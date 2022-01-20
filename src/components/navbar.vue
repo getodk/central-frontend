@@ -54,7 +54,7 @@ import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 import modal from '../mixins/modal';
 import routes from '../mixins/routes';
 import { loadAsync } from '../util/async-components';
-import { requestData } from '../store/modules/request';
+import { requestDataComputed } from '../reusables/request-data';
 
 export default {
   name: 'Navbar',
@@ -66,7 +66,7 @@ export default {
     NavbarLocaleDropdown
   },
   mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
-  inject: ['staticConfig'],
+  inject: ['requestData', 'staticConfig'],
   data() {
     return {
       analyticsIntroduction: {
@@ -75,9 +75,12 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['currentUser', 'analyticsConfig']),
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      currentUser: ({ currentUser }) => currentUser.data,
+      analyticsConfig: ({ analyticsConfig }) => analyticsConfig.data
+    }),
     showsAnalytics() {
       return this.staticConfig.showsAnalytics;
     },

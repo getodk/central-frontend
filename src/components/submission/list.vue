@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="submission-list">
-    <loading :state="$store.getters.initiallyLoading(['fields'])"/>
+    <loading :state="requestData.initiallyLoading(['fields'])"/>
     <div v-show="fields != null">
       <div id="submission-list-actions">
         <form class="form-inline" @submit.prevent>
@@ -59,7 +59,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { last } from 'ramda';
-import { mapGetters } from 'vuex';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
@@ -73,7 +72,7 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionList',
@@ -88,7 +87,7 @@ export default {
     SubmissionUpdateReviewState
   },
   mixins: [modal()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     projectId: {
       type: String,
@@ -134,15 +133,16 @@ export default {
     };
   },
   computed: {
-    ...requestData([
-      'form',
-      { key: 'formDraft', getOption: true },
-      'keys',
-      'fields',
-      'odataChunk',
-      'submitters'
-    ]),
-    ...mapGetters(['selectableFields']),
+    ...requestDataComputed({
+      form: ({ form }) => form.data,
+      formDraft: ({ formDraft }) => formDraft.data.get(),
+      keys: ({ keys }) => keys.data,
+      fields: ({ fields }) => fields.data,
+      selectableFields: ({ fields }) => fields.selectable,
+      odataChunk: ({ odataChunk }) => odataChunk.data,
+      loadingOData: ({ odataChunk }) => odataChunk.awaitingResponse,
+      submitters: ({ submitters }) => submitters.data
+    }),
     odataFilter() {
       const conditions = [];
       if (this.filters.submitterId !== '')
@@ -160,9 +160,6 @@ export default {
         conditions.push(`(${condition})`);
       }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
-    },
-    loadingOData() {
-      return this.$store.getters.loading('odataChunk');
     },
     formVersion() {
       return this.draft ? this.formDraft : this.form;
@@ -219,8 +216,7 @@ export default {
   },
   methods: {
     clearSubmissions() {
-      if (this.odataChunk != null)
-        this.$store.commit('clearData', 'odataChunk');
+      this.requestData.odataChunk.clear();
       this.submissions = null;
       this.instanceIds.clear();
       this.originalCount = null;
@@ -253,8 +249,7 @@ export default {
       const top = this.top(skip);
       const query = { $top: top, $skip: skip, $count: true, $wkt: true };
       if (this.odataFilter != null) query.$filter = this.odataFilter;
-      return this.$store.dispatch('get', [{
-        key: 'odataChunk',
+      return this.requestData.odataChunk.request({
         url: apiPaths.odataSubmissions(
           this.projectId,
           this.xmlFormId,
@@ -272,11 +267,10 @@ export default {
             this.pushSubmissions();
           this.skip = top + skip;
         }
-      }]).catch(noop);
+      }).catch(noop);
     },
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'fields',
+      this.requestData.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
           odata: true
         }),
@@ -286,13 +280,12 @@ export default {
             ? this.selectableFields
             : this.selectableFields.slice(0, 10);
         }
-      }]).catch(noop);
+      }).catch(noop);
       this.fetchChunk(0, true);
       if (!this.draft) {
-        this.$store.dispatch('get', [{
-          key: 'submitters',
-          url: apiPaths.submitters(this.projectId, this.xmlFormId, this.draft)
-        }]).catch(noop);
+        this.requestData.submitters.request({
+          url: apiPaths.submitters(this.projectId, this.xmlFormId)
+        }).catch(noop);
       }
     },
     scrolledToBottom() {

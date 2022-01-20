@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <audit-filters v-model:action="filters.action"
       v-model:date-range="filters.dateRange"/>
     <audit-table :audits="audits"/>
-    <loading :state="$store.getters.initiallyLoading(['audits'])"/>
+    <loading :state="initiallyLoading"/>
     <p v-show="audits != null && audits.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
@@ -32,11 +32,12 @@ import Loading from '../loading.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'AuditList',
   components: { AuditFilters, AuditTable, Loading },
+  inject: ['requestData'],
   data() {
     const today = DateTime.local().startOf('day');
     return {
@@ -46,9 +47,12 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['audits']),
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the component
+    // is created.
+    audits: ({ audits }) => audits.data,
+    initiallyLoading: (requestData) => requestData.initiallyLoading(['audits'])
+  }),
   watch: {
     'filters.action': 'fetchData',
     'filters.dateRange': 'fetchData'
@@ -59,15 +63,14 @@ export default {
   methods: {
     fetchData() {
       const { action, dateRange } = this.filters;
-      this.$store.dispatch('get', [{
-        key: 'audits',
+      this.requestData.audits.request({
         url: apiPaths.audits({
           action,
           start: dateRange[0].toISO(),
           end: dateRange[1].endOf('day').toISO()
         }),
         extended: true
-      }]).catch(noop);
+      }).catch(noop);
     }
   }
 };

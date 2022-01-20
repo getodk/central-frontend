@@ -58,12 +58,13 @@ import MarkdownView from '../markdown/view.vue';
 import reviewState from '../../mixins/review-state';
 import SubmissionDiffItem from './diff-item.vue';
 
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
   components: { ActorLink, DateTime, MarkdownView, SubmissionDiffItem },
   mixins: [reviewState()],
+  inject: ['requestData'],
   props: {
     projectId: {
       type: String,
@@ -83,7 +84,9 @@ export default {
     }
   },
   computed: {
-    ...requestData(['diffs']),
+    ...requestDataComputed({
+      diffs: ({ diffs }) => diffs.data
+    }),
     updateOrEdit() {
       return this.entry.action === 'submission.update' ||
         this.entry.action === 'submission.update.version';

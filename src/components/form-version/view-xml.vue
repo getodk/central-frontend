@@ -39,11 +39,12 @@ import formatXml from 'xml-formatter';
 
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormVersionViewXml',
   components: { Modal, Spinner },
+  inject: ['requestData'],
   props: {
     state: {
       type: Boolean,
@@ -52,10 +53,11 @@ export default {
   },
   emits: ['hide'],
   computed: {
-    ...requestData(['formVersionXml']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['formVersionXml']);
-    },
+    ...requestDataComputed({
+      formVersionXml: ({ formVersionXml }) => formVersionXml.data,
+      initiallyLoading: (requestData) =>
+        requestData.initiallyLoading(['formVersionXml'])
+    }),
     // XSLT might be a way to implement this without a dependency, but Firefox
     // doesn't seem to support the `indent` attribute of <xsl:output>:
     // https://stackoverflow.com/questions/376373/pretty-printing-xml-with-javascript

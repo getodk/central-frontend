@@ -6,12 +6,12 @@ import 'should';
 import '../src/setup';
 
 import i18n from '../src/i18n';
-import store from '../src/store';
 import { noop } from '../src/util/util';
 
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/async-components';
 import { mockAxios } from './util/axios';
+import { mockLogin } from './util/session';
 import './assertions';
 
 
@@ -61,11 +61,6 @@ afterEach(() => {
 });
 
 afterEach(() => {
-  store.commit('resetRequests');
-  store.commit('clearData');
-});
-
-afterEach(() => {
   if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
 });
 
@@ -74,6 +69,8 @@ afterEach(() => {
 });
 
 afterEach(testData.reset);
+
+afterEach(mockLogin.reset);
 
 
 

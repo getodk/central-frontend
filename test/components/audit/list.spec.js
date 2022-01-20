@@ -7,7 +7,7 @@ describe('AuditList', () => {
   it('sends the correct request', () =>
     load('/system/audits', { root: false })
       .beforeEachResponse((component, { method, url, headers }) => {
-        method.should.equal('GET');
+        should.not.exist(method);
         // We test the query parameters in the AuditFilters tests.
         url.should.startWith('/v1/audits?');
         headers['X-Extended-Metadata'].should.equal('true');

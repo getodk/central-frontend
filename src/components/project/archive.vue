@@ -38,48 +38,39 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject } from 'vue';
+
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectArchive',
   components: { Modal, Spinner },
-  mixins: [request()],
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
+    state: Boolean
   },
   emits: ['hide', 'success'],
-  data() {
+  setup(props, { emit }) {
+    const { project } = inject('requestData');
+    const archive = project.request({
+      method: 'PATCH',
+      url: apiPaths.project(project.data.id),
+      data: { archived: true },
+      // Specifying `update` because the response will not include extended
+      // metadata.
+      update: ({ data }) => { project.update(data); }
+    })
+      .then(() => { emit('success', project.data); })
+      .catch(noop);
+
     return {
-      awaitingResponse: false
+      project: project.ref,
+      archive,
+      awaitingResponse: project.awaitingResponse
     };
-  },
-  computed: requestData(['project']),
-  methods: {
-    archive() {
-      this.patch(apiPaths.project(this.project.id), { archived: true })
-        .then(response => {
-          this.$store.commit('setData', {
-            key: 'project',
-            // We do not simply specify response.data, because it does not
-            // include extended metadata.
-            value: this.project.with({
-              archived: true,
-              updatedAt: response.data.updatedAt
-            })
-          });
-          this.$emit('success', this.project);
-        })
-        .catch(noop);
-    }
   }
 };
 </script>

@@ -40,14 +40,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import Form from '../../presenters/form';
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionDownloadDropdown',
+  inject: ['requestData'],
   props: {
     formVersion: {
       type: Form,
@@ -57,8 +56,11 @@ export default {
   },
   emits: ['decrypt'],
   computed: {
-    ...requestData(['fields', 'odataChunk']),
-    ...mapGetters(['managedKey']),
+    ...requestDataComputed({
+      fields: ({ fields }) => fields.data,
+      odataChunk: ({ odataChunk }) => odataChunk.data,
+      managedKey: ({ keys }) => keys.managed
+    }),
     buttonText() {
       if (this.odataFilter == null) {
         return this.$tcn(

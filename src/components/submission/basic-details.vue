@@ -61,16 +61,19 @@ import DateTime from '../date-time.vue';
 import PageSection from '../page/section.vue';
 
 import reviewState from '../../mixins/review-state';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionBasicDetails',
   components: { DateTime, PageSection },
   mixins: [reviewState()],
+  inject: ['requestData'],
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['submission']),
+    ...requestDataComputed({
+      // The component assumes that this data will exist when the component is
+      // created.
+      submission: ({ submission }) => submission.data
+    }),
     attachments() {
       const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
       return this.$t('attachmentSummary', {

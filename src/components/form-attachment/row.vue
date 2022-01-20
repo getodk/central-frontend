@@ -40,11 +40,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormAttachmentRow',
   components: { DateTime },
+  inject: ['requestData'],
   props: {
     attachment: {
       type: Object,
@@ -60,14 +61,16 @@ export default {
       required: true
     },
     updatedAttachments: {
-      type: Array,
+      type: Set,
       required: true
     }
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['form']),
+    ...requestDataComputed({
+      // The component assumes that this data will exist when the component is
+      // created.
+      form: ({ form }) => form.data
+    }),
     targeted() {
       const targetedByDragover = this.dragoverAttachment != null &&
         this.attachment.name === this.dragoverAttachment.name;
@@ -80,13 +83,11 @@ export default {
         this.dragoverAttachment.name !== this.attachment.name;
       const highlightedAsInfo = this.targeted ||
         (this.fileIsOverDropZone && !dragoverTargetsADifferentRow);
-      const highlightedAsSuccess = this.updatedAttachments
-        .some(attachment => attachment.name === this.attachment.name);
       return {
         'form-attachment-row': true,
         info: highlightedAsInfo,
         targeted: this.targeted,
-        success: highlightedAsSuccess
+        success: this.updatedAttachments.has(this.attachment.name)
       };
     },
     type() {

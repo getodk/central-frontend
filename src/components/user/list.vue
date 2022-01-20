@@ -35,14 +35,14 @@ either is an Administrator or has no role. -->
           <th class="actions">{{ $t('header.actions') }}</th>
         </tr>
       </thead>
-      <tbody v-if="users != null && adminIds != null">
+      <tbody v-if="dataExists">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :admin="adminIds.has(user.id)" :highlighted="highlighted"
           @assigned-role="afterAssignRole" @reset-password="showResetPassword"
           @retire="showRetire"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['users', 'actors'])"/>
+    <loading :state="initiallyLoading"/>
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
@@ -62,7 +62,7 @@ import UserRow from './row.vue';
 
 import modal from '../../mixins/modal';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'UserList',
@@ -75,7 +75,7 @@ export default {
     UserRow
   },
   mixins: [modal()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   data() {
     return {
       // The ids of the users who are administrators
@@ -96,30 +96,29 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['users']),
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the
+    // component is created.
+    users: ({ users }) => users.data,
+    initiallyLoading: (requestData) =>
+      requestData.initiallyLoading(['users', 'actors']),
+    dataExists: (requestData) => requestData.dataExists(['users', 'actors'])
+  }),
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
       this.adminIds = null;
-      return this.$store.dispatch('get', [
-        {
-          key: 'users',
-          url: '/v1/users'
-        },
-        {
-          key: 'actors',
-          url: '/v1/assignments/admin',
-          success: ({ actors }) => {
-            this.adminIds = new Set();
-            for (const actor of actors)
-              this.adminIds.add(actor.id);
-          }
+      this.requestData.users.request('/v1/users').catch(noop);
+      this.requestData.actors.request({
+        url: '/v1/assignments/admin',
+        success: ({ actors }) => {
+          this.adminIds = new Set();
+          for (const actor of actors.data)
+            this.adminIds.add(actor.id);
         }
-      ]).catch(noop);
+      }).catch(noop);
     },
     afterCreate(user) {
       this.fetchData();

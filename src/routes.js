@@ -9,6 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { T, equals } from 'ramda';
+
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 
@@ -102,7 +104,8 @@ The following meta fields are supported for bottom-level routes:
       }
     }
 
-    Do not set preserveData directly: use preserveDataForKey() instead.
+    Do not set preserveData directly: use the function preserveData() below
+    instead.
 
   - validateData (optional)
 
@@ -219,7 +222,18 @@ const asyncRoute = (options) => {
   return config;
 };
 
-export default ({ staticConfig }) => {
+export default ({ requestData, staticConfig }) => {
+  const title = {
+    project: () => {
+      const { data } = requestData.project;
+      return data != null ? data.name : null;
+    },
+    form: () => {
+      const { data } = requestData.form;
+      return data != null ? data.nameOrId() : null;
+    }
+  };
+
 const routes = [
   {
     path: '/login',
@@ -228,7 +242,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('action.logIn')] }
+      title: () => [i18n.t('action.logIn')]
     }
   },
   asyncRoute({
@@ -238,7 +252,7 @@ const routes = [
     meta: {
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('title.resetPassword')] }
+      title: () => [i18n.t('title.resetPassword')]
     }
   }),
   asyncRoute({
@@ -249,7 +263,7 @@ const routes = [
       restoreSession: false,
       requireLogin: false,
       requireAnonymity: true,
-      title: { parts: () => [i18n.t('title.setPassword')] }
+      title: () => [i18n.t('title.setPassword')]
     }
   }),
 
@@ -258,7 +272,7 @@ const routes = [
     component: 'ProjectList',
     loading: 'page',
     meta: {
-      title: { parts: () => [i18n.t('resource.projects')] } // Homepage
+      title: () => [i18n.t('resource.projects')]
     }
   }),
   asyncRoute({
@@ -277,10 +291,7 @@ const routes = [
           validateData: {
             project: (project) => project.permits('form.list')
           },
-          title: {
-            key: 'project',
-            parts: ({ project }) => [project != null ? project.name : null]
-          }
+          title: () => [title.project()]
         }
       }),
       asyncRoute({
@@ -296,13 +307,7 @@ const routes = [
               'assignment.delete'
             ])
           },
-          title: {
-            key: 'project',
-            parts: ({ project }) => [
-              i18n.t('resource.projectRoles'),
-              project != null ? project.name : null
-            ]
-          }
+          title: () => [i18n.t('resource.projectRoles'), title.project()]
         }
       }),
       asyncRoute({
@@ -318,13 +323,7 @@ const routes = [
               'session.end'
             ])
           },
-          title: {
-            key: 'project',
-            parts: ({ project }) => [
-              i18n.t('resource.appUsers'),
-              project != null ? project.name : null
-            ]
-          }
+          title: () => [i18n.t('resource.appUsers'), title.project()]
         }
       }),
       asyncRoute({
@@ -344,13 +343,7 @@ const routes = [
               'assignment.delete'
             ])
           },
-          title: {
-            key: 'project',
-            parts: ({ project }) => [
-              i18n.t('projectShow.tab.formAccess'),
-              project != null ? project.name : null
-            ]
-          }
+          title: () => [i18n.t('projectShow.tab.formAccess'), title.project()]
         }
       }),
       asyncRoute({
@@ -361,13 +354,7 @@ const routes = [
           validateData: {
             project: (project) => project.permits(['project.update'])
           },
-          title: {
-            key: 'project',
-            parts: ({ project }) => [
-              i18n.t('common.tab.settings'),
-              project != null ? project.name : null
-            ]
-          }
+          title: () => [i18n.t('common.tab.settings'), title.project()]
         }
       })
     ]
@@ -396,10 +383,7 @@ const routes = [
               project.permits(['form.read', 'form.update']),
             form: (form) => form.publishedAt != null
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [form != null ? form.nameOrId() : null]
-          }
+          title: () => [title.form()]
         }
       }),
       asyncRoute({
@@ -414,13 +398,7 @@ const routes = [
               project.permits(['form.read', 'submission.list']),
             form: (form) => form.publishedAt != null
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [
-              i18n.t('formHead.tab.versions'),
-              form != null ? form.nameOrId() : null
-            ]
-          }
+          title: () => [i18n.t('formHead.tab.versions'), title.form()]
         }
       }),
       asyncRoute({
@@ -437,13 +415,7 @@ const routes = [
             ]),
             form: (form) => form.publishedAt != null
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [
-              i18n.t('resource.submissions'),
-              form != null ? form.nameOrId() : null
-            ]
-          }
+          title: () => [i18n.t('resource.submissions'), title.form()]
         }
       }),
       asyncRoute({
@@ -461,13 +433,7 @@ const routes = [
             ]),
             form: (form) => form.publishedAt != null
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [
-              i18n.t('formHead.tab.publicAccess'),
-              form != null ? form.nameOrId() : null
-            ]
-          }
+          title: () => [i18n.t('formHead.tab.publicAccess'), title.form()]
         }
       }),
       asyncRoute({
@@ -480,13 +446,7 @@ const routes = [
               project.permits(['form.read', 'form.update', 'form.delete']),
             form: (form) => form.publishedAt != null
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [
-              i18n.t('common.tab.settings'),
-              form != null ? form.nameOrId() : null
-            ]
-          }
+          title: () => [i18n.t('common.tab.settings'), title.form()]
         }
       }),
       asyncRoute({
@@ -500,13 +460,7 @@ const routes = [
               project.permits(['form.read', 'form.update', 'form.delete']),
             formDraft: (formDraft) => formDraft.isDefined()
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [
-              i18n.t('formHead.draftNav.tab.status'),
-              form != null ? form.nameOrId() : null
-            ]
-          }
+          title: () => [i18n.t('formHead.draftNav.tab.status'), title.form()]
         }
       }),
       asyncRoute({
@@ -516,17 +470,10 @@ const routes = [
         meta: {
           validateData: {
             project: (project) => project.permits(['form.read', 'form.update']),
-            attachments: (option) => option
-              .map(attachments => attachments.length !== 0)
-              .orElse(false)
+            attachments: (attachments) =>
+              attachments.isDefined() && attachments.get().size !== 0
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [
-              i18n.t('formHead.draftNav.tab.attachments'),
-              form != null ? form.nameOrId() : null
-            ]
-          }
+          title: () => [i18n.t('formHead.draftNav.tab.attachments'), title.form()]
         }
       }),
       asyncRoute({
@@ -543,13 +490,7 @@ const routes = [
             ]),
             formDraft: (formDraft) => formDraft.isDefined()
           },
-          title: {
-            key: 'form',
-            parts: ({ form }) => [
-              i18n.t('formHead.draftNav.tab.testing'),
-              form != null ? form.nameOrId() : null
-            ]
-          }
+          title: () => [i18n.t('formHead.draftNav.tab.testing'), title.form()]
         }
       })
     ]
@@ -563,12 +504,11 @@ const routes = [
       validateData: {
         project: (project) => project.permits('submission.read')
       },
-      title: {
-        key: 'submission',
-        parts: ({ submission }) => {
-          const submissionId = submission != null ? instanceNameOrId(submission) : null;
-          return [`${i18n.t('title.details')}: ${submissionId}`];
-        }
+      title: () => {
+        const { data } = requestData.submission;
+        return data != null
+          ? [`${i18n.t('title.details')}: ${instanceNameOrId(data)}`]
+          : [i18n.t('title.details')];
       }
     }
   }),
@@ -595,7 +535,7 @@ const routes = [
               'user.delete'
             ])
           },
-          title: { parts: () => [i18n.t('resource.webUsers')] }
+          title: () => [i18n.t('resource.webUsers')]
         }
       })
     ]
@@ -610,11 +550,9 @@ const routes = [
         currentUser: (currentUser) =>
           currentUser.can(['user.read', 'user.update'])
       },
-      title: {
-        key: 'user',
-        parts: ({ user }) => [
-          user != null ? user.displayName : null
-        ]
+      title: () => {
+        const { data } = requestData.user;
+        return data != null ? data.displayName : null;
       }
     }
   }),
@@ -623,7 +561,7 @@ const routes = [
     component: 'AccountEdit',
     loading: 'page',
     meta: {
-      title: { parts: () => [i18n.t('title.editProfile')] }
+      title: () => [i18n.t('title.editProfile')]
     }
   }),
 
@@ -646,7 +584,7 @@ const routes = [
               'audit.read'
             ])
           },
-          title: { parts: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')] }
+          title: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')]
         },
         beforeEnter: () => (staticConfig.showsBackups ? true : '/')
       }),
@@ -658,7 +596,7 @@ const routes = [
           validateData: {
             currentUser: (currentUser) => currentUser.can('audit.read')
           },
-          title: { parts: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')] }
+          title: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')]
         }
       }),
       asyncRoute({
@@ -670,12 +608,7 @@ const routes = [
             currentUser: (currentUser) =>
               currentUser.can(['config.read', 'config.set', 'analytics.read'])
           },
-          title: {
-            parts: () => [
-              i18n.t('systemHome.tab.analytics'),
-              i18n.t('systemHome.title')
-            ]
-          }
+          title: () => [i18n.t('systemHome.tab.analytics'), i18n.t('systemHome.title')]
         },
         beforeEnter: () => (staticConfig.showsAnalytics ? true : '/')
       })
@@ -688,7 +621,7 @@ const routes = [
     loading: 'page',
     key: () => '/dl',
     meta: {
-      title: { parts: () => [i18n.t('title.download')] }
+      title: () => [i18n.t('title.download')]
     }
   }),
 
@@ -699,7 +632,7 @@ const routes = [
     meta: {
       restoreSession: false,
       requireLogin: false,
-      title: { parts: () => [i18n.t('title.pageNotFound')] }
+      title: () => [i18n.t('title.pageNotFound')]
     }
   })
 ];
@@ -709,21 +642,21 @@ const routes = [
 ////////////////////////////////////////////////////////////////////////////////
 // TRAVERSE ROUTES
 
-const routesByName = {};
+const routesByName = new Map();
 {
+  const noValidations = [];
   // Normalizes the values of meta fields, including by setting defaults.
   const normalizeMeta = (meta) => ({
     restoreSession: true,
     requireLogin: true,
     requireAnonymity: false,
-    preserveData: {},
+    preserveData: new Map(),
+    title: () => [],
     ...meta,
-    validateData: meta != null && meta.validateData != null
-      ? Object.entries(meta.validateData)
-      : [],
-    title: meta != null && meta.title != null
-      ? meta.title
-      : { parts: () => [] }
+    validateData: meta == null || meta.validateData == null
+      ? noValidations
+      : Object.entries(meta.validateData)
+        .map(([key, validator]) => [requestData[key], validator])
   });
 
   const stack = [...routes];
@@ -736,65 +669,56 @@ const routesByName = {};
         stack.push(child);
     } else {
       route.meta = normalizeMeta(route.meta);
-      routesByName[route.name] = route;
+      routesByName.set(route.name, route);
     }
   }
 }
 
 
 
-////////////////////////////////////////////////////////////////////////////////
-// PRESERVE DATA
+  //////////////////////////////////////////////////////////////////////////////
+  // PRESERVE DATA
 
-/*
-preserveDataForKey() sets the preserveData meta field so that when the route
-changes from `from` to `to`, and the routes' params match on `params`, the data
-for `key` is not cleared.
+  /* preserveData() updates the preserveData meta field for one or more routes.
+  If the specified preserves() function returns `true` when passed the routes
+  that the user is navigating `to` and `from`, then the data for the specified
+  resources will be preserved. Otherwise, the data will be cleared after the
+  navigation is confirmed. To specify that all data should be preserved when
+  preserves() returns `true`, specify '*' instead of resources. */
+  const preserveData = (routeNames, resourcesOrStar, preserves) => {
+    for (const key of resourcesOrStar === '*' ? ['*'] : resourcesOrStar) {
+      for (const name of routeNames) {
+        const { meta } = routesByName.get(name);
+        const fs = meta.preserveData.get(key);
+        if (fs == null)
+          meta.preserveData.set(key, [preserves]);
+        else
+          fs.push(preserves);
+      }
+    }
+  };
 
-  - key. A request key or '*'.
-  - to. An array of route names.
-  - from (default: `to`). An array of route names.
-  - params. An array of param names.
-*/
-const preserveDataForKey = ({ key, to, params, from = to }) => {
-  for (const toName of to) {
-    const { preserveData } = routesByName[toName].meta;
-    if (preserveData[key] == null) preserveData[key] = {};
-    const paramsByFrom = preserveData[key];
-    for (const fromName of from)
-      paramsByFrom[fromName] = params;
-  }
-};
+  // Data that is always preserved after navigation
+  preserveData(
+    routesByName.keys(),
+    [
+      requestData.centralVersion,
+      requestData.session,
+      requestData.currentUser,
+      requestData.roles,
+      requestData.analyticsConfig
+    ],
+    T
+  );
 
-// Data that does not change with navigation
-{
-  const keys = [
-    'centralVersion',
-    'session',
-    'currentUser',
-    'roles',
-    'analyticsConfig'
-  ];
-  const names = Object.keys(routesByName);
-  for (const key of keys)
-    preserveDataForKey({ key, to: names, params: [] });
-}
-
-// Tabs
-preserveDataForKey({
-  key: '*',
-  to: [
+  const projectRoutes = [
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
     'ProjectFormAccess',
     'ProjectSettings'
-  ],
-  params: ['projectId']
-});
-preserveDataForKey({
-  key: '*',
-  to: [
+  ];
+  const formRoutes = [
     'FormOverview',
     'FormVersionList',
     'FormSubmissions',
@@ -803,33 +727,21 @@ preserveDataForKey({
     'FormDraftStatus',
     'FormAttachmentList',
     'FormDraftTesting'
-  ],
-  params: ['projectId', 'xmlFormId']
-});
+  ];
 
-preserveDataForKey({
-  key: 'project',
-  to: [
-    // ProjectShow
-    'ProjectOverview',
-    'ProjectUserList',
-    'FieldKeyList',
-    'ProjectFormAccess',
-    'ProjectSettings',
-    // FormShow
-    'FormOverview',
-    'FormVersionList',
-    'FormSubmissions',
-    'PublicLinkList',
-    'FormSettings',
-    'FormDraftStatus',
-    'FormAttachmentList',
-    'FormDraftTesting',
-    // SubmissionShow
-    'SubmissionShow'
-  ],
-  params: ['projectId']
-});
+  // Preserve data when navigating between tabs.
+  preserveData([...projectRoutes, ...formRoutes], '*', (to, from) => {
+    const sameParent = to.matched.length === from.matched.length &&
+      to.matched[to.matched.length - 2] === from.matched[from.matched.length - 2];
+    return sameParent && equals(to.params, from.params);
+  });
+
+  // Preserve requestData.project.
+  preserveData(
+    [...projectRoutes, ...formRoutes, 'SubmissionShow'],
+    [requestData.project],
+    (to, from) => to.params.projectId === from.params.projectId
+  );
 
 
 

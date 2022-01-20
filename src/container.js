@@ -11,35 +11,38 @@ except according to the terms contained in the LICENSE file.
 */
 import createAlert from './alert';
 import createCentralRouter from './router';
+import createRequestData from './request-data';
 import createUnsavedChanges from './unsaved-changes';
 import i18n from './i18n';
 import staticConfigFile from '../config';
-import store from './store';
 
 export default ({
   // `router` can be an object, or it can be a function that takes a partial
   // container and returns an object. It is also possible to create a container
   // without a router by specifying `null`.
   router = createCentralRouter,
+  // requestData should be a function that takes a partial container and returns
+  // a requestData object.
+  requestData = createRequestData,
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(),
   staticConfig = staticConfigFile,
 } = {}) => {
   const container = {
     i18n: i18n.global,
-    store,
     alert,
     unsavedChanges,
     staticConfig,
   };
+  container.requestData = requestData(container);
   if (router != null)
     container.router = typeof router === 'function' ? router(container) : router;
   container.install = (app) => {
     app
       .use(i18n)
-      .use(store)
       .use(container.router)
       .provide('container', container)
+      .provide('requestData', requestData)
       .provide('alert', alert)
       .provide('unsavedChanges', unsavedChanges)
       .provide('staticConfig', staticConfig)

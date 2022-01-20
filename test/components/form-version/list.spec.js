@@ -5,19 +5,10 @@ import { mockLogin } from '../../util/session';
 describe('FormVersionList', () => {
   beforeEach(mockLogin);
 
-  it('sends the correct request', () => {
+  it('sends the correct initial requests', () => {
     testData.extendedForms.createPast(1);
-    let success = false;
-    return load('/projects/1/forms/f/versions')
-      .beforeEachResponse((app, { method, url, headers }) => {
-        if (url === '/v1/projects/1/forms/f/versions') {
-          method.should.equal('GET');
-          headers['X-Extended-Metadata'].should.equal('true');
-          success = true;
-        }
-      })
-      .afterResponses(() => {
-        success.should.be.true();
-      });
+    return load('/projects/1/forms/f/versions').testRequests([
+      { url: '/v1/projects/1/forms/f/versions', extended: true }
+    ]);
   });
 });

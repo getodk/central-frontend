@@ -31,12 +31,13 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionComment',
   components: { Spinner, MarkdownTextarea },
   mixins: [request()],
+  inject: ['requestData'],
   props: {
     projectId: {
       type: String,
@@ -60,7 +61,9 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser']),
+    ...requestDataComputed({
+      currentUser: ({ currentUser }) => currentUser.data
+    }),
     editWithoutComment() {
       if (this.feed == null) return false;
       for (const entry of this.feed) {

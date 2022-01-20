@@ -54,15 +54,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import ProjectFormAccessRow from './row.vue';
 
-import { requestData } from '../../../store/modules/request';
+import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'ProjectFormAccessTable',
   components: { ProjectFormAccessRow },
+  inject: ['requestData'],
   props: {
     changesByForm: {
       type: Object,
@@ -70,10 +69,10 @@ export default {
     }
   },
   emits: ['show-states', 'update:state', 'update:fieldKeyAccess'],
-  computed: {
-    ...requestData(['forms']),
-    ...mapGetters(['fieldKeysWithToken'])
-  },
+  computed: requestDataComputed({
+    forms: ({ forms }) => forms.data,
+    fieldKeysWithTokens: ({ fieldKeys }) => fieldKeys.withToken
+  }),
   methods: {
     updateState(form, state) {
       this.$emit('update:state', form, state);

@@ -91,7 +91,7 @@ const mixin = {
       return `/users/${id}/edit`;
     },
     canRoute(location) {
-      return canRoute(this.$router.resolve(location), this.$route, this.$store);
+      return canRoute(this.$router.resolve(location), this.$route);
     }
   }
 };

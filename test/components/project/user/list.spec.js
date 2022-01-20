@@ -387,7 +387,7 @@ describe('ProjectUserList', () => {
         component.get('.close').should.be.visible();
       }));
 
-    it('allows another search, canceling the first search', () =>
+    it('allows another search, aborting the first search', () =>
       search({ root: false })
         // Sends a request for a second search.
         .beforeAnyResponse(component =>

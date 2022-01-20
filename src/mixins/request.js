@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 /*
 This mixin is used to send POST, PUT, PATCH, and DELETE requests. For GET
-requests, use $store.dispatch('get').
+requests, use requestData.
 
 The request mixin assumes that no single component sends concurrent requests. It
 is the component's responsibility to ensure that the user is not able to send
@@ -30,8 +30,8 @@ property:
     directly mutate this property after defining it.
 */
 
-import i18n from '../i18n';
-import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
+import { noop } from '../util/util';
+import { request } from '../util/request';
 
 /*
 request() accepts all the options that axios.request() does. It also accepts the
@@ -81,59 +81,36 @@ resulted in an error response. Before the then() or catch() callback is run, Vue
 will react to the change in awaitingResponse from `true` to `false`, running
 watchers and updating the DOM.
 */
-function request({
-  fulfillProblem = undefined,
-  problemToAlert = undefined,
-  ...axiosConfig
-}) {
-  const { data } = axiosConfig;
-  // This limit is set in the nginx config. The alert also mentions this number.
-  if (data != null && data instanceof File && data.size > 100000000) {
-    this.alert.danger(i18n.t('mixin.request.alert.fileSize', data));
-    return Promise.reject(new Error('file size exceeds limit'));
-  }
-
-  if (this.awaitingResponse != null) this.awaitingResponse = true;
-
-  const { session } = this.$store.state.request.data;
-  const initialRoute = this.$route;
-  return this.$http.request(withAuth(axiosConfig, session))
-    .catch(error => {
-      // this.$store seems to be defined even after the component has been
-      // unmounted.
-      if (this.$route !== initialRoute) throw new Error('route change');
-
-      if (fulfillProblem != null && error.response != null &&
-        isProblem(error.response.data) && fulfillProblem(error.response.data))
-        return error.response;
-
-      if (this.awaitingResponse != null) this.awaitingResponse = false;
-
-      logAxiosError(error);
-      this.alert.danger(requestAlertMessage(error, {
-        problemToAlert,
-        component: this
-      }));
-      throw error;
-    })
-    .then(response => {
-      if (this.$route !== initialRoute) throw new Error('route change');
-      if (this.awaitingResponse != null) this.awaitingResponse = false;
-
-      return response;
-    });
-}
 
 // @vue/component
 const mixin = {
-  inject: ['alert'],
-  watch: {
-    $route() {
-      if (this.awaitingResponse != null) this.awaitingResponse = false;
-    }
-  },
+  inject: ['requestData', 'alert'],
   methods: {
-    request,
+    async request(config) {
+      if (typeof config === 'string') return this.request({ url: config });
+      const { onSuccess = noop, ...requestConfig } = config;
+
+      if (this.awaitingResponse != null) this.awaitingResponse = true;
+
+      if (requestConfig.abortAfterNavigate == null) {
+        const { method = 'GET' } = requestConfig;
+        requestConfig.abortAfterNavigate = method !== 'GET';
+      }
+
+      const { onError = noop } = requestConfig;
+      requestConfig.onError = () => {
+        if (this.awaitingResponse != null) this.awaitingResponse = false;
+        onError();
+      };
+
+      const response = await request(this.container, this.$i18n, requestConfig);
+      if (this.awaitingResponse != null) this.awaitingResponse = false;
+      onSuccess(response);
+      return response;
+    },
+    get(url, config = undefined) {
+      return this.request({ ...config, method: 'GET', url });
+    },
     post(url, data = undefined, config = undefined) {
       const full = { ...config, method: 'POST', url };
       if (data != null) full.data = data;

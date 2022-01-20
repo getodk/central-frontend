@@ -1,14 +1,15 @@
 import createContainer from '../../src/container';
 import { noop } from '../../src/util/util';
 
-import { setData } from './store';
+import { testRequestData } from './request-data';
 
 export default (options = undefined) => {
   const fullOptions = {
     router: null,
     ...options
   };
-  if (options.requestData != null) setData(options.requestData);
+  if (typeof options.requestData !== 'function')
+    fullOptions.requestData = testRequestData(options.requestData);
   const container = createContainer(fullOptions);
 
   const { install } = container;

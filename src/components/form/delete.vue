@@ -43,12 +43,13 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDelete',
   components: { Modal, Spinner },
   mixins: [request()],
+  inject: ['requestData'],
   props: {
     state: {
       type: Boolean,
@@ -61,7 +62,9 @@ export default {
       awaitingResponse: false
     };
   },
-  computed: requestData(['form']),
+  computed: requestDataComputed({
+    form: ({ form }) => form.data
+  }),
   methods: {
     del() {
       this.delete(apiPaths.form(this.form.projectId, this.form.xmlFormId))

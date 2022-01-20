@@ -70,22 +70,22 @@ import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
-
-// The component does not assume that this data will exist when the component is
-// created.
-const requestKeys = ['project', 'form'];
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormChecklist',
   components: { ChecklistStep, DocLink, SentenceSeparator },
   mixins: [routes()],
+  inject: ['requestData'],
   emits: ['show-submission-options'],
   computed: {
-    ...requestData(requestKeys),
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    },
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      project: ({ project }) => project.data,
+      form: ({ form }) => form.data,
+      dataExists: (requestData) => requestData.dataExists(['project', 'form'])
+    }),
     // Indicates whether each step is complete.
     stepCompletion() {
       return [

@@ -90,13 +90,13 @@ import Spinner from '../spinner.vue';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
 import { apiPaths, isProblem } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormNew',
   components: { DocLink, Modal, SentenceSeparator, Spinner },
   mixins: [dropZone(), request()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     state: {
       type: Boolean,
@@ -113,9 +113,12 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project', { key: 'formDraft', getOption: true }]),
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      project: ({ project }) => project.data,
+      formDraft: ({ formDraft }) => formDraft.data.get()
+    }),
     disabled() {
       return this.awaitingResponse;
     },

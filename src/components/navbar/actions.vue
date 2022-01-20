@@ -41,21 +41,23 @@ except according to the terms contained in the LICENSE file.
 import request from '../../mixins/request';
 import { logOut } from '../../util/session';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'NavbarActions',
   mixins: [request()],
-  inject: ['container', 'alert', 'unsavedChanges'],
+  inject: ['container', 'requestData', 'alert', 'unsavedChanges'],
   props: {
     loggedIn: {
       type: Boolean,
       default: false
     }
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['currentUser']),
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the
+    // component is created.
+    currentUser: ({ currentUser }) => currentUser.data
+  }),
   methods: {
     logOut() {
       if (this.unsavedChanges.confirm()) {

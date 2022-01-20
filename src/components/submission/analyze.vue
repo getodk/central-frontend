@@ -94,11 +94,12 @@ import Modal from '../modal.vue';
 import Selectable from '../selectable.vue';
 
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionAnalyze',
   components: { Modal, Selectable },
+  inject: ['requestData'],
   props: {
     state: Boolean
   },
@@ -109,7 +110,9 @@ export default {
     };
   },
   computed: {
-    ...requestData(['form']),
+    ...requestDataComputed({
+      form: ({ form }) => form.data
+    }),
     odataUrl() {
       if (this.form == null) return '';
       const path = apiPaths.odataSvc(this.form.projectId, this.form.xmlFormId);

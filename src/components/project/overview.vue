@@ -28,12 +28,13 @@ import FormList from '../form/list.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'ProjectOverview',
   components: { FormList, ProjectOverviewAbout, ProjectOverviewRightNow },
   mixins: [routes()],
+  inject: ['requestData'],
   props: {
     projectId: {
       type: String,
@@ -42,9 +43,11 @@ export default {
   },
   emits: ['fetch-forms'],
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project']),
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      project: ({ project }) => project.data
+    }),
     rendersTopRow() {
       return this.project != null && this.project.permits('project.update');
     }

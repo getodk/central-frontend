@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </i18n-t>
     </checklist-step>
-    <checklist-step v-if="attachments.length !== 0"
+    <checklist-step v-if="attachments.size !== 0"
       :stage="missingAttachmentCount === 0 ? 'complete' : 'current'">
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
@@ -73,19 +73,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import ChecklistStep from '../checklist-step.vue';
 import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDraftChecklist',
   components: { ChecklistStep, DocLink, SentenceSeparator },
   mixins: [routes()],
+  inject: ['requestData'],
   props: {
     // Indicates whether the current route path is .../draft.
     status: {
@@ -93,23 +92,16 @@ export default {
       default: false
     }
   },
-  computed: {
+  computed: requestDataComputed({
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData([
-      'form',
-      { key: 'formDraft', getOption: true },
-      { key: 'attachments', getOption: true }
-    ]),
-    ...mapGetters(['missingAttachmentCount']),
-    dataExists() {
-      return this.$store.getters.dataExists([
-        'form',
-        'formDraft',
-        'attachments'
-      ]);
-    }
-  }
+    form: ({ form }) => form.data,
+    formDraft: ({ formDraft }) => formDraft.data.get(),
+    attachments: ({ attachments }) => attachments.data.get(),
+    missingAttachmentCount: ({ attachments }) => attachments.missingCount,
+    dataExists: (requestData) =>
+      requestData.dataExists(['form', 'formDraft', 'attachments'])
+  })
 };
 </script>
 

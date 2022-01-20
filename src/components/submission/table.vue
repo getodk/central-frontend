@@ -64,7 +64,7 @@ except according to the terms contained in the LICENSE file.
 import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
 
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 // We may render many rows, so this component makes use of event delegation and
 // other optimizations.
@@ -72,6 +72,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'SubmissionTable',
   components: { SubmissionDataRow, SubmissionMetadataRow },
+  inject: ['requestData'],
   props: {
     projectId: {
       type: String,
@@ -111,9 +112,11 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project']),
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      project: ({ project }) => project.data
+    }),
     canUpdate() {
       return this.project != null && this.project.permits('submission.update');
     }

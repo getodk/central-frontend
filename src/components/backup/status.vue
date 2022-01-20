@@ -95,19 +95,18 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { mapGetters } from 'vuex';
 
 import DateTimeComponent from '../date-time.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import { ago } from '../../util/date-time';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'BackupStatus',
   components: { DateTime: DateTimeComponent, SentenceSeparator, Spinner },
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   emits: ['create', 'terminate'],
   data() {
     return {
@@ -115,10 +114,10 @@ export default {
     };
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['backupsConfig']),
-    ...mapGetters(['auditsForBackupsConfig']),
+    ...requestDataComputed({
+      backupsConfig: ({ backupsConfig }) => backupsConfig.data,
+      auditsForBackupsConfig: ({ audits }) => audits.forBackupsConfig
+    }),
     status() {
       if (this.backupsConfig.isEmpty()) return 'notConfigured';
       const latestAudit = this.auditsForBackupsConfig[0];

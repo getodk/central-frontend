@@ -51,13 +51,13 @@ except according to the terms contained in the LICENSE file.
 import FormDelete from './delete.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { requestData } from '../../reusables/request-data';
 
 export default {
   name: 'FormSettings',
   components: { FormDelete },
   mixins: [modal(), routes()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   data() {
     return {
       deleteForm: {
@@ -67,7 +67,9 @@ export default {
   },
   // The component does not assume that this data will exist when the component
   // is created.
-  computed: requestData(['form']),
+  computed: requestDataComputed({
+    form: ({ form }) => form.data
+  }),
   methods: {
     afterDelete(form) {
       this.$router.push(this.projectPath())

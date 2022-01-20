@@ -85,18 +85,14 @@ describe('FormShow', () => {
         .request(() => {
           clock.tick(3000);
         })
-        .beforeEachResponse((_, { method, url, headers }) => {
-          method.should.equal('GET');
-          url.should.equal('/v1/projects/1/forms/f/draft');
-          should.not.exist(headers['X-Extended-Metadata']);
-        })
         .respondWithData(() => {
           testData.extendedFormDrafts.update(-1, { enketoId: 'xyz' });
           return testData.standardFormDrafts.last();
         })
+        .testRequests([{ url: '/v1/projects/1/forms/f/draft' }])
         .afterResponse(app => {
-          const { formDraft } = app.vm.$store.state.request.data;
-          formDraft.get().enketoId.should.equal('xyz');
+          const { formDraft } = app.vm.$container.requestData;
+          formDraft.data.get().enketoId.should.equal('xyz');
         })
         .testNoRequest(() => {
           clock.tick(3000);
@@ -121,8 +117,8 @@ describe('FormShow', () => {
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
-          const { formDraft } = app.vm.$store.state.request.data;
-          formDraft.get().enketoId.should.equal('xyz');
+          const { formDraft } = app.vm.$container.requestData;
+          formDraft.data.get().enketoId.should.equal('xyz');
         });
     });
 
@@ -236,18 +232,14 @@ describe('FormShow', () => {
         .request(() => {
           clock.tick(3000);
         })
-        .beforeEachResponse((_, { method, url, headers }) => {
-          method.should.equal('GET');
-          url.should.equal('/v1/projects/1/forms/f');
-          should.not.exist(headers['X-Extended-Metadata']);
-        })
         .respondWithData(() => {
           testData.extendedForms.update(-1, { enketoId: 'xyz' });
           return testData.standardForms.last();
         })
+        .testRequests([{ url: '/v1/projects/1/forms/f' }])
         .afterResponse(app => {
-          const { form } = app.vm.$store.state.request.data;
-          form.enketoId.should.equal('xyz');
+          const { form } = app.vm.$container.requestData;
+          form.data.enketoId.should.equal('xyz');
         })
         .testNoRequest(() => {
           clock.tick(3000);
@@ -275,8 +267,8 @@ describe('FormShow', () => {
           return testData.standardForms.last();
         })
         .afterResponse(app => {
-          const { form } = app.vm.$store.state.request.data;
-          form.enketoId.should.equal('xyz');
+          const { form } = app.vm.$container.requestData;
+          form.data.enketoId.should.equal('xyz');
         });
     });
 
@@ -335,9 +327,9 @@ describe('FormShow', () => {
           return testData.standardFormDrafts.last();
         })
         .afterResponses(app => {
-          const { form, formDraft } = app.vm.$store.state.request.data;
-          form.enketoId.should.equal('xyz');
-          formDraft.get().enketoId.should.equal('abc');
+          const { form, formDraft } = app.vm.$container.requestData;
+          form.data.enketoId.should.equal('xyz');
+          formDraft.data.get().enketoId.should.equal('abc');
         })
         .testNoRequest(() => {
           clock.tick(3000);
@@ -362,8 +354,8 @@ describe('FormShow', () => {
             return testData.standardForms.last();
           })
           .afterResponse(app => {
-            const { form } = app.vm.$store.state.request.data;
-            form.enketoOnceId.should.equal('zyx');
+            const { form } = app.vm.$container.requestData;
+            form.data.enketoOnceId.should.equal('zyx');
           })
           .testNoRequest(() => {
             clock.tick(3000);
@@ -393,8 +385,8 @@ describe('FormShow', () => {
           return testData.standardForms.last();
         })
         .afterResponse(app => {
-          const { form } = app.vm.$store.state.request.data;
-          form.enketoOnceId.should.equal('zyx');
+          const { form } = app.vm.$container.requestData;
+          form.data.enketoOnceId.should.equal('zyx');
         });
     });
   });

@@ -3,8 +3,6 @@
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
-import { withAuth } from '../../../src/util/request';
-
 export function testRequests(expectedConfigs) {
   let count = 0;
   return this
@@ -17,17 +15,32 @@ export function testRequests(expectedConfigs) {
       // (presumably because it is checked elsewhere).
       if (i < expectedConfigs.length && expectedConfigs[i] != null) {
         const { extended = false, ...expectedConfig } = expectedConfigs[i];
-        if (expectedConfig.method == null) expectedConfig.method = 'GET';
+
+        // If expectedConfig.method == null, have it default to 'GET' (unless
+        // config.method == null, in which case we know that the two match).
+        if (expectedConfig.method == null && config.method != null)
+          expectedConfig.method = 'GET';
+
+        // We only check the Authorization header if expectedConfig specifies
+        // one.
+        if ((expectedConfig.headers == null ||
+          expectedConfig.headers.Authorization == null) &&
+          config.headers != null && config.headers.Authorization != null) {
+          expectedConfig.headers = {
+            ...expectedConfig.headers,
+            Authorization: config.headers.Authorization
+          };
+        }
         if (extended) {
           expectedConfig.headers = {
             ...expectedConfig.headers,
             'X-Extended-Metadata': 'true'
           };
         }
-        const session = component != null
-          ? component.vm.$store.state.request.data.session
-          : null;
-        config.should.eql(withAuth(expectedConfig, session));
+        if (expectedConfig.headers == null && config.headers != null)
+          expectedConfig.headers = {};
+
+        config.should.eql(expectedConfig);
       }
     })
     .afterResponses(() => {

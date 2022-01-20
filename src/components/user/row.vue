@@ -69,12 +69,13 @@ import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'UserRow',
   components: { Spinner },
   mixins: [request(), routes()],
+  inject: ['requestData'],
   props: {
     user: {
       type: Object,
@@ -91,7 +92,9 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser']),
+    ...requestDataComputed({
+      currentUser: ({ currentUser }) => currentUser.data
+    }),
     disabled() {
       return this.user.id === this.currentUser.id || this.awaitingResponse;
     },

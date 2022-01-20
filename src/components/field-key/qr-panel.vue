@@ -72,17 +72,20 @@ import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FieldKeyQrPanel',
   components: { CollectQr, DocLink, SentenceSeparator },
+  inject: ['requestData'],
   props: {
     fieldKey: Object,
     managed: Boolean
   },
   computed: {
-    ...requestData(['project']),
+    ...requestDataComputed({
+      project: ({ project }) => project.data
+    }),
     settings() {
       const url = apiPaths.serverUrlForFieldKey(
         this.fieldKey.token,

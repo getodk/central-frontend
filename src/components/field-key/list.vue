@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
           @show-code="showPopover" @revoke="showRevoke"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
+    <loading :state="initiallyLoading"/>
     <p v-if="fieldKeys != null && fieldKeys.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
@@ -77,7 +77,7 @@ import ProjectSubmissionOptions from '../project/submission-options.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FieldKeyList',
@@ -92,7 +92,7 @@ export default {
     ProjectSubmissionOptions
   },
   mixins: [modal(), routes()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     projectId: {
       type: String,
@@ -123,9 +123,12 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['fieldKeys']),
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the component
+    // is created.
+    fieldKeys: ({ fieldKeys }) => fieldKeys.data,
+    initiallyLoading: (requestData) => requestData.initiallyLoading(['fieldKeys'])
+  }),
   created() {
     this.fetchData(false);
   },

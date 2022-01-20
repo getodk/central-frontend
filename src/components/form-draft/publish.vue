@@ -68,8 +68,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -78,12 +76,13 @@ import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDraftPublish',
   components: { FormGroup, Modal, Spinner },
   mixins: [request(), routes()],
+  inject: ['requestData'],
   props: {
     state: {
       type: Boolean,
@@ -98,14 +97,14 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData([
-      'formVersions',
-      { key: 'formDraft', getOption: true },
-      'attachments'
-    ]),
-    ...mapGetters(['missingAttachmentCount']),
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      formVersions: ({ formVersions }) => formVersions.data,
+      formDraft: ({ formDraft }) => formDraft.data.get(),
+      attachments: ({ attachments }) => attachments.data.get(),
+      missingAttachmentCount: ({ attachments }) => attachments.missingCount
+    }),
     draftVersionStringIsDuplicate() {
       if (this.formVersions == null || this.formDraft == null) return false;
       return this.formVersions.some(version =>

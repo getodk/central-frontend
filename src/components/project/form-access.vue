@@ -47,8 +47,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import ProjectFormAccessStates from './form-access/states.vue';
@@ -60,9 +58,7 @@ import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formSummaryAssignments'];
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'ProjectFormAccess',
@@ -75,7 +71,7 @@ export default {
     Spinner
   },
   mixins: [modal(), request()],
-  inject: ['alert'],
+  inject: ['request-data', 'alert'],
   props: {
     projectId: {
       type: String,
@@ -94,14 +90,17 @@ export default {
     };
   },
   computed: {
-    ...requestData(REQUEST_KEYS),
-    ...mapGetters(['rolesBySystem', 'fieldKeysWithToken']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
-    },
+    ...requestDataComputed({
+      appUserRole: ({ roles }) => roles.bySystem.value.get('app-user'),
+      project: ({ project }) => project.data,
+      forms: ({ forms }) => forms.data,
+      fieldKeysWithToken: ({ fieldKeys }) => fieldKeys.withToken,
+      formSummaryAssignments: ({ formSummaryAssignments }) => formSummaryAssignments.data,
+      initiallyLoading: (requestData) =>
+        requestData.initiallyLoading(['roles', 'project', 'forms', 'fieldKeys', 'formSummaryAssignments']),
+      dataExists: (requestData) =>
+        requestData.dataExists(['roles', 'project', 'forms', 'fieldKeys', 'formSummaryAssignments'])
+    }),
     saveDisabled() {
       return !this.dataExists || this.changeCount === 0 ||
         this.awaitingResponse;
@@ -142,10 +141,9 @@ export default {
           const changes = this.changesByForm[form.xmlFormId];
 
           const assignments = [];
-          const roleId = this.rolesBySystem['app-user'].id;
           for (const fieldKey of this.fieldKeysWithToken) {
             if (changes.current.fieldKeyAccess[fieldKey.id])
-              assignments.push({ actorId: fieldKey.id, roleId });
+              assignments.push({ actorId: fieldKey.id, roleId: this.appUserRole.id });
           }
 
           return {
@@ -177,18 +175,14 @@ export default {
     fetchData(resend) {
       this.$emit('fetch-forms', resend);
       this.$emit('fetch-field-keys', resend);
-      this.$store.dispatch('get', [
-        {
-          key: 'roles',
-          url: '/v1/roles',
-          resend: false
-        },
-        {
-          key: 'formSummaryAssignments',
-          url: apiPaths.formSummaryAssignments(this.projectId, 'app-user'),
-          resend
-        }
-      ]).catch(noop);
+      this.requestData.roles.request({
+        url: '/v1/roles',
+        resend: false
+      }).catch(noop);
+      this.requestData.formSummaryAssignments.request({
+        url: apiPaths.formSummaryAssignments(this.projectId, 'app-user'),
+        resend
+      }).catch(noop);
     },
     // initChangesByForm() initializes this.changesByForm. Contrary to what its
     // name may suggest, this.changesByForm does not store only changes. Rather,

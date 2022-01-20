@@ -80,52 +80,51 @@ except according to the terms contained in the LICENSE file.
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 
-import Option from '../../util/option';
-import request from '../../mixins/request';
 import { noop } from '../../util/util';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'AnalyticsForm',
   components: { FormGroup, Spinner },
-  mixins: [request()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   emits: ['preview'],
   data() {
-    const requestData = this.$store.state.request.data;
-    const configValue = requestData.analyticsConfig
+    const configValue = this.requestData.analyticsConfig.data
       .map(({ value }) => value)
       .orElseGet(() => ({ enabled: null }));
     return {
-      awaitingResponse: false,
       enabled: configValue.enabled,
       contact: configValue.email != null || configValue.organization != null,
       email: configValue.email != null
         ? configValue.email
-        : (configValue.organization == null ? requestData.currentUser.email : ''),
+        : (configValue.organization == null ? this.requestData.currentUser.data.email : ''),
       organization: configValue.organization != null
         ? configValue.organization
         : ''
     };
   },
+  computed: requestDataComputed({
+    awaitingResponse: ({ analyticsConfig }) => analyticsConfig.awaitingResponse
+  }),
   methods: {
-    async setConfig() {
-      const postData = { enabled: this.enabled };
+    setConfig() {
+      const data = { enabled: this.enabled };
       if (this.enabled && this.contact) {
-        if (this.email !== '') postData.email = this.email;
+        if (this.email !== '') data.email = this.email;
         if (this.organization !== '')
-          postData.organization = this.organization;
+          data.organization = this.organization;
       }
-      const response = await this.post('/v1/config/analytics', postData);
-      this.$store.commit('setData', {
-        key: 'analyticsConfig',
-        value: Option.of(response.data)
+      return this.requestData.analyticsConfig.request({
+        method: 'POST',
+        url: '/v1/config/analytics',
+        data
       });
     },
-    async unsetConfig() {
-      await this.request({ method: 'DELETE', url: '/v1/config/analytics' });
-      this.$store.commit('setData', {
-        key: 'analyticsConfig',
-        value: Option.none()
+    unsetConfig() {
+      return this.requestData.analyticsConfig.request({
+        method: 'DELETE',
+        url: '/v1/config/analytics',
+        update: () => { this.requestData.analyticsConfig.setToNone(); }
       });
     },
     submit() {

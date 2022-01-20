@@ -45,13 +45,13 @@ import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'UserEditPassword',
   components: { FormGroup, Spinner },
   mixins: [request()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   data() {
     return {
       awaitingResponse: false,
@@ -62,7 +62,10 @@ export default {
       invalidPassword: false
     };
   },
-  computed: requestData(['currentUser', 'user']),
+  computed: requestDataComputed({
+    currentUser: ({ currentUser }) => currentUser.data,
+    user: ({ user }) => user.data
+  }),
   methods: {
     submit() {
       this.invalidPassword = this.newPassword.length < 10;

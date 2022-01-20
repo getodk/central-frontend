@@ -32,15 +32,19 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormRow from './row.vue';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormTable',
   components: { FormRow },
+  inject: ['requestData'],
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project', 'forms']),
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      project: ({ project }) => project.data,
+      forms: ({ forms }) => forms.data
+    }),
     columns() {
       const columns = new Set(['name']);
       // Hide columns from a project viewer.

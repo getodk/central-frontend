@@ -110,7 +110,7 @@ except according to the terms contained in the LICENSE file.
               @show-introduction="showModal('introduction')"/>
           </tbody>
         </table>
-        <loading :state="$store.getters.initiallyLoading(['projects'])"/>
+        <loading :state="loadingProjects"/>
         <p v-if="projects != null && projects.length === 0"
           class="empty-table-message">
           {{ $t('emptyTable') }}
@@ -136,7 +136,7 @@ import SummaryItem from '../summary-item.vue';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'ProjectList',
@@ -150,7 +150,7 @@ export default {
     SummaryItem
   },
   mixins: [modal(), routes()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   data() {
     return {
       newProject: {
@@ -162,7 +162,11 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser', 'projects', 'users']),
+    ...requestDataComputed({
+      currentUser: ({ currentUser }) => currentUser.data,
+      projects: ({ projects }) => projects.data,
+      users: ({ users }) => users.data
+    }),
     // We should probably move the "Right Now" section into its own component.
     rightNowKeys() {
       const keys = ['projects'];
@@ -170,10 +174,13 @@ export default {
       return keys;
     },
     loadingRightNow() {
-      return this.$store.getters.initiallyLoading(this.rightNowKeys);
+      return this.requestData.initiallyLoading(this.rightNowKeys);
     },
     dataExistsForRightNow() {
-      return this.$store.getters.dataExists(this.rightNowKeys);
+      return this.requestData.dataExists(this.rightNowKeys);
+    },
+    loadingProjects() {
+      return this.requestData.initiallyLoading(['projects']);
     },
     rendersIntroduction() {
       if (this.projects == null || this.projects.length !== 1) return false;
@@ -182,15 +189,12 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('get', [{
-      key: 'projects',
+    this.requestData.projects.request({
       url: '/v1/projects',
       extended: true
-    }]).catch(noop);
-    if (this.currentUser.can('user.list')) {
-      this.$store.dispatch('get', [{ key: 'users', url: '/v1/users' }])
-        .catch(noop);
-    }
+    }).catch(noop);
+    if (this.currentUser.can('user.list'))
+      this.requestData.users.request('/v1/users').catch(noop);
   },
   methods: {
     scrollToProjects() {

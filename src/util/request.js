@@ -10,8 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
+import { identity } from 'ramda';
 
-import i18n from '../i18n';
+import { noop } from './util';
 
 export const queryString = (query) => {
   if (query == null) return '';
@@ -129,54 +130,171 @@ export const apiPaths = {
   audits: (query) => `/v1/audits${queryString(query)}`
 };
 
-export const withAuth = (config, session) => {
-  const { headers } = config;
-  if ((headers == null || headers.Authorization == null) &&
-    config.url.startsWith('/v1/') && session != null) {
-    return {
-      ...config,
-      headers: { ...headers, Authorization: `Bearer ${session.token}` }
-    };
-  }
-  return config;
+export const chainSignals = (signal, abortController) => {
+  if (signal.aborted)
+    abortController.abort();
+  else
+    signal.addEventListener('abort', () => { abortController.abort(); });
 };
 
 // Returns `true` if `data` looks like a Backend Problem and `false` if not.
 export const isProblem = (data) => data != null && typeof data === 'object' &&
   typeof data.code === 'number' && typeof data.message === 'string';
 
-export const logAxiosError = (error) => {
-  if (error.response == null) {
-    Vue.prototype.$logger.log(error.request != null
-      ? error.request
-      : error.message);
-  }
-};
 
-// See the `request` mixin for a description of this function's behavior.
-export const requestAlertMessage = (axiosError, options = {}) => {
+
+////////////////////////////////////////////////////////////////////////////////
+// request()
+
+const requestAlertMessage = (i18n, error, problemToAlert) => {
   // No Problem response
-  if (axiosError.request == null) return i18n.t('util.request.noRequest');
-  const { response } = axiosError;
+  if (error.request == null) return i18n.t('util.request.noRequest');
+  const { response } = error;
   if (response == null) return i18n.t('util.request.noResponse');
-  if (!(axiosError.config.url.startsWith('/v1/') && isProblem(response.data)))
+  if (!(error.config.url.startsWith('/v1/') && isProblem(response.data)))
     return i18n.t('util.request.errorNotProblem', response);
 
   const problem = response.data;
 
-  const { problemToAlert } = options;
   if (problemToAlert != null) {
     const message = problemToAlert(problem);
     return message != null ? message : problem.message;
   }
 
-  const { component } = options;
-  if (component != null) {
-    const key = problem.code.toString().replace('.', '_');
-    const path = `problem.${key}`;
-    if (component.$te(path, i18n.fallbackLocale))
-      return component.$t(path, problem);
-  }
+  const key = problem.code.toString().replace('.', '_');
+  const path = `problem.${key}`;
+  if (i18n.te(path, i18n.fallbackLocale)) return i18n.t(path, problem);
 
   return problem.message;
+};
+
+/*
+The request() function sends a request. If the request is to Backend, request()
+will automatically specify the Authorization header. request() calls axios and
+accepts all axios options. It also accepts the following options:
+
+  - extended (default: false). `true` to request extended metadata and `false`
+    not to.
+  - abortAfterNavigate (default: false). It is often the case that a request
+    should be aborted after the user navigates away from the route that sent the
+    request. Specifying `true` will abort the request in that case; specifying
+    `false` will not. If a request is aborted, then if/when a response is
+    received for the request, it will be ignored.
+
+  Error Handling
+  --------------
+
+  - fulfillProblem (optional). Usually, an error response means that the request
+    was invalid or that something went wrong. However, in some cases, an error
+    response should be treated as if it is successful, resulting in a fulfilled,
+    not a rejected, promise. Use fulfillProblem to identify such responses.
+    fulfillProblem is a function that will be passed the Backend Problem. (Any
+    error response that is not a Problem is automatically considered
+    unsuccessful.) fulfillProblem should return `true` if the response is
+    considered successful and `false` if not.
+  - alert (default: true). Specify `true` to show an alert for an unsuccessful
+    response and to log it. Specify `false` to not inform the user of an
+    unsuccessful response.
+
+  - problemToAlert (optional). If the request results in an unsuccessful
+    response, the request() function shows an alert. By default, the alert
+    message is the same as that of the Backend Problem. However, there are two
+    ways to show a different message:
+
+    1. If a function is specified for problemToAlert, request() passes the
+       Problem to the function, which has the option to return a different
+       message. If the function returns `null` or `undefined`, the Problem's
+       message is used.
+    2. If problemToAlert has not been specified, and a component's i18n object
+       has been passed to request(), request() will check whether the component
+       has specified a message for the Problem code. For example:
+
+       <i18n lang="json5">
+       {
+         "en": {
+           "problem": {
+             "404_1": "Not found."
+           }
+         }
+       }
+       </i18n>
+
+  - errorToAlert (optional). When the request results in a unsuccessful
+    response that is a Problem, problemToAlert provides a way to customize the
+    alert message. errorToAlert provides a way to customize the alert message
+    for an unsuccessful response that is not a Problem. errorToAlert is a
+    function that receives the message that the alert would show. The alert will
+    instead show the message that errorToAlert returns.
+  - onError (optional). A callback that is run if the request is aborted or
+    results in an unsuccessful response.
+
+Calling catch()
+---------------
+
+The request() function returns a promise. If you call catch() on the promise,
+make sure that the logic of the catch() callback accounts for whether the
+request may have been aborted. A request may be aborted if `true` is specified
+for abortAfterNavigate or if the `signal` option from axios is specified.
+*/
+export const request = (container, ...args) => {
+  const [i18n, config] = args.length >= 2 ? args : [container.i18n, args[0]];
+  if (typeof config === 'string')
+    return request(container, i18n, { url: config });
+  const {
+    extended = false,
+    abortAfterNavigate = false,
+    fulfillProblem = undefined,
+    alert: alertOption = true,
+    problemToAlert = undefined,
+    errorToAlert = identity,
+    onError = noop,
+    ...axiosConfig
+  } = config;
+
+  const { router, requestData, alert } = container;
+  // This limit is set in the nginx config. The alert also mentions this number.
+  if (axiosConfig.data != null && axiosConfig.data instanceof File &&
+    axiosConfig.data.size > 100000000) {
+    alert.danger(i18n.t('mixin.request.alert.fileSize', axiosConfig.data));
+    return Promise.reject(new Error('file size exceeds limit'));
+  }
+
+  const headers = { ...axiosConfig.headers };
+  if (headers.Authorization == null && axiosConfig.url.startsWith('/v1/') &&
+    requestData.session.data != null)
+    headers.Authorization = `Bearer ${requestData.session.data.token}`;
+  if (extended) headers['X-Extended-Metadata'] = true;
+  axiosConfig.headers = headers;
+
+  const abortController = new AbortController();
+  const removeHook = abortAfterNavigate
+    ? router.afterEach(() => { abortController.abort(); })
+    : noop;
+  abortController.signal.addEventListener('abort', () => {
+    removeHook();
+    onError();
+  });
+  if (axiosConfig.signal != null)
+    chainSignals(axiosConfig.signal, abortController);
+  axiosConfig.signal = abortController.signal;
+
+  return Vue.prototype.$http.request(axiosConfig)
+    .catch(error => {
+      if (abortController.signal.aborted) throw error;
+
+      if (fulfillProblem != null && error.response != null &&
+        isProblem(error.response.data) && fulfillProblem(error.response.data))
+        return error.response;
+
+      if (alertOption) {
+        if (error.response == null)
+          Vue.prototype.$logger.log(error.request != null ? error.request : error.message);
+        alert.danger(errorToAlert(requestAlertMessage(i18n, error, problemToAlert)));
+      }
+
+      onError();
+      throw error;
+    })
+    // Remove the navigation hook.
+    .finally(() => { abortController.abort(); });
 };

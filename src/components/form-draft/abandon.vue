@@ -45,12 +45,13 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDraftAbandon',
   components: { Modal, Spinner },
   mixins: [request()],
+  inject: ['requestData'],
   props: {
     state: {
       type: Boolean,
@@ -64,9 +65,11 @@ export default {
     };
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['form']),
+    ...requestDataComputed({
+      // The component assumes that this data will exist when the component is
+      // created.
+      form: ({ form }) => form.data
+    }),
     title() {
       return this.form.publishedAt != null
         ? this.$t('title.abandon')

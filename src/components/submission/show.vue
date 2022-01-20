@@ -52,7 +52,7 @@ import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { instanceNameOrId } from '../../util/odata';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionShow',
@@ -66,7 +66,7 @@ export default {
     SubmissionUpdateReviewState
   },
   mixins: [modal(), routes()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     projectId: {
       type: String,
@@ -89,13 +89,13 @@ export default {
     };
   },
   computed: {
-    ...requestData(['submission']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['project', 'submission']);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(['project', 'submission']);
-    },
+    ...requestDataComputed({
+      submission: ({ submission }) => submission.data,
+      initiallyLoading: (requestData) =>
+        requestData.initiallyLoading(['project', 'submission']),
+      dataExists: (requestData) =>
+        requestData.dataExists(['project', 'submission'])
+    }),
     instanceNameOrId() {
       return instanceNameOrId(this.submission);
     }
@@ -105,74 +105,39 @@ export default {
   },
   methods: {
     fetchActivityData() {
-      this.$store.dispatch('get', [
-        {
-          key: 'audits',
-          url: apiPaths.submissionAudits(
-            this.projectId,
-            this.xmlFormId,
-            this.instanceId
-          ),
-          extended: true
-        },
-        {
-          key: 'comments',
-          url: apiPaths.submissionComments(
-            this.projectId,
-            this.xmlFormId,
-            this.instanceId
-          ),
-          extended: true
-        },
-        {
-          key: 'diffs',
-          url: apiPaths.submissionDiffs(
-            this.projectId,
-            this.xmlFormId,
-            this.instanceId
-          )
-        }
-      ]).catch(noop);
+      this.requestData.audits.request({
+        url: apiPaths.submissionAudits(this.projectId, this.xmlFormId, this.instanceId),
+        extended: true
+      }).catch(noop);
+      this.requestData.comments.request({
+        url: apiPaths.submissionComments(this.projectId, this.xmlFormId, this.instanceId),
+        extended: true
+      }).catch(noop);
+      this.requestData.diffs.request({
+        url: apiPaths.submissionDiffs(this.projectId, this.xmlFormId, this.instanceId)
+      }).catch(noop);
     },
     fetchData() {
-      // We do not reconcile project.lastSubmission and
-      // submission.__system.submisionDate.
-      this.$store.dispatch('get', [
-        {
-          key: 'project',
-          url: apiPaths.project(this.projectId),
-          extended: true,
-          resend: false
-        },
-        {
-          key: 'submission',
-          url: apiPaths.odataSubmission(
-            this.projectId,
-            this.xmlFormId,
-            this.instanceId
-          )
-        },
-        {
-          key: 'fields',
-          url: apiPaths.fields(
-            this.projectId,
-            this.xmlFormId
-          )
-        }
-      ]).catch(noop);
+      // We do not reconcile requestData.project.lastSubmission and
+      // requestData.submission.__system.submisionDate.
+      this.requestData.project.request({
+        url: apiPaths.project(this.projectId),
+        extended: true,
+        resend: false
+      }).catch(noop);
+      this.requestData.submission.request({
+        url: apiPaths.odataSubmission(this.projectId, this.xmlFormId, this.instanceId)
+      }).catch(noop);
+      this.requestData.fields.request({
+        url: apiPaths.fields(this.projectId, this.xmlFormId)
+      }).catch(noop);
       this.fetchActivityData();
     },
     afterUpdateReviewState(submission, reviewState) {
       this.fetchActivityData();
       this.hideModal('updateReviewState');
       this.alert.success(this.$t('alert.updateReviewState'));
-      this.$store.commit('setData', {
-        key: 'submission',
-        value: {
-          ...submission,
-          __system: { ...submission.__system, reviewState }
-        }
-      });
+      this.requestData.submission.review(reviewState);
     }
   }
 };

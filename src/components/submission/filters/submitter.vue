@@ -26,10 +26,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { requestData } from '../../../store/modules/request';
+import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'SubmissionFiltersSubmitter',
+  inject: ['requestData'],
   props: {
     modelValue: {
       type: String,
@@ -37,9 +38,11 @@ export default {
     }
   },
   emits: ['update:modelValue'],
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['submitters'])
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the
+    // component is created.
+    submitters: ({ submitters }) => submitters.data
+  })
 };
 </script>
 

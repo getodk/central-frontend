@@ -55,11 +55,12 @@ import SubmissionComment from './comment.vue';
 import SubmissionFeedEntry from './feed-entry.vue';
 
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionActivity',
   components: { Loading, PageSection, SubmissionComment, SubmissionFeedEntry },
+  inject: ['requestData'],
   props: {
     projectId: {
       type: String,
@@ -76,15 +77,20 @@ export default {
   },
   emits: ['update-review-state', 'comment'],
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project', 'submission', 'audits', 'comments', 'diffs', 'fields']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['audits', 'comments', 'diffs', 'fields']);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(['audits', 'comments', 'diffs', 'fields']);
-    },
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      project: ({ project }) => project.data,
+      submission: ({ submission }) => submission.data,
+      audits: ({ audits }) => audits.data,
+      comments: ({ comments }) => comments.data,
+      diffs: ({ diffs }) => diffs.data,
+      fields: ({ fields }) => fields.data,
+      initiallyLoading: (requestData) =>
+        requestData.initiallyLoading(['audits', 'comments', 'diffs', 'fields']),
+      dataExists: (requestData) =>
+        requestData.dataExists(['audits', 'comments', 'diffs', 'fields'])
+    }),
     editPath() {
       return apiPaths.editSubmission(
         this.projectId,

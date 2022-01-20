@@ -37,14 +37,12 @@ import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import BackupStatus from './status.vue';
 import Loading from '../loading.vue';
-import Option from '../../util/option';
 import PageSection from '../page/section.vue';
+
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-const REQUEST_KEYS = ['backupsConfig', 'audits'];
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'BackupList',
@@ -57,7 +55,7 @@ export default {
     PageSection
   },
   mixins: [modal()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   data() {
     return {
       newBackup: {
@@ -68,35 +66,28 @@ export default {
       }
     };
   },
-  computed: {
+  computed: requestDataComputed({
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(REQUEST_KEYS),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
-    }
-  },
+    backupsConfig: ({ backupsConfig }) => backupsConfig.data,
+    audits: ({ audits }) => audits.data,
+
+    initiallyLoading: (requestData) =>
+      requestData.initiallyLoading(['backupsConfig', 'audits']),
+    dataExists: (requestData) =>
+      requestData.dataExists(['backupsConfig', 'audits'])
+  }),
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [
-        {
-          key: 'backupsConfig',
-          url: '/v1/config/backups',
-          fulfillProblem: ({ code }) => code === 404.1
-        },
-        {
-          key: 'audits',
-          // A backup audit log entry does not have an actor or actee, so we do
-          // not need to request extended metadata.
-          url: apiPaths.audits({ action: 'backup', limit: 10 })
-        }
-      ]).catch(noop);
+      this.requestData.backupsConfig.request('/v1/config/backups').catch(noop);
+      // A backup audit log entry does not have an actor or actee, so we do not
+      // need to request extended metadata.
+      this.requestData.audits.request({
+        url: apiPaths.audits({ action: 'backup', limit: 10 })
+      }).catch(noop);
     },
     afterCreate() {
       this.fetchData();
@@ -106,10 +97,6 @@ export default {
     afterTerminate() {
       this.hideModal('terminate');
       this.alert.success(this.$t('alert.terminate'));
-      this.$store.commit('setData', {
-        key: 'backupsConfig',
-        value: Option.none()
-      });
     }
   }
 };

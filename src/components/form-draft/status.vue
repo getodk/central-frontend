@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
+    <loading :state="initiallyLoading"/>
     <div v-show="formVersions != null" class="row">
       <div class="col-xs-6">
         <page-section condensed>
@@ -91,13 +91,13 @@ import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import PageSection from '../page/section.vue';
 import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import Loading from '../loading.vue';
-import Option from '../../util/option';
+
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDraftStatus',
@@ -113,7 +113,7 @@ export default {
     PageSection
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     projectId: {
       type: String,
@@ -142,44 +142,35 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData([
-    'form',
-    'formVersions',
-    { key: 'formDraft', getOption: true }
-  ]),
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the
+    // component is created.
+    form: ({ form }) => form.data,
+    formVersions: ({ formVersions }) => formVersions.data,
+    formDraft: ({ formDraft }) => formDraft.data.get(),
+
+    initiallyLoading: (requestData) => requestData.initiallyLoading(['formVersions'])
+  }),
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'formVersions',
+      this.requestData.formVersions.request({
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,
         resend: false
-      }]).catch(noop);
+      }).catch(noop);
     },
     afterUpload() {
       this.$emit('fetch-draft');
       this.hideModal('upload');
       this.alert.success(this.$t('alert.upload'));
     },
-    clearDraft() {
-      this.$store.commit('setData', {
-        key: 'formDraft',
-        value: Option.none()
-      });
-      this.$store.commit('setData', {
-        key: 'attachments',
-        value: Option.none()
-      });
-    },
     afterPublish() {
       this.$emit('fetch-form');
-      this.$store.commit('clearData', 'formVersions');
-      this.clearDraft();
+      this.requestData.formVersions.clear();
+      this.requestData.formDraft.setToNone();
       this.$router.push(this.formPath())
         .then(() => {
           this.alert.success(this.$t('alert.publish'));
@@ -187,7 +178,7 @@ export default {
     },
     afterAbandon(form) {
       if (form.publishedAt != null) {
-        this.clearDraft();
+        this.requestData.formDraft.setToNone();
         this.$router.push(this.formPath())
           .then(() => {
             this.alert.success(this.$t('alert.abandon'));

@@ -74,13 +74,13 @@ import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FieldKeyNew',
   components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
   mixins: [request(), routes()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     state: {
       type: Boolean,
@@ -102,8 +102,10 @@ export default {
       created: null
     };
   },
-  // The modal assumes that this data will exist when the modal is shown.
-  computed: requestData(['project']),
+  computed: requestDataComputed({
+    // The modal assumes that this data will exist when the modal is shown.
+    project: ({ project }) => project.data
+  }),
   watch: {
     state(state) {
       if (!state) {
@@ -144,7 +146,7 @@ export default {
     },
     navigateToFormAccess(navigate, event) {
       // Clear fieldKeys so that the Form Access tab will fetch it again.
-      this.$store.commit('clearData', 'fieldKeys');
+      this.requestData.fieldKeys.clear();
       navigate(event);
     },
     createAnother() {

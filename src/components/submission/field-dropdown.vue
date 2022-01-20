@@ -71,14 +71,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { equals } from 'ramda';
-import { mapGetters } from 'vuex';
 import { markRaw } from 'vue';
+
+import { requestDataComputed } from '../../reusables/request-data';
 
 // This constant is also used in the `disabled` message.
 const maxCheckedCount = 100;
 
 export default {
   name: 'SubmissionFieldDropdown',
+  inject: ['requestData'],
   props: {
     modelValue: {
       type: Array,
@@ -88,7 +90,7 @@ export default {
   emits: ['update:modelValue'],
   data() {
     const checked = {};
-    for (const field of this.$store.getters.selectableFields)
+    for (const field of this.requestData.fields.selectable.value)
       checked[field.path] = false;
     for (const field of this.modelValue)
       checked[field.path] = true;
@@ -105,7 +107,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['selectableFields']),
+    ...requestDataComputed({
+      selectableFields: ({ fields }) => fields.selectable
+    }),
     placeholder() {
       return this.$t('placeholder', {
         selected: this.$n(this.modelValue.length, 'default'),

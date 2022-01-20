@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
         <p>{{ $t('introduction[2]') }}</p>
       </div>
-      <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
+      <loading :state="awaitingResponse"/>
       <template v-if="analyticsPreview">
         <analytics-metrics-table :title="$t('common.system')" :metrics="systemSummary"/>
         <div id="analytics-preview-project-summary">
@@ -53,8 +53,8 @@ import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import AnalyticsMetricsTable from './metrics-table.vue';
 
+import request from '../../mixins/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 // Metrics to filter out (with pick/omit) and put in
 // a separate table
@@ -69,12 +69,19 @@ const submissionStateMetrics = [
 export default {
   name: 'AnalyticsPreview',
   components: { AnalyticsMetricsTable, Loading, Modal },
+  mixins: [request()],
+  inject: ['requestData'],
   props: {
     state: Boolean
   },
   emits: ['hide'],
+  data() {
+    return {
+      analyticsPreview: null,
+      awaitingResponse: false
+    };
+  },
   computed: {
-    ...requestData(['analyticsPreview']),
     systemSummary() {
       return this.analyticsPreview.system;
     },
@@ -111,10 +118,11 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'analyticsPreview',
-        url: '/v1/analytics/preview'
-      }]).catch(noop);
+      this.request('/v1/analytics/preview')
+        .then(({ data }) => {
+          this.analyticsPreview = data;
+        })
+        .catch(noop);
     }
   }
 };

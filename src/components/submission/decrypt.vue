@@ -39,20 +39,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 
 import callWait from '../../mixins/call-wait';
 import { isProblem } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
   mixins: [callWait()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     state: Boolean,
     formAction: String,
@@ -68,10 +66,10 @@ export default {
       passphrase: ''
     };
   },
-  computed: {
-    ...requestData(['session']),
-    ...mapGetters(['managedKey'])
-  },
+  computed: requestDataComputed({
+    session: ({ session }) => session.data,
+    managedKey: ({ keys }) => keys.managed
+  }),
   watch: {
     state() {
       if (!this.state) {

@@ -28,44 +28,36 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectEdit',
   components: { FormGroup, Spinner },
-  mixins: [request()],
-  inject: ['alert'],
-  data() {
-    return {
-      awaitingResponse: false,
-      name: this.$store.state.request.data.project.name
-    };
-  },
-  computed: requestData(['project']),
-  methods: {
-    submit() {
-      const { name } = this;
-      this.patch(apiPaths.project(this.project.id), { name })
-        .then(response => {
-          this.$store.commit('setData', {
-            key: 'project',
-            // We do not simply specify response.data, because it does not
-            // include extended metadata.
-            value: this.project.with({
-              name,
-              updatedAt: response.data.updatedAt
-            })
-          });
-          this.alert.success(this.$t('alert.success'));
-        })
-        .catch(noop);
-    }
+  setup() {
+    const { requestData, alert } = inject('container');
+    const { project } = requestData;
+    const name = ref(project.data.name);
+
+    const { t } = useI18n();
+    const submit = () => project.request({
+      method: 'PATCH',
+      url: apiPaths.project(project.data.id),
+      data: { name: name.value },
+      // Specifying `update` because the response will not include extended
+      // metadata.
+      update: ({ data }) => { project.update(data); }
+    })
+      .then(() => { alert.success(t('alert.success')); })
+      .catch(noop);
+
+    return { name, submit, awaitingResponse: project.awaitingResponse };
   }
 };
 </script>

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <form-version-table @view-xml="showModal('viewXml')"/>
-    <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
+    <loading :state="initiallyLoading"/>
 
     <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
   </div>
@@ -25,6 +25,7 @@ import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormVersionList',
@@ -34,6 +35,7 @@ export default {
     Loading
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' })],
+  inject: ['requestData'],
   props: {
     projectId: {
       type: String,
@@ -51,18 +53,20 @@ export default {
       }
     };
   },
+  computed: requestDataComputed({
+    initiallyLoading: (requestData) => requestData.initiallyLoading(['formVersions'])
+  }),
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        // We do not reconcile `form` and `formVersions`.
-        key: 'formVersions',
+      // We do not reconcile `form` and `formVersions`.
+      this.requestData.formVersions.request({
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,
         resend: false
-      }]).catch(noop);
+      }).catch(noop);
     }
   }
 };

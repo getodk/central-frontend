@@ -201,7 +201,7 @@ describe('createRouter()', () => {
 
     const dataExists = (keys) => (app) => {
       for (const key of keys)
-        should.exist(app.vm.$store.state.request.data[key]);
+        should.exist(app.vm.$container.requestData[key].data);
     };
 
     describe('navigating between project routes', () => {
@@ -851,7 +851,7 @@ describe('createRouter()', () => {
     });
   });
 
-  describe('updateDocumentTitle()', () => {
+  describe('title', () => {
     beforeEach(() => {
       mockLogin();
       testData.extendedProjects.createPast(1, { name: 'My Project Name' });
@@ -1004,7 +1004,7 @@ describe('createRouter()', () => {
     });
   });
 
-  describe('updateDocumentTitle() - logged out', () => {
+  describe('title - logged out', () => {
     it('shows page title on login screen', () =>
       load('/login')
         .restoreSession(false)

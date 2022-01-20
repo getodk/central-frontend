@@ -33,36 +33,31 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject } from 'vue';
+
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'BackupTerminate',
   components: { Modal, Spinner },
-  mixins: [request()],
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
+    state: Boolean
   },
   emits: ['hide', 'success'],
-  data() {
-    return {
-      awaitingResponse: false
-    };
-  },
-  methods: {
-    terminate() {
-      this.request({ method: 'DELETE', url: '/v1/config/backups' })
-        .then(() => {
-          this.$emit('success');
-        })
-        .catch(noop);
-    }
+  setup(props, { emit }) {
+    const { backupsConfig } = inject('requestData');
+    const terminate = () => backupsConfig.request({
+      method: 'DELETE',
+      url: '/v1/config/backups',
+      update: () => { backupsConfig.setToNone(); }
+    })
+      .then(() => { emit('success'); })
+      .catch(noop);
+
+    return { terminate, awaitingResponse: backupsConfig.awaitingResponse };
   }
 };
 </script>

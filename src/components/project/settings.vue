@@ -87,7 +87,7 @@ import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'ProjectSettings',
@@ -99,7 +99,7 @@ export default {
     SentenceSeparator
   },
   mixins: [modal(), routes()],
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   emits: ['fetch-project'],
   data() {
     return {
@@ -111,7 +111,9 @@ export default {
       }
     };
   },
-  computed: requestData(['project']),
+  computed: requestDataComputed({
+    project: ({ project }) => project.data
+  }),
   methods: {
     afterEnableEncryption() {
       this.hideModal('enableEncryption');

@@ -46,7 +46,6 @@ except according to the terms contained in the LICENSE file.
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { enketoBasePath, noop } from '../../util/util';
 import { localStore } from '../../util/storage';
 import { logIn } from '../../util/session';
@@ -54,8 +53,7 @@ import { logIn } from '../../util/session';
 export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
-  mixins: [request()],
-  inject: ['container', 'alert'],
+  inject: ['container', 'requestData', 'alert'],
   data() {
     return {
       disabled: false,
@@ -99,15 +97,12 @@ export default {
       }
 
       this.disabled = true;
-      this.request({
+      this.requestData.session.request({
         method: 'POST',
         url: '/v1/sessions',
         data: { email: this.email, password: this.password }
       })
-        .then(({ data }) => {
-          this.$store.commit('setData', { key: 'session', value: data });
-          return logIn(this.container, true);
-        })
+        .then(() => logIn(this.container, true))
         .then(() => {
           this.navigateToNext(
             this.$route.query.next,

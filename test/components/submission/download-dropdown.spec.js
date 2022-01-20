@@ -41,9 +41,10 @@ describe('SubmissionDownloadDropdown', () => {
         const dropdown = mountComponent({
           props: { odataFilter: '__system/submitterId eq 1' }
         });
-        dropdown.vm.$store.commit('setData', {
-          key: 'odataChunk',
-          value: { '@odata.count': 1 }
+        dropdown.vm.requestData.odataChunk.setFromResponse({
+          config: { url: '/v1/projects/1/forms/f.svc/Submissions' },
+          status: 200,
+          data: { '@odata.count': 1 }
         });
         await dropdown.vm.$nextTick();
         const text = dropdown.get('button').text();

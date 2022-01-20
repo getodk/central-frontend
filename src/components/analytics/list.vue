@@ -46,9 +46,7 @@ import PageSection from '../page/section.vue';
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-const requestKeys = ['analyticsConfig', 'audits'];
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'AnalyticsList',
@@ -60,6 +58,7 @@ export default {
     PageSection
   },
   mixins: [modal()],
+  inject: ['requestData'],
   data() {
     return {
       preview: {
@@ -68,30 +67,24 @@ export default {
     };
   },
   computed: {
-    ...requestData(requestKeys),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(requestKeys);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    }
+    ...requestDataComputed({
+      analyticsConfig: ({ analyticsConfig }) => analyticsConfig.data,
+      audits: ({ audits }) => audits.data,
+      initiallyLoading: (requestData) =>
+        requestData.initiallyLoading(['analyticsConfig', 'audits']),
+      dataExists: (requestData) =>
+        requestData.dataExists(['analyticsConfig', 'audits'])
+    })
   },
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [
-        {
-          key: 'analyticsConfig',
-          url: '/v1/config/analytics',
-          fulfillProblem: ({ code }) => code === 404.1
-        },
-        {
-          key: 'audits',
-          url: apiPaths.audits({ action: 'analytics', limit: 10 })
-        }
-      ]).catch(noop);
+      this.requestData.analyticsConfig.request('/v1/config/analytics').catch(noop);
+      this.requestData.audits.request({
+        url: apiPaths.audits({ action: 'analytics', limit: 10 })
+      }).catch(noop);
     }
   }
 };

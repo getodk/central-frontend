@@ -40,11 +40,12 @@ except according to the terms contained in the LICENSE file.
 import Selectable from '../selectable.vue';
 
 import { enketoBasePath } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'PublicLinkRow',
   components: { Selectable },
+  inject: ['requestData'],
   props: {
     publicLink: {
       type: Object,
@@ -54,9 +55,11 @@ export default {
   },
   emits: ['revoke'],
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['form']),
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      form: ({ form }) => form.data
+    }),
     htmlClass() {
       return {
         'public-link-row': true,

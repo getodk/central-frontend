@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PublicLinkRow from './row.vue';
 
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'PublicLinkTable',
@@ -39,9 +39,11 @@ export default {
     highlighted: Number
   },
   emits: ['revoke'],
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['publicLinks'])
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the
+    // component is created.
+    publicLinks: ({ publicLinks }) => publicLinks.data
+  })
 };
 </script>
 

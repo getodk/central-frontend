@@ -15,13 +15,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import UserEdit from '../user/edit.vue';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'AccountEdit',
   components: { UserEdit },
-  // The component assumes that this data will exist when the component is
-  // created.
-  computed: requestData(['currentUser'])
+  inject: ['requestData'],
+  computed: requestDataComputed({
+    // The component assumes that this data will exist when the component is
+    // created.
+    currentUser: ({ currentUser }) => currentUser.data
+  })
 };
 </script>

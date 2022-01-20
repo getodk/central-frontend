@@ -107,29 +107,30 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import PageBack from '../page/back.vue';
 
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
-import { requestData } from '../../store/modules/request';
-
-const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormHead',
   components: { PageBack },
   mixins: [routes(), tab()],
+  inject: ['requestData'],
   emits: ['create-draft'],
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(requestKeys),
-    ...mapGetters(['missingAttachmentCount']),
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    },
+    ...requestDataComputed({
+      // The component does not assume that this data will exist when the
+      // component is created.
+      project: ({ project }) => project.data,
+      form: ({ form }) => form.data,
+      formDraft: ({ formDraft }) => formDraft.data,
+      attachments: ({ attachments }) => attachments.data,
+      missingAttachmentCount: ({ attachments }) => attachments.missingCount,
+      dataExists: (requestData) =>
+        requestData.dataExists(['project', 'form', 'formDraft', 'attachments'])
+    }),
     tabPathPrefix() {
       return this.formPath();
     },

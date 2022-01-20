@@ -42,6 +42,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'FormVersionDefDropdown',
+  inject: ['requestData'],
   props: {
     version: {
       type: Form,
@@ -67,10 +68,7 @@ export default {
         : apiPaths.formDraftDef(projectId, xmlFormId, extension);
     },
     viewXml() {
-      this.$store.dispatch('get', [{
-        key: 'formVersionXml',
-        url: this.defPath('.xml')
-      }]).catch(noop);
+      this.requestData.formVersionXml.request(this.defPath('.xml')).catch(noop);
       this.$emit('view-xml');
     }
   }

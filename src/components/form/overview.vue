@@ -75,7 +75,7 @@ import ProjectSubmissionOptions from '../project/submission-options.vue';
 
 import modal from '../../mixins/modal';
 import { loadAsync } from '../../util/async-components';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormOverview',
@@ -90,6 +90,7 @@ export default {
     ProjectSubmissionOptions
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' })],
+  inject: ['requestData'],
   props: {
     projectId: {
       type: String,
@@ -111,9 +112,12 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['form', 'formDraft'])
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the
+    // component is created.
+    form: ({ form }) => form.data,
+    formDraft: ({ formDraft }) => formDraft.data
+  })
 };
 </script>
 

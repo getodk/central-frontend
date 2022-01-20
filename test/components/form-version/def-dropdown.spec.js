@@ -15,11 +15,8 @@ describe('FormVersionDefDropdown', () => {
           props: { version: new Form(form) }
         })
         .request(component => component.get('a').trigger('click'))
-        .beforeEachResponse((_, { method, url }) => {
-          method.should.equal('GET');
-          url.should.equal('/v1/projects/1/forms/f/versions/v1.xml');
-        })
-        .respondWithData(() => '<x/>');
+        .respondWithData(() => '<x/>')
+        .testRequests([{ url: '/v1/projects/1/forms/f/versions/v1.xml' }]);
     });
 
     it('sends the correct request for a draft', () => {
@@ -30,11 +27,8 @@ describe('FormVersionDefDropdown', () => {
           props: { version: new Form(draft) }
         })
         .request(component => component.get('a').trigger('click'))
-        .beforeEachResponse((_, { method, url }) => {
-          method.should.equal('GET');
-          url.should.equal('/v1/projects/1/forms/f/draft.xml');
-        })
-        .respondWithData(() => '<x/>');
+        .respondWithData(() => '<x/>')
+        .testRequests([{ url: '/v1/projects/1/forms/f/draft.xml' }]);
     });
 
     it('stores the XML', () => {

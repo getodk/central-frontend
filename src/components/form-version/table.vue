@@ -27,15 +27,18 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormVersionRow from './row.vue';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormVersionTable',
   components: { FormVersionRow },
+  inject: ['requestData'],
   emits: ['view-xml'],
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['formVersions'])
+  computed: requestDataComputed({
+    // The component does not assume that this data will exist when the
+    // component is created.
+    formVersions: ({ formVersions }) => formVersions.data
+  })
 };
 </script>
 

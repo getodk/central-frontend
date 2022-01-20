@@ -66,12 +66,13 @@ import EnketoPreview from '../enketo/preview.vue';
 import LinkIfCan from '../link-if-can.vue';
 import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormRow',
   components: { DateTime, EnketoFill, EnketoPreview, LinkIfCan },
   mixins: [routes()],
+  inject: ['requestData'],
   props: {
     form: {
       type: Form,
@@ -83,9 +84,11 @@ export default {
     }
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['project']),
+    ...requestDataComputed({
+      // The component assumes that this data will exist when the component is
+      // created.
+      project: ({ project }) => project.data
+    }),
     submissionsPath() {
       return this.formPath(
         this.form.projectId,

@@ -70,7 +70,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
           @change="afterAssignmentChange"/>
       </tbody>
     </table>
-    <loading :state="initiallyLoading || $store.getters.loading('users')"/>
+    <loading :state="initiallyLoading || searching"/>
     <p v-show="emptyMessage !== ''" class="empty-table-message">
       {{ emptyMessage }}
     </p>
@@ -84,12 +84,12 @@ import ProjectUserRow from './row.vue';
 
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'ProjectUserList',
   components: { DocLink, Loading, ProjectUserRow },
-  inject: ['alert'],
+  inject: ['requestData', 'alert'],
   props: {
     projectId: {
       type: String,
@@ -111,13 +111,14 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser', 'roles', 'projectAssignments']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['roles', 'projectAssignments']);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(['roles', 'projectAssignments']);
-    },
+    ...requestDataComputed({
+      currentUser: ({ currentUser }) => currentUser.data,
+      searching: ({ users }) => users.awaitingResponse,
+      roles: ({ roles }) => roles.data,
+      projectAssignments: ({ projectAssignments }) => projectAssignments.data,
+      initiallyLoading: (requestData) =>
+        requestData.initiallyLoading(['roles', 'projectAssignments'])
+    }),
     searchDisabled() {
       if (!this.dataExists) return true;
       /*
@@ -137,12 +138,12 @@ export default {
     },
     // The assignments to show in the table
     tableAssignments() {
-      if (this.$store.getters.loading('users')) return null;
+      if (this.searching) return null;
       if (this.searchAssignments != null) return this.searchAssignments;
       return this.projectAssignments;
     },
     emptyMessage() {
-      if (!this.dataExists || this.$store.getters.loading('users')) return '';
+      if (this.initiallyLoading || this.searching) return '';
       return this.searchAssignments != null
         ? (this.searchAssignments.length === 0 ? this.$t('common.noResults') : '')
         : (this.projectAssignments.length === 0 ? this.$t('emptyTable') : '');
@@ -153,19 +154,15 @@ export default {
   },
   methods: {
     fetchData(resend) {
-      this.$store.dispatch('get', [
-        {
-          key: 'roles',
-          url: '/v1/roles',
-          resend: false
-        },
-        {
-          key: 'projectAssignments',
-          url: apiPaths.projectAssignments(this.projectId),
-          extended: true,
-          resend
-        }
-      ]).catch(noop);
+      this.requestData.roles.request({
+        url: '/v1/roles',
+        resend: false
+      }).catch(noop);
+      this.requestData.projectAssignments.request({
+        url: apiPaths.projectAssignments(this.projectId),
+        extended: true,
+        resend
+      }).catch(noop);
     },
     clearSearch() {
       this.fetchData(true);
@@ -173,11 +170,11 @@ export default {
       this.searchAssignments = null;
     },
     search() {
-      this.$store.dispatch('get', [{
-        key: 'users',
+      const { users } = this.requestData;
+      users.request({
         url: apiPaths.users({ q: this.q }),
-        success: ({ users }) => {
-          this.searchAssignments = users.map(user => {
+        success: () => {
+          this.searchAssignments = users.data.map(user => {
             const assignment = this.projectAssignments
               .find(a => a.actor.id === user.id);
             return assignment != null
@@ -185,7 +182,7 @@ export default {
               : { actor: user, roleId: null };
           });
         }
-      }]).catch(noop);
+      }).catch(noop);
     },
     changeQ(q) {
       this.q = q;

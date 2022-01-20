@@ -10,11 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { watch } from 'vue';
 
 import createRoutes from './routes';
-import store from './store';
-import { canRoute, forceReplace, preservesData, updateDocumentTitle } from './util/router';
-import { keys as requestKeys } from './store/modules/request/keys';
+import { canRoute, forceReplace, preservesData } from './util/router';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';
@@ -22,7 +21,7 @@ import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
 export default (container, history = createWebHashHistory()) => {
-  const { alert, unsavedChanges } = container;
+  const { requestData, alert, unsavedChanges } = container;
   const router = createRouter({ history, routes: createRoutes(container) });
 
 
@@ -65,9 +64,9 @@ router.afterEach(to => {
 
     // Implements the restoreSession meta field.
     async (to) => {
-      // A test can skip this request by setting the session.
-      if (to.meta.restoreSession && store.state.request.data.session == null) {
-        await restoreSession(store);
+      // A test can skip this request by setting requestData.session.
+      if (to.meta.restoreSession && requestData.session.data == null) {
+        await restoreSession(requestData);
         await logIn(container, false);
       }
     }
@@ -87,61 +86,54 @@ router.afterEach(to => {
 // Implements the requireLogin and requireAnonymity meta fields.
 router.beforeEach(to => {
   if (to.meta.requireLogin) {
-    return store.state.request.data.session != null
+    return requestData.session.data != null
       ? true
       : { path: '/login', query: { next: to.fullPath } };
   }
   if (to.meta.requireAnonymity)
-    return store.state.request.data.session != null ? '/' : true;
+    return requestData.session.data != null ? '/' : true;
   return true;
 });
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// RESPONSE DATA
+// requestData
 
 // Implements the preserveData meta field.
 router.afterEach((to, from) => {
   if (preservesData('*', to, from)) return;
-  for (const key of requestKeys) {
-    if (!preservesData(key, to, from)) {
-      if (store.state.request.data[key] != null) store.commit('clearData', key);
-      if (store.getters.loading(key)) store.commit('cancelRequest', key);
+  for (const resource of requestData.resources) {
+    if (!preservesData(resource, to, from)) {
+      resource.clear();
+      resource.abortRequest();
     }
   }
 });
 
 // validateData
 
-router.beforeEach((to, from) => (canRoute(to, from, store) ? true : '/'));
+router.beforeEach((to, from) => (canRoute(to, from) ? true : '/'));
 
 /*
-Set up watchers on the response data, and update them whenever the validateData
-or title.key meta field changes.
+Set up watchers on requestData, and update them whenever the validateData meta
+field changes.
 
-If a component sets up its own watchers on the response data, they should be run
-after the router's watchers. (That might not be the case if the component
-instance is reused after a route change, but that shouldn't happen given our use
-of the `key` attribute.)
+If a component sets up its own watchers on requestData, they should be run after
+the router's watchers. (That might not be the case if the component instance is
+reused after a route change, but that shouldn't happen given our use of the
+`key` attribute.)
 */
 {
-  const unwatch = [];
+  const stop = [];
   router.afterEach(to => {
-    while (unwatch.length !== 0)
-      unwatch.pop()();
+    while (stop.length !== 0)
+      stop.pop()();
 
-    for (const [key, validator] of to.meta.validateData) {
-      unwatch.push(store.watch((state) => state.request.data[key], (value) => {
+    for (const [resource, validator] of to.meta.validateData) {
+      stop.push(watch(resource.ref, (value) => {
         if (value != null && !validator(value))
           forceReplace(container, '/');
-      }));
-    }
-
-    if (to.meta.title.key != null) {
-      const { key } = to.meta.title;
-      unwatch.push(store.watch((state) => state.request.data[key], () => {
-        updateDocumentTitle(to, store);
       }));
     }
   });
@@ -176,12 +168,20 @@ router.afterEach(() => {
 
 
 
-////////////////////////////////////////////////////////////////////////////////
-// PAGE TITLES
+  //////////////////////////////////////////////////////////////////////////////
+  // PAGE TITLES
 
-router.afterEach((to) => {
-  updateDocumentTitle(to, store);
-});
+  router.isReady().then(() => {
+    watch(
+      () => router.currentRoute.value.meta.title(),
+      (parts) => {
+        // Append ODK Central to every title, filter out any null values (e.g.
+        // project name before the project object was loaded), join with
+        // separator.
+        document.title = parts.concat('ODK Central').filter(x => x).join(' | ');
+      }
+    );
+  });
 
 
 

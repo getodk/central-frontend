@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
             :disabled="disabled" :title="selectTitle"
             :aria-label="$t('field.projectRole')"
             @change="change($event.target.value)">
-            <option v-for="role of $store.getters.projectRoles" :key="role.id"
+            <option v-for="role of projectRoles" :key="role.id"
               :value="role.id.toString()">
               {{ $t(`role.${role.system}`) }}
             </option>
@@ -44,12 +44,13 @@ import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'ProjectUserRow',
   components: { Spinner },
   mixins: [request()],
+  inject: ['requestData'],
   props: {
     assignment: {
       type: Object,
@@ -68,7 +69,12 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser', 'roles', 'project']),
+    ...requestDataComputed({
+      currentUser: ({ currentUser }) => currentUser.data,
+      roles: ({ roles }) => roles.data,
+      projectRoles: ({ roles }) => roles.projectRoles,
+      project: ({ project }) => project.data
+    }),
     disabled() {
       return this.assignment.actor.id === this.currentUser.id ||
         this.awaitingResponse;

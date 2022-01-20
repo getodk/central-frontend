@@ -30,51 +30,34 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 import FormGroup from '../../form-group.vue';
 import Spinner from '../../spinner.vue';
-import request from '../../../mixins/request';
+
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
 
 export default {
   name: 'UserEditBasicDetails',
   components: { FormGroup, Spinner },
-  mixins: [request()],
-  inject: ['alert'],
-  data() {
-    const { email, displayName } = this.$store.state.request.data.user;
-    return {
-      awaitingResponse: false,
-      email,
-      displayName
-    };
-  },
-  // The component assumes that this data will exist when the component is
-  // created.
-  computed: requestData(['currentUser', 'user']),
-  methods: {
-    submit() {
-      this.request({
-        method: 'PATCH',
-        url: apiPaths.user(this.user.id),
-        data: { email: this.email, displayName: this.displayName }
-      })
-        .then(response => {
-          this.$store.commit('setData', {
-            key: 'user',
-            value: this.user.with(response.data)
-          });
-          if (this.user.id === this.currentUser.id) {
-            this.$store.commit('setData', {
-              key: 'currentUser',
-              value: this.currentUser.with(response.data)
-            });
-          }
-          this.alert.success(this.$t('alert.success'));
-        })
-        .catch(noop);
-    }
+  setup() {
+    const { requestData, alert } = inject('container');
+    const { user } = requestData;
+    const email = ref(user.data.email);
+    const displayName = ref(user.data.displayName);
+
+    const { t } = useI18n();
+    const submit = () => user.request({
+      method: 'PATCH',
+      url: apiPaths.user(user.data.id),
+      data: { email: email.value, displayName: displayName.value }
+    })
+      .then(() => { alert.success(t('alert.success')); })
+      .catch(noop);
+
+    return { email, displayName, submit, awaitingResponse: user.awaitingResponse };
   }
 };
 </script>

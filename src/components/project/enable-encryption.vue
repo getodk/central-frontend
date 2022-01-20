@@ -138,12 +138,13 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'ProjectEnableEncryption',
   components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
   mixins: [request()],
+  inject: ['requestData'],
   props: {
     state: {
       type: Boolean,
@@ -161,7 +162,9 @@ export default {
       success: false
     };
   },
-  computed: requestData(['project']),
+  computed: requestDataComputed({
+    project: ({ project }) => project.data
+  }),
   watch: {
     state() {
       if (this.state) return;

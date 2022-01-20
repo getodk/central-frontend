@@ -51,14 +51,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import Form from '../../../presenters/form';
 import routes from '../../../mixins/routes';
+import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'ProjectFormAccessRow',
   mixins: [routes()],
+  inject: ['requestData'],
   props: {
     form: {
       type: Form,
@@ -75,7 +75,9 @@ export default {
   },
   emits: ['update:state', 'update:fieldKeyAccess'],
   computed: {
-    ...mapGetters(['fieldKeysWithToken']),
+    ...requestDataComputed({
+      fieldKeysWithToken: ({ fieldKeys }) => fieldKeys.withToken
+    }),
     htmlClass() {
       return {
         'project-form-access-row': true,
