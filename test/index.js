@@ -57,19 +57,11 @@ afterEach(() => {
 
 afterEach(() => {
   sinon.restore();
-});
-
-afterEach(() => {
   document.documentElement.setAttribute('lang', 'en');
-});
-
-afterEach(() => {
   localStorage.clear();
+  testData.reset();
+  mockLogin.reset();
 });
-
-afterEach(testData.reset);
-
-afterEach(mockLogin.reset);
 
 
 
