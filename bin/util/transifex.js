@@ -50,12 +50,83 @@ const sourceLocale = 'en';
 const parseVars = (pluralForm) => {
   const varMatches = pluralForm.match(/{\w+}/g);
   const vars = varMatches != null ? varMatches.sort() : [];
-  // Braces used outside of variables could be an issue.
+  // Braces used outside of variables could be an issue. Braces are special
+  // characters for both Vue I18n and ICU plurals.
   const braceMatches = pluralForm.match(/[{}]/g);
   if (braceMatches != null && braceMatches.length !== 2 * vars.length)
     logThenThrow(pluralForm, 'unexpected brace');
   return vars;
 };
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LINKED LOCALE MESSAGES
+
+/*
+We will use a linked locale message when two messages are exactly the same.
+However, we don't use a linked locale message to insert one message into
+another, larger message: grammatical features like noun case and construct state
+mean that that usually won't work across languages. Given that, we only use the
+@:path syntax, not @:(path). We also currently do not use linked locale message
+modifiers.
+
+Related to this, note that while a linked locale message can link to a
+pluralized message if they are exactly the same, a pluralized message should not
+contain a linked locale message: that would mean that it is using a linked
+locale message within a longer message.
+*/
+const pathOfLinkedMessage = (pluralForm) => {
+  const match = pluralForm.match(/^@:([\w.]+)$/);
+  return match != null ? match[1].split('.') : null;
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SPECIAL CHARACTERS
+
+/*
+includesVueI18nSpecial() returns `true` if a message contains one of these Vue
+I18n special characters:
+
+  - |
+  - @
+  - $
+
+Otherwise it returns `false`.
+
+Vue I18n requires "literal interpolation" to escape these characters:
+https://vue-i18n.intlify.dev/guide/essentials/syntax.html#special-characters.
+Fortunately, we don't currently have a message that requires literal
+interpolation.
+
+includesVueI18nSpecial() does not search for braces, which are handled
+elsewhere.
+*/
+const includesVueI18nSpecial = (pluralForm) =>
+  /[|$]/.test(pluralForm) ||
+  (pathOfLinkedMessage(pluralForm) == null && pluralForm.includes('@'));
+
+/*
+Transifex uses ICU plurals. includesIcuSpecial() returns `true` if a message
+contains one of these ICU special characters:
+
+  - ' (used for escaping)
+  - # (used in ICU plurals)
+
+Otherwise it returns `false`.
+
+I'm not sure that Transifex actually accounts for these special characters. For
+example, it doesn't seem to escape them on export. For that reason, we allow
+translations to contain these special characters (single quotes in particular
+are common in translations). However, source messages should avoid these
+characters. Instead of using straight single quotes, a source message should use
+curly quotes.
+
+includesIcuSpecial() does not search for braces, which are handled elsewhere.
+*/
+const includesIcuSpecial = (pluralForm) => /['#]/.test(pluralForm);
 
 
 
@@ -75,9 +146,15 @@ class PluralForms {
       logThenThrow(message, 'a pluralized message must have exactly two forms');
 
     for (const form of forms) {
-      if (form.includes('|')) logThenThrow(message, 'unexpected |');
-      if (/(^\s|\s$|\s\s)/.test(form))
-        logThenThrow(message, 'unexpected white space');
+      if (pathOfLinkedMessage(form) != null) {
+        if (forms.length !== 1)
+          logThenThrow(message, 'a pluralized message cannot contain a linked locale message');
+      } else {
+        if (includesVueI18nSpecial(form))
+          logThenThrow(message, 'unexpected Vue I18n special character');
+        if (/^\s|\s$|\s\s/.test(form))
+          logThenThrow(message, 'unexpected white space');
+      }
     }
 
     return new PluralForms(forms);
@@ -143,18 +220,15 @@ class PluralForms {
 
   toVueI18n() {
     const forms = Array.from(this);
-    if (forms.some(form => form.includes('|')))
-      logThenThrow(this, 'unexpected |');
+    if (forms.some(includesVueI18nSpecial))
+      logThenThrow(this, 'unexpected Vue I18n special character');
     return forms.join(' | ');
   }
 
   toTransifex() {
     for (let i = 0; i < this.length; i += 1) {
-      // Single quotes are used for escaping in ICU plurals.
-      if (this[i].includes("'"))
-        logThenThrow(this, "We don't support straight single quotes in ICU plurals, but curly quotes are supported.");
-      // Used in ICU plurals
-      if (this[i].includes('#')) logThenThrow(this, 'unexpected #');
+      if (includesIcuSpecial(this[i]))
+        logThenThrow(this, 'unexpected ICU special character');
     }
     if (this.length > 2) logThenThrow(this, 'too many plural forms');
     return this.length === 2
@@ -164,40 +238,6 @@ class PluralForms {
       : this[0];
   }
 }
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// LINKED LOCALE MESSAGES
-
-/*
-We will use a linked locale message when two messages are exactly the same.
-However, we don't use a linked locale message to insert one message into
-another, larger message: grammatical features like noun case and construct state
-mean that that usually won't work across languages. Given that, we only use the
-@:path syntax, not @:(path). We also do not use linked locale message modifiers.
-
-Related to this, note that while a linked locale message can link to a
-pluralized message if they are exactly the same, a pluralized message should not
-contain a linked locale message: that would mean that it is using a linked
-locale message within a longer message. See also these related issues:
-
-https://github.com/kazupon/vue-i18n/issues/521
-https://github.com/kazupon/vue-i18n/issues/195
-*/
-const pathOfLinkedMessage = (pluralForms) => {
-  if (pluralForms.length === 1) {
-    const match = pluralForms[0].match(/^@:([\w.]+)$/);
-    if (match != null) return match[1].split('.');
-  }
-
-  for (let i = 0; i < pluralForms.length; i += 1) {
-    if (pluralForms[i].includes('@:'))
-      logThenThrow(pluralForms, 'unexpected linked locale message');
-  }
-
-  return null;
-};
 
 
 
@@ -370,8 +410,8 @@ const _restructure = (
   for (const [k, v] of entries) {
     // If `v` is a linked locale message, validate it, then skip it so that it
     // does not appear in the Structured JSON.
-    if (v instanceof PluralForms) {
-      const path = pathOfLinkedMessage(v);
+    if (v instanceof PluralForms && v.length === 1) {
+      const path = pathOfLinkedMessage(v[0]);
       if (path != null) {
         const messageLinkedTo = path.reduce(
           (node, key) => {
@@ -385,7 +425,7 @@ const _restructure = (
           },
           root
         );
-        if (pathOfLinkedMessage(messageLinkedTo) != null) {
+        if (pathOfLinkedMessage(messageLinkedTo[0]) != null) {
           // Supporting this case would add complexity to
           // copyLinkedLocaleMessage().
           logThenThrow(value, 'cannot link to a linked locale message');
@@ -646,7 +686,8 @@ class Translations {
 // in the fallback locale. Because of that, we copy a linked locale message only
 // if the message it links to is translated.
 const copyLinkedLocaleMessage = ({ source, root, parent, key }) => {
-  const path = pathOfLinkedMessage(source);
+  if (source.length !== 1) return;
+  const path = pathOfLinkedMessage(source[0]);
   if (path == null) return;
   const translationLinkedTo = path.reduce((node, k) => node.get(k), root);
   if (!translationLinkedTo.translated.isEmpty()) parent.set(key, source);
@@ -722,9 +763,8 @@ const validateTranslation = (locale) => ({ source, translated, path }) => {
     logThenThrow({ source, translated }, 'translation must use the same variables as the source message');
 
   for (let i = 0; i < translated.length; i += 1) {
-    // Check for a linked locale message. (I don't see an easy way to set up a
-    // Transifex translation check for this.)
-    if (translated[i].includes('@:') && translated[i] !== source[i])
+    // Check for a linked locale message.
+    if (pathOfLinkedMessage(translated[i]) != null && translated[i] !== source[i])
       logThenThrow({ source, translated }, 'unexpected linked locale message');
 
     if (locales[locale].warnVariableSeparator) {
