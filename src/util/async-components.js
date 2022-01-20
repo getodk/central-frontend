@@ -23,10 +23,6 @@ const loader = (load) => {
 };
 
 const loaders = new Map()
-  .set('Password', loader(() => import(
-    /* webpackChunkName: "component-password" */
-    'vue-password-strength-meter'
-  )))
   .set('AccountClaim', loader(() => import(
     /* webpackChunkName: "component-account-claim" */
     '../components/account/claim.vue'

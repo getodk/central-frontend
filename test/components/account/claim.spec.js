@@ -23,7 +23,7 @@ describe('AccountClaim', () => {
     component.should.alert('danger', 'Please input a password at least 10 characters long.');
   });
 
-  it('shows full password strength', async () => {
+  it.skip('shows full password strength', async () => {
     const component = mount(AccountClaim);
     await loadAsync('Password');
     await wait();
