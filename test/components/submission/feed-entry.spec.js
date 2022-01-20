@@ -3,8 +3,6 @@ import DateTime from '../../../src/components/date-time.vue';
 import MarkdownView from '../../../src/components/markdown/view.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 
-import Audit from '../../../src/presenters/audit';
-
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
@@ -17,7 +15,7 @@ const mountComponent = (options = undefined) =>
       xmlFormId: testData.extendedForms.last().xmlFormId,
       instanceId: 's',
       entry: testData.extendedAudits.size !== 0
-        ? new Audit(testData.extendedAudits.last())
+        ? testData.extendedAudits.last()
         : testData.extendedComments.last()
     },
     container: {

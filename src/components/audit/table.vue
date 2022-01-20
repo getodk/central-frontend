@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       </tr>
     </thead>
     <tbody v-if="audits != null">
-      <audit-row v-for="audit of audits" :key="audit.key" :audit="audit"/>
+      <audit-row v-for="(audit, index) in audits" :key="index" :audit="audit"/>
     </tbody>
   </table>
 </template>

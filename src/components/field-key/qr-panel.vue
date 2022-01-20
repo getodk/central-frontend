@@ -71,7 +71,6 @@ import CollectQr from '../collect-qr.vue';
 import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import FieldKey from '../../presenters/field-key';
 import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
@@ -79,7 +78,7 @@ export default {
   name: 'FieldKeyQrPanel',
   components: { CollectQr, DocLink, SentenceSeparator },
   props: {
-    fieldKey: FieldKey,
+    fieldKey: Object,
     managed: Boolean
   },
   computed: {
