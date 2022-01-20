@@ -17,7 +17,7 @@ either is an Administrator or has no role. -->
   <div>
     <div class="heading-with-button">
       <button id="user-list-new-button" type="button" class="btn btn-primary"
-        @click="showModal('newUser')">
+        @click="createModal.show">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <i18n-t tag="p" keypath="heading[0]">
@@ -38,16 +38,17 @@ either is an Administrator or has no role. -->
       <tbody v-if="dataExists">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :highlighted="highlighted" @change-assignment="afterAssignmentChange"
-          @reset-password="showResetPassword" @retire="showRetire"/>
+          @reset-password="resetPasswordModal.show" @retire="retireModal.show"/>
       </tbody>
     </table>
     <loading :state="initiallyLoading"/>
 
-    <user-new v-bind="newUser" @hide="hideModal('newUser')"
+    <user-new v-bind="createModal.data" @hide="createModal.hide"
       @success="afterCreate"/>
-    <user-reset-password v-bind="resetPassword" @hide="hideResetPassword"
-      @success="afterResetPassword"/>
-    <user-retire v-bind="retire" @hide="hideRetire" @success="afterRetire"/>
+    <user-reset-password v-bind="resetPasswordModal.data"
+      @hide="resetPasswordModal.hide" @success="afterResetPassword"/>
+    <user-retire v-bind="retireModal.data" @hide="retireModal.hide"
+      @success="afterRetire"/>
   </div>
 </template>
 
@@ -59,7 +60,7 @@ import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
 import UserRow from './row.vue';
 
-import modal from '../../mixins/modal';
+import modalData from '../../util/modal';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
@@ -73,24 +74,15 @@ export default {
     UserRetire,
     UserRow
   },
-  mixins: [modal()],
   inject: ['requestData', 'alert'],
   data() {
     return {
       // The id of the highlighted user
       highlighted: null,
       // Modals
-      newUser: {
-        state: false
-      },
-      resetPassword: {
-        state: false,
-        user: null
-      },
-      retire: {
-        state: false,
-        user: null
-      }
+      createModal: modalData(),
+      resetPasswordModal: modalData(),
+      retireModal: modalData()
     };
   },
   computed: requestDataComputed({
@@ -112,7 +104,7 @@ export default {
     },
     afterCreate(user) {
       this.fetchData();
-      this.hideModal('newUser');
+      this.createModal.hide();
       this.alert.success(this.$t('alert.create', user));
       this.highlighted = user.id;
     },
@@ -122,30 +114,13 @@ export default {
         roleName: admin ? this.$t('role.admin') : this.$t('role.none')
       }));
     },
-    showResetPassword(user) {
-      this.resetPassword.user = user;
-      this.showModal('resetPassword');
-    },
-    hideResetPassword() {
-      this.hideModal('resetPassword');
-      this.resetPassword.user = null;
-    },
     afterResetPassword(user) {
-      this.hideResetPassword();
-      this.hideModal('resetPassword');
+      this.resetPasswordModal.hide();
       this.alert.success(this.$t('alert.resetPassword', user));
-    },
-    showRetire(user) {
-      this.retire.user = user;
-      this.showModal('retire');
-    },
-    hideRetire() {
-      this.hideModal('retire');
-      this.retire.user = null;
     },
     afterRetire(user) {
       this.fetchData();
-      this.hideRetire();
+      this.retireModal.hide();
       this.alert.success(this.$t('alert.retire', user));
     }
   }

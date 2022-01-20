@@ -14,14 +14,13 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <form-overview-right-now v-if="form != null"
-          @view-xml="showModal('viewXml')"/>
+          @view-xml="viewXmlModal.show"/>
         <page-section condensed>
           <template #heading>
             <span>{{ $t('checklist') }}</span>
           </template>
           <template #body>
-            <form-checklist
-              @show-submission-options="showModal('submissionOptions')"/>
+            <form-checklist @show-submission-options="submissionOptions.show"/>
           </template>
         </page-section>
       </div>
@@ -40,7 +39,7 @@ except according to the terms contained in the LICENSE file.
                 </i18n-t>
                 <div>
                   <form-version-standard-buttons :version="formDraft.get()"
-                    @view-xml="showModal('viewXml')"/>
+                    @view-xml="viewXmlModal.show"/>
                 </div>
               </template>
             </form-version-summary-item>
@@ -58,9 +57,9 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
-    <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
-    <project-submission-options v-bind="submissionOptions"
-      @hide="hideModal('submissionOptions')"/>
+    <form-version-view-xml v-bind="viewXmlModal.data" @hide="viewXmlModal.hide"/>
+    <project-submission-options v-bind="submissionOptions.data"
+      @hide="submissionOptions.hide"/>
   </div>
 </template>
 
@@ -73,7 +72,7 @@ import FormVersionSummaryItem from '../form-version/summary-item.vue';
 import PageSection from '../page/section.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
 
-import modal from '../../mixins/modal';
+import modalData from '../../util/modal';
 import { loadAsync } from '../../util/async-components';
 import { requestDataComputed } from '../../reusables/request-data';
 
@@ -89,7 +88,6 @@ export default {
     PageSection,
     ProjectSubmissionOptions
   },
-  mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   inject: ['requestData'],
   props: {
     projectId: {
@@ -104,12 +102,8 @@ export default {
   data() {
     return {
       // Modals
-      viewXml: {
-        state: false
-      },
-      submissionOptions: {
-        state: false
-      }
+      viewXmlModal: modalData('FormVersionViewXml'),
+      submissionOptions: modalData()
     };
   },
   computed: requestDataComputed({

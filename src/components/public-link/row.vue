@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td>
       <button v-if="publicLink.token != null" type="button"
-        class="btn btn-danger" @click="$emit('revoke', publicLink)">
+        class="btn btn-danger" @click="$emit('revoke', { publicLink })">
         <span class="icon-times-circle"></span>{{ $t('action.revoke') }}&hellip;
       </button>
     </td>

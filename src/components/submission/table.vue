@@ -166,7 +166,7 @@ export default {
       if (!this.canUpdate) return;
       const tr = event.target.closest('tr');
       if (tr.querySelector('.review-button').contains(event.target))
-        this.$emit('review', this.submissions[tr.dataset.index]);
+        this.$emit('review', { submission: this.submissions[tr.dataset.index] });
     },
     // Using a method instead of a prop in case the same submission is updated
     // twice in a row.

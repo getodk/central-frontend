@@ -11,17 +11,18 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <form-version-table @view-xml="showModal('viewXml')"/>
+    <form-version-table @view-xml="viewXmlModal.show"/>
     <loading :state="initiallyLoading"/>
 
-    <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
+    <form-version-view-xml v-bind="viewXmlModal.data" @hide="viewXmlModal.hide"/>
   </div>
 </template>
 
 <script>
 import FormVersionTable from './table.vue';
 import Loading from '../loading.vue';
-import modal from '../../mixins/modal';
+
+import modalData from '../../util/modal';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
 import { noop } from '../../util/util';
@@ -34,7 +35,6 @@ export default {
     FormVersionViewXml: loadAsync('FormVersionViewXml'),
     Loading
   },
-  mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   inject: ['requestData'],
   props: {
     projectId: {
@@ -48,9 +48,7 @@ export default {
   },
   data() {
     return {
-      viewXml: {
-        state: false
-      }
+      viewXmlModal: modalData('FormVersionViewXml')
     };
   },
   computed: requestDataComputed({

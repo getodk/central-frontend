@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <navbar-links v-if="loggedIn"/>
           <div class="navbar-right">
             <a v-show="showsAnalyticsNotice" id="navbar-analytics-notice"
-              href="#" @click.prevent="showModal('analyticsIntroduction')">
+              href="#" @click.prevent="analyticsIntroduction.show">
               {{ $t('analyticsNotice') }}
             </a>
             <ul class="nav navbar-nav">
@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </nav>
-    <analytics-introduction v-if="showsAnalytics" v-bind="analyticsIntroduction"
-      @hide="hideModal('analyticsIntroduction')"/>
+    <analytics-introduction v-if="showsAnalytics" v-bind="analyticsIntroduction.data"
+      @hide="analyticsIntroduction.hide"/>
   </div>
 </template>
 
@@ -51,7 +51,7 @@ import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
-import modal from '../mixins/modal';
+import modalData from '../util/modal';
 import routes from '../mixins/routes';
 import { loadAsync } from '../util/async-components';
 import { requestDataComputed } from '../reusables/request-data';
@@ -65,13 +65,11 @@ export default {
     NavbarLinks,
     NavbarLocaleDropdown
   },
-  mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
+  mixins: [routes()],
   inject: ['requestData', 'staticConfig'],
   data() {
     return {
-      analyticsIntroduction: {
-        state: false
-      }
+      analyticsIntroduction: modalData('AnalyticsIntroduction')
     };
   },
   computed: {

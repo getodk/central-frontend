@@ -92,7 +92,8 @@ export default {
         if (disabled) event.preventDefault();
       } else {
         event.preventDefault();
-        if (!disabled) this.$emit('decrypt', target.getAttribute('href'));
+        if (!disabled)
+          this.$emit('decrypt', { formAction: target.getAttribute('href') });
       }
     },
     href(extension, query = undefined) {

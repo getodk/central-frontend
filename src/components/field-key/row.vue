@@ -74,7 +74,7 @@ export default {
       // Bootstrap does not truly disable dropdown menu items marked as
       // disabled.
       if (this.fieldKey.token == null) return;
-      this.$emit('revoke', this.fieldKey);
+      this.$emit('revoke', { fieldKey: this.fieldKey });
     }
   }
 };

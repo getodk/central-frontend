@@ -31,12 +31,12 @@ except according to the terms contained in the LICENSE file.
         </form>
         <submission-download-dropdown v-if="formVersion != null"
           :form-version="formVersion" :odata-filter="odataFilter"
-          @decrypt="showDecrypt"/>
+          @decrypt="decryptModal.show"/>
       </div>
       <submission-table v-show="submissions != null && submissions.length !== 0"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :submissions="submissions" :fields="selectedFields"
-        :original-count="originalCount" @review="showReview"/>
+        :original-count="originalCount" @review="reviewModal.show"/>
       <p v-show="submissions != null && submissions.length === 0"
         class="empty-table-message">
         {{ odataFilter == null ? $t('emptyTable') : $t('noMatching') }}
@@ -49,11 +49,10 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
-    <submission-decrypt v-bind="decrypt" @hide="hideModal('decrypt')"/>
-    <submission-update-review-state :state="review.state"
+    <submission-decrypt v-bind="decryptModal.data" @hide="decryptModal.hide"/>
+    <submission-update-review-state v-bind="reviewModal.data"
       :project-id="projectId" :xml-form-id="xmlFormId"
-      :submission="review.submission" @hide="hideReview"
-      @success="afterReview"/>
+      @hide="reviewModal.hide" @success="afterReview"/>
   </div>
 </template>
 
@@ -69,7 +68,7 @@ import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
-import modal from '../../mixins/modal';
+import modalData from '../../util/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
@@ -86,7 +85,6 @@ export default {
     SubmissionTable,
     SubmissionUpdateReviewState
   },
-  mixins: [modal()],
   inject: ['requestData', 'alert'],
   props: {
     projectId: {
@@ -122,14 +120,9 @@ export default {
       // equal submissions.length unless a submission has been created since the
       // initial fetch or last refresh.
       skip: 0,
-      decrypt: {
-        state: false,
-        formAction: null
-      },
-      review: {
-        state: false,
-        submission: null
-      }
+      // Modals
+      decryptModal: modalData(),
+      reviewModal: modalData()
     };
   },
   computed: {
@@ -305,23 +298,11 @@ export default {
     filter() {
       this.fetchChunk(0, true);
     },
-    showDecrypt(formAction) {
-      this.decrypt.formAction = formAction;
-      this.showModal('decrypt');
-    },
-    showReview(submission) {
-      this.review.submission = submission;
-      this.showModal('review');
-    },
-    hideReview() {
-      this.hideModal('review');
-      this.review.submission = null;
-    },
     // This method accounts for the unlikely case that the user clicked the
     // refresh button before reviewing the submission. In that case, the
     // submission may have been edited or may no longer be shown.
     afterReview(originalSubmission, reviewState) {
-      this.hideReview();
+      this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));
       const index = this.submissions.findIndex(submission =>
         submission.__id === originalSubmission.__id);

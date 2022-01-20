@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
           </li>
           <li>
             <a class="reset-password" href="#"
-              @click.prevent="$emit('reset-password', user)">
+              @click.prevent="$emit('reset-password', { user })">
               {{ $t('action.resetPassword') }}&hellip;
             </a>
           </li>
@@ -116,7 +116,7 @@ export default {
         .catch(noop);
     },
     retire() {
-      if (!this.disabled) this.$emit('retire', this.user);
+      if (!this.disabled) this.$emit('retire', { user: this.user });
     }
   }
 };

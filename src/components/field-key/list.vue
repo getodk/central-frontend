@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div class="heading-with-button">
       <button id="field-key-list-create-button" type="button"
-        class="btn btn-primary" @click="showModal('newFieldKey')">
+        class="btn btn-primary" @click="createModal.show">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <i18n-t tag="p" keypath="heading[0].full">
@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
       <i18n-t tag="p" keypath="heading[1].full">
         <template #clickHere>
-          <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
+          <a href="#" @click.prevent="submissionOptions.show">{{ $t('heading[1].clickHere') }}</a>
         </template>
       </i18n-t>
     </div>
@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
       <tbody v-if="fieldKeys != null">
         <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.id"
           :field-key="fieldKey" :highlighted="highlighted"
-          @show-code="showPopover" @revoke="showRevoke"/>
+          @show-code="showPopover" @revoke="revokeModal.show"/>
       </tbody>
     </table>
     <loading :state="initiallyLoading"/>
@@ -56,11 +56,11 @@ except according to the terms contained in the LICENSE file.
       @hide="hidePopover">
       <field-key-qr-panel :field-key="popover.fieldKey" :managed="managed"/>
     </popover>
-    <field-key-new :state="newFieldKey.state" :managed="managed"
-      @hide="hideModal('newFieldKey')" @success="afterCreate"/>
-    <project-submission-options v-bind="submissionOptions"
-      @hide="hideModal('submissionOptions')"/>
-    <field-key-revoke v-bind="revoke" @hide="hideRevoke"
+    <field-key-new v-bind="createModal.data" @hide="createModal.hide"
+      @success="afterCreate"/>
+    <project-submission-options v-bind="submissionOptions.data"
+      @hide="submissionOptions.hide"/>
+    <field-key-revoke v-bind="revokeModal.data" @hide="revokeModal.hide"
       @success="afterRevoke"/>
   </div>
 </template>
@@ -75,7 +75,7 @@ import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
 
-import modal from '../../mixins/modal';
+import modalData from '../../util/modal';
 import routes from '../../mixins/routes';
 import { requestDataComputed } from '../../reusables/request-data';
 
@@ -91,7 +91,7 @@ export default {
     FieldKeyRevoke,
     ProjectSubmissionOptions
   },
-  mixins: [modal(), routes()],
+  mixins: [routes()],
   inject: ['requestData', 'alert'],
   props: {
     projectId: {
@@ -111,16 +111,9 @@ export default {
         fieldKey: null
       },
       // Modals
-      newFieldKey: {
-        state: false
-      },
-      submissionOptions: {
-        state: false
-      },
-      revoke: {
-        state: false,
-        fieldKey: null
-      }
+      createModal: modalData(),
+      submissionOptions: modalData(),
+      revokeModal: modalData()
     };
   },
   computed: requestDataComputed({
@@ -170,23 +163,15 @@ export default {
         });
       }
     },
-    showRevoke(fieldKey) {
-      this.revoke.fieldKey = fieldKey;
-      this.showModal('revoke');
-    },
-    hideRevoke() {
-      this.hideModal('revoke');
-      this.revoke.fieldKey = null;
-    },
     afterCreate(fieldKey) {
       this.fetchData(true);
-      this.hideModal('newFieldKey');
+      this.createModal.hide();
       this.alert.success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
       this.fetchData(true);
-      this.hideRevoke();
+      this.revokeModal.hide();
       this.alert.success(this.$t('alert.revoke', fieldKey));
     }
   }
