@@ -22,76 +22,69 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { START_LOCATION } from 'vue-router';
+import { inject, onBeforeUnmount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
-import { mixinCallWait } from '../reusables/call-wait';
-import { requestData } from '../store/modules/request';
+import { useCallWait } from '../reusables/call-wait';
 import { useSessions } from '../util/session';
+
+const useVersionCheck = ({ requestData, alert }, t, { callWait }) => {
+  // We store alertInterval so that we can clear it during testing.
+  let alertInterval;
+  const checkVersion = () => {
+    const { centralVersion } = requestData;
+    const previousVersion = centralVersion.data;
+    return centralVersion.request({ url: '/version.txt', clear: false, alert: false })
+      .then(() => {
+        if (previousVersion != null && centralVersion.data !== previousVersion) {
+          alert.info(t('alert.versionChange'));
+          // Keep alerting the user about the version change. One benefit of
+          // this is that the user should see the alert even if there is another
+          // alert (say, about session expiration).
+          alertInterval = setInterval(
+            () => { alert.info(t('alert.versionChange')); },
+            60000
+          );
+          return true;
+        }
+
+        return false;
+      })
+      // This error could be the result of logout, which will abort all
+      // requests.
+      .catch(error => (error.response != null && error.response.status === 404));
+  };
+  callWait('checkVersion', checkVersion, (tries) => (tries === 0 ? 15000 : 60000));
+  onBeforeUnmount(() => {
+    if (alertInterval != null) clearInterval(alertInterval);
+  });
+};
 
 export default {
   name: 'App',
   components: { Alert, Navbar },
-  mixins: [mixinCallWait],
-  data() {
-    return {
-      calls: {}
-    };
-  },
-  computed: {
-    ...requestData(['centralVersion']),
-    routerReady() {
-      return this.$route !== START_LOCATION;
-    }
-  },
-  created() {
-    this.$once('hook:beforeDestroy', useSessions(this.$router, this.$store));
-    this.callWait('checkVersion', this.checkVersion, (tries) =>
-      (tries === 0 ? 15000 : 60000));
-  },
-  methods: {
-    checkVersion() {
-      const previousVersion = this.centralVersion;
-      return this.$store.dispatch('get', [{
-        key: 'centralVersion',
-        url: '/version.txt',
-        clear: false,
-        alert: false
-      }])
-        .then(() => {
-          if (previousVersion != null && this.centralVersion !== previousVersion) {
-            this.$alert().info(this.$t('alert.versionChange'));
-            // Keep alerting the user about the version change. One benefit of
-            // this is that the user should see the alert even if there is
-            // another alert (say, about session expiration).
-            const id = setInterval(
-              () => {
-                this.$alert().info(this.$t('alert.versionChange'));
-              },
-              60000
-            );
-            this.$once('hook:beforeDestroy', () => {
-              clearInterval(id);
-            });
-            return true;
-          }
+  setup() {
+    const container = inject('container');
+    useSessions(container);
+    useVersionCheck(container, useI18n().t, useCallWait());
 
-          return false;
-        })
-        // This error could be the result of logout, which will cancel all
-        // requests.
-        .catch(error =>
-          (error.response != null && error.response.status === 404));
-    },
-    hideAlertAfterClick(event) {
-      const alert = this.$alert();
-      if (alert.state && event.target.closest('a[target="_blank"]') != null &&
-        !event.defaultPrevented) {
+    const routerReady = ref(false);
+    const { router, alert } = container;
+    router.isReady().then(() => {
+      routerReady.value = true;
+    });
+
+    const hideAlertAfterClick = (event) => {
+      if (alert.data.state &&
+        event.target.closest('a[target="_blank"]') != null &&
+        !event.defaultPrevented)
         alert.blank();
-      }
-    }
+    };
+
+    return { routerReady, hideAlertAfterClick };
   }
 };
 </script>

@@ -65,6 +65,7 @@ hand-in-hand.
 */
 
 import { START_LOCATION } from 'vue-router';
+import { onBeforeUnmount } from 'vue';
 
 import { apiPaths, isProblem, request } from './request';
 import { forceReplace } from './router';
@@ -175,10 +176,10 @@ export const useSessions = (container) => {
   const id = setInterval(logOutBeforeSessionExpires(container), 15000);
   const handler = logOutAfterStorageChange(container);
   window.addEventListener('storage', handler);
-  return () => {
+  onBeforeUnmount(() => {
     clearInterval(id);
     window.removeEventListener('storage', handler);
-  };
+  });
 };
 
 export const restoreSession = (requestData) => {
