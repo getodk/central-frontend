@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 import { identity } from 'ramda';
 
 import { noop } from './util';
@@ -251,7 +250,7 @@ export const request = (container, ...args) => {
     ...axiosConfig
   } = config;
 
-  const { router, requestData, alert, logger } = container;
+  const { router, requestData, alert, http, logger } = container;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (axiosConfig.data != null && axiosConfig.data instanceof File &&
     axiosConfig.data.size > 100000000) {
@@ -278,7 +277,7 @@ export const request = (container, ...args) => {
     chainSignals(axiosConfig.signal, abortController);
   axiosConfig.signal = abortController.signal;
 
-  return Vue.prototype.$http.request(axiosConfig)
+  return http.request(axiosConfig)
     .catch(error => {
       if (abortController.signal.aborted) throw error;
 

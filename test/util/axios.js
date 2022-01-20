@@ -1,20 +1,27 @@
-export const mockAxios = (respond) => {
-  const http = (config) => respond(config);
-  http.request = http;
+const logUnhandledRequest = (config) => {
+  // eslint-disable-next-line no-console
+  console.error(config);
+  // eslint-disable-next-line no-console
+  console.error('A request was sent, but not handled. Are you using mockHttp() or load()?');
+  return Promise.reject(new Error('unhandled request'));
+};
+export const mockAxios = (...args) => {
+  const http = (config) => http.request(config);
+  http.respondWith = (respond) => {
+    http.request = respond != null ? respond : logUnhandledRequest;
+  };
+  http.respondWith(...args);
+
   http.get = (url, config) => http({ ...config, method: 'GET', url });
   http.post = (url, data, config) => {
-    const full = { ...config, method: 'POST', url };
-    if (data != null) full.data = data;
-    return http(full);
+    const fullConfig = { ...config, method: 'POST', url };
+    if (data != null) fullConfig.data = data;
+    return http(fullConfig);
   };
   http.put = (url, data, config) => http({ ...config, method: 'PUT', url, data });
   http.patch = (url, data, config) => http({ ...config, method: 'PATCH', url, data });
   http.delete = (url, config) => http({ ...config, method: 'DELETE', url });
-  http.defaults = {
-    headers: {
-      common: {}
-    }
-  };
+
   return http;
 };
 

@@ -9,7 +9,7 @@ describe('createRequestData()', () => {
       mockLogin();
       const container = createTestContainer();
       const { requestData } = container;
-      return mockHttp()
+      return mockHttp(container)
         .request(() => Promise.allSettled(
           requestData.currentUser.request('/v1/users/current'),
           requestData.projects.request('/v1/projects'),

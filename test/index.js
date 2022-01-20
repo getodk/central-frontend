@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import sinon from 'sinon';
 import { enableAutoUnmount } from '@vue/test-utils';
 import 'should';
@@ -7,37 +6,17 @@ import '../src/setup';
 
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/async-components';
-import { mockAxios } from './util/axios';
 import { mockLogin } from './util/session';
 import './assertions';
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// GLOBAL UTILITIES
-
-{
-  let unhandled = null;
-  Vue.prototype.$http = mockAxios(config => {
-    if (unhandled == null) unhandled = config;
-    return Promise.reject(new Error('unhandled request'));
-  });
-  afterEach(() => {
-    if (unhandled != null) {
-      console.error(unhandled); // eslint-disable-line no-console
-      throw new Error('A request was sent, but not handled. Are you using mockHttp() or load()?');
-    }
-  });
-}
+// HOOKS
 
 // Even if a route is lazy-loaded, load() will need synchronous access to the
 // async components associated with the route.
 before(loadAsyncRouteComponents);
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// OTHER HOOKS
 
 beforeEach(testData.seed);
 

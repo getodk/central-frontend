@@ -9,6 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import axios from 'axios';
+
 import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
@@ -29,6 +31,7 @@ export default ({
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(),
   staticConfig = staticConfigFile,
+  http = axios,
   logger = console
 } = {}) => {
   const container = {
@@ -36,6 +39,7 @@ export default ({
     alert,
     unsavedChanges,
     staticConfig,
+    http,
     // Adding `logger` in order to silence certain logging during testing.
     logger
   };
@@ -52,6 +56,7 @@ export default ({
       .provide('alert', alert)
       .provide('unsavedChanges', unsavedChanges)
       .provide('staticConfig', staticConfig)
+      .provide('http', http)
       .provide('logger', logger);
   };
   return container;

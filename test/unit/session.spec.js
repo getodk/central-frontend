@@ -24,7 +24,7 @@ describe('util/session', () => {
       it('sends the correct request', () => {
         const container = createTestContainer();
         const { requestData } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => restoreSession(requestData))
           .beforeEachResponse((_, { method, url }) => {
             should.not.exist(method);
@@ -36,7 +36,7 @@ describe('util/session', () => {
       it('saves the session', () => {
         const container = createTestContainer();
         const { requestData } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => restoreSession(requestData))
           .respondWithData(() => testData.sessions.last())
           .afterResponse(() => {
@@ -49,7 +49,7 @@ describe('util/session', () => {
         const { requestData } = container;
         const setItem = sinon.fake();
         sinon.replace(Storage.prototype, 'setItem', setItem);
-        return mockHttp()
+        return mockHttp(container)
           .request(() => restoreSession(requestData))
           .respondWithData(() => testData.sessions.last())
           .afterResponse(() => {
@@ -60,7 +60,7 @@ describe('util/session', () => {
       it('removes sessionExpires from local storage after a 404', () => {
         const container = createTestContainer();
         const { requestData } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => restoreSession(requestData).catch(noop))
           .respondWithProblem(404.1)
           .afterResponse(() => {
@@ -77,7 +77,7 @@ describe('util/session', () => {
       it('does not send a request', () => {
         const container = createTestContainer();
         const { requestData } = container;
-        return mockHttp()
+        return mockHttp(container)
           .testNoRequest(() => restoreSession(requestData).catch(noop));
       });
 
@@ -92,7 +92,7 @@ describe('util/session', () => {
       testData.sessions.createPast(1);
       const container = createTestContainer();
       const { requestData } = container;
-      return mockHttp()
+      return mockHttp(container)
         .request(() => restoreSession(requestData))
         .respondWithData(() => testData.sessions.last());
     });
@@ -111,7 +111,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew({ token: 'foo' }) }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .beforeEachResponse((_, { method, url, headers }) => {
             should.not.exist(method);
@@ -128,7 +128,7 @@ describe('util/session', () => {
           requestData: { session: testData.sessions.createNew() }
         });
         const { requestData } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .afterResponse(() => {
@@ -141,7 +141,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew() }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true).should.be.fulfilled())
           .respondWithData(() => testData.extendedUsers.first());
       });
@@ -157,7 +157,7 @@ describe('util/session', () => {
             session: testData.sessions.createNew({ expiresAt: '1970-01-02T00:00:00Z' })
           }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .afterResponse(() => {
@@ -171,7 +171,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew() }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, false))
           .respondWithData(() => testData.extendedUsers.first())
           .afterResponse(() => {
@@ -187,7 +187,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew({ token: 'foo' }) }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .respondWithProblem(404.1)
@@ -207,7 +207,7 @@ describe('util/session', () => {
           requestData: { session: testData.sessions.createNew({ token: 'foo' }) },
           staticConfig: { ...staticConfig, showsAnalytics: false }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .testRequests([
@@ -228,7 +228,7 @@ describe('util/session', () => {
         router: mockRouter(),
         requestData: { session: testData.sessions.createNew({ token: 'foo' }) }
       });
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -247,7 +247,7 @@ describe('util/session', () => {
         router: mockRouter(),
         requestData: { session: testData.sessions.createNew() }
       });
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -262,7 +262,7 @@ describe('util/session', () => {
         requestData: { session: testData.sessions.createNew() }
       });
       const { requestData } = container;
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
@@ -286,7 +286,7 @@ describe('util/session', () => {
           requestData: { session: testData.sessions.createNew() }
         });
         const { requestData } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .beforeEachResponse((_, { url }) => {
             if (url === '/v1/config/analytics') {
@@ -306,7 +306,7 @@ describe('util/session', () => {
           requestData: { session: testData.sessions.createNew() }
         });
         const { requestData } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
@@ -329,7 +329,7 @@ describe('util/session', () => {
         router: mockRouter(),
         requestData: { session: testData.sessions.createNew() }
       });
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -388,7 +388,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew() }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
@@ -403,7 +403,7 @@ describe('util/session', () => {
           requestData: { session: testData.sessions.createNew() }
         });
         const { alert } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
@@ -426,7 +426,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew() }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
@@ -440,7 +440,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew() }
         });
-        return mockHttp()
+        return mockHttp(container)
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
@@ -543,7 +543,7 @@ describe('util/session', () => {
         requestData: { session: testData.sessions.createNew() }
       });
       const { requestData } = container;
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true).catch(noop))
         .respondWithProblem()
         .respondWithSuccess()
@@ -557,7 +557,7 @@ describe('util/session', () => {
         router: mockRouter(),
         requestData: { session: testData.sessions.createNew() }
       });
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true).should.be.rejected())
         .respondWithProblem()
         .respondWithSuccess();
@@ -574,7 +574,7 @@ describe('util/session', () => {
       requestData.session.set(testData.sessions.createNew({
         expiresAt: '1970-01-01T00:05:00Z'
       }));
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -622,7 +622,7 @@ describe('util/session', () => {
       requestData.session.set(testData.sessions.createNew({
         expiresAt: '1970-01-01T00:05:00Z'
       }));
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -647,7 +647,7 @@ describe('util/session', () => {
       requestData.session.set(testData.sessions.createNew({
         expiresAt: '1970-01-01T00:05:00Z'
       }));
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -671,7 +671,7 @@ describe('util/session', () => {
           session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
         }
       });
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -690,7 +690,7 @@ describe('util/session', () => {
           session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
         }
       });
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
@@ -710,7 +710,7 @@ describe('util/session', () => {
       requestData.session.set(testData.sessions.createNew({
         expiresAt: '1970-01-01T00:05:00Z'
       }));
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
@@ -733,7 +733,7 @@ describe('util/session', () => {
       requestData.session.set(testData.sessions.createNew({
         expiresAt: '1970-01-01T00:05:00Z'
       }));
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
@@ -769,7 +769,7 @@ describe('util/session', () => {
       requestData.session.set(testData.sessions.createNew({
         expiresAt: '1970-01-01T00:05:00Z'
       }));
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -791,7 +791,7 @@ describe('util/session', () => {
       const cleanup = useSessions(container);
       const { requestData } = container;
       requestData.session.set(testData.sessions.createNew());
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -814,7 +814,7 @@ describe('util/session', () => {
       const cleanup = useSessions(container);
       const { requestData } = container;
       requestData.session.set(testData.sessions.createNew());
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -853,7 +853,7 @@ describe('util/session', () => {
       const cleanup = useSessions(container);
       const { requestData } = container;
       requestData.session.set(testData.sessions.createNew());
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
@@ -875,7 +875,7 @@ describe('util/session', () => {
       const cleanup = useSessions(container);
       const { requestData } = container;
       requestData.session.set(testData.sessions.createNew());
-      return mockHttp()
+      return mockHttp(container)
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()

@@ -1,6 +1,7 @@
 import createContainer from '../../src/container';
 import { noop } from '../../src/util/util';
 
+import { mockAxios } from './axios';
 import { testRequestData } from './request-data';
 
 const silentLogger = { log: noop, error: noop };
@@ -8,6 +9,7 @@ const silentLogger = { log: noop, error: noop };
 export default (options = undefined) => {
   const fullOptions = {
     router: null,
+    http: mockAxios(),
     logger: silentLogger,
     ...options
   };
