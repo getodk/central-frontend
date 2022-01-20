@@ -30,11 +30,11 @@ import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageBody from '../page/body.vue';
-import callWait from '../../mixins/call-wait';
 import reconcileData from '../../store/modules/request/reconcile';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
+import { mixinCallWait } from '../../reusables/call-wait';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -53,7 +53,7 @@ const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
 export default {
   name: 'FormShow',
   components: { FormHead, Loading, PageBody },
-  mixins: [callWait(), request(), routes()],
+  mixins: [mixinCallWait, request(), routes()],
   props: {
     projectId: {
       type: String,

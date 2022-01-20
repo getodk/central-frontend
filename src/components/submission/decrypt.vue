@@ -42,14 +42,14 @@ except according to the terms contained in the LICENSE file.
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 
-import callWait from '../../mixins/call-wait';
 import { isProblem } from '../../util/request';
+import { mixinCallWait } from '../../reusables/call-wait';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
-  mixins: [callWait()],
+  mixins: [mixinCallWait],
   inject: ['requestData', 'alert', 'logger'],
   props: {
     state: Boolean,
