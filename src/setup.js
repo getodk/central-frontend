@@ -29,8 +29,6 @@ import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
 import './assets/scss/app.scss';
 
-import { $tcn } from './util/i18n';
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,4 +40,3 @@ import { $tcn } from './util/i18n';
 Vue.prototype.$http = axios;
 // Adding $logger makes it easier to silence certain logging during testing.
 Vue.prototype.$logger = console;
-Vue.prototype.$tcn = $tcn;

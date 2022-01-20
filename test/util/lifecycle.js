@@ -1,6 +1,8 @@
 import { last, lensPath, view } from 'ramda';
 import { mount as vtuMount } from '@vue/test-utils';
 
+import { $tcn } from '../../src/util/i18n';
+
 import createTestContainer from './container';
 
 /*
@@ -22,6 +24,11 @@ export const mount = (component, options = {}) => {
   vtuOptions.global = {
     ...vtuOptions.global,
     plugins: [container.install != null ? container : createTestContainer(container)],
+    mixins: [
+      {
+        methods: { $tcn }
+      }
+    ]
   };
   return vtuMount(component, vtuOptions);
 };

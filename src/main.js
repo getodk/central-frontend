@@ -16,7 +16,11 @@ import './setup';
 import App from './components/app.vue';
 
 import createContainer from './container';
+import { $tcn } from './util/i18n';
 
 createApp(App)
   .use(createContainer())
+  .mixin({
+    methods: { $tcn }
+  })
   .mount('#app');
