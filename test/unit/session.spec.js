@@ -352,13 +352,14 @@ describe('util/session', () => {
         sinon.replace(window, 'confirm', confirm);
         return load('/users')
           .afterResponses(app => {
-            app.vm.$store.commit('setUnsavedChanges', true);
+            // eslint-disable-next-line no-param-reassign
+            app.vm.$container.unsavedChanges.count += 1;
           })
           .request(app => logOut(app.vm.$container, false))
           .respondWithSuccess()
           .afterResponse(app => {
             app.vm.$route.path.should.equal('/login');
-            app.vm.$store.state.router.unsavedChanges.should.be.false();
+            app.vm.$container.unsavedChanges.count.should.equal(0);
             confirm.called.should.be.false();
           });
       });

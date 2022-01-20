@@ -13,7 +13,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 
 import createRoutes from './routes';
 import store from './store';
-import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
+import { canRoute, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
 import { loadLocale } from './util/i18n';
@@ -22,7 +22,7 @@ import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
 export default (container, history = createWebHashHistory()) => {
-  const { alert } = container;
+  const { alert, unsavedChanges } = container;
   const router = createRouter({ history, routes: createRoutes(container) });
 
 
@@ -153,17 +153,16 @@ of the `key` attribute.)
 // UNSAVED CHANGES
 
 window.addEventListener('beforeunload', (event) => {
-  if (!store.state.router.unsavedChanges) return;
+  if (unsavedChanges.count === 0) return;
   event.preventDefault();
   // Needed for Chrome.
   event.returnValue = ''; // eslint-disable-line no-param-reassign
 });
 
-router.beforeEach(() => confirmUnsavedChanges(store));
+router.beforeEach(() => unsavedChanges.confirm());
 
 router.afterEach(() => {
-  if (store.state.router.unsavedChanges)
-    store.commit('setUnsavedChanges', false);
+  unsavedChanges.count = 0;
 });
 
 

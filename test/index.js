@@ -63,7 +63,6 @@ afterEach(() => {
 afterEach(() => {
   store.commit('resetRequests');
   store.commit('clearData');
-  store.commit('resetRouterState');
 });
 
 afterEach(() => {

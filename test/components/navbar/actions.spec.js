@@ -68,7 +68,8 @@ describe('NavbarActions', () => {
       sinon.replace(window, 'confirm', () => false);
       return load('/account/edit')
         .afterResponses(app => {
-          app.vm.$store.commit('setUnsavedChanges', true);
+          // eslint-disable-next-line no-param-reassign
+          app.vm.$container.unsavedChanges.count += 1;
         })
         .testNoRequest(app =>
           app.get('#navbar-actions-log-out').trigger('click'));

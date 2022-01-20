@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 
-import { confirmUnsavedChanges, forceReplace, routeProps } from '../../src/util/router';
+import { forceReplace, routeProps } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
@@ -71,24 +71,6 @@ describe('util/router', () => {
           app.vm.$route.path.should.equal('/');
           fake.called.should.be.false();
         });
-    });
-  });
-
-  describe('confirmUnsavedChanges()', () => {
-    it('returns true if there are no unsaved changes', () => {
-      confirmUnsavedChanges(store).should.be.true();
-    });
-
-    it('returns true if the user confirms', () => {
-      store.commit('setUnsavedChanges', true);
-      sinon.replace(window, 'confirm', () => true);
-      confirmUnsavedChanges(store).should.be.true();
-    });
-
-    it('returns false if the user does not confirm', () => {
-      store.commit('setUnsavedChanges', true);
-      sinon.replace(window, 'confirm', () => false);
-      confirmUnsavedChanges(store).should.be.false();
     });
   });
 });

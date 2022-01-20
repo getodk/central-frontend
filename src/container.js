@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import createAlert from './alert';
 import createCentralRouter from './router';
+import createUnsavedChanges from './unsaved-changes';
 import i18n from './i18n';
 import staticConfigFile from '../config';
 import store from './store';
@@ -21,12 +22,14 @@ export default ({
   // without a router by specifying `null`.
   router = createCentralRouter,
   alert = createAlert(),
+  unsavedChanges = createUnsavedChanges(),
   staticConfig = staticConfigFile,
 } = {}) => {
   const container = {
     i18n: i18n.global,
     store,
     alert,
+    unsavedChanges,
     staticConfig,
   };
   if (router != null)
@@ -38,6 +41,7 @@ export default ({
       .use(container.router)
       .provide('container', container)
       .provide('alert', alert)
+      .provide('unsavedChanges', unsavedChanges)
       .provide('staticConfig', staticConfig)
   };
   return container;

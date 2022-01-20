@@ -12,8 +12,7 @@ except according to the terms contained in the LICENSE file.
 import Vuex from 'vuex';
 
 import request from './modules/request';
-import router from './modules/router';
 
 export default new Vuex.Store({
-  modules: { request, router }
+  modules: { request }
 });

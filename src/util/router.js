@@ -12,8 +12,6 @@ except according to the terms contained in the LICENSE file.
 import { START_LOCATION } from 'vue-router';
 import { last } from 'ramda';
 
-import i18n from '../i18n';
-
 // Returns the props for a route component.
 export const routeProps = (route, props) => {
   if (props == null || props === false) return {};
@@ -23,21 +21,10 @@ export const routeProps = (route, props) => {
   return props;
 };
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// UNSAVED CHANGES
-
-export const forceReplace = ({ router, store }, location) => {
-  if (store.state.router.unsavedChanges)
-    store.commit('setUnsavedChanges', false);
+export const forceReplace = ({ router, unsavedChanges }, location) => {
+  unsavedChanges.count = 0; // eslint-disable-line no-param-reassign
   return router.replace(location);
 };
-
-export const confirmUnsavedChanges = (store) =>
-  !store.state.router.unsavedChanges ||
-  // eslint-disable-next-line no-alert
-  window.confirm(i18n.t('router.unsavedChanges'));
 
 
 

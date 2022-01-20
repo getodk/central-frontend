@@ -1,5 +1,5 @@
 /*
-Copyright 2017 ODK Central Developers
+Copyright 2022 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -9,18 +9,12 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-export default {
-  state: {
-    unsavedChanges: false
-  },
-  mutations: {
-    /* eslint-disable no-param-reassign */
-    setUnsavedChanges(state, unsavedChanges) {
-      state.unsavedChanges = unsavedChanges;
-    },
-    resetRouterState(state) {
-      state.unsavedChanges = false;
-    }
-    /* eslint-enable no-param-reassign */
+import i18n from './i18n';
+
+export default () => ({
+  count: 0,
+  confirm() {
+    // eslint-disable-next-line no-alert
+    return this.count === 0 || window.confirm(i18n.t('router.unsavedChanges'));
   }
-};
+});
