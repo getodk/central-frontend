@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 
 import i18n from '../src/i18n';
-import store from '../src/store';
+import staticConfig from '../config';
 import { loadLocale } from '../src/util/i18n';
 import { noop } from '../src/util/util';
 
@@ -1008,12 +1008,14 @@ describe('createRouter()', () => {
         }));
   });
 
-  describe('config', () => {
+  describe('staticConfig', () => {
     beforeEach(mockLogin);
 
     it('redirects user from /system/backups if showsBackups is false', () => {
-      store.commit('setConfig', { key: 'showsBackups', value: false });
-      return load('/system/backups', {}, false)
+      const container = {
+        staticConfig: { ...staticConfig, showsBackups: false }
+      };
+      return load('/system/backups', { container }, false)
         .respondFor('/')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
@@ -1021,8 +1023,10 @@ describe('createRouter()', () => {
     });
 
     it('redirects user from /system/analytics if showsAnalytics is false', () => {
-      store.commit('setConfig', { key: 'showsAnalytics', value: false });
-      return load('/system/analytics', {}, false)
+      const container = {
+        staticConfig: { ...staticConfig, showsAnalytics: false }
+      };
+      return load('/system/analytics', { container }, false)
         .respondFor('/')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');

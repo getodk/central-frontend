@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import { createRouter, createWebHashHistory } from 'vue-router';
 
-import routes from './routes';
+import createRoutes from './routes';
 import store from './store';
 import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
@@ -23,7 +23,7 @@ import { noop } from './util/util';
 
 export default (container, history = createWebHashHistory()) => {
   const { alert } = container;
-  const router = createRouter({ history, routes });
+  const router = createRouter({ history, routes: createRoutes(container) });
 
 
 

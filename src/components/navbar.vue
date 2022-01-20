@@ -46,8 +46,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import NavbarActions from './navbar/actions.vue';
 import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
@@ -68,6 +66,7 @@ export default {
     NavbarLocaleDropdown
   },
   mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
+  inject: ['staticConfig'],
   data() {
     return {
       analyticsIntroduction: {
@@ -79,7 +78,9 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData(['currentUser', 'analyticsConfig']),
-    ...mapState({ showsAnalytics: (state) => state.config.showsAnalytics }),
+    showsAnalytics() {
+      return this.staticConfig.showsAnalytics;
+    },
     // Usually once the user is logged in (either after their session has been
     // restored or after they have submitted the login form), we render a fuller
     // navbar. However, if after submitting the login form, the user is

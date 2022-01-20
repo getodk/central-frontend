@@ -40,8 +40,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -51,11 +49,14 @@ export default {
   name: 'SystemHome',
   components: { PageBody, PageHead },
   mixins: [tab()],
+  inject: ['staticConfig'],
   computed: {
-    ...mapState({
-      showsBackups: (state) => state.config.showsBackups,
-      showsAnalytics: (state) => state.config.showsAnalytics
-    }),
+    showsBackups() {
+      return this.staticConfig.showsBackups;
+    },
+    showsAnalytics() {
+      return this.staticConfig.showsAnalytics;
+    },
     tabPathPrefix() {
       return '/system';
     }

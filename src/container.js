@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 import createAlert from './alert';
 import createCentralRouter from './router';
 import i18n from './i18n';
+import staticConfigFile from '../config';
 import store from './store';
 
 export default ({
@@ -20,11 +21,13 @@ export default ({
   // without a router by specifying `null`.
   router = createCentralRouter,
   alert = createAlert(),
+  staticConfig = staticConfigFile,
 } = {}) => {
   const container = {
     i18n: i18n.global,
     store,
     alert,
+    staticConfig,
   };
   if (router != null)
     container.router = typeof router === 'function' ? router(container) : router;
@@ -35,6 +38,7 @@ export default ({
       .use(container.router)
       .provide('container', container)
       .provide('alert', alert)
+      .provide('staticConfig', staticConfig)
   };
   return container;
 };

@@ -13,7 +13,6 @@ import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 
 import i18n from './i18n';
-import store from './store';
 import { instanceNameOrId } from './util/odata';
 import { routeProps } from './util/router';
 
@@ -220,6 +219,7 @@ const asyncRoute = (options) => {
   return config;
 };
 
+export default ({ staticConfig }) => {
 const routes = [
   {
     path: '/login',
@@ -648,7 +648,7 @@ const routes = [
           },
           title: { parts: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')] }
         },
-        beforeEnter: () => (store.state.config.showsBackups ? true : '/')
+        beforeEnter: () => (staticConfig.showsBackups ? true : '/')
       }),
       asyncRoute({
         path: 'audits',
@@ -677,7 +677,7 @@ const routes = [
             ]
           }
         },
-        beforeEnter: () => (store.state.config.showsAnalytics ? true : '/')
+        beforeEnter: () => (staticConfig.showsAnalytics ? true : '/')
       })
     ]
   }),
@@ -703,7 +703,6 @@ const routes = [
     }
   })
 ];
-export default routes;
 
 
 
@@ -831,3 +830,11 @@ preserveDataForKey({
   ],
   params: ['projectId']
 });
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  // RETURN
+
+  return routes;
+};
