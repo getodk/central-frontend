@@ -11,15 +11,11 @@ except according to the terms contained in the LICENSE file.
 */
 export default {
   state: {
-    anyNavigationConfirmed: false,
     sendInitialRequests: true,
     unsavedChanges: false
   },
   mutations: {
     /* eslint-disable no-param-reassign */
-    confirmNavigation(state, route) {
-      state.anyNavigationConfirmed = true;
-    },
     setSendInitialRequests(state, sendInitialRequests) {
       state.sendInitialRequests = sendInitialRequests;
     },
@@ -27,7 +23,6 @@ export default {
       state.unsavedChanges = unsavedChanges;
     },
     resetRouterState(state) {
-      state.anyNavigationConfirmed = false;
       state.sendInitialRequests = true;
       state.unsavedChanges = false;
     }

@@ -38,16 +38,6 @@ export default router;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ROUTER STATE
-
-// Set select properties of store.state.router.
-router.afterEach(to => {
-  store.commit('confirmNavigation', to);
-});
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // LAZY LOADING
 
 /* After it is created, an AsyncRoute component will load the async component

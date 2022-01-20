@@ -89,7 +89,6 @@ export const mount = (component, options = {}) => {
         };
       }
       mountOptions.mocks = mocks;
-      store.commit('confirmNavigation', mocks.$route);
     }
   }
 

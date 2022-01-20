@@ -65,6 +65,7 @@ hand-in-hand.
 */
 
 import Vue from 'vue';
+import { START_LOCATION } from 'vue-router';
 
 import i18n from '../i18n';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
@@ -133,7 +134,7 @@ export const logOut = (router, store, setNext) => {
   // We do not navigate to /login for a logout during login or during the
   // initial navigation. After the initial navigation, navigation is
   // synchronous, so a logout during navigation is not possible.
-  if (store.state.router.anyNavigationConfirmed &&
+  if (router.currentRoute.value !== START_LOCATION &&
     router.currentRoute.value.path !== '/login') {
     const location = { path: '/login' };
     if (setNext) location.query = { next: router.currentRoute.value.fullPath };

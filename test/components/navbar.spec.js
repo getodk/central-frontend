@@ -7,7 +7,7 @@ import { load } from '../util/http';
 
 describe('Navbar', () => {
   describe('visibility', () => {
-    it('does not show the navbar until the first confirmed navigation', () => {
+    it('does not show the navbar during the initial navigation', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       let wasHidden;
       const removeGuard = router.afterEach(() => {

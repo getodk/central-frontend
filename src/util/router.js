@@ -9,6 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { START_LOCATION } from 'vue-router';
 import { last } from 'ramda';
 
 import i18n from '../i18n';
@@ -52,8 +53,7 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
   - from. A Route object.
 */
 export const preservesData = (key, to, from) => {
-  // Initial navigation
-  if (from.matched.length === 0) return true;
+  if (from === START_LOCATION) return true;
   const forKey = to.meta.preserveData[key];
   if (forKey == null) return false;
   const params = forKey[last(from.matched).name];
