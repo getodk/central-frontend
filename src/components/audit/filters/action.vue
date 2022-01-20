@@ -23,11 +23,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import audit from '../../../mixins/audit';
+import mixinAudits from '../../../mixins/audit';
 
 export default {
   name: 'AuditFiltersAction',
-  mixins: [audit()],
+  mixins: [mixinAudits],
   props: {
     modelValue: {
       type: String,

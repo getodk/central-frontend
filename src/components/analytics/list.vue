@@ -43,7 +43,7 @@ import AuditTable from '../audit/table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
-import modal from '../../mixins/modal';
+import mixinModals from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
@@ -57,7 +57,7 @@ export default {
     Loading,
     PageSection
   },
-  mixins: [modal()],
+  mixins: [mixinModals],
   inject: ['requestData'],
   data() {
     return {

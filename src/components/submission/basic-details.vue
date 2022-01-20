@@ -60,13 +60,13 @@ except according to the terms contained in the LICENSE file.
 import DateTime from '../date-time.vue';
 import PageSection from '../page/section.vue';
 
-import reviewState from '../../mixins/review-state';
+import mixinReviewState from '../../mixins/review-state';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionBasicDetails',
   components: { DateTime, PageSection },
-  mixins: [reviewState()],
+  mixins: [mixinReviewState],
   inject: ['requestData'],
   computed: {
     ...requestDataComputed({

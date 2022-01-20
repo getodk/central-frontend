@@ -47,7 +47,7 @@ import SubmissionActivity from './activity.vue';
 import SubmissionBasicDetails from './basic-details.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
-import modal from '../../mixins/modal';
+import mixinModals from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { instanceNameOrId } from '../../util/odata';
 import { mixinPaths } from '../../reusables/paths';
@@ -65,7 +65,7 @@ export default {
     SubmissionBasicDetails,
     SubmissionUpdateReviewState
   },
-  mixins: [modal(), mixinPaths],
+  mixins: [mixinModals, mixinPaths],
   inject: ['requestData', 'alert'],
   props: {
     projectId: {

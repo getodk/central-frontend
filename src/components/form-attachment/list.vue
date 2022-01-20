@@ -62,8 +62,8 @@ import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import dropZone from '../../mixins/drop-zone';
-import modal from '../../mixins/modal';
+import mixinDropZone from '../../mixins/drop-zone';
+import mixinModals from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
@@ -77,7 +77,7 @@ export default {
     FormAttachmentRow,
     FormAttachmentUploadFiles
   },
-  mixins: [dropZone(), modal(), mixinRequests],
+  mixins: [mixinDropZone, mixinModals, mixinRequests],
   inject: ['requestData', 'alert'],
   data() {
     return {

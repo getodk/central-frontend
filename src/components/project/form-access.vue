@@ -54,7 +54,7 @@ import ProjectFormAccessTable from './form-access/table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import modal from '../../mixins/modal';
+import mixinModals from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
@@ -70,7 +70,7 @@ export default {
     SentenceSeparator,
     Spinner
   },
-  mixins: [modal(), mixinRequests],
+  mixins: [mixinModals, mixinRequests],
   inject: ['request-data', 'alert'],
   props: {
     projectId: {

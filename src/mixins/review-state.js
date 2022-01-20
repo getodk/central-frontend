@@ -10,11 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-/*
-This mixin includes methods related to submission review state.
-
-The mixin factory does not take any options.
-*/
+// This mixin includes methods related to submission review state.
 
 const icons = {
   hasIssues: 'icon-comments',
@@ -24,12 +20,10 @@ const icons = {
 };
 
 // @vue/component
-const mixin = {
+export default {
   methods: {
     reviewStateIcon(reviewState) {
       return reviewState == null ? 'icon-dot-circle-o' : icons[reviewState];
     }
   }
 };
-
-export default () => mixin;

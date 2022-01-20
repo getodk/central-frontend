@@ -133,7 +133,7 @@ import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
 import SummaryItem from '../summary-item.vue';
-import modal from '../../mixins/modal';
+import mixinModals from '../../mixins/modal';
 import { mixinPaths } from '../../reusables/paths';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
@@ -149,7 +149,7 @@ export default {
     ProjectRow,
     SummaryItem
   },
-  mixins: [modal(), mixinPaths],
+  mixins: [mixinModals, mixinPaths],
   inject: ['requestData', 'alert'],
   data() {
     return {

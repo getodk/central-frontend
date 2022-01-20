@@ -55,13 +55,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 
-import reviewState from '../../mixins/review-state';
+import mixinReviewState from '../../mixins/review-state';
 import { apiPaths } from '../../util/request';
 
 export default {
   name: 'SubmissionMetadataRow',
   components: { DateTime },
-  mixins: [reviewState()],
+  mixins: [mixinReviewState],
   props: {
     projectId: {
       type: String,

@@ -13,8 +13,6 @@ except according to the terms contained in the LICENSE file.
 /*
 A component with a single file drop zone may use this mixin.
 
-The mixin factory does not take any options.
-
 The component using the mixin must:
 
   - Use a `ref` attribute to assign a reference ID of 'dropZone' to the drop
@@ -45,7 +43,7 @@ const noFiles = (event) =>
   !event.originalEvent.dataTransfer.types.some(type => type === 'Files');
 
 // @vue/component
-const mixin = {
+export default {
   computed: {
     fileIsOverDropZone() {
       return this.dragDepth !== 0;
@@ -92,5 +90,3 @@ const mixin = {
     $(this.$refs.dropZone).off(`.${componentName}`);
   }
 };
-
-export default () => mixin;

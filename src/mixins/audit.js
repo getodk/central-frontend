@@ -10,11 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-/*
-This mixin includes methods related to audit log entries.
-
-The mixin factory does not take any options.
-*/
+// This mixin includes methods related to audit log entries.
 
 // Returns the i18n path to use to describe the specified audit action.
 const actionPath = (action) => {
@@ -27,7 +23,7 @@ const actionPath = (action) => {
 };
 
 // @vue/component
-const mixin = {
+export default {
   methods: {
     // Returns a message describing an audit action.
     actionMessage(action) {
@@ -38,5 +34,3 @@ const mixin = {
     }
   }
 };
-
-export default () => mixin;

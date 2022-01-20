@@ -22,7 +22,7 @@ that indicates whether the modal should be shown.
 */
 
 // @vue/component
-const mixin = {
+export default {
   methods: {
     showModal(name) {
       this[name].state = true;
@@ -32,5 +32,3 @@ const mixin = {
     }
   }
 };
-
-export default () => mixin;

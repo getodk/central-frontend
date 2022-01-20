@@ -115,9 +115,11 @@ Most components are named according to the combination of a resource and an acti
 * `Edit`. A component used to update an existing resource of a particular type.
 * `Delete`. A modal used to delete an existing resource of a particular type.
 
-### Vue Mixins
+### Reusability: Mixins and the Composition API
 
-Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
+Components can share reusable code. They can do so using either mixins or the Composition API. Several pieces of reusable code are available as both a mixin and a composable: see [`/src/reusables/`](/src/reusables/). A component using the Options API should use the mixin, while a component using the Composition API should use the composable. Some pieces of reusable code are currently only available as a mixin: see [`/src/mixins/`](/src/mixins/).
+
+ODK Central Frontend recently moved from Vue 2 and Vue 3, and we are still establishing patterns in this area. Currently, the vast majority of components use the Options API, but that may change: we could start preferring the Composition API for new components. Alternatively, we may decide to leave the Composition API for specialized cases. How we end up using the Composition API will influence how we approach mixins and composables in the future.
 
 ### Router
 
@@ -306,7 +308,7 @@ You can use `mockHttp().testStandardButton()` to test some of these things for a
 
 To run tests, type `npm run test`. This will run all `*.spec.js` files in [`/test/`](/test/).
 
-The core of our tests is the tests of the components and the tests of the router, which together implement most of the business logic. We also have unit tests of mixins, the Vuex store, utility functions, and so on. The directory structure of `/test/` largely mirrors that of `/src/`. For example, each test file in `/test/components/` corresponds to a component in `/src/components/`; each test file in `/test/mixins/` corresponds to a mixin in `/src/mixins/`. The exception is that the files in `/test/util/` do not test the files in `/src/util/`, but rather are test utility functions. The files in `/src/util/` are tested by those in `/test/unit/`.
+The core of our tests is the tests of the components and the tests of the router, which together implement most of the business logic. We also have unit tests of composables/mixins, the Vuex store, utility functions, and so on. The directory structure of `/test/` largely mirrors that of `/src/`. For example, each test file in `/test/components/` corresponds to a component in `/src/components/`; each test file in `/test/reusables/` corresponds to a file in `/src/reusables/`. The exception is that the files in `/test/util/` do not test the files in `/src/util/`, but rather are test utility functions. The files in `/src/util/` are tested by those in `/test/unit/`.
 
 If you add code outside a `.vue` file (for example, a utility function), and it is easy to test in isolation, consider writing unit tests to verify the code. If a function's input is very easy to directly construct or mock, for example, it is likely a good candidate for unit testing. On the other hand, when writing code that is more closely related to other code, it may work best to test the functionality in a component test or a test of the router.
 

@@ -86,7 +86,7 @@ import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import dropZone from '../../mixins/drop-zone';
+import mixinDropZone from '../../mixins/drop-zone';
 import { apiPaths, isProblem } from '../../util/request';
 import { mixinRequests } from '../../reusables/requests';
 import { requestDataComputed } from '../../reusables/request-data';
@@ -94,7 +94,7 @@ import { requestDataComputed } from '../../reusables/request-data';
 export default {
   name: 'FormNew',
   components: { DocLink, Modal, SentenceSeparator, Spinner },
-  mixins: [dropZone(), mixinRequests],
+  mixins: [mixinDropZone, mixinRequests],
   inject: ['requestData', 'alert'],
   props: {
     state: {

@@ -55,7 +55,7 @@ import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import MarkdownView from '../markdown/view.vue';
 
-import reviewState from '../../mixins/review-state';
+import mixinReviewState from '../../mixins/review-state';
 import SubmissionDiffItem from './diff-item.vue';
 
 import { requestDataComputed } from '../../reusables/request-data';
@@ -63,7 +63,7 @@ import { requestDataComputed } from '../../reusables/request-data';
 export default {
   name: 'SubmissionFeedEntry',
   components: { ActorLink, DateTime, MarkdownView, SubmissionDiffItem },
-  mixins: [reviewState()],
+  mixins: [mixinReviewState],
   inject: ['requestData'],
   props: {
     projectId: {
