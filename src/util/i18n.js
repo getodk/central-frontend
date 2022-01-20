@@ -34,7 +34,7 @@ export const loadLocale = ({ i18n, logger }, locale) => {
       setLocale(locale);
     })
     .catch(e => {
-      logger.error(e);
+      logger.log(e);
       throw e;
     });
 };

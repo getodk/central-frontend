@@ -24,7 +24,7 @@ import './assertions';
   });
   afterEach(() => {
     if (unhandled != null) {
-      console.log(unhandled); // eslint-disable-line no-console
+      console.error(unhandled); // eslint-disable-line no-console
       throw new Error('A request was sent, but not handled. Are you using mockHttp() or load()?');
     }
   });
@@ -46,7 +46,7 @@ enableAutoUnmount(afterEach);
 afterEach(() => {
   const afterScript = document.querySelector('body > script:last-of-type + *');
   if (afterScript != null) {
-    console.log(document.body.innerHTML); // eslint-disable-line no-console
+    console.error(document.body.innerHTML); // eslint-disable-line no-console
     throw new Error('Unexpected element after last script element. Have all Bootstrap elements been removed?');
   }
 });
