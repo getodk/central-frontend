@@ -72,6 +72,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { equals } from 'ramda';
 import { mapGetters } from 'vuex';
+import { markRaw } from 'vue';
 
 // This constant is also used in the `disabled` message.
 const maxCheckedCount = 100;
@@ -136,8 +137,8 @@ export default {
     }
   },
   mounted() {
-    this.wrappers.parent = $(this.$el).on('hidden.bs.dropdown', this.afterHide);
-    this.wrappers.toggle = $(this.$refs.select);
+    this.wrappers.parent = markRaw($(this.$el).on('hidden.bs.dropdown', this.afterHide));
+    this.wrappers.toggle = markRaw($(this.$refs.select));
   },
   beforeUnmount() {
     this.wrappers.parent.off('hidden.bs.dropdown');
