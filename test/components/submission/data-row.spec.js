@@ -2,22 +2,28 @@ import { Settings } from 'luxon';
 
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 
-import Field from '../../../src/presenters/field';
-
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
 
-const mountComponent = (props = undefined) => mount(SubmissionDataRow, {
-  props: {
-    projectId: '1',
-    xmlFormId: 'f',
-    draft: false,
-    submission: testData.submissionOData().value[0],
-    fields: testData.extendedForms.last()._fields.map(field => new Field(field)),
-    ...props
-  }
-});
+const mountOptions = () => {
+  const container = createTestContainer({
+    requestData: { fields: testData.extendedForms.last()._fields }
+  });
+  const { requestData } = container;
+  return {
+    props: {
+      projectId: '1',
+      xmlFormId: 'f',
+      draft: false,
+      submission: testData.submissionOData().value[0],
+      fields: requestData.fields.data
+    },
+    container
+  };
+};
+const mountComponent = () => mount(SubmissionDataRow, mountOptions());
 
 describe('SubmissionDataRow', () => {
   it('shows an empty string if the value of a field does not exist', () => {
@@ -349,7 +355,9 @@ describe('SubmissionDataRow', () => {
         forms: 1
       });
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-      const row = mountComponent({ fields: [] });
+      const options = mountOptions();
+      options.props.fields = [];
+      const row = mount(SubmissionDataRow, options);
       const td = row.findAll('td');
       td.length.should.equal(1);
       should.not.exist(td[0].attributes().colspan);

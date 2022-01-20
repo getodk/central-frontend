@@ -2,7 +2,9 @@ import { DateTime } from 'luxon';
 
 import DateRangePicker from '../../src/components/date-range-picker.vue';
 
+import createCentralI18n from '../../src/i18n';
 import { loadLocale } from '../../src/util/i18n';
+
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { setLuxon } from '../util/date-time';
 import { wait } from '../util/util';
@@ -279,12 +281,13 @@ describe('DateRangePicker', () => {
       should.not.exist(mountComponent().vm.config.locale);
     });
 
-    it('specifies a flatpickr locale if the i18n locale is es', () =>
-      loadLocale('es')
-        .then(() => {
-          const { locale } = mountComponent().vm.config;
-          locale.weekdays.longhand[0].should.equal('Domingo');
-        })
-        .finally(() => loadLocale('en')));
+    it('specifies a flatpickr locale if the i18n locale is es', async () => {
+      const i18n = createCentralI18n();
+      await loadLocale({ i18n }, 'es');
+      const component = mountComponent({
+        container: { i18n }
+      });
+      component.vm.config.locale.should.equal('es');
+    });
   });
 });

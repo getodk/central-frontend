@@ -12,11 +12,7 @@ except according to the terms contained in the LICENSE file.
 import { construct, identity, last } from 'ramda';
 import { computed, reactive } from 'vue';
 
-import Field from '../presenters/field';
-import Form from '../presenters/form';
 import Option from '../util/option';
-import Project from '../presenters/project';
-import User from '../presenters/user';
 import createResourceForContainer from './resource';
 import { computeIfExists } from '../util/reactivity';
 
@@ -102,6 +98,7 @@ const optionResource = (data) => ({
 
 export default (container, requestData) => {
   const createResource = createResourceForContainer(container, resourceDebugger);
+  const { User, Project, Form, Field } = container;
 return withDebugging({
   /* eslint-disable no-param-reassign */
 

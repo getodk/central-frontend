@@ -40,7 +40,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import { apiPaths } from '../../util/request';
 import { requestDataComputed } from '../../reusables/request-data';
 
@@ -49,7 +48,7 @@ export default {
   inject: ['requestData'],
   props: {
     formVersion: {
-      type: Form,
+      type: Object,
       required: true
     },
     odataFilter: String

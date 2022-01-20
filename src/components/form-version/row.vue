@@ -30,7 +30,6 @@ except according to the terms contained in the LICENSE file.
 import FormVersionDefDropdown from './def-dropdown.vue';
 import TimeAndUser from '../time-and-user.vue';
 
-import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 
 export default {
@@ -39,7 +38,7 @@ export default {
   mixins: [routes()],
   props: {
     version: {
-      type: Form,
+      type: Object,
       required: true
     }
   },

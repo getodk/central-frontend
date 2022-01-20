@@ -27,7 +27,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import SummaryItem from '../summary-item.vue';
 
 export default {
@@ -35,7 +34,7 @@ export default {
   components: { SummaryItem },
   props: {
     version: {
-      type: Form,
+      type: Object,
       required: true
     }
   }

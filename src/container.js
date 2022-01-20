@@ -10,10 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import createAlert from './alert';
+import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createRequestData from './request-data';
 import createUnsavedChanges from './unsaved-changes';
-import i18n from './i18n';
+import definePresenters from './presenters';
 import staticConfigFile from '../config';
 
 export default ({
@@ -21,6 +22,7 @@ export default ({
   // container and returns an object. It is also possible to create a container
   // without a router by specifying `null`.
   router = createCentralRouter,
+  i18n = createCentralI18n(),
   // requestData should be a function that takes a partial container and returns
   // a requestData object.
   requestData = createRequestData,
@@ -34,6 +36,7 @@ export default ({
     unsavedChanges,
     staticConfig,
   };
+  Object.assign(container, definePresenters(container));
   container.requestData = requestData(container);
   if (router != null)
     container.router = typeof router === 'function' ? router(container) : router;

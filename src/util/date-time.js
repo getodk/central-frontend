@@ -11,8 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 import { DateTime } from 'luxon';
 
-import i18n from '../i18n';
-
 export const ago = (duration) => DateTime.local().minus(duration);
 
 
@@ -28,20 +26,13 @@ export const formatDate = (dateTime, relative = false) => {
   if (!dateTime.isValid) return dateTime.toString();
   if (relative) {
     const now = DateTime.local();
-    // We may be able to use dateTime.toRelativeCalendar() once Safari supports
-    // Intl.RelativeTimeFormat.
-    if (now.hasSame(dateTime, 'day')) return i18n.t('util.dateTime.today');
-    if (now.minus({ days: 1 }).hasSame(dateTime, 'day'))
-      return i18n.t('util.dateTime.yesterday');
+    // TODO. Remove i18n messages under util.dateTime.
+    if (now.hasSame(dateTime, 'day') ||
+      now.minus({ days: 1 }).hasSame(dateTime, 'day'))
+      return dateTime.toRelativeCalendar({ base: now });
     for (let i = 2; i <= 5; i += 1) {
-      if (now.minus({ days: i }).hasSame(dateTime, 'day')) {
-        // If keeping the Luxon and Vue I18n locales in sync becomes more
-        // challenging, we may want to move to Vue I18n for DateTime
-        // localization.
-        if (dateTime.locale !== i18n.locale)
-          throw new Error('dateTime has a different locale than i18n');
+      if (now.minus({ days: i }).hasSame(dateTime, 'day'))
         return dateTime.weekdayLong;
-      }
     }
   }
   // If this changes, DateRangePicker will need to change as well.

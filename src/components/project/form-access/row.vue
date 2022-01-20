@@ -51,7 +51,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../../presenters/form';
 import routes from '../../../mixins/routes';
 import { requestDataComputed } from '../../../reusables/request-data';
 
@@ -61,7 +60,7 @@ export default {
   inject: ['requestData'],
   props: {
     form: {
-      type: Form,
+      type: Object,
       required: true
     },
     changes: {

@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import i18n from '../i18n';
 import { presenterClass } from './base';
 
 // This presenter class is used for forms and form versions (primary, draft, and
@@ -42,7 +41,7 @@ const props = [
   'draftToken'
 ];
 
-export default class Form extends presenterClass(props) {
+export default ({ i18n }) => class Form extends presenterClass(props) {
   nameOrId() { return this.name != null ? this.name : this.xmlFormId; }
 
   versionOrBlank() {
@@ -55,4 +54,4 @@ export default class Form extends presenterClass(props) {
   updatedOrCreatedAt() {
     return this.updatedAt != null ? this.updatedAt : this.createdAt;
   }
-}
+};

@@ -1,32 +1,39 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
 
-import Field from '../../../src/presenters/field';
-
+import createTestContainer from '../../util/container';
 import testData from '../../data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mockRouter } from '../../util/router';
 
-const mountComponent = (mountOptions = {}) => mount(SubmissionTable, {
-  ...mountOptions,
-  props: {
-    projectId: '1',
-    xmlFormId: 'f',
-    draft: false,
-    submissions: testData.submissionOData().value,
-    fields: testData.extendedForms.last()._fields
-      .map(field => new Field(field)),
-    originalCount: testData.extendedSubmissions.size,
-    ...mountOptions.props
-  },
-  container: {
-    requestData: { project: testData.extendedProjects.last() },
-    stubs: { RouterLink: RouterLinkStub }
-  }
-});
+const mountOptions = (options = undefined) => {
+  const merged = mergeMountOptions(options, {
+    props: {
+      projectId: '1',
+      xmlFormId: 'f',
+      draft: false,
+      submissions: testData.submissionOData().value,
+      originalCount: testData.extendedSubmissions.size
+    },
+    container: {
+      requestData: {
+        project: testData.extendedProjects.last(),
+        fields: testData.extendedForms.last()._fields
+      }
+    }
+  });
+  merged.container.router = mockRouter(!merged.props.draft
+    ? '/projects/1/forms/f/submissions'
+    : '/projects/1/forms/f/draft/testing');
+  merged.container = createTestContainer(merged.container);
+  const { requestData } = merged.container;
+  merged.props.fields = requestData.fields.data;
+  return merged;
+};
+const mountComponent = (options = undefined) =>
+  mount(SubmissionTable, mountOptions(options));
 
 const headers = (table) => table.findAll('th').map(th => th.text());
 
@@ -70,9 +77,10 @@ describe('SubmissionTable', () => {
       ];
       testData.extendedForms.createPast(1, { fields, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
-      const component = mountComponent({
-        props: { fields: [new Field(fields[1])] }
-      });
+      const options = mountOptions();
+      const { Field } = options.container;
+      options.props.fields = [new Field(fields[1])];
+      const component = mount(SubmissionTable, options);
       const table = component.get('#submission-table-data');
       headers(table).should.eql(['g-s', 'Instance ID']);
     });

@@ -66,7 +66,6 @@ hand-in-hand.
 
 import { START_LOCATION } from 'vue-router';
 
-import i18n from '../i18n';
 import { apiPaths, isProblem, request } from './request';
 import { forceReplace } from './router';
 import { localStore } from './storage';
@@ -89,7 +88,7 @@ const removeSessionFromStorage = () => {
 };
 
 const requestLogout = (container) => {
-  const { requestData } = container;
+  const { i18n, requestData } = container;
   return request(container, {
     method: 'DELETE',
     url: apiPaths.session(requestData.session.data.token),
@@ -137,7 +136,7 @@ export const logOut = (container, setNext) => {
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
 const logOutBeforeSessionExpires = (container) => {
-  const { requestData, alert } = container;
+  const { i18n, requestData, alert } = container;
   let alerted;
   return () => {
     const session = requestData.session.data;

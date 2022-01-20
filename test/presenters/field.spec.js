@@ -1,6 +1,7 @@
-import Field from '../../src/presenters/field';
-
+import createTestContainer from '../util/container';
 import testData from '../data';
+
+const { Field } = createTestContainer();
 
 describe('Field', () => {
   it('splits the path', () => {

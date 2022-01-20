@@ -1,7 +1,5 @@
 import FormVersionDefDropdown from '../../../src/components/form-version/def-dropdown.vue';
 
-import Form from '../../../src/presenters/form';
-
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mount } from '../../util/lifecycle';
@@ -12,7 +10,7 @@ describe('FormVersionDefDropdown', () => {
       const form = testData.extendedForms.createPast(1).last();
       return mockHttp()
         .mount(FormVersionDefDropdown, {
-          props: { version: new Form(form) }
+          props: { version: form }
         })
         .request(component => component.get('a').trigger('click'))
         .respondWithData(() => '<x/>')
@@ -24,7 +22,7 @@ describe('FormVersionDefDropdown', () => {
       const draft = testData.extendedFormDrafts.last();
       return mockHttp()
         .mount(FormVersionDefDropdown, {
-          props: { version: new Form(draft) }
+          props: { version: draft }
         })
         .request(component => component.get('a').trigger('click'))
         .respondWithData(() => '<x/>')
@@ -35,7 +33,7 @@ describe('FormVersionDefDropdown', () => {
       const form = testData.extendedForms.createPast(1).last();
       return mockHttp()
         .mount(FormVersionDefDropdown, {
-          props: { version: new Form(form) }
+          props: { version: form }
         })
         .request(component => component.get('a').trigger('click'))
         .respondWithData(() => '<x/>')
@@ -49,7 +47,7 @@ describe('FormVersionDefDropdown', () => {
       const form = testData.extendedForms.createPast(1).last();
       return mockHttp()
         .mount(FormVersionDefDropdown, {
-          props: { version: new Form(form) }
+          props: { version: form }
         })
         .request(dropdown => dropdown.get('a').trigger('click'))
         .beforeAnyResponse(dropdown => {
@@ -63,7 +61,7 @@ describe('FormVersionDefDropdown', () => {
     it('shows the correct text', () => {
       const form = testData.extendedForms.createPast(1).last();
       const dropdown = mount(FormVersionDefDropdown, {
-        props: { version: new Form(form) }
+        props: { version: form }
       });
       dropdown.findAll('a')[1].text().should.equal('Download as XForm (.xml)');
     });
@@ -71,7 +69,7 @@ describe('FormVersionDefDropdown', () => {
     it('has the correct href attribute for a published version', () => {
       const form = testData.extendedForms.createPast(1).last();
       const dropdown = mount(FormVersionDefDropdown, {
-        props: { version: new Form(form) }
+        props: { version: form }
       });
       const { href } = dropdown.findAll('a')[1].attributes();
       href.should.equal('/v1/projects/1/forms/f/versions/v1.xml');
@@ -81,7 +79,7 @@ describe('FormVersionDefDropdown', () => {
       testData.extendedForms.createPast(1, { draft: true });
       const draft = testData.extendedFormDrafts.last();
       const dropdown = mount(FormVersionDefDropdown, {
-        props: { version: new Form(draft) }
+        props: { version: draft }
       });
       const { href } = dropdown.findAll('a')[1].attributes();
       href.should.equal('/v1/projects/1/forms/f/draft.xml');
@@ -90,7 +88,7 @@ describe('FormVersionDefDropdown', () => {
     it('has the correct download attribute', () => {
       const form = testData.extendedForms.createPast(1).last();
       const dropdown = mount(FormVersionDefDropdown, {
-        props: { version: new Form(form) }
+        props: { version: form }
       });
       dropdown.findAll('a')[1].attributes().download.should.equal('f.xml');
     });
@@ -102,7 +100,7 @@ describe('FormVersionDefDropdown', () => {
         .createPast(1, { excelContentType: 'application/vnd.ms-excel' })
         .last();
       const dropdown = mount(FormVersionDefDropdown, {
-        props: { version: new Form(form) }
+        props: { version: form }
       });
       dropdown.findAll('a').length.should.equal(3);
     });
@@ -112,7 +110,7 @@ describe('FormVersionDefDropdown', () => {
         .createPast(1, { excelContentType: null })
         .last();
       const dropdown = mount(FormVersionDefDropdown, {
-        props: { version: new Form(form) }
+        props: { version: form }
       });
       dropdown.findAll('a').length.should.equal(2);
     });
@@ -123,7 +121,7 @@ describe('FormVersionDefDropdown', () => {
           .createPast(1, { excelContentType: 'application/vnd.ms-excel' })
           .last();
         const dropdown = mount(FormVersionDefDropdown, {
-          props: { version: new Form(form) }
+          props: { version: form }
         });
         const text = dropdown.findAll('a')[2].text();
         text.should.equal('Download as XLSForm (.xls)');
@@ -134,7 +132,7 @@ describe('FormVersionDefDropdown', () => {
           .createPast(1, { excelContentType: 'application/vnd.ms-excel' })
           .last();
         const dropdown = mount(FormVersionDefDropdown, {
-          props: { version: new Form(form) }
+          props: { version: form }
         });
         const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/versions/v1.xls');
@@ -147,7 +145,7 @@ describe('FormVersionDefDropdown', () => {
         });
         const draft = testData.extendedFormDrafts.last();
         const dropdown = mount(FormVersionDefDropdown, {
-          props: { version: new Form(draft) }
+          props: { version: draft }
         });
         const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/draft.xls');
@@ -162,7 +160,7 @@ describe('FormVersionDefDropdown', () => {
           })
           .last();
         const dropdown = mount(FormVersionDefDropdown, {
-          props: { version: new Form(form) }
+          props: { version: form }
         });
         const text = dropdown.findAll('a')[2].text();
         text.should.equal('Download as XLSForm (.xlsx)');
@@ -175,7 +173,7 @@ describe('FormVersionDefDropdown', () => {
           })
           .last();
         const dropdown = mount(FormVersionDefDropdown, {
-          props: { version: new Form(form) }
+          props: { version: form }
         });
         const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/versions/v1.xlsx');
@@ -188,7 +186,7 @@ describe('FormVersionDefDropdown', () => {
         });
         const draft = testData.extendedFormDrafts.last();
         const dropdown = mount(FormVersionDefDropdown, {
-          props: { version: new Form(draft) }
+          props: { version: draft }
         });
         const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/draft.xlsx');

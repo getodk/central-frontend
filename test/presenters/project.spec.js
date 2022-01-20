@@ -1,5 +1,7 @@
-import Project from '../../src/presenters/project';
+import createTestContainer from '../util/container';
 import testData from '../data';
+
+const { Project } = createTestContainer();
 
 describe('Project', () => {
   describe('nameWithArchived()', () => {

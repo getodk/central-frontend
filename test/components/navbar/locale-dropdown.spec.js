@@ -1,8 +1,5 @@
 import NavbarLocaleDropdown from '../../../src/components/navbar/locale-dropdown.vue';
 
-import i18n from '../../../src/i18n';
-import { loadLocale } from '../../../src/util/i18n';
-
 import { load } from '../../util/http';
 import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
@@ -23,8 +20,6 @@ describe('NavbarLocaleDropdown', () => {
   });
 
   describe('after a locale selection', () => {
-    afterEach(() => loadLocale('en'));
-
     const selectLocale = () => load('/login')
       .restoreSession(false)
       .afterResponses(async (app) => {
@@ -35,13 +30,12 @@ describe('NavbarLocaleDropdown', () => {
         return app;
       });
 
-    it('loads the locale', () =>
-      selectLocale()
-        // Wait for the locale to be loaded.
-        .then(() => wait(100))
-        .then(() => {
-          i18n.locale.should.equal('es');
-        }));
+    it('loads the locale', async () => {
+      const app = await selectLocale();
+      // Wait for the locale to be loaded.
+      await wait(100);
+      app.vm.$i18n.locale.should.equal('es');
+    });
 
     it('shows the new locale', () =>
       selectLocale().then(app => {

@@ -14,7 +14,6 @@ import { T, equals } from 'ramda';
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 
-import i18n from './i18n';
 import { instanceNameOrId } from './util/odata';
 import { routeProps } from './util/router';
 
@@ -222,7 +221,7 @@ const asyncRoute = (options) => {
   return config;
 };
 
-export default ({ requestData, staticConfig }) => {
+export default ({ i18n, requestData, staticConfig }) => {
   const title = {
     project: () => {
       const { data } = requestData.project;

@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import i18n from '../i18n';
 import { presenterClass } from './base';
 
 const props = [
@@ -26,7 +25,7 @@ const props = [
   'verbs'
 ];
 
-export default class Project extends presenterClass(props) {
+export default ({ i18n }) => class Project extends presenterClass(props) {
   constructor(data) {
     super(data);
     this._verbSet = data.verbs != null ? new Set(data.verbs) : null;
@@ -43,4 +42,4 @@ export default class Project extends presenterClass(props) {
       ? this._verbSet.has(verbOrVerbs)
       : verbOrVerbs.every(verb => this._verbSet.has(verb));
   }
-}
+};

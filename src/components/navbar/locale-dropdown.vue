@@ -39,6 +39,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'NavbarLocaleDropdown',
+  inject: ['container'],
   data() {
     return {
       loading: false
@@ -52,7 +53,7 @@ export default {
   methods: {
     loadLocale(locale) {
       this.loading = true;
-      return loadLocale(locale)
+      return loadLocale(this.container, locale)
         .then(() => {
           localStore.setItem('locale', locale);
         })

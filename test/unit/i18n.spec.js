@@ -1,40 +1,34 @@
-import i18n from '../../src/i18n';
-import { flatpickrLocales, loadLocale } from '../../src/util/i18n';
-
-import { i18nProps } from '../util/i18n';
+import createCentralI18n from '../../src/i18n';
+import { $tcn, loadLocale } from '../../src/util/i18n';
 
 describe('util/i18n', () => {
   describe('loadLocale()', () => {
-    afterEach(() => {
-      i18n.locale = 'en';
-      document.querySelector('html').setAttribute('lang', 'en');
+    it('changes the locale', async () => {
+      const i18n = createCentralI18n();
+      await loadLocale({ i18n }, 'es');
+      i18n.locale.should.equal('es');
+      i18n.t('field.password').should.equal('Contraseña');
     });
 
-    it('changes the locale', () =>
-      loadLocale('es').then(() => {
-        i18n.locale.should.equal('es');
-        i18n.t('field.password').should.equal('Contraseña');
-      }));
+    it('changes the lang attribute', async () => {
+      document.querySelector('html').getAttribute('lang').should.equal('en');
+      await loadLocale({ i18n: createCentralI18n() }, 'es');
+      document.querySelector('html').getAttribute('lang').should.equal('es');
+    });
 
-    it('changes the lang attribute', () =>
-      loadLocale('es').then(() => {
-        document.querySelector('html').getAttribute('lang').should.equal('es');
-      }));
+    it('returns a rejected promise for a locale that is not defined', () => {
+      const result = loadLocale({ i18n: createCentralI18n() }, 'la');
+      return result.should.be.rejectedWith('unknown locale');
+    });
 
-    it('loads the flatpickr locale', () =>
-      loadLocale('es').then(() => {
-        flatpickrLocales.es.weekdays.longhand[0].should.equal('Domingo');
-      }));
-
-    it('returns a rejected promise for a locale that is not defined', () =>
-      loadLocale('la').should.be.rejected());
+    // Adding this test in case `locales` is changed from a Map to an object.
+    it('returns a rejected promise for a property in Object.prototype', () => {
+      const result = loadLocale({ i18n: createCentralI18n() }, 'toString');
+      return result.should.be.rejectedWith('unknown locale');
+    });
   });
 
   describe('pluralization rules', () => {
-    afterEach(() => {
-      i18n.locale = 'en';
-    });
-
     // Array of test cases by locale
     const cases = {
       cs: ['plural.webUser', [
@@ -49,11 +43,11 @@ describe('util/i18n', () => {
     };
     for (const [locale, [path, casesForLocale]] of Object.entries(cases)) {
       describe(locale, () => {
-        before(() => loadLocale(locale));
+        const i18n = createCentralI18n();
+        before(() => loadLocale({ i18n }, locale));
 
         for (const [count, form] of casesForLocale) {
           it(`uses the correct form for ${count}`, () => {
-            i18n.locale = locale;
             i18n.tc(path, count).should.equal(form);
           });
         }
@@ -61,32 +55,34 @@ describe('util/i18n', () => {
     }
   });
 
-  describe('pluralization utilities', () => {
-    beforeEach(() => {
-      i18n.setLocaleMessage('la', {
-        forms: '{count} Forma | {count} Formae',
-        parts: '{name} est omnis divisa in partes {count}.',
-      });
-      i18n.locale = 'la';
+  describe('$tcn()', () => {
+    const i18n = createCentralI18n();
+    i18n.setLocaleMessage('la', {
+      forms: '{count} Forma | {count} Formae',
+      parts: '{name} est omnis divisa in partem {count}. | {name} est omnis divisa in partes {count}.'
     });
-    afterEach(() => {
-      i18n.locale = 'en';
-      i18n.setLocaleMessage('la', {});
+    i18n.locale = 'la';
+    const i18nProps = {
+      $tc: i18n.tc.bind(i18n),
+      $n: i18n.n.bind(i18n),
+      $tcn
+    };
+
+    it('returns the singular', () => {
+      i18nProps.$tcn('forms', 1).should.equal('1 Forma');
     });
 
-    describe('$tcn()', () => {
-      it('returns the singular', () => {
-        i18nProps.$tcn('forms', 1).should.equal('1 Forma');
-      });
+    it('returns the plural', () => {
+      i18nProps.$tcn('forms', 2).should.equal('2 Formae');
+    });
 
-      it('returns the plural', () => {
-        i18nProps.$tcn('forms', 1234).should.equal('1,234 Formae');
-      });
+    it('localizes the count', () => {
+      i18nProps.$tcn('forms', 1234).should.equal('1,234 Formae');
+    });
 
-      it('uses values', () => {
-        const message = i18nProps.$tcn('parts', 3, { name: 'Gallia' });
-        message.should.equal('Gallia est omnis divisa in partes 3.');
-      });
+    it('uses values', () => {
+      const message = i18nProps.$tcn('parts', 3, { name: 'Gallia' });
+      message.should.equal('Gallia est omnis divisa in partes 3.');
     });
   });
 });

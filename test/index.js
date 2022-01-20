@@ -5,7 +5,6 @@ import 'should';
 
 import '../src/setup';
 
-import i18n from '../src/i18n';
 import { noop } from '../src/util/util';
 
 import testData from './data';
@@ -61,7 +60,7 @@ afterEach(() => {
 });
 
 afterEach(() => {
-  if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
+  document.documentElement.setAttribute('lang', 'en');
 });
 
 afterEach(() => {

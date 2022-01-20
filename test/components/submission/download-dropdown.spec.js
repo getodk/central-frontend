@@ -1,21 +1,19 @@
 import SubmissionDownloadDropdown from '../../../src/components/submission/download-dropdown.vue';
 
-import Form from '../../../src/presenters/form';
-
 import testData from '../../data';
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountComponent = (options = {}) => {
+const mountComponent = (options = undefined) => {
   const form = testData.extendedForms.last();
-  return mount(SubmissionDownloadDropdown, {
-    props: { formVersion: new Form(form), ...options.props },
+  return mount(SubmissionDownloadDropdown, mergeMountOptions(options, {
+    props: { formVersion: form },
     container: {
       requestData: {
         fields: form._fields,
         keys: testData.standardKeys.sorted()
       }
     }
-  });
+  }));
 };
 
 describe('SubmissionDownloadDropdown', () => {

@@ -9,11 +9,14 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import defineField from './field';
+import defineForm from './form';
+import defineProject from './project';
+import defineUser from './user';
 
-export default ({ i18n }) => ({
-  count: 0,
-  confirm() {
-    // eslint-disable-next-line no-alert
-    return this.count === 0 || window.confirm(i18n.t('router.unsavedChanges'));
-  }
+export default (container) => ({
+  User: defineUser(container),
+  Project: defineProject(container),
+  Form: defineForm(container),
+  Field: defineField(container)
 });

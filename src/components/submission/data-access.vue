@@ -26,14 +26,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionDataAccess',
   inject: ['requestData'],
   props: {
-    formVersion: Form
+    formVersion: Object
   },
   emits: ['analyze'],
   computed: {

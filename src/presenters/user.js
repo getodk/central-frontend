@@ -22,7 +22,7 @@ const props = [
   'verbs'
 ];
 
-export default class User extends presenterClass(props) {
+export default () => class User extends presenterClass(props) {
   constructor(data) {
     super(data);
     this._verbSet = data.verbs != null ? new Set(data.verbs) : null;
@@ -34,4 +34,4 @@ export default class User extends presenterClass(props) {
       ? this._verbSet.has(verbOrVerbs)
       : verbOrVerbs.every(verb => this._verbSet.has(verb));
   }
-}
+};

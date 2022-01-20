@@ -1,5 +1,7 @@
-import Form from '../../src/presenters/form';
+import createTestContainer from '../util/container';
 import testData from '../data';
+
+const { Form } = createTestContainer();
 
 describe('Form', () => {
   describe('nameOrId()', () => {

@@ -39,50 +39,56 @@ import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
-import Form from '../../presenters/form';
 import audit from '../../mixins/audit';
 import routes from '../../mixins/routes';
 
-const typeByCategory = {
-  user: 'resource.user',
-  project: 'resource.project',
-  form: 'resource.form',
-  public_link: 'resource.publicLink',
-  field_key: 'resource.appUser',
-  config: 'resource.config',
-  upgrade: 'audit.category.upgrade'
-};
-
-const getDisplayName = ({ displayName }) => displayName;
-const acteeSpeciesByCategory = {
+const categories = {
   user: {
-    title: getDisplayName,
-    path: ({ id }, vm) => vm.userPath(id)
+    type: 'resource.user',
+    target: (actee, vm) => ({
+      title: actee.displayName,
+      path: vm.userPath(actee.id)
+    })
   },
   project: {
-    title: ({ name }) => name,
-    path: ({ id }, vm) => vm.projectPath(id)
+    type: 'resource.project',
+    target: (actee, vm) => ({
+      title: actee.name,
+      path: vm.projectPath(actee.id)
+    })
   },
   form: {
-    title: (form) => new Form(form).nameOrId(),
-    path: (form, vm) => vm.primaryFormPath(form)
+    type: 'resource.form',
+    target: (actee, vm) => {
+      const { Form } = vm.container;
+      return { title: new Form(actee), path: vm.primaryFormPath(actee) };
+    }
   },
   public_link: {
-    title: getDisplayName
+    type: 'resource.publicLink',
+    target: (actee) => ({ title: actee.displayName })
   },
   field_key: {
-    title: getDisplayName
+    type: 'resource.appUser',
+    target: (actee) => ({ title: actee.displayName })
+  },
+  config: {
+    type: 'resource.config'
+  },
+  upgrade: {
+    type: 'audit.category.upgrade'
   }
 };
 // Presumably at some point, the actee of an upgrade audit might not be a form,
 // at which point we will have to update this component (perhaps we would use
 // the full action or a prefix instead of the category).
-acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
+categories.upgrade.target = categories.form.target;
 
 export default {
   name: 'AuditRow',
   components: { ActorLink, DateTime, Selectable },
   mixins: [audit(), routes()],
+  inject: ['container'],
   props: {
     audit: {
       type: Object,
@@ -98,17 +104,13 @@ export default {
       const actionMessage = this.actionMessage(this.audit.action);
       if (actionMessage == null) return [this.audit.action];
       return this.category != null
-        ? [this.$t(typeByCategory[this.category]), actionMessage]
+        ? [this.$t(categories[this.category].type), actionMessage]
         : [actionMessage];
     },
     target() {
       if (this.category == null) return null;
-      const species = acteeSpeciesByCategory[this.category];
-      if (species == null) return null;
-      const { actee } = this.audit;
-      const result = { title: species.title(actee) };
-      if (species.path != null) result.path = species.path(actee, this);
-      return result;
+      const createTarget = categories[this.category].target;
+      return createTarget != null ? createTarget(this.audit.actee, this) : null;
     },
     details() {
       return this.audit.details != null

@@ -66,13 +66,9 @@ describe('ProjectShow', () => {
     const app = await load('/projects/1');
     const title = app.get('#page-head-title');
     title.text().should.equal('My Project (archived)');
-    await loadLocale('es');
+    await loadLocale(app.vm.$container, 'es');
     await app.vm.$nextTick();
-    try {
-      title.text().should.equal('My Project (archivado)');
-    } finally {
-      await loadLocale('en');
-    }
+    title.text().should.equal('My Project (archivado)');
   });
 
   it('shows a loading message until response for project is received', () => {

@@ -36,7 +36,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 
-import Project from '../../presenters/project';
 import routes from '../../mixins/routes';
 
 export default {
@@ -45,7 +44,7 @@ export default {
   mixins: [routes()],
   props: {
     project: {
-      type: Project,
+      type: Object,
       required: true
     },
     introduction: {

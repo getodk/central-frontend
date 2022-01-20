@@ -2,25 +2,15 @@ import EnketoFill from '../../../src/components/enketo/fill.vue';
 
 import TestUtilSpan from '../../util/components/span.vue';
 
-import Form from '../../../src/presenters/form';
-
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
-
-const mountComponent = (options) => mount(EnketoFill, {
-  ...options,
-  props: {
-    ...options.props,
-    formVersion: new Form(options.props.formVersion)
-  }
-});
 
 describe('EnketoFill', () => {
   it('renders correctly for an open form with an enketoId', () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: 'xyz', state: 'open' })
       .last();
-    const button = mountComponent({
+    const button = mount(EnketoFill, {
       props: { formVersion: form },
       slots: { default: TestUtilSpan }
     });
@@ -33,7 +23,7 @@ describe('EnketoFill', () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: null, state: 'open' })
       .last();
-    const button = mountComponent({
+    const button = mount(EnketoFill, {
       props: { formVersion: form },
       slots: { default: TestUtilSpan }
     });
@@ -48,7 +38,7 @@ describe('EnketoFill', () => {
       const form = testData.extendedForms
         .createPast(1, { enketoId: 'xyz', state: 'closing' })
         .last();
-      const button = mountComponent({
+      const button = mount(EnketoFill, {
         props: { formVersion: form },
         slots: { default: TestUtilSpan }
       });
@@ -63,7 +53,7 @@ describe('EnketoFill', () => {
         state: 'closing'
       });
       const draft = testData.extendedFormDrafts.last();
-      const button = mountComponent({
+      const button = mount(EnketoFill, {
         props: { formVersion: draft },
         slots: { default: TestUtilSpan }
       });

@@ -1,12 +1,10 @@
 import SubmissionDataAccess from '../../../src/components/submission/data-access.vue';
 
-import Form from '../../../src/presenters/form';
-
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(SubmissionDataAccess, {
-  props: { formVersion: new Form(testData.extendedForms.last()) },
+  props: { formVersion: testData.extendedForms.last() },
   container: {
     requestData: { keys: testData.standardKeys.sorted() }
   }

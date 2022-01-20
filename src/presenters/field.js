@@ -7,7 +7,7 @@ const props = [
   'binary'
 ];
 
-export default class Field extends presenterClass(props) {
+export default () => class Field extends presenterClass(props) {
   splitPath() {
     if (this._split == null) {
       this._split = this.path.split('/');
@@ -20,4 +20,4 @@ export default class Field extends presenterClass(props) {
     if (this._header == null) this._header = this.splitPath().join('-');
     return this._header;
   }
-}
+};
