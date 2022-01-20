@@ -50,7 +50,7 @@ export default {
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
   mixins: [callWait()],
-  inject: ['requestData', 'alert'],
+  inject: ['requestData', 'alert', 'logger'],
   props: {
     state: Boolean,
     formAction: String,
@@ -135,12 +135,10 @@ export default {
         // a <pre> element.
         problem = JSON.parse(doc.body.textContent);
       } catch (e) {
-        this.$logger.error('cannot parse Problem');
+        this.logger.log(doc.body.textContent);
+        this.alert.danger(this.$t('alert.parseError'));
       }
-      if (isProblem(problem)) {
-        this.$logger.error(problem);
-        this.alert.danger(problem.message);
-      }
+      if (isProblem(problem)) this.alert.danger(problem.message);
       return true;
     },
     scheduleProblemCheck() {
@@ -188,7 +186,8 @@ export default {
     // passphrase hint.
     "hint": "Hint: {hint}",
     "alert": {
-      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
+      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again.",
+      "parseError": "Something went wrong while requesting your data."
     }
   }
 }

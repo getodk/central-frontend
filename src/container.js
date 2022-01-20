@@ -29,12 +29,15 @@ export default ({
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(),
   staticConfig = staticConfigFile,
+  logger = console
 } = {}) => {
   const container = {
     i18n: i18n.global,
     alert,
     unsavedChanges,
     staticConfig,
+    // Adding `logger` in order to silence certain logging during testing.
+    logger
   };
   Object.assign(container, definePresenters(container));
   container.requestData = requestData(container);
@@ -49,6 +52,7 @@ export default ({
       .provide('alert', alert)
       .provide('unsavedChanges', unsavedChanges)
       .provide('staticConfig', staticConfig)
+      .provide('logger', logger);
   };
   return container;
 };

@@ -251,7 +251,7 @@ export const request = (container, ...args) => {
     ...axiosConfig
   } = config;
 
-  const { router, requestData, alert } = container;
+  const { router, requestData, alert, logger } = container;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (axiosConfig.data != null && axiosConfig.data instanceof File &&
     axiosConfig.data.size > 100000000) {
@@ -288,7 +288,7 @@ export const request = (container, ...args) => {
 
       if (alertOption) {
         if (error.response == null)
-          Vue.prototype.$logger.log(error.request != null ? error.request : error.message);
+          logger.log(error.request != null ? error.request : error.message);
         alert.danger(errorToAlert(requestAlertMessage(i18n, error, problemToAlert)));
       }
 

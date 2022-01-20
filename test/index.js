@@ -5,8 +5,6 @@ import 'should';
 
 import '../src/setup';
 
-import { noop } from '../src/util/util';
-
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/async-components';
 import { mockAxios } from './util/axios';
@@ -35,8 +33,6 @@ import './assertions';
 // Even if a route is lazy-loaded, load() will need synchronous access to the
 // async components associated with the route.
 before(loadAsyncRouteComponents);
-
-Vue.prototype.$logger = { log: noop, error: noop };
 
 
 

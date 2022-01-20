@@ -59,7 +59,7 @@ router.afterEach(to => {
       const locale = storageLocale != null
         ? storageLocale
         : navigator.language.split('-', 1)[0];
-      return loadLocale(locale);
+      return loadLocale(container, locale);
     },
 
     // Implements the restoreSession meta field.

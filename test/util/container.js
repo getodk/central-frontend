@@ -3,9 +3,12 @@ import { noop } from '../../src/util/util';
 
 import { testRequestData } from './request-data';
 
+const silentLogger = { log: noop, error: noop };
+
 export default (options = undefined) => {
   const fullOptions = {
     router: null,
+    logger: silentLogger,
     ...options
   };
   if (typeof options.requestData !== 'function')
