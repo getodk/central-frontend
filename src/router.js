@@ -53,26 +53,31 @@ router.afterEach(to => {
 ////////////////////////////////////////////////////////////////////////////////
 // INITIAL REQUESTS
 
-const initialLocale = () => {
-  const locale = localStore.getItem('locale');
-  return locale != null ? locale : navigator.language.split('-', 1)[0];
-};
+{
+  const requests = [
+    () => {
+      const storageLocale = localStore.getItem('locale');
+      const locale = storageLocale != null
+        ? storageLocale
+        : navigator.language.split('-', 1)[0];
+      return loadLocale(locale);
+    },
 
-// Implements the restoreSession meta field.
-const restoreSessionForRoute = async (to) => {
-  if (to.meta.restoreSession) {
-    await restoreSession(store);
-    await logIn(container, false);
-  }
-};
+    // Implements the restoreSession meta field.
+    async (to) => {
+      // A test can skip this request by setting the session.
+      if (to.meta.restoreSession && store.state.request.data.session == null) {
+        await restoreSession(store);
+        await logIn(container, false);
+      }
+    }
+  ];
 
-router.beforeEach(to => {
-  if (!store.state.router.sendInitialRequests) return true;
-  return Promise.allSettled([loadLocale(initialLocale()), restoreSessionForRoute(to)])
-    .then(() => {
-      store.commit('setSendInitialRequests', false);
-    });
-});
+  const removeGuard = router.beforeEach(async (to) => {
+    await Promise.allSettled(requests.map(request => request(to)));
+    removeGuard();
+  });
+}
 
 
 

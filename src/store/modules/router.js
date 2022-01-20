@@ -11,19 +11,14 @@ except according to the terms contained in the LICENSE file.
 */
 export default {
   state: {
-    sendInitialRequests: true,
     unsavedChanges: false
   },
   mutations: {
     /* eslint-disable no-param-reassign */
-    setSendInitialRequests(state, sendInitialRequests) {
-      state.sendInitialRequests = sendInitialRequests;
-    },
     setUnsavedChanges(state, unsavedChanges) {
       state.unsavedChanges = unsavedChanges;
     },
     resetRouterState(state) {
-      state.sendInitialRequests = true;
       state.unsavedChanges = false;
     }
     /* eslint-enable no-param-reassign */
