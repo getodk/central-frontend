@@ -1,5 +1,5 @@
 /*
-Copyright 2017 ODK Central Developers
+Copyright 2022 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -10,18 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-// This file completes setup common to production/development and testing. The
-// order in which it is imported is important. It can only be imported after
-// plugins have been installed. It should also be imported before other files,
-// because this file has side effects.
-
-// ./jquery must be imported before any of Bootstrap's JavaScript plugins,
-// because the plugins require jQuery.
-import './jquery';
-import './bootstrap';
-
-// Import global styles. These must be imported before any component so that
-// they precede components' styles.
+// Import global styles.
 import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
 import './assets/scss/app.scss';

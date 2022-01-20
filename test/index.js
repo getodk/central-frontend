@@ -2,7 +2,9 @@ import sinon from 'sinon';
 import { enableAutoUnmount } from '@vue/test-utils';
 import 'should';
 
-import '../src/setup';
+import '../src/styles';
+import '../src/jquery';
+import '../src/bootstrap';
 
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/async-components';
