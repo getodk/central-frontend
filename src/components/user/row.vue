@@ -19,9 +19,10 @@ except according to the terms contained in the LICENSE file.
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRole"
-            :disabled="disabled" :title="selectTitle"
+            :disabled="disabled || awaitingResponse"
+            :title="disabled ? $t('cannotAssignRole') : null"
             :aria-label="$t('field.sitewideRole')"
-            @change="assignRole($event.target.value)">
+            @change="changeAssignment($event.target.value)">
             <option value="admin">{{ $t('role.admin') }}</option>
             <option value="">{{ $t('role.none') }}</option>
           </select>
@@ -51,7 +52,8 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.resetPassword') }}&hellip;
             </a>
           </li>
-          <li :class="{ disabled }" :title="retireTitle">
+          <li :class="{ disabled }"
+            :title="disabled ? $t('cannotRetire') : null">
             <a class="retire-user" href="#" @click.prevent="retire">
               {{ $t('action.retire') }}&hellip;
             </a>
@@ -81,14 +83,13 @@ export default {
       type: Object,
       required: true
     },
-    admin: Boolean,
     highlighted: Number
   },
-  emits: ['reset-password', 'assigned-role', 'retire'],
+  emits: ['reset-password', 'change-assignment', 'retire'],
   data() {
     return {
       awaitingResponse: false,
-      selectedRole: this.admin ? 'admin' : ''
+      selectedRole: this.requestData.actors.has(this.user.id) ? 'admin' : ''
     };
   },
   computed: {
@@ -96,31 +97,21 @@ export default {
       currentUser: ({ currentUser }) => currentUser.data
     }),
     disabled() {
-      return this.user.id === this.currentUser.id || this.awaitingResponse;
-    },
-    selectTitle() {
-      return this.user.id === this.currentUser.id
-        ? this.$t('cannotAssignRole')
-        : null;
+      return this.user.id === this.currentUser.id;
     },
     actionsButtonId() {
       return `user-row-actions-button${this.user.id}`;
-    },
-    retireTitle() {
-      return this.user.id === this.currentUser.id
-        ? this.$t('cannotRetire')
-        : null;
     }
   },
   methods: {
-    assignRole(role) {
-      this.selectedRole = role;
+    changeAssignment(system) {
+      this.selectedRole = system;
       this.request({
-        method: this.selectedRole === 'admin' ? 'POST' : 'DELETE',
+        method: system === 'admin' ? 'POST' : 'DELETE',
         url: apiPaths.assignment('admin', this.user.id)
       })
         .then(() => {
-          this.$emit('assigned-role', this.user, this.selectedRole === 'admin');
+          this.$emit('change-assignment', this.user, system === 'admin');
         })
         .catch(noop);
     },

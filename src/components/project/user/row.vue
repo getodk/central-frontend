@@ -12,19 +12,18 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr>
     <td class="display-name">
-      <span :title="assignment.actor.displayName">
-        {{ assignment.actor.displayName }}
-      </span>
+      <span :title="actor.displayName">{{ actor.displayName }}</span>
     </td>
     <td>
       <form>
         <div class="form-group">
-          <select class="form-control" :value="selectedRoleId"
-            :disabled="disabled" :title="selectTitle"
+          <select class="form-control" :value="selectedRole"
+            :disabled="disabled || awaitingResponse"
+            :title="disabled ? $t('cannotAssignRole') : null"
             :aria-label="$t('field.projectRole')"
             @change="change($event.target.value)">
             <option v-for="role of projectRoles" :key="role.id"
-              :value="role.id.toString()">
+              :value="role.system">
               {{ $t(`role.${role.system}`) }}
             </option>
             <option value="">{{ $t('role.none') }}</option>
@@ -57,73 +56,77 @@ export default {
       required: true
     }
   },
-  emits: ['increment-count', 'decrement-count', 'change'],
+  emits: ['change'],
   data() {
     return {
-      // If two requests are sent, there may be a moment between them when
-      // awaitingResponse is `false`.
       awaitingResponse: false,
-      selectedRoleId: this.assignment.roleId != null
-        ? this.assignment.roleId.toString()
+      selectedRole: this.assignment.roleId != null
+        ? this.requestData.roles.data.get(this.assignment.roleId).system
         : ''
     };
   },
   computed: {
     ...requestDataComputed({
       currentUser: ({ currentUser }) => currentUser.data,
-      roles: ({ roles }) => roles.data,
+      rolesBySystem: ({ roles }) => roles.bySystem,
       projectRoles: ({ roles }) => roles.projectRoles,
       project: ({ project }) => project.data
     }),
-    disabled() {
-      return this.assignment.actor.id === this.currentUser.id ||
-        this.awaitingResponse;
+    actor() {
+      return this.assignment.actor;
     },
-    selectTitle() {
-      return this.assignment.actor.id === this.currentUser.id
-        ? this.$t('cannotAssignRole')
-        : null;
+    disabled() {
+      return this.actor.id === this.currentUser.id;
     }
   },
   methods: {
-    requestChange(method, roleIdString) {
-      if (roleIdString === '') return Promise.resolve();
-      return this.request({
-        method,
-        url: apiPaths.projectAssignment(
-          this.project.id,
-          roleIdString,
-          this.assignment.actor.id
-        )
+    async revoke(system, signal) {
+      if (system === '') return;
+      const roleId = this.rolesBySystem.get(system).id;
+      await this.request({
+        method: 'DELETE',
+        url: apiPaths.projectAssignment(this.project.id, roleId, this.actor.id),
+        signal
       });
+      this.requestData.projectAssignments.revoke(this.actor.id);
     },
-    change(roleIdString) {
-      this.$emit('increment-count');
-      const previousRoleId = this.selectedRoleId;
-      this.selectedRoleId = roleIdString;
-      const initialRoute = this.$route;
-      // At some point we will likely implement something transactional so that
-      // we don't send two requests.
-      this.requestChange('DELETE', previousRoleId)
-        .then(() => this.requestChange('POST', roleIdString)
-          .catch(e => {
-            if (previousRoleId !== '' && roleIdString !== '' &&
-              this.$route === initialRoute) {
-              this.selectedRoleId = '';
-              this.$emit('change', this.assignment.actor, null, true);
+    async assign(system, signal) {
+      if (system === '') return;
+      const roleId = this.rolesBySystem.get(system).id;
+      await this.request({
+        method: 'POST',
+        url: apiPaths.projectAssignment(this.project.id, roleId, this.actor.id),
+        signal
+      });
+      this.requestData.projectAssignments.assign(this.actor, roleId);
+    },
+    change(selectedRole) {
+      const oldRole = this.selectedRole;
+      this.selectedRole = selectedRole;
+
+      const abortController = new AbortController();
+      const unwatch = this.$watch(this.requestData.projectAssignments.ref, () => {
+        abortController.abort();
+        unwatch();
+      });
+
+      // At some point we may implement something transactional so that we don't
+      // need to send two requests.
+      this.revoke(oldRole, abortController.signal)
+        .then(() => this.assign(selectedRole, abortController.signal)
+          .catch(error => {
+            if (oldRole !== '' && error.response != null) {
+              this.selectedRole = '';
+              this.requestData.projectAssignments.revoke(this.actor.id);
+              this.$emit('change', this.actor, '', true);
             }
-            throw e;
+            throw error;
           }))
         .then(() => {
-          const role = roleIdString !== ''
-            ? this.roles.find(r => r.id.toString() === roleIdString)
-            : null;
-          this.$emit('change', this.assignment.actor, role, false);
+          this.$emit('change', this.actor, selectedRole, false);
         })
-        .catch(noop)
-        .finally(() => {
-          if (this.$route === initialRoute) this.$emit('decrement-count');
-        });
+        .finally(unwatch)
+        .catch(noop);
     }
   }
 };

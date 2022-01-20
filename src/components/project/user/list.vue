@@ -44,12 +44,9 @@ are Project Manager, Project Viewer, and Data Collector. -->
       @submit.prevent>
       <label class="form-group">
         <input class="form-control" :value="q" :placeholder="searchLabel"
-          :disabled="searchDisabled" autocomplete="off"
-          @change="changeQ($event.target.value)">
-        <!-- When search is disabled, we hide rather than disable this button,
-        because Bootstrap does not have CSS for .close[disabled]. -->
-        <button v-show="q !== '' && !searchDisabled" type="button" class="close"
-          :aria-label="$t('action.clearSearch')" @click="clearSearch">
+          autocomplete="off" @change="changeQ($event.target.value)">
+        <button v-show="q !== ''" type="button" class="close"
+          :aria-label="$t('action.clearSearch')" @click="changeQ('')">
           <span aria-hidden="true">&times;</span>
         </button>
         <span class="form-label">{{ searchLabel }}</span>
@@ -63,10 +60,9 @@ are Project Manager, Project Viewer, and Data Collector. -->
           <th>{{ $t('header.projectRole') }}</th>
         </tr>
       </thead>
-      <tbody v-if="roles != null && tableAssignments != null">
-        <project-user-row v-for="assignment of tableAssignments"
+      <tbody v-if="tableAssignments != null && roles != null">
+        <project-user-row v-for="assignment of tableAssignments.values()"
           :key="assignment.actor.id" :assignment="assignment"
-          @increment-count="incrementCount" @decrement-count="decrementCount"
           @change="afterAssignmentChange"/>
       </tbody>
     </table>
@@ -105,9 +101,7 @@ export default {
       // for one or more of these objects. searchAssignments is not updated
       // after an assignment change: it is a snapshot of assignments at the time
       // of the search.
-      searchAssignments: null,
-      // The number of POST or DELETE requests in progress
-      assignRequestCount: 0
+      searchAssignments: null
     };
   },
   computed: {
@@ -139,14 +133,15 @@ export default {
     // The assignments to show in the table
     tableAssignments() {
       if (this.searching) return null;
-      if (this.searchAssignments != null) return this.searchAssignments;
-      return this.projectAssignments;
+      return this.searchAssignments != null
+        ? this.searchAssignments
+        : this.projectAssignments;
     },
     emptyMessage() {
       if (this.initiallyLoading || this.searching) return '';
       return this.searchAssignments != null
-        ? (this.searchAssignments.length === 0 ? this.$t('common.noResults') : '')
-        : (this.projectAssignments.length === 0 ? this.$t('emptyTable') : '');
+        ? (this.searchAssignments.size === 0 ? this.$t('common.noResults') : '')
+        : (this.projectAssignments.size === 0 ? this.$t('emptyTable') : '');
     }
   },
   created() {
@@ -164,75 +159,41 @@ export default {
         resend
       }).catch(noop);
     },
-    clearSearch() {
-      this.fetchData(true);
-      this.q = '';
-      this.searchAssignments = null;
-    },
     search() {
       const { users } = this.requestData;
       users.request({
         url: apiPaths.users({ q: this.q }),
-        success: () => {
-          this.searchAssignments = users.data.map(user => {
-            const assignment = this.projectAssignments
-              .find(a => a.actor.id === user.id);
-            return assignment != null
-              ? assignment
-              : { actor: user, roleId: null };
-          });
+        onSuccess: () => {
+          this.searchAssignments = users.data.reduce(
+            (map, user) => {
+              const projectAssignment = this.projectAssignments.get(user.id);
+              return map.set(user.id, projectAssignment != null
+                ? projectAssignment
+                : { actor: user, roleId: null });
+            },
+            new Map()
+          );
+          users.clear();
         }
       }).catch(noop);
     },
     changeQ(q) {
       this.q = q;
-      if (this.q === '')
-        this.clearSearch();
-      else
+      this.searchAssignments = null;
+      if (q !== '') {
         this.search();
-    },
-    incrementCount() {
-      this.assignRequestCount += 1;
-    },
-    decrementCount() {
-      this.assignRequestCount -= 1;
-    },
-    /*
-    afterAssignmentChange() completes two tasks after an assignment change:
-
-      1. Shows an alert about the change.
-      2. Updates this.projectAssignments to reflect the change.
-        - Note that this.searchAssignments is not similarly updated.
-    */
-    afterAssignmentChange(actor, role, deleteWithoutPost) {
-      // Update this.projectAssignments.
-      const index = this.projectAssignments
-        .findIndex(assignment => assignment.actor.id === actor.id);
-      // If `role` is `null`, then rather than remove the assignment from
-      // projectAssignments, we set its roleId to `null`. That way, the user
-      // will remain in the table until a new request is sent for
-      // projectAssignments.
-      const assignment = { actor, roleId: role != null ? role.id : null };
-      if (index !== -1) {
-        this.$store.commit('setDataProp', {
-          key: 'projectAssignments',
-          prop: index,
-          value: assignment
-        });
       } else {
-        this.$store.commit('setData', {
-          key: 'projectAssignments',
-          value: [...this.projectAssignments, assignment]
-        });
+        this.fetchData(true);
+        this.requestData.users.abortRequest();
       }
-
-      // Show the alert.
+    },
+    afterAssignmentChange(actor, system, deleteWithoutPost) {
       if (deleteWithoutPost) {
         this.alert.danger(this.$t('alert.unassignWithoutReassign', actor));
-      } else if (role != null) {
+      } else if (system !== '') {
         this.alert.success(this.$t('alert.assignRole', {
           displayName: actor.displayName,
-          roleName: this.$t(`role.${role.system}`)
+          roleName: this.$t(`role.${system}`)
         }));
       } else {
         this.alert.success(this.$t('alert.unassignRole', actor));

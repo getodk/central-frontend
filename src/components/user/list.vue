@@ -37,9 +37,8 @@ either is an Administrator or has no role. -->
       </thead>
       <tbody v-if="dataExists">
         <user-row v-for="user of users" :key="user.id" :user="user"
-          :admin="adminIds.has(user.id)" :highlighted="highlighted"
-          @assigned-role="afterAssignRole" @reset-password="showResetPassword"
-          @retire="showRetire"/>
+          :highlighted="highlighted" @change-assignment="afterAssignmentChange"
+          @reset-password="showResetPassword" @retire="showRetire"/>
       </tbody>
     </table>
     <loading :state="initiallyLoading"/>
@@ -78,8 +77,6 @@ export default {
   inject: ['requestData', 'alert'],
   data() {
     return {
-      // The ids of the users who are administrators
-      adminIds: null,
       // The id of the highlighted user
       highlighted: null,
       // Modals
@@ -109,16 +106,9 @@ export default {
   },
   methods: {
     fetchData() {
-      this.adminIds = null;
       this.requestData.users.request('/v1/users').catch(noop);
-      this.requestData.actors.request({
-        url: '/v1/assignments/admin',
-        success: ({ actors }) => {
-          this.adminIds = new Set();
-          for (const actor of actors.data)
-            this.adminIds.add(actor.id);
-        }
-      }).catch(noop);
+      this.requestData.actors.request('/v1/assignments/admin').catch(noop);
+      this.highlighted = null;
     },
     afterCreate(user) {
       this.fetchData();
@@ -126,35 +116,11 @@ export default {
       this.alert.success(this.$t('alert.create', user));
       this.highlighted = user.id;
     },
-    // Called after a user is assigned a new role (including None).
-    afterAssignRole(user, admin) {
+    afterAssignmentChange(user, admin) {
       this.alert.success(this.$t('alert.assignRole', {
         displayName: user.displayName,
         roleName: admin ? this.$t('role.admin') : this.$t('role.none')
       }));
-
-      /*
-      Here we update this.adminIds. If the current user has also refreshed the
-      data, then in rare cases, the update to this.adminIds will not be shown.
-      For example:
-
-        1. The current user changes another user's sitewide role.
-        2. Immediately after, the user clicks the refresh button.
-        3. The response for the role change is received first, updating
-           this.adminIds.
-        4. The response for the refresh is received, possibly undoing the
-           update to this.adminIds.
-
-      In cases like this, the current user will likely refresh Frontend or redo
-      the change.
-      */
-      if (this.adminIds != null) {
-        if (admin) {
-          this.adminIds.add(user.id);
-        } else {
-          this.adminIds.delete(user.id);
-        }
-      }
     },
     showResetPassword(user) {
       this.resetPassword.user = user;
@@ -181,7 +147,6 @@ export default {
       this.fetchData();
       this.hideRetire();
       this.alert.success(this.$t('alert.retire', user));
-      this.highlighted = null;
     }
   }
 };

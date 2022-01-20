@@ -260,7 +260,7 @@ export default {
         // so we don't clear this.odataChunk here. this.clearSubmissions() will
         // clear this.odataChunk.
         clear: false,
-        success: () => {
+        onSuccess: () => {
           if (skip === 0)
             this.replaceSubmissions();
           else
@@ -274,7 +274,7 @@ export default {
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
           odata: true
         }),
-        success: () => {
+        onSuccess: () => {
           // We also use 11 in the SubmissionFieldDropdown v-if.
           this.selectedFields = this.selectableFields.length <= 11
             ? this.selectableFields
