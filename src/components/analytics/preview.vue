@@ -53,7 +53,7 @@ import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import AnalyticsMetricsTable from './metrics-table.vue';
 
-import request from '../../mixins/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 
 // Metrics to filter out (with pick/omit) and put in
@@ -69,7 +69,7 @@ const submissionStateMetrics = [
 export default {
   name: 'AnalyticsPreview',
   components: { AnalyticsMetricsTable, Loading, Modal },
-  mixins: [request()],
+  mixins: [mixinRequests],
   inject: ['requestData'],
   props: {
     state: Boolean

@@ -70,16 +70,16 @@ import Modal from '../modal.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { mixinPaths } from '../../reusables/paths';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FieldKeyNew',
   components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
-  mixins: [mixinPaths, request()],
+  mixins: [mixinPaths, mixinRequests],
   inject: ['requestData', 'alert'],
   props: {
     state: {

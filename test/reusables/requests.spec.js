@@ -4,7 +4,7 @@ import { noop } from '../../src/util/util';
 
 import { mockHttp } from '../util/http';
 
-describe('mixins/request', () => {
+describe('requests reusable', () => {
   describe('awaitingResponse', () => {
     it('sets awaitingResponse to true during the request', () =>
       mockHttp()

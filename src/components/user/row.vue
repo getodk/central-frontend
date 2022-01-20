@@ -67,16 +67,16 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { mixinPaths } from '../../reusables/paths';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'UserRow',
   components: { Spinner },
-  mixins: [mixinPaths, request()],
+  mixins: [mixinPaths, mixinRequests],
   inject: ['requestData'],
   props: {
     user: {

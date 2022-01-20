@@ -101,7 +101,7 @@ import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 
 const GOOGLE_BREAKPOINT = 601;
@@ -109,7 +109,7 @@ const GOOGLE_BREAKPOINT = 601;
 export default {
   name: 'BackupNew',
   components: { FormGroup, Modal, SentenceSeparator, Spinner },
-  mixins: [request()],
+  mixins: [mixinRequests],
   props: {
     state: {
       type: Boolean,

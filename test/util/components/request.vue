@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import request from '../../../src/mixins/request';
+import { mixinRequests } from '../../../src/reusables/requests';
 
 export default {
   name: 'TestUtilRequest',
-  mixins: [request()],
+  mixins: [mixinRequests],
   data() {
     return {
       awaitingResponse: false

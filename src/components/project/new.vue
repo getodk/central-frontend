@@ -46,13 +46,13 @@ import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectNew',
   components: { DocLink, FormGroup, Modal, Spinner },
-  mixins: [request()],
+  mixins: [mixinRequests],
   props: {
     state: {
       type: Boolean,

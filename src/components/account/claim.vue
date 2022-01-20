@@ -40,13 +40,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
-import request from '../../mixins/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 
 export default {
   name: 'AccountClaim',
   components: { FormGroup, Spinner },
-  mixins: [request()],
+  mixins: [mixinRequests],
   inject: ['alert'],
   data() {
     return {

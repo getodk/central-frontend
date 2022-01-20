@@ -28,15 +28,15 @@ except according to the terms contained in the LICENSE file.
 import MarkdownTextarea from '../markdown/textarea.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'SubmissionComment',
   components: { Spinner, MarkdownTextarea },
-  mixins: [request()],
+  mixins: [mixinRequests],
   inject: ['requestData'],
   props: {
     projectId: {

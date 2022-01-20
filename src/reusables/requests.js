@@ -11,79 +11,59 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
-This mixin is used to send POST, PUT, PATCH, and DELETE requests. For GET
-requests, use requestData.
+A component that sends a request may use this composable/mixin, which includes
+related helper functions/methods:
 
-The request mixin assumes that no single component sends concurrent requests. It
-is the component's responsibility to ensure that the user is not able to send
-concurrent requests, for example, by disabling a submit button while a request
-is in progress. Separate components can send concurrent requests, but any single
-component can only send one request at a time.
+  - request()
+  - get()
+  - post()
+  - patch()
+  - put()
+  - delete()
 
-The mixin factory does not take any options.
+The request() function/method of the composable/mixin calls the request()
+function in src/util/request.js and accepts all the same options. By default,
+it will specify `true` for abortAfterNavigate if the request is not a GET
+request.
 
-The component using this mixin may optionally define the following data
-property:
+If the component is sending a request that will modify requestData, it should
+probably use requestData to send the request instead.
 
-  - awaitingResponse. `true` if a request is in progress and `false` if not.
-    Initialize the property as `false`. The component using the mixin should not
-    directly mutate this property after defining it.
+awaitingResponse
+----------------
+
+A component using the mixin may optionally define a data property named
+awaitingResponse. awaitingResponse will be `true` if a request is in progress
+and `false` if not. Initialize the property as `false`. The component using the
+mixin should not directly mutate the property after defining it.
+
+Similarly, the composable returns an object whose awaitingResponse property is
+a ref that is `true` if a request is in progress and `false` if not.
+
+In both cases, awaitingResponse assumes that the component will not send
+multiple, concurrent requests. If a component uses awaitingResponse, it is the
+component's responsibility to ensure that the user is not able to send
+multiple, concurrent requests, for example, by disabling a submit button while a
+request is in progress.
+
+Each function/method of the composable/mixin returns a promise. If you call
+then() on the promise, note that the request will not be in progress when the
+then() callback is run: awaitingResponse will be `false`. Before the then() or
+catch() callback is run, Vue will react to the change in awaitingResponse from
+`true` to `false`, running watchers and updating the DOM. Often that is
+perfectly fine. However, if you must run a callback in the same tick in which
+awaitingResponse is set to `false`, you can do so by specifying the callback to
+the function/method using the onSuccess or onError option.
 */
+
+import { map } from 'ramda';
+import { ref } from 'vue';
 
 import { noop } from '../util/util';
 import { request } from '../util/request';
 
-/*
-request() accepts all the options that axios.request() does. It also accepts the
-following options:
-
-  - fulfillProblem. Usually, an error response means that the request was
-    invalid or that something went wrong. However, in some cases, an error
-    response should be treated as if it is successful, resulting in a fulfilled,
-    not a rejected, promise. Use fulfillProblem to identify such responses.
-    fulfillProblem is passed the Backend Problem. (Any error response that is
-    not a Problem is automatically considered unsuccessful.) fulfillProblem
-    should return `true` if the response is considered successful and `false` if
-    not.
-  - problemToAlert. If the request results in an error response, request() shows
-    an alert. By default, the alert message is the same as that of the Backend
-    Problem. However, there are two ways to show a different message:
-
-    1. If a function is specified for problemToAlert, request() passes the
-       Problem to the function, which has the option to return a different
-       message. If the function returns `null` or `undefined`, the Problem's
-       message is used.
-    2. If problemToAlert has not been specified, request() will check whether
-       the component has specified an i18n message for the Problem code. For
-       example:
-
-       <i18n lang="json5">
-       {
-         "en": {
-           "problem": {
-             "404_1": "Not found."
-           }
-         }
-       }
-       </i18n>
-
-Return Value
-------------
-
-request() returns a promise. The promise will be rejected if the request is
-invalid or results in an error response or if the user navigates away from the
-route that sent the request. Otherwise the promise should be fulfilled.
-
-If you call then() on the promise, note that the request will not be in progress
-when the then() callback is run (awaitingResponse will equal `false`). If you
-call catch() on the promise, your logic should not assume that the request
-resulted in an error response. Before the then() or catch() callback is run, Vue
-will react to the change in awaitingResponse from `true` to `false`, running
-watchers and updating the DOM.
-*/
-
 // @vue/component
-const mixin = {
+export const mixinRequests = {
   inject: ['requestData', 'alert'],
   methods: {
     async request(config) {
@@ -112,9 +92,9 @@ const mixin = {
       return this.request({ ...config, method: 'GET', url });
     },
     post(url, data = undefined, config = undefined) {
-      const full = { ...config, method: 'POST', url };
-      if (data != null) full.data = data;
-      return this.request(full);
+      const fullConfig = { ...config, method: 'POST', url };
+      if (data != null) fullConfig.data = data;
+      return this.request(fullConfig);
     },
     put(url, data, config = undefined) {
       return this.request({ ...config, method: 'PUT', url, data });
@@ -128,4 +108,16 @@ const mixin = {
   }
 };
 
-export default () => mixin;
+export const useRequests = (container, i18n = container.i18n) => {
+  const awaitingResponse = ref(false);
+  const obj = {
+    container,
+    $i18n: i18n,
+    get awaitingResponse() { return awaitingResponse.value; },
+    set awaitingResponse(value) { awaitingResponse.value = value; },
+    ...mixinRequests.methods
+  };
+  const result = map((f) => f.bind(obj), mixinRequests.methods);
+  result.awaitingResponse = awaitingResponse;
+  return result;
+};

@@ -38,14 +38,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import request from '../../mixins/request';
 import { logOut } from '../../util/session';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'NavbarActions',
-  mixins: [request()],
   inject: ['container', 'requestData', 'alert', 'unsavedChanges'],
   props: {
     loggedIn: {

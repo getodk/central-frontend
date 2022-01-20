@@ -42,15 +42,15 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../../form-group.vue';
 import Spinner from '../../spinner.vue';
-import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
+import { mixinRequests } from '../../../reusables/requests';
 import { noop } from '../../../util/util';
 import { requestDataComputed } from '../../../reusables/request-data';
 
 export default {
   name: 'UserEditPassword',
   components: { FormGroup, Spinner },
-  mixins: [request()],
+  mixins: [mixinRequests],
   inject: ['requestData', 'alert'],
   data() {
     return {

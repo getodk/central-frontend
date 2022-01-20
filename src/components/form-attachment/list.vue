@@ -64,8 +64,8 @@ import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
@@ -77,7 +77,7 @@ export default {
     FormAttachmentRow,
     FormAttachmentUploadFiles
   },
-  mixins: [dropZone(), modal(), request()],
+  mixins: [dropZone(), modal(), mixinRequests],
   inject: ['requestData', 'alert'],
   data() {
     return {

@@ -42,15 +42,15 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
 export default {
   name: 'FormDraftAbandon',
   components: { Modal, Spinner },
-  mixins: [request()],
+  mixins: [mixinRequests],
   inject: ['requestData'],
   props: {
     state: {

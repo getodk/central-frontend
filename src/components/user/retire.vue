@@ -41,14 +41,14 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 
 export default {
   name: 'UserRetire',
   components: { Modal, Spinner },
-  mixins: [request()],
+  mixins: [mixinRequests],
   props: {
     state: Boolean,
     user: Object

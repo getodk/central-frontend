@@ -55,8 +55,8 @@ import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
+import { mixinRequests } from '../../reusables/requests';
 import { noop } from '../../util/util';
 import { requestDataComputed } from '../../reusables/request-data';
 
@@ -70,7 +70,7 @@ export default {
     SentenceSeparator,
     Spinner
   },
-  mixins: [modal(), request()],
+  mixins: [modal(), mixinRequests],
   inject: ['request-data', 'alert'],
   props: {
     projectId: {
