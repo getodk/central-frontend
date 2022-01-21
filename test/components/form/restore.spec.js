@@ -19,9 +19,7 @@ describe('FormRestore', () => {
 
   it('toggles the modal', () =>
     load('/projects/1', {}, {
-      deletedForms: () => [
-        new Form({ xmlFormId: '15_days_ago', deletedAt: ago({ days: 15 }).toISO() })
-      ]
+      deletedForms: () => [{ xmlFormId: '15_days_ago', deletedAt: ago({ days: 15 }).toISO() }]
     })
       .testModalToggles({
         modal: FormRestore,
@@ -47,9 +45,7 @@ describe('FormRestore', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'this_id_exists', version: '2', id: 222 });
 
     return load('/projects/1', {}, {
-      deletedForms: () => [
-        new Form({ xmlFormId: 'this_id_exists', id: 111, deletedAt: ago({ days: 15 }).toISO() })
-      ]
+      deletedForms: () => [{ xmlFormId: 'this_id_exists', id: 111, deletedAt: ago({ days: 15 }).toISO() }]
     })
       .afterResponses(component => {
         const button = component.get('[data-form-id="111"]');
@@ -83,12 +79,10 @@ describe('FormRestore', () => {
     };
 
     it('shows non-empty active and trash lists updating correctly', async () => {
-      testData.extendedForms.createPast(1);
-      testData.extendedForms.createPast(1);
-      testData.extendedForms.createPast(1);
+      testData.extendedForms.createPast(3);
       const trashedForms = {
-        111: new Form({ xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() }),
-        222: new Form({ xmlFormId: '222', id: 222, name: 'Another Deleted Form', projectId: 1, deletedAt: ago({ days: 10 }).toISO() })
+        111: { xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() },
+        222: { xmlFormId: '222', id: 222, name: 'Another Deleted Form', projectId: 1, deletedAt: ago({ days: 10 }).toISO() }
       };
       const app = await restore(trashedForms, 111);
       app.findAllComponents(FormTrashRow).length.should.equal(1);
@@ -97,8 +91,8 @@ describe('FormRestore', () => {
 
     it('shows form lists updating correctly when active starts off empty', async () => {
       const trashedForms = {
-        111: new Form({ xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() }),
-        222: new Form({ xmlFormId: '222', id: 222, name: 'Another Deleted Form', projectId: 1, deletedAt: ago({ days: 10 }).toISO() })
+        111: { xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() },
+        222: { xmlFormId: '222', id: 222, name: 'Another Deleted Form', projectId: 1, deletedAt: ago({ days: 10 }).toISO() }
       };
       const app = await restore(trashedForms, 111);
       app.findAllComponents(FormTrashRow).length.should.equal(1);
@@ -107,7 +101,7 @@ describe('FormRestore', () => {
 
     it('shows form lists updating correctly when trash becomes empty', async () => {
       const trashedForms = {
-        111: new Form({ xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() })
+        111: { xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() }
       };
       const app = await restore(trashedForms, 111);
       app.find('#form-trash-list').exists().should.be.false();
@@ -116,8 +110,8 @@ describe('FormRestore', () => {
 
     it('shows a success message', async () => {
       const trashedForms = {
-        111: new Form({ xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() }),
-        222: new Form({ xmlFormId: '222', id: 222, name: 'Another Deleted Form', projectId: 1, deletedAt: ago({ days: 10 }).toISO() })
+        111: { xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() },
+        222: { xmlFormId: '222', id: 222, name: 'Another Deleted Form', projectId: 1, deletedAt: ago({ days: 10 }).toISO() }
       };
       const app = await restore(trashedForms, 111);
       app.findAllComponents(FormRow).length.should.equal(1);
@@ -125,9 +119,9 @@ describe('FormRestore', () => {
       app.should.alert('success', 'The Form “Delete Me” has been undeleted.');
     });
 
-    it('sends the correct requests', async () => {
+    it('sends the correct requests', () => {
       const trashedForms = {
-        111: new Form({ xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() })
+        111: { xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() }
       };
       return restore(trashedForms, 111)
         .testRequests([

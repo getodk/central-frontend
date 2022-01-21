@@ -2,7 +2,6 @@ import DateTime from '../../../src/components/date-time.vue';
 import FormTrashRow from '../../../src/components/form/trash-row.vue';
 
 import Form from '../../../src/presenters/form';
-import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
@@ -30,9 +29,13 @@ describe('FormTrashRow', () => {
     });
 
     it('shows the deleted timestamp', () => {
-      const formData = { xmlFormId: 'f', name: null, deletedAt: ago({ days: 15 }).toISO() };
-      mountComponent(formData).get('.deleted-date').text().should.match(/^Deleted .+$/);
-      // Should I try to match the date string exactly?
+      const deletedDate = new Date().toISOString();
+      const formData = { xmlFormId: 'f', name: null, deletedAt: deletedDate };
+      const row = mountComponent(formData);
+      row.get('.deleted-date').text().should.match(/^Deleted .+$/);
+      const dateTime = row.findAllComponents(DateTime);
+      dateTime.length.should.equal(1);
+      dateTime.at(0).props().iso.should.equal(deletedDate);
     });
   });
 
