@@ -58,6 +58,9 @@ export const apiPaths = {
     `/v1/projects/${projectId}/assignments/${role}/${actorId}`,
   projectKey: projectPath('/key'),
   forms: projectPath('/forms'),
+  deletedForms: projectPath('/forms?deleted=true'),
+  restoreForm: (projectId, numericFormId) =>
+    `/v1/projects/${projectId}/forms/${numericFormId}/restore`,
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),

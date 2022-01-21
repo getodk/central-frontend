@@ -16,6 +16,8 @@ import { presenterClass } from './base';
 // archived).
 
 const props = [
+  // Numeric id
+  'id',
   'projectId',
   'xmlFormId',
   'name',
@@ -30,6 +32,7 @@ const props = [
   'publishedAt',
   'createdAt',
   'updatedAt',
+  'deletedAt',
   // Extended form, extended form version, and extended form draft
   'excelContentType',
   // Extended form and extended form draft

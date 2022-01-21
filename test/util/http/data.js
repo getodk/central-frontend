@@ -13,6 +13,7 @@ const defaults = {
   project: () => testData.extendedProjects.last(),
   projectAssignments: () => testData.extendedProjectAssignments.sorted(),
   forms: () => testData.extendedForms.sorted(),
+  deletedForms: () => [],
   formSummaryAssignments: () =>
     testData.standardFormSummaryAssignments.sorted(),
   form: () => testData.extendedForms.last(),
@@ -67,7 +68,7 @@ const mapsByComponent = {
 
   ProjectList: mapKeys(['projects', 'users']),
   ProjectShow: mapKeys(['project']),
-  ProjectOverview: mapKeys(['forms']),
+  ProjectOverview: mapKeys(['forms', 'deletedForms']),
   ProjectUserList: mapKeys(['roles', 'projectAssignments']),
   FieldKeyList: mapKeys(['fieldKeys']),
   ProjectFormAccess: mapKeys([

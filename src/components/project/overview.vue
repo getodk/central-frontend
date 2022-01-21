@@ -20,11 +20,13 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <form-list :condensed="!rendersTopRow"/>
+    <form-trash-list v-if="rendersTrashList" @restore="$emit('fetch-forms', true)"/>
   </div>
 </template>
 
 <script>
 import FormList from '../form/list.vue';
+import FormTrashList from '../form/trash-list.vue';
 import ProjectOverviewAbout from './overview/about.vue';
 import ProjectOverviewRightNow from './overview/right-now.vue';
 import routes from '../../mixins/routes';
@@ -32,7 +34,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectOverview',
-  components: { FormList, ProjectOverviewAbout, ProjectOverviewRightNow },
+  components: { FormList, FormTrashList, ProjectOverviewAbout, ProjectOverviewRightNow },
   mixins: [routes()],
   props: {
     projectId: {
@@ -46,6 +48,9 @@ export default {
     ...requestData(['project']),
     rendersTopRow() {
       return this.project != null && this.project.permits('project.update');
+    },
+    rendersTrashList() {
+      return this.project != null && this.project.permits('form.restore');
     }
   },
   created() {

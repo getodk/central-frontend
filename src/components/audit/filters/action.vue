@@ -58,6 +58,8 @@ export default {
         this.actionOption('form.attachment.update'),
         this.actionOption('form.submission.export'),
         this.actionOption('form.delete'),
+        this.actionOption('form.purge'),
+        this.actionOption('form.restore'),
         this.categoryOption('field_key'),
         this.actionOption('field_key.create'),
         this.actionOption('field_key.assignment.create'),

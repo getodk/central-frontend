@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div v-if="form.lastSubmission != null">
         <router-link :to="submissionsPath">
-          <i18n :tag="false" path="lastSubmission">
+          <i18n :tag="false" path="common.lastSubmission">
             <template #dateTime>
               <date-time :iso="form.lastSubmission"/>
             </template>
@@ -103,6 +103,28 @@ export default {
 .form-row {
   .table tbody & td { vertical-align: middle; }
 
+  // column widths
+  .name {
+    width: 500px;
+    max-width: 500px;
+    @include text-overflow-ellipsis;
+  }
+
+  .id-and-version {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .submissions {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .actions {
+    width: 180px;
+    max-width: 180px;
+  }
+
   .name {
     .link-if-can { font-size: 24px; }
     a { @include text-link; }
@@ -156,7 +178,6 @@ export default {
     // the date and time, for example: "2020/01/01 01:23". It may show a
     // formatted date like "2020/01/01", or it may use a word like "today",
     // "yesterday", or "Sunday".
-    "lastSubmission": "(last {dateTime})",
     "action": {
       "fill": "Fill Form"
     },

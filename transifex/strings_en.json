@@ -237,6 +237,14 @@
         "submission_export": {
           "string": "Download Submissions",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "restore": {
+          "string": "Undelete",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "purge": {
+          "string": "Purge",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "public_link": {
@@ -708,6 +716,10 @@
     },
     "total": {
       "string": "Total"
+    },
+    "lastSubmission": {
+      "string": "(last {dateTime})",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
   "mixin": {
@@ -1059,6 +1071,16 @@
       },
       "emptyTable": {
         "string": "There are no matching audit log entries."
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "This resource has been deleted.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "This resource has been purged.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
       }
     },
     "AuditTable": {
@@ -2274,15 +2296,28 @@
         }
       }
     },
-    "FormRow": {
-      "lastSubmission": {
-        "string": "(last {dateTime})",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "FormRestore": {
+      "title": {
+        "string": "Undelete Form",
+        "developer_comment": "This is the title at the top of a pop-up."
       },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to undelete the Form {name}?"
+        },
+        "1": {
+          "string": "The Form will be restored to its previous state, including all data, settings, and permissions."
+        },
+        "2": {
+          "string": "If the Form is deleted again, it will be another 30 days before it is removed."
+        }
+      }
+    },
+    "FormRow": {
       "action": {
         "fill": {
           "string": "Fill Form",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
       "formClosedTip": {
@@ -2329,6 +2364,40 @@
         "idAndVersion": {
           "string": "ID and Version",
           "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
+        }
+      }
+    },
+    "FormTrashList": {
+      "title": {
+        "string": "Trash"
+      },
+      "trashCount": {
+        "string": "({count})",
+        "developer_comment": "{count} is the number of Forms in the trash."
+      },
+      "alert": {
+        "restore": {
+          "string": "The Form “{name}” has been undeleted."
+        }
+      },
+      "message": {
+        "string": "Forms and Form-related data are deleted after 30 days in the Trash"
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "Undelete",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "deletedDate": {
+        "string": "Deleted {dateTime}",
+        "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "disabled": {
+        "conflict": {
+          "string": "This Form cannot be undeleted because an active Form with the same ID exists."
         }
       }
     },

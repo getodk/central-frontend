@@ -1,0 +1,156 @@
+<!--
+Copyright 2021 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <tr class="form-trash-row">
+    <td class="name">
+      <span class="form-name">{{ form.nameOrId() }}</span>
+      <div class="deleted-date">
+        <i18n :tag="false" path="deletedDate">
+          <template #dateTime>
+            <date-time :iso="form.deletedAt"/>
+          </template>
+        </i18n>
+      </div>
+    </td>
+    <td class="id-and-version">
+      <div class="form-id">
+        <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
+      </div>
+      <div v-if="form.version != null && form.version !== ''" class="version">
+        <span :title="form.version">{{ form.version }}</span>
+      </div>
+    </td>
+    <td class="submissions">
+      <div>{{ $tcn('count.submission', form.submissions) }}</div>
+      <div v-if="form.lastSubmission != null">
+        <i18n :tag="false" path="common.lastSubmission">
+          <template #dateTime>
+            <date-time :iso="form.lastSubmission"/>
+          </template>
+        </i18n>
+      </div>
+    </td>
+    <td class="actions">
+      <button class="form-trash-row-restore-button btn btn-default" type="button"
+        :disabled="disabled" :title="disabledTitle"
+        :data-form-id="form.id"
+        @click="openRestoreModal(form)">
+        <span class="icon-recycle"></span>{{ $t('action.restore') }}
+      </button>
+    </td>
+  </tr>
+</template>
+
+<script>
+import DateTime from '../date-time.vue';
+import Form from '../../presenters/form';
+import { requestData } from '../../store/modules/request';
+
+export default {
+  name: 'FormTrashRow',
+  components: { DateTime },
+  props: {
+    form: {
+      type: Form,
+      required: true
+    }
+  },
+  computed: {
+    // The component assumes that this data will exist when the component is
+    // created.
+    ...requestData(['forms']),
+    activeFormIds() {
+      // returns ids of existing forms to disable restoring deleted
+      // forms with conflicting ids (also prevented on backend)
+      return (this.forms != null
+        ? this.forms.map((f) => f.xmlFormId)
+        : []);
+    },
+    disabled() {
+      return this.activeFormIds.includes(this.form.xmlFormId);
+    },
+    disabledTitle() {
+      if (this.disabled)
+        return this.$t('disabled.conflict');
+      return null;
+    }
+  },
+  methods: {
+    openRestoreModal(form) {
+      this.$emit('start-restore', form);
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/mixins';
+
+.form-trash-row {
+  .table tbody & td { vertical-align: middle; }
+
+  // column widths
+  .name {
+    width: 500px;
+    max-width: 500px;
+    @include text-overflow-ellipsis;
+  }
+
+  .id-and-version {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .submissions {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .actions {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .form-name {
+    font-size: 20px;
+  }
+
+  .form-id, .version {
+    @include text-overflow-ellipsis;
+    font-family: $font-family-monospace;
+  }
+
+  .version { color: #888; }
+
+  .deleted-date {
+    color: $color-danger;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "restore": "Undelete"
+    },
+    // This text shows when the Form was deleted. {dateTime} shows
+    // the date and time, for example: "2020/01/01 01:23". It may show a
+    // formatted date like "2020/01/01", or it may use a word like "today",
+    // "yesterday", or "Sunday".
+    "deletedDate": "Deleted {dateTime}",
+    "disabled": {
+      "conflict": "This Form cannot be undeleted because an active Form with the same ID exists."
+    }
+  }
+}
+</i18n>

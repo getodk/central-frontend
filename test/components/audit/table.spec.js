@@ -99,6 +99,23 @@ describe('AuditTable', () => {
       testType(row, ['User', 'Log in']);
       testTarget(row, 'User 1', '/users/1/edit');
     });
+
+    it('renders deleted user targets correctly', () => {
+      testData.extendedUsers.createPast(1, { displayName: 'User Name' });
+      const deletedUser = testData.toActor(testData.extendedUsers.last());
+      deletedUser.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'user.delete', // will display the same way for all actions
+        actee: deletedUser
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('User Name');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
+    });
   });
 
   describe('project target', () => {
@@ -122,6 +139,24 @@ describe('AuditTable', () => {
         testTarget(row, 'My Project', '/projects/1');
       });
     }
+
+    it('renders deleted project targets correctly', () => {
+      const deletedProject = testData.standardProjects
+        .createPast(1, { name: 'My Project' })
+        .last();
+      deletedProject.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'project.delete', // will display the same way for all actions
+        actee: deletedProject
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My Project');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
+    });
   });
 
   describe('form target', () => {
@@ -134,6 +169,8 @@ describe('AuditTable', () => {
       ['form.attachment.update', ['Form', 'Update Attachments']],
       ['form.submission.export', ['Form', 'Download Submissions']],
       ['form.delete', ['Form', 'Delete']],
+      ['form.restore', ['Form', 'Undelete']],
+      ['form.purge', ['Form', 'Purge']],
       ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
       ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']]
     ];
@@ -152,6 +189,24 @@ describe('AuditTable', () => {
         testTarget(row, 'My Form', '/projects/1/forms/a%20b');
       });
     }
+
+    it('renders deleted form targets correctly', () => {
+      const deletedForm = testData.standardForms
+        .createPast(1, { xmlFormId: 'a', name: 'My Form' })
+        .last();
+      deletedForm.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'form.delete', // will display the same way for all actions
+        actee: deletedForm
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My Form');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
+    });
 
     it('shows the xmlFormId if the form does not have a name', () => {
       testData.extendedAudits.createPast(1, {
@@ -200,6 +255,24 @@ describe('AuditTable', () => {
         testTarget(row, 'My Public Link');
       });
     }
+
+    it('renders deleted public link targets correctly', () => {
+      const deletedActor = testData.toActor(testData.standardPublicLinks
+        .createPast(1, { displayName: 'My Public Link' })
+        .last());
+      deletedActor.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'public_link.delete', // will display the same way for all actions
+        actee: deletedActor
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My Public Link');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
+    });
   });
 
   describe('app user target', () => {
@@ -225,6 +298,24 @@ describe('AuditTable', () => {
         testTarget(row, 'My App User');
       });
     }
+
+    it('renders deleted app user targets correctly', () => {
+      const deletedActor = testData.toActor(testData.extendedFieldKeys
+        .createPast(1, { displayName: 'My App User' })
+        .last());
+      deletedActor.deletedAt = ago({ days: 2 }).toISO();
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers.first(),
+        action: 'field_key.delete', // will display the same way for all actions
+        actee: deletedActor
+      });
+      const target = mountComponent().get('.target');
+      target.find('a').exists().should.be.false();
+      target.text().should.equal('My App User');
+      const icon = target.find('.icon-trash');
+      icon.exists().should.be.true();
+      icon.attributes().title.should.equal('This resource has been deleted.');
+    });
   });
 
   it('renders a config.set audit correctly', () => {
@@ -319,6 +410,29 @@ describe('AuditTable', () => {
       actee: testData.toActor(testData.extendedUsers.first()),
       details: { some: 'json' }
     });
+    const selectable = mountComponent().getComponent(Selectable);
+    selectable.text().should.equal('{"some":"json"}');
+  });
+
+  it('renders a purged form row correctly', () => {
+    testData.extendedAudits.createPast(1, {
+      actor: testData.extendedUsers.first(),
+      action: 'form.purge',
+      actee: {
+        purgedAt: ago({ days: 2 }).toISO(),
+        purgedName: 'Purged Form',
+        details: { formId: 123 }
+      },
+      details: { some: 'json' }
+    });
+    const target = mountComponent().get('.target');
+    target.find('a').exists().should.be.false();
+    target.text().should.equal('Purged Form');
+    const icon = target.find('.icon-trash');
+    icon.exists().should.be.true();
+    icon.attributes().title.should.equal('This resource has been purged.');
+    // The purged details aren't part of the audit and don't show up here
+    // but the original details of the audit do
     const selectable = mountComponent().getComponent(Selectable);
     selectable.text().should.equal('{"some":"json"}');
   });

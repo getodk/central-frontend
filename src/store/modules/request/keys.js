@@ -37,6 +37,7 @@ export const keys = [
   'project',
   'projectAssignments',
   'forms',
+  'deletedForms',
   'formSummaryAssignments',
   'form',
   // The fields for a particular form version, whether the primary version or
@@ -88,6 +89,7 @@ export const transforms = {
   projects: ({ data }) => data.map(project => new Project(project)),
   project: ({ data }) => new Project(data),
   forms: formPresenters,
+  deletedForms: formPresenters,
   form: formPresenter,
   fields: ({ data }) => data.map(field => new Field(field)),
   formVersions: formPresenters,

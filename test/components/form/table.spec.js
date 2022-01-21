@@ -20,7 +20,7 @@ describe('FormTable', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedForms.createPast(1);
-      const app = await load('/projects/1');
+      const app = await load('/projects/1', {}, { deletedForms: false });
       const table = app.getComponent(FormTable);
       const headers = table.findAll('th').wrappers.map(th => th.text());
       headers.should.eql(['Name', 'Submissions']);
@@ -34,7 +34,7 @@ describe('FormTable', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
       testData.extendedForms.createPast(1);
-      const app = await load('/projects/1');
+      const app = await load('/projects/1', {}, { deletedForms: false });
       const table = app.getComponent(FormTable);
       const headers = table.findAll('th').wrappers.map(th => th.text());
       headers.should.eql(['Name', 'ID and Version', 'Actions']);
@@ -69,7 +69,7 @@ describe('FormTable', () => {
         name: 'My Draft Form',
         draft: true
       });
-      const app = await load('/projects/1');
+      const app = await load('/projects/1', {}, { deletedForms: false });
       const td = app.findAll('.form-row .name');
       const text = td.wrappers.map(wrapper => wrapper.text());
       text.should.eql(['My Draft Form', 'My Published Form']);
@@ -83,7 +83,7 @@ describe('FormTable', () => {
         name: 'My Draft Form',
         draft: true
       });
-      const app = await load('/projects/1');
+      const app = await load('/projects/1', {}, { deletedForms: false });
       const td = app.findAll('.form-row .name');
       const text = td.wrappers.map(wrapper => wrapper.text());
       text.should.eql(['My Published Form']);

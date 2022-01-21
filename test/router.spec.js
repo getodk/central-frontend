@@ -211,11 +211,9 @@ describe('router', () => {
       });
 
       it('preserves data while navigating to/from the project overview', () =>
-        // Load .../form-access, which requests all the data that the project
-        // overview uses.
         load('/projects/1/form-access')
           .complete()
-          .route('/projects/1')
+          .load('/projects/1', { project: false, forms: false }) // allow deletedForms to be fetched
           .complete()
           .route('/projects/1/form-access')
           .then(dataExists(['project', 'forms'])));
@@ -435,7 +433,7 @@ describe('router', () => {
               }));
 
           it('redirects a user navigating from a different project route', () =>
-            load('/projects/1')
+            load('/projects/1', {}, { deletedForms: false })
               .complete()
               .route('/projects/1/settings')
               .respondFor('/', { users: false })
@@ -456,7 +454,7 @@ describe('router', () => {
         });
 
         it('does not redirect the user from the project overview', async () => {
-          const app = await load('/projects/1');
+          const app = await load('/projects/1', {}, { deletedForms: false });
           app.vm.$route.path.should.equal('/projects/1');
         });
 
@@ -552,7 +550,7 @@ describe('router', () => {
       });
 
       it('does not redirect the user from the project overview', async () => {
-        const app = await load('/projects/1');
+        const app = await load('/projects/1', {}, { deletedForms: false });
         app.vm.$route.path.should.equal('/projects/1');
       });
 
@@ -575,7 +573,7 @@ describe('router', () => {
         '/projects/1/forms/f/submissions/s'
       ]) {
         it(`redirects the user from ${path}`, () =>
-          load('/projects/1')
+          load('/projects/1', {}, { deletedForms: false })
             .complete()
             .route(path)
             .respondFor('/', { users: false })

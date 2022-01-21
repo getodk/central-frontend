@@ -45,7 +45,8 @@ describe('ProjectArchive', () => {
         })
         .respondWithData(() =>
           testData.extendedProjects.update(-1, { archived: true }))
-        .respondWithData(() => testData.extendedForms.sorted());
+        .respondWithData(() => testData.extendedForms.sorted())
+        .respondWithData(() => []);
     };
 
     it('redirects the user to the project overview', async () => {

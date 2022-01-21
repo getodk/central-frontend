@@ -27,7 +27,11 @@ except according to the terms contained in the LICENSE file.
           :title="target.title">
           {{ target.title }}
         </router-link>
-        <span v-else :title="target.title">{{ target.title }}</span>
+        <span v-else :title="target.title">
+          <span v-if="target.deleted" class="icon-trash" :title="$t('deletedMessage')"></span>
+          <span v-if="target.purged" class="icon-trash" :title="$t('purgedMessage')"></span>
+          {{ target.title }}
+        </span>
       </template>
     </td>
     <td><selectable>{{ details }}</selectable></td>
@@ -106,6 +110,15 @@ export default {
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
       const { actee } = this.audit;
+
+      // purged actee (used purgedName as title)
+      if (actee.purgedAt != null)
+        return { title: actee.purgedName, purged: true };
+
+      // soft-deleted actee (use species title but don't make a link)
+      if (actee.deletedAt != null)
+        return { title: species.title(actee), deleted: true };
+
       const result = { title: species.title(actee) };
       if (species.path != null) result.path = species.path(actee, this);
       return result;
@@ -137,3 +150,17 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This shows as a tool tip in the audit log explaining that a resource
+    // has been deleted.
+    "deletedMessage": "This resource has been deleted.",
+    // This shows as a tool tip in the audit log explaining that a resource
+    // has been purged (deleted forever).
+    "purgedMessage": "This resource has been purged."
+  }
+}
+</i18n>
+

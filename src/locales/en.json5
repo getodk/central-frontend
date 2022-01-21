@@ -119,7 +119,9 @@
         "update_draft_delete": "Abandon Draft",
         "attachment_update": "Update Attachments",
         "submission_export": "Download Submissions",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "restore": "Undelete",
+        "purge": "Purge"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Project.
@@ -321,7 +323,12 @@
       "settings": "Settings",
       "overview": "Overview"
     },
-    "total": "Total"
+    "total": "Total",
+    // This text shows when the last Submission was received. {dateTime} shows
+    // the date and time, for example: "2020/01/01 01:23". It may show a
+    // formatted date like "2020/01/01", or it may use a word like "today",
+    // "yesterday", or "Sunday".
+    "lastSubmission": "(last {dateTime})",
   },
   "mixin": {
     "request": {
