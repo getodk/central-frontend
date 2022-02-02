@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DOMPurify from 'dompurify';
-import marked from 'marked';
+import { marked } from 'marked';
 
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   if ('target' in node) {
@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     renderedMarkdown() {
-      const md = marked(this.rawMarkdown, { gfm: true, breaks: true });
+      const md = marked.parse(this.rawMarkdown, { gfm: true, breaks: true });
       const santized = DOMPurify.sanitize(md, {
         FORBID_ATTR: forbiddenAttributes,
         ALLOWED_TAGS: allowedTags,
