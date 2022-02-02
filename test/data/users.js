@@ -23,7 +23,8 @@ export const extendedUsers = dataStore({
     // Sitewide role
     role = 'admin',
     verbs = verbsByRole(role),
-    createdAt
+    createdAt = undefined,
+    deletedAt = undefined
   }) => ({
     id,
     type: 'user',
@@ -33,7 +34,8 @@ export const extendedUsers = dataStore({
     createdAt: createdAt != null
       ? createdAt
       : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()),
-    updated: null
+    updatedAt: null,
+    deletedAt
   }),
   sort: (administrator1, administrator2) =>
     administrator1.email.localeCompare(administrator2.email)

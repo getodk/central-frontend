@@ -24,6 +24,24 @@ describe('ActorLink', () => {
     linkIfCan.attributes().title.should.equal('Alice');
   });
 
+  it('renders a span if the actor is a deleted user', () => {
+    const actor = testData.standardUsers
+      .createPast(1, {
+        displayName: 'Deleted User',
+        deletedAt: new Date().toISOString()
+      })
+      .last();
+    const component = mount(ActorLink, {
+      propsData: { actor },
+      stubs: { RouterLink: RouterLinkStub },
+      mocks: { $route: '/system/audits' }
+    });
+    component.findComponent(LinkIfCan).exists().should.be.false();
+    component.element.tagName.should.equal('SPAN');
+    component.text().should.equal('Deleted User');
+    component.attributes().title.should.equal('Deleted User');
+  });
+
   it('renders a span if the actor is not a user', () => {
     const actor = testData.extendedFieldKeys
       .createPast(1, { displayName: 'My App User' })

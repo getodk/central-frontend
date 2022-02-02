@@ -19,7 +19,10 @@ except according to the terms contained in the LICENSE file.
       </template>
     </td>
     <td class="initiator">
-      <actor-link v-if="audit.actor != null" :actor="audit.actor"/>
+      <template v-if="audit.actor != null">
+        <span v-if="audit.actor.deletedAt != null" class="icon-trash" :title="$t('deletedMessage')"></span>
+        <actor-link :actor="audit.actor"/>
+      </template>
     </td>
     <td class="target">
       <template v-if="target != null">
@@ -27,11 +30,11 @@ except according to the terms contained in the LICENSE file.
           :title="target.title">
           {{ target.title }}
         </router-link>
-        <span v-else :title="target.title">
+        <template v-else>
           <span v-if="target.deleted" class="icon-trash" :title="$t('deletedMessage')"></span>
-          <span v-if="target.purged" class="icon-trash" :title="$t('purgedMessage')"></span>
-          {{ target.title }}
-        </span>
+          <span v-else-if="target.purged" class="icon-trash" :title="$t('purgedMessage')"></span>
+          <span :title="target.title">{{ target.title }}</span>
+        </template>
       </template>
     </td>
     <td><selectable>{{ details }}</selectable></td>
@@ -133,6 +136,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+
 .audit-row {
   .table tbody & td {
     vertical-align: middle;
@@ -143,10 +148,11 @@ export default {
     vertical-align: 1px;
   }
 
-  .initiator, .target {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .initiator, .target { @include text-overflow-ellipsis; }
+
+  .icon-trash {
+    cursor: help;
+    margin-right: $margin-right-icon;
   }
 }
 </style>

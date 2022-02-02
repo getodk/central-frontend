@@ -392,6 +392,23 @@ describe('AuditTable', () => {
       actorLink.props().actor.displayName.should.equal('User 1');
     });
 
+    it('renders correctly for an audit with a deleted actor', () => {
+      testData.extendedAudits.createPast(1, {
+        actor: testData.extendedUsers
+          .createPast(1, {
+            displayName: 'Deleted User',
+            deletedAt: new Date().toISOString()
+          })
+          .last(),
+        action: 'user.update',
+        actee: testData.toActor(testData.extendedUsers.first())
+      });
+      const row = mountComponent();
+      row.findComponent(ActorLink).exists().should.be.true();
+      const icon = row.get('.initiator .icon-trash');
+      icon.attributes().title.should.equal('This resource has been deleted.');
+    });
+
     it('renders correctly for an audit without an actor', () => {
       testData.extendedAudits.createPast(1, {
         action: 'upgrade.process.form',
