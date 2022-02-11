@@ -26,9 +26,8 @@ except according to the terms contained in the LICENSE file.
             <spinner :state="refreshing"/>
           </button>
         </form>
-        <submission-download-dropdown v-if="formVersion != null"
-          :form-version="formVersion" :odata-filter="odataFilter"
-          @decrypt="showDecrypt"/>
+        <submission-download-button :form-version="formVersion"
+          :filtered="odataFilter != null" @download="showModal('download')"/>
       </div>
       <submission-table v-show="submissions != null && submissions.length !== 0"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
@@ -46,7 +45,8 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
-    <submission-decrypt v-bind="decrypt" @hide="hideModal('decrypt')"/>
+    <submission-download :state="download.state" :form-version="formVersion"
+      :odata-filter="odataFilter" @hide="hideModal('download')"/>
     <submission-update-review-state :state="review.state"
       :project-id="projectId" :xml-form-id="xmlFormId"
       :submission="review.submission" @hide="hideReview"
@@ -60,8 +60,8 @@ import { mapGetters } from 'vuex';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
-import SubmissionDecrypt from './decrypt.vue';
-import SubmissionDownloadDropdown from './download-dropdown.vue';
+import SubmissionDownload from './decrypt.vue';
+import SubmissionDownloadButton from './download-dropdown.vue';
 import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
@@ -77,8 +77,8 @@ export default {
   components: {
     Loading,
     Spinner,
-    SubmissionDecrypt,
-    SubmissionDownloadDropdown,
+    SubmissionDownload,
+    SubmissionDownloadButton,
     SubmissionFieldDropdown,
     SubmissionFilters,
     SubmissionTable,
@@ -119,9 +119,8 @@ export default {
       // equal submissions.length unless a submission has been created since the
       // initial fetch or last refresh.
       skip: 0,
-      decrypt: {
-        state: false,
-        formAction: null
+      download: {
+        state: false
       },
       review: {
         state: false,
@@ -308,10 +307,6 @@ export default {
     filter() {
       this.fetchChunk(0, true);
     },
-    showDecrypt(formAction) {
-      this.decrypt.formAction = formAction;
-      this.showModal('decrypt');
-    },
     showReview(submission) {
       this.review.submission = submission;
       this.showModal('review');
@@ -345,8 +340,8 @@ export default {
 @import '../../assets/scss/variables';
 
 #submission-list {
-  // Make sure there is enough space for the DateRangePicker and the
-  // SubmissionDownloadDropdown when they are open.
+  // Make sure that there is enough space for the DateRangePicker when it is
+  // open.
   min-height: 375px;
 }
 
@@ -363,12 +358,11 @@ export default {
   margin-left: 10px;
   margin-right: 5px;
 }
-#submission-download-dropdown {
+#submission-download-button {
+  // The bottom margin is for if the download button wraps above the other
+  // actions.
   margin-bottom: 10px;
   margin-left: auto;
-
-  // Needed to work with align-items above.
-  .btn { float: none; }
 }
 
 #submission-list-message {

@@ -1,25 +1,25 @@
-import { last } from 'ramda';
+import { last, map } from 'ramda';
 
 // eslint-disable-next-line import/prefer-default-export
-export const fields = {};
-const types = [
-  'structure',
-  'repeat',
-  'string',
-  'int',
-  'decimal',
-  'date',
-  'time',
-  'dateTime',
-  'geopoint',
-  'binary'
-];
-for (const type of types) {
-  fields[type] = (path) => ({
+export const fields = map(
+  (props) => (path) => ({
     path,
     name: last(path.split('/')),
-    type,
-    binary: type === 'binary' ? true : null
-  });
-}
-fields.group = fields.structure;
+    binary: null,
+    selectMultiple: null,
+    ...props
+  }),
+  {
+    group: { type: 'structure' },
+    repeat: { type: 'repeat' },
+    int: { type: 'int' },
+    decimal: { type: 'decimal' },
+    string: { type: 'string' },
+    selectMultiple: { type: 'string', selectMultiple: true },
+    date: { type: 'date' },
+    time: { type: 'time' },
+    dateTime: { type: 'dateTime' },
+    geopoint: { type: 'geopoint' },
+    binary: { type: 'binary', binary: true }
+  }
+);

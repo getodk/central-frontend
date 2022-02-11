@@ -171,12 +171,6 @@ const dataGetters = {
       0
     );
   },
-  // Returns a managed key if there is one among `keys`. Returns `null` if there
-  // is no managed key or if `keys` is `null`.
-  managedKey: ({ data }) => {
-    const ks = data.keys;
-    return ks != null ? ks.find(k => k.managed) : null;
-  },
   fieldKeysWithToken: ({ data: { fieldKeys } }) => (fieldKeys != null
     ? fieldKeys.filter(fieldKey => fieldKey.token != null)
     : null),

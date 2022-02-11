@@ -1,5 +1,5 @@
 import EnketoFill from '../../../src/components/enketo/fill.vue';
-import SubmissionDownloadDropdown from '../../../src/components/submission/download-dropdown.vue';
+import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -40,8 +40,8 @@ describe('FormSubmissions', () => {
       const component = await load('/projects/1/forms/f/submissions', {
         root: false
       });
-      const dropdown = component.getComponent(SubmissionDownloadDropdown);
-      dropdown.get('button').text().should.equal('Download 1 record');
+      const text = component.getComponent(SubmissionDownloadButton).text();
+      text.should.equal('Download 1 record…');
     });
 
     it('updates the form checklist if the count changes', () => {

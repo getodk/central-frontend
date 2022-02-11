@@ -4,7 +4,8 @@ const props = [
   'path',
   'name',
   'type',
-  'binary'
+  'binary',
+  'selectMultiple'
 ];
 
 export default class Field extends presenterClass(props) {

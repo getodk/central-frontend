@@ -25,13 +25,20 @@ const forms = dataStore({
     id,
     lastCreatedAt,
 
+    key = undefined,
     submissions = undefined,
     lastSubmission = submissions != null && submissions !== 0
       ? new Date().toISOString()
       : undefined,
     project = extendedProjects.size !== 0
       ? extendedProjects.first()
-      : extendedProjects.createPast(1, { forms: 1, lastSubmission }).last(),
+      : extendedProjects
+        .createPast(1, {
+          key: key != null && key.managed ? key : null,
+          forms: 1,
+          lastSubmission
+        })
+        .last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
     name = faker.random.boolean() ? faker.name.findName() : null,
     enketoId = 'xyz',
@@ -74,6 +81,7 @@ const forms = dataStore({
       ...rest,
       form,
       draft,
+      key,
       publishedAt,
       enketoId: draft ? enketoId : null,
       submissions,

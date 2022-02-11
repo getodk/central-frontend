@@ -144,14 +144,14 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 .btn-primary {
   background-color: $color-action-background;
 
-  &[disabled], fieldset[disabled] & {
+  &[disabled], &.disabled, fieldset[disabled] & {
     background-color: $color-action-background-disabled;
   }
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background-hover;
 
-    &[disabled], fieldset[disabled] & {
+    &[disabled], &.disabled, fieldset[disabled] & {
       background-color: $color-action-background-disabled;
     }
   }
@@ -162,7 +162,7 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:hover, &:focus, &:active:focus {
     background-color: #ccc;
-    &[disabled], fieldset[disabled] & { background-color: #ddd; }
+    &[disabled], &.disabled, fieldset[disabled] & { background-color: #ddd; }
   }
 
   > [class^="icon-"]:first-child { color: $color-action-background; }
@@ -173,7 +173,7 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-danger-dark;
-    &[disabled], fieldset[disabled] { background-color: $color-danger; }
+    &[disabled], &.disabled, fieldset[disabled] { background-color: $color-danger; }
   }
 }
 
@@ -400,7 +400,10 @@ input[type="radio"], input[type="checkbox"] {
     }
   }
 
-  &.disabled label, fieldset[disabled] & label { cursor: not-allowed; }
+  &.disabled label, fieldset[disabled] & label {
+    cursor: not-allowed;
+    color: $color-input-inactive;
+  }
 }
 
 .form-group + .radio,

@@ -10,27 +10,92 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" hideable backdrop @hide="$emit('hide')"
-    @shown="$refs.passphrase.focus()">
+  <modal id="submission-download" :state="state" hideable
+    :large="managedKey != null" backdrop @hide="$emit('hide')"
+    @shown="$refs.form.querySelector('input:not([disabled])').focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
-      <form @submit.prevent="submit">
-        <form-group ref="passphrase" v-model="passphrase" type="password"
-          :placeholder="$t('field.passphrase')" required autocomplete="off"/>
-        <p v-if="managedKey != null && managedKey.hint != null"
-          class="modal-introduction">
-          {{ $t('hint', managedKey) }}
-        </p>
-        <div class="modal-actions">
-          <button type="submit" class="btn btn-primary">
-            {{ $t('action.download') }}
-          </button>
-          <button type="button" class="btn btn-link" @click="$emit('hide')">
-            {{ $t('action.cancel') }}
-          </button>
+      <div id="submission-download-container">
+        <form ref="form" @submit.prevent>
+          <p id="submission-download-options-title">
+            {{ $t('exportOptions') }}
+          </p>
+          <div class="checkbox"
+            :class="{ disabled: splitSelectMultiplesTitle != null }">
+            <label :title="splitSelectMultiplesTitle">
+              <input v-model="splitSelectMultiples" type="checkbox"
+                :disabled="splitSelectMultiplesTitle != null">
+              {{ $t('field.splitSelectMultiples') }}
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input v-model="removeGroupNames" type="checkbox">
+              {{ $t('field.removeGroupNames') }}
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input v-model="deletedFields" type="checkbox">
+              {{ $t('field.deletedFields') }}
+            </label>
+          </div>
+          <template v-if="managedKey != null">
+            <p id="submission-download-passphrase-help"
+              class="modal-introduction">
+              {{ $t('introduction[0]') }}
+            </p>
+            <form-group v-model="passphrase" type="password"
+              :placeholder="$t('field.passphrase')" required
+              autocomplete="off"/>
+            <p v-if="managedKey.hint != null" class="modal-introduction">
+              {{ $t('hint', managedKey) }}
+            </p>
+          </template>
+        </form>
+        <div id="submission-download-divider"></div>
+        <div id="submission-download-actions" @click="download">
+          <div class="submission-download-action">
+            <span class="submission-download-action-label">
+              <span class="icon-file-o"></span>{{ $t('action.download.mainTable') }}
+            </span>
+            <div>
+              <a :href="href('.csv')" class="btn btn-primary">
+                <span class="icon-download"></span>.csv
+              </a>
+            </div>
+          </div>
+          <div class="submission-download-action"
+            :class="{ disabled: noRepeat }">
+            <span class="submission-download-action-label"
+              :title="noRepeat ? $t('noRepeat') : null">
+              <span class="icon-files-o"></span>{{ $t('action.download.allTables') }}
+            </span>
+            <div>
+              <a :href="href('.csv.zip', { attachments: false })"
+                class="btn btn-primary" :class="{ disabled: noRepeat }"
+                :title="noRepeat ? $t('noRepeat') : null">
+                <span class="icon-download"></span>.zip
+              </a>
+            </div>
+          </div>
+          <div class="submission-download-action">
+            <span class="submission-download-action-label">
+              <span class="icon-image"></span>{{ $t('action.download.withMedia') }}
+            </span>
+            <div>
+              <a :href="href('.csv.zip')" class="btn btn-primary">
+                <span class="icon-download"></span>.zip
+              </a>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="$emit('hide')">
+          {{ $t('action.done') }}
+        </button>
+      </div>
       <!-- We specify a Frontend page for src so that any cookies are sent when
       the iframe form is submitted. -->
       <iframe v-show="false" ref="iframe" src="/blank.html"></iframe>
@@ -39,49 +104,78 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 
 import callWait from '../../mixins/call-wait';
-import { isProblem } from '../../util/request';
+import { apiPaths, isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
+  // Ideally, this component would be named SubmissionDownload, but that would
+  // cause messages to be moved in Transifex.
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
   mixins: [callWait()],
   props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
-    formAction: String, // eslint-disable-line vue/require-default-prop
-    delayBetweenChecks: {
-      type: Number,
-      default: 1000
-    }
+    state: Boolean,
+    formVersion: Object,
+    odataFilter: String
   },
   data() {
     return {
       calls: {},
+      splitSelectMultiples: false,
+      removeGroupNames: false,
+      deletedFields: false,
       passphrase: ''
     };
   },
   computed: {
-    ...requestData(['session']),
-    ...mapGetters(['managedKey'])
+    ...requestData(['session', 'fields', 'keys']),
+    managedKey() {
+      return this.keys != null ? this.keys.find(key => key.managed) : null;
+    },
+    splitSelectMultiplesTitle() {
+      if (this.fields != null &&
+        !this.fields.some(({ selectMultiple }) => selectMultiple === true))
+        return this.$t('noSelectMultiple');
+      return this.formVersion != null && this.formVersion.keyId != null
+        ? this.$t('encryptedForm')
+        : null;
+    },
+    noRepeat() {
+      return this.fields != null &&
+        !this.fields.some(({ type }) => type === 'repeat');
+    }
   },
   watch: {
-    state() {
-      if (!this.state) {
+    state(state) {
+      if (!state) {
+        // Reset the passphrase, but don't reset the other form fields.
         this.passphrase = '';
         this.cancelCall('checkForProblem');
       }
     }
   },
   methods: {
+    href(extension, query = undefined) {
+      if (this.formVersion == null) return '#';
+      const fullQuery = {
+        ...query,
+        $filter: this.odataFilter,
+        splitSelectMultiples: this.splitSelectMultiples,
+        groupPaths: !this.removeGroupNames,
+        deletedFields: this.deletedFields
+      };
+      return apiPaths.submissions(
+        this.formVersion.projectId,
+        this.formVersion.xmlFormId,
+        this.formVersion.publishedAt == null,
+        extension,
+        fullQuery
+      );
+    },
     /*
     replaceIframeBody() empties the iframe body, then appends a form to it. We
     place a form in an iframe for a few reasons:
@@ -101,12 +195,12 @@ export default {
     Note that because the iframe may change pages after the form is submitted
     (if a Problem is returned), we recreate the form each time we submit it.
     */
-    replaceIframeBody() {
+    submitIframeForm(action) {
       const doc = this.$refs.iframe.contentWindow.document;
       doc.body.innerHTML = '';
       const form = doc.createElement('form');
       form.setAttribute('method', 'post');
-      form.setAttribute('action', this.formAction);
+      form.setAttribute('action', action);
       doc.body.appendChild(form);
 
       const passphraseInput = doc.createElement('input');
@@ -124,6 +218,9 @@ export default {
 
       passphraseInput.value = this.passphrase;
       csrf.value = this.session.csrf;
+      form.submit();
+      // Ensure that the inputs' values are no longer in the DOM.
+      form.reset();
     },
     checkForProblem() {
       const doc = this.$refs.iframe.contentWindow.document;
@@ -146,51 +243,120 @@ export default {
       }
       return true;
     },
-    scheduleProblemCheck() {
-      this.cancelCall('checkForProblem');
-      this.callWait('checkForProblem', this.checkForProblem, (tries) =>
-        (tries < 300 ? this.delayBetweenChecks : null));
-    },
-    submit() {
+    decrypt(action) {
+      const iframeDoc = this.$refs.iframe.contentWindow.document;
+
       // Return immediately if the iframe is still loading. It would probably be
       // better to wait for the iframe to load, then continue the process then,
       // but there would be edge cases to consider in implementing that. (For
       // example, what if the user submits the form, but then closes the modal
       // before the iframe finishes loading?)
-      const iframeDoc = this.$refs.iframe.contentWindow.document;
-      if (iframeDoc.readyState === 'loading') return;
+      if (iframeDoc.readyState === 'loading') {
+        this.$alert().info('alert.unavailable');
+        return;
+      }
 
-      this.replaceIframeBody();
-      const form = iframeDoc.body.querySelector('form');
-      form.submit();
-      // Clear the form so that the inputs' values are no longer in the DOM.
-      for (const input of form.querySelectorAll('input'))
-        input.value = '';
+      this.submitIframeForm(action);
 
-      // Because the form submission is not an AJAX request, we will only know
-      // the result of the request if a Problem is returned: if a Problem is
-      // returned, the iframe will change pages, but if the download is
-      // successful, the iframe seems not to change.
-      this.$alert().info(this.$t('alert.submit'));
-
-      this.scheduleProblemCheck();
+      this.cancelCall('checkForProblem');
+      this.callWait('checkForProblem', this.checkForProblem, (tries) =>
+        (tries < 300 ? 1000 : null));
+    },
+    download(event) {
+      const a = event.target.closest('a');
+      if (a == null) return;
+      const willDownload = !a.classList.contains('disabled') &&
+        this.$refs.form.reportValidity();
+      if (this.managedKey == null) {
+        if (!willDownload) event.preventDefault();
+      } else {
+        event.preventDefault();
+        if (willDownload) this.decrypt(a.getAttribute('href'));
+      }
+      if (willDownload) this.$alert().info(this.$t('alert.submit'));
     }
   }
 };
 </script>
 
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#submission-download-container {
+  display: flex;
+  justify-content: space-between;
+}
+#submission-download-options-title { font-weight: bold; }
+#submission-download-container form, #submission-download-actions {
+  margin-bottom: 1px;
+  margin-top: 5px;
+}
+#submission-download-passphrase-help { margin-top: 21px; }
+#submission-download-container form :last-child { margin-bottom: 0; }
+#submission-download-divider {
+  border-left: 1px solid $color-subpanel-border-strong;
+  margin-bottom: -5px;
+  margin-top: -1px;
+}
+#submission-download-actions { margin-right: 12px; }
+$label-icon-max-width: 15px;
+.submission-download-action-label {
+  // Instead of wrapping the element in a <div> and setting the margin on that,
+  // we set `display` to inline-block: that way, the cursor will be shown as
+  // not-allowed only over the text.
+  display: inline-block;
+  font-weight: bold;
+  margin-bottom: 3px;
+
+  [class^="icon-"] {
+    display: inline-block;
+    margin-right: $margin-right-icon;
+    min-width: $label-icon-max-width;
+  }
+
+  .submission-download-action.disabled & {
+    color: $color-input-inactive;
+    cursor: not-allowed;
+  }
+}
+.submission-download-action {
+  a { margin-left: #{$label-icon-max-width + $margin-right-icon}; }
+  + .submission-download-action { margin-top: 12px; }
+}
+</style>
+
 <i18n lang="json5">
 {
   "en": {
     // This is the title at the top of a pop-up.
-    "title": "Decrypt and Download",
+    "title": "Download Submissions",
+    // This text is shown above options for downloading Submissions.
+    "exportOptions": "Export options",
+    "field": {
+      "splitSelectMultiples": "Split “select multiple” choices into columns",
+      "removeGroupNames": "Remove group names",
+      "deletedFields": "Include previously deleted Form fields"
+    },
+    "noSelectMultiple": "This Form does not have any select multiple fields.",
+    "encryptedForm": "Encrypted Forms cannot be processed in this way.",
     "introduction": [
       "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
     ],
     // This text is shown if there is a passphrase hint. {hint} is the
     // passphrase hint.
     "hint": "Hint: {hint}",
+    // "Repeats" refers to repeat groups.
+    "noRepeat": "This Form does not have repeats.",
+    "action": {
+      "download": {
+        // This is the text of a button. "Repeats" refers to repeat groups.
+        "mainTable": "Main data table (no repeats)",
+        "allTables": "All data tables",
+        "withMedia": "All data and media files"
+      }
+    },
     "alert": {
+      "unavailable": "The data download is not yet available. Please try again in a moment.",
       "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
     }
   }

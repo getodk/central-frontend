@@ -192,19 +192,32 @@ describe('App', () => {
     });
   });
 
-  it('hides the alert if the user clicks an a[target="_blank"]', async () => {
-    mockLogin();
-    const app = await load('/', { attachTo: document.body });
-    app.vm.$alert().info('Something happened!');
-    const preventDefault = (event) => {
-      event.preventDefault();
-    };
-    document.addEventListener('click', preventDefault);
-    await app.getComponent(ProjectList).getComponent(DocLink).trigger('click');
-    try {
-      app.should.not.alert();
-    } finally {
+  describe('hiding alert after user clicks an a[target="_blank"]', () => {
+    beforeEach(mockLogin);
+
+    const preventDefault = (event) => { event.preventDefault(); };
+    before(() => {
+      document.addEventListener('click', preventDefault);
+    });
+    after(() => {
       document.removeEventListener('click', preventDefault);
-    }
+    });
+
+    it('hides the alert', async () => {
+      const app = await load('/', { attachTo: document.body });
+      app.vm.$alert().info('Something happened!');
+      await app.getComponent(ProjectList).getComponent(DocLink).trigger('click');
+      app.should.not.alert();
+    });
+
+    it('does not hide the alert if it was shown after the click', async () => {
+      const app = await load('/', { attachTo: document.body });
+      const docLink = app.getComponent(ProjectList).getComponent(DocLink);
+      docLink.vm.$el.addEventListener('click', () => {
+        app.vm.$alert().info('Something happened!');
+      });
+      docLink.trigger('click');
+      app.should.alert();
+    });
   });
 });

@@ -2,7 +2,7 @@ import ChecklistStep from '../../../src/components/checklist-step.vue';
 import CollectQr from '../../../src/components/collect-qr.vue';
 import EnketoFill from '../../../src/components/enketo/fill.vue';
 import FormDraftStatus from '../../../src/components/form-draft/status.vue';
-import SubmissionDownloadDropdown from '../../../src/components/submission/download-dropdown.vue';
+import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -47,8 +47,8 @@ describe('FormDraftTesting', () => {
       const component = await load('/projects/1/forms/f/draft/testing', {
         root: false
       });
-      const dropdown = component.getComponent(SubmissionDownloadDropdown);
-      dropdown.get('button').text().should.equal('Download 2 records');
+      const text = component.getComponent(SubmissionDownloadButton).text();
+      text.should.equal('Download 2 records…');
     });
 
     it('updates the draft checklist if the count changes', () => {
