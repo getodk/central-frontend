@@ -2,6 +2,8 @@ import sinon from 'sinon';
 
 import SubmissionDownload from '../../../src/components/submission/decrypt.vue';
 
+import { noop } from '../../../src/util/util';
+
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
@@ -30,7 +32,7 @@ const aUrl = (a) => {
   return new URL(href, window.location.origin);
 };
 
-describe.only('SubmissionDownload', () => {
+describe('SubmissionDownload', () => {
   beforeEach(mockLogin);
 
   it('toggles the modal', () => {
@@ -101,7 +103,7 @@ describe.only('SubmissionDownload', () => {
       url.searchParams.get('groupPaths').should.equal('false');
   });
 
-  describe('includes deletedFields in each download link', async () => {
+  it('includes deletedFields in each download link', async () => {
     testData.extendedForms.createPast(1);
     const modal = mountComponent();
     const a = modal.findAll('a').wrappers;
@@ -261,17 +263,16 @@ describe.only('SubmissionDownload', () => {
         defaultPrevented = event.defaultPrevented;
         event.preventDefault();
       });
-      await modal.get('a').trigger('click');
+      modal.get('a').trigger('click');
       defaultPrevented.should.be.false();
     });
 
     it('shows an info alert', async () => {
-      testData.extendedForms.createPast(1);
       const modal = mountComponent();
       modal.element.addEventListener('click', (event) => {
         event.preventDefault();
       });
-      await modal.get('a').trigger('click');
+      modal.get('a').trigger('click');
       modal.should.alert('info');
     });
 
@@ -295,109 +296,105 @@ describe.only('SubmissionDownload', () => {
       });
     });
 
-    it('prevents default', async () => {
-      const modal = mountComponent();
+    const preventDefault = (event) => { event.preventDefault(); };
+    /* In production, it seems that the iframe changes pages if a Problem is
+    returned after the form is submitted, but it does not change pages if the
+    submission is successful. However, in testing, the iframe always seems to
+    change pages after the form is submitted. Because of that, each test should
+    specify what should happen after the form is submitted. Many tests will
+    prevent default in order to prevent a page change, simulating a successful
+    submission. */
+    const setup = async (onSubmit = preventDefault) => {
+      const modal = mountComponent({ attachTo: document.body });
       await modal.get('input[type="password"]').setValue('supersecret');
-      sinon.replace(modal.vm, 'decrypt', sinon.fake());
+      // Wait for the iframe to load.
+      await wait(200);
+      const doc = modal.vm.$refs.iframe.contentWindow.document;
+      doc.addEventListener('submit', onSubmit);
+      return modal;
+    };
+
+    it('prevents default for the click event', async () => {
+      const modal = await setup();
       const event = new MouseEvent('click', {
         bubbles: true,
         cancelable: true
       });
       modal.get('a').element.dispatchEvent(event).should.be.false();
-    });
-
-    // Here, we simply test that the decrypt() method is called with the correct
-    // argument. We test the actual behavior of the decrypt() method below.
-    it('calls the decrypt() method', async () => {
-      const modal = mountComponent();
-      await modal.get('input[type="password"]').setValue('supersecret');
-      const decrypt = sinon.fake();
-      sinon.replace(modal.vm, 'decrypt', decrypt);
-      const a = modal.get('a');
-      await a.trigger('click');
-      decrypt.calledWith(a.attributes().href).should.be.true();
-    });
-
-    it('calls the decrypt() method if the click is on the icon', async () => {
-      const modal = mountComponent();
-      await modal.get('input[type="password"]').setValue('supersecret');
-      const decrypt = sinon.fake();
-      sinon.replace(modal.vm, 'decrypt', decrypt);
-      const a = modal.get('a');
-      await a.get('span').trigger('click');
-      decrypt.calledWith(a.attributes().href).should.be.true();
-    });
-
-    it('shows an info alert', async () => {
-      const modal = mountComponent();
-      await modal.get('input[type="password"]').setValue('supersecret');
-      sinon.replace(modal.vm, 'decrypt', sinon.fake());
-      await modal.get('a').trigger('click');
-      modal.should.alert('info');
-    });
-
-    it('does nothing if the link is disabled', async () => {
-      const modal = mountComponent();
-      await modal.get('input[type="password"]').setValue('supersecret');
-      const decrypt = sinon.fake();
-      sinon.replace(modal.vm, 'decrypt', decrypt);
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true
-      });
-      modal.findAll('a').at(1).element.dispatchEvent(event).should.be.false();
-      decrypt.called.should.be.false();
-      modal.should.not.alert();
-    });
-
-    it('does nothing if the passphrase has not been entered', () => {
-      const modal = mountComponent();
-      const decrypt = sinon.fake();
-      sinon.replace(modal.vm, 'decrypt', decrypt);
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true
-      });
-      modal.get('a').element.dispatchEvent(event).should.be.false();
-      decrypt.called.should.be.false();
-      modal.should.not.alert();
     });
 
     it('submits a form from the iframe', async () => {
-      const modal = mountComponent({ attachTo: document.body });
-      // Wait for the iframe to load.
-      await wait(200);
-      await modal.get('input[type="password"]').setValue('supersecret');
       let success = false;
-      const doc = modal.vm.$refs.iframe.contentWindow.document;
-      doc.body.addEventListener('submit', (event) => {
+      const modal = await setup(event => {
+        event.preventDefault();
         const action = event.target.getAttribute('action');
-        action.should.equal('/v1/projects/1/forms/f/submissions.csv.zip');
-
+        action.should.startWith('/v1/projects/1/forms/f/submissions.csv?');
         const inputs = event.target.querySelectorAll('input');
         inputs.length.should.equal(2);
         const key = testData.standardKeys.last();
         inputs[0].getAttribute('name').should.equal(key.id.toString());
         inputs[0].value.should.equal('supersecret');
         inputs[1].value.should.equal(modal.vm.session.csrf);
-        Promise.resolve().then(() => {
-          inputs[0].value.should.equal('');
-          inputs[1].value.should.equal('');
-          success = true;
-        });
+        success = true;
       });
-      modal.vm.decrypt('/v1/projects/1/forms/f/submissions.csv.zip');
-      await modal.vm.$nextTick();
+      modal.get('a').trigger('click');
       success.should.be.true();
+    });
+
+    it('resets the iframe form', async () => {
+      const modal = await setup();
+      modal.get('a').trigger('click');
+      const doc = modal.vm.$refs.iframe.contentWindow.document;
+      const inputs = doc.querySelectorAll('input');
+      inputs.length.should.equal(2);
+      inputs[0].value.should.equal('');
+      inputs[1].value.should.equal('');
+    });
+
+    it('submits the iframe form if the click is on the icon', async () => {
+      const onSubmit = sinon.fake(preventDefault);
+      const modal = await setup(onSubmit);
+      modal.get('a span').trigger('click');
+      onSubmit.called.should.be.true();
+    });
+
+    it('shows an info alert', async () => {
+      const modal = await setup();
+      modal.get('a').trigger('click');
+      modal.should.alert('info');
+    });
+
+    it('does nothing if the link is disabled', async () => {
+      const onSubmit = sinon.fake();
+      const modal = await setup(onSubmit);
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true
+      });
+      modal.findAll('a').at(1).element.dispatchEvent(event).should.be.false();
+      onSubmit.called.should.be.false();
+      modal.should.not.alert();
+    });
+
+    it('does nothing if the passphrase is empty', async () => {
+      const onSubmit = sinon.fake();
+      const modal = await setup(onSubmit);
+      await modal.get('input[type="password"]').setValue('');
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true
+      });
+      modal.get('a').element.dispatchEvent(event).should.be.false();
+      onSubmit.called.should.be.false();
+      modal.should.not.alert();
     });
 
     it('shows a danger alert if a Problem is returned', async () => {
       const clock = sinon.useFakeTimers();
-      const modal = mountComponent({ attachTo: document.body });
-      // Wait for the iframe to load.
-      await wait(200);
-      await modal.get('input[type="password"]').setValue('supersecret');
-      modal.vm.decrypt('/test/files/problem.html');
+      const modal = await setup(noop);
+      const a = modal.get('a');
+      a.element.setAttribute('href', '/test/files/problem.html');
+      a.trigger('click');
       // Wait for problem.html to load.
       await wait(200);
       clock.tick(1000);
@@ -409,19 +406,9 @@ describe.only('SubmissionDownload', () => {
 
     it('continually checks for a Problem', async () => {
       const clock = sinon.useFakeTimers();
-      const modal = mountComponent({ attachTo: document.body });
-      // Wait for the iframe to load.
-      await wait(200);
-      await modal.get('input[type="password"]').setValue('supersecret');
-      // In production, it seems that the iframe changes pages if a Problem is
-      // returned after the form submission, but it does not change pages if the
-      // submission is successful. However, in testing, the iframe always seems
-      // to change pages after the form is submitted. To prevent that, here we
-      // prevent default.
-      const doc = modal.vm.$refs.iframe.contentWindow.document;
-      doc.addEventListener('submit', (event) => { event.preventDefault(); });
-      modal.vm.decrypt('/v1/projects/1/forms/f/submissions.csv.zip');
+      const modal = await setup();
       const checkForProblem = sinon.spy(modal.vm, 'checkForProblem');
+      modal.get('a').trigger('click');
       clock.tick(1000);
       checkForProblem.callCount.should.equal(1);
       // Wait for the callWait promise to resolve.
