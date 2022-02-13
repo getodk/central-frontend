@@ -29,8 +29,10 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $t('common.currentDraft') }}</span>
           </template>
           <template #body>
-            <form-version-summary-item v-if="formDraft != null"
-              :version="formDraft">
+            <summary-item v-if="formDraft != null" icon="file-o">
+              <template #heading>
+                <form-version-string :version="formDraft.version"/>
+              </template>
               <template #body>
                 <i18n tag="p" path="currentDraft.versionCaption.full">
                   <template #draftVersion>
@@ -48,7 +50,7 @@ except according to the terms contained in the LICENSE file.
                   </button>
                 </div>
               </template>
-            </form-version-summary-item>
+            </summary-item>
           </template>
         </page-section>
         <page-section condensed>
@@ -85,12 +87,11 @@ import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
-// Import PageSection before SummaryItem (in FormVersionSummaryItem) in order to
-// have the same import order as other components: see
-// https://github.com/vuejs/vue-cli/issues/3771
-import PageSection from '../page/section.vue';
-import FormVersionSummaryItem from '../form-version/summary-item.vue';
+import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
+import SummaryItem from '../summary-item.vue';
+
 import Option from '../../util/option';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
@@ -107,10 +108,11 @@ export default {
     FormDraftPublish,
     FormNew,
     FormVersionStandardButtons,
-    FormVersionSummaryItem,
+    FormVersionString,
     FormVersionViewXml: loadAsync('FormVersionViewXml'),
     Loading,
-    PageSection
+    PageSection,
+    SummaryItem
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes()],
   props: {

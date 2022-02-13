@@ -16,7 +16,10 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('common.rightNow') }}</span>
     </template>
     <template #body>
-      <form-version-summary-item :version="form">
+      <summary-item icon="file-o">
+        <template #heading>
+          <form-version-string :version="form.version"/>
+        </template>
         <template #body>
           <i18n tag="p" path="version.full">
             <template #publishedVersion>
@@ -28,7 +31,7 @@ except according to the terms contained in the LICENSE file.
               @view-xml="$emit('view-xml')"/>
           </div>
         </template>
-      </form-version-summary-item>
+      </summary-item>
       <summary-item :icon="stateIcon">
         <template #heading>
           {{ $t(`formState.${form.state}`) }}
@@ -56,9 +59,10 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormVersionStandardButtons from '../../form-version/standard-buttons.vue';
-import FormVersionSummaryItem from '../../form-version/summary-item.vue';
+import FormVersionString from '../../form-version/string.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
+
 import routes from '../../../mixins/routes';
 import { requestData } from '../../../store/modules/request';
 
@@ -66,7 +70,7 @@ export default {
   name: 'FormOverviewRightNow',
   components: {
     FormVersionStandardButtons,
-    FormVersionSummaryItem,
+    FormVersionString,
     PageSection,
     SummaryItem
   },

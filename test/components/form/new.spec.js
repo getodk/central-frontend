@@ -1,6 +1,7 @@
 import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FormNew from '../../../src/components/form/new.vue';
 import FormRow from '../../../src/components/form/row.vue';
+import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
 import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/file';
@@ -343,8 +344,8 @@ describe('FormNew', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const version = app.get('.form-version-summary-item .version');
-          version.text().should.equal('v1');
+          const { version } = app.getComponent(FormVersionString).props();
+          version.should.equal('v1');
         })
         .request(async (app) => {
           await app.get('#form-draft-status-upload-button').trigger('click');
@@ -360,8 +361,8 @@ describe('FormNew', () => {
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          const version = app.get('.form-version-summary-item .version');
-          version.text().should.equal('v2');
+          const { version } = app.getComponent(FormVersionString).props();
+          version.should.equal('v2');
         });
     });
 

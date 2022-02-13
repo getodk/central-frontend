@@ -11,10 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="form-version-row">
-    <td class="version" :class="{ 'blank-version': version.version === '' }">
-      <span :title="version.versionOrBlank()">
-        {{ version.versionOrBlank() }}
-      </span>
+    <td class="version">
+      <form-version-string :version="version.version"/>
     </td>
     <td>
       <time-and-user :iso="version.publishedAt" :user="version.publishedBy"/>
@@ -29,12 +27,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Form from '../../presenters/form';
 import FormVersionDefDropdown from './def-dropdown.vue';
+import FormVersionString from './string.vue';
 import TimeAndUser from '../time-and-user.vue';
+
 import routes from '../../mixins/routes';
 
 export default {
   name: 'FormVersionRow',
-  components: { FormVersionDefDropdown, TimeAndUser },
+  components: { FormVersionDefDropdown, FormVersionString, TimeAndUser },
   mixins: [routes()],
   props: {
     version: {
@@ -46,20 +46,10 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 .form-version-row {
   .table tbody & td { vertical-align: middle; }
-
-  .version {
-    font-family: $font-family-monospace;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .blank-version {
-    font-family: inherit;
-  }
+  .version { @include text-overflow-ellipsis; }
 }
 </style>
