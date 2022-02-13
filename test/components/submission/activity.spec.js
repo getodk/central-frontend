@@ -39,6 +39,7 @@ describe('SubmissionActivity', () => {
     return load("/projects/1/forms/a%20b/submissions/'c%20d'").testRequests([
       { url: '/v1/projects/1', extended: true },
       { url: "/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')" },
+      { url: "/v1/projects/1/forms/a%20b/submissions/'c%20d'/versions/'c%20d'" },
       { url: '/v1/projects/1/forms/a%20b/fields' },
       { url: "/v1/projects/1/forms/a%20b/submissions/'c%20d'/audits", extended: true },
       { url: "/v1/projects/1/forms/a%20b/submissions/'c%20d'/comments", extended: true },

@@ -36,6 +36,7 @@ const defaults = {
   audits: () => testData.extendedAudits.sorted(),
   comments: () => testData.extendedComments.sorted(),
   diffs: () => ({}),
+  submissionVersion: () => ({}),
   publicLinks: () => testData.standardPublicLinks.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
 
@@ -87,7 +88,7 @@ const mapsByComponent = {
   FormDraftStatus: mapKeys(['formVersions']),
   FormAttachmentList: new Map(),
   FormDraftTesting: mapKeys(['keys', 'fields', 'odataChunk']),
-  SubmissionShow: mapKeys(['project', 'submission', 'fields', 'audits', 'comments', 'diffs']),
+  SubmissionShow: mapKeys(['project', 'submission', 'submissionVersion', 'fields', 'audits', 'comments', 'diffs']),
 
   UserHome: new Map(),
   UserList: mapKeys(['users', 'actors']),

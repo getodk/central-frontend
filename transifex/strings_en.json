@@ -3302,8 +3302,14 @@
       "reviewState": {
         "string": "Review State"
       },
+      "formVersion": {
+        "string": "Form version"
+      },
       "deviceId": {
         "string": "Device ID"
+      },
+      "userAgent": {
+        "string": "User agent"
       },
       "attachments": {
         "string": "Media files"

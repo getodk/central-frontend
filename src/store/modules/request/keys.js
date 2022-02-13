@@ -57,6 +57,7 @@ export const keys = [
   'audits',
   'comments',
   'diffs',
+  'submissionVersion',
   'publicLinks',
   'fieldKeys',
 

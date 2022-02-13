@@ -8,6 +8,7 @@ import { dataStore, view } from './data-store';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
+import { fields } from './fields';
 import { toActor } from './actors';
 
 const fakeDateTime = () => {
@@ -51,7 +52,7 @@ const odataValue = (field, instanceId) => {
 };
 
 // Returns random OData for a submission. `partial` seeds the OData.
-const odata = (instanceId, fields, partial) => fields
+const odata = (instanceId, versionFields, partial) => versionFields
   .map(field => new Field(field))
   .reduce(
     (data, field) => {
@@ -74,22 +75,29 @@ export const extendedSubmissions = dataStore({
     inPast,
     lastCreatedAt,
 
+    attachmentsExpected = 0,
     // `form` is deprecated. Use formVersion instead.
     form = extendedForms.size !== 0
       ? extendedForms.first()
       // The lastSubmission property of the form will likely not match the
       // submission.
-      : extendedForms.createPast(1, { submissions: 1 }).last(),
+      : extendedForms
+        .createPast(1, {
+          submissions: 1,
+          fields: attachmentsExpected !== 0
+            ? [fields.binary('/b')]
+            : undefined
+        })
+        .last(),
     formVersion = form,
     instanceId = faker.random.uuid(),
 
     submitter = extendedUsers.first(),
-    attachmentsExpected = 0,
     attachmentsPresent = attachmentsExpected,
     status = null,
     reviewState = null,
-    edits = 0,
     deviceId = null,
+    edits = 0,
 
     ...partialOData
   }) => {
@@ -106,6 +114,7 @@ export const extendedSubmissions = dataStore({
     return {
       instanceId,
       deviceId,
+      formVersion: formVersion.version,
       submitterId: submitter.id,
       submitter: toActor(submitter),
       createdAt,
@@ -118,14 +127,16 @@ export const extendedSubmissions = dataStore({
         __id: instanceId,
         __system: {
           submissionDate: createdAt,
+          updatedAt: null,
           submitterId: submitter.id.toString(),
           submitterName: submitter.displayName,
           attachmentsPresent,
           attachmentsExpected,
           status,
           reviewState,
+          deviceId,
           edits,
-          deviceId
+          formVersion: formVersion.version
         }
       })
     };
