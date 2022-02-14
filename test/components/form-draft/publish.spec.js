@@ -297,6 +297,23 @@ describe('FormDraftPublish', () => {
       });
   });
 
+  it('does not show the version input field if backend returns a different problem', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+    return mockHttp()
+      .mount(FormDraftPublish, mountOptions())
+      .request(async (modal) => {
+        await modal.setProps({ state: true });
+        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+      })
+      .respondWithProblem(500.1)
+      .afterResponse(modal => {
+        modal.should.alert('danger');
+        modal.find('input').exists().should.be.false();
+        modal.findAll('.modal-introduction p').length.should.equal(2);
+      });
+  });
+
   describe('after a successful response', () => {
     const publish = () => {
       testData.extendedForms.createPast(1, { draft: true });
