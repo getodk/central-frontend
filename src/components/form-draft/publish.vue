@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
         <p v-if="draftVersionStringIsDuplicate">{{ $t('introduction[2]') }}</p>
       </div>
-      <form v-if="draftVersionStringIsDuplicate" @submit.prevent="publish">
+      <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
           :placeholder="$t('field.version')" required autocomplete="off"/>
         <!-- We specify two nearly identical .modal-actions, because here we
@@ -92,7 +92,8 @@ export default {
   data() {
     return {
       awaitingResponse: false,
-      versionString: ''
+      versionString: '',
+      versionConflict: false
     };
   },
   computed: {
@@ -134,7 +135,11 @@ export default {
           this.versionString !== this.formDraft.version
             ? { version: this.versionString }
             : null
-        )
+        ),
+        fulfillProblem: (problem) => {
+          if (problem.code === 409.6)
+            this.versionConflict = true;
+        }
       })
         .then(() => {
           this.$emit('success');
@@ -173,7 +178,7 @@ export default {
       "version": "Version"
     },
     "problem": {
-      "409_6": "The version name you’ve specified conflicts with a past version of this Form. Please change it to something new and try again."
+      "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     }
   }
 }

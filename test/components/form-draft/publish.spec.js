@@ -269,8 +269,31 @@ describe('FormDraftPublish', () => {
       .afterResponse(modal => {
         modal.should.alert(
           'danger',
-          'The version name you’ve specified conflicts with a past version of this Form. Please change it to something new and try again.'
+          'The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition.'
         );
+      });
+  });
+
+  it('shows the version input field after request returns duplicate version problem', () => {
+    // The scenario here is a user trying to publish a form that conflicts with
+    // a form/version combo probably found in the trash. This component doesn't
+    // have access to trashed forms so it doesn't know about the problem until the
+    // request from the backend returns the problem.
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+    return mockHttp()
+      .mount(FormDraftPublish, mountOptions())
+      .request(async (modal) => {
+        await modal.setProps({ state: true });
+        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+      })
+      .respondWithProblem(409.6)
+      .afterResponse(modal => {
+        modal.should.alert('danger');
+        modal.get('input').should.be.visible();
+        // Explanatory text does not include last duplicate draft paragraph
+        // because that explanation appears in the alert in this scenario.
+        modal.findAll('.modal-introduction p').length.should.equal(2);
       });
   });
 
