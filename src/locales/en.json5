@@ -338,10 +338,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      // This is shown for a Form with a blank version name.
-      "blankVersion": "(blank)"
-    },
     "Project": {
       // {name} is the name of a Project. We append "(archived)" to the name if
       // the Project is archived.

@@ -732,12 +732,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": {
-        "string": "(blank)",
-        "developer_comment": "This is shown for a Form with a blank version name."
-      }
-    },
     "Project": {
       "nameWithArchived": {
         "string": "{name} (archived)",
@@ -2421,6 +2415,12 @@
         }
       }
     },
+    "FormVersionString": {
+      "blank": {
+        "string": "(blank)",
+        "developer_comment": "This is shown for a Form with a blank version name."
+      }
+    },
     "FormVersionTable": {
       "header": {
         "published": {
@@ -3302,8 +3302,14 @@
       "reviewState": {
         "string": "Review State"
       },
+      "formVersion": {
+        "string": "Form version"
+      },
       "deviceId": {
         "string": "Device ID"
+      },
+      "userAgent": {
+        "string": "User agent"
       },
       "attachments": {
         "string": "Media files"

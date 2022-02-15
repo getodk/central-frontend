@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <page-section id="submission-basic-details" condensed>
     <template #heading><span>{{ $t('common.basicInfo') }}</span></template>
     <template #body>
-      <dl>
+      <loading :state="initiallyLoading"/>
+      <dl v-if="dataExists">
         <div>
           <dt>{{ $t('header.instanceId') }}</dt>
           <dd><span :title="submission.__id">{{ submission.__id }}</span></dd>
@@ -35,10 +36,22 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $t(`reviewState.${submission.__system.reviewState}`) }}</span>
           </dd>
         </div>
+        <div>
+          <dt>{{ $t('formVersion') }}</dt>
+          <dd>
+            <form-version-string :version="submission.__system.formVersion"/>
+          </dd>
+        </div>
         <div v-if="submission.__system.deviceId != null">
           <dt>{{ $t('deviceId') }}</dt>
           <dd>
             <span :title="submission.__system.deviceId">{{ submission.__system.deviceId }}</span>
+          </dd>
+        </div>
+        <div v-if="submissionVersion.userAgent != null">
+          <dt>{{ $t('userAgent') }}</dt>
+          <dd>
+            <span :title="submissionVersion.userAgent">{{ submissionVersion.userAgent }}</span>
           </dd>
         </div>
         <div v-if="submission.__system.attachmentsExpected !== 0">
@@ -58,6 +71,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
+import FormVersionString from '../form-version/string.vue';
+import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
 import reviewState from '../../mixins/review-state';
@@ -65,12 +80,16 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionBasicDetails',
-  components: { DateTime, PageSection },
+  components: { DateTime, FormVersionString, Loading, PageSection },
   mixins: [reviewState()],
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['submission']),
+    ...requestData(['submission', 'submissionVersion']),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(['submission', 'submissionVersion']);
+    },
+    dataExists() {
+      return this.$store.getters.dataExists(['submission', 'submissionVersion']);
+    },
     attachments() {
       const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
       return this.$t('attachmentSummary', {
@@ -116,7 +135,9 @@ export default {
 {
   "en": {
     "reviewState": "Review State",
+    "formVersion": "Form version",
     "deviceId": "Device ID",
+    "userAgent": "User agent",
     "attachments": "Media files",
     "present": "{count} file | {count} files",
     // This shows the number of files that were expected to be submitted.

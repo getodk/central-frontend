@@ -273,6 +273,11 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/comments');
     });
 
+    it('submissionVersion', () => {
+      const path = apiPaths.submissionVersion(1, 'a b', 'c d', 'e f');
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/versions/e%20f');
+    });
+
     it('publicLinks', () => {
       const path = apiPaths.publicLinks(1, 'a b');
       path.should.equal('/v1/projects/1/forms/a%20b/public-links');

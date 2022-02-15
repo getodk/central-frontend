@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
       <loading :state="initiallyLoading"/>
       <div v-show="dataExists" class="row">
         <div class="col-xs-4">
-          <submission-basic-details v-if="submission != null"/>
+          <submission-basic-details/>
         </div>
         <div class="col-xs-8">
           <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
@@ -148,6 +148,15 @@ export default {
           url: apiPaths.odataSubmission(
             this.projectId,
             this.xmlFormId,
+            this.instanceId
+          )
+        },
+        {
+          key: 'submissionVersion',
+          url: apiPaths.submissionVersion(
+            this.projectId,
+            this.xmlFormId,
+            this.instanceId,
             this.instanceId
           )
         },

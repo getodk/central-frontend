@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
 
 $icon-font-size: 56px;
 
@@ -107,6 +107,7 @@ $icon-font-size: 56px;
 }
 
 .summary-item-heading {
+  @include text-overflow-ellipsis;
   font-size: 30px;
   line-height: 35px;
 

@@ -125,6 +125,12 @@ export const apiPaths = {
   submissionAudits: submissionPath('/audits'),
   submissionComments: submissionPath('/comments'),
   submissionDiffs: submissionPath('/diffs'),
+  submissionVersion: (projectId, xmlFormId, rootId, instanceId) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedRootId = encodeURIComponent(rootId);
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedRootId}/versions/${encodedInstanceId}`;
+  },
   publicLinks: formPath('/public-links'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>

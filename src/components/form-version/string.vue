@@ -1,0 +1,54 @@
+<!--
+Copyright 2022 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <span :class="htmlClass" :title="versionOrBlank">{{ versionOrBlank }}</span>
+</template>
+
+<script>
+export default {
+  name: 'FormVersionString',
+  props: {
+    version: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    htmlClass() {
+      return this.version !== ''
+        ? 'form-version-string'
+        : 'form-version-string blank-version';
+    },
+    versionOrBlank() {
+      return this.version !== '' ? this.version : this.$t('blank');
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+.form-version-string {
+  font-family: $font-family-monospace;
+  &.blank-version { font-family: inherit; }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is shown for a Form with a blank version name.
+    "blank": "(blank)"
+  }
+}
+</i18n>

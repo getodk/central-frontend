@@ -1,4 +1,4 @@
-import FormVersionSummaryItem from '../../../src/components/form-version/summary-item.vue';
+import FormVersionString from '../../../src/components/form-version/string.vue';
 import FormVersionViewXml from '../../../src/components/form-version/view-xml.vue';
 
 import testData from '../../data';
@@ -25,11 +25,11 @@ describe('FormOverview', () => {
           text.should.equal('Your Current Draft');
         }));
 
-      it('renders FormVersionSummaryItem for the draft', () =>
+      it('shows the version string of the draft', () =>
         load('/projects/1/forms/f').then(app => {
-          const components = app.findAllComponents(FormVersionSummaryItem);
+          const components = app.findAllComponents(FormVersionString);
           components.length.should.equal(2);
-          components.at(1).props().version.version.should.equal('v2');
+          components.at(1).props().version.should.equal('v2');
         }));
 
       it('toggles the "View XML" modal', () =>

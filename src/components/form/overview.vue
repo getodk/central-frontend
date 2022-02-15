@@ -31,7 +31,10 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $t('common.currentDraft') }}</span>
           </template>
           <template #body>
-            <form-version-summary-item :version="formDraft.get()">
+            <summary-item icon="file-o">
+              <template #heading>
+                <form-version-string :version="formDraft.get().version"/>
+              </template>
               <template #body>
                 <i18n tag="p" path="draft.any.versionCaption.full">
                   <template #draftVersion>
@@ -43,7 +46,7 @@ except according to the terms contained in the LICENSE file.
                     @view-xml="showModal('viewXml')"/>
                 </div>
               </template>
-            </form-version-summary-item>
+            </summary-item>
             <form-draft-checklist/>
           </template>
         </page-section>
@@ -69,9 +72,10 @@ import FormChecklist from './checklist.vue';
 import FormDraftChecklist from '../form-draft/checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
-import FormVersionSummaryItem from '../form-version/summary-item.vue';
+import FormVersionString from '../form-version/string.vue';
 import PageSection from '../page/section.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
+import SummaryItem from '../summary-item.vue';
 
 import modal from '../../mixins/modal';
 import { loadAsync } from '../../util/async-components';
@@ -84,10 +88,11 @@ export default {
     FormDraftChecklist,
     FormOverviewRightNow,
     FormVersionStandardButtons,
-    FormVersionSummaryItem,
+    FormVersionString,
     FormVersionViewXml: loadAsync('FormVersionViewXml'),
     PageSection,
-    ProjectSubmissionOptions
+    ProjectSubmissionOptions,
+    SummaryItem
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   props: {

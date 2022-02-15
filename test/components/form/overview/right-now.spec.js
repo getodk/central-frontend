@@ -1,7 +1,7 @@
 import { RouterLinkStub } from '@vue/test-utils';
 
 import FormOverviewRightNow from '../../../../src/components/form/overview/right-now.vue';
-import FormVersionSummaryItem from '../../../../src/components/form-version/summary-item.vue';
+import FormVersionString from '../../../../src/components/form-version/string.vue';
 import FormVersionViewXml from '../../../../src/components/form-version/view-xml.vue';
 import SummaryItem from '../../../../src/components/summary-item.vue';
 
@@ -22,11 +22,11 @@ const mountComponent = () => {
 describe('FormOverviewRightNow', () => {
   beforeEach(mockLogin);
 
-  it('renders FormVersionSummaryItem for the primary version', () => {
+  it('shows the version string of the primary form version', () => {
     testData.extendedForms.createPast(1);
     testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
-    const item = mountComponent().getComponent(FormVersionSummaryItem);
-    item.props().version.version.should.equal('v1');
+    const component = mountComponent();
+    component.getComponent(FormVersionString).props().version.should.equal('v1');
   });
 
   it('toggles the "View XML" modal', () => {
