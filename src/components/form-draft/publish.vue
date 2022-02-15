@@ -75,7 +75,7 @@ import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
-import { apiPaths } from '../../util/request';
+import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -93,6 +93,12 @@ export default {
     return {
       awaitingResponse: false,
       versionString: '',
+      // versionConflict is used in a scenario where a user tries to
+      // publish a form that conflicts with a form/version combo probably
+      // found in the trash. This component doesn't have access to trashed
+      // forms so it doesn't know about the conflict until the request from
+      // the backend returns the problem. Setting versionConflict = true
+      // unhides the version input field so the user can correct the conflict.
       versionConflict: false
     };
   },
@@ -136,13 +142,15 @@ export default {
             ? { version: this.versionString }
             : null
         ),
-        fulfillProblem: (problem) => {
-          if (problem.code === 409.6)
-            this.versionConflict = true;
-        }
+        fulfillProblem: (problem) => problem.code === 409.6
       })
-        .then(() => {
-          this.$emit('success');
+        .then(({ data }) => {
+          if (!isProblem(data)) {
+            this.$emit('success');
+          } else {
+            this.$alert().danger(this.$t('problem.409_6'));
+            this.versionConflict = true;
+          }
         })
         .catch(noop);
     }
