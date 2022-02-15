@@ -2011,7 +2011,7 @@
       },
       "problem": {
         "409_6": {
-          "string": "The version name you’ve specified conflicts with a past version of this Form. Please change it to something new and try again."
+          "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
         }
       }
     },

@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
         <p v-if="draftVersionStringIsDuplicate">{{ $t('introduction[2]') }}</p>
       </div>
-      <form v-if="draftVersionStringIsDuplicate" @submit.prevent="publish">
+      <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
           :placeholder="$t('field.version')" required autocomplete="off"/>
         <!-- We specify two nearly identical .modal-actions, because here we
@@ -75,7 +75,7 @@ import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
-import { apiPaths } from '../../util/request';
+import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -92,7 +92,14 @@ export default {
   data() {
     return {
       awaitingResponse: false,
-      versionString: ''
+      versionString: '',
+      // versionConflict is used in a scenario where a user tries to
+      // publish a form that conflicts with a form/version combo probably
+      // found in the trash. This component doesn't have access to trashed
+      // forms so it doesn't know about the conflict until the request from
+      // the backend returns the problem. Setting versionConflict = true
+      // unhides the version input field so the user can correct the conflict.
+      versionConflict: false
     };
   },
   computed: {
@@ -134,10 +141,16 @@ export default {
           this.versionString !== this.formDraft.version
             ? { version: this.versionString }
             : null
-        )
+        ),
+        fulfillProblem: (problem) => problem.code === 409.6
       })
-        .then(() => {
-          this.$emit('success');
+        .then(({ data }) => {
+          if (!isProblem(data)) {
+            this.$emit('success');
+          } else {
+            this.$alert().danger(this.$t('problem.409_6'));
+            this.versionConflict = true;
+          }
         })
         .catch(noop);
     }
@@ -173,7 +186,7 @@ export default {
       "version": "Version"
     },
     "problem": {
-      "409_6": "The version name you’ve specified conflicts with a past version of this Form. Please change it to something new and try again."
+      "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     }
   }
 }

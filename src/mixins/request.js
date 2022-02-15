@@ -44,7 +44,22 @@ following options:
     fulfillProblem is passed the Backend Problem. (Any error response that is
     not a Problem is automatically considered unsuccessful.) fulfillProblem
     should return `true` if the response is considered successful and `false` if
-    not.
+    not. The response can then be handled in a then() callback. For example:
+
+      this.request({
+        method: 'POST',
+        url: '...',
+        fulfillProblem: (problem) => problem.code === <some code>
+      })
+        .then(({ data }) => {
+          if (!isProblem(data)) {
+            // success
+          } else {
+            // respond to specific problem
+          }
+        })
+        .catch(noop);
+
   - problemToAlert. If the request results in an error response, request() shows
     an alert. By default, the alert message is the same as that of the Backend
     Problem. However, there are two ways to show a different message:
