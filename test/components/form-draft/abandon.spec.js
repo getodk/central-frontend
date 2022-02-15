@@ -66,7 +66,7 @@ describe('FormDraftAbandon', () => {
 
       it('shows the correct text for the first paragraph', () => {
         const text = mountComponent().get('.modal-introduction p').text();
-        text.should.endWith('this Form will be entirely deleted.');
+        text.should.endWith('this entire Form will be deleted and moved to the Trash.');
       });
 
       it('does not render an additional paragraph', () => {

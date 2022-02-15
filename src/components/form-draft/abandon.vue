@@ -105,7 +105,7 @@ export default {
         "Your published Form definition, its Media Files, and Submissions will not be affected."
       ],
       "deleteForm": [
-        "You are about to permanently delete this draft Form definition, along with any draft Media Files you have uploaded, and all test Submissions. Because you have not yet published it, this Form will be entirely deleted."
+        "You are about to delete this draft Form definition, along with any draft Media Files you have uploaded, and all test Submissions. Because you have not yet published it, this entire Form will be deleted and moved to the Trash."
       ]
     },
     "action": {
