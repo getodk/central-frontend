@@ -29,9 +29,7 @@ export default {
         : 'form-version-string blank-version';
     },
     versionOrBlank() {
-      return this.version !== ''
-        ? this.version
-        : this.$t('presenter.Form.blankVersion');
+      return this.version !== '' ? this.version : this.$t('blank');
     }
   }
 };
@@ -45,3 +43,12 @@ export default {
   &.blank-version { font-family: inherit; }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is shown for a Form with a blank version name.
+    "blank": "(blank)"
+  }
+}
+</i18n>
