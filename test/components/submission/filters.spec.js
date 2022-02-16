@@ -109,7 +109,7 @@ describe('SubmissionFilters', () => {
       .respondWithData(testData.submissionOData);
   });
 
-  it('allows multiple review states to be selected', () => {
+  it.skip('allows multiple review states to be selected', () => {
     testData.extendedForms.createPast(1);
     return loadSubmissionList()
       .complete()

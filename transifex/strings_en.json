@@ -3532,6 +3532,12 @@
         }
       }
     },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "(Any State)",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
+      }
+    },
     "SubmissionFiltersSubmitter": {
       "field": {
         "submitter": {

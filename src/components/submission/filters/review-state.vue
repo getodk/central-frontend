@@ -11,7 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="submission-filters-review-state" class="form-group">
-    <select v-model="selectValue" class="form-control" multiple size="2">
+    <select v-model="selectValue" class="form-control">
+      <option value="">{{ $t('anyState') }}</option>
       <option value="null">{{ $t('reviewState.null') }}</option>
       <option value="'approved'">{{ $t('reviewState.approved') }}</option>
       <option value="'hasIssues'">{{ $t('reviewState.hasIssues') }}</option>
@@ -26,6 +27,11 @@ except according to the terms contained in the LICENSE file.
 export default {
   name: 'SubmissionFiltersReviewState',
   props: {
+    // `value` is an array because at one point, the filter was a
+    // <select multiple>. However, the native <select multiple> was a confusing
+    // user experience, so we made the filter a single-select. `value` is still
+    // an array because the filter will hopefully become a multiselect again at
+    // some point (one with an improved user experience).
     value: {
       type: Array,
       required: true
@@ -34,12 +40,22 @@ export default {
   computed: {
     selectValue: {
       get() {
-        return this.value;
+        return this.value.length !== 0 ? this.value[0] : '';
       },
       set(value) {
-        this.$emit('input', value);
+        this.$emit('input', value !== '' ? [value] : []);
       }
     }
   }
 };
 </script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This text is shown in a dropdown that allows the user to filter to show
+    // only Submissions in a particular Review State.
+    "anyState": "(Any State)"
+  }
+}
+</i18n>
