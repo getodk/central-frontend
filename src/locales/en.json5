@@ -258,6 +258,7 @@
     "projectRoles": "Project Roles",
   },
   "alert": {
+    "passwordTooShort": "Please input a password at least 10 characters long.",
     "updateReviewState": "Review State saved!"
   },
   "moreInfo": {

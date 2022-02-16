@@ -17,7 +17,8 @@ except according to the terms contained in the LICENSE file.
       :autocomplete="autocomplete" @input="$emit('input', $event.target.value)"
       @change="$emit('change', $event.target.value)">
     <span class="form-label">{{ placeholder }}{{ star }}</span>
-    <password v-if="strengthmeter" v-model="value" :strength-meter-only="true"
+    <password v-if="autocomplete === 'new-password'" :value="value"
+      strength-meter-only
       strength-meter-class="Password__strength-meter password-strength"/>
     <slot name="after"></slot>
   </label>
@@ -50,10 +51,6 @@ export default {
     autocomplete: {
       type: String,
       required: true
-    },
-    strengthmeter: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {
