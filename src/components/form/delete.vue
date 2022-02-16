@@ -82,7 +82,7 @@ export default {
     "title": "Delete Form",
     "introduction": [
       "Are you sure you want to delete the Form {name} and all of its Submissions?",
-      "This action cannot be undone."
+      "This action will move the Form to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
     ]
   }
 }
