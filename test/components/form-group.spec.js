@@ -2,6 +2,8 @@ import FormGroup from '../../src/components/form-group.vue';
 
 import TestUtilSpan from '../util/components/span.vue';
 
+import { loadAsync } from '../../src/util/async-components';
+
 import { mount } from '../util/lifecycle';
 
 const mountComponent = (mountOptions = {}) => mount(FormGroup, {
@@ -72,6 +74,15 @@ describe('FormGroup', () => {
       propsData: { autocomplete: 'name' }
     });
     formGroup.get('input').attributes().autocomplete.should.equal('name');
+  });
+
+  it("shows password strength meter if autocomplete prop equals 'new-password'", async () => {
+    const formGroup = mountComponent({
+      propsData: { value: 'foo', autocomplete: 'new-password' }
+    });
+    const Password = await loadAsync('Password')();
+    await formGroup.vm.$nextTick();
+    formGroup.getComponent(Password).props().value.should.equal('foo');
   });
 
   it('passes attributes to the input', () => {

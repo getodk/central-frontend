@@ -23,10 +23,10 @@ except according to the terms contained in the LICENSE file.
           autocomplete="current-password"/>
         <form-group id="user-edit-password-new-password" v-model="newPassword"
           type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="mismatch || invalidPassword" autocomplete="new-password" strengthmeter/>
+          :has-error="tooShort || mismatch" autocomplete="new-password"/>
         <form-group id="user-edit-password-confirm" v-model="confirm"
           type="password" :placeholder="$t('field.passwordConfirm')" required
-          :has-error="mismatch || invalidPassword" autocomplete="new-password"/>
+          :has-error="mismatch" autocomplete="new-password"/>
         <button :disabled="awaitingResponse" type="submit"
           class="btn btn-primary">
           {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
@@ -42,6 +42,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../../form-group.vue';
 import Spinner from '../../spinner.vue';
+
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
@@ -56,24 +57,33 @@ export default {
       awaitingResponse: false,
       oldPassword: '',
       newPassword: '',
+      tooShort: false,
       confirm: '',
-      mismatch: false,
-      invalidPassword: false
+      mismatch: false
     };
   },
   computed: requestData(['currentUser', 'user']),
   methods: {
-    submit() {
-      this.invalidPassword = this.newPassword.length < 10;
-      if (this.invalidPassword) {
-        this.$alert().danger('Please input a password at least 10 characters long.');
-        return;
+    validate() {
+      this.tooShort = false;
+      this.mismatch = false;
+
+      if (this.newPassword.length < 10) {
+        this.$alert().danger(this.$t('alert.passwordTooShort'));
+        this.tooShort = true;
+        return false;
       }
-      this.mismatch = this.newPassword !== this.confirm;
-      if (this.mismatch) {
+
+      if (this.confirm !== this.newPassword) {
         this.$alert().danger(this.$t('alert.mismatch'));
-        return;
+        this.mismatch = true;
+        return false;
       }
+
+      return true;
+    },
+    submit() {
+      if (!this.validate()) return;
       const data = { old: this.oldPassword, new: this.newPassword };
       this.put(apiPaths.password(this.user.id), data)
         .then(() => {
@@ -89,9 +99,8 @@ export default {
 </script>
 
 <style lang="scss">
-#user-edit-password input[autocomplete="username"] {
-  display: none;
-}
+#user-edit-password input[autocomplete="username"] { display: none; }
+#user-edit-password-confirm ~ .Password { display: none; }
 </style>
 
 <i18n lang="json5">

@@ -120,6 +120,8 @@ export default {
               // external page is loaded.
               this.disabled = false;
               this.$router.replace(location).catch(noop);
+              if (this.password.length < 10)
+                this.$alert().info(this.$t('alert.changePassword'));
             },
             (url) => {
               window.location.replace(url);
@@ -138,7 +140,8 @@ export default {
 {
   "en": {
     "alert": {
-      "alreadyLoggedIn": "A user is already logged in. Please refresh the page to continue."
+      "alreadyLoggedIn": "A user is already logged in. Please refresh the page to continue.",
+      "changePassword": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
     },
     "problem": {
       "401_2": "Incorrect email address and/or password."

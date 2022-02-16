@@ -24,7 +24,7 @@ describe('AccountLogin', () => {
     component.get('input[type="email"]').should.be.focused();
   });
 
-  it('shows an alert if there is an existing session', async () => {
+  it('shows an info alert if there is an existing session', async () => {
     const component = mount(AccountLogin, {
       stubs: { RouterLink: RouterLinkStub }
     });
@@ -85,6 +85,22 @@ describe('AccountLogin', () => {
         const { data } = app.vm.$store.state.request;
         should.exist(data.session);
         should.exist(data.currentUser);
+      });
+  });
+
+  it('shows an info alert if the password is too short', () => {
+    testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+    return load('/login')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => testData.extendedUsers.first())
+      .respondFor('/', { users: false })
+      .afterResponses(app => {
+        app.should.alert('info', (message) => {
+          message.should.startWith('Your password is shorter than 10 characters.');
+        });
       });
   });
 

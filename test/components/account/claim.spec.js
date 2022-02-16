@@ -1,10 +1,7 @@
 import AccountClaim from '../../../src/components/account/claim.vue';
 
-import { loadAsync } from '../../../src/util/async-components';
-
 import { load, mockHttp } from '../../util/http';
 import { mount } from '../../util/lifecycle';
-import { wait } from '../../util/util';
 
 describe('AccountClaim', () => {
   it('shows proper page title', () =>
@@ -16,19 +13,11 @@ describe('AccountClaim', () => {
     component.get('input').should.be.focused();
   });
 
-  it('shows a alert for short password length error', async () => {
+  it('shows a danger alert if the password is too short', async () => {
     const component = mount(AccountClaim);
     await component.get('input').setValue('x');
     await component.get('form').trigger('submit');
     component.should.alert('danger', 'Please input a password at least 10 characters long.');
-  });
-
-  it('shows full password strength', async () => {
-    const component = mount(AccountClaim);
-    await loadAsync('Password');
-    await wait();
-    await component.get('input').setValue('@1TestPassword1@');
-    component.get('.Password__strength-meter--fill').attributes('data-score').should.equal('4');
   });
 
   it('sends the correct request', () =>

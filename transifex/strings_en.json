@@ -587,6 +587,9 @@
     }
   },
   "alert": {
+    "passwordTooShort": {
+      "string": "Please input a password at least 10 characters long."
+    },
     "updateReviewState": {
       "string": "Review State saved!"
     }
@@ -806,6 +809,9 @@
       "alert": {
         "alreadyLoggedIn": {
           "string": "A user is already logged in. Please refresh the page to continue."
+        },
+        "changePassword": {
+          "string": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
         }
       },
       "problem": {
@@ -2651,6 +2657,11 @@
         "hint": {
           "string": "Passphrase hint (optional)",
           "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "passphraseTooShort": {
+          "string": "Please input a passphrase at least 10 characters long."
         }
       }
     },

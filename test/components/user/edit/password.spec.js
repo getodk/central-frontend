@@ -1,3 +1,4 @@
+import FormGroup from '../../../../src/components/form-group.vue';
 import UserEditPassword from '../../../../src/components/user/edit/password.vue';
 
 import testData from '../../../data';
@@ -9,14 +10,14 @@ const mountOptions = () => ({
   requestData: { user: testData.standardUsers.first() }
 });
 const submit =
-  async (component, { validSizePass = true, match = true } = {}) => {
+  async (component, { tooShort = false, mismatch = false } = {}) => {
     await component.get('#user-edit-password-old-password').setValue('testPasswordX');
-    await component.get('#user-edit-password-new-password').setValue(validSizePass
+    await component.get('#user-edit-password-new-password').setValue(!tooShort
       ? 'testPasswordY'
       : 'y');
-    await component.get('#user-edit-password-confirm').setValue(match
-      ? (validSizePass ? 'testPasswordY' : 'y')
-      : (validSizePass ? 'testPasswordZ' : 'z'));
+    await component.get('#user-edit-password-confirm').setValue(!mismatch
+      ? (!tooShort ? 'testPasswordY' : 'y')
+      : (!tooShort ? 'testPasswordZ' : 'z'));
     return component.get('#user-edit-password form').trigger('submit');
   };
 
@@ -57,68 +58,67 @@ describe('UserEditPassword', () => {
     component.find('form').exists().should.be.false();
   });
 
-  it('implements some standard button things', () =>
-    mockHttp()
-      .mount(UserEditPassword, mountOptions())
-      .testStandardButton({
-        button: 'button',
-        request: submit
-      }));
-
   describe('new passwords do not match', () => {
     it('shows a danger alert', async () => {
       const component = mount(UserEditPassword, mountOptions());
-      await submit(component, { match: false });
-      component.should.alert('danger');
+      await submit(component, { mismatch: true });
+      component.should.alert('danger', 'Please check that your new passwords match.');
     });
 
-    it('adds .has-error to the fields', async () => {
+    it('marks the inputs as invalid', async () => {
       const component = mount(UserEditPassword, mountOptions());
-      await submit(component, { match: false });
-      const formGroups = component.findAll('.form-group');
+      await submit(component, { mismatch: true });
+      const formGroups = component.findAllComponents(FormGroup);
       formGroups.length.should.equal(3);
-      formGroups.at(1).classes('has-error').should.be.true();
-      formGroups.at(2).classes('has-error').should.be.true();
+      formGroups.at(1).props().hasError.should.be.true();
+      formGroups.at(2).props().hasError.should.be.true();
     });
 
-    it('removes .has-error once the passwords match', () =>
+    it('marks the inputs as valid after the passwords match', () =>
       mockHttp()
         .mount(UserEditPassword, mountOptions())
         .request(async (component) => {
-          await submit(component, { match: false });
+          await submit(component, { mismatch: true });
           await component.get('#user-edit-password-confirm').setValue('testPasswordY');
           return component.get('form').trigger('submit');
         })
         .beforeAnyResponse(component => {
-          const formGroups = component.findAll('.form-group');
-          formGroups.at(1).classes('has-error').should.be.false();
-          formGroups.at(2).classes('has-error').should.be.false();
+          const formGroups = component.findAllComponents(FormGroup);
+          formGroups.length.should.equal(3);
+          formGroups.at(1).props().hasError.should.be.false();
+          formGroups.at(2).props().hasError.should.be.false();
         })
         .respondWithSuccess());
   });
 
-  describe('password length does not meet the criteria', () => {
-    it('adds .has-error to the field when password length < 10', async () => {
+  describe('password is too short', () => {
+    it('shows a danger alert', async () => {
       const component = mount(UserEditPassword, mountOptions());
-      await submit(component, { validSizePass: false });
-      const formGroups = component.findAll('.form-group');
-      formGroups.length.should.equal(3);
-      formGroups.at(1).classes('has-error').should.be.true();
+      await submit(component, { tooShort: true });
+      component.should.alert('danger', 'Please input a password at least 10 characters long.');
     });
 
-    it('removes .has-error once the passwords length > 10', () =>
+    it('marks the input as invalid', async () => {
+      const component = mount(UserEditPassword, mountOptions());
+      await submit(component, { tooShort: true });
+      const formGroups = component.findAllComponents(FormGroup);
+      formGroups.length.should.equal(3);
+      formGroups.at(1).props().hasError.should.be.true();
+    });
+
+    it('marks the input as valid after the password is long enough', () =>
       mockHttp()
         .mount(UserEditPassword, mountOptions())
         .request(async (component) => {
-          await submit(component, { validSizePass: false });
-          const newPassword = component.get('#user-edit-password-new-password');
-          await newPassword.setValue('testPasswordY');
+          await submit(component, { tooShort: true });
+          await component.get('#user-edit-password-new-password').setValue('testPasswordY');
           await component.get('#user-edit-password-confirm').setValue('testPasswordY');
           return component.get('form').trigger('submit');
         })
         .beforeAnyResponse(component => {
-          const formGroups = component.findAll('.form-group');
-          formGroups.at(1).classes('has-error').should.be.false();
+          const formGroups = component.findAllComponents(FormGroup);
+          formGroups.length.should.equal(3);
+          formGroups.at(1).props().hasError.should.be.false();
         })
         .respondWithSuccess());
   });
