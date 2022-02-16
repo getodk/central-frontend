@@ -50,7 +50,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div v-if="submissionVersion.userAgent != null">
           <dt>{{ $t('userAgent') }}</dt>
-          <dd>
+          <dd id="submission-basic-details-user-agent">
             <span :title="submissionVersion.userAgent">{{ submissionVersion.userAgent }}</span>
           </dd>
         </div>
@@ -112,6 +112,7 @@ export default {
   margin-bottom: $margin-bottom-page-section;
 
   dd { @include text-overflow-ellipsis; }
+  #submission-basic-details-user-agent { white-space: normal; }
 
   .icon-exclamation-triangle {
     color: $color-warning;
