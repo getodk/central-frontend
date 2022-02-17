@@ -3359,8 +3359,32 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "Decrypt and Download",
+        "string": "Download Submissions",
         "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "Export options",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "Split “select multiple” choices into columns",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "Remove group names",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "Include previously deleted Form fields",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "noSelectMultiple": {
+        "string": "This Form does not have any select multiple fields."
+      },
+      "encryptedForm": {
+        "string": "Encrypted Forms cannot be processed in this way."
       },
       "introduction": {
         "0": {
@@ -3371,7 +3395,30 @@
         "string": "Hint: {hint}",
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
+      "noRepeat": {
+        "string": "This Form does not have repeats.",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "Main data table (no repeats)",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "All data tables",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withMedia": {
+            "string": "All data and media files",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
       "alert": {
+        "unavailable": {
+          "string": "The data download is not yet available. Please try again in a moment."
+        },
         "submit": {
           "string": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
         }
@@ -3409,18 +3456,6 @@
               "string": "{count, plural, one {Download {count} matching record} other {Download {count} matching records}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
-          },
-          "withMedia": {
-            "string": "All data and media files (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "withoutMedia": {
-            "string": "All data without media files (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "primaryDataTable": {
-            "string": "Data without repeats (.csv)",
-            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }

@@ -10,56 +10,29 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="submission-download-dropdown" class="btn-group">
-    <button id="submission-download-dropdown-toggle" type="button"
-      class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      <span class="icon-arrow-circle-down"></span>
-      <span>{{ buttonText }}</span>
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-right"
-      aria-labelledby="submission-download-dropdown-toggle" @click="download">
-      <li :class="{ disabled: disablesDownloadWithMedia }">
-        <a :href="href('.csv.zip')" :target="target">
-          {{ $t('action.download.withMedia') }}
-        </a>
-      </li>
-      <li>
-        <a :href="href('.csv.zip', { attachments: false })" :target="target">
-          {{ $t('action.download.withoutMedia') }}
-        </a>
-      </li>
-      <li>
-        <a :href="href('.csv')" :target="target">
-          {{ $t('action.download.primaryDataTable') }}
-        </a>
-      </li>
-    </ul>
-  </div>
+  <button id="submission-download-button" type="button" class="btn btn-primary"
+    @click="$emit('download')">
+    <span class="icon-arrow-circle-down"></span>
+    <span>{{ text }}&hellip;</span>
+  </button>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
-import Form from '../../presenters/form';
-import { apiPaths } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
 export default {
+  // Ideally, this component would be named SubmissionDownloadButton, but that
+  // would cause messages to be moved in Transifex.
   name: 'SubmissionDownloadDropdown',
   props: {
-    formVersion: {
-      type: Form,
-      required: true
-    },
-    odataFilter: String
+    formVersion: Object,
+    filtered: Boolean
   },
   computed: {
-    ...requestData(['fields', 'odataChunk']),
-    ...mapGetters(['managedKey']),
-    buttonText() {
-      if (this.odataFilter == null) {
+    ...requestData(['odataChunk']),
+    text() {
+      if (!this.filtered) {
+        if (this.formVersion == null) return '';
         return this.$tcn(
           'action.download.unfiltered',
           this.formVersion.submissions
@@ -71,37 +44,6 @@ export default {
       return this.$tcn(
         'action.download.filtered.withCount',
         this.odataChunk['@odata.count']
-      );
-    },
-    disablesDownloadWithMedia() {
-      // The link will be enabled while this.fields is loading.
-      return this.fields != null && !this.fields.some(field => field.binary);
-    },
-    target() {
-      return this.managedKey == null ? '_blank' : null;
-    }
-  },
-  methods: {
-    download(event) {
-      const { target } = event;
-      if (target.tagName !== 'A') return;
-      const disabled = target.parentNode.classList.contains('disabled');
-      if (this.managedKey == null) {
-        if (disabled) event.preventDefault();
-      } else {
-        event.preventDefault();
-        if (!disabled) this.$emit('decrypt', target.getAttribute('href'));
-      }
-    },
-    href(extension, query = undefined) {
-      return apiPaths.submissions(
-        this.formVersion.projectId,
-        this.formVersion.xmlFormId,
-        this.formVersion.publishedAt == null,
-        extension,
-        this.odataFilter == null
-          ? query
-          : { ...query, $filter: this.odataFilter }
       );
     }
   }
@@ -118,13 +60,8 @@ export default {
           // This is the text of a button. This text is shown when the number of
           // matching records is unknown.
           "withoutCount": "Download matching records",
-          "withCount": "Download {count} matching record | Download {count} matching records",
-        },
-        "withMedia": "All data and media files (.zip)",
-        "withoutMedia": "All data without media files (.zip)",
-        // This text is shown in a dropdown that allows the user to download
-        // Submissions. "Repeats" refers to repeat groups.
-        "primaryDataTable": "Data without repeats (.csv)"
+          "withCount": "Download {count} matching record | Download {count} matching records"
+        }
       }
     }
   }

@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('/fonts/icomoon.ttf?rioheg') format('truetype'),
-    url('/fonts/icomoon.woff?rioheg') format('woff'),
-    url('/fonts/icomoon.svg?rioheg#icomoon') format('svg');
+    url('/fonts/icomoon.ttf?ijnc2n') format('truetype'),
+    url('/fonts/icomoon.woff?ijnc2n') format('woff'),
+    url('/fonts/icomoon.svg?ijnc2n#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -188,4 +188,19 @@
 }
 .icon-question-circle-o:before {
   content: "\f29c";
+}
+.icon-image:before {
+  content: "\f03e";
+}
+.icon-photo:before {
+  content: "\f03e";
+}
+.icon-picture-o:before {
+  content: "\f03e";
+}
+.icon-copy:before {
+  content: "\f0c5";
+}
+.icon-files-o:before {
+  content: "\f0c5";
 }

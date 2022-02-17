@@ -15,7 +15,9 @@ except according to the terms contained in the LICENSE file.
     will affect how the navbar is rendered. -->
     <navbar v-show="anyNavigationConfirmed"/>
     <alert id="app-alert"/>
-    <div class="container-fluid" @click="hideAlertAfterClick">
+    <!-- Specifying .capture so that an alert is not hidden immediately if it
+    was shown after the click. -->
+    <div class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
   </div>
