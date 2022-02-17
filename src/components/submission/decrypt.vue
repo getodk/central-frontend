@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="submission-download" :state="state" hideable
-    :large="managedKey != null" backdrop @hide="$emit('hide')"
+  <modal :state="state" hideable :large="managedKey != null" backdrop
+    @hide="$emit('hide')"
     @shown="$refs.form.querySelector('input:not([disabled])').focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -177,8 +177,8 @@ export default {
       );
     },
     /*
-    replaceIframeBody() empties the iframe body, then appends a form to it. We
-    place a form in an iframe for a few reasons:
+    submitIframeForm() empties the iframe body, appends a form to it, then
+    submits the form. We place a form in an iframe for a few reasons:
 
       - We want to have the browser handle everything about the download, which
         means that we cannot use an AJAX request.
@@ -232,8 +232,7 @@ export default {
       // If Backend returns a Problem, the iframe changes pages. However, if the
       // form submission is successful, it seems that the iframe does not change
       // pages, and the form remains on the page.
-      if (doc.querySelector('form') != null || doc.body == null)
-        return false;
+      if (doc.querySelector('form') != null || doc.body == null) return false;
       let problem;
       try {
         // Note that the Problem may be wrapped in another element, for example,
@@ -249,14 +248,12 @@ export default {
       return true;
     },
     decrypt(action) {
-      const iframeDoc = this.$refs.iframe.contentWindow.document;
-
       // Return immediately if the iframe is still loading. It would probably be
       // better to wait for the iframe to load, then continue the process then,
       // but there would be edge cases to consider in implementing that. (For
       // example, what if the user submits the form, but then closes the modal
       // before the iframe finishes loading?)
-      if (iframeDoc.readyState === 'loading') {
+      if (this.$refs.iframe.contentWindow.document.readyState === 'loading') {
         this.$alert().info('alert.unavailable');
         return;
       }

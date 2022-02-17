@@ -8,7 +8,7 @@ import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
-import { wait } from '../../util/util';
+import { waitUntil } from '../../util/util';
 
 const mountComponent = (options = {}) => {
   const propsData = {
@@ -141,13 +141,13 @@ describe('SubmissionDownload', () => {
       modal.find('input[type="password"]').exists().should.be.true();
     });
 
-    it('does not show the input if there is not a managed key', () => {
+    it('does not show the input if there is not a key', () => {
       testData.extendedForms.createPast(1);
       const modal = mountComponent();
       modal.find('input[type="password"]').exists().should.be.false();
     });
 
-    it('does not show input for an encrypted form if there is not a managed key', () => {
+    it('does not show input if there is a key that is not a managed key', () => {
       testData.extendedForms.createPast(1, {
         key: testData.standardKeys.createPast(1, { managed: false }).last()
       });
@@ -221,7 +221,7 @@ describe('SubmissionDownload', () => {
   describe('download link for all data tables', () => {
     it('enables the link if the form has a repeat group', () => {
       testData.extendedForms.createPast(1, {
-        fields: [testData.fields.repeat('/r'), testData.fields.int('/i')]
+        fields: [testData.fields.repeat('/r'), testData.fields.int('/r/i')]
       });
       const modal = mountComponent();
       const action = modal.findAll('.submission-download-action').at(1);
@@ -259,7 +259,7 @@ describe('SubmissionDownload', () => {
     it('does not prevent default', async () => {
       const modal = mountComponent();
       let defaultPrevented;
-      modal.element.addEventListener('click', event => {
+      modal.element.addEventListener('click', (event) => {
         defaultPrevented = event.defaultPrevented;
         event.preventDefault();
       });
@@ -288,15 +288,12 @@ describe('SubmissionDownload', () => {
   });
 
   describe('clicking a link if there is a managed key', () => {
-    beforeEach(() => {
-      testData.extendedForms.createPast(1, {
-        // Create a form without a repeat group.
-        fields: [testData.fields.int('/i')],
-        key: testData.standardKeys.createPast(1, { managed: true }).last()
-      });
-    });
-
     const preventDefault = (event) => { event.preventDefault(); };
+    const waitForIframe = async (iframe, path) => {
+      await waitUntil(() => iframe.contentWindow.location.pathname === path);
+      return waitUntil(() =>
+        iframe.contentWindow.document.readyState !== 'loading');
+    };
     /* In production, it seems that the iframe changes pages if a Problem is
     returned after the form is submitted, but it does not change pages if the
     submission is successful. However, in testing, the iframe always seems to
@@ -305,12 +302,16 @@ describe('SubmissionDownload', () => {
     prevent default in order to prevent a page change, simulating a successful
     submission. */
     const setup = async (onSubmit = preventDefault) => {
+      testData.extendedForms.createPast(1, {
+        // Create a form without a repeat group.
+        fields: [testData.fields.int('/i')],
+        key: testData.standardKeys.createPast(1, { managed: true }).last()
+      });
       const modal = mountComponent({ attachTo: document.body });
       await modal.get('input[type="password"]').setValue('supersecret');
-      // Wait for the iframe to load.
-      await wait(200);
-      const doc = modal.vm.$refs.iframe.contentWindow.document;
-      doc.addEventListener('submit', onSubmit);
+      const iframe = modal.get('iframe').element;
+      await waitForIframe(iframe, '/blank.html');
+      iframe.contentWindow.document.addEventListener('submit', onSubmit);
       return modal;
     };
 
@@ -341,7 +342,7 @@ describe('SubmissionDownload', () => {
       success.should.be.true();
     });
 
-    it('resets the iframe form', async () => {
+    it('resets the iframe form after it is submitted', async () => {
       const modal = await setup();
       modal.get('a').trigger('click');
       const doc = modal.vm.$refs.iframe.contentWindow.document;
@@ -390,13 +391,13 @@ describe('SubmissionDownload', () => {
     });
 
     it('shows a danger alert if a Problem is returned', async () => {
-      const clock = sinon.useFakeTimers();
+      const clock = sinon.useFakeTimers(Date.now());
       const modal = await setup(noop);
       const a = modal.get('a');
       a.element.setAttribute('href', '/test/files/problem.html');
       a.trigger('click');
-      // Wait for problem.html to load.
-      await wait(200);
+      const iframe = modal.get('iframe').element;
+      await waitForIframe(iframe, '/test/files/problem.html');
       clock.tick(1000);
       modal.should.alert(
         'danger',
@@ -405,15 +406,15 @@ describe('SubmissionDownload', () => {
     });
 
     it('continually checks for a Problem', async () => {
-      const clock = sinon.useFakeTimers();
+      const clock = sinon.useFakeTimers(Date.now());
       const modal = await setup();
       const checkForProblem = sinon.spy(modal.vm, 'checkForProblem');
       modal.get('a').trigger('click');
       clock.tick(1000);
       checkForProblem.callCount.should.equal(1);
-      // Wait for the callWait promise to resolve.
-      await modal.vm.$nextTick();
-      clock.tick(1000);
+      // Calling tickAsync() rather than tick() so that the callWait promise
+      // will resolve.
+      await clock.tickAsync(1000);
       checkForProblem.callCount.should.equal(2);
     });
   });
