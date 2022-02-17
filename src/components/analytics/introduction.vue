@@ -99,6 +99,19 @@ export default {
       "improveCentral": "Zlepšit Central"
     }
   },
+  "de": {
+    "title": "Hilf ODK Central zu verbessern!",
+    "introduction": [
+      {
+        "full": "Unter {usageReporting} in den Systemeinstellungen kannst du wählen, ob duanonymisierte Nutzungsdaten oder Kontaktinformationen mit dem Central-Team teilen möchtest.",
+        "usageReporting": "Nutzungsberichterstattung"
+      },
+      "Dort können Sie auch festlegen, dass diese Nachricht nicht mehr angezeigt wird."
+    ],
+    "action": {
+      "improveCentral": "Verbessere Central"
+    }
+  },
   "es": {
     "title": "Ayuda a mejorar Central",
     "introduction": [

@@ -190,6 +190,19 @@ export default {
     },
     "submissionStates": "Stavy odeslání"
   },
+  "de": {
+    "title": "Anonymisierter Nutzungsbericht",
+    "introduction": [
+      "Dank, dass du darüber nachdenkst uns Nutzungsinformationen zu senden. Diese Daten helfen uns, eure Bedürfnisse zu priorisieren!",
+      "Hier ersichtlich ist der Bericht zur aktuellen Datensammlung. Um auf neue Funktionen und Anforderungen zu reagieren, ändern wir manchmal die Berichte, aber wir sammeln immer nur Durchschnittswerte, wie hier gezeigt.",
+      "Du kannst jederzeit hierher kommen, um zu sehen, welche Daten gesammelt werden."
+    ],
+    "projects": {
+      "title": "Projekt-Übersicht",
+      "subtitle": "(Zeigt das aktivste Projekt der {count} Projekt) | (Zeigt das aktivste Projekt der {count} Projekte)"
+    },
+    "submissionStates": "Einsendungenstatus"
+  },
   "es": {
     "title": "Informe de uso anonimizado",
     "introduction": [

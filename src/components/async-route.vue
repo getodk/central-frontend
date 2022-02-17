@@ -135,6 +135,11 @@ export default {
       "loadError": "Požadovanou stránku se nepodařilo načíst. Obnovte prosím stránku a zkuste to znovu."
     }
   },
+  "de": {
+    "alert": {
+      "loadError": "Die Seite konnte nicht geladen werden. Bitte aktualisiere die Seite und versuche es erneut."
+    }
+  },
   "es": {
     "alert": {
       "loadError": "No se pudo cargar la página solicitada. Actualice la página y vuelva a intentarlo."

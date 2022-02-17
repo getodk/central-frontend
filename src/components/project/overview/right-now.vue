@@ -122,6 +122,13 @@ export default {
         "{appUsers}, die eine Datensammel-App verwenden können, um Formulare herunterzuladen und Daten zu diesem Projekt übermitteln können."
       ],
       "appUsers": "App-Benutzer | App-Benutzer"
+    },
+    "forms": {
+      "full": [
+        "{forms}, die heruntergeladen und als Umfragen ausgegeben werden können.",
+        "{forms}, die heruntergeladen und als Umfragen ausgegeben werden können."
+      ],
+      "forms": "Formular | Formulare"
     }
   },
   "es": {
@@ -131,6 +138,13 @@ export default {
         "{appUsers} que pueda utilizar un cliente de recopilación de datos para descargar y enviar datos de Formulario a este proyecto."
       ],
       "appUsers": "Usuario móvil | Usuarios móviles"
+    },
+    "forms": {
+      "full": [
+        "{forms} que puede ser descargado y mostrado como encuestas.",
+        "{forms} que pueden ser descargados y mostrados como encuestas."
+      ],
+      "forms": "Formulario | Formularios"
     }
   },
   "fr": {
@@ -140,6 +154,13 @@ export default {
         "{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données."
       ],
       "appUsers": "Utilisateur mobile | Utilisateurs mobiles"
+    },
+    "forms": {
+      "full": [
+        "{forms} qui peuvent être téléchargés et donnés sous forme d'enquêtes.",
+        "{forms} qui peuvent être téléchargés et donnés sous forme d'enquêtes."
+      ],
+      "forms": "Formulaire | Formulaires"
     }
   },
   "id": {
@@ -157,6 +178,13 @@ export default {
         "{appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto."
       ],
       "appUsers": "Utente dell'applicazione | Utenti dell'applicazione"
+    },
+    "forms": {
+      "full": [
+        "{forms} che può essere scaricato e dato come sondaggio.",
+        "{forms} che possono essere scaricati e dati come sondaggi."
+      ],
+      "forms": "Formulari | Formulari"
     }
   },
   "ja": {

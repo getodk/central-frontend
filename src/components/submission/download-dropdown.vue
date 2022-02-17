@@ -78,10 +78,7 @@ export default {
         "filtered": {
           "withoutCount": "Stáhnout odpovídající záznamy",
           "withCount": "Stáhnout {count} odpovídající záznam | Stáhnout {count} odpovídající záznamy | Stáhnout {count} odpovídajících záznamů | Stáhnout {count} odpovídající záznamy"
-        },
-        "withMedia": "Všechna data a mediální soubory (.zip)",
-        "withoutMedia": "Všechna data bez mediálních souborů (.zip)",
-        "primaryDataTable": "Data bez opakování (.csv)"
+        }
       }
     }
   },
@@ -92,10 +89,7 @@ export default {
         "filtered": {
           "withoutCount": "Passende Datensätze herunterladen",
           "withCount": "{count} passenden Datensatz herunterladen | {count} passende Datensätze herunterladen"
-        },
-        "withMedia": "Alle Daten und Mediendateien (.zip)",
-        "withoutMedia": "Alle Daten ohne Mediendateien (.zip)",
-        "primaryDataTable": "Daten ohne Wiederholungen (.csv)"
+        }
       }
     }
   },
@@ -106,10 +100,7 @@ export default {
         "filtered": {
           "withoutCount": "Descargar registros coincidentes",
           "withCount": "Descargar {count} registros coincidentes. | Descargar {count} registros coincidentes"
-        },
-        "withMedia": "Todos los datos y archivos multimedia (.zip)",
-        "withoutMedia": "Todos los datos sin archivos multimedia (.zip)",
-        "primaryDataTable": "Datos sin grupos de repetición (.csv)"
+        }
       }
     }
   },
@@ -120,10 +111,7 @@ export default {
         "filtered": {
           "withoutCount": "Télécharger les enregistrements correspondants",
           "withCount": "Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s)"
-        },
-        "withMedia": "Toutes les données et fichiers médias (.zip)",
-        "withoutMedia": "Toutes les données sans fichiers médias",
-        "primaryDataTable": "Données sans \"repeats\" (.csv)"
+        }
       }
     }
   },
@@ -134,10 +122,7 @@ export default {
         "filtered": {
           "withoutCount": "Unduh pencatatan yang cocok",
           "withCount": "Unduh {count} pencatatan yang cocok"
-        },
-        "withMedia": "Semua data dan berkas media (.zip)",
-        "withoutMedia": "Semua data tanpa berkas media (.zip)",
-        "primaryDataTable": "Data tanpa perulangan (.csv)"
+        }
       }
     }
   },
@@ -148,10 +133,7 @@ export default {
         "filtered": {
           "withoutCount": "Scarica records corrispondenti",
           "withCount": "Scarica {count} record corrispondente | Scarica {count} records corrispondenti"
-        },
-        "withMedia": "Tutti i dati e file multimediali (.zip)",
-        "withoutMedia": "Tutti i dati senza file multimediali (.zip)",
-        "primaryDataTable": "Data senza repeats (.csv)"
+        }
       }
     }
   },
@@ -162,10 +144,7 @@ export default {
         "filtered": {
           "withoutCount": "照合されたレコードのダウンロード",
           "withCount": "{count}件の該当レコードのダウンロード"
-        },
-        "withMedia": "全データとメディアファイルの保存（.zip形式）",
-        "withoutMedia": "メディアファイルを除く、全データの保存（.zip形式）",
-        "primaryDataTable": "繰返し質問の回答を含まないデータ（.csv形式）"
+        }
       }
     }
   }

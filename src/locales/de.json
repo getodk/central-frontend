@@ -29,7 +29,8 @@
     "title": "System-Management",
     "tab": {
       "backups": "Sicherheitskopien",
-      "audits": "Server Audit Logs"
+      "audits": "Server Audit Logs",
+      "analytics": "Nutzungsberichterstattung"
     }
   },
   "role": {
@@ -70,6 +71,7 @@
         "session_end": "Widerrufen",
         "delete": "Löschen"
       },
+      "analytics": "Berichtsnutzung",
       "backup": "Sicherheitskopie",
       "config": {
         "set": "Setzen"
@@ -87,6 +89,8 @@
         "update_draft_delete": "Entwurf löschen",
         "attachment_update": "Anhänge aktualisieren",
         "submission_export": "Übermittlungen downloaden",
+        "restore": "Löschen rückgängig machen",
+        "purge": "Säubern",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -140,8 +144,11 @@
     "resetPassword": "Passwort zurücksetzen",
     "review": "Überprüfen",
     "save": "Speichern",
+    "saveSettings": "Einstellungen speichern",
     "update": "Aktualisieren",
-    "yesProceed": "Ja, fortfahren"
+    "yesProceed": "Ja, fortfahren",
+    "showPreview": "Vorschau",
+    "hidePreview": "Vorschau ausblenden"
   },
   "field": {
     "comment": "Kommentieren...",
@@ -188,10 +195,12 @@
     "appUsers": "App-Benutzer",
     "config": "Server-Konfiguration",
     "form": "Formular",
+    "forms": "Formulare",
     "project": "Projekt",
     "projects": "Projekte",
     "publicLink": "Öffentlicher Zugangslink",
     "user": "Benutzer",
+    "users": "Benutzer",
     "webUser": "Web-Benutzer",
     "webUsers": "Web-Benutzer",
     "session": "Sitzung",
@@ -199,6 +208,7 @@
     "projectRoles": "Projektrollen"
   },
   "alert": {
+    "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
     "updateReviewState": "Überprüfungsstatus gespeichert!"
   },
   "moreInfo": {
@@ -211,6 +221,13 @@
       "helpArticle": "Hilfe-Artikel"
     },
     "learnMore": "Erfahren Sie mehr."
+  },
+  "analytics": {
+    "alwaysImprove": "Wir sind stets bemüht, ODK Central zu verbessern.",
+    "needFeedback": {
+      "full": "Wir benötigen {your} Feedback, damit wir verstehen können, wie du Central verwendest und wie wir es für dich besser machen können.",
+      "your": "dein"
+    }
   },
   "submission": {
     "missingMedia": "Fehlende Medien",
@@ -233,11 +250,14 @@
     "noResults": "Keine Ergebnisse",
     "rightNow": "Aktuell",
     "success": "Das hat geklappt!",
+    "system": "System",
     "yes": "Ja",
     "tab": {
       "settings": "Einstellungen",
       "overview": "Übersicht"
-    }
+    },
+    "total": "Total",
+    "lastSubmission": "letzte {dateTime}"
   },
   "mixin": {
     "request": {
@@ -247,9 +267,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": "(leer)"
-    },
     "Project": {
       "nameWithArchived": "{name} (archiviert)"
     }

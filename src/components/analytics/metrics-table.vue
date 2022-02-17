@@ -135,6 +135,38 @@ export default {
       "num_submissions_from_web_users": "Počet podání od uživatelů webu"
     }
   },
+  "de": {
+    "recent": "in den letzten 45 Tagen",
+    "fields": {
+      "num_admins": "Anzahl Administratoren",
+      "num_projects_encryption": "Anzahl der Projekte mit aktivierter Verschlüsselung",
+      "num_questions_biggest_form": "Anzahl Fragen im grössten Formular",
+      "num_audit_log_entries": "Anzahl der Audit-Log-Einträge",
+      "backups_configured": "Sicherungskopien konfiguriert.",
+      "database_size": "Systemdatenbankgröße",
+      "num_managers": "Anzahl Projekt-Manager",
+      "num_viewers": "Anzahl Projekt-Betrachter",
+      "num_data_collectors": "Anzahl Datensammler",
+      "num_app_users": "Anzahl App-Benutzer",
+      "num_device_ids": "Anzahl Geräte-IDs",
+      "num_public_access_links": "Anzahl der öffentlicher Zugangslinks",
+      "num_forms": "Anzahl Formulare",
+      "num_forms_with_repeats": "Anzahl Formulare mit Wiederholungen/repeats",
+      "num_forms_with_geospatial": "Anzahl Formulare mit Geodata",
+      "num_forms_with_encryption": "Anzahl Formulare mit Verschlüsselung",
+      "num_forms_with_audits": "Anzahl Formulare mit Audits",
+      "num_submissions_received": "Anzahl ausgefüllte Formulare - erhalten",
+      "num_submissions_approved": "Anzahl ausgefüllte Formulare - genehmigt",
+      "num_submissions_has_issues": "Anzahl ausgefüllte Formulare - mit Problemen",
+      "num_submissions_rejected": "Anzahl ausgefüllter Formulare - abgelehnt",
+      "num_submissions_edited": "Anzahl ausgefüllter Formulare - geändert",
+      "num_submissions_with_edits": "Anzahl ausgefüllte Formulare mit Änderungen",
+      "num_submissions_with_comments": "Anzahl ausgefüllter Formulare mit Kommentaren",
+      "num_submissions_from_app_users": "Anzahl ausgefüllter Formulare von App-Benutzern",
+      "num_submissions_from_public_links": "Anzahl Einreichungen von Zugangslink",
+      "num_submissions_from_web_users": "Anzahl Einreichungen von Web Benutzern"
+    }
+  },
   "es": {
     "recent": "en los últimos 45 días",
     "fields": {

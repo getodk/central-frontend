@@ -237,6 +237,14 @@
         "submission_export": {
           "string": "Stáhnout příspěvky",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "restore": {
+          "string": "Zrušit smazání",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "purge": {
+          "string": "Vyčistit",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "public_link": {
@@ -579,6 +587,9 @@
     }
   },
   "alert": {
+    "passwordTooShort": {
+      "string": ""
+    },
     "updateReviewState": {
       "string": "Stav kontroly uložen!"
     }
@@ -708,6 +719,10 @@
     },
     "total": {
       "string": "Celkem"
+    },
+    "lastSubmission": {
+      "string": "(naposledy {dateTime})",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
   "mixin": {
@@ -720,12 +735,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": {
-        "string": "(prázdný)",
-        "developer_comment": "This is shown for a Form with a blank version name."
-      }
-    },
     "Project": {
       "nameWithArchived": {
         "string": "{name} (archivováno)",
@@ -800,6 +809,9 @@
       "alert": {
         "alreadyLoggedIn": {
           "string": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
+        },
+        "changePassword": {
+          "string": ""
         }
       },
       "problem": {
@@ -1059,6 +1071,16 @@
       },
       "emptyTable": {
         "string": "Neexistují žádné odpovídající položky protokolu auditu."
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "Tento zdroj byl smazán.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "Tento zdroj byl vyčištěn.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
       }
     },
     "AuditTable": {
@@ -1808,7 +1830,7 @@
           "string": "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?"
         },
         "1": {
-          "string": "Tuto akci nelze vrátit zpět."
+          "string": ""
         }
       }
     },
@@ -1834,7 +1856,7 @@
         },
         "deleteForm": {
           "0": {
-            "string": "Chystáte se trvale smazat tuto definici konceptu formuláře, spolu se všemi koncepty mediálních souborů, které jste nahráli, a všechny testovací příspěvky. Protože jste jej ještě nezveřejnili, bude tento formulář zcela smazán."
+            "string": ""
           }
         }
       },
@@ -1995,7 +2017,7 @@
       },
       "problem": {
         "409_6": {
-          "string": "Název verze, který jste zadali, je v konfliktu s předchozí verzí tohoto formuláře. Změňte prosím na něco nového a zkuste to znovu."
+          "string": ""
         }
       }
     },
@@ -2274,15 +2296,28 @@
         }
       }
     },
-    "FormRow": {
-      "lastSubmission": {
-        "string": "(poslední {dateTime})",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "FormRestore": {
+      "title": {
+        "string": "Zrušit smazání formuláře",
+        "developer_comment": "This is the title at the top of a pop-up."
       },
+      "introduction": {
+        "0": {
+          "string": "Opravdu chcete formulář {name} smazat ?"
+        },
+        "1": {
+          "string": "Formulář bude obnoven do předchozího stavu včetně všech dat, nastavení a oprávnění."
+        },
+        "2": {
+          "string": "Pokud je formulář opět smazán, bude trvat dalších 30 dní, než bude odstraněn."
+        }
+      }
+    },
+    "FormRow": {
       "action": {
         "fill": {
           "string": "Vyplnit formulář",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
       "formClosedTip": {
@@ -2332,6 +2367,40 @@
         }
       }
     },
+    "FormTrashList": {
+      "title": {
+        "string": "Koš"
+      },
+      "trashCount": {
+        "string": "({count})",
+        "developer_comment": "{count} is the number of Forms in the trash."
+      },
+      "alert": {
+        "restore": {
+          "string": "Formuláři \"{name}\" bylo zrušeno smazání."
+        }
+      },
+      "message": {
+        "string": "Formuláře a data související s formuláři jsou po 30 dnech odstraněny do koše."
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "Zrušit smazání",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "deletedDate": {
+        "string": "Smazáno {dateTime}",
+        "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "disabled": {
+        "conflict": {
+          "string": "Tento formulář nelze smazat, protože existuje aktivní formulář se stejným ID."
+        }
+      }
+    },
     "FormVersionDefDropdown": {
       "action": {
         "def": {
@@ -2350,6 +2419,12 @@
           "string": "Stáhnout jako XLSForm ({extension})",
           "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
+      }
+    },
+    "FormVersionString": {
+      "blank": {
+        "string": "",
+        "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
     "FormVersionTable": {
@@ -2582,6 +2657,11 @@
         "hint": {
           "string": "Přístupová fráze (volitelné)",
           "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "passphraseTooShort": {
+          "string": ""
         }
       }
     },
@@ -3233,8 +3313,14 @@
       "reviewState": {
         "string": "Stav kontroly"
       },
+      "formVersion": {
+        "string": ""
+      },
       "deviceId": {
         "string": "ID zařízení"
+      },
+      "userAgent": {
+        "string": ""
       },
       "attachments": {
         "string": "Soubory medií"
@@ -3273,8 +3359,32 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "Dešifrovat a stáhnout",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "noSelectMultiple": {
+        "string": ""
+      },
+      "encryptedForm": {
+        "string": ""
       },
       "introduction": {
         "0": {
@@ -3285,7 +3395,30 @@
         "string": "Nápověda: {hint}",
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
+      "noRepeat": {
+        "string": "",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withMedia": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
       "alert": {
+        "unavailable": {
+          "string": ""
+        },
         "submit": {
           "string": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
         }
@@ -3323,18 +3456,6 @@
               "string": "{count, plural, one {Stáhnout {count} odpovídající záznam} few {Stáhnout {count} odpovídající záznamy} many {Stáhnout {count} odpovídajících záznamů} other {Stáhnout {count} odpovídající záznamy}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
-          },
-          "withMedia": {
-            "string": "Všechna data a mediální soubory (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "withoutMedia": {
-            "string": "Všechna data bez mediálních souborů (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "primaryDataTable": {
-            "string": "Data bez opakování (.csv)",
-            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }
@@ -3444,6 +3565,12 @@
           "string": "Odesláno v",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
+      }
+    },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

@@ -89,6 +89,8 @@
         "update_draft_delete": "Abbandona bozza",
         "attachment_update": "Aggiorna allegati",
         "submission_export": "Scarica invii",
+        "restore": "Ripristina",
+        "purge": "Ripulire",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -206,6 +208,7 @@
     "projectRoles": "Ruoli del progetto"
   },
   "alert": {
+    "passwordTooShort": "Si prega di inserire una password di almeno 10 caratteri.",
     "updateReviewState": "Stato revisione salvato!"
   },
   "moreInfo": {
@@ -253,7 +256,8 @@
       "settings": "Impostazioni",
       "overview": "Panoramica"
     },
-    "total": "Totale"
+    "total": "Totale",
+    "lastSubmission": "(ultimo {dateTime})"
   },
   "mixin": {
     "request": {
@@ -263,9 +267,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": "(vuoto)"
-    },
     "Project": {
       "nameWithArchived": "{name} (archiviato)"
     }

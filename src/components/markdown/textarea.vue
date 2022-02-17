@@ -159,6 +159,10 @@ export default {
     "markdownSupported": "Markdown podporován",
     "preview": "Náhled"
   },
+  "de": {
+    "markdownSupported": "unterstützt durch Markdown",
+    "preview": "Vorschau"
+  },
   "es": {
     "markdownSupported": "soporte Markdown",
     "preview": "Vista previa"

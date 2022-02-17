@@ -128,27 +128,63 @@ export default {
     "title": "Formular-Status",
     "introduction": [
       "Formular-Status steuern den Lebenszyklusstatus eines jeden Formulars. Normalerweise, aber nicht immer, beginnt ein Formular im Status Offen und geht weiter über Schließen nach Geschlossen, wenn es nicht mehr benötigt wird.",
-      {},
-      {},
-      {}
+      {
+        "full": "{open} Formulare sind bereit zum Download und akzeptieren neue Einreichungen.",
+        "open": "Offen"
+      },
+      {
+        "full": "{closing} Formulare akzeptieren neue Einreichungen, aber {not} sind nicht zum Download bereit.",
+        "closing": "Schließen",
+        "not": "nicht"
+      },
+      {
+        "full": "{closed} Formulare können {not1} heruntergeladen werden und akzeptieren {not2} neuen Übermittlungen.",
+        "closed": "Geschlossene",
+        "not1": "nicht",
+        "not2": "nicht"
+      }
     ]
   },
   "es": {
     "title": "Estado del formulario",
     "introduction": [
       "El estado del formulario controla el ciclo de vida de cada formulario. Por lo general, pero en algunas ocasiones no será de este modo, el formulario comenzará abierto y luego procederá a cerrarse cuando ya no sea necesario.",
-      {},
-      {},
-      {}
+      {
+        "full": "{open} Formularios disponibles para descarga y aceptáran nuevos envíos.",
+        "open": "abiertos"
+      },
+      {
+        "full": "{closing} Formularios aceptáran nuevos envíos, pero {not} están disponibles para descarga.",
+        "closing": "cerrando",
+        "not": "no"
+      },
+      {
+        "full": "{closed} Formularios están {not1} disponibles para descarga y {not2} aceptáran nuevos envíos.",
+        "closed": "cerrados",
+        "not1": "no",
+        "not2": "no"
+      }
     ]
   },
   "fr": {
     "title": "États des formulaires",
     "introduction": [
       "Les États de formulaire contrôlent le cycle de vie de chaque formulaire. Généralement, mais pas toujours, un formulaire démarrera \"Ouvert\", sera utilisé jusqu'à sa \"Fermeture\", et sera \"Fermé\" quand il ne sera plus utile.",
-      {},
-      {},
-      {}
+      {
+        "full": "{open} formulaires sont disponibles pour le téléchargement et prêts à accepter des soumissions.",
+        "open": "Ouvert"
+      },
+      {
+        "full": "{closing} formulaires acceptent des soumissions, mais ne sont {not} disponibles au téléchargement.",
+        "closing": "Fermeture",
+        "not": "pas"
+      },
+      {
+        "full": "{closed} formulaires sont {not1} disponibles au téléchargement et acceptent {not2} de nouvelles soumissions.",
+        "closed": "Fermé",
+        "not1": "pas",
+        "not2": "pas"
+      }
     ]
   },
   "id": {
@@ -164,9 +200,21 @@ export default {
     "title": "Stato del Formulario",
     "introduction": [
       "Gli stati del formulario controllano lo stato del ciclo di vita di ogni formulario. Di solito, ma non sempre, un formulario inizia nello stato \"aperto\" e procede negli stati da \"in chiusura\" a \"chiuso\" quando non è più necessario.",
-      {},
-      {},
-      {}
+      {
+        "full": "{open} Formulari sono disponibili per il download e accetteranno nuovi Invii.",
+        "open": "Aperto"
+      },
+      {
+        "full": "{closing} Formulari accetteranno nuovi Invii, ma sono {not} disponibili per il download.",
+        "closing": "In fase di chiusura",
+        "not": "non"
+      },
+      {
+        "full": "{closed} Formulari sono {not1} disponibili per il download e {not2} accetteranno nuovi invii.",
+        "closed": "Chiuso",
+        "not1": "non",
+        "not2": "non"
+      }
     ]
   },
   "ja": {

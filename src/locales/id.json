@@ -256,9 +256,6 @@
     "total": "Total"
   },
   "presenter": {
-    "Form": {
-      "blankVersion": "(kosong)"
-    },
     "Project": {
       "nameWithArchived": "{name} (diarsipkan)"
     }

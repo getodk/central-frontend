@@ -300,6 +300,13 @@ export default {
     },
     "empty": "prázdné"
   },
+  "de": {
+    "editCaption": {
+      "added": "(hinzugefügt)",
+      "deleted": "(gelöscht)"
+    },
+    "empty": "leer"
+  },
   "es": {
     "editCaption": {
       "added": "(añadido)",

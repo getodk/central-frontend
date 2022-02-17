@@ -76,7 +76,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
-        "string": "",
+        "string": "Nutzungsberichterstattung",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
@@ -194,7 +194,7 @@
         }
       },
       "analytics": {
-        "string": "",
+        "string": "Berichtsnutzung",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "backup": {
@@ -236,6 +236,14 @@
         },
         "submission_export": {
           "string": "Übermittlungen downloaden",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "restore": {
+          "string": "Löschen rückgängig machen",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "purge": {
+          "string": "Säubern",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
@@ -365,7 +373,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "saveSettings": {
-      "string": "",
+      "string": "Einstellungen speichern",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
@@ -377,11 +385,11 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "showPreview": {
-      "string": "",
+      "string": "Vorschau",
       "developer_comment": "This text is shown on a button that the user clicks to show a preview of something"
     },
     "hidePreview": {
-      "string": "",
+      "string": "Vorschau ausblenden",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     }
   },
@@ -534,7 +542,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "forms": {
-      "string": "",
+      "string": "Formulare",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "project": {
@@ -554,7 +562,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "users": {
-      "string": "",
+      "string": "Benutzer",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "webUser": {
@@ -579,6 +587,9 @@
     }
   },
   "alert": {
+    "passwordTooShort": {
+      "string": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein."
+    },
     "updateReviewState": {
       "string": "Überprüfungsstatus gespeichert!"
     }
@@ -611,15 +622,15 @@
   },
   "analytics": {
     "alwaysImprove": {
-      "string": ""
+      "string": "Wir sind stets bemüht, ODK Central zu verbessern."
     },
     "needFeedback": {
       "full": {
-        "string": "",
+        "string": "Wir benötigen {your} Feedback, damit wir verstehen können, wie du Central verwendest und wie wir es für dich besser machen können. ",
         "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
       },
       "your": {
-        "string": "",
+        "string": "dein",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
     }
@@ -690,7 +701,7 @@
       "string": "Das hat geklappt!"
     },
     "system": {
-      "string": "",
+      "string": "System",
       "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
     },
     "yes": {
@@ -707,7 +718,11 @@
       }
     },
     "total": {
-      "string": ""
+      "string": "Total"
+    },
+    "lastSubmission": {
+      "string": "letzte {dateTime}",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
   "mixin": {
@@ -720,12 +735,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": {
-        "string": "(leer)",
-        "developer_comment": "This is shown for a Form with a blank version name."
-      }
-    },
     "Project": {
       "nameWithArchived": {
         "string": "{name} (archiviert)",
@@ -800,6 +809,9 @@
       "alert": {
         "alreadyLoggedIn": {
           "string": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten."
+        },
+        "changePassword": {
+          "string": "Ihr Passwort ist kürzer als 10 Zeichen. Um Ihr Konto zu schützen, verlängerns Sie bitte Ihr Passwort."
         }
       },
       "problem": {
@@ -819,91 +831,91 @@
       "enabled": {
         "null": {
           "0": {
-            "string": ""
+            "string": "Erinnere uns später"
           },
           "1": {
-            "string": ""
+            "string": "Administratoren werden die Nachrichten weiterhin im oberen Bereich des Bildschirms sehen."
           }
         },
         "true": {
           "0": {
             "full": {
-              "string": "",
+              "string": "{weWillShare} und wir akzeptieren die {termsOfService} und {privacyPolicy}.",
               "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {weWillShare} has the text: We are willing to share anonymous usage data monthly with the Central team,\n- {termsOfService} has the text: Terms of Service\n- {privacyPolicy} has the text: Privacy Policy"
             },
             "weWillShare": {
-              "string": "",
+              "string": "Wir sind einverstanden, anonyme Nutzungsdaten monatlich mit dem Central-Team zu teilen.",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {weWillShare} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
             },
             "termsOfService": {
-              "string": "",
+              "string": "Nutzungsbedingungen",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {termsOfService} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
             },
             "privacyPolicy": {
-              "string": "",
+              "string": "Datenschutzerklärung",
               "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {privacyPolicy} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
             }
           },
           "1": {
-            "string": ""
+            "string": "Welche Messwerte werden übermittelt?"
           }
         },
         "false": {
           "0": {
-            "string": ""
+            "string": "Wir sind nicht daran interessiert Informationen zu teilen."
           },
           "1": {
-            "string": ""
+            "string": "Sie werden keine Erinnerung mehr kriegen."
           }
         }
       },
       "contact": {
         "0": {
-          "string": ""
+          "string": "Ich bin einverstanden, dass meine Kontaktdaten im Report ersichtlich sind."
         },
         "1": {
-          "string": ""
+          "string": "Wir werden Sie unter Umständen kontaktieren, um mehr über Ihre Nutzung von Central zu erfahren. "
         }
       },
       "field": {
         "workEmail": {
-          "string": "",
+          "string": "Email Adresse (geschäftlich)",
           "developer_comment": "This is the text of a form field."
         },
         "organization": {
-          "string": "",
+          "string": "Name der Organisation",
           "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {
         "success": {
-          "string": ""
+          "string": "Einstellungen gespeichert!"
         }
       }
     },
     "AnalyticsIntroduction": {
       "title": {
-        "string": "",
+        "string": "Hilf ODK Central zu verbessern!",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
           "full": {
-            "string": "",
+            "string": "Unter {usageReporting} in den Systemeinstellungen kannst du wählen, ob duanonymisierte Nutzungsdaten oder Kontaktinformationen mit dem Central-Team teilen möchtest. ",
             "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
           },
           "usageReporting": {
-            "string": "",
+            "string": "Nutzungsberichterstattung",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
           }
         },
         "1": {
-          "string": ""
+          "string": "Dort können Sie auch festlegen, dass diese Nachricht nicht mehr angezeigt wird."
         }
       },
       "action": {
         "improveCentral": {
-          "string": "",
+          "string": "Verbessere Central",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -911,143 +923,143 @@
     "AnalyticsList": {
       "heading": {
         "0": {
-          "string": ""
+          "string": "Weiter unten kannst du auswählen, ob dieser Central-Server anonyme Nutzungsinformationen mit dem Central-Team teilen soll oder nicht. Diese Einstellung gelten für den gesamten Server. "
         }
       },
       "auditsTitle": {
-        "string": "",
+        "string": "Neueste Nutzungsberichte",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "AnalyticsMetricsTable": {
       "recent": {
-        "string": ""
+        "string": "in den letzten 45 Tagen"
       },
       "fields": {
         "num_admins": {
-          "string": ""
+          "string": "Anzahl Administratoren"
         },
         "num_projects_encryption": {
-          "string": ""
+          "string": "Anzahl der Projekte mit aktivierter Verschlüsselung"
         },
         "num_questions_biggest_form": {
-          "string": ""
+          "string": "Anzahl Fragen im grössten Formular"
         },
         "num_audit_log_entries": {
-          "string": ""
+          "string": "Anzahl der Audit-Log-Einträge"
         },
         "backups_configured": {
-          "string": ""
+          "string": "Sicherungskopien konfiguriert."
         },
         "database_size": {
-          "string": ""
+          "string": "Systemdatenbankgröße"
         },
         "num_managers": {
-          "string": ""
+          "string": "Anzahl Projekt-Manager"
         },
         "num_viewers": {
-          "string": ""
+          "string": "Anzahl Projekt-Betrachter"
         },
         "num_data_collectors": {
-          "string": ""
+          "string": "Anzahl Datensammler"
         },
         "num_app_users": {
-          "string": ""
+          "string": "Anzahl App-Benutzer"
         },
         "num_device_ids": {
-          "string": ""
+          "string": "Anzahl Geräte-IDs"
         },
         "num_public_access_links": {
-          "string": ""
+          "string": "Anzahl der öffentlicher Zugangslinks"
         },
         "num_forms": {
-          "string": ""
+          "string": "Anzahl Formulare"
         },
         "num_forms_with_repeats": {
-          "string": ""
+          "string": "Anzahl Formulare mit Wiederholungen/repeats"
         },
         "num_forms_with_geospatial": {
-          "string": ""
+          "string": "Anzahl Formulare mit Geodata"
         },
         "num_forms_with_encryption": {
-          "string": ""
+          "string": "Anzahl Formulare mit Verschlüsselung"
         },
         "num_forms_with_audits": {
-          "string": ""
+          "string": "Anzahl Formulare mit Audits"
         },
         "num_submissions_received": {
-          "string": ""
+          "string": "Anzahl ausgefüllte Formulare - erhalten"
         },
         "num_submissions_approved": {
-          "string": ""
+          "string": "Anzahl ausgefüllte Formulare - genehmigt"
         },
         "num_submissions_has_issues": {
-          "string": ""
+          "string": "Anzahl ausgefüllte Formulare - mit Problemen"
         },
         "num_submissions_rejected": {
-          "string": ""
+          "string": "Anzahl ausgefüllter Formulare - abgelehnt"
         },
         "num_submissions_edited": {
-          "string": ""
+          "string": "Anzahl ausgefüllter Formulare - geändert"
         },
         "num_submissions_with_edits": {
-          "string": ""
+          "string": "Anzahl ausgefüllte Formulare mit Änderungen "
         },
         "num_submissions_with_comments": {
-          "string": ""
+          "string": "Anzahl ausgefüllter Formulare mit Kommentaren"
         },
         "num_submissions_from_app_users": {
-          "string": ""
+          "string": "Anzahl ausgefüllter Formulare von App-Benutzern"
         },
         "num_submissions_from_public_links": {
-          "string": ""
+          "string": "Anzahl Einreichungen von Zugangslink"
         },
         "num_submissions_from_web_users": {
-          "string": ""
+          "string": "Anzahl Einreichungen von Web Benutzern"
         }
       }
     },
     "AnalyticsPreview": {
       "title": {
-        "string": "",
+        "string": "Anonymisierter Nutzungsbericht",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Dank, dass du darüber nachdenkst uns Nutzungsinformationen zu senden. Diese Daten helfen uns, eure Bedürfnisse zu priorisieren! "
         },
         "1": {
-          "string": ""
+          "string": "Hier ersichtlich ist der Bericht zur aktuellen Datensammlung. Um auf neue Funktionen und Anforderungen zu reagieren, ändern wir manchmal die Berichte, aber wir sammeln immer nur Durchschnittswerte, wie hier gezeigt. "
         },
         "2": {
-          "string": ""
+          "string": "Du kannst jederzeit hierher kommen, um zu sehen, welche Daten gesammelt werden."
         }
       },
       "projects": {
         "title": {
-          "string": "",
+          "string": "Projekt-Übersicht",
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {} other {}}"
+          "string": "{count, plural, one {(Zeigt das aktivste Projekt der  {count} Projekt)} other { (Zeigt das aktivste Projekt der {count} Projekte)}}"
         }
       },
       "submissionStates": {
-        "string": "",
+        "string": "Einsendungenstatus",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       }
     },
     "App": {
       "alert": {
         "versionChange": {
-          "string": ""
+          "string": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden. "
         }
       }
     },
     "AsyncRoute": {
       "alert": {
         "loadError": {
-          "string": ""
+          "string": "Die Seite konnte nicht geladen werden. Bitte aktualisiere die Seite und versuche es erneut. "
         }
       }
     },
@@ -1059,6 +1071,16 @@
       },
       "emptyTable": {
         "string": "Keine zutreffenden Audit-Logeinträge."
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "Diese Ressource wurde gelöscht.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "Diese Ressource wurde gelöscht.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
       }
     },
     "AuditTable": {
@@ -1808,7 +1830,7 @@
           "string": "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?"
         },
         "1": {
-          "string": "Diese Aktion kann nicht rückgängig gemacht werden."
+          "string": "Diese Aktion verschiebt das Formular in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
         }
       }
     },
@@ -1834,7 +1856,7 @@
         },
         "deleteForm": {
           "0": {
-            "string": "Sie sind dabei, diese Formulardefinition, die dazugehörenden hochgeladenen Mediendaten und alle Testübermittlungen zu löschen. Weil Sie das Formular noch nicht veröffentlicht haben, wird es vollständig gelöscht."
+            "string": "Sie sind im Begriff, diese Definition des Formularentwurfes zusammen mit allen Entwürfen von Mediendateien, die Sie hochgeladen haben, und allen Testübermittlungen zu löschen. Da Sie dieses Formular noch nicht veröffentlicht haben, wird dieses gesamte Formular gelöscht und in den Papierkorb verschoben."
           }
         }
       },
@@ -1908,7 +1930,7 @@
         },
         "3": {
           "title": {
-            "string": "",
+            "string": "Teste das Formular indem du eine Einreichung erstellst.",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1967,7 +1989,7 @@
         },
         "testing": {
           "full": {
-            "string": "",
+            "string": "Sie haben {tested} noch nicht eine Test-Datenübermittlung hochgeladen. Sie müssen das nicht tun, aber es wird dringend empfohlen.",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
@@ -1995,7 +2017,7 @@
       },
       "problem": {
         "409_6": {
-          "string": "Der Versionsname, den Sie angegeben haben, kollidiert mit einer bestehenden Version des Formulars. Bitte ändern Sie zu einem neuen und versuchen Sie es noch einmal."
+          "string": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
         }
       }
     },
@@ -2274,15 +2296,28 @@
         }
       }
     },
-    "FormRow": {
-      "lastSubmission": {
-        "string": "(zuletzt {dateTime})",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "FormRestore": {
+      "title": {
+        "string": "Form löschen rückgängig machen",
+        "developer_comment": "This is the title at the top of a pop-up."
       },
+      "introduction": {
+        "0": {
+          "string": "Sind Sie sicher dass Sie das Formular {name} wiederherstellen möchten?"
+        },
+        "1": {
+          "string": "Das Formular wird in seinem vorherigen Zustand wiederhergestellt, einschließlich aller Daten, Einstellungen und Berechtigungen. "
+        },
+        "2": {
+          "string": "Wenn das Formular erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
+        }
+      }
+    },
+    "FormRow": {
       "action": {
         "fill": {
           "string": "Formular ausfüllen",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
       "formClosedTip": {
@@ -2332,6 +2367,40 @@
         }
       }
     },
+    "FormTrashList": {
+      "title": {
+        "string": "Papierkorb"
+      },
+      "trashCount": {
+        "string": "{count}",
+        "developer_comment": "{count} is the number of Forms in the trash."
+      },
+      "alert": {
+        "restore": {
+          "string": "Das Formular {name} wurde wiederhergestellt."
+        }
+      },
+      "message": {
+        "string": "Formulare und formularbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht"
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "Wiederherstellen",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "deletedDate": {
+        "string": "Gelöscht {dateTime}",
+        "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "disabled": {
+        "conflict": {
+          "string": "Dieses Formular kann nicht wiederhergestellt werden, weil ein aktives Formular mit derselben ID existiert."
+        }
+      }
+    },
     "FormVersionDefDropdown": {
       "action": {
         "def": {
@@ -2350,6 +2419,12 @@
           "string": "Download als XLSForm ({extension})",
           "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
+      }
+    },
+    "FormVersionString": {
+      "blank": {
+        "string": "(leer)",
+        "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
     "FormVersionTable": {
@@ -2377,11 +2452,11 @@
     },
     "MarkdownTextarea": {
       "markdownSupported": {
-        "string": "",
+        "string": "unterstützt durch Markdown",
         "developer_comment": "This is a link to an external website with Markdown style guidelines"
       },
       "preview": {
-        "string": "",
+        "string": "Vorschau",
         "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
       }
     },
@@ -2393,7 +2468,7 @@
         }
       },
       "analyticsNotice": {
-        "string": ""
+        "string": "Hilf Central zu verbessern!"
       }
     },
     "NavbarActions": {
@@ -2583,6 +2658,11 @@
           "string": "Optionale Merkhilfe für die Passphrase",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "alert": {
+        "passphraseTooShort": {
+          "string": "Bitte geben Sie eine mindestens 10 Zeichen lange Passphrase ein."
+        }
       }
     },
     "ProjectFormAccess": {
@@ -2626,7 +2706,7 @@
         },
         "1": {
           "full": {
-            "string": "",
+            "string": "{open} Formulare sind bereit zum Download und akzeptieren neue Einreichungen.",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
@@ -2636,7 +2716,7 @@
         },
         "2": {
           "full": {
-            "string": "",
+            "string": "{closing} Formulare akzeptieren neue Einreichungen, aber {not} sind nicht zum Download bereit.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
           },
           "closing": {
@@ -2650,7 +2730,7 @@
         },
         "3": {
           "full": {
-            "string": "",
+            "string": "{closed} Formulare können {not1} heruntergeladen werden und akzeptieren {not2} neuen Übermittlungen.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
           },
           "closed": {
@@ -2832,7 +2912,7 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, one {} other {}}",
+          "string": "{count, plural, one {{forms}, die heruntergeladen und als Umfragen ausgegeben werden können. } other {{forms}, die heruntergeladen und als Umfragen ausgegeben werden können. }}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
@@ -3233,8 +3313,14 @@
       "reviewState": {
         "string": "Überprüfungsstatus"
       },
+      "formVersion": {
+        "string": "Formular Version"
+      },
       "deviceId": {
         "string": "Geräte-ID"
+      },
+      "userAgent": {
+        "string": "User-Agent"
       },
       "attachments": {
         "string": "Mediendateien"
@@ -3273,8 +3359,32 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "Entschlüsseln und Herunterladen",
+        "string": "Übermittlungen downloaden",
         "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "Exportoptionen",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "Unterteilen Sie „mehrere auswählen“-Optionen in Spalten",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "Gruppennamen entfernen",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "Zuvor gelöschte Formularfelder einschließen",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "noSelectMultiple": {
+        "string": "Dieses Formular enthält keine Mehrfachauswahlfelder."
+      },
+      "encryptedForm": {
+        "string": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden."
       },
       "introduction": {
         "0": {
@@ -3285,7 +3395,30 @@
         "string": "Hinweis: {hint}",
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
+      "noRepeat": {
+        "string": "Diese Form hat keine repeats.",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "Hauptdatentabelle (keine repeats)",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "Alle Datentabellen",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withMedia": {
+            "string": "Alle Daten und Mediendateien",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
       "alert": {
+        "unavailable": {
+          "string": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal."
+        },
         "submit": {
           "string": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut."
         }
@@ -3294,16 +3427,16 @@
     "SubmissionDiffItem": {
       "editCaption": {
         "added": {
-          "string": "",
+          "string": "(hinzugefügt)",
           "developer_comment": "The description of how a specific field in a form submission changed"
         },
         "deleted": {
-          "string": "",
+          "string": "(gelöscht)",
           "developer_comment": "The description of how a specific field in a form submission changed"
         }
       },
       "empty": {
-        "string": "",
+        "string": "leer",
         "developer_comment": "Text showing that a value in a submission edit is empty"
       }
     },
@@ -3323,18 +3456,6 @@
               "string": "{count, plural, one {{count} passenden Datensatz herunterladen} other {{count} passende Datensätze herunterladen}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
-          },
-          "withMedia": {
-            "string": "Alle Daten und Mediendateien (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "withoutMedia": {
-            "string": "Alle Daten ohne Mediendateien (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "primaryDataTable": {
-            "string": "Daten ohne Wiederholungen (.csv)",
-            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }
@@ -3444,6 +3565,12 @@
           "string": "Übermittelt um",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
+      }
+    },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "(Beliebiger Status)",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {
