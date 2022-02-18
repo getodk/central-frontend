@@ -237,6 +237,14 @@
         "submission_export": {
           "string": "提出済フォームのダウンロード",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "restore": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "purge": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "public_link": {
@@ -579,6 +587,9 @@
     }
   },
   "alert": {
+    "passwordTooShort": {
+      "string": ""
+    },
     "updateReviewState": {
       "string": "レビュー・ステータス保存完了！"
     }
@@ -708,6 +719,10 @@
     },
     "total": {
       "string": "全期間"
+    },
+    "lastSubmission": {
+      "string": "",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
   "mixin": {
@@ -720,12 +735,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": {
-        "string": "（空）",
-        "developer_comment": "This is shown for a Form with a blank version name."
-      }
-    },
     "Project": {
       "nameWithArchived": {
         "string": "{name}（アーカイブ済）",
@@ -800,6 +809,9 @@
       "alert": {
         "alreadyLoggedIn": {
           "string": "すでにユーザーでログインされています。\n続けるにはページを更新してください。"
+        },
+        "changePassword": {
+          "string": ""
         }
       },
       "problem": {
@@ -1059,6 +1071,16 @@
       },
       "emptyTable": {
         "string": "照合できる監査ログの記録がありません。"
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
       }
     },
     "AuditTable": {
@@ -1808,7 +1830,7 @@
           "string": "フォーム{name}および、その提出済フォームが削除されます。\n本当に削除してもよろしいですか？"
         },
         "1": {
-          "string": "この操作は取り消しできません。"
+          "string": ""
         }
       }
     },
@@ -1834,7 +1856,7 @@
         },
         "deleteForm": {
           "0": {
-            "string": "この定義フォームの下書き、下書きのメディアファイルおよび下書きへのテスト提出済フォームの全てのを永久に削除しようとしています。このフォームはまだ公開されていないので、フォームが完全に削除されます。"
+            "string": ""
           }
         }
       },
@@ -1995,7 +2017,7 @@
       },
       "problem": {
         "409_6": {
-          "string": "指定されたバージョン名は、このフォームの過去のバージョンと競合しています。新しいものに変更して再度試して下さい。"
+          "string": ""
         }
       }
     },
@@ -2274,15 +2296,28 @@
         }
       }
     },
-    "FormRow": {
-      "lastSubmission": {
-        "string": "（最終提出日時　{dateTime}）",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "FormRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
       },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      }
+    },
+    "FormRow": {
       "action": {
         "fill": {
           "string": "フォームに記入",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
       "formClosedTip": {
@@ -2332,6 +2367,40 @@
         }
       }
     },
+    "FormTrashList": {
+      "title": {
+        "string": ""
+      },
+      "trashCount": {
+        "string": "",
+        "developer_comment": "{count} is the number of Forms in the trash."
+      },
+      "alert": {
+        "restore": {
+          "string": ""
+        }
+      },
+      "message": {
+        "string": ""
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "deletedDate": {
+        "string": "",
+        "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "disabled": {
+        "conflict": {
+          "string": ""
+        }
+      }
+    },
     "FormVersionDefDropdown": {
       "action": {
         "def": {
@@ -2350,6 +2419,12 @@
           "string": "XLSFormとしてダウンロード（{extension}形式）",
           "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
+      }
+    },
+    "FormVersionString": {
+      "blank": {
+        "string": "",
+        "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
     "FormVersionTable": {
@@ -2582,6 +2657,11 @@
         "hint": {
           "string": "パスフレーズのヒント（任意）",
           "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "passphraseTooShort": {
+          "string": ""
         }
       }
     },
@@ -3233,8 +3313,14 @@
       "reviewState": {
         "string": "レビュー・ステータス"
       },
+      "formVersion": {
+        "string": ""
+      },
       "deviceId": {
         "string": "デバイスID"
+      },
+      "userAgent": {
+        "string": ""
       },
       "attachments": {
         "string": "メディアファイル"
@@ -3273,8 +3359,32 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "復号してダウンロード",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "noSelectMultiple": {
+        "string": ""
+      },
+      "encryptedForm": {
+        "string": ""
       },
       "introduction": {
         "0": {
@@ -3285,7 +3395,30 @@
         "string": "ヒント：{hint}",
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
+      "noRepeat": {
+        "string": "",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withMedia": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
       "alert": {
+        "unavailable": {
+          "string": ""
+        },
         "submit": {
           "string": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。開始されない場合は、もう一度試して下さい。"
         }
@@ -3323,18 +3456,6 @@
               "string": "{count, plural, other {{count}件の該当レコードのダウンロード}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
-          },
-          "withMedia": {
-            "string": "全データとメディアファイルの保存（.zip形式）",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "withoutMedia": {
-            "string": "メディアファイルを除く、全データの保存（.zip形式）",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "primaryDataTable": {
-            "string": "繰返し質問の回答を含まないデータ（.csv形式）",
-            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }
@@ -3444,6 +3565,12 @@
           "string": "フォームの送信日",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
+      }
+    },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

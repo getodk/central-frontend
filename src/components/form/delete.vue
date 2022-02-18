@@ -92,53 +92,37 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Odstranit formulář",
-    "introduction": [
-      "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?",
-      "Tuto akci nelze vrátit zpět."
-    ]
+    "title": "Odstranit formulář"
   },
   "de": {
     "title": "Formulare löschen",
     "introduction": [
       "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?",
-      "Diese Aktion kann nicht rückgängig gemacht werden."
+      "Diese Aktion verschiebt das Formular in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
     ]
   },
   "es": {
     "title": "Borrar formulario",
     "introduction": [
       "¿Está seguro que desea eliminar el formulario {name} y todos sus envíos?",
-      "Esta acción no se puede deshacer."
+      "Esta acción moverá el Formulario a la Papelera. Después de 30 días en la Papelera, se eliminará de forma permanente, pero se puede recuperar antes de esa fecha."
     ]
   },
   "fr": {
-    "title": "Supprimer le formulaire",
-    "introduction": [
-      "Êtes vous sûr de vouloir supprimer le formulaire {name} et toutes les données soumises ?",
-      "Cette action ne peut être annulée."
-    ]
+    "title": "Supprimer le formulaire"
   },
   "id": {
-    "title": "Hapus Formulir",
-    "introduction": [
-      "Apakah Anda yakin ingin menghapus Formulir {name} dan semua kiriman data di dalamnya?",
-      "Tindakan ini tidak dapat dibatalkan/dikembalikan."
-    ]
+    "title": "Hapus Formulir"
   },
   "it": {
     "title": "Cancellare il formulario",
     "introduction": [
       "Sei sicuro di voler eliminare il formulario {name} e tutti i suoi invii?",
-      "Quest'azione non può essere annullata"
+      "Questa azione sposterà il formulario nel Cestino. Dopo 30 giorni nel Cestino, verrà eliminato definitivamente, ma prima di allora può essere ripristinato."
     ]
   },
   "ja": {
-    "title": "フォームの削除",
-    "introduction": [
-      "フォーム{name}および、その提出済フォームが削除されます。 本当に削除してもよろしいですか？",
-      "この操作は取り消しできません。"
-    ]
+    "title": "フォームの削除"
   }
 }
 </i18n>

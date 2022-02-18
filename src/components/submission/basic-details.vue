@@ -164,7 +164,9 @@ export default {
   },
   "de": {
     "reviewState": "Überprüfungsstatus",
+    "formVersion": "Formular Version",
     "deviceId": "Geräte-ID",
+    "userAgent": "User-Agent",
     "attachments": "Mediendateien",
     "present": "{count} Datei | {count} Dateien",
     "expected": "{count} erwartet | {count} erwartet",
@@ -172,7 +174,9 @@ export default {
   },
   "es": {
     "reviewState": "Estado de revisión",
+    "formVersion": "Versión formulario",
     "deviceId": "ID del dispositivo",
+    "userAgent": "Agente de usuario",
     "attachments": "Archivos multimedia",
     "present": "{count} file | {count} files",
     "expected": "{count} expected | {count} esperado",
@@ -196,7 +200,9 @@ export default {
   },
   "it": {
     "reviewState": "Rivedi lo stato",
+    "formVersion": "Versione formulario",
     "deviceId": "ID del dispositivo",
+    "userAgent": "Agente utente",
     "attachments": "File multimediali",
     "present": "{count} file | {count} files",
     "expected": "{count} atteso | {count} attesi",

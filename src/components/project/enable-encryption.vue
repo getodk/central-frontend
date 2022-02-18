@@ -424,6 +424,9 @@ export default {
     ],
     "field": {
       "hint": "Optionale Merkhilfe für die Passphrase"
+    },
+    "alert": {
+      "passphraseTooShort": "Bitte geben Sie eine mindestens 10 Zeichen lange Passphrase ein."
     }
   },
   "es": {
@@ -477,6 +480,9 @@ export default {
     ],
     "field": {
       "hint": "Sugerencia de frase de contraseña (opcional)"
+    },
+    "alert": {
+      "passphraseTooShort": "Ingrese una frase de contraseña de al menos 10 caracteres."
     }
   },
   "fr": {
@@ -636,6 +642,9 @@ export default {
     ],
     "field": {
       "hint": "Suggerimento per la passphrase (opzionale)"
+    },
+    "alert": {
+      "passphraseTooShort": "Inserisci una passphrase di almeno 10 caratteri."
     }
   },
   "ja": {

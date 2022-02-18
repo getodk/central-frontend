@@ -226,6 +226,38 @@ export default {
       "success": "Nastavení uloženo!"
     }
   },
+  "de": {
+    "enabled": {
+      "null": [
+        "Erinnere uns später",
+        "Administratoren werden die Nachrichten weiterhin im oberen Bereich des Bildschirms sehen."
+      ],
+      "true": [
+        {
+          "full": "{weWillShare} und wir akzeptieren die {termsOfService} und {privacyPolicy}.",
+          "weWillShare": "Wir sind einverstanden, anonyme Nutzungsdaten monatlich mit dem Central-Team zu teilen.",
+          "termsOfService": "Nutzungsbedingungen",
+          "privacyPolicy": "Datenschutzerklärung"
+        },
+        "Welche Messwerte werden übermittelt?"
+      ],
+      "false": [
+        "Wir sind nicht daran interessiert Informationen zu teilen.",
+        "Sie werden keine Erinnerung mehr kriegen."
+      ]
+    },
+    "contact": [
+      "Ich bin einverstanden, dass meine Kontaktdaten im Report ersichtlich sind.",
+      "Wir werden Sie unter Umständen kontaktieren, um mehr über Ihre Nutzung von Central zu erfahren."
+    ],
+    "field": {
+      "workEmail": "Email Adresse (geschäftlich)",
+      "organization": "Name der Organisation"
+    },
+    "alert": {
+      "success": "Einstellungen gespeichert!"
+    }
+  },
   "es": {
     "enabled": {
       "null": [

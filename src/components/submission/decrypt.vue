@@ -369,7 +369,6 @@ $label-icon-max-width: 15px;
 <i18n>
 {
   "cs": {
-    "title": "Dešifrovat a stáhnout",
     "introduction": [
       "Abyste mohli tato data stáhnout, budete muset zadat vaše přístupové heslo. Vaše přístupové heslo bude použito pouze k dešifrování vašich dat ke stažení, a poté ho server znovu zapomene."
     ],
@@ -379,27 +378,60 @@ $label-icon-max-width: 15px;
     }
   },
   "de": {
-    "title": "Entschlüsseln und Herunterladen",
+    "title": "Übermittlungen downloaden",
+    "exportOptions": "Exportoptionen",
+    "field": {
+      "splitSelectMultiples": "Unterteilen Sie „mehrere auswählen“-Optionen in Spalten",
+      "removeGroupNames": "Gruppennamen entfernen",
+      "deletedFields": "Zuvor gelöschte Formularfelder einschließen"
+    },
+    "noSelectMultiple": "Dieses Formular enthält keine Mehrfachauswahlfelder.",
+    "encryptedForm": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden.",
     "introduction": [
       "Um die Daten herunterzuladen wird Ihre Passphrase benötigt. Diese wird nur zum Entschlüsseln der Daten für den Download benutzt und nicht gespeichert."
     ],
     "hint": "Hinweis: {hint}",
+    "noRepeat": "Diese Form hat keine repeats.",
+    "action": {
+      "download": {
+        "mainTable": "Hauptdatentabelle (keine repeats)",
+        "allTables": "Alle Datentabellen",
+        "withMedia": "Alle Daten und Mediendateien"
+      }
+    },
     "alert": {
+      "unavailable": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal.",
       "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut."
     }
   },
   "es": {
-    "title": "Descifrar y descargar",
+    "title": "Descargar datos enviados",
+    "exportOptions": "Opciones de exportación",
+    "field": {
+      "splitSelectMultiples": "Divida las opciones de \"selección múltiple\" en columnas",
+      "removeGroupNames": "Eliminar nombres de grupos",
+      "deletedFields": "Incluir campos de formulario eliminados anteriormente"
+    },
+    "noSelectMultiple": "Este formulario no tiene ningún campo de selección múltiple.",
+    "encryptedForm": "Los formularios cifrados no se pueden procesar de esta manera.",
     "introduction": [
       "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada, al finalizar el proceso el servidor la olvidará."
     ],
     "hint": "Pista: {hint}",
+    "noRepeat": "Este formulario no tiene campos repetidos.",
+    "action": {
+      "download": {
+        "mainTable": "Tabla de datos principal (sin repeticiones)",
+        "allTables": "Todas las tablas de datos",
+        "withMedia": "Todos los datos y archivos multimedia"
+      }
+    },
     "alert": {
+      "unavailable": "La descarga de datos aún no está disponible. Vuelva a intentarlo en un momento.",
       "submit": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente."
     }
   },
   "fr": {
-    "title": "Décrypter et télécharger",
     "introduction": [
       "Pour télécharger ces données, vous devrez fournir votre phrase secrète. Votre phrase secrète sera utilisée uniquement pour déchiffrer vos données pour le téléchargement, après quoi le serveur l'oubliera à nouveau"
     ],
@@ -409,7 +441,6 @@ $label-icon-max-width: 15px;
     }
   },
   "id": {
-    "title": "Dekripsi dan Unduh",
     "introduction": [
       "Untuk mengunduh data ini, Anda harus menyediakan frasa sandi. Frasa sandi hanya akan digunakan untuk mendekripsi data anda untuk diunduh, dan akan terhapus dari server setelahnya."
     ],
@@ -419,17 +450,33 @@ $label-icon-max-width: 15px;
     }
   },
   "it": {
-    "title": "Decifra e scarica",
+    "title": "Scarica invii",
+    "exportOptions": "Opzioni di esportazione",
+    "field": {
+      "splitSelectMultiples": "Dividi le scelte \"select multiple\" in colonne",
+      "removeGroupNames": "Rimuovi i nomi dei gruppi",
+      "deletedFields": "Includi campi del formulario eliminati in precedenza"
+    },
+    "noSelectMultiple": "Questo formulario non ha campi a scelta multipla selezionati.",
+    "encryptedForm": "I moduli crittografati non possono essere elaborati in questo modo.",
     "introduction": [
       "Per scaricare questi dati, dovrai fornire la tua passphrase. La tua passphrase verrà utilizzata solo per decifrare i tuoi dati per il download, dopodiché il server la cancellerà."
     ],
     "hint": "Suggerimento: {hint}",
+    "noRepeat": "Questo formulario non ha repeats.",
+    "action": {
+      "download": {
+        "mainTable": "Tabella dati principale (no repeats)",
+        "allTables": "Tutte le tabelle di dati",
+        "withMedia": "Tutti i dati e i file multimediali"
+      }
+    },
     "alert": {
+      "unavailable": "Il download dei dati non è ancora disponibile. Si prega di riprovare in un altro momento.",
       "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questa finestra. Se stai ancora aspettando e il download non è iniziato, riprova."
     }
   },
   "ja": {
-    "title": "復号してダウンロード",
     "introduction": [
       "このデータをダウンロードするためには、パスフレーズを入力する必要があります。パスフレーズは、データをダウンロードする際の復号時にのみ使用され、その後、サーバーはパスフレーズを保持しません。"
     ],

@@ -214,9 +214,6 @@ export default {
     ],
     "field": {
       "version": "Verze"
-    },
-    "problem": {
-      "409_6": "Název verze, který jste zadali, je v konfliktu s předchozí verzí tohoto formuláře. Změňte prosím na něco nového a zkuste to znovu."
     }
   },
   "de": {
@@ -225,6 +222,10 @@ export default {
       "attachments": {
         "full": "Sie haben die {mediaFiles} für Ihr Formular benötigten Dateien nicht bereitgestellt. Sie können dies ignorieren, aber Sie müssen Entwurfsversionen zum späteren Hochladen bereitstellen.",
         "mediaFiles": "Mediendateien"
+      },
+      "testing": {
+        "full": "Sie haben {tested} noch nicht eine Test-Datenübermittlung hochgeladen. Sie müssen das nicht tun, aber es wird dringend empfohlen.",
+        "tested": "dieses Formular"
       }
     },
     "introduction": [
@@ -236,7 +237,7 @@ export default {
       "version": "Version"
     },
     "problem": {
-      "409_6": "Der Versionsname, den Sie angegeben haben, kollidiert mit einer bestehenden Version des Formulars. Bitte ändern Sie zu einem neuen und versuchen Sie es noch einmal."
+      "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
     }
   },
   "es": {
@@ -245,6 +246,10 @@ export default {
       "attachments": {
         "full": "No ha proporcionado todos los {mediaFiles} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de borrador para cargar esos archivos más tarde.",
         "mediaFiles": "archivos multimedia"
+      },
+      "testing": {
+        "full": "Aún no ha {tested} subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
+        "tested": "probado este formulario"
       }
     },
     "introduction": [
@@ -256,7 +261,7 @@ export default {
       "version": "Versión"
     },
     "problem": {
-      "409_6": "El nombre de la versión que especificó entra en conflicto con una versión anterior de este formulario. Cambie a algo nuevo e intente nuevamente."
+      "409_6": "El nombre de la versión de este borrador entra en conflicto con una versión anterior de este formulario o un formulario eliminado. Utilice el campo a continuación para cambiarlo a algo nuevo o cargar una nueva definición de formulario."
     }
   },
   "fr": {
@@ -265,6 +270,10 @@ export default {
       "attachments": {
         "full": "Vous n'avez pas fourni tous les {mediaFiles} requis par votre formulaire. Vous pouvez ignorer cette notification, mais vous devrez créer une nouvelle ébauche pour ajouter ces fichiers plus tard.",
         "mediaFiles": "fichiers média"
+      },
+      "testing": {
+        "full": "Vous n'avez pas encore {tested} en téleversant une soumission. Vous n'êtes pas obligé de faire cela, mais c'est fortement recommandé.",
+        "tested": "testé ce formulaire"
       }
     },
     "introduction": [
@@ -274,9 +283,6 @@ export default {
     ],
     "field": {
       "version": "Version"
-    },
-    "problem": {
-      "409_6": "Le nom de version spécifié est en conflit avec une ancienne version du formulaire. Merci d'en essayer un nouveau et d'essayer à nouveau."
     }
   },
   "id": {
@@ -294,9 +300,6 @@ export default {
     ],
     "field": {
       "version": "Versi"
-    },
-    "problem": {
-      "409_6": "Nama yang Anda pilih sama dengan nama dari versi lama formulir ini. Mohon ubah nama dan coba lagi."
     }
   },
   "it": {
@@ -305,6 +308,10 @@ export default {
       "attachments": {
         "full": "Non hai fornito tutti i {mediaFiles} che il tuo formulario richiede. Puoi ignorarlo se lo desideri, ma dovrai creare una nuova versione bozza per caricare quei file in un secondo momento.",
         "mediaFiles": "File multimediali"
+      },
+      "testing": {
+        "full": "Non hai ancora {tested} caricando un invio di prova. Non devi farlo, ma è altamente raccomandato.",
+        "tested": "testato questo Formulario"
       }
     },
     "introduction": [
@@ -316,7 +323,7 @@ export default {
       "version": "Versione"
     },
     "problem": {
-      "409_6": "Il nome della versione che hai specificato è in conflitto con una versione precedente di questo formulario. Per favore sostituiscilo con un altro nome e riprova."
+      "409_6": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
     }
   },
   "ja": {
@@ -338,9 +345,6 @@ export default {
     ],
     "field": {
       "version": "バージョン"
-    },
-    "problem": {
-      "409_6": "指定されたバージョン名は、このフォームの過去のバージョンと競合しています。新しいものに変更して再度試して下さい。"
     }
   }
 }

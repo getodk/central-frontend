@@ -237,6 +237,14 @@
         "submission_export": {
           "string": "Descargar datos enviados",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "restore": {
+          "string": "Restaurar",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "purge": {
+          "string": "Vaciar",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "public_link": {
@@ -579,6 +587,9 @@
     }
   },
   "alert": {
+    "passwordTooShort": {
+      "string": "Introduzca una contraseña de al menos 10 caracteres."
+    },
     "updateReviewState": {
       "string": "Estado de revisión guardado!"
     }
@@ -708,6 +719,10 @@
     },
     "total": {
       "string": "Total"
+    },
+    "lastSubmission": {
+      "string": "(último {dateTime})",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
   "mixin": {
@@ -720,12 +735,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": {
-        "string": "(vacío)",
-        "developer_comment": "This is shown for a Form with a blank version name."
-      }
-    },
     "Project": {
       "nameWithArchived": {
         "string": "{name} (archivado)",
@@ -800,6 +809,9 @@
       "alert": {
         "alreadyLoggedIn": {
           "string": "Un usuario ya ha iniciado sesión. Actualice la página para continuar."
+        },
+        "changePassword": {
+          "string": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
         }
       },
       "problem": {
@@ -1059,6 +1071,16 @@
       },
       "emptyTable": {
         "string": "No hay entradas de registro de auditoría coincidentes."
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "Este recurso ha sido borrado.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "Este recurso ha sido vaciado.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
       }
     },
     "AuditTable": {
@@ -1808,7 +1830,7 @@
           "string": "¿Está seguro que desea eliminar el formulario {name} y todos sus envíos?"
         },
         "1": {
-          "string": "Esta acción no se puede deshacer."
+          "string": "Esta acción moverá el Formulario a la Papelera. Después de 30 días en la Papelera, se eliminará de forma permanente, pero se puede recuperar antes de esa fecha."
         }
       }
     },
@@ -1834,7 +1856,7 @@
         },
         "deleteForm": {
           "0": {
-            "string": "Está a punto de borrar permanentemente este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este formulario se eliminará por completo."
+            "string": "Está a punto de borrar este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este formulario se eliminará y movido a la Papelera.."
           }
         }
       },
@@ -1908,7 +1930,7 @@
         },
         "3": {
           "title": {
-            "string": "",
+            "string": "Pruebe el formulario creando un envío",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
@@ -1967,7 +1989,7 @@
         },
         "testing": {
           "full": {
-            "string": "",
+            "string": "Aún no ha {tested} subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
             "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
           },
           "tested": {
@@ -1995,7 +2017,7 @@
       },
       "problem": {
         "409_6": {
-          "string": "El nombre de la versión que especificó entra en conflicto con una versión anterior de este formulario. Cambie a algo nuevo e intente nuevamente."
+          "string": "El nombre de la versión de este borrador entra en conflicto con una versión anterior de este formulario o un formulario eliminado. Utilice el campo a continuación para cambiarlo a algo nuevo o cargar una nueva definición de formulario."
         }
       }
     },
@@ -2274,15 +2296,28 @@
         }
       }
     },
-    "FormRow": {
-      "lastSubmission": {
-        "string": "(último {dateTime})",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "FormRestore": {
+      "title": {
+        "string": "Restaurar el formulario",
+        "developer_comment": "This is the title at the top of a pop-up."
       },
+      "introduction": {
+        "0": {
+          "string": "¿Está seguro que desea recuperar el formulario {name}?"
+        },
+        "1": {
+          "string": "El formulario se restaurará a su estado anterior, incluidos todos los datos, configuraciones y permisos."
+        },
+        "2": {
+          "string": "Si el formulario se elimina nuevamente, pasarán otros 30 días antes de que se elimine."
+        }
+      }
+    },
+    "FormRow": {
       "action": {
         "fill": {
           "string": "Llenar formulario",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
       "formClosedTip": {
@@ -2332,6 +2367,40 @@
         }
       }
     },
+    "FormTrashList": {
+      "title": {
+        "string": "Papelera"
+      },
+      "trashCount": {
+        "string": "({count})",
+        "developer_comment": "{count} is the number of Forms in the trash."
+      },
+      "alert": {
+        "restore": {
+          "string": "El formulario {name} fue recuperado."
+        }
+      },
+      "message": {
+        "string": "Los formularios y los datos relacionados con los formularios se eliminan después de 30 días en la Papelera"
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "Restaurar",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "deletedDate": {
+        "string": "Borrado {dateTime}",
+        "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "disabled": {
+        "conflict": {
+          "string": "Este formulario no se puede recuperar porque existe un formulario activo con el mismo ID."
+        }
+      }
+    },
     "FormVersionDefDropdown": {
       "action": {
         "def": {
@@ -2350,6 +2419,12 @@
           "string": "Descarga como XLSForm ({extension})",
           "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
+      }
+    },
+    "FormVersionString": {
+      "blank": {
+        "string": "(vacío)",
+        "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
     "FormVersionTable": {
@@ -2583,6 +2658,11 @@
           "string": "Sugerencia de frase de contraseña (opcional)",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "alert": {
+        "passphraseTooShort": {
+          "string": "Ingrese una frase de contraseña de al menos 10 caracteres."
+        }
       }
     },
     "ProjectFormAccess": {
@@ -2626,7 +2706,7 @@
         },
         "1": {
           "full": {
-            "string": "",
+            "string": "{open} Formularios disponibles para descarga y aceptáran nuevos envíos.",
             "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
           },
           "open": {
@@ -2636,7 +2716,7 @@
         },
         "2": {
           "full": {
-            "string": "",
+            "string": "{closing} Formularios aceptáran nuevos envíos, pero {not} están disponibles para descarga.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
           },
           "closing": {
@@ -2650,7 +2730,7 @@
         },
         "3": {
           "full": {
-            "string": "",
+            "string": "{closed} Formularios están {not1} disponibles para descarga  y {not2} aceptáran nuevos envíos.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
           },
           "closed": {
@@ -2832,7 +2912,7 @@
       },
       "forms": {
         "full": {
-          "string": "{count, plural, one {} other {}}",
+          "string": "{count, plural, one {{forms} que puede ser descargado y mostrado como encuestas.} other {{forms} que pueden ser descargados y mostrados como encuestas.}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
@@ -3233,8 +3313,14 @@
       "reviewState": {
         "string": "Estado de revisión"
       },
+      "formVersion": {
+        "string": "Versión formulario"
+      },
       "deviceId": {
         "string": "ID del dispositivo"
+      },
+      "userAgent": {
+        "string": "Agente de usuario"
       },
       "attachments": {
         "string": "Archivos multimedia"
@@ -3273,8 +3359,32 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "Descifrar y descargar",
+        "string": "Descargar datos enviados",
         "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "Opciones de exportación",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "Divida las opciones de \"selección múltiple\" en columnas",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "Eliminar nombres de grupos",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "Incluir campos de formulario eliminados anteriormente",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "noSelectMultiple": {
+        "string": "Este formulario no tiene ningún campo de selección múltiple."
+      },
+      "encryptedForm": {
+        "string": "Los formularios cifrados no se pueden procesar de esta manera."
       },
       "introduction": {
         "0": {
@@ -3285,7 +3395,30 @@
         "string": "Pista: {hint}",
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
+      "noRepeat": {
+        "string": "Este formulario no tiene campos repetidos.",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "Tabla de datos principal (sin repeticiones)",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "Todas las tablas de datos",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withMedia": {
+            "string": "Todos los datos y archivos multimedia",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
       "alert": {
+        "unavailable": {
+          "string": "La descarga de datos aún no está disponible. Vuelva a intentarlo en un momento."
+        },
         "submit": {
           "string": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente. "
         }
@@ -3323,18 +3456,6 @@
               "string": "{count, plural, one {Descargar {count} registros coincidentes.} other {Descargar {count} registros coincidentes}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
-          },
-          "withMedia": {
-            "string": "Todos los datos y archivos multimedia (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "withoutMedia": {
-            "string": "Todos los datos sin archivos multimedia (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "primaryDataTable": {
-            "string": "Datos sin grupos de repetición (.csv)",
-            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }
@@ -3444,6 +3565,12 @@
           "string": "Enviado a",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
+      }
+    },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "(Cualquier estado)",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

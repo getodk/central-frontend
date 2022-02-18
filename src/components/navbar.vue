@@ -269,7 +269,8 @@ $border-height: 3px;
   "de": {
     "action": {
       "toggle": "Navigation umschalten"
-    }
+    },
+    "analyticsNotice": "Hilf Central zu verbessern!"
   },
   "es": {
     "action": {

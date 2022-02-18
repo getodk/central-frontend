@@ -154,6 +154,11 @@ body.modal-open #app-alert {
       "versionChange": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
     }
   },
+  "de": {
+    "alert": {
+      "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden."
+    }
+  },
   "es": {
     "alert": {
       "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles."

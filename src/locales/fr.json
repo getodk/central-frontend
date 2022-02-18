@@ -89,6 +89,8 @@
         "update_draft_delete": "Abandonner l'ébauche",
         "attachment_update": "Mettre à jour les fichiers joints",
         "submission_export": "Télécharger les soumissions",
+        "restore": "Restaurer",
+        "purge": "Purger",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -263,9 +265,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": "(vierge)"
-    },
     "Project": {
       "nameWithArchived": "{name} (archivé)"
     }

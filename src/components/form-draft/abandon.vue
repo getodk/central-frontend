@@ -127,9 +127,6 @@ export default {
       "abandon": [
         "Chystáte se trvale smazat pracovní verzi tohoto formuláře. To znamená, že definice konceptu formuláře, všechny koncepty mediálních souborů, které jste nahráli, a všechna testovací odeslání budou odstraněna.",
         "Vaše publikovaná definice formuláře, její mediální soubory a odeslání nebudou ovlivněny."
-      ],
-      "deleteForm": [
-        "Chystáte se trvale smazat tuto definici konceptu formuláře, spolu se všemi koncepty mediálních souborů, které jste nahráli, a všechny testovací příspěvky. Protože jste jej ještě nezveřejnili, bude tento formulář zcela smazán."
       ]
     },
     "action": {
@@ -147,7 +144,7 @@ export default {
         "Ihre veröffentlichten Forumulardefinitionen, ihre Mediendateien und Übermittlungen werden nicht angetastet."
       ],
       "deleteForm": [
-        "Sie sind dabei, diese Formulardefinition, die dazugehörenden hochgeladenen Mediendaten und alle Testübermittlungen zu löschen. Weil Sie das Formular noch nicht veröffentlicht haben, wird es vollständig gelöscht."
+        "Sie sind im Begriff, diese Definition des Formularentwurfes zusammen mit allen Entwürfen von Mediendateien, die Sie hochgeladen haben, und allen Testübermittlungen zu löschen. Da Sie dieses Formular noch nicht veröffentlicht haben, wird dieses gesamte Formular gelöscht und in den Papierkorb verschoben."
       ]
     },
     "action": {
@@ -165,7 +162,7 @@ export default {
         "Su definición de formulario publicada, sus archivos multimedia y envíos no se verán afectados."
       ],
       "deleteForm": [
-        "Está a punto de borrar permanentemente este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este formulario se eliminará por completo."
+        "Está a punto de borrar este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este formulario se eliminará y movido a la Papelera.."
       ]
     },
     "action": {
@@ -181,9 +178,6 @@ export default {
       "abandon": [
         "Vous êtes sur le point de supprimer définitivement la version d'ébauche de ce formulaire. Sa définition, ses fichiers multimédias liés et toutes ses soumissions de test seront supprimés.",
         "Votre définition de formulaire publiée, ses fichiers média et ses données soumises ne seront pas affectés."
-      ],
-      "deleteForm": [
-        "Vous êtes sur le point de supprimer définitivement la version d'ébauche de ce formulaire, ainsi que tous ses fichiers multimédias liés et toutes ses soumissions de test. Parce que ce formulaire n'a pas encore de version publiée, il sera entièrement supprimé."
       ]
     },
     "action": {
@@ -199,9 +193,6 @@ export default {
       "abandon": [
         "Anda hendak menghapus permanen versi draf dari formulir ini. Draf definisi formulir, draf file media yang telah diunggah, dan semua tes kiriman data dalam formulir akan dihapus.",
         "Definisi formulir, file media, dan kiriman data yang sudah diterbitkan tidak akan terpengaruh."
-      ],
-      "deleteForm": [
-        "Anda hendak menghapus permanen draf definisi formulir ini beserta draf file media yang telah diunggah, dan semua kiriman data yang masuk. Sebab Anda belum menerbitkannya, maka keseluruhan formulir ini akan dihapus."
       ]
     },
     "action": {
@@ -219,7 +210,7 @@ export default {
         "La definizione del formulario pubblicato, i suoi file multimediali e gli invii non saranno interessati."
       ],
       "deleteForm": [
-        "Stai per eliminare definitivamente questa bozza di definizione del formulario, insieme a qualsiasi bozza di file multimediali che hai caricato e a tutti gli invii di prova. Poiché non l'hai ancora pubblicato, questo formulario verrà completamente eliminato."
+        "Stai per eliminare questa bozza di definizione del formulario, insieme a qualsiasi bozza di file multimediali che hai caricato e tutti gli invii di prova. Poiché non l'hai ancora pubblicato, l'intero formualrio verrà eliminato e spostato nel Cestino."
       ]
     },
     "action": {
@@ -235,9 +226,6 @@ export default {
       "abandon": [
         "このフォームの下書きバージョンを永久に削除しようとしています。これは、この定義フォームの下書き、下書きのメディアファイルおよび下書きへのテスト提出済フォームが全て削除されることを意味します。",
         "あなたの公開した定義フォームやメディアファイル、提出済フォームは影響を受けません。"
-      ],
-      "deleteForm": [
-        "この定義フォームの下書き、下書きのメディアファイルおよび下書きへのテスト提出済フォームの全てのを永久に削除しようとしています。このフォームはまだ公開されていないので、フォームが完全に削除されます。"
       ]
     },
     "action": {

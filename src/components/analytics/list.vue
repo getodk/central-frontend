@@ -118,6 +118,12 @@ export default {
     ],
     "auditsTitle": "Nejnovější zprávy o použití"
   },
+  "de": {
+    "heading": [
+      "Weiter unten kannst du auswählen, ob dieser Central-Server anonyme Nutzungsinformationen mit dem Central-Team teilen soll oder nicht. Diese Einstellung gelten für den gesamten Server."
+    ],
+    "auditsTitle": "Neueste Nutzungsberichte"
+  },
   "es": {
     "heading": [
       "A continuación, puede elegir si este servidor Central compartirá información de uso anónima con el equipo Central. Esta configuración afecta a todo el servidor."

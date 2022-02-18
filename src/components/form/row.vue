@@ -192,7 +192,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "lastSubmission": "(poslední {dateTime})",
     "action": {
       "fill": "Vyplnit formulář"
     },
@@ -201,7 +200,6 @@ export default {
     "formUnpublishedTip": "Tento formulář dosud nemá publikovanou verzi."
   },
   "de": {
-    "lastSubmission": "(zuletzt {dateTime})",
     "action": {
       "fill": "Formular ausfüllen"
     },
@@ -210,7 +208,6 @@ export default {
     "formUnpublishedTip": "Es gibt bisher noch keine veröffentlichte Version dieses Formulars."
   },
   "es": {
-    "lastSubmission": "(último {dateTime})",
     "action": {
       "fill": "Llenar formulario"
     },
@@ -219,7 +216,6 @@ export default {
     "formUnpublishedTip": "Este Formulario aún no tiene una versión publicada."
   },
   "fr": {
-    "lastSubmission": "(dernière {dateTime})",
     "action": {
       "fill": "Remplir le formulaire"
     },
@@ -228,7 +224,6 @@ export default {
     "formUnpublishedTip": "Ce formulaire ne dispose pas encore de version publiée."
   },
   "id": {
-    "lastSubmission": "(terakhir {dateTime})",
     "action": {
       "fill": "Isi Formulir"
     },
@@ -237,7 +232,6 @@ export default {
     "formUnpublishedTip": "Formulir ini belum memiliki versi yang dipublikasikan."
   },
   "it": {
-    "lastSubmission": "(ultima {dateTime})",
     "action": {
       "fill": "Compila il Formulario"
     },
@@ -246,7 +240,6 @@ export default {
     "formUnpublishedTip": "Questo formulario non ha ancora una versione pubblicata."
   },
   "ja": {
-    "lastSubmission": "（最終提出日時 {dateTime}）",
     "action": {
       "fill": "フォームに記入"
     },

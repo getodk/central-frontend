@@ -163,7 +163,8 @@ export default {
   },
   "de": {
     "alert": {
-      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten."
+      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten.",
+      "changePassword": "Ihr Passwort ist kürzer als 10 Zeichen. Um Ihr Konto zu schützen, verlängerns Sie bitte Ihr Passwort."
     },
     "problem": {
       "401_2": "Falsche E-Mail-Adresse und/oder Passwort."
@@ -171,7 +172,8 @@ export default {
   },
   "es": {
     "alert": {
-      "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar."
+      "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar.",
+      "changePassword": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
     },
     "problem": {
       "401_2": "Dirección de correo electrónico y/o contraseña incorrecta."
@@ -195,7 +197,8 @@ export default {
   },
   "it": {
     "alert": {
-      "alreadyLoggedIn": "Un utente ha già effettuato l'accesso. Aggiorna la pagina per continuare."
+      "alreadyLoggedIn": "Un utente ha già effettuato l'accesso. Aggiorna la pagina per continuare.",
+      "changePassword": "La tua password è lunga meno di 10 caratteri. Per proteggere il tuo account, cambia la password per renderla più lunga."
     },
     "problem": {
       "401_2": "Indirizzo e-mail e/o password errati."

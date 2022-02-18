@@ -272,6 +272,7 @@ export default {
         ]
       },
       {
+        "title": "Teste das Formular indem du eine Einreichung erstellst.",
         "body": [
           {
             "full": "Sie können ein Formular {test}, um sicher zu sein, dass es wie erwartet funktioniert. Test-Übermittlungen sind in den endgültigen Daten nicht enthalten.",
@@ -325,6 +326,7 @@ export default {
         ]
       },
       {
+        "title": "Pruebe el formulario creando un envío",
         "body": [
           {
             "full": "Puede {test} un formulario para asegurarse de que funciona como usted espera. Los envíos de prueba no son incluidos en sus datos finales.",
@@ -378,6 +380,7 @@ export default {
         ]
       },
       {
+        "title": "Testez le formulaire en créant une soumission",
         "body": [
           {
             "full": "Vous pouvez {test} un formulaire pour vérifier qu'il fonctionne comme prévu. Les soumissions de test ne seront pas incluses dans vos vraies données.",
@@ -484,6 +487,7 @@ export default {
         ]
       },
       {
+        "title": "Testa il formulario creando un invio",
         "body": [
           {
             "full": "Puoi {test} un formulario per assicurarti che funzioni come previsto. Gli invii di prova non sono inclusi nei dati finali.",

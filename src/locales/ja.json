@@ -263,9 +263,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": "（空）"
-    },
     "Project": {
       "nameWithArchived": "{name}（アーカイブ済）"
     }

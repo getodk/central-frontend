@@ -237,6 +237,14 @@
         "submission_export": {
           "string": "Unduh kiriman",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "restore": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "purge": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         }
       },
       "public_link": {
@@ -579,6 +587,9 @@
     }
   },
   "alert": {
+    "passwordTooShort": {
+      "string": ""
+    },
     "updateReviewState": {
       "string": "Status Ulasan disimpan!"
     }
@@ -708,6 +719,10 @@
     },
     "total": {
       "string": "Total"
+    },
+    "lastSubmission": {
+      "string": "",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
   "mixin": {
@@ -720,12 +735,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": {
-        "string": "(kosong)",
-        "developer_comment": "This is shown for a Form with a blank version name."
-      }
-    },
     "Project": {
       "nameWithArchived": {
         "string": "{name} (diarsipkan)",
@@ -800,6 +809,9 @@
       "alert": {
         "alreadyLoggedIn": {
           "string": "Seorang pengguna sudah masuk. Mohon perbarui halaman untuk melanjutkan."
+        },
+        "changePassword": {
+          "string": ""
         }
       },
       "problem": {
@@ -1059,6 +1071,16 @@
       },
       "emptyTable": {
         "string": "Tidak ada catatan audit yang cocok."
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
       }
     },
     "AuditTable": {
@@ -1808,7 +1830,7 @@
           "string": "Apakah Anda yakin ingin menghapus Formulir {name} dan semua kiriman data di dalamnya?"
         },
         "1": {
-          "string": "Tindakan ini tidak dapat dibatalkan/dikembalikan."
+          "string": ""
         }
       }
     },
@@ -1834,7 +1856,7 @@
         },
         "deleteForm": {
           "0": {
-            "string": "Anda hendak menghapus permanen draf definisi formulir ini beserta draf file media yang telah diunggah, dan semua kiriman data yang masuk. Sebab Anda belum menerbitkannya, maka keseluruhan formulir ini akan dihapus."
+            "string": ""
           }
         }
       },
@@ -1995,7 +2017,7 @@
       },
       "problem": {
         "409_6": {
-          "string": "Nama yang Anda pilih sama dengan nama dari versi lama formulir ini. Mohon ubah nama dan coba lagi."
+          "string": ""
         }
       }
     },
@@ -2274,15 +2296,28 @@
         }
       }
     },
-    "FormRow": {
-      "lastSubmission": {
-        "string": "(terakhir {dateTime})",
-        "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "FormRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
       },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      }
+    },
+    "FormRow": {
       "action": {
         "fill": {
           "string": "Isi Formulir",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
       "formClosedTip": {
@@ -2332,6 +2367,40 @@
         }
       }
     },
+    "FormTrashList": {
+      "title": {
+        "string": ""
+      },
+      "trashCount": {
+        "string": "",
+        "developer_comment": "{count} is the number of Forms in the trash."
+      },
+      "alert": {
+        "restore": {
+          "string": ""
+        }
+      },
+      "message": {
+        "string": ""
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "deletedDate": {
+        "string": "",
+        "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "disabled": {
+        "conflict": {
+          "string": ""
+        }
+      }
+    },
     "FormVersionDefDropdown": {
       "action": {
         "def": {
@@ -2350,6 +2419,12 @@
           "string": "Unduh sebagai XLSForm ({extension})",
           "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
+      }
+    },
+    "FormVersionString": {
+      "blank": {
+        "string": "",
+        "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
     "FormVersionTable": {
@@ -2582,6 +2657,11 @@
         "hint": {
           "string": "Petunjuk frasa sandi (opsional)",
           "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "passphraseTooShort": {
+          "string": ""
         }
       }
     },
@@ -3233,8 +3313,14 @@
       "reviewState": {
         "string": "Status ulasan"
       },
+      "formVersion": {
+        "string": ""
+      },
       "deviceId": {
         "string": "ID Perangkat"
+      },
+      "userAgent": {
+        "string": ""
       },
       "attachments": {
         "string": "File Media"
@@ -3273,8 +3359,32 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "Dekripsi dan Unduh",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "noSelectMultiple": {
+        "string": ""
+      },
+      "encryptedForm": {
+        "string": ""
       },
       "introduction": {
         "0": {
@@ -3285,7 +3395,30 @@
         "string": "Petunjuk: {hint}",
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
+      "noRepeat": {
+        "string": "",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withMedia": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
       "alert": {
+        "unavailable": {
+          "string": ""
+        },
         "submit": {
           "string": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
         }
@@ -3323,18 +3456,6 @@
               "string": "{count, plural, other {Unduh {count} pencatatan yang cocok}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
-          },
-          "withMedia": {
-            "string": "Semua data dan berkas media (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "withoutMedia": {
-            "string": "Semua data tanpa berkas media (.zip)",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "primaryDataTable": {
-            "string": "Data tanpa perulangan (.csv)",
-            "developer_comment": "This text is shown in a dropdown that allows the user to download Submissions. \"Repeats\" refers to repeat groups."
           }
         }
       }
@@ -3444,6 +3565,12 @@
           "string": "Terkirim pada",
           "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
         }
+      }
+    },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
     "SubmissionFiltersSubmitter": {

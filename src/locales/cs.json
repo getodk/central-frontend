@@ -89,6 +89,8 @@
         "update_draft_delete": "Opustit koncept",
         "attachment_update": "Aktualizovat přílohy",
         "submission_export": "Stáhnout příspěvky",
+        "restore": "Zrušit smazání",
+        "purge": "Vyčistit",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -253,7 +255,8 @@
       "settings": "Nastavení",
       "overview": "Přehled"
     },
-    "total": "Celkem"
+    "total": "Celkem",
+    "lastSubmission": "(naposledy {dateTime})"
   },
   "mixin": {
     "request": {
@@ -263,9 +266,6 @@
     }
   },
   "presenter": {
-    "Form": {
-      "blankVersion": "(prázdný)"
-    },
     "Project": {
       "nameWithArchived": "{name} (archivováno)"
     }
