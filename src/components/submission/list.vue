@@ -349,6 +349,8 @@ export default {
   align-items: baseline;
   display: flex;
   flex-wrap: wrap-reverse;
+
+  form > :first-child { margin-left: 0; }
 }
 #submission-field-dropdown {
   margin-left: 15px;
