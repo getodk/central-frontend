@@ -18,7 +18,8 @@ const locales = {
   fr: { pluralCategories: ['one', 'other'] },
   id: {},
   it: {},
-  ja: { warnVariableSeparator: false }
+  ja: { warnVariableSeparator: false },
+  sw: {}
 };
 
 const sourceLocale = 'en';
