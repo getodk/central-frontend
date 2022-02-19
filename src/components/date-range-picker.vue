@@ -29,7 +29,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import flatpickr from 'vue-flatpickr-component';
+import flatpickr from 'flatpickr';
+import flatpickrComponent from 'vue-flatpickr-component';
 import { DateTime } from 'luxon';
 import 'flatpickr/dist/flatpickr.css';
 
@@ -43,7 +44,7 @@ import 'flatpickr/dist/l10n/ja';
 
 export default {
   name: 'DateRangePicker',
-  components: { flatpickr },
+  components: { flatpickr: flatpickrComponent },
   props: {
     // Either an array of two DateTime objects or an empty array
     value: {
@@ -74,7 +75,8 @@ export default {
         // See https://github.com/flatpickr/flatpickr/issues/1549
         dateFormat: 'Y/m/d'
       };
-      config.locale = this.$i18n.locale;
+      const l10n = flatpickr.l10ns[this.$i18n.locale];
+      if (l10n != null) config.locale = l10n;
       return config;
     },
     star() {

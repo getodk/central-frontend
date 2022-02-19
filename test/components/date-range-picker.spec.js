@@ -294,5 +294,14 @@ describe('DateRangePicker', () => {
       const text = document.querySelector('.flatpickr-weekday').textContent.trim();
       text.should.equal('Lun');
     });
+
+    // There is not a flatpickr localization for sw.
+    it('renders correctly for sw', async () => {
+      await loadLocale('sw');
+      const component = mountComponent({ attachTo: document.body });
+      await component.get('input').trigger('click');
+      const text = document.querySelector('.flatpickr-weekday').textContent.trim();
+      text.should.equal('Sun');
+    });
   });
 });
