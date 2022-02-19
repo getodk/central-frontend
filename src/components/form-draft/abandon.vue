@@ -231,6 +231,24 @@ export default {
     "action": {
       "abandon": "削除"
     }
+  },
+  "sw": {
+    "title": {
+      "abandon": "acha rasimu",
+      "deleteForm": "Achana na Rasimu na ufute Fomu"
+    },
+    "introduction": {
+      "abandon": [
+        "Unakaribia kufuta kabisa Rasimu ya toleo la Fomu hii. Hii inamaanisha kuwa rasimu ya ufafanuzi wa Fomu, rasimu ya Faili zozote za Midia ulizopakia na Mawasilisho yote ya majaribio yataondolewa.",
+        "Ufafanuzi wako wa Fomu uliochapishwa, Faili zake za Midia na Mawasilisho hayataathiriwa"
+      ],
+      "deleteForm": [
+        "Unakaribia kufuta rasimu hii ya ufafanuzi wa Fomu, pamoja na rasimu ya Faili zozote za Midia ambazo umepakia, na Mawasilisho yote ya majaribio. Kwa sababu bado hujaichapisha, Fomu hii yote itafutwa na kuhamishiwa kwenye Tupio."
+      ]
+    },
+    "action": {
+      "abandon": "Achana"
+    }
   }
 }
 </i18n>

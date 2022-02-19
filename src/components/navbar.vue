@@ -301,6 +301,12 @@ $border-height: 3px;
       "toggle": "ナビゲーションを有効化"
     },
     "analyticsNotice": "Centralの改善を支援！"
+  },
+  "sw": {
+    "action": {
+      "toggle": "Geuza urambazaji"
+    },
+    "analyticsNotice": "Saidia kuboresha Central"
   }
 }
 </i18n>

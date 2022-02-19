@@ -158,6 +158,15 @@ export default {
     "alert": {
       "success": "ユーザー詳細の保存完了！"
     }
+  },
+  "sw": {
+    "title": "Maelezo ya Msingi",
+    "action": {
+      "update": "Sasisha maelezo"
+    },
+    "alert": {
+      "success": "Maelezo ya mtumiaji yamehifadhiwa!"
+    }
   }
 }
 </i18n>

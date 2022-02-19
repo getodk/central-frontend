@@ -205,6 +205,12 @@ export default {
     "field": {
       "projectRole": "プロジェクトでの役割"
     }
+  },
+  "sw": {
+    "cannotAssignRole": "Huenda usihariri Jukumu lako la Mradi.",
+    "field": {
+      "projectRole": "Jukumu la Mradi"
+    }
   }
 }
 </i18n>

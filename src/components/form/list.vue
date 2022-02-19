@@ -165,6 +165,16 @@ export default {
     "alert": {
       "create": "新規フォーム\"{name}\"が下書きとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用できます。"
     }
+  },
+  "sw": {
+    "title": "Fomu",
+    "action": {
+      "create": "Mpya"
+    },
+    "emptyTable": "hakuna Fomu za kuonyesha",
+    "alert": {
+      "create": "Fomu yako mpya \"{name}\" imeundwa kama Rasimu. Angalia orodha hapa chini, na unapohisi iko tayari, unaweza kuchapisha Fomu kwa matumizi."
+    }
   }
 }
 </i18n>

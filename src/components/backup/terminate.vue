@@ -129,6 +129,13 @@ export default {
       "自動バックアップを本当に停止しますか？",
       "バックアップを再開するには、また初めから設定し直す必要があります。なお、この操作は取り消しできません。"
     ]
+  },
+  "sw": {
+    "title": "Sitisha Hifadhi Nakala za Kiotomatiki",
+    "introduction": [
+      "Je, una uhakika kuwa ungependa kusitisha hifadhi rudufu zako otomatiki?",
+      "Utalazimika kuzisanidi tena kutoka mwanzo ili kuzianzisha tena, na kitendo hiki hakiwezi kutenduliwa"
+    ]
   }
 }
 </i18n>

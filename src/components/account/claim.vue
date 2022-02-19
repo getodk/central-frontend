@@ -179,6 +179,17 @@ export default {
     "alert": {
       "success": "パスワードが正常にリセットされました。"
     }
+  },
+  "sw": {
+    "action": {
+      "set": "Weka nenosiri"
+    },
+    "problem": {
+      "401_2": "{message} Huenda muda wa kiungo katika barua pepe yako umeisha, na huenda barua pepe mpya ikatumwa."
+    },
+    "alert": {
+      "success": "Nenosiri limewekwa upya."
+    }
   }
 }
 </i18n>

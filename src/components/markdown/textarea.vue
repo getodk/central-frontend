@@ -182,6 +182,10 @@ export default {
   "ja": {
     "markdownSupported": "マークダウンがサポートされています。",
     "preview": "プレビュー"
+  },
+  "sw": {
+    "markdownSupported": "Markdown inatumika",
+    "preview": "Hakiki"
   }
 }
 </i18n>

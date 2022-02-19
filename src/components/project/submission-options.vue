@@ -252,6 +252,25 @@ export default {
         "dataCollector": "データ収集者"
       }
     ]
+  },
+  "sw": {
+    "title": "Chaguzi za Uwasilishaji",
+    "introduction": [
+      "Kuna chaguo kadhaa za kuwasilisha data kwa ODK Central:",
+      {
+        "full": "Unda {appUsers} na utumie programu ya Android ya {collect}. Hii inafaa zaidi wakati wakusanyaji wa data wanahitaji ufikiaji wa Fomu nyingi, wako nje ya mtandao, au una Fomu ngumu",
+        "appUsers": "Watumiaji wa Programu"
+      },
+      {
+        "full": "Unda {publicLinks} moja au zaidi ili kushiriki na waliojibu ambao watajiripoti.",
+        "publicLinks": "Viungo vya Ufikiaji wa Umma"
+      },
+      {
+        "full": "Unda {webUser} na Jukumu la {dataCollector} kwa kila mtu ambaye atakuwa akikusanya data. Watumiaji hawa wataingia katika Kituo Kikuu ili kujaza Fomu hii katika kivinjari cha wavuti. Wasimamizi wa Miradi wanaweza pia kuunda Mawasilisho kutoka kwa kivinjari cha wavuti.",
+        "webUser": "Mtumiaji wa Mtandao",
+        "dataCollector": "Mkusanya Data"
+      }
+    ]
   }
 }
 </i18n>

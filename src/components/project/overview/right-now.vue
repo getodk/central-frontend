@@ -200,6 +200,22 @@ export default {
       ],
       "forms": "フォーム"
     }
+  },
+  "sw": {
+    "appUsers": {
+      "full": [
+        "{appUsers} ambao wanaweza kutumia mteja wa kukusanya data kupakua na kuwasilisha data ya Fomu kwa Mradi huu",
+        "{appUsers} ambao wanaweza kutumia mteja wa kukusanya data kupakua na kuwasilisha data ya Fomu kwa Mradi huu"
+      ],
+      "appUsers": "Mtumiaji wa Programu | Watumiaji wa Programu"
+    },
+    "forms": {
+      "full": [
+        "{forms} ambazo zinaweza kupakuliwa na kutolewa kama tafiti.",
+        "{forms} ambazo zinaweza kupakuliwa na kutolewa kama tafiti."
+      ],
+      "forms": "Fomu | Fomu"
+    }
   }
 }
 </i18n>

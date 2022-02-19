@@ -64,6 +64,9 @@ export default {
   },
   "it": {
     "blank": "(vuoto)"
+  },
+  "sw": {
+    "blank": "(tupu)"
   }
 }
 </i18n>

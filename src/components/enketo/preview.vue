@@ -106,6 +106,12 @@ export default {
       "processing": "このフォームのプレビュー処理が終了していません。後ほどページを更新し、もう一度試して下さい。",
       "notOpen": "このバージョンのODK Centralでは、プレビューは、公開状態のフォームでのみ利用可能です。"
     }
+  },
+  "sw": {
+    "disabled": {
+      "processing": "Onyesho la kuchungulia halijamaliza kuchakata Fomu hii. Tafadhali onyesha upya baadaye na ujaribu tena.",
+      "notOpen": "Katika toleo hili la ODK Central, onyesho la kukagua linapatikana kwa Fomu zilizo katika \"OPEN STATE\""
+    }
   }
 }
 </i18n>

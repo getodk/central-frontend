@@ -557,6 +557,42 @@ export default {
       "assignRole": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。",
       "unassignRole": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
     }
+  },
+  "sw": {
+    "heading": [
+      "Wasimamizi wa Tovuti nzima wanazingatiwa kiotomatiki Wasimamizi wa kila Mradi. Watumiaji Wengine wanaweza kuwa na Majukumu mahususi kwa Mradi huu",
+      {
+        "full": "{projectManagers} inaweza kutekeleza kazi yoyote ya usimamizi inayohusiana na Mradi huu na inaweza kujaza Fomu katika kivinjari cha wavuti.",
+        "projectManagers": "Wasimamizi wa Mradi"
+      },
+      {
+        "full": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data",
+        "projectViewers": "Watazamaji wa Mradi"
+      },
+      {
+        "full": "{dataCollectors} inaweza kujaza Fomu katika kivinjari, lakini haiwezi kuona au kubadilisha data au mipangilio",
+        "dataCollectors": "Wakusanyaji Data"
+      }
+    ],
+    "action": {
+      "clearSearch": "Futa utafutaji"
+    },
+    "field": {
+      "q": {
+        "canList": "Tafuta mtumiaji...",
+        "cannotList": "Weka barua pepe kamili ya mtumiaji..."
+      }
+    },
+    "header": {
+      "user": "Mtumiaji",
+      "projectRole": "Jukumu la Mradi"
+    },
+    "emptyTable": "Bado hakuna watumiaji waliokabidhiwa kwa Mradi huu. Ili kuongeza moja, tafuta mtumiaji hapo juu.",
+    "alert": {
+      "unassignWithoutReassign": "Hitilafu fulani imetokea. \"{displayName}\" imeondolewa kwenye Mradi.",
+      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu.",
+      "unassignRole": "Mafanikio! \"{displayName}\" imeondolewa kwenye Mradi huu."
+    }
   }
 }
 </i18n>

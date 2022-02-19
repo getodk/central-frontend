@@ -128,6 +128,12 @@ export default {
       "ここでは、このサーバーで行われた重要な操作履歴を閲覧できます。ユーザーやプロジェクト、フォーム設定への変更は、ここで確認できます。"
     ],
     "emptyTable": "照合できる監査ログの記録がありません。"
+  },
+  "sw": {
+    "heading": [
+      "Hapa utapata logi ya vitendo muhimu vilivyofanywa kwenye seva hii. Mabadiliko yaliyofanywa kwa mipangilio ya mtumiaji, Mradi, au Fomu yanaweza kupatikana hapa."
+    ],
+    "emptyTable": "Hakuna maingizo ya kumbukumbu ya ukaguzi yanayolingana"
   }
 }
 </i18n>

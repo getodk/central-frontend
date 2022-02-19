@@ -263,6 +263,24 @@ export default {
       ],
       "submissions": "提出"
     }
+  },
+  "sw": {
+    "version": {
+      "full": "{publishedVersion} ya Fomu hii.",
+      "publishedVersion": "Toleo lililochapishwa"
+    },
+    "stateCaption": {
+      "open": "Fomu hii inaweza kupakuliwa na inakubali Mawasilisho.",
+      "closing": "Fomu hii haiwezi kupakuliwa lakini bado inakubali Mawasilisho.",
+      "closed": "Fomu hii haiwezi kupakuliwa na haikubali Mawasilisho."
+    },
+    "submissions": {
+      "full": [
+        "{submissions} zimehifadhiwa kwa Fomu hii.",
+        "{submissions} zimehifadhiwa kwa Fomu hii."
+      ],
+      "submissions": "Wasilisho | Mawasilisho"
+    }
   }
 }
 </i18n>

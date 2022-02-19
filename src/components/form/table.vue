@@ -110,6 +110,11 @@ export default {
     "header": {
       "idAndVersion": "フォームIDとバージョン"
     }
+  },
+  "sw": {
+    "header": {
+      "idAndVersion": "Kitambulisho na Toleo"
+    }
   }
 }
 </i18n>

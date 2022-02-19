@@ -1,0 +1,3837 @@
+{
+  "title": {
+    "resetPassword": {
+      "string": "Weka upya neno siri",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "setPassword": {
+      "string": "Weka neno siri",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "editProfile": {
+      "string": "Hariri Wasifu",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "download": {
+      "string": "Pakua",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "pageNotFound": {
+      "string": " Ukurasa Haupatikani",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "details": {
+      "string": "Maelezo",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    }
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": {
+        "string": "Ufikiaji wa Fomu",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": {
+        "string": "Matoleo",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "publicAccess": {
+        "string": "Ufikiaji wa Umma",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
+    },
+    "draftNav": {
+      "tab": {
+        "status": {
+          "string": "Hali",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "attachments": {
+          "string": "Faili za media",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "testing": {
+          "string": " Upimaji",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        }
+      }
+    }
+  },
+  "systemHome": {
+    "title": {
+      "string": "Usimamizi wa mfumo",
+      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+    },
+    "tab": {
+      "backups": {
+        "string": "Hifadhi rudufu",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "audits": {
+        "string": "Kumbukumbu za ukaguzi wa seva",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "analytics": {
+        "string": "Ripoti ya matumizi",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
+    }
+  },
+  "role": {
+    "none": {
+      "string": "Hakuna",
+      "developer_comment": "This is shown when a user does not have a Role."
+    },
+    "admin": {
+      "string": "Msimamizi",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "manager": {
+      "string": "Meneja wa mradi",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "viewer": {
+      "string": "Mtazamaji wa mradi",
+      "developer_comment": "This is the name of a user Role."
+    },
+    "formfill": {
+      "string": "Mkusanyaji wa data",
+      "developer_comment": "This is the name of a user Role."
+    }
+  },
+  "formState": {
+    "open": {
+      "string": "Fungua",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Open\" is one Form State."
+    },
+    "closing": {
+      "string": "Kufunga",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Closing\" is one Form State."
+    },
+    "closed": {
+      "string": "imefungwa",
+      "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
+    }
+  },
+  "reviewState": {
+    "received": {
+      "string": "Imepokelewa",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "hasIssues": {
+      "string": "Ina masuala",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "edited": {
+      "string": "Imehaririwa",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "approved": {
+      "string": "Imeidhinishwa",
+      "developer_comment": "This is a possible Review State for a Submission."
+    },
+    "rejected": {
+      "string": "Imekataliwa",
+      "developer_comment": "This is a possible Review State for a Submission."
+    }
+  },
+  "audit": {
+    "category": {
+      "nonverbose": {
+        "string": "vitendo vyote",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "user": {
+        "string": "vitendo vya mtumiaji wa wavuti",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "project": {
+        "string": "hatua za mradi",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "form": {
+        "string": "Vitendo vya fomu",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "field_key": {
+        "string": "Vitendo vya mtumiaji wa programu",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "public_link": {
+        "string": "vitendo vya kiungo cha ufikiaji wa umma",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "config": {
+        "string": "vitendo vya usanidi wa seva",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "upgrade": {
+        "string": "uboreshaji wa seva",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      }
+    },
+    "action": {
+      "default": {
+        "create": {
+          "string": "Unda",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "update": {
+          "string": "sasisha maelezo",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "session_end": {
+          "string": "batilisha",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "delete": {
+          "string": "kufuta",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        }
+      },
+      "analytics": {
+        "string": "Ripoti matumizi",
+        "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "backup": {
+        "string": "Hifadhi nakala",
+        "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "config": {
+        "set": {
+          "string": "weka",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Server Configuration."
+        }
+      },
+      "field_key": {
+        "assignment_create": {
+          "string": "kutoa ufikiaji",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
+        },
+        "assignment_delete": {
+          "string": "Ondoa ufikiaji",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
+        }
+      },
+      "form": {
+        "update_draft_set": {
+          "string": "Unda rasimu",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_publish": {
+          "string": "Chapisha rasimu",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_delete": {
+          "string": "Acha rasimu",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "attachment_update": {
+          "string": "Sasisha Viambatisho",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "submission_export": {
+          "string": "Pakua mawasilisho",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "restore": {
+          "string": "futa kufuta",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "purge": {
+          "string": "Safisha",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        }
+      },
+      "public_link": {
+        "assignment_create": {
+          "string": "Peana ufikiaji",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        },
+        "assignment_delete": {
+          "string": "Ondoa ufikiaji",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        }
+      },
+      "upgrade": {
+        "process_form": {
+          "string": " Chakata Fomu",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_draft": {
+          "string": "Rasimu ya fomu ya mchakato",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        }
+      },
+      "user": {
+        "assignment_create": {
+          "string": "Panga jukumu",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
+        },
+        "assignment_delete": {
+          "string": "Batilisha jukumu",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
+        },
+        "delete": {
+          "string": "staafu",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on or for a Web User."
+        }
+      }
+    }
+  },
+  "action": {
+    "cancel": {
+      "string": "Ghairi",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "clear": {
+      "string": "Safisha",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "close": {
+      "string": "Funga",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "comment": {
+      "string": "Maoni",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "create": {
+      "string": "Unda",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "createSubmission": {
+      "string": "Mpya",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+    },
+    "done": {
+      "string": "Imekamilika",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "download": {
+      "string": "Pakua",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "edit": {
+      "string": "Hariri",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "editProfile": {
+      "string": "Hariri wasifu",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "logIn": {
+      "string": "Ingia",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "looksGood": {
+      "string": "Inaonekana vizuri, endelea",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "more": {
+      "string": "Zaidi",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "neverMind": {
+      "string": "Usijali, ghairi",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "next": {
+      "string": "Inayofuata",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "noCancel": {
+      "string": "Hapana, ghairi",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "ok": {
+      "string": "sawa",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "proceed": {
+      "string": "Endelea",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "refresh": {
+      "string": "Onyesha upya",
+      "developer_comment": "This is the text of a button that refreshes data."
+    },
+    "resetPassword": {
+      "string": "Weka upya nenosiri",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "review": {
+      "string": "hakiki",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "save": {
+      "string": "hifadhi",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "saveSettings": {
+      "string": "hifadhi mipangilio",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "update": {
+      "string": "sasisha",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "yesProceed": {
+      "string": "Ndio,endelea",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "showPreview": {
+      "string": "Hakiki",
+      "developer_comment": "This text is shown on a button that the user clicks to show a preview of something"
+    },
+    "hidePreview": {
+      "string": "Ficha hakiki",
+      "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    }
+  },
+  "field": {
+    "comment": {
+      "string": "Acha Maoni",
+      "developer_comment": "This is the text of a form field."
+    },
+    "dateRange": {
+      "string": "Muda wa tarehe",
+      "developer_comment": "This is the text of a form field."
+    },
+    "displayName": {
+      "string": " Onyesha jina",
+      "developer_comment": "This is the text of a form field."
+    },
+    "email": {
+      "string": "Barua pepe",
+      "developer_comment": "This is the text of a form field."
+    },
+    "name": {
+      "string": "Jina",
+      "developer_comment": "This is the text of a form field."
+    },
+    "newPassword": {
+      "string": "Password mpya",
+      "developer_comment": "This is the text of a form field."
+    },
+    "oldPassword": {
+      "string": "Password ya zamani",
+      "developer_comment": "This is the text of a form field."
+    },
+    "passphrase": {
+      "string": " Nenosiri",
+      "developer_comment": "This is the text of a form field."
+    },
+    "password": {
+      "string": "Password",
+      "developer_comment": "This is the text of a form field."
+    },
+    "passwordConfirm": {
+      "string": "Password mpya (thibitisha)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "Kagua hali",
+      "developer_comment": "This is the text of a form field."
+    },
+    "type": {
+      "string": "Aina",
+      "developer_comment": "This is the text of a form field."
+    }
+  },
+  "header": {
+    "actions": {
+      "string": "Vitendo",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "created": {
+      "string": "Imeundwa",
+      "developer_comment": "This is the text of a table column header. The column shows who created the resource and possibly also when they did so."
+    },
+    "createdBy": {
+      "string": "Imeundwa na",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "displayName": {
+      "string": "Onyesha jina",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "email": {
+      "string": "Barua pepe",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "instanceId": {
+      "string": "Kitambulisho cha Mfano",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "lastSubmission": {
+      "string": "uwasilishaji wa hivi karibuni",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "name": {
+      "string": "Jina",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "submitterName": {
+      "string": "iliyowasilishwa na",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "submissionDate": {
+      "string": "imewasilishwa kwa",
+      "developer_comment": "This is the text of a table column header. The column indicates when each Submission was submitted."
+    },
+    "time": {
+      "string": "Muda",
+      "developer_comment": "This is the text of a table column header for a column that shows dates and times."
+    },
+    "type": {
+      "string": "Aina",
+      "developer_comment": "This is the text of a table column header."
+    }
+  },
+  "plural": {
+    "appUser": {
+      "string": "{count, plural, one {mtumiaji wa programu} other {Watumiaji wa programu}}"
+    },
+    "form": {
+      "string": "{count, plural, one {Fomu} other {Fomu}}"
+    },
+    "project": {
+      "string": "{count, plural, one {Mradi} other {Miradi}}"
+    },
+    "submission": {
+      "string": "{count, plural, one {Uwasilishaji} other {Mawasilisho}}"
+    },
+    "webUser": {
+      "string": "{count, plural, one {mtumiaji wa wavuti} other {watumiaji wa mtandao}}"
+    }
+  },
+  "count": {
+    "appUser": {
+      "string": "{count, plural, one {{count} Mtumiaji wa Programu} other {{count} Watumiaji wa Programu}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "form": {
+      "string": "{count, plural, one {{count} Fomu} other {{count} Fomu}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "submission": {
+      "string": "{count, plural, one {{count} wasilisho} other {{count} Mawasilisho}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    }
+  },
+  "resource": {
+    "appUser": {
+      "string": "mtumiaji wa programu",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "appUsers": {
+      "string": "watumiaji wa programu",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "config": {
+      "string": "usanidi wa seva",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "form": {
+      "string": "Fomu",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "forms": {
+      "string": "fomu",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "project": {
+      "string": "Mradi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "projects": {
+      "string": "miradi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "publicLink": {
+      "string": "Kiungo cha ufikiaji wa umma",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "user": {
+      "string": "mtumiaji",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "users": {
+      "string": "Watumiaji",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "webUser": {
+      "string": "mtumiaji wa wavuti",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "webUsers": {
+      "string": "watumiaji wa mtandao",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "session": {
+      "string": "kipindi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submissions": {
+      "string": "mawasilisho",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "projectRoles": {
+      "string": "majukumu ya mradi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    }
+  },
+  "alert": {
+    "passwordTooShort": {
+      "string": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10."
+    },
+    "updateReviewState": {
+      "string": "Kagua Jimbo limehifadhiwa!"
+    }
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": {
+        "string": "For more information, {clickHere}.",
+        "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+      },
+      "clickHere": {
+        "string": "bonyeza hapa",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information, {clickHere}."
+      }
+    },
+    "helpArticle": {
+      "full": {
+        "string": "Kwa maelezo zaidi, tafadhali angalia {helpArticle}.",
+        "developer_comment": "{helpArticle} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis help article"
+      },
+      "helpArticle": {
+        "string": "Makala hii ya msaada",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {helpArticle} is in the following text:\n\nFor more information, please see {helpArticle}."
+      }
+    },
+    "learnMore": {
+      "string": "Jifunze zaidi",
+      "developer_comment": "This is a link to more information."
+    }
+  },
+  "analytics": {
+    "alwaysImprove": {
+      "string": "Daima tunajaribu kuboresha ODK Central."
+    },
+    "needFeedback": {
+      "full": {
+        "string": "Ili kufanya hivi, tunahitaji maoni yako  {your}, ili tuweze kuelewa jinsi unavyotumia Central, na jinsi inavyoweza kuwa bora zaidi kwako.",
+        "developer_comment": "\"This\" refers to improving Central.\n\n{your} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nyour"
+      },
+      "your": {
+        "string": "yako",
+        "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
+      }
+    }
+  },
+  "submission": {
+    "missingMedia": {
+      "string": "Vyombo vya habari vinavyokosekana",
+      "developer_comment": "This is a possible state for a Submission."
+    },
+    "action": {
+      "edit": {
+        "string": "Hariri ({count})",
+        "developer_comment": "{count} is the number of previous edits."
+      }
+    },
+    "editDisabled": {
+      "string": "Huwezi kuhariri mawasilisho yaliyosimbwa kwa njia fiche",
+      "developer_comment": "This is shown when the Edit button is disabled."
+    },
+    "binaryLinkTitle": {
+      "string": "Faili iliwasilishwa. Bofya ili kupakua."
+    },
+    "encryptionMessage": {
+      "string": "Onyesho la kukagua data halipatikani kwa sababu ya usimbaji fiche"
+    }
+  },
+  "common": {
+    "activity": {
+      "string": "shughuli",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "anybody": {
+      "string": "(Mtu yeyote)",
+      "developer_comment": "This is shown in a dropdown that allows the user to filter to only show data for particular users."
+    },
+    "areYouSure": {
+      "string": "Je, una uhakika ungependa kuendelea?",
+      "developer_comment": "Here we ask the user to confirm that they wish to complete an action that they have initiated."
+    },
+    "basicInfo": {
+      "string": "Taarifa za Msingi",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "currentDraft": {
+      "string": "Rasimu Yako ya Sasa",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "dangerZone": {
+      "string": "Eneo la Hatari",
+      "developer_comment": "This is a title shown above a section of the page."
+    },
+    "filter": {
+      "string": "chujio",
+      "developer_comment": "This text is shown next to options for filtering a table."
+    },
+    "no": {
+      "string": "Hapana"
+    },
+    "noResults": {
+      "string": "Hakuna majibu",
+      "developer_comment": "This is shown if a search returned no results."
+    },
+    "rightNow": {
+      "string": "Sasaivi",
+      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
+    },
+    "success": {
+      "string": "Mafanikio!"
+    },
+    "system": {
+      "string": "mfumo",
+      "developer_comment": "\"System\" refers to the server and how it is configured. It may be shown as a title, for example, at the top of the page."
+    },
+    "yes": {
+      "string": "Ndiyo"
+    },
+    "tab": {
+      "settings": {
+        "string": "mipangilio",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "overview": {
+        "string": "muhtasari",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      }
+    },
+    "total": {
+      "string": "jumla"
+    },
+    "lastSubmission": {
+      "string": "(mwisho {dateTime})",
+      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    }
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": {
+          "string": "faili \"{name}\" ambayo unajaribu kupakia ni kubwa kuliko kikomo cha MB 100"
+        }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (iliyohifadhiwa)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
+      }
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": {
+        "string": "leo",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"today 01:23\". The string may appear on its own or be part of a sentence."
+      },
+      "yesterday": {
+        "string": "jana",
+        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"yesterday 01:23\". The string may appear on its own or be part of a sentence."
+      }
+    },
+    "request": {
+      "noRequest": {
+        "string": "Hitilafu fulani imetokea: hakukuwa na ombi."
+      },
+      "noResponse": {
+        "string": "Hitilafu fulani imetokea: hakukuwa na jibu kwa ombi lako."
+      },
+      "errorNotProblem": {
+        "string": "Hitilafu fulani imetokea: msimbo wa hitilafu {status}.",
+        "developer_comment": "{status} is an HTTP status code, for example, 404."
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": {
+          "string": "Muda wa kipindi chako utaisha baada ya dakika 2, na utaondolewa kiotomatiki."
+        },
+        "expired": {
+          "string": "Muda wa kipindi chako umeisha. Ili kuendelea kufanya kazi, tafadhali ingia tena."
+        },
+        "logoutError": {
+          "string": "Kulikuwa na tatizo, na hukuwa umetoka nje kikamilifu. Tafadhali onyesha upya ukurasa na ujaribu kutoka tena. {message}",
+          "developer_comment": "{message} is a more detailed error message."
+        }
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": {
+      "string": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
+    }
+  },
+  "component": {
+    "AccountClaim": {
+      "action": {
+        "set": {
+          "string": "Weka nenosiri",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "problem": {
+        "401_2": {
+          "string": "{message} Huenda muda wa kiungo katika barua pepe yako umeisha, na huenda barua pepe mpya ikatumwa.",
+          "developer_comment": "{message} is an error message from the server."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Nenosiri limewekwa upya."
+        }
+      }
+    },
+    "AccountLogin": {
+      "alert": {
+        "alreadyLoggedIn": {
+          "string": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea."
+        },
+        "changePassword": {
+          "string": "Nenosiri lako ni fupi kuliko vibambo 10. Ili kulinda akaunti yako, tafadhali badilisha nenosiri lako ili kuifanya iwe ndefu."
+        }
+      },
+      "problem": {
+        "401_2": {
+          "string": "Anwani ya barua pepe na/au nenosiri si sahihi."
+        }
+      }
+    },
+    "AccountResetPassword": {
+      "alert": {
+        "success": {
+          "string": "Barua pepe imetumwa kwa {email} ikiwa na maagizo zaidi."
+        }
+      }
+    },
+    "AnalyticsForm": {
+      "enabled": {
+        "null": {
+          "0": {
+            "string": "Tukumbushe baadaye"
+          },
+          "1": {
+            "string": "Wasimamizi wataendelea kuona ujumbe juu ya skrini"
+          }
+        },
+        "true": {
+          "0": {
+            "full": {
+              "string": "{weWillShare} na tunakubali {termsOfService} na {privacyPolicy}.",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {weWillShare} has the text: We are willing to share anonymous usage data monthly with the Central team,\n- {termsOfService} has the text: Terms of Service\n- {privacyPolicy} has the text: Privacy Policy"
+            },
+            "weWillShare": {
+              "string": "Tuko tayari kushiriki data ya matumizi isiyojulikana kila mwezi na timu ya Kati",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {weWillShare} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            },
+            "termsOfService": {
+              "string": "Masharti ya Huduma",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {termsOfService} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            },
+            "privacyPolicy": {
+              "string": "Sera ya Faragha",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {privacyPolicy} is in the following text:\n\n{weWillShare} and we accept the {termsOfService} and {privacyPolicy}."
+            }
+          },
+          "1": {
+            "string": "Ni vipimo gani vinatumwa?"
+          }
+        },
+        "false": {
+          "0": {
+            "string": "Hatutashiriki habari yoyote."
+          },
+          "1": {
+            "string": "hutaona kikumbusho kuhusu hili tena"
+          }
+        }
+      },
+      "contact": {
+        "0": {
+          "string": "Niko tayari kujumuisha maelezo yangu ya mawasiliano na ripoti"
+        },
+        "1": {
+          "string": "Tunaweza kuwasiliana nawe ili kupata maelezo zaidi kuhusu matumizi yako ya Central"
+        }
+      },
+      "field": {
+        "workEmail": {
+          "string": "Anwani ya barua pepe ya kazini",
+          "developer_comment": "This is the text of a form field."
+        },
+        "organization": {
+          "string": "Jina la shirika",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Mipangilio imehifadhiwa!"
+        }
+      }
+    },
+    "AnalyticsIntroduction": {
+      "title": {
+        "string": "Saidia Kuboresha Central!",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "full": {
+            "string": "Katika kichupo cha {usageReporting} katika Mipangilio ya Mfumo, unaweza kuchagua kushiriki data ya matumizi isiyojulikana au maelezo ya mawasiliano na timu ya Kati.",
+            "developer_comment": "{usageReporting} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nUsage Reporting"
+          },
+          "usageReporting": {
+            "string": "Ripoti ya Matumizi",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {usageReporting} is in the following text:\n\nIn the {usageReporting} tab in System Settings, you can choose to share anonymized usage data or contact information with the Central team."
+          }
+        },
+        "1": {
+          "string": "Huko, unaweza pia kuchagua kutouona ujumbe huu tena"
+        }
+      },
+      "action": {
+        "improveCentral": {
+          "string": "Boresha Central",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "AnalyticsList": {
+      "heading": {
+        "0": {
+          "string": "Hapo chini, unaweza kuchagua kama seva hii ya Central itashiriki maelezo ya matumizi yasiyokutambulisha na timu ya Central. Mpangilio huu unaathiri seva nzima"
+        }
+      },
+      "auditsTitle": {
+        "string": "Ripoti za Matumizi ya Hivi Punde",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "AnalyticsMetricsTable": {
+      "recent": {
+        "string": "katika siku 45 zilizopita"
+      },
+      "fields": {
+        "num_admins": {
+          "string": "Idadi ya Wasimamizi"
+        },
+        "num_projects_encryption": {
+          "string": "Idadi ya Miradi ambayo usimbaji fiche umewezeshwa"
+        },
+        "num_questions_biggest_form": {
+          "string": "Idadi ya maswali katika kidato kikubwa zaidi"
+        },
+        "num_audit_log_entries": {
+          "string": "Idadi ya maingizo ya Kumbukumbu ya Ukaguzi"
+        },
+        "backups_configured": {
+          "string": "Hifadhi rudufu zilizosanidiwa"
+        },
+        "database_size": {
+          "string": "Saizi ya hifadhidata ya mfumo"
+        },
+        "num_managers": {
+          "string": "Idadi ya wasimamizi wa miradi"
+        },
+        "num_viewers": {
+          "string": "Idadi ya watazamaji wa mradi"
+        },
+        "num_data_collectors": {
+          "string": "Idadi ya wakusanyaji data"
+        },
+        "num_app_users": {
+          "string": "Idadi ya watumiaji wa programu"
+        },
+        "num_device_ids": {
+          "string": "Idadi ya vitambulisho vya kifaa"
+        },
+        "num_public_access_links": {
+          "string": "Idadi ya viungo vya ufikiaji wa umma"
+        },
+        "num_forms": {
+          "string": "Idadi ya Fomu"
+        },
+        "num_forms_with_repeats": {
+          "string": "Idadi ya Fomu zilizo na marudio"
+        },
+        "num_forms_with_geospatial": {
+          "string": "Idadi ya Fomu zilizo na jiografia"
+        },
+        "num_forms_with_encryption": {
+          "string": "Idadi ya Fomu zilizo na usimbaji fiche"
+        },
+        "num_forms_with_audits": {
+          "string": "Idadi ya Fomu zilizo na ukaguzi\n "
+        },
+        "num_submissions_received": {
+          "string": "Idadi ya Mawasilisho - Yaliyopokelewa"
+        },
+        "num_submissions_approved": {
+          "string": "Idadi ya Mawasilisho - Yameidhinishwa"
+        },
+        "num_submissions_has_issues": {
+          "string": "Idadi ya Mawasilisho - Ina Masuala"
+        },
+        "num_submissions_rejected": {
+          "string": "Idadi ya Mawasilisho - Yamekataliwa"
+        },
+        "num_submissions_edited": {
+          "string": "Idadi ya Mawasilisho - Yaliyohaririwa"
+        },
+        "num_submissions_with_edits": {
+          "string": "Idadi ya Mawasilisho yenye mabadiliko"
+        },
+        "num_submissions_with_comments": {
+          "string": "Idadi ya Mawasilisho yenye maoni"
+        },
+        "num_submissions_from_app_users": {
+          "string": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Programu"
+        },
+        "num_submissions_from_public_links": {
+          "string": "Idadi ya Mawasilisho kutoka kwa Viungo vya Umma"
+        },
+        "num_submissions_from_web_users": {
+          "string": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Wavuti"
+        }
+      }
+    },
+    "AnalyticsPreview": {
+      "title": {
+        "string": "Ripoti ya Matumizi Isiyojulikana",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Asante kwa kufikiria kutuma habari ya matumizi. Data hii itatusaidia kutanguliza mahitaji yako!"
+        },
+        "1": {
+          "string": "Inayoonyeshwa hapa ni ripoti tunayokusanya kwa sasa. Ili kukabiliana na vipengele na mahitaji mapya, wakati mwingine tutabadilisha kile kinachoripotiwa, lakini tutawahi tu kukusanya wastani wa muhtasari kama unavyoona hapa."
+        },
+        "2": {
+          "string": "Unaweza kuja hapa kila wakati ili kuona kile kinachokusanywa."
+        }
+      },
+      "projects": {
+        "title": {
+          "string": "Muhtasari wa Mradi",
+          "developer_comment": "This is the title shown above a series of metrics about Project usage."
+        },
+        "subtitle": {
+          "string": "{count, plural, one {(Inaonyesha Mradi amilifu zaidi wa Mradi ya {count})} other {(Inaonyesha Mradi amilifu zaidi wa Miradi ya {count})}}"
+        }
+      },
+      "submissionStates": {
+        "string": "Nchi za Uwasilishaji",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
+      }
+    },
+    "App": {
+      "alert": {
+        "versionChange": {
+          "string": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka yasiyotabirika."
+        }
+      }
+    },
+    "AsyncRoute": {
+      "alert": {
+        "loadError": {
+          "string": "ukurasa ulioomba haukuweza kupakiwa. Tafadhali onyesha upya ukurasa na ujaribu tena"
+        }
+      }
+    },
+    "AuditList": {
+      "heading": {
+        "0": {
+          "string": "Hapa utapata logi ya vitendo muhimu vilivyofanywa kwenye seva hii. Mabadiliko yaliyofanywa kwa mipangilio ya mtumiaji, Mradi, au Fomu yanaweza kupatikana hapa."
+        }
+      },
+      "emptyTable": {
+        "string": "Hakuna maingizo ya kumbukumbu ya ukaguzi yanayolingana"
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "Rasimali hii imefutwa",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
+      },
+      "purgedMessage": {
+        "string": "Rasilimali hii imesafishwa.",
+        "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
+      }
+    },
+    "AuditTable": {
+      "header": {
+        "initiator": {
+          "string": "Mwanzilishi",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "target": {
+          "string": "Lengo",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "details": {
+          "string": "Maelezo",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "BackupList": {
+      "auditsTitle": {
+        "string": "Hifadhi Nakala za Hivi Punde",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "alert": {
+        "create": {
+          "string": "Mafanikio! Hifadhi rudufu za kiotomatiki sasa zimesanidiwa."
+        },
+        "terminate": {
+          "string": "Nakala zako za kiotomatiki zimekatishwa. Inapendekezwa kuwa usanidi mpya haraka iwezekanavyo"
+        }
+      }
+    },
+    "BackupNew": {
+      "title": {
+        "string": "Sanidi Hifadhi Nakala",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "steps": {
+        "0": {
+          "warning": {
+            "full": {
+              "string": "Hifadhi rudufu hii kwa sasa haijumuishi viungo vya Fomu ya Wavuti. Ukishiriki Viungo vya Ufikiaji wa Umma au kuunganisha kwa nje moja kwa moja kwa Fomu za Wavuti kwa ajili ya kufanya Mawasilisho mapya, tunapendekeza kwa dhati kwamba ufanye hifadhi kamili ya mfumo hadi hili lishughulikiwe. Iwapo itabidi urejeshe kutoka kwa nakala na uishie na viungo vilivyovunjika vya Onyesho la Kuchungulia, tafadhali ichapishe kwenye {forum} ili upate usaidizi.",
+              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
+            },
+            "forum": {
+              "string": "jukwaa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
+            }
+          },
+          "introduction": {
+            "0": {
+              "string": "Ukipenda, unaweza kusanidi kaulisiri ya usimbaji ambayo lazima itumike kufungua nakala rudufu."
+            },
+            "1": {
+              "string": "Hakuna njia ya kurejesha kaulisiri ikiwa utaipoteza!"
+            },
+            "2": {
+              "string": "Hakikisha umechagua kitu ambacho utakumbuka, au uandike mahali salama"
+            }
+          }
+        },
+        "1": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "Kwa usalama, seva hutuma data yako kwenye Hifadhi ya Google. Unaweza kujiandikisha kwa akaunti isiyolipishwa {here}",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "hapa",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
+              }
+            },
+            "1": {
+              "string": "Unapobofya inayofuata, Google itathibitisha kwamba ungependa kuruhusu seva kufikia akaunti yako. Kitu pekee ambacho seva itaruhusiwa kugusa ni faili za chelezo inazounda"
+            },
+            "2": {
+              "string": "Ukishathibitisha hili, utaombwa kunakili na kubandika maandishi hapa nyuma."
+            }
+          }
+        },
+        "2": {
+          "introduction": {
+            "0": {
+              "full": {
+                "string": "Karibu tena! Je, umepata maandishi ya kunakili na kubandika? Ikiwa sivyo, bofya {here} ili kujaribu tena.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "hapa",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
+              }
+            },
+            "1": {
+              "string": "Vinginevyo, bandika hapa chini na umemaliza!"
+            }
+          }
+        }
+      },
+      "field": {
+        "passphrase": {
+          "string": "Nenosiri (hiari)",
+          "developer_comment": "This is the text of a form field."
+        },
+        "confirmationText": {
+          "string": "Maandishi ya uthibitisho",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "problem": {
+        "verify": {
+          "string": "Tafadhali jaribu tena, na uende kwenye jamii forum tatizo likiendelea."
+        }
+      }
+    },
+    "BackupStatus": {
+      "getHelp": {
+        "full": {
+          "string": "Ikiwa unatatizika, tafadhali jaribu {forum}.",
+          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
+        },
+        "forum": {
+          "string": "jamii forum",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
+        }
+      },
+      "notConfigured": {
+        "0": {
+          "string": "Hifadhi rudufu hazijasanidiwa."
+        },
+        "1": {
+          "string": "Seva ya data haijawekwa ili kuhifadhi nakala kiotomatiki data yake popote pale."
+        },
+        "2": {
+          "full": {
+            "string": "Isipokuwa umeweka aina nyingine ya kuhifadhi nakala ya data ambayo seva haijui, {recommended} ufanye hivi sasa. Ikiwa huna uhakika, ni bora kufanya hivyo ili tu kuwa salama.",
+            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
+          },
+          "recommended": {
+            "string": "inapendekezwa sana",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
+          }
+        },
+        "3": {
+          "string": "Hifadhi rudufu za data otomatiki hufanyika kupitia mfumo huu mara moja kwa siku. Data yako yote imesimbwa kwa njia fiche kwa nenosiri ulilotoa ili wewe tu uweze kulifungua."
+        }
+      },
+      "neverRun": {
+        "0": {
+          "string": "Hifadhi rudufu iliyosanidiwa bado haijatekelezwa"
+        },
+        "1": {
+          "string": "Ikiwa umesanidi nakala rudufu ndani ya siku chache zilizopita, hii ni kawaida. Vinginevyo, kitu kimeenda vibaya."
+        },
+        "2": {
+          "full": {
+            "string": "Katika hali hiyo, marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma.",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "sitisha",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "somethingWentWrong": {
+        "0": {
+          "string": "Kuna kitu hakiko sawa"
+        },
+        "1": {
+          "full": {
+            "string": "Hifadhi rudufu ya hivi punde iliyokamilika kwa ufanisi ilikuwa {moreThanThreeDaysAgo}.",
+            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
+          },
+          "moreThanThreeDaysAgo": {
+            "string": "zaidi ya siku tatu zilizopita",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma",
+            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
+          },
+          "terminate": {
+            "string": "sitisha",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
+          }
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Hifadhi rudufu inafanya kazi.",
+          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
+        },
+        "1": {
+          "string": "Hifadhi rudufu ya mwisho ilikamilika {dateTime}.",
+          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
+        }
+      },
+      "action": {
+        "setUp": {
+          "string": "Sanidi sasa",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "download": {
+          "string": "Pakua nakala rudufu sasa",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "terminate": {
+          "string": "Sitisha",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "download": {
+          "string": "Hifadhi rudufu inaendelea sasa, na itasimbwa kwa njia fiche na kupakuliwa kwenye kompyuta yako. Hii inaweza kuchukua muda. Mara tu upakuaji unapoanza, unaweza kuondoka kwenye ukurasa huu."
+        }
+      }
+    },
+    "BackupTerminate": {
+      "title": {
+        "string": "Sitisha Hifadhi Nakala za Kiotomatiki",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Je, una uhakika kuwa ungependa kusitisha hifadhi rudufu zako otomatiki?"
+        },
+        "1": {
+          "string": "Utalazimika kuzisanidi tena kutoka mwanzo ili kuzianzisha tena, na kitendo hiki hakiwezi kutenduliwa"
+        }
+      }
+    },
+    "Download": {
+      "body": {
+        "string": "{filename} itaanza kupakuliwa hivi karibuni. Mara tu upakuaji unapoanza, unaweza kuondoka kwenye ukurasa huu"
+      }
+    },
+    "EnketoFill": {
+      "disabled": {
+        "processing": {
+          "string": "Fomu ya Wavuti bado haipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena"
+        },
+        "notOpen": {
+          "string": "Fomu hii haikubali Mawasilisho mapya kwa sasa"
+        }
+      }
+    },
+    "EnketoPreview": {
+      "disabled": {
+        "processing": {
+          "string": "Onyesho la kuchungulia halijamaliza kuchakata Fomu hii. Tafadhali onyesha upya baadaye na ujaribu tena."
+        },
+        "notOpen": {
+          "string": "Katika toleo hili la ODK Central, onyesho la kukagua linapatikana kwa Fomu zilizo katika \"OPEN STATE\""
+        }
+      }
+    },
+    "FieldKeyList": {
+      "action": {
+        "create": {
+          "string": "Unda Mtumiaji wa Programu",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "full": {
+            "string": "Watumiaji wa Programu hutumiwa kukusanya data kutoka kwa programu kama vile {collect}. Kwa kawaida huwakilisha jukumu la pamoja kama vile \"Chanjo\" lakini pia zinaweza kuwakilisha watu binafsi. Watumiaji wa Programu katika Mradi huu wanaweza kupakua na kutumia Fomu ndani ya Mradi huu pekee. Unapounda Mtumiaji mpya wa Programu, haitakuwa na ufikiaji wa Fomu zozote mwanzoni. Ili kuweka Fomu ambazo kila Mtumiaji wa Programu anaweza kufikia, tumia kichupo cha {formAccess}.",
+            "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
+          },
+          "formAccess": {
+            "string": "Ufikiaji wa Fomu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccess} is in the following text:\n\nApp Users are used to collect data from an application such as {collect}. They typically represent a shared role such as “Vaccinator” but may also represent individuals. App Users in this Project can only download and use Forms within this Project. When you create a new App User, it will not have access to any Forms at first. To set the Forms each App User may access, use the {formAccess} tab."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Watumiaji wa Programu wanafaa zaidi wakati wakusanyaji wa data wanahitaji ufikiaji wa Fomu nyingi, wako nje ya mtandao, au una Fomu ngumu. Ikiwa unahitaji watu waliojibu kuripoti binafsi au kuwa na fomu ya mtandaoni pekee, {clickHere} kwa chaguo zingine.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "bonyeza hapa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nApp Users are most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form. If you need respondents to self-report or have an online-only form, {clickHere} for other options."
+          }
+        }
+      },
+      "header": {
+        "lastUsed": {
+          "string": "Iliyotumika Mwisho",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "configureClient": {
+          "string": "Sanidi Mteja",
+          "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
+        }
+      },
+      "emptyTable": {
+        "string": "Bado hakuna Watumiaji wa Programu. Utahitaji kuunda baadhi ili kupakua Fomu na kuwasilisha data kutoka kwa kifaa chako"
+      },
+      "alert": {
+        "create": {
+          "string": "Mtumiaji wa Programu \"{displayName}\" ameundwa."
+        },
+        "revoke": {
+          "string": "Ufikiaji umebatilishwa kwa Mtumiaji wa Programu \"{displayName}\"."
+        }
+      }
+    },
+    "FieldKeyNew": {
+      "title": {
+        "string": "Unda Mtumiaji wa Programu",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Mtumiaji huyu hatakuwa na ufikiaji wa Fomu zozote mwanzoni. Utaweza kukabidhi Fomu baada ya mtumiaji kuunda."
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Mtumiaji wa Programu \"{displayName}\" ameundwa."
+        },
+        "1": {
+          "string": "Unaweza kusanidi kifaa cha mkononi kwa ajili ya \"{displayName}\" sasa hivi, au unaweza kuifanya baadaye kwenye jedwali la Watumiaji wa Programu kwa kubofya \"Angalia nambari ya kuthibitisha.\"",
+          "developer_comment": "Clicking \"See code\" displays a QR code."
+        },
+        "2": {
+          "full": {
+            "string": "Unaweza kutaka kutembelea {formAccessSettings} za Mradi huu ili kumpa mtumiaji huyu idhini ya kufikia Fomu.",
+            "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
+          },
+          "formAccessSettings": {
+            "string": "Mipangilio ya Ufikiaji wa Fomu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nYou may wish to visit this Project’s {formAccessSettings} to give this user access to Forms."
+          }
+        }
+      },
+      "action": {
+        "createAnother": {
+          "string": "Unda nyingine",
+          "developer_comment": "This is the text of a button that is used to create another App User."
+        }
+      }
+    },
+    "FieldKeyQrPanel": {
+      "title": {
+        "managed": {
+          "string": "Msimbo wa Usanidi wa Mteja",
+          "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
+        },
+        "legacy": {
+          "string": "Msimbo wa Usanidi wa Mteja wa Urithi",
+          "developer_comment": "This is the title at the top of a pop-up. \"Client\" refers to a data collection client like ODK Collect. \"Code\" refers to a QR code."
+        }
+      },
+      "body": {
+        "0": {
+          "managed": {
+            "full": {
+              "string": "Hii ni {managedCode}",
+              "developer_comment": "{managedCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nManaged QR Code"
+            },
+            "managedCode": {
+              "string": "Msimbo wa QR unaosimamiwa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nThis is a {managedCode}."
+            }
+          },
+          "legacy": {
+            "full": {
+              "string": "Hii ni {legacyCode}.",
+              "developer_comment": "{legacyCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nLegacy QR Code"
+            },
+            "legacyCode": {
+              "string": "Msimbo wa QR wa urithi",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nThis is a {legacyCode}."
+            }
+          }
+        },
+        "1": {
+          "managed": {
+            "string": "Mkusanyiko utalingana kabisa na Fomu zinazopatikana kwa \"{displayName}\" ikijumuisha kutumia masasisho kiotomatiki. Watumiaji hawatahitaji Kujipatia Fomu tupu. Zaidi ya hayo, Fomu zilizokamilishwa zitatumwa kiotomatiki mara tu muunganisho utakapopatikana.",
+            "developer_comment": "\"Get Blank Form\" is the text of a button in ODK Collect."
+          },
+          "legacy": {
+            "string": "Watumiaji watalazimika Kupata mwenyewe Fomu tupu kwenye kifaa na kuamua ni Fomu zipi za kusasisha. Pia watahitaji Kutuma mwenyewe Fomu Zilizokamilishwa",
+            "developer_comment": "\"Get Blank Form\" and \"Send Finalized Form\" are the text of buttons in ODK Collect."
+          }
+        },
+        "2": {
+          "managed": {
+            "full": {
+              "string": "Kwa tabia ya zamani, {switchToLegacy}",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToLegacy} has the text: switch to a {legacyCode}\n- {legacyCode} has the text: Legacy QR Code"
+            },
+            "switchToLegacy": {
+              "string": "badilisha hadi {legacyCode}",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToLegacy} is in the following text:\n\nFor the old behavior, {switchToLegacy}.\n\nNote that {legacyCode} is a separate string that will be translated below. Its text is:\n\nLegacy QR Code"
+            },
+            "legacyCode": {
+              "string": "Msimbo wa QR wa urithi",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {legacyCode} is in the following text:\n\nFor the old behavior, switch to a {legacyCode}."
+            }
+          },
+          "legacy": {
+            "full": {
+              "string": "Kwa mchakato unaodhibitiwa zaidi na usiofaa, {switchToManaged}",
+              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {switchToManaged} has the text: switch to a {managedCode}\n- {managedCode} has the text: Managed QR Code"
+            },
+            "switchToManaged": {
+              "string": "badilisha hadi {managedCode}",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {switchToManaged} is in the following text:\n\nFor a more controlled and foolproof process, {switchToManaged}.\n\nNote that {managedCode} is a separate string that will be translated below. Its text is:\n\nManaged QR Code"
+            },
+            "managedCode": {
+              "string": "Msimbo wa QR unaosimamiwa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {managedCode} is in the following text:\n\nFor a more controlled and foolproof process, switch to a {managedCode}."
+            }
+          }
+        },
+        "3": {
+          "string": "Changanua msimbo huu wa QR ili kusanidi kifaa kilicho na akaunti \"{displayName}\"."
+        }
+      }
+    },
+    "FieldKeyRevoke": {
+      "title": {
+        "string": "Batilisha Ufikiaji wa Mtumiaji",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Je, una uhakika unataka kubatilisha ufikiaji kutoka kwa Mtumiaji wa Programu {displayName}?",
+          "developer_comment": "{displayName} is formatted in bold."
+        },
+        "1": {
+          "string": "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho"
+        },
+        "2": {
+          "string": "Kitendo hiki hakiwezi kutenduliwa"
+        }
+      }
+    },
+    "FieldKeyRow": {
+      "seeCode": {
+        "string": "Angalia msimbo",
+        "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
+      },
+      "accessRevoked": {
+        "string": "Ufikiaji umebatilishwa",
+        "developer_comment": "This text is shown for an App User whose access has been revoked."
+      },
+      "action": {
+        "revokeAccess": {
+          "string": "Batilisha ufikiaji",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormAttachmentList": {
+      "action": {
+        "upload": {
+          "string": "Pakia faili",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "string": "Kulingana na Fomu uliyopakia, faili zifuatazo zinatarajiwa. Unaweza kuona ni zipi zimepakiwa au bado hazipo."
+        },
+        "1": {
+          "string": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa"
+        }
+      },
+      "header": {
+        "uploaded": {
+          "string": "Imepakiwa",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        }
+      },
+      "problem": {
+        "noneUploaded": {
+          "string": "{message} Hakuna faili zilizopakiwa.",
+          "developer_comment": "{message} is an error message from the server."
+        },
+        "someUploaded": {
+          "string": "{count, plural, one {{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa.} other {{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa.}}",
+          "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers. {uploaded} is at least 1, and {total} is at least 2. The string will be pluralized based on {uploaded}."
+        }
+      },
+      "alert": {
+        "readError": {
+          "string": "Hitilafu fulani imetokea wakati wa kusoma \"{filename}\""
+        },
+        "success": {
+          "string": "{count, plural, one {faili {count} imepakiwa.} other {faili {count} zimepakiwa.}}"
+        }
+      }
+    },
+    "FormAttachmentNameMismatch": {
+      "title": {
+        "upload": {
+          "string": "Pakia Faili",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "replace": {
+          "string": "Badilisha Faili",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "Je, una uhakika unataka kupakia {filename} kama {attachmentName}?",
+          "developer_comment": "{filename} and {attachmentName} are formatted in bold."
+        },
+        "1": {
+          "string": "Tunakagua mara mbili kwa sababu majina ya faili hayalingani"
+        }
+      }
+    },
+    "FormAttachmentPopups": {
+      "title": {
+        "string": "Pakia Faili",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "duringDragover": {
+        "dropToUpload": {
+          "string": "Dondosha sasa ili upakie faili hii kama {attachmentName}.",
+          "developer_comment": "{attachmentName} is formatted in bold."
+        },
+        "dragover": {
+          "string": "Buruta juu ya ingizo la faili unalotaka kubadilisha na faili na uangushe ili kupakia"
+        },
+        "dropToPrepare": {
+          "full": {
+            "string": "Dondosha sasa ili kuandaa {countOfFiles} kwa ajili ya kupakiwa kwenye Fomu hii.",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, one {faili {count}} other {faili {count}}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text:\n\nDrop now to prepare {countOfFiles} for upload to this Form."
+          }
+        }
+      },
+      "afterSelection": {
+        "matched": {
+          "full": {
+            "string": "{count, plural, one {{countOfFiles} tayari kupakiwa.} other {{countOfFiles} tayari kupakiwa.}}",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, one {faili {count}} other {faili {count}}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
+          }
+        },
+        "someUnmatched": {
+          "full": {
+            "string": "{count, plural, one {{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao} other {{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao.}}",
+            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
+          },
+          "countOfFiles": {
+            "string": "{count, plural, one {faili {count}} other {faili {count}}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
+          }
+        },
+        "noneMatched": {
+          "string": "{count, plural, one {Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao} other {Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao}}"
+        }
+      },
+      "duringUpload": {
+        "total": {
+          "string": "{count, plural, one {Tafadhali subiri,  faili yako inapakiwa {count}:} other {Tafadhali subiri,  faili zako zinapakiwa {count}:}}"
+        },
+        "current": {
+          "string": "Inatuma {filename} ({percentUploaded})",
+          "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
+        },
+        "remaining": {
+          "beforeLast": {
+            "string": "{count, plural, one {faili {count} itasalia.} other {faili {count} zitasalia.}}"
+          },
+          "last": {
+            "string": "Hili ndilo faili la mwisho."
+          }
+        }
+      }
+    },
+    "FormAttachmentRow": {
+      "type": {
+        "image": {
+          "string": "Picha",
+          "developer_comment": "This is a type of Media File."
+        },
+        "audio": {
+          "string": "Sauti",
+          "developer_comment": "This is a type of Media File."
+        },
+        "video": {
+          "string": "Video",
+          "developer_comment": "This is a type of Media File."
+        },
+        "file": {
+          "string": "Faili ya Data",
+          "developer_comment": "This is a type of Media File."
+        }
+      },
+      "replace": {
+        "string": "Badilisha",
+        "developer_comment": "This is a label that is shown next to a Media File that would be replaced if the selected files were uploaded."
+      },
+      "notUploaded": {
+        "text": {
+          "string": "Bado haijapakiwa",
+          "developer_comment": "This is shown for a Media File that has not been uploaded."
+        },
+        "title": {
+          "string": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
+        }
+      }
+    },
+    "FormAttachmentUploadFiles": {
+      "title": {
+        "string": "Pakia Faili",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "full": {
+            "string": "Ili kupakia faili, unaweza {dragAndDrop} faili moja au zaidi kwenye jedwali kwenye ukurasa huu.",
+            "developer_comment": "{dragAndDrop} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ndrag and drop"
+          },
+          "dragAndDrop": {
+            "string": "buruta na udondoshe",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dragAndDrop} is in the following text:\n\nTo upload files, you can {dragAndDrop} one or more files onto the table on this page."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "ikiwa ungependa kuchagua faili kutoka kwa haraka, hakikisha kwamba majina yao yanalingana na yale yaliyo kwenye jedwali kisha {clickHere}",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here to choose"
+          },
+          "clickHere": {
+            "string": "bonyeza hapa kuchagua",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
+          }
+        }
+      }
+    },
+    "FormChecklist": {
+      "clickForInfo": {
+        "string": "Bonyeza hapa kujua zaidi"
+      },
+      "steps": {
+        "0": {
+          "title": {
+            "string": "Chapisha Rasimu ya toleo lako la kwanza",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "string": "Kazi nzuri!"
+            },
+            "1": {
+              "string": "Umechapisha Fomu yako. Iko tayari kukubali Mawasilisho. Ikiwa ungependa kufanya mabadiliko kwenye Fomu au Faili zake za Midia, unaweza kutengeneza Rasimu mpya."
+            }
+          }
+        },
+        "1": {
+          "title": {
+            "string": "Pakua Fomu ya wateja wa uchunguzi na uwasilishe data",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "none": {
+                "string": "Bado hakuna mtu aliyewasilisha data yoyote kwa Fomu hii"
+              },
+              "any": {
+                "string": "{count, plural, one {Jumla ya wasilisho {count} imewasilishwa.} other {Jumla ya Mawasilisho {count} yamewasilishwa.}}"
+              }
+            },
+            "1": {
+              "full": {
+                "string": "{clickHere} ili kupata maelezo kuhusu njia tofauti za kuwasilisha data",
+                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
+              },
+              "clickHere": {
+                "string": "Bonyeza hapa",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
+              }
+            }
+          }
+        },
+        "2": {
+          "title": {
+            "string": "Tathmini na uchanganue data iliyowasilishwa",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "none": {
+                "string": "Baada ya kupata data ya Fomu hii, unaweza kuihamisha au kuisawazisha ili kufuatilia na kuchambua data kwa ubora na matokeo."
+              },
+              "any": {
+                "string": "{count, plural, one {Unaweza kuhamisha au kusawazisha {count} wasilisho kwenye Fomu hii ili kuyafuatilia na kuyachanganua kwa ubora na matokeo.} other {Unaweza kuhamisha au kusawazisha {count} Mawasilisho kwenye Fomu hii ili kuyafuatilia na kuyachanganua kwa ubora na matokeo.}}"
+              }
+            },
+            "1": {
+              "full": {
+                "string": "Unaweza kufanya hivyo kwa vibonye vya Kupakua na Kuchanganua kwenye {submissionsTab}",
+                "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
+              },
+              "submissionsTab": {
+                "string": "Kichupo cha mawasilisho",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
+              }
+            }
+          }
+        },
+        "3": {
+          "title": {
+            "string": "Dhibiti kustaafu kwa Fomu",
+            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Unapofika mwisho wa ukusanyaji wako wa data, unaweza kutumia vidhibiti vya Hali ya Fomu kwenye {formAccessTab} ili kudhibiti kama, kwa mfano, Watumiaji wa Programu wataweza kuona au kuunda Mawasilisho mapya kwa Fomu hii.",
+                "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
+              },
+              "formAccessTab": {
+                "string": "Kichupo cha Ufikiaji wa Fomu cha ukurasa wa Mradi",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
+              }
+            }
+          }
+        }
+      }
+    },
+    "FormDelete": {
+      "title": {
+        "string": "Futa Fomu",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Je, una uhakika ungependa kufuta Fomu ya {name} na Mawasilisho yake yote?"
+        },
+        "1": {
+          "string": "kitendo hiki kitahamisha Fomu hadi kwenye Tupio. Baada ya siku 30 kwenye Tupio, itasafishwa kabisa, lakini inaweza kufutwa kabla ya wakati huo."
+        }
+      }
+    },
+    "FormDraftAbandon": {
+      "title": {
+        "abandon": {
+          "string": "acha rasimu",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "deleteForm": {
+          "string": "Achana na Rasimu na ufute Fomu",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "abandon": {
+          "0": {
+            "string": "Unakaribia kufuta kabisa Rasimu ya toleo la Fomu hii. Hii inamaanisha kuwa rasimu ya ufafanuzi wa Fomu, rasimu ya Faili zozote za Midia ulizopakia na Mawasilisho yote ya majaribio yataondolewa."
+          },
+          "1": {
+            "string": "Ufafanuzi wako wa Fomu uliochapishwa, Faili zake za Midia na Mawasilisho hayataathiriwa"
+          }
+        },
+        "deleteForm": {
+          "0": {
+            "string": "Unakaribia kufuta rasimu hii ya ufafanuzi wa Fomu, pamoja na rasimu ya Faili zozote za Midia ambazo umepakia, na Mawasilisho yote ya majaribio. Kwa sababu bado hujaichapisha, Fomu hii yote itafutwa na kuhamishiwa kwenye Tupio."
+          }
+        }
+      },
+      "action": {
+        "abandon": {
+          "string": "Achana",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "FormDraftChecklist": {
+      "clickForInfo": {
+        "string": "Bonyeza hapa kujua zaidi"
+      },
+      "steps": {
+        "0": {
+          "title": {
+            "string": "Pakia ufafanuzi wa awali wa Fomu",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "string": "Kazi nzuri!"
+            },
+            "1": {
+              "string": "Muundo wako wa Fomu umepakiwa."
+            }
+          }
+        },
+        "1": {
+          "title": {
+            "string": "Pakia ufafanuzi wa Fomu uliorekebishwa (si lazima)",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "status": {
+                "string": "Ikiwa umefanya mabadiliko kwenye Fomu yenyewe, ikijumuisha maandishi ya swali au sheria za mantiki, sasa ni wakati wa kupakia XML au XLSForm mpya kwa kutumia kitufe kilicho kulia.",
+                "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated."
+              },
+              "link": {
+                "full": {
+                  "string": "Ikiwa umefanya mabadiliko kwenye Fomu yenyewe, ikijumuisha maandishi ya swali au sheria za mantiki, sasa ni wakati wa {upload} XML au XLSForm mpya.",
+                  "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
+                },
+                "upload": {
+                  "string": "pakia",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "title": {
+            "string": "Pakia Faili za Midia ya Fomu",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Usanifu wa Fomu yako unarejelea faili ambazo zinahitajika ili kuwasilisha Fomu yako. Unaweza kupakia nakala mpya au zilizosasishwa za hizi kwa usambazaji chini ya kichupo cha {mediaFiles}",
+                "developer_comment": "{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+              },
+              "mediaFiles": {
+                "string": "Faili za Midia",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab."
+              }
+            }
+          }
+        },
+        "3": {
+          "title": {
+            "string": "Jaribu Fomu kwa kuunda Wasilisho",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "full": {
+                "string": "Unaweza {test} Fomu ili kuhakikisha kuwa inafanya kazi jinsi unavyotarajia. Mawasilisho ya Jaribio hayajumuishwi katika data yako ya mwisho.",
+                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
+              },
+              "test": {
+                "string": "Jaribia",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
+              }
+            }
+          }
+        },
+        "4": {
+          "title": {
+            "string": "Chapisha Rasimu",
+            "developer_comment": "This is the title of a checklist item."
+          },
+          "body": {
+            "0": {
+              "status": {
+                "string": "Unapokuwa na uhakika kuwa Rasimu yako iko tayari na ungependa kuisambaza kwa vifaa vyako kwenye uga, unaweza kuichapisha kwa kutumia kitufe kilicho kulia."
+              },
+              "link": {
+                "full": {
+                  "string": "Unapokuwa na uhakika kuwa Rasimu yako iko tayari na ungependa kuisambaza kwa vifaa vyako kwenye uga, unaweza {publish}.",
+                  "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
+                },
+                "publish": {
+                  "string": "Chapisha",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "FormDraftPublish": {
+      "title": {
+        "string": "Chapisha Rasimu",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "warnings": {
+        "attachments": {
+          "full": {
+            "string": "Hujatoa {mediaFiles} zote ambazo Fomu yako inahitaji. Unaweza kupuuza hili ukipenda, lakini utahitaji kutengeneza toleo jipya la Rasimu ili kupakia faili hizo baadaye.",
+            "developer_comment": "This is a warning shown to the user.\n\n{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+          },
+          "mediaFiles": {
+            "string": "Faili za Midia",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYou have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later."
+          }
+        },
+        "testing": {
+          "full": {
+            "string": "Bado huja {tested} kwa kupakia Wasilisho la jaribio. Sio lazima kufanya hivi, lakini inashauriwa sana.",
+            "developer_comment": "This is a warning shown to the user.\n\n{tested} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntested this Form"
+          },
+          "tested": {
+            "string": "Fomu hii imejaribiwa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tested} is in the following text:\n\nYou have not yet {tested} by uploading a test Submission. You do not have to do this, but it is highly recommended."
+          }
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "Unakaribia kuifanya Rasimu hii kuwa toleo lililochapishwa la Fomu yako. Hii itakamilisha mabadiliko yoyote ambayo umefanya kwa ufafanuzi wa Fomu na Faili zake za Midia zilizoambatishwa"
+        },
+        "1": {
+          "string": "Mawasilisho ya Fomu Yaliyopo hayataathiriwa, lakini Mawasilisho yote ya Rasimu ya majaribio yataondolewa"
+        },
+        "2": {
+          "string": "Kila toleo la Fomu linahitaji jina la toleo la kipekee. Kwa sasa, Rasimu ya Fomu yako ina jina la toleo sawa na toleo lililochapishwa hapo awali. Unaweza kuweka mpya kwa kupakia ufafanuzi wa Fomu kwa jina unalotaka, au unaweza kuandika mpya hapa chini na seva itakubadilisha."
+        }
+      },
+      "field": {
+        "version": {
+          "string": "Toleo",
+          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
+        }
+      },
+      "problem": {
+        "409_6": {
+          "string": "Jina la toleo la Rasimu hii linakinzana na toleo la awali la Fomu hii au Fomu iliyofutwa. Tafadhali tumia sehemu iliyo hapa chini ili kuibadilisha hadi kitu kipya au kupakia ufafanuzi mpya wa Fomu"
+        }
+      }
+    },
+    "FormDraftStatus": {
+      "draftChecklist": {
+        "title": {
+          "string": " Orodha ya rasimu",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "currentDraft": {
+        "versionCaption": {
+          "full": {
+            "string": "{draftVersion} ya Fomu hii.",
+            "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
+          },
+          "draftVersion": {
+            "string": "Toleo la rasimu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
+          }
+        },
+        "action": {
+          "upload": {
+            "string": "Pakia ufafanuzi mpya",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "actions": {
+        "title": {
+          "string": "Vitendo",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "action": {
+          "publish": {
+            "string": "Chapisha Rasimu",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "abandon": {
+            "string": "Achana na Rasimu",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "upload": {
+          "string": "Mafanikio! Ufafanuzi mpya wa Fomu umehifadhiwa kama Rasimu yako"
+        },
+        "publish": {
+          "string": "Rasimu yako sasa imechapishwa. Kifaa chochote kinachorejesha Fomu za Mradi huu sasa kitapokea ufafanuzi mpya wa Fomu na Faili za Midia"
+        },
+        "abandon": {
+          "string": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi."
+        },
+        "delete": {
+          "string": "Fomu \"{name}\" ilifutwa."
+        }
+      }
+    },
+    "FormDraftTesting": {
+      "title": {
+        "string": "Mtihani wa Rasimu",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "0": {
+          "string": "Unaweza kutumia msimbo wa usanidi ulio kulia ili kusanidi kifaa cha mkononi ili kupakua Rasimu hii. Unaweza pia kubofya kitufe kipya hapo juu ili kuunda Wasilisho jipya kutoka kwa kivinjari chako cha wavuti."
+        },
+        "1": {
+          "string": "Rasimu ya Mawasilisho huenda kwenye jedwali la majaribio hapa chini, ambapo unaweza kuhakiki na kupakua. Unapochapisha Rasimu ya Fomu hii, Mawasilisho yake ya majaribio yataondolewa kabisa."
+        }
+      },
+      "collectProjectName": {
+        "string": "[Rasimu] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
+      }
+    },
+    "FormHead": {
+      "projectNav": {
+        "action": {
+          "back": {
+            "string": "Rudi kwa Muhtasari wa Mradi",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "formNav": {
+        "tabTitle": {
+          "string": "Vipengele hivi vitapatikana mara tu utakapochapisha Rasimu ya Fomu yako",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
+        }
+      },
+      "draftNav": {
+        "title": {
+          "string": "Rasimu",
+          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
+        },
+        "action": {
+          "create": {
+            "string": "Unda Rasimu mpya",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      }
+    },
+    "FormList": {
+      "title": {
+        "string": "Fomu",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "create": {
+          "string": "Mpya",
+          "developer_comment": "This is the text of a button that is used to create a new Form."
+        }
+      },
+      "emptyTable": {
+        "string": "hakuna Fomu za kuonyesha"
+      },
+      "alert": {
+        "create": {
+          "string": "Fomu yako mpya \"{name}\" imeundwa kama Rasimu. Angalia orodha hapa chini, na unapohisi iko tayari, unaweza kuchapisha Fomu kwa matumizi."
+        }
+      }
+    },
+    "FormNew": {
+      "title": {
+        "create": {
+          "string": "unda fomu",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "update": {
+          "string": "Pakia Ufafanuzi wa Fomu Mpya",
+          "developer_comment": "This is the title at the top of a pop-up."
+        }
+      },
+      "introduction": {
+        "0": {
+          "create": {
+            "string": "Ili kuunda Fomu, pakia faili ya XForms XML au faili ya XLSForm Excel.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
+          },
+          "update": {
+            "string": "Ili kusasisha Rasimu, pakia faili ya XForms XML au faili ya XLSForm Excel.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Ikiwa tayari huna, kuna {tools} za kukusaidia kuunda Fomu yako.",
+            "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
+          },
+          "tools": {
+            "string": "zana zinazopatikana",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tools} is in the following text:\n\nIf you don’t already have one, there are {tools} to help you design your Form."
+          }
+        },
+        "2": {
+          "string": "Ikiwa una media, utaweza kuipakia kwenye ukurasa unaofuata, baada ya kuunda Fomu."
+        }
+      },
+      "dropZone": {
+        "full": {
+          "string": "Dondosha faili hapa, au {chooseOne} ili upakie.",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "Chagua moja",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrop a file here, or {chooseOne} to upload."
+        }
+      },
+      "action": {
+        "upload": {
+          "string": "pakia",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "uploadAnyway": {
+          "string": "Pakia hata hivyo",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "fileRequired": {
+          "string": "Tafadhali chagua faili."
+        }
+      },
+      "problem": {
+        "400_8": {
+          "string": "Ufafanuzi wa Fomu uliyopakia hauonekani kuwa wa Fomu hii. Ina formId isiyo sahihi (expected \"{expected}\", imepata \"{actual}\")."
+        },
+        "400_15": {
+          "string": "XLSForm haikuweza kubadilishwa: {error}",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
+        },
+        "409_3": {
+          "string": "Tayari kuna Fomu katika Mradi huu yenye Kitambulisho cha Fomu ya “{xmlFormId}”."
+        }
+      },
+      "warningsText": {
+        "0": {
+          "string": "Faili hii ya XLSForm inaweza kutumika, lakini ina matatizo yafuatayo yanayowezekana (maonyo ya ubadilishaji).",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
+        },
+        "1": {
+          "string": "Tafadhali sahihisha matatizo na ujaribu tena"
+        },
+        "2": {
+          "create": {
+            "string": "Ikiwa una uhakika kuwa matatizo haya yanaweza kupuuzwa, bofya kitufe ili kuunda Fomu hata hivyo:"
+          },
+          "update": {
+            "string": "ikiwa una uhakika matatizo haya yanaweza kupuuzwa, bofya kitufe ili kusasisha Rasimu hata hivyo:"
+          }
+        }
+      }
+    },
+    "FormOverview": {
+      "checklist": {
+        "string": "Orodha ya ukaguzi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "draft": {
+        "none": {
+          "title": {
+            "string": "Hakuna Rasimu ya Sasa",
+            "developer_comment": "This is a title shown above a section of the page."
+          },
+          "body": {
+            "string": "Kwa sasa hakuna Rasimu ya toleo la Fomu hii. Ikiwa ungependa kufanya mabadiliko kwenye Fomu au Faili zake za Midia, anza kwa kuunda Rasimu kwa kutumia kitufe kilicho hapo juu"
+          }
+        },
+        "any": {
+          "versionCaption": {
+            "full": {
+              "string": "{draftVersion} ya Fomu hii",
+              "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
+            },
+            "draftVersion": {
+              "string": "Toleo la rasimu",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
+            }
+          }
+        }
+      }
+    },
+    "FormOverviewRightNow": {
+      "version": {
+        "full": {
+          "string": "{publishedVersion} ya Fomu hii.",
+          "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
+        },
+        "publishedVersion": {
+          "string": "Toleo lililochapishwa",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
+        }
+      },
+      "stateCaption": {
+        "open": {
+          "string": "Fomu hii inaweza kupakuliwa na inakubali Mawasilisho."
+        },
+        "closing": {
+          "string": "Fomu hii haiwezi kupakuliwa lakini bado inakubali Mawasilisho."
+        },
+        "closed": {
+          "string": "Fomu hii haiwezi kupakuliwa na haikubali Mawasilisho."
+        }
+      },
+      "submissions": {
+        "full": {
+          "string": "{count, plural, one {{submissions} zimehifadhiwa kwa Fomu hii.} other {{submissions} zimehifadhiwa kwa Fomu hii.}}",
+          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
+        },
+        "submissions": {
+          "string": "{count, plural, one {Wasilisho} other {Mawasilisho}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
+        }
+      }
+    },
+    "FormRestore": {
+      "title": {
+        "string": "Ondoa kufuta fomu",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Je, una uhakika unataka kutengua Fomu ya {name}?"
+        },
+        "1": {
+          "string": "Fomu itarejeshwa katika hali yake ya awali, ikijumuisha data, mipangilio na ruhusa zote."
+        },
+        "2": {
+          "string": "Ikiwa Fomu itafutwa tena, itapita siku 30 kabla ya kuondolewa."
+        }
+      }
+    },
+    "FormRow": {
+      "action": {
+        "fill": {
+          "string": "Jaza Fomu",
+          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+        }
+      },
+      "formClosedTip": {
+        "string": "Fomu Hii Imefungwa. Haiwezi kupakuliwa na haikubali Mawasilisho."
+      },
+      "formClosingTip": {
+        "string": "Fomu Hii Inafungwa. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho."
+      },
+      "formUnpublishedTip": {
+        "string": "Fomu hii bado haina toleo lililochapishwa."
+      }
+    },
+    "FormSettings": {
+      "state": {
+        "title": {
+          "string": "Jimbo la Fomu",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "full": {
+            "string": "Ili kuweka hali ya Fomu hii, tafadhali tembelea Project {formAccessSettings}.",
+            "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
+          },
+          "formAccessSettings": {
+            "string": "Mipangilio ya Ufikiaji wa Fomu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nTo set this Form’s state, please visit the Project {formAccessSettings}."
+          }
+        }
+      },
+      "action": {
+        "delete": {
+          "string": "Futa Fomu hii",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "Fomu \"{name}\" ilifutwa."
+        }
+      }
+    },
+    "FormTable": {
+      "header": {
+        "idAndVersion": {
+          "string": "Kitambulisho na Toleo",
+          "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
+        }
+      }
+    },
+    "FormTrashList": {
+      "title": {
+        "string": "Takataka"
+      },
+      "trashCount": {
+        "string": "({count})",
+        "developer_comment": "{count} is the number of Forms in the trash."
+      },
+      "alert": {
+        "restore": {
+          "string": "Fomu \"{name}\" imetenguliwa"
+        }
+      },
+      "message": {
+        "string": "Fomu na data inayohusiana na Fomu hufutwa baada ya siku 30 kwenye Tupio"
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "Ondoa kufuta",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "deletedDate": {
+        "string": "Imefutwa {dateTime}",
+        "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      },
+      "disabled": {
+        "conflict": {
+          "string": "Fomu hii haiwezi kufutwa kwa sababu kuna Fomu inayotumika yenye kitambulisho sawa."
+        }
+      }
+    },
+    "FormVersionDefDropdown": {
+      "action": {
+        "def": {
+          "string": "Ufafanuzi",
+          "developer_comment": "This is the text of a button. \"Definition\" refers to a Form definition."
+        },
+        "viewXml": {
+          "string": "Tazama XML kwenye kivinjari",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "downloadXForm": {
+          "string": "Pakua kama XForm (.xml)",
+          "developer_comment": "This is the text of a link to download a Form definition. The word \"XForm\" should not be translated."
+        },
+        "downloadXlsForm": {
+          "string": "Pakua kama XLSForm ({extension})",
+          "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
+        }
+      }
+    },
+    "FormVersionString": {
+      "blank": {
+        "string": "(tupu)",
+        "developer_comment": "This is shown for a Form with a blank version name."
+      }
+    },
+    "FormVersionTable": {
+      "header": {
+        "published": {
+          "string": "Imechapishwa",
+          "developer_comment": "This is the text of a table column header. The column shows who published the version of the Form, as well as when they did so."
+        },
+        "definition": {
+          "string": "Ufafanuzi",
+          "developer_comment": "This is the text of a table column header. \"Definition\" refers to a Form definition."
+        }
+      }
+    },
+    "FormVersionViewXml": {
+      "title": {
+        "string": "Tazama XML",
+        "developer_comment": "This is the title at the top of a pop-up."
+      }
+    },
+    "Loading": {
+      "text": {
+        "string": "Inapakia..."
+      }
+    },
+    "MarkdownTextarea": {
+      "markdownSupported": {
+        "string": "Markdown inatumika",
+        "developer_comment": "This is a link to an external website with Markdown style guidelines"
+      },
+      "preview": {
+        "string": "Hakiki",
+        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+      }
+    },
+    "Navbar": {
+      "action": {
+        "toggle": {
+          "string": "Geuza urambazaji",
+          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
+        }
+      },
+      "analyticsNotice": {
+        "string": "Saidia kuboresha Central"
+      }
+    },
+    "NavbarActions": {
+      "notLoggedIn": {
+        "string": "Hujaingia",
+        "developer_comment": "This text is shown if the user is not logged in. It is shown in the navigation bar at the top of the page."
+      },
+      "action": {
+        "logOut": {
+          "string": "toka kwenye ukurasa",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "logOut": {
+          "string": "Umetoka  kwenye ukurasa kwa mafanikio."
+        }
+      }
+    },
+    "NavbarHelpDropdown": {
+      "docs": {
+        "string": "hati",
+        "developer_comment": "This is the text of a link that links to the documentation."
+      },
+      "forum": {
+        "string": "Jukwaa",
+        "developer_comment": "This is the text of a link that links to the ODK forum."
+      },
+      "version": {
+        "string": "Toleo",
+        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
+      }
+    },
+    "NavbarLinks": {
+      "current": {
+        "string": "sasa",
+        "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
+      }
+    },
+    "NavbarLocaleDropdown": {
+      "helpTranslate": {
+        "string": "Saidia kutafsiri Central",
+        "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
+      }
+    },
+    "NotFound": {
+      "body": {
+        "string": "Ukurasa ulioomba haukupatikana."
+      }
+    },
+    "ProjectArchive": {
+      "title": {
+        "string": "Mradi wa Kuhifadhi kumbukumbu",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Unakaribia kuweka Mradi \"{name}\" kwenye kumbukumbu. Bado itafanya kazi kama inavyofanya sasa, lakini itapangwa hadi chini ya Orodha ya Mradi kwenye ukurasa wa nyumbani wa  Central"
+        },
+        "1": {
+          "full": {
+            "string": "{noUndo}, lakini uwezo wa kutoa Mradi kwenye kumbukumbu umepangwa kutolewa siku zijazo.",
+            "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
+          },
+          "noUndo": {
+            "string": "Kitendo hiki hakiwezi kutenduliwa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but the ability to unarchive a Project is planned for a future release."
+          }
+        }
+      }
+    },
+    "ProjectEdit": {
+      "title": {
+        "string": "Maelezo ya Msingi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "field": {
+        "name": {
+          "string": "Jina la mradi",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Mipangilio ya mradi imehifadhiwa!"
+        }
+      }
+    },
+    "ProjectEnableEncryption": {
+      "title": {
+        "string": "Washa Usimbaji",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "steps": {
+        "0": {
+          "introduction": {
+            "0": {
+              "0": {
+                "string": "Ukiwezesha usimbaji fiche, mambo yafuatayo yatafanyika:"
+              },
+              "1": {
+                "string": "Data iliyokamilishwa ya Uwasilishaji itasimbwa kwa njia fiche kwenye vifaa vya mkononi."
+              },
+              "2": {
+                "string": "Data ya uwasilishaji imesalia itasimbwa kwa njia fiche kwenye seva ya Central"
+              },
+              "3": {
+                "0": {
+                  "string": "Fomu zilizosanidiwa kwa funguo za mwongozo za {submission} zitaendelea kutumia funguo hizo, na lazima zisimbuwe wewe mwenyewe",
+                  "developer_comment": "{submission} will have the text \"<submission>\", which is XML and will not be translated."
+                },
+                "1": {
+                  "string": "li kutumia mchakato wa usimbaji fiche wa Kati kiotomatiki kwenye Fomu hizi, ondoa usanidi wa {base64RsaPublicKey}.",
+                  "developer_comment": "{base64RsaPublicKey} will have the text \"base64RsaPublicKey\", which is code and will not be translated."
+                }
+              },
+              "4": {
+                "string": "Hutaweza tena kuhakiki data ya Wasilisho mtandaoni."
+              },
+              "5": {
+                "string": "Hutaweza tena kuunganisha kwa data kupitia OData."
+              },
+              "6": {
+                "string": "Hutaweza tena kuhariri Mawasilisho katika kivinjari chako cha wavuti."
+              }
+            },
+            "1": {
+              "0": {
+                "string": "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:"
+              },
+              "1": {
+                "0": {
+                  "string": "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa."
+                },
+                "1": {
+                  "string": "katika toleo la baadaye, utakuwa na chaguo la kusimba data iliyopo"
+                }
+              },
+              "2": {
+                "0": {
+                  "string": "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa"
+                },
+                "1": {
+                  "string": "Katika toleo la baadaye, utaweza kuzima usimbaji fiche, ambao utaondoa usimbaji fiche wa data yako. Hii itakuwa kweli hata ukiwezesha usimbaji fiche sasa."
+                }
+              }
+            },
+            "2": {
+              "full": {
+                "string": "Unaweza kupata maelezo zaidi kuhusu usimbaji fiche {here}. Ikiwa hii inaonekana kama kitu unachotaka, bonyeza Ifuatayo ili kuendelea.",
+                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+              },
+              "here": {
+                "string": "hapa",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nYou can learn more about encryption {here}. If this sounds like something you want, press Next to proceed."
+              }
+            }
+          }
+        },
+        "1": {
+          "introduction": {
+            "0": {
+              "string": "Kwanza, utahitaji kuchagua neno la siri. Kaulisiri hii itahitajika ili kusimbua Mawasilisho yako. Kwa faragha yako, seva haitakumbuka kaulisiri hii: watu walio na kaulisiri pekee wataweza kusimbua na kusoma data yako ya Wasilisho."
+            },
+            "1": {
+              "full": {
+                "string": "Hakuna urefu au vizuizi vya maudhui kwenye kaulisiri, lakini ukiipoteza, hakuna njia {no} ya kuirejesha au data yako!",
+                "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
+              },
+              "no": {
+                "string": "Hapana",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nThere are no length or content restrictions on the passphrase, but if you lose it, there is {no} way to recover it or your data!"
+              }
+            }
+          }
+        },
+        "2": {
+          "introduction": {
+            "0": {
+              "string": "Usimbaji fiche umesanidiwa kwa Mradi huu. Kifaa chochote cha rununu kitalazimika kuleta au kuleta tena Fomu za hivi punde zaidi ili usimbaji fiche ufanyike."
+            }
+          }
+        }
+      },
+      "field": {
+        "hint": {
+          "string": "Kidokezo cha kaulisiri (si lazima)",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "alert": {
+        "passphraseTooShort": {
+          "string": "Tafadhali weka kaulisiri yenye urefu wa angalau vibambo 10."
+        }
+      }
+    },
+    "ProjectFormAccess": {
+      "heading": {
+        "0": {
+          "string": "Watumiaji wa Programu wanaweza tu kuona na kujaza Fomu ambazo wamepewa ufikiaji wa uwazi katika jedwali lililo hapa chini. Wasimamizi wa Miradi na Wakusanyaji Data wanaweza kutumia kivinjari cha wavuti kujaza Fomu yoyote katika Mradi ambayo iko katika hali ya Wazi."
+        }
+      },
+      "emptyTable": {
+        "string": "Hakuna Fomu za kuonyesha."
+      },
+      "alert": {
+        "success": {
+          "string": "Mabadiliko yako yamehifadhiwa!"
+        }
+      }
+    },
+    "ProjectFormAccessRow": {
+      "draftTitle": {
+        "string": "Fomu hii bado haina toleo lililochapishwa. Haitaonekana kwenye vifaa hadi Rasimu itakapochapishwa. Ukishachapisha Fomu, mipangilio iliyoonyeshwa hapa itatumika"
+      },
+      "field": {
+        "state": {
+          "string": "Hali",
+          "developer_comment": "This is the text of a form field. \"State\" refers to the Form State. Form States control the lifecycle state of each Form."
+        },
+        "appUserAccess": {
+          "string": "Ufikiaji wa Mtumiaji wa Programu",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "ProjectFormAccessStates": {
+      "title": {
+        "string": "Hali ya fomu",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Hali ya Fomu hudhibiti hali ya mzunguko wa maisha ya kila Fomu. Kwa kawaida, lakini si mara zote, Fomu itaanza Fungua na kuendelea na Kufunga hadi Kufungwa wakati haihitajiki tena."
+        },
+        "1": {
+          "full": {
+            "string": "{open} Fomu zinapatikana kwa kupakuliwa na zitakubali Mawasilisho mapya.",
+            "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
+          },
+          "open": {
+            "string": "Fungua",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download and will accept new Submissions."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "{closing} Fomu zitakubali Mawasilisho mapya, lakini si {not} kupakuliwa.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
+          },
+          "closing": {
+            "string": "Kufunga",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
+          },
+          "not": {
+            "string": "sivyo",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
+          }
+        },
+        "3": {
+          "full": {
+            "string": "{closed} Fomu {not1} kupakuliwa na {not2} hazitakubali Mawasilisho mapya",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
+          },
+          "closed": {
+            "string": "Imefungwa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
+          },
+          "not1": {
+            "string": "Sivyo",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
+          },
+          "not2": {
+            "string": "Sivyo",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
+          }
+        }
+      }
+    },
+    "ProjectFormAccessTable": {
+      "header": {
+        "form": {
+          "string": "fomu",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "state": {
+          "string": "hali",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "ProjectIntroduction": {
+      "title": {
+        "string": "Miradi ni nini?",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Miradi hukuruhusu kupanga Fomu na Watumiaji zinazohusiana. Watumiaji wa Wavuti wanaweza kupewa Majukumu ambayo huwaruhusu kutekeleza vitendo fulani ndani ya Mradi, ikijumuisha kutumia kivinjari cha wavuti kujaza Fomu. Watumiaji wa Programu za Mradi wanaweza tu kuona Fomu katika Mradi ambao wanaweza kufikia."
+        }
+      }
+    },
+    "ProjectList": {
+      "heading": {
+        "0": {
+          "string": "Karibu Central."
+        },
+        "1": {
+          "string": "Hebu tufanye baadhi ya mambo.",
+          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
+        }
+      },
+      "gettingStarted": {
+        "title": {
+          "string": "Kuanza",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "0": {
+            "full": {
+              "string": "Iwapo huna uhakika pa kuanzia, kuna mwongozo wa kuanza na hati za mtumiaji zinazopatikana kwenye {docsWebsite}.",
+              "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
+            },
+            "docsWebsite": {
+              "string": "Tovuti ya Hati za ODK",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
+            }
+          },
+          "1": {
+            "full": {
+              "string": "Kwa kuongeza, unaweza kupata usaidizi kutoka kwa wengine kwenye {forum} wakati wowote, ambapo unaweza kutafuta maswali ya awali au kuuliza moja yako mwenyewe.",
+              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
+            },
+            "forum": {
+              "string": "ODK jamii forum",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
+            }
+          }
+        }
+      },
+      "news": {
+        "string": "Habari",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "rightNow": {
+        "users": {
+          "full": {
+            "string": "{count, plural, one {{webUsers} ambaye anaweza kusimamia Miradi kupitia tovuti hii.} other {{webUsers} ambao wanaweza kusimamia Miradi kupitia tovuti hii.}}",
+            "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
+          },
+          "webUsers": {
+            "string": "{count, plural, one {Mtumiaji wa Mtandao} other {Watumiaji wa Mtandao}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
+          }
+        },
+        "projects": {
+          "full": {
+            "string": "{count, plural, one {{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa.} other {{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa.}}",
+            "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
+          },
+          "projects": {
+            "string": "{count, plural, one {Mradi} other {Miradi}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text. (The plural form of the text is shown.)\n\n{projects} which can organize Forms and App Users for device deployment."
+          }
+        }
+      },
+      "projectsTitle": {
+        "string": "Miradi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "create": {
+          "string": "Mpya",
+          "developer_comment": "This is the text of a button that is used to create a new Project."
+        }
+      },
+      "header": {
+        "forms": {
+          "string": "Fomu",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "emptyTable": {
+        "string": "Hakuna Miradi kwako kuona."
+      },
+      "alert": {
+        "create": {
+          "string": "Mradi wako mpya umeundwa."
+        }
+      }
+    },
+    "ProjectNew": {
+      "title": {
+        "string": "Unda Mradi",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Miradi huweka pamoja Fomu na Watumiaji wa Programu ili kurahisisha kupanga na kudhibiti, kwenye tovuti hii na kwenye kifaa chako cha kukusanya data."
+        }
+      }
+    },
+    "ProjectOverviewAbout": {
+      "title": {
+        "string": "Kuhusu Miradi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "body": {
+        "0": {
+          "full": {
+            "string": "Miradi hukuruhusu kupanga Fomu na Watumiaji zinazohusiana. Watumiaji wa Wavuti wanaweza kupewa Majukumu ambayo huwaruhusu kutekeleza vitendo fulani ndani ya Mradi huu, ikijumuisha kutumia kivinjari cha wavuti kujaza Fomu. Watumiaji wa Programu za Mradi huu wanaweza tu kuona Fomu katika Mradi huu ambao wana {accessTo}",
+            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
+          },
+          "accessTo": {
+            "string": "upatikanaji wa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "ikiwa una maoni yoyote, tafadhali tembelea {forumThread}.",
+            "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
+          },
+          "forumThread": {
+            "string": "hii thread ya jukwaa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
+          }
+        }
+      }
+    },
+    "ProjectOverviewRightNow": {
+      "appUsers": {
+        "full": {
+          "string": "{count, plural, one {{appUsers} ambao wanaweza kutumia mteja wa kukusanya data kupakua na kuwasilisha data ya Fomu kwa Mradi huu} other {{appUsers} ambao wanaweza kutumia mteja wa kukusanya data kupakua na kuwasilisha data ya Fomu kwa Mradi huu}}",
+          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "{count, plural, one {Mtumiaji wa Programu} other {Watumiaji wa Programu}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
+        }
+      },
+      "forms": {
+        "full": {
+          "string": "{count, plural, one {{forms} ambazo zinaweza kupakuliwa na kutolewa kama tafiti.\n } other {{forms} ambazo zinaweza kupakuliwa na kutolewa kama tafiti.}}",
+          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
+        },
+        "forms": {
+          "string": "{count, plural, one {Fomu} other {Fomu}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
+        }
+      }
+    },
+    "ProjectRow": {
+      "help": {
+        "string": "Miradi ni nini?"
+      },
+      "noSubmission": {
+        "string": "(Hakuna)",
+        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
+      },
+      "encryptionTip": {
+        "string": "Mradi huu unatumia usimbaji fiche unaodhibitiwa"
+      }
+    },
+    "ProjectSettings": {
+      "encryption": {
+        "title": {
+          "string": "Usimbaji fiche",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "unencrypted": {
+            "0": {
+              "string": "Usimbaji fiche wa data ya uwasilishaji haujawezeshwa kwa Mradi huu."
+            }
+          },
+          "encrypted": {
+            "0": {
+              "full": {
+                "string": "Usimbaji fiche wa data ya uwasilishaji {enabled} kwa Mradi huu.",
+                "developer_comment": "{enabled} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nenabled"
+              },
+              "enabled": {
+                "string": "imewezeshwa",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {enabled} is in the following text:\n\nSubmission data encryption is {enabled} for this Project."
+              }
+            },
+            "1": {
+              "string": "Katika toleo hili la ODK Central, huwezi kuzima usimbaji fiche mara tu inapowashwa."
+            }
+          }
+        },
+        "action": {
+          "enableEncryption": {
+            "string": "Washa usimbaji fiche",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "dangerZone": {
+        "action": {
+          "archive": {
+            "string": "Hifadhi Mradi huu kwenye kumbukumbu",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "archived": {
+          "0": {
+            "string": "Mradi huu umewekwa kwenye kumbukumbu."
+          },
+          "1": {
+            "string": "Katika toleo hili la ODK Central, unaweza usiondoe Mradi kwenye kumbukumbu. Hata hivyo, uwezo wa kufuta Mradi umepangwa kwa ajili ya kutolewa siku zijazo."
+          }
+        }
+      },
+      "alert": {
+        "archive": {
+          "string": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
+        }
+      }
+    },
+    "ProjectSubmissionOptions": {
+      "title": {
+        "string": "Chaguzi za Uwasilishaji",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Kuna chaguo kadhaa za kuwasilisha data kwa ODK Central:",
+          "developer_comment": "This text is shown above a list of options for submitting data."
+        },
+        "1": {
+          "full": {
+            "string": "Unda {appUsers} na utumie programu ya Android ya {collect}. Hii inafaa zaidi wakati wakusanyaji wa data wanahitaji ufikiaji wa Fomu nyingi, wako nje ya mtandao, au una Fomu ngumu",
+            "developer_comment": "This text is shown in a list of options for submitting data. {collect} is a link whose text is \"ODK Collect\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+          },
+          "appUsers": {
+            "string": "Watumiaji wa Programu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nCreate {appUsers} and use the {collect} Android application. This is most appropriate when data collectors need access to multiple Forms, are offline, or you have a complex Form."
+          }
+        },
+        "2": {
+          "full": {
+            "string": "Unda {publicLinks} moja au zaidi ili kushiriki na waliojibu ambao watajiripoti.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\n{publicLinks} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublic Access Links"
+          },
+          "publicLinks": {
+            "string": "Viungo vya Ufikiaji wa Umma",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publicLinks} is in the following text:\n\nCreate one or more {publicLinks} to share with respondents who will self-report."
+          }
+        },
+        "3": {
+          "full": {
+            "string": "Unda {webUser} na Jukumu la {dataCollector} kwa kila mtu ambaye atakuwa akikusanya data. Watumiaji hawa wataingia katika Kituo Kikuu ili kujaza Fomu hii katika kivinjari cha wavuti. Wasimamizi wa Miradi wanaweza pia kuunda Mawasilisho kutoka kwa kivinjari cha wavuti.",
+            "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
+          },
+          "webUser": {
+            "string": "Mtumiaji wa Mtandao",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUser} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          },
+          "dataCollector": {
+            "string": "Mkusanya Data",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollector} is in the following text:\n\nCreate a {webUser} with the Role of {dataCollector} for each individual who will be collecting data. These Users will log into Central to fill out this Form in a web browser. Project Managers can also create Submissions from a web browser."
+          }
+        }
+      }
+    },
+    "ProjectUserList": {
+      "heading": {
+        "0": {
+          "string": "Wasimamizi wa Tovuti nzima wanazingatiwa kiotomatiki Wasimamizi wa kila Mradi. Watumiaji Wengine wanaweza kuwa na Majukumu mahususi kwa Mradi huu",
+          "developer_comment": "This text is shown above a list of Roles."
+        },
+        "1": {
+          "full": {
+            "string": "{projectManagers} inaweza kutekeleza kazi yoyote ya usimamizi inayohusiana na Mradi huu na inaweza kujaza Fomu katika kivinjari cha wavuti.",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectManagers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Managers"
+          },
+          "projectManagers": {
+            "string": "Wasimamizi wa Mradi",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectManagers} is in the following text:\n\n{projectManagers} can perform any administrative task related to this Project and can fill Forms out in a web browser"
+          }
+        },
+        "2": {
+          "full": {
+            "string": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
+          },
+          "projectViewers": {
+            "string": "Watazamaji wa Mradi",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+          }
+        },
+        "3": {
+          "full": {
+            "string": "{dataCollectors} inaweza kujaza Fomu katika kivinjari, lakini haiwezi kuona au kubadilisha data au mipangilio",
+            "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
+          },
+          "dataCollectors": {
+            "string": "Wakusanyaji Data",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollectors} is in the following text:\n\n{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings"
+          }
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Futa utafutaji",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "field": {
+        "q": {
+          "canList": {
+            "string": "Tafuta mtumiaji...",
+            "developer_comment": "This is the text of a form field."
+          },
+          "cannotList": {
+            "string": "Weka barua pepe kamili ya mtumiaji...",
+            "developer_comment": "This is the text of a form field."
+          }
+        }
+      },
+      "header": {
+        "user": {
+          "string": "Mtumiaji",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "projectRole": {
+          "string": "Jukumu la Mradi",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "emptyTable": {
+        "string": "Bado hakuna watumiaji waliokabidhiwa kwa Mradi huu. Ili kuongeza moja, tafuta mtumiaji hapo juu."
+      },
+      "alert": {
+        "unassignWithoutReassign": {
+          "string": "Hitilafu fulani imetokea. \"{displayName}\" imeondolewa kwenye Mradi."
+        },
+        "assignRole": {
+          "string": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu."
+        },
+        "unassignRole": {
+          "string": "Mafanikio! \"{displayName}\" imeondolewa kwenye Mradi huu."
+        }
+      }
+    },
+    "ProjectUserRow": {
+      "cannotAssignRole": {
+        "string": "Huenda usihariri Jukumu lako la Mradi."
+      },
+      "field": {
+        "projectRole": {
+          "string": "Jukumu la Mradi",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "PublicLinkCreate": {
+      "title": {
+        "string": "Unda Kiungo cha Ufikiaji wa Umma",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Mtu yeyote aliye na Kiungo hiki ataweza kujaza Fomu hii katika kivinjari. Tumia jina la onyesho ili kujikumbusha mahali ulipoichapisha, ulishiriki na nani, wakati inakusudiwa kutumika, na kadhalika"
+        }
+      },
+      "field": {
+        "once": {
+          "string": "Uwasilishaji Mmoja",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "onceHelp": {
+        "string": "Ruhusu Uwasilishaji mmoja tu kutoka kwa kila kivinjari.",
+        "developer_comment": "This is help text for the \"Single Submission\" checkbox."
+      }
+    },
+    "PublicLinkList": {
+      "action": {
+        "create": {
+          "string": "Unda Kiungo cha Ufikiaji wa Umma",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "full": {
+            "string": "Mtu yeyote aliye na Kiungo cha Ufikiaji wa Umma anaweza kujaza Fomu hii katika kivinjari. Unaweza kuunda Viungo vingi ili kufuatilia usambazaji tofauti wa Fomu, kuweka kikomo muda ambao kikundi mahususi cha watu kinaweza kufikia Fomu, na zaidi. Viungo hivi vitafanya kazi ikiwa tu Fomu iko katika {state} la Wazi.",
+            "developer_comment": "{state} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstate"
+          },
+          "state": {
+            "string": "Hali",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {state} is in the following text:\n\nAnyone with a Public Access Link can fill out this Form in a web browser. You can create multiple Links to track different distributions of the Form, to limit how long a specific group of people has access to the Form, and more. These links will only work if the Form is in the Open {state}."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "Viungo vya Umma vimekusudiwa kujiripoti. Ikiwa unafanya kazi na wakusanyaji data ambao wanahitaji kuwasilisha Fomu sawa mara nyingi, {clickHere} kwa chaguo zingine.",
+            "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+          },
+          "clickHere": {
+            "string": "Bonyeza hapa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nPublic Links are intended for self-reporting. If you are working with data collectors who need to submit the same Form multiple times, {clickHere} for other options."
+          }
+        }
+      },
+      "emptyTable": {
+        "string": "Hakuna Viungo vya Ufikiaji wa Umma vya Fomu hii."
+      },
+      "alert": {
+        "create": {
+          "string": "Mafanikio! Kiungo chako cha Kufikia Umma kimeundwa na sasa kinapatikana. Nakili hapa chini ili kuisambaza."
+        },
+        "revoke": {
+          "string": "Kiungo cha Ufikiaji wa Umma \"{displayName}\" kimebatilishwa. Hakuna Mawasilisho Zaidi yatakubaliwa kwa kutumia Kiungo hiki."
+        }
+      }
+    },
+    "PublicLinkRevoke": {
+      "title": {
+        "string": "Batilisha Kiungo cha Ufikiaji wa Umma",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Unakaribia kubatilisha Kiungo hiki cha Ufikiaji wa Umma. Hii ina maana kwamba majaribio yote ya kuwasilisha data kwa kutumia kiungo yatakataliwa, ikiwa ni pamoja na rekodi ambazo tayari zimeanzishwa"
+        }
+      }
+    },
+    "PublicLinkRow": {
+      "action": {
+        "revoke": {
+          "string": "Batilisha",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "revoked": {
+        "string": "Imebatilishwa",
+        "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
+      },
+      "unavailable": {
+        "text": {
+          "string": "Haipatikani bado",
+          "developer_comment": "This text is shown for a Public Access Link that is not available yet."
+        },
+        "title": {
+          "string": "Kiungo cha Ufikiaji wa Umma bado hakipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena."
+        }
+      }
+    },
+    "PublicLinkTable": {
+      "header": {
+        "once": {
+          "string": "Uwasilishaji Mmoja",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "accessLink": {
+          "string": "Kiungo cha Ufikiaji",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "SubmissionAnalyze": {
+      "title": {
+        "string": "Kwa kutumia OData",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "OData ni kiwango kipya cha kuhamisha data kati ya zana na huduma. Zana za uchanganuzi zisizolipishwa na zenye nguvu kama vile Excel, {powerBi} na {r} zinaweza kuleta data kupitia OData kwa uchanganuzi.",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
+        },
+        "1": {
+          "string": "Kuna faida nyingi kwa OData, lakini muhimu zaidi inaauni uhamishaji wa uaminifu kamili wa aina ngumu kama vile nambari na data ya kijiografia, na huwezesha toleo jipya zaidi la data yako kusawazisha kwa urahisi na zana zozote zinazoitumia."
+        },
+        "2": {
+          "string": "Ili kuanza kutumia OData, chagua zana yako na unakili kiungo ndani yake."
+        }
+      },
+      "tab": {
+        "microsoft": {
+          "string": "Excel/Power BI",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "other": {
+          "string": "Nyingine",
+          "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
+        }
+      },
+      "help": {
+        "microsoft": {
+          "full": {
+            "string": "Kwa usaidizi wa kutumia OData na Excel, angalia {pageForExcel}. Kwa usaidizi wa Power BI, angalia {pageForPowerBi}.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
+          },
+          "pageForExcel": {
+            "string": "ukurasa huu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          },
+          "pageForPowerBi": {
+            "string": "ukurasa huu",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          }
+        },
+        "r": {
+          "0": {
+            "full": {
+              "string": "Ili kufikia data ya Kati kutoka kwa {r}, tunapendekeza utumie {ruODK}. Tazama vignette za ruODK kwa mifano ya kutumia API ya {oData} na {restful}.",
+              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
+            },
+            "restful": {
+              "string": "Tulivu",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
+            }
+          },
+          "1": {
+            "full": {
+              "string": "kama vile ODK yenyewe, ruODK inatengenezwa na kuungwa mkono na wanajamii. Ikiwa ungependa kusaidia kuiboresha, unaweza kupata maelezo {here}.",
+              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+            },
+            "here": {
+              "string": "Hapa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
+            }
+          }
+        },
+        "other": {
+          "full": {
+            "string": "Kwa maelezo kamili ya usaidizi wetu wa OData, tafadhali angalia {article}.",
+            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
+          },
+          "article": {
+            "string": "Makala hii",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
+          }
+        }
+      }
+    },
+    "SubmissionBasicDetails": {
+      "reviewState": {
+        "string": "Kagua hali"
+      },
+      "formVersion": {
+        "string": "Toleo la fomu"
+      },
+      "deviceId": {
+        "string": "Kitambulisho cha Kifaa"
+      },
+      "userAgent": {
+        "string": "Wakala wa mtumiaji"
+      },
+      "attachments": {
+        "string": "Faili za media"
+      },
+      "present": {
+        "string": "{count, plural, one {faili {count}} other {faili {count}}}"
+      },
+      "expected": {
+        "string": "{count, plural, one {{count} inatarajiwa} other {{count} inatarajiwa}}",
+        "developer_comment": "This shows the number of files that were expected to be submitted."
+      },
+      "attachmentSummary": {
+        "string": "{present} / {expected}",
+        "developer_comment": "{present} shows the number of files that were submitted, and {expected} shows the number of files that were expected to be submitted. For example: \"2 files / 3 expected\""
+      }
+    },
+    "SubmissionComment": {
+      "editWithoutComment": {
+        "string": "Umefanya mabadiliko kwenye data hii. Tafadhali eleza mabadiliko uliyofanya."
+      }
+    },
+    "SubmissionDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "Ufikiaji wa API",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "Changanua kupitia OData",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabled": {
+        "string": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
+      }
+    },
+    "SubmissionDecrypt": {
+      "title": {
+        "string": "Pakua Mawasilisho",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "Chaguzi za export",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "Gawanya chaguo za \"chagua nyingi\" kwenye safu wima",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "Ondoa majina ya kikundi",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "Jumuisha sehemu za Fomu zilizofutwa hapo awali",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "noSelectMultiple": {
+        "string": "Fomu hii haina sehemu nyingi zilizochaguliwa"
+      },
+      "encryptedForm": {
+        "string": "Fomu Zilizosimbwa kwa njia fiche haziwezi kuchakatwa kwa njia hii"
+      },
+      "introduction": {
+        "0": {
+          "string": "Ili kupakua data hii, utahitaji kutoa neno lako la siri. Kauli yako ya siri itatumika tu kusimbua data yako kwa ajili ya kupakua, na kisha seva itaisahau tena."
+        }
+      },
+      "hint": {
+        "string": "Kidokezo: {hint}",
+        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+      },
+      "noRepeat": {
+        "string": "Fomu hii haina marudio",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "Jedwali kuu la data (hakuna marudio)",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "Jedwali zote za data",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withMedia": {
+            "string": "Data zote na faili za midia",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "unavailable": {
+          "string": "Upakuaji wa data bado haupatikani. Tafadhali jaribu tena baada ya muda mfupi"
+        },
+        "submit": {
+          "string": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena."
+        }
+      }
+    },
+    "SubmissionDiffItem": {
+      "editCaption": {
+        "added": {
+          "string": "(imeongezwa)",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        },
+        "deleted": {
+          "string": "(imefutwa)",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        }
+      },
+      "empty": {
+        "string": "tupu",
+        "developer_comment": "Text showing that a value in a submission edit is empty"
+      }
+    },
+    "SubmissionDownloadDropdown": {
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, one {Pakua rekodi {count}} other {Pakua rekodi {count}}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withoutCount": {
+              "string": "Pakua rekodi zinazolingana",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+            },
+            "withCount": {
+              "string": "{count, plural, one {Pakua rekodi {count} zinazolingana} other {Pakua rekodi {count} zinazolingana}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            }
+          }
+        }
+      }
+    },
+    "SubmissionFeedEntry": {
+      "title": {
+        "create": {
+          "string": "Imewasilishwa na {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Submitted\", so it is essential for \"Submitted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nSubmitted by {name}\n\nyou could split it into:\n\nSubmitted • {name}"
+        },
+        "updateReviewState": {
+          "null": {
+            "full": {
+              "string": "{reviewState} kwa {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReceived"
+            },
+            "reviewState": {
+              "string": "Imepokelewa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
+            }
+          },
+          "hasIssues": {
+            "full": {
+              "string": "{reviewState} kwa {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} per {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nHas Issues"
+            },
+            "reviewState": {
+              "string": "Ina Masuala",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} per {name}"
+            }
+          },
+          "edited": {
+            "full": {
+              "string": "{reviewState} kwa {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nEdited"
+            },
+            "reviewState": {
+              "string": "Imehaririwa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          },
+          "approved": {
+            "full": {
+              "string": "{reviewState} kwa {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
+            },
+            "reviewState": {
+              "string": "Imeidhinishwa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          },
+          "rejected": {
+            "full": {
+              "string": "{reviewState} kwa {name}",
+              "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\n{reviewState} by {name}\n\nyou could split it into:\n\n{reviewState} • {name}\n\n{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRejected"
+            },
+            "reviewState": {
+              "string": "Imekataliwa",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          }
+        },
+        "comment": {
+          "string": "Maoni kutoka kwa {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
+        }
+      }
+    },
+    "SubmissionFieldDropdown": {
+      "placeholder": {
+        "string": "{selected} kati ya {total}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
+      },
+      "field": {
+        "columns": {
+          "string": "Safu wima zimeonyeshwa",
+          "developer_comment": "This is shown beneath text that indicates the number of columns that the user has selected to display in a table. For example, that text may read \"10 of 100\", where 10 is the number of columns selected, and 100 is the total number of columns."
+        },
+        "search": {
+          "string": "Tafuta safu wima...",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "disabled": {
+        "string": "Haiwezi kuchagua zaidi ya safu wima 100."
+      },
+      "action": {
+        "select": {
+          "full": {
+            "string": "Chagua {all} / {none}",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {all} has the text: All\n- {none} has the text: None"
+          },
+          "all": {
+            "string": "zote",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+          },
+          "none": {
+            "string": "hakuna",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+          }
+        }
+      }
+    },
+    "SubmissionFilters": {
+      "field": {
+        "submissionDate": {
+          "string": "Imewasilishwa kwa",
+          "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
+        }
+      }
+    },
+    "SubmissionFiltersReviewState": {
+      "anyState": {
+        "string": "(hali lolote)",
+        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
+      }
+    },
+    "SubmissionFiltersSubmitter": {
+      "field": {
+        "submitter": {
+          "string": "Iliyowasilishwa na",
+          "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
+        }
+      }
+    },
+    "SubmissionList": {
+      "loading": {
+        "withoutCount": {
+          "string": "Inapakia Mawasilisho...",
+          "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {Inapakia Mawasilisho {count}...} other {Inapakia Mawasilisho {count}...}}"
+        },
+        "first": {
+          "string": "{count, plural, one {Inapakia {top} ya kwanza kati ya Mawasilisho {count}...} other {Inapakia {top} ya kwanza kati ya Mawasilisho {count}...}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, one {Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia...} other {Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia...}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {Inapakia Mawasilisho {count} ya mwisho...} other {Inapakia Mawasilisho {count} ya mwisho...}}"
+          },
+          "one": {
+            "string": "Inapakia Wasilisho la mwisho..."
+          }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "Inapakia Mawasilisho yanayolingana...",
+            "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana...} other {Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana...}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {Inapakia Mawasilisho {count} ya mwisho yanayolingana...} other {Inapakia Mawasilisho {count} ya mwisho yanayolingana...}}"
+            },
+            "one": {
+              "string": "Inapakia Wasilisho linalolingana la mwisho..."
+            }
+          }
+        }
+      },
+      "emptyTable": {
+        "string": "Bado hakuna Mawasilisho."
+      },
+      "noMatching": {
+        "string": "Hakuna Mawasilisho yanayolingana."
+      }
+    },
+    "SubmissionShow": {
+      "back": {
+        "title": {
+          "string": "Maelezo ya Uwasilishaji",
+          "developer_comment": "This is shown at the top of the page."
+        },
+        "back": {
+          "string": "Rudi kwenye Jedwali la Mawasilisho",
+          "developer_comment": "This is shown at the top of the page."
+        }
+      }
+    },
+    "SubmissionTable": {
+      "header": {
+        "stateAndActions": {
+          "string": "Hali na vitendo",
+          "developer_comment": "This is the text of a table column header."
+        }
+      }
+    },
+    "SubmissionUpdateReviewState": {
+      "title": {
+        "string": "Sasisha Uhakiki wa hali",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "field": {
+        "notes": {
+          "string": "Vidokezo na maoni (si lazima)",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "TimeAndUser": {
+      "text": {
+        "string": "{dateTime} na {displayName}",
+        "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+      }
+    },
+    "UserEditBasicDetails": {
+      "title": {
+        "string": "Maelezo ya Msingi",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "update": {
+          "string": "Sasisha maelezo",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "success": {
+          "string": "Maelezo ya mtumiaji yamehifadhiwa!"
+        }
+      }
+    },
+    "UserEditPassword": {
+      "title": {
+        "string": "Badilisha neno la siri",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "action": {
+        "change": {
+          "string": "Badilisha neno la siri",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "cannotChange": {
+        "string": "Ni mmiliki wa akaunti pekee ndiye anayeweza kuweka nenosiri lake moja kwa moja."
+      },
+      "alert": {
+        "mismatch": {
+          "string": "Ni mmiliki wa akaunti pekee ndiye anayeweza kuweka nenosiri lake moja kwa moja."
+        },
+        "success": {
+          "string": "Mafanikio! Nenosiri lako limesasishwa."
+        }
+      }
+    },
+    "UserHome": {
+      "title": {
+        "string": "Mipangilio ya Mtumiaji",
+        "developer_comment": "This is shown as the title at the top of the page."
+      },
+      "tab": {
+        "users": {
+          "string": "Watumiaji wa Mtandao",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "roles": {
+          "string": "Mipangilio ya Wajibu",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        }
+      },
+      "comingSoon": {
+        "string": "(inakuja hivi karibuni)",
+        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
+      }
+    },
+    "UserList": {
+      "action": {
+        "create": {
+          "string": "Unda Mtumiaji wa Wavuti",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "heading": {
+        "0": {
+          "string": "Watumiaji Wavuti wana akaunti kwenye tovuti hii ili kusimamia na kusimamia Miradi kwenye seva hii. Wasimamizi wanaweza kudhibiti chochote kwenye tovuti. Watumiaji wasio na Jukumu la Tovuti Pote wanaweza kupewa Jukumu kwenye Mradi wowote, kutoka kwa mipangilio ya Mradi huo. Wasimamizi wa Tovuti nzima na baadhi ya Majukumu ya Mradi wanaweza kutumia kivinjari cha wavuti kujaza Fomu. Ili kuwasilisha data kupitia programu kama vile {collect}, unda Watumiaji wa Programu kwa kila Mradi.",
+          "developer_comment": "{collect} is a link whose text is \"ODK Collect\"."
+        }
+      },
+      "header": {
+        "sitewideRole": {
+          "string": "Jukumu la Tovuti nzima",
+          "developer_comment": "This is the text of a table column header."
+        }
+      },
+      "alert": {
+        "create": {
+          "string": "Mtumiaji ameundwa kwa ajili ya \"{displayName}\"."
+        },
+        "assignRole": {
+          "string": "Mafanikio! \"{displayName}\" imepewa Jukumu la Eneo Lote la \"{roleName}\"."
+        },
+        "resetPassword": {
+          "string": "Nenosiri la \"{displayName}\" limebatilishwa. Barua pepe imetumwa kwa {email} ikiwa na maagizo ya jinsi ya kuendelea."
+        },
+        "retire": {
+          "string": "Mtumiaji \"{displayName}\" amestaafu."
+        }
+      }
+    },
+    "UserNew": {
+      "title": {
+        "string": "Unda Mtumiaji wa Wavuti",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Ukishafungua akaunti hii, barua pepe utakayotoa itatumiwa maelekezo ya jinsi ya kuweka nenosiri na kuendelea."
+        }
+      }
+    },
+    "UserResetPassword": {
+      "title": {
+        "string": "Weka upya Nenosiri",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "full": {
+          "string": "Ukibofya {resetPassword} hapa chini, nenosiri la mtumiaji “{displayName}” <{email}> litabatilishwa mara moja. Barua pepe itatumwa kwa {email} ikiwa na maagizo ya jinsi ya kuendelea.",
+          "developer_comment": "{resetPassword} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nReset password"
+        },
+        "resetPassword": {
+          "string": "Weka upya nenosiri",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {resetPassword} is in the following text:\n\nOnce you click {resetPassword} below, the password for the user “{displayName}” <{email}> will be immediately invalidated. An email will be sent to {email} with instructions on how to proceed."
+        }
+      }
+    },
+    "UserRetire": {
+      "title": {
+        "string": "Mtumiaji Anayestaafu",
+        "developer_comment": "This is the title at the top of a pop-up. An Administrator can use the pop-up to retire another Web User."
+      },
+      "introduction": {
+        "0": {
+          "string": "Unakaribia kustaafu akaunti ya mtumiaji \"{displayName}\" <{email}>. Mtumiaji huyo atazuiwa mara moja kufanya vitendo vyovyote na kuondoka"
+        },
+        "1": {
+          "full": {
+            "string": "{noUndo}, lakini akaunti mpya inaweza kufunguliwa kwa ajili ya mtu huyo kwa kutumia anwani sawa ya barua pepe.",
+            "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
+          },
+          "noUndo": {
+            "string": "Kitendo hiki hakiwezi kutenduliwa",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but a new account can always be created for that person with the same email address."
+          }
+        }
+      }
+    },
+    "UserRow": {
+      "cannotAssignRole": {
+        "string": "Huenda usihariri Jukumu lako la Tovuti nzima."
+      },
+      "field": {
+        "sitewideRole": {
+          "string": "Jukumu la Tovuti nzima",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "cannotRetire": {
+        "string": "Huenda usistaafu mwenyewe.",
+        "developer_comment": "An Administrator may retire other Web Users, but not their own account."
+      },
+      "action": {
+        "retire": {
+          "string": "Staafu mtumiaji",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    }
+  }
+}

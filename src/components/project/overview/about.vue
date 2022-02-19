@@ -163,6 +163,19 @@ export default {
         "forumThread": "フォーラムのスレッド"
       }
     ]
+  },
+  "sw": {
+    "title": "Kuhusu Miradi",
+    "body": [
+      {
+        "full": "Miradi hukuruhusu kupanga Fomu na Watumiaji zinazohusiana. Watumiaji wa Wavuti wanaweza kupewa Majukumu ambayo huwaruhusu kutekeleza vitendo fulani ndani ya Mradi huu, ikijumuisha kutumia kivinjari cha wavuti kujaza Fomu. Watumiaji wa Programu za Mradi huu wanaweza tu kuona Fomu katika Mradi huu ambao wana {accessTo}",
+        "accessTo": "upatikanaji wa"
+      },
+      {
+        "full": "ikiwa una maoni yoyote, tafadhali tembelea {forumThread}.",
+        "forumThread": "hii thread ya jukwaa"
+      }
+    ]
   }
 }
 </i18n>

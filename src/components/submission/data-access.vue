@@ -119,6 +119,13 @@ export default {
       "analyze": "OData経由で解析"
     },
     "analyzeDisabled": "フォームの暗号化のため、ODataによるアクセスは利用できません"
+  },
+  "sw": {
+    "action": {
+      "apiAccess": "Ufikiaji wa API",
+      "analyze": "Changanua kupitia OData"
+    },
+    "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
   }
 }
 </i18n>

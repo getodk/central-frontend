@@ -562,6 +562,60 @@ export default {
         ]
       }
     ]
+  },
+  "sw": {
+    "clickForInfo": "Bonyeza hapa kujua zaidi",
+    "steps": [
+      {
+        "title": "Pakia ufafanuzi wa awali wa Fomu",
+        "body": [
+          "Kazi nzuri!",
+          "Muundo wako wa Fomu umepakiwa."
+        ]
+      },
+      {
+        "title": "Pakia ufafanuzi wa Fomu uliorekebishwa (si lazima)",
+        "body": [
+          {
+            "status": "Ikiwa umefanya mabadiliko kwenye Fomu yenyewe, ikijumuisha maandishi ya swali au sheria za mantiki, sasa ni wakati wa kupakia XML au XLSForm mpya kwa kutumia kitufe kilicho kulia.",
+            "link": {
+              "full": "Ikiwa umefanya mabadiliko kwenye Fomu yenyewe, ikijumuisha maandishi ya swali au sheria za mantiki, sasa ni wakati wa {upload} XML au XLSForm mpya.",
+              "upload": "pakia"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Pakia Faili za Midia ya Fomu",
+        "body": [
+          {
+            "full": "Usanifu wa Fomu yako unarejelea faili ambazo zinahitajika ili kuwasilisha Fomu yako. Unaweza kupakia nakala mpya au zilizosasishwa za hizi kwa usambazaji chini ya kichupo cha {mediaFiles}",
+            "mediaFiles": "Faili za Midia"
+          }
+        ]
+      },
+      {
+        "title": "Jaribu Fomu kwa kuunda Wasilisho",
+        "body": [
+          {
+            "full": "Unaweza {test} Fomu ili kuhakikisha kuwa inafanya kazi jinsi unavyotarajia. Mawasilisho ya Jaribio hayajumuishwi katika data yako ya mwisho.",
+            "test": "Jaribia"
+          }
+        ]
+      },
+      {
+        "title": "Chapisha Rasimu",
+        "body": [
+          {
+            "status": "Unapokuwa na uhakika kuwa Rasimu yako iko tayari na ungependa kuisambaza kwa vifaa vyako kwenye uga, unaweza kuichapisha kwa kutumia kitufe kilicho kulia.",
+            "link": {
+              "full": "Unapokuwa na uhakika kuwa Rasimu yako iko tayari na ungependa kuisambaza kwa vifaa vyako kwenye uga, unaweza {publish}.",
+              "publish": "Chapisha"
+            }
+          }
+        ]
+      }
+    ]
   }
 }
 </i18n>

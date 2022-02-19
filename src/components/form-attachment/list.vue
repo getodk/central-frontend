@@ -571,6 +571,26 @@ export default {
       "readError": "ファイル\"{filename}\"を読み込み中に問題が発生しました。",
       "success": "{count}のファイルのアップロードに成功"
     }
+  },
+  "sw": {
+    "action": {
+      "upload": "Pakia faili"
+    },
+    "heading": [
+      "Kulingana na Fomu uliyopakia, faili zifuatazo zinatarajiwa. Unaweza kuona ni zipi zimepakiwa au bado hazipo.",
+      "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa"
+    ],
+    "header": {
+      "uploaded": "Imepakiwa"
+    },
+    "problem": {
+      "noneUploaded": "{message} Hakuna faili zilizopakiwa.",
+      "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
+    },
+    "alert": {
+      "readError": "Hitilafu fulani imetokea wakati wa kusoma \"{filename}\"",
+      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
+    }
   }
 }
 </i18n>

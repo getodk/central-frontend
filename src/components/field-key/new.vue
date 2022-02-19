@@ -320,6 +320,23 @@ export default {
     "action": {
       "createAnother": "別のものを作成"
     }
+  },
+  "sw": {
+    "title": "Unda Mtumiaji wa Programu",
+    "introduction": [
+      "Mtumiaji huyu hatakuwa na ufikiaji wa Fomu zozote mwanzoni. Utaweza kukabidhi Fomu baada ya mtumiaji kuunda."
+    ],
+    "success": [
+      "Mtumiaji wa Programu \"{displayName}\" ameundwa.",
+      "Unaweza kusanidi kifaa cha mkononi kwa ajili ya \"{displayName}\" sasa hivi, au unaweza kuifanya baadaye kwenye jedwali la Watumiaji wa Programu kwa kubofya \"Angalia nambari ya kuthibitisha.\"",
+      {
+        "full": "Unaweza kutaka kutembelea {formAccessSettings} za Mradi huu ili kumpa mtumiaji huyu idhini ya kufikia Fomu.",
+        "formAccessSettings": "Mipangilio ya Ufikiaji wa Fomu"
+      }
+    ],
+    "action": {
+      "createAnother": "Unda nyingine"
+    }
   }
 }
 </i18n>

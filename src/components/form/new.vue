@@ -591,6 +591,47 @@ $drop-zone-vpadding: 15px;
         "update": "これら問題が無視できると判断した場合、ボタンをクリックして下書きを更新して下さい。"
       }
     ]
+  },
+  "sw": {
+    "title": {
+      "create": "unda fomu",
+      "update": "Pakia Ufafanuzi wa Fomu Mpya"
+    },
+    "introduction": [
+      {
+        "create": "Ili kuunda Fomu, pakia faili ya XForms XML au faili ya XLSForm Excel.",
+        "update": "Ili kusasisha Rasimu, pakia faili ya XForms XML au faili ya XLSForm Excel."
+      },
+      {
+        "full": "Ikiwa tayari huna, kuna {tools} za kukusaidia kuunda Fomu yako.",
+        "tools": "zana zinazopatikana"
+      },
+      "Ikiwa una media, utaweza kuipakia kwenye ukurasa unaofuata, baada ya kuunda Fomu."
+    ],
+    "dropZone": {
+      "full": "Dondosha faili hapa, au {chooseOne} ili upakie.",
+      "chooseOne": "Chagua moja"
+    },
+    "action": {
+      "upload": "pakia",
+      "uploadAnyway": "Pakia hata hivyo"
+    },
+    "alert": {
+      "fileRequired": "Tafadhali chagua faili."
+    },
+    "problem": {
+      "400_8": "Ufafanuzi wa Fomu uliyopakia hauonekani kuwa wa Fomu hii. Ina formId isiyo sahihi (expected \"{expected}\", imepata \"{actual}\").",
+      "400_15": "XLSForm haikuweza kubadilishwa: {error}",
+      "409_3": "Tayari kuna Fomu katika Mradi huu yenye Kitambulisho cha Fomu ya “{xmlFormId}”."
+    },
+    "warningsText": [
+      "Faili hii ya XLSForm inaweza kutumika, lakini ina matatizo yafuatayo yanayowezekana (maonyo ya ubadilishaji).",
+      "Tafadhali sahihisha matatizo na ujaribu tena",
+      {
+        "create": "Ikiwa una uhakika kuwa matatizo haya yanaweza kupuuzwa, bofya kitufe ili kuunda Fomu hata hivyo:",
+        "update": "ikiwa una uhakika matatizo haya yanaweza kupuuzwa, bofya kitufe ili kusasisha Rasimu hata hivyo:"
+      }
+    ]
   }
 }
 </i18n>

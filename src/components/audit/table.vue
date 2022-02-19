@@ -108,6 +108,13 @@ export default {
       "target": "操作の対象",
       "details": "詳細"
     }
+  },
+  "sw": {
+    "header": {
+      "initiator": "Mwanzilishi",
+      "target": "Lengo",
+      "details": "Maelezo"
+    }
   }
 }
 </i18n>

@@ -635,6 +635,53 @@ export default {
     "alert": {
       "create": "新規プロジェクトは正しく作成されました。"
     }
+  },
+  "sw": {
+    "heading": [
+      "Karibu Central.",
+      "Hebu tufanye baadhi ya mambo."
+    ],
+    "gettingStarted": {
+      "title": "Kuanza",
+      "body": [
+        {
+          "full": "Iwapo huna uhakika pa kuanzia, kuna mwongozo wa kuanza na hati za mtumiaji zinazopatikana kwenye {docsWebsite}.",
+          "docsWebsite": "Tovuti ya Hati za ODK"
+        },
+        {
+          "full": "Kwa kuongeza, unaweza kupata usaidizi kutoka kwa wengine kwenye {forum} wakati wowote, ambapo unaweza kutafuta maswali ya awali au kuuliza moja yako mwenyewe.",
+          "forum": "ODK jamii forum"
+        }
+      ]
+    },
+    "news": "Habari",
+    "rightNow": {
+      "users": {
+        "full": [
+          "{webUsers} ambaye anaweza kusimamia Miradi kupitia tovuti hii.",
+          "{webUsers} ambao wanaweza kusimamia Miradi kupitia tovuti hii."
+        ],
+        "webUsers": "Mtumiaji wa Mtandao | Watumiaji wa Mtandao"
+      },
+      "projects": {
+        "full": [
+          "{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa.",
+          "{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa."
+        ],
+        "projects": "Mradi | Miradi"
+      }
+    },
+    "projectsTitle": "Miradi",
+    "action": {
+      "create": "Mpya"
+    },
+    "header": {
+      "forms": "Fomu"
+    },
+    "emptyTable": "Hakuna Miradi kwako kuona.",
+    "alert": {
+      "create": "Mradi wako mpya umeundwa."
+    }
   }
 }
 </i18n>

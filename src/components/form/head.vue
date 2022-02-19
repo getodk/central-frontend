@@ -356,6 +356,22 @@ $tab-li-margin-top: 5px;
         "create": "新規下書きの作成"
       }
     }
+  },
+  "sw": {
+    "projectNav": {
+      "action": {
+        "back": "Rudi kwa Muhtasari wa Mradi"
+      }
+    },
+    "formNav": {
+      "tabTitle": "Vipengele hivi vitapatikana mara tu utakapochapisha Rasimu ya Fomu yako"
+    },
+    "draftNav": {
+      "title": "Rasimu",
+      "action": {
+        "create": "Unda Rasimu mpya"
+      }
+    }
   }
 }
 </i18n>

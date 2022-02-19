@@ -126,6 +126,12 @@ export default {
     "introduction": [
       "一般公開リンクを無効化しようとしています。これにより、この一般公開リンクを用いた全てのデータの提出が出来なくなります。これには現在すでに入力が開始されたフォームの提出も含まれます。"
     ]
+  },
+  "sw": {
+    "title": "Batilisha Kiungo cha Ufikiaji wa Umma",
+    "introduction": [
+      "Unakaribia kubatilisha Kiungo hiki cha Ufikiaji wa Umma. Hii ina maana kwamba majaribio yote ya kuwasilisha data kwa kutumia kiungo yatakataliwa, ikiwa ni pamoja na rekodi ambazo tayari zimeanzishwa"
+    ]
   }
 }
 </i18n>

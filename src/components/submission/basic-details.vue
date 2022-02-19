@@ -215,6 +215,16 @@ export default {
     "present": "{count}件の提出済メディアファイル",
     "expected": "{count}件の期待されるメディアファイル数",
     "attachmentSummary": "{present} / {expected}"
+  },
+  "sw": {
+    "reviewState": "Kagua hali",
+    "formVersion": "Toleo la fomu",
+    "deviceId": "Kitambulisho cha Kifaa",
+    "userAgent": "Wakala wa mtumiaji",
+    "attachments": "Faili za media",
+    "present": "faili {count} | faili {count}",
+    "expected": "{count} inatarajiwa | {count} inatarajiwa",
+    "attachmentSummary": "{present} / {expected}"
   }
 }
 </i18n>

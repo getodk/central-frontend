@@ -189,6 +189,16 @@ export default {
       "once": "一回限りのデータ提出機能"
     },
     "onceHelp": "各プラウザから一回しかフォームの提出を受け付けない。"
+  },
+  "sw": {
+    "title": "Unda Kiungo cha Ufikiaji wa Umma",
+    "introduction": [
+      "Mtu yeyote aliye na Kiungo hiki ataweza kujaza Fomu hii katika kivinjari. Tumia jina la onyesho ili kujikumbusha mahali ulipoichapisha, ulishiriki na nani, wakati inakusudiwa kutumika, na kadhalika"
+    ],
+    "field": {
+      "once": "Uwasilishaji Mmoja"
+    },
+    "onceHelp": "Ruhusu Uwasilishaji mmoja tu kutoka kwa kila kivinjari."
   }
 }
 </i18n>

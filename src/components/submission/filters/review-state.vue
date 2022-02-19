@@ -71,6 +71,9 @@ export default {
   },
   "it": {
     "anyState": "(Qualsiasi Stato)"
+  },
+  "sw": {
+    "anyState": "(hali lolote)"
   }
 }
 </i18n>

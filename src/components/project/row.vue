@@ -134,6 +134,11 @@ export default {
     "help": "プロジェクトとは？",
     "noSubmission": "（なし）",
     "encryptionTip": "このプロジェクトは管理された暗号化を使用しています。"
+  },
+  "sw": {
+    "help": "Miradi ni nini?",
+    "noSubmission": "(Hakuna)",
+    "encryptionTip": "Mradi huu unatumia usimbaji fiche unaodhibitiwa"
   }
 }
 </i18n>

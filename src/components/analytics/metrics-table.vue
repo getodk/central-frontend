@@ -309,6 +309,38 @@ export default {
       "num_submissions_from_public_links": "一般公開リンクから提出されたフォーム数",
       "num_submissions_from_web_users": "Webユーザーから提出されたフォーム数"
     }
+  },
+  "sw": {
+    "recent": "katika siku 45 zilizopita",
+    "fields": {
+      "num_admins": "Idadi ya Wasimamizi",
+      "num_projects_encryption": "Idadi ya Miradi ambayo usimbaji fiche umewezeshwa",
+      "num_questions_biggest_form": "Idadi ya maswali katika kidato kikubwa zaidi",
+      "num_audit_log_entries": "Idadi ya maingizo ya Kumbukumbu ya Ukaguzi",
+      "backups_configured": "Hifadhi rudufu zilizosanidiwa",
+      "database_size": "Saizi ya hifadhidata ya mfumo",
+      "num_managers": "Idadi ya wasimamizi wa miradi",
+      "num_viewers": "Idadi ya watazamaji wa mradi",
+      "num_data_collectors": "Idadi ya wakusanyaji data",
+      "num_app_users": "Idadi ya watumiaji wa programu",
+      "num_device_ids": "Idadi ya vitambulisho vya kifaa",
+      "num_public_access_links": "Idadi ya viungo vya ufikiaji wa umma",
+      "num_forms": "Idadi ya Fomu",
+      "num_forms_with_repeats": "Idadi ya Fomu zilizo na marudio",
+      "num_forms_with_geospatial": "Idadi ya Fomu zilizo na jiografia",
+      "num_forms_with_encryption": "Idadi ya Fomu zilizo na usimbaji fiche",
+      "num_forms_with_audits": "Idadi ya Fomu zilizo na ukaguzi",
+      "num_submissions_received": "Idadi ya Mawasilisho - Yaliyopokelewa",
+      "num_submissions_approved": "Idadi ya Mawasilisho - Yameidhinishwa",
+      "num_submissions_has_issues": "Idadi ya Mawasilisho - Ina Masuala",
+      "num_submissions_rejected": "Idadi ya Mawasilisho - Yamekataliwa",
+      "num_submissions_edited": "Idadi ya Mawasilisho - Yaliyohaririwa",
+      "num_submissions_with_edits": "Idadi ya Mawasilisho yenye mabadiliko",
+      "num_submissions_with_comments": "Idadi ya Mawasilisho yenye maoni",
+      "num_submissions_from_app_users": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Programu",
+      "num_submissions_from_public_links": "Idadi ya Mawasilisho kutoka kwa Viungo vya Umma",
+      "num_submissions_from_web_users": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Wavuti"
+    }
   }
 }
 </i18n>

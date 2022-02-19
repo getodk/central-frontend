@@ -522,6 +522,48 @@ export default {
     "problem": {
       "verify": "再度試し、問題が解決しない場合はコミュニティフォーラムを確認して下さい。"
     }
+  },
+  "sw": {
+    "title": "Sanidi Hifadhi Nakala",
+    "steps": [
+      {
+        "warning": {
+          "full": "Hifadhi rudufu hii kwa sasa haijumuishi viungo vya Fomu ya Wavuti. Ukishiriki Viungo vya Ufikiaji wa Umma au kuunganisha kwa nje moja kwa moja kwa Fomu za Wavuti kwa ajili ya kufanya Mawasilisho mapya, tunapendekeza kwa dhati kwamba ufanye hifadhi kamili ya mfumo hadi hili lishughulikiwe. Iwapo itabidi urejeshe kutoka kwa nakala na uishie na viungo vilivyovunjika vya Onyesho la Kuchungulia, tafadhali ichapishe kwenye {forum} ili upate usaidizi.",
+          "forum": "jukwaa"
+        },
+        "introduction": [
+          "Ukipenda, unaweza kusanidi kaulisiri ya usimbaji ambayo lazima itumike kufungua nakala rudufu.",
+          "Hakuna njia ya kurejesha kaulisiri ikiwa utaipoteza!",
+          "Hakikisha umechagua kitu ambacho utakumbuka, au uandike mahali salama"
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "Kwa usalama, seva hutuma data yako kwenye Hifadhi ya Google. Unaweza kujiandikisha kwa akaunti isiyolipishwa {here}",
+            "here": "hapa"
+          },
+          "Unapobofya inayofuata, Google itathibitisha kwamba ungependa kuruhusu seva kufikia akaunti yako. Kitu pekee ambacho seva itaruhusiwa kugusa ni faili za chelezo inazounda",
+          "Ukishathibitisha hili, utaombwa kunakili na kubandika maandishi hapa nyuma."
+        ]
+      },
+      {
+        "introduction": [
+          {
+            "full": "Karibu tena! Je, umepata maandishi ya kunakili na kubandika? Ikiwa sivyo, bofya {here} ili kujaribu tena.",
+            "here": "hapa"
+          },
+          "Vinginevyo, bandika hapa chini na umemaliza!"
+        ]
+      }
+    ],
+    "field": {
+      "passphrase": "Nenosiri (hiari)",
+      "confirmationText": "Maandishi ya uthibitisho"
+    },
+    "problem": {
+      "verify": "Tafadhali jaribu tena, na uende kwenye jamii forum tatizo likiendelea."
+    }
   }
 }
 </i18n>

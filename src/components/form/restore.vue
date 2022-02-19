@@ -125,6 +125,14 @@ export default {
       "Il Formulario verrà ripristinato allo stato precedente, inclusi tutti i dati, le impostazioni e le autorizzazioni.",
       "Se il Formulario viene nuovamente eliminato, ci vorranno altri 30 giorni prima che venga rimosso."
     ]
+  },
+  "sw": {
+    "title": "Ondoa kufuta fomu",
+    "introduction": [
+      "Je, una uhakika unataka kutengua Fomu ya {name}?",
+      "Fomu itarejeshwa katika hali yake ya awali, ikijumuisha data, mipangilio na ruhusa zote.",
+      "Ikiwa Fomu itafutwa tena, itapita siku 30 kabla ya kuondolewa."
+    ]
   }
 }
 </i18n>

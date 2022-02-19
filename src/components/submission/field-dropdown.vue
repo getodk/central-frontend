@@ -421,6 +421,21 @@ export default {
         "none": "なし"
       }
     }
+  },
+  "sw": {
+    "placeholder": "{selected} kati ya {total}",
+    "field": {
+      "columns": "Safu wima zimeonyeshwa",
+      "search": "Tafuta safu wima..."
+    },
+    "disabled": "Haiwezi kuchagua zaidi ya safu wima 100.",
+    "action": {
+      "select": {
+        "full": "Chagua {all} / {none}",
+        "all": "zote",
+        "none": "hakuna"
+      }
+    }
   }
 }
 </i18n>

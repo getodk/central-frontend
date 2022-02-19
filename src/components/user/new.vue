@@ -139,6 +139,12 @@ export default {
     "introduction": [
       "このアカウントを作成すると、登録したメールアドレスにパスワード設定方法と今後の手順を記載したメールが送信されます。"
     ]
+  },
+  "sw": {
+    "title": "Unda Mtumiaji wa Wavuti",
+    "introduction": [
+      "Ukishafungua akaunti hii, barua pepe utakayotoa itatumiwa maelekezo ya jinsi ya kuweka nenosiri na kuendelea."
+    ]
   }
 }
 </i18n>

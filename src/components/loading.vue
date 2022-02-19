@@ -64,6 +64,9 @@ export default {
   },
   "ja": {
     "text": "読み込み中..."
+  },
+  "sw": {
+    "text": "Inapakia..."
   }
 }
 </i18n>

@@ -147,6 +147,17 @@ export default {
         }
       }
     }
+  },
+  "sw": {
+    "action": {
+      "download": {
+        "unfiltered": "Pakua rekodi {count} | Pakua rekodi {count}",
+        "filtered": {
+          "withoutCount": "Pakua rekodi zinazolingana",
+          "withCount": "Pakua rekodi {count} zinazolingana | Pakua rekodi {count} zinazolingana"
+        }
+      }
+    }
   }
 }
 </i18n>

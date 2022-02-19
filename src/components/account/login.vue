@@ -211,6 +211,15 @@ export default {
     "problem": {
       "401_2": "メールアドレスとパスワードの一方、または両方が違います。"
     }
+  },
+  "sw": {
+    "alert": {
+      "alreadyLoggedIn": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea.",
+      "changePassword": "Nenosiri lako ni fupi kuliko vibambo 10. Ili kulinda akaunti yako, tafadhali badilisha nenosiri lako ili kuifanya iwe ndefu."
+    },
+    "problem": {
+      "401_2": "Anwani ya barua pepe na/au nenosiri si sahihi."
+    }
   }
 }
 </i18n>

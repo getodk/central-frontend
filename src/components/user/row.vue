@@ -247,6 +247,16 @@ export default {
     "action": {
       "retire": "ユーザーの除外"
     }
+  },
+  "sw": {
+    "cannotAssignRole": "Huenda usihariri Jukumu lako la Tovuti nzima.",
+    "field": {
+      "sitewideRole": "Jukumu la Tovuti nzima"
+    },
+    "cannotRetire": "Huenda usistaafu mwenyewe.",
+    "action": {
+      "retire": "Staafu mtumiaji"
+    }
   }
 }
 </i18n>

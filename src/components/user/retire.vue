@@ -161,6 +161,16 @@ export default {
         "noUndo": "この操作は取り消しできません"
       }
     ]
+  },
+  "sw": {
+    "title": "Mtumiaji Anayestaafu",
+    "introduction": [
+      "Unakaribia kustaafu akaunti ya mtumiaji \"{displayName}\" \u003c{email}>. Mtumiaji huyo atazuiwa mara moja kufanya vitendo vyovyote na kuondoka",
+      {
+        "full": "{noUndo}, lakini akaunti mpya inaweza kufunguliwa kwa ajili ya mtu huyo kwa kutumia anwani sawa ya barua pepe.",
+        "noUndo": "Kitendo hiki hakiwezi kutenduliwa"
+      }
+    ]
   }
 }
 </i18n>

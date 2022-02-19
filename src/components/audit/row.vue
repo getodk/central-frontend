@@ -193,6 +193,10 @@ export default {
   "it": {
     "deletedMessage": "Questa risorsa è stata eliminata.",
     "purgedMessage": "Questa risorsa è stata eliminata definitivamente."
+  },
+  "sw": {
+    "deletedMessage": "Rasimali hii imefutwa",
+    "purgedMessage": "Rasilimali hii imesafishwa."
   }
 }
 </i18n>

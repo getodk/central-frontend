@@ -446,6 +446,41 @@ export default {
       },
       "このQRコードをスキャンして、アカウント名\"{displayName}\"の端末を設定する。"
     ]
+  },
+  "sw": {
+    "title": {
+      "managed": "Msimbo wa Usanidi wa Mteja",
+      "legacy": "Msimbo wa Usanidi wa Mteja wa Urithi"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "Hii ni {managedCode}",
+          "managedCode": "Msimbo wa QR unaosimamiwa"
+        },
+        "legacy": {
+          "full": "Hii ni {legacyCode}.",
+          "legacyCode": "Msimbo wa QR wa urithi"
+        }
+      },
+      {
+        "managed": "Mkusanyiko utalingana kabisa na Fomu zinazopatikana kwa \"{displayName}\" ikijumuisha kutumia masasisho kiotomatiki. Watumiaji hawatahitaji Kujipatia Fomu tupu. Zaidi ya hayo, Fomu zilizokamilishwa zitatumwa kiotomatiki mara tu muunganisho utakapopatikana.",
+        "legacy": "Watumiaji watalazimika Kupata mwenyewe Fomu tupu kwenye kifaa na kuamua ni Fomu zipi za kusasisha. Pia watahitaji Kutuma mwenyewe Fomu Zilizokamilishwa"
+      },
+      {
+        "managed": {
+          "full": "Kwa tabia ya zamani, {switchToLegacy}",
+          "switchToLegacy": "badilisha hadi {legacyCode}",
+          "legacyCode": "Msimbo wa QR wa urithi"
+        },
+        "legacy": {
+          "full": "Kwa mchakato unaodhibitiwa zaidi na usiofaa, {switchToManaged}",
+          "switchToManaged": "badilisha hadi {managedCode}",
+          "managedCode": "Msimbo wa QR unaosimamiwa"
+        }
+      },
+      "Changanua msimbo huu wa QR ili kusanidi kifaa kilicho na akaunti \"{displayName}\"."
+    ]
   }
 }
 </i18n>

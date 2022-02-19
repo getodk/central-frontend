@@ -577,6 +577,28 @@ export default {
     },
     "emptyTable": "表示できる提出済フォームはありません。",
     "noMatching": "照合できる提出済フォームはありません。"
+  },
+  "sw": {
+    "loading": {
+      "withoutCount": "Inapakia Mawasilisho...",
+      "all": "Inapakia Mawasilisho {count}... | Inapakia Mawasilisho {count}...",
+      "first": "Inapakia {top} ya kwanza kati ya Mawasilisho {count}... | Inapakia {top} ya kwanza kati ya Mawasilisho {count}...",
+      "middle": "Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia... | Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia...",
+      "last": {
+        "multiple": "Inapakia Mawasilisho {count} ya mwisho... | Inapakia Mawasilisho {count} ya mwisho...",
+        "one": "Inapakia Wasilisho la mwisho..."
+      },
+      "filtered": {
+        "withoutCount": "Inapakia Mawasilisho yanayolingana...",
+        "middle": "Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana... | Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana...",
+        "last": {
+          "multiple": "Inapakia Mawasilisho {count} ya mwisho yanayolingana... | Inapakia Mawasilisho {count} ya mwisho yanayolingana...",
+          "one": "Inapakia Wasilisho linalolingana la mwisho..."
+        }
+      }
+    },
+    "emptyTable": "Bado hakuna Mawasilisho.",
+    "noMatching": "Hakuna Mawasilisho yanayolingana."
   }
 }
 </i18n>

@@ -332,6 +332,15 @@ export default {
     "alert": {
       "success": "変更が保存されました。"
     }
+  },
+  "sw": {
+    "heading": [
+      "Watumiaji wa Programu wanaweza tu kuona na kujaza Fomu ambazo wamepewa ufikiaji wa uwazi katika jedwali lililo hapa chini. Wasimamizi wa Miradi na Wakusanyaji Data wanaweza kutumia kivinjari cha wavuti kujaza Fomu yoyote katika Mradi ambayo iko katika hali ya Wazi."
+    ],
+    "emptyTable": "Hakuna Fomu za kuonyesha.",
+    "alert": {
+      "success": "Mabadiliko yako yamehifadhiwa!"
+    }
   }
 }
 </i18n>

@@ -104,6 +104,12 @@ export default {
       "processing": "Webフォームはまだ利用できません。現在、処理中です。後ほどページを更新し、もう一度試して下さい。",
       "notOpen": "このフォームは現在、新規のフォーム提出を受け付けていません。"
     }
+  },
+  "sw": {
+    "disabled": {
+      "processing": "Fomu ya Wavuti bado haipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena",
+      "notOpen": "Fomu hii haikubali Mawasilisho mapya kwa sasa"
+    }
   }
 }
 </i18n>

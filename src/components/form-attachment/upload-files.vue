@@ -174,6 +174,19 @@ export default {
         "clickHere": "こちらをクリックして選択する"
       }
     ]
+  },
+  "sw": {
+    "title": "Pakia Faili",
+    "introduction": [
+      {
+        "full": "Ili kupakia faili, unaweza {dragAndDrop} faili moja au zaidi kwenye jedwali kwenye ukurasa huu.",
+        "dragAndDrop": "buruta na udondoshe"
+      },
+      {
+        "full": "ikiwa ungependa kuchagua faili kutoka kwa haraka, hakikisha kwamba majina yao yanalingana na yale yaliyo kwenye jedwali kisha {clickHere}",
+        "clickHere": "bonyeza hapa kuchagua"
+      }
+    ]
   }
 }
 </i18n>

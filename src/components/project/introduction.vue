@@ -102,6 +102,12 @@ export default {
     "introduction": [
       "プロジェクトでは、関連のあるフォームやユーザーをグループ化できます。Webユーザーには役割が与えられ、ブラウザでのフォーム入力など、プロジェクト内で特定の操作が可能です。プロジェクトのアプリユーザーは、自分がアクセス権のあるプロジェクト内のフォームのみ閲覧できます。"
     ]
+  },
+  "sw": {
+    "title": "Miradi ni nini?",
+    "introduction": [
+      "Miradi hukuruhusu kupanga Fomu na Watumiaji zinazohusiana. Watumiaji wa Wavuti wanaweza kupewa Majukumu ambayo huwaruhusu kutekeleza vitendo fulani ndani ya Mradi, ikijumuisha kutumia kivinjari cha wavuti kujaza Fomu. Watumiaji wa Programu za Mradi wanaweza tu kuona Fomu katika Mradi ambao wanaweza kufikia."
+    ]
   }
 }
 </i18n>

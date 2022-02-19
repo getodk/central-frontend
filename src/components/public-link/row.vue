@@ -177,6 +177,16 @@ export default {
       "text": "まだ利用できません。",
       "title": "一般公開リンクはまだ利用できません。処理が終了していません。後ほどページを更新し、もう一度試して下さい。"
     }
+  },
+  "sw": {
+    "action": {
+      "revoke": "Batilisha"
+    },
+    "revoked": "Imebatilishwa",
+    "unavailable": {
+      "text": "Haipatikani bado",
+      "title": "Kiungo cha Ufikiaji wa Umma bado hakipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena."
+    }
   }
 }
 </i18n>

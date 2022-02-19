@@ -97,6 +97,11 @@ export default {
     "field": {
       "submitter": "フォーム送信者"
     }
+  },
+  "sw": {
+    "field": {
+      "submitter": "Iliyowasilishwa na"
+    }
   }
 }
 </i18n>

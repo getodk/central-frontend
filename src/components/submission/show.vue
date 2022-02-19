@@ -242,6 +242,12 @@ export default {
       "title": "提出フォームの詳細",
       "back": "提出フォームの一覧に戻る"
     }
+  },
+  "sw": {
+    "back": {
+      "title": "Maelezo ya Uwasilishaji",
+      "back": "Rudi kwenye Jedwali la Mawasilisho"
+    }
   }
 }
 </i18n>

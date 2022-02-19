@@ -341,6 +341,13 @@ export default {
       "deleted": "（削除済み）"
     },
     "empty": "空"
+  },
+  "sw": {
+    "editCaption": {
+      "added": "(imeongezwa)",
+      "deleted": "(imefutwa)"
+    },
+    "empty": "tupu"
   }
 }
 </i18n>
