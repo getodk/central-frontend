@@ -87,7 +87,7 @@ class PluralForms {
   // Transifex uses ICU plurals.
   static fromTransifex(string, locale) {
     const forms = [];
-    const icuMatch = string.match(/^({count, plural,).+}$/);
+    const icuMatch = string.match(/^({count, plural,).+}$/s);
     if (icuMatch == null) {
       forms.push(string);
     } else {
