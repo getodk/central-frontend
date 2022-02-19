@@ -30,11 +30,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import flatpickr from 'vue-flatpickr-component';
-
 import { DateTime } from 'luxon';
 import 'flatpickr/dist/flatpickr.css';
 
-import { flatpickrLocales } from '../util/i18n';
+import 'flatpickr/dist/l10n/cs';
+import 'flatpickr/dist/l10n/de';
+import 'flatpickr/dist/l10n/es';
+import 'flatpickr/dist/l10n/fr';
+import 'flatpickr/dist/l10n/id';
+import 'flatpickr/dist/l10n/it';
+import 'flatpickr/dist/l10n/ja';
 
 export default {
   name: 'DateRangePicker',
@@ -63,28 +68,13 @@ export default {
     };
   },
   computed: {
-    flatpickrLocale() {
-      // flatpickr bundles the flatpickr locale for en.
-      if (this.$i18n.locale === 'en') return null;
-      if (this.$i18n.locale === this.$i18n.fallbackLocale) {
-        // DateRangePicker does not currently bundle the flatpickr locale for
-        // the i18n fallback locale, because the i18n fallback locale is en, and
-        // flatpickr itself bundles the flatpickr locale for en.
-        throw new Error('DateRangePicker must bundle the flatpickr locale for the i18n fallback locale');
-      }
-      return flatpickrLocales[this.$i18n.locale];
-    },
     config() {
       const config = {
         mode: 'range',
         // See https://github.com/flatpickr/flatpickr/issues/1549
         dateFormat: 'Y/m/d'
       };
-      // If this.$i18n.locale changes, this.config will change, but flatpickr
-      // itself won't change:
-      // https://github.com/flatpickr/flatpickr/issues/1882
-      // https://github.com/flatpickr/flatpickr/issues/2019
-      if (this.flatpickrLocale != null) config.locale = this.flatpickrLocale;
+      config.locale = this.$i18n.locale;
       return config;
     },
     star() {

@@ -278,16 +278,21 @@ describe('DateRangePicker', () => {
   });
 
   describe('i18n', () => {
-    it('does not specify a flatpickr locale if the i18n locale is en', () => {
-      should.not.exist(mountComponent().vm.config.locale);
+    afterEach(() => loadLocale('en'));
+
+    it('renders correctly for en', async () => {
+      const component = mountComponent({ attachTo: document.body });
+      await component.get('input').trigger('click');
+      const text = document.querySelector('.flatpickr-weekday').textContent.trim();
+      text.should.equal('Sun');
     });
 
-    it('specifies a flatpickr locale if the i18n locale is es', () =>
-      loadLocale('es')
-        .then(() => {
-          const { locale } = mountComponent().vm.config;
-          locale.weekdays.longhand[0].should.equal('Domingo');
-        })
-        .finally(() => loadLocale('en')));
+    it('renders correctly for es', async () => {
+      await loadLocale('es');
+      const component = mountComponent({ attachTo: document.body });
+      await component.get('input').trigger('click');
+      const text = document.querySelector('.flatpickr-weekday').textContent.trim();
+      text.should.equal('Lun');
+    });
   });
 });
