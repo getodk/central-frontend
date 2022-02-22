@@ -311,7 +311,27 @@ describe('SubmissionDownload', () => {
       await modal.get('input[type="password"]').setValue('supersecret');
       const iframe = modal.get('iframe').element;
       await waitForIframe(iframe, '/blank.html');
-      iframe.contentWindow.document.addEventListener('submit', onSubmit);
+
+      /* We want to test things about the form submission by listening for a
+      submit event. Yet the component calls the form submit() method, which
+      doesn't trigger a submit event. Because of that, when submit() is called
+      on the form, the test calls requestSubmit() instead. The only difference
+      between submit() and requestSubmit() here is that requestSubmit() will
+      trigger a submit event. We considered having the component itself call
+      requestSubmit() instead of submit(). However, Safari doesn't support
+      requestSubmit() yet. We also encountered this Firefox bug:
+      https://bugzilla.mozilla.org/show_bug.cgi?id=1306686 */
+      const { contentWindow } = iframe;
+      contentWindow.document.addEventListener('submit', onSubmit);
+      (contentWindow.HTMLFormElement.prototype === HTMLFormElement.prototype).should.be.false();
+      const originalSubmit = contentWindow.HTMLFormElement.prototype.submit;
+      contentWindow.HTMLFormElement.prototype.submit = function submit() {
+        // Immediately restore the submit() method in case it is used
+        // internally.
+        contentWindow.HTMLFormElement.prototype.submit = originalSubmit;
+        this.requestSubmit();
+      };
+
       return modal;
     };
 
