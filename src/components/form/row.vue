@@ -246,6 +246,14 @@ export default {
     "formClosedTip": "このフォームは終了しています。ダウンロードやフォームの提出は出来ません。",
     "formClosingTip": "このフォームはクロージング状態です。ダウンロードは出来ませんが、フォームの提出は受け付けています。",
     "formUnpublishedTip": "このフォームは公開バージョンがまだありません。"
+  },
+  "sw": {
+    "action": {
+      "fill": "Jaza Fomu"
+    },
+    "formClosedTip": "Fomu Hii Imefungwa. Haiwezi kupakuliwa na haikubali Mawasilisho.",
+    "formClosingTip": "Fomu Hii Inafungwa. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho.",
+    "formUnpublishedTip": "Fomu hii bado haina toleo lililochapishwa."
   }
 }
 </i18n>

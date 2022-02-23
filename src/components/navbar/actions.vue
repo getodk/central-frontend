@@ -151,6 +151,15 @@ export default {
     "alert": {
       "logOut": "ログアウトに成功しました。"
     }
+  },
+  "sw": {
+    "notLoggedIn": "Hujaingia",
+    "action": {
+      "logOut": "toka kwenye ukurasa"
+    },
+    "alert": {
+      "logOut": "Umetoka kwenye ukurasa kwa mafanikio."
+    }
   }
 }
 </i18n>

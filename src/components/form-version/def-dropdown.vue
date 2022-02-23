@@ -152,6 +152,14 @@ export default {
       "downloadXForm": "XFormとしてダウンロード（.xml形式）",
       "downloadXlsForm": "XLSFormとしてダウンロード（{extension}形式）"
     }
+  },
+  "sw": {
+    "action": {
+      "def": "Ufafanuzi",
+      "viewXml": "Tazama XML kwenye kivinjari",
+      "downloadXForm": "Pakua kama XForm (.xml)",
+      "downloadXlsForm": "Pakua kama XLSForm ({extension})"
+    }
   }
 }
 </i18n>

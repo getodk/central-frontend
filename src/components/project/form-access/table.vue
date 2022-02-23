@@ -260,6 +260,12 @@ export default {
       "form": "フォーム",
       "state": "状態"
     }
+  },
+  "sw": {
+    "header": {
+      "form": "fomu",
+      "state": "hali"
+    }
   }
 }
 </i18n>

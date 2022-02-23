@@ -120,6 +120,11 @@ export default {
     "alert": {
       "success": "{email}に詳細の対応についての情報が記されたメールが送信されました。"
     }
+  },
+  "sw": {
+    "alert": {
+      "success": "Barua pepe imetumwa kwa {email} ikiwa na maagizo zaidi."
+    }
   }
 }
 </i18n>

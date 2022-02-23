@@ -435,6 +435,33 @@ export default {
       "abandon": "このフォームの下書きは正常に削除されました。",
       "delete": "フォーム\"{name}\"は削除されました。"
     }
+  },
+  "sw": {
+    "draftChecklist": {
+      "title": "Orodha ya rasimu"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "{draftVersion} ya Fomu hii.",
+        "draftVersion": "Toleo la rasimu"
+      },
+      "action": {
+        "upload": "Pakia ufafanuzi mpya"
+      }
+    },
+    "actions": {
+      "title": "Vitendo",
+      "action": {
+        "publish": "Chapisha Rasimu",
+        "abandon": "Achana na Rasimu"
+      }
+    },
+    "alert": {
+      "upload": "Mafanikio! Ufafanuzi mpya wa Fomu umehifadhiwa kama Rasimu yako",
+      "publish": "Rasimu yako sasa imechapishwa. Kifaa chochote kinachorejesha Fomu za Mradi huu sasa kitapokea ufafanuzi mpya wa Fomu na Faili za Midia",
+      "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi.",
+      "delete": "Fomu \"{name}\" ilifutwa."
+    }
   }
 }
 </i18n>

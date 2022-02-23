@@ -395,6 +395,38 @@ export default {
     "alert": {
       "archive": "プロジェクト\"{name}\"はアーカイブされました。"
     }
+  },
+  "sw": {
+    "encryption": {
+      "title": "Usimbaji fiche",
+      "body": {
+        "unencrypted": [
+          "Usimbaji fiche wa data ya uwasilishaji haujawezeshwa kwa Mradi huu."
+        ],
+        "encrypted": [
+          {
+            "full": "Usimbaji fiche wa data ya uwasilishaji {enabled} kwa Mradi huu.",
+            "enabled": "imewezeshwa"
+          },
+          "Katika toleo hili la ODK Central, huwezi kuzima usimbaji fiche mara tu inapowashwa."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Washa usimbaji fiche"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "Hifadhi Mradi huu kwenye kumbukumbu"
+      },
+      "archived": [
+        "Mradi huu umewekwa kwenye kumbukumbu.",
+        "Katika toleo hili la ODK Central, unaweza usiondoe Mradi kwenye kumbukumbu. Hata hivyo, uwezo wa kufuta Mradi umepangwa kwa ajili ya kutolewa siku zijazo."
+      ]
+    },
+    "alert": {
+      "archive": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
+    }
   }
 }
 </i18n>

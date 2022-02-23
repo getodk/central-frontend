@@ -23,7 +23,8 @@ export const locales = new Map()
   .set('fr', 'Français')
   .set('id', 'Bahasa Indonesia')
   .set('it', 'Italiano')
-  .set('ja', '日本語');
+  .set('ja', '日本語')
+  .set('sw', 'Kiswahili');
 
 const fallbackLocale = 'en';
 

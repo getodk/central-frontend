@@ -206,6 +206,12 @@ export default {
     "field": {
       "notes": "メモとコメント（任意）"
     }
+  },
+  "sw": {
+    "title": "Sasisha Uhakiki wa hali",
+    "field": {
+      "notes": "Vidokezo na maoni (si lazima)"
+    }
   }
 }
 </i18n>

@@ -100,6 +100,9 @@ export default {
   },
   "ja": {
     "helpTranslate": "Centralの翻訳に貢献する"
+  },
+  "sw": {
+    "helpTranslate": "Saidia kutafsiri Central"
   }
 }
 </i18n>

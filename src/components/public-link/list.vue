@@ -311,6 +311,26 @@ export default {
       "create": "成功です！一般公開リンクが作成され、利用可能です。 以下をコピーして配布できます。",
       "revoke": "一般公開リンク\"{displayName}\"の無効化に成功しました。以後、このリンクでのサフォームの提出は受付られません。"
     }
+  },
+  "sw": {
+    "action": {
+      "create": "Unda Kiungo cha Ufikiaji wa Umma"
+    },
+    "heading": [
+      {
+        "full": "Mtu yeyote aliye na Kiungo cha Ufikiaji wa Umma anaweza kujaza Fomu hii katika kivinjari. Unaweza kuunda Viungo vingi ili kufuatilia usambazaji tofauti wa Fomu, kuweka kikomo muda ambao kikundi mahususi cha watu kinaweza kufikia Fomu, na zaidi. Viungo hivi vitafanya kazi ikiwa tu Fomu iko katika {state} la Wazi.",
+        "state": "Hali"
+      },
+      {
+        "full": "Viungo vya Umma vimekusudiwa kujiripoti. Ikiwa unafanya kazi na wakusanyaji data ambao wanahitaji kuwasilisha Fomu sawa mara nyingi, {clickHere} kwa chaguo zingine.",
+        "clickHere": "Bonyeza hapa"
+      }
+    ],
+    "emptyTable": "Hakuna Viungo vya Ufikiaji wa Umma vya Fomu hii.",
+    "alert": {
+      "create": "Mafanikio! Kiungo chako cha Kufikia Umma kimeundwa na sasa kinapatikana. Nakili hapa chini ili kuisambaza.",
+      "revoke": "Kiungo cha Ufikiaji wa Umma \"{displayName}\" kimebatilishwa. Hakuna Mawasilisho Zaidi yatakubaliwa kwa kutumia Kiungo hiki."
+    }
   }
 }
 </i18n>

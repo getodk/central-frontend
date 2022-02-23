@@ -89,6 +89,11 @@ export default {
     "docs": "Docs",
     "forum": "フォーラム",
     "version": "バージョン"
+  },
+  "sw": {
+    "docs": "hati",
+    "forum": "Jukwaa",
+    "version": "Toleo"
   }
 }
 </i18n>

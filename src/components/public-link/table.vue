@@ -110,6 +110,12 @@ export default {
       "once": "一回限りのデータ提出機能",
       "accessLink": "アクセスリンク"
     }
+  },
+  "sw": {
+    "header": {
+      "once": "Uwasilishaji Mmoja",
+      "accessLink": "Kiungo cha Ufikiaji"
+    }
   }
 }
 </i18n>

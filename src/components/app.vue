@@ -178,6 +178,11 @@ body.modal-open #app-alert {
     "alert": {
       "versionChange": "サーバーがアップデートされました。予期しない動作を避けるため、ページを更新してください。"
     }
+  },
+  "sw": {
+    "alert": {
+      "versionChange": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka yasiyotabirika."
+    }
   }
 }
 </i18n>

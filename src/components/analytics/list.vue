@@ -147,6 +147,12 @@ export default {
       "以下で、あなたはこのCentralサーバーがCentralチームと匿名化された利用情報を共有するかどうかを選択できます。この設定はサーバー全体の及びます。"
     ],
     "auditsTitle": "最新の利用情報"
+  },
+  "sw": {
+    "heading": [
+      "Hapo chini, unaweza kuchagua kama seva hii ya Central itashiriki maelezo ya matumizi yasiyokutambulisha na timu ya Central. Mpangilio huu unaathiri seva nzima"
+    ],
+    "auditsTitle": "Ripoti za Matumizi ya Hivi Punde"
   }
 }
 </i18n>

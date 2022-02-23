@@ -170,6 +170,16 @@ export default {
         "noUndo": "この操作は取り消しできません。"
       }
     ]
+  },
+  "sw": {
+    "title": "Mradi wa Kuhifadhi kumbukumbu",
+    "introduction": [
+      "Unakaribia kuweka Mradi \"{name}\" kwenye kumbukumbu. Bado itafanya kazi kama inavyofanya sasa, lakini itapangwa hadi chini ya Orodha ya Mradi kwenye ukurasa wa nyumbani wa Central",
+      {
+        "full": "{noUndo}, lakini uwezo wa kutoa Mradi kwenye kumbukumbu umepangwa kutolewa siku zijazo.",
+        "noUndo": "Kitendo hiki hakiwezi kutenduliwa"
+      }
+    ]
   }
 }
 </i18n>

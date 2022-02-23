@@ -137,6 +137,12 @@ export default {
     "introduction": [
       "プロジェクトでは、フォームやアプリユーザーをグループ化して、このWebサイトとデータ収集デバイスの両方で、整理と管理を簡易化します。"
     ]
+  },
+  "sw": {
+    "title": "Unda Mradi",
+    "introduction": [
+      "Miradi huweka pamoja Fomu na Watumiaji wa Programu ili kurahisisha kupanga na kudhibiti, kwenye tovuti hii na kwenye kifaa chako cha kukusanya data."
+    ]
   }
 }
 </i18n>

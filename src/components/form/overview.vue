@@ -274,6 +274,21 @@ export default {
         }
       }
     }
+  },
+  "sw": {
+    "checklist": "Orodha ya ukaguzi",
+    "draft": {
+      "none": {
+        "title": "Hakuna Rasimu ya Sasa",
+        "body": "Kwa sasa hakuna Rasimu ya toleo la Fomu hii. Ikiwa ungependa kufanya mabadiliko kwenye Fomu au Faili zake za Midia, anza kwa kuunda Rasimu kwa kutumia kitufe kilicho hapo juu"
+      },
+      "any": {
+        "versionCaption": {
+          "full": "{draftVersion} ya Fomu hii",
+          "draftVersion": "Toleo la rasimu"
+        }
+      }
+    }
   }
 }
 </i18n>

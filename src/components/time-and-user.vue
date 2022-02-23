@@ -87,6 +87,9 @@ export default {
   },
   "ja": {
     "text": "{displayName}が{dateTime}の時点で実施"
+  },
+  "sw": {
+    "text": "{dateTime} na {displayName}"
   }
 }
 </i18n>

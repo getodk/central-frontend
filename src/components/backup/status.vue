@@ -560,6 +560,52 @@ export default {
     "alert": {
       "download": "現在、バックアップが実行中です。バックアップデータは暗号化され、あなたのコンピュータにダウンロードされます。処理にしばらく時間がかかります。ダウンロードが始まると、このページを閉じても構いません。"
     }
+  },
+  "sw": {
+    "getHelp": {
+      "full": "Ikiwa unatatizika, tafadhali jaribu {forum}.",
+      "forum": "jamii forum"
+    },
+    "notConfigured": [
+      "Hifadhi rudufu hazijasanidiwa.",
+      "Seva ya data haijawekwa ili kuhifadhi nakala kiotomatiki data yake popote pale.",
+      {
+        "full": "Isipokuwa umeweka aina nyingine ya kuhifadhi nakala ya data ambayo seva haijui, {recommended} ufanye hivi sasa. Ikiwa huna uhakika, ni bora kufanya hivyo ili tu kuwa salama.",
+        "recommended": "inapendekezwa sana"
+      },
+      "Hifadhi rudufu za data otomatiki hufanyika kupitia mfumo huu mara moja kwa siku. Data yako yote imesimbwa kwa njia fiche kwa nenosiri ulilotoa ili wewe tu uweze kulifungua."
+    ],
+    "neverRun": [
+      "Hifadhi rudufu iliyosanidiwa bado haijatekelezwa",
+      "Ikiwa umesanidi nakala rudufu ndani ya siku chache zilizopita, hii ni kawaida. Vinginevyo, kitu kimeenda vibaya.",
+      {
+        "full": "Katika hali hiyo, marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma.",
+        "terminate": "sitisha"
+      }
+    ],
+    "somethingWentWrong": [
+      "Kuna kitu hakiko sawa",
+      {
+        "full": "Hifadhi rudufu ya hivi punde iliyokamilika kwa ufanisi ilikuwa {moreThanThreeDaysAgo}.",
+        "moreThanThreeDaysAgo": "zaidi ya siku tatu zilizopita"
+      },
+      {
+        "full": "Marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma",
+        "terminate": "sitisha"
+      }
+    ],
+    "success": [
+      "Hifadhi rudufu inafanya kazi.",
+      "Hifadhi rudufu ya mwisho ilikamilika {dateTime}."
+    ],
+    "action": {
+      "setUp": "Sanidi sasa",
+      "download": "Pakua nakala rudufu sasa",
+      "terminate": "Sitisha"
+    },
+    "alert": {
+      "download": "Hifadhi rudufu inaendelea sasa, na itasimbwa kwa njia fiche na kupakuliwa kwenye kompyuta yako. Hii inaweza kuchukua muda. Mara tu upakuaji unapoanza, unaweza kuondoka kwenye ukurasa huu."
+    }
   }
 }
 </i18n>

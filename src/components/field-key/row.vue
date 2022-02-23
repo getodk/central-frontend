@@ -156,6 +156,13 @@ export default {
     "action": {
       "revokeAccess": "アクセス権の取消"
     }
+  },
+  "sw": {
+    "seeCode": "Angalia msimbo",
+    "accessRevoked": "Ufikiaji umebatilishwa",
+    "action": {
+      "revokeAccess": "Batilisha ufikiaji"
+    }
   }
 }
 </i18n>

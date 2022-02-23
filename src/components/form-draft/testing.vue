@@ -229,6 +229,14 @@ export default {
       "下書きにテスト提出されたフォームは、以下の表に示されます。ここではデータのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト提出済フォームは永久に削除されます。"
     ],
     "collectProjectName": "[下書き] {name}"
+  },
+  "sw": {
+    "title": "Mtihani wa Rasimu",
+    "body": [
+      "Unaweza kutumia msimbo wa usanidi ulio kulia ili kusanidi kifaa cha mkononi ili kupakua Rasimu hii. Unaweza pia kubofya kitufe kipya hapo juu ili kuunda Wasilisho jipya kutoka kwa kivinjari chako cha wavuti.",
+      "Rasimu ya Mawasilisho huenda kwenye jedwali la majaribio hapa chini, ambapo unaweza kuhakiki na kupakua. Unapochapisha Rasimu ya Fomu hii, Mawasilisho yake ya majaribio yataondolewa kabisa."
+    ],
+    "collectProjectName": "[Rasimu] {name}"
   }
 }
 </i18n>

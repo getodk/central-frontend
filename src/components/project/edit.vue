@@ -149,6 +149,15 @@ export default {
     "alert": {
       "success": "プロジェクト設定の保存完了！"
     }
+  },
+  "sw": {
+    "title": "Maelezo ya Msingi",
+    "field": {
+      "name": "Jina la mradi"
+    },
+    "alert": {
+      "success": "Mipangilio ya mradi imehifadhiwa!"
+    }
   }
 }
 </i18n>

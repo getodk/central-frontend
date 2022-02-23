@@ -216,6 +216,21 @@ export default {
     "alert": {
       "delete": "フォーム\"{name}\"は削除されました。"
     }
+  },
+  "sw": {
+    "state": {
+      "title": "Jimbo la Fomu",
+      "body": {
+        "full": "Ili kuweka hali ya Fomu hii, tafadhali tembelea Project {formAccessSettings}.",
+        "formAccessSettings": "Mipangilio ya Ufikiaji wa Fomu"
+      }
+    },
+    "action": {
+      "delete": "Futa Fomu hii"
+    },
+    "alert": {
+      "delete": "Fomu \"{name}\" ilifutwa."
+    }
   }
 }
 </i18n>

@@ -254,6 +254,19 @@ export default {
       "subtitle": "（最もアクティブな{count}つのプロジェクトについて）"
     },
     "submissionStates": "提出済フォームの状態"
+  },
+  "sw": {
+    "title": "Ripoti ya Matumizi Isiyojulikana",
+    "introduction": [
+      "Asante kwa kufikiria kutuma habari ya matumizi. Data hii itatusaidia kutanguliza mahitaji yako!",
+      "Inayoonyeshwa hapa ni ripoti tunayokusanya kwa sasa. Ili kukabiliana na vipengele na mahitaji mapya, wakati mwingine tutabadilisha kile kinachoripotiwa, lakini tutawahi tu kukusanya wastani wa muhtasari kama unavyoona hapa.",
+      "Unaweza kuja hapa kila wakati ili kuona kile kinachokusanywa."
+    ],
+    "projects": {
+      "title": "Muhtasari wa Mradi",
+      "subtitle": "(Inaonyesha Mradi amilifu zaidi wa Mradi ya {count}) | (Inaonyesha Mradi amilifu zaidi wa Miradi ya {count})"
+    },
+    "submissionStates": "Nchi za Uwasilishaji"
   }
 }
 </i18n>

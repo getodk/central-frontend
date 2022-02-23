@@ -1,0 +1,295 @@
+{
+  "title": {
+    "resetPassword": "Weka upya neno siri",
+    "setPassword": "Weka neno siri",
+    "editProfile": "Hariri Wasifu",
+    "download": "Pakua",
+    "pageNotFound": "Ukurasa Haupatikani",
+    "details": "Maelezo"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Ufikiaji wa Fomu"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Matoleo",
+      "publicAccess": "Ufikiaji wa Umma"
+    },
+    "draftNav": {
+      "tab": {
+        "status": "Hali",
+        "attachments": "Faili za media",
+        "testing": "Upimaji"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "Usimamizi wa mfumo",
+    "tab": {
+      "backups": "Hifadhi rudufu",
+      "audits": "Kumbukumbu za ukaguzi wa seva",
+      "analytics": "Ripoti ya matumizi"
+    }
+  },
+  "role": {
+    "none": "Hakuna",
+    "admin": "Msimamizi",
+    "manager": "Meneja wa mradi",
+    "viewer": "Mtazamaji wa mradi",
+    "formfill": "Mkusanyaji wa data"
+  },
+  "formState": {
+    "open": "Fungua",
+    "closing": "Kufunga",
+    "closed": "imefungwa"
+  },
+  "reviewState": {
+    "received": "Imepokelewa",
+    "hasIssues": "Ina masuala",
+    "edited": "Imehaririwa",
+    "approved": "Imeidhinishwa",
+    "rejected": "Imekataliwa",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "vitendo vyote",
+      "user": "vitendo vya mtumiaji wa wavuti",
+      "project": "hatua za mradi",
+      "form": "Vitendo vya fomu",
+      "field_key": "Vitendo vya mtumiaji wa programu",
+      "public_link": "vitendo vya kiungo cha ufikiaji wa umma",
+      "config": "vitendo vya usanidi wa seva",
+      "upgrade": "uboreshaji wa seva"
+    },
+    "action": {
+      "default": {
+        "create": "Unda",
+        "update": "sasisha maelezo",
+        "session_end": "batilisha",
+        "delete": "kufuta"
+      },
+      "analytics": "Ripoti matumizi",
+      "backup": "Hifadhi nakala",
+      "config": {
+        "set": "weka"
+      },
+      "field_key": {
+        "assignment_create": "kutoa ufikiaji",
+        "assignment_delete": "Ondoa ufikiaji",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "Unda rasimu",
+        "update_publish": "Chapisha rasimu",
+        "update_draft_delete": "Acha rasimu",
+        "attachment_update": "Sasisha Viambatisho",
+        "submission_export": "Pakua mawasilisho",
+        "restore": "futa kufuta",
+        "purge": "Safisha",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "Peana ufikiaji",
+        "assignment_delete": "Ondoa ufikiaji",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Chakata Fomu",
+        "process_form_draft": "Rasimu ya fomu ya mchakato"
+      },
+      "user": {
+        "assignment_create": "Panga jukumu",
+        "assignment_delete": "Batilisha jukumu",
+        "delete": "staafu",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Ghairi",
+    "clear": "Safisha",
+    "close": "Funga",
+    "comment": "Maoni",
+    "create": "Unda",
+    "createSubmission": "Mpya",
+    "done": "Imekamilika",
+    "download": "Pakua",
+    "edit": "Hariri",
+    "editProfile": "Hariri wasifu",
+    "logIn": "Ingia",
+    "looksGood": "Inaonekana vizuri, endelea",
+    "more": "Zaidi",
+    "neverMind": "Usijali, ghairi",
+    "next": "Inayofuata",
+    "noCancel": "Hapana, ghairi",
+    "ok": "sawa",
+    "proceed": "Endelea",
+    "refresh": "Onyesha upya",
+    "resetPassword": "Weka upya nenosiri",
+    "review": "hakiki",
+    "save": "hifadhi",
+    "saveSettings": "hifadhi mipangilio",
+    "update": "sasisha",
+    "yesProceed": "Ndio,endelea",
+    "showPreview": "Hakiki",
+    "hidePreview": "Ficha hakiki"
+  },
+  "field": {
+    "comment": "Acha Maoni",
+    "dateRange": "Muda wa tarehe",
+    "displayName": "Onyesha jina",
+    "email": "Barua pepe",
+    "name": "Jina",
+    "newPassword": "Password mpya",
+    "oldPassword": "Password ya zamani",
+    "passphrase": "Nenosiri",
+    "password": "Password",
+    "passwordConfirm": "Password mpya (thibitisha)",
+    "reviewState": "Kagua hali",
+    "type": "Aina"
+  },
+  "header": {
+    "actions": "Vitendo",
+    "created": "Imeundwa",
+    "createdBy": "Imeundwa na",
+    "displayName": "Onyesha jina",
+    "email": "Barua pepe",
+    "instanceId": "Kitambulisho cha Mfano",
+    "lastSubmission": "uwasilishaji wa hivi karibuni",
+    "name": "Jina",
+    "submitterName": "iliyowasilishwa na",
+    "submissionDate": "imewasilishwa kwa",
+    "time": "Muda",
+    "type": "Aina"
+  },
+  "plural": {
+    "appUser": "mtumiaji wa programu | Watumiaji wa programu",
+    "form": "Fomu | Fomu",
+    "project": "Mradi | Miradi",
+    "submission": "Uwasilishaji | Mawasilisho",
+    "webUser": "mtumiaji wa wavuti | watumiaji wa mtandao"
+  },
+  "count": {
+    "appUser": "{count} Mtumiaji wa Programu | {count} Watumiaji wa Programu",
+    "form": "{count} Fomu | {count} Fomu",
+    "submission": "{count} wasilisho | {count} Mawasilisho"
+  },
+  "resource": {
+    "appUser": "mtumiaji wa programu",
+    "appUsers": "watumiaji wa programu",
+    "config": "usanidi wa seva",
+    "form": "Fomu",
+    "forms": "fomu",
+    "project": "Mradi",
+    "projects": "miradi",
+    "publicLink": "Kiungo cha ufikiaji wa umma",
+    "user": "mtumiaji",
+    "users": "Watumiaji",
+    "webUser": "mtumiaji wa wavuti",
+    "webUsers": "watumiaji wa mtandao",
+    "session": "kipindi",
+    "submissions": "mawasilisho",
+    "projectRoles": "majukumu ya mradi"
+  },
+  "alert": {
+    "passwordTooShort": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10.",
+    "updateReviewState": "Kagua Jimbo limehifadhiwa!"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "For more information, {clickHere}.",
+      "clickHere": "bonyeza hapa"
+    },
+    "helpArticle": {
+      "full": "Kwa maelezo zaidi, tafadhali angalia {helpArticle}.",
+      "helpArticle": "Makala hii ya msaada"
+    },
+    "learnMore": "Jifunze zaidi"
+  },
+  "analytics": {
+    "alwaysImprove": "Daima tunajaribu kuboresha ODK Central.",
+    "needFeedback": {
+      "full": "Ili kufanya hivi, tunahitaji maoni yako {your}, ili tuweze kuelewa jinsi unavyotumia Central, na jinsi inavyoweza kuwa bora zaidi kwako.",
+      "your": "yako"
+    }
+  },
+  "submission": {
+    "missingMedia": "Vyombo vya habari vinavyokosekana",
+    "action": {
+      "edit": "Hariri ({count})"
+    },
+    "editDisabled": "Huwezi kuhariri mawasilisho yaliyosimbwa kwa njia fiche",
+    "binaryLinkTitle": "Faili iliwasilishwa. Bofya ili kupakua.",
+    "encryptionMessage": "Onyesho la kukagua data halipatikani kwa sababu ya usimbaji fiche"
+  },
+  "common": {
+    "activity": "shughuli",
+    "anybody": "(Mtu yeyote)",
+    "areYouSure": "Je, una uhakika ungependa kuendelea?",
+    "basicInfo": "Taarifa za Msingi",
+    "currentDraft": "Rasimu Yako ya Sasa",
+    "dangerZone": "Eneo la Hatari",
+    "filter": "chujio",
+    "no": "Hapana",
+    "noResults": "Hakuna majibu",
+    "rightNow": "Sasaivi",
+    "success": "Mafanikio!",
+    "system": "mfumo",
+    "yes": "Ndiyo",
+    "tab": {
+      "settings": "mipangilio",
+      "overview": "muhtasari"
+    },
+    "total": "jumla",
+    "lastSubmission": "(mwisho {dateTime})"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "faili \"{name}\" ambayo unajaribu kupakia ni kubwa kuliko kikomo cha MB 100"
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": "{name} (iliyohifadhiwa)"
+    }
+  },
+  "util": {
+    "dateTime": {
+      "today": "leo",
+      "yesterday": "jana"
+    },
+    "request": {
+      "noRequest": "Hitilafu fulani imetokea: hakukuwa na ombi.",
+      "noResponse": "Hitilafu fulani imetokea: hakukuwa na jibu kwa ombi lako.",
+      "errorNotProblem": "Hitilafu fulani imetokea: msimbo wa hitilafu {status}."
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Muda wa kipindi chako utaisha baada ya dakika 2, na utaondolewa kiotomatiki.",
+        "expired": "Muda wa kipindi chako umeisha. Ili kuendelea kufanya kazi, tafadhali ingia tena.",
+        "logoutError": "Kulikuwa na tatizo, na hukuwa umetoka nje kikamilifu. Tafadhali onyesha upya ukurasa na ujaribu kutoka tena. {message}"
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
+  }
+}

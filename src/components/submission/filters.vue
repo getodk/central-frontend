@@ -102,6 +102,11 @@ export default {
     "field": {
       "submissionDate": "フォームの送信日"
     }
+  },
+  "sw": {
+    "field": {
+      "submissionDate": "Imewasilishwa kwa"
+    }
   }
 }
 </i18n>

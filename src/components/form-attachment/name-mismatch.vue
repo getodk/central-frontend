@@ -170,6 +170,16 @@ export default {
       "{filename}を{attachmentName}としてアップロードしますか？",
       "ファイル名が一致しないため、ダブルチェックしています。"
     ]
+  },
+  "sw": {
+    "title": {
+      "upload": "Pakia Faili",
+      "replace": "Badilisha Faili"
+    },
+    "introduction": [
+      "Je, una uhakika unataka kupakia {filename} kama {attachmentName}?",
+      "Tunakagua mara mbili kwa sababu majina ya faili hayalingani"
+    ]
   }
 }
 </i18n>

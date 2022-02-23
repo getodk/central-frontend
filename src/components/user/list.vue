@@ -339,6 +339,23 @@ export default {
       "resetPassword": "\"{displayName}\"のパスワードが無効です。{email}宛に、今後の対応についての手続き方法を記載したメールが送信されました。",
       "retire": "ユーザー\"{displayName}\"を除外しました。"
     }
+  },
+  "sw": {
+    "action": {
+      "create": "Unda Mtumiaji wa Wavuti"
+    },
+    "heading": [
+      "Watumiaji Wavuti wana akaunti kwenye tovuti hii ili kusimamia na kusimamia Miradi kwenye seva hii. Wasimamizi wanaweza kudhibiti chochote kwenye tovuti. Watumiaji wasio na Jukumu la Tovuti Pote wanaweza kupewa Jukumu kwenye Mradi wowote, kutoka kwa mipangilio ya Mradi huo. Wasimamizi wa Tovuti nzima na baadhi ya Majukumu ya Mradi wanaweza kutumia kivinjari cha wavuti kujaza Fomu. Ili kuwasilisha data kupitia programu kama vile {collect}, unda Watumiaji wa Programu kwa kila Mradi."
+    ],
+    "header": {
+      "sitewideRole": "Jukumu la Tovuti nzima"
+    },
+    "alert": {
+      "create": "Mtumiaji ameundwa kwa ajili ya \"{displayName}\".",
+      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la Eneo Lote la \"{roleName}\".",
+      "resetPassword": "Nenosiri la \"{displayName}\" limebatilishwa. Barua pepe imetumwa kwa {email} ikiwa na maagizo ya jinsi ya kuendelea.",
+      "retire": "Mtumiaji \"{displayName}\" amestaafu."
+    }
   }
 }
 </i18n>

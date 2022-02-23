@@ -136,6 +136,13 @@ export default {
       "full": "次の{resetPassword}クリックすると、ユーザー\"{displayName}\"\u003c{email}>のパスワードが今すぐ無効化されます。その際、{email}に今後の手順を記載したメールが送信されます。",
       "resetPassword": "パスワードのリセット"
     }
+  },
+  "sw": {
+    "title": "Weka upya Nenosiri",
+    "introduction": {
+      "full": "Ukibofya {resetPassword} hapa chini, nenosiri la mtumiaji “{displayName}” \u003c{email}> litabatilishwa mara moja. Barua pepe itatumwa kwa {email} ikiwa na maagizo ya jinsi ya kuendelea.",
+      "resetPassword": "Weka upya nenosiri"
+    }
   }
 }
 </i18n>

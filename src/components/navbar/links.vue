@@ -107,6 +107,9 @@ export default {
   },
   "ja": {
     "current": "現在"
+  },
+  "sw": {
+    "current": "sasa"
   }
 }
 </i18n>

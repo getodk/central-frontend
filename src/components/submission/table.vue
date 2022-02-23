@@ -250,6 +250,11 @@ export default {
     "header": {
       "stateAndActions": "レビュー・ステータスと操作"
     }
+  },
+  "sw": {
+    "header": {
+      "stateAndActions": "Hali na vitendo"
+    }
   }
 }
 </i18n>

@@ -1,5 +1,6 @@
 import i18n from '../../src/i18n';
-import { flatpickrLocales, loadLocale } from '../../src/util/i18n';
+import { loadLocale } from '../../src/util/i18n';
+
 import { i18nProps } from '../util/i18n';
 
 describe('util/i18n', () => {
@@ -20,13 +21,8 @@ describe('util/i18n', () => {
         document.querySelector('html').getAttribute('lang').should.equal('es');
       }));
 
-    it('loads the flatpickr locale', () =>
-      loadLocale('es').then(() => {
-        flatpickrLocales.es.weekdays.longhand[0].should.equal('Domingo');
-      }));
-
-    it('returns a rejected promise for a locale that is not defined', () =>
-      loadLocale('la').should.be.rejected());
+    it('returns a rejected promise for a locale that is not supported', () =>
+      loadLocale('la').should.be.rejectedWith('unknown locale'));
   });
 
   describe('pluralization rules', () => {

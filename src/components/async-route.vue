@@ -159,6 +159,11 @@ export default {
     "alert": {
       "loadError": "リクエストされたページを読み込むことができませんでした。ページを更新して、もう一度試みて下さい。"
     }
+  },
+  "sw": {
+    "alert": {
+      "loadError": "ukurasa ulioomba haukuweza kupakiwa. Tafadhali onyesha upya ukurasa na ujaribu tena"
+    }
   }
 }
 </i18n>

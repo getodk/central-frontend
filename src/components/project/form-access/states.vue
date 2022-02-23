@@ -237,6 +237,27 @@ export default {
         "not2": "ません"
       }
     ]
+  },
+  "sw": {
+    "title": "Hali ya fomu",
+    "introduction": [
+      "Hali ya Fomu hudhibiti hali ya mzunguko wa maisha ya kila Fomu. Kwa kawaida, lakini si mara zote, Fomu itaanza Fungua na kuendelea na Kufunga hadi Kufungwa wakati haihitajiki tena.",
+      {
+        "full": "{open} Fomu zinapatikana kwa kupakuliwa na zitakubali Mawasilisho mapya.",
+        "open": "Fungua"
+      },
+      {
+        "full": "{closing} Fomu zitakubali Mawasilisho mapya, lakini si {not} kupakuliwa.",
+        "closing": "Kufunga",
+        "not": "sivyo"
+      },
+      {
+        "full": "{closed} Fomu {not1} kupakuliwa na {not2} hazitakubali Mawasilisho mapya",
+        "closed": "Imefungwa",
+        "not1": "Sivyo",
+        "not2": "Sivyo"
+      }
+    ]
   }
 }
 </i18n>

@@ -192,6 +192,14 @@ export default {
       "restore": "Il formulario “{name}” è stato ripristinato."
     },
     "message": "I formulari e i dati relativi ai formulari vengono eliminati dopo 30 giorni nel Cestino"
+  },
+  "sw": {
+    "title": "Takataka",
+    "trashCount": "({count})",
+    "alert": {
+      "restore": "Fomu \"{name}\" imetenguliwa"
+    },
+    "message": "Fomu na data inayohusiana na Fomu hufutwa baada ya siku 30 kwenye Tupio"
   }
 }
 </i18n>

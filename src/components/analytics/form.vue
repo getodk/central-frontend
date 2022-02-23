@@ -390,6 +390,38 @@ export default {
     "alert": {
       "success": "設定が保存されました！"
     }
+  },
+  "sw": {
+    "enabled": {
+      "null": [
+        "Tukumbushe baadaye",
+        "Wasimamizi wataendelea kuona ujumbe juu ya skrini"
+      ],
+      "true": [
+        {
+          "full": "{weWillShare} na tunakubali {termsOfService} na {privacyPolicy}.",
+          "weWillShare": "Tuko tayari kushiriki data ya matumizi isiyojulikana kila mwezi na timu ya Kati",
+          "termsOfService": "Masharti ya Huduma",
+          "privacyPolicy": "Sera ya Faragha"
+        },
+        "Ni vipimo gani vinatumwa?"
+      ],
+      "false": [
+        "Hatutashiriki habari yoyote.",
+        "hutaona kikumbusho kuhusu hili tena"
+      ]
+    },
+    "contact": [
+      "Niko tayari kujumuisha maelezo yangu ya mawasiliano na ripoti",
+      "Tunaweza kuwasiliana nawe ili kupata maelezo zaidi kuhusu matumizi yako ya Central"
+    ],
+    "field": {
+      "workEmail": "Anwani ya barua pepe ya kazini",
+      "organization": "Jina la shirika"
+    },
+    "alert": {
+      "success": "Mipangilio imehifadhiwa!"
+    }
   }
 }
 </i18n>

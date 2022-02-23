@@ -495,6 +495,53 @@ export default {
         ]
       }
     ]
+  },
+  "sw": {
+    "clickForInfo": "Bonyeza hapa kujua zaidi",
+    "steps": [
+      {
+        "title": "Chapisha Rasimu ya toleo lako la kwanza",
+        "body": [
+          "Kazi nzuri!",
+          "Umechapisha Fomu yako. Iko tayari kukubali Mawasilisho. Ikiwa ungependa kufanya mabadiliko kwenye Fomu au Faili zake za Midia, unaweza kutengeneza Rasimu mpya."
+        ]
+      },
+      {
+        "title": "Pakua Fomu ya wateja wa uchunguzi na uwasilishe data",
+        "body": [
+          {
+            "none": "Bado hakuna mtu aliyewasilisha data yoyote kwa Fomu hii",
+            "any": "Jumla ya wasilisho {count} imewasilishwa. | Jumla ya Mawasilisho {count} yamewasilishwa."
+          },
+          {
+            "full": "{clickHere} ili kupata maelezo kuhusu njia tofauti za kuwasilisha data",
+            "clickHere": "Bonyeza hapa"
+          }
+        ]
+      },
+      {
+        "title": "Tathmini na uchanganue data iliyowasilishwa",
+        "body": [
+          {
+            "none": "Baada ya kupata data ya Fomu hii, unaweza kuihamisha au kuisawazisha ili kufuatilia na kuchambua data kwa ubora na matokeo.",
+            "any": "Unaweza kuhamisha au kusawazisha {count} wasilisho kwenye Fomu hii ili kuyafuatilia na kuyachanganua kwa ubora na matokeo. | Unaweza kuhamisha au kusawazisha {count} Mawasilisho kwenye Fomu hii ili kuyafuatilia na kuyachanganua kwa ubora na matokeo."
+          },
+          {
+            "full": "Unaweza kufanya hivyo kwa vibonye vya Kupakua na Kuchanganua kwenye {submissionsTab}",
+            "submissionsTab": "Kichupo cha mawasilisho"
+          }
+        ]
+      },
+      {
+        "title": "Dhibiti kustaafu kwa Fomu",
+        "body": [
+          {
+            "full": "Unapofika mwisho wa ukusanyaji wako wa data, unaweza kutumia vidhibiti vya Hali ya Fomu kwenye {formAccessTab} ili kudhibiti kama, kwa mfano, Watumiaji wa Programu wataweza kuona au kuunda Mawasilisho mapya kwa Fomu hii.",
+            "formAccessTab": "Kichupo cha Ufikiaji wa Fomu cha ukurasa wa Mradi"
+          }
+        ]
+      }
+    ]
   }
 }
 </i18n>

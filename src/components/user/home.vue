@@ -131,6 +131,14 @@ export default {
       "roles": "役割設定"
     },
     "comingSoon": "（近日公開）"
+  },
+  "sw": {
+    "title": "Mipangilio ya Mtumiaji",
+    "tab": {
+      "users": "Watumiaji wa Mtandao",
+      "roles": "Mipangilio ya Wajibu"
+    },
+    "comingSoon": "(inakuja hivi karibuni)"
   }
 }
 </i18n>

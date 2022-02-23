@@ -561,6 +561,42 @@ $popup-width: 300px;
         "last": "末尾のデータ"
       }
     }
+  },
+  "sw": {
+    "title": "Pakia Faili",
+    "duringDragover": {
+      "dropToUpload": "Dondosha sasa ili upakie faili hii kama {attachmentName}.",
+      "dragover": "Buruta juu ya ingizo la faili unalotaka kubadilisha na faili na uangushe ili kupakia",
+      "dropToPrepare": {
+        "full": "Dondosha sasa ili kuandaa {countOfFiles} kwa ajili ya kupakiwa kwenye Fomu hii.",
+        "countOfFiles": "faili {count} | faili {count}"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": [
+          "{countOfFiles} tayari kupakiwa.",
+          "{countOfFiles} tayari kupakiwa."
+        ],
+        "countOfFiles": "faili {count} | faili {count}"
+      },
+      "someUnmatched": {
+        "full": [
+          "{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao",
+          "{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao."
+        ],
+        "countOfFiles": "faili {count} | faili {count}"
+      },
+      "noneMatched": "Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao | Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao"
+    },
+    "duringUpload": {
+      "total": "Tafadhali subiri, faili yako inapakiwa {count}: | Tafadhali subiri, faili zako zinapakiwa {count}:",
+      "current": "Inatuma {filename} ({percentUploaded})",
+      "remaining": {
+        "beforeLast": "faili {count} itasalia. | faili {count} zitasalia.",
+        "last": "Hili ndilo faili la mwisho."
+      }
+    }
   }
 }
 </i18n>

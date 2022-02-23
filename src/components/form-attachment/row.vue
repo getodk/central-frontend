@@ -256,6 +256,19 @@ export default {
       "text": "アップロード未完了",
       "title": "１つ以上のファイルをドラッグ＆ドロップしてアップロードする。"
     }
+  },
+  "sw": {
+    "type": {
+      "image": "Picha",
+      "audio": "Sauti",
+      "video": "Video",
+      "file": "Faili ya Data"
+    },
+    "replace": "Badilisha",
+    "notUploaded": {
+      "text": "Bado haijapakiwa",
+      "title": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
+    }
   }
 }
 </i18n>

@@ -450,6 +450,34 @@ Comment • {name} */
       },
       "comment": "{name}によるコメント"
     }
+  },
+  "sw": {
+    "title": {
+      "create": "Imewasilishwa na {name}",
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState} kwa {name}",
+          "reviewState": "Imepokelewa"
+        },
+        "hasIssues": {
+          "full": "{reviewState} kwa {name}",
+          "reviewState": "Ina Masuala"
+        },
+        "edited": {
+          "full": "{reviewState} kwa {name}",
+          "reviewState": "Imehaririwa"
+        },
+        "approved": {
+          "full": "{reviewState} kwa {name}",
+          "reviewState": "Imeidhinishwa"
+        },
+        "rejected": {
+          "full": "{reviewState} kwa {name}",
+          "reviewState": "Imekataliwa"
+        }
+      },
+      "comment": "Maoni kutoka kwa {name}"
+    }
   }
 }
 </i18n>

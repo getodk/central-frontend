@@ -199,6 +199,17 @@ export default {
       "mismatch": "新しいパスワードが一致することを確認して下さい。",
       "success": "成功です！パスワードが更新されました。"
     }
+  },
+  "sw": {
+    "title": "Badilisha neno la siri",
+    "action": {
+      "change": "Badilisha neno la siri"
+    },
+    "cannotChange": "Ni mmiliki wa akaunti pekee ndiye anayeweza kuweka nenosiri lake moja kwa moja.",
+    "alert": {
+      "mismatch": "Ni mmiliki wa akaunti pekee ndiye anayeweza kuweka nenosiri lake moja kwa moja.",
+      "success": "Mafanikio! Nenosiri lako limesasishwa."
+    }
   }
 }
 </i18n>

@@ -163,6 +163,19 @@ export default {
     "action": {
       "improveCentral": "Centralを改善する。"
     }
+  },
+  "sw": {
+    "title": "Saidia Kuboresha Central!",
+    "introduction": [
+      {
+        "full": "Katika kichupo cha {usageReporting} katika Mipangilio ya Mfumo, unaweza kuchagua kushiriki data ya matumizi isiyojulikana au maelezo ya mawasiliano na timu ya Kati.",
+        "usageReporting": "Ripoti ya Matumizi"
+      },
+      "Huko, unaweza pia kuchagua kutouona ujumbe huu tena"
+    ],
+    "action": {
+      "improveCentral": "Boresha Central"
+    }
   }
 }
 </i18n>

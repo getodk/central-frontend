@@ -156,6 +156,9 @@ export default {
   },
   "ja": {
     "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。"
+  },
+  "sw": {
+    "editWithoutComment": "Umefanya mabadiliko kwenye data hii. Tafadhali eleza mabadiliko uliyofanya."
   }
 }
 </i18n>

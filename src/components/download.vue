@@ -79,6 +79,9 @@ export default {
   },
   "ja": {
     "body": "{filename}はすぐにダウンロードされます。ダウンロードが始めると、このページから移動しても構いません。"
+  },
+  "sw": {
+    "body": "{filename} itaanza kupakuliwa hivi karibuni. Mara tu upakuaji unapoanza, unaweza kuondoka kwenye ukurasa huu"
   }
 }
 </i18n>

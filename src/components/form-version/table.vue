@@ -107,6 +107,12 @@ export default {
       "published": "公開済み",
       "definition": "定義フォーム"
     }
+  },
+  "sw": {
+    "header": {
+      "published": "Imechapishwa",
+      "definition": "Ufafanuzi"
+    }
   }
 }
 </i18n>

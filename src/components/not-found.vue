@@ -61,6 +61,9 @@ export default {
   },
   "ja": {
     "body": "リクエストされたページは見つかりません。"
+  },
+  "sw": {
+    "body": "Ukurasa ulioomba haukupatikana."
   }
 }
 </i18n>

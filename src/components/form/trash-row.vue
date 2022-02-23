@@ -202,6 +202,15 @@ export default {
     "disabled": {
       "conflict": "Questo formulario non può essere ripristinato perché esiste un formulario attivo con lo stesso ID."
     }
+  },
+  "sw": {
+    "action": {
+      "restore": "Ondoa kufuta"
+    },
+    "deletedDate": "Imefutwa {dateTime}",
+    "disabled": {
+      "conflict": "Fomu hii haiwezi kufutwa kwa sababu kuna Fomu inayotumika yenye kitambulisho sawa."
+    }
   }
 }
 </i18n>

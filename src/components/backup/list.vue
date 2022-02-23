@@ -178,6 +178,13 @@ export default {
       "create": "成功です！自動バックアップは設定されました。",
       "terminate": "自動バックアップを停止しました。 なるべく早急に新たなバックアップ設定を行うことを推奨します。"
     }
+  },
+  "sw": {
+    "auditsTitle": "Hifadhi Nakala za Hivi Punde",
+    "alert": {
+      "create": "Mafanikio! Hifadhi rudufu za kiotomatiki sasa zimesanidiwa.",
+      "terminate": "Nakala zako za kiotomatiki zimekatishwa. Inapendekezwa kuwa usanidi mpya haraka iwezekanavyo"
+    }
   }
 }
 </i18n>

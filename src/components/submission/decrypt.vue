@@ -484,6 +484,33 @@ $label-icon-max-width: 15px;
     "alert": {
       "submit": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。開始されない場合は、もう一度試して下さい。"
     }
+  },
+  "sw": {
+    "title": "Pakua Mawasilisho",
+    "exportOptions": "Chaguzi za export",
+    "field": {
+      "splitSelectMultiples": "Gawanya chaguo za \"chagua nyingi\" kwenye safu wima",
+      "removeGroupNames": "Ondoa majina ya kikundi",
+      "deletedFields": "Jumuisha sehemu za Fomu zilizofutwa hapo awali"
+    },
+    "noSelectMultiple": "Fomu hii haina sehemu nyingi zilizochaguliwa",
+    "encryptedForm": "Fomu Zilizosimbwa kwa njia fiche haziwezi kuchakatwa kwa njia hii",
+    "introduction": [
+      "Ili kupakua data hii, utahitaji kutoa neno lako la siri. Kauli yako ya siri itatumika tu kusimbua data yako kwa ajili ya kupakua, na kisha seva itaisahau tena."
+    ],
+    "hint": "Kidokezo: {hint}",
+    "noRepeat": "Fomu hii haina marudio",
+    "action": {
+      "download": {
+        "mainTable": "Jedwali kuu la data (hakuna marudio)",
+        "allTables": "Jedwali zote za data",
+        "withMedia": "Data zote na faili za midia"
+      }
+    },
+    "alert": {
+      "unavailable": "Upakuaji wa data bado haupatikani. Tafadhali jaribu tena baada ya muda mfupi",
+      "submit": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena."
+    }
   }
 }
 </i18n>

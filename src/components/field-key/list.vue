@@ -399,6 +399,30 @@ export default {
       "create": "アプリユーザー\"{displayName}\"は正常に作成されました。",
       "revoke": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました。"
     }
+  },
+  "sw": {
+    "action": {
+      "create": "Unda Mtumiaji wa Programu"
+    },
+    "heading": [
+      {
+        "full": "Watumiaji wa Programu hutumiwa kukusanya data kutoka kwa programu kama vile {collect}. Kwa kawaida huwakilisha jukumu la pamoja kama vile \"Chanjo\" lakini pia zinaweza kuwakilisha watu binafsi. Watumiaji wa Programu katika Mradi huu wanaweza kupakua na kutumia Fomu ndani ya Mradi huu pekee. Unapounda Mtumiaji mpya wa Programu, haitakuwa na ufikiaji wa Fomu zozote mwanzoni. Ili kuweka Fomu ambazo kila Mtumiaji wa Programu anaweza kufikia, tumia kichupo cha {formAccess}.",
+        "formAccess": "Ufikiaji wa Fomu"
+      },
+      {
+        "full": "Watumiaji wa Programu wanafaa zaidi wakati wakusanyaji wa data wanahitaji ufikiaji wa Fomu nyingi, wako nje ya mtandao, au una Fomu ngumu. Ikiwa unahitaji watu waliojibu kuripoti binafsi au kuwa na fomu ya mtandaoni pekee, {clickHere} kwa chaguo zingine.",
+        "clickHere": "bonyeza hapa"
+      }
+    ],
+    "header": {
+      "lastUsed": "Iliyotumika Mwisho",
+      "configureClient": "Sanidi Mteja"
+    },
+    "emptyTable": "Bado hakuna Watumiaji wa Programu. Utahitaji kuunda baadhi ili kupakua Fomu na kuwasilisha data kutoka kwa kifaa chako",
+    "alert": {
+      "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa.",
+      "revoke": "Ufikiaji umebatilishwa kwa Mtumiaji wa Programu \"{displayName}\"."
+    }
   }
 }
 </i18n>

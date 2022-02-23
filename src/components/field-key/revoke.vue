@@ -148,6 +148,14 @@ export default {
       "このユーザーからこれまでに提出されたフォームは残りますが、このユーザーに依存している人は、フォームのダウンロードや提出フォームのアップロードを継続するために、新しいユーザーを作成する必要があります。",
       "この操作は取り消しできません。"
     ]
+  },
+  "sw": {
+    "title": "Batilisha Ufikiaji wa Mtumiaji",
+    "introduction": [
+      "Je, una uhakika unataka kubatilisha ufikiaji kutoka kwa Mtumiaji wa Programu {displayName}?",
+      "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho",
+      "Kitendo hiki hakiwezi kutenduliwa"
+    ]
   }
 }
 </i18n>

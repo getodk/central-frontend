@@ -346,6 +346,30 @@ export default {
     "field": {
       "version": "バージョン"
     }
+  },
+  "sw": {
+    "title": "Chapisha Rasimu",
+    "warnings": {
+      "attachments": {
+        "full": "Hujatoa {mediaFiles} zote ambazo Fomu yako inahitaji. Unaweza kupuuza hili ukipenda, lakini utahitaji kutengeneza toleo jipya la Rasimu ili kupakia faili hizo baadaye.",
+        "mediaFiles": "Faili za Midia"
+      },
+      "testing": {
+        "full": "Bado huja {tested} kwa kupakia Wasilisho la jaribio. Sio lazima kufanya hivi, lakini inashauriwa sana.",
+        "tested": "Fomu hii imejaribiwa"
+      }
+    },
+    "introduction": [
+      "Unakaribia kuifanya Rasimu hii kuwa toleo lililochapishwa la Fomu yako. Hii itakamilisha mabadiliko yoyote ambayo umefanya kwa ufafanuzi wa Fomu na Faili zake za Midia zilizoambatishwa",
+      "Mawasilisho ya Fomu Yaliyopo hayataathiriwa, lakini Mawasilisho yote ya Rasimu ya majaribio yataondolewa",
+      "Kila toleo la Fomu linahitaji jina la toleo la kipekee. Kwa sasa, Rasimu ya Fomu yako ina jina la toleo sawa na toleo lililochapishwa hapo awali. Unaweza kuweka mpya kwa kupakia ufafanuzi wa Fomu kwa jina unalotaka, au unaweza kuandika mpya hapa chini na seva itakubadilisha."
+    ],
+    "field": {
+      "version": "Toleo"
+    },
+    "problem": {
+      "409_6": "Jina la toleo la Rasimu hii linakinzana na toleo la awali la Fomu hii au Fomu iliyofutwa. Tafadhali tumia sehemu iliyo hapa chini ili kuibadilisha hadi kitu kipya au kupakia ufafanuzi mpya wa Fomu"
+    }
   }
 }
 </i18n>

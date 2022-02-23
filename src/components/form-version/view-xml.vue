@@ -113,6 +113,9 @@ export default {
   },
   "ja": {
     "title": "XMLの閲覧"
+  },
+  "sw": {
+    "title": "Tazama XML"
   }
 }
 </i18n>

@@ -452,6 +452,39 @@ export default {
         "article": "こちら"
       }
     }
+  },
+  "sw": {
+    "title": "Kwa kutumia OData",
+    "introduction": [
+      "OData ni kiwango kipya cha kuhamisha data kati ya zana na huduma. Zana za uchanganuzi zisizolipishwa na zenye nguvu kama vile Excel, {powerBi} na {r} zinaweza kuleta data kupitia OData kwa uchanganuzi.",
+      "Kuna faida nyingi kwa OData, lakini muhimu zaidi inaauni uhamishaji wa uaminifu kamili wa aina ngumu kama vile nambari na data ya kijiografia, na huwezesha toleo jipya zaidi la data yako kusawazisha kwa urahisi na zana zozote zinazoitumia.",
+      "Ili kuanza kutumia OData, chagua zana yako na unakili kiungo ndani yake."
+    ],
+    "tab": {
+      "microsoft": "Excel/Power BI",
+      "other": "Nyingine"
+    },
+    "help": {
+      "microsoft": {
+        "full": "Kwa usaidizi wa kutumia OData na Excel, angalia {pageForExcel}. Kwa usaidizi wa Power BI, angalia {pageForPowerBi}.",
+        "pageForExcel": "ukurasa huu",
+        "pageForPowerBi": "ukurasa huu"
+      },
+      "r": [
+        {
+          "full": "Ili kufikia data ya Kati kutoka kwa {r}, tunapendekeza utumie {ruODK}. Tazama vignette za ruODK kwa mifano ya kutumia API ya {oData} na {restful}.",
+          "restful": "Tulivu"
+        },
+        {
+          "full": "kama vile ODK yenyewe, ruODK inatengenezwa na kuungwa mkono na wanajamii. Ikiwa ungependa kusaidia kuiboresha, unaweza kupata maelezo {here}.",
+          "here": "Hapa"
+        }
+      ],
+      "other": {
+        "full": "Kwa maelezo kamili ya usaidizi wetu wa OData, tafadhali angalia {article}.",
+        "article": "Makala hii"
+      }
+    }
   }
 }
 </i18n>

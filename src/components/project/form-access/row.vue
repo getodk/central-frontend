@@ -197,6 +197,13 @@ export default {
       "state": "状態",
       "appUserAccess": "アプリユーザーのアクセス"
     }
+  },
+  "sw": {
+    "draftTitle": "Fomu hii bado haina toleo lililochapishwa. Haitaonekana kwenye vifaa hadi Rasimu itakapochapishwa. Ukishachapisha Fomu, mipangilio iliyoonyeshwa hapa itatumika",
+    "field": {
+      "state": "Hali",
+      "appUserAccess": "Ufikiaji wa Mtumiaji wa Programu"
+    }
   }
 }
 </i18n>

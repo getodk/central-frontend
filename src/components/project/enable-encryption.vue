@@ -699,6 +699,62 @@ export default {
     "field": {
       "hint": "パスフレーズのヒント（任意）"
     }
+  },
+  "sw": {
+    "title": "Washa Usimbaji",
+    "steps": [
+      {
+        "introduction": [
+          [
+            "Ukiwezesha usimbaji fiche, mambo yafuatayo yatafanyika:",
+            "Data iliyokamilishwa ya Uwasilishaji itasimbwa kwa njia fiche kwenye vifaa vya mkononi.",
+            "Data ya uwasilishaji imesalia itasimbwa kwa njia fiche kwenye seva ya Central",
+            [
+              "Fomu zilizosanidiwa kwa funguo za mwongozo za {submission} zitaendelea kutumia funguo hizo, na lazima zisimbuwe wewe mwenyewe",
+              "li kutumia mchakato wa usimbaji fiche wa Kati kiotomatiki kwenye Fomu hizi, ondoa usanidi wa {base64RsaPublicKey}."
+            ],
+            "Hutaweza tena kuhakiki data ya Wasilisho mtandaoni.",
+            "Hutaweza tena kuunganisha kwa data kupitia OData.",
+            "Hutaweza tena kuhariri Mawasilisho katika kivinjari chako cha wavuti."
+          ],
+          [
+            "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:",
+            [
+              "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa.",
+              "katika toleo la baadaye, utakuwa na chaguo la kusimba data iliyopo"
+            ],
+            [
+              "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa",
+              "Katika toleo la baadaye, utaweza kuzima usimbaji fiche, ambao utaondoa usimbaji fiche wa data yako. Hii itakuwa kweli hata ukiwezesha usimbaji fiche sasa."
+            ]
+          ],
+          {
+            "full": "Unaweza kupata maelezo zaidi kuhusu usimbaji fiche {here}. Ikiwa hii inaonekana kama kitu unachotaka, bonyeza Ifuatayo ili kuendelea.",
+            "here": "hapa"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "Kwanza, utahitaji kuchagua neno la siri. Kaulisiri hii itahitajika ili kusimbua Mawasilisho yako. Kwa faragha yako, seva haitakumbuka kaulisiri hii: watu walio na kaulisiri pekee wataweza kusimbua na kusoma data yako ya Wasilisho.",
+          {
+            "full": "Hakuna urefu au vizuizi vya maudhui kwenye kaulisiri, lakini ukiipoteza, hakuna njia {no} ya kuirejesha au data yako!",
+            "no": "Hapana"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "Usimbaji fiche umesanidiwa kwa Mradi huu. Kifaa chochote cha rununu kitalazimika kuleta au kuleta tena Fomu za hivi punde zaidi ili usimbaji fiche ufanyike."
+        ]
+      }
+    ],
+    "field": {
+      "hint": "Kidokezo cha kaulisiri (si lazima)"
+    },
+    "alert": {
+      "passphraseTooShort": "Tafadhali weka kaulisiri yenye urefu wa angalau vibambo 10."
+    }
   }
 }
 </i18n>
