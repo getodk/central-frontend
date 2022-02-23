@@ -187,6 +187,7 @@ export default {
       if (this.hint !== '') data.hint = this.hint;
       this.post(apiPaths.projectKey(this.project.id), data)
         .then(() => {
+          this.$alert().blank();
           this.step += 1;
           this.success = true;
         })

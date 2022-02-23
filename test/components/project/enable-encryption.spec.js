@@ -129,9 +129,42 @@ describe('ProjectEnableEncryption', () => {
   });
 
   describe('after a successful response', () => {
-    const submit = () => {
+    beforeEach(() => {
       testData.extendedProjects.createPast(1);
-      return load('/projects/1/settings')
+    });
+
+    it('shows a success icon', () =>
+      mockHttp()
+        .mount(ProjectEnableEncryption, mountOptions())
+        .request(async (modal) => {
+          await modal.get('.btn-primary').trigger('click');
+          await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithSuccess()
+        .afterResponse(modal => {
+          modal.find('.icon-check-circle').exists().should.be.true();
+        }));
+
+    it('hides an alert about the passphrase length', () =>
+      mockHttp()
+        .mount(ProjectEnableEncryption, mountOptions())
+        .request(async (modal) => {
+          await modal.get('.btn-primary').trigger('click');
+          const passphrase = modal.get('input[placeholder="Passphrase *"]');
+          await passphrase.setValue('x');
+          const form = modal.get('form');
+          await form.trigger('submit');
+          await passphrase.setValue('supersecret');
+          return form.trigger('submit');
+        })
+        .respondWithSuccess()
+        .afterResponse(modal => {
+          modal.should.not.alert();
+        }));
+
+    it('does not show the button after the modal is hidden', () =>
+      load('/projects/1/settings')
         .complete()
         .request(async (app) => {
           await app.get('#project-settings-enable-encryption-button').trigger('click');
@@ -144,17 +177,7 @@ describe('ProjectEnableEncryption', () => {
           const key = testData.standardKeys.createNew({ managed: true });
           testData.extendedProjects.update(-1, { keyId: key.id });
           return { success: true };
-        });
-    };
-
-    it('indicates success in the modal', async () => {
-      const app = await submit();
-      const modal = app.getComponent(ProjectEnableEncryption);
-      modal.find('.icon-check-circle').exists().should.be.true();
-    });
-
-    it('does not show the button after the modal is hidden', () =>
-      submit()
+        })
         .complete()
         .request(app =>
           app.get('#project-enable-encryption .btn-primary').trigger('click'))
