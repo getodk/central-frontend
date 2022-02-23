@@ -218,12 +218,7 @@ export default {
 
       passphraseInput.value = this.passphrase;
       csrf.value = this.session.csrf;
-      // Using requestSubmit() if it is available in order to facilitate
-      // testing.
-      if (form.requestSubmit != null)
-        form.requestSubmit();
-      else
-        form.submit();
+      form.submit();
       // Ensure that the inputs' values are no longer in the DOM.
       form.reset();
     },
