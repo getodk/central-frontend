@@ -292,11 +292,14 @@ export default {
 #submission-download-container form :last-child { margin-bottom: 0; }
 #submission-download-divider {
   border-left: 1px solid $color-subpanel-border-strong;
-  margin-bottom: -5px;
-  margin-top: -1px;
+  margin: -1px 18px -5px 18px;
 }
-#submission-download-actions { margin-right: 12px; }
 $label-icon-max-width: 15px;
+$actions-padding-left: $label-icon-max-width + $margin-right-icon;
+#submission-download-actions {
+  margin-right: 12px;
+  padding-left: $actions-padding-left;
+}
 .submission-download-action-label {
   // Instead of wrapping the element in a <div> and setting the margin on that,
   // we set `display` to inline-block: that way, the cursor will be shown as
@@ -304,11 +307,13 @@ $label-icon-max-width: 15px;
   display: inline-block;
   font-weight: bold;
   margin-bottom: 3px;
+  text-indent: -$actions-padding-left;
 
   [class^="icon-"] {
     display: inline-block;
     margin-right: $margin-right-icon;
     min-width: $label-icon-max-width;
+    text-indent: 0;
   }
 
   .submission-download-action.disabled & {
@@ -316,10 +321,7 @@ $label-icon-max-width: 15px;
     cursor: not-allowed;
   }
 }
-.submission-download-action {
-  a { margin-left: #{$label-icon-max-width + $margin-right-icon}; }
-  + .submission-download-action { margin-top: 12px; }
-}
+.submission-download-action + .submission-download-action { margin-top: 12px; }
 </style>
 
 <i18n lang="json5">
