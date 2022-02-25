@@ -948,6 +948,18 @@
         "num_audit_log_entries": {
           "string": "Number of Audit Log entries"
         },
+        "num_archived_projects": {
+          "string": "Number of archived Projects"
+        },
+        "num_unique_managers": {
+          "string": "Number of unique Project Managers"
+        },
+        "num_unique_viewers": {
+          "string": "Number of unique Project Viewers"
+        },
+        "num_unique_collectors": {
+          "string": "Number of unique Data Collectors"
+        },
         "backups_configured": {
           "string": "Backups configured"
         },
@@ -986,6 +998,9 @@
         },
         "num_forms_with_audits": {
           "string": "Number of Forms with audits"
+        },
+        "num_reused_form_ids": {
+          "string": "Number of reused Form IDs"
         },
         "num_submissions_received": {
           "string": "Number of Submissions - Received"
