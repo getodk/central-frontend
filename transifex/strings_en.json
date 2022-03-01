@@ -3401,6 +3401,9 @@
       "encryptedForm": {
         "string": "Encrypted Forms cannot be processed in this way."
       },
+      "deletedFieldsDisabledForDraft": {
+        "string": "Draft Forms cannot be processed in this way."
+      },
       "introduction": {
         "0": {
           "string": "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
