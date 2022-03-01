@@ -93,7 +93,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
-          {{ $t('action.done') }}
+          {{ $t('action.close') }}
         </button>
       </div>
       <!-- We specify a Frontend page for src so that any cookies are sent when
