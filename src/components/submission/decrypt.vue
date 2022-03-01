@@ -34,9 +34,11 @@ except according to the terms contained in the LICENSE file.
               {{ $t('field.removeGroupNames') }}
             </label>
           </div>
-          <div class="checkbox">
-            <label>
-              <input v-model="deletedFields" type="checkbox">
+          <div class="checkbox"
+            :class="{ disabled: deletedFieldsTitle != null }">
+            <label :title="deletedFieldsTitle">
+              <input v-model="deletedFields" type="checkbox"
+                :disabled="deletedFieldsTitle != null">
               {{ $t('field.deletedFields') }}
             </label>
           </div>
@@ -142,6 +144,11 @@ export default {
         return this.$t('noSelectMultiple');
       return this.formVersion != null && this.formVersion.keyId != null
         ? this.$t('encryptedForm')
+        : null;
+    },
+    deletedFieldsTitle() {
+      return this.formVersion != null && this.formVersion.publishedAt == null
+        ? this.$t('deletedFieldsDisabledForDraft')
         : null;
     },
     noRepeat() {
@@ -338,6 +345,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "noSelectMultiple": "This Form does not have any select multiple fields.",
     "encryptedForm": "Encrypted Forms cannot be processed in this way.",
+    "deletedFieldsDisabledForDraft": "Draft Forms cannot be processed in this way.",
     "introduction": [
       "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
     ],

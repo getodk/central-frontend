@@ -103,15 +103,30 @@ describe('SubmissionDownload', () => {
       url.searchParams.get('groupPaths').should.equal('false');
   });
 
-  it('includes deletedFields in each download link', async () => {
-    testData.extendedForms.createPast(1);
-    const modal = mountComponent();
-    const a = modal.findAll('a').wrappers;
-    for (const url of a.map(aUrl))
-      url.searchParams.get('deletedFields').should.equal('false');
-    await modal.findAll('input[type="checkbox"]').at(2).setChecked();
-    for (const url of a.map(aUrl))
-      url.searchParams.get('deletedFields').should.equal('true');
+  describe('deletedFields checkbox', () => {
+    it('includes deletedFields in each download link', async () => {
+      testData.extendedForms.createPast(1);
+      const modal = mountComponent();
+      const a = modal.findAll('a').wrappers;
+      for (const url of a.map(aUrl))
+        url.searchParams.get('deletedFields').should.equal('false');
+      await modal.findAll('input[type="checkbox"]').at(2).setChecked();
+      for (const url of a.map(aUrl))
+        url.searchParams.get('deletedFields').should.equal('true');
+    });
+
+    it('disables the checkbox for a form draft', () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { draft: true });
+      const modal = mountComponent({
+        propsData: { formVersion: testData.extendedFormDrafts.last() }
+      });
+      const checkbox = modal.findAll('.checkbox').at(2);
+      checkbox.classes('disabled').should.be.true();
+      checkbox.get('input').element.disabled.should.be.true();
+      const { title } = checkbox.get('label').attributes();
+      title.should.equal('Draft Forms cannot be processed in this way.');
+    });
   });
 
   describe('input focus', () => {
