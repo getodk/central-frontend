@@ -948,6 +948,18 @@
         "num_audit_log_entries": {
           "string": "監査ログ数"
         },
+        "num_archived_projects": {
+          "string": ""
+        },
+        "num_unique_managers": {
+          "string": ""
+        },
+        "num_unique_viewers": {
+          "string": ""
+        },
+        "num_unique_collectors": {
+          "string": ""
+        },
         "backups_configured": {
           "string": "設定されたバックアップ"
         },
@@ -986,6 +998,9 @@
         },
         "num_forms_with_audits": {
           "string": "監査を受けたフォーム数"
+        },
+        "num_reused_form_ids": {
+          "string": ""
         },
         "num_submissions_received": {
           "string": "提出済みフォーム数　ー　受信済み"
@@ -3384,6 +3399,9 @@
         "string": ""
       },
       "encryptedForm": {
+        "string": ""
+      },
+      "deletedFieldsDisabledForDraft": {
         "string": ""
       },
       "introduction": {

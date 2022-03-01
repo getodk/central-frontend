@@ -374,11 +374,29 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
 <i18n>
 {
   "cs": {
+    "title": "Stáhnout příspěvky",
+    "exportOptions": "Možnosti exportu",
+    "field": {
+      "splitSelectMultiples": "Rozdělení možností \"vybrat více\" do sloupců",
+      "removeGroupNames": "Odstranění názvů skupin",
+      "deletedFields": "Zahrnout dříve odstraněná pole formuláře"
+    },
+    "noSelectMultiple": "Tento formulář nemá žádná pole pro výběr více položek.",
+    "encryptedForm": "Šifrované formuláře nelze tímto způsobem zpracovávat.",
     "introduction": [
       "Abyste mohli tato data stáhnout, budete muset zadat vaše přístupové heslo. Vaše přístupové heslo bude použito pouze k dešifrování vašich dat ke stažení, a poté ho server znovu zapomene."
     ],
     "hint": "Nápověda: {hint}",
+    "noRepeat": "Tento formulář nemá opakování.",
+    "action": {
+      "download": {
+        "mainTable": "Hlavní datová tabulka (bez opakování)",
+        "allTables": "Všechny datové tabulky",
+        "withMedia": "Všechny datové a mediální soubory"
+      }
+    },
     "alert": {
+      "unavailable": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu.",
       "submit": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
     }
   },
@@ -437,11 +455,29 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     }
   },
   "fr": {
+    "title": "Télécharger les soumissions",
+    "exportOptions": "Options d'exportation",
+    "field": {
+      "splitSelectMultiples": "Séparer le contenu des questions à choix multiples en plusieurs colonnes.",
+      "removeGroupNames": "Supprimer les noms de groupe",
+      "deletedFields": "Inclure les champs du formulaire précédemment supprimés."
+    },
+    "noSelectMultiple": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\").",
+    "encryptedForm": "Les formulaires chiffrés ne peuvent être traités de cette manière.",
     "introduction": [
       "Pour télécharger ces données, vous devrez fournir votre phrase secrète. Votre phrase secrète sera utilisée uniquement pour déchiffrer vos données pour le téléchargement, après quoi le serveur l'oubliera à nouveau"
     ],
     "hint": "Indice : {hint}",
+    "noRepeat": "Ce formulaire ne contient pas de structures \"repeat\"",
+    "action": {
+      "download": {
+        "mainTable": "Principale table de données (sans \"repeats\")",
+        "allTables": "Toutes les tables de données",
+        "withMedia": "Toutes les données et médias associés."
+      }
+    },
     "alert": {
+      "unavailable": "Le téléchargement des données n'est pas encore disponible. Merci de réessayer dans un moment.",
       "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer."
     }
   },
@@ -500,6 +536,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "noSelectMultiple": "Fomu hii haina sehemu nyingi zilizochaguliwa",
     "encryptedForm": "Fomu Zilizosimbwa kwa njia fiche haziwezi kuchakatwa kwa njia hii",
+    "deletedFieldsDisabledForDraft": "Rasimu za Fomu haziwezi kuchakatwa kwa njia hii.",
     "introduction": [
       "Ili kupakua data hii, utahitaji kutoa neno lako la siri. Kauli yako ya siri itatumika tu kusimbua data yako kwa ajili ya kupakua, na kisha seva itaisahau tena."
     ],

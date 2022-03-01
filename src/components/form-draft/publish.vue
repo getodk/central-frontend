@@ -214,6 +214,9 @@ export default {
     ],
     "field": {
       "version": "Verze"
+    },
+    "problem": {
+      "409_6": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
     }
   },
   "de": {
@@ -283,6 +286,9 @@ export default {
     ],
     "field": {
       "version": "Version"
+    },
+    "problem": {
+      "409_6": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé. Merci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
     }
   },
   "id": {

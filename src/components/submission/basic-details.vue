@@ -156,7 +156,9 @@ export default {
 {
   "cs": {
     "reviewState": "Stav kontroly",
+    "formVersion": "Verze formuláře",
     "deviceId": "ID zařízení",
+    "userAgent": "Uživatelský agent",
     "attachments": "Soubory medií",
     "present": "{count} soubor | {count} soubory | {count} souborů | {count} soubory",
     "expected": "{count} očekáván | {count} očekávány | {count} očekáváno | {count} očekávány",
@@ -184,7 +186,9 @@ export default {
   },
   "fr": {
     "reviewState": "État",
+    "formVersion": "Version de formulaire",
     "deviceId": "ID d'appareil",
+    "userAgent": "\"User agent\"",
     "attachments": "Fichiers média",
     "present": "{count} fichier | {count} fichiers",
     "expected": "{count} attendu | {count} attendus",

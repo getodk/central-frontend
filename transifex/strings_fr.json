@@ -47,7 +47,7 @@
     "draftNav": {
       "tab": {
         "status": {
-          "string": "Status",
+          "string": "Statut",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "attachments": {
@@ -76,7 +76,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
-        "string": "Reporting des usages",
+        "string": "Rapport d'utilisation",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
@@ -127,7 +127,7 @@
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "edited": {
-      "string": "Édité",
+      "string": "Éditée",
       "developer_comment": "This is a possible Review State for a Submission."
     },
     "approved": {
@@ -588,7 +588,7 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": ""
+      "string": "Merci de renseigner un mot de passe d'au moins 10 caractères."
     },
     "updateReviewState": {
       "string": "État sauvegardé!"
@@ -721,7 +721,7 @@
       "string": "Total"
     },
     "lastSubmission": {
-      "string": "",
+      "string": "(dernière {dateTime})",
       "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
     }
   },
@@ -811,7 +811,7 @@
           "string": "Un utilisateur est déjà connecté. Merci de rafraîchir la page pour continuer."
         },
         "changePassword": {
-          "string": ""
+          "string": "Votre mot de passe fait moins de 10 caractères.\nPour protéger votre compte, merci de choisir un mot de passe plus long."
         }
       },
       "problem": {
@@ -948,6 +948,18 @@
         "num_audit_log_entries": {
           "string": "Nombre d'entrées dans le log d'audit"
         },
+        "num_archived_projects": {
+          "string": ""
+        },
+        "num_unique_managers": {
+          "string": ""
+        },
+        "num_unique_viewers": {
+          "string": ""
+        },
+        "num_unique_collectors": {
+          "string": ""
+        },
         "backups_configured": {
           "string": "Sauvegardes configurées"
         },
@@ -986,6 +998,9 @@
         },
         "num_forms_with_audits": {
           "string": "Nombre de formulaires avec audits"
+        },
+        "num_reused_form_ids": {
+          "string": ""
         },
         "num_submissions_received": {
           "string": "Nombre de soumissions - Reçues"
@@ -1830,7 +1845,7 @@
           "string": "Êtes vous sûr de vouloir supprimer le formulaire {name} et toutes les données soumises ?"
         },
         "1": {
-          "string": ""
+          "string": "Cette action va envoyer le formulaire à la corbeille.\nAprès 30 jours dans la corbeille, il sera purgé de manière permanente, mais il peut être restauré avant ce délai."
         }
       }
     },
@@ -1856,7 +1871,7 @@
         },
         "deleteForm": {
           "0": {
-            "string": ""
+            "string": "Vous êtes sur le point de supprimer cette ébauche du formulaire, y compris ses fichiers média associés et toutes ses soumissions de test.\nPuisque vous n'avez pas encore publié cette ébauche, le formulaire complet sera supprimé et envoyé à la corbeille."
           }
         }
       },
@@ -2017,7 +2032,7 @@
       },
       "problem": {
         "409_6": {
-          "string": ""
+          "string": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé.\nMerci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
         }
       }
     },
@@ -2309,7 +2324,7 @@
           "string": "Le formulaire sera restauré dans son état précédent, incluant toutes les données, paramètres et permissions."
         },
         "2": {
-          "string": "Si le formulaire est à nouveau supprimé, il faudra attendre 30 jours supplémentaires avant qu'il ne soit retiré."
+          "string": "Si le formulaire est à nouveau supprimé, il faudra attendre à nouveau 30 jours avant qu'il ne soit retiré."
         }
       }
     },
@@ -2372,7 +2387,7 @@
         "string": "Corbeille"
       },
       "trashCount": {
-        "string": "",
+        "string": "({count})",
         "developer_comment": "{count} is the number of Forms in the trash."
       },
       "alert": {
@@ -2381,7 +2396,7 @@
         }
       },
       "message": {
-        "string": "Le formulaire et les données associées sont supprimés après 30 jour passés dans la corbeille"
+        "string": "Le formulaire et les données associées sont supprimés après 30 jours passés dans la corbeille"
       }
     },
     "FormTrashRow": {
@@ -2423,7 +2438,7 @@
     },
     "FormVersionString": {
       "blank": {
-        "string": "",
+        "string": "(vierge)",
         "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
@@ -2661,7 +2676,7 @@
       },
       "alert": {
         "passphraseTooShort": {
-          "string": ""
+          "string": "Merci de renseigner une phrase secrète d'au moins 10 caractères."
         }
       }
     },
@@ -3314,13 +3329,13 @@
         "string": "État"
       },
       "formVersion": {
-        "string": ""
+        "string": "Version de formulaire"
       },
       "deviceId": {
         "string": "ID d'appareil"
       },
       "userAgent": {
-        "string": ""
+        "string": "\"User agent\""
       },
       "attachments": {
         "string": "Fichiers média"
@@ -3359,31 +3374,34 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "",
+        "string": "Télécharger les soumissions",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "exportOptions": {
-        "string": "",
+        "string": "Options d'exportation",
         "developer_comment": "This text is shown above options for downloading Submissions."
       },
       "field": {
         "splitSelectMultiples": {
-          "string": "",
+          "string": "Séparer le contenu des questions à choix multiples en plusieurs colonnes.",
           "developer_comment": "This is the text of a form field."
         },
         "removeGroupNames": {
-          "string": "",
+          "string": "Supprimer les noms de groupe",
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "",
+          "string": "Inclure les champs du formulaire précédemment supprimés.",
           "developer_comment": "This is the text of a form field."
         }
       },
       "noSelectMultiple": {
-        "string": ""
+        "string": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\")."
       },
       "encryptedForm": {
+        "string": "Les formulaires chiffrés ne peuvent être traités de cette manière."
+      },
+      "deletedFieldsDisabledForDraft": {
         "string": ""
       },
       "introduction": {
@@ -3396,28 +3414,28 @@
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
       "noRepeat": {
-        "string": "",
+        "string": "Ce formulaire ne contient pas de structures \"repeat\"",
         "developer_comment": "\"Repeats\" refers to repeat groups."
       },
       "action": {
         "download": {
           "mainTable": {
-            "string": "",
+            "string": "Principale table de données (sans \"repeats\")",
             "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
           },
           "allTables": {
-            "string": "",
+            "string": "Toutes les tables de données",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "withMedia": {
-            "string": "",
+            "string": "Toutes les données et médias associés.",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "alert": {
         "unavailable": {
-          "string": ""
+          "string": "Le téléchargement des données n'est pas encore disponible.\nMerci de réessayer dans un moment."
         },
         "submit": {
           "string": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer."
@@ -3569,7 +3587,7 @@
     },
     "SubmissionFiltersReviewState": {
       "anyState": {
-        "string": "",
+        "string": "(Tous états)",
         "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
