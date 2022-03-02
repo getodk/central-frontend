@@ -372,6 +372,9 @@ export default {
     ],
     "field": {
       "hint": "Přístupová fráze (volitelné)"
+    },
+    "alert": {
+      "passphraseTooShort": "Zadejte alespoň 10 znaků dlouhou přístupovou frázi."
     }
   },
   "de": {
@@ -537,6 +540,9 @@ export default {
     ],
     "field": {
       "hint": "Indice de phrase de passe (optionnel)"
+    },
+    "alert": {
+      "passphraseTooShort": "Merci de renseigner une phrase secrète d'au moins 10 caractères."
     }
   },
   "id": {

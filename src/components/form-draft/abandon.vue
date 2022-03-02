@@ -127,6 +127,9 @@ export default {
       "abandon": [
         "Chystáte se trvale smazat pracovní verzi tohoto formuláře. To znamená, že definice konceptu formuláře, všechny koncepty mediálních souborů, které jste nahráli, a všechna testovací odeslání budou odstraněna.",
         "Vaše publikovaná definice formuláře, její mediální soubory a odeslání nebudou ovlivněny."
+      ],
+      "deleteForm": [
+        "Chystáte se odstranit tento návrh definice formuláře spolu se všemi nahranými návrhy mediálních souborů a všemi testovacími podáními. Protože jste ji ještě nezveřejnili, bude celý tento Formulář odstraněn a přesunut do koše."
       ]
     },
     "action": {
@@ -178,6 +181,9 @@ export default {
       "abandon": [
         "Vous êtes sur le point de supprimer définitivement la version d'ébauche de ce formulaire. Sa définition, ses fichiers multimédias liés et toutes ses soumissions de test seront supprimés.",
         "Votre définition de formulaire publiée, ses fichiers média et ses données soumises ne seront pas affectés."
+      ],
+      "deleteForm": [
+        "Vous êtes sur le point de supprimer cette ébauche du formulaire, y compris ses fichiers média associés et toutes ses soumissions de test. Puisque vous n'avez pas encore publié cette ébauche, le formulaire complet sera supprimé et envoyé à la corbeille."
       ]
     },
     "action": {

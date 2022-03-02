@@ -155,7 +155,8 @@ export default {
 {
   "cs": {
     "alert": {
-      "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
+      "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku.",
+      "changePassword": "Vaše heslo je kratší než 10 znaků. Chcete-li svůj účet chránit, změňte si heslo tak, aby bylo delší."
     },
     "problem": {
       "401_2": "Nesprávná e-mailová adresa nebo heslo."
@@ -181,7 +182,8 @@ export default {
   },
   "fr": {
     "alert": {
-      "alreadyLoggedIn": "Un utilisateur est déjà connecté. Merci de rafraîchir la page pour continuer."
+      "alreadyLoggedIn": "Un utilisateur est déjà connecté. Merci de rafraîchir la page pour continuer.",
+      "changePassword": "Votre mot de passe fait moins de 10 caractères. Pour protéger votre compte, merci de choisir un mot de passe plus long."
     },
     "problem": {
       "401_2": "Adresse de courriel et/ou mot de passe invalides."

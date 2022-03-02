@@ -115,7 +115,7 @@ export default {
     "introduction": [
       "Êtes vous sûr de vouloir restaurer le formulaire {name} ?",
       "Le formulaire sera restauré dans son état précédent, incluant toutes les données, paramètres et permissions.",
-      "Si le formulaire est à nouveau supprimé, il faudra attendre 30 jours supplémentaires avant qu'il ne soit retiré."
+      "Si le formulaire est à nouveau supprimé, il faudra attendre à nouveau 30 jours avant qu'il ne soit retiré."
     ]
   },
   "it": {

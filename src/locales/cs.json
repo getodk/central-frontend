@@ -208,6 +208,7 @@
     "projectRoles": "Role projektu"
   },
   "alert": {
+    "passwordTooShort": "Zadejte heslo dlouhé alespoň 10 znaků.",
     "updateReviewState": "Stav kontroly uložen!"
   },
   "moreInfo": {

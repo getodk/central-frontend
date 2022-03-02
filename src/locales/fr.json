@@ -19,7 +19,7 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
+        "status": "Statut",
         "attachments": "Fichiers média",
         "testing": "Test"
       }
@@ -30,7 +30,7 @@
     "tab": {
       "backups": "Sauvegardes",
       "audits": "Journal d'audit",
-      "analytics": "Reporting des usages"
+      "analytics": "Rapport d'utilisation"
     }
   },
   "role": {
@@ -48,7 +48,7 @@
   "reviewState": {
     "received": "Reçue",
     "hasIssues": "Comporte des erreurs",
-    "edited": "Édité",
+    "edited": "Éditée",
     "approved": "Approuvée",
     "rejected": "Rejetée",
     "null": "@:reviewState.received"
@@ -208,6 +208,7 @@
     "projectRoles": "Rôles du projet"
   },
   "alert": {
+    "passwordTooShort": "Merci de renseigner un mot de passe d'au moins 10 caractères.",
     "updateReviewState": "État sauvegardé!"
   },
   "moreInfo": {
@@ -255,7 +256,8 @@
       "settings": "Paramètres",
       "overview": "Aperçu"
     },
-    "total": "Total"
+    "total": "Total",
+    "lastSubmission": "(dernière {dateTime})"
   },
   "mixin": {
     "request": {

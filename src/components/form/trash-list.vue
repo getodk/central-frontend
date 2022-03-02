@@ -180,10 +180,11 @@ export default {
   },
   "fr": {
     "title": "Corbeille",
+    "trashCount": "({count})",
     "alert": {
       "restore": "Le formulaire “{name}” a été restauré."
     },
-    "message": "Le formulaire et les données associées sont supprimés après 30 jour passés dans la corbeille"
+    "message": "Le formulaire et les données associées sont supprimés après 30 jours passés dans la corbeille"
   },
   "it": {
     "title": "Cestino",

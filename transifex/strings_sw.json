@@ -948,6 +948,18 @@
         "num_audit_log_entries": {
           "string": "Idadi ya maingizo ya Kumbukumbu ya Ukaguzi"
         },
+        "num_archived_projects": {
+          "string": "Idadi ya miradi iliyohifadhiwa kwenye kumbukumbu"
+        },
+        "num_unique_managers": {
+          "string": "Idadi ya wasimamizi wa Miradi wa kipekee"
+        },
+        "num_unique_viewers": {
+          "string": "Idadi ya watazamaji wa kipekee wa Mradi"
+        },
+        "num_unique_collectors": {
+          "string": "Idadi ya Wakusanyaji data wa kipekee"
+        },
         "backups_configured": {
           "string": "Hifadhi rudufu zilizosanidiwa"
         },
@@ -986,6 +998,9 @@
         },
         "num_forms_with_audits": {
           "string": "Idadi ya Fomu zilizo na ukaguzi\n "
+        },
+        "num_reused_form_ids": {
+          "string": "Idadi ya vitambulisho vya fomu vilivyotumika tena"
         },
         "num_submissions_received": {
           "string": "Idadi ya Mawasilisho - Yaliyopokelewa"
@@ -3385,6 +3400,9 @@
       },
       "encryptedForm": {
         "string": "Fomu Zilizosimbwa kwa njia fiche haziwezi kuchakatwa kwa njia hii"
+      },
+      "deletedFieldsDisabledForDraft": {
+        "string": "Rasimu za Fomu haziwezi kuchakatwa kwa njia hii."
       },
       "introduction": {
         "0": {

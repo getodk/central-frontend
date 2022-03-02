@@ -92,7 +92,11 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Odstranit formulář"
+    "title": "Odstranit formulář",
+    "introduction": [
+      "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?",
+      "Tato akce přesune formulář do koše. Po 30 dnech v koši bude trvale vymazán, ale předtím jej lze zrušit."
+    ]
   },
   "de": {
     "title": "Formulare löschen",
@@ -109,7 +113,11 @@ export default {
     ]
   },
   "fr": {
-    "title": "Supprimer le formulaire"
+    "title": "Supprimer le formulaire",
+    "introduction": [
+      "Êtes vous sûr de vouloir supprimer le formulaire {name} et toutes les données soumises ?",
+      "Cette action va envoyer le formulaire à la corbeille. Après 30 jours dans la corbeille, il sera purgé de manière permanente, mais il peut être restauré avant ce délai."
+    ]
   },
   "id": {
     "title": "Hapus Formulir"

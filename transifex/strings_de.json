@@ -948,6 +948,18 @@
         "num_audit_log_entries": {
           "string": "Anzahl der Audit-Log-Einträge"
         },
+        "num_archived_projects": {
+          "string": "Anzahl der archivierten Projekte"
+        },
+        "num_unique_managers": {
+          "string": "Anzahl eindeutiger Projekt-Manager"
+        },
+        "num_unique_viewers": {
+          "string": "Anzahl eindeutiger Projekt-Betrachter"
+        },
+        "num_unique_collectors": {
+          "string": "Anzahl eindeutiger Datensammler"
+        },
         "backups_configured": {
           "string": "Sicherungskopien konfiguriert."
         },
@@ -986,6 +998,9 @@
         },
         "num_forms_with_audits": {
           "string": "Anzahl Formulare mit Audits"
+        },
+        "num_reused_form_ids": {
+          "string": "Anzahl der wiederverwendeten Formular-IDs"
         },
         "num_submissions_received": {
           "string": "Anzahl ausgefüllte Formulare - erhalten"
@@ -3385,6 +3400,9 @@
       },
       "encryptedForm": {
         "string": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden."
+      },
+      "deletedFieldsDisabledForDraft": {
+        "string": ""
       },
       "introduction": {
         "0": {

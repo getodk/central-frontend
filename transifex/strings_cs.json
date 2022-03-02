@@ -588,7 +588,7 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": ""
+      "string": "Zadejte heslo dlouhé alespoň 10 znaků."
     },
     "updateReviewState": {
       "string": "Stav kontroly uložen!"
@@ -811,7 +811,7 @@
           "string": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
         },
         "changePassword": {
-          "string": ""
+          "string": "Vaše heslo je kratší než 10 znaků. Chcete-li svůj účet chránit, změňte si heslo tak, aby bylo delší."
         }
       },
       "problem": {
@@ -948,6 +948,18 @@
         "num_audit_log_entries": {
           "string": "Počet záznamů v protokolu auditů"
         },
+        "num_archived_projects": {
+          "string": ""
+        },
+        "num_unique_managers": {
+          "string": ""
+        },
+        "num_unique_viewers": {
+          "string": ""
+        },
+        "num_unique_collectors": {
+          "string": ""
+        },
         "backups_configured": {
           "string": "Konfigurace záloh"
         },
@@ -986,6 +998,9 @@
         },
         "num_forms_with_audits": {
           "string": "Počet formulářů s audity"
+        },
+        "num_reused_form_ids": {
+          "string": ""
         },
         "num_submissions_received": {
           "string": "Počet přijatých podání"
@@ -1830,7 +1845,7 @@
           "string": "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?"
         },
         "1": {
-          "string": ""
+          "string": "Tato akce přesune formulář do koše. Po 30 dnech v koši bude trvale vymazán, ale předtím jej lze zrušit."
         }
       }
     },
@@ -1856,7 +1871,7 @@
         },
         "deleteForm": {
           "0": {
-            "string": ""
+            "string": "Chystáte se odstranit tento návrh definice formuláře spolu se všemi nahranými návrhy mediálních souborů a všemi testovacími podáními. Protože jste ji ještě nezveřejnili, bude celý tento Formulář odstraněn a přesunut do koše."
           }
         }
       },
@@ -2017,7 +2032,7 @@
       },
       "problem": {
         "409_6": {
-          "string": ""
+          "string": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
         }
       }
     },
@@ -2423,7 +2438,7 @@
     },
     "FormVersionString": {
       "blank": {
-        "string": "",
+        "string": "(prázdný)",
         "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
@@ -2661,7 +2676,7 @@
       },
       "alert": {
         "passphraseTooShort": {
-          "string": ""
+          "string": "Zadejte alespoň 10 znaků dlouhou přístupovou frázi."
         }
       }
     },
@@ -3314,13 +3329,13 @@
         "string": "Stav kontroly"
       },
       "formVersion": {
-        "string": ""
+        "string": "Verze formuláře"
       },
       "deviceId": {
         "string": "ID zařízení"
       },
       "userAgent": {
-        "string": ""
+        "string": "Uživatelský agent"
       },
       "attachments": {
         "string": "Soubory medií"
@@ -3359,31 +3374,34 @@
     },
     "SubmissionDecrypt": {
       "title": {
-        "string": "",
+        "string": "Stáhnout příspěvky",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "exportOptions": {
-        "string": "",
+        "string": "Možnosti exportu",
         "developer_comment": "This text is shown above options for downloading Submissions."
       },
       "field": {
         "splitSelectMultiples": {
-          "string": "",
+          "string": "Rozdělení možností \"vybrat více\" do sloupců",
           "developer_comment": "This is the text of a form field."
         },
         "removeGroupNames": {
-          "string": "",
+          "string": "Odstranění názvů skupin",
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "",
+          "string": "Zahrnout dříve odstraněná pole formuláře",
           "developer_comment": "This is the text of a form field."
         }
       },
       "noSelectMultiple": {
-        "string": ""
+        "string": "Tento formulář nemá žádná pole pro výběr více položek."
       },
       "encryptedForm": {
+        "string": "Šifrované formuláře nelze tímto způsobem zpracovávat."
+      },
+      "deletedFieldsDisabledForDraft": {
         "string": ""
       },
       "introduction": {
@@ -3396,28 +3414,28 @@
         "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
       },
       "noRepeat": {
-        "string": "",
+        "string": "Tento formulář nemá opakování.",
         "developer_comment": "\"Repeats\" refers to repeat groups."
       },
       "action": {
         "download": {
           "mainTable": {
-            "string": "",
+            "string": "Hlavní datová tabulka (bez opakování)",
             "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
           },
           "allTables": {
-            "string": "",
+            "string": "Všechny datové tabulky",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "withMedia": {
-            "string": "",
+            "string": "Všechny datové a mediální soubory",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "alert": {
         "unavailable": {
-          "string": ""
+          "string": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu."
         },
         "submit": {
           "string": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
@@ -3569,7 +3587,7 @@
     },
     "SubmissionFiltersReviewState": {
       "anyState": {
-        "string": "",
+        "string": "(Jakýkoli stav)",
         "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
       }
     },
