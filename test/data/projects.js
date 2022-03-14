@@ -26,6 +26,7 @@ export const extendedProjects = dataStore({
     lastCreatedAt,
 
     name = faker.name.findName(),
+    description = '',
     archived = false,
     // The default value of this property does not necessarily match
     // testData.extendedForms.
@@ -45,6 +46,7 @@ export const extendedProjects = dataStore({
   }) => ({
     id,
     name,
+    description,
     archived,
     keyId: key != null ? key.id : null,
     createdAt: inPast

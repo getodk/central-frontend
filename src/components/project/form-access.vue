@@ -132,6 +132,7 @@ export default {
     projectToSave() {
       return {
         name: this.project.name,
+        description: this.project.description,
         archived: this.project.archived,
         // If there is a form on Backend that is not in this.forms, then at
         // least right now, Backend will return a Problem response. In the
