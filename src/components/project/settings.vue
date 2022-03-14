@@ -71,8 +71,8 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
-    <project-enable-encryption v-bind="enableEncryption"
-      @hide="hideModal('enableEncryption')" @success="afterEnableEncryption"/>
+    <!-- project-enable-encryption v-bind="enableEncryption"
+      @hide="hideModal('enableEncryption')" @success="afterEnableEncryption"/ -->
     <project-archive v-bind="archive" @hide="hideModal('archive')"
       @success="afterArchive"/>
   </div>
@@ -82,7 +82,7 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import ProjectArchive from './archive.vue';
 import ProjectEdit from './edit.vue';
-import ProjectEnableEncryption from './enable-encryption.vue';
+//import ProjectEnableEncryption from './enable-encryption.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
@@ -95,7 +95,7 @@ export default {
     DocLink,
     ProjectArchive,
     ProjectEdit,
-    ProjectEnableEncryption,
+    //ProjectEnableEncryption,
     SentenceSeparator
   },
   mixins: [modal(), routes()],
