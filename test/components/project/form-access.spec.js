@@ -239,6 +239,7 @@ describe('ProjectFormAccess', () => {
             url: '/v1/projects/1',
             data: {
               name: 'My Project',
+              description: '',
               archived: false,
               forms: [
                 {
