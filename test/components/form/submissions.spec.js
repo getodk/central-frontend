@@ -1,5 +1,7 @@
 import EnketoFill from '../../../src/components/enketo/fill.vue';
+import FormOverviewRightNow from '../../../src/components/form/overview/right-now.vue';
 import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
+import SummaryItem from '../../../src/components/summary-item.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -44,15 +46,15 @@ describe('FormSubmissions', () => {
       text.should.equal('Download 1 record…');
     });
 
-    it('updates the form checklist if the count changes', () => {
+    it('updates the form overview if the count changes', () => {
       testData.extendedForms.createPast(1, { submissions: 10 });
       testData.extendedSubmissions.createPast(11);
       return load('/projects/1/forms/f')
         .afterResponses(app => {
-          const step = app.findAll('#form-checklist .checklist-step').at(1);
-          const text = step.findAll('p').at(1).text();
-          text.should.containEql('10 ');
-          text.should.not.containEql('11 ');
+          const item = app.findComponent(FormOverviewRightNow)
+            .findAllComponents(SummaryItem)
+            .at(2);
+          item.get('.summary-item-heading').text().should.equal('10');
         })
         .load('/projects/1/forms/f/submissions', {
           project: false, form: false, formDraft: false, attachments: false
@@ -60,10 +62,10 @@ describe('FormSubmissions', () => {
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {
-          const step = app.findAll('#form-checklist .checklist-step').at(1);
-          const text = step.findAll('p').at(1).text();
-          text.should.containEql('11 ');
-          text.should.not.containEql('10 ');
+          const item = app.findComponent(FormOverviewRightNow)
+            .findAllComponents(SummaryItem)
+            .at(2);
+          item.get('.summary-item-heading').text().should.equal('11');
         });
     });
   });

@@ -2250,10 +2250,6 @@
       }
     },
     "FormOverview": {
-      "checklist": {
-        "string": "Checklist",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "draft": {
         "none": {
           "title": {

@@ -11,15 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-overview">
-    <div v-if="rendersTopRow" class="row">
-      <div class="col-xs-6">
-        <project-overview-about/>
-      </div>
-      <div class="col-xs-6">
-        <project-overview-right-now @scroll-to-forms="scrollToForms"/>
-      </div>
-    </div>
-    <form-list :condensed="!rendersTopRow"/>
+    <form-list/>
     <form-trash-list v-if="rendersTrashList" @restore="$emit('fetch-forms', true)"/>
   </div>
 </template>
@@ -27,15 +19,11 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormList from '../form/list.vue';
 import FormTrashList from '../form/trash-list.vue';
-import ProjectOverviewAbout from './overview/about.vue';
-import ProjectOverviewRightNow from './overview/right-now.vue';
-import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectOverview',
-  components: { FormList, FormTrashList, ProjectOverviewAbout, ProjectOverviewRightNow },
-  mixins: [routes()],
+  components: { FormList, FormTrashList },
   props: {
     projectId: {
       type: String,
@@ -46,29 +34,12 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData(['project']),
-    rendersTopRow() {
-      return this.project != null && this.project.permits('project.update');
-    },
     rendersTrashList() {
       return this.project != null && this.project.permits('form.restore');
     }
   },
   created() {
     this.$emit('fetch-forms', false);
-  },
-  methods: {
-    scrollToForms() {
-      const scrollTop = Math.round($('#form-list').offset().top);
-      $('html, body').animate({ scrollTop });
-    }
   }
 };
 </script>
-
-<style lang="scss">
-#project-overview > .row {
-  margin-top: 10px;
-
-  + #form-list { margin-top: 10px; }
-}
-</style>
