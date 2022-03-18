@@ -346,16 +346,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      // This will be part of a longer string that shows the date and time, for
-      // example: "today 01:23". The string may appear on its own or be part of
-      // a sentence.
-      "today": "today",
-      // This will be part of a longer string that shows the date and time, for
-      // example: "yesterday 01:23". The string may appear on its own or be part
-      // of a sentence.
-      "yesterday": "yesterday"
-    },
     "request": {
       "noRequest": "Something went wrong: there was no request.",
       "noResponse": "Something went wrong: there was no response to your request.",

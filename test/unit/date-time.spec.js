@@ -3,211 +3,197 @@ import { DateTime } from 'luxon';
 import { formatDate, formatDateTime, formatTime } from '../../src/util/date-time';
 import { setLuxon } from '../util/date-time';
 
+const dt = (iso) => DateTime.fromISO(iso);
+
 // Array of test cases
-const cases = [
+const pastWeekCases = [
   // Earlier today
   {
     now: '2018-01-01T01:00:00Z',
     iso: '2018-01-01T00:00:00Z',
-    formattedDate: ['2018/01/01', 'today'],
-    formattedTime: ['00:00']
+    formatted: 'today'
   },
   // The value is the exact same time as the current time.
   {
     now: '2018-01-01T01:00:00Z',
     iso: '2018-01-01T01:00:00Z',
-    formattedDate: ['2018/01/01', 'today'],
-    formattedTime: ['01:00']
+    formatted: 'today'
   },
   // Later today
   {
     now: '2018-01-01T01:00:00Z',
     iso: '2018-01-01T02:00:00Z',
-    formattedDate: ['2018/01/01', 'today'],
-    formattedTime: ['02:00']
+    formatted: 'today'
   },
   // Yesterday
   {
     now: '2018-01-01T00:00:00Z',
     iso: '2017-12-31T01:00:00Z',
-    formattedDate: ['2017/12/31', 'yesterday'],
-    formattedTime: ['01:00']
+    formatted: 'yesterday'
   },
   // More than 24 hours in the past, but still yesterday
   {
     now: '2018-01-01T01:00:00Z',
     iso: '2017-12-31T00:00:00Z',
-    formattedDate: ['2017/12/31', 'yesterday'],
-    formattedTime: ['00:00']
+    formatted: 'yesterday'
   },
   // 2 days ago
   {
     now: '2018-01-01T00:00:00Z',
     iso: '2017-12-30T00:00:00Z',
-    formattedDate: ['2017/12/30', 'Saturday'],
-    formattedTime: ['00:00']
+    formatted: 'Saturday'
   },
   // 3 days ago
   {
     now: '2018-01-01T00:00:00Z',
     iso: '2017-12-29T00:00:00Z',
-    formattedDate: ['2017/12/29', 'Friday'],
-    formattedTime: ['00:00']
+    formatted: 'Friday'
   },
   // 4 days ago
   {
     now: '2018-01-01T00:00:00Z',
     iso: '2017-12-28T00:00:00Z',
-    formattedDate: ['2017/12/28', 'Thursday'],
-    formattedTime: ['00:00']
+    formatted: 'Thursday'
   },
   // 5 days ago
   {
     now: '2018-01-01T00:00:00Z',
     iso: '2017-12-27T00:00:00Z',
-    formattedDate: ['2017/12/27', 'Wednesday'],
-    formattedTime: ['00:00']
+    formatted: 'Wednesday'
   },
   // 6 days ago
   {
     now: '2018-01-01T00:00:00Z',
     iso: '2017-12-26T00:00:00Z',
-    formattedDate: ['2017/12/26'],
-    formattedTime: ['00:00']
+    formatted: '2017/12/26'
   },
   // Tomorrow
   {
     now: '2018-01-01T00:00:00Z',
     iso: '2018-01-02T00:00:00Z',
-    formattedDate: ['2018/01/02'],
-    formattedTime: ['00:00']
-  },
-  // With seconds
-  {
-    now: '2018-01-01T00:00:00Z',
-    iso: '2018-01-01T01:02:59Z',
-    formattedDate: ['2018/01/01', 'today'],
-    formattedTime: ['01:02', '59']
-  },
-  {
-    now: '2018-01-01T00:00:00Z',
-    iso: '2018-01-01T23:59:59Z',
-    formattedDate: ['2018/01/01', 'today'],
-    formattedTime: ['23:59', '59']
-  },
-  // The formatted value is in the specified time zone.
-  {
-    zoneName: 'UTC-1',
-    now: '2018-01-01T01:00:00Z',
-    iso: '2018-01-01T02:00:00Z',
-    formattedDate: ['2018/01/01', 'today'],
-    formattedTime: ['01:00']
-  },
-  {
-    zoneName: 'UTC-1',
-    now: '2018-01-01T01:00:00Z',
-    iso: '2018-01-02T00:00:00-02:00',
-    formattedDate: ['2018/01/02'],
-    formattedTime: ['01:00']
+    formatted: '2018/01/02'
   },
   // Within UTC, the value is the same date as the current time, but within the
   // specified time zone, it is a different date.
   {
-    zoneName: 'UTC-1',
+    defaultZoneName: 'UTC-1',
     now: '2018-01-01T01:00:00Z',
     iso: '2018-01-01T00:00:00Z',
-    formattedDate: ['2017/12/31', 'yesterday'],
-    formattedTime: ['23:00']
+    formatted: 'yesterday'
   },
   // Within UTC, the value is a different date from the current time, but within
   // the specified time zone, it is the same date.
   {
-    zoneName: 'UTC-1',
+    defaultZoneName: 'UTC-1',
     now: '2018-01-01T01:00:00Z',
     iso: '2018-01-02T00:00:00Z',
-    formattedDate: ['2018/01/01', 'today'],
-    formattedTime: ['23:00']
+    formatted: 'today'
   }
 ];
 
 describe('util/date-time', () => {
-  let restoreLocale;
-  before(() => {
-    restoreLocale = setLuxon({ defaultLocale: 'en' });
+  let restoreLuxon;
+  afterEach(() => {
+    if (restoreLuxon != null) {
+      restoreLuxon();
+      restoreLuxon = null;
+    }
   });
-  after(() => {
-    restoreLocale();
+
+  describe('formatDate()', () => {
+    it('returns the correct absolute date', () => {
+      restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
+      formatDate(dt('2018-01-01T00:00:00Z')).should.equal('2018/01/01');
+    });
+
+    it('returns the date in the correct time zone', () => {
+      restoreLuxon = setLuxon({ defaultZoneName: 'UTC-1' });
+      formatDate(dt('2018-01-01T00:00:00Z')).should.equal('2017/12/31');
+    });
+
+    describe('pastWeek', () => {
+      for (const testCase of pastWeekCases) {
+        const { defaultZoneName = 'UTC', now, iso, formatted } = testCase;
+        // eslint-disable-next-line no-loop-func
+        it(`formats ${iso} when it is now ${now} (${defaultZoneName})`, () => {
+          restoreLuxon = setLuxon({ defaultZoneName, now });
+          formatDate(dt(iso), 'pastWeek').should.equal(formatted);
+        });
+      }
+    });
+
+    it('returns the correct string for an invalid DateTime', () => {
+      formatDate(dt('invalid')).should.equal('Invalid DateTime');
+    });
   });
 
-  for (const testCase of cases) {
-    const { zoneName = 'UTC', now, iso, formattedDate, formattedTime } = testCase;
-    const [absoluteDate, relativeDate = absoluteDate] = formattedDate;
-    const [hm, s = '00'] = formattedTime;
-    const hms = `${hm}:${s}`;
-
-    describe(`formatting '${iso}' when it is now '${now}' (${zoneName})`, () => {
-      let restoreLuxon;
-      let dateTime;
-      before(() => {
-        restoreLuxon = setLuxon({ defaultZoneName: zoneName, now });
-        dateTime = DateTime.fromISO(iso);
-      });
-      after(() => {
-        restoreLuxon();
-      });
-
-      describe('formatDate()', () => {
-        it('returns the correct absolute date', () => {
-          formatDate(dateTime, false).should.equal(absoluteDate);
-          formatDate(dateTime).should.equal(absoluteDate);
-        });
-
-        it('returns the correct relative date', () => {
-          formatDate(dateTime, true).should.equal(relativeDate);
-        });
-      });
-
-      describe('formatTime()', () => {
-        it('returns the correct hour and minute', () => {
-          formatTime(dateTime, false).should.equal(hm);
-        });
-
-        it('returns the correct second', () => {
-          formatTime(dateTime, true).should.equal(hms);
-          formatTime(dateTime).should.equal(hms);
-        });
-      });
-
-      describe('formatDateTime()', () => {
-        it('returns the correct absolute date/time', () => {
-          const expected = `${absoluteDate} ${hms}`;
-          formatDateTime(dateTime, false).should.equal(expected);
-          formatDateTime(dateTime).should.equal(expected);
-        });
-
-        it('returns the correct relative date/time', () => {
-          formatDateTime(dateTime, true).should.equal(`${relativeDate} ${hm}`);
-        });
-      });
-    });
-  }
-
-  describe('invalid DateTime', () => {
-    const dateTime = DateTime.fromISO('invalid');
-
-    specify('formatDate() returns the correct string', () => {
-      formatDate(dateTime, false).should.equal('Invalid DateTime');
-      formatDate(dateTime, true).should.equal('Invalid DateTime');
+  describe('formatTime()', () => {
+    it('returns the correct hour and minute', () => {
+      restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
+      formatTime(dt('2018-01-01T01:23:45Z'), false).should.equal('01:23');
+      formatTime(dt('2018-01-01T23:45:01Z'), false).should.equal('23:45');
     });
 
-    specify('formatTime() returns the correct string', () => {
-      formatTime(dateTime, true).should.equal('Invalid DateTime');
-      formatTime(dateTime, false).should.equal('Invalid DateTime');
+    it('returns the correct second', () => {
+      restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
+      const dateTime = dt('2018-01-01T01:23:45Z');
+      formatTime(dateTime, true).should.equal('01:23:45');
+      formatTime(dateTime).should.equal('01:23:45');
     });
 
-    specify('formatDateTime() returns the correct string', () => {
-      formatDateTime(dateTime, false).should.equal('Invalid DateTime');
-      formatDateTime(dateTime, true).should.equal('Invalid DateTime');
+    it('returns the time in the correct time zone', () => {
+      restoreLuxon = setLuxon({ defaultZoneName: 'UTC-1' });
+      formatTime(dt('2018-01-01T02:00:00Z')).should.equal('01:00:00');
+    });
+
+    it('returns the correct string for an invalid DateTime', () => {
+      formatTime(dt('invalid')).should.equal('Invalid DateTime');
+    });
+  });
+
+  describe('formatDateTime()', () => {
+    beforeEach(() => {
+      restoreLuxon = setLuxon({ defaultZoneName: 'UTC', now: '2018-01-01T00:00:00Z' });
+    });
+
+    it('returns the correct absolute date/time', () => {
+      const formatted = formatDateTime(dt('2017-12-31T01:23:45Z'));
+      formatted.should.equal('2017/12/31 01:23:45');
+    });
+
+    it('returns the correct pastWeek date/time', () => {
+      const formatted = formatDateTime(dt('2017-12-31T01:23:45Z'), 'pastWeek');
+      formatted.should.equal('yesterday 01:23');
+    });
+
+    describe('past date/time', () => {
+      const cases = [
+        // Future
+        ['2018-01-01T01:00:00Z', '2018/01/01 01:00:00'],
+        // Exact same time as the current time
+        ['2018-01-01T00:00:00Z', '2018/01/01 00:00:00'],
+        ['2017-12-31T23:59:00Z', '60 sec. ago'],
+        ['2017-12-31T23:58:59Z', '1 min. ago'],
+        ['2017-12-31T22:00:00Z', '120 min. ago'],
+        ['2017-12-31T21:59:59Z', '2 hr. ago'],
+        ['2017-12-30T00:00:00Z', '48 hr. ago'],
+        ['2017-12-29T23:59:59Z', '2 days ago'],
+        ['2017-11-17T00:00:00Z', '45 days ago'],
+        ['2017-11-16T23:59:59Z', '6 wk. ago'],
+        ['2017-11-06T00:00:00Z', '8 wk. ago'],
+        ['2017-11-05T23:59:59Z', '1 mo. ago'],
+        ['2015-01-01T00:00:00Z', '36 mo. ago'],
+        ['2014-12-31T23:59:59Z', '3 yr. ago']
+      ];
+      for (const [iso, formatted] of cases) {
+        it(`correctly formats ${iso}`, () => {
+          formatDateTime(dt(iso), 'past').should.equal(formatted);
+        });
+      }
+    });
+
+    it('returns the correct string for an invalid DateTime', () => {
+      formatDateTime(dt('invalid')).should.equal('Invalid DateTime');
     });
   });
 });

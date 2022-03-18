@@ -23,6 +23,10 @@ export default {
   name: 'DateTime',
   props: {
     iso: String,
+    relative: {
+      type: String,
+      default: 'pastWeek'
+    },
     blank: {
       type: String,
       default: ''
@@ -35,7 +39,7 @@ export default {
   },
   methods: {
     format(relative) {
-      return formatDateTime(this.dateTime, relative);
+      return formatDateTime(this.dateTime, relative ? this.relative : null);
     }
   }
 };
