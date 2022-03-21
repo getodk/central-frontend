@@ -1,8 +1,6 @@
 import FieldKeyRevoke from '../../../src/components/field-key/revoke.vue';
 import FieldKeyRow from '../../../src/components/field-key/row.vue';
 
-import FieldKey from '../../../src/presenters/field-key';
-
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -34,7 +32,7 @@ describe('FieldKeyRevoke', () => {
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
     return mockHttp()
       .mount(FieldKeyRevoke, {
-        propsData: { state: true, fieldKey: new FieldKey(fieldKey) }
+        propsData: { state: true, fieldKey }
       })
       .testStandardButton({
         button: '.btn-danger',

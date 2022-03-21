@@ -9,11 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Audit from '../../../presenters/audit';
 import Field from '../../../presenters/field';
-import FieldKey from '../../../presenters/field-key';
 import Form from '../../../presenters/form';
-import FormAttachment from '../../../presenters/form-attachment';
 import Option from '../../../util/option';
 import Project from '../../../presenters/project';
 import User from '../../../presenters/user';
@@ -95,15 +92,12 @@ export const transforms = {
   fields: ({ data }) => data.map(field => new Field(field)),
   formVersions: formPresenters,
   formDraft: option(formPresenter),
-  attachments: option(({ data }) =>
-    data.map(attachment => new FormAttachment(attachment))),
+  attachments: option(),
   odataChunk: ({ data, config }) => ({
     ...data,
     filtered: config.url.includes('%24filter=')
   }),
   submission: ({ data }) => data.value[0],
-  audits: ({ data }) => data.map(audit => new Audit(audit)),
-  fieldKeys: ({ data }) => data.map(fieldKey => new FieldKey(fieldKey)),
 
   backupsConfig: option(),
   analyticsConfig: option()

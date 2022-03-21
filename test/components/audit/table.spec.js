@@ -5,8 +5,6 @@ import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import Selectable from '../../../src/components/selectable.vue';
 
-import Audit from '../../../src/presenters/audit';
-
 import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
@@ -14,7 +12,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(AuditRow, {
-  propsData: { audit: new Audit(testData.extendedAudits.last()) },
+  propsData: { audit: testData.extendedAudits.last() },
   stubs: { RouterLink: RouterLinkStub },
   mocks: { $route: '/system/audits' }
 });
