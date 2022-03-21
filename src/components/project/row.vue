@@ -11,20 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="project-row" :class="{ archived: project.archived }">
-    <td>
-      <div class="name">
-        <router-link :to="projectPath(project.id)">
-          <span v-if="project.keyId" class="icon-lock project-icon"
-            :title="$t('encryptionTip')"></span>
-          <span>{{ project.nameWithArchived() }}</span>
-          <span class="icon-angle-right"></span>
-        </router-link>
-      </div>
-      <div v-if="introduction">
-        <a href="#" @click.prevent="$emit('show-introduction')">
-          {{ $t('help') }}
-        </a>
-      </div>
+    <td class="name">
+      <router-link :to="projectPath(project.id)">
+        <span v-if="project.keyId" class="icon-lock project-icon"
+          :title="$t('encryptionTip')"></span>
+        <span>{{ project.nameWithArchived() }}</span>
+        <span class="icon-angle-right"></span>
+      </router-link>
     </td>
     <td>{{ $tcn('count.form', project.forms) }}</td>
     <td>
@@ -88,7 +81,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "help": "What are Projects?",
     // This text is shown under the "Latest Submission" column of the Projects
     // table. It is shown for a Project with no Submissions.
     "noSubmission": "(none)",

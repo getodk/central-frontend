@@ -106,8 +106,7 @@ except according to the terms contained in the LICENSE file.
           </thead>
           <tbody v-if="projects != null">
             <project-row v-for="project of projects" :key="project.id"
-              :project="project" :introduction="rendersIntroduction"
-              @show-introduction="showModal('introduction')"/>
+              :project="project"/>
           </tbody>
         </table>
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
@@ -117,11 +116,8 @@ except according to the terms contained in the LICENSE file.
         </p>
       </template>
     </page-section>
-
     <project-new v-bind="newProject" @hide="hideModal('newProject')"
       @success="afterCreate"/>
-    <project-introduction v-if="rendersIntroduction" v-bind="introduction"
-      @hide="hideModal('introduction')"/>
   </div>
 </template>
 
@@ -129,7 +125,6 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
-import ProjectIntroduction from './introduction.vue';
 import ProjectNew from './new.vue';
 import ProjectRow from './row.vue';
 import SummaryItem from '../summary-item.vue';
@@ -144,7 +139,6 @@ export default {
     DocLink,
     Loading,
     PageSection,
-    ProjectIntroduction,
     ProjectNew,
     ProjectRow,
     SummaryItem
@@ -153,9 +147,6 @@ export default {
   data() {
     return {
       newProject: {
-        state: false
-      },
-      introduction: {
         state: false
       }
     };
@@ -173,11 +164,6 @@ export default {
     },
     dataExistsForRightNow() {
       return this.$store.getters.dataExists(this.rightNowKeys);
-    },
-    rendersIntroduction() {
-      if (this.projects == null || this.projects.length !== 1) return false;
-      const project = this.projects[0];
-      return project.name === 'Default Project' && project.forms === 0;
     }
   },
   created() {
