@@ -51,7 +51,7 @@ describe('FormSubmissions', () => {
       testData.extendedSubmissions.createPast(11);
       return load('/projects/1/forms/f')
         .afterResponses(app => {
-          const item = app.findComponent(FormOverviewRightNow)
+          const item = app.getComponent(FormOverviewRightNow)
             .findAllComponents(SummaryItem)
             .at(2);
           item.get('.summary-item-heading').text().should.equal('10');
@@ -62,7 +62,7 @@ describe('FormSubmissions', () => {
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {
-          const item = app.findComponent(FormOverviewRightNow)
+          const item = app.getComponent(FormOverviewRightNow)
             .findAllComponents(SummaryItem)
             .at(2);
           item.get('.summary-item-heading').text().should.equal('11');

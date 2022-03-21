@@ -73,7 +73,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#form-list { margin-bottom: $margin-bottom-page-section }
+#form-list { margin-bottom: $margin-bottom-page-section; }
 </style>
 
 <i18n lang="json5">

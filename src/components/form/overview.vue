@@ -51,7 +51,6 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
     </div>
-
     <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
   </div>
 </template>
