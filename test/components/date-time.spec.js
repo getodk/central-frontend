@@ -34,11 +34,20 @@ describe('DateTime', () => {
     component.attributes().title.should.equal('2020/01/01 12:34:56');
   });
 
-  it('shows the correct text', () => {
-    const component = mount(DateTime, {
-      propsData: { iso: '2020-01-01T12:34:56Z' }
+  describe('relative prop', () => {
+    it('defaults to recent', () => {
+      const component = mount(DateTime, {
+        propsData: { iso: '2019-12-31T12:34:56Z' }
+      });
+      component.text().should.equal('yesterday 12:34');
     });
-    component.text().should.equal('today 12:34');
+
+    it('uses the prop', () => {
+      const component = mount(DateTime, {
+        propsData: { iso: '2019-12-31T12:34:56Z', relative: 'past' }
+      });
+      component.text().should.equal('11 hr. ago');
+    });
   });
 
   describe('iso prop is null', () => {

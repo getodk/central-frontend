@@ -23,6 +23,10 @@ export default {
   name: 'DateTime',
   props: {
     iso: String,
+    relative: {
+      type: String,
+      default: 'recent'
+    },
     blank: {
       type: String,
       default: ''
@@ -34,8 +38,8 @@ export default {
     }
   },
   methods: {
-    format(relative) {
-      return formatDateTime(this.dateTime, relative);
+    format(useRelative) {
+      return formatDateTime(this.dateTime, useRelative ? this.relative : null);
     }
   }
 };

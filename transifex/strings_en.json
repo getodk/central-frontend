@@ -743,16 +743,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": {
-        "string": "today",
-        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"today 01:23\". The string may appear on its own or be part of a sentence."
-      },
-      "yesterday": {
-        "string": "yesterday",
-        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"yesterday 01:23\". The string may appear on its own or be part of a sentence."
-      }
-    },
     "request": {
       "noRequest": {
         "string": "Something went wrong: there was no request."
