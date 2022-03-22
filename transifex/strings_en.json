@@ -2889,6 +2889,16 @@
         }
       }
     },
+    "ProjectOverviewDescription": {
+      "instructions": {
+        "string": "Add your own notes, links, instructions and other resources to this space in Project Settings. (todo: make link)",
+        "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description."
+      },
+      "note": {
+        "string": "Only Project Managers can see this message.",
+        "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
+      }
+    },
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
