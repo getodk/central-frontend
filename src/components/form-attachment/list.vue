@@ -313,7 +313,7 @@ export default {
           // This may differ a little from updatedAt on the server, but that
           // should be OK.
           const updatedAt = new Date().toISOString();
-          updatedAttachments.push(attachment.with({ exists: true, updatedAt }));
+          updatedAttachments.push({ ...attachment, exists: true, updatedAt });
         });
     },
     updateAttachment(updatedAttachment) {

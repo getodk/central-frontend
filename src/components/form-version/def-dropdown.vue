@@ -40,6 +40,8 @@ import Form from '../../presenters/form';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
+let id = 0;
+
 export default {
   name: 'FormVersionDefDropdown',
   props: {
@@ -48,9 +50,15 @@ export default {
       required: true
     }
   },
+  data() {
+    id += 1;
+    return {
+      id
+    };
+  },
   computed: {
     toggleId() {
-      return `form-version-def-dropdown-toggle${this.version.key}`;
+      return `form-version-def-toggle${this.id}`;
     },
     excelExtension() {
       return this.version.excelContentType === 'application/vnd.ms-excel'

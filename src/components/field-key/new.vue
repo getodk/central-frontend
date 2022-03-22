@@ -70,7 +70,6 @@ import Modal from '../modal.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import FieldKey from '../../presenters/field-key';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
@@ -128,7 +127,7 @@ export default {
           this.displayName = '';
 
           this.step = 1;
-          this.created = new FieldKey(data);
+          this.created = data;
         })
         .catch(noop);
     },

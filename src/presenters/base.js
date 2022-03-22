@@ -10,8 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-let key = 0;
-
 export class Presenter {
   constructor(data) {
     this._data = data;
@@ -19,16 +17,6 @@ export class Presenter {
 
   get object() {
     return this._data;
-  }
-
-  // Returns a unique ID for the object. This is particularly useful if the
-  // object has no other ID property. `key` is typically used with v-for and
-  // v-bind:key. `key` does _not_ return a Backend Key object.
-  get key() {
-    if (this._key != null) return this._key;
-    key += 1;
-    this._key = key;
-    return key;
   }
 
   with(data) {
