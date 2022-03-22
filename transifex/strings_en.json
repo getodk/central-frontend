@@ -2550,6 +2550,15 @@
         "name": {
           "string": "Project name",
           "developer_comment": "This is the text of a form field."
+        },
+        "description": {
+          "string": "Project description",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "description": {
+          "string": "Write project description here..."
         }
       },
       "alert": {
