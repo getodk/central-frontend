@@ -6,7 +6,7 @@ import { setLuxon } from '../util/date-time';
 const dt = (iso) => DateTime.fromISO(iso);
 
 // Array of test cases
-const pastWeekCases = [
+const recentCases = [
   // Earlier today
   {
     now: '2018-01-01T01:00:00Z',
@@ -111,13 +111,13 @@ describe('util/date-time', () => {
       formatDate(dt('2018-01-01T00:00:00Z')).should.equal('2017/12/31');
     });
 
-    describe('pastWeek', () => {
-      for (const testCase of pastWeekCases) {
+    describe('recent date', () => {
+      for (const testCase of recentCases) {
         const { defaultZoneName = 'UTC', now, iso, formatted } = testCase;
         // eslint-disable-next-line no-loop-func
         it(`formats ${iso} when it is now ${now} (${defaultZoneName})`, () => {
           restoreLuxon = setLuxon({ defaultZoneName, now });
-          formatDate(dt(iso), 'pastWeek').should.equal(formatted);
+          formatDate(dt(iso), 'recent').should.equal(formatted);
         });
       }
     });
@@ -161,8 +161,8 @@ describe('util/date-time', () => {
       formatted.should.equal('2017/12/31 01:23:45');
     });
 
-    it('returns the correct pastWeek date/time', () => {
-      const formatted = formatDateTime(dt('2017-12-31T01:23:45Z'), 'pastWeek');
+    it('returns the correct recent date/time', () => {
+      const formatted = formatDateTime(dt('2017-12-31T01:23:45Z'), 'recent');
       formatted.should.equal('yesterday 01:23');
     });
 

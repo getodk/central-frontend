@@ -35,7 +35,7 @@ describe('DateTime', () => {
   });
 
   describe('relative prop', () => {
-    it('defaults to pastWeek', () => {
+    it('defaults to recent', () => {
       const component = mount(DateTime, {
         propsData: { iso: '2019-12-31T12:34:56Z' }
       });

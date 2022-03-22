@@ -25,7 +25,7 @@ export default {
     iso: String,
     relative: {
       type: String,
-      default: 'pastWeek'
+      default: 'recent'
     },
     blank: {
       type: String,
@@ -38,8 +38,8 @@ export default {
     }
   },
   methods: {
-    format(relative) {
-      return formatDateTime(this.dateTime, relative ? this.relative : null);
+    format(useRelative) {
+      return formatDateTime(this.dateTime, useRelative ? this.relative : null);
     }
   }
 };

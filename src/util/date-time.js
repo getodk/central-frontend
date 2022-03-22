@@ -24,7 +24,7 @@ export const ago = (duration) => DateTime.local().minus(duration);
 
 export const formatDate = (dateTime, relative = undefined) => {
   if (!dateTime.isValid) return dateTime.toString();
-  if (relative === 'pastWeek') {
+  if (relative === 'recent') {
     const now = DateTime.local();
     if (now.hasSame(dateTime, 'day') ||
       now.minus({ days: 1 }).hasSame(dateTime, 'day'))
