@@ -2250,10 +2250,6 @@
       }
     },
     "FormOverview": {
-      "checklist": {
-        "string": "Checklist",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "draft": {
         "none": {
           "title": {
@@ -2775,17 +2771,6 @@
         }
       }
     },
-    "ProjectIntroduction": {
-      "title": {
-        "string": "What are Projects?",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "Projects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within the Project, including using a web browser to fill out Forms. App Users for the Project can only see Forms in the Project which they have access to."
-        }
-      }
-    },
     "ProjectList": {
       "heading": {
         "0": {
@@ -2937,9 +2922,6 @@
       }
     },
     "ProjectRow": {
-      "help": {
-        "string": "What are Projects?"
-      },
       "noSubmission": {
         "string": "(none)",
         "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."

@@ -9,48 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-<template>
-  <page-section>
-    <template #heading>
-      <span>{{ $t('title') }}</span>
-    </template>
-    <template #body>
-      <i18n tag="p" path="body[0].full">
-        <template #accessTo>
-          <router-link :to="projectPath('form-access')">{{ $t('body[0].accessTo') }}</router-link>
-        </template>
-      </i18n>
-      <p>
-        <i18n :tag="false" path="moreInfo.helpArticle.full">
-          <template #helpArticle>
-            <doc-link to="central-projects/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
-          </template>
-        </i18n>
-        <sentence-separator/>
-        <i18n :tag="false" path="body[1].full">
-          <template #forumThread>
-            <a href="https://forum.getodk.org/t/-/19677" target="_blank">{{ $t('body[1].forumThread') }}</a>
-          </template>
-        </i18n>
-      </p>
-    </template>
-  </page-section>
-</template>
 
-<script>
-import DocLink from '../../doc-link.vue';
-import PageSection from '../../page/section.vue';
-import SentenceSeparator from '../../sentence-separator.vue';
-
-import routes from '../../../mixins/routes';
-
-export default {
-  name: 'ProjectOverviewAbout',
-  components: { DocLink, PageSection, SentenceSeparator },
-  mixins: [routes()]
-};
-</script>
-
+<!-- TODO. Remove this file after v1.5 is released. -->
 <i18n lang="json5">
 {
   "en": {

@@ -15,15 +15,6 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-6">
         <form-overview-right-now v-if="form != null"
           @view-xml="showModal('viewXml')"/>
-        <page-section condensed>
-          <template #heading>
-            <span>{{ $t('checklist') }}</span>
-          </template>
-          <template #body>
-            <form-checklist
-              @show-submission-options="showModal('submissionOptions')"/>
-          </template>
-        </page-section>
       </div>
       <div v-if="formDraft != null" id="form-overview-draft" class="col-xs-6">
         <page-section v-if="formDraft.isDefined()" condensed>
@@ -60,21 +51,16 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
     </div>
-
     <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
-    <project-submission-options v-bind="submissionOptions"
-      @hide="hideModal('submissionOptions')"/>
   </div>
 </template>
 
 <script>
-import FormChecklist from './checklist.vue';
 import FormDraftChecklist from '../form-draft/checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import FormVersionString from '../form-version/string.vue';
 import PageSection from '../page/section.vue';
-import ProjectSubmissionOptions from '../project/submission-options.vue';
 import SummaryItem from '../summary-item.vue';
 
 import modal from '../../mixins/modal';
@@ -84,14 +70,12 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'FormOverview',
   components: {
-    FormChecklist,
     FormDraftChecklist,
     FormOverviewRightNow,
     FormVersionStandardButtons,
     FormVersionString,
     FormVersionViewXml: loadAsync('FormVersionViewXml'),
     PageSection,
-    ProjectSubmissionOptions,
     SummaryItem
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' })],
@@ -109,9 +93,6 @@ export default {
     return {
       // Modals
       viewXml: {
-        state: false
-      },
-      submissionOptions: {
         state: false
       }
     };
@@ -148,8 +129,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is a title shown above a section of the page.
-    "checklist": "Checklist",
     "draft": {
       "none": {
         // This is a title shown above a section of the page.
