@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="submission-basic-details" condensed>
+  <page-section id="submission-basic-details">
     <template #heading><span>{{ $t('common.basicInfo') }}</span></template>
     <template #body>
       <loading :state="initiallyLoading"/>
@@ -109,7 +109,7 @@ export default {
 @import '../../assets/scss/mixins';
 
 #submission-basic-details {
-  margin-bottom: $margin-bottom-page-section;
+  margin-bottom: 35px;
 
   dd { @include text-overflow-ellipsis; }
   #submission-basic-details-user-agent { white-space: normal; }

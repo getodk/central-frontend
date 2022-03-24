@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
           @view-xml="showModal('viewXml')"/>
       </div>
       <div v-if="formDraft != null" id="form-overview-draft" class="col-xs-6">
-        <page-section v-if="formDraft.isDefined()" condensed>
+        <page-section v-if="formDraft.isDefined()">
           <template #heading>
             <span>{{ $t('common.currentDraft') }}</span>
           </template>
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
             <form-draft-checklist/>
           </template>
         </page-section>
-        <page-section v-else condensed>
+        <page-section v-else>
           <template #heading>
             <span>{{ $t('draft.none.title') }}</span>
           </template>

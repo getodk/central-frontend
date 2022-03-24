@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="page-section" :class="{ 'page-section-condensed': condensed }">
+  <div class="page-section">
     <div class="page-section-heading">
       <!-- The first element of this slot should be a <span> element that
       contains the title of the page section. -->
@@ -24,27 +24,18 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'PageSection',
-  props: {
-    condensed: {
-      type: Boolean,
-      default: false
-    }
-  }
+  name: 'PageSection'
 };
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-.page-section {
-  margin-bottom: 35px;
-}
+.page-section { margin-bottom: 20px; }
 
 .page-section-heading {
   font-size: 30px;
   margin-bottom: 10px;
-  margin-top: 10px;
   position: relative;
 
   > span:first-child {
@@ -56,15 +47,6 @@ export default {
       position: relative;
       top: -2px;
     }
-  }
-}
-
-.page-section-condensed {
-  border-top: none;
-  margin-bottom: 20px;
-
-  .page-section-heading {
-    margin-top: 0;
   }
 }
 </style>

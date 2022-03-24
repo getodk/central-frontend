@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-section id="form-overview-right-now"
-    :class="{ 'open-form': form.state === 'open' }" condensed>
+    :class="{ 'open-form': form.state === 'open' }">
     <template #heading>
       <span>{{ $t('common.rightNow') }}</span>
     </template>
