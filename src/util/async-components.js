@@ -99,6 +99,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-version-view-xml" */
     '../components/form-version/view-xml.vue'
   )))
+  .set('Home', loader(() => import(
+    /* webpackChunkName: "component-home" */
+    '../components/home.vue'
+  )))
   .set('NotFound', loader(() => import(
     /* webpackChunkName: "component-not-found" */
     '../components/not-found.vue'
@@ -106,10 +110,6 @@ const loaders = new Map()
   .set('ProjectFormAccess', loader(() => import(
     /* webpackChunkName: "component-project-form-access" */
     '../components/project/form-access.vue'
-  )))
-  .set('ProjectList', loader(() => import(
-    /* webpackChunkName: "component-project-list" */
-    '../components/project/list.vue'
   )))
   .set('ProjectOverview', loader(() => import(
     /* webpackChunkName: "component-project-overview" */

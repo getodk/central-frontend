@@ -32,6 +32,7 @@ export default {
 </script>
 
 <style lang="scss">
+@use 'sass:math';
 @import '../assets/scss/variables';
 
 $spinner-size: 16px;
@@ -43,7 +44,7 @@ $spinner-width: 3px;
 }
 
 .spinner {
-  $adjusted-position: calc(50% - (#{$spinner-size} / 2));
+  $adjusted-position: calc(50% - #{math.div($spinner-size, 2)});
   display: block;
   left: $adjusted-position;
   opacity: 0;
@@ -95,7 +96,7 @@ $spinner-width: 3px;
     border-top-color: $color-page-background;
     content: '';
     display: block;
-    left: ($spinner-size / 2) - ($spinner-width / 2);
+    left: math.div($spinner-size, 2) - math.div($spinner-width, 2);
     height: $spinner-width;
     position: absolute;
     top: 0;

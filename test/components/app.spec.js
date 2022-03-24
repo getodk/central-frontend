@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 
-import DocLink from '../../src/components/doc-link.vue';
-import ProjectList from '../../src/components/project/list.vue';
+import Home from '../../src/components/home.vue';
 
 import { logOut } from '../../src/util/session';
 
@@ -206,17 +205,17 @@ describe('App', () => {
     it('hides the alert', async () => {
       const app = await load('/', { attachTo: document.body });
       app.vm.$alert().info('Something happened!');
-      await app.getComponent(ProjectList).getComponent(DocLink).trigger('click');
+      await app.getComponent(Home).get('a[target="_blank"]').trigger('click');
       app.should.not.alert();
     });
 
     it('does not hide the alert if it was shown after the click', async () => {
       const app = await load('/', { attachTo: document.body });
-      const docLink = app.getComponent(ProjectList).getComponent(DocLink);
-      docLink.vm.$el.addEventListener('click', () => {
+      const a = app.getComponent(Home).get('a[target="_blank"]');
+      a.element.addEventListener('click', () => {
         app.vm.$alert().info('Something happened!');
       });
-      docLink.trigger('click');
+      a.trigger('click');
       app.should.alert();
     });
   });

@@ -40,7 +40,7 @@ export default {
 
   > span:first-child {
     color: $color-accent-primary;
-    font-weight: bold;
+    font-weight: 600;
 
     + .btn { margin-left: 24px; }
     ~ .btn {
