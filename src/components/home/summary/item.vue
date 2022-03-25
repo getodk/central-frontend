@@ -49,12 +49,11 @@ export default {
   .heading {
     align-items: flex-end;
     display: flex;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 
     > [class^="icon-"] {
       color: #555;
       font-size: 63px;
-      margin-bottom: 2px;
       margin-right: 9px;
     }
   }
