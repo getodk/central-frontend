@@ -87,7 +87,7 @@ export default {
   padding-bottom: 25px;
   padding-left: 15px;
   padding-right: 15px;
-  margin: 0 -15px 30px;
+  margin: 0 -15px 35px;
 
   > div {
     $border-width: 1px;

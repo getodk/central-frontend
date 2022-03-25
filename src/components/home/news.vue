@@ -31,7 +31,7 @@ export default {
 
 <style lang="scss">
 #home-news {
-  margin-bottom: 35px;
+  margin-bottom: 25px;
 
   iframe {
     border-width: 0;
