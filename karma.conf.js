@@ -7,12 +7,13 @@ This config is based on:
   - https://github.com/Nikku/karma-browserify
 */
 
+// eslint-disable-next-line import/extensions
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
 const { entry, ...webpackConfigForKarma } = webpackConfig;
 webpackConfigForKarma.devtool = 'inline-source-map';
 
-module.exports = function(config) {
+module.exports = (config) => {
   config.set({
     frameworks: ['mocha'],
     files: [

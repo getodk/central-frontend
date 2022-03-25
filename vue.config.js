@@ -11,12 +11,14 @@ except according to the terms contained in the LICENSE file.
 */
 module.exports = {
   chainWebpack: (config) => {
+    /* eslint-disable indent */
     config.module
       .rule('json5')
         .test(/\/src\/locales\/en\.json5$/)
         .type('javascript/auto')
         .use('json5')
           .loader('json5-loader');
+    /* eslint-enable indent */
 
     // We don't want to prefetch all locale files.
     config.plugins.delete('prefetch');
