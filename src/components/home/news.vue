@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="home-news">
+  <page-section id="home-news" horizontal>
     <template #heading>
       <span>{{ $t('title') }}</span>
     </template>

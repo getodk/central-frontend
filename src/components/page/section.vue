@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="page-section">
+  <div class="page-section" :class="{ horizontal }">
     <div class="page-section-heading">
       <!-- The first element of this slot should be a <span> element that
       contains the title of the page section. -->
@@ -24,19 +24,32 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'PageSection'
+  name: 'PageSection',
+  props: {
+    horizontal: Boolean
+  }
 };
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-.page-section { margin-bottom: 20px; }
+.page-section {
+  margin-bottom: 20px;
+
+  &.horizontal { display: flex; }
+}
 
 .page-section-heading {
   font-size: 30px;
   margin-bottom: 10px;
   position: relative;
+
+  .page-section.horizontal & {
+    line-height: 1;
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
 
   > span:first-child {
     color: $color-accent-primary;
