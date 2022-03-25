@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
       <div v-if="form.lastSubmission != null">
         <i18n :tag="false" path="common.lastSubmission">
           <template #dateTime>
-            <date-time :iso="form.lastSubmission"/>
+            <date-time :iso="form.lastSubmission" relative="past"/>
           </template>
         </i18n>
       </div>

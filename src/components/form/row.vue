@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
         <router-link :to="submissionsPath">
           <i18n :tag="false" path="common.lastSubmission">
             <template #dateTime>
-              <date-time :iso="form.lastSubmission"/>
+              <date-time :iso="form.lastSubmission" relative="past"/>
             </template>
           </i18n>
         </router-link>
