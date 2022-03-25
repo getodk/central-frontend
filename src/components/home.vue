@@ -13,21 +13,34 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div id="home-heading">{{ $t('heading[0]') }}</div>
     <home-summary/>
-    <home-news/>
+    <div id="home-news-container">
+      <home-news/>
+      <home-config-section v-if="homeConfig.title != null"
+        :title="homeConfig.title" :body="homeConfig.body"/>
+    </div>
     <project-list/>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';
 import ProjectList from './project/list.vue';
 
+import { loadAsync } from '../util/async-components';
 import { noop } from '../util/util';
 
 export default {
   name: 'Home',
-  components: { HomeNews, HomeSummary, ProjectList },
+  components: {
+    HomeConfigSection: loadAsync('HomeConfigSection'),
+    HomeNews,
+    HomeSummary,
+    ProjectList
+  },
+  computed: mapState({ homeConfig: (state) => state.config.home }),
   created() {
     this.fetchData();
   },
@@ -55,6 +68,11 @@ export default {
   margin-left: -15px;
   margin-right: -15px;
   padding: 20px 15px 12px 15px;
+}
+
+#home-news-container {
+  display: flex;
+  > * { flex: 1; }
 }
 </style>
 
