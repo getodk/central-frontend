@@ -21,7 +21,8 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td>{{ $tcn('count.form', project.forms) }}</td>
     <td>
-      <date-time :iso="project.lastSubmission" :blank="$t('noSubmission')"/>
+      <date-time :iso="project.lastSubmission" relative="past"
+        :blank="$t('noSubmission')"/>
     </td>
   </tr>
 </template>
