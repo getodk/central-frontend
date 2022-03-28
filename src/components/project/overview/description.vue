@@ -16,7 +16,13 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template v-else>
       <div v-if="canUpdate" id="project-overview-description-update">
-        <div class="instructions">{{ $t('instructions') }}</div>
+        <i18n tag="div" class="instructions" path="instructions.full">
+          <template #projectSettings>
+            <router-link :to="projectPath('settings')">
+                {{ $t('instructions.projectSettings') }}
+              </router-link>
+          </template>
+        </i18n>
         <div class="note">{{ $t('note') }}</div>
       </div>
     </template>
@@ -26,10 +32,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import MarkdownView from '../../markdown/view.vue';
+import routes from '../../../mixins/routes';
 
 export default {
   name: 'ProjectOverviewDescription',
   components: { MarkdownView },
+  mixins: [routes()],
   props: {
     description: {
       type: String
@@ -86,7 +94,10 @@ export default {
   "en": {
     // This is shown in place of an empty project description and serves as a
     // guide for where and how to change the description.
-    "instructions": "Add your own notes, links, instructions and other resources to this space in Project Settings. (todo: make link)",
+    "instructions": {
+      "full": "Add your own notes, links, instructions and other resources to this space in {projectSettings}.",
+      "projectSettings": "Project Settings"
+    },
     // This note is also shown with an empty project description explaining who
     // sees the message and can take action on it.
     "note": "Only Project Managers can see this message."

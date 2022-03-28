@@ -2900,8 +2900,14 @@
     },
     "ProjectOverviewDescription": {
       "instructions": {
-        "string": "Add your own notes, links, instructions and other resources to this space in Project Settings. (todo: make link)",
-        "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description."
+        "full": {
+          "string": "Add your own notes, links, instructions and other resources to this space in {projectSettings}.",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\n{projectSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Settings"
+        },
+        "projectSettings": {
+          "string": "Project Settings",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectSettings} is in the following text:\n\nAdd your own notes, links, instructions and other resources to this space in {projectSettings}."
+        }
       },
       "note": {
         "string": "Only Project Managers can see this message.",
