@@ -28,16 +28,14 @@ except according to the terms contained in the LICENSE file.
       </home-summary-item>
     </div>
     <div>
-      <!-- TODO. Update the icon. -->
       <home-summary-item to="https://docs.getodk.org/central-intro/"
-        icon="question-circle">
+        icon="book">
         <template #title>{{ $t('docs.title') }}</template>
         <template #body>{{ $t('docs.body') }}</template>
       </home-summary-item>
     </div>
     <div>
-      <!-- TODO. Update the icon. -->
-      <home-summary-item to="https://forum.getodk.org/" icon="comments">
+      <home-summary-item to="https://forum.getodk.org/" icon="comments-o">
         <template #title>{{ $t('forum.title') }}</template>
         <template #body>{{ $t('forum.body') }}</template>
       </home-summary-item>
