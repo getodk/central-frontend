@@ -31,20 +31,11 @@ describe('HomeSummaryItem', () => {
     mountComponent().find('#body').exists().should.be.true();
   });
 
-  describe('to prop is specified', () => {
-    it('passes the prop to the Linkable', () => {
-      const component = mountComponent({
-        propsData: { to: '/users' }
-      });
-      component.getComponent(Linkable).props().to.should.equal('/users');
+  it('passes the to prop to the Linkable', () => {
+    const component = mountComponent({
+      propsData: { to: '/users' }
     });
-
-    it('renders an .icon-angle-right', () => {
-      const component = mountComponent({
-        propsData: { to: '/users' }
-      });
-      component.find('.icon-angle-right').exists().should.be.true();
-    });
+    component.getComponent(Linkable).props().to.should.equal('/users');
   });
 
   it('renders a count if one is specified', () => {

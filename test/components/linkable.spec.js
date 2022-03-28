@@ -40,9 +40,9 @@ describe('Linkable', () => {
     a.find('#content').exists().should.be.true();
   });
 
-  it('renders a <span> otherwise', () => {
+  it('renders a <div> otherwise', () => {
     const linkable = mountComponent();
-    linkable.element.tagName.should.equal('SPAN');
+    linkable.element.tagName.should.equal('DIV');
     linkable.find('a').exists().should.be.false();
     linkable.find('#content').exists().should.be.true();
   });

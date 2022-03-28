@@ -21,9 +21,9 @@ except according to the terms contained in the LICENSE file.
     @click.prevent="$emit('click')">
     <slot></slot>
   </a>
-  <span v-else class="linkable">
+  <div v-else class="linkable">
     <slot></slot>
-  </span>
+  </div>
 </template>
 
 <script>

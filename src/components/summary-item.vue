@@ -60,19 +60,14 @@ $icon-font-size: 56px;
 .summary-item-icon-container {
   position: absolute;
 
-  span {
+  [class^="icon-"] {
     color: #555;
     font-size: $icon-font-size;
   }
-
-  &.summary-item-link span {
-    margin-right: 0;
-  }
 }
+a.summary-item-icon-container [class^="icon-"] { margin-right: 0; }
 
-.summary-item-heading, .summary-item-body {
-  margin-left: 75px;
-}
+.summary-item-heading, .summary-item-body { margin-left: 75px; }
 
 .summary-item-heading {
   @include text-overflow-ellipsis;
@@ -84,10 +79,7 @@ $icon-font-size: 56px;
     font-size: 20px;
     vertical-align: 2px;
   }
-
-  .summary-item-link .icon-angle-right {
-    margin-right: 0;
-  }
+  a .icon-angle-right { margin-right: 0; }
 }
 
 .summary-item-body {

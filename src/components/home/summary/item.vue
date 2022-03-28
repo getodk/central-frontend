@@ -17,7 +17,10 @@ except according to the terms contained in the LICENSE file.
         <div v-if="count != null" class="count">{{ $n(count, 'default') }}</div>
         <div class="title">
           <span><slot name="title"></slot></span>
-          <span v-if="to != null" class="icon-angle-right"></span>
+          <!-- If the Linkable is not a link, we hide the icon by making it
+          transparent. We always render the icon in order to keep the height of
+          .title consistent. -->
+          <span class="icon-angle-right"></span>
         </div>
       </div>
     </div>
@@ -83,4 +86,5 @@ export default {
     margin-bottom: 0;
   }
 }
+div.home-summary-item .icon-angle-right { color: transparent; }
 </style>
