@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div class="panel-body">
       <form @submit.prevent="submit">
-        <form-group v-model.trim="name" :placeholder="$t('field.name')"
+        <form-group v-model.trim="name" :placeholder="$t('field.name')" required
           autocomplete="off"/>
         <label class="form-group">
           <markdown-textarea v-model="description" rows="10"/>

@@ -49,8 +49,7 @@ export default {
     // If the description is blank and they don't have permission,
     // nothing will be shown in this description component.
     canUpdate: {
-      type: Boolean,
-      defaut: false
+      type: Boolean
     }
   }
 };
