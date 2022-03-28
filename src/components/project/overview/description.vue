@@ -10,7 +10,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <template v-if="description != null">
+    <template v-if="!emptyDescription">
       <markdown-view v-if="description != null" id="project-overview-description"
         :raw-markdown="description"/>
     </template>
@@ -50,6 +50,11 @@ export default {
     // nothing will be shown in this description component.
     canUpdate: {
       type: Boolean
+    }
+  },
+  computed: {
+    emptyDescription() {
+      return this.description === '' || this.description == null;
     }
   }
 };
