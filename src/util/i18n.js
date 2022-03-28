@@ -35,9 +35,9 @@ export const loadLocale = (locale) => {
       i18n.setLocaleMessage(locale, m.default);
       setLocale(locale);
     })
-    .catch(e => {
-      Vue.prototype.$logger.error(e);
-      throw e;
+    .catch(error => {
+      Vue.prototype.$logger.log(error);
+      throw error;
     });
 };
 

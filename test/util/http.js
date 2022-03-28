@@ -719,12 +719,12 @@ class MockHttp {
   /* eslint-disable no-console */
 
   _listRequestResponseLog() {
-    console.log('request/response log for the last series executed:');
+    console.error('request/response log for the last series executed:');
     if (this._requestResponseLog.length === 0) {
-      console.log('(empty)');
+      console.error('(empty)');
     } else {
       for (const entry of this._requestResponseLog)
-        console.log(entry);
+        console.error(entry);
     }
   }
 
