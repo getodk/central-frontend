@@ -2556,11 +2556,6 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "description": {
-          "string": "Write project description here..."
-        }
-      },
       "alert": {
         "success": {
           "string": "Project settings saved!"

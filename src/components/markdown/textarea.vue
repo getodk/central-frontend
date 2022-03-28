@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="form-group">
       <textarea :value="value" class="form-control"
         :placeholder="defaultText" :aria-label="defaultText"
-        :required="required" rows="2" @input="$emit('input', $event.target.value)">
+        :required="required" :rows="rows" @input="$emit('input', $event.target.value)">
       </textarea>
     </div>
     <div v-if="value !== '' && previewMode" class="preview-container">
@@ -44,16 +44,18 @@ export default {
       required: true
     },
     showFooter: {
-      type: Boolean,
-      default: false
+      type: Boolean
     },
     defaultText: {
       type: String,
       default: ''
     },
     required: {
-      type: Boolean,
-      default: false
+      type: Boolean
+    },
+    rows: {
+      type: String,
+      default: '2'
     }
   },
   data() {

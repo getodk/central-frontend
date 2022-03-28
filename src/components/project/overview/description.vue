@@ -74,6 +74,7 @@ export default {
 
 #project-overview-description > p {
   max-width: 80%;
+  line-height: 1.2;
 }
 
 #project-overview-description-update {
