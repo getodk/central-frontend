@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <form-group v-model.trim="name" :placeholder="$t('field.name')"
           autocomplete="off"/>
         <label class="form-group">
-          <markdown-textarea v-model="description" rows="10" />
+          <markdown-textarea v-model="description" rows="10"/>
           <span class="form-label">{{ $t('field.description') }}</span>
         </label>
         <button type="submit" class="btn btn-primary"
