@@ -8,6 +8,7 @@ const mountComponent = (propsData) => {
     defaultText: 'default text',
     showFooter: false,
     required: false,
+    rows: '2',
     ...propsData
   };
 
@@ -20,7 +21,8 @@ const mountComponent = (propsData) => {
     template: `<div><markdown-textarea v-model="body"
       default-text="${props.defaultText}"
       :show-footer="${props.showFooter}"
-      :required="${props.required}">
+      :required="${props.required}"
+      :rows="${props.rows}">
     </markdown-textarea></div>`,
     components: { 'markdown-textarea': MarkdownTextarea }
   });
@@ -115,5 +117,13 @@ describe('MarkdownTextarea', () => {
     const component = mountComponent({});
     const required = component.get('textarea').attributes('required');
     should.not.exist(required);
+  });
+
+  it('allows custom height via textarea rows prop', () => {
+    const component = mountComponent({
+      rows: '5'
+    });
+    const rows = component.get('textarea').attributes('rows');
+    rows.should.equal('5');
   });
 });

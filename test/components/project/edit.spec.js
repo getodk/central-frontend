@@ -43,7 +43,7 @@ describe('ProjectEdit', () => {
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('PATCH');
         url.should.equal('/v1/projects/1');
-        data.should.eql({ name: 'New Name' });
+        data.should.eql({ name: 'New Name', description: '' });
       })
       .respondWithProblem();
   });
