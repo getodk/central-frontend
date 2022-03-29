@@ -23,12 +23,12 @@ describe('ProjectOverviewDescription', () => {
 
   it('shows instructions if description is empty', () => {
     const component = mountComponent({ description: '', canUpdate: true });
-    component.find('#project-overview-description-update').text().should.startWith('Add your own notes');
+    component.find('#project-overview-description-update').text().should.startWith('Add project notes');
   });
 
   it('shows instructions if description is null', () => {
     const component = mountComponent({ canUpdate: true });
-    component.find('#project-overview-description-update').text().should.startWith('Add your own notes');
+    component.find('#project-overview-description-update').text().should.startWith('Add project notes');
   });
 
   it('shows nothing if empty description and cannot update', () => {
