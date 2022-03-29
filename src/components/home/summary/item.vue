@@ -56,15 +56,16 @@ export default {
 
     > [class^="icon-"] {
       color: #555;
-      font-size: 63px;
+      font-size: 62px;
+      margin-bottom: 2px;
       margin-right: 9px;
     }
   }
 
   .count {
-    font-size: 36px;
+    font-size: 35px;
     line-height: 1;
-    margin-bottom: -3px;
+    margin-bottom: -4px;
   }
 
   .title {

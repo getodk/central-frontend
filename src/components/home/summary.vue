@@ -89,15 +89,16 @@ export default {
 
   > div {
     $border-width: 1px;
-    $hpadding: 20px;
+    $padding-left: 20px;
+    $padding-right: 12px;
     border-left: $border-width solid $color-subpanel-border;
     box-sizing: content-box;
-    padding-left: $hpadding;
-    padding-right: $hpadding;
+    padding-left: $padding-left;
+    padding-right: $padding-right;
     padding-top: 3px;
     padding-bottom: 3px;
-    // width(#home-summary) = 4 * width(#home-summary > div) + 6 * $hpadding + 3 * $border-width
-    width: calc(25% - #{math.ceil(math.div(6 * $hpadding + 3 * $border-width, 4))});
+    // width(#home-summary) = 4 * width(#home-summary > div) + 3 * $padding-right + 3 * $border-width + 3 * $padding-left
+    width: calc(25% - #{math.ceil(math.div(3 * $padding-right + 3 * $border-width + 3 * $padding-left, 4))});
 
     &:first-child {
       border-left: none;

@@ -62,7 +62,7 @@ export default {
 #home-heading {
   background: $color-subpanel-background;
   color: $color-accent-primary;
-  font-size: 36px;
+  font-size: 35px;
   font-weight: 600;
   letter-spacing: -0.03em;
   margin-left: -15px;
