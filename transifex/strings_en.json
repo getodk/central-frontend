@@ -2554,6 +2554,10 @@
         "description": {
           "string": "Project description",
           "developer_comment": "This is the text of a form field."
+        },
+        "note": {
+          "string": "Add notes, links, instructions and other resources here.",
+          "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {

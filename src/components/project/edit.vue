@@ -21,6 +21,7 @@ except according to the terms contained in the LICENSE file.
         <label class="form-group">
           <markdown-textarea v-model="description" rows="10"/>
           <span class="form-label">{{ $t('field.description') }}</span>
+          <span class="note">{{ $t('field.note') }}</span>
         </label>
         <button type="submit" class="btn btn-primary"
           :disabled="awaitingResponse">
@@ -77,6 +78,15 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.note {
+  float: right;
+  color: #333;
+  font-size: 11px;
+  padding-right: 12px;
+}
+</style>
+
 <i18n lang="json5">
 {
   "en": {
@@ -84,7 +94,8 @@ export default {
     "title": "Basic Details",
     "field": {
       "name": "Project name",
-      "description": "Project description"
+      "description": "Project description",
+      "note": "Add notes, links, instructions and other resources here."
     },
     "alert": {
       "success": "Project settings saved!"
