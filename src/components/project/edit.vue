@@ -79,11 +79,15 @@ export default {
 </script>
 
 <style lang="scss">
-.note {
-  float: right;
-  color: #333;
-  font-size: 11px;
-  padding-right: 12px;
+#project-edit {
+  .note {
+    float: right;
+    color: #333;
+    font-size: 11px;
+    padding-right: 12px;
+    position: relative;
+    top: 2px;
+  }
 }
 </style>
 
