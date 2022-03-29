@@ -126,4 +126,20 @@ describe('MarkdownTextarea', () => {
     const rows = component.get('textarea').attributes('rows');
     rows.should.equal('5');
   });
+
+  it('allows a null value to be passed to it', () => {
+    // the textarea may be displaying null content returned from the API
+    // e.g. project.description before it is set.
+    const component = mount({
+      data() {
+        return {
+          body: null
+        };
+      },
+      template: '<div><markdown-textarea v-model="body"></markdown-textarea></div>',
+      components: { 'markdown-textarea': MarkdownTextarea }
+    }).getComponent(MarkdownTextarea);
+
+    should.not.exist(component.props().value);
+  });
 });

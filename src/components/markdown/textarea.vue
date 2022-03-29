@@ -11,13 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="markdown-textarea" :class="activeBorderClass">
-    <div class="form-group">
-      <textarea :value="value" class="form-control"
-        :placeholder="defaultText" :aria-label="defaultText"
-        :required="required" :rows="rows" @input="$emit('input', $event.target.value)">
-      </textarea>
-    </div>
-    <div v-if="value !== '' && previewMode" class="preview-container">
+    <textarea :value="value" class="form-control"
+      :placeholder="defaultText" :aria-label="defaultText"
+      :required="required" :rows="rows" @input="$emit('input', $event.target.value)">
+    </textarea>
+    <div v-if="!emptyValue && previewMode" class="preview-container">
       <p class="heading">{{ $t('preview') }}</p>
       <markdown-view :raw-markdown="value"/>
     </div>
@@ -40,8 +38,7 @@ export default {
   components: { MarkdownView },
   props: {
     value: {
-      type: String,
-      required: true
+      type: String
     },
     showFooter: {
       type: Boolean
@@ -115,8 +112,8 @@ export default {
   }
 
   .md-preview-btn {
-    background-color: #666;
-    color: white;
+    background-color: #ccc;
+    color: #333;
     &:hover, &:focus, &:active:focus { background-color: #888; }
   }
 

@@ -14,13 +14,15 @@ except according to the terms contained in the LICENSE file.
     <div v-if="editWithoutComment" role="alert">
       <span class="icon-pencil"></span>{{ $t('editWithoutComment') }}
     </div>
-    <markdown-textarea v-model="body" :default-text="$t('field.comment')"
-      :show-footer="editWithoutComment || awaitingResponse" required>
-      <button type="submit" class="btn btn-primary"
-        :disabled="awaitingResponse">
-        {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
-      </button>
-    </markdown-textarea>
+    <div class="form-group">
+      <markdown-textarea v-model="body" :default-text="$t('field.comment')"
+        :show-footer="editWithoutComment || awaitingResponse" required>
+        <button type="submit" class="btn btn-primary"
+          :disabled="awaitingResponse">
+          {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
+        </button>
+      </markdown-textarea>
+    </div>
   </form>
 </template>
 
