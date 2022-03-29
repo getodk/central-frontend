@@ -81,10 +81,10 @@ export default {
   font-style: italic;
 
   .instructions {
-    font-size: 21px;
+    font-size: 16px;
   }
   .note {
-    font-size: 15px;
+    font-size: 13px;
   }
 }
 
