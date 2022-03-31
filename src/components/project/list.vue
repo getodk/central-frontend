@@ -21,24 +21,27 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template #body>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{ $t('header.name') }}</th>
-              <th>{{ $t('resource.forms') }}</th>
-              <th>{{ $t('header.lastSubmission') }}</th>
-            </tr>
-          </thead>
-          <tbody v-if="projects != null">
-            <project-row v-for="project of projects" :key="project.id"
-              :project="project"/>
-          </tbody>
-        </table>
+        <div v-if="projects != null">
+          <project-home-block v-for="project of activeProjects" :key="project.id"
+            :project="project"/>
+        </div>
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
         <p v-if="projects != null && projects.length === 0"
           class="empty-table-message">
           {{ $t('emptyTable') }}
         </p>
+      </template>
+    </page-section>
+    <page-section v-if="archivedProjects.length > 0">
+      <template #heading>
+        <span>{{ $t('archived') }}</span>
+      </template>
+      <template #body>
+        <div v-for="project of archivedProjects" :key="project.id">
+          <h3 class="title">
+            <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
+          </h3>
+        </div>
       </template>
     </page-section>
     <project-new v-bind="newProject" @hide="hideModal('newProject')"
@@ -50,7 +53,7 @@ except according to the terms contained in the LICENSE file.
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectNew from './new.vue';
-import ProjectRow from './row.vue';
+import ProjectHomeBlock from './home-block.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
@@ -58,7 +61,12 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectList',
-  components: { Loading, PageSection, ProjectNew, ProjectRow },
+  components: {
+    Loading,
+    PageSection,
+    ProjectNew,
+    ProjectHomeBlock
+  },
   mixins: [modal(), routes()],
   inject: ['alert'],
   data() {
@@ -68,7 +76,17 @@ export default {
       }
     };
   },
-  computed: requestData(['currentUser', 'projects']),
+  computed: {
+    ...requestData(['currentUser', 'projects']),
+    activeProjects() {
+      if (this.projects == null) return [];
+      return this.projects.filter((p) => !(p.archived));
+    },
+    archivedProjects() {
+      if (this.projects == null) return [];
+      return this.projects.filter((p) => p.archived);
+    }
+  },
   methods: {
     afterCreate(project) {
       this.$router.push(this.projectPath(project.id))
@@ -87,6 +105,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "archived": "Archived Projects",
     "action": {
       // This is the text of a button that is used to create a new Project.
       "create": "New"

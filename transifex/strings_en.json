@@ -2806,6 +2806,9 @@
       }
     },
     "ProjectList": {
+      "archived": {
+        "string": "Archived Projects"
+      },
       "action": {
         "create": {
           "string": "New",

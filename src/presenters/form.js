@@ -35,6 +35,7 @@ const props = [
   // Extended form, extended form version, and extended form draft
   'excelContentType',
   // Extended form and extended form draft
+  'reviewStates',
   'submissions',
   'lastSubmission',
   'createdBy',

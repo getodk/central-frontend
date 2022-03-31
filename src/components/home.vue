@@ -48,7 +48,7 @@ export default {
     fetchData() {
       this.$store.dispatch('get', [{
         key: 'projects',
-        url: '/v1/projects',
+        url: '/v1/projects?forms=true',
         extended: true
       }]).catch(noop);
     }
