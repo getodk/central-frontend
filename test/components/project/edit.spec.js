@@ -18,6 +18,12 @@ describe('ProjectEdit', () => {
     value.should.equal('My Project');
   });
 
+  it('sets the value of the textarea to the current description', () => {
+    testData.extendedProjects.createPast(1, { description: 'Description of my project.' });
+    const { value } = mount(ProjectEdit, mountOptions()).get('textarea').element;
+    value.should.equal('Description of my project.');
+  });
+
   it('resets the form if the route changes', () => {
     testData.extendedProjects
       .createPast(1, { name: 'Project 1' })
@@ -38,12 +44,13 @@ describe('ProjectEdit', () => {
       .mount(ProjectEdit, mountOptions())
       .request(async (component) => {
         component.get('input').setValue('New Name');
+        component.get('textarea').setValue('New Description');
         return component.get('form').trigger('submit');
       })
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('PATCH');
         url.should.equal('/v1/projects/1');
-        data.should.eql({ name: 'New Name' });
+        data.should.eql({ name: 'New Name', description: 'New Description' });
       })
       .respondWithProblem();
   });

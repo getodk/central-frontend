@@ -11,17 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="markdown-textarea" :class="activeBorderClass">
-    <div class="form-group">
-      <textarea :value="value" class="form-control"
-        :placeholder="defaultText" :aria-label="defaultText"
-        :required="required" rows="2" @input="$emit('input', $event.target.value)">
-      </textarea>
-    </div>
-    <div v-if="value !== '' && previewMode" class="preview-container">
+    <textarea :value="value" class="form-control"
+      :placeholder="defaultText" :aria-label="defaultText"
+      :required="required" :rows="rows" @input="$emit('input', $event.target.value)">
+    </textarea>
+    <div v-if="!emptyValue && previewMode" class="preview-container">
       <p class="heading">{{ $t('preview') }}</p>
       <markdown-view :raw-markdown="value"/>
     </div>
-    <div v-show="value !== '' || showFooter " class="markdown-textarea-actions">
+    <div v-show="!emptyValue || showFooter " class="markdown-textarea-actions">
       <a href="https://commonmark.org/help/" class="external-help-link" target="_blank" rel="noopener">{{ $t('markdownSupported') }} </a>
       <span class="push"></span>
       <button class="btn md-preview-btn" type="button" @click="toggleViewMode">
@@ -40,20 +38,21 @@ export default {
   components: { MarkdownView },
   props: {
     value: {
-      type: String,
-      required: true
+      type: String
     },
     showFooter: {
-      type: Boolean,
-      default: false
+      type: Boolean
     },
     defaultText: {
       type: String,
       default: ''
     },
     required: {
-      type: Boolean,
-      default: false
+      type: Boolean
+    },
+    rows: {
+      type: String,
+      default: '2'
     }
   },
   data() {
@@ -62,11 +61,14 @@ export default {
     };
   },
   computed: {
+    emptyValue() {
+      return this.value === '' || this.value == null;
+    },
     previewButtonText() {
       return this.previewMode ? this.$t('action.hidePreview') : this.$t('action.showPreview');
     },
     activeBorderClass() {
-      if (this.showFooter || this.value !== '')
+      if (this.showFooter || !this.emptyValue)
         return 'active-border';
       return null;
     }
@@ -110,8 +112,8 @@ export default {
   }
 
   .md-preview-btn {
-    background-color: #666;
-    color: white;
+    background-color: #bbb;
+    color: #333;
     &:hover, &:focus, &:active:focus { background-color: #888; }
   }
 

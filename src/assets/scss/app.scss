@@ -324,6 +324,12 @@ $form-group-padding-bottom: 15px;
   padding-bottom: $form-group-padding-bottom;
   position: relative;
 
+  &:focus-within {
+    .form-label {
+      color: $color-action-foreground;
+    }
+  }
+
   $form-control-z-index: 1;
   .form-control {
     background: $color-input-background;
@@ -359,7 +365,6 @@ $form-group-padding-bottom: 15px;
     transition: 0.15s transform, 0.15s color;
   }
   .form-control {
-    &:focus ~ .form-label { color: $color-action-foreground; }
     &:placeholder-shown ~ .form-label { transform: translateY(-15px); }
   }
 

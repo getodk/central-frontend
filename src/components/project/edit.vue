@@ -18,6 +18,11 @@ except according to the terms contained in the LICENSE file.
       <form @submit.prevent="submit">
         <form-group v-model.trim="name" :placeholder="$t('field.name')" required
           autocomplete="off"/>
+        <label class="form-group">
+          <markdown-textarea v-model="description" rows="10"/>
+          <span class="form-label">{{ $t('field.description') }}</span>
+          <span class="note">{{ $t('field.note') }}</span>
+        </label>
         <button type="submit" class="btn btn-primary"
           :disabled="awaitingResponse">
           {{ $t('action.saveSettings') }} <spinner :state="awaitingResponse"/>
@@ -30,6 +35,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
+import MarkdownTextarea from '../markdown/textarea.vue';
+
 
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
@@ -38,19 +45,20 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectEdit',
-  components: { FormGroup, Spinner },
+  components: { FormGroup, Spinner, MarkdownTextarea },
   mixins: [request()],
   data() {
     return {
       awaitingResponse: false,
-      name: this.$store.state.request.data.project.name
+      name: this.$store.state.request.data.project.name,
+      description: this.$store.state.request.data.project.description
     };
   },
   computed: requestData(['project']),
   methods: {
     submit() {
-      const { name } = this;
-      this.patch(apiPaths.project(this.project.id), { name })
+      const { name, description } = this;
+      this.patch(apiPaths.project(this.project.id), { name, description })
         .then(response => {
           this.$store.commit('setData', {
             key: 'project',
@@ -58,6 +66,7 @@ export default {
             // include extended metadata.
             value: this.project.with({
               name,
+              description,
               updatedAt: response.data.updatedAt
             })
           });
@@ -69,13 +78,28 @@ export default {
 };
 </script>
 
+<style lang="scss">
+#project-edit {
+  .note {
+    float: right;
+    color: #333;
+    font-size: 11px;
+    padding-right: 12px;
+    position: relative;
+    top: 2px;
+  }
+}
+</style>
+
 <i18n lang="json5">
 {
   "en": {
     // This is a title shown above a section of the page.
     "title": "Basic Details",
     "field": {
-      "name": "Project name"
+      "name": "Project name",
+      "description": "Project description",
+      "note": "Add notes, links, instructions and other resources here."
     },
     "alert": {
       "success": "Project settings saved!"

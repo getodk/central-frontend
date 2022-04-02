@@ -28,8 +28,10 @@ except according to the terms contained in the LICENSE file.
             </div>
           </div>
           <div class="col-xs-8">
-            <markdown-textarea v-model="notes" :default-text="$t('field.notes')"
+            <div class="form-group">
+              <markdown-textarea v-model="notes" :default-text="$t('field.notes')"
               :show-footer="awaitingResponse"/>
+            </div>
           </div>
         </div>
         <div class="modal-actions">

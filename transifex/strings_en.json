@@ -2550,6 +2550,14 @@
         "name": {
           "string": "Project name",
           "developer_comment": "This is the text of a form field."
+        },
+        "description": {
+          "string": "Project description",
+          "developer_comment": "This is the text of a form field."
+        },
+        "note": {
+          "string": "Add notes, links, instructions and other resources here.",
+          "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {
@@ -2887,6 +2895,22 @@
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
           }
         }
+      }
+    },
+    "ProjectOverviewDescription": {
+      "instructions": {
+        "full": {
+          "string": "Add Project notes, links, instructions and other resources to this space in {projectSettings}.",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\n{projectSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Settings"
+        },
+        "projectSettings": {
+          "string": "Project Settings",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectSettings} is in the following text:\n\nAdd Project notes, links, instructions and other resources to this space in {projectSettings}."
+        }
+      },
+      "note": {
+        "string": "Only Project Managers can see this suggestion.",
+        "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
       }
     },
     "ProjectOverviewRightNow": {
