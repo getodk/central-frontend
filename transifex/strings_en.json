@@ -2900,12 +2900,12 @@
     "ProjectOverviewDescription": {
       "instructions": {
         "full": {
-          "string": "Add project notes, links, instructions and other resources to this space in {projectSettings}.",
+          "string": "Add Project notes, links, instructions and other resources to this space in {projectSettings}.",
           "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\n{projectSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Settings"
         },
         "projectSettings": {
           "string": "Project Settings",
-          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectSettings} is in the following text:\n\nAdd project notes, links, instructions and other resources to this space in {projectSettings}."
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectSettings} is in the following text:\n\nAdd Project notes, links, instructions and other resources to this space in {projectSettings}."
         }
       },
       "note": {

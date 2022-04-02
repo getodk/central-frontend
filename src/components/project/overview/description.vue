@@ -96,7 +96,7 @@ export default {
     // This is shown in place of an empty project description and serves as a
     // guide for where and how to change the description.
     "instructions": {
-      "full": "Add project notes, links, instructions and other resources to this space in {projectSettings}.",
+      "full": "Add Project notes, links, instructions and other resources to this space in {projectSettings}.",
       "projectSettings": "Project Settings"
     },
     // This note is also shown with an empty project description explaining who
