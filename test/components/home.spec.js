@@ -15,7 +15,7 @@ describe('Home', () => {
       ]);
     });
 
-    it('does not send a request for users for a user without a sidewide role', () => {
+    it('does not send request for users if user does not have a sidewide role', () => {
       mockLogin({ role: 'none' });
       return load('/', { root: false }, { users: false }).testRequests([
         { url: '/v1/projects', extended: true }

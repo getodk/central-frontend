@@ -69,10 +69,10 @@ export default {
   }
 
   .title {
+    align-items: center;
     display: flex;
     font-size: 12px;
     font-weight: 600;
-    align-items: center;
   }
 
   .icon-angle-right {

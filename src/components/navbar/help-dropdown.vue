@@ -17,10 +17,10 @@ except according to the terms contained in the LICENSE file.
     </a>
     <ul class="dropdown-menu">
       <li>
-        <doc-link to="central-intro/">{{ $t('docs') }}</doc-link>
+        <doc-link to="central-intro/">{{ $t('common.docs') }}</doc-link>
       </li>
       <li>
-        <a href="https://forum.getodk.org/" target="_blank">{{ $t('forum') }}</a>
+        <a href="https://forum.getodk.org/" target="_blank">{{ $t('common.forum') }}</a>
       </li>
       <li>
         <a href="/version.txt" target="_blank">{{ $t('version') }}</a>
@@ -41,10 +41,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is the text of a link that links to the documentation.
-    "docs": "Docs",
-    // This is the text of a link that links to the ODK forum.
-    "forum": "Forum",
     // This is the text of a link that shows what version of ODK Central is in
     // use.
     "version": "Version"

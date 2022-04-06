@@ -26,6 +26,7 @@ describe('Linkable', () => {
     });
     const a = linkable.get('a');
     a.attributes().href.should.equal('https://getodk.org');
+    a.attributes().target.should.equal('_blank');
     a.find('#content').exists().should.be.true();
   });
 

@@ -58,12 +58,7 @@ import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectList',
-  components: {
-    Loading,
-    PageSection,
-    ProjectNew,
-    ProjectRow
-  },
+  components: { Loading, PageSection, ProjectNew, ProjectRow },
   mixins: [modal(), routes()],
   data() {
     return {

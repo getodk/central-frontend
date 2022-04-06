@@ -67,7 +67,7 @@ export default {
   letter-spacing: -0.03em;
   margin-left: -15px;
   margin-right: -15px;
-  padding: 20px 15px 12px 15px;
+  padding: 20px 15px 15px 15px;
 }
 
 #home-news-container {

@@ -685,9 +685,17 @@
       "string": "Danger Zone",
       "developer_comment": "This is a title shown above a section of the page."
     },
+    "docs": {
+      "string": "Docs",
+      "developer_comment": "This is the text of a link that links to the documentation."
+    },
     "filter": {
       "string": "Filter",
       "developer_comment": "This text is shown next to options for filtering a table."
+    },
+    "forum": {
+      "string": "Forum",
+      "developer_comment": "This is the text of a link that links to the ODK forum."
     },
     "no": {
       "string": "No"
@@ -2474,17 +2482,11 @@
         }
       },
       "docs": {
-        "title": {
-          "string": "Docs"
-        },
         "body": {
           "string": "There is a getting started guide and user documentation available on the ODK Docs website."
         }
       },
       "forum": {
-        "title": {
-          "string": "Forum"
-        },
         "body": {
           "string": "You can always get help from others on the forum, where you can also search previous questions."
         }
@@ -2534,14 +2536,6 @@
       }
     },
     "NavbarHelpDropdown": {
-      "docs": {
-        "string": "Docs",
-        "developer_comment": "This is the text of a link that links to the documentation."
-      },
-      "forum": {
-        "string": "Forum",
-        "developer_comment": "This is the text of a link that links to the ODK forum."
-      },
       "version": {
         "string": "Version",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."

@@ -309,8 +309,12 @@
     "currentDraft": "Your Current Draft",
     // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
+    // This is the text of a link that links to the documentation.
+    "docs": "Docs",
     // This text is shown next to options for filtering a table.
     "filter": "Filter",
+    // This is the text of a link that links to the ODK forum.
+    "forum": "Forum",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",

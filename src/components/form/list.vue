@@ -71,8 +71,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
-
 #form-list { margin-bottom: 35px; }
 </style>
 

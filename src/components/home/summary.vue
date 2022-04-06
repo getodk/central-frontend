@@ -30,13 +30,13 @@ except according to the terms contained in the LICENSE file.
     <div>
       <home-summary-item to="https://docs.getodk.org/central-intro/"
         icon="book">
-        <template #title>{{ $t('docs.title') }}</template>
+        <template #title>{{ $t('common.docs') }}</template>
         <template #body>{{ $t('docs.body') }}</template>
       </home-summary-item>
     </div>
     <div>
       <home-summary-item to="https://forum.getodk.org/" icon="comments-o">
-        <template #title>{{ $t('forum.title') }}</template>
+        <template #title>{{ $t('common.forum') }}</template>
         <template #body>{{ $t('forum.body') }}</template>
       </home-summary-item>
     </div>
@@ -82,10 +82,10 @@ export default {
   background: $color-subpanel-background;
   border-bottom: 2px solid $color-subpanel-border;
   display: flex;
-  padding-bottom: 25px;
+  margin: 0 -15px 35px;
+  padding-bottom: 20px;
   padding-left: 15px;
   padding-right: 15px;
-  margin: 0 -15px 35px;
 
   > div {
     $border-width: 1px;
@@ -93,10 +93,9 @@ export default {
     $padding-right: 12px;
     border-left: $border-width solid $color-subpanel-border;
     box-sizing: content-box;
+    padding-bottom: 3px;
     padding-left: $padding-left;
     padding-right: $padding-right;
-    padding-top: 3px;
-    padding-bottom: 3px;
     // width(#home-summary) = 4 * width(#home-summary > div) + 3 * $padding-right + 3 * $border-width + 3 * $padding-left
     width: calc(25% - #{math.ceil(math.div(3 * $padding-right + 3 * $border-width + 3 * $padding-left, 4))});
 
@@ -119,11 +118,9 @@ export default {
       "body": "Users can be assigned to Projects to manage them, or to collect or review submitted data."
     },
     "docs": {
-      "title": "Docs",
       "body": "There is a getting started guide and user documentation available on the ODK Docs website."
     },
     "forum": {
-      "title": "Forum",
       "body": "You can always get help from others on the forum, where you can also search previous questions."
     }
   }
