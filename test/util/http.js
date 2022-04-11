@@ -33,7 +33,7 @@ specify all the responses, in order of the request:
   mockLogin();
   testData.extendedProjects.createPast(3);
   mockHttp()
-    .mount(ProjectList)
+    .mount(Home)
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted());
 
@@ -47,7 +47,7 @@ component once the responses have been processed:
   mockLogin();
   testData.extendedProjects.createPast(3);
   mockHttp()
-    .mount(ProjectList)
+    .mount(Home)
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
@@ -73,7 +73,7 @@ Mocha. You can call then(), catch(), or finally() on the thenable:
   mockLogin();
   testData.extendedProjects.createPast(3);
   mockHttp()
-    .mount(ProjectList)
+    .mount(Home)
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
@@ -125,7 +125,7 @@ it uses $route, you can use Vue Test Utils to mock it. For example:
   mockLogin();
   testData.extendedProjects.createPast(3);
   mockHttp()
-    .mount(ProjectList, {
+    .mount(Home, {
       stubs: { RouterLink: RouterLinkStub },
       mocks: { $route: '/' }
     })
@@ -139,7 +139,7 @@ location, then pass the router to mount():
   testData.extendedProjects.createPast(3);
   mockHttp()
     .route('/')
-    .mount(ProjectList, { router })
+    .mount(Home, { router })
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted());
 
@@ -203,7 +203,7 @@ the route component, stubbing <router-link> and mocking $route. For example,
 is equivalent to:
 
   mockHttp()
-    .mount(ProjectList, {
+    .mount(Home, {
       stubs: { RouterLink: RouterLinkStub },
       mocks: { $route: '/' }
     })

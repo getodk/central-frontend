@@ -88,10 +88,10 @@ The following meta fields are supported for bottom-level routes:
 
     {
       // Do not clear data for the 'project' key if the user is navigating from
-      // the route named 'ProjectList' and if the routes' params match on
+      // the route named 'ProjectOverview' and if the routes' params match on
       // 'projectId'.
       project: {
-        ProjectList: ['projectId']
+        ProjectOverview: ['projectId']
       },
 
       // Do not clear data for any key if the user is navigating from a route
@@ -255,7 +255,7 @@ const routes = [
 
   asyncRoute({
     path: '/',
-    component: 'ProjectList',
+    component: 'Home',
     loading: 'page',
     meta: {
       title: { parts: () => [i18n.t('resource.projects')] } // Homepage

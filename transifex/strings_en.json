@@ -506,6 +506,9 @@
     "submission": {
       "string": "{count, plural, one {Submission} other {Submissions}}"
     },
+    "user": {
+      "string": "{count, plural, one {User} other {Users}}"
+    },
     "webUser": {
       "string": "{count, plural, one {Web User} other {Web Users}}"
     }
@@ -682,9 +685,17 @@
       "string": "Danger Zone",
       "developer_comment": "This is a title shown above a section of the page."
     },
+    "docs": {
+      "string": "Docs",
+      "developer_comment": "This is the text of a link that links to the documentation."
+    },
     "filter": {
       "string": "Filter",
       "developer_comment": "This text is shown next to options for filtering a table."
+    },
+    "forum": {
+      "string": "Forum",
+      "developer_comment": "This is the text of a link that links to the ODK forum."
     },
     "no": {
       "string": "No"
@@ -2446,6 +2457,41 @@
         "developer_comment": "This is the title at the top of a pop-up."
       }
     },
+    "Home": {
+      "heading": {
+        "0": {
+          "string": "Welcome to Central."
+        }
+      }
+    },
+    "HomeNews": {
+      "title": {
+        "string": "News",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "HomeSummary": {
+      "projects": {
+        "body": {
+          "string": "Central is organized into Projects, which each contain their own Forms and related data."
+        }
+      },
+      "users": {
+        "body": {
+          "string": "Users can be assigned to Projects to manage them, or to collect or review submitted data."
+        }
+      },
+      "docs": {
+        "body": {
+          "string": "There is a getting started guide and user documentation available on the ODK Docs website."
+        }
+      },
+      "forum": {
+        "body": {
+          "string": "You can always get help from others on the forum, where you can also search previous questions."
+        }
+      }
+    },
     "Loading": {
       "text": {
         "string": "Loading…"
@@ -2490,14 +2536,6 @@
       }
     },
     "NavbarHelpDropdown": {
-      "docs": {
-        "string": "Docs",
-        "developer_comment": "This is the text of a link that links to the documentation."
-      },
-      "forum": {
-        "string": "Forum",
-        "developer_comment": "This is the text of a link that links to the ODK forum."
-      },
       "version": {
         "string": "Version",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -2770,83 +2808,10 @@
       }
     },
     "ProjectList": {
-      "heading": {
-        "0": {
-          "string": "Welcome to Central."
-        },
-        "1": {
-          "string": "Let’s get some things done.",
-          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
-        }
-      },
-      "gettingStarted": {
-        "title": {
-          "string": "Getting Started",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
-        "body": {
-          "0": {
-            "full": {
-              "string": "If you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}.",
-              "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
-            },
-            "docsWebsite": {
-              "string": "ODK Docs website",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
-            }
-          },
-          "1": {
-            "full": {
-              "string": "In addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
-            },
-            "forum": {
-              "string": "ODK community forum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
-            }
-          }
-        }
-      },
-      "news": {
-        "string": "News",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "rightNow": {
-        "users": {
-          "full": {
-            "string": "{count, plural, one {{webUsers} who can administer Projects through this website.} other {{webUsers} who can administer Projects through this website.}}",
-            "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
-          },
-          "webUsers": {
-            "string": "{count, plural, one {Web User} other {Web Users}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
-          }
-        },
-        "projects": {
-          "full": {
-            "string": "{count, plural, one {{projects} which can organize Forms and App Users for device deployment.} other {{projects} which can organize Forms and App Users for device deployment.}}",
-            "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
-          },
-          "projects": {
-            "string": "{count, plural, one {Project} other {Projects}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text. (The plural form of the text is shown.)\n\n{projects} which can organize Forms and App Users for device deployment."
-          }
-        }
-      },
-      "projectsTitle": {
-        "string": "Projects",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "action": {
         "create": {
           "string": "New",
           "developer_comment": "This is the text of a button that is used to create a new Project."
-        }
-      },
-      "header": {
-        "forms": {
-          "string": "Forms",
-          "developer_comment": "This is the text of a table column header."
         }
       },
       "emptyTable": {

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
     <div v-show="formVersions != null" class="row">
       <div class="col-xs-6">
-        <page-section condensed>
+        <page-section>
           <template #heading>
             <span>{{ $t('draftChecklist.title') }}</span>
           </template>
@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
       <div class="col-xs-6">
-        <page-section condensed>
+        <page-section>
           <template #heading>
             <span>{{ $t('common.currentDraft') }}</span>
           </template>
@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
             </summary-item>
           </template>
         </page-section>
-        <page-section condensed>
+        <page-section>
           <template #heading>
             <span>{{ $t('actions.title') }}</span>
           </template>

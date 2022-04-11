@@ -141,7 +141,7 @@ export default {
 @import '../../assets/scss/variables';
 
 #analytics-form {
-  margin-bottom: $margin-bottom-page-section;
+  margin-bottom: 35px;
 
   .radio { margin-bottom: 21px; }
   .help-block { color: $color-text; }

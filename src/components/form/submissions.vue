@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <page-section v-show="keys != null" condensed>
+    <page-section v-show="keys != null">
       <template #heading>
         <span>{{ $t('resource.submissions') }}</span>
         <enketo-fill v-if="rendersEnketoFill" :form-version="form">

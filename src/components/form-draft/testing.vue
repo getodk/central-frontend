@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div id="form-draft-testing-info" class="row">
       <div class="col-xs-8">
-        <page-section condensed>
+        <page-section>
           <template #heading>
             <span>{{ $t('title') }}</span>
             <enketo-fill v-if="formDraft != null" :form-version="formDraft">

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-section id="form-overview-right-now"
-    :class="{ 'open-form': form.state === 'open' }" condensed>
+    :class="{ 'open-form': form.state === 'open' }">
     <template #heading>
       <span>{{ $t('common.rightNow') }}</span>
     </template>
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t(`stateCaption.${form.state}`) }}
         </template>
       </summary-item>
-      <summary-item :route-to="formPath('submissions')" icon="inbox">
+      <summary-item :to="formPath('submissions')" icon="inbox">
         <template #heading>
           {{ $n(form.submissions, 'default') }}
           <span class="icon-angle-right"></span>

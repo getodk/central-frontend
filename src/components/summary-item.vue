@@ -11,63 +11,38 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="summary-item">
-    <router-link v-if="routeTo != null" :to="routeTo"
-      class="summary-item-icon-container summary-item-link">
-      <span :class="iconClass"></span>
-    </router-link>
-    <a v-else-if="clickable"
-      class="summary-item-icon-container summary-item-link" href="#"
-      role="button" @click.prevent="$emit('click')">
-      <span :class="iconClass"></span>
-    </a>
-    <span v-else class="summary-item-icon-container">
-      <span :class="iconClass"></span>
-    </span>
-
+    <linkable :to="to" :clickable="clickable"
+      class="summary-item-icon-container" @click="$emit('click')">
+      <span :class="`icon-${icon}`"></span>
+    </linkable>
     <div class="summary-item-heading">
-      <router-link v-if="routeTo != null" :to="routeTo"
-        class="summary-item-link">
+      <linkable :to="to" :clickable="clickable" @click="$emit('click')">
         <slot name="heading"></slot>
-      </router-link>
-      <a v-else-if="clickable" class="summary-item-link" href="#" role="button"
-        @click.prevent="$emit('click')">
-        <slot name="heading"></slot>
-      </a>
-      <slot v-else name="heading"></slot>
+      </linkable>
     </div>
     <div class="summary-item-body">
-      <router-link v-if="routeTo != null" :to="routeTo"
-        class="summary-item-link">
+      <linkable :to="to" :clickable="clickable" @click="$emit('click')">
         <slot name="body"></slot>
-      </router-link>
-      <a v-else-if="clickable" class="summary-item-link" href="#" role="button"
-        @click.prevent="$emit('click')">
-        <slot name="body"></slot>
-      </a>
-      <slot v-else name="body"></slot>
+      </linkable>
     </div>
   </div>
 </template>
 
 <script>
+import Linkable from './linkable.vue';
+
 export default {
   name: 'SummaryItem',
+  components: { Linkable },
   props: {
-    routeTo: String, // eslint-disable-line vue/require-default-prop
-    clickable: {
-      type: Boolean,
-      default: false
-    },
+    to: String,
+    clickable: Boolean,
     icon: {
       type: String,
       required: true
     }
   },
-  computed: {
-    iconClass() {
-      return `icon-${this.icon}`;
-    }
-  }
+  emits: ['click']
 };
 </script>
 
@@ -82,29 +57,17 @@ $icon-font-size: 56px;
   position: relative;
 }
 
-.summary-item-link {
-  &, &:hover, &:focus {
-    color: inherit;
-    text-decoration: none;
-  }
-}
-
 .summary-item-icon-container {
   position: absolute;
 
-  span {
+  [class^="icon-"] {
     color: #555;
     font-size: $icon-font-size;
   }
-
-  &.summary-item-link span {
-    margin-right: 0;
-  }
 }
+a.summary-item-icon-container [class^="icon-"] { margin-right: 0; }
 
-.summary-item-heading, .summary-item-body {
-  margin-left: 75px;
-}
+.summary-item-heading, .summary-item-body { margin-left: 75px; }
 
 .summary-item-heading {
   @include text-overflow-ellipsis;
@@ -116,10 +79,7 @@ $icon-font-size: 56px;
     font-size: 20px;
     vertical-align: 2px;
   }
-
-  .summary-item-link .icon-angle-right {
-    margin-right: 0;
-  }
+  a .icon-angle-right { margin-right: 0; }
 }
 
 .summary-item-body {

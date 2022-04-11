@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-list">
-    <page-section condensed>
+    <page-section>
       <template #heading>
         <span>{{ $t('title') }}</span>
         <button v-if="project != null && project.permits('form.create')"
@@ -71,9 +71,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
-
-#form-list { margin-bottom: $margin-bottom-page-section; }
+#form-list { margin-bottom: 35px; }
 </style>
 
 <i18n lang="json5">

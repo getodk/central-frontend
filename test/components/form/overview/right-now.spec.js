@@ -78,7 +78,7 @@ describe('FormOverviewRightNow', () => {
     it('links to the submissions page', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
       const item = mountComponent().findAllComponents(SummaryItem).at(2);
-      item.props().routeTo.should.equal('/projects/1/forms/a%20b/submissions');
+      item.props().to.should.equal('/projects/1/forms/a%20b/submissions');
     });
   });
 });

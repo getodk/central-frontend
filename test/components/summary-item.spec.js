@@ -21,9 +21,9 @@ describe('SummaryItem', () => {
     item.find('.icon-user-circle').exists().should.be.true();
   });
 
-  it('renders links if the routeTo prop is specified', () => {
+  it('renders links if the to prop is specified', () => {
     const item = mountComponent({
-      propsData: { routeTo: '/users' }
+      propsData: { to: '/users' }
     });
     const links = item.findAllComponents(RouterLinkStub);
     links.length.should.equal(3);

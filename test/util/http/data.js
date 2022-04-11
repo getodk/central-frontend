@@ -67,7 +67,7 @@ const mapsByComponent = {
   AccountResetPassword: new Map(),
   AccountClaim: new Map(),
 
-  ProjectList: mapKeys(['projects', 'users']),
+  Home: mapKeys(['projects', 'users']),
   ProjectShow: mapKeys(['project']),
   ProjectOverview: mapKeys(['forms', 'deletedForms']),
   ProjectUserList: mapKeys(['roles', 'projectAssignments']),

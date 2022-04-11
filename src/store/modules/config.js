@@ -18,7 +18,11 @@ const config = {
   // `true` to allow navigation to /system/backups and `false` not to.
   showsBackups: true,
   // `true` to allow navigation to /system/analytics and `false` not to.
-  showsAnalytics: true
+  showsAnalytics: true,
+  home: {
+    title: null,
+    body: null
+  }
 };
 
 export default {

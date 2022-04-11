@@ -1,0 +1,49 @@
+<!--
+Copyright 2022 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <router-link v-if="to != null && !external" :to="to" class="linkable">
+    <slot></slot>
+  </router-link>
+  <a v-else-if="to != null && external" class="linkable" :href="to"
+    target="_blank">
+    <slot></slot>
+  </a>
+  <a v-else-if="clickable" class="linkable" href="#" role="button"
+    @click.prevent="$emit('click')">
+    <slot></slot>
+  </a>
+  <div v-else class="linkable">
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Linkable',
+  props: {
+    to: String,
+    clickable: Boolean
+  },
+  emits: ['click'],
+  computed: {
+    external() {
+      return !this.to.startsWith('/');
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../assets/scss/mixins';
+
+a.linkable { @include text-link; }
+</style>

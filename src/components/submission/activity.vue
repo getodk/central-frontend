@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="submission-activity" condensed>
+  <page-section id="submission-activity">
     <template #heading>
       <span>{{ $t('common.activity') }}</span>
       <template v-if="project != null && project.permits('submission.update')">
@@ -105,8 +105,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
-
-#submission-activity { margin-bottom: $margin-bottom-page-section; }
+#submission-activity { margin-bottom: 35px; }
 #submission-activity-update-review-state-button { margin-right: 5px; }
 </style>
