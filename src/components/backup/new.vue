@@ -16,11 +16,11 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <template v-if="step === 0">
         <div class="modal-warnings">
-          <i18n tag="p" path="steps[0].warning.full">
+          <i18n-t tag="p" keypath="steps[0].warning.full">
             <template #forum>
               <a href="https://forum.getodk.org/" target="_blank">{{ $t('steps[0].warning.forum') }}</a>
             </template>
-          </i18n>
+          </i18n-t>
         </div>
         <p class="modal-introduction">
           <span>{{ $t('steps[0].introduction[0]') }}</span>
@@ -46,11 +46,11 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else-if="step === 1">
         <div class="modal-introduction">
-          <i18n tag="p" path="steps[1].introduction[0].full">
+          <i18n-t tag="p" keypath="steps[1].introduction[0].full">
             <template #here>
               <a href="https://accounts.google.com/SignUp" target="_blank">{{ $t('steps[1].introduction[0].here') }}</a>
             </template>
-          </i18n>
+          </i18n-t>
           <p>{{ $t('steps[1].introduction[1]') }}</p>
           <p>{{ $t('steps[1].introduction[2]') }}</p>
         </div>
@@ -67,11 +67,11 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-if="step === 2">
         <div class="modal-introduction">
-          <i18n tag="p" path="steps[2].introduction[0].full">
+          <i18n-t tag="p" keypath="steps[2].introduction[0].full">
             <template #here>
               <a href="#" role="button" @click.prevent="openGoogle">{{ $t('steps[2].introduction[0].here') }}</a>
             </template>
-          </i18n>
+          </i18n-t>
           <p>{{ $t('steps[2].introduction[1]') }}</p>
         </div>
         <form @submit.prevent="verify">

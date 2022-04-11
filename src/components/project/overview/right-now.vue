@@ -16,18 +16,12 @@ except according to the terms contained in the LICENSE file.
   "en": {
     "appUsers": {
       // The count of App Users is shown separately above this text.
-      "full": [
-        "{appUsers} who can use a data collection client to download and submit Form data to this Project.",
-        "{appUsers} who can use a data collection client to download and submit Form data to this Project."
-      ],
+      "full": "{appUsers} who can use a data collection client to download and submit Form data to this Project. | {appUsers} who can use a data collection client to download and submit Form data to this Project.",
       "appUsers": "App User | App Users"
     },
     "forms": {
       // The count of Forms is shown separately above this text.
-      "full": [
-        "{forms} which can be downloaded and given as a survey.",
-        "{forms} which can be downloaded and given as surveys."
-      ],
+      "full": "{forms} which can be downloaded and given as a survey. | {forms} which can be downloaded and given as surveys.",
       "forms": "Form | Forms"
     }
   }

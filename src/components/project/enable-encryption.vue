@@ -29,16 +29,16 @@ except according to the terms contained in the LICENSE file.
             </div>
             <div class="info-item">
               <span class="icon-circle-o"></span>
-              <i18n tag="p" path="steps[0].introduction[0][3][0]">
+              <i18n-t tag="p" keypath="steps[0].introduction[0][3][0]">
                 <template #submission>
                   <code>&lt;submission&gt;</code>
                 </template>
-              </i18n>
-              <i18n tag="p" path="steps[0].introduction[0][3][1]">
+              </i18n-t>
+              <i18n-t tag="p" keypath="steps[0].introduction[0][3][1]">
                 <template #base64RsaPublicKey>
                   <code>base64RsaPublicKey</code>
                 </template>
-              </i18n>
+              </i18n-t>
             </div>
             <div class="info-item">
               <span class="icon-close"></span>
@@ -66,11 +66,11 @@ except according to the terms contained in the LICENSE file.
               <p>{{ $t('steps[0].introduction[1][2][1]') }}</p>
             </div>
           </div>
-          <i18n tag="p" path="steps[0].introduction[2].full">
+          <i18n-t tag="p" keypath="steps[0].introduction[2].full">
             <template #here>
               <doc-link to="central-encryption/">{{ $t('steps[0].introduction[2].here') }}</doc-link>
             </template>
-          </i18n>
+          </i18n-t>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="moveToForm">
@@ -84,11 +84,11 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="step === 1">
         <div class="modal-introduction">
           <p>{{ $t('steps[1].introduction[0]') }}</p>
-          <i18n tag="p" path="steps[1].introduction[1].full">
+          <i18n-t tag="p" keypath="steps[1].introduction[1].full">
             <template #no>
               <strong>{{ $t('steps[1].introduction[1].no') }}</strong>
             </template>
-          </i18n>
+          </i18n-t>
         </div>
         <form @submit.prevent="submit">
           <form-group ref="passphrase" v-model="passphrase"

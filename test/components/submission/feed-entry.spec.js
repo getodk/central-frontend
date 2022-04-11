@@ -184,12 +184,12 @@ describe('SubmissionFeedEntry', () => {
 
       // Diffs attach to audits with the same details.instanceId
       testData.extendedAudits.createPast(1, {
-        action: 'submission.update',
+        action: 'submission.update.version',
         details: { instanceId: '1234' }
       });
     });
 
-    it('shows diffs joined with a submission.update audit event', () => {
+    it('shows diffs joined with a submission.update.version audit event', () => {
       const component = mountComponent({
         requestData: {
           diffs: {

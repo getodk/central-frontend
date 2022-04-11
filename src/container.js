@@ -13,6 +13,8 @@ import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 
+import Translation from './components/i18n-t';
+
 import i18n from './i18n';
 import router from './router';
 import store from './store';
@@ -30,6 +32,7 @@ export default (options = {}) => {
     Vue.use(VueI18n);
     if (routerOption != null && routerOption instanceof VueRouter)
       Vue.use(VueRouter);
+    Vue.component('i18n-t', Translation);
     // eslint-disable-next-line no-param-reassign
     Vue.prototype.$alert = function $alert() {
       return new StoreAlert(this.$store);

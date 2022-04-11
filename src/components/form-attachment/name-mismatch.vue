@@ -16,14 +16,14 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #body>
       <div class="modal-introduction">
-        <i18n tag="p" path="introduction[0]">
+        <i18n-t tag="p" keypath="introduction[0]">
           <template #filename>
             <strong>{{ file.name }}</strong>
           </template>
           <template #attachmentName>
             <strong>{{ attachment.name }}</strong>
           </template>
-        </i18n>
+        </i18n-t>
         <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">

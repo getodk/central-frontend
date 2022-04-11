@@ -21,11 +21,11 @@ except according to the terms contained in the LICENSE file.
           <form-version-string :version="form.version"/>
         </template>
         <template #body>
-          <i18n tag="p" path="version.full">
+          <i18n-t tag="p" keypath="version.full">
             <template #publishedVersion>
               <strong>{{ $t('version.publishedVersion') }}</strong>
             </template>
-          </i18n>
+          </i18n-t>
           <div>
             <form-version-standard-buttons :version="form"
               @view-xml="$emit('view-xml')"/>
@@ -46,11 +46,12 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <i18n tag="p" :path="$tcPath('submissions.full', form.submissions)">
+          <i18n-t tag="p" keypath="submissions.full"
+            :plural="form.submissions">
             <template #submissions>
               <strong>{{ $tc('submissions.submissions', form.submissions) }}</strong>
             </template>
-          </i18n>
+          </i18n-t>
         </template>
       </summary-item>
     </template>
@@ -125,10 +126,7 @@ export default {
     },
     "submissions": {
       // The count of Submissions is shown separately above this text.
-      "full": [
-        "{submissions} has been saved for this Form.",
-        "{submissions} have been saved for this Form."
-      ],
+      "full": "{submissions} has been saved for this Form. | {submissions} have been saved for this Form.",
       "submissions": "Submission | Submissions"
     }
   }
@@ -149,12 +147,7 @@ export default {
       "closed": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
     },
     "submissions": {
-      "full": [
-        "{submissions} byl pro tento formulář uložen.",
-        "{submissions} byly pro tento formulář uloženy.",
-        "{submissions} bylo pro tento formulář uloženo.",
-        "{submissions} bylo pro tento formulář uloženo."
-      ],
+      "full": "{submissions} byl pro tento formulář uložen. | {submissions} byly pro tento formulář uloženy. | {submissions} bylo pro tento formulář uloženo. | {submissions} bylo pro tento formulář uloženo.",
       "submissions": "Příspěvek | Příspěvky | Příspěvků | Příspěvků"
     }
   },
@@ -169,10 +162,7 @@ export default {
       "closed": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
     },
     "submissions": {
-      "full": [
-        "{submissions} wurde für dieses Formular gespeichert.",
-        "{submissions} wurden für dieses Formular gespeichert."
-      ],
+      "full": "{submissions} wurde für dieses Formular gespeichert. | {submissions} wurden für dieses Formular gespeichert.",
       "submissions": "Übermittlung | Übermittlungen"
     }
   },
@@ -187,10 +177,7 @@ export default {
       "closed": "Este formulario no se puede descargar y no acepta envíos."
     },
     "submissions": {
-      "full": [
-        "{submissions} ha sido guardada para este formulario",
-        "{submissions} han sido guardadas para este formulario."
-      ],
+      "full": "{submissions} ha sido guardada para este formulario | {submissions} han sido guardadas para este formulario.",
       "submissions": "Envío | Envíos"
     }
   },
@@ -205,10 +192,7 @@ export default {
       "closed": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions."
     },
     "submissions": {
-      "full": [
-        "{submissions} a été enregistrées pour ce formulaire.",
-        "{submissions} ont été enregistrées pour ce formulaire."
-      ],
+      "full": "{submissions} a été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire.",
       "submissions": "Soumission | Soumissions"
     }
   },
@@ -223,9 +207,7 @@ export default {
       "closed": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
     },
     "submissions": {
-      "full": [
-        "{submissions} untuk formulir ini sudah disimpan."
-      ],
+      "full": "{submissions} untuk formulir ini sudah disimpan.",
       "submissions": "Kiriman data"
     }
   },
@@ -240,10 +222,7 @@ export default {
       "closed": "Questo Formulario non è scaricabile e non accetta Invii."
     },
     "submissions": {
-      "full": [
-        "{submissions} è stato salvato per questo formulario",
-        "{submissions} sono state salvate per questo formulario"
-      ],
+      "full": "{submissions} è stato salvato per questo formulario | {submissions} sono state salvate per questo formulario",
       "submissions": "Invio | Invii"
     }
   },
@@ -258,9 +237,7 @@ export default {
       "closed": "このフォームはダウンロードできませんし、フォームの提出も受け付けていません。"
     },
     "submissions": {
-      "full": [
-        "このフォームへの{submissions}は保存されました。"
-      ],
+      "full": "このフォームへの{submissions}は保存されました。",
       "submissions": "提出"
     }
   },
@@ -275,10 +252,7 @@ export default {
       "closed": "Fomu hii haiwezi kupakuliwa na haikubali Mawasilisho."
     },
     "submissions": {
-      "full": [
-        "{submissions} zimehifadhiwa kwa Fomu hii.",
-        "{submissions} zimehifadhiwa kwa Fomu hii."
-      ],
+      "full": "{submissions} zimehifadhiwa kwa Fomu hii. | {submissions} zimehifadhiwa kwa Fomu hii.",
       "submissions": "Wasilisho | Mawasilisho"
     }
   }

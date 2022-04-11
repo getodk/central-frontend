@@ -60,13 +60,7 @@ describe('util/i18n', () => {
     beforeEach(() => {
       i18n.setLocaleMessage('la', {
         forms: '{count} Forma | {count} Formae',
-        parts: '{name} est omnis divisa in partes {count}.',
-        interpolation: {
-          full: {
-            0: 'Singular',
-            1: 'Plural'
-          }
-        }
+        parts: '{name} est omnis divisa in partem {count}. | {name} est omnis divisa in partes {count}.'
       });
       i18n.locale = 'la';
     });
@@ -87,18 +81,6 @@ describe('util/i18n', () => {
       it('uses values', () => {
         const message = i18nProps.$tcn('parts', 3, { name: 'Gallia' });
         message.should.equal('Gallia est omnis divisa in partes 3.');
-      });
-    });
-
-    describe('$tcPath()', () => {
-      it('returns the correct path for the singular', () => {
-        const path = i18nProps.$tcPath('interpolation.full', 1);
-        path.should.equal('interpolation.full[0]');
-      });
-
-      it('returns the correct path for the plural', () => {
-        const path = i18nProps.$tcPath('interpolation.full', 10);
-        path.should.equal('interpolation.full[1]');
       });
     });
   });

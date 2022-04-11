@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </li>
       <li class="toggle-all">
-        <i18n tag="div" path="action.select.full">
+        <i18n-t tag="div" keypath="action.select.full">
           <template #all>
             <a href="#" :class="{ disabled: disablesSelectAll }"
               :title="disablesSelectAll ? $t('disabled') : null" role="button"
@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
           <template #none>
             <a href="#" role="button" @click.prevent="selectNone">{{ $t('action.select.none') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
       </li>
       <li>
         <ul>

@@ -22,11 +22,11 @@ except according to the terms contained in the LICENSE file.
       <p>
         <span>{{ $t('heading[0]') }}</span>
         <sentence-separator/>
-        <i18n :tag="false" path="moreInfo.clickHere.full">
+        <i18n-t keypath="moreInfo.clickHere.full">
           <template #clickHere>
             <doc-link to="central-projects/#managing-form-access">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
           </template>
-        </i18n>
+        </i18n-t>
       </p>
     </div>
 

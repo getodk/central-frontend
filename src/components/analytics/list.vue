@@ -13,11 +13,11 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div class="page-body-heading">
       <p>{{ $t('analytics.alwaysImprove') }}</p>
-      <i18n tag="p" path="analytics.needFeedback.full">
+      <i18n-t tag="p" keypath="analytics.needFeedback.full">
         <template #your>
           <span>{{ $t('analytics.needFeedback.your') }}</span>
         </template>
-      </i18n>
+      </i18n-t>
       <p>{{ $t('heading[0]') }}</p>
     </div>
     <loading :state="initiallyLoading"/>

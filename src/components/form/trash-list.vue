@@ -16,11 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-trash"></span>
         <span>{{ $t('title') }}</span>
       </span>
-      <span id="form-trash-list-count">
-        <i18n :tag="false" path="trashCount">
-          <template #count>{{ count }}</template>
-        </i18n>
-      </span>
+      <span id="form-trash-list-count">{{ $t('trashCount', { count: $n(count, 'default') }) }}</span>
       <span id="form-trash-list-note">{{ $t('message') }}</span>
     </div>
     <table id="form-trash-list-table" class="table">

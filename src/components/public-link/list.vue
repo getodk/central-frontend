@@ -17,23 +17,23 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <p>
-        <i18n :tag="false" path="heading[0].full">
+        <i18n-t keypath="heading[0].full">
           <template #state>
             <router-link :to="projectPath('form-access')">{{ $t('heading[0].state') }}</router-link>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
-        <i18n :tag="false" path="moreInfo.clickHere.full">
+        <i18n-t keypath="moreInfo.clickHere.full">
           <template #clickHere>
             <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
           </template>
-        </i18n>
+        </i18n-t>
       </p>
-      <i18n tag="p" path="heading[1].full">
+      <i18n-t tag="p" keypath="heading[1].full">
         <template #clickHere>
           <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
         </template>
-      </i18n>
+      </i18n-t>
     </div>
 
     <public-link-table :highlighted="highlighted" @revoke="showRevoke"/>

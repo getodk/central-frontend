@@ -22,40 +22,40 @@ except according to the terms contained in the LICENSE file.
       <collect-qr :settings="settings" error-correction-level="L"
         :cell-size="3"/>
       <p>
-        <i18n v-if="managed" :tag="false" path="body[0].managed.full">
+        <i18n-t v-if="managed" keypath="body[0].managed.full">
           <template #managedCode>
             <strong>{{ $t('body[0].managed.managedCode') }}</strong>
           </template>
-        </i18n>
-        <i18n v-else :tag="false" path="body[0].legacy.full">
+        </i18n-t>
+        <i18n-t v-else keypath="body[0].legacy.full">
           <template #legacyCode>
             <strong>{{ $t('body[0].legacy.legacyCode') }}</strong>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
         <template v-if="managed">{{ $t('body[1].managed', fieldKey) }}</template>
         <template v-else>{{ $t('body[1].legacy') }}</template>
         <sentence-separator/>
-        <i18n v-if="managed" :tag="false" path="body[2].managed.full">
+        <i18n-t v-if="managed" keypath="body[2].managed.full">
           <template #switchToLegacy>
-            <i18n tag="a" path="body[2].managed.switchToLegacy"
+            <i18n-t tag="a" keypath="body[2].managed.switchToLegacy"
               class="switch-code" href="#">
               <template #legacyCode>
                 <strong>{{ $t('body[2].managed.legacyCode') }}</strong>
               </template>
-            </i18n>
+            </i18n-t>
           </template>
-        </i18n>
-        <i18n v-else :tag="false" path="body[2].legacy.full">
+        </i18n-t>
+        <i18n-t v-else keypath="body[2].legacy.full">
           <template #switchToManaged>
-            <i18n tag="a" path="body[2].legacy.switchToManaged"
+            <i18n-t tag="a" keypath="body[2].legacy.switchToManaged"
               class="switch-code" href="#">
               <template #managedCode>
                 <strong>{{ $t('body[2].legacy.managedCode') }}</strong>
               </template>
-            </i18n>
+            </i18n-t>
           </template>
-        </i18n>
+        </i18n-t>
       </p>
       <p>
         <span>{{ $t('body[3]', fieldKey) }}</span>

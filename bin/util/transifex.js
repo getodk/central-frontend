@@ -452,19 +452,8 @@ const destructure = (json, locale) => JSON.parse(
 // Returns the Vue I18n messages for the source locale after converting them to
 // PluralForms objects.
 const readSourceMessages = (localesDir, filenamesByComponent) => {
-  const reviver = (key, value) => {
-    if (typeof value === 'string') return PluralForms.fromVueI18n(value);
-    if (key === 'full') {
-      // `value` will be an array if $tcPath() is used.
-      if (!Array.isArray(value)) logThenThrow(value, 'invalid full property');
-      return new PluralForms(value.map(pluralForms => {
-        if (pluralForms.length !== 1)
-          logThenThrow(value, 'invalid full property');
-        return pluralForms[0];
-      }));
-    }
-    return value;
-  };
+  const reviver = (_, value) =>
+    (typeof value === 'string' ? PluralForms.fromVueI18n(value) : value);
 
   // Read the root messages.
   const messages = parse(
@@ -519,11 +508,8 @@ class Translation {
   // parent, it will change here as well.
   get translated() { return this.parent._translated[this.key]; }
 
-  toJSON(key) {
-    if (this.translated.isEmpty()) return undefined;
-    return key === 'full' && this.source.length !== 1
-      ? Array.from(this.translated) // Needed for $tcPath().
-      : this.translated.toVueI18n();
+  toJSON() {
+    return !this.translated.isEmpty() ? this.translated.toVueI18n() : undefined;
   }
 }
 

@@ -25,11 +25,11 @@ except according to the terms contained in the LICENSE file.
             <p>
               <span>{{ $t('body[1]') }}</span>
               <sentence-separator/>
-              <i18n :tag="false" path="moreInfo.helpArticle.full">
+              <i18n-t keypath="moreInfo.helpArticle.full">
                 <template #helpArticle>
                   <doc-link to="central-forms/#working-with-form-drafts">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
                 </template>
-              </i18n>
+              </i18n-t>
             </p>
           </template>
         </page-section>
