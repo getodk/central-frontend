@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import 'should';
 
 // These files must be imported before the rest.
-import './util/local-vue';
+import './plugins';
 import '../src/setup';
 
 import i18n from '../src/i18n';

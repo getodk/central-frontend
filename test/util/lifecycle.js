@@ -1,11 +1,9 @@
-import { mount as vtuMount } from '@vue/test-utils';
+import { createLocalVue, mount as vtuMount } from '@vue/test-utils';
 
-import i18n from '../../src/i18n';
 import router from '../../src/router';
-import store from '../../src/store';
+import { $tcn } from '../../src/util/i18n';
 
-import localVues from './local-vue';
-import { setData } from './store';
+import createTestContainer from './container';
 
 
 
@@ -55,7 +53,12 @@ Our mount() function will also set it up so that the component is destroyed
 after the test.
 */
 export const mount = (component, options = {}) => {
-  const { requestData, throwIfEmit, ...mountOptions } = options;
+  const { router: routerOption = null, requestData, throwIfEmit, ...mountOptions } = options;
+  const container = createTestContainer({ router: routerOption, requestData });
+  mountOptions.localVue = createLocalVue();
+  mountOptions.localVue.use(container);
+  mountOptions.localVue.prototype.$tcn = $tcn;
+  mountOptions.provide = { ...container.provide, ...mountOptions.provide };
 
   /* Vue Test Utils doesn't seem to mount `component` as the root component:
   `component` seems to have a parent component that is the root component.
@@ -66,30 +69,25 @@ export const mount = (component, options = {}) => {
   doesn't use an i18n custom block, because a child component may use one. Since
   we are passing `i18n` to the parent component, it also feels right to pass
   `store`. */
-  mountOptions.parentComponent = { store, i18n };
+  mountOptions.parentComponent = {
+    store: container.store,
+    i18n: container.i18n
+  };
+  if (container.router != null)
+    mountOptions.parentComponent.router = container.router;
 
-  if (requestData != null) setData(requestData);
-
-  if (mountOptions.router != null) {
-    mountOptions.localVue = localVues.withRouter;
-    mountOptions.parentComponent.router = mountOptions.router;
-    delete mountOptions.router;
-  } else {
-    mountOptions.localVue = localVues.withoutRouter;
-
-    if (mountOptions.mocks != null && mountOptions.mocks.$route != null) {
-      const mocks = { ...mountOptions.mocks };
-      if (typeof mocks.$route === 'string')
-        mocks.$route = router.resolve(mocks.$route).route;
-      if (mocks.$router == null) {
-        mocks.$router = {
-          currentRoute: mocks.$route,
-          resolve: router.resolve.bind(router)
-        };
-      }
-      mountOptions.mocks = mocks;
-      store.commit('confirmNavigation', mocks.$route);
+  if (mountOptions.mocks != null && mountOptions.mocks.$route != null) {
+    const mocks = { ...mountOptions.mocks };
+    if (typeof mocks.$route === 'string')
+      mocks.$route = router.resolve(mocks.$route).route;
+    if (mocks.$router == null) {
+      mocks.$router = {
+        currentRoute: mocks.$route,
+        resolve: router.resolve.bind(router)
+      };
     }
+    mountOptions.mocks = mocks;
+    container.store.commit('confirmNavigation', mocks.$route);
   }
 
   const wrapper = vtuMount(component, mountOptions);

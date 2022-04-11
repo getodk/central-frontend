@@ -17,14 +17,18 @@ import './setup';
 
 import App from './components/app.vue';
 
-import i18n from './i18n';
-import router from './router';
-import store from './store';
+import createContainer from './container';
+import { $tcn } from './util/i18n';
+
+const container = createContainer();
+Vue.use(container);
+Vue.prototype.$tcn = $tcn;
 
 new Vue({ // eslint-disable-line no-new
   el: '#app',
   render: (h) => h(App),
-  router,
-  store,
-  i18n
+  router: container.router,
+  store: container.store,
+  i18n: container.i18n,
+  provide: container.provide
 });
