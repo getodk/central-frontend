@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 
-import i18n from './i18n';
-import store from './store';
 import { instanceNameOrId } from './util/odata';
 import { routeProps } from './util/router';
 
+export default ({ store, i18n }) => {
+/* eslint-disable indent */ // TODO/vue3
 /*
 Lazy-Loading Routes
 -------------------
@@ -713,7 +713,6 @@ const routes = [
     }
   })
 ];
-export default routes;
 
 
 
@@ -841,3 +840,11 @@ preserveDataForKey({
   ],
   params: ['projectId']
 });
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  // RETURN
+
+  return routes;
+};

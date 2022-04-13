@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 import VueRouter from 'vue-router';
 import { last } from 'ramda';
 
-import routes from './routes';
+import createRoutes from './routes';
+import i18n from './i18n';
 import store from './store';
 import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
@@ -29,7 +30,7 @@ const router = new VueRouter({
   // becomes an issue during testing, because the hash diverges from the current
   // route over time: Headless Chrome seems to rate-limit hash changes.
   mode: process.env.NODE_ENV === 'test' ? 'abstract' : 'hash',
-  routes
+  routes: createRoutes({ store, i18n })
 });
 export default router;
 
