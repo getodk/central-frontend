@@ -208,7 +208,7 @@ const pathOfLinkedMessage = (pluralForms) => {
 /*
 Our convention for component interpolation is to group all the messages used in
 the component interpolation in a flat object. The object will have a property
-named `full` whose path is passed to the <i18n> component. A component
+named `full` whose path is passed to the <i18n-t> component. A component
 interpolation is identified by the presence of a property named `full`, so
 `full` should not be used as a property name outside component interpolation.
 

@@ -46,8 +46,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-angle-right"></span>
         </template>
         <template #body>
-          <i18n-t tag="p" keypath="submissions.full"
-            :plural="form.submissions">
+          <i18n-t tag="p" keypath="submissions.full" :plural="form.submissions">
             <template #submissions>
               <strong>{{ $tc('submissions.submissions', form.submissions) }}</strong>
             </template>

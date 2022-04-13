@@ -13,11 +13,11 @@ except according to the terms contained in the LICENSE file.
   <markdown-view v-if="!emptyDescription" id="project-overview-description"
     :raw-markdown="description"/>
   <div v-else-if="canUpdate" id="project-overview-description-update">
-    <i18n tag="div" class="instructions" path="instructions.full">
+    <i18n-t tag="div" class="instructions" keypath="instructions.full">
       <template #projectSettings>
         <router-link :to="projectPath('settings')">{{ $t('instructions.projectSettings') }}</router-link>
       </template>
-    </i18n>
+    </i18n-t>
     <div class="note">{{ $t('note') }}</div>
   </div>
 </template>
