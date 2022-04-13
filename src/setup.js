@@ -29,24 +29,7 @@ import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
 import './assets/scss/app.scss';
 
-import { StoreAlert } from './util/alert';
-import { $tcPath, $tcn } from './util/i18n';
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLOBAL UTILITIES
-
-// See: https://vuejs.org/v2/cookbook/adding-instance-properties.html
-
-Vue.prototype.$alert = function $alert() {
-  return new StoreAlert(this.$store);
-};
 // Adding $http in order to mock it during testing.
 Vue.prototype.$http = axios;
 // Adding $logger makes it easier to silence certain logging during testing.
 Vue.prototype.$logger = console;
-
-// i18n
-Vue.prototype.$tcn = $tcn;
-Vue.prototype.$tcPath = $tcPath;

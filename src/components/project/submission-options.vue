@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
         <ul>
-          <i18n tag="li" path="introduction[1].full">
+          <i18n-t tag="li" keypath="introduction[1].full">
             <template #appUsers>
               <router-link v-if="$route.path !== projectPath('app-users')"
                 :to="projectPath('app-users')">
@@ -29,8 +29,8 @@ except according to the terms contained in the LICENSE file.
             <template #collect>
               <doc-link to="collect-intro/">ODK Collect</doc-link>
             </template>
-          </i18n>
-          <i18n tag="li" path="introduction[2].full">
+          </i18n-t>
+          <i18n-t tag="li" keypath="introduction[2].full">
             <template #publicLinks>
               <!-- Only render text, not a link, for a project route. -->
               <template v-if="$route.params.xmlFormId == null">
@@ -44,8 +44,8 @@ except according to the terms contained in the LICENSE file.
                 <strong>{{ $t('introduction[2].publicLinks') }}</strong>
               </a>
             </template>
-          </i18n>
-          <i18n tag="li" path="introduction[3].full">
+          </i18n-t>
+          <i18n-t tag="li" keypath="introduction[3].full">
             <template #webUser>
               <link-if-can to="/users">
                 <strong>{{ $t('introduction[3].webUser') }}</strong>
@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
                 <strong>{{ $t('introduction[3].dataCollector') }}</strong>
               </router-link>
             </template>
-          </i18n>
+          </i18n-t>
         </ul>
       </div>
       <div class="modal-actions">

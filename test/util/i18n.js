@@ -1,5 +1,5 @@
 import i18n from '../../src/i18n';
-import { $tcPath, $tcn } from '../../src/util/i18n';
+import { $tcn } from '../../src/util/i18n';
 
 // eslint-disable-next-line import/prefer-default-export
 export const i18nProps = Object.freeze({
@@ -9,6 +9,5 @@ export const i18nProps = Object.freeze({
   $te(...args) { return i18n.te(...args); },
   $n(...args) { return i18n.n(...args); },
 
-  $tcn,
-  $tcPath
+  $tcn
 });

@@ -17,18 +17,18 @@ except according to the terms contained in the LICENSE file.
       <div v-if="rendersAttachmentsWarning || rendersTestingWarning"
         class="modal-warnings">
         <ul>
-          <i18n v-if="rendersAttachmentsWarning" tag="li"
-            path="warnings.attachments.full">
+          <i18n-t v-if="rendersAttachmentsWarning" tag="li"
+            keypath="warnings.attachments.full">
             <template #mediaFiles>
               <router-link :to="formPath('draft/attachments')">{{ $t('warnings.attachments.mediaFiles') }}</router-link>
             </template>
-          </i18n>
-          <i18n v-if="rendersTestingWarning" tag="li"
-            path="warnings.testing.full">
+          </i18n-t>
+          <i18n-t v-if="rendersTestingWarning" tag="li"
+            keypath="warnings.testing.full">
             <template #tested>
               <router-link :to="formPath('draft/testing')">{{ $t('warnings.testing.tested') }}</router-link>
             </template>
-          </i18n>
+          </i18n-t>
         </ul>
       </div>
       <div class="modal-introduction">

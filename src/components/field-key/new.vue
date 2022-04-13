@@ -41,14 +41,14 @@ except according to the terms contained in the LICENSE file.
           </p>
           <field-key-qr-panel :field-key="created" :managed="managed"/>
           <p>{{ $t('success[1]', created) }}</p>
-          <i18n tag="p" path="success[2].full">
+          <i18n-t tag="p" keypath="success[2].full">
             <template #formAccessSettings>
               <router-link v-slot="{ href, navigate }"
                 :to="projectPath('form-access')" custom>
                 <a :href="href" @click="navigateToFormAccess(navigate, $event)">{{ $t('success[2].formAccessSettings') }}</a>
               </router-link>
             </template>
-          </i18n>
+          </i18n-t>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="complete">

@@ -16,19 +16,19 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('analytics.alwaysImprove') }}</p>
-        <i18n tag="p" path="analytics.needFeedback.full">
+        <i18n-t tag="p" keypath="analytics.needFeedback.full">
           <template #your>
             <strong>{{ $t('analytics.needFeedback.your') }}</strong>
           </template>
-        </i18n>
-        <i18n tag="p" path="introduction[0].full">
+        </i18n-t>
+        <i18n-t tag="p" keypath="introduction[0].full">
           <template #usageReporting>
             <router-link v-slot="{ href, navigate }" to="/system/analytics"
               custom>
               <a :href="href" @click="hideAndNavigate(navigate, $event)">{{ $t('introduction[0].usageReporting') }}</a>
             </router-link>
           </template>
-        </i18n>
+        </i18n-t>
         <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">

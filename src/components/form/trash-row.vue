@@ -13,13 +13,11 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-trash-row">
     <td class="name">
       <span class="form-name">{{ form.nameOrId() }}</span>
-      <div class="deleted-date">
-        <i18n :tag="false" path="deletedDate">
-          <template #dateTime>
-            <date-time :iso="form.deletedAt"/>
-          </template>
-        </i18n>
-      </div>
+      <i18n-t tag="div" keypath="deletedDate" class="deleted-date">
+        <template #dateTime>
+          <date-time :iso="form.deletedAt"/>
+        </template>
+      </i18n-t>
     </td>
     <td class="id-and-version">
       <div class="form-id">
@@ -31,13 +29,12 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="submissions">
       <div>{{ $tcn('count.submission', form.submissions) }}</div>
-      <div v-if="form.lastSubmission != null">
-        <i18n :tag="false" path="common.lastSubmission">
-          <template #dateTime>
-            <date-time :iso="form.lastSubmission" relative="past"/>
-          </template>
-        </i18n>
-      </div>
+      <i18n-t v-if="form.lastSubmission != null" tag="div"
+        keypath="common.lastSubmission">
+        <template #dateTime>
+          <date-time :iso="form.lastSubmission" relative="past"/>
+        </template>
+      </i18n-t>
     </td>
     <td class="actions">
       <button class="form-trash-row-restore-button btn btn-default" type="button"

@@ -16,60 +16,60 @@ except according to the terms contained in the LICENSE file.
     <template v-if="status === 'notConfigured'">
       <p>{{ $t('notConfigured[0]') }}</p>
       <p><strong>{{ $t('notConfigured[1]') }}</strong></p>
-      <i18n tag="p" path="notConfigured[2].full">
+      <i18n-t tag="p" keypath="notConfigured[2].full">
         <template #recommended>
           <strong>{{ $t('notConfigured[2].recommended') }}</strong>
         </template>
-      </i18n>
+      </i18n-t>
       <p>{{ $t('notConfigured[3]') }}</p>
     </template>
     <template v-else-if="status === 'neverRun'">
       <p>{{ $t('neverRun[0]') }}</p>
       <p>{{ $t('neverRun[1]') }}</p>
       <p>
-        <i18n :tag="false" path="neverRun[2].full">
+        <i18n-t keypath="neverRun[2].full">
           <template #terminate>
             <strong>{{ $t('neverRun[2].terminate') }}</strong>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
-        <i18n :tag="false" path="getHelp.full">
+        <i18n-t keypath="getHelp.full">
           <template #forum>
             <a href="https://forum.getodk.org/" target="_blank">{{ $t('getHelp.forum') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
       </p>
     </template>
     <template v-else-if="status === 'somethingWentWrong'">
       <p>{{ $t('somethingWentWrong[0]') }}</p>
-      <i18n tag="p" path="somethingWentWrong[1].full">
+      <i18n-t tag="p" keypath="somethingWentWrong[1].full">
         <template #moreThanThreeDaysAgo>
           <strong>{{ $t('somethingWentWrong[1].moreThanThreeDaysAgo') }}</strong>
         </template>
-      </i18n>
+      </i18n-t>
       <p>
-        <i18n :tag="false" path="somethingWentWrong[2].full">
+        <i18n-t keypath="somethingWentWrong[2].full">
           <template #terminate>
             <strong>{{ $t('somethingWentWrong[2].terminate') }}</strong>
           </template>
-        </i18n>
+        </i18n-t>
         <sentence-separator/>
-        <i18n :tag="false" path="getHelp.full">
+        <i18n-t keypath="getHelp.full">
           <template #forum>
             <a href="https://forum.getodk.org/" target="_blank">{{ $t('getHelp.forum') }}</a>
           </template>
-        </i18n>
+        </i18n-t>
       </p>
     </template>
     <template v-else>
       <p>{{ $t('success[0]') }}</p>
-      <i18n tag="p" path="success[1]">
+      <i18n-t tag="p" keypath="success[1]">
         <template #dateTime>
           <strong id="backup-status-most-recently-logged-at">
             <date-time :iso="auditsForBackupsConfig[0].loggedAt"/>
           </strong>
         </template>
-      </i18n>
+      </i18n-t>
     </template>
 
     <div>

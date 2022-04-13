@@ -11,11 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-body>
-    <i18n tag="p" path="body">
+    <i18n-t tag="p" keypath="body">
       <template #filename>
         <strong>{{ filename }}</strong>
       </template>
-    </i18n>
+    </i18n-t>
     <a v-show="false" ref="link" :href="href" download></a>
   </page-body>
 </template>

@@ -23,38 +23,38 @@ some point. -->
       </div>
       <div class="modal-body">
         <template v-if="shownDuringDragover">
-          <i18n v-if="dragoverAttachment != null" tag="p"
-            path="duringDragover.dropToUpload">
+          <i18n-t v-if="dragoverAttachment != null" tag="p"
+            keypath="duringDragover.dropToUpload">
             <template #attachmentName>
               <strong>{{ dragoverAttachment.name }}</strong>
             </template>
-          </i18n>
+          </i18n-t>
           <p v-else-if="countOfFilesOverDropZone === 1">
             {{ $t('duringDragover.dragover') }}
           </p>
-          <i18n v-else tag="p" path="duringDragover.dropToPrepare.full">
+          <i18n-t v-else tag="p" keypath="duringDragover.dropToPrepare.full">
             <template #countOfFiles>
               <strong>{{ $tcn('duringDragover.dropToPrepare.countOfFiles', countOfFilesOverDropZone) }}</strong>
             </template>
-          </i18n>
+          </i18n-t>
         </template>
         <template v-else-if="shownAfterSelection">
           <template v-if="plannedUploads.length !== 0">
-            <i18n tag="p"
-              :path="$tcPath('afterSelection.matched.full', plannedUploads.length)">
+            <i18n-t tag="p" keypath="afterSelection.matched.full"
+              :plural="plannedUploads.length">
               <template #countOfFiles>
                 <strong>{{ $tcn('afterSelection.matched.countOfFiles', plannedUploads.length) }}</strong>
               </template>
-            </i18n>
+            </i18n-t>
             <p v-show="unmatchedFiles.length !== 0"
               id="form-attachment-popups-unmatched">
               <span class="icon-exclamation-triangle"></span>
-              <i18n
-                :path="$tcPath('afterSelection.someUnmatched.full', unmatchedFiles.length)">
+              <i18n-t tag="span" keypath="afterSelection.someUnmatched.full"
+                :plural="unmatchedFiles.length">
                 <template #countOfFiles>
                   <strong>{{ $tcn('afterSelection.someUnmatched.countOfFiles', unmatchedFiles.length) }}</strong>
                 </template>
-              </i18n>
+              </i18n-t>
             </p>
             <p>
               <button type="button" class="btn btn-primary"
@@ -279,17 +279,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} ready for upload.",
-          "{countOfFiles} ready for upload."
-        ],
+        "full": "{countOfFiles} ready for upload. | {countOfFiles} ready for upload.",
         "countOfFiles": "{count} file | {count} files"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles} has a name we don’t recognize and will be ignored. To upload it, rename it or drag it onto its target.",
-          "{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
-        ],
+        "full": "{countOfFiles} has a name we don’t recognize and will be ignored. To upload it, rename it or drag it onto its target. | {countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets.",
         "countOfFiles": "{count} file | {count} files"
       },
       "noneMatched": "We don’t recognize the file you are trying to upload. Please rename it to match the names listed above, or drag it individually onto its target. | We don’t recognize any of the files you are trying to upload. Please rename them to match the names listed above, or drag them individually onto their targets."
@@ -322,21 +316,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} připraven k nahrání",
-          "{countOfFiles} připraveny k nahrání",
-          "{countOfFiles} připraveno k nahrání",
-          "{countOfFiles} připraveno k nahrání"
-        ],
+        "full": "{countOfFiles} připraven k nahrání | {countOfFiles} připraveny k nahrání | {countOfFiles} připraveno k nahrání | {countOfFiles} připraveno k nahrání",
         "countOfFiles": "{count} soubor | {count} soubory | {count} souborů | {count} souborů"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles} má název, který neznáme a bude ignorováno. Chcete-li jej nahrát, přejmenujte jej, nebo přetáhněte na svůj cíl.",
-          "{countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl.",
-          "{countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl.",
-          "{countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl."
-        ],
+        "full": "{countOfFiles} má název, který neznáme a bude ignorováno. Chcete-li jej nahrát, přejmenujte jej, nebo přetáhněte na svůj cíl. | {countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl. | {countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl. | {countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl.",
         "countOfFiles": "{count} soubor | {count} soubory | {count} soubory | {count} souborů"
       },
       "noneMatched": "Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme žádný ze souborů, které se pokoušíte nahrát. Přejmenujte je podle výše uvedených názvů nebo je přetáhněte jednotlivě na jejich cíle."
@@ -362,17 +346,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} bereit zum Hochladen",
-          "{countOfFiles} bereit zum Hochladen"
-        ],
+        "full": "{countOfFiles} bereit zum Hochladen | {countOfFiles} bereit zum Hochladen",
         "countOfFiles": "{count} Datei | {count} Dateien"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles} Datei hat einen Namen, den wir nicht erkennen, sie wird ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen.",
-          "{countOfFiles} Dateien haben Namen, die wir nicht erkennen, diese werden ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen."
-        ],
+        "full": "{countOfFiles} Datei hat einen Namen, den wir nicht erkennen, sie wird ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen. | {countOfFiles} Dateien haben Namen, die wir nicht erkennen, diese werden ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen.",
         "countOfFiles": "{count} Datei | {count} Dateien"
       },
       "noneMatched": "Wir erkennen keine der Dateien, die Sie hochzuladen versuchen. Bitte benennen Sie Dateien um, damit sie mit den oben gelisteten Namen übereinstimmen, oder ziehen Sie sie einzeln auf ihre Ziele. | Wir erkennen keine der Dateien, die Sie hochzuladen versuchen. Bitte benennen Sie Dateien um, damit sie mit den oben gelisteten Namen übereinstimmen, oder ziehen Sie sie einzeln auf ihre Ziele."
@@ -398,17 +376,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} listo para subir.",
-          "{countOfFiles} listos para subir."
-        ],
+        "full": "{countOfFiles} listo para subir. | {countOfFiles} listos para subir.",
         "countOfFiles": "{count} | {count} archivos"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino.",
-          "{countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino."
-        ],
+        "full": "{countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino. | {countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino.",
         "countOfFiles": "{count} archivos | {count} archivos"
       },
       "noneMatched": "No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos. | No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos."
@@ -434,17 +406,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} prêts à être téléversés for upload.",
-          "{countOfFiles} prêts à être téléversés."
-        ],
+        "full": "{countOfFiles} prêts à être téléversés for upload. | {countOfFiles} prêts à être téléversés.",
         "countOfFiles": "{count} fichier | {count} fichiers"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles} a un nom que nous ne reconnaissons pas et qui sera ignoré. Pour le téléverser, renommez le ou déposez le sur sa cible.",
-          "{countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles."
-        ],
+        "full": "{countOfFiles} a un nom que nous ne reconnaissons pas et qui sera ignoré. Pour le téléverser, renommez le ou déposez le sur sa cible. | {countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles.",
         "countOfFiles": "{count} fichier | {count} fichiers"
       },
       "noneMatched": "Nous ne reconnaissons pas le fichier que vous tentez de téléverser. Renommez le pour qu'il corresponde aux noms listez ci-dessous, ou déposez le individuellement sur sa cible. | Nous ne reconnaissons aucun des fichiers que vous tentez de téléverser. Renommez les pour qu'ils correspondent aux noms listez ci-dessous, ou déposez les un à un sur leurs cibles."
@@ -470,15 +436,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} siap untuk diunggah."
-        ],
+        "full": "{countOfFiles} siap untuk diunggah.",
         "countOfFiles": "{count} berkas"
       },
       "someUnmatched": {
-        "full": [
-          "Nama {countOfFiles} tidak dikenali dan ditolak. Untuk mengunggah dokumen, ubah nama dokumen atau seret dokumen satu per satu ke target masing-masing."
-        ],
+        "full": "Nama {countOfFiles} tidak dikenali dan ditolak. Untuk mengunggah dokumen, ubah nama dokumen atau seret dokumen satu per satu ke target masing-masing.",
         "countOfFiles": "{count} berkas"
       },
       "noneMatched": "Kami tidak mengenali dokumen yang ingin Anda unggah. Mohon ubah nama dokumen sesuai dengan nama-nama yang terdaftar di atas, atau seret dokumen satu per satu ke targetnya masing-masing."
@@ -504,17 +466,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} prontio per essere caricato.",
-          "{countOfFiles} pronti per essere caricati."
-        ],
+        "full": "{countOfFiles} prontio per essere caricato. | {countOfFiles} pronti per essere caricati.",
         "countOfFiles": "{count} file | {count} files"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo.",
-          "{countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi."
-        ],
+        "full": "{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo. | {countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.",
         "countOfFiles": "{count} file | {count} files"
       },
       "noneMatched": "Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo. | Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi."
@@ -540,15 +496,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles}はアップロードできます。"
-        ],
+        "full": "{countOfFiles}はアップロードできます。",
         "countOfFiles": "{count}件のファイル"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles}は認識できない名前のため無視されます。これらのアップロードには、名前を変更するか、それぞれ個別にアップロード対象にドラッグ＆ドロップしてください。"
-        ],
+        "full": "{countOfFiles}は認識できない名前のため無視されます。これらのアップロードには、名前を変更するか、それぞれ個別にアップロード対象にドラッグ＆ドロップしてください。",
         "countOfFiles": "{count}件のファイル"
       },
       "noneMatched": "アップロードを試みているファイルが何れも認識できません。上記の名前に合わせてファイル名を変更するか、それぞれ個別に対象にドラッグしてください。"
@@ -574,17 +526,11 @@ $popup-width: 300px;
     },
     "afterSelection": {
       "matched": {
-        "full": [
-          "{countOfFiles} tayari kupakiwa.",
-          "{countOfFiles} tayari kupakiwa."
-        ],
+        "full": "{countOfFiles} tayari kupakiwa. | {countOfFiles} tayari kupakiwa.",
         "countOfFiles": "faili {count} | faili {count}"
       },
       "someUnmatched": {
-        "full": [
-          "{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao",
-          "{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao."
-        ],
+        "full": "{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao | {countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao.",
         "countOfFiles": "faili {count} | faili {count}"
       },
       "noneMatched": "Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao | Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao"

@@ -37,11 +37,11 @@ except according to the terms contained in the LICENSE file.
             </template>
             <template v-else>
               <p>
-                <i18n :tag="false" path="encryption.body.encrypted[0].full">
+                <i18n-t keypath="encryption.body.encrypted[0].full">
                   <template #enabled>
                     <strong>{{ $t('encryption.body.encrypted[0].enabled') }}</strong>
                   </template>
-                </i18n>
+                </i18n-t>
                 <sentence-separator/>
                 <doc-link to="central-encryption/">{{ $t('moreInfo.learnMore') }}</doc-link>
               </p>

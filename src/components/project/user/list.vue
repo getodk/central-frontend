@@ -18,27 +18,27 @@ are Project Manager, Project Viewer, and Data Collector. -->
     <div class="page-body-heading">
       <p>{{ $t('heading[0]') }}</p>
       <ul>
-        <i18n tag="li" path="heading[1].full">
+        <i18n-t tag="li" keypath="heading[1].full">
           <template #projectManagers>
             <strong>{{ $t('heading[1].projectManagers') }}</strong>
           </template>
-        </i18n>
-        <i18n tag="li" path="heading[2].full">
+        </i18n-t>
+        <i18n-t tag="li" keypath="heading[2].full">
           <template #projectViewers>
             <strong>{{ $t('heading[2].projectViewers') }}</strong>
           </template>
-        </i18n>
-        <i18n tag="li" path="heading[3].full">
+        </i18n-t>
+        <i18n-t tag="li" keypath="heading[3].full">
           <template #dataCollectors>
             <strong>{{ $t('heading[3].dataCollectors') }}</strong>
           </template>
-        </i18n>
+        </i18n-t>
       </ul>
-      <i18n tag="p" path="moreInfo.clickHere.full">
+      <i18n-t tag="p" keypath="moreInfo.clickHere.full">
         <template #clickHere>
           <doc-link to="central-projects/#managing-project-roles">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
         </template>
-      </i18n>
+      </i18n-t>
     </div>
     <form id="project-user-list-search-form" class="form-inline"
       @submit.prevent>

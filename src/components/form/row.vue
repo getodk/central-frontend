@@ -39,11 +39,11 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div v-if="form.lastSubmission != null">
         <router-link :to="submissionsPath">
-          <i18n :tag="false" path="common.lastSubmission">
+          <i18n-t keypath="common.lastSubmission">
             <template #dateTime>
               <date-time :iso="form.lastSubmission" relative="past"/>
             </template>
-          </i18n>
+          </i18n-t>
         </router-link>
       </div>
     </td>
