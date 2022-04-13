@@ -5,6 +5,7 @@ import LinkIfCan from '../../src/components/link-if-can.vue';
 import TestUtilSpan from '../util/components/span.vue';
 
 import { mockLogin } from '../util/session';
+import { mockRouter } from '../util/router';
 import { mount } from '../util/lifecycle';
 
 describe('LinkIfCan', () => {
@@ -13,8 +14,7 @@ describe('LinkIfCan', () => {
     const component = mount(LinkIfCan, {
       propsData: { to: '/users' },
       slots: { default: TestUtilSpan },
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: '/' }
+      container: { router: mockRouter('/') }
     });
     const link = component.getComponent(RouterLinkStub);
     link.props().to.should.equal('/users');
@@ -26,8 +26,7 @@ describe('LinkIfCan', () => {
     const component = mount(LinkIfCan, {
       propsData: { to: '/users' },
       slots: { default: TestUtilSpan },
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: '/' }
+      container: { router: mockRouter('/') }
     });
     component.findComponent(RouterLinkStub).exists().should.be.false();
     component.element.tagName.should.equal('SPAN');
@@ -39,8 +38,7 @@ describe('LinkIfCan', () => {
     const component = mount(LinkIfCan, {
       propsData: { to: '/users' },
       slots: { default: '<span class="icon-angle-right"></span>' },
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: '/' },
+      container: { router: mockRouter('/') },
       attachTo: document.body
     });
     component.get('.icon-angle-right').should.be.hidden(true);

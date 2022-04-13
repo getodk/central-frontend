@@ -1,16 +1,16 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ProjectList from '../../../src/components/project/list.vue';
 import ProjectRow from '../../../src/components/project/row.vue';
 
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(ProjectList, {
-  requestData: { projects: testData.extendedProjects.sorted() },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/' }
+  container: {
+    router: mockRouter('/'),
+    requestData: { projects: testData.extendedProjects.sorted() }
+  }
 });
 
 describe('ProjectList', () => {

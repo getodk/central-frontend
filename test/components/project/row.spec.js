@@ -6,6 +6,7 @@ import ProjectRow from '../../../src/components/project/row.vue';
 import Project from '../../../src/presenters/project';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(ProjectRow, {
@@ -13,7 +14,7 @@ const mountComponent = () => mount(ProjectRow, {
     project: new Project(testData.extendedProjects.last()),
     introduction: false
   },
-  stubs: { RouterLink: RouterLinkStub }
+  container: { router: mockRouter('/') }
 });
 
 describe('ProjectRow', () => {

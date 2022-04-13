@@ -1,16 +1,17 @@
 import sinon from 'sinon';
 
-import router from '../../src/router';
 import store from '../../src/store';
 import { confirmUnsavedChanges, forceReplace, routeProps } from '../../src/util/router';
 
+import createTestContainer from '../util/container';
 import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
+import { resolveRoute, testRouter } from '../util/router';
 
 describe('util/router', () => {
   describe('routeProps()', () => {
-    const { route } = router.resolve('/projects/1');
+    const route = resolveRoute('/projects/1');
 
     it('returns an empty object if props is undefined', () => {
       routeProps(route, undefined).should.eql({});
@@ -42,7 +43,7 @@ describe('util/router', () => {
       testData.extendedProjects.createPast(1);
       return load('/')
         .complete()
-        .request(app => forceReplace(app.vm.$router, app.vm.$store, '/users'))
+        .request(app => forceReplace(app.vm.$container, '/users'))
         .respondFor('/users')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/users');
@@ -50,7 +51,8 @@ describe('util/router', () => {
     });
 
     it('returns a promise', () => {
-      forceReplace(router, store, '/').should.be.a.Promise();
+      const container = createTestContainer({ router: testRouter() });
+      forceReplace(container, '/').should.be.a.Promise();
     });
 
     it('does not show a prompt if there are unsaved changes', () => {
@@ -61,7 +63,7 @@ describe('util/router', () => {
       return load('/projects/1/form-access')
         .afterResponses(app =>
           app.get('#project-form-access-table select').setValue('closed'))
-        .request(app => forceReplace(app.vm.$router, app.vm.$store, '/'))
+        .request(app => forceReplace(app.vm.$container, '/'))
         .respondFor('/')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');

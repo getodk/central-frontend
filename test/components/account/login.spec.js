@@ -1,11 +1,11 @@
 import sinon from 'sinon';
-import { RouterLinkStub } from '@vue/test-utils';
 
 import AccountLogin from '../../../src/components/account/login.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const submit = async (component) => {
@@ -18,7 +18,7 @@ const submit = async (component) => {
 describe('AccountLogin', () => {
   it('focuses the first input', () => {
     const component = mount(AccountLogin, {
-      stubs: { RouterLink: RouterLinkStub },
+      container: { router: mockRouter('/account/login') },
       attachTo: document.body
     });
     component.get('input[type="email"]').should.be.focused();
@@ -26,7 +26,7 @@ describe('AccountLogin', () => {
 
   it('shows an info alert if there is an existing session', async () => {
     const component = mount(AccountLogin, {
-      stubs: { RouterLink: RouterLinkStub }
+      container: { router: mockRouter('/account/login') }
     });
     localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
     await submit(component);
@@ -38,7 +38,7 @@ describe('AccountLogin', () => {
   it('sends the correct request', () =>
     mockHttp()
       .mount(AccountLogin, {
-        stubs: { RouterLink: RouterLinkStub }
+        container: { router: mockRouter('/account/login') }
       })
       .request(submit)
       .beforeEachResponse((_, { method, url, data }) => {
@@ -62,7 +62,7 @@ describe('AccountLogin', () => {
   it('shows a danger alert for incorrect credentials', () =>
     mockHttp()
       .mount(AccountLogin, {
-        stubs: { RouterLink: RouterLinkStub }
+        container: { router: mockRouter('/account/login') }
       })
       .request(submit)
       .respondWithProblem(401.2)

@@ -1,16 +1,14 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import HomeSummary from '../../../src/components/home/summary.vue';
 import HomeSummaryItem from '../../../src/components/home/summary/item.vue';
 
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 
 const mountOptions = () => ({
   requestData: { projects: testData.extendedProjects.sorted() },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/' }
+  container: { router: mockRouter('/') }
 });
 
 describe('HomeSummary', () => {

@@ -1,6 +1,6 @@
 import { createLocalVue, mount as vtuMount } from '@vue/test-utils';
+import { last, lensPath, view } from 'ramda';
 
-import router from '../../src/router';
 import { $tcn } from '../../src/util/i18n';
 
 import createTestContainer from './container';
@@ -53,8 +53,10 @@ Our mount() function will also set it up so that the component is destroyed
 after the test.
 */
 export const mount = (component, options = {}) => {
-  const { router: routerOption = null, requestData, throwIfEmit, ...mountOptions } = options;
-  const container = createTestContainer({ router: routerOption, requestData });
+  const { container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
+  const container = containerOption != null && containerOption.install != null
+    ? containerOption
+    : createTestContainer({ requestData, ...containerOption });
   mountOptions.localVue = createLocalVue();
   mountOptions.localVue.use(container);
   mountOptions.localVue.prototype.$tcn = $tcn;
@@ -76,20 +78,6 @@ export const mount = (component, options = {}) => {
   if (container.router != null)
     mountOptions.parentComponent.router = container.router;
 
-  if (mountOptions.mocks != null && mountOptions.mocks.$route != null) {
-    const mocks = { ...mountOptions.mocks };
-    if (typeof mocks.$route === 'string')
-      mocks.$route = router.resolve(mocks.$route).route;
-    if (mocks.$router == null) {
-      mocks.$router = {
-        currentRoute: mocks.$route,
-        resolve: router.resolve.bind(router)
-      };
-    }
-    mountOptions.mocks = mocks;
-    container.store.commit('confirmNavigation', mocks.$route);
-  }
-
   const wrapper = vtuMount(component, mountOptions);
   componentsToDestroy.push(wrapper);
 
@@ -108,4 +96,36 @@ export const mount = (component, options = {}) => {
   }
 
   return wrapper;
+};
+
+// TODO/vue3. Update this list for Vue 3.
+const optionsToMerge = [
+  ['propsData'],
+  ['slots'],
+  ['attrs'],
+  ['provide'],
+  ['stubs'],
+  ['mocks'],
+  ['container'],
+  ['container', 'requestData']
+];
+
+// Merges two sets of options for mount().
+export const mergeMountOptions = (options, defaults) => {
+  if (options == null) return defaults;
+  const merged = { ...defaults, ...options };
+  for (const path of optionsToMerge) {
+    const lens = lensPath(path);
+    const option = view(lens, options);
+    if (option != null) {
+      const defaultOption = view(lens, defaults);
+      if (defaultOption != null) {
+        let obj = merged;
+        for (let i = 0; i < path.length - 1; i += 1)
+          obj = obj[path[i]];
+        obj[last(path)] = { ...defaultOption, ...option };
+      }
+    }
+  }
+  return merged;
 };

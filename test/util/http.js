@@ -119,6 +119,8 @@ afterResponses(), complete() will also execute the series.
 The router
 ----------
 
+// TODO/vue3. Update these comments.
+
 If the component uses <router-link>, you can use Vue Test Utils to stub it. If
 it uses $route, you can use Vue Test Utils to mock it. For example:
 
@@ -273,21 +275,21 @@ reviewing the comments above each method below.
 */
 
 import Vue from 'vue';
-import { RouterLinkStub } from '@vue/test-utils';
 import { last } from 'ramda';
 
 import App from '../../src/components/app.vue';
 
-import router from '../../src/router';
 import { noop } from '../../src/util/util';
 import { routeProps } from '../../src/util/router';
 
+import createTestContainer from './container';
 import requestDataByComponent from './http/data';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { loadAsyncCache } from './async-components';
+import { mergeMountOptions, mount as lifecycleMount } from './lifecycle';
 import { mockAxios, mockAxiosError, mockResponse } from './axios';
-import { mount as lifecycleMount } from './lifecycle';
+import { mockRouter, resolveRoute, testRouter } from './router';
 import { wait, waitUntil } from './util';
 
 let inProgress = false;
@@ -303,6 +305,7 @@ const routeComponents = (route) => route.matched.map(routeRecord => {
 
 class MockHttp {
   constructor({
+    container = null,
     // If the current series follows a previous series of request-response
     // cycles, previousPromise is the promise from the previous series.
     // previousPromise is used to chain series.
@@ -315,6 +318,7 @@ class MockHttp {
     beforeAnyResponse = null,
     beforeEachResponse = null
   } = {}) {
+    this._container = container;
     this._previousPromise = previousPromise;
     this._location = location;
     this._mount = mount;
@@ -326,6 +330,7 @@ class MockHttp {
 
   _with(options) {
     return new MockHttp({
+      container: this._container,
       previousPromise: this._previousPromise,
       location: this._location,
       mount: this._mount,
@@ -353,7 +358,25 @@ class MockHttp {
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
       throw new Error('cannot call mount() after the first series in a chain');
-    return this._with({ mount: () => lifecycleMount(component, options) });
+
+    const containerOption = options != null ? options.container : undefined;
+    if (containerOption != null && this._container != null &&
+      containerOption !== this._container) {
+      throw new Error('cannot call mount() with different container from series');
+    }
+    const container = this._container != null
+      ? this._container
+      : (containerOption != null && containerOption.install != null
+        ? containerOption
+        : createTestContainer({
+          requestData: options != null ? options.requestData : null,
+          ...containerOption
+        }));
+
+    return this._with({
+      container,
+      mount: () => lifecycleMount(component, { ...options, container })
+    });
   }
 
   // The callback may return a Promise or a non-Promise value.
@@ -442,7 +465,7 @@ class MockHttp {
   The property names of `options` correspond to request keys.
   */
   respondFor(location, options = undefined) {
-    return routeComponents(router.resolve(location).route).reduce(
+    return routeComponents(resolveRoute(location)).reduce(
       (series, component) => series.respondForComponent(component, options),
       this
     );
@@ -557,7 +580,7 @@ class MockHttp {
         .finally(() => {
           inProgress = false;
         }));
-    return new MockHttp({ previousPromise: promise });
+    return new MockHttp({ container: this._container, previousPromise: promise });
   }
 
   afterResponse(optionsOrCallback) {
@@ -683,9 +706,11 @@ class MockHttp {
   }
 
   _navigate() {
+    const { router } = this._container;
+    if (router == null) throw new Error('container does not contain a router');
     return new Promise(resolve => {
-      const removeGuard = router.afterEach(() => {
-        removeGuard();
+      const removeHook = router.afterEach(() => {
+        removeHook();
         resolve();
       });
       router.push(this._location).catch(noop);
@@ -778,25 +803,27 @@ class MockHttp {
 
 Object.assign(MockHttp.prototype, commonTests);
 
-export const mockHttp = () => new MockHttp();
+export const mockHttp = (container = undefined) => new MockHttp({ container });
 
 // Mounts the component associated with the bottom-level route matching
 // `location`, setting propsData. If respondForOptions is not `false`, it will
 // also set requestData and respond to the initial requests that the component
 // sends.
 const loadBottomComponent = (location, mountOptions, respondForOptions) => {
-  const { route } = router.resolve(location);
+  const route = resolveRoute(location);
   const components = routeComponents(route);
   const bottomComponent = last(components);
 
   const fullMountOptions = {
     ...mountOptions,
-    stubs: { RouterLink: RouterLinkStub },
-    mocks: { $route: route },
     // A component may emit an event in order to ask its parent component to
     // send a request. However, loadBottomComponent() doesn't support that
     // approach.
     throwIfEmit: `${bottomComponent.name} emitted an event, but it is not expected to do so. In this case, root cannot be specified as false.`
+  };
+  fullMountOptions.container = {
+    ...fullMountOptions.container,
+    router: mockRouter(location)
   };
 
   const bottomRouteRecord = last(route.matched);
@@ -815,7 +842,7 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
         requestData[key] = option != null ? option() : callback();
       }
     }
-    fullMountOptions.requestData = requestData;
+    fullMountOptions.container.requestData = requestData;
   }
 
   return mockHttp()
@@ -847,7 +874,9 @@ export const load = (
 
   return mockHttp()
     .route(location)
-    .mount(App, { ...mountOptions, router })
+    .mount(App, mergeMountOptions(mountOptions, {
+      container: { router: testRouter() }
+    }))
     .modify(series => (respondForOptions !== false
       ? series.respondFor(location, respondForOptions)
       : series));

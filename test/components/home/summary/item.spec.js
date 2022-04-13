@@ -1,8 +1,7 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import HomeSummaryItem from '../../../../src/components/home/summary/item.vue';
 import Linkable from '../../../../src/components/linkable.vue';
 
+import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 
 const mountComponent = (options = {}) => mount(HomeSummaryItem, {
@@ -14,8 +13,7 @@ const mountComponent = (options = {}) => mount(HomeSummaryItem, {
     title: '<span id="title">Some Title</span>',
     body: '<span id="body">Some body text</span>'
   },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/' }
+  container: { router: mockRouter('/') }
 });
 
 describe('HomeSummaryItem', () => {

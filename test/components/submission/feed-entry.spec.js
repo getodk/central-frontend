@@ -1,31 +1,31 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ActorLink from '../../../src/components/actor-link.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import MarkdownView from '../../../src/components/markdown/view.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 
 import testData from '../../data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mockRouter } from '../../util/router';
 
-const mountComponent = (options = {}) => mount(SubmissionFeedEntry, {
-  propsData: {
-    projectId: '1',
-    xmlFormId: testData.extendedForms.last().xmlFormId,
-    instanceId: 's',
-    entry: testData.extendedAudits.size !== 0
-      ? testData.extendedAudits.last()
-      : testData.extendedComments.last()
-  },
-  requestData: {
-    diffs: {},
-    fields: testData.extendedForms.last()._fields,
-    ...options.requestData
-  },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/projects/1/submissions/s' }
-});
+const mountComponent = (options = undefined) =>
+  mount(SubmissionFeedEntry, mergeMountOptions(options, {
+    propsData: {
+      projectId: '1',
+      xmlFormId: testData.extendedForms.last().xmlFormId,
+      instanceId: 's',
+      entry: testData.extendedAudits.size !== 0
+        ? testData.extendedAudits.last()
+        : testData.extendedComments.last()
+    },
+    container: {
+      router: mockRouter('/projects/1/submissions/s'),
+      requestData: {
+        diffs: {},
+        fields: testData.extendedForms.last()._fields
+      }
+    }
+  }));
 
 describe('SubmissionFeedEntry', () => {
   beforeEach(() => {
@@ -191,20 +191,22 @@ describe('SubmissionFeedEntry', () => {
 
     it('shows diffs joined with a submission.update.version audit event', () => {
       const component = mountComponent({
-        requestData: {
-          diffs: {
-            1234: [
-              {
-                new: 'Benny',
-                old: 'Berry',
-                path: ['name']
-              },
-              {
-                new: '17',
-                old: '15',
-                path: ['age']
-              }
-            ]
+        container: {
+          requestData: {
+            diffs: {
+              1234: [
+                {
+                  new: 'Benny',
+                  old: 'Berry',
+                  path: ['name']
+                },
+                {
+                  new: '17',
+                  old: '15',
+                  path: ['age']
+                }
+              ]
+            }
           }
         }
       });
@@ -215,24 +217,26 @@ describe('SubmissionFeedEntry', () => {
 
     it('does not show changes to instanceID and deprecatedID', () => {
       const component = mountComponent({
-        requestData: {
-          diffs: {
-            1234: [
-              {
-                new: 'Benny',
-                old: 'Berry',
-                path: ['name']
-              },
-              {
-                new: '1234',
-                old: '1111',
-                path: ['meta', 'instanceID']
-              },
-              {
-                new: '1111',
-                path: ['meta', 'deprecatedID']
-              }
-            ]
+        container: {
+          requestData: {
+            diffs: {
+              1234: [
+                {
+                  new: 'Benny',
+                  old: 'Berry',
+                  path: ['name']
+                },
+                {
+                  new: '1234',
+                  old: '1111',
+                  path: ['meta', 'instanceID']
+                },
+                {
+                  new: '1111',
+                  path: ['meta', 'deprecatedID']
+                }
+              ]
+            }
           }
         }
       });
@@ -248,19 +252,21 @@ describe('SubmissionFeedEntry', () => {
       // The audit.details.instanceID (key into diffs dict) is used to build
       // the link for the new version of the submission.
       const component = mountComponent({
-        requestData: {
-          diffs: {
-            1234: [
-              {
-                new: 'new_file.jpg',
-                old: 'old_file.jpg',
-                path: ['photo']
-              },
-              {
-                new: '1111',
-                path: ['meta', 'deprecatedID']
-              }
-            ]
+        container: {
+          requestData: {
+            diffs: {
+              1234: [
+                {
+                  new: 'new_file.jpg',
+                  old: 'old_file.jpg',
+                  path: ['photo']
+                },
+                {
+                  new: '1111',
+                  path: ['meta', 'deprecatedID']
+                }
+              ]
+            }
           }
         }
       });

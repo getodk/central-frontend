@@ -151,8 +151,7 @@ describe('App', () => {
             clock.tick(15000);
           })
           .beforeEachResponse((app, { url }) => {
-            if (url === '/version.txt')
-              logOut(app.vm.$router, app.vm.$store, false);
+            if (url === '/version.txt') logOut(app.vm.$container, false);
           })
           .respondWithData(() => 'v1.2')
           .respondWithSuccess()

@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import SubmissionActivity from '../../../src/components/submission/activity.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
@@ -7,6 +5,7 @@ import SubmissionUpdateReviewState from '../../../src/components/submission/upda
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
 
@@ -24,9 +23,10 @@ const mountComponent = () => {
       xmlFormId: form.xmlFormId,
       instanceId: submission.value[0].__id
     },
-    requestData: { project, submission, fields, audits, comments, diffs },
-    stubs: { RouterLink: RouterLinkStub },
-    mocks: { $route: '/projects/1/submissions/s' }
+    container: {
+      router: mockRouter('/projects/1/submissions/s'),
+      requestData: { project, submission, fields, audits, comments, diffs }
+    }
   });
 };
 
