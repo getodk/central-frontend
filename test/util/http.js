@@ -531,7 +531,10 @@ class MockHttp {
       return this.afterResponses({ callback: optionsOrCallback });
     const { callback, pollWork = undefined } = optionsOrCallback;
     const promise = this._initialPromise()
-      .then(() => this._navigateAndMount()
+      // Starting with Promise.resolve() in case this._navigateAndMount() throws
+      // an error.
+      .then(() => Promise.resolve()
+        .then(() => this._navigateAndMount())
         // If both this.route() and this.request() were specified, then wait for
         // any async components associated with the route to load.
         .then(this._location && this._request != null ? wait : noop)
