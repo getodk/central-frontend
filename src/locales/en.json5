@@ -292,7 +292,10 @@
     // This is shown when the Edit button is disabled.
     "editDisabled": "You cannot edit encrypted Submissions.",
     "binaryLinkTitle": "File was submitted. Click to download.",
-    "encryptionMessage": "Data preview is not available due to encryption."
+    "encryptionMessage": "Data preview is not available due to encryption.",
+    // This text is shown under the "Latest Submission" column of the tables
+    // for Projects and Forms. It is shown for a Project or Form with no Submissions.
+    "noSubmission": "(none)"
   },
   "common": {
     // This is a title shown above a section of the page.

@@ -18,13 +18,13 @@ except according to the terms contained in the LICENSE file.
       </link-if-can>
     </td>
     <td class="review-state">
-      {{ $n(form.reviewStates.received) }}<span class="icon-dot-circle-o"></span>
+      {{ $n(form.reviewStates.received, 'default') }}<span class="icon-dot-circle-o"></span>
     </td>
     <td class="review-state">
-      {{ $n(form.reviewStates.hasIssues) }}<span class="icon-comments"></span>
+      {{ $n(form.reviewStates.hasIssues, 'default') }}<span class="icon-comments"></span>
     </td>
     <td class="review-state">
-      {{ $n(form.reviewStates.edited) }}<span class="icon-pencil"></span>
+      {{ $n(form.reviewStates.edited, 'default') }}<span class="icon-pencil"></span>
     </td>
     <td class="last-submission">
       <div v-if="form.lastSubmission != null">
@@ -33,11 +33,12 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-clock-o"></span>
         </router-link>
       </div>
+      <div v-else>{{ $t('submission.noSubmission') }}</div>
     </td>
     <td class="total-submissions">
       <div v-if="form.publishedAt != null">
         <router-link :to="submissionsPath">
-          <span>{{ $n(form.submissions) }}</span>
+          <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-gear"></span>
         </router-link>
       </div>

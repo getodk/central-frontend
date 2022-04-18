@@ -80,7 +80,10 @@ export const transforms = {
   users: ({ data }, { User }) => data.map(User.from),
   user: userPresenter,
 
-  projects: ({ data }, { Project }) => data.map(Project.from),
+  projects: ({ data }, { Project, Form }) => data.map(project => Project.from({
+    ...project,
+    formList: project.formList.map(Form.from)
+  })),
   project: ({ data }, { Project }) => Project.from(data),
   forms: formPresenters,
   deletedForms: formPresenters,

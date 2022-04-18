@@ -24,8 +24,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Project from '../../presenters/project';
-import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 
 import ProjectFormRow from './form-row.vue';
@@ -36,7 +34,7 @@ export default {
   mixins: [routes()],
   props: {
     project: {
-      type: Project,
+      type: Object,
       required: true
     },
     maxForms: {
@@ -47,7 +45,7 @@ export default {
   },
   computed: {
     visibleForms() {
-      return this.project.formList.slice(0, this.maxForms).map((f) => new Form(f));
+      return this.project.formList.slice(0, this.maxForms);
     },
     numInvisibleForms() {
       return this.project.formList.length - this.visibleForms.length;
