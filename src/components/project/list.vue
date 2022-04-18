@@ -37,10 +37,12 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('archived') }}</span>
       </template>
       <template #body>
-        <div v-for="project of archivedProjects" :key="project.id">
-          <h3 class="title">
-            <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
-          </h3>
+        <div id="archived-projects">
+          <div v-for="project of archivedProjects" :key="project.id">
+            <div class="title">
+              <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
+            </div>
+          </div>
         </div>
       </template>
     </page-section>
@@ -99,7 +101,17 @@ export default {
 </script>
 
 <style lang="scss">
-#project-list table { table-layout: fixed; }
+@import '../../assets/scss/mixins';
+
+#archived-projects {
+  .title {
+    a { @include text-link; }
+    color: $color-action-foreground;
+    font-size: 24px;
+    font-weight: 500;
+  }
+}
+
 </style>
 
 <i18n lang="json5">

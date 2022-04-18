@@ -11,9 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="project-home-block">
-    <h2 class="title">
+    <div class="title">
       <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
-    </h2>
+      <span v-if="project.keyId" class="encrypted badge">
+        <span class="icon-lock project-icon"
+        :title="$t('encryptionTip')"></span>
+        {{ $t('encrypted') }}
+        </span>
+    </div>
     <table v-if="visibleForms != null" class="project-form-table table">
       <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :columns="columns"/>
     </table>
@@ -62,10 +67,20 @@ export default {
 @import '../../assets/scss/mixins';
 
 .project-home-block {
+  margin-bottom: 15px;
+
   .title {
     color: $color-action-foreground;
     font-size: 24px;
+    font-weight: 500;
     margin-bottom: 5px;
+  }
+
+  .encrypted {
+    margin-left: 9px;
+    color: #333;
+    background-color: #ccc;
+    font-weight: 400;
   }
 
   padding-right: 12px;
@@ -88,3 +103,16 @@ export default {
   .project-form-table tr:nth-child(even) {background: #eee;}
 }
 </style>
+
+
+<i18n lang="json5">
+{
+  "en": {
+    // This text is shown under the "Latest Submission" column of the Projects
+    // table. It is shown for a Project with no Submissions.
+    "noSubmission": "(none)",
+    "encrypted": "Encrypted",
+    "encryptionTip": "This Project uses managed encryption.",
+  }
+}
+</i18n>

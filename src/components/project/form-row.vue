@@ -17,32 +17,38 @@ except according to the terms contained in the LICENSE file.
         {{ form.nameOrId() }}
       </link-if-can>
     </td>
-    <td class="review-state">
-      {{ $n(form.reviewStates.received, 'default') }}<span class="icon-dot-circle-o"></span>
-    </td>
-    <td class="review-state">
-      {{ $n(form.reviewStates.hasIssues, 'default') }}<span class="icon-comments"></span>
-    </td>
-    <td class="review-state">
-      {{ $n(form.reviewStates.edited, 'default') }}<span class="icon-pencil"></span>
-    </td>
-    <td class="last-submission">
-      <div v-if="form.lastSubmission != null">
-        <router-link :to="submissionsPath">
-          <date-time :iso="form.lastSubmission" relative="past"/>
-          <span class="icon-clock-o"></span>
-        </router-link>
-      </div>
-      <div v-else>{{ $t('submission.noSubmission') }}</div>
-    </td>
-    <td class="total-submissions">
-      <div v-if="form.publishedAt != null">
+    <template v-if="form.publishedAt != null">
+      <td class="review-state">
+        {{ $n(form.reviewStates.received, 'default') }}<span class="icon-dot-circle-o"></span>
+      </td>
+      <td class="review-state">
+        {{ $n(form.reviewStates.hasIssues, 'default') }}<span class="icon-comments"></span>
+      </td>
+      <td class="review-state">
+        {{ $n(form.reviewStates.edited, 'default') }}<span class="icon-pencil"></span>
+      </td>
+      <td class="last-submission">
+        <div v-if="form.lastSubmission != null">
+          <router-link :to="submissionsPath">
+            <date-time :iso="form.lastSubmission" relative="past"/>
+            <span class="icon-clock-o"></span>
+          </router-link>
+        </div>
+        <div v-else>{{ $t('submission.noSubmission') }}</div>
+      </td>
+      <td class="total-submissions">
         <router-link :to="submissionsPath">
           <span>{{ $n(form.submissions, 'default') }}</span>
-          <span class="icon-gear"></span>
+          <span class="icon-asterisk"></span>
         </router-link>
-      </div>
-    </td>
+      </td>
+    </template>
+    <template v-else>
+      <td class="not-published" colspan="5">
+        {{ $t('unpublished') }}
+        <span class="icon-asterisk"></span>
+      </td>
+    </template>
   </tr>
 </template>
 
@@ -94,7 +100,7 @@ export default {
     a { @include text-link; }
   }
 
-  .review-state, .total-submissions {
+  .review-state, .total-submissions, .not-published {
     text-align: right;
     width: 100px;
   }
@@ -110,3 +116,14 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This text is shown in the Forms table in place of submission counts
+    // when the Form has not been published and in pla there are no submission
+    // counts to show.
+    "unpublished": "Not published yet"
+  }
+}
+</i18n>

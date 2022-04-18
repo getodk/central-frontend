@@ -2809,6 +2809,24 @@
         }
       }
     },
+    "ProjectFormRow": {
+      "unpublished": {
+        "string": "Not published yet",
+        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and in pla there are no submission counts to show."
+      }
+    },
+    "ProjectHomeBlock": {
+      "noSubmission": {
+        "string": "(none)",
+        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
+      },
+      "encrypted": {
+        "string": "Encrypted"
+      },
+      "encryptionTip": {
+        "string": "This Project uses managed encryption."
+      }
+    },
     "ProjectList": {
       "archived": {
         "string": "Archived Projects"
