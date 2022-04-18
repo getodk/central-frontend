@@ -181,11 +181,11 @@ describe('util/session', () => {
       });
 
       it('does not send request if showsAnalytics config is false', () => {
-        store.commit('setConfig', { key: 'showsAnalytics', value: false });
         testData.extendedUsers.createPast(1, { role: 'admin' });
         const container = createTestContainer({
           router: mockRouter(),
-          requestData: { session: testData.sessions.createNew({ token: 'foo' }) }
+          requestData: { session: testData.sessions.createNew({ token: 'foo' }) },
+          config: { showsAnalytics: false }
         });
         return mockHttp()
           .request(() => logIn(container, true))
