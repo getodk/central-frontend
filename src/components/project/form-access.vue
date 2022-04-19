@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
     <template v-if="dataExists">
       <project-form-access-table :changes-by-form="changesByForm"
         @update:state="updateState"
-        @update:fieldKeyAccess="updateFieldKeyAccess"
+        @update:field-key-access="updateFieldKeyAccess"
         @show-states="showModal('statesModal')"/>
       <p v-if="forms.length === 0" class="empty-table-message">
         {{ $t('emptyTable') }}

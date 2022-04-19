@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
         <tbody v-if="forms.length !== 0">
           <project-form-access-row v-for="form of forms" :key="form.xmlFormId"
             :form="form" :changes="changesByForm[form.xmlFormId]"
-            @update:fieldKeyAccess="updateFieldKeyAccess"/>
+            @update:field-key-access="updateFieldKeyAccess"/>
         </tbody>
       </table>
     </div>
@@ -69,7 +69,7 @@ export default {
       required: true
     }
   },
-  emits: ['show-states', 'update:state', 'update:fieldKeyAccess'],
+  emits: ['show-states', 'update:state', 'update:field-key-access'],
   computed: {
     ...requestData(['forms']),
     ...mapGetters(['fieldKeysWithToken'])
@@ -79,7 +79,7 @@ export default {
       this.$emit('update:state', form, state);
     },
     updateFieldKeyAccess(form, fieldKey, accessible) {
-      this.$emit('update:fieldKeyAccess', form, fieldKey, accessible);
+      this.$emit('update:field-key-access', form, fieldKey, accessible);
     }
   }
 };
