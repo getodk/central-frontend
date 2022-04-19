@@ -37,7 +37,7 @@ export default {
       required: true
     }
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
   computed: {
     selectValue: {
       get() {

@@ -36,7 +36,7 @@ export default {
       required: true
     }
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
   // The component does not assume that this data will exist when the component
   // is created.
   computed: requestData(['submitters'])

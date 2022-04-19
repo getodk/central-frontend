@@ -55,7 +55,7 @@ export default {
       default: '2'
     }
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
   data() {
     return {
       previewMode: false

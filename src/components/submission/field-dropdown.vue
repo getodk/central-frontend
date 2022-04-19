@@ -84,7 +84,7 @@ export default {
       required: true
     }
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
   data() {
     const checked = {};
     for (const field of this.$store.getters.selectableFields)
