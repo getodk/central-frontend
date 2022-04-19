@@ -37,6 +37,7 @@ export default {
       type: Array,
       required: true
     }
-  }
+  },
+  emits: ['update:action', 'update:dateRange']
 };
 </script>

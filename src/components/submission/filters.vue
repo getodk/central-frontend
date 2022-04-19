@@ -49,7 +49,8 @@ export default {
       type: Array,
       required: true
     }
-  }
+  },
+  emits: ['update:submitterId', 'update:submissionDate', 'update:reviewState']
 };
 </script>
 

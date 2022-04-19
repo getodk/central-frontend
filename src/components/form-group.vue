@@ -53,6 +53,7 @@ export default {
       required: true
     }
   },
+  emits: ['change', 'input'],
   computed: {
     star() {
       return this.required ? ' *' : '';

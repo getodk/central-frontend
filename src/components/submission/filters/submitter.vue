@@ -36,6 +36,7 @@ export default {
       required: true
     }
   },
+  emits: ['input'],
   // The component does not assume that this data will exist when the component
   // is created.
   computed: requestData(['submitters'])

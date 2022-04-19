@@ -60,6 +60,7 @@ export default {
       required: true
     }
   },
+  emits: ['input'],
   data() {
     return {
       // We initialize this.flatpickrValue as an array of Date objects, but

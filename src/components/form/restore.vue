@@ -52,6 +52,7 @@ export default {
     state: Boolean,
     form: Object
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       awaitingResponse: false

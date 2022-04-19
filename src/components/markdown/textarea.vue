@@ -55,6 +55,7 @@ export default {
       default: '2'
     }
   },
+  emits: ['input'],
   data() {
     return {
       previewMode: false

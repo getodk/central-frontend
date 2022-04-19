@@ -84,6 +84,7 @@ export default {
       required: true
     }
   },
+  emits: ['input'],
   data() {
     const checked = {};
     for (const field of this.$store.getters.selectableFields)

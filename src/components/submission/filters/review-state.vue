@@ -37,6 +37,7 @@ export default {
       required: true
     }
   },
+  emits: ['input'],
   computed: {
     selectValue: {
       get() {
