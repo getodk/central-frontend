@@ -13,17 +13,24 @@ except according to the terms contained in the LICENSE file.
   <div class="project-home-block">
     <div class="title">
       <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
-      <span v-if="project.keyId" class="encrypted badge">
-        <span class="icon-lock project-icon"
-        :title="$t('encryptionTip')"></span>
+      <span v-if="project.keyId" class="encrypted badge"
+        :title="$t('encryptionTip')">
+        <span class="icon-lock project-icon"></span>
         {{ $t('encrypted') }}
         </span>
     </div>
     <table v-if="visibleForms != null" class="project-form-table table">
-      <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :columns="columns"/>
+      <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form"/>
     </table>
-    <div v-if="numInvisibleForms > 0" class="show-more-forms">
-      Show {{ project.formList.length }} total<span class="icon-angle-down"></span>
+    <div v-if="showExpander">
+      <span class="expand-button" @click.prevent="toggleExpanded">
+        <template v-if="!expanded">
+          {{ $tcn('showMore', project.formList.length) }}<span class="icon-angle-down"></span>
+        </template>
+        <template v-else>
+          {{ $tcn('showFewer', project.formList.length) }}
+        </template>
+      </span>
     </div>
   </div>
 </template>
@@ -46,18 +53,25 @@ export default {
       type: Number,
       default: 3
     }
-    // todo: default # of proj to show
+  },
+  data() {
+    return {
+      expanded: false
+    };
   },
   computed: {
     visibleForms() {
-      return this.project.formList.slice(0, this.maxForms);
+      return this.expanded
+        ? this.project.formList
+        : this.project.formList.slice(0, this.maxForms);
     },
-    numInvisibleForms() {
-      return this.project.formList.length - this.visibleForms.length;
-    },
-    columns() {
-      // TODO don't have per-project permissions at this point
-      return new Set(['name', 'idAndVersion', 'actions', 'submissions']);
+    showExpander() {
+      return this.project.formList.length > this.maxForms;
+    }
+  },
+  methods: {
+    toggleExpanded() {
+      this.expanded = !this.expanded;
     }
   }
 };
@@ -90,10 +104,11 @@ export default {
     margin-bottom: 4px;
   }
 
-  .show-more-forms {
+  .expand-button {
     margin-left: 12px;
     font-size: 14px;
     color: #888;
+    cursor: pointer;
   }
 
   .icon-angle-down {
@@ -113,6 +128,8 @@ export default {
     "noSubmission": "(none)",
     "encrypted": "Encrypted",
     "encryptionTip": "This Project uses managed encryption.",
+    "showMore": "Show {count} total",
+    "showFewer": "Show fewer of {count} total"
   }
 }
 </i18n>

@@ -2825,6 +2825,12 @@
       },
       "encryptionTip": {
         "string": "This Project uses managed encryption."
+      },
+      "showMore": {
+        "string": "Show {count} total"
+      },
+      "showFewer": {
+        "string": "Show fewer of {count} total"
       }
     },
     "ProjectList": {

@@ -67,10 +67,6 @@ export default {
     form: {
       type: Form,
       required: true
-    },
-    columns: {
-      type: Set,
-      required: true
     }
   },
   computed: {
