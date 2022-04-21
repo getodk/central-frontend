@@ -323,7 +323,7 @@ Our tests use a number of external packages:
 
 We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
 
-[Vue Test Utils](https://vue-test-utils.vuejs.org/) renders Vue components for testing, allowing you to test that a component renders and behaves as expected. We have built some functionality on top of Vue Test Utils, in particular [`mount()`](/test/util/lifecycle.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
+[Vue Test Utils](https://test-utils.vuejs.org/) renders Vue components for testing, allowing you to test that a component renders and behaves as expected. We have built some functionality on top of Vue Test Utils, in particular [`mount()`](/test/util/lifecycle.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
 
 Many tests involve sending a request. You can mock a series of request-response cycles by using `load()` or `mockHttp()`, defined in [`/test/util/http.js`](/test/util/http.js). You can use these to implement common tests, for example, testing some standard button things: see [`/test/util/http/common.js`](/test/util/http/common.js).
 
