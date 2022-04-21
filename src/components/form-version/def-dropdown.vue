@@ -50,13 +50,13 @@ export default {
       required: true
     }
   },
+  emits: ['view-xml'],
   data() {
     id += 1;
     return {
       id
     };
   },
-  emits: ['view-xml'],
   computed: {
     toggleId() {
       return `form-version-def-toggle${this.id}`;

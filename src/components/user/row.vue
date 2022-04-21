@@ -83,7 +83,7 @@ export default {
     admin: Boolean,
     highlighted: Number
   },
-  emits: ['reset-password', 'assigned-role', 'retire'],
+  emits: ['assigned-role', 'reset-password', 'retire'],
   data() {
     return {
       awaitingResponse: false,
