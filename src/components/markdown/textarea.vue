@@ -55,6 +55,7 @@ export default {
       default: '2'
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       previewMode: false

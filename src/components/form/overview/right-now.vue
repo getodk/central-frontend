@@ -75,6 +75,7 @@ export default {
     SummaryItem
   },
   mixins: [routes()],
+  emits: ['view-xml'],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.

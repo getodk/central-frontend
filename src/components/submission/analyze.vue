@@ -102,6 +102,7 @@ export default {
   props: {
     state: Boolean
   },
+  emits: ['hide'],
   data() {
     return {
       tool: 'microsoft'

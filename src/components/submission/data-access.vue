@@ -32,8 +32,9 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'SubmissionDataAccess',
   props: {
-    formVersion: Form // eslint-disable-line vue/require-default-prop
+    formVersion: Form
   },
+  emits: ['analyze'],
   computed: {
     // The component does not assume that this data will exist when the
     // component is created.

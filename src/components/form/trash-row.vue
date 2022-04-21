@@ -61,6 +61,7 @@ export default {
       required: true
     }
   },
+  emits: ['start-restore'],
   computed: {
     // The component assumes that this data will exist when the component is
     // created.

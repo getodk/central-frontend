@@ -86,6 +86,7 @@ export default {
     fields: Array,
     originalCount: Number
   },
+  emits: ['review'],
   data() {
     return {
       /*

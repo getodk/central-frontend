@@ -50,6 +50,7 @@ export default {
       required: true
     }
   },
+  emits: ['view-xml'],
   data() {
     id += 1;
     return {

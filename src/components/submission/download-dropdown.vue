@@ -28,6 +28,7 @@ export default {
     formVersion: Object,
     filtered: Boolean
   },
+  emits: ['download'],
   computed: {
     ...requestData(['odataChunk']),
     text() {

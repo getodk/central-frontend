@@ -60,6 +60,7 @@ export default {
       required: true
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       // We initialize this.flatpickrValue as an array of Date objects, but
