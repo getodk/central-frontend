@@ -12,10 +12,9 @@ except according to the terms contained in the LICENSE file.
 import Vuex from 'vuex';
 
 import alert from './modules/alert';
-import config from './modules/config';
 import request from './modules/request';
 import router from './modules/router';
 
 export default new Vuex.Store({
-  modules: { alert, config, request, router }
+  modules: { alert, request, router }
 });

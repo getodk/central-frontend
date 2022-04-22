@@ -237,7 +237,7 @@ However, if there is a logout during the request to restore the session, then
 the request for the current user should result in an error. If there is a logout
 during a request to create a session, then the new session will be used. */
 export const logIn = (container, newSession) => {
-  const { store } = container;
+  const { store, config } = container;
   if (newSession) {
     /* If two tabs submit the login form at the same time, then both will end up
     logged out: the first tab to log in will set sessionExpires; then the second
@@ -267,7 +267,7 @@ export const logIn = (container, newSession) => {
         });
     })
     .then(() => {
-      if (store.state.config.showsAnalytics &&
+      if (config.showsAnalytics &&
         store.state.request.data.currentUser.can('config.read')) {
         store.dispatch('get', [{
           key: 'analyticsConfig',

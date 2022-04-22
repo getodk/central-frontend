@@ -3,8 +3,6 @@ import { RouterLinkStub } from '@vue/test-utils';
 import Navbar from '../../../src/components/navbar.vue';
 import NavbarLinks from '../../../src/components/navbar/links.vue';
 
-import store from '../../../src/store';
-
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
@@ -39,10 +37,12 @@ describe('NavbarLinks', () => {
   });
 
   it('links to /system/audits if the showsBackups config is false', () => {
-    store.commit('setConfig', { key: 'showsBackups', value: false });
     mockLogin();
     const component = mount(NavbarLinks, {
-      container: { router: mockRouter('/') }
+      container: {
+        router: mockRouter('/'),
+        config: { showsBackups: false }
+      }
     });
     const { to } = component.findAllComponents(RouterLinkStub).at(2).props();
     to.should.equal('/system/audits');

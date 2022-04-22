@@ -1,11 +1,13 @@
 import createContainer from '../../src/container';
+import defaultConfig from '../../src/config';
 
 import { setData } from './store';
 
 export default (options = {}) => {
   const container = createContainer({
     router: null,
-    ...options
+    ...options,
+    config: { ...defaultConfig, ...options.config }
   });
   if (options.requestData != null) setData(options.requestData);
   const { install } = container;

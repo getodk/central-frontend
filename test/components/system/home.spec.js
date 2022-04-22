@@ -3,8 +3,6 @@ import { RouterLinkStub } from '@vue/test-utils';
 import PageHead from '../../../src/components/page/head.vue';
 import SystemHome from '../../../src/components/system/home.vue';
 
-import store from '../../../src/store';
-
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { mockRouter } from '../../util/router';
@@ -22,17 +20,21 @@ describe('SystemHome', () => {
   });
 
   it('hides the Backups tab if the showsBackups config is false', () => {
-    store.commit('setConfig', { key: 'showsBackups', value: false });
     const component = mount(SystemHome, {
-      container: { router: mockRouter('/system/audits') }
+      container: {
+        router: mockRouter('/system/audits'),
+        config: { showsBackups: false }
+      }
     });
     component.get('#page-head-tabs li').should.be.hidden();
   });
 
   it('hides "Usage Reporting" tab if showsAnalytics config is false', () => {
-    store.commit('setConfig', { key: 'showsAnalytics', value: false });
     const component = mount(SystemHome, {
-      container: { router: mockRouter('/system/backups') }
+      container: {
+        router: mockRouter('/system/backups'),
+        config: { showsAnalytics: false }
+      }
     });
     component.findAll('#page-head-tabs li').at(2).should.be.hidden();
   });

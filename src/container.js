@@ -16,16 +16,19 @@ import Vuex from 'vuex';
 import Translation from './components/i18n-t';
 
 import createCentralRouter from './router';
+import defaultConfig from './config';
 import i18n from './i18n';
 import store from './store';
 import { StoreAlert } from './util/alert';
 
 export default ({
-  router = createCentralRouter
+  router = createCentralRouter,
+  config = defaultConfig
 } = {}) => {
   const container = {
     store,
-    i18n
+    i18n,
+    config
   };
   if (router != null) container.router = router(container);
   container.install = (Vue) => {
@@ -40,7 +43,8 @@ export default ({
     };
   };
   container.provide = {
-    container
+    container,
+    config
   };
   return container;
 };
