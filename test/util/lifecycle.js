@@ -33,18 +33,12 @@ export const destroyAll = () => {
 // MOUNT
 
 /*
+TODO/vue3. Update these comments.
+
 Our mount() function is similar to mount() from Vue Test Utils. It automatically
 specifies useful options to Vue Test Utils' mount(). It also accepts additional
 options:
 
-  - mocks
-    - $route. Vue Test Utils' mount() expects $route to be similar to a Route
-      object. However, our mount() function also allows $route to be a string
-      location; it will automatically convert it to a Route object.
-      Additionally, because it is so common for $route and $router to be used
-      together, if you specify $route without $router, our mount() function will
-      pass a minimal mock of $router with read-only functionality. If you need
-      additional router functionality, you should probably inject the router.
   - requestData. Passed to setData() before the component is mounted.
   - throwIfEmit. A message to throw if the component emits an event. Used
     internally by load() when the `root` option is `false`.
@@ -60,6 +54,7 @@ export const mount = (component, options = {}) => {
   mountOptions.localVue = createLocalVue();
   mountOptions.localVue.use(container);
   mountOptions.localVue.prototype.$tcn = $tcn;
+  mountOptions.mocks = { $container: container, ...mountOptions.mocks };
   mountOptions.provide = { ...container.provide, ...mountOptions.provide };
 
   /* Vue Test Utils doesn't seem to mount `component` as the root component:
@@ -120,10 +115,11 @@ export const mergeMountOptions = (options, defaults) => {
     if (option != null) {
       const defaultOption = view(lens, defaults);
       if (defaultOption != null) {
-        let obj = merged;
-        for (let i = 0; i < path.length - 1; i += 1)
-          obj = obj[path[i]];
-        obj[last(path)] = { ...defaultOption, ...option };
+        const parent = path.slice(0, -1).reduce(
+          (obj, prop) => obj[prop],
+          merged
+        );
+        parent[last(path)] = { ...defaultOption, ...option };
       }
     }
   }

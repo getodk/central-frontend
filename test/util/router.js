@@ -14,16 +14,17 @@ export const testRouter = (modify = noop) => (container) =>
   // Using abstract mode because there were issues using hash mode. In hash
   // mode, when the router is injected into a root component, the router
   // examines the hash to determine the initial location. But that becomes an
-  // issue during testing, because the hash diverges from the current
-  // route over time: Headless Chrome seems to rate-limit hash changes.
+  // issue during testing, because the hash diverges from the current route over
+  // time: Headless Chrome seems to rate-limit hash changes.
   tap(modify, createCentralRouter(container, 'abstract'));
 
 const { router } = createTestContainer({ router: testRouter() });
 export const resolveRoute = (location) => router.resolve(location).route;
 
 // A router-like object that cannot navigate. In a sense, the object is like a
-// read-only router: the object's route will not change after the object is
-// initialized.
+// read-only router: the object's current route will never change after the
+// object is initialized. If you need a router that can navigate, use
+// testRouter().
 class MockRouter {
   constructor(store, location) {
     this.currentRoute = location != null
