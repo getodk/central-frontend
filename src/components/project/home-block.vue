@@ -49,9 +49,13 @@ export default {
       type: Object,
       required: true
     },
+    sortFunc: {
+      type: Function,
+      required: true
+    },
     maxForms: {
       type: Number,
-      default: 3
+      default: 6
     }
   },
   data() {
@@ -61,9 +65,10 @@ export default {
   },
   computed: {
     visibleForms() {
+      const sortedForms = this.sortFunc(this.project.formList);
       return this.expanded
-        ? this.project.formList
-        : this.project.formList.slice(0, this.maxForms);
+        ? sortedForms
+        : sortedForms.slice(0, this.maxForms);
     },
     showExpander() {
       return this.project.formList.length > this.maxForms;

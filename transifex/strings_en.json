@@ -2995,6 +2995,22 @@
         }
       }
     },
+    "ProjectSort": {
+      "sort": {
+        "string": "Sort"
+      },
+      "sortOptions": {
+        "alphabetical": {
+          "string": "Alphabetical"
+        },
+        "latest": {
+          "string": "Latest Submission"
+        },
+        "newest": {
+          "string": "Newest"
+        }
+      }
+    },
     "ProjectSubmissionOptions": {
       "title": {
         "string": "Submission Options",

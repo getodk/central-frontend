@@ -19,11 +19,12 @@ except according to the terms contained in the LICENSE file.
           @click="showModal('newProject')">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
+        <project-sort v-model="sortMode"/>
       </template>
       <template #body>
         <div v-if="projects != null">
           <project-home-block v-for="project of activeProjects" :key="project.id"
-            :project="project"/>
+            :project="project" :sort-func="sortFunction"/>
         </div>
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
         <p v-if="projects != null && projects.length === 0"
@@ -52,10 +53,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { ascend, descend, sortWith } from 'ramda';
+
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectNew from './new.vue';
 import ProjectHomeBlock from './home-block.vue';
+import ProjectSort from './sort.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
@@ -67,7 +71,8 @@ export default {
     Loading,
     PageSection,
     ProjectNew,
-    ProjectHomeBlock
+    ProjectHomeBlock,
+    ProjectSort
   },
   mixins: [modal(), routes()],
   inject: ['alert'],
@@ -75,18 +80,27 @@ export default {
     return {
       newProject: {
         state: false
-      }
+      },
+      sortMode: 'newest'
     };
   },
   computed: {
     ...requestData(['currentUser', 'projects']),
+    sortFunction() {
+      const sortFunctions = {
+        alphabetical: sortWith([ascend(entry => entry.name)]),
+        latest: sortWith([descend(entry => entry.lastSubmission)]),
+        newest: sortWith([descend(entry => entry.createdAt)])
+      };
+      return sortFunctions[this.sortMode];
+    },
     activeProjects() {
       if (this.projects == null) return [];
-      return this.projects.filter((p) => !(p.archived));
+      return this.sortFunction(this.projects.filter((p) => !(p.archived)));
     },
     archivedProjects() {
       if (this.projects == null) return [];
-      return this.projects.filter((p) => p.archived);
+      return this.sortFunction(this.projects.filter((p) => p.archived));
     }
   },
   methods: {

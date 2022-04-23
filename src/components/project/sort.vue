@@ -1,0 +1,68 @@
+<!--
+Copyright 2022 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <div id="project-sort">
+    <form class="form-inline" @submit.prevent>
+      <span id="project-sort-label">{{ $t('sort') }}</span>
+      <label id="project-sort-modes" class="form-group">
+        <select :value="value" class="form-control"
+          @change="$emit('input', $event.target.value)">
+          <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
+          <option value="latest">{{ $t('sortOptions.latest') }}</option>
+          <option value="newest">{{ $t('sortOptions.newest') }}</option>
+        </select>
+      </label>
+    </form>
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'ProjectSort',
+  components: {},
+  props: {
+    value: {
+      type: String,
+      required: true
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/mixins';
+
+#project-sort {
+  float: right;
+
+  #project-sort-label {
+    font-size: 14px;
+    padding-right: 8px;
+  }
+
+}
+
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "sort": "Sort",
+    "sortOptions": {
+      "alphabetical": "Alphabetical",
+      "latest": "Latest Submission",
+      "newest": "Newest"
+    }
+  }
+}
+</i18n>
