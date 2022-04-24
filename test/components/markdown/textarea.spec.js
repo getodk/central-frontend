@@ -1,39 +1,23 @@
 import MarkdownTextarea from '../../../src/components/markdown/textarea.vue';
 import MarkdownView from '../../../src/components/markdown/view.vue';
 
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountComponent = (propsData) => {
-  const props = {
-    defaultText: 'default text',
-    showFooter: false,
-    required: false,
-    rows: '2',
-    ...propsData
-  };
-
-  const parent = mount({
-    data() {
-      return {
-        body: ''
-      };
-    },
-    template: `<div><markdown-textarea v-model="body"
-      default-text="${props.defaultText}"
-      :show-footer="${props.showFooter}"
-      :required="${props.required}"
-      rows="${props.rows}">
-    </markdown-textarea></div>`,
-    components: { 'markdown-textarea': MarkdownTextarea }
-  });
-
-  return parent.getComponent(MarkdownTextarea);
-};
+const mountComponent = (options = undefined) =>
+  mount(MarkdownTextarea, mergeMountOptions(options, {
+    props: { value: '', defaultText: 'default text' }
+  }));
 
 describe('MarkdownTextarea', () => {
+  it('emits an input event', () => {
+    const component = mountComponent();
+    component.get('textarea').setValue('foo');
+    component.emitted().input.should.eql([['foo']]);
+  });
+
   it('shows placeholder text and no actions as default behavior', () => {
     const component = mountComponent({
-      defaultText: 'placeholder text'
+      props: { defaultText: 'placeholder text' }
     });
     component.get('.markdown-textarea-actions').should.be.hidden();
     component.get('textarea').attributes().placeholder.should.equal('placeholder text');
@@ -43,30 +27,28 @@ describe('MarkdownTextarea', () => {
     const component = mountComponent();
     const actions = component.get('.markdown-textarea-actions');
     actions.should.be.hidden();
-    const textarea = component.find('textarea');
-    await textarea.setValue('foo');
+    await component.setProps({ value: 'foo' });
     actions.should.be.visible();
-    await textarea.setValue('');
+    await component.setProps({ value: '' });
     actions.should.be.hidden();
   });
 
   it('shows the actions if showFooter is true', () => {
     const component = mountComponent({
-      showFooter: true
+      props: { showFooter: true }
     });
     component.get('.markdown-textarea-actions').should.be.visible();
   });
 
   it('shows the actions if showFooter is true even if input is added and removed', async () => {
     const component = mountComponent({
-      showFooter: true
+      props: { showFooter: true }
     });
     const actions = component.get('.markdown-textarea-actions');
     actions.should.be.visible();
-    const textarea = component.get('textarea');
-    await textarea.setValue('foo');
+    await component.setProps({ value: 'foo' });
     actions.should.be.visible();
-    await textarea.setValue('');
+    await component.setProps({ value: '' });
     actions.should.be.visible();
   });
 
@@ -78,7 +60,7 @@ describe('MarkdownTextarea', () => {
   it('shows markdown preview after input and button click', async () => {
     const component = mountComponent();
     component.find('.preview-container').exists().should.be.false();
-    await component.get('textarea').setValue('foo');
+    await component.setProps({ value: 'foo' });
     component.find('.preview-container').exists().should.be.false();
     const previewButton = component.get('.md-preview-btn');
     await previewButton.trigger('click');
@@ -87,10 +69,10 @@ describe('MarkdownTextarea', () => {
     component.find('.preview-container').exists().should.be.false();
   });
 
-
   it('shows rendered markdown', async () => {
-    const component = mountComponent();
-    await component.get('textarea').setValue('this is **bold**');
+    const component = mountComponent({
+      props: { value: 'this is **bold**' }
+    });
     await component.get('.md-preview-btn').trigger('click');
     const preview = component.getComponent(MarkdownView);
     preview.props().rawMarkdown.should.equal('this is **bold**');
@@ -98,8 +80,8 @@ describe('MarkdownTextarea', () => {
   });
 
   it('uses the default slot', () => {
-    const component = mount(MarkdownTextarea, {
-      propsData: { value: '', defaultText: 'default text', showFooter: true },
+    const component = mountComponent({
+      props: { showFooter: true },
       slots: { default: '<button id="some-button">Button text</button>' }
     });
     component.find('#some-button').exists().should.be.true();
@@ -107,21 +89,21 @@ describe('MarkdownTextarea', () => {
 
   it('adds "required" to textarea if required prop is true', () => {
     const component = mountComponent({
-      required: true
+      props: { required: true }
     });
     const required = component.get('textarea').attributes('required');
     should.exist(required);
   });
 
   it('does not make textarea required by default', () => {
-    const component = mountComponent({});
+    const component = mountComponent();
     const required = component.get('textarea').attributes('required');
     should.not.exist(required);
   });
 
   it('allows custom height via textarea rows prop', () => {
     const component = mountComponent({
-      rows: '5'
+      props: { rows: '5' }
     });
     const rows = component.get('textarea').attributes('rows');
     rows.should.equal('5');
@@ -130,16 +112,9 @@ describe('MarkdownTextarea', () => {
   it('allows a null value to be passed to it', () => {
     // the textarea may be displaying null content returned from the API
     // e.g. project.description before it is set.
-    const component = mount({
-      data() {
-        return {
-          body: null
-        };
-      },
-      template: '<div><markdown-textarea v-model="body"></markdown-textarea></div>',
-      components: { 'markdown-textarea': MarkdownTextarea }
-    }).getComponent(MarkdownTextarea);
-
+    const component = mountComponent({
+      props: { value: null }
+    });
     should.not.exist(component.props().value);
   });
 });

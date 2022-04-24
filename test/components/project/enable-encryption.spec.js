@@ -8,7 +8,7 @@ import { mockLogin } from '../../util/session';
 const ProjectEnableEncryption = null;
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
-  propsData: { state: true },
+  props: { state: true },
   container: {
     requestData: { project: testData.extendedProjects.last() }
   }

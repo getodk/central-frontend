@@ -6,15 +6,15 @@ import CollectQr from '../../src/components/collect-qr.vue';
 import { mount } from '../util/lifecycle';
 import { wait } from '../util/util';
 
-const mountComponent = (propsData) => mount(CollectQr, {
-  propsData: {
+const mountComponent = (props) => mount(CollectQr, {
+  props: {
     settings: {
       general: { server_url: 'http://localhost:9876/path' },
       admin: {}
     },
     errorCorrectionLevel: 'L',
     cellSize: 1,
-    ...propsData
+    ...props
   }
 });
 

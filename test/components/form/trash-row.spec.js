@@ -8,7 +8,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (formData) => mount(FormTrashRow, {
-  propsData: { form: new Form(formData) },
+  props: { form: new Form(formData) },
   container: {
     requestData: { forms: testData.extendedForms.sorted() }
   }

@@ -13,7 +13,7 @@ import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(AuditRow, {
-  propsData: { audit: testData.extendedAudits.last() },
+  props: { audit: testData.extendedAudits.last() },
   container: { router: mockRouter('/system/audits') }
 });
 const testType = (row, type) => {

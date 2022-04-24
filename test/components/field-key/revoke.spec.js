@@ -32,7 +32,7 @@ describe('FieldKeyRevoke', () => {
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
     return mockHttp()
       .mount(FieldKeyRevoke, {
-        propsData: { state: true, fieldKey }
+        props: { state: true, fieldKey }
       })
       .testStandardButton({
         button: '.btn-danger',

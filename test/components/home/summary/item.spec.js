@@ -1,20 +1,18 @@
 import HomeSummaryItem from '../../../../src/components/home/summary/item.vue';
 import Linkable from '../../../../src/components/linkable.vue';
 
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
 import { mockRouter } from '../../../util/router';
-import { mount } from '../../../util/lifecycle';
 
-const mountComponent = (options = {}) => mount(HomeSummaryItem, {
-  propsData: {
-    icon: 'user-circle',
-    ...options.propsData
-  },
-  slots: {
-    title: '<span id="title">Some Title</span>',
-    body: '<span id="body">Some body text</span>'
-  },
-  container: { router: mockRouter('/') }
-});
+const mountComponent = (options = undefined) =>
+  mount(HomeSummaryItem, mergeMountOptions(options, {
+    props: { icon: 'user-circle' },
+    slots: {
+      title: '<span id="title">Some Title</span>',
+      body: '<span id="body">Some body text</span>'
+    },
+    container: { router: mockRouter('/') }
+  }));
 
 describe('HomeSummaryItem', () => {
   it('renders the correct icon', () => {
@@ -31,14 +29,14 @@ describe('HomeSummaryItem', () => {
 
   it('passes the to prop to the Linkable', () => {
     const component = mountComponent({
-      propsData: { to: '/users' }
+      props: { to: '/users' }
     });
     component.getComponent(Linkable).props().to.should.equal('/users');
   });
 
   it('renders a count if one is specified', () => {
     const component = mountComponent({
-      propsData: { count: 1234 }
+      props: { count: 1234 }
     });
     component.get('.count').text().should.equal('1,234');
   });

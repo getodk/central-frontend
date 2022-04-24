@@ -10,7 +10,7 @@ import { mockRouter } from '../../util/router';
 
 const mountComponent = (options = undefined) =>
   mount(SubmissionFeedEntry, mergeMountOptions(options, {
-    propsData: {
+    props: {
       projectId: '1',
       xmlFormId: testData.extendedForms.last().xmlFormId,
       instanceId: 's',

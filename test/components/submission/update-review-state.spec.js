@@ -2,30 +2,25 @@ import SubmissionUpdateReviewState from '../../../src/components/submission/upda
 import MarkdownTextarea from '../../../src/components/markdown/textarea.vue';
 
 import testData from '../../data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 
-const mountOptions = (options = undefined) => ({
-  propsData: {
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  props: {
     state: false,
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
     submission: testData.submissionOData().value[0]
-  },
-  ...options
+  }
 });
-const mountComponent = (options = undefined) =>
-  mount(SubmissionUpdateReviewState, mountOptions(options));
-const mockHttpForComponent = (options = undefined) =>
-  mockHttp().mount(SubmissionUpdateReviewState, mountOptions(options));
 
 describe('SubmissionUpdateReviewState', () => {
   beforeEach(mockLogin);
 
   it('renders the correct radio buttons for review state', async () => {
     testData.extendedSubmissions.createPast(1);
-    const modal = mountComponent();
+    const modal = mount(SubmissionUpdateReviewState, mountOptions());
     await modal.setProps({ state: true });
     const radios = modal.findAll('.radio label');
     radios.length.should.equal(3);
@@ -46,21 +41,21 @@ describe('SubmissionUpdateReviewState', () => {
   describe('review state selection', () => {
     it('sets the selection to the current review state', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
-      const modal = mountComponent();
+      const modal = mount(SubmissionUpdateReviewState, mountOptions());
       await modal.setProps({ state: true });
       modal.get('input[value="hasIssues"]').element.checked.should.be.true();
     });
 
     it('sets selection to approved if current review state is null', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
-      const modal = mountComponent();
+      const modal = mount(SubmissionUpdateReviewState, mountOptions());
       await modal.setProps({ state: true });
       modal.get('input[value="approved"]').element.checked.should.be.true();
     });
 
     it('sets selection to approved if current review state is edited', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
-      const modal = mountComponent();
+      const modal = mount(SubmissionUpdateReviewState, mountOptions());
       await modal.setProps({ state: true });
       modal.get('input[value="approved"]').element.checked.should.be.true();
     });
@@ -68,21 +63,23 @@ describe('SubmissionUpdateReviewState', () => {
 
   it('focuses the review state radio', async () => {
     testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
-    const modal = mountComponent({ attachTo: document.body });
+    const modal = mount(SubmissionUpdateReviewState, mountOptions({
+      attachTo: document.body
+    }));
     await modal.setProps({ state: true });
     modal.get('input[value="hasIssues"]').should.be.focused();
   });
 
   it('does not require a comment in the text area', async () => {
     testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
-    const modal = mountComponent();
+    const modal = mount(SubmissionUpdateReviewState, mountOptions());
     await modal.setProps({ state: true });
     modal.getComponent(MarkdownTextarea).props().required.should.equal(false);
   });
 
   it('resets the form after the modal is hidden', async () => {
     testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
-    const modal = mountComponent();
+    const modal = mount(SubmissionUpdateReviewState, mountOptions());
     await modal.setProps({ state: true });
     await modal.get('input[value="rejected"]').setChecked();
     await modal.setData({ notes: 'Some notes' });
@@ -102,7 +99,8 @@ describe('SubmissionUpdateReviewState', () => {
         instanceId: 'c d',
         reviewState: null
       });
-      return mockHttpForComponent()
+      return mockHttp()
+        .mount(SubmissionUpdateReviewState, mountOptions())
         .request(async (modal) => {
           await modal.setProps({ state: true });
           await modal.get('input[value="hasIssues"]').setChecked();
@@ -118,7 +116,8 @@ describe('SubmissionUpdateReviewState', () => {
 
     it('sends an X-Action-Notes header if there are notes', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
-      return mockHttpForComponent()
+      return mockHttp()
+        .mount(SubmissionUpdateReviewState, mountOptions())
         .request(async (modal) => {
           await modal.setProps({ state: true });
           await modal.setData({ notes: 'Some\nnotes' });
@@ -133,7 +132,8 @@ describe('SubmissionUpdateReviewState', () => {
 
   it('implements some standard button things', () => {
     testData.extendedSubmissions.createPast(1, { reviewState: null });
-    return mockHttpForComponent()
+    return mockHttp()
+      .mount(SubmissionUpdateReviewState, mountOptions())
       .afterResponses(modal => modal.setProps({ state: true }))
       .testStandardButton({
         button: '.btn-primary',
@@ -146,7 +146,8 @@ describe('SubmissionUpdateReviewState', () => {
   describe('markdown preview comment box', () => {
     it('shows the markdown footer during the request', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
-      return mockHttpForComponent()
+      return mockHttp()
+        .mount(SubmissionUpdateReviewState, mountOptions())
         .request(async (modal) => {
           await modal.setProps({ state: true });
           await modal.setData({ notes: 'some notes' });

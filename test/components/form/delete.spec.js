@@ -20,7 +20,7 @@ describe('FormDelete', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(FormDelete, {
-        propsData: { state: true },
+        props: { state: true },
         container: {
           requestData: { form: testData.extendedForms.createPast(1).last() }
         }

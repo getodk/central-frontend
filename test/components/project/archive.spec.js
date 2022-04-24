@@ -25,7 +25,7 @@ describe('ProjectArchive', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(ProjectArchive, {
-        propsData: { state: true },
+        props: { state: true },
         container: {
           requestData: { project: testData.extendedProjects.createPast(1).last() }
         }

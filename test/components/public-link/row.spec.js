@@ -5,7 +5,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(PublicLinkRow, {
-  propsData: { publicLink: testData.standardPublicLinks.last() },
+  props: { publicLink: testData.standardPublicLinks.last() },
   container: {
     requestData: { form: testData.extendedForms.last() }
   }

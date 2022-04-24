@@ -7,7 +7,7 @@ import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 const mountOptions = () => ({
-  propsData: { state: true, user: new User(testData.standardUsers.first()) }
+  props: { state: true, user: new User(testData.standardUsers.first()) }
 });
 
 describe('UserResetPassword', () => {

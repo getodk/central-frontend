@@ -11,17 +11,17 @@ import { mount } from '../../util/lifecycle';
 import { waitUntil } from '../../util/util';
 
 const mountComponent = (options = {}) => {
-  const propsData = {
+  const props = {
     state: true,
     formVersion: testData.extendedForms.last(),
-    ...options.propsData
+    ...options.props
   };
   return mount(SubmissionDownload, {
     ...options,
-    propsData,
+    props,
     container: {
       requestData: {
-        fields: propsData.formVersion._fields,
+        fields: props.formVersion._fields,
         keys: testData.standardKeys.sorted()
       }
     }
@@ -121,7 +121,7 @@ describe('SubmissionDownload', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       const modal = mountComponent({
-        propsData: { formVersion: testData.extendedFormDrafts.last() }
+        props: { formVersion: testData.extendedFormDrafts.last() }
       });
       const checkbox = modal.findAll('.checkbox').at(2);
       checkbox.classes('disabled').should.be.true();
@@ -215,7 +215,7 @@ describe('SubmissionDownload', () => {
     it('sets the correct href attributes for a form draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       const modal = mountComponent({
-        propsData: { formVersion: testData.extendedFormDrafts.last() }
+        props: { formVersion: testData.extendedFormDrafts.last() }
       });
       const urls = modal.findAll('a').wrappers.map(aUrl);
       urls[0].pathname.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv');
@@ -229,7 +229,7 @@ describe('SubmissionDownload', () => {
   it('includes the OData filter in each download link', () => {
     testData.extendedForms.createPast(1);
     const modal = mountComponent({
-      propsData: { odataFilter: '__system/submitterId eq 1' }
+      props: { odataFilter: '__system/submitterId eq 1' }
     });
     for (const url of modal.findAll('a').wrappers.map(aUrl))
       url.searchParams.get('$filter').should.equal('__system/submitterId eq 1');

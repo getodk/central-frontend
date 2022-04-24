@@ -5,7 +5,7 @@ import { mount } from '../../../util/lifecycle';
 
 const mountComponent = ({ value = '' } = {}) =>
   mount(SubmissionFiltersSubmitter, {
-    propsData: { value },
+    props: { value },
     container: {
       requestData: {
         submitters: testData.extendedFieldKeys

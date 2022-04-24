@@ -4,29 +4,24 @@ import TestUtilSpan from '../util/components/span.vue';
 
 import { loadAsync } from '../../src/util/async-components';
 
-import { mount } from '../util/lifecycle';
+import { mergeMountOptions, mount } from '../util/lifecycle';
 
-const mountComponent = (mountOptions = {}) => mount(FormGroup, {
-  ...mountOptions,
-  propsData: {
-    value: '',
-    placeholder: 'My input',
-    autocomplete: 'off',
-    ...mountOptions.propsData
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(FormGroup, mergeMountOptions(options, {
+    props: { value: '', placeholder: 'My input', autocomplete: 'off' }
+  }));
 
 describe('FormGroup', () => {
   it('uses the value prop', () => {
     const formGroup = mountComponent({
-      propsData: { value: 'x' }
+      props: { value: 'x' }
     });
     formGroup.get('input').element.value.should.equal('x');
   });
 
   it('emits an input event', async () => {
     const formGroup = mountComponent({
-      propsData: { value: 'x' }
+      props: { value: 'x' }
     });
     await formGroup.get('input').setValue('y');
     formGroup.emitted().input.should.eql([['y']]);
@@ -34,7 +29,7 @@ describe('FormGroup', () => {
 
   it('emits a change event', async () => {
     const formGroup = mountComponent({
-      propsData: { value: 'x' }
+      props: { value: 'x' }
     });
     const input = formGroup.get('input');
     input.element.value = 'y';
@@ -45,7 +40,7 @@ describe('FormGroup', () => {
   describe('required prop', () => {
     it('renders correctly if the prop is true', () => {
       const formGroup = mountComponent({
-        propsData: { placeholder: 'My input', required: true }
+        props: { placeholder: 'My input', required: true }
       });
       const { required, placeholder } = formGroup.get('input').attributes();
       should.exist(required);
@@ -54,7 +49,7 @@ describe('FormGroup', () => {
 
     it('renders correctly if the prop is false', () => {
       const formGroup = mountComponent({
-        propsData: { placeholder: 'My input', required: false }
+        props: { placeholder: 'My input', required: false }
       });
       const { required, placeholder } = formGroup.get('input').attributes();
       should.not.exist(required);
@@ -64,21 +59,21 @@ describe('FormGroup', () => {
 
   it('has the correct class if hasError is true', () => {
     const formGroup = mountComponent({
-      propsData: { hasError: true }
+      props: { hasError: true }
     });
     formGroup.classes('has-error').should.be.true();
   });
 
   it('passes the autocomplete prop to the input', () => {
     const formGroup = mountComponent({
-      propsData: { autocomplete: 'name' }
+      props: { autocomplete: 'name' }
     });
     formGroup.get('input').attributes().autocomplete.should.equal('name');
   });
 
   it("shows password strength meter if autocomplete prop equals 'new-password'", async () => {
     const formGroup = mountComponent({
-      propsData: { value: 'foo', autocomplete: 'new-password' }
+      props: { value: 'foo', autocomplete: 'new-password' }
     });
     const Password = await loadAsync('Password')();
     await formGroup.vm.$nextTick();

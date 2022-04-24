@@ -8,14 +8,14 @@ import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
 
-const mountComponent = (propsData = undefined) => mount(SubmissionDataRow, {
-  propsData: {
+const mountComponent = (props = undefined) => mount(SubmissionDataRow, {
+  props: {
     projectId: '1',
     xmlFormId: 'f',
     draft: false,
     submission: testData.submissionOData().value[0],
     fields: testData.extendedForms.last()._fields.map(field => new Field(field)),
-    ...propsData
+    ...props
   }
 });
 

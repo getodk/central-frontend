@@ -15,7 +15,7 @@ const mountComponent = (options = undefined) => mount(Linkable, {
 describe('Linkable', () => {
   it('renders a <router-link> if the to prop is a relative URL', () => {
     const linkable = mountComponent({
-      propsData: { to: '/users' }
+      props: { to: '/users' }
     });
     linkable.getComponent(RouterLinkStub).props().to.should.equal('/users');
     linkable.find('#content').exists().should.be.true();
@@ -23,7 +23,7 @@ describe('Linkable', () => {
 
   it('renders a simple <a> element if the to prop is an absolute URL', () => {
     const linkable = mountComponent({
-      propsData: { to: 'https://getodk.org' }
+      props: { to: 'https://getodk.org' }
     });
     const a = linkable.get('a');
     a.attributes().href.should.equal('https://getodk.org');
@@ -33,7 +33,7 @@ describe('Linkable', () => {
 
   it('renders a button-like <a> element if the clickable prop is true', () => {
     const linkable = mountComponent({
-      propsData: { clickable: true }
+      props: { clickable: true }
     });
     const a = linkable.get('a');
     a.attributes().href.should.equal('#');

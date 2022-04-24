@@ -17,7 +17,7 @@ const mountOptions = () => {
     requestData.formDraft = testData.extendedFormDrafts.last();
   }
   return {
-    propsData: { state: true },
+    props: { state: true },
     container: {
       router: mockRouter(requestData.formDraft == null
         ? '/projects/1'

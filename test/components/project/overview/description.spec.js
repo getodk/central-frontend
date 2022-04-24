@@ -5,8 +5,8 @@ import ProjectOverviewDescription from '../../../../src/components/project/overv
 import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 
-const mountComponent = (propsData) => mount(ProjectOverviewDescription, {
-  propsData,
+const mountComponent = (props) => mount(ProjectOverviewDescription, {
+  props,
   container: { router: mockRouter('/projects/1') }
 });
 

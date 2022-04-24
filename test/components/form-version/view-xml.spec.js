@@ -4,7 +4,7 @@ import { mount } from '../../util/lifecycle';
 describe('FormVersionViewXml', () => {
   it('formats the XML', () => {
     const modal = mount(FormVersionViewXml, {
-      propsData: { state: true },
+      props: { state: true },
       container: {
         requestData: { formVersionXml: '<x><y/></x>' }
       }

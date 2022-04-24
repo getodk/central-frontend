@@ -4,8 +4,8 @@ import FieldKeyQrPanel from '../../../src/components/field-key/qr-panel.vue';
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = (propsData) => mount(FieldKeyQrPanel, {
-  propsData: { fieldKey: testData.extendedFieldKeys.last(), ...propsData },
+const mountComponent = (props) => mount(FieldKeyQrPanel, {
+  props: { fieldKey: testData.extendedFieldKeys.last(), ...props },
   container: {
     requestData: { project: testData.extendedProjects.last() }
   }

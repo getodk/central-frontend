@@ -3,14 +3,14 @@ import { RouterLinkStub } from '@vue/test-utils';
 import LinkIfCan from '../../../src/components/link-if-can.vue';
 import ProjectSubmissionOptions from '../../../src/components/project/submission-options.vue';
 
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
-import { mount } from '../../util/lifecycle';
 
-const mountComponent = (options) => mount(ProjectSubmissionOptions, {
-  propsData: { state: true },
-  ...options
-});
+const mountComponent = (options) =>
+  mount(ProjectSubmissionOptions, mergeMountOptions(options, {
+    props: { state: true }
+  }));
 
 describe('ProjectSubmissionOptions', () => {
   beforeEach(mockLogin);

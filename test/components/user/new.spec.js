@@ -20,7 +20,7 @@ describe('UserNew', () => {
 
   it('focuses the email input', () => {
     const modal = mount(UserNew, {
-      propsData: { state: true },
+      props: { state: true },
       attachTo: document.body
     });
     modal.get('input[type="email"]').should.be.focused();
@@ -28,7 +28,7 @@ describe('UserNew', () => {
 
   it('resets the form after the modal is hidden', async () => {
     const modal = mount(UserNew, {
-      propsData: { state: true }
+      props: { state: true }
     });
     await modal.get('input[type="email"]').setValue('new@email.com');
     await modal.get('input[type="text"]').setValue('New Name');
@@ -42,7 +42,7 @@ describe('UserNew', () => {
     it('sends the correct request', () =>
       mockHttp()
         .mount(UserNew, {
-          propsData: { state: true }
+          props: { state: true }
         })
         .request(async (modal) => {
           await modal.get('input[type="email"]').setValue('new@email.com');
@@ -58,7 +58,7 @@ describe('UserNew', () => {
     it('sends the display name if there is one', () =>
       mockHttp()
         .mount(UserNew, {
-          propsData: { state: true }
+          props: { state: true }
         })
         .request(async (modal) => {
           await modal.get('input[type="email"]').setValue('new@email.com');
@@ -74,7 +74,7 @@ describe('UserNew', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(UserNew, {
-        propsData: { state: true }
+        props: { state: true }
       })
       .testStandardButton({
         button: '.btn-primary',

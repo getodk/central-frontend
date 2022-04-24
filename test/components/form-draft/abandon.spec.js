@@ -7,7 +7,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = () => ({
-  propsData: { state: true },
+  props: { state: true },
   container: {
     requestData: { form: testData.extendedForms.last() }
   }

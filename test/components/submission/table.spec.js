@@ -11,7 +11,7 @@ import { mockRouter } from '../../util/router';
 
 const mountComponent = (options = undefined) => {
   const merged = mergeMountOptions(options, {
-    propsData: {
+    props: {
       projectId: '1',
       xmlFormId: 'f',
       draft: false,
@@ -24,7 +24,7 @@ const mountComponent = (options = undefined) => {
       requestData: { project: testData.extendedProjects.last() }
     }
   });
-  merged.container.router = mockRouter(merged.propsData.draft
+  merged.container.router = mockRouter(merged.props.draft
     ? '/projects/1/forms/f/draft/testing'
     : '/projects/1/forms/f/submissions');
   return mount(SubmissionTable, merged);
@@ -37,7 +37,7 @@ describe('SubmissionTable', () => {
     it('renders the correct headers for a form', () => {
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        propsData: { draft: false }
+        props: { draft: false }
       });
       const table = component.get('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
@@ -47,7 +47,7 @@ describe('SubmissionTable', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        propsData: { draft: true }
+        props: { draft: true }
       });
       const table = component.get('#submission-table-metadata');
       headers(table).should.eql(['', 'Submitted at']);
@@ -73,7 +73,7 @@ describe('SubmissionTable', () => {
       testData.extendedForms.createPast(1, { fields, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        propsData: { fields: [new Field(fields[1])] }
+        props: { fields: [new Field(fields[1])] }
       });
       const table = component.get('#submission-table-data');
       headers(table).should.eql(['g-s', 'Instance ID']);
@@ -94,7 +94,7 @@ describe('SubmissionTable', () => {
     testData.extendedForms.createPast(1, { submissions: 10 });
     testData.extendedSubmissions.createPast(10);
     const component = mountComponent({
-      propsData: { submissions: testData.submissionOData(2).value }
+      props: { submissions: testData.submissionOData(2).value }
     });
     const rows = component.findAllComponents(SubmissionMetadataRow);
     rows.length.should.equal(2);

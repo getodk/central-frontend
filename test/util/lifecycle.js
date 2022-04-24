@@ -82,7 +82,6 @@ export const mount = (component, options = {}) => {
 // TODO/vue3. Update this list for Vue 3.
 const optionsToMerge = [
   ['props'],
-  ['propsData'],
   ['slots'],
   ['attrs'],
   ['provide'],

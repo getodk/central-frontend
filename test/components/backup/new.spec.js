@@ -18,7 +18,7 @@ describe('BackupNew', () => {
   describe('step 1', () => {
     it('focuses the input', () => {
       const modal = mount(BackupNew, {
-        propsData: { state: true },
+        props: { state: true },
         attachTo: document.body
       });
       modal.get('input').should.be.focused();
@@ -27,7 +27,7 @@ describe('BackupNew', () => {
     it('sends the correct request', () =>
       mockHttp()
         .mount(BackupNew, {
-          propsData: { state: true }
+          props: { state: true }
         })
         .request(async (modal) => {
           await modal.get('input').setValue('supersecret');
@@ -43,7 +43,7 @@ describe('BackupNew', () => {
     it('implements some standard button things', () =>
       mockHttp()
         .mount(BackupNew, {
-          propsData: { state: true }
+          props: { state: true }
         })
         .testStandardButton({
           button: '.btn-primary',
@@ -57,7 +57,7 @@ describe('BackupNew', () => {
     it('focuses the input', () =>
       mockHttp()
         .mount(BackupNew, {
-          propsData: { state: true },
+          props: { state: true },
           attachTo: document.body
         })
         .request(modal => modal.get('form').trigger('submit'))
@@ -70,7 +70,7 @@ describe('BackupNew', () => {
     it('sends the correct request', () =>
       mockHttp()
         .mount(BackupNew, {
-          propsData: { state: true }
+          props: { state: true }
         })
         .request(modal => modal.get('form').trigger('submit'))
         .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))
@@ -90,7 +90,7 @@ describe('BackupNew', () => {
     it('implements some standard button things', () =>
       mockHttp()
         .mount(BackupNew, {
-          propsData: { state: true }
+          props: { state: true }
         })
         .request(modal => modal.get('form').trigger('submit'))
         .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))
@@ -108,7 +108,7 @@ describe('BackupNew', () => {
     it('shows a custom alert message', () =>
       mockHttp()
         .mount(BackupNew, {
-          propsData: { state: true }
+          props: { state: true }
         })
         .request(modal => modal.get('form').trigger('submit'))
         .respondWithData(() => ({ url: 'http://localhost', token: 'foo' }))

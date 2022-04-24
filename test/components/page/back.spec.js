@@ -16,7 +16,7 @@ describe('PageBack', () => {
   describe('linkTitle prop is true', () => {
     it('renders a link', () => {
       const component = mountComponent({
-        propsData: { to: '/users', linkTitle: true }
+        props: { to: '/users', linkTitle: true }
       });
       const link = component.getComponent(RouterLinkStub);
       should.exist(link.element.closest('#page-back-title'));
@@ -25,7 +25,7 @@ describe('PageBack', () => {
 
     it('uses the title slot', () => {
       const component = mountComponent({
-        propsData: { to: '/users', linkTitle: true },
+        props: { to: '/users', linkTitle: true },
         slots: { title: TestUtilSpan }
       });
       const text = component.getComponent(RouterLinkStub).get('span').text();
@@ -36,14 +36,14 @@ describe('PageBack', () => {
   describe('linkTitle prop is false', () => {
     it('does not render a link', () => {
       const component = mountComponent({
-        propsData: { to: '/users', linkTitle: false }
+        props: { to: '/users', linkTitle: false }
       });
       component.find('#page-back-title a').exists().should.be.false();
     });
 
     it('uses the title slot', () => {
       const component = mountComponent({
-        propsData: { to: '/users', linkTitle: false },
+        props: { to: '/users', linkTitle: false },
         slots: { title: TestUtilSpan }
       });
       const text = component.get('#page-back-title span').text();
@@ -53,7 +53,7 @@ describe('PageBack', () => {
 
   it('renders a link for the back slot', () => {
     const component = mountComponent({
-      propsData: { to: '/users' }
+      props: { to: '/users' }
     });
     const link = component.getComponent(RouterLinkStub);
     link.attributes().id.should.equal('page-back-back');
@@ -62,7 +62,7 @@ describe('PageBack', () => {
 
   it('uses the back slot', () => {
     const component = mountComponent({
-      propsData: { to: '/users' },
+      props: { to: '/users' },
       slots: { back: TestUtilSpan }
     });
     component.get('#page-back-back span').text().should.equal('Some span text');

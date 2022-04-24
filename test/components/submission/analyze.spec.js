@@ -7,7 +7,7 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(SubmissionAnalyze, {
-  propsData: { state: true },
+  props: { state: true },
   container: {
     requestData: { form: testData.extendedForms.last() }
   }

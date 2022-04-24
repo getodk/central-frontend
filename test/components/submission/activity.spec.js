@@ -18,7 +18,7 @@ const mountComponent = () => {
   const comments = testData.extendedComments.sorted();
   const diffs = {};
   return mount(SubmissionActivity, {
-    propsData: {
+    props: {
       projectId: '1',
       xmlFormId: form.xmlFormId,
       instanceId: submission.value[0].__id

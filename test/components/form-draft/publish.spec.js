@@ -10,7 +10,7 @@ import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = (options = undefined) => ({
-  propsData: { state: false },
+  props: { state: false },
   container: {
     router: mockRouter('/projects/1/forms/f/draft'),
     requestData: {

@@ -28,7 +28,7 @@ describe('ProjectNew', () => {
   it('focuses the input', () => {
     mockLogin();
     const modal = mount(ProjectNew, {
-      propsData: { state: true },
+      props: { state: true },
       attachTo: document.body
     });
     modal.get('input').should.be.focused();
@@ -38,7 +38,7 @@ describe('ProjectNew', () => {
     mockLogin();
     return mockHttp()
       .mount(ProjectNew, {
-        propsData: { state: true }
+        props: { state: true }
       })
       .request(async (modal) => {
         await modal.get('input').setValue('My Project');
@@ -56,7 +56,7 @@ describe('ProjectNew', () => {
     mockLogin();
     return mockHttp()
       .mount(ProjectNew, {
-        propsData: { state: true }
+        props: { state: true }
       })
       .testStandardButton({
         button: '.btn-primary',

@@ -22,7 +22,7 @@ describe('BackupTerminate', () => {
   it('sends the correct request', () =>
     mockHttp()
       .mount(BackupTerminate, {
-        propsData: { state: true }
+        props: { state: true }
       })
       .request(modal => modal.get('.btn-danger').trigger('click'))
       .respondWithProblem()
@@ -31,7 +31,7 @@ describe('BackupTerminate', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(BackupTerminate, {
-        propsData: { state: true }
+        props: { state: true }
       })
       .testStandardButton({
         button: '.btn-danger',

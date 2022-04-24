@@ -7,7 +7,7 @@ import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
-  propsData: { state: true, managed: true },
+  props: { state: true, managed: true },
   container: {
     requestData: { project: testData.extendedProjects.last() }
   }

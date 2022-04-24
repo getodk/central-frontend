@@ -12,7 +12,7 @@ import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = (propsData = undefined) => {
+const mountComponent = (props = undefined) => {
   const { xmlFormId } = testData.extendedForms.last();
   const mergedProps = {
     projectId: '1',
@@ -21,10 +21,10 @@ const mountComponent = (propsData = undefined) => {
     submission: testData.submissionOData().value[0],
     rowNumber: 1,
     canUpdate: true,
-    ...propsData
+    ...props
   };
   return mount(SubmissionMetadataRow, {
-    propsData: mergedProps,
+    props: mergedProps,
     container: {
       router: mockRouter(!mergedProps.draft
         ? `/projects/1/forms/${encodeURIComponent(xmlFormId)}/submissions`

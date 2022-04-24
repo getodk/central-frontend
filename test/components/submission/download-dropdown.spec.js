@@ -1,15 +1,12 @@
 import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
 
 import testData from '../../data';
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountComponent = (options = {}) => mount(SubmissionDownloadButton, {
-  ...options,
-  propsData: {
-    formVersion: testData.extendedForms.last(),
-    ...options.propsData
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(SubmissionDownloadButton, mergeMountOptions(options, {
+    props: { formVersion: testData.extendedForms.last() }
+  }));
 
 describe('SubmissionDownloadButton', () => {
   describe('text', () => {
@@ -23,7 +20,7 @@ describe('SubmissionDownloadButton', () => {
       it('shows correct text while first chunk of submissions is loading', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
         const dropdown = mountComponent({
-          propsData: { filtered: true }
+          props: { filtered: true }
         });
         const text = dropdown.get('button').text();
         text.should.equal('Download matching records…');
@@ -32,7 +29,7 @@ describe('SubmissionDownloadButton', () => {
       it('shows correct text after first chunk of submissions has loaded', async () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
         const dropdown = mountComponent({
-          propsData: { filtered: true }
+          props: { filtered: true }
         });
         dropdown.vm.$store.commit('setData', {
           key: 'odataChunk',

@@ -4,7 +4,7 @@ import { mount } from '../../../util/lifecycle';
 
 const mountComponent = ({ value = 'nonverbose' } = {}) =>
   mount(AuditFiltersAction, {
-    propsData: { value }
+    props: { value }
   });
 
 describe('AuditFiltersAction', () => {

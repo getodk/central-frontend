@@ -39,7 +39,7 @@ describe('UserRetire', () => {
       .last();
     return mockHttp()
       .mount(UserRetire, {
-        propsData: { state: true, user: new User(user) }
+        props: { state: true, user: new User(user) }
       })
       .testStandardButton({
         button: '.btn-danger',

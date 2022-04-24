@@ -5,7 +5,7 @@ import { mount } from '../../util/lifecycle';
 describe('AnalyticsMetricsTable', () => {
   it('shows the title', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_admins: { recent: 1, total: 1 } }
       }
@@ -15,7 +15,7 @@ describe('AnalyticsMetricsTable', () => {
 
   it('shows the metric name', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_admins: { recent: 1, total: 1 } }
       }
@@ -25,7 +25,7 @@ describe('AnalyticsMetricsTable', () => {
 
   it('correctly renders a metric with recent data', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_admins: { recent: 1000, total: 2000 } }
       }
@@ -38,7 +38,7 @@ describe('AnalyticsMetricsTable', () => {
 
   it('correctly renders a metric without recent data', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_questions_biggest_form: 1000 }
       }
@@ -51,7 +51,7 @@ describe('AnalyticsMetricsTable', () => {
 
   it('renders a row for each metric', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: {
           num_admins: { recent: 1, total: 1 },
