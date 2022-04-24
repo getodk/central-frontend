@@ -47,13 +47,14 @@ Our mount() function will also set it up so that the component is destroyed
 after the test.
 */
 export const mount = (component, options = {}) => {
-  const { global: g = {}, container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
+  const { props, global: g = {}, container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
   const container = containerOption != null && containerOption.install != null
     ? containerOption
     : createTestContainer({ requestData, ...containerOption });
   mountOptions.localVue = createLocalVue();
   mountOptions.localVue.use(container);
   mountOptions.localVue.prototype.$tcn = $tcn;
+  if (props != null) mountOptions.propsData = props;
   mountOptions.mocks = { $container: container, ...g.mocks };
   mountOptions.stubs = g.stubs;
   mountOptions.provide = { ...container.provide, ...mountOptions.provide };
@@ -96,6 +97,7 @@ export const mount = (component, options = {}) => {
 
 // TODO/vue3. Update this list for Vue 3.
 const optionsToMerge = [
+  ['props'],
   ['propsData'],
   ['slots'],
   ['attrs'],
