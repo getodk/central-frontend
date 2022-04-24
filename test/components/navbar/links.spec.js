@@ -11,8 +11,10 @@ describe('NavbarLinks', () => {
   it('does not render the links before login', () => {
     const navbar = mount(Navbar, {
       container: { router: mockRouter('/login') },
-      // Stubbing AnalyticsIntroduction because of its custom <router-link>
-      stubs: { AnalyticsIntroduction: true }
+      global: {
+        // Stubbing AnalyticsIntroduction because of its custom <router-link>
+        stubs: { AnalyticsIntroduction: true }
+      }
     });
     navbar.findComponent(NavbarLinks).exists().should.be.false();
   });

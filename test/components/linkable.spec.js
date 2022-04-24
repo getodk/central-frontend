@@ -7,7 +7,9 @@ import { mount } from '../util/lifecycle';
 const mountComponent = (options = undefined) => mount(Linkable, {
   ...options,
   slots: { default: '<span id="content"></span>' },
-  stubs: { RouterLink: RouterLinkStub }
+  global: {
+    stubs: { RouterLink: RouterLinkStub }
+  }
 });
 
 describe('Linkable', () => {

@@ -47,14 +47,15 @@ Our mount() function will also set it up so that the component is destroyed
 after the test.
 */
 export const mount = (component, options = {}) => {
-  const { container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
+  const { global: g = {}, container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
   const container = containerOption != null && containerOption.install != null
     ? containerOption
     : createTestContainer({ requestData, ...containerOption });
   mountOptions.localVue = createLocalVue();
   mountOptions.localVue.use(container);
   mountOptions.localVue.prototype.$tcn = $tcn;
-  mountOptions.mocks = { $container: container, ...mountOptions.mocks };
+  mountOptions.mocks = { $container: container, ...g.mocks };
+  mountOptions.stubs = g.stubs;
   mountOptions.provide = { ...container.provide, ...mountOptions.provide };
 
   /* Vue Test Utils doesn't seem to mount `component` as the root component:
@@ -99,8 +100,9 @@ const optionsToMerge = [
   ['slots'],
   ['attrs'],
   ['provide'],
-  ['stubs'],
-  ['mocks'],
+  ['global'],
+  ['global', 'mocks'],
+  ['global', 'stubs'],
   ['container'],
   ['container', 'requestData']
 ];

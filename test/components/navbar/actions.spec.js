@@ -12,8 +12,10 @@ describe('NavbarActions', () => {
   it('indicates if the user is not logged in', () => {
     const navbar = mount(Navbar, {
       container: { router: mockRouter('/login') },
-      // Stubbing AnalyticsIntroduction because of its custom <router-link>
-      stubs: { AnalyticsIntroduction: true }
+      global: {
+        // Stubbing AnalyticsIntroduction because of its custom <router-link>
+        stubs: { AnalyticsIntroduction: true }
+      }
     });
     const text = navbar.getComponent(NavbarActions).get('a').text();
     text.should.equal('Not logged in');
@@ -23,7 +25,9 @@ describe('NavbarActions', () => {
     mockLogin({ displayName: 'Alice' });
     const navbar = mount(Navbar, {
       container: { router: mockRouter('/') },
-      stubs: { AnalyticsIntroduction: true }
+      global: {
+        stubs: { AnalyticsIntroduction: true }
+      }
     });
     navbar.getComponent(NavbarActions).get('a').text().should.equal('Alice');
   });
