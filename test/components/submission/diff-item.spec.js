@@ -13,8 +13,8 @@ const mountComponent = (entry) => mount(SubmissionDiffItem, {
     oldVersionId: 'v1',
     newVersionId: 'v2'
   },
-  requestData: {
-    fields: testData.extendedForms.last()._fields
+  container: {
+    requestData: { fields: testData.extendedForms.last()._fields }
   }
 });
 

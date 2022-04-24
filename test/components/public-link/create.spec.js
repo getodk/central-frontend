@@ -2,20 +2,15 @@ import PublicLinkCreate from '../../../src/components/public-link/create.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 
-const mountComponent = (options) => mount(PublicLinkCreate, {
-  ...options,
-  propsData: { state: true },
-  requestData: { form: testData.extendedForms.last() }
-});
-const mockHttpForComponent = (mountOptions) => mockHttp()
-  .mount(PublicLinkCreate, {
-    ...mountOptions,
-    propsData: { state: true },
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  props: { state: true },
+  container: {
     requestData: { form: testData.extendedForms.last() }
-  });
+  }
+});
 
 describe('PublicLinkCreate', () => {
   beforeEach(() => {
@@ -31,12 +26,14 @@ describe('PublicLinkCreate', () => {
     }));
 
   it('focuses the display name input', () => {
-    const modal = mountComponent({ attachTo: document.body });
+    const modal = mount(PublicLinkCreate, mountOptions({
+      attachTo: document.body
+    }));
     modal.get('input').should.be.focused();
   });
 
   it('resets the form after the modal is hidden', async () => {
-    const modal = mountComponent();
+    const modal = mount(PublicLinkCreate, mountOptions());
     await modal.get('input').setValue('My Public Link');
     await modal.get('input[type="checkbox"]').setChecked();
     await modal.setProps({ state: false });
@@ -47,7 +44,8 @@ describe('PublicLinkCreate', () => {
 
   describe('request', () => {
     it('sends the correct request', () =>
-      mockHttpForComponent()
+      mockHttp()
+        .mount(PublicLinkCreate, mountOptions())
         .request(async (modal) => {
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
@@ -60,7 +58,8 @@ describe('PublicLinkCreate', () => {
         .respondWithProblem());
 
     it('sends the correct once property if the checkbox is checked', () =>
-      mockHttpForComponent()
+      mockHttp()
+        .mount(PublicLinkCreate, mountOptions())
         .request(async (modal) => {
           await modal.get('input').setValue('My Public Link');
           await modal.get('input[type="checkbox"]').setChecked();
@@ -73,7 +72,8 @@ describe('PublicLinkCreate', () => {
   });
 
   it('implements some standard button things', () =>
-    mockHttpForComponent()
+    mockHttp()
+      .mount(PublicLinkCreate, mountOptions())
       .testStandardButton({
         button: '.btn-primary',
         request: async (modal) => {

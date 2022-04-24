@@ -6,7 +6,9 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(PublicLinkRow, {
   propsData: { publicLink: testData.standardPublicLinks.last() },
-  requestData: { form: testData.extendedForms.last() }
+  container: {
+    requestData: { form: testData.extendedForms.last() }
+  }
 });
 
 describe('PublicLinkRow', () => {

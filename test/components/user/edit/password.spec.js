@@ -7,7 +7,9 @@ import { mockLogin } from '../../../util/session';
 import { mount } from '../../../util/lifecycle';
 
 const mountOptions = () => ({
-  requestData: { user: testData.standardUsers.first() }
+  container: {
+    requestData: { user: testData.standardUsers.first() }
+  }
 });
 const submit =
   async (component, { tooShort = false, mismatch = false } = {}) => {
@@ -53,7 +55,9 @@ describe('UserEditPassword', () => {
   it("does not render form if it is not current user's own account", async () => {
     const user = testData.standardUsers.createPast(1).last();
     const component = mount(UserEditPassword, {
-      requestData: { user }
+      container: {
+        requestData: { user }
+      }
     });
     component.find('form').exists().should.be.false();
   });

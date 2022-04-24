@@ -47,10 +47,10 @@ Our mount() function will also set it up so that the component is destroyed
 after the test.
 */
 export const mount = (component, options = {}) => {
-  const { props, global: g = {}, container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
+  const { props, global: g = {}, container: containerOption, throwIfEmit, ...mountOptions } = options;
   const container = containerOption != null && containerOption.install != null
     ? containerOption
-    : createTestContainer({ requestData, ...containerOption });
+    : createTestContainer(containerOption);
   mountOptions.localVue = createLocalVue();
   mountOptions.localVue.use(container);
   mountOptions.localVue.prototype.$tcn = $tcn;

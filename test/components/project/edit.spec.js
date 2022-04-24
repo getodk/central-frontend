@@ -6,7 +6,9 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = () => ({
-  requestData: { project: testData.extendedProjects.last() }
+  container: {
+    requestData: { project: testData.extendedProjects.last() }
+  }
 });
 
 describe('ProjectEdit', () => {

@@ -3,17 +3,18 @@ import FormVersionString from '../../../src/components/form-version/string.vue';
 import SubmissionBasicDetails from '../../../src/components/submission/basic-details.vue';
 
 import testData from '../../data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 
-const mountComponent = (options = {}) => mount(SubmissionBasicDetails, {
-  ...options,
-  requestData: {
-    submission: testData.submissionOData(),
-    submissionVersion: {},
-    ...options.requestData
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(SubmissionBasicDetails, mergeMountOptions(options, {
+    container: {
+      requestData: {
+        submission: testData.submissionOData(),
+        submissionVersion: {}
+      }
+    }
+  }));
 
 describe('SubmissionBasicDetails', () => {
   beforeEach(() => {
@@ -107,8 +108,10 @@ describe('SubmissionBasicDetails', () => {
     it('shows the user agent', () => {
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        requestData: {
-          submissionVersion: { userAgent: 'Collect' }
+        container: {
+          requestData: {
+            submissionVersion: { userAgent: 'Collect' }
+          }
         }
       });
       const span = component.findAll('dd').at(5).get('span');

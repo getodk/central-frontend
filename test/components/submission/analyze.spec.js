@@ -8,7 +8,9 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(SubmissionAnalyze, {
   propsData: { state: true },
-  requestData: { form: testData.extendedForms.last() }
+  container: {
+    requestData: { form: testData.extendedForms.last() }
+  }
 });
 const clickTab = (component, tabText) => {
   const a = component.findAll('#submission-analyze .nav-tabs a');

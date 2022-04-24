@@ -368,10 +368,7 @@ class MockHttp {
       ? this._container
       : (containerOption != null && containerOption.install != null
         ? containerOption
-        : createTestContainer({
-          requestData: options != null ? options.requestData : null,
-          ...containerOption
-        }));
+        : createTestContainer(containerOption));
 
     return this._with({
       container,

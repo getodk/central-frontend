@@ -9,8 +9,10 @@ import { mount } from '../../util/lifecycle';
 const mountOptions = () => {
   const config = testData.standardConfigs.forKey('analytics');
   return {
-    requestData: {
-      analyticsConfig: config != null ? config : mockResponse.problem(404.1)
+    container: {
+      requestData: {
+        analyticsConfig: config != null ? config : mockResponse.problem(404.1)
+      }
     }
   };
 };

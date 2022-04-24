@@ -9,8 +9,8 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (formData) => mount(FormTrashRow, {
   propsData: { form: new Form(formData) },
-  requestData: {
-    forms: testData.extendedForms.sorted()
+  container: {
+    requestData: { forms: testData.extendedForms.sorted() }
   }
 });
 

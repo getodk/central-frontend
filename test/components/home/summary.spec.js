@@ -7,8 +7,10 @@ import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 
 const mountOptions = () => ({
-  requestData: { projects: testData.extendedProjects.sorted() },
-  container: { router: mockRouter('/') }
+  container: {
+    router: mockRouter('/'),
+    requestData: { projects: testData.extendedProjects.sorted() }
+  }
 });
 
 describe('HomeSummary', () => {

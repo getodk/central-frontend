@@ -7,7 +7,9 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(SubmissionDataAccess, {
   propsData: { formVersion: new Form(testData.extendedForms.last()) },
-  requestData: { keys: testData.standardKeys.sorted() }
+  container: {
+    requestData: { keys: testData.standardKeys.sorted() }
+  }
 });
 
 describe('SubmissionDataAccess', () => {

@@ -6,7 +6,9 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (propsData) => mount(FieldKeyQrPanel, {
   propsData: { fieldKey: testData.extendedFieldKeys.last(), ...propsData },
-  requestData: { project: testData.extendedProjects.last() }
+  container: {
+    requestData: { project: testData.extendedProjects.last() }
+  }
 });
 
 describe('FieldKeyQrPanel', () => {

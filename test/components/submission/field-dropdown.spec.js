@@ -297,7 +297,9 @@ describe('SubmissionFieldDropdown', () => {
       commitFields(fields);
       const dropdown = mount(SubmissionFieldDropdown, {
         propsData: { value: fields.slice(0, 100) },
-        requestData: { fields }
+        container: {
+          requestData: { fields }
+        }
       });
       dropdown.get('.toggle-all a').classes('disabled').should.be.true();
     });

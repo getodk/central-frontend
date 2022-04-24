@@ -19,9 +19,11 @@ const mountComponent = (options = {}) => {
   return mount(SubmissionDownload, {
     ...options,
     propsData,
-    requestData: {
-      fields: propsData.formVersion._fields,
-      keys: testData.standardKeys.sorted()
+    container: {
+      requestData: {
+        fields: propsData.formVersion._fields,
+        keys: testData.standardKeys.sorted()
+      }
     }
   });
 };
