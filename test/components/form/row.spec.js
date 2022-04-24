@@ -9,18 +9,20 @@ import LinkIfCan from '../../../src/components/link-if-can.vue';
 
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => {
   // Mounting FormTable rather than FormRow in order not to mock the `columns`
   // prop of FormRow.
   const table = mount(FormTable, {
-    requestData: {
-      project: testData.extendedProjects.last(),
-      forms: testData.extendedForms.sorted()
-    },
-    stubs: { RouterLink: RouterLinkStub },
-    mocks: { $route: '/projects/1' }
+    container: {
+      router: mockRouter('/projects/1'),
+      requestData: {
+        project: testData.extendedProjects.last(),
+        forms: testData.extendedForms.sorted()
+      }
+    }
   });
   return table.getComponent(FormRow);
 };

@@ -15,16 +15,14 @@ except according to the terms contained in the LICENSE file.
     <home-summary/>
     <div id="home-news-container">
       <home-news/>
-      <home-config-section v-if="homeConfig.title != null"
-        :title="homeConfig.title" :body="homeConfig.body"/>
+      <home-config-section v-if="config.home.title != null"
+        :title="config.home.title" :body="config.home.body"/>
     </div>
     <project-list/>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';
 import ProjectList from './project/list.vue';
@@ -40,7 +38,7 @@ export default {
     HomeSummary,
     ProjectList
   },
-  computed: mapState({ homeConfig: (state) => state.config.home }),
+  inject: ['config'],
   created() {
     this.fetchData();
   },

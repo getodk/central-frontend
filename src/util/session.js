@@ -113,8 +113,9 @@ const requestLogout = (store) => {
     });
 };
 
-export const logOut = (router, store, setNext) => {
+export const logOut = (container, setNext) => {
   removeSessionFromStorage();
+  const { router, store } = container;
   const { expiresAt } = store.state.request.data.session;
   // If the session has expired (for example, while the computer was asleep), we
   // do not send a request, which would result in an error. (Using Date.parse()
@@ -137,7 +138,7 @@ export const logOut = (router, store, setNext) => {
     router.currentRoute.path !== '/login') {
     const location = { path: '/login' };
     if (setNext) location.query = { next: router.currentRoute.fullPath };
-    forceReplace(router, store, location);
+    forceReplace(container, location);
   }
 
   return promise;
@@ -146,7 +147,8 @@ export const logOut = (router, store, setNext) => {
 // We check for upcoming session expiration on an interval. We take that
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
-const logOutBeforeSessionExpires = (router, store) => {
+const logOutBeforeSessionExpires = (container) => {
+  const { store } = container;
   let alerted;
   return () => {
     const { session } = store.state.request.data;
@@ -154,7 +156,7 @@ const logOutBeforeSessionExpires = (router, store) => {
     const millisUntilExpires = Date.parse(session.expiresAt) - Date.now();
     const millisUntilLogout = millisUntilExpires - 60000;
     if (millisUntilLogout <= 0) {
-      logOut(router, store, true)
+      logOut(container, true)
         .then(() => {
           store.commit('setAlert', {
             type: 'info',
@@ -178,17 +180,17 @@ const logOutBeforeSessionExpires = (router, store) => {
   };
 };
 
-const logOutAfterStorageChange = (router, store) => (event) => {
+const logOutAfterStorageChange = (container) => (event) => {
   // event.key == null if the user clears local storage in Chrome.
   if ((event.key == null || event.key === 'sessionExpires') &&
-    store.state.request.data.session != null) {
-    logOut(router, store, true).catch(noop);
+    container.store.state.request.data.session != null) {
+    logOut(container, true).catch(noop);
   }
 };
 
-export const useSessions = (router, store) => {
-  const id = setInterval(logOutBeforeSessionExpires(router, store), 15000);
-  const handler = logOutAfterStorageChange(router, store);
+export const useSessions = (container) => {
+  const id = setInterval(logOutBeforeSessionExpires(container), 15000);
+  const handler = logOutAfterStorageChange(container);
   window.addEventListener('storage', handler);
   return () => {
     clearInterval(id);
@@ -234,7 +236,8 @@ request to create a session. We do not watch for a logout during either request.
 However, if there is a logout during the request to restore the session, then
 the request for the current user should result in an error. If there is a logout
 during a request to create a session, then the new session will be used. */
-export const logIn = (router, store, newSession) => {
+export const logIn = (container, newSession) => {
+  const { store, config } = container;
   if (newSession) {
     /* If two tabs submit the login form at the same time, then both will end up
     logged out: the first tab to log in will set sessionExpires; then the second
@@ -258,13 +261,13 @@ export const logIn = (router, store, newSession) => {
       // run, in which case we simply re-throw the error.
       if (store.state.request.data.session == null) throw error;
 
-      return logOut(router, store, false)
+      return logOut(container, false)
         .then(() => {
           throw error;
         });
     })
     .then(() => {
-      if (store.state.config.showsAnalytics &&
+      if (config.showsAnalytics &&
         store.state.request.data.currentUser.can('config.read')) {
         store.dispatch('get', [{
           key: 'analyticsConfig',

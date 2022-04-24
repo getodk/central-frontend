@@ -12,8 +12,7 @@ except according to the terms contained in the LICENSE file.
 import VueRouter from 'vue-router';
 import { last } from 'ramda';
 
-import routes from './routes';
-import store from './store';
+import createRoutes from './routes';
 import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/async-components';
@@ -22,23 +21,17 @@ import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
-const router = new VueRouter({
-  // Using abstract mode simplifies testing quite a bit: there were issues using
-  // hash mode. In hash mode, when the router is injected into a component, the
-  // router examines the hash to determine the initial location. But that
-  // becomes an issue during testing, because the hash diverges from the current
-  // route over time: Headless Chrome seems to rate-limit hash changes.
-  mode: process.env.NODE_ENV === 'test' ? 'abstract' : 'hash',
-  routes
-});
-export default router;
+export default (container, mode = 'hash') => {
+  const router = new VueRouter({ mode, routes: createRoutes(container) });
 
 
 
+/* eslint-disable indent */ // TODO/vue3
 ////////////////////////////////////////////////////////////////////////////////
 // ROUTER STATE
 
 // Set select properties of store.state.router.
+const { store } = container;
 router.afterEach(to => {
   store.commit('confirmNavigation', to);
 });
@@ -80,7 +73,7 @@ const initialLocale = () => {
 const restoreSessionForRoute = async (to) => {
   if (last(to.matched).meta.restoreSession) {
     await restoreSession(store);
-    await logIn(router, store, false);
+    await logIn(container, false);
   }
 };
 
@@ -164,8 +157,7 @@ of the `key` attribute.)
     const { meta } = last(to.matched);
     for (const [key, validator] of meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
-        if (value != null && !validator(value))
-          forceReplace(router, store, '/');
+        if (value != null && !validator(value)) forceReplace(container, '/');
       }));
     }
 
@@ -176,6 +168,16 @@ of the `key` attribute.)
       }));
     }
   });
+
+  // TODO/vue3. Remove this once there is a factory for the store.
+  const { init } = router;
+  router.init = (app) => {
+    app.$once('hook:beforeDestroy', () => {
+      for (const f of unwatch)
+        f();
+    });
+    return init.call(router, app);
+  };
 }
 
 
@@ -212,9 +214,18 @@ router.afterEach(() => {
 });
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // PAGE TITLES
 
 router.afterEach((to) => {
   updateDocumentTitle(to, store);
 });
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  // RETURN
+
+  return router;
+};

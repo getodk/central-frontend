@@ -1,8 +1,7 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import AccountResetPassword from '../../../src/components/account/reset-password.vue';
 
 import { load, mockHttp } from '../../util/http';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 describe('AccountResetPassword', () => {
@@ -15,7 +14,7 @@ describe('AccountResetPassword', () => {
 
   it('focuses the input', () => {
     const component = mount(AccountResetPassword, {
-      stubs: { RouterLink: RouterLinkStub },
+      container: { router: mockRouter('/reset-password') },
       attachTo: document.body
     });
     component.get('input').should.be.focused();
@@ -24,7 +23,7 @@ describe('AccountResetPassword', () => {
   it('sends the correct request', () =>
     mockHttp()
       .mount(AccountResetPassword, {
-        stubs: { RouterLink: RouterLinkStub }
+        container: { router: mockRouter('/reset-password') }
       })
       .request(async (component) => {
         await component.get('input').setValue('alice@getodk.org');
@@ -40,7 +39,7 @@ describe('AccountResetPassword', () => {
   it('implement some standard button things', () =>
     mockHttp()
       .mount(AccountResetPassword, {
-        stubs: { RouterLink: RouterLinkStub }
+        container: { router: mockRouter('/reset-password') }
       })
       .testStandardButton({
         button: '.btn-primary',

@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
         <tbody v-if="forms.length !== 0">
           <project-form-access-row v-for="form of forms" :key="form.xmlFormId"
             :form="form" :changes="changesByForm[form.xmlFormId]"
-            @update:field-key-access="updateFieldKeyAccess"/>
+            @update:fieldKeyAccess="updateFieldKeyAccess"/>
         </tbody>
       </table>
     </div>
@@ -57,6 +57,7 @@ except according to the terms contained in the LICENSE file.
 import { mapGetters } from 'vuex';
 
 import ProjectFormAccessRow from './row.vue';
+
 import { requestData } from '../../../store/modules/request';
 
 export default {
@@ -68,6 +69,7 @@ export default {
       required: true
     }
   },
+  emits: ['show-states', 'update:state', 'update:fieldKeyAccess'],
   computed: {
     ...requestData(['forms']),
     ...mapGetters(['fieldKeysWithToken'])
@@ -77,7 +79,7 @@ export default {
       this.$emit('update:state', form, state);
     },
     updateFieldKeyAccess(form, fieldKey, accessible) {
-      this.$emit('update:field-key-access', form, fieldKey, accessible);
+      this.$emit('update:fieldKeyAccess', form, fieldKey, accessible);
     }
   }
 };

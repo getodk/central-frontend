@@ -42,6 +42,7 @@ export default {
   name: 'FormTrashList',
   components: { FormTrashRow, FormRestore },
   mixins: [modal()],
+  emits: ['restore'],
   data() {
     return {
       restoreForm: {

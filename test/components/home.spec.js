@@ -1,7 +1,5 @@
 import HomeConfigSection from '../../src/components/home/config-section.vue';
 
-import store from '../../src/store';
-
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 
@@ -27,11 +25,14 @@ describe('Home', () => {
     beforeEach(mockLogin);
 
     it('passes the config to the component', async () => {
-      store.commit('setConfig', {
-        key: 'home',
-        value: { title: 'Some Title', body: 'Some **body** text' }
+      const app = await load('/', {
+        container: {
+          config: {
+            home: { title: 'Some Title', body: 'Some **body** text' }
+          }
+        },
+        root: false
       });
-      const app = await load('/', { root: false });
       const props = app.getComponent(HomeConfigSection).props();
       props.title.should.equal('Some Title');
       props.body.should.equal('Some **body** text');

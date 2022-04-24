@@ -21,8 +21,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import EnketoPreview from '../enketo/preview.vue';
-import Form from '../../presenters/form';
 import FormVersionDefDropdown from './def-dropdown.vue';
+
+import Form from '../../presenters/form';
 
 export default {
   name: 'FormVersionStandardButtons',
@@ -32,7 +33,8 @@ export default {
       type: Form,
       required: true
     }
-  }
+  },
+  emits: ['view-xml']
 };
 </script>
 

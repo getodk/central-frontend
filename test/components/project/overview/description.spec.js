@@ -2,12 +2,12 @@ import { RouterLinkStub } from '@vue/test-utils';
 
 import ProjectOverviewDescription from '../../../../src/components/project/overview/description.vue';
 
+import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 
 const mountComponent = (propsData) => mount(ProjectOverviewDescription, {
   propsData,
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/projects/1' }
+  container: { router: mockRouter('/projects/1') }
 });
 
 describe('ProjectOverviewDescription', () => {

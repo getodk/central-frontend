@@ -55,6 +55,7 @@ export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  inject: ['container'],
   data() {
     return {
       disabled: false,
@@ -108,7 +109,7 @@ export default {
       })
         .then(({ data }) => {
           this.$store.commit('setData', { key: 'session', value: data });
-          return logIn(this.$router, this.$store, true);
+          return logIn(this.container, true);
         })
         .then(() => {
           this.navigateToNext(

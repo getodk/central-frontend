@@ -52,6 +52,7 @@ export default {
       default: 'right'
     }
   },
+  emits: ['hide'],
   data() {
     return {
       // jQuery wrapper of this.target

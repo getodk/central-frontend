@@ -15,23 +15,30 @@ import Vuex from 'vuex';
 
 import Translation from './components/i18n-t';
 
+import createCentralRouter from './router';
+import defaultConfig from './config';
 import i18n from './i18n';
-import router from './router';
 import store from './store';
 import { StoreAlert } from './util/alert';
 
-export default (options = {}) => {
+export default ({
+  // `router` must be a function that returns an object. The function will
+  // receive a partial container. It is also possible to create a container
+  // without a router by specifying `null`.
+  router = createCentralRouter,
+  config = defaultConfig
+} = {}) => {
   const container = {
     store,
-    i18n
+    i18n,
+    config
   };
-  const { router: routerOption = router } = options;
-  if (routerOption != null) container.router = routerOption;
+  if (router != null) container.router = router(container);
   container.install = (Vue) => {
     Vue.use(Vuex);
     Vue.use(VueI18n);
-    if (routerOption != null && routerOption instanceof VueRouter)
-      Vue.use(VueRouter);
+    if (container.router != null)
+      Vue.use(container.router instanceof VueRouter ? VueRouter : container.router);
     Vue.component('i18n-t', Translation);
     // eslint-disable-next-line no-param-reassign
     Vue.prototype.$alert = function $alert() {
@@ -39,7 +46,8 @@ export default (options = {}) => {
     };
   };
   container.provide = {
-    container
+    container,
+    config
   };
   return container;
 };

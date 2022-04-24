@@ -61,7 +61,8 @@ export default {
       type: Boolean,
       default: false
     }
-  }
+  },
+  emits: ['hide']
 };
 </script>
 

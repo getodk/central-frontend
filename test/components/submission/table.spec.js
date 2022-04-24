@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
@@ -7,24 +5,30 @@ import SubmissionTable from '../../../src/components/submission/table.vue';
 import Field from '../../../src/presenters/field';
 
 import testData from '../../data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mockRouter } from '../../util/router';
 
-const mountComponent = (mountOptions = {}) => mount(SubmissionTable, {
-  ...mountOptions,
-  propsData: {
-    projectId: '1',
-    xmlFormId: 'f',
-    draft: false,
-    submissions: testData.submissionOData().value,
-    fields: testData.extendedForms.last()._fields
-      .map(field => new Field(field)),
-    originalCount: testData.extendedSubmissions.size,
-    ...mountOptions.propsData
-  },
-  requestData: { project: testData.extendedProjects.last() },
-  stubs: { RouterLink: RouterLinkStub }
-});
+const mountComponent = (options = undefined) => {
+  const merged = mergeMountOptions(options, {
+    propsData: {
+      projectId: '1',
+      xmlFormId: 'f',
+      draft: false,
+      submissions: testData.submissionOData().value,
+      fields: testData.extendedForms.last()._fields
+        .map(field => new Field(field)),
+      originalCount: testData.extendedSubmissions.size
+    },
+    container: {
+      requestData: { project: testData.extendedProjects.last() }
+    }
+  });
+  merged.container.router = mockRouter(merged.propsData.draft
+    ? '/projects/1/forms/f/draft/testing'
+    : '/projects/1/forms/f/submissions');
+  return mount(SubmissionTable, merged);
+};
 
 const headers = (table) => table.findAll('th').wrappers.map(th => th.text());
 

@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 
-import i18n from './i18n';
-import store from './store';
 import { instanceNameOrId } from './util/odata';
 import { routeProps } from './util/router';
 
+export default (container) => {
+/* eslint-disable indent */ // TODO/vue3
 /*
 Lazy-Loading Routes
 -------------------
@@ -220,6 +220,7 @@ const asyncRoute = (options) => {
   return config;
 };
 
+const { i18n, config } = container;
 const routes = [
   {
     path: '/login',
@@ -649,7 +650,7 @@ const routes = [
           title: { parts: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')] }
         },
         beforeEnter: (to, from, next) => {
-          if (store.state.config.showsBackups)
+          if (config.showsBackups)
             next();
           else
             next('/');
@@ -683,7 +684,7 @@ const routes = [
           }
         },
         beforeEnter: (to, from, next) => {
-          if (store.state.config.showsAnalytics)
+          if (config.showsAnalytics)
             next();
           else
             next('/');
@@ -713,7 +714,6 @@ const routes = [
     }
   })
 ];
-export default routes;
 
 
 
@@ -841,3 +841,11 @@ preserveDataForKey({
   ],
   params: ['projectId']
 });
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  // RETURN
+
+  return routes;
+};

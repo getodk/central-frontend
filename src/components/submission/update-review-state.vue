@@ -77,6 +77,7 @@ export default {
     },
     submission: Object
   },
+  emits: ['hide', 'success'],
   data() {
     return {
       awaitingResponse: false,

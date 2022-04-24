@@ -40,6 +40,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Spinner from '../../spinner.vue';
+
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
@@ -55,6 +56,7 @@ export default {
       required: true
     }
   },
+  emits: ['increment-count', 'decrement-count', 'change'],
   data() {
     return {
       // If two requests are sent, there may be a moment between them when

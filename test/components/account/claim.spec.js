@@ -1,6 +1,7 @@
 import AccountClaim from '../../../src/components/account/claim.vue';
 
 import { load, mockHttp } from '../../util/http';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 describe('AccountClaim', () => {
@@ -23,7 +24,7 @@ describe('AccountClaim', () => {
   it('sends the correct request', () =>
     mockHttp()
       .mount(AccountClaim, {
-        mocks: { $route: '/account/claim?token=foo' }
+        container: { router: mockRouter('/account/claim?token=foo') }
       })
       .request(async (component) => {
         await component.get('input').setValue('testPassword');
@@ -40,7 +41,7 @@ describe('AccountClaim', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(AccountClaim, {
-        mocks: { $route: '/account/claim?token=foo' }
+        container: { router: mockRouter('/account/claim?token=foo') }
       })
       .testStandardButton({
         button: '.btn-primary',
@@ -53,7 +54,7 @@ describe('AccountClaim', () => {
   it('shows a custom alert message for a 401.2 Problem', () =>
     mockHttp()
       .mount(AccountClaim, {
-        mocks: { $route: '/account/claim?token=foo' }
+        container: { router: mockRouter('/account/claim?token=foo') }
       })
       .request(async (component) => {
         await component.get('input').setValue('testPassword');

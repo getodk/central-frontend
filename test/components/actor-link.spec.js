@@ -1,10 +1,9 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ActorLink from '../../src/components/actor-link.vue';
 import LinkIfCan from '../../src/components/link-if-can.vue';
 
 import testData from '../data';
 import { mockLogin } from '../util/session';
+import { mockRouter } from '../util/router';
 import { mount } from '../util/lifecycle';
 
 describe('ActorLink', () => {
@@ -15,8 +14,7 @@ describe('ActorLink', () => {
   it('renders a LinkIfCan component if the actor is a user', () => {
     const component = mount(ActorLink, {
       propsData: { actor: testData.extendedUsers.first() },
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: '/system/audits' }
+      container: { router: mockRouter('/system/audits') }
     });
     const linkIfCan = component.getComponent(LinkIfCan);
     linkIfCan.props().to.should.equal('/users/1/edit');
@@ -33,8 +31,7 @@ describe('ActorLink', () => {
       .last();
     const component = mount(ActorLink, {
       propsData: { actor },
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: '/system/audits' }
+      container: { router: mockRouter('/system/audits') }
     });
     component.findComponent(LinkIfCan).exists().should.be.false();
     component.element.tagName.should.equal('SPAN');
@@ -48,8 +45,7 @@ describe('ActorLink', () => {
       .last();
     const component = mount(ActorLink, {
       propsData: { actor },
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: '/system/audits' }
+      container: { router: mockRouter('/system/audits') }
     });
     component.findComponent(LinkIfCan).exists().should.be.false();
     component.element.tagName.should.equal('SPAN');

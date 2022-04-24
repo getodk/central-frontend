@@ -1,45 +1,39 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import SubmissionList from '../../src/components/submission/list.vue';
 
 import testData from '../data';
+import { mergeMountOptions } from './lifecycle';
 import { mockHttp } from './http';
 import { mockResponse } from './axios';
+import { mockRouter } from './router';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loadSubmissionList = (mountOptions = {}) => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
-  const { propsData } = mountOptions;
-  const top = propsData != null && propsData.top != null
-    ? propsData.top
-    : SubmissionList.props.top.default;
-  return mockHttp()
-    .mount(SubmissionList, {
-      ...mountOptions,
-      propsData: {
-        projectId: project.id.toString(),
-        xmlFormId: form.xmlFormId,
-        draft: form.publishedAt == null,
-        top,
-        ...propsData
-      },
+  const mergedOptions = mergeMountOptions(mountOptions, {
+    propsData: {
+      projectId: project.id.toString(),
+      xmlFormId: form.xmlFormId,
+      draft: form.publishedAt == null,
+      top: SubmissionList.props.top.default
+    },
+    container: {
       requestData: {
         project,
         form,
         formDraft: form.publishedAt == null
           ? testData.extendedFormDrafts.last()
           : mockResponse.problem(404.1),
-        keys: testData.standardKeys.sorted(),
-        ...mountOptions.requestData
+        keys: testData.standardKeys.sorted()
       },
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: {
-        $route: form.publishedAt != null
-          ? `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/submissions`
-          : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft/testing`
-      }
-    })
+      router: mockRouter(form.publishedAt != null
+        ? `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/submissions`
+        : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft/testing`)
+    }
+  });
+  const { top } = mergedOptions.propsData;
+  return mockHttp()
+    .mount(SubmissionList, mergedOptions)
     .respondWithData(() => form._fields)
     .respondWithData(() => testData.submissionOData(top(0)))
     .modify(series => {

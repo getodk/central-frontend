@@ -4,6 +4,7 @@ import Download from '../../src/components/download.vue';
 
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
+import { mockRouter } from '../util/router';
 import { mount } from '../util/lifecycle';
 
 describe('Download', () => {
@@ -11,14 +12,14 @@ describe('Download', () => {
 
   it('sets the correct href attribute', async () => {
     const component = mount(Download, {
-      mocks: { $route: '/dl/a/b.txt?c=d#e' }
+      container: { router: mockRouter('/dl/a/b.txt?c=d#e') }
     });
     component.get('a').attributes().href.should.equal('/v1/a/b.txt?c=d#e');
   });
 
   it('shows the filename', () => {
     const component = mount(Download, {
-      mocks: { $route: '/dl/a/b.txt?c=d#e' }
+      container: { router: mockRouter('/dl/a/b.txt?c=d#e') }
     });
     component.get('p').text().should.startWith('b.txt will begin');
   });
@@ -27,7 +28,7 @@ describe('Download', () => {
     const handler = sinon.fake();
     document.addEventListener('click', handler);
     const component = mount(Download, {
-      mocks: { $route: '/dl/a.txt' },
+      container: { router: mockRouter('/dl/a.txt') },
       attachTo: document.body
     });
     try {

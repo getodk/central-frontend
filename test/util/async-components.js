@@ -1,11 +1,13 @@
-import routes from '../../src/routes';
+import createRoutes from '../../src/routes';
 import { loadAsync } from '../../src/util/async-components';
+
+import createTestContainer from './container';
 
 export const loadAsyncCache = new Map();
 
 export const loadAsyncRouteComponents = () => {
   const promises = [];
-  const stack = [...routes];
+  const stack = [...createRoutes(createTestContainer())];
   while (stack.length !== 0) {
     const route = stack.pop();
 

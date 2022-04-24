@@ -25,11 +25,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import FormVersionDefDropdown from './def-dropdown.vue';
 import FormVersionString from './string.vue';
 import TimeAndUser from '../time-and-user.vue';
 
+import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 
 export default {
@@ -41,7 +41,8 @@ export default {
       type: Form,
       required: true
     }
-  }
+  },
+  emits: ['view-xml']
 };
 </script>
 

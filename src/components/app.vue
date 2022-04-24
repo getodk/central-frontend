@@ -37,6 +37,7 @@ export default {
   name: 'App',
   components: { Alert, Navbar },
   mixins: [callWait()],
+  inject: ['container'],
   data() {
     return {
       calls: {}
@@ -53,7 +54,7 @@ export default {
     })
   },
   created() {
-    this.$once('hook:beforeDestroy', useSessions(this.$router, this.$store));
+    this.$once('hook:beforeDestroy', useSessions(this.container));
     this.callWait('checkVersion', this.checkVersion, (tries) =>
       (tries === 0 ? 15000 : 60000));
   },

@@ -72,6 +72,7 @@ export default {
   props: {
     state: Boolean
   },
+  emits: ['hide'],
   computed: {
     ...requestData(['analyticsPreview']),
     systemSummary() {

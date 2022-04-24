@@ -22,7 +22,7 @@ const mountComponent = (propsData) => {
       default-text="${props.defaultText}"
       :show-footer="${props.showFooter}"
       :required="${props.required}"
-      :rows="${props.rows}">
+      rows="${props.rows}">
     </markdown-textarea></div>`,
     components: { 'markdown-textarea': MarkdownTextarea }
   });

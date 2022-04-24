@@ -1,6 +1,6 @@
 import { createLocalVue, mount as vtuMount } from '@vue/test-utils';
+import { last, lensPath, view } from 'ramda';
 
-import router from '../../src/router';
 import { $tcn } from '../../src/util/i18n';
 
 import createTestContainer from './container';
@@ -33,18 +33,12 @@ export const destroyAll = () => {
 // MOUNT
 
 /*
+TODO/vue3. Update these comments.
+
 Our mount() function is similar to mount() from Vue Test Utils. It automatically
 specifies useful options to Vue Test Utils' mount(). It also accepts additional
 options:
 
-  - mocks
-    - $route. Vue Test Utils' mount() expects $route to be similar to a Route
-      object. However, our mount() function also allows $route to be a string
-      location; it will automatically convert it to a Route object.
-      Additionally, because it is so common for $route and $router to be used
-      together, if you specify $route without $router, our mount() function will
-      pass a minimal mock of $router with read-only functionality. If you need
-      additional router functionality, you should probably inject the router.
   - requestData. Passed to setData() before the component is mounted.
   - throwIfEmit. A message to throw if the component emits an event. Used
     internally by load() when the `root` option is `false`.
@@ -53,11 +47,14 @@ Our mount() function will also set it up so that the component is destroyed
 after the test.
 */
 export const mount = (component, options = {}) => {
-  const { router: routerOption = null, requestData, throwIfEmit, ...mountOptions } = options;
-  const container = createTestContainer({ router: routerOption, requestData });
+  const { container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
+  const container = containerOption != null && containerOption.install != null
+    ? containerOption
+    : createTestContainer({ requestData, ...containerOption });
   mountOptions.localVue = createLocalVue();
   mountOptions.localVue.use(container);
   mountOptions.localVue.prototype.$tcn = $tcn;
+  mountOptions.mocks = { $container: container, ...mountOptions.mocks };
   mountOptions.provide = { ...container.provide, ...mountOptions.provide };
 
   /* Vue Test Utils doesn't seem to mount `component` as the root component:
@@ -75,20 +72,6 @@ export const mount = (component, options = {}) => {
   };
   if (container.router != null)
     mountOptions.parentComponent.router = container.router;
-
-  if (mountOptions.mocks != null && mountOptions.mocks.$route != null) {
-    const mocks = { ...mountOptions.mocks };
-    if (typeof mocks.$route === 'string')
-      mocks.$route = router.resolve(mocks.$route).route;
-    if (mocks.$router == null) {
-      mocks.$router = {
-        currentRoute: mocks.$route,
-        resolve: router.resolve.bind(router)
-      };
-    }
-    mountOptions.mocks = mocks;
-    container.store.commit('confirmNavigation', mocks.$route);
-  }
 
   const wrapper = vtuMount(component, mountOptions);
   componentsToDestroy.push(wrapper);
@@ -108,4 +91,37 @@ export const mount = (component, options = {}) => {
   }
 
   return wrapper;
+};
+
+// TODO/vue3. Update this list for Vue 3.
+const optionsToMerge = [
+  ['propsData'],
+  ['slots'],
+  ['attrs'],
+  ['provide'],
+  ['stubs'],
+  ['mocks'],
+  ['container'],
+  ['container', 'requestData']
+];
+
+// Merges two sets of options for mount().
+export const mergeMountOptions = (options, defaults) => {
+  if (options == null) return defaults;
+  const merged = { ...defaults, ...options };
+  for (const path of optionsToMerge) {
+    const lens = lensPath(path);
+    const option = view(lens, options);
+    if (option != null) {
+      const defaultOption = view(lens, defaults);
+      if (defaultOption != null) {
+        const parent = path.slice(0, -1).reduce(
+          (obj, prop) => obj[prop],
+          merged
+        );
+        parent[last(path)] = { ...defaultOption, ...option };
+      }
+    }
+  }
+  return merged;
 };

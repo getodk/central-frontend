@@ -27,7 +27,7 @@ export const routeProps = (route, props) => {
 ////////////////////////////////////////////////////////////////////////////////
 // UNSAVED CHANGES
 
-export const forceReplace = (router, store, location) => {
+export const forceReplace = ({ router, store }, location) => {
   if (store.state.router.unsavedChanges)
     store.commit('setUnsavedChanges', false);
   return router.replace(location);

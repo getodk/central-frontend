@@ -108,7 +108,7 @@ export default {
       type: Number,
       required: true
     },
-    dragoverAttachment: Object, // eslint-disable-line vue/require-default-prop
+    dragoverAttachment: Object,
     plannedUploads: {
       type: Array,
       required: true
@@ -126,6 +126,7 @@ export default {
       required: true
     }
   },
+  emits: ['confirm', 'cancel'],
   computed: {
     shownDuringDragover() {
       return this.countOfFilesOverDropZone !== 0;

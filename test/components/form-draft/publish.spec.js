@@ -6,17 +6,19 @@ import FormVersionRow from '../../../src/components/form-version/row.vue';
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = (options = undefined) => ({
   propsData: { state: false },
-  requestData: {
-    formVersions: testData.extendedFormVersions.published(),
-    formDraft: testData.extendedFormDrafts.last(),
-    attachments: testData.standardFormAttachments.sorted()
+  container: {
+    router: mockRouter('/projects/1/forms/f/draft'),
+    requestData: {
+      formVersions: testData.extendedFormVersions.published(),
+      formDraft: testData.extendedFormDrafts.last(),
+      attachments: testData.standardFormAttachments.sorted()
+    }
   },
-  stubs: { RouterLink: RouterLinkStub },
-  mocks: { $route: '/projects/1/forms/f/draft' },
   ...options
 });
 

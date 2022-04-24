@@ -32,22 +32,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import routes from '../../mixins/routes';
 
 export default {
   name: 'NavbarLinks',
   mixins: [routes()],
+  inject: ['config'],
   computed: {
-    ...mapState({
-      showsBackups: (state) => state.config.showsBackups
-    }),
     projectsLinkIsActive() {
       return this.$route.path === '/' || this.routePathStartsWith('/projects');
     },
     systemPath() {
-      return this.showsBackups ? '/system/backups' : '/system/audits';
+      return this.config.showsBackups ? '/system/backups' : '/system/audits';
     }
   },
   methods: {

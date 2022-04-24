@@ -54,6 +54,7 @@ export default {
       required: true
     }
   },
+  emits: ['confirm', 'cancel', 'hide'],
   computed: {
     // Returning dummy values for `attachment` and `file` when
     // plannedUploads.length !== 1 in order to simplify the template.

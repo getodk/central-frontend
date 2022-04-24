@@ -40,14 +40,12 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </nav>
-    <analytics-introduction v-if="showsAnalytics" v-bind="analyticsIntroduction"
+    <analytics-introduction v-if="config.showsAnalytics" v-bind="analyticsIntroduction"
       @hide="hideModal('analyticsIntroduction')"/>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import NavbarActions from './navbar/actions.vue';
 import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
@@ -68,6 +66,7 @@ export default {
     NavbarLocaleDropdown
   },
   mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
+  inject: ['config'],
   data() {
     return {
       analyticsIntroduction: {
@@ -79,7 +78,6 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData(['currentUser', 'analyticsConfig']),
-    ...mapState({ showsAnalytics: (state) => state.config.showsAnalytics }),
     // Usually once the user is logged in (either after their session has been
     // restored or after they have submitted the login form), we render a fuller
     // navbar. However, if after submitting the login form, the user is
@@ -89,7 +87,7 @@ export default {
       return this.currentUser != null && this.$route.path !== '/login';
     },
     showsAnalyticsNotice() {
-      return this.showsAnalytics && this.loggedIn &&
+      return this.config.showsAnalytics && this.loggedIn &&
         this.canRoute('/system/analytics') && this.analyticsConfig != null &&
         this.analyticsConfig.isEmpty() &&
         Date.now() - Date.parse(this.currentUser.createdAt) >= /* 14 days */ 1209600000;
