@@ -98,7 +98,7 @@ describe('SubmissionFieldDropdown', () => {
       await dropdown.get('input[type="checkbox"]').setChecked();
       await dropdown.get('input[type="checkbox"]').setChecked(false);
       await dropdown.get('select').trigger('click');
-      should(dropdown.emitted()).be.empty();
+      should.not.exist(dropdown.emitted().input);
     });
   });
 

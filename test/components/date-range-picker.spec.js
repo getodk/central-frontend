@@ -134,7 +134,7 @@ describe('DateRangePicker', () => {
       props: { value: ['1970-01-02', '1970-01-03'] }
     });
     close(component, ['1970-01-02', '1970-01-03']);
-    should(component.emitted()).be.empty();
+    should.not.exist(component.emitted().input);
   });
 
   describe('incomplete selection of a single date', () => {
@@ -157,7 +157,7 @@ describe('DateRangePicker', () => {
       component.vm.$watch('flatpickrValue', () => { changeCount += 1; });
       close(component, ['1970-01-02']);
       await wait();
-      should(component.emitted()).be.empty();
+      should.not.exist(component.emitted().input);
       component.vm.flatpickrValue.should.equal('1970/01/02');
       changeCount.should.equal(2);
     });
@@ -195,7 +195,7 @@ describe('DateRangePicker', () => {
         component.vm.$watch('flatpickrValue', () => { changeCount += 1; });
         close(component, []);
         await wait();
-        should(component.emitted()).be.empty();
+        should.not.exist(component.emitted().input);
         component.vm.flatpickrValue.should.equal('1970/01/01');
         changeCount.should.equal(2);
       });
