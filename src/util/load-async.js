@@ -10,6 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+/*
+Most dynamic imports are housed in this file. Centralizing dynamic imports here
+has a couple of benefits:
+
+  - webpack magic comments are not repeated across files.
+  - It is possible to check whether a particular dynamic import has been
+    completed.
+*/
+
 const loader = (load) => {
   const obj = {
     loaded: false,

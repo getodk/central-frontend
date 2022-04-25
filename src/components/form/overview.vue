@@ -66,7 +66,7 @@ import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
 
 import modal from '../../mixins/modal';
-import { loadAsync } from '../../util/async-components';
+import { loadAsync } from '../../util/load-async';
 import { requestData } from '../../store/modules/request';
 
 export default {

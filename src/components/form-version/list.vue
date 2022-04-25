@@ -26,7 +26,7 @@ import Loading from '../loading.vue';
 
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
-import { loadAsync } from '../../util/async-components';
+import { loadAsync } from '../../util/load-async';
 import { noop } from '../../util/util';
 
 export default {

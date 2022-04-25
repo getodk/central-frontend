@@ -98,7 +98,7 @@ import Option from '../../util/option';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
-import { loadAsync } from '../../util/async-components';
+import { loadAsync } from '../../util/load-async';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 

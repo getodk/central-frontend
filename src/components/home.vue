@@ -29,7 +29,7 @@ import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';
 import ProjectList from './project/list.vue';
 
-import { loadAsync } from '../util/async-components';
+import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
 export default {

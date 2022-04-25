@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { loadAsync } from '../util/async-components';
+import { loadAsync } from '../util/load-async';
 
 export default {
   name: 'FormGroup',

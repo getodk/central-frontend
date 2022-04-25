@@ -15,7 +15,7 @@ import { last } from 'ramda';
 import createRoutes from './routes';
 import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
-import { loadAsync } from './util/async-components';
+import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';

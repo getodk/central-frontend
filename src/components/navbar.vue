@@ -55,7 +55,7 @@ import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
 import modal from '../mixins/modal';
 import routes from '../mixins/routes';
-import { loadAsync } from '../util/async-components';
+import { loadAsync } from '../util/load-async';
 import { requestData } from '../store/modules/request';
 
 export default {
