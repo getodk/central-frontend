@@ -25,7 +25,7 @@ describe('NavbarLinks', () => {
       container: { router: mockRouter('/') }
     });
     const links = component.findAllComponents(RouterLinkStub);
-    const to = links.wrappers.map(link => link.props().to);
+    const to = links.map(link => link.props().to);
     to.should.eql(['/', '/users', '/system/backups']);
   });
 
@@ -35,7 +35,7 @@ describe('NavbarLinks', () => {
       container: { router: mockRouter('/') }
     });
     const links = component.findAllComponents(RouterLinkStub);
-    links.wrappers.map(link => link.props().to).should.eql(['/']);
+    links.map(link => link.props().to).should.eql(['/']);
   });
 
   it('links to /system/audits if the showsBackups config is false', () => {
@@ -46,7 +46,7 @@ describe('NavbarLinks', () => {
         config: { showsBackups: false }
       }
     });
-    const { to } = component.findAllComponents(RouterLinkStub).at(2).props();
+    const { to } = component.findAllComponents(RouterLinkStub)[2].props();
     to.should.equal('/system/audits');
   });
 
@@ -68,9 +68,8 @@ describe('NavbarLinks', () => {
         });
         const active = component.findAll('.active');
         active.length.should.equal(1);
-        const link = component.findAllComponents(RouterLinkStub)
-          .filter(wrapper => active.at(0).element.contains(wrapper.element))
-          .at(0);
+        const link = component.findAllComponents(RouterLinkStub).find(wrapper =>
+          active[0].element.contains(wrapper.element));
         link.props().to.should.equal(activeLink);
       });
     }

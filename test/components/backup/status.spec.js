@@ -199,11 +199,10 @@ describe('BackupStatus', () => {
       it('shows a spinner', async () => {
         const app = await load('/system/backups', { attachTo: document.body });
         const component = app.getComponent(BackupStatus);
-        const spinners = component.findAllComponents(Spinner);
-        spinners.length.should.equal(1);
-        spinners.at(0).props().state.should.be.false();
+        const spinner = component.getComponent(Spinner);
+        spinner.props().state.should.be.false();
         await component.get('[href="/v1/backup"]').trigger('click');
-        spinners.at(0).props().state.should.be.true();
+        spinner.props().state.should.be.true();
       });
     });
   });

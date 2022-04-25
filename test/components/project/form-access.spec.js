@@ -67,7 +67,7 @@ describe('ProjectFormAccess', () => {
       createData();
       const app = await load('/projects/1/form-access');
       const th = app.findAll('#project-form-access-table th');
-      th.wrappers.map(wrapper => wrapper.text()).should.eql([
+      th.map(wrapper => wrapper.text()).should.eql([
         'Form',
         'State',
         'App Users',
@@ -76,8 +76,8 @@ describe('ProjectFormAccess', () => {
         ''
         // There is no column for "App User 3".
       ]);
-      th.at(3).attributes().title.should.equal('App User 2');
-      th.at(4).attributes().title.should.equal('App User 1');
+      th[3].attributes().title.should.equal('App User 2');
+      th[4].attributes().title.should.equal('App User 1');
     });
 
     it('shows a message if there are no forms', async () => {
@@ -175,14 +175,14 @@ describe('ProjectFormAccess', () => {
         const app = await load('/projects/1/form-access');
         const checkboxes = app.findAll('#project-form-access-table input[type="checkbox"]');
         checkboxes.length.should.equal(2);
-        await checkboxes.at(1).setChecked();
-        checkboxes.at(1).classes('uncommitted-change').should.be.true();
+        await checkboxes[1].setChecked();
+        checkboxes[1].classes('uncommitted-change').should.be.true();
       });
 
       it('updates the Save button', async () => {
         const app = await load('/projects/1/form-access');
         const checkboxes = app.findAll('#project-form-access-table input[type="checkbox"]');
-        await checkboxes.at(1).setChecked();
+        await checkboxes[1].setChecked();
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.true();
         button.element.disabled.should.be.false();
@@ -196,8 +196,8 @@ describe('ProjectFormAccess', () => {
         const table = app.get('#project-form-access-table');
         await table.get('select').setValue('open');
         const checkboxes = table.findAll('input[type="checkbox"]');
-        await checkboxes.at(0).setChecked(false);
-        return checkboxes.at(1).setChecked();
+        await checkboxes[0].setChecked(false);
+        return checkboxes[1].setChecked();
       };
       const saveWithSuccess = () => load('/projects/1/form-access')
         .complete()
@@ -281,13 +281,13 @@ describe('ProjectFormAccess', () => {
           td.length.should.equal(th.length);
 
           // State column
-          td.at(1).get('select').element.value.should.equal('open');
+          td[1].get('select').element.value.should.equal('open');
 
           // App User Access columns
-          th.at(3).text().should.equal('App User 2');
-          td.at(3).get('input').element.checked.should.be.false();
-          th.at(4).text().should.equal('App User 1');
-          td.at(4).get('input').element.checked.should.be.true();
+          th[3].text().should.equal('App User 2');
+          td[3].get('input').element.checked.should.be.false();
+          th[4].text().should.equal('App User 1');
+          td[4].get('input').element.checked.should.be.true();
         }));
 
       it('sets unsavedChanges to false', async () => {

@@ -45,7 +45,7 @@ describe('ChecklistStep', () => {
       });
       const p = component.findAll('p');
       p.length.should.equal(2);
-      p.at(1).text().should.equal('Some p text');
+      p[1].text().should.equal('Some p text');
     });
   });
 });

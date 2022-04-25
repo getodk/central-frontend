@@ -51,10 +51,9 @@ describe('FormSubmissions', () => {
       testData.extendedSubmissions.createPast(11);
       return load('/projects/1/forms/f')
         .afterResponses(app => {
-          const item = app.getComponent(FormOverviewRightNow)
-            .findAllComponents(SummaryItem)
-            .at(2);
-          item.get('.summary-item-heading').text().should.equal('10');
+          const items = app.getComponent(FormOverviewRightNow)
+            .findAllComponents(SummaryItem);
+          items[2].get('.summary-item-heading').text().should.equal('10');
         })
         .load('/projects/1/forms/f/submissions', {
           project: false, form: false, formDraft: false, attachments: false
@@ -62,10 +61,9 @@ describe('FormSubmissions', () => {
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {
-          const item = app.getComponent(FormOverviewRightNow)
-            .findAllComponents(SummaryItem)
-            .at(2);
-          item.get('.summary-item-heading').text().should.equal('11');
+          const items = app.getComponent(FormOverviewRightNow)
+            .findAllComponents(SummaryItem);
+          items[2].get('.summary-item-heading').text().should.equal('11');
         });
     });
   });

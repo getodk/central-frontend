@@ -30,7 +30,7 @@ describe('SummaryItem', () => {
     });
     const links = item.findAllComponents(RouterLinkStub);
     links.length.should.equal(3);
-    links.wrappers.map(link => link.props().to).should.matchEach('/users');
+    links.map(link => link.props().to).should.matchEach('/users');
   });
 
   it('emits a click event if the clickable prop is true', async () => {
@@ -39,9 +39,8 @@ describe('SummaryItem', () => {
     });
     const a = item.findAll('a');
     a.length.should.equal(3);
-    await a.at(0).trigger('click');
-    await a.at(1).trigger('click');
-    await a.at(2).trigger('click');
+    for (const wrapper of a)
+      await wrapper.trigger('click'); // eslint-disable-line no-await-in-loop
     item.emitted().click.length.should.equal(3);
   });
 });

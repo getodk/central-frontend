@@ -30,7 +30,7 @@ const mountComponent = (options = undefined) => {
   return mount(SubmissionTable, merged);
 };
 
-const headers = (table) => table.findAll('th').wrappers.map(th => th.text());
+const headers = (table) => table.findAll('th').map(th => th.text());
 
 describe('SubmissionTable', () => {
   describe('metadata headers', () => {
@@ -97,9 +97,7 @@ describe('SubmissionTable', () => {
       props: { submissions: testData.submissionOData(2).value }
     });
     const rows = component.findAllComponents(SubmissionMetadataRow);
-    rows.length.should.equal(2);
-    rows.at(0).props().rowNumber.should.equal(10);
-    rows.at(1).props().rowNumber.should.equal(9);
+    rows.map(row => row.props().rowNumber).should.eql([10, 9]);
   });
 
   describe('canUpdate prop of SubmissionMetadataRow', () => {
@@ -126,8 +124,8 @@ describe('SubmissionTable', () => {
       const component = mountComponent();
       await component.getComponent(SubmissionDataRow).trigger('mouseover');
       const metadataRows = component.findAllComponents(SubmissionMetadataRow);
-      metadataRows.at(0).classes('data-hover').should.be.true();
-      metadataRows.at(1).classes('data-hover').should.be.false();
+      metadataRows[0].classes('data-hover').should.be.true();
+      metadataRows[1].classes('data-hover').should.be.false();
     });
 
     it('toggles actions if user hovers over a new SubmissionDataRow', async () => {
@@ -135,11 +133,11 @@ describe('SubmissionTable', () => {
       testData.extendedSubmissions.createPast(2);
       const component = mountComponent();
       const dataRows = component.findAllComponents(SubmissionDataRow);
-      await dataRows.at(0).trigger('mouseover');
-      await dataRows.at(1).trigger('mouseover');
+      await dataRows[0].trigger('mouseover');
+      await dataRows[1].trigger('mouseover');
       const metadataRows = component.findAllComponents(SubmissionMetadataRow);
-      metadataRows.at(0).classes('data-hover').should.be.false();
-      metadataRows.at(1).classes('data-hover').should.be.true();
+      metadataRows[0].classes('data-hover').should.be.false();
+      metadataRows[1].classes('data-hover').should.be.true();
     });
 
     it('hides the actions if the cursor leaves the table', async () => {
@@ -158,11 +156,11 @@ describe('SubmissionTable', () => {
       const tbody = component.get('#submission-table-metadata tbody');
       tbody.classes('submission-table-actions-trigger-hover').should.be.true();
       const btn = tbody.findAll('.btn');
-      await btn.at(0).trigger('focus');
+      await btn[0].trigger('focus');
       tbody.classes('submission-table-actions-trigger-focus').should.be.true();
       await component.getComponent(SubmissionMetadataRow).trigger('mousemove');
       tbody.classes('submission-table-actions-trigger-hover').should.be.true();
-      await btn.at(1).trigger('focus');
+      await btn[1].trigger('focus');
       await component.getComponent(SubmissionDataRow).trigger('mousemove');
       tbody.classes('submission-table-actions-trigger-hover').should.be.true();
     });

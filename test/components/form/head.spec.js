@@ -66,7 +66,7 @@ describe('FormHead', () => {
       testData.standardFormAttachments.createPast(1, { exists: false });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
-        tabs.wrappers.map(tab => tab.text()).should.eql([
+        tabs.map(tab => tab.text()).should.eql([
           'Overview',
           'Versions',
           'Submissions',
@@ -86,7 +86,7 @@ describe('FormHead', () => {
       testData.standardFormAttachments.createPast(1);
       return load('/projects/1/forms/f/draft/testing').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
-        const text = tabs.wrappers.map(tab => tab.text());
+        const text = tabs.map(tab => tab.text());
         text.should.eql(['Versions', 'Submissions', 'Testing']);
       });
     });
@@ -97,7 +97,7 @@ describe('FormHead', () => {
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-form-tabs li');
         tabs.length.should.equal(5);
-        for (const tab of tabs.wrappers) {
+        for (const tab of tabs) {
           tab.classes('disabled').should.be.true();
           tab.attributes().title.should.equal('These functions will become available once you publish your Draft Form');
         }
@@ -111,7 +111,7 @@ describe('FormHead', () => {
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-form-tabs li');
         tabs.length.should.equal(5);
-        for (const tab of tabs.wrappers) {
+        for (const tab of tabs) {
           tab.classes('disabled').should.be.false();
           should.not.exist(tab.attributes().title);
         }
@@ -128,15 +128,14 @@ describe('FormHead', () => {
     it('is not shown if there are no form attachments', () =>
       load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
-        const text = tabs.wrappers.map(tab => tab.text());
-        text.should.eql(['Status', 'Testing']);
+        tabs.map(tab => tab.text()).should.eql(['Status', 'Testing']);
       }));
 
     it('is shown if there are form attachments', () => {
       testData.standardFormAttachments.createPast(2, { exists: false });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
-        const text = tabs.wrappers.map(tab => tab.text());
+        const text = tabs.map(tab => tab.text());
         text.should.eql(['Status', 'Media Files  2', 'Testing']);
       });
     });

@@ -116,8 +116,8 @@ describe('SubmissionFilters', () => {
       .request(component => {
         const select = component.get('#submission-filters-review-state select');
         const options = select.findAll('option');
-        options.at(0).element.selected = true;
-        options.at(1).element.selected = true;
+        options[0].element.selected = true;
+        options[1].element.selected = true;
         return select.trigger('change');
       })
       .beforeEachResponse((_, { url }) => {

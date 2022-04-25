@@ -25,17 +25,17 @@ describe('SubmissionUpdateReviewState', () => {
     const radios = modal.findAll('.radio label');
     radios.length.should.equal(3);
 
-    radios.at(0).get('input').attributes().value.should.equal('approved');
-    radios.at(0).find('.icon-check-circle').exists().should.be.true();
-    radios.at(0).text().should.equal('Approved');
+    radios[0].get('input').attributes().value.should.equal('approved');
+    radios[0].find('.icon-check-circle').exists().should.be.true();
+    radios[0].text().should.equal('Approved');
 
-    radios.at(1).get('input').attributes().value.should.equal('hasIssues');
-    radios.at(1).find('.icon-comments').exists().should.be.true();
-    radios.at(1).text().should.equal('Has issues');
+    radios[1].get('input').attributes().value.should.equal('hasIssues');
+    radios[1].find('.icon-comments').exists().should.be.true();
+    radios[1].text().should.equal('Has issues');
 
-    radios.at(2).get('input').attributes().value.should.equal('rejected');
-    radios.at(2).find('.icon-times-circle').exists().should.be.true();
-    radios.at(2).text().should.equal('Rejected');
+    radios[2].get('input').attributes().value.should.equal('rejected');
+    radios[2].find('.icon-times-circle').exists().should.be.true();
+    radios[2].text().should.equal('Rejected');
   });
 
   describe('review state selection', () => {

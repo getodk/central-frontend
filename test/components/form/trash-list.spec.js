@@ -84,7 +84,7 @@ describe('FormTrashList', () => {
       ])
       .afterResponses(component => {
         const rows = component.findAllComponents(FormTrashRow);
-        const formXmlIds = rows.wrappers.map(row => row.find('.form-id').text());
+        const formXmlIds = rows.map(row => row.find('.form-id').text());
         formXmlIds.should.eql(['20_days_ago', '15_days_ago', '10_days_ago', '5_days_ago']);
       }));
 

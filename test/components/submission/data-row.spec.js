@@ -307,8 +307,8 @@ describe('SubmissionDataRow', () => {
     testData.extendedSubmissions.createPast(1, { instanceId: 'foo' });
     const td = mountComponent().findAll('td');
     td.length.should.equal(2);
-    td.at(1).text().should.equal('foo');
-    td.at(1).attributes().title.should.equal('foo');
+    td[1].text().should.equal('foo');
+    td[1].attributes().title.should.equal('foo');
   });
 
   it('renders a cell for each field', () => {
@@ -321,9 +321,7 @@ describe('SubmissionDataRow', () => {
       s1: 'bar',
       s2: 'baz'
     });
-    const td = mountComponent().findAll('td');
-    td.length.should.equal(3);
-    const text = td.wrappers.map(wrapper => wrapper.text());
+    const text = mountComponent().findAll('td').map(td => td.text());
     text.should.eql(['bar', 'baz', 'foo']);
   });
 
@@ -340,8 +338,9 @@ describe('SubmissionDataRow', () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const row = mountComponent();
       row.classes('encrypted-submission').should.be.true();
-      row.findAll('td').length.should.equal(2);
-      row.get('td').attributes().colspan.should.equal('2');
+      const td = row.findAll('td');
+      td.length.should.equal(2);
+      td[0].attributes().colspan.should.equal('2');
     });
 
     it('does not show the encryption message if no fields are selected', () => {
@@ -353,7 +352,7 @@ describe('SubmissionDataRow', () => {
       const row = mountComponent({ fields: [] });
       const td = row.findAll('td');
       td.length.should.equal(1);
-      should.not.exist(td.at(0).attributes().colspan);
+      should.not.exist(td[0].attributes().colspan);
     });
   });
 });

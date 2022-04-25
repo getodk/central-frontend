@@ -87,8 +87,8 @@ describe('AnalyticsPreview', () => {
     const modal = await mockHttpForComponent();
     const tables = modal.findAllComponents(AnalyticsMetricsTable);
     const projectMetrics = analyticsPreview.projects[1];
-    tables.at(1).props().metrics.should.equal(projectMetrics.users);
-    tables.at(2).props().metrics.should.equal(projectMetrics.forms);
+    tables[1].props().metrics.should.equal(projectMetrics.users);
+    tables[2].props().metrics.should.equal(projectMetrics.forms);
   });
 
   it('shows submission metrics split into two tables', async () => {
@@ -96,7 +96,7 @@ describe('AnalyticsPreview', () => {
     const tables = modal.findAllComponents(AnalyticsMetricsTable);
     const subMetrics = { num_submissions_from_web_users: { recent: 1, total: 1 } };
     const stateMetrics = { num_submissions_received: { recent: 1, total: 1 } };
-    tables.at(3).props().metrics.should.eql(subMetrics);
-    tables.at(4).props().metrics.should.eql(stateMetrics);
+    tables[3].props().metrics.should.eql(subMetrics);
+    tables[4].props().metrics.should.eql(stateMetrics);
   });
 });

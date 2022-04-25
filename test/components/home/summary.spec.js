@@ -41,7 +41,7 @@ describe('HomeSummary', () => {
       .mount(HomeSummary, mountOptions())
       .respondWithData(() => testData.standardUsers.sorted())
       .afterResponse(component => {
-        const item = component.findAllComponents(HomeSummaryItem).at(1);
+        const item = component.findAllComponents(HomeSummaryItem)[1];
         const { to, count } = item.props();
         to.should.equal('/users');
         count.should.equal(1);
@@ -55,7 +55,7 @@ describe('HomeSummary', () => {
       .afterResponse(component => {
         const items = component.findAllComponents(HomeSummaryItem);
         items.length.should.equal(3);
-        for (const item of items.wrappers)
+        for (const item of items)
           should(item.props().to).not.equal('/users');
       });
   });

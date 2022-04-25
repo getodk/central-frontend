@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import sinon from 'sinon';
+import { Wrapper } from '@vue/test-utils';
 import 'should';
 
 // These files must be imported before the rest.
@@ -15,6 +16,15 @@ import { destroyAll } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/async-components';
 import { mockAxios } from './util/axios';
 import './assertions';
+
+// TODO/vue3. Remove this.
+for (const name of ['findAll', 'findAllComponents']) {
+  const f = Wrapper.prototype[name];
+  // eslint-disable-next-line func-names
+  Wrapper.prototype[name] = function(selector) {
+    return f.call(this, selector).wrappers;
+  };
+}
 
 
 

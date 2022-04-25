@@ -12,12 +12,10 @@ const mountComponent = () => mount(SubmissionAnalyze, {
     requestData: { form: testData.extendedForms.last() }
   }
 });
-const clickTab = (component, tabText) => {
-  const a = component.findAll('#submission-analyze .nav-tabs a');
-  const forTab = a.wrappers.find(wrapper => wrapper.text() === tabText);
-  should.exist(forTab);
-  return forTab.trigger('click');
-};
+const clickTab = (component, tabText) =>
+  component.findAll('#submission-analyze .nav-tabs a')
+    .find(a => a.text() === tabText)
+    .trigger('click');
 
 describe('SubmissionAnalyze', () => {
   beforeEach(() => {

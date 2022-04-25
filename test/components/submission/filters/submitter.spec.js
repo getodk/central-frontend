@@ -26,12 +26,12 @@ describe('SubmissionFiltersSubmitter', () => {
       .createPast(1, { displayName: 'App User 2' })
       .last();
     const options = mountComponent().findAll('option');
-    options.at(0).attributes().value.should.equal('');
-    options.at(0).text().should.equal('(Anybody)');
-    options.at(1).attributes().value.should.equal(fieldKey1.id.toString());
-    options.at(1).text().should.equal('App User 1');
-    options.at(2).attributes().value.should.equal(fieldKey2.id.toString());
-    options.at(2).text().should.equal('App User 2');
+    options[0].attributes().value.should.equal('');
+    options[0].text().should.equal('(Anybody)');
+    options[1].attributes().value.should.equal(fieldKey1.id.toString());
+    options[1].text().should.equal('App User 1');
+    options[2].attributes().value.should.equal(fieldKey2.id.toString());
+    options[2].text().should.equal('App User 2');
   });
 
   it('sets the value of the select element to the value prop', () => {

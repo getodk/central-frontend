@@ -71,8 +71,7 @@ describe('FormVersionDefDropdown', () => {
       const dropdown = mount(FormVersionDefDropdown, {
         props: { version: new Form(form) }
       });
-      const text = dropdown.findAll('a').at(1).text();
-      text.should.equal('Download as XForm (.xml)');
+      dropdown.findAll('a')[1].text().should.equal('Download as XForm (.xml)');
     });
 
     it('has the correct href attribute for a published version', () => {
@@ -80,7 +79,7 @@ describe('FormVersionDefDropdown', () => {
       const dropdown = mount(FormVersionDefDropdown, {
         props: { version: new Form(form) }
       });
-      const { href } = dropdown.findAll('a').at(1).attributes();
+      const { href } = dropdown.findAll('a')[1].attributes();
       href.should.equal('/v1/projects/1/forms/f/versions/v1.xml');
     });
 
@@ -90,7 +89,7 @@ describe('FormVersionDefDropdown', () => {
       const dropdown = mount(FormVersionDefDropdown, {
         props: { version: new Form(draft) }
       });
-      const { href } = dropdown.findAll('a').at(1).attributes();
+      const { href } = dropdown.findAll('a')[1].attributes();
       href.should.equal('/v1/projects/1/forms/f/draft.xml');
     });
 
@@ -99,7 +98,7 @@ describe('FormVersionDefDropdown', () => {
       const dropdown = mount(FormVersionDefDropdown, {
         props: { version: new Form(form) }
       });
-      dropdown.findAll('a').at(1).attributes().download.should.equal('f.xml');
+      dropdown.findAll('a')[1].attributes().download.should.equal('f.xml');
     });
   });
 
@@ -132,7 +131,7 @@ describe('FormVersionDefDropdown', () => {
         const dropdown = mount(FormVersionDefDropdown, {
           props: { version: new Form(form) }
         });
-        const text = dropdown.findAll('a').at(2).text();
+        const text = dropdown.findAll('a')[2].text();
         text.should.equal('Download as XLSForm (.xls)');
       });
 
@@ -143,7 +142,7 @@ describe('FormVersionDefDropdown', () => {
         const dropdown = mount(FormVersionDefDropdown, {
           props: { version: new Form(form) }
         });
-        const { href } = dropdown.findAll('a').at(2).attributes();
+        const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/versions/v1.xls');
       });
 
@@ -156,7 +155,7 @@ describe('FormVersionDefDropdown', () => {
         const dropdown = mount(FormVersionDefDropdown, {
           props: { version: new Form(draft) }
         });
-        const { href } = dropdown.findAll('a').at(2).attributes();
+        const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/draft.xls');
       });
     });
@@ -171,7 +170,7 @@ describe('FormVersionDefDropdown', () => {
         const dropdown = mount(FormVersionDefDropdown, {
           props: { version: new Form(form) }
         });
-        const text = dropdown.findAll('a').at(2).text();
+        const text = dropdown.findAll('a')[2].text();
         text.should.equal('Download as XLSForm (.xlsx)');
       });
 
@@ -184,7 +183,7 @@ describe('FormVersionDefDropdown', () => {
         const dropdown = mount(FormVersionDefDropdown, {
           props: { version: new Form(form) }
         });
-        const { href } = dropdown.findAll('a').at(2).attributes();
+        const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/versions/v1.xlsx');
       });
 
@@ -197,7 +196,7 @@ describe('FormVersionDefDropdown', () => {
         const dropdown = mount(FormVersionDefDropdown, {
           props: { version: new Form(draft) }
         });
-        const { href } = dropdown.findAll('a').at(2).attributes();
+        const { href } = dropdown.findAll('a')[2].attributes();
         href.should.equal('/v1/projects/1/forms/f/draft.xlsx');
       });
     });

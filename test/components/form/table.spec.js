@@ -11,7 +11,7 @@ describe('FormTable', () => {
       testData.extendedForms.createPast(1);
       const app = await load('/projects/1');
       const table = app.getComponent(FormTable);
-      const headers = table.findAll('th').wrappers.map(th => th.text());
+      const headers = table.findAll('th').map(th => th.text());
       headers.should.eql(['Name', 'ID and Version', 'Submissions', 'Actions']);
       table.findAll('td').length.should.equal(4);
     });
@@ -22,12 +22,12 @@ describe('FormTable', () => {
       testData.extendedForms.createPast(1);
       const app = await load('/projects/1', {}, { deletedForms: false });
       const table = app.getComponent(FormTable);
-      const headers = table.findAll('th').wrappers.map(th => th.text());
+      const headers = table.findAll('th').map(th => th.text());
       headers.should.eql(['Name', 'Submissions']);
       const td = table.findAll('td');
       td.length.should.equal(2);
-      td.at(0).classes('name').should.be.true();
-      td.at(1).classes('submissions').should.be.true();
+      td[0].classes('name').should.be.true();
+      td[1].classes('submissions').should.be.true();
     });
 
     it('shows the correct columns to a Data Collector', async () => {
@@ -36,13 +36,13 @@ describe('FormTable', () => {
       testData.extendedForms.createPast(1);
       const app = await load('/projects/1', {}, { deletedForms: false });
       const table = app.getComponent(FormTable);
-      const headers = table.findAll('th').wrappers.map(th => th.text());
+      const headers = table.findAll('th').map(th => th.text());
       headers.should.eql(['Name', 'ID and Version', 'Actions']);
       const td = table.findAll('td');
       td.length.should.equal(3);
-      td.at(0).classes('name').should.be.true();
-      td.at(1).classes('id-and-version').should.be.true();
-      td.at(2).classes('actions').should.be.true();
+      td[0].classes('name').should.be.true();
+      td[1].classes('id-and-version').should.be.true();
+      td[2].classes('actions').should.be.true();
     });
   });
 
@@ -56,8 +56,7 @@ describe('FormTable', () => {
         draft: true
       });
       const app = await load('/projects/1');
-      const td = app.findAll('.form-row .name');
-      const text = td.wrappers.map(wrapper => wrapper.text());
+      const text = app.findAll('.form-row .name').map(td => td.text());
       text.should.eql(['My Draft Form', 'My Published Form']);
     });
 
@@ -70,8 +69,7 @@ describe('FormTable', () => {
         draft: true
       });
       const app = await load('/projects/1', {}, { deletedForms: false });
-      const td = app.findAll('.form-row .name');
-      const text = td.wrappers.map(wrapper => wrapper.text());
+      const text = app.findAll('.form-row .name').map(td => td.text());
       text.should.eql(['My Draft Form', 'My Published Form']);
     });
 
@@ -84,8 +82,7 @@ describe('FormTable', () => {
         draft: true
       });
       const app = await load('/projects/1', {}, { deletedForms: false });
-      const td = app.findAll('.form-row .name');
-      const text = td.wrappers.map(wrapper => wrapper.text());
+      const text = app.findAll('.form-row .name').map(td => td.text());
       text.should.eql(['My Published Form']);
     });
   });

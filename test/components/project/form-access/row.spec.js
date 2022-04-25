@@ -64,8 +64,8 @@ describe('ProjectFormAccessRow', () => {
   it('shows the form state', () => {
     testData.extendedForms.createPast(1, { state: 'closing' });
     return load('/projects/1/form-access').then(app => {
-      const td = app.findAll('.project-form-access-row td').at(1);
-      td.get('select').element.value.should.equal('closing');
+      const select = app.get('.project-form-access-row td:nth-child(2) select');
+      select.element.value.should.equal('closing');
     });
   });
 
@@ -82,10 +82,8 @@ describe('ProjectFormAccessRow', () => {
         xmlFormId: 'f'
       });
       return load('/projects/1/form-access').then(app => {
-        const td = app.findAll('.project-form-access-row-access');
-        td.length.should.equal(2);
-        td.at(0).get('input').element.checked.should.be.true();
-        td.at(1).get('input').element.checked.should.be.false();
+        const inputs = app.findAll('.project-form-access-row-access input');
+        inputs.map(input => input.element.checked).should.eql([true, false]);
       });
     });
 

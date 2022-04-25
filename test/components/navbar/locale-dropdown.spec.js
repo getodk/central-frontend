@@ -14,10 +14,12 @@ describe('NavbarLocaleDropdown', () => {
   });
 
   it('shows a menu item for each locale', () => {
-    const a = mount(NavbarLocaleDropdown).findAll('.dropdown-menu a');
-    a.at(0).text().should.eql('English');
-    a.at(1).text().should.eql('Čeština');
-    a.at(2).text().should.eql('Deutsch');
+    const text = mount(NavbarLocaleDropdown).findAll('.dropdown-menu a')
+      .map(a => a.text());
+    text.length.should.be.above(3);
+    text[0].should.eql('English');
+    text[1].should.eql('Čeština');
+    text[2].should.eql('Deutsch');
   });
 
   describe('after a locale selection', () => {
@@ -26,10 +28,10 @@ describe('NavbarLocaleDropdown', () => {
     const selectLocale = () => load('/login')
       .restoreSession(false)
       .afterResponses(async (app) => {
-        const a = app.findAll('#navbar-locale-dropdown .dropdown-menu a');
-        const es = a.wrappers.find(wrapper => wrapper.text() === 'Español');
-        should.exist(es);
-        await es.trigger('click');
+        const a = app.findAll('#navbar-locale-dropdown .dropdown-menu a')
+          .find(wrapper => wrapper.text() === 'Español');
+        should.exist(a);
+        await a.trigger('click');
         return app;
       });
 
@@ -54,8 +56,6 @@ describe('NavbarLocaleDropdown', () => {
 
     it('updates the page title based on the new locale', () =>
       selectLocale()
-        // Wait for the locale to be loaded.
-        .then(() => wait(100))
         .then(() => {
           // Log in screen
           document.title.should.equal('Ingresar | ODK Central');

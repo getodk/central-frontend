@@ -47,7 +47,7 @@ describe('SubmissionMetadataRow', () => {
       mockLogin({ displayName: 'Alice' });
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent({ draft: false });
-      const td = row.findAll('td').at(1);
+      const td = row.findAll('td')[1];
       td.classes('submitter-name').should.be.true();
       td.text().should.equal('Alice');
       td.attributes().title.should.equal('Alice');
@@ -212,19 +212,19 @@ describe('SubmissionMetadataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-      const { href } = mountComponent().findAll('.btn').at(1).attributes();
+      const { href } = mountComponent().findAll('.btn')[1].attributes();
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
 
     it('sets the correct title attribute', () => {
       testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      const { title } = mountComponent().findAll('.btn').at(1).attributes();
+      const { title } = mountComponent().findAll('.btn')[1].attributes();
       title.should.equal('Edit (1,000)');
     });
 
     it('disables the button if the submission is encrypted', () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-      const button = mountComponent().findAll('.btn').at(1);
+      const button = mountComponent().findAll('.btn')[1];
       button.element.disabled.should.be.true();
       const { title } = button.attributes();
       title.should.equal('You cannot edit encrypted Submissions.');

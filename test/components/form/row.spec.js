@@ -75,7 +75,7 @@ describe('FormRow', () => {
         testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
         const links = mountComponent().findAllComponents(LinkIfCan);
         links.length.should.equal(1);
-        links.at(0).props().to.should.equal('/projects/1/forms/a%20b');
+        links[0].props().to.should.equal('/projects/1/forms/a%20b');
       });
 
       it('links to .../draft for a form without a published version', () => {
@@ -161,10 +161,10 @@ describe('FormRow', () => {
       const row = mountComponent();
       const divs = row.findAll('.submissions div');
       divs.length.should.equal(2);
-      divs.at(1).text().should.match(/^\(last .+\)$/);
+      divs[1].text().should.match(/^\(last .+\)$/);
       const dateTimes = row.findAllComponents(DateTime);
       dateTimes.length.should.equal(1);
-      dateTimes.at(0).props().iso.should.equal(lastSubmission);
+      dateTimes[0].props().iso.should.equal(lastSubmission);
     });
 
     it('does not render date if there have been no submissions', () => {
@@ -184,7 +184,7 @@ describe('FormRow', () => {
       const links = mountComponent().findAllComponents(RouterLinkStub)
         .filter(link => link.element.closest('.submissions') != null);
       links.length.should.equal(2);
-      const to = links.wrappers.map(link => link.props().to);
+      const to = links.map(link => link.props().to);
       to.should.matchEach('/projects/1/forms/a%20b/submissions');
     });
 

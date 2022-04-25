@@ -33,7 +33,7 @@ describe('ProjectRow', () => {
 
   it('shows the form count', () => {
     testData.extendedProjects.createPast(1, { forms: 2 });
-    mountComponent().findAll('td').at(1).text().should.equal('2 Forms');
+    mountComponent().findAll('td')[1].text().should.equal('2 Forms');
   });
 
   describe('last submission date', () => {
@@ -45,7 +45,7 @@ describe('ProjectRow', () => {
 
     it('shows (none) if there has been no submission', () => {
       testData.extendedProjects.createPast(1, { lastSubmission: null });
-      mountComponent().findAll('td').at(2).text().should.equal('(none)');
+      mountComponent().findAll('td')[2].text().should.equal('(none)');
     });
   });
 

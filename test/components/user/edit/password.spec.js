@@ -74,8 +74,8 @@ describe('UserEditPassword', () => {
       await submit(component, { mismatch: true });
       const formGroups = component.findAllComponents(FormGroup);
       formGroups.length.should.equal(3);
-      formGroups.at(1).props().hasError.should.be.true();
-      formGroups.at(2).props().hasError.should.be.true();
+      formGroups[1].props().hasError.should.be.true();
+      formGroups[2].props().hasError.should.be.true();
     });
 
     it('marks the inputs as valid after the passwords match', () =>
@@ -89,8 +89,8 @@ describe('UserEditPassword', () => {
         .beforeAnyResponse(component => {
           const formGroups = component.findAllComponents(FormGroup);
           formGroups.length.should.equal(3);
-          formGroups.at(1).props().hasError.should.be.false();
-          formGroups.at(2).props().hasError.should.be.false();
+          formGroups[1].props().hasError.should.be.false();
+          formGroups[2].props().hasError.should.be.false();
         })
         .respondWithSuccess());
   });
@@ -107,7 +107,7 @@ describe('UserEditPassword', () => {
       await submit(component, { tooShort: true });
       const formGroups = component.findAllComponents(FormGroup);
       formGroups.length.should.equal(3);
-      formGroups.at(1).props().hasError.should.be.true();
+      formGroups[1].props().hasError.should.be.true();
     });
 
     it('marks the input as valid after the password is long enough', () =>
@@ -122,7 +122,7 @@ describe('UserEditPassword', () => {
         .beforeAnyResponse(component => {
           const formGroups = component.findAllComponents(FormGroup);
           formGroups.length.should.equal(3);
-          formGroups.at(1).props().hasError.should.be.false();
+          formGroups[1].props().hasError.should.be.false();
         })
         .respondWithSuccess());
   });
