@@ -72,6 +72,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { equals } from 'ramda';
 import { mapGetters } from 'vuex';
+import { markRaw } from '@vue/composition-api';
 
 // This constant is also used in the `disabled` message.
 const maxCheckedCount = 100;
@@ -97,10 +98,10 @@ export default {
       checkedCount: this.value.length,
       search: '',
       // jQuery wrappers
-      wrappers: {
+      wrappers: markRaw({
         parent: null,
         toggle: null
-      }
+      })
     };
   },
   computed: {

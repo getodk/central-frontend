@@ -55,6 +55,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import pako from 'pako/lib/deflate';
+import { markRaw } from '@vue/composition-api';
 
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
@@ -293,7 +294,7 @@ export default {
             },
             data,
             onUploadProgress: (progressEvent) => {
-              this.uploadStatus.progress = progressEvent;
+              this.uploadStatus.progress = markRaw(progressEvent);
             },
             problemToAlert: (problem) => {
               const { total } = this.uploadStatus;
