@@ -19,8 +19,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { defineAsyncComponent } from '@vue/composition-api';
+
 import FormVersionTable from './table.vue';
 import Loading from '../loading.vue';
+
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/async-components';
@@ -30,7 +33,7 @@ export default {
   name: 'FormVersionList',
   components: {
     FormVersionTable,
-    FormVersionViewXml: loadAsync('FormVersionViewXml'),
+    FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
     Loading
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' })],

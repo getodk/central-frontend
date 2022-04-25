@@ -82,6 +82,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { defineAsyncComponent } from '@vue/composition-api';
+
 import FormDraftAbandon from './abandon.vue';
 import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
@@ -109,7 +111,7 @@ export default {
     FormNew,
     FormVersionStandardButtons,
     FormVersionString,
-    FormVersionViewXml: loadAsync('FormVersionViewXml'),
+    FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
     Loading,
     PageSection,
     SummaryItem
