@@ -11,12 +11,11 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
-Most dynamic imports are housed in this file. Centralizing dynamic imports here
-has a couple of benefits:
+Most dynamic imports are housed in this file. Using a dynamic import with
+loadAsync() has a couple of benefits:
 
-  - webpack magic comments are not repeated across files.
-  - It is possible to check whether a particular dynamic import has been
-    completed.
+  - It is possible to check whether the import has been completed.
+  - webpack magic comments will not be repeated across files.
 */
 
 const loader = (load) => {
