@@ -75,6 +75,7 @@ export default {
     Spinner
   },
   mixins: [modal(), request()],
+  inject: ['unsavedChanges'],
   props: {
     projectId: {
       type: String,
@@ -165,6 +166,9 @@ export default {
         if (dataExists) this.initChangesByForm();
       },
       immediate: true
+    },
+    changeCount(newCount, oldCount) {
+      this.unsavedChanges.plus(newCount - oldCount);
     }
   },
   created() {
@@ -210,23 +214,13 @@ export default {
         });
       }
     },
-    setUnsavedChanges() {
-      if (this.changeCount === 0) {
-        if (this.$store.state.router.unsavedChanges)
-          this.$store.commit('setUnsavedChanges', false);
-      } else if (!this.$store.state.router.unsavedChanges) {
-        this.$store.commit('setUnsavedChanges', true);
-      }
-    },
     updateState(form, state) {
       const changes = this.changesByForm[form.xmlFormId];
       const changedBeforeUpdate = changes.current.state !== changes.previous.state;
       changes.current.state = state;
       const changedAfterUpdate = changes.current.state !== changes.previous.state;
-      if (changedAfterUpdate !== changedBeforeUpdate) {
+      if (changedAfterUpdate !== changedBeforeUpdate)
         this.changeCount += changedAfterUpdate ? 1 : -1;
-        this.setUnsavedChanges();
-      }
     },
     updateFieldKeyAccess(form, fieldKey, accessible) {
       const changes = this.changesByForm[form.xmlFormId];
@@ -235,17 +229,14 @@ export default {
       changes.current.fieldKeyAccess[fieldKey.id] = accessible;
       const changedAfterUpdate = accessible !==
         changes.previous.fieldKeyAccess[fieldKey.id];
-      if (changedAfterUpdate !== changedBeforeUpdate) {
+      if (changedAfterUpdate !== changedBeforeUpdate)
         this.changeCount += changedAfterUpdate ? 1 : -1;
-        this.setUnsavedChanges();
-      }
     },
     save() {
       this.put(apiPaths.project(this.projectId), this.projectToSave)
         .then(() => {
           this.fetchData(true);
           this.$alert().success(this.$t('alert.success'));
-          this.$store.commit('setUnsavedChanges', false);
           this.changesByForm = null;
           this.changeCount = 0;
         })

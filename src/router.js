@@ -13,7 +13,7 @@ import VueRouter from 'vue-router';
 import { last } from 'ramda';
 
 import createRoutes from './routes';
-import { canRoute, confirmUnsavedChanges, forceReplace, preservesData, updateDocumentTitle } from './util/router';
+import { canRoute, forceReplace, preservesData, updateDocumentTitle } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
@@ -31,7 +31,7 @@ export default (container, mode = 'hash') => {
 // ROUTER STATE
 
 // Set select properties of store.state.router.
-const { store } = container;
+const { store, unsavedChanges } = container;
 router.afterEach(to => {
   store.commit('confirmNavigation', to);
 });
@@ -186,22 +186,21 @@ of the `key` attribute.)
 // UNSAVED CHANGES
 
 window.addEventListener('beforeunload', (event) => {
-  if (!store.state.router.unsavedChanges) return;
+  if (unsavedChanges.count === 0) return;
   event.preventDefault();
   // Needed for Chrome.
   event.returnValue = ''; // eslint-disable-line no-param-reassign
 });
 
 router.beforeEach((to, from, next) => {
-  if (confirmUnsavedChanges(store))
+  if (unsavedChanges.confirm())
     next();
   else
     next(false);
 });
 
 router.afterEach(() => {
-  if (store.state.router.unsavedChanges)
-    store.commit('setUnsavedChanges', false);
+  unsavedChanges.zero();
 });
 
 

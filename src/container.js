@@ -17,6 +17,7 @@ import Vuex from 'vuex';
 import Translation from './components/i18n-t';
 
 import createCentralRouter from './router';
+import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import i18n from './i18n';
 import store from './store';
@@ -27,11 +28,13 @@ export default ({
   // receive a partial container. It is also possible to create a container
   // without a router by specifying `null`.
   router = createCentralRouter,
+  unsavedChanges = createUnsavedChanges(i18n),
   config = defaultConfig
 } = {}) => {
   const container = {
     store,
     i18n,
+    unsavedChanges,
     config
   };
   if (router != null) container.router = router(container);
@@ -49,6 +52,7 @@ export default ({
   };
   container.provide = {
     container,
+    unsavedChanges,
     config
   };
   return container;

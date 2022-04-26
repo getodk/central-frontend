@@ -104,6 +104,13 @@ describe('ProjectFormAccess', () => {
         button.element.disabled.should.be.false();
       });
 
+      it('increments unsavedChanges', async () => {
+        const app = await load('/projects/1/form-access');
+        app.vm.$container.unsavedChanges.count.should.equal(0);
+        await app.get('#project-form-access-table select').setValue('open');
+        app.vm.$container.unsavedChanges.count.should.equal(1);
+      });
+
       it("undoes these if the form's state is changed back", async () => {
         const app = await load('/projects/1/form-access');
         const select = app.get('#project-form-access-table select');
@@ -117,12 +124,9 @@ describe('ProjectFormAccess', () => {
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.false();
         button.element.disabled.should.be.true();
-      });
 
-      it('sets unsavedChanges to true', async () => {
-        const app = await load('/projects/1/form-access');
-        await app.get('#project-form-access-table select').setValue('open');
-        app.vm.$store.state.router.unsavedChanges.should.be.true();
+        // unsavedChanges
+        app.vm.$container.unsavedChanges.count.should.equal(0);
       });
     });
 
@@ -145,6 +149,14 @@ describe('ProjectFormAccess', () => {
         button.element.disabled.should.be.false();
       });
 
+      it('increments unsavedChanges', async () => {
+        const app = await load('/projects/1/form-access');
+        app.vm.$container.unsavedChanges.count.should.equal(0);
+        const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
+        await checkbox.setChecked(false);
+        app.vm.$container.unsavedChanges.count.should.equal(1);
+      });
+
       it('undoes these if the checkbox is checked again', async () => {
         const app = await load('/projects/1/form-access');
         const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
@@ -158,13 +170,9 @@ describe('ProjectFormAccess', () => {
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.false();
         button.element.disabled.should.be.true();
-      });
 
-      it('sets unsavedChanges to true', async () => {
-        const app = await load('/projects/1/form-access');
-        const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
-        await checkbox.setChecked(false);
-        app.vm.$store.state.router.unsavedChanges.should.be.true();
+        // unsavedChanges
+        app.vm.$container.unsavedChanges.count.should.equal(0);
       });
     });
 
@@ -290,9 +298,9 @@ describe('ProjectFormAccess', () => {
           td[4].get('input').element.checked.should.be.true();
         }));
 
-      it('sets unsavedChanges to false', async () => {
+      it('resets unsavedChanges', async () => {
         const app = await saveWithSuccess();
-        app.vm.$store.state.router.unsavedChanges.should.be.false();
+        app.vm.$container.unsavedChanges.count.should.equal(0);
       });
     });
   });

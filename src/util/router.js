@@ -11,8 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 import { last } from 'ramda';
 
-import i18n from '../i18n';
-
 // Returns the props for a route component.
 export const routeProps = (route, props) => {
   if (props == null || props === false) return {};
@@ -22,21 +20,10 @@ export const routeProps = (route, props) => {
   return props;
 };
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// UNSAVED CHANGES
-
-export const forceReplace = ({ router, store }, location) => {
-  if (store.state.router.unsavedChanges)
-    store.commit('setUnsavedChanges', false);
+export const forceReplace = ({ router, unsavedChanges }, location) => {
+  unsavedChanges.zero();
   return router.replace(location);
 };
-
-export const confirmUnsavedChanges = (store) =>
-  !store.state.router.unsavedChanges ||
-  // eslint-disable-next-line no-alert
-  window.confirm(i18n.t('router.unsavedChanges'));
 
 
 

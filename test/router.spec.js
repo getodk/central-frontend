@@ -804,21 +804,21 @@ describe('createCentralRouter()', () => {
       it('navigates away', () =>
         load('/account/edit')
           .afterResponses(app => {
-            app.vm.$store.commit('setUnsavedChanges', true);
+            app.vm.$container.unsavedChanges.plus(1);
           })
           .load('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           }));
 
-      it('sets unsavedChanges to false', () =>
+      it('resets unsavedChanges', () =>
         load('/account/edit')
           .afterResponses(app => {
-            app.vm.$store.commit('setUnsavedChanges', true);
+            app.vm.$container.unsavedChanges.plus(1);
           })
           .load('/')
           .afterResponses(app => {
-            app.vm.$store.state.router.unsavedChanges.should.be.false();
+            app.vm.$container.unsavedChanges.count.should.equal(0);
           }));
     });
 
@@ -827,19 +827,21 @@ describe('createCentralRouter()', () => {
         sinon.replace(window, 'confirm', () => false);
       });
 
-      it('does not navigate away', () =>
-        load('/account/edit').then(app => {
-          app.vm.$store.commit('setUnsavedChanges', true);
-          app.vm.$router.push('/').catch(noop);
-          app.vm.$route.path.should.equal('/account/edit');
-        }));
+      it('does not navigate away', async () => {
+        const app = await load('/account/edit');
+        app.vm.$container.unsavedChanges.plus(1);
+        // TODO/vue3. Remove catch(noop).
+        await app.vm.$router.push('/').catch(noop);
+        app.vm.$route.path.should.equal('/account/edit');
+      });
 
-      it('does not change unsavedChanges', () =>
-        load('/account/edit').then(app => {
-          app.vm.$store.commit('setUnsavedChanges', true);
-          app.vm.$router.push('/').catch(noop);
-          app.vm.$store.state.router.unsavedChanges.should.be.true();
-        }));
+      it('does not change unsavedChanges', async () => {
+        const app = await load('/account/edit');
+        app.vm.$container.unsavedChanges.plus(1);
+        // TODO/vue3. Remove catch(noop).
+        await app.vm.$router.push('/').catch(noop);
+        app.vm.$container.unsavedChanges.count.should.not.equal(0);
+      });
     });
   });
 

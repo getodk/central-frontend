@@ -19,8 +19,7 @@ export default {
     // here as well.
     currentRoute: null,
     anyNavigationConfirmed: false,
-    sendInitialRequests: true,
-    unsavedChanges: false
+    sendInitialRequests: true
   },
   mutations: {
     /* eslint-disable no-param-reassign */
@@ -31,14 +30,10 @@ export default {
     setSendInitialRequests(state, sendInitialRequests) {
       state.sendInitialRequests = sendInitialRequests;
     },
-    setUnsavedChanges(state, unsavedChanges) {
-      state.unsavedChanges = unsavedChanges;
-    },
     resetRouterState(state) {
       state.currentRoute = null;
       state.anyNavigationConfirmed = false;
       state.sendInitialRequests = true;
-      state.unsavedChanges = false;
     }
     /* eslint-enable no-param-reassign */
   }
