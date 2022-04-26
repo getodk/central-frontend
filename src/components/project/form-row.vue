@@ -19,17 +19,23 @@ except according to the terms contained in the LICENSE file.
     </td>
     <template v-if="form.publishedAt != null">
       <td class="review-state">
-        {{ $n(form.reviewStates.received, 'default') }}<span class="icon-dot-circle-o"></span>
+        <router-link :to="submissionsPath.received">
+          {{ $n(form.reviewStates.received, 'default') }}<span class="icon-dot-circle-o"></span>
+        </router-link>
       </td>
       <td class="review-state">
-        {{ $n(form.reviewStates.hasIssues, 'default') }}<span class="icon-comments"></span>
+        <router-link :to="submissionsPath.hasIssuse">
+          {{ $n(form.reviewStates.hasIssues, 'default') }}<span class="icon-comments"></span>
+        </router-link>
       </td>
       <td class="review-state">
-        {{ $n(form.reviewStates.edited, 'default') }}<span class="icon-pencil"></span>
+        <router-link :to="submissionsPath.edited">
+          {{ $n(form.reviewStates.edited, 'default') }}<span class="icon-pencil"></span>
+        </router-link>
       </td>
       <td class="last-submission">
         <div v-if="form.lastSubmission != null">
-          <router-link :to="submissionsPath">
+          <router-link :to="submissionsPath.all">
             <date-time :iso="form.lastSubmission" relative="past"/>
             <span class="icon-clock-o"></span>
           </router-link>
@@ -37,7 +43,7 @@ except according to the terms contained in the LICENSE file.
         <div v-else>{{ $t('submission.noSubmission') }}</div>
       </td>
       <td class="total-submissions">
-        <router-link :to="submissionsPath">
+        <router-link :to="submissionsPath.all">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
         </router-link>
@@ -74,11 +80,28 @@ export default {
     // created.
     ...requestData(['project']),
     submissionsPath() {
-      return this.formPath(
-        this.form.projectId,
-        this.form.xmlFormId,
-        this.form.publishedAt != null ? 'submissions' : 'draft/testing'
-      );
+      return {
+        received: `${this.formPath(
+          this.form.projectId,
+          this.form.xmlFormId,
+          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+        )}?reviewState=null`,
+        edited: `${this.formPath(
+          this.form.projectId,
+          this.form.xmlFormId,
+          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+        )}?reviewState=%27edited%27`,
+        hasIssues: `${this.formPath(
+          this.form.projectId,
+          this.form.xmlFormId,
+          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+        )}?reviewState=%27hasIssues%27`,
+        all: this.formPath(
+          this.form.projectId,
+          this.form.xmlFormId,
+          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+        )
+      };
     }
   }
 };
