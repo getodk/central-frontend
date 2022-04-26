@@ -5,10 +5,9 @@ import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
-const mockHttpForComponent = () => mockHttp()
-  .mount(PublicLinkRevoke, {
-    propsData: { state: true, publicLink: testData.standardPublicLinks.last() }
-  });
+const mountOptions = () => ({
+  props: { state: true, publicLink: testData.standardPublicLinks.last() }
+});
 
 describe('PublicLinkRevoke', () => {
   beforeEach(() => {
@@ -27,7 +26,8 @@ describe('PublicLinkRevoke', () => {
     }));
 
   it('sends the correct request', () =>
-    mockHttpForComponent()
+    mockHttp()
+      .mount(PublicLinkRevoke, mountOptions())
       .request(modal => modal.get('.btn-danger').trigger('click'))
       .beforeEachResponse((_, { method, url }) => {
         method.should.equal('DELETE');
@@ -36,7 +36,8 @@ describe('PublicLinkRevoke', () => {
       .respondWithProblem());
 
   it('implements some standard button things', () =>
-    mockHttpForComponent()
+    mockHttp()
+      .mount(PublicLinkRevoke, mountOptions())
       .testStandardButton({
         button: '.btn-danger',
         disabled: ['.btn-link'],

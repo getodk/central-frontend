@@ -21,7 +21,7 @@ describe('DateTime', () => {
 
   it('renders a time element', () => {
     const component = mount(DateTime, {
-      propsData: { iso: '2020-01-01T12:34:56Z' }
+      props: { iso: '2020-01-01T12:34:56Z' }
     });
     component.element.tagName.should.equal('TIME');
     component.attributes().datetime.should.equal('2020-01-01T12:34:56Z');
@@ -29,7 +29,7 @@ describe('DateTime', () => {
 
   it('sets the correct title attribute', () => {
     const component = mount(DateTime, {
-      propsData: { iso: '2020-01-01T12:34:56Z' }
+      props: { iso: '2020-01-01T12:34:56Z' }
     });
     component.attributes().title.should.equal('2020/01/01 12:34:56');
   });
@@ -37,14 +37,14 @@ describe('DateTime', () => {
   describe('relative prop', () => {
     it('defaults to recent', () => {
       const component = mount(DateTime, {
-        propsData: { iso: '2019-12-31T12:34:56Z' }
+        props: { iso: '2019-12-31T12:34:56Z' }
       });
       component.text().should.equal('yesterday 12:34');
     });
 
     it('uses the prop', () => {
       const component = mount(DateTime, {
-        propsData: { iso: '2019-12-31T12:34:56Z', relative: 'past' }
+        props: { iso: '2019-12-31T12:34:56Z', relative: 'past' }
       });
       component.text().should.equal('11 hr. ago');
     });
@@ -53,28 +53,28 @@ describe('DateTime', () => {
   describe('iso prop is null', () => {
     it('renders a span element', () => {
       const component = mount(DateTime, {
-        propsData: { iso: null }
+        props: { iso: null }
       });
       component.element.tagName.should.equal('SPAN');
     });
 
     it('does not have a title attribute', () => {
       const component = mount(DateTime, {
-        propsData: { iso: null }
+        props: { iso: null }
       });
       should.not.exist(component.attributes().title);
     });
 
     it('shows the correct text if the prop blank exists', () => {
       const component = mount(DateTime, {
-        propsData: { iso: null, blank: '(none)' }
+        props: { iso: null, blank: '(none)' }
       });
       component.text().should.equal('(none)');
     });
 
     it('renders correctly if the prop blank does not exist', () => {
       const component = mount(DateTime, {
-        propsData: { iso: null }
+        props: { iso: null }
       });
       component.text().should.equal('');
     });
@@ -82,7 +82,7 @@ describe('DateTime', () => {
 
   it('updates the text after a locale change', () => {
     const component = mount(DateTime, {
-      propsData: { iso: '2020-01-01T12:34:56Z' }
+      props: { iso: '2020-01-01T12:34:56Z' }
     });
     component.text().should.equal('today 12:34');
     return loadLocale('es')

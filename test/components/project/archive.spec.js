@@ -25,8 +25,10 @@ describe('ProjectArchive', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(ProjectArchive, {
-        propsData: { state: true },
-        requestData: { project: testData.extendedProjects.createPast(1).last() }
+        props: { state: true },
+        container: {
+          requestData: { project: testData.extendedProjects.createPast(1).last() }
+        }
       })
       .testStandardButton({
         button: '.btn-danger',

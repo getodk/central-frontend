@@ -29,7 +29,7 @@ describe('FormOverview', () => {
         load('/projects/1/forms/f').then(app => {
           const components = app.findAllComponents(FormVersionString);
           components.length.should.equal(2);
-          components.at(1).props().version.should.equal('v2');
+          components[1].props().version.should.equal('v2');
         }));
 
       it('toggles the "View XML" modal', () =>

@@ -5,7 +5,7 @@ import { mount } from '../../util/lifecycle';
 describe('AnalyticsMetricsTable', () => {
   it('shows the title', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_admins: { recent: 1, total: 1 } }
       }
@@ -15,7 +15,7 @@ describe('AnalyticsMetricsTable', () => {
 
   it('shows the metric name', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_admins: { recent: 1, total: 1 } }
       }
@@ -25,33 +25,31 @@ describe('AnalyticsMetricsTable', () => {
 
   it('correctly renders a metric with recent data', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_admins: { recent: 1000, total: 2000 } }
       }
     });
-    const td = component.findAll('td.metric-value');
-    td.length.should.equal(2);
-    td.at(0).text().should.equal('1,000');
-    td.at(1).text().should.equal('2,000');
+    const text = component.findAll('td.metric-value').map(td => td.text());
+    text.should.eql(['1,000', '2,000']);
   });
 
   it('correctly renders a metric without recent data', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: { num_questions_biggest_form: 1000 }
       }
     });
     const td = component.findAll('td.metric-value');
     td.length.should.equal(1);
-    td.at(0).attributes().colspan.should.equal('2');
-    td.at(0).text().should.equal('1,000');
+    td[0].attributes().colspan.should.equal('2');
+    td[0].text().should.equal('1,000');
   });
 
   it('renders a row for each metric', () => {
     const component = mount(AnalyticsMetricsTable, {
-      propsData: {
+      props: {
         title: 'System',
         metrics: {
           num_admins: { recent: 1, total: 1 },

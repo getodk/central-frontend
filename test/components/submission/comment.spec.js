@@ -6,19 +6,15 @@ import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountOptions = (propsData) => ({
-  propsData: {
+const mountOptions = (props) => ({
+  props: {
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,
     instanceId: testData.extendedSubmissions.last().instanceId,
     feed: null,
-    ...propsData
+    ...props
   }
 });
-const mountComponent = (propsData = undefined) =>
-  mount(SubmissionComment, mountOptions(propsData));
-const mockHttpForComponent = (propsData = undefined) =>
-  mockHttp().mount(SubmissionComment, mountOptions(propsData));
 
 describe('SubmissionComment', () => {
   beforeEach(mockLogin);
@@ -29,13 +25,13 @@ describe('SubmissionComment', () => {
     });
 
     it('does not show the alert if the feed is loading', () => {
-      const component = mountComponent({ feed: null });
+      const component = mount(SubmissionComment, mountOptions({ feed: null }));
       component.find('[role="alert"]').exists().should.be.false();
     });
 
     it('does not show the alert if the user did not make an edit', () => {
       const user = testData.extendedUsers.createPast(1).last();
-      const component = mountComponent({
+      const component = mount(SubmissionComment, mountOptions({
         feed: [
           testData.extendedAudits.createNew({ action: 'submission.create' }),
           testData.extendedAudits.createNew({
@@ -43,12 +39,12 @@ describe('SubmissionComment', () => {
             action: 'submission.update.version'
           })
         ].reverse()
-      });
+      }));
       component.find('[role="alert"]').exists().should.be.false();
     });
 
     it('does not show the alert if the user commented after their edit', () => {
-      const component = mountComponent({
+      const component = mount(SubmissionComment, mountOptions({
         feed: [
           testData.extendedAudits.createNew({ action: 'submission.create' }),
           testData.extendedAudits.createNew({
@@ -56,24 +52,24 @@ describe('SubmissionComment', () => {
           }),
           testData.extendedComments.createNew()
         ].reverse()
-      });
+      }));
       component.find('[role="alert"]').exists().should.be.false();
     });
 
     it('shows the alert if the user did not comment', () => {
-      const component = mountComponent({
+      const component = mount(SubmissionComment, mountOptions({
         feed: [
           testData.extendedAudits.createNew({ action: 'submission.create' }),
           testData.extendedAudits.createNew({
             action: 'submission.update.version'
           })
         ].reverse()
-      });
+      }));
       component.find('[role="alert"]').exists().should.be.true();
     });
 
     it('shows the alert if the user commented before their edit', () => {
-      const component = mountComponent({
+      const component = mount(SubmissionComment, mountOptions({
         feed: [
           testData.extendedAudits.createNew({ action: 'submission.create' }),
           testData.extendedComments.createNew(),
@@ -81,13 +77,13 @@ describe('SubmissionComment', () => {
             action: 'submission.update.version'
           })
         ].reverse()
-      });
+      }));
       component.find('[role="alert"]').exists().should.be.true();
     });
 
     it('shows the alert if another user commented', () => {
       const user = testData.extendedUsers.createPast(1).last();
-      const component = mountComponent({
+      const component = mount(SubmissionComment, mountOptions({
         feed: [
           testData.extendedAudits.createNew({ action: 'submission.create' }),
           testData.extendedAudits.createNew({
@@ -95,27 +91,28 @@ describe('SubmissionComment', () => {
           }),
           testData.extendedComments.createNew({ actor: user })
         ].reverse()
-      });
+      }));
       component.find('[role="alert"]').exists().should.be.true();
     });
   });
 
   it('shows the actions if the user should comment after editing', () => {
     testData.extendedSubmissions.createNew();
-    const component = mountComponent({
+    const component = mount(SubmissionComment, mountOptions({
       feed: [
         testData.extendedAudits.createNew({ action: 'submission.create' }),
         testData.extendedAudits.createNew({
           action: 'submission.update.version'
         })
       ].reverse()
-    });
+    }));
     component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
   });
 
   it('shows the actions during the request', () => {
     testData.extendedSubmissions.createPast(1);
-    return mockHttpForComponent()
+    return mockHttp()
+      .mount(SubmissionComment, mountOptions())
       .request(async (component) => {
         await component.setData({ body: 'foo' }); // Linked to child's 'value' prop and textarea
         return component.get('form').trigger('submit');
@@ -130,7 +127,8 @@ describe('SubmissionComment', () => {
   it('sends the correct request', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
     testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-    return mockHttpForComponent()
+    return mockHttp()
+      .mount(SubmissionComment, mountOptions())
       .request(async (component) => {
         await component.setData({ body: 'foo' });
         return component.get('form').trigger('submit');
@@ -145,18 +143,20 @@ describe('SubmissionComment', () => {
 
   it('implements some standard button things', () => {
     testData.extendedSubmissions.createPast(1);
-    return mockHttpForComponent().testStandardButton({
-      button: 'button[type="submit"]',
-      request: async (component) => {
-        await component.setData({ body: 'foo' });
-        return component.get('form').trigger('submit');
-      }
-    });
+    return mockHttp()
+      .mount(SubmissionComment, mountOptions())
+      .testStandardButton({
+        button: 'button[type="submit"]',
+        request: async (component) => {
+          await component.setData({ body: 'foo' });
+          return component.get('form').trigger('submit');
+        }
+      });
   });
 
   it('should make the textarea required', async () => {
     testData.extendedSubmissions.createPast(1);
-    const component = mountComponent();
+    const component = mount(SubmissionComment, mountOptions());
     component.getComponent(MarkdownTextarea).props().required.should.equal(true);
   });
 

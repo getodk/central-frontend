@@ -17,8 +17,8 @@ describe('FormTrashList', () => {
     it('requests deletedForms if not yet in store', () =>
       mockHttp()
         .mount(FormTrashList, {
-          requestData: {
-            project: testData.extendedProjects.last()
+          container: {
+            requestData: { project: testData.extendedProjects.last() }
           }
         })
         .respondWithData(() => []));
@@ -26,9 +26,11 @@ describe('FormTrashList', () => {
     it('does not request deletedForms if in store already', () =>
       mockHttp()
         .mount(FormTrashList, {
-          requestData: {
-            project: testData.extendedProjects.last(),
-            deletedForms: []
+          container: {
+            requestData: {
+              project: testData.extendedProjects.last(),
+              deletedForms: []
+            }
           }
         })
         .testNoRequest());
@@ -37,8 +39,8 @@ describe('FormTrashList', () => {
   it('does not render component if there are no deleted forms', () =>
     mockHttp()
       .mount(FormTrashList, {
-        requestData: {
-          project: testData.extendedProjects.last()
+        container: {
+          requestData: { project: testData.extendedProjects.last() }
         }
       })
       .respondWithData(() => [])
@@ -49,9 +51,11 @@ describe('FormTrashList', () => {
   it('shows the correct number of rows', () =>
     mockHttp()
       .mount(FormTrashList, {
-        requestData: {
-          project: testData.extendedProjects.last(),
-          forms: testData.extendedForms.sorted()
+        container: {
+          requestData: {
+            project: testData.extendedProjects.last(),
+            forms: testData.extendedForms.sorted()
+          }
         }
       })
       .respondWithData(() => [
@@ -65,9 +69,11 @@ describe('FormTrashList', () => {
   it('shows the rows sorted with recently deleted on the bottom', () =>
     mockHttp()
       .mount(FormTrashList, {
-        requestData: {
-          project: testData.extendedProjects.last(),
-          forms: testData.extendedForms.sorted()
+        container: {
+          requestData: {
+            project: testData.extendedProjects.last(),
+            forms: testData.extendedForms.sorted()
+          }
         }
       })
       .respondWithData(() => [
@@ -78,16 +84,18 @@ describe('FormTrashList', () => {
       ])
       .afterResponses(component => {
         const rows = component.findAllComponents(FormTrashRow);
-        const formXmlIds = rows.wrappers.map(row => row.find('.form-id').text());
+        const formXmlIds = rows.map(row => row.find('.form-id').text());
         formXmlIds.should.eql(['20_days_ago', '15_days_ago', '10_days_ago', '5_days_ago']);
       }));
 
   it('shows the correct headers', () =>
     mockHttp()
       .mount(FormTrashList, {
-        requestData: {
-          project: testData.extendedProjects.last(),
-          forms: testData.extendedForms.sorted()
+        container: {
+          requestData: {
+            project: testData.extendedProjects.last(),
+            forms: testData.extendedForms.sorted()
+          }
         }
       })
       .respondWithData(() => [{ xmlFormId: 'a', deletedAt: new Date().toISOString() }])

@@ -10,7 +10,7 @@ const mountComponent = (options) => mount(PageSection, {
 describe('PageSection', () => {
   it('adds a class if the horizontal prop is true', () => {
     const component = mountComponent({
-      propsData: { horizontal: true }
+      props: { horizontal: true }
     });
     component.classes('horizontal').should.be.true();
   });

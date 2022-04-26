@@ -18,7 +18,7 @@ const mountComponent = () => {
   const comments = testData.extendedComments.sorted();
   const diffs = {};
   return mount(SubmissionActivity, {
-    propsData: {
+    props: {
       projectId: '1',
       xmlFormId: form.xmlFormId,
       instanceId: submission.value[0].__id
@@ -190,9 +190,9 @@ describe('SubmissionActivity', () => {
     testData.extendedComments.createNew({ body: 'Comment 2' });
     const entries = mountComponent().findAllComponents(SubmissionFeedEntry);
     entries.length.should.equal(4);
-    entries.at(0).props().entry.body.should.equal('Comment 2');
-    entries.at(1).props().entry.action.should.equal('submission.update.version');
-    entries.at(2).props().entry.body.should.equal('Comment 1');
-    entries.at(3).props().entry.action.should.equal('submission.create');
+    entries[0].props().entry.body.should.equal('Comment 2');
+    entries[1].props().entry.action.should.equal('submission.update.version');
+    entries[2].props().entry.body.should.equal('Comment 1');
+    entries[3].props().entry.action.should.equal('submission.create');
   });
 });

@@ -100,7 +100,7 @@ const assertStandardButton = (
   const spinners = component.findAllComponents(Spinner).filter(spinner =>
     button.element.contains(spinner.element));
   spinners.length.should.equal(1);
-  spinners.at(0).props().state.should.equal(awaitingResponse);
+  spinners[0].props().state.should.equal(awaitingResponse);
 
   for (const selector of disabledSelectors)
     component.get(selector).element.disabled.should.equal(awaitingResponse);

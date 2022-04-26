@@ -2,15 +2,16 @@
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 
 const ProjectEnableEncryption = null;
 
-const mountOptions = (options) => ({
-  propsData: { state: true },
-  requestData: { project: testData.extendedProjects.last() },
-  ...options
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  props: { state: true },
+  container: {
+    requestData: { project: testData.extendedProjects.last() }
+  }
 });
 
 describe.skip('ProjectEnableEncryption', () => {

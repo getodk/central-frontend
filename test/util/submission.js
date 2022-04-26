@@ -11,7 +11,7 @@ export const loadSubmissionList = (mountOptions = {}) => {
   const project = testData.extendedProjects.last();
   const form = testData.extendedForms.last();
   const mergedOptions = mergeMountOptions(mountOptions, {
-    propsData: {
+    props: {
       projectId: project.id.toString(),
       xmlFormId: form.xmlFormId,
       draft: form.publishedAt == null,
@@ -31,7 +31,7 @@ export const loadSubmissionList = (mountOptions = {}) => {
         : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft/testing`)
     }
   });
-  const { top } = mergedOptions.propsData;
+  const { top } = mergedOptions.props;
   return mockHttp()
     .mount(SubmissionList, mergedOptions)
     .respondWithData(() => form._fields)

@@ -46,7 +46,7 @@ describe('SubmissionFilters', () => {
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
     testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
     return loadSubmissionList({
-      propsData: { top: () => 2 }
+      props: { top: () => 2 }
     })
       .complete()
       .request(component => {
@@ -116,8 +116,8 @@ describe('SubmissionFilters', () => {
       .request(component => {
         const select = component.get('#submission-filters-review-state select');
         const options = select.findAll('option');
-        options.at(0).element.selected = true;
-        options.at(1).element.selected = true;
+        options[0].element.selected = true;
+        options[1].element.selected = true;
         return select.trigger('change');
       })
       .beforeEachResponse((_, { url }) => {
@@ -214,7 +214,7 @@ describe('SubmissionFilters', () => {
       const fieldKey = testData.extendedFieldKeys.createPast(1).last();
       testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
       return loadSubmissionList({
-        propsData: { top: () => 2 }
+        props: { top: () => 2 }
       })
         .complete()
         .request(component => {
@@ -234,7 +234,7 @@ describe('SubmissionFilters', () => {
       const fieldKey = testData.extendedFieldKeys.createPast(1).last();
       testData.extendedSubmissions.createPast(5, { submitter: fieldKey });
       return loadSubmissionList({
-        propsData: { top: () => 2 }
+        props: { top: () => 2 }
       })
         .complete()
         .request(component => {
@@ -261,7 +261,7 @@ describe('SubmissionFilters', () => {
         const fieldKey = testData.extendedFieldKeys.createPast(1).last();
         testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
         return loadSubmissionList({
-          propsData: { top: () => 2 }
+          props: { top: () => 2 }
         })
           .complete()
           .request(component => {
@@ -287,7 +287,7 @@ describe('SubmissionFilters', () => {
         const fieldKey = testData.extendedFieldKeys.createPast(1).last();
         testData.extendedSubmissions.createPast(4, { submitter: fieldKey });
         return loadSubmissionList({
-          propsData: { top: () => 2 }
+          props: { top: () => 2 }
         })
           .complete()
           .request(component => {

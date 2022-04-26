@@ -19,9 +19,7 @@ const mountComponent = (options) => {
     ...options.container
   });
   return mount(FormDraftChecklist, {
-    propsData: {
-      status: container.router.currentRoute.path.endsWith('/draft')
-    },
+    props: { status: container.router.currentRoute.path.endsWith('/draft') },
     container
   });
 };
@@ -118,8 +116,8 @@ describe('FormDraftChecklist', () => {
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
-      const step = checklist.findAllComponents(ChecklistStep).at(1);
-      step.props().stage.should.equal('complete');
+      const { stage } = checklist.findAllComponents(ChecklistStep)[1].props();
+      stage.should.equal('complete');
     });
 
     it('is marked as a current step if an attachment is missing', () => {
@@ -129,8 +127,8 @@ describe('FormDraftChecklist', () => {
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
-      const step = checklist.findAllComponents(ChecklistStep).at(1);
-      step.props().stage.should.equal('current');
+      const { stage } = checklist.findAllComponents(ChecklistStep)[1].props();
+      stage.should.equal('current');
     });
   });
 
@@ -145,8 +143,8 @@ describe('FormDraftChecklist', () => {
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
-      const step = checklist.findAllComponents(ChecklistStep).at(2);
-      step.props().stage.should.equal('complete');
+      const { stage } = checklist.findAllComponents(ChecklistStep)[2].props();
+      stage.should.equal('complete');
     });
 
     it('is marked as a current step if draft does not have a submission', () => {
@@ -156,8 +154,8 @@ describe('FormDraftChecklist', () => {
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
-      const step = checklist.findAllComponents(ChecklistStep).at(2);
-      step.props().stage.should.equal('current');
+      const { stage } = checklist.findAllComponents(ChecklistStep)[2].props();
+      stage.should.equal('current');
     });
   });
 
@@ -172,15 +170,15 @@ describe('FormDraftChecklist', () => {
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
-      const step = checklist.findAllComponents(ChecklistStep).at(3);
-      step.props().stage.should.equal('current');
+      const { stage } = checklist.findAllComponents(ChecklistStep)[3].props();
+      stage.should.equal('current');
     });
 
     it('links to .../draft from the form overview', () => {
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f') }
       });
-      const step = checklist.findAllComponents(ChecklistStep).at(3);
+      const step = checklist.findAllComponents(ChecklistStep)[3];
       const { to } = step.getComponent(RouterLinkStub).props();
       to.should.equal('/projects/1/forms/f/draft');
     });
@@ -189,7 +187,7 @@ describe('FormDraftChecklist', () => {
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
-      const step = checklist.findAllComponents(ChecklistStep).at(3);
+      const step = checklist.findAllComponents(ChecklistStep)[3];
       step.findComponent(RouterLinkStub).exists().should.be.false();
     });
   });

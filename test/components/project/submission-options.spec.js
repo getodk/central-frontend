@@ -3,14 +3,14 @@ import { RouterLinkStub } from '@vue/test-utils';
 import LinkIfCan from '../../../src/components/link-if-can.vue';
 import ProjectSubmissionOptions from '../../../src/components/project/submission-options.vue';
 
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
-import { mount } from '../../util/lifecycle';
 
-const mountComponent = (options) => mount(ProjectSubmissionOptions, {
-  propsData: { state: true },
-  ...options
-});
+const mountComponent = (options) =>
+  mount(ProjectSubmissionOptions, mergeMountOptions(options, {
+    props: { state: true }
+  }));
 
 describe('ProjectSubmissionOptions', () => {
   beforeEach(mockLogin);
@@ -43,8 +43,8 @@ describe('ProjectSubmissionOptions', () => {
       const modal = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f') }
       });
-      const link = modal.findAllComponents(RouterLinkStub).at(1);
-      modal.findAll('li').at(1).element.contains(link.element).should.be.true();
+      const link = modal.findAllComponents(RouterLinkStub)[1];
+      modal.findAll('li')[1].element.contains(link.element).should.be.true();
       link.props().to.should.equal('/projects/1/forms/f/public-links');
       link.text().should.equal('Public Access Links');
     });
@@ -53,7 +53,7 @@ describe('ProjectSubmissionOptions', () => {
       const modal = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/public-links') }
       });
-      const a = modal.findAll('li').at(1).get('a');
+      const a = modal.findAll('li')[1].get('a');
       a.attributes().href.should.equal('#');
       a.text().should.equal('Public Access Links');
       await a.trigger('click');
@@ -64,7 +64,7 @@ describe('ProjectSubmissionOptions', () => {
       const modal = mountComponent({
         container: { router: mockRouter('/projects/1/app-users') }
       });
-      const li = modal.findAll('li').at(1);
+      const li = modal.findAll('li')[1];
       li.find('a').exists().should.be.false();
       li.get('strong').text().should.equal('Public Access Links');
     });

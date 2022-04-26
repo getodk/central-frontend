@@ -44,7 +44,7 @@ describe('FormOverviewRightNow', () => {
       testData.extendedForms.createPast(1, { state: 'open' });
       const items = mountComponent().findAllComponents(SummaryItem);
       items.length.should.equal(3);
-      const item = items.at(1);
+      const item = items[1];
       item.props().icon.should.equal('exchange');
       item.get('.summary-item-heading').text().should.equal('Open');
       item.get('.summary-item-body').text().should.equal('This Form is downloadable and is accepting Submissions.');
@@ -52,7 +52,7 @@ describe('FormOverviewRightNow', () => {
 
     it('renders correctly if the form is closing', () => {
       testData.extendedForms.createPast(1, { state: 'closing' });
-      const item = mountComponent().findAllComponents(SummaryItem).at(1);
+      const item = mountComponent().findAllComponents(SummaryItem)[1];
       item.props().icon.should.equal('clock-o');
       item.get('.summary-item-heading').text().should.equal('Closing');
       item.get('.summary-item-body').text().should.equal('This Form is not downloadable but still accepts Submissions.');
@@ -60,7 +60,7 @@ describe('FormOverviewRightNow', () => {
 
     it('renders correctly if the form is closed', () => {
       testData.extendedForms.createPast(1, { state: 'closed' });
-      const item = mountComponent().findAllComponents(SummaryItem).at(1);
+      const item = mountComponent().findAllComponents(SummaryItem)[1];
       item.props().icon.should.equal('ban');
       item.get('.summary-item-heading').text().should.equal('Closed');
       item.get('.summary-item-body').text().should.equal('This Form is not downloadable and does not accept Submissions.');
@@ -72,12 +72,12 @@ describe('FormOverviewRightNow', () => {
       testData.extendedForms.createPast(1, { submissions: 123 });
       const items = mountComponent().findAllComponents(SummaryItem);
       items.length.should.equal(3);
-      items.at(2).get('.summary-item-heading').text().should.equal('123');
+      items[2].get('.summary-item-heading').text().should.equal('123');
     });
 
     it('links to the submissions page', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      const item = mountComponent().findAllComponents(SummaryItem).at(2);
+      const item = mountComponent().findAllComponents(SummaryItem)[2];
       item.props().to.should.equal('/projects/1/forms/a%20b/submissions');
     });
   });

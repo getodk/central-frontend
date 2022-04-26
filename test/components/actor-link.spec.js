@@ -13,7 +13,7 @@ describe('ActorLink', () => {
 
   it('renders a LinkIfCan component if the actor is a user', () => {
     const component = mount(ActorLink, {
-      propsData: { actor: testData.extendedUsers.first() },
+      props: { actor: testData.extendedUsers.first() },
       container: { router: mockRouter('/system/audits') }
     });
     const linkIfCan = component.getComponent(LinkIfCan);
@@ -30,7 +30,7 @@ describe('ActorLink', () => {
       })
       .last();
     const component = mount(ActorLink, {
-      propsData: { actor },
+      props: { actor },
       container: { router: mockRouter('/system/audits') }
     });
     component.findComponent(LinkIfCan).exists().should.be.false();
@@ -44,7 +44,7 @@ describe('ActorLink', () => {
       .createPast(1, { displayName: 'My App User' })
       .last();
     const component = mount(ActorLink, {
-      propsData: { actor },
+      props: { actor },
       container: { router: mockRouter('/system/audits') }
     });
     component.findComponent(LinkIfCan).exists().should.be.false();

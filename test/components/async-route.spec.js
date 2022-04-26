@@ -11,12 +11,12 @@ import { loadedAsync, setLoader } from '../../src/util/async-components';
 import { mount } from '../util/lifecycle';
 import { wait, waitUntil } from '../util/util';
 
-const mountComponent = (propsData) => mount(AsyncRoute, {
-  propsData: {
+const mountComponent = (props) => mount(AsyncRoute, {
+  props: {
     props: {},
     loading: 'tab',
     k: '0',
-    ...propsData
+    ...props
   }
 });
 

@@ -13,7 +13,7 @@ import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(AuditRow, {
-  propsData: { audit: testData.extendedAudits.last() },
+  props: { audit: testData.extendedAudits.last() },
   container: { router: mockRouter('/system/audits') }
 });
 const testType = (row, type) => {
@@ -36,7 +36,7 @@ const testTarget = (row, text, to = undefined) => {
     span.text().should.equal(text);
     span.attributes().title.should.equal(text);
   } else {
-    const link = row.findAllComponents(RouterLinkStub).wrappers.find(wrapper =>
+    const link = row.findAllComponents(RouterLinkStub).find(wrapper =>
       wrapper.element.closest('.target') != null);
     link.text().should.equal(text);
     link.attributes().title.should.equal(text);
@@ -224,7 +224,7 @@ describe('AuditTable', () => {
           .last()
       });
       const row = mountComponent();
-      const link = row.findAllComponents(RouterLinkStub).wrappers.find(wrapper =>
+      const link = row.findAllComponents(RouterLinkStub).find(wrapper =>
         wrapper.element.closest('.target') != null);
       link.props().to.should.equal('/projects/1/forms/a%20b/draft');
     });

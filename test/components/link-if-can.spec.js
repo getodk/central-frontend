@@ -12,7 +12,7 @@ describe('LinkIfCan', () => {
   it('renders a link if the user can navigate to the location', () => {
     mockLogin({ role: 'admin' });
     const component = mount(LinkIfCan, {
-      propsData: { to: '/users' },
+      props: { to: '/users' },
       slots: { default: TestUtilSpan },
       container: { router: mockRouter('/') }
     });
@@ -24,7 +24,7 @@ describe('LinkIfCan', () => {
   it('renders a span if the user cannot navigate to the location', () => {
     mockLogin({ role: 'none' });
     const component = mount(LinkIfCan, {
-      propsData: { to: '/users' },
+      props: { to: '/users' },
       slots: { default: TestUtilSpan },
       container: { router: mockRouter('/') }
     });
@@ -36,7 +36,7 @@ describe('LinkIfCan', () => {
   it('hides an .icon-angle-right if user cannot navigate to location', () => {
     mockLogin({ role: 'none' });
     const component = mount(LinkIfCan, {
-      propsData: { to: '/users' },
+      props: { to: '/users' },
       slots: { default: '<span class="icon-angle-right"></span>' },
       container: { router: mockRouter('/') },
       attachTo: document.body

@@ -107,7 +107,7 @@ describe('SubmissionList', () => {
         const submissions = testData.extendedSubmissions.sorted();
         submissions.length.should.be.aboveOrEqual(count + offset);
         for (let i = 0; i < rows.length; i += 1) {
-          const text = rows.at(i).findAll('td').at(-1).text();
+          const text = rows[i].get('td:last-child').text();
           text.should.equal(submissions[i + offset].instanceId);
         }
       };
@@ -119,10 +119,9 @@ describe('SubmissionList', () => {
           message.should.not.be.hidden();
           message.get('#submission-list-message-text').text().should.equal(text);
 
-          const spinners = component.findAllComponents(Spinner)
-            .filter(spinner => message.element.contains(spinner.element));
-          spinners.length.should.equal(1);
-          spinners.at(0).props().state.should.equal(true);
+          const spinner = component.findAllComponents(Spinner).find(wrapper =>
+            message.element.contains(wrapper.element));
+          spinner.props().state.should.be.true();
         }
       };
 
@@ -147,7 +146,7 @@ describe('SubmissionList', () => {
       it('initially loads only the first chunk if there are many submissions', () => {
         createSubmissions(3);
         return loadSubmissionList({
-          propsData: { top: () => 2 }
+          props: { top: () => 2 }
         })
           .beforeEachResponse((component, config) => {
             if (config.url.includes('.svc/Submissions')) {
@@ -163,7 +162,7 @@ describe('SubmissionList', () => {
       it('clicking refresh button loads only first chunk of submissions', () => {
         createSubmissions(3);
         return loadSubmissionList({
-          propsData: { top: () => 2 }
+          props: { top: () => 2 }
         })
           .complete()
           .request(component =>
@@ -182,7 +181,7 @@ describe('SubmissionList', () => {
           createSubmissions(12);
           // Chunk 1
           return loadSubmissionList({
-            propsData: { top: (skip) => (skip < 8 ? 2 : 3) }
+            props: { top: (skip) => (skip < 8 ? 2 : 3) }
           })
             .beforeEachResponse((component, { url }) => {
               if (url.includes('.svc/Submissions'))
@@ -310,7 +309,7 @@ describe('SubmissionList', () => {
         it('does nothing after user scrolls somewhere other than bottom of page', () => {
           createSubmissions(5);
           return loadSubmissionList({
-            propsData: { top: () => 2 }
+            props: { top: () => 2 }
           })
             .complete()
             .testNoRequest(component => {
@@ -326,7 +325,7 @@ describe('SubmissionList', () => {
         it('clicking refresh button loads first chunk, even after scrolling', () => {
           createSubmissions(5);
           return loadSubmissionList({
-            propsData: { top: () => 2 }
+            props: { top: () => 2 }
           })
             .complete()
             .request(component => {
@@ -356,7 +355,7 @@ describe('SubmissionList', () => {
         it('scrolling to the bottom has no effect if awaiting response', () => {
           createSubmissions(5);
           return loadSubmissionList({
-            propsData: { top: () => 2 }
+            props: { top: () => 2 }
           })
             .complete()
             .request(component => {
@@ -384,7 +383,7 @@ describe('SubmissionList', () => {
         it('scrolling has no effect after all submissions have been loaded', () => {
           createSubmissions(2);
           return loadSubmissionList({
-            propsData: { top: () => 2 }
+            props: { top: () => 2 }
           })
             .complete()
             .request(component => {
@@ -399,7 +398,7 @@ describe('SubmissionList', () => {
           createSubmissions(4);
           // 4 submissions exist. About to request $top=2, $skip=0.
           return loadSubmissionList({
-            propsData: { top: () => 2 }
+            props: { top: () => 2 }
           })
             .beforeEachResponse((component, config) => {
               if (config.url.includes('.svc/Submissions')) {

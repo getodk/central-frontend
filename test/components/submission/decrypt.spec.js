@@ -11,17 +11,19 @@ import { mount } from '../../util/lifecycle';
 import { waitUntil } from '../../util/util';
 
 const mountComponent = (options = {}) => {
-  const propsData = {
+  const props = {
     state: true,
     formVersion: testData.extendedForms.last(),
-    ...options.propsData
+    ...options.props
   };
   return mount(SubmissionDownload, {
     ...options,
-    propsData,
-    requestData: {
-      fields: propsData.formVersion._fields,
-      keys: testData.standardKeys.sorted()
+    props,
+    container: {
+      requestData: {
+        fields: props.formVersion._fields,
+        keys: testData.standardKeys.sorted()
+      }
     }
   });
 };
@@ -83,7 +85,7 @@ describe('SubmissionDownload', () => {
         fields: [testData.fields.selectMultiple('/sm')]
       });
       const modal = mountComponent();
-      const a = modal.findAll('a').wrappers;
+      const a = modal.findAll('a');
       for (const url of a.map(aUrl))
         url.searchParams.get('splitSelectMultiples').should.equal('false');
       await modal.get('input[type="checkbox"]').setChecked();
@@ -95,10 +97,10 @@ describe('SubmissionDownload', () => {
   it('includes groupPaths in each download link', async () => {
     testData.extendedForms.createPast(1);
     const modal = mountComponent();
-    const a = modal.findAll('a').wrappers;
+    const a = modal.findAll('a');
     for (const url of a.map(aUrl))
       url.searchParams.get('groupPaths').should.equal('true');
-    await modal.findAll('input[type="checkbox"]').at(1).setChecked();
+    await modal.findAll('input[type="checkbox"]')[1].setChecked();
     for (const url of a.map(aUrl))
       url.searchParams.get('groupPaths').should.equal('false');
   });
@@ -107,10 +109,10 @@ describe('SubmissionDownload', () => {
     it('includes deletedFields in each download link', async () => {
       testData.extendedForms.createPast(1);
       const modal = mountComponent();
-      const a = modal.findAll('a').wrappers;
+      const a = modal.findAll('a');
       for (const url of a.map(aUrl))
         url.searchParams.get('deletedFields').should.equal('false');
-      await modal.findAll('input[type="checkbox"]').at(2).setChecked();
+      await modal.findAll('input[type="checkbox"]')[2].setChecked();
       for (const url of a.map(aUrl))
         url.searchParams.get('deletedFields').should.equal('true');
     });
@@ -119,9 +121,9 @@ describe('SubmissionDownload', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       const modal = mountComponent({
-        propsData: { formVersion: testData.extendedFormDrafts.last() }
+        props: { formVersion: testData.extendedFormDrafts.last() }
       });
-      const checkbox = modal.findAll('.checkbox').at(2);
+      const checkbox = modal.findAll('.checkbox')[2];
       checkbox.classes('disabled').should.be.true();
       checkbox.get('input').element.disabled.should.be.true();
       const { title } = checkbox.get('label').attributes();
@@ -143,7 +145,7 @@ describe('SubmissionDownload', () => {
         fields: [testData.fields.int('/i')]
       });
       const modal = mountComponent({ attachTo: document.body });
-      modal.findAll('input').at(1).should.be.focused();
+      modal.findAll('input')[1].should.be.focused();
     });
   });
 
@@ -187,7 +189,7 @@ describe('SubmissionDownload', () => {
       key: testData.standardKeys.createPast(1, { managed: true }).last()
     });
     const modal = mountComponent();
-    const checkboxes = modal.findAll('input[type="checkbox"]').wrappers;
+    const checkboxes = modal.findAll('input[type="checkbox"]');
     for (const checkbox of checkboxes)
       await checkbox.setChecked(); // eslint-disable-line no-await-in-loop
     const passphrase = modal.get('input[type="password"]');
@@ -202,7 +204,7 @@ describe('SubmissionDownload', () => {
   describe('href attributes', () => {
     it('sets the correct href attributes for a form', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      const urls = mountComponent().findAll('a').wrappers.map(aUrl);
+      const urls = mountComponent().findAll('a').map(aUrl);
       urls[0].pathname.should.equal('/v1/projects/1/forms/a%20b/submissions.csv');
       urls[1].pathname.should.equal('/v1/projects/1/forms/a%20b/submissions.csv.zip');
       urls[1].searchParams.get('attachments').should.equal('false');
@@ -213,9 +215,9 @@ describe('SubmissionDownload', () => {
     it('sets the correct href attributes for a form draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       const modal = mountComponent({
-        propsData: { formVersion: testData.extendedFormDrafts.last() }
+        props: { formVersion: testData.extendedFormDrafts.last() }
       });
-      const urls = modal.findAll('a').wrappers.map(aUrl);
+      const urls = modal.findAll('a').map(aUrl);
       urls[0].pathname.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv');
       urls[1].pathname.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv.zip');
       urls[1].searchParams.get('attachments').should.equal('false');
@@ -227,9 +229,9 @@ describe('SubmissionDownload', () => {
   it('includes the OData filter in each download link', () => {
     testData.extendedForms.createPast(1);
     const modal = mountComponent({
-      propsData: { odataFilter: '__system/submitterId eq 1' }
+      props: { odataFilter: '__system/submitterId eq 1' }
     });
-    for (const url of modal.findAll('a').wrappers.map(aUrl))
+    for (const url of modal.findAll('a').map(aUrl))
       url.searchParams.get('$filter').should.equal('__system/submitterId eq 1');
   });
 
@@ -239,7 +241,7 @@ describe('SubmissionDownload', () => {
         fields: [testData.fields.repeat('/r'), testData.fields.int('/r/i')]
       });
       const modal = mountComponent();
-      const action = modal.findAll('.submission-download-action').at(1);
+      const action = modal.findAll('.submission-download-action')[1];
       action.classes('disabled').should.be.false();
       const label = action.get('.submission-download-action-label');
       should.not.exist(label.attributes().title);
@@ -253,7 +255,7 @@ describe('SubmissionDownload', () => {
         fields: [testData.fields.int('/i')]
       });
       const modal = mountComponent();
-      const action = modal.findAll('.submission-download-action').at(1);
+      const action = modal.findAll('.submission-download-action')[1];
       action.classes('disabled').should.be.true();
       const label = action.get('.submission-download-action-label');
       label.attributes().title.should.equal('This Form does not have repeats.');
@@ -297,7 +299,7 @@ describe('SubmissionDownload', () => {
         bubbles: true,
         cancelable: true
       });
-      modal.findAll('a').at(1).element.dispatchEvent(event).should.be.false();
+      modal.findAll('a')[1].element.dispatchEvent(event).should.be.false();
       modal.should.not.alert();
     });
   });
@@ -407,7 +409,7 @@ describe('SubmissionDownload', () => {
         bubbles: true,
         cancelable: true
       });
-      modal.findAll('a').at(1).element.dispatchEvent(event).should.be.false();
+      modal.findAll('a')[1].element.dispatchEvent(event).should.be.false();
       onSubmit.called.should.be.false();
       modal.should.not.alert();
     });

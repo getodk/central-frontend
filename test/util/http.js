@@ -353,7 +353,7 @@ class MockHttp {
     return this._with({ location });
   }
 
-  mount(component, options = undefined) {
+  mount(component, options = undefined, throwIfEmit = undefined) {
     if (this._mount != null)
       throw new Error('cannot call mount() more than once in a single chain');
     if (this._previousPromise != null)
@@ -368,15 +368,29 @@ class MockHttp {
       ? this._container
       : (containerOption != null && containerOption.install != null
         ? containerOption
-        : createTestContainer({
-          requestData: options != null ? options.requestData : null,
-          ...containerOption
-        }));
+        : createTestContainer(containerOption));
 
-    return this._with({
-      container,
-      mount: () => lifecycleMount(component, { ...options, container })
-    });
+    const mount = () => {
+      const wrapper = lifecycleMount(component, { ...options, container });
+
+      if (throwIfEmit != null) {
+        const emitted = wrapper.emitted();
+        if (emitted != null) {
+          let any = false;
+          for (const [name, calls] of Object.entries(emitted)) {
+            if (!name.startsWith('hook:')) {
+              console.error(name, calls[0]); // eslint-disable-line no-console
+              any = true;
+            }
+          }
+          if (any) throw new Error(throwIfEmit);
+        }
+      }
+
+      return wrapper;
+    };
+
+    return this._with({ container, mount });
   }
 
   // The callback may return a Promise or a non-Promise value.
@@ -806,29 +820,21 @@ Object.assign(MockHttp.prototype, commonTests);
 export const mockHttp = (container = undefined) => new MockHttp({ container });
 
 // Mounts the component associated with the bottom-level route matching
-// `location`, setting propsData. If respondForOptions is not `false`, it will
-// also set requestData and respond to the initial requests that the component
-// sends.
+// `location`, specifying props. If respondForOptions is not `false`, it will
+// also specify requestData and respond to the initial requests that the
+// component sends.
 const loadBottomComponent = (location, mountOptions, respondForOptions) => {
   const route = resolveRoute(location);
   const components = routeComponents(route);
   const bottomComponent = last(components);
 
-  const fullMountOptions = {
-    ...mountOptions,
-    // A component may emit an event in order to ask its parent component to
-    // send a request. However, loadBottomComponent() doesn't support that
-    // approach.
-    throwIfEmit: `${bottomComponent.name} emitted an event, but it is not expected to do so. In this case, root cannot be specified as false.`
-  };
-  fullMountOptions.container = {
-    ...fullMountOptions.container,
-    router: mockRouter(location)
-  };
+  const fullMountOptions = mergeMountOptions(mountOptions, {
+    container: { router: mockRouter(location) }
+  });
 
   const bottomRouteRecord = last(route.matched);
   const props = routeProps(route, bottomRouteRecord.props.default);
-  fullMountOptions.propsData = bottomRouteRecord.meta.asyncRoute == null
+  fullMountOptions.props = bottomRouteRecord.meta.asyncRoute == null
     ? props
     : props.props;
 
@@ -845,8 +851,12 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
     fullMountOptions.container.requestData = requestData;
   }
 
+  // A component may emit an event in order to ask its parent component to send
+  // a request. However, loadBottomComponent() doesn't support that approach.
+  const throwIfEmit = `${bottomComponent.name} emitted an event, but it is not expected to do so. In this case, root cannot be specified as false.`;
+
   return mockHttp()
-    .mount(bottomComponent, fullMountOptions)
+    .mount(bottomComponent, fullMountOptions, throwIfEmit)
     .modify(series => (respondForOptions !== false
       ? series.respondForComponent(bottomComponent, respondForOptions)
       : series));

@@ -8,9 +8,9 @@ import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (formData) => mount(FormTrashRow, {
-  propsData: { form: new Form(formData) },
-  requestData: {
-    forms: testData.extendedForms.sorted()
+  props: { form: new Form(formData) },
+  container: {
+    requestData: { forms: testData.extendedForms.sorted() }
   }
 });
 
@@ -35,7 +35,7 @@ describe('FormTrashRow', () => {
       row.get('.deleted-date').text().should.match(/^Deleted .+$/);
       const dateTime = row.findAllComponents(DateTime);
       dateTime.length.should.equal(1);
-      dateTime.at(0).props().iso.should.equal(deletedDate);
+      dateTime[0].props().iso.should.equal(deletedDate);
     });
   });
 
@@ -73,10 +73,10 @@ describe('FormTrashRow', () => {
       const row = mountComponent(formData);
       const divs = row.findAll('.submissions div');
       divs.length.should.equal(2); // submission count and last submission timestamp
-      divs.at(1).text().should.match(/^\(last .+\)$/);
+      divs[1].text().should.match(/^\(last .+\)$/);
       const dateTimes = row.findAllComponents(DateTime);
       dateTimes.length.should.equal(2); // deleted timestamp and last submission timestamp
-      dateTimes.at(1).props().iso.should.equal(lastSubmission);
+      dateTimes[1].props().iso.should.equal(lastSubmission);
     });
 
     it('does not render date if there is no last submission', () => {

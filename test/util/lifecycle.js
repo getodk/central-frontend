@@ -40,21 +40,21 @@ specifies useful options to Vue Test Utils' mount(). It also accepts additional
 options:
 
   - requestData. Passed to setData() before the component is mounted.
-  - throwIfEmit. A message to throw if the component emits an event. Used
-    internally by load() when the `root` option is `false`.
 
 Our mount() function will also set it up so that the component is destroyed
 after the test.
 */
 export const mount = (component, options = {}) => {
-  const { container: containerOption, requestData, throwIfEmit, ...mountOptions } = options;
+  const { props, global: g = {}, container: containerOption, ...mountOptions } = options;
   const container = containerOption != null && containerOption.install != null
     ? containerOption
-    : createTestContainer({ requestData, ...containerOption });
+    : createTestContainer(containerOption);
   mountOptions.localVue = createLocalVue();
   mountOptions.localVue.use(container);
   mountOptions.localVue.prototype.$tcn = $tcn;
-  mountOptions.mocks = { $container: container, ...mountOptions.mocks };
+  if (props != null) mountOptions.propsData = props;
+  mountOptions.mocks = { $container: container, ...g.mocks };
+  mountOptions.stubs = g.stubs;
   mountOptions.provide = { ...container.provide, ...mountOptions.provide };
 
   /* Vue Test Utils doesn't seem to mount `component` as the root component:
@@ -76,31 +76,18 @@ export const mount = (component, options = {}) => {
   const wrapper = vtuMount(component, mountOptions);
   componentsToDestroy.push(wrapper);
 
-  if (throwIfEmit != null) {
-    const emitted = wrapper.emitted();
-    if (emitted != null) {
-      let any = false;
-      for (const [name, calls] of Object.entries(emitted)) {
-        if (!name.startsWith('hook:')) {
-          console.error(name, calls[0]); // eslint-disable-line no-console
-          any = true;
-        }
-      }
-      if (any) throw new Error(throwIfEmit);
-    }
-  }
-
   return wrapper;
 };
 
 // TODO/vue3. Update this list for Vue 3.
 const optionsToMerge = [
-  ['propsData'],
+  ['props'],
   ['slots'],
   ['attrs'],
   ['provide'],
-  ['stubs'],
-  ['mocks'],
+  ['global'],
+  ['global', 'mocks'],
+  ['global', 'stubs'],
   ['container'],
   ['container', 'requestData']
 ];

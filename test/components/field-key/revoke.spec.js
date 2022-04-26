@@ -32,7 +32,7 @@ describe('FieldKeyRevoke', () => {
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
     return mockHttp()
       .mount(FieldKeyRevoke, {
-        propsData: { state: true, fieldKey }
+        props: { state: true, fieldKey }
       })
       .testStandardButton({
         button: '.btn-danger',
@@ -72,9 +72,9 @@ describe('FieldKeyRevoke', () => {
       const app = await revoke();
       const rows = app.findAllComponents(FieldKeyRow);
       rows.length.should.equal(2);
-      rows.at(0).find('.field-key-row-popover-link').exists().should.be.true();
-      rows.at(1).find('.field-key-row-popover-link').exists().should.be.false();
-      rows.at(1).findAll('td').at(3).text().should.equal('Access revoked');
+      rows[0].find('.field-key-row-popover-link').exists().should.be.true();
+      rows[1].find('.field-key-row-popover-link').exists().should.be.false();
+      rows[1].findAll('td')[3].text().should.equal('Access revoked');
     });
   });
 });

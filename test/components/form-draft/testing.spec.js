@@ -59,10 +59,9 @@ describe('FormDraftTesting', () => {
       testData.extendedSubmissions.createPast(1, { form: draft });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const step = app.getComponent(FormDraftStatus)
-            .findAllComponents(ChecklistStep)
-            .at(1);
-          step.props().stage.should.equal('current');
+          const steps = app.getComponent(FormDraftStatus)
+            .findAllComponents(ChecklistStep);
+          steps[1].props().stage.should.equal('current');
         })
         .load('/projects/1/forms/f/draft/testing', {
           project: false, form: false, formDraft: false, attachments: false
@@ -70,10 +69,9 @@ describe('FormDraftTesting', () => {
         .complete()
         .route('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const step = app.getComponent(FormDraftStatus)
-            .findAllComponents(ChecklistStep)
-            .at(1);
-          step.props().stage.should.equal('complete');
+          const steps = app.getComponent(FormDraftStatus)
+            .findAllComponents(ChecklistStep);
+          steps[1].props().stage.should.equal('complete');
         });
     });
   });

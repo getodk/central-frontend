@@ -3,13 +3,14 @@ import FieldKeyQrPanel from '../../../src/components/field-key/qr-panel.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 
-const mountOptions = (options) => ({
-  propsData: { state: true, managed: true },
-  requestData: { project: testData.extendedProjects.last() },
-  ...options
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  props: { state: true, managed: true },
+  container: {
+    requestData: { project: testData.extendedProjects.last() }
+  }
 });
 
 describe('FieldKeyNew', () => {

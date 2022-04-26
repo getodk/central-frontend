@@ -82,12 +82,12 @@ describe('ProjectShow', () => {
       .beforeEachResponse(app => {
         const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
-        loading.at(0).props().state.should.equal(true);
+        loading[0].props().state.should.equal(true);
       })
       .afterResponses(app => {
         const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
-        loading.at(0).props().state.should.equal(false);
+        loading[0].props().state.should.equal(false);
       });
   });
 
@@ -98,7 +98,7 @@ describe('ProjectShow', () => {
       const app = await load('/projects/1', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
       li.length.should.be.above(1);
-      li.at(0).should.be.visible(true);
+      li[0].should.be.visible(true);
     });
 
     for (const role of ['viewer', 'formfill']) {
@@ -108,7 +108,7 @@ describe('ProjectShow', () => {
         const app = await load('/projects/1', { attachTo: document.body }, { deletedForms: false });
         const li = app.findAll('#page-head-tabs li');
         li.length.should.equal(1);
-        li.at(0).should.be.hidden(true);
+        li[0].should.be.hidden(true);
       });
     }
   });

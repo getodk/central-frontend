@@ -3,17 +3,18 @@ import FormVersionString from '../../../src/components/form-version/string.vue';
 import SubmissionBasicDetails from '../../../src/components/submission/basic-details.vue';
 
 import testData from '../../data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 
-const mountComponent = (options = {}) => mount(SubmissionBasicDetails, {
-  ...options,
-  requestData: {
-    submission: testData.submissionOData(),
-    submissionVersion: {},
-    ...options.requestData
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(SubmissionBasicDetails, mergeMountOptions(options, {
+    container: {
+      requestData: {
+        submission: testData.submissionOData(),
+        submissionVersion: {}
+      }
+    }
+  }));
 
 describe('SubmissionBasicDetails', () => {
   beforeEach(() => {
@@ -31,7 +32,7 @@ describe('SubmissionBasicDetails', () => {
     testData.extendedSubmissions.createPast(1, {
       submitter: testData.extendedUsers.first()
     });
-    const span = mountComponent().findAll('dd').at(1).get('span');
+    const span = mountComponent().get('dl :nth-child(2) dd span');
     span.text().should.equal('Alice');
     span.attributes().title.should.equal('Alice');
   });
@@ -92,7 +93,7 @@ describe('SubmissionBasicDetails', () => {
   describe('device ID', () => {
     it('shows the device ID', () => {
       testData.extendedSubmissions.createPast(1, { deviceId: 'foo' });
-      const span = mountComponent().findAll('dd').at(5).get('span');
+      const span = mountComponent().get('dl :nth-child(6) dd span');
       span.text().should.equal('foo');
       span.attributes().title.should.equal('foo');
     });
@@ -107,11 +108,13 @@ describe('SubmissionBasicDetails', () => {
     it('shows the user agent', () => {
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent({
-        requestData: {
-          submissionVersion: { userAgent: 'Collect' }
+        container: {
+          requestData: {
+            submissionVersion: { userAgent: 'Collect' }
+          }
         }
       });
-      const span = component.findAll('dd').at(5).get('span');
+      const span = component.get('dl :nth-child(6) dd span');
       span.text().should.equal('Collect');
       span.attributes().title.should.equal('Collect');
     });
@@ -128,7 +131,7 @@ describe('SubmissionBasicDetails', () => {
         attachmentsExpected: 3,
         attachmentsPresent: 2
       });
-      const text = mountComponent().findAll('dd').at(5).get('span').text();
+      const text = mountComponent().get('dl :nth-child(6) dd span').text();
       text.should.equal('2 files / 3 expected');
     });
 
@@ -137,9 +140,10 @@ describe('SubmissionBasicDetails', () => {
         attachmentsExpected: 3,
         attachmentsPresent: 2
       });
-      const spans = mountComponent().findAll('dd').at(5).findAll('span');
-      spans.at(1).classes('icon-exclamation-triangle').should.be.true();
-      spans.at(2).text().should.equal('Missing media');
+      const spans = mountComponent().findAll('dl :nth-child(6) dd span');
+      spans.length.should.equal(3);
+      spans[1].classes('icon-exclamation-triangle').should.be.true();
+      spans[2].text().should.equal('Missing media');
     });
 
     it('does not render if no attachments are expected', () => {

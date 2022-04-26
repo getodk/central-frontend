@@ -30,7 +30,7 @@ describe('FormRestore', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(FormRestore, {
-        propsData: {
+        props: {
           state: true,
           form: new Form({ xmlFormId: 'a', projectId: 1 })
         }

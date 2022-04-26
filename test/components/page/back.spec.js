@@ -4,14 +4,19 @@ import PageBack from '../../../src/components/page/back.vue';
 
 import TestUtilSpan from '../../util/components/span.vue';
 
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
+
+const mountComponent = (options) => mount(PageBack, mergeMountOptions(options, {
+  global: {
+    stubs: { RouterLink: RouterLinkStub }
+  }
+}));
 
 describe('PageBack', () => {
   describe('linkTitle prop is true', () => {
     it('renders a link', () => {
-      const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: true },
-        stubs: { RouterLink: RouterLinkStub }
+      const component = mountComponent({
+        props: { to: '/users', linkTitle: true }
       });
       const link = component.getComponent(RouterLinkStub);
       should.exist(link.element.closest('#page-back-title'));
@@ -19,10 +24,9 @@ describe('PageBack', () => {
     });
 
     it('uses the title slot', () => {
-      const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: true },
-        slots: { title: TestUtilSpan },
-        stubs: { RouterLink: RouterLinkStub }
+      const component = mountComponent({
+        props: { to: '/users', linkTitle: true },
+        slots: { title: TestUtilSpan }
       });
       const text = component.getComponent(RouterLinkStub).get('span').text();
       text.should.equal('Some span text');
@@ -31,18 +35,16 @@ describe('PageBack', () => {
 
   describe('linkTitle prop is false', () => {
     it('does not render a link', () => {
-      const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: false },
-        stubs: { RouterLink: RouterLinkStub }
+      const component = mountComponent({
+        props: { to: '/users', linkTitle: false }
       });
       component.find('#page-back-title a').exists().should.be.false();
     });
 
     it('uses the title slot', () => {
-      const component = mount(PageBack, {
-        propsData: { to: '/users', linkTitle: false },
-        slots: { title: TestUtilSpan },
-        stubs: { RouterLink: RouterLinkStub }
+      const component = mountComponent({
+        props: { to: '/users', linkTitle: false },
+        slots: { title: TestUtilSpan }
       });
       const text = component.get('#page-back-title span').text();
       text.should.equal('Some span text');
@@ -50,9 +52,8 @@ describe('PageBack', () => {
   });
 
   it('renders a link for the back slot', () => {
-    const component = mount(PageBack, {
-      propsData: { to: '/users' },
-      stubs: { RouterLink: RouterLinkStub }
+    const component = mountComponent({
+      props: { to: '/users' }
     });
     const link = component.getComponent(RouterLinkStub);
     link.attributes().id.should.equal('page-back-back');
@@ -60,10 +61,9 @@ describe('PageBack', () => {
   });
 
   it('uses the back slot', () => {
-    const component = mount(PageBack, {
-      propsData: { to: '/users' },
-      slots: { back: TestUtilSpan },
-      stubs: { RouterLink: RouterLinkStub }
+    const component = mountComponent({
+      props: { to: '/users' },
+      slots: { back: TestUtilSpan }
     });
     component.get('#page-back-back span').text().should.equal('Some span text');
   });
