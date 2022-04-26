@@ -1,5 +1,5 @@
 import createRoutes from '../../src/routes';
-import { loadAsync } from '../../src/util/async-components';
+import { loadAsync } from '../../src/util/load-async';
 
 import createTestContainer from './container';
 

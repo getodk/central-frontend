@@ -12,6 +12,7 @@
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
   },
   "dependencies": {
+    "@vue/composition-api": "~1",
     "axios": "~0.21",
     "bootstrap": "~3",
     "dompurify": "~2",

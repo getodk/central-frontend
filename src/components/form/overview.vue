@@ -56,6 +56,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { defineAsyncComponent } from '@vue/composition-api';
+
 import FormDraftChecklist from '../form-draft/checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
@@ -64,7 +66,7 @@ import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
 
 import modal from '../../mixins/modal';
-import { loadAsync } from '../../util/async-components';
+import { loadAsync } from '../../util/load-async';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -74,7 +76,7 @@ export default {
     FormOverviewRightNow,
     FormVersionStandardButtons,
     FormVersionString,
-    FormVersionViewXml: loadAsync('FormVersionViewXml'),
+    FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
     PageSection,
     SummaryItem
   },

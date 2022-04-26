@@ -10,6 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+/*
+Most dynamic imports are housed in this file. Using a dynamic import with
+loadAsync() has a couple of benefits:
+
+  - It is possible to check whether the import has been completed.
+  - webpack magic comments will not be repeated across files.
+*/
+
 const loader = (load) => {
   const obj = {
     loaded: false,

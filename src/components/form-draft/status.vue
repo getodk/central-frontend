@@ -82,6 +82,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { defineAsyncComponent } from '@vue/composition-api';
+
 import FormDraftAbandon from './abandon.vue';
 import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
@@ -96,7 +98,7 @@ import Option from '../../util/option';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
-import { loadAsync } from '../../util/async-components';
+import { loadAsync } from '../../util/load-async';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
 
@@ -109,7 +111,7 @@ export default {
     FormNew,
     FormVersionStandardButtons,
     FormVersionString,
-    FormVersionViewXml: loadAsync('FormVersionViewXml'),
+    FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
     Loading,
     PageSection,
     SummaryItem

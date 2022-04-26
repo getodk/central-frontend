@@ -13,7 +13,7 @@ import { noop } from '../src/util/util';
 
 import testData from './data';
 import { destroyAll } from './util/lifecycle';
-import { loadAsyncRouteComponents } from './util/async-components';
+import { loadAsyncRouteComponents } from './util/load-async';
 import { mockAxios } from './util/axios';
 import './assertions';
 

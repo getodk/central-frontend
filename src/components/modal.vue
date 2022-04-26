@@ -33,6 +33,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { markRaw } from '@vue/composition-api';
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
@@ -73,9 +74,9 @@ export default {
       id,
       // The modal() method of the Boostrap plugin
       bs: null,
-      observer: new MutationObserver(() => {
+      observer: markRaw(new MutationObserver(() => {
         if (this.state) this.bs('handleUpdate');
-      }),
+      })),
       mousedownOutsideDialog: false
     };
   },

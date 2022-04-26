@@ -286,7 +286,7 @@ import createTestContainer from './container';
 import requestDataByComponent from './http/data';
 import testData from '../data';
 import * as commonTests from './http/common';
-import { loadAsyncCache } from './async-components';
+import { loadAsyncCache } from './load-async';
 import { mergeMountOptions, mount as lifecycleMount } from './lifecycle';
 import { mockAxios, mockAxiosError, mockResponse } from './axios';
 import { mockRouter, resolveRoute, testRouter } from './router';

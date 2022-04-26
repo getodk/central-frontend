@@ -6,7 +6,7 @@ import TestUtilIcon from '../util/components/icon.vue';
 import TestUtilP from '../util/components/p.vue';
 import TestUtilSpan from '../util/components/span.vue';
 
-import { loadedAsync, setLoader } from '../../src/util/async-components';
+import { loadedAsync, setLoader } from '../../src/util/load-async';
 
 import { mount } from '../util/lifecycle';
 import { wait, waitUntil } from '../util/util';

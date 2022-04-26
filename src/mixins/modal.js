@@ -25,7 +25,7 @@ name of the associated property. For example:
   modal({ submissionOptions: 'ProjectSubmissionOptions' })
 */
 
-import { loadedAsync } from '../util/async-components';
+import { loadedAsync } from '../util/load-async';
 
 // @vue/component
 const mixin = {

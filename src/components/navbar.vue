@@ -46,6 +46,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { defineAsyncComponent } from '@vue/composition-api';
+
 import NavbarActions from './navbar/actions.vue';
 import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
@@ -53,13 +55,13 @@ import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
 import modal from '../mixins/modal';
 import routes from '../mixins/routes';
-import { loadAsync } from '../util/async-components';
+import { loadAsync } from '../util/load-async';
 import { requestData } from '../store/modules/request';
 
 export default {
   name: 'Navbar',
   components: {
-    AnalyticsIntroduction: loadAsync('AnalyticsIntroduction'),
+    AnalyticsIntroduction: defineAsyncComponent(loadAsync('AnalyticsIntroduction')),
     NavbarActions,
     NavbarHelpDropdown,
     NavbarLinks,

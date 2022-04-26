@@ -23,9 +23,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { markRaw } from '@vue/composition-api';
+
 import Loading from './loading.vue';
 import PageBody from './page/body.vue';
-import { loadAsync, loadedAsync } from '../util/async-components';
+import { loadAsync, loadedAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
 export default {
@@ -98,7 +100,7 @@ export default {
         .then(m => {
           if (!canceled) {
             this.showsLoading = false;
-            this.component = m.default;
+            this.component = markRaw(m.default);
           }
         })
         .catch(() => {

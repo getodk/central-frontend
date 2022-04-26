@@ -2,7 +2,7 @@ import FormGroup from '../../src/components/form-group.vue';
 
 import TestUtilSpan from '../util/components/span.vue';
 
-import { loadAsync } from '../../src/util/async-components';
+import { loadAsync } from '../../src/util/load-async';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
 
