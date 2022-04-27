@@ -18,8 +18,7 @@ export default {
     // Instead, we have the router import the store, then save the current route
     // here as well.
     currentRoute: null,
-    anyNavigationConfirmed: false,
-    sendInitialRequests: true
+    anyNavigationConfirmed: false
   },
   mutations: {
     /* eslint-disable no-param-reassign */
@@ -27,13 +26,9 @@ export default {
       state.currentRoute = route;
       state.anyNavigationConfirmed = true;
     },
-    setSendInitialRequests(state, sendInitialRequests) {
-      state.sendInitialRequests = sendInitialRequests;
-    },
     resetRouterState(state) {
       state.currentRoute = null;
       state.anyNavigationConfirmed = false;
-      state.sendInitialRequests = true;
     }
     /* eslint-enable no-param-reassign */
   }

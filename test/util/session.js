@@ -1,7 +1,5 @@
 import { DateTime } from 'luxon';
 
-import store from '../../src/store';
-
 import testData from '../data';
 import { setData } from './store';
 
@@ -17,5 +15,4 @@ export const mockLogin = (options = undefined) => {
     'sessionExpires',
     DateTime.fromISO(session.expiresAt).toMillis().toString()
   );
-  store.commit('setSendInitialRequests', false);
 };
