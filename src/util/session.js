@@ -65,6 +65,7 @@ hand-in-hand.
 */
 
 import Vue from 'vue';
+import VueRouter from 'vue-router';
 
 import i18n from '../i18n';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
@@ -131,10 +132,11 @@ export const logOut = (container, setNext) => {
   // navigation. There are also some cases in which we don't navigate to /login.
   store.commit('cancelRequests');
 
+  // TODO/vue3. Update this comment.
   // We do not navigate to /login for a logout during login or during the
   // initial navigation. After the initial navigation, navigation is
   // synchronous, so a logout during navigation is not possible.
-  if (store.state.router.anyNavigationConfirmed &&
+  if (router.currentRoute !== VueRouter.START_LOCATION &&
     router.currentRoute.path !== '/login') {
     const location = { path: '/login' };
     if (setNext) location.query = { next: router.currentRoute.fullPath };

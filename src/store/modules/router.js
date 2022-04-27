@@ -17,18 +17,15 @@ export default {
     // router itself imports the store: we would have a circular dependency.
     // Instead, we have the router import the store, then save the current route
     // here as well.
-    currentRoute: null,
-    anyNavigationConfirmed: false
+    currentRoute: null
   },
   mutations: {
     /* eslint-disable no-param-reassign */
     confirmNavigation(state, route) {
       state.currentRoute = route;
-      state.anyNavigationConfirmed = true;
     },
     resetRouterState(state) {
       state.currentRoute = null;
-      state.anyNavigationConfirmed = false;
     }
     /* eslint-enable no-param-reassign */
   }

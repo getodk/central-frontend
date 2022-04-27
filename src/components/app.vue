@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div ref="app">
     <!-- If the user's session is restored during the initial navigation, that
     will affect how the navbar is rendered. -->
-    <navbar v-show="anyNavigationConfirmed"/>
+    <navbar v-show="routerReady"/>
     <alert id="app-alert"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import VueRouter from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
@@ -45,13 +45,9 @@ export default {
   },
   computed: {
     ...requestData(['centralVersion']),
-    ...mapState({
-      // Vue seems to trigger the initial navigation before creating App. If the
-      // initial navigation is synchronous, Vue seems to confirm the navigation
-      // before creating App. However, if the initial navigation is
-      // asynchronous, Vue seems to create App before confirming the navigation.
-      anyNavigationConfirmed: (state) => state.router.anyNavigationConfirmed
-    })
+    routerReady() {
+      return this.$route !== VueRouter.START_LOCATION;
+    }
   },
   created() {
     this.$once('hook:beforeDestroy', useSessions(this.container));
