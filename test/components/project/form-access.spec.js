@@ -298,7 +298,7 @@ describe('ProjectFormAccess', () => {
           td[4].get('input').element.checked.should.be.true();
         }));
 
-      it('resets unsavedChanges', async () => {
+      it('updates unsavedChanges', async () => {
         const app = await saveWithSuccess();
         app.vm.$container.unsavedChanges.count.should.equal(0);
       });
