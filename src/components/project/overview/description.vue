@@ -64,7 +64,7 @@ export default {
 }
 
 #project-overview-description {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.2;
 
   /*
