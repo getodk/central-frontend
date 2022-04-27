@@ -39,7 +39,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import request from '../../mixins/request';
-import { confirmUnsavedChanges } from '../../util/router';
 import { logOut } from '../../util/session';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -47,7 +46,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'NavbarActions',
   mixins: [request()],
-  inject: ['container'],
+  inject: ['container', 'unsavedChanges'],
   props: {
     loggedIn: {
       type: Boolean,
@@ -59,7 +58,7 @@ export default {
   computed: requestData(['currentUser']),
   methods: {
     logOut() {
-      if (confirmUnsavedChanges(this.$store)) {
+      if (this.unsavedChanges.confirm()) {
         logOut(this.container, false)
           .then(() => {
             this.$alert().success(this.$t('alert.logOut'));

@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 
-import store from '../../src/store';
-import { confirmUnsavedChanges, forceReplace, routeProps } from '../../src/util/router';
+import { forceReplace, routeProps } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
@@ -55,38 +54,24 @@ describe('util/router', () => {
       forceReplace(container, '/').should.be.a.Promise();
     });
 
-    it('does not show a prompt if there are unsaved changes', () => {
-      testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(1, { state: 'open' });
-      const fake = sinon.fake();
-      sinon.replace(window, 'confirm', fake);
-      return load('/projects/1/form-access')
-        .afterResponses(app =>
-          app.get('#project-form-access-table select').setValue('closed'))
-        .request(app => forceReplace(app.vm.$container, '/'))
-        .respondFor('/')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-          fake.called.should.be.false();
-        });
-    });
-  });
+    describe('unsaved changes', () => {
+      it('does not show a prompt', async () => {
+        const container = createTestContainer({ router: testRouter() });
+        const { unsavedChanges } = container;
+        unsavedChanges.plus(1);
+        const confirm = sinon.fake();
+        sinon.replace(window, 'confirm', confirm);
+        await forceReplace(container, '/');
+        confirm.called.should.be.false();
+      });
 
-  describe('confirmUnsavedChanges()', () => {
-    it('returns true if there are no unsaved changes', () => {
-      confirmUnsavedChanges(store).should.be.true();
-    });
-
-    it('returns true if the user confirms', () => {
-      store.commit('setUnsavedChanges', true);
-      sinon.replace(window, 'confirm', () => true);
-      confirmUnsavedChanges(store).should.be.true();
-    });
-
-    it('returns false if the user does not confirm', () => {
-      store.commit('setUnsavedChanges', true);
-      sinon.replace(window, 'confirm', () => false);
-      confirmUnsavedChanges(store).should.be.false();
+      it('resets unsavedChanges', async () => {
+        const container = createTestContainer({ router: testRouter() });
+        const { unsavedChanges } = container;
+        unsavedChanges.plus(1);
+        await forceReplace(container, '/');
+        unsavedChanges.count.should.equal(0);
+      });
     });
   });
 });

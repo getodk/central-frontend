@@ -68,7 +68,7 @@ describe('NavbarActions', () => {
       sinon.replace(window, 'confirm', () => false);
       return load('/account/edit')
         .afterResponses(app => {
-          app.vm.$store.commit('setUnsavedChanges', true);
+          app.vm.$container.unsavedChanges.plus(1);
         })
         .testNoRequest(app =>
           app.get('#navbar-actions-log-out').trigger('click'));
