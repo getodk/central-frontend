@@ -23,21 +23,11 @@ import { noop } from './util/util';
 
 export default (container, mode = 'hash') => {
   const router = new VueRouter({ mode, routes: createRoutes(container) });
+  const { store, unsavedChanges } = container;
 
 
 
 /* eslint-disable indent */ // TODO/vue3
-////////////////////////////////////////////////////////////////////////////////
-// ROUTER STATE
-
-// Set select properties of store.state.router.
-const { store, unsavedChanges } = container;
-router.afterEach(to => {
-  store.commit('confirmNavigation', to);
-});
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // LAZY LOADING
 

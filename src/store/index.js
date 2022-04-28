@@ -13,8 +13,7 @@ import Vuex from 'vuex';
 
 import alert from './modules/alert';
 import request from './modules/request';
-import router from './modules/router';
 
 export default new Vuex.Store({
-  modules: { alert, request, router }
+  modules: { alert, request }
 });

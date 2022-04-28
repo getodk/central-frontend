@@ -26,11 +26,10 @@ export const resolveRoute = (location) => router.resolve(location).route;
 // object is initialized. If you need a router that can navigate, use
 // testRouter().
 class MockRouter {
-  constructor(store, location) {
+  constructor(location) {
     this.currentRoute = location != null
       ? resolveRoute(location)
       : VueRouter.START_LOCATION;
-    if (location != null) store.commit('confirmNavigation', this.currentRoute);
   }
 
   install(Vue) {
@@ -55,5 +54,4 @@ for (const prop in router) {
   }
 }
 
-export const mockRouter = (location = undefined) => ({ store }) =>
-  new MockRouter(store, location);
+export const mockRouter = (location = undefined) => () => new MockRouter(location);

@@ -111,13 +111,12 @@ function request({
   if (this.awaitingResponse != null) this.awaitingResponse = true;
 
   const { session } = this.$store.state.request.data;
-  const { currentRoute } = this.$store.state.router;
+  const initialRoute = this.$route;
   return this.$http.request(withAuth(axiosConfig, session))
     .catch(error => {
-      // this.$store seems to be defined even after the component has been
+      // this.$route seems to be defined even after the component has been
       // destroyed.
-      if (this.$store.state.router.currentRoute !== currentRoute)
-        throw new Error('route change');
+      if (this.$route !== initialRoute) throw new Error('route change');
 
       if (fulfillProblem != null && error.response != null &&
         isProblem(error.response.data) && fulfillProblem(error.response.data))
@@ -133,8 +132,7 @@ function request({
       throw error;
     })
     .then(response => {
-      if (this.$store.state.router.currentRoute !== currentRoute)
-        throw new Error('route change');
+      if (this.$route !== initialRoute) throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;
 
       return response;

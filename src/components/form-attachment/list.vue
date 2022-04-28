@@ -253,12 +253,12 @@ export default {
         return Promise.resolve({ data: file, encoding: 'identity' });
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        const { currentRoute } = this.$store.state.router;
+        const initialRoute = this.$route;
         reader.onload = () => {
           resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
         };
         reader.onerror = () => {
-          if (this.$store.state.router.currentRoute === currentRoute) {
+          if (this.$route === initialRoute) {
             this.$alert().danger(this.$t('alert.readError', {
               filename: file.name
             }));
@@ -276,11 +276,10 @@ export default {
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
       this.uploadStatus.progress = null;
-      const { currentRoute } = this.$store.state.router;
+      const initialRoute = this.$route;
       return this.maybeGzip(file)
         .then(({ data, encoding }) => {
-          if (this.$store.state.router.currentRoute !== currentRoute)
-            throw new Error();
+          if (this.$route !== initialRoute) throw new Error();
           return this.request({
             method: 'POST',
             url: apiPaths.formDraftAttachment(
@@ -342,11 +341,11 @@ export default {
         const upload = this.plannedUploads[i];
         promise = promise.then(() => this.uploadFile(upload, updated));
       }
-      const { currentRoute } = this.$store.state.router;
+      const initialRoute = this.$route;
       promise
         .catch(noop)
         .finally(() => {
-          if (this.$store.state.router.currentRoute !== currentRoute) return;
+          if (this.$route !== initialRoute) return;
           if (updated.length === this.uploadStatus.total)
             this.$alert().success(this.$tcn('alert.success', updated.length));
           for (const attachment of updated)

@@ -76,7 +76,6 @@ afterEach(() => {
   store.commit('resetAlert');
   store.commit('resetRequests');
   store.commit('clearData');
-  store.commit('resetRouterState');
 });
 
 afterEach(() => {

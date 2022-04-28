@@ -95,14 +95,14 @@ export default {
       this.$emit('increment-count');
       const previousRoleId = this.selectedRoleId;
       this.selectedRoleId = roleIdString;
-      const { currentRoute } = this.$store.state.router;
+      const initialRoute = this.$route;
       // At some point we will likely implement something transactional so that
       // we don't send two requests.
       this.requestChange('DELETE', previousRoleId)
         .then(() => this.requestChange('POST', roleIdString)
           .catch(e => {
             if (previousRoleId !== '' && roleIdString !== '' &&
-              this.$store.state.router.currentRoute === currentRoute) {
+              this.$route === initialRoute) {
               this.selectedRoleId = '';
               this.$emit('change', this.assignment.actor, null, true);
             }
@@ -116,8 +116,7 @@ export default {
         })
         .catch(noop)
         .finally(() => {
-          if (this.$store.state.router.currentRoute === currentRoute)
-            this.$emit('decrement-count');
+          if (this.$route === initialRoute) this.$emit('decrement-count');
         });
     }
   }

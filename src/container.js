@@ -24,8 +24,8 @@ import store from './store';
 import { StoreAlert } from './util/alert';
 
 export default ({
-  // `router` must be a function that returns an object. The function will
-  // receive a partial container. It is also possible to create a container
+  // `router` must be a function that returns an object. The function will be
+  // passed a partial container. It is also possible to create a container
   // without a router by specifying `null`.
   router = createCentralRouter,
   unsavedChanges = createUnsavedChanges(i18n),
