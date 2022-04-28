@@ -1,9 +1,10 @@
-import store from '../../src/store';
+import createTestContainer from '../util/container';
 
 describe('store/modules/alert', () => {
   describe('mutations', () => {
     describe('setAlert', () => {
       it('sets the properties', () => {
+        const { store } = createTestContainer();
         store.commit('setAlert', {
           type: 'info',
           message: 'Something happened!'
@@ -17,6 +18,7 @@ describe('store/modules/alert', () => {
 
     describe('hideAlert', () => {
       it('resets properties', () => {
+        const { store } = createTestContainer();
         store.commit('setAlert', {
           type: 'info',
           message: 'Something happened!'

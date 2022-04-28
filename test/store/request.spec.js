@@ -1,7 +1,6 @@
-import store from '../../src/store';
-
 import { noop } from '../../src/util/util';
 
+import createTestContainer from '../util/container';
 import testData from '../data';
 import { mockHttp } from '../util/http';
 import { mockLogin } from '../util/session';
@@ -11,6 +10,8 @@ describe('store/modules/request', () => {
     describe('cancelRequests', () => {
       it('cancels all requests', () => {
         mockLogin();
+        const container = createTestContainer();
+        const { store } = container;
         return mockHttp()
           .request(() => store.dispatch('get', [
             { key: 'currentUser', url: '/v1/users/current' },

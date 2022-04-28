@@ -17,10 +17,10 @@ import Vuex from 'vuex';
 import Translation from './components/i18n-t';
 
 import createCentralRouter from './router';
+import createCentralStore from './store';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import i18n from './i18n';
-import store from './store';
 import { StoreAlert } from './util/alert';
 
 export default ({
@@ -28,15 +28,18 @@ export default ({
   // passed a partial container. It is also possible to create a container
   // without a router by specifying `null`.
   router = createCentralRouter,
+  // `store` must be a function that returns an object. The function will be
+  // passed a partial container.
+  store = createCentralStore,
   unsavedChanges = createUnsavedChanges(i18n),
   config = defaultConfig
 } = {}) => {
   const container = {
-    store,
     i18n,
     unsavedChanges,
     config
   };
+  container.store = store(container);
   if (router != null) container.router = router(container);
   container.install = (Vue) => {
     Vue.use(VueCompositionAPI);

@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-export default {
+export default () => ({
   state: {
     // The alert's "contextual" type: 'success', 'info', 'warning', or 'danger'.
     type: 'danger',
@@ -30,13 +30,7 @@ export default {
     hideAlert(state) {
       state.state = false;
       state.message = null;
-    },
-    resetAlert(state) {
-      state.type = 'danger';
-      state.message = null;
-      state.state = false;
-      state.at = new Date();
     }
     /* eslint-enable no-param-reassign */
   }
-};
+});

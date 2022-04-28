@@ -32,7 +32,7 @@ const updateData = (oldData, newData, props) => {
   return { ...oldData, ...pick(props, newData) };
 };
 
-export default {
+export default () => ({
   state: {
     // Using allKeys.reduce() in part so that `requests` has a reactive property
     // for each key.
@@ -111,15 +111,6 @@ export default {
     setRequestState({ requests }, { key, state }) {
       requests[key].last.state = state;
     },
-    resetRequests({ requests }) {
-      for (const key of allKeys) {
-        const requestsForKey = requests[key];
-        const { last } = requestsForKey;
-        last.promise = null;
-        last.state = null;
-        requestsForKey.cancelId = 0;
-      }
-    },
     // Cancels the last request for the key.
     cancelRequest({ requests }, key) {
       const requestsForKey = requests[key];
@@ -142,6 +133,13 @@ export default {
     setDataProp({ data }, { key, prop, value }) {
       const target = data[key] instanceof Option ? data[key].get() : data[key];
       Vue.set(target, prop, value);
+    },
+    setFromResponse({ data }, { key, response }) {
+      const transform = transforms[key];
+      const transformed = transform != null
+        ? transform(response)
+        : response.data;
+      data[key] = transformed;
     },
     clearData({ data }, key = undefined) {
       if (key != null) {
@@ -349,11 +347,7 @@ export default {
             commit('setRequestState', { key, state: 'success' });
 
             if (update == null) {
-              const transform = transforms[key];
-              const transformed = transform != null
-                ? transform(response)
-                : response.data;
-              commit('setData', { key, value: transformed });
+              commit('setFromResponse', { key, response });
             } else {
               commit('setData', {
                 key,
@@ -370,7 +364,7 @@ export default {
       }));
     }
   }
-};
+});
 
 /*
 requestData() facilitates access to the response data, returning functions that
