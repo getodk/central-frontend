@@ -147,7 +147,7 @@ By default, response data is cleared after the user navigates to a new route. Ho
 
 ### Alerts
 
-We use the [`Alert`](/src/components/alert.vue) component to render an alert. Only a single alert is shown at a time &mdash; either at the top of the viewport or, if a modal is shown, at the top of the modal. Either way, the data for the alert is stored in the [`alert` module](/src/store/modules/alert.js) of the Vuex store. To display an alert, a component can use the `$alert()` global utility.
+We use the [`Alert`](/src/components/alert.vue) component to render an alert. Only a single alert is shown at a time &mdash; either at the top of the viewport or, if a modal is shown, at the top of the modal. Either way, the data for the alert is stored in the [`alert` object](/src/alert.js) in the container. To display an alert, a component can inject `alert`.
 
 ### Internationalization
 

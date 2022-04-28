@@ -23,7 +23,7 @@ import { noop } from './util/util';
 
 export default (container, mode = 'hash') => {
   const router = new VueRouter({ mode, routes: createRoutes(container) });
-  const { store, unsavedChanges } = container;
+  const { store, alert, unsavedChanges } = container;
 
 
 
@@ -204,7 +204,7 @@ router.afterEach(() => {
 // OTHER NAVIGATION GUARDS
 
 router.afterEach(() => {
-  if (store.state.alert.state) store.commit('hideAlert');
+  alert.blank();
 });
 
 

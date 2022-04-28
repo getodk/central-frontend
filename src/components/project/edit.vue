@@ -37,7 +37,6 @@ import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import MarkdownTextarea from '../markdown/textarea.vue';
 
-
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -47,6 +46,7 @@ export default {
   name: 'ProjectEdit',
   components: { FormGroup, Spinner, MarkdownTextarea },
   mixins: [request()],
+  inject: ['alert'],
   data() {
     return {
       awaitingResponse: false,
@@ -70,7 +70,7 @@ export default {
               updatedAt: response.data.updatedAt
             })
           });
-          this.$alert().success(this.$t('alert.success'));
+          this.alert.success(this.$t('alert.success'));
         })
         .catch(noop);
     }

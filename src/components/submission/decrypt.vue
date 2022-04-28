@@ -119,6 +119,7 @@ export default {
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
   mixins: [callWait()],
+  inject: ['alert'],
   props: {
     state: Boolean,
     formVersion: Object,
@@ -246,7 +247,7 @@ export default {
       }
       if (isProblem(problem)) {
         this.$logger.error(problem);
-        this.$alert().danger(problem.message);
+        this.alert.danger(problem.message);
       }
       return true;
     },
@@ -257,7 +258,7 @@ export default {
       // example, what if the user submits the form, but then closes the modal
       // before the iframe finishes loading?)
       if (this.$refs.iframe.contentWindow.document.readyState === 'loading') {
-        this.$alert().info('alert.unavailable');
+        this.alert.info('alert.unavailable');
         return;
       }
 
@@ -278,7 +279,7 @@ export default {
         event.preventDefault();
         if (willDownload) this.decrypt(a.getAttribute('href'));
       }
-      if (willDownload) this.$alert().info(this.$t('alert.submit'));
+      if (willDownload) this.alert.info(this.$t('alert.submit'));
     }
   }
 };

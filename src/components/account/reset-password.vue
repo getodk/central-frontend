@@ -48,6 +48,7 @@ export default {
   name: 'AccountResetPassword',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  inject: ['alert'],
   data() {
     return {
       awaitingResponse: false,
@@ -63,9 +64,7 @@ export default {
         .post('/v1/users/reset/initiate', { email: this.email })
         .then(() => this.$router.push('/login'))
         .then(() => {
-          this.$alert().success(this.$t('alert.success', {
-            email: this.email
-          }));
+          this.alert.success(this.$t('alert.success', { email: this.email }));
         })
         .catch(noop);
     }

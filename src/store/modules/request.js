@@ -32,7 +32,7 @@ const updateData = (oldData, newData, props) => {
   return { ...oldData, ...pick(props, newData) };
 };
 
-export default () => ({
+export default ({ alert }) => ({
   state: {
     // Using allKeys.reduce() in part so that `requests` has a reactive property
     // for each key.
@@ -270,7 +270,7 @@ export default () => ({
 
           // Response handling
           fulfillProblem = undefined,
-          alert = true,
+          alert: alertOption = true,
           success,
 
           // Existing data
@@ -328,11 +328,10 @@ export default () => ({
               fulfillProblem(error.response.data))
               return error.response;
 
-            if (alert) {
+            if (alertOption) {
               logAxiosError(error);
               if (!alerted) {
-                const message = requestAlertMessage(error);
-                commit('setAlert', { type: 'danger', message });
+                alert.danger(requestAlertMessage(error));
                 alerted = true;
               }
             }

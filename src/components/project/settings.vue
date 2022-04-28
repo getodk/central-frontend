@@ -99,6 +99,7 @@ export default {
     SentenceSeparator
   },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   emits: ['fetch-project'],
   data() {
     return {
@@ -119,7 +120,7 @@ export default {
     afterArchive(project) {
       this.$router.push(this.projectPath())
         .then(() => {
-          this.$alert().success(this.$t('alert.archive', project));
+          this.alert.success(this.$t('alert.archive', project));
         });
     }
   }

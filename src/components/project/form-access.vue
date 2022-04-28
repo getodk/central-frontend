@@ -75,7 +75,7 @@ export default {
     Spinner
   },
   mixins: [modal(), request()],
-  inject: ['unsavedChanges'],
+  inject: ['alert', 'unsavedChanges'],
   props: {
     projectId: {
       type: String,
@@ -236,7 +236,7 @@ export default {
       this.put(apiPaths.project(this.projectId), this.projectToSave)
         .then(() => {
           this.fetchData(true);
-          this.$alert().success(this.$t('alert.success'));
+          this.alert.success(this.$t('alert.success'));
           this.changesByForm = null;
           this.changeCount = 0;
         })

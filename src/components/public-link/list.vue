@@ -79,6 +79,7 @@ export default {
     SentenceSeparator
   },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   props: {
     projectId: {
       type: String,
@@ -132,13 +133,13 @@ export default {
     afterCreate(publicLink) {
       this.fetchData(true);
       this.hideModal('create');
-      this.$alert().success(this.$t('alert.create'));
+      this.alert.success(this.$t('alert.create'));
       this.highlighted = publicLink.id;
     },
     afterRevoke(publicLink) {
       this.fetchData(true);
       this.hideRevoke();
-      this.$alert().success(this.$t('alert.revoke', publicLink));
+      this.alert.success(this.$t('alert.revoke', publicLink));
     }
   }
 };

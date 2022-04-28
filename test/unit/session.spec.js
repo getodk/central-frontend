@@ -408,7 +408,7 @@ describe('util/session', () => {
           router: mockRouter(),
           requestData: { session: testData.sessions.createNew() }
         });
-        const { store } = container;
+        const { alert } = container;
         return mockHttp()
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
@@ -419,7 +419,6 @@ describe('util/session', () => {
             message: 'logOut() problem.'
           })
           .afterResponse(() => {
-            const { alert } = store.state;
             alert.state.should.be.true();
             alert.type.should.equal('danger');
             alert.message.should.startWith('There was a problem, and you were not fully logged out.');
@@ -624,7 +623,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
-      const { store } = container;
+      const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
       });
@@ -637,7 +636,6 @@ describe('util/session', () => {
         })
         .respondWithSuccess()
         .afterResponse(() => {
-          const { alert } = store.state;
           alert.state.should.be.true();
           alert.type.should.equal('info');
           alert.message.should.startWith('Your session has expired.');
@@ -713,7 +711,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
-      const { store } = container;
+      const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
       });
@@ -722,7 +720,6 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(119000);
-          const { alert } = store.state;
           alert.state.should.be.false();
           clock.tick(1000);
           alert.state.should.be.true();
@@ -737,7 +734,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
-      const { store } = container;
+      const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
       });
@@ -746,9 +743,8 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(120000);
-          const { alert } = store.state;
           alert.state.should.be.true();
-          store.commit('hideAlert');
+          alert.blank();
           clock.tick(30000);
           alert.state.should.be.false();
         })
@@ -766,7 +762,7 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(120000);
-          store.state.alert.state.should.be.true();
+          alert.state.should.be.true();
         })
         .finally(cleanup);
     });
@@ -776,7 +772,7 @@ describe('util/session', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
       const cleanup = useSessions(container);
-      const { store } = container;
+      const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
       });
@@ -787,9 +783,9 @@ describe('util/session', () => {
         .request(() => logOut(container, false))
         .respondWithSuccess()
         .afterResponse(() => {
-          store.commit('hideAlert');
+          alert.blank();
           clock.tick(120000);
-          store.state.alert.state.should.be.false();
+          alert.state.should.be.false();
         })
         .finally(cleanup);
     });

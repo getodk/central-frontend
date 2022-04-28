@@ -42,6 +42,7 @@ export default {
   name: 'FormTrashList',
   components: { FormTrashRow, FormRestore },
   mixins: [modal()],
+  inject: ['alert'],
   emits: ['restore'],
   data() {
     return {
@@ -84,7 +85,7 @@ export default {
     },
     afterRestore() {
       this.hideRestore();
-      this.$alert().success(this.$t('alert.restore', { name: this.restoreForm.form.name }));
+      this.alert.success(this.$t('alert.restore', { name: this.restoreForm.form.name }));
       this.restoreForm.form = null;
 
       // refresh trashed forms list

@@ -5,8 +5,8 @@ import { mount } from '../util/lifecycle';
 
 const mountComponent = () => {
   const container = createTestContainer();
-  const { store } = container;
-  store.commit('setAlert', { type: 'info', message: 'Something happened!' });
+  const { alert } = container;
+  alert.info('Something happened!');
   return mount(Alert, { container });
 };
 

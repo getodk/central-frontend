@@ -61,7 +61,7 @@ describe('Modal', () => {
       const modal = mountComponent({
         props: { state: false }
       });
-      modal.vm.$alert().info('Some alert');
+      modal.vm.$container.alert.info('Some alert');
       await modal.setProps({ state: true });
       modal.should.not.alert();
     });
@@ -81,7 +81,7 @@ describe('Modal', () => {
       const modal = mountComponent({
         props: { state: true }
       });
-      modal.vm.$alert().info('Some alert');
+      modal.vm.$container.alert.info('Some alert');
       await modal.vm.$nextTick();
       await modal.setProps({ state: false });
       modal.should.not.alert();
@@ -91,7 +91,7 @@ describe('Modal', () => {
       const modal = mountComponent({
         props: { state: true }
       });
-      modal.vm.$alert().info('Some alert');
+      modal.vm.$container.alert.info('Some alert');
       await modal.setProps({ state: false });
       modal.should.alert();
     });
@@ -104,7 +104,7 @@ describe('Modal', () => {
     });
     const bs = sinon.fake(modal.vm.bs);
     modal.setData({ bs });
-    modal.vm.$alert().info('Some alert');
+    modal.vm.$container.alert.info('Some alert');
     await modal.vm.$nextTick();
     modal.get('.modal-body p').element.textContent = 'New text';
     await modal.vm.$nextTick();

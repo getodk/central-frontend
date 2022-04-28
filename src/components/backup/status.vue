@@ -107,6 +107,7 @@ import { requestData } from '../../store/modules/request';
 export default {
   name: 'BackupStatus',
   components: { DateTime: DateTimeComponent, SentenceSeparator, Spinner },
+  inject: ['alert'],
   emits: ['create', 'terminate'],
   data() {
     return {
@@ -147,7 +148,7 @@ export default {
   methods: {
     download(event) {
       if (!this.downloading) {
-        this.$alert().success(this.$t('alert.download'));
+        this.alert.success(this.$t('alert.download'));
         this.downloading = true;
       } else {
         event.preventDefault();

@@ -88,6 +88,7 @@ export default {
   name: 'AnalyticsForm',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  inject: ['alert'],
   emits: ['preview'],
   data() {
     const requestData = this.$store.state.request.data;
@@ -130,7 +131,7 @@ export default {
     submit() {
       (this.enabled != null ? this.setConfig() : this.unsetConfig())
         .then(() => {
-          this.$alert().success(this.$t('alert.success'));
+          this.alert.success(this.$t('alert.success'));
         })
         .catch(noop);
     }

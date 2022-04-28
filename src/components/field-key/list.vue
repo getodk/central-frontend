@@ -92,6 +92,7 @@ export default {
     ProjectSubmissionOptions
   },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   props: {
     projectId: {
       type: String,
@@ -177,13 +178,13 @@ export default {
     afterCreate(fieldKey) {
       this.fetchData(true);
       this.hideModal('newFieldKey');
-      this.$alert().success(this.$t('alert.create', fieldKey));
+      this.alert.success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
       this.fetchData(true);
       this.hideRevoke();
-      this.$alert().success(this.$t('alert.revoke', fieldKey));
+      this.alert.success(this.$t('alert.revoke', fieldKey));
     }
   }
 };

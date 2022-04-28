@@ -96,6 +96,7 @@ export default {
   name: 'FormNew',
   components: { DocLink, Modal, SentenceSeparator, Spinner },
   mixins: [dropZone(), request()],
+  inject: ['alert'],
   props: {
     state: {
       type: Boolean,
@@ -145,7 +146,7 @@ export default {
   },
   methods: {
     afterFileSelection(file) {
-      this.$alert().blank();
+      this.alert.blank();
       this.file = file;
       this.warnings = null;
     },
@@ -158,7 +159,7 @@ export default {
     },
     upload(ignoreWarnings) {
       if (this.file == null) {
-        this.$alert().info(this.$t('alert.fileRequired'));
+        this.alert.info(this.$t('alert.fileRequired'));
         return;
       }
 
@@ -199,7 +200,7 @@ export default {
       })
         .then(({ data }) => {
           if (isProblem(data)) {
-            this.$alert().blank();
+            this.alert.blank();
             this.warnings = data.details.warnings;
           } else {
             // project.forms may now be out-of-date. However, if the user

@@ -84,6 +84,7 @@ export default {
   name: 'FormDraftPublish',
   components: { FormGroup, Modal, Spinner },
   mixins: [request(), routes()],
+  inject: ['alert'],
   props: {
     state: {
       type: Boolean,
@@ -150,7 +151,7 @@ export default {
           if (!isProblem(data)) {
             this.$emit('success');
           } else {
-            this.$alert().danger(this.$t('problem.409_6'));
+            this.alert.danger(this.$t('problem.409_6'));
             this.versionConflict = true;
           }
         })

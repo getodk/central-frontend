@@ -37,7 +37,7 @@ export default {
   name: 'App',
   components: { Alert, Navbar },
   mixins: [callWait()],
-  inject: ['container'],
+  inject: ['container', 'alert'],
   data() {
     return {
       calls: {}
@@ -65,13 +65,13 @@ export default {
       }])
         .then(() => {
           if (previousVersion != null && this.centralVersion !== previousVersion) {
-            this.$alert().info(this.$t('alert.versionChange'));
+            this.alert.info(this.$t('alert.versionChange'));
             // Keep alerting the user about the version change. One benefit of
             // this is that the user should see the alert even if there is
             // another alert (say, about session expiration).
             const id = setInterval(
               () => {
-                this.$alert().info(this.$t('alert.versionChange'));
+                this.alert.info(this.$t('alert.versionChange'));
               },
               60000
             );
@@ -89,10 +89,9 @@ export default {
           (error.response != null && error.response.status === 404));
     },
     hideAlertAfterClick(event) {
-      const alert = this.$alert();
-      if (alert.state && event.target.closest('a[target="_blank"]') != null &&
+      if (this.alert.state && event.target.closest('a[target="_blank"]') != null &&
         !event.defaultPrevented) {
-        alert.blank();
+        this.alert.blank();
       }
     }
   }

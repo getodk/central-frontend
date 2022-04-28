@@ -16,12 +16,12 @@ import Vuex from 'vuex';
 
 import Translation from './components/i18n-t';
 
+import createAlert from './alert';
 import createCentralRouter from './router';
 import createCentralStore from './store';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import i18n from './i18n';
-import { StoreAlert } from './util/alert';
 
 export default ({
   // `router` must be a function that returns an object. The function will be
@@ -31,11 +31,13 @@ export default ({
   // `store` must be a function that returns an object. The function will be
   // passed a partial container.
   store = createCentralStore,
+  alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n),
   config = defaultConfig
 } = {}) => {
   const container = {
     i18n,
+    alert,
     unsavedChanges,
     config
   };
@@ -48,13 +50,10 @@ export default ({
     if (container.router != null)
       Vue.use(container.router instanceof VueRouter ? VueRouter : container.router);
     Vue.component('i18n-t', Translation);
-    // eslint-disable-next-line no-param-reassign
-    Vue.prototype.$alert = function $alert() {
-      return new StoreAlert(this.$store);
-    };
   };
   container.provide = {
     container,
+    alert,
     unsavedChanges,
     config
   };
