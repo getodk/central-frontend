@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-export class Presenter {
+export default class Presenter {
   constructor(data) {
     this._data = data;
   }
@@ -24,7 +24,7 @@ export class Presenter {
   }
 }
 
-export const presenterClass = (props) => {
+Presenter.define = (props) => {
   const klass = class extends Presenter {};
 
   // Add a getter for each property of the underlying data.

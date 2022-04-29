@@ -17,8 +17,8 @@ import { mapState } from 'vuex';
 import { pick } from 'ramda';
 
 import Option from '../../util/option';
+import Presenter from '../../presenters/base';
 import reconcileData from './request/reconcile';
-import { Presenter } from '../../presenters/base';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
 import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../../util/request';
 
