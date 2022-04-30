@@ -46,7 +46,6 @@ import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
-import Form from '../../presenters/form';
 import audit from '../../mixins/audit';
 import routes from '../../mixins/routes';
 
@@ -60,19 +59,19 @@ const typeByCategory = {
   upgrade: 'audit.category.upgrade'
 };
 
-const getDisplayName = ({ displayName }) => displayName;
+const getDisplayName = (actee) => actee.displayName;
 const acteeSpeciesByCategory = {
   user: {
     title: getDisplayName,
-    path: ({ id }, vm) => vm.userPath(id)
+    path: (actee, { userPath }) => userPath(actee.id)
   },
   project: {
-    title: ({ name }) => name,
-    path: ({ id }, vm) => vm.projectPath(id)
+    title: (actee) => actee.name,
+    path: (actee, { projectPath }) => projectPath(actee.id)
   },
   form: {
-    title: (form) => new Form(form).nameOrId(),
-    path: (form, vm) => vm.primaryFormPath(form)
+    title: (actee, { Form }) => Form.from(actee).nameOrId(),
+    path: (actee, { primaryFormPath }) => primaryFormPath(actee)
   },
   public_link: {
     title: getDisplayName
@@ -90,6 +89,7 @@ export default {
   name: 'AuditRow',
   components: { ActorLink, DateTime, Selectable },
   mixins: [audit(), routes()],
+  inject: ['container'],
   props: {
     audit: {
       type: Object,
@@ -118,11 +118,11 @@ export default {
       if (actee.purgedAt != null)
         return { title: actee.purgedName, purged: true };
 
+      const title = species.title(actee, this.container);
       // soft-deleted actee (use species title but don't make a link)
-      if (actee.deletedAt != null)
-        return { title: species.title(actee), deleted: true };
+      if (actee.deletedAt != null) return { title, deleted: true };
 
-      const result = { title: species.title(actee) };
+      const result = { title };
       if (species.path != null) result.path = species.path(actee, this);
       return result;
     },
