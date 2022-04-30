@@ -11,19 +11,19 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-import i18n, { locales } from '../i18n';
+import { locales } from '../i18n';
 
-const setLocale = (locale) => {
-  i18n.locale = locale;
-  document.querySelector('html').setAttribute('lang', locale);
+const setLocale = (i18n, locale) => {
+  i18n.locale = locale; // eslint-disable-line no-param-reassign
+  document.documentElement.setAttribute('lang', locale);
 };
 
 // Loads a locale asynchronously.
-export const loadLocale = (locale) => {
+export const loadLocale = ({ i18n }, locale) => {
   if (!locales.has(locale)) return Promise.reject(new Error('unknown locale'));
 
   if (i18n.messages[locale] != null) {
-    if (locale !== i18n.locale) setLocale(locale);
+    if (locale !== i18n.locale) setLocale(i18n, locale);
     return Promise.resolve();
   }
 
@@ -33,7 +33,7 @@ export const loadLocale = (locale) => {
   )
     .then(m => {
       i18n.setLocaleMessage(locale, m.default);
-      setLocale(locale);
+      setLocale(i18n, locale);
     })
     .catch(error => {
       Vue.prototype.$logger.log(error);

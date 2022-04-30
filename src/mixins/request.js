@@ -30,7 +30,6 @@ property:
     directly mutate this property after defining it.
 */
 
-import i18n from '../i18n';
 import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
 
 /*
@@ -104,7 +103,7 @@ function request({
   const { data } = axiosConfig;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
-    this.alert.danger(i18n.t('mixin.request.alert.fileSize', data));
+    this.alert.danger(this.$t('mixin.request.alert.fileSize', data));
     return Promise.reject(new Error('file size exceeds limit'));
   }
 
@@ -125,10 +124,7 @@ function request({
       if (this.awaitingResponse != null) this.awaitingResponse = false;
 
       logAxiosError(error);
-      this.alert.danger(requestAlertMessage(error, {
-        problemToAlert,
-        component: this
-      }));
+      this.alert.danger(requestAlertMessage(this.$i18n, error, problemToAlert));
       throw error;
     })
     .then(response => {

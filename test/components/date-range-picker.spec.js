@@ -3,6 +3,8 @@ import { DateTime } from 'luxon';
 import DateRangePicker from '../../src/components/date-range-picker.vue';
 
 import { loadLocale } from '../../src/util/i18n';
+
+import createTestContainer from '../util/container';
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { setLuxon } from '../util/date-time';
 import { wait } from '../util/util';
@@ -272,8 +274,6 @@ describe('DateRangePicker', () => {
   });
 
   describe('i18n', () => {
-    afterEach(() => loadLocale('en'));
-
     it('renders correctly for en', async () => {
       const component = mountComponent({ attachTo: document.body });
       await component.get('input').trigger('click');
@@ -282,8 +282,9 @@ describe('DateRangePicker', () => {
     });
 
     it('renders correctly for es', async () => {
-      await loadLocale('es');
-      const component = mountComponent({ attachTo: document.body });
+      const container = createTestContainer();
+      await loadLocale(container, 'es');
+      const component = mountComponent({ container, attachTo: document.body });
       await component.get('input').trigger('click');
       const text = document.querySelector('.flatpickr-weekday').textContent.trim();
       text.should.equal('Lun');
@@ -291,8 +292,9 @@ describe('DateRangePicker', () => {
 
     // There is not a flatpickr localization for sw.
     it('renders correctly for sw', async () => {
-      await loadLocale('sw');
-      const component = mountComponent({ attachTo: document.body });
+      const container = createTestContainer();
+      await loadLocale(container, 'sw');
+      const component = mountComponent({ container, attachTo: document.body });
       await component.get('input').trigger('click');
       const text = document.querySelector('.flatpickr-weekday').textContent.trim();
       text.should.equal('Sun');

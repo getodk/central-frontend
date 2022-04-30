@@ -2,10 +2,9 @@ import Vue from 'vue';
 
 import sinon from 'sinon';
 
-import i18n from '../../src/i18n';
+import createCentralI18n from '../../src/i18n';
 import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth } from '../../src/util/request';
 
-import { i18nProps } from '../util/i18n';
 import { mockAxiosError } from '../util/axios';
 
 describe('util/request', () => {
@@ -425,19 +424,19 @@ describe('util/request', () => {
     });
 
     it('returns a message if there was no request', () => {
-      const message = requestAlertMessage(new Error());
+      const message = requestAlertMessage(createCentralI18n(), new Error());
       message.should.equal('Something went wrong: there was no request.');
     });
 
     it('returns a message if there was no response', () => {
       const error = new Error();
       error.request = {};
-      const message = requestAlertMessage(error);
+      const message = requestAlertMessage(createCentralI18n(), error);
       message.should.equal('Something went wrong: there was no response to your request.');
     });
 
     it('returns a message with status code if request URL does not start with /v1', () => {
-      const message = requestAlertMessage(mockAxiosError({
+      const message = requestAlertMessage(createCentralI18n(), mockAxiosError({
         status: 500,
         data: { code: 500.1, message: 'Message from Google' },
         config: { url: 'https://www.google.com' }
@@ -446,7 +445,7 @@ describe('util/request', () => {
     });
 
     it('returns a message with status code if response is not a Problem', () => {
-      const message = requestAlertMessage(mockAxiosError({
+      const message = requestAlertMessage(createCentralI18n(), mockAxiosError({
         status: 500,
         data: { x: 1 },
         config: { url: '/v1/projects/1/forms/f' }
@@ -455,85 +454,78 @@ describe('util/request', () => {
     });
 
     it('returns the message of a Problem', () => {
-      const message = requestAlertMessage(errorWithProblem());
+      const i18n = createCentralI18n();
+      const message = requestAlertMessage(i18n, errorWithProblem());
       message.should.equal('Message from API');
     });
 
     describe('problemToAlert', () => {
       it('returns the message from the function', () => {
-        const message = requestAlertMessage(errorWithProblem(), {
-          problemToAlert: (problem) =>
+        const message = requestAlertMessage(
+          createCentralI18n(),
+          errorWithProblem(),
+          (problem) =>
             `Message from problemToAlert: ${problem.message} (${problem.code})`
-        });
+        );
         message.should.equal('Message from problemToAlert: Message from API (500.1)');
       });
 
       it('returns the Problem message if the function returns null', () => {
-        const message = requestAlertMessage(errorWithProblem(), {
-          problemToAlert: () => null
-        });
+        const message = requestAlertMessage(
+          createCentralI18n(),
+          errorWithProblem(),
+          () => null
+        );
         message.should.equal('Message from API');
       });
     });
 
     describe('i18n', () => {
-      beforeEach(() => {
-        i18n.setLocaleMessage('la', {
-          problem: {
-            '401_2': 'Message for locale: {message} ({code})'
-          }
-        });
-        i18n.locale = 'la';
-
-        i18n.setLocaleMessage('ett', {
-          problem: {
-            '401_2': 'Message for fallback (401.2)',
-            '404_1': 'Message for fallback (404.1)'
-          }
-        });
-        i18n.fallbackLocale = 'ett';
+      const i18n = createCentralI18n();
+      i18n.setLocaleMessage('la', {
+        problem: {
+          '401_2': 'Message for locale: {message} ({code})'
+        }
       });
-      afterEach(() => {
-        i18n.locale = 'en';
-        i18n.fallbackLocale = 'en';
-        i18n.setLocaleMessage('la', {});
-        i18n.setLocaleMessage('ett', {});
+      i18n.locale = 'la';
+      i18n.setLocaleMessage('ett', {
+        problem: {
+          '401_2': 'Message for fallback (401.2)',
+          '404_1': 'Message for fallback (404.1)'
+        }
       });
+      i18n.fallbackLocale = 'ett';
 
       it('returns an i18n message for the Problem code', () => {
-        const message = requestAlertMessage(errorWithProblem(401.2), {
-          component: i18nProps
-        });
+        const message = requestAlertMessage(i18n, errorWithProblem(401.2));
         message.should.equal('Message for locale: Message from API (401.2)');
       });
 
       it('returns the Problem message if there is no i18n message', () => {
-        const message = requestAlertMessage(errorWithProblem(), {
-          component: i18nProps
-        });
+        const message = requestAlertMessage(i18n, errorWithProblem());
         message.should.equal('Message from API');
       });
 
       it('returns an i18n message for the fallback locale', () => {
-        const message = requestAlertMessage(errorWithProblem(404.1), {
-          component: i18nProps
-        });
+        const message = requestAlertMessage(i18n, errorWithProblem(404.1));
         message.should.equal('Message for fallback (404.1)');
       });
 
       it('does not return i18n message if problemToAlert function returns string', () => {
-        const message = requestAlertMessage(errorWithProblem(401.2), {
-          problemToAlert: () => 'Message from problemToAlert',
-          component: i18nProps
-        });
+        const message = requestAlertMessage(
+          i18n,
+          errorWithProblem(401.2),
+          () => 'Message from problemToAlert'
+        );
         message.should.equal('Message from problemToAlert');
       });
 
       it('does not return i18n message if problemToAlert function returns null', () => {
-        const message = requestAlertMessage(errorWithProblem(401.2), {
-          problemToAlert: () => null,
-          component: i18nProps
-        });
+        const message = requestAlertMessage(
+          i18n,
+          errorWithProblem(401.2),
+          () => null
+        );
         message.should.equal('Message from API');
       });
     });

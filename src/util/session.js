@@ -67,7 +67,6 @@ hand-in-hand.
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import i18n from '../i18n';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
 import { forceReplace } from './router';
 import { localStore } from './storage';
@@ -89,7 +88,7 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ store, alert }) => {
+const requestLogout = ({ store, i18n, alert }) => {
   const { token } = store.state.request.data.session;
   return Vue.prototype.$http.delete(apiPaths.session(token), {
     headers: { Authorization: `Bearer ${token}` }
@@ -105,7 +104,7 @@ const requestLogout = ({ store, alert }) => {
       }
 
       alert.danger(i18n.t('util.session.alert.logoutError', {
-        message: requestAlertMessage(error)
+        message: requestAlertMessage(i18n, error)
       }));
       throw error;
     });
@@ -147,7 +146,7 @@ export const logOut = (container, setNext) => {
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
 const logOutBeforeSessionExpires = (container) => {
-  const { store, alert } = container;
+  const { store, i18n, alert } = container;
   let alerted;
   return () => {
     const { session } = store.state.request.data;

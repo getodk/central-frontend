@@ -17,11 +17,11 @@ import Vuex from 'vuex';
 import Translation from './components/i18n-t';
 
 import createAlert from './alert';
+import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createCentralStore from './store';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
-import i18n from './i18n';
 import subclassPresenters from './presenters';
 
 export default ({
@@ -32,6 +32,7 @@ export default ({
   // `store` must be a function that returns an object. The function will be
   // passed a partial container.
   store = createCentralStore,
+  i18n = createCentralI18n(),
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n),
   config = defaultConfig

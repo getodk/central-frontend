@@ -1,9 +1,9 @@
-import i18n from '../../src/i18n';
+import createCentralI18n from '../../src/i18n';
 import subclassPresenters from '../../src/presenters';
 
 import testData from '../data';
 
-const { Project } = subclassPresenters(i18n);
+const { Project } = subclassPresenters(createCentralI18n());
 
 describe('Project', () => {
   describe('nameWithArchived()', () => {

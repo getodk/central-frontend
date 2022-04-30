@@ -11,8 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-import i18n from '../i18n';
-
 export const queryString = (query) => {
   if (query == null) return '';
   const entries = Object.entries(query);
@@ -163,7 +161,7 @@ export const logAxiosError = (error) => {
 };
 
 // See the `request` mixin for a description of this function's behavior.
-export const requestAlertMessage = (axiosError, options = {}) => {
+export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined) => {
   // No Problem response
   if (axiosError.request == null) return i18n.t('util.request.noRequest');
   const { response } = axiosError;
@@ -173,19 +171,14 @@ export const requestAlertMessage = (axiosError, options = {}) => {
 
   const problem = response.data;
 
-  const { problemToAlert } = options;
   if (problemToAlert != null) {
     const message = problemToAlert(problem);
     return message != null ? message : problem.message;
   }
 
-  const { component } = options;
-  if (component != null) {
-    const key = problem.code.toString().replace('.', '_');
-    const path = `problem.${key}`;
-    if (component.$te(path, i18n.fallbackLocale))
-      return component.$t(path, problem);
-  }
+  const key = problem.code.toString().replace('.', '_');
+  const path = `problem.${key}`;
+  if (i18n.te(path, i18n.fallbackLocale)) return i18n.t(path, problem);
 
   return problem.message;
 };

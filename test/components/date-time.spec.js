@@ -80,15 +80,12 @@ describe('DateTime', () => {
     });
   });
 
-  it('updates the text after a locale change', () => {
+  it('updates the text after a locale change', async () => {
     const component = mount(DateTime, {
       props: { iso: '2020-01-01T12:34:56Z' }
     });
     component.text().should.equal('today 12:34');
-    return loadLocale('es')
-      .then(() => {
-        component.text().should.equal('hoy 12:34');
-      })
-      .finally(() => loadLocale('en'));
+    await loadLocale(component.vm.$container, 'es');
+    component.text().should.equal('hoy 12:34');
   });
 });
