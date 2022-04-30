@@ -82,7 +82,6 @@ definition for an existing form -->
 
 <script>
 import DocLink from '../doc-link.vue';
-import Form from '../../presenters/form';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
@@ -96,7 +95,7 @@ export default {
   name: 'FormNew',
   components: { DocLink, Modal, SentenceSeparator, Spinner },
   mixins: [dropZone(), request()],
-  inject: ['alert'],
+  inject: ['container', 'alert'],
   props: {
     state: {
       type: Boolean,
@@ -205,7 +204,9 @@ export default {
           } else {
             // project.forms may now be out-of-date. However, if the user
             // navigates to the project overview, it should be updated.
-            this.$emit('success', new Form(data));
+
+            const { Form } = this.container;
+            this.$emit('success', Form.from(data));
           }
         })
         .catch(() => {

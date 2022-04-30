@@ -32,7 +32,10 @@ const updateData = (oldData, newData, props) => {
   return { ...oldData, ...pick(props, newData) };
 };
 
-export default ({ alert }) => ({
+export default (container) => {
+  const { alert } = container;
+/* eslint-disable indent */ // TODO/vue3
+return {
   state: {
     // Using allKeys.reduce() in part so that `requests` has a reactive property
     // for each key.
@@ -137,7 +140,7 @@ export default ({ alert }) => ({
     setFromResponse({ data }, { key, response }) {
       const transform = transforms[key];
       const transformed = transform != null
-        ? transform(response)
+        ? transform(response, container)
         : response.data;
       data[key] = transformed;
     },
@@ -363,7 +366,9 @@ export default ({ alert }) => ({
       }));
     }
   }
-});
+};
+/* eslint-enable indent */
+};
 
 /*
 requestData() facilitates access to the response data, returning functions that

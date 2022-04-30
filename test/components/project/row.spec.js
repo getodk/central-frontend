@@ -3,19 +3,19 @@ import { RouterLinkStub } from '@vue/test-utils';
 import DateTime from '../../../src/components/date-time.vue';
 import ProjectRow from '../../../src/components/project/row.vue';
 
-import Project from '../../../src/presenters/project';
-
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(ProjectRow, {
-  props: {
-    project: new Project(testData.extendedProjects.last()),
-    introduction: false
-  },
-  container: { router: mockRouter('/') }
-});
+const mountComponent = () => {
+  const container = createTestContainer({ router: mockRouter('/') });
+  const { Project } = container;
+  return mount(ProjectRow, {
+    props: { project: Project.from(testData.extendedProjects.last()) },
+    container
+  });
+};
 
 describe('ProjectRow', () => {
   it('renders the project name correctly', () => {

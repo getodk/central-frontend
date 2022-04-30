@@ -22,6 +22,7 @@ import createCentralStore from './store';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import i18n from './i18n';
+import subclassPresenters from './presenters';
 
 export default ({
   // `router` must be a function that returns an object. The function will be
@@ -39,7 +40,8 @@ export default ({
     i18n,
     alert,
     unsavedChanges,
-    config
+    config,
+    ...subclassPresenters(i18n)
   };
   container.store = store(container);
   if (router != null) container.router = router(container);

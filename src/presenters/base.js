@@ -11,8 +11,9 @@ except according to the terms contained in the LICENSE file.
 */
 
 export default class Presenter {
-  constructor(data) {
+  constructor(data, i18n = undefined) {
     this._data = data;
+    this.i18n = i18n;
   }
 
   get object() {
@@ -20,7 +21,7 @@ export default class Presenter {
   }
 
   with(data) {
-    return new (this.constructor)({ ...this._data, ...data });
+    return new (this.constructor)({ ...this._data, ...data }, this.i18n);
   }
 }
 

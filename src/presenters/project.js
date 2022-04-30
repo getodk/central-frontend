@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import Presenter from './base';
-import i18n from '../i18n';
 
 const props = [
   'id',
@@ -28,14 +27,14 @@ const props = [
 ];
 
 export default class Project extends Presenter.define(props) {
-  constructor(data) {
-    super(data);
+  constructor(data, i18n) {
+    super(data, i18n);
     this._verbSet = data.verbs != null ? new Set(data.verbs) : null;
   }
 
   nameWithArchived() {
     return this.archived
-      ? i18n.t('presenter.Project.nameWithArchived', this.object)
+      ? this.i18n.t('presenter.Project.nameWithArchived', this.object)
       : this.name;
   }
 
