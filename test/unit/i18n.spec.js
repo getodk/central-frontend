@@ -14,13 +14,21 @@ describe('util/i18n', () => {
     });
 
     it('changes the lang attribute', async () => {
+      const { documentElement } = document;
+      documentElement.getAttribute('lang').should.equal('en');
       await loadLocale(createTestContainer(), 'es');
-      document.documentElement.getAttribute('lang').should.equal('es');
+      documentElement.getAttribute('lang').should.equal('es');
     });
 
-    it('returns a rejected promise for a locale that is not supported', async () => {
-      const container = createTestContainer();
-      return loadLocale(container, 'la').should.be.rejectedWith('unknown locale');
+    it('returns a rejected promise for a locale that is not supported', () => {
+      const result = loadLocale(createTestContainer(), 'la');
+      return result.should.be.rejectedWith('unknown locale');
+    });
+
+    // Adding this test in case `locales` is changed from a Map to an object.
+    it('returns a rejected promise for a property of Object.prototype', () => {
+      const result = loadLocale(createTestContainer(), 'toString');
+      return result.should.be.rejectedWith('unknown locale');
     });
   });
 
@@ -67,6 +75,10 @@ describe('util/i18n', () => {
     });
 
     it('returns the plural', () => {
+      i18nProps.$tcn('forms', 2).should.equal('2 Formae');
+    });
+
+    it('localizes the count', () => {
       i18nProps.$tcn('forms', 1234).should.equal('1,234 Formae');
     });
 
