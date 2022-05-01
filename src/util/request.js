@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
 
 export const queryString = (query) => {
   if (query == null) return '';
@@ -152,12 +151,9 @@ export const withAuth = (config, session) => {
 export const isProblem = (data) => data != null && typeof data === 'object' &&
   typeof data.code === 'number' && typeof data.message === 'string';
 
-export const logAxiosError = (error) => {
-  if (error.response == null) {
-    Vue.prototype.$logger.log(error.request != null
-      ? error.request
-      : error.message);
-  }
+export const logAxiosError = (logger, error) => {
+  if (error.response == null)
+    logger.log(error.request != null ? error.request : error.message);
 };
 
 // See the `request` mixin for a description of this function's behavior.

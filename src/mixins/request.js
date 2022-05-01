@@ -123,7 +123,7 @@ function request({
 
       if (this.awaitingResponse != null) this.awaitingResponse = false;
 
-      logAxiosError(error);
+      logAxiosError(this.logger, error);
       this.alert.danger(requestAlertMessage(this.$i18n, error, problemToAlert));
       throw error;
     })
@@ -137,7 +137,7 @@ function request({
 
 // @vue/component
 const mixin = {
-  inject: ['alert'],
+  inject: ['alert', 'logger'],
   watch: {
     $route() {
       if (this.awaitingResponse != null) this.awaitingResponse = false;

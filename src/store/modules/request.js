@@ -33,7 +33,7 @@ const updateData = (oldData, newData, props) => {
 };
 
 export default (container) => {
-  const { i18n, alert } = container;
+  const { i18n, alert, logger } = container;
 /* eslint-disable indent */ // TODO/vue3
 return {
   state: {
@@ -332,7 +332,7 @@ return {
               return error.response;
 
             if (alertOption) {
-              logAxiosError(error);
+              logAxiosError(logger, error);
               if (!alerted) {
                 alert.danger(requestAlertMessage(i18n, error));
                 alerted = true;

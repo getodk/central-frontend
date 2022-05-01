@@ -1,3 +1,9 @@
+import sinon from 'sinon';
+
+export const mockLogger = () => ({ log: sinon.fake(), error: sinon.fake() });
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // setTimeout()
 

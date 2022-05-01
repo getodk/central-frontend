@@ -7,8 +7,6 @@ import 'should';
 import './plugins';
 import '../src/setup';
 
-import { noop } from '../src/util/util';
-
 import testData from './data';
 import { destroyAll } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/load-async';
@@ -47,8 +45,6 @@ for (const name of ['findAll', 'findAllComponents']) {
 // Even if a route is lazy-loaded, load() will need synchronous access to the
 // async components associated with the route.
 before(loadAsyncRouteComponents);
-
-Vue.prototype.$logger = { log: noop, error: noop };
 
 
 

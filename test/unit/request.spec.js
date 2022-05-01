@@ -1,11 +1,8 @@
-import Vue from 'vue';
-
-import sinon from 'sinon';
-
 import createCentralI18n from '../../src/i18n';
 import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth } from '../../src/util/request';
 
 import { mockAxiosError } from '../util/axios';
+import { mockLogger } from '../util/util';
 
 describe('util/request', () => {
   describe('queryString()', () => {
@@ -390,29 +387,26 @@ describe('util/request', () => {
 
   describe('logAxiosError()', () => {
     it('does not log if there was a response', () => {
+      const logger = mockLogger();
       const error = new Error();
       error.response = {};
-      const log = sinon.fake();
-      sinon.replace(Vue.prototype.$logger, 'log', log);
-      logAxiosError(error);
-      log.called.should.be.false();
+      logAxiosError(logger, error);
+      logger.log.called.should.be.false();
     });
 
     it('logs the request if there was one', () => {
+      const logger = mockLogger();
       const error = new Error();
       error.request = {};
-      const log = sinon.fake();
-      sinon.replace(Vue.prototype.$logger, 'log', log);
-      logAxiosError(error);
-      log.calledWith(error.request).should.be.true();
+      logAxiosError(logger, error);
+      logger.log.calledWith(error.request).should.be.true();
     });
 
     it('logs the error message if there was no request', () => {
+      const logger = mockLogger();
       const error = new Error('foo');
-      const log = sinon.fake();
-      sinon.replace(Vue.prototype.$logger, 'log', log);
-      logAxiosError(error);
-      log.calledWith('foo').should.be.true();
+      logAxiosError(logger, error);
+      logger.log.calledWith('foo').should.be.true();
     });
   });
 

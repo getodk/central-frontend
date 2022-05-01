@@ -119,7 +119,7 @@ export default {
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
   mixins: [callWait()],
-  inject: ['alert'],
+  inject: ['alert', 'logger'],
   props: {
     state: Boolean,
     formVersion: Object,
@@ -243,10 +243,10 @@ export default {
         // a <pre> element.
         problem = JSON.parse(doc.body.textContent);
       } catch (e) {
-        this.$logger.error('cannot parse Problem');
+        this.logger.error('cannot parse Problem');
       }
       if (isProblem(problem)) {
-        this.$logger.error(problem);
+        this.logger.error(problem);
         this.alert.danger(problem.message);
       }
       return true;

@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
-
 import { locales } from '../i18n';
 
 const setLocale = (i18n, locale) => {
@@ -19,7 +17,7 @@ const setLocale = (i18n, locale) => {
 };
 
 // Loads a locale asynchronously.
-export const loadLocale = ({ i18n }, locale) => {
+export const loadLocale = ({ i18n, logger }, locale) => {
   if (!locales.has(locale)) return Promise.reject(new Error('unknown locale'));
 
   if (i18n.messages[locale] != null) {
@@ -36,7 +34,7 @@ export const loadLocale = ({ i18n }, locale) => {
       setLocale(i18n, locale);
     })
     .catch(error => {
-      Vue.prototype.$logger.log(error);
+      logger.log(error);
       throw error;
     });
 };

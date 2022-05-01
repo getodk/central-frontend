@@ -31,5 +31,3 @@ import './assets/scss/app.scss';
 
 // Adding $http in order to mock it during testing.
 Vue.prototype.$http = axios;
-// Adding $logger makes it easier to silence certain logging during testing.
-Vue.prototype.$logger = console;

@@ -35,13 +35,16 @@ export default ({
   i18n = createCentralI18n(),
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n),
-  config = defaultConfig
+  config = defaultConfig,
+  // Adding `logger` in part in order to silence certain logging during testing.
+  logger = console
 } = {}) => {
   const container = {
     i18n,
     alert,
     unsavedChanges,
     config,
+    logger,
     ...subclassPresenters(i18n)
   };
   container.store = store(container);
@@ -58,7 +61,8 @@ export default ({
     container,
     alert,
     unsavedChanges,
-    config
+    config,
+    logger
   };
   return container;
 };
