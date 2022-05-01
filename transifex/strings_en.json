@@ -3400,6 +3400,9 @@
         },
         "submit": {
           "string": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
+        },
+        "parseError": {
+          "string": "Something went wrong while requesting your data."
         }
       }
     },

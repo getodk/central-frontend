@@ -243,12 +243,10 @@ export default {
         // a <pre> element.
         problem = JSON.parse(doc.body.textContent);
       } catch (e) {
-        this.logger.error('cannot parse Problem');
+        this.logger.log(doc.body.textContent);
+        this.alert.danger(this.$t('alert.parseError'));
       }
-      if (isProblem(problem)) {
-        this.logger.error(problem);
-        this.alert.danger(problem.message);
-      }
+      if (isProblem(problem)) this.alert.danger(problem.message);
       return true;
     },
     decrypt(action) {
@@ -366,7 +364,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "The data download is not yet available. Please try again in a moment.",
-      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
+      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again.",
+      "parseError": "Something went wrong while requesting your data."
     }
   }
 }

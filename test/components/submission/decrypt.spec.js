@@ -442,7 +442,34 @@ describe('SubmissionDownload', () => {
       );
     });
 
-    it('continually checks for a Problem', async () => {
+    describe('error response that is not a Problem', () => {
+      it('shows a danger alert', async () => {
+        const clock = sinon.useFakeTimers(Date.now());
+        const modal = await setup(event => {
+          event.preventDefault();
+          const { body } = event.target.getRootNode();
+          body.textContent = '500 Internal Server Error';
+        });
+        modal.get('a').trigger('click');
+        clock.tick(1000);
+        modal.should.alert('danger', 'Something went wrong while requesting your data.');
+      });
+
+      it('logs the response', async () => {
+        const clock = sinon.useFakeTimers(Date.now());
+        const modal = await setup(event => {
+          event.preventDefault();
+          const { body } = event.target.getRootNode();
+          body.textContent = '500 Internal Server Error';
+        });
+        modal.get('a').trigger('click');
+        clock.tick(1000);
+        const { logger } = modal.vm.$container;
+        logger.log.calledWith('500 Internal Server Error').should.be.true();
+      });
+    });
+
+    it('continually checks for an error response', async () => {
       const clock = sinon.useFakeTimers(Date.now());
       const modal = await setup();
       const checkForProblem = sinon.spy(modal.vm, 'checkForProblem');
