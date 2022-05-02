@@ -2816,10 +2816,6 @@
       }
     },
     "ProjectHomeBlock": {
-      "noSubmission": {
-        "string": "(none)",
-        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
-      },
       "encrypted": {
         "string": "Encrypted"
       },

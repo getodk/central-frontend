@@ -128,9 +128,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This text is shown under the "Latest Submission" column of the Projects
-    // table. It is shown for a Project with no Submissions.
-    "noSubmission": "(none)",
     "encrypted": "Encrypted",
     "encryptionTip": "This Project uses managed encryption.",
     "showMore": "Show {count} total",
