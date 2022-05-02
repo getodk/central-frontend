@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         </router-link>
       </td>
       <td class="review-state">
-        <router-link :to="submissionsPath.hasIssuse">
+        <router-link :to="submissionsPath.hasIssues">
           {{ $n(form.reviewStates.hasIssues, 'default') }}<span class="icon-comments"></span>
         </router-link>
       </td>
@@ -114,7 +114,8 @@ export default {
   .table tbody & td { vertical-align: middle; }
 
   td {
-    font-size: 18px;
+    font-size: 16px;
+    padding: 3px 0px 3px 6px;
     color: #333;
     a { @include text-link; }
   }
@@ -131,7 +132,7 @@ export default {
 
   [class*='icon'] {
     margin-left: 5px;
-    color: #666;
+    color: #888;
   }
 }
 </style>

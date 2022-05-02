@@ -55,7 +55,7 @@ export default {
     },
     maxForms: {
       type: Number,
-      default: 6
+      default: 3
     }
   },
   data() {
@@ -105,12 +105,12 @@ export default {
   padding-right: 12px;
 
   table {
-    margin-left: 12px;
+    margin-left: 9px;
     margin-bottom: 4px;
   }
 
   .expand-button {
-    margin-left: 12px;
+    margin-left: 15px;
     font-size: 14px;
     color: #888;
     cursor: pointer;
