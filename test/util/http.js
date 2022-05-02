@@ -659,18 +659,19 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
-          let withoutConfig;
+          let responseWithoutConfig;
           try {
-            withoutConfig = (this._responses[index])();
+            const callback = this._responses[index];
+            responseWithoutConfig = callback();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
 
-          this._requestResponseLog.push(withoutConfig);
+          this._requestResponseLog.push(responseWithoutConfig);
 
-          const response = { ...withoutConfig, config };
+          const response = { ...responseWithoutConfig, config };
           if (response.status >= 200 && response.status < 300)
             resolve(response);
           else
