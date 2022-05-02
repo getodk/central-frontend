@@ -12,7 +12,7 @@ describe('store/modules/request', () => {
         mockLogin();
         const container = createTestContainer();
         const { store } = container;
-        return mockHttp()
+        return mockHttp(container)
           .request(() => store.dispatch('get', [
             { key: 'currentUser', url: '/v1/users/current' },
             { key: 'users', url: '/v1/users' },

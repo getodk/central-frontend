@@ -64,7 +64,6 @@ Firefox, and Safari, blocking cookies and blocking local storage seem to go
 hand-in-hand.
 */
 
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import { apiPaths, isProblem, requestAlertMessage } from './request';
@@ -88,9 +87,9 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ store, i18n, alert }) => {
+const requestLogout = ({ store, i18n, alert, http }) => {
   const { token } = store.state.request.data.session;
-  return Vue.prototype.$http.delete(apiPaths.session(token), {
+  return http.delete(apiPaths.session(token), {
     headers: { Authorization: `Bearer ${token}` }
   })
     .catch(error => {

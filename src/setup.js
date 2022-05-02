@@ -15,9 +15,6 @@ except according to the terms contained in the LICENSE file.
 // plugins have been installed. It should also be imported before other files,
 // because this file has side effects.
 
-import Vue from 'vue';
-import axios from 'axios';
-
 // ./jquery must be imported before any of Bootstrap's JavaScript plugins,
 // because the plugins require jQuery.
 import './jquery';
@@ -28,6 +25,3 @@ import './bootstrap';
 import './assets/css/bootstrap.css';
 import './assets/css/icomoon.css';
 import './assets/scss/app.scss';
-
-// Adding $http in order to mock it during testing.
-Vue.prototype.$http = axios;

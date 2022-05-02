@@ -13,6 +13,7 @@ import VueCompositionAPI from '@vue/composition-api';
 import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
+import axios from 'axios';
 
 import Translation from './components/i18n-t';
 
@@ -36,6 +37,7 @@ export default ({
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n),
   config = defaultConfig,
+  http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
   logger = console
 } = {}) => {
@@ -44,6 +46,7 @@ export default ({
     alert,
     unsavedChanges,
     config,
+    http,
     logger,
     ...subclassPresenters(i18n)
   };
@@ -62,6 +65,7 @@ export default ({
     alert,
     unsavedChanges,
     config,
+    http,
     logger
   };
   return container;

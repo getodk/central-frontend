@@ -111,7 +111,7 @@ function request({
 
   const { session } = this.$store.state.request.data;
   const initialRoute = this.$route;
-  return this.$http.request(withAuth(axiosConfig, session))
+  return this.http.request(withAuth(axiosConfig, session))
     .catch(error => {
       // this.$route seems to be defined even after the component has been
       // destroyed.
@@ -137,7 +137,7 @@ function request({
 
 // @vue/component
 const mixin = {
-  inject: ['alert', 'logger'],
+  inject: ['alert', 'http', 'logger'],
   watch: {
     $route() {
       if (this.awaitingResponse != null) this.awaitingResponse = false;

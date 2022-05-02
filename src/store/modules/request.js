@@ -33,7 +33,7 @@ const updateData = (oldData, newData, props) => {
 };
 
 export default (container) => {
-  const { i18n, alert, logger } = container;
+  const { i18n, alert, http, logger } = container;
 /* eslint-disable indent */ // TODO/vue3
 return {
   state: {
@@ -321,7 +321,7 @@ return {
           axiosConfig.headers = headers;
 
         const { cancelId } = requestsForKey;
-        const promise = Vue.prototype.$http.request(withAuth(axiosConfig, data.session))
+        const promise = http.request(withAuth(axiosConfig, data.session))
           .catch(error => {
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
