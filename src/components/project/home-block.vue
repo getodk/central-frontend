@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           {{ $tcn('showMore', project.formList.length) }}<span class="icon-angle-down"></span>
         </template>
         <template v-else>
-          {{ $tcn('showFewer', project.formList.length) }}
+          {{ $tcn('showFewer', project.formList.length) }}<span class="icon-angle-up"></span>
         </template>
       </span>
     </div>
@@ -116,11 +116,11 @@ export default {
     cursor: pointer;
   }
 
-  .icon-angle-down {
+  .icon-angle-down, .icon-angle-up {
     margin-left: 5px;
   }
 
-  .project-form-table tr:nth-child(even) {background: #eee;}
+  .project-form-table tr:nth-child(3n + 2) {background: #eee;}
 }
 </style>
 
