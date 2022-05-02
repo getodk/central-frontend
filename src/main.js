@@ -11,14 +11,19 @@ except according to the terms contained in the LICENSE file.
 */
 import Vue from 'vue';
 
-// These files must be imported before the rest.
 import './plugins';
-import './setup';
+// The global styles must be imported before any component so that they precede
+// components' styles.
+import './styles';
 
 import App from './components/app.vue';
 
 import createContainer from './container';
 import { $tcn } from './util/i18n';
+// ./jquery must be imported before any of Bootstrap's JavaScript plugins,
+// because the plugins require jQuery.
+import './jquery';
+import './bootstrap';
 
 const container = createContainer();
 Vue.use(container);

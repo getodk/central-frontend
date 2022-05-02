@@ -4,7 +4,9 @@ import 'should';
 
 // These files must be imported before the rest.
 import './plugins';
-import '../src/setup';
+import '../src/styles';
+import '../src/jquery';
+import '../src/bootstrap';
 
 import testData from './data';
 import { destroyAll } from './util/lifecycle';
