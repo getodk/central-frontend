@@ -22,6 +22,28 @@ describe('ProjectList', () => {
   });
 
   it('shows a message if there are no projects', () => {
+    // TODO: show something fancier when there are no projects and update test
     mountComponent().get('.empty-table-message').should.be.visible();
   });
+
+  it('shows archived projects at the bottom of the page', () => {
+    // TODO
+  });
+
+  it('does not show archived header if no archived projects exist', () => {
+    // TODO
+  });
+
+  it('sorts archived projects according to full project sort', () => {
+    // TODO
+  });
+
+  it('changes the sort mode from the sort dropdown', () => {
+    // TODO
+  });
+
+  it('shows the appropriate number of forms based on total project/form numbers', () => {
+    // TODO
+  });
 });
+
