@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { RouterLinkStub } from '@vue/test-utils';
 
 import ProjectFormRow from '../../../src/components/project/form-row.vue';
@@ -9,6 +10,7 @@ import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
+// eslint-disable-next-line no-unused-vars
 const mountComponent = () => mount(ProjectFormRow, {
   props: {
     form: new Form(testData.extendedForms.last())
