@@ -25,10 +25,10 @@ except according to the terms contained in the LICENSE file.
     <div v-if="showExpander">
       <span class="expand-button" @click.prevent="toggleExpanded">
         <template v-if="!expanded">
-          {{ $tcn('showMore', project.formList.length) }}<span class="icon-angle-down"></span>
+          {{ $tcn('showMore', numForms) }}<span class="icon-angle-down"></span>
         </template>
         <template v-else>
-          {{ $tcn('showFewer', project.formList.length) }}<span class="icon-angle-up"></span>
+          {{ $tcn('showFewer', numForms) }}<span class="icon-angle-up"></span>
         </template>
       </span>
     </div>
@@ -65,13 +65,17 @@ export default {
   },
   computed: {
     visibleForms() {
-      const sortedForms = this.sortFunc(this.project.formList);
+      const sortedForms = [...this.project.formList];
+      sortedForms.sort(this.sortFunc);
       return this.expanded
         ? sortedForms
         : sortedForms.slice(0, this.maxForms);
     },
     showExpander() {
-      return this.project.formList.length > this.maxForms;
+      return this.numForms > this.maxForms;
+    },
+    numForms() {
+      return this.project.formList.length;
     }
   },
   methods: {

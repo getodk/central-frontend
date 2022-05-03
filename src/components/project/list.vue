@@ -53,8 +53,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { ascend, descend, sortWith } from 'ramda';
-
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectNew from './new.vue';
@@ -81,26 +79,47 @@ export default {
       newProject: {
         state: false
       },
-      sortMode: 'newest'
+      sortMode: 'latest'
     };
   },
   computed: {
     ...requestData(['currentUser', 'projects']),
     sortFunction() {
       const sortFunctions = {
-        alphabetical: sortWith([ascend(entry => entry.name)]),
-        latest: sortWith([descend(entry => entry.lastSubmission)]),
-        newest: sortWith([descend(entry => entry.createdAt)])
+        alphabetical: (a, b) => {
+          // sort uses `name` field for both projects and forms
+          // but some forms don't have a name
+          const nameA = a.name != null ? a.name : a.nameOrId();
+          const nameB = b.name != null ? b.name : b.nameOrId();
+          return nameA.localeCompare(nameB);
+        },
+        latest: (a, b) => {
+          const dateA = a.lastSubmission;
+          const dateB = b.lastSubmission;
+          // null submission dates should go at the end
+          if (dateA == null)
+            return 1;
+          if (dateB == null)
+            return -1;
+          return new Date(dateB) - new Date(dateA);
+        },
+        newest: (a, b) => {
+          const dateA = a.createdAt;
+          const dateB = b.createdAt;
+          return new Date(dateB) - new Date(dateA);
+        }
       };
       return sortFunctions[this.sortMode];
     },
     activeProjects() {
       if (this.projects == null) return [];
-      return this.sortFunction(this.projects.filter((p) => !(p.archived)));
+      const filteredProjects = this.projects.filter((p) => !(p.archived));
+      return filteredProjects.sort(this.sortFunction);
     },
     archivedProjects() {
       if (this.projects == null) return [];
-      return this.sortFunction(this.projects.filter((p) => p.archived));
+      const filteredProjects = this.projects.filter((p) => (p.archived));
+      return filteredProjects.sort(this.sortFunction);
     }
   },
   methods: {
