@@ -117,6 +117,7 @@ export default {
     SummaryItem
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes()],
+  inject: ['alert'],
   props: {
     projectId: {
       type: String,
@@ -167,7 +168,7 @@ export default {
     afterUpload() {
       this.$emit('fetch-draft');
       this.hideModal('upload');
-      this.$alert().success(this.$t('alert.upload'));
+      this.alert.success(this.$t('alert.upload'));
     },
     clearDraft() {
       this.$store.commit('setData', {
@@ -185,7 +186,7 @@ export default {
       this.clearDraft();
       this.$router.push(this.formPath())
         .then(() => {
-          this.$alert().success(this.$t('alert.publish'));
+          this.alert.success(this.$t('alert.publish'));
         });
     },
     afterAbandon(form) {
@@ -193,12 +194,12 @@ export default {
         this.clearDraft();
         this.$router.push(this.formPath())
           .then(() => {
-            this.$alert().success(this.$t('alert.abandon'));
+            this.alert.success(this.$t('alert.abandon'));
           });
       } else {
         this.$router.push(this.projectPath())
           .then(() => {
-            this.$alert().success(this.$t('alert.delete', {
+            this.alert.success(this.$t('alert.delete', {
               name: form.nameOrId()
             }));
           });

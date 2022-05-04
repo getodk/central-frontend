@@ -82,7 +82,6 @@ definition for an existing form -->
 
 <script>
 import DocLink from '../doc-link.vue';
-import Form from '../../presenters/form';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
@@ -96,6 +95,7 @@ export default {
   name: 'FormNew',
   components: { DocLink, Modal, SentenceSeparator, Spinner },
   mixins: [dropZone(), request()],
+  inject: ['container', 'alert'],
   props: {
     state: {
       type: Boolean,
@@ -145,7 +145,7 @@ export default {
   },
   methods: {
     afterFileSelection(file) {
-      this.$alert().blank();
+      this.alert.blank();
       this.file = file;
       this.warnings = null;
     },
@@ -158,7 +158,7 @@ export default {
     },
     upload(ignoreWarnings) {
       if (this.file == null) {
-        this.$alert().info(this.$t('alert.fileRequired'));
+        this.alert.info(this.$t('alert.fileRequired'));
         return;
       }
 
@@ -168,7 +168,7 @@ export default {
         const fallback = this.file.name.replace(/\.xlsx?$/, '');
         headers['X-XlsForm-FormId-Fallback'] = encodeURIComponent(fallback);
       }
-      const { currentRoute } = this.$store.state.router;
+      const initialRoute = this.$route;
       this.request({
         method: 'POST',
         url: this.formDraft == null
@@ -199,17 +199,18 @@ export default {
       })
         .then(({ data }) => {
           if (isProblem(data)) {
-            this.$alert().blank();
+            this.alert.blank();
             this.warnings = data.details.warnings;
           } else {
             // project.forms may now be out-of-date. However, if the user
             // navigates to the project overview, it should be updated.
-            this.$emit('success', new Form(data));
+
+            const { Form } = this.container;
+            this.$emit('success', Form.from(data));
           }
         })
         .catch(() => {
-          if (this.$store.state.router.currentRoute === currentRoute)
-            this.warnings = null;
+          if (this.$route === initialRoute) this.warnings = null;
         });
     }
   }

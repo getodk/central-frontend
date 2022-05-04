@@ -55,7 +55,7 @@ export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
   mixins: [request()],
-  inject: ['container'],
+  inject: ['container', 'alert'],
   data() {
     return {
       disabled: false,
@@ -97,7 +97,7 @@ export default {
     submit() {
       const sessionExpires = localStore.getItem('sessionExpires');
       if (sessionExpires != null && parseInt(sessionExpires, 10) > Date.now()) {
-        this.$alert().info(this.$t('alert.alreadyLoggedIn'));
+        this.alert.info(this.$t('alert.alreadyLoggedIn'));
         return;
       }
 
@@ -122,7 +122,7 @@ export default {
               this.disabled = false;
               this.$router.replace(location).catch(noop);
               if (this.password.length < 10)
-                this.$alert().info(this.$t('alert.changePassword'));
+                this.alert.info(this.$t('alert.changePassword'));
             },
             (url) => {
               window.location.replace(url);

@@ -41,6 +41,7 @@ export default {
   name: 'UserEditBasicDetails',
   components: { FormGroup, Spinner },
   mixins: [request()],
+  inject: ['alert'],
   data() {
     const { email, displayName } = this.$store.state.request.data.user;
     return {
@@ -70,7 +71,7 @@ export default {
               value: this.currentUser.with(response.data)
             });
           }
-          this.$alert().success(this.$t('alert.success'));
+          this.alert.success(this.$t('alert.success'));
         })
         .catch(noop);
     }

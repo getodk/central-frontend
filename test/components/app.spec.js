@@ -103,7 +103,7 @@ describe('App', () => {
           })
           .respondWithData(() => 'v1.3')
           .afterResponse(app => {
-            app.vm.$alert().blank();
+            app.vm.$container.alert.blank();
             clock.tick(60000);
             app.should.alert('info', (message) => {
               message.should.startWith('The server has been updated.');
@@ -203,7 +203,7 @@ describe('App', () => {
 
     it('hides the alert', async () => {
       const app = await load('/', { attachTo: document.body });
-      app.vm.$alert().info('Something happened!');
+      app.vm.$container.alert.info('Something happened!');
       await app.getComponent(Home).get('a[target="_blank"]').trigger('click');
       app.should.not.alert();
     });
@@ -212,7 +212,7 @@ describe('App', () => {
       const app = await load('/', { attachTo: document.body });
       const a = app.getComponent(Home).get('a[target="_blank"]');
       a.element.addEventListener('click', () => {
-        app.vm.$alert().info('Something happened!');
+        app.vm.$container.alert.info('Something happened!');
       });
       a.trigger('click');
       app.should.alert();

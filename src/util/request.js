@@ -9,9 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
-
-import i18n from '../i18n';
 
 export const queryString = (query) => {
   if (query == null) return '';
@@ -154,16 +151,13 @@ export const withAuth = (config, session) => {
 export const isProblem = (data) => data != null && typeof data === 'object' &&
   typeof data.code === 'number' && typeof data.message === 'string';
 
-export const logAxiosError = (error) => {
-  if (error.response == null) {
-    Vue.prototype.$logger.log(error.request != null
-      ? error.request
-      : error.message);
-  }
+export const logAxiosError = (logger, error) => {
+  if (error.response == null)
+    logger.log(error.request != null ? error.request : error.message);
 };
 
 // See the `request` mixin for a description of this function's behavior.
-export const requestAlertMessage = (axiosError, options = {}) => {
+export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined) => {
   // No Problem response
   if (axiosError.request == null) return i18n.t('util.request.noRequest');
   const { response } = axiosError;
@@ -173,19 +167,14 @@ export const requestAlertMessage = (axiosError, options = {}) => {
 
   const problem = response.data;
 
-  const { problemToAlert } = options;
   if (problemToAlert != null) {
     const message = problemToAlert(problem);
     return message != null ? message : problem.message;
   }
 
-  const { component } = options;
-  if (component != null) {
-    const key = problem.code.toString().replace('.', '_');
-    const path = `problem.${key}`;
-    if (component.$te(path, i18n.fallbackLocale))
-      return component.$t(path, problem);
-  }
+  const key = problem.code.toString().replace('.', '_');
+  const path = `problem.${key}`;
+  if (i18n.te(path, i18n.fallbackLocale)) return i18n.t(path, problem);
 
   return problem.message;
 };

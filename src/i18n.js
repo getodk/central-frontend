@@ -102,7 +102,7 @@ for (const locale of locales.keys()) {
 ////////////////////////////////////////////////////////////////////////////////
 // EXPORT
 
-export default new VueI18n({
+export default () => new VueI18n({
   locale: fallbackLocale,
   fallbackLocale,
   messages: { [fallbackLocale]: fallbackMessages },

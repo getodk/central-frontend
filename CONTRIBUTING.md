@@ -90,6 +90,8 @@ Each presenter class defines a whitelist of properties that the presenter object
 
 When you use the [`request` module](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) of the Vuex store to send a GET request, then if there is a presenter class associated with the response data, the `request` module will automatically wrap the response data within a presenter object.
 
+Some presenter classes need access to the internationalization object `i18n`. If you retrieve a presenter class from the container rather than importing it, the class will have a static method named `from()` that will create a new presenter object and automatically pass in `i18n`: see [`subclassPresenters()`](/src/presenters/index.js). If you define a new presenter class, you should also add it to `subclassPresenters()`. For more on internationalization, see the section [below](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#internationalization).
+
 ### Learning About a Component
 
 To learn how a given component works, one of the best places to start is how the component communicates with its parent component:
@@ -147,7 +149,7 @@ By default, response data is cleared after the user navigates to a new route. Ho
 
 ### Alerts
 
-We use the [`Alert`](/src/components/alert.vue) component to render an alert. Only a single alert is shown at a time &mdash; either at the top of the viewport or, if a modal is shown, at the top of the modal. Either way, the data for the alert is stored in the [`alert` module](/src/store/modules/alert.js) of the Vuex store. To display an alert, a component can use the `$alert()` global utility.
+We use the [`Alert`](/src/components/alert.vue) component to render an alert. Only a single alert is shown at a time &mdash; either at the top of the viewport or, if a modal is shown, at the top of the modal. Either way, the data for the alert is stored in the [`alert` object](/src/alert.js) in the container. To display an alert, a component can inject `alert`.
 
 ### Internationalization
 

@@ -9,11 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Field from '../../../presenters/field';
-import Form from '../../../presenters/form';
 import Option from '../../../util/option';
-import Project from '../../../presenters/project';
-import User from '../../../presenters/user';
 
 // Each type of response data that the `request` module manages is associated
 // with a key. Each key tends to correspond to a single Backend endpoint.
@@ -70,26 +66,26 @@ export const keys = [
 
 // Define functions to transform responses.
 
-const option = (transform = undefined) => (response) => (response.status === 200
-  ? Option.of(transform != null ? transform(response) : response.data)
+const option = (transform = undefined) => (response, container) => (response.status === 200
+  ? Option.of(transform != null ? transform(response, container) : response.data)
   : Option.none());
 
-const userPresenter = ({ data }) => new User(data);
-const formPresenters = ({ data }) => data.map(form => new Form(form));
-const formPresenter = ({ data }) => new Form(data);
+const userPresenter = ({ data }, { User }) => User.from(data);
+const formPresenters = ({ data }, { Form }) => data.map(Form.from);
+const formPresenter = ({ data }, { Form }) => Form.from(data);
 
 export const transforms = {
   currentUser: userPresenter,
 
-  users: ({ data }) => data.map(user => new User(user)),
+  users: ({ data }, { User }) => data.map(User.from),
   user: userPresenter,
 
-  projects: ({ data }) => data.map(project => new Project(project)),
-  project: ({ data }) => new Project(data),
+  projects: ({ data }, { Project }) => data.map(Project.from),
+  project: ({ data }, { Project }) => Project.from(data),
   forms: formPresenters,
   deletedForms: formPresenters,
   form: formPresenter,
-  fields: ({ data }) => data.map(field => new Field(field)),
+  fields: ({ data }, { Field }) => data.map(Field.from),
   formVersions: formPresenters,
   formDraft: option(formPresenter),
   attachments: option(),

@@ -28,6 +28,7 @@ Router does not support it directly: see
 https://github.com/vuejs/vue-router/pull/2140. Instead, we use a wrapper
 component, AsyncRoute, that will load and render the async component.
 
+TODO/vue3. Update these comments.
 Because we use a wrapper component, navigation itself is not asynchronous. For
 example, if a user clicks a link to /users but has not loaded UserList yet, they
 will immediately navigate to /users, where they will see a loading message; they

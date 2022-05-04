@@ -10,36 +10,20 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="state" :key="atEpoch" :class="htmlClass" role="alert">
-    <!-- When the button is clicked, we simply hide the alert, rather than using
-    the Bootstrap alert plugin and calling $().alert('close'): the plugin would
-    remove the alert from the DOM. -->
+  <div v-show="alert.state" :key="alert.at.getTime()"
+    class="alert alert-dismissible" :class="`alert-${alert.type}`" role="alert">
     <button type="button" class="close" :aria-label="$t('action.close')"
-      @click="hideAlert">
+      @click="alert.blank()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <span class="alert-message">{{ message }}</span>
+    <span class="alert-message">{{ alert.message }}</span>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
-
 export default {
   name: 'Alert',
-  computed: {
-    ...mapState({
-      type: (state) => state.alert.type,
-      message: (state) => state.alert.message,
-      state: (state) => state.alert.state,
-      at: (state) => state.alert.at
-    }),
-    htmlClass() {
-      return ['alert', 'alert-dismissible', `alert-${this.type}`];
-    },
-    atEpoch() { return this.at.getTime(); }
-  },
-  methods: mapMutations(['hideAlert'])
+  inject: ['alert']
 };
 </script>
 

@@ -13,30 +13,44 @@ import VueCompositionAPI from '@vue/composition-api';
 import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
+import axios from 'axios';
 
 import Translation from './components/i18n-t';
 
+import createAlert from './alert';
+import createCentralI18n from './i18n';
 import createCentralRouter from './router';
+import createCentralStore from './store';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
-import i18n from './i18n';
-import store from './store';
-import { StoreAlert } from './util/alert';
+import subclassPresenters from './presenters';
 
 export default ({
-  // `router` must be a function that returns an object. The function will
-  // receive a partial container. It is also possible to create a container
+  // `router` must be a function that returns an object. The function will be
+  // passed a partial container. It is also possible to create a container
   // without a router by specifying `null`.
   router = createCentralRouter,
+  // `store` must be a function that returns an object. The function will be
+  // passed a partial container.
+  store = createCentralStore,
+  i18n = createCentralI18n(),
+  alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n),
-  config = defaultConfig
+  config = defaultConfig,
+  http = axios,
+  // Adding `logger` in part in order to silence certain logging during testing.
+  logger = console
 } = {}) => {
   const container = {
-    store,
     i18n,
+    alert,
     unsavedChanges,
-    config
+    config,
+    http,
+    logger,
+    ...subclassPresenters(i18n)
   };
+  container.store = store(container);
   if (router != null) container.router = router(container);
   container.install = (Vue) => {
     Vue.use(VueCompositionAPI);
@@ -45,15 +59,14 @@ export default ({
     if (container.router != null)
       Vue.use(container.router instanceof VueRouter ? VueRouter : container.router);
     Vue.component('i18n-t', Translation);
-    // eslint-disable-next-line no-param-reassign
-    Vue.prototype.$alert = function $alert() {
-      return new StoreAlert(this.$store);
-    };
   };
   container.provide = {
     container,
+    alert,
     unsavedChanges,
-    config
+    config,
+    http,
+    logger
   };
   return container;
 };

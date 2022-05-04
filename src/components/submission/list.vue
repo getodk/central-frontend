@@ -85,6 +85,7 @@ export default {
     SubmissionUpdateReviewState
   },
   mixins: [modal()],
+  inject: ['alert'],
   props: {
     projectId: {
       type: String,
@@ -320,7 +321,7 @@ export default {
     // submission may have been edited or may no longer be shown.
     afterReview(originalSubmission, reviewState) {
       this.hideReview();
-      this.$alert().success(this.$t('alert.updateReviewState'));
+      this.alert.success(this.$t('alert.updateReviewState'));
       const index = this.submissions.findIndex(submission =>
         submission.__id === originalSubmission.__id);
       if (index !== -1) {

@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { presenterClass } from './base';
+import Presenter from './base';
 
 const props = [
   'path',
@@ -19,7 +19,7 @@ const props = [
   'selectMultiple'
 ];
 
-export default class Field extends presenterClass(props) {
+export default class Field extends Presenter.define(props) {
   splitPath() {
     if (this._split == null) {
       this._split = this.path.split('/');

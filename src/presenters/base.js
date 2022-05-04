@@ -10,9 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-export class Presenter {
-  constructor(data) {
+export default class Presenter {
+  constructor(data, i18n = undefined) {
     this._data = data;
+    this.i18n = i18n;
   }
 
   get object() {
@@ -20,11 +21,11 @@ export class Presenter {
   }
 
   with(data) {
-    return new (this.constructor)({ ...this._data, ...data });
+    return new (this.constructor)({ ...this._data, ...data }, this.i18n);
   }
 }
 
-export const presenterClass = (props) => {
+Presenter.define = (props) => {
   const klass = class extends Presenter {};
 
   // Add a getter for each property of the underlying data.

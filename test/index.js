@@ -1,20 +1,17 @@
-import Vue from 'vue';
 import sinon from 'sinon';
 import { Wrapper } from '@vue/test-utils';
 import 'should';
 
 // These files must be imported before the rest.
 import './plugins';
-import '../src/setup';
-
-import i18n from '../src/i18n';
-import store from '../src/store';
-import { noop } from '../src/util/util';
+import '../src/styles';
+import '../src/jquery';
+import '../src/bootstrap';
 
 import testData from './data';
 import { destroyAll } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/load-async';
-import { mockAxios } from './util/axios';
+import { mockLogin } from './util/session';
 import './assertions';
 
 // TODO/vue3. Remove this.
@@ -29,32 +26,11 @@ for (const name of ['findAll', 'findAllComponents']) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// GLOBAL UTILITIES
-
-{
-  let unhandled = null;
-  Vue.prototype.$http = mockAxios(config => {
-    if (unhandled == null) unhandled = config;
-    return Promise.reject(new Error('unhandled request'));
-  });
-  afterEach(() => {
-    if (unhandled != null) {
-      console.error(unhandled); // eslint-disable-line no-console
-      throw new Error('A request was sent, but not handled. Are you using mockHttp() or load()?');
-    }
-  });
-}
+// HOOKS
 
 // Even if a route is lazy-loaded, load() will need synchronous access to the
 // async components associated with the route.
 before(loadAsyncRouteComponents);
-
-Vue.prototype.$logger = { log: noop, error: noop };
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// OTHER HOOKS
 
 beforeEach(testData.seed);
 
@@ -70,24 +46,11 @@ afterEach(() => {
 
 afterEach(() => {
   sinon.restore();
-});
-
-afterEach(() => {
-  store.commit('resetAlert');
-  store.commit('resetRequests');
-  store.commit('clearData');
-  store.commit('resetRouterState');
-});
-
-afterEach(() => {
-  if (i18n.locale !== 'en') throw new Error('i18n locale was not restored');
-});
-
-afterEach(() => {
+  document.documentElement.setAttribute('lang', 'en');
   localStorage.clear();
+  testData.reset();
+  mockLogin.reset();
 });
-
-afterEach(testData.reset);
 
 
 

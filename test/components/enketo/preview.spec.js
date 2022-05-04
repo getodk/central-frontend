@@ -1,14 +1,24 @@
 import EnketoPreview from '../../../src/components/enketo/preview.vue';
 
+import Form from '../../../src/presenters/form';
+
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
+
+const mountComponent = (options) => mount(EnketoPreview, {
+  ...options,
+  props: {
+    ...options.props,
+    formVersion: new Form(options.props.formVersion)
+  }
+});
 
 describe('EnketoPreview', () => {
   it('renders correctly for an open form with an enketoId', () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: 'xyz', state: 'open' })
       .last();
-    const button = mount(EnketoPreview, {
+    const button = mountComponent({
       props: { formVersion: form }
     });
     button.element.tagName.should.equal('A');
@@ -19,7 +29,7 @@ describe('EnketoPreview', () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: null, state: 'open' })
       .last();
-    const button = mount(EnketoPreview, {
+    const button = mountComponent({
       props: { formVersion: form }
     });
     button.element.tagName.should.equal('BUTTON');
@@ -32,7 +42,7 @@ describe('EnketoPreview', () => {
       const form = testData.extendedForms
         .createPast(1, { enketoId: 'xyz', state: 'closing' })
         .last();
-      const button = mount(EnketoPreview, {
+      const button = mountComponent({
         props: { formVersion: form }
       });
       button.element.tagName.should.equal('BUTTON');
@@ -46,7 +56,7 @@ describe('EnketoPreview', () => {
         state: 'closing'
       });
       const draft = testData.extendedFormDrafts.last();
-      const button = mount(EnketoPreview, {
+      const button = mountComponent({
         props: { formVersion: draft }
       });
       button.element.tagName.should.equal('A');

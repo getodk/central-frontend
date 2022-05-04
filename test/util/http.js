@@ -274,7 +274,6 @@ There is a lot you can do with mockHttp() and load(). You can learn more by
 reviewing the comments above each method below.
 */
 
-import Vue from 'vue';
 import { last } from 'ramda';
 
 import App from '../../src/components/app.vue';
@@ -288,11 +287,9 @@ import testData from '../data';
 import * as commonTests from './http/common';
 import { loadAsyncCache } from './load-async';
 import { mergeMountOptions, mount as lifecycleMount } from './lifecycle';
-import { mockAxios, mockAxiosError, mockResponse } from './axios';
+import { mockAxiosError, mockResponse } from './axios';
 import { mockRouter, resolveRoute, testRouter } from './router';
 import { wait, waitUntil } from './util';
-
-let inProgress = false;
 
 // Returns the components associated with a route. If the route is lazy-loaded,
 // any async component will be unwrapped from AsyncRoute.
@@ -585,15 +582,10 @@ class MockHttp {
         .finally(pollWork != null
           ? () => waitUntil(() => pollWork(this._component))
           : noop)
-        .finally(() => {
-          Vue.prototype.$http = this._previousHttp;
-        })
-        .then(() => this._checkStateAfterWait())
+        .finally(() => { this._container.http.respond(null); })
+        .then(() => { this._checkStateAfterWait(); })
         .then(() => callback(this._component))
-        .then(result => ({ component: this._component, result }))
-        .finally(() => {
-          inProgress = false;
-        }));
+        .then(result => ({ component: this._component, result })));
     return new MockHttp({ container: this._container, previousPromise: promise });
   }
 
@@ -603,44 +595,18 @@ class MockHttp {
 
   complete() { return this.afterResponses(component => component); }
 
+  // Sets up `http` in the container and sets properties of the MockHttp that
+  // are used within this.afterResponses(). this._initialPromise() does nothing
+  // if this._previousPromise is rejected.
   _initialPromise() {
     const promise = this._previousPromise != null
       ? this._previousPromise
       : Promise.resolve({});
-    // Check initial state, set globals, and set properties of this object that
-    // are used within the afterResponses() promise. `component` is the
-    // component that the previous promise mounted (if any).
+    // `component` is the component that the previous promise mounted (if any).
     return promise.then(({ component }) => {
-      // Concurrent series could cause issues in at least two ways. First,
-      // Vue.prototype.$http might not be restored correctly. Second, if
-      // concurrent series use the single global router, that could cause
-      // issues.
-      if (inProgress) throw new Error('another series is in progress');
-      inProgress = true;
-      this._previousHttp = Vue.prototype.$http;
-      Vue.prototype.$http = mockAxios(this._http());
+      if (this._container == null) throw new Error('container required');
+      this._container.http.respond(this._http());
       this._component = component;
-      /*
-      MockHttp uses two promises:
-
-        1. The first promise is chained on this._previousPromise and returned by
-           an after responses hook. Usually it is ultimately returned to Mocha.
-        2. The second promise, stored in this._responseChain, holds the
-           responses, chained in order of request. this._responseChain is not
-           returned to Mocha, but rather to Frontend from $http.
-
-      The two promises are related: the first promise triggers one or more
-      requests; for which responses are returned to Frontend through the second
-      promise; then the first promise is returned to Mocha or whatever else
-      comes after the hook.
-
-      It is because the second promise is returned to Frontend and not Mocha
-      that _tryBeforeAnyResponse() and _tryBeforeEachResponse() catch any error
-      even though they are called within a promise chain. Those methods catch
-      and store any error so that the after responses hook is able to reject the
-      first promise if something unexpected happens in the second promise.
-      */
-      this._responsesPromise = Promise.resolve();
       this._requestCount = 0;
       this._errorFromBeforeAnyResponse = null;
       this._errorFromBeforeEachResponse = null;
@@ -652,6 +618,27 @@ class MockHttp {
   // Returns a function that responds with each of the specified responses in
   // turn.
   _http() {
+    /*
+    MockHttp uses two promises:
+
+      1. The first promise is chained on this._previousPromise and returned by
+         an after responses hook. Usually it is ultimately returned to Mocha.
+      2. The second promise, stored here in `promise`, holds the responses,
+         chained in order of request. `promise` is not returned to Mocha, but
+         rather to Frontend from `http` in the container.
+
+    The two promises are related: the first promise triggers one or more
+    requests; for which responses are returned to Frontend through the second
+    promise; then the first promise is returned to Mocha or whatever else comes
+    after the hook.
+
+    It is because the second promise is returned to Frontend and not Mocha that
+    this._tryBeforeAnyResponse() and this._tryBeforeEachResponse() catch any
+    error even though they are called within a promise chain. Those methods
+    catch and store any error so that the after responses hook is able to reject
+    the first promise if something unexpected happens in the second promise.
+    */
+    let promise = Promise.resolve();
     return (config) => {
       this._requestResponseLog.push(config);
       const index = this._requestCount;
@@ -659,11 +646,11 @@ class MockHttp {
       if (this._requestCount > this._responses.length)
         return Promise.reject(new Error());
 
-      this._responsesPromise = this._responsesPromise
+      promise = promise
         // If this is not the first response, and the previous response was an
-        // error, then this._responsesPromise will be rejected. However, we need
-        // this part of the promise chain to be fulfilled, because this response
-        // will not necessarily be an error even if the previous one was.
+        // error, then `promise` will be rejected. However, we need this part of
+        // the promise chain to be fulfilled, because this response will not
+        // necessarily be an error even if the previous one was.
         .catch(noop)
         .then(() => (index === 0 && this._beforeAnyResponse != null
           ? this._tryBeforeAnyResponse()
@@ -672,24 +659,25 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
-          let withoutConfig;
+          let responseWithoutConfig;
           try {
-            withoutConfig = (this._responses[index])();
+            const callback = this._responses[index];
+            responseWithoutConfig = callback();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
 
-          this._requestResponseLog.push(withoutConfig);
+          this._requestResponseLog.push(responseWithoutConfig);
 
-          const response = { ...withoutConfig, config };
+          const response = { ...responseWithoutConfig, config };
           if (response.status >= 200 && response.status < 300)
             resolve(response);
           else
             reject(mockAxiosError(response));
         }));
-      return this._responsesPromise;
+      return promise;
     };
   }
 

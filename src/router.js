@@ -23,21 +23,11 @@ import { noop } from './util/util';
 
 export default (container, mode = 'hash') => {
   const router = new VueRouter({ mode, routes: createRoutes(container) });
+  const { store, alert, unsavedChanges } = container;
 
 
 
 /* eslint-disable indent */ // TODO/vue3
-////////////////////////////////////////////////////////////////////////////////
-// ROUTER STATE
-
-// Set select properties of store.state.router.
-const { store, unsavedChanges } = container;
-router.afterEach(to => {
-  store.commit('confirmNavigation', to);
-});
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // LAZY LOADING
 
@@ -61,34 +51,39 @@ router.afterEach(to => {
 
 
 
-////////////////////////////////////////////////////////////////////////////////
-// INITIAL REQUESTS
+  //////////////////////////////////////////////////////////////////////////////
+  // INITIAL REQUESTS
 
-const initialLocale = () => {
-  const locale = localStore.getItem('locale');
-  return locale != null ? locale : navigator.language.split('-', 1)[0];
-};
+  // During the initial navigation, the router sends requests for essential data
+  // that is needed to render the app.
 
-// Implements the restoreSession meta field.
-const restoreSessionForRoute = async (to) => {
-  if (last(to.matched).meta.restoreSession) {
-    await restoreSession(store);
-    await logIn(container, false);
-  }
-};
+  {
+    const requests = [
+      () => {
+        const storageLocale = localStore.getItem('locale');
+        const locale = storageLocale != null
+          ? storageLocale
+          : navigator.language.split('-', 1)[0];
+        return loadLocale(container, locale);
+      },
 
-router.beforeEach((to, from, next) => {
-  if (!store.state.router.sendInitialRequests) {
-    next();
-    return;
-  }
+      // Implements the restoreSession meta field. A test can skip this request
+      // by setting the session before the initial navigation.
+      async (to) => {
+        if (last(to.matched).meta.restoreSession &&
+          store.state.request.data.session == null) {
+          await restoreSession(store);
+          await logIn(container, false);
+        }
+      }
+    ];
 
-  Promise.allSettled([loadLocale(initialLocale()), restoreSessionForRoute(to)])
-    .then(() => {
-      store.commit('setSendInitialRequests', false);
+    const removeGuard = router.beforeEach(async (to, _, next) => {
+      await Promise.allSettled(requests.map(request => request(to)));
+      removeGuard();
       next();
     });
-});
+  }
 
 
 
@@ -209,7 +204,7 @@ router.afterEach(() => {
 // OTHER NAVIGATION GUARDS
 
 router.afterEach(() => {
-  if (store.state.alert.state) store.commit('hideAlert');
+  alert.blank();
 });
 
 

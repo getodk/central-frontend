@@ -24,7 +24,7 @@ must also specify a name for the check. For example:
     'afternoon',
     () => {
       if (DateTime.local().hour < 11) return false;
-      this.$alert().info('It is the afternoon!');
+      this.alert.info('It is the afternoon!');
       return true;
     },
     // Wait a second before each of the first 100 tries, then wait a minute

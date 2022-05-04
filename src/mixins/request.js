@@ -30,7 +30,6 @@ property:
     directly mutate this property after defining it.
 */
 
-import i18n from '../i18n';
 import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
 
 /*
@@ -104,20 +103,19 @@ function request({
   const { data } = axiosConfig;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
-    this.$alert().danger(i18n.t('mixin.request.alert.fileSize', data));
+    this.alert.danger(this.$t('mixin.request.alert.fileSize', data));
     return Promise.reject(new Error('file size exceeds limit'));
   }
 
   if (this.awaitingResponse != null) this.awaitingResponse = true;
 
   const { session } = this.$store.state.request.data;
-  const { currentRoute } = this.$store.state.router;
-  return this.$http.request(withAuth(axiosConfig, session))
+  const initialRoute = this.$route;
+  return this.http.request(withAuth(axiosConfig, session))
     .catch(error => {
-      // this.$store seems to be defined even after the component has been
+      // this.$route seems to be defined even after the component has been
       // destroyed.
-      if (this.$store.state.router.currentRoute !== currentRoute)
-        throw new Error('route change');
+      if (this.$route !== initialRoute) throw new Error('route change');
 
       if (fulfillProblem != null && error.response != null &&
         isProblem(error.response.data) && fulfillProblem(error.response.data))
@@ -125,16 +123,12 @@ function request({
 
       if (this.awaitingResponse != null) this.awaitingResponse = false;
 
-      logAxiosError(error);
-      this.$alert().danger(requestAlertMessage(error, {
-        problemToAlert,
-        component: this
-      }));
+      logAxiosError(this.logger, error);
+      this.alert.danger(requestAlertMessage(this.$i18n, error, problemToAlert));
       throw error;
     })
     .then(response => {
-      if (this.$store.state.router.currentRoute !== currentRoute)
-        throw new Error('route change');
+      if (this.$route !== initialRoute) throw new Error('route change');
       if (this.awaitingResponse != null) this.awaitingResponse = false;
 
       return response;
@@ -143,6 +137,7 @@ function request({
 
 // @vue/component
 const mixin = {
+  inject: ['alert', 'http', 'logger'],
   watch: {
     $route() {
       if (this.awaitingResponse != null) this.awaitingResponse = false;

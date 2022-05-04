@@ -59,6 +59,7 @@ let id = 0;
 export default {
   name: 'Modal',
   components: { Alert },
+  inject: ['alert'],
   props: {
     state: Boolean,
     // Indicates whether the user is able to hide the modal by clicking ×,
@@ -82,7 +83,7 @@ export default {
   },
   computed: {
     stateAndAlertAt() {
-      return [this.state, this.$store.state.alert.at];
+      return [this.state, this.alert.at];
     },
     titleId() {
       return `modal-title${this.id}`;
@@ -106,7 +107,7 @@ export default {
       // hide the alert: if the alert is visible, then #app-alert will be shown.
       // This allows the modal to display an alert after it is hidden.
       if (!newState && newAlertAt !== oldAlertAt) return;
-      if (this.$store.state.alert.state) this.$store.commit('hideAlert');
+      this.alert.blank();
     }
   },
   mounted() {

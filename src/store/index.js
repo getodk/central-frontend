@@ -11,10 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 import Vuex from 'vuex';
 
-import alert from './modules/alert';
-import request from './modules/request';
-import router from './modules/router';
+import createRequestModule from './modules/request';
 
-export default new Vuex.Store({
-  modules: { alert, request, router }
+export default (container) => new Vuex.Store({
+  modules: { request: createRequestModule(container) }
 });

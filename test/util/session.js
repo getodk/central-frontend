@@ -1,21 +1,35 @@
 import { DateTime } from 'luxon';
 
-import store from '../../src/store';
-
 import testData from '../data';
-import { setData } from './store';
+
+let loggedIn = false;
 
 // eslint-disable-next-line import/prefer-default-export
 export const mockLogin = (options = undefined) => {
   if (testData.extendedUsers.size !== 0) throw new Error('user already exists');
-  const currentUser = testData.extendedUsers
-    .createPast(1, { role: 'admin', ...options })
-    .first();
-  const session = testData.sessions.createNew();
-  setData({ session, currentUser });
+  if (testData.sessions.size !== 0) throw new Error('session already exists');
+  testData.extendedUsers.createPast(1, { role: 'admin', ...options });
+  const { expiresAt } = testData.sessions.createNew();
+
   localStorage.setItem(
     'sessionExpires',
-    DateTime.fromISO(session.expiresAt).toMillis().toString()
+    DateTime.fromISO(expiresAt).toMillis().toString()
   );
-  store.commit('setSendInitialRequests', false);
+
+  loggedIn = true;
 };
+
+mockLogin.setRequestData = (store) => {
+  if (loggedIn) {
+    store.commit('setFromResponse', {
+      key: 'session',
+      response: { status: 200, data: testData.sessions.first() }
+    });
+    store.commit('setFromResponse', {
+      key: 'currentUser',
+      response: { status: 200, data: testData.extendedUsers.first() }
+    });
+  }
+};
+
+mockLogin.reset = () => { loggedIn = false; };

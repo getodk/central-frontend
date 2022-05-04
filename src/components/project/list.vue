@@ -60,6 +60,7 @@ export default {
   name: 'ProjectList',
   components: { Loading, PageSection, ProjectNew, ProjectRow },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   data() {
     return {
       newProject: {
@@ -72,7 +73,7 @@ export default {
     afterCreate(project) {
       this.$router.push(this.projectPath(project.id))
         .then(() => {
-          this.$alert().success(this.$t('alert.create'));
+          this.alert.success(this.$t('alert.create'));
         });
     }
   }

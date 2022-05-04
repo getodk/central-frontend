@@ -144,6 +144,7 @@ export default {
   name: 'ProjectEnableEncryption',
   components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
   mixins: [request()],
+  inject: ['alert'],
   props: {
     state: {
       type: Boolean,
@@ -180,7 +181,7 @@ export default {
     },
     submit() {
       if (this.passphrase.length < 10) {
-        this.$alert().danger(this.$t('alert.passphraseTooShort'));
+        this.alert.danger(this.$t('alert.passphraseTooShort'));
         return;
       }
 
@@ -188,7 +189,7 @@ export default {
       if (this.hint !== '') data.hint = this.hint;
       this.post(apiPaths.projectKey(this.project.id), data)
         .then(() => {
-          this.$alert().blank();
+          this.alert.blank();
           this.step += 1;
           this.success = true;
         })

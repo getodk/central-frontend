@@ -64,9 +64,8 @@ Firefox, and Safari, blocking cookies and blocking local storage seem to go
 hand-in-hand.
 */
 
-import Vue from 'vue';
+import VueRouter from 'vue-router';
 
-import i18n from '../i18n';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
 import { forceReplace } from './router';
 import { localStore } from './storage';
@@ -88,9 +87,9 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = (store) => {
+const requestLogout = ({ store, i18n, alert, http }) => {
   const { token } = store.state.request.data.session;
-  return Vue.prototype.$http.delete(apiPaths.session(token), {
+  return http.delete(apiPaths.session(token), {
     headers: { Authorization: `Bearer ${token}` }
   })
     .catch(error => {
@@ -103,12 +102,9 @@ const requestLogout = (store) => {
         return;
       }
 
-      store.commit('setAlert', {
-        type: 'danger',
-        message: i18n.t('util.session.alert.logoutError', {
-          message: requestAlertMessage(error)
-        })
-      });
+      alert.danger(i18n.t('util.session.alert.logoutError', {
+        message: requestAlertMessage(i18n, error)
+      }));
       throw error;
     });
 };
@@ -121,7 +117,7 @@ export const logOut = (container, setNext) => {
   // do not send a request, which would result in an error. (Using Date.parse()
   // rather than DateTime.fromISO() in order to reduce the bundle.)
   const promise = Date.parse(expiresAt) > Date.now()
-    ? requestLogout(store)
+    ? requestLogout(container)
     : Promise.resolve();
   // We clear all data and cancel any requests. However, that isn't ideal for
   // centralVersion, and we may need to revisit this logic in the future.
@@ -131,10 +127,11 @@ export const logOut = (container, setNext) => {
   // navigation. There are also some cases in which we don't navigate to /login.
   store.commit('cancelRequests');
 
+  // TODO/vue3. Update this comment.
   // We do not navigate to /login for a logout during login or during the
   // initial navigation. After the initial navigation, navigation is
   // synchronous, so a logout during navigation is not possible.
-  if (store.state.router.anyNavigationConfirmed &&
+  if (router.currentRoute !== VueRouter.START_LOCATION &&
     router.currentRoute.path !== '/login') {
     const location = { path: '/login' };
     if (setNext) location.query = { next: router.currentRoute.fullPath };
@@ -148,7 +145,7 @@ export const logOut = (container, setNext) => {
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
 const logOutBeforeSessionExpires = (container) => {
-  const { store } = container;
+  const { store, i18n, alert } = container;
   let alerted;
   return () => {
     const { session } = store.state.request.data;
@@ -157,12 +154,7 @@ const logOutBeforeSessionExpires = (container) => {
     const millisUntilLogout = millisUntilExpires - 60000;
     if (millisUntilLogout <= 0) {
       logOut(container, true)
-        .then(() => {
-          store.commit('setAlert', {
-            type: 'info',
-            message: i18n.t('util.session.alert.expired')
-          });
-        })
+        .then(() => { alert.info(i18n.t('util.session.alert.expired')); })
         .catch(noop);
     } else if (alerted !== session.token) {
       // The alert also mentions this number. The alert will be a little
@@ -170,10 +162,7 @@ const logOutBeforeSessionExpires = (container) => {
       // case is unlikely.
       const millisUntilAlert = millisUntilLogout - 120000;
       if (millisUntilAlert <= 0) {
-        store.commit('setAlert', {
-          type: 'info',
-          message: i18n.t('util.session.alert.expiresSoon')
-        });
+        alert.info(i18n.t('util.session.alert.expiresSoon'));
         alerted = session.token;
       }
     }

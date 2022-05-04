@@ -17,8 +17,8 @@ import { mapState } from 'vuex';
 import { pick } from 'ramda';
 
 import Option from '../../util/option';
+import Presenter from '../../presenters/base';
 import reconcileData from './request/reconcile';
-import { Presenter } from '../../presenters/base';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
 import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../../util/request';
 
@@ -32,7 +32,10 @@ const updateData = (oldData, newData, props) => {
   return { ...oldData, ...pick(props, newData) };
 };
 
-export default {
+export default (container) => {
+  const { i18n, alert, http, logger } = container;
+/* eslint-disable indent */ // TODO/vue3
+return {
   state: {
     // Using allKeys.reduce() in part so that `requests` has a reactive property
     // for each key.
@@ -111,15 +114,6 @@ export default {
     setRequestState({ requests }, { key, state }) {
       requests[key].last.state = state;
     },
-    resetRequests({ requests }) {
-      for (const key of allKeys) {
-        const requestsForKey = requests[key];
-        const { last } = requestsForKey;
-        last.promise = null;
-        last.state = null;
-        requestsForKey.cancelId = 0;
-      }
-    },
     // Cancels the last request for the key.
     cancelRequest({ requests }, key) {
       const requestsForKey = requests[key];
@@ -142,6 +136,13 @@ export default {
     setDataProp({ data }, { key, prop, value }) {
       const target = data[key] instanceof Option ? data[key].get() : data[key];
       Vue.set(target, prop, value);
+    },
+    setFromResponse({ data }, { key, response }) {
+      const transform = transforms[key];
+      const transformed = transform != null
+        ? transform(response, container)
+        : response.data;
+      data[key] = transformed;
     },
     clearData({ data }, key = undefined) {
       if (key != null) {
@@ -272,7 +273,7 @@ export default {
 
           // Response handling
           fulfillProblem = undefined,
-          alert = true,
+          alert: alertOption = true,
           success,
 
           // Existing data
@@ -320,7 +321,7 @@ export default {
           axiosConfig.headers = headers;
 
         const { cancelId } = requestsForKey;
-        const promise = Vue.prototype.$http.request(withAuth(axiosConfig, data.session))
+        const promise = http.request(withAuth(axiosConfig, data.session))
           .catch(error => {
             if (requestsForKey.cancelId !== cancelId)
               throw new Error('request was canceled');
@@ -330,11 +331,10 @@ export default {
               fulfillProblem(error.response.data))
               return error.response;
 
-            if (alert) {
-              logAxiosError(error);
+            if (alertOption) {
+              logAxiosError(logger, error);
               if (!alerted) {
-                const message = requestAlertMessage(error);
-                commit('setAlert', { type: 'danger', message });
+                alert.danger(requestAlertMessage(i18n, error));
                 alerted = true;
               }
             }
@@ -349,11 +349,7 @@ export default {
             commit('setRequestState', { key, state: 'success' });
 
             if (update == null) {
-              const transform = transforms[key];
-              const transformed = transform != null
-                ? transform(response)
-                : response.data;
-              commit('setData', { key, value: transformed });
+              commit('setFromResponse', { key, response });
             } else {
               commit('setData', {
                 key,
@@ -370,6 +366,8 @@ export default {
       }));
     }
   }
+};
+/* eslint-enable indent */
 };
 
 /*

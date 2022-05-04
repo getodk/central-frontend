@@ -1,5 +1,9 @@
-import Project from '../../src/presenters/project';
+import createCentralI18n from '../../src/i18n';
+import subclassPresenters from '../../src/presenters';
+
 import testData from '../data';
+
+const { Project } = subclassPresenters(createCentralI18n());
 
 describe('Project', () => {
   describe('nameWithArchived()', () => {
@@ -7,14 +11,14 @@ describe('Project', () => {
       const project = testData.extendedProjects.createNew({
         name: 'My Project'
       });
-      new Project(project).nameWithArchived().should.equal('My Project');
+      Project.from(project).nameWithArchived().should.equal('My Project');
     });
 
     it('appends (archived) if the project is archived', () => {
       const project = testData.extendedProjects
         .createPast(1, { name: 'My Project', archived: true })
         .last();
-      new Project(project).nameWithArchived().should.equal('My Project (archived)');
+      Project.from(project).nameWithArchived().should.equal('My Project (archived)');
     });
   });
 });

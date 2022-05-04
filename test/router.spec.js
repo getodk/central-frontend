@@ -1,7 +1,5 @@
 import sinon from 'sinon';
 
-import i18n from '../src/i18n';
-import { loadLocale } from '../src/util/i18n';
 import { noop } from '../src/util/util';
 
 import testData from './data';
@@ -17,7 +15,6 @@ describe('createCentralRouter()', () => {
     });
     afterEach(() => {
       delete navigator.language;
-      return loadLocale('en');
     });
 
     const setLanguage = (locale) => {
@@ -31,8 +28,8 @@ describe('createCentralRouter()', () => {
       setLanguage('es');
       return load('/login')
         .restoreSession(false)
-        .afterResponses(() => {
-          i18n.locale.should.equal('es');
+        .afterResponses(app => {
+          app.vm.$i18n.locale.should.equal('es');
         });
     });
 
@@ -40,8 +37,8 @@ describe('createCentralRouter()', () => {
       setLanguage('es-ES');
       return load('/login')
         .restoreSession(false)
-        .afterResponses(() => {
-          i18n.locale.should.equal('es');
+        .afterResponses(app => {
+          app.vm.$i18n.locale.should.equal('es');
         });
     });
 
@@ -49,8 +46,8 @@ describe('createCentralRouter()', () => {
       setLanguage('la');
       return load('/login')
         .restoreSession(false)
-        .afterResponses(() => {
-          i18n.locale.should.equal('en');
+        .afterResponses(app => {
+          app.vm.$i18n.locale.should.equal('en');
         });
     });
 
@@ -58,8 +55,8 @@ describe('createCentralRouter()', () => {
       localStorage.setItem('locale', 'es');
       return load('/login')
         .restoreSession(false)
-        .afterResponses(() => {
-          i18n.locale.should.equal('es');
+        .afterResponses(app => {
+          app.vm.$i18n.locale.should.equal('es');
         });
     });
 
@@ -71,8 +68,8 @@ describe('createCentralRouter()', () => {
           setLanguage('en');
         })
         .route('/reset-password')
-        .then(() => {
-          i18n.locale.should.equal('es');
+        .then(app => {
+          app.vm.$i18n.locale.should.equal('es');
         });
     });
   });

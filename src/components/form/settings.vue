@@ -57,6 +57,7 @@ export default {
   name: 'FormSettings',
   components: { FormDelete },
   mixins: [modal(), routes()],
+  inject: ['alert'],
   data() {
     return {
       deleteForm: {
@@ -71,7 +72,7 @@ export default {
     afterDelete(form) {
       this.$router.push(this.projectPath())
         .then(() => {
-          this.$alert().success(this.$t('alert.delete', {
+          this.alert.success(this.$t('alert.delete', {
             name: form.nameOrId()
           }));
         });

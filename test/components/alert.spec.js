@@ -1,26 +1,28 @@
 import Alert from '../../src/components/alert.vue';
 
-import store from '../../src/store';
-
+import createTestContainer from '../util/container';
 import { mount } from '../util/lifecycle';
 
-describe('Alert', () => {
-  beforeEach(() => {
-    store.commit('setAlert', { type: 'info', message: 'Something happened!' });
-  });
+const mountComponent = () => {
+  const container = createTestContainer();
+  const { alert } = container;
+  alert.info('Something happened!');
+  return mount(Alert, { container });
+};
 
+describe('Alert', () => {
   it('shows the message', () => {
-    const text = mount(Alert).get('.alert-message').text();
+    const text = mountComponent().get('.alert-message').text();
     text.should.equal('Something happened!');
   });
 
   it('adds a contextual class', () => {
-    mount(Alert).classes('alert-info').should.be.true();
+    mountComponent().classes('alert-info').should.be.true();
   });
 
   it('clicking the .close button hides the alert', async () => {
-    const alert = mount(Alert);
-    await alert.get('.close').trigger('click');
-    alert.should.be.hidden();
+    const component = mountComponent();
+    await component.get('.close').trigger('click');
+    component.should.be.hidden();
   });
 });
