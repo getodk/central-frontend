@@ -3,115 +3,275 @@ import { DateTime, Settings } from 'luxon';
 import sinon from 'sinon';
 
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
+import SubmissionFilters from '../../../src/components/submission/filters.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
+import { mergeMountOptions } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
+import { relativeUrl } from '../../util/request';
+import { setLuxon } from '../../util/date-time';
+import { testRouter } from '../../util/router';
+
+const loadComponent = (...args) => {
+  const [queryString, mountOptions] = typeof args[0] === 'string'
+    ? args
+    : ['', args[0]];
+  return loadSubmissionList(mergeMountOptions(mountOptions, {
+    container: { router: testRouter() }
+  }))
+    .route(`/projects/1/forms/f/submissions?${queryString}`);
+};
 
 describe('SubmissionFilters', () => {
   beforeEach(mockLogin);
 
-  it('initially does not filter submissions', () => {
-    testData.extendedForms.createPast(1);
-    return loadSubmissionList()
-      .beforeEachResponse((_, { url }) => {
-        url.should.not.containEql('%24filter=');
-      });
+  let restoreLuxon;
+  beforeEach(() => {
+    restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
+  });
+  afterEach(() => {
+    restoreLuxon();
   });
 
-  it('sends a request after the submitter filter is changed', () => {
-    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-    testData.extendedForms.createPast(1, { submissions: 1 });
-    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-    testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
-    return loadSubmissionList()
-      .complete()
-      .request(component => {
-        const select = component.get('#submission-filters-submitter select');
-        return select.setValue(fieldKey.id.toString());
-      })
-      .beforeEachResponse((_, { url }) => {
-        const match = url.match(/&%24filter=__system%2FsubmitterId\+eq\+(\d+)(&|$)/);
-        should.exist(match);
-        match[1].should.equal(fieldKey.id.toString());
-      })
-      .respondWithData(testData.submissionOData);
+  describe('initial filters', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1);
+    });
+
+    it('filters on submitter if ?submitter is specified', () =>
+      loadComponent('submitterId=1')
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc')) {
+            const filter = relativeUrl(url).searchParams.get('$filter');
+            filter.should.containEql('__system/submitterId eq 1');
+          }
+        })
+        .afterResponses(component => {
+          const filters = component.getComponent(SubmissionFilters).props();
+          filters.submitterId.should.equal('1');
+        }));
+
+    it('filters on review state if ?reviewState is specified', () =>
+      loadComponent('reviewState=%27approved%27&reviewState=null')
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc')) {
+            const filter = relativeUrl(url).searchParams.get('$filter');
+            // For now, we only use the first ?reviewState query parameter.
+            filter.should.containEql("(__system/reviewState eq 'approved')");
+          }
+        })
+        .afterResponses(component => {
+          const filters = component.getComponent(SubmissionFilters).props();
+          filters.reviewState.should.eql(["'approved'"]);
+        }));
+
+    it('filters on submission date if ?start and ?end are specified', () =>
+      loadComponent('start=1970-01-01&end=1970-01-02')
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc')) {
+            const filter = relativeUrl(url).searchParams.get('$filter');
+            filter.should.containEql('__system/submissionDate ge 1970-01-01T00:00:00.000Z and __system/submissionDate le 1970-01-02T23:59:59.999Z');
+          }
+        })
+        .afterResponses(component => {
+          const filters = component.getComponent(SubmissionFilters).props();
+          const [start, end] = filters.submissionDate;
+          start.toISO().should.equal('1970-01-01T00:00:00.000Z');
+          end.toISO().should.equal('1970-01-02T00:00:00.000Z');
+        }));
+
+    it('ignores any times specified in ?start and ?end', () =>
+      loadComponent('start=1970-01-01T12:00:00Z&end=1970-01-02T12:00:00Z')
+        .afterResponses(component => {
+          const filters = component.getComponent(SubmissionFilters).props();
+          const [start, end] = filters.submissionDate;
+          start.toISO().should.equal('1970-01-01T00:00:00.000Z');
+          end.toISO().should.equal('1970-01-02T00:00:00.000Z');
+        }));
+
+    describe('empty or invalid query parameters', () => {
+      const cases = [
+        '',
+        'submitterId=-1',
+        'submitterId=foo',
+        'submitterId',
+        'reviewState=foo',
+        'reviewState',
+        'start=1970-01-01',
+        'end=1970-01-01',
+        'start=1970-01-01&end=foo',
+        'start=1970-01-01&end',
+        'start=foo&end=1970-01-01',
+        'start&end=1970-01-01',
+        'start=1970-01-02&end=1970-01-01'
+      ];
+      for (const queryString of cases) {
+        it(`does not filter if the query string is ?${queryString}`, () =>
+          loadComponent(queryString)
+            .beforeEachResponse((_, { url }) => {
+              if (url.includes('.svc'))
+                relativeUrl(url).searchParams.has('$filter').should.be.false();
+            })
+            .afterResponses(component => {
+              const filters = component.getComponent(SubmissionFilters).props();
+              filters.submitterId.should.equal('');
+              filters.submissionDate.should.eql([]);
+              filters.reviewState.should.eql([]);
+            }));
+      }
+    });
   });
 
-  it('re-renders the table after the submitter filter is changed', () => {
-    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-    testData.extendedForms.createPast(1, { submissions: 3 });
-    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-    testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-    return loadSubmissionList({
-      props: { top: () => 2 }
-    })
-      .complete()
-      .request(component => {
-        sinon.replace(component.vm, 'scrolledToBottom', () => true);
-        document.dispatchEvent(new Event('scroll'));
+  describe('after the submitter filter is changed', () => {
+    beforeEach(() => {
+      testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
+      testData.extendedFieldKeys.createPast(1);
+    });
+
+    it('sends a request', () => {
+      const fieldKey = testData.extendedFieldKeys.last();
+      testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
+      return loadComponent()
+        .complete()
+        .request(component => {
+          const select = component.get('#submission-filters-submitter select');
+          return select.setValue(fieldKey.id.toString());
+        })
+        .beforeEachResponse((_, { url }) => {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.equal(`__system/submitterId eq ${fieldKey.id}`);
+        })
+        .respondWithData(testData.submissionOData);
+    });
+
+    it('updates the URL', () => {
+      const fieldKey = testData.extendedFieldKeys.last();
+      testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
+      return loadComponent()
+        .complete()
+        .request(component => {
+          const select = component.get('#submission-filters-submitter select');
+          return select.setValue(fieldKey.id.toString());
+        })
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          const { submitterId } = component.vm.$route.query;
+          submitterId.should.equal(fieldKey.id.toString());
+        });
+    });
+
+    it('re-renders the table', () => {
+      testData.extendedForms.createPast(1, { submissions: 3 });
+      const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+      testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
+      return loadComponent({
+        props: { top: () => 2 }
       })
-      .respondWithData(() => testData.submissionOData(2, 2))
-      .afterResponse(component => {
-        component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
-      })
-      .request(component => {
-        const select = component.get('#submission-filters-submitter select');
-        return select.setValue(fieldKey.id.toString());
-      })
-      .beforeEachResponse(component => {
-        component.findComponent(SubmissionMetadataRow).exists().should.be.false();
-      })
-      .respondWithData(() => testData.submissionOData(2, 0))
-      .afterResponse(component => {
-        component.findAllComponents(SubmissionMetadataRow).length.should.equal(2);
-      });
+        .complete()
+        .request(component => {
+          sinon.replace(component.vm, 'scrolledToBottom', () => true);
+          document.dispatchEvent(new Event('scroll'));
+        })
+        .respondWithData(() => testData.submissionOData(2, 2))
+        .afterResponse(component => {
+          component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
+        })
+        .request(component => {
+          const select = component.get('#submission-filters-submitter select');
+          return select.setValue(fieldKey.id.toString());
+        })
+        .beforeEachResponse(component => {
+          component.findComponent(SubmissionMetadataRow).exists().should.be.false();
+        })
+        .respondWithData(() => testData.submissionOData(2, 0))
+        .afterResponse(component => {
+          component.findAllComponents(SubmissionMetadataRow).length.should.equal(2);
+        });
+    });
   });
 
-  it('sends a request after the submission date filter is changed', () => {
-    testData.extendedForms.createPast(1);
-    return loadSubmissionList()
-      .complete()
-      .request(component => {
-        component.getComponent(DateRangePicker).vm.close([
-          DateTime.fromISO('1970-01-01').toJSDate(),
-          DateTime.fromISO('1970-01-02').toJSDate()
-        ]);
-      })
-      .beforeEachResponse((_, { url }) => {
-        const match = url.match(/&%24filter=__system%2FsubmissionDate\+ge\+([^+]+)\+and\+__system%2FsubmissionDate\+le\+([^+]+)(&|$)/);
-        should.exist(match);
+  describe('after the submission date filter is changed', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1);
+    });
 
-        const start = decodeURIComponent(match[1]);
-        start.should.startWith('1970-01-01T00:00:00.000');
-        DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
+    it('sends a request', () =>
+      loadComponent()
+        .complete()
+        .request(component => {
+          component.getComponent(DateRangePicker).vm.close([
+            DateTime.fromISO('1970-01-01').toJSDate(),
+            DateTime.fromISO('1970-01-02').toJSDate()
+          ]);
+        })
+        .beforeEachResponse((_, { url }) => {
+          const match = url.match(/&%24filter=__system%2FsubmissionDate\+ge\+([^+]+)\+and\+__system%2FsubmissionDate\+le\+([^+]+)(&|$)/);
+          should.exist(match);
 
-        const end = decodeURIComponent(match[2]);
-        end.should.startWith('1970-01-02T23:59:59.999');
-        DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
-      })
-      .respondWithData(testData.submissionOData);
+          const start = decodeURIComponent(match[1]);
+          start.should.equal('1970-01-01T00:00:00.000Z');
+          DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
+
+          const end = decodeURIComponent(match[2]);
+          end.should.equal('1970-01-02T23:59:59.999Z');
+          DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
+        })
+        .respondWithData(testData.submissionOData));
+
+    it('updates the URL', () =>
+      loadComponent()
+        .complete()
+        .request(component => {
+          component.getComponent(DateRangePicker).vm.close([
+            DateTime.fromISO('1970-01-01').toJSDate(),
+            DateTime.fromISO('1970-01-02').toJSDate()
+          ]);
+        })
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          const { start, end } = component.vm.$route.query;
+          start.should.equal('1970-01-01');
+          end.should.equal('1970-01-02');
+        }));
   });
 
-  it('sends a request after the review state filter is changed', () => {
-    testData.extendedForms.createPast(1);
-    return loadSubmissionList()
-      .complete()
-      .request(component => {
-        const select = component.get('#submission-filters-review-state select');
-        return select.setValue('null');
-      })
-      .beforeEachResponse((_, { url }) => {
-        url.should.match(/&%24filter=%28__system%2FreviewState\+eq\+null%29(&|$)/);
-      })
-      .respondWithData(testData.submissionOData);
+  describe('after the review state filter is changed', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1);
+    });
+
+    it('sends a request', () =>
+      loadComponent()
+        .complete()
+        .request(component => {
+          const select = component.get('#submission-filters-review-state select');
+          return select.setValue("'approved'");
+        })
+        .beforeEachResponse((_, { url }) => {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.equal("(__system/reviewState eq 'approved')");
+        })
+        .respondWithData(testData.submissionOData));
+
+    it('updates the URL', () =>
+      loadComponent()
+        .complete()
+        .request(component => {
+          const select = component.get('#submission-filters-review-state select');
+          return select.setValue("'approved'");
+        })
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          component.vm.$route.query.reviewState.should.eql(["'approved'"]);
+        }));
   });
 
   it.skip('allows multiple review states to be selected', () => {
     testData.extendedForms.createPast(1);
-    return loadSubmissionList()
+    return loadComponent()
       .complete()
       .request(component => {
         const select = component.get('#submission-filters-review-state select');
@@ -126,12 +286,12 @@ describe('SubmissionFilters', () => {
       .respondWithData(testData.submissionOData);
   });
 
-  it('specifies all the filters in the query parameter', () => {
+  it('specifies the filters together', () => {
     testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
     testData.extendedForms.createPast(1, { submissions: 1 });
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
     testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
-    return loadSubmissionList()
+    return loadComponent()
       .complete()
       .request(component => {
         const select = component.get('#submission-filters-submitter select');
@@ -152,9 +312,18 @@ describe('SubmissionFilters', () => {
         return select.setValue('null');
       })
       .beforeEachResponse((_, { url }) => {
-        url.should.match(/&%24filter=__system%2FsubmitterId\+eq\+\d+\+and\+__system%2FsubmissionDate\+ge\+[^+]+\+and\+__system%2FsubmissionDate\+le\+[^+]+\+and\+%28__system%2FreviewState\+eq\+null%29(&|$)/);
+        const filter = relativeUrl(url).searchParams.get('$filter');
+        filter.should.match(/__system\/submitterId eq \d+ and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)/);
       })
-      .respondWithData(() => testData.submissionOData(0));
+      .respondWithData(() => testData.submissionOData(0))
+      .afterResponse(component => {
+        component.vm.$route.query.should.eql({
+          submitterId: fieldKey.id.toString(),
+          start: '1970-01-01',
+          end: '1970-01-02',
+          reviewState: ['null']
+        });
+      });
   });
 
   it('numbers the rows based on the number of filtered submissions', () => {
@@ -166,7 +335,7 @@ describe('SubmissionFilters', () => {
     testData.extendedSubmissions.createPast(1, {
       submitter: testData.extendedFieldKeys.createPast(1).last()
     });
-    return loadSubmissionList()
+    return loadComponent()
       .complete()
       .request(component => {
         const select = component.get('#submission-filters-submitter select');
@@ -190,20 +359,20 @@ describe('SubmissionFilters', () => {
     testData.extendedSubmissions.createPast(1, {
       submitter: testData.extendedFieldKeys.createPast(1).last()
     });
-    return load('/projects/1/forms/f/submissions', { root: false })
-      .afterResponses(component => {
-        component.vm.$store.state.request.data.form.submissions.should.equal(2);
+    return load('/projects/1/forms/f/submissions')
+      .afterResponses(app => {
+        app.vm.$store.state.request.data.form.submissions.should.equal(2);
       })
-      .request(component => {
-        const select = component.get('#submission-filters-submitter select');
+      .request(app => {
+        const select = app.get('#submission-filters-submitter select');
         return select.setValue(testData.extendedFieldKeys.last().id.toString());
       })
       .respondWithData(() => ({
         value: [testData.extendedSubmissions.last()._odata],
         '@odata.count': 1
       }))
-      .afterResponse(component => {
-        component.vm.$store.state.request.data.form.submissions.should.equal(2);
+      .afterResponse(app => {
+        app.vm.$store.state.request.data.form.submissions.should.equal(2);
       });
   });
 
@@ -213,7 +382,7 @@ describe('SubmissionFilters', () => {
       testData.extendedForms.createPast(1, { submissions: 3 });
       const fieldKey = testData.extendedFieldKeys.createPast(1).last();
       testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-      return loadSubmissionList({
+      return loadComponent({
         props: { top: () => 2 }
       })
         .complete()
@@ -233,7 +402,7 @@ describe('SubmissionFilters', () => {
       testData.extendedForms.createPast(1, { submissions: 5 });
       const fieldKey = testData.extendedFieldKeys.createPast(1).last();
       testData.extendedSubmissions.createPast(5, { submitter: fieldKey });
-      return loadSubmissionList({
+      return loadComponent({
         props: { top: () => 2 }
       })
         .complete()
@@ -260,7 +429,7 @@ describe('SubmissionFilters', () => {
         testData.extendedForms.createPast(1, { submissions: 3 });
         const fieldKey = testData.extendedFieldKeys.createPast(1).last();
         testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-        return loadSubmissionList({
+        return loadComponent({
           props: { top: () => 2 }
         })
           .complete()
@@ -286,7 +455,7 @@ describe('SubmissionFilters', () => {
         testData.extendedForms.createPast(1, { submissions: 4 });
         const fieldKey = testData.extendedFieldKeys.createPast(1).last();
         testData.extendedSubmissions.createPast(4, { submitter: fieldKey });
-        return loadSubmissionList({
+        return loadComponent({
           props: { top: () => 2 }
         })
           .complete()

@@ -17,6 +17,7 @@ except according to the terms contained in the LICENSE file.
     <select v-else class="form-control" :value="value"
       @change="$emit('input', $event.target.value)">
       <option value="">{{ $t('common.anybody') }}</option>
+      <option v-if="unknown" :value="value">{{ $t('unknown') }}</option>
       <option v-for="submitter of submitters" :key="submitter.id"
         :value="submitter.id.toString()">
         {{ submitter.displayName }}
@@ -44,6 +45,10 @@ export default {
     ...requestData(['submitters']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(['submitters']);
+    },
+    unknown() {
+      return this.value !== '' &&
+        !this.submitters.some(submitter => this.value === submitter.id.toString());
     }
   }
 };
@@ -62,7 +67,8 @@ export default {
       // This is the text of a form field that shows the names of users who have
       // submitted data.
       "submitter": "Submitted by"
-    }
+    },
+    "unknown": "Unknown submitter"
   }
 }
 </i18n>

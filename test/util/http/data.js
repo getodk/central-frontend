@@ -25,7 +25,7 @@ const defaults = {
   attachments: () => (testData.extendedFormVersions.last().publishedAt == null
     ? testData.standardFormAttachments.sorted()
     : mockResponse.problem(404.1)),
-  odataChunk: testData.submissionOData,
+  odataChunk: () => testData.submissionOData(250),
   keys: () => testData.standardKeys.sorted(),
   submitters: () => testData.extendedFieldKeys
     .sorted()

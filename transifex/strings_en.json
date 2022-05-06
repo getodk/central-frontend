@@ -3559,6 +3559,9 @@
           "string": "Submitted by",
           "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
         }
+      },
+      "unknown": {
+        "string": "Unknown submitter"
       }
     },
     "SubmissionList": {

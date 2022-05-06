@@ -15,7 +15,9 @@ except according to the terms contained in the LICENSE file.
     <div v-show="fields != null">
       <div id="submission-list-actions">
         <form class="form-inline" @submit.prevent>
-          <submission-filters v-if="!draft" v-bind.sync="filters"/>
+          <submission-filters v-if="!draft" :submitter-id.sync="submitterId"
+            :submission-date.sync="submissionDateRange"
+            :review-state.sync="reviewStates"/>
           <submission-field-dropdown
             v-if="fields != null && selectableFields.length > 11"
             v-model="selectedFields"/>
@@ -55,6 +57,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { DateTime } from 'luxon';
 import { last } from 'ramda';
 import { mapGetters } from 'vuex';
 
@@ -68,8 +71,10 @@ import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
 import modal from '../../mixins/modal';
+import useReviewState from '../../composables/review-state';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { odataLiteral } from '../../util/odata';
 import { requestData } from '../../store/modules/request';
 
 export default {
@@ -102,13 +107,12 @@ export default {
       default: (skip) => (skip < 1000 ? 250 : 1000)
     }
   },
+  setup() {
+    const { reviewStates: allReviewStates } = useReviewState();
+    return { allReviewStates };
+  },
   data() {
     return {
-      filters: {
-        submitterId: '',
-        submissionDate: [],
-        reviewState: []
-      },
       selectedFields: null,
       refreshing: false,
       submissions: null,
@@ -139,18 +143,60 @@ export default {
       'submitters'
     ]),
     ...mapGetters(['selectableFields']),
+    submitterId: {
+      get() {
+        const { submitterId } = this.$route.query;
+        return typeof submitterId === 'string' && /^[1-9]\d*$/.test(submitterId)
+          ? submitterId
+          : '';
+      },
+      set(submitterId) {
+        this.replaceFilters({ submitterId });
+      }
+    },
+    submissionDateRange: {
+      get() {
+        const { query } = this.$route;
+        if (typeof query.start === 'string' && typeof query.end === 'string') {
+          const start = DateTime.fromISO(query.start);
+          const end = DateTime.fromISO(query.end);
+          if (start.isValid && end.isValid && start <= end)
+            return [start.startOf('day'), end.startOf('day')];
+        }
+        return [];
+      },
+      set(submissionDateRange) {
+        return this.replaceFilters({ submissionDateRange });
+      }
+    },
+    reviewStates: {
+      get() {
+        const { query } = this.$route;
+        const values = Array.isArray(query.reviewState)
+          ? query.reviewState.filter(reviewState => typeof reviewState === 'string')
+          : (typeof query.reviewState === 'string' ? [query.reviewState] : []);
+        return values
+          .filter(value => this.allReviewStates.some(reviewState =>
+            value === odataLiteral(reviewState)))
+          .splice(0, 1);
+      },
+      set(reviewStates) {
+        this.replaceFilters({ reviewStates });
+      }
+    },
     odataFilter() {
+      if (this.draft) return null;
       const conditions = [];
-      if (this.filters.submitterId !== '')
-        conditions.push(`__system/submitterId eq ${this.filters.submitterId}`);
-      if (this.filters.submissionDate.length !== 0) {
-        const start = this.filters.submissionDate[0].toISO();
-        const end = this.filters.submissionDate[1].endOf('day').toISO();
+      if (this.submitterId !== '')
+        conditions.push(`__system/submitterId eq ${this.submitterId}`);
+      if (this.submissionDateRange.length !== 0) {
+        const start = this.submissionDateRange[0].toISO();
+        const end = this.submissionDateRange[1].endOf('day').toISO();
         conditions.push(`__system/submissionDate ge ${start}`);
         conditions.push(`__system/submissionDate le ${end}`);
       }
-      if (this.filters.reviewState.length !== 0) {
-        const condition = this.filters.reviewState
+      if (this.reviewStates.length !== 0) {
+        const condition = this.reviewStates
           .map(reviewState => `__system/reviewState eq ${reviewState}`)
           .join(' or ');
         conditions.push(`(${condition})`);
@@ -194,9 +240,9 @@ export default {
     }
   },
   watch: {
-    'filters.submitterId': 'filter',
-    'filters.submissionDate': 'filter',
-    'filters.reviewState': 'filter',
+    odataFilter() {
+      this.fetchChunk(0, true);
+    },
     selectedFields(_, oldFields) {
       if (oldFields != null) this.fetchChunk(0, true);
     },
@@ -305,8 +351,19 @@ export default {
         this.fetchChunk(this.skip, false);
       }
     },
-    filter() {
-      this.fetchChunk(0, true);
+    replaceFilters({
+      submitterId = this.submitterId,
+      submissionDateRange = this.submissionDateRange,
+      reviewStates = this.reviewStates
+    }) {
+      const query = {};
+      if (submitterId !== '') query.submitterId = submitterId;
+      if (submissionDateRange.length !== 0) {
+        query.start = submissionDateRange[0].toISODate();
+        query.end = submissionDateRange[1].toISODate();
+      }
+      query.reviewState = reviewStates;
+      this.$router.replace({ path: this.$route.path, query });
     },
     showReview(submission) {
       this.review.submission = submission;

@@ -64,6 +64,11 @@ describe('SubmissionFiltersSubmitter', () => {
     select.element.value.should.equal(id.toString());
   });
 
+  it('renders correctly if the value prop is an unknown submitter', () => {
+    const option = mountComponent({ value: '42' }).get('option[value="42"]');
+    option.text().should.equal('Unknown submitter');
+  });
+
   it('emits an input event', () => {
     const { id } = testData.extendedFieldKeys
       .createPast(1, 'App User 1')
