@@ -17,8 +17,10 @@ const icons = new Map()
   .set('edited', 'icon-pencil')
   .set('approved', 'icon-check-circle')
   .set('rejected', 'icon-times-circle');
+const reviewStates = [...icons.keys()];
+icons.set('received', icons.get(null));
 
 export default always({
-  reviewStates: [...icons.keys()],
+  reviewStates,
   reviewStateIcon: (reviewState) => icons.get(reviewState)
 });
