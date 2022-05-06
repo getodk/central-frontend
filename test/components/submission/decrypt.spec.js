@@ -8,6 +8,7 @@ import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
+import { relativeUrl } from '../../util/request';
 import { waitUntil } from '../../util/util';
 
 const mountComponent = (options = {}) => {
@@ -28,11 +29,7 @@ const mountComponent = (options = {}) => {
   });
 };
 
-const aUrl = (a) => {
-  const { href } = a.attributes();
-  href.should.startWith('/');
-  return new URL(href, window.location.origin);
-};
+const aUrl = (a) => relativeUrl(a.attributes().href);
 
 describe('SubmissionDownload', () => {
   beforeEach(mockLogin);

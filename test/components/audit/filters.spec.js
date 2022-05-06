@@ -6,6 +6,7 @@ import DateRangePicker from '../../../src/components/date-range-picker.vue';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { relativeUrl } from '../../util/request';
 import { setLuxon } from '../../util/date-time';
 
 describe('AuditFilters', () => {
@@ -35,9 +36,7 @@ describe('AuditFilters', () => {
     const restoreLuxon = setLuxon({ now: '1970-01-01T12:00:00' });
     return load('/system/audits', { root: false })
       .beforeEachResponse((component, { url }) => {
-        const index = url.indexOf('?');
-        index.should.not.equal(-1);
-        const params = new URLSearchParams(url.slice(index));
+        const params = relativeUrl(url).searchParams;
 
         const start = params.get('start');
         start.should.startWith('1970-01-01T00:00:00.000');
