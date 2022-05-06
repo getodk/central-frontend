@@ -101,7 +101,6 @@ export default {
 
 <style lang="scss">
 #user-edit-password input[autocomplete="username"] { display: none; }
-#user-edit-password-confirm ~ .Password { display: none; }
 </style>
 
 <i18n lang="json5">
