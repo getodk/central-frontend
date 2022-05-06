@@ -697,6 +697,9 @@
       "string": "Forum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
     },
+    "loading": {
+      "string": "Loading…"
+    },
     "no": {
       "string": "No"
     },
@@ -2490,11 +2493,6 @@
         "body": {
           "string": "You can always get help from others on the forum, where you can also search previous questions."
         }
-      }
-    },
-    "Loading": {
-      "text": {
-        "string": "Loading…"
       }
     },
     "MarkdownTextarea": {

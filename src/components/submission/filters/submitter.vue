@@ -11,15 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="submission-filters-submitter" class="form-group">
-    <select class="form-control" :value="value"
+    <select v-if="initiallyLoading" class="form-control" disabled>
+      <option>{{ $t('common.loading') }}</option>
+    </select>
+    <select v-else class="form-control" :value="value"
       @change="$emit('input', $event.target.value)">
       <option value="">{{ $t('common.anybody') }}</option>
-      <template v-if="submitters != null">
-        <option v-for="submitter of submitters" :key="submitter.id"
-          :value="submitter.id.toString()">
-          {{ submitter.displayName }}
-        </option>
-      </template>
+      <option v-for="submitter of submitters" :key="submitter.id"
+        :value="submitter.id.toString()">
+        {{ submitter.displayName }}
+      </option>
     </select>
     <span class="form-label">{{ $t('field.submitter') }}</span>
   </label>
@@ -37,9 +38,14 @@ export default {
     }
   },
   emits: ['update:modelValue'],
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['submitters'])
+  computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(['submitters']),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(['submitters']);
+    }
+  }
 };
 </script>
 

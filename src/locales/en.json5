@@ -315,6 +315,7 @@
     "filter": "Filter",
     // This is the text of a link that links to the ODK forum.
     "forum": "Forum",
+    "loading": "Loading…",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
