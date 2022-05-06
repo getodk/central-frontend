@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 */
 import { always } from 'ramda';
 
-const icons = {
-  hasIssues: 'icon-comments',
-  edited: 'icon-pencil',
-  approved: 'icon-check-circle',
-  rejected: 'icon-times-circle'
-};
+const icons = new Map()
+  .set(null, 'icon-dot-circle-o')
+  .set('hasIssues', 'icon-comments')
+  .set('edited', 'icon-pencil')
+  .set('approved', 'icon-check-circle')
+  .set('rejected', 'icon-times-circle');
 
 export default always({
-  reviewStateIcon: (reviewState) =>
-    (reviewState == null ? 'icon-dot-circle-o' : icons[reviewState])
+  reviewStates: [...icons.keys()],
+  reviewStateIcon: (reviewState) => icons.get(reviewState)
 });

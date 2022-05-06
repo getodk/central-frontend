@@ -13,17 +13,19 @@ except according to the terms contained in the LICENSE file.
   <label id="submission-filters-review-state" class="form-group">
     <select v-model="selectValue" class="form-control">
       <option value="">{{ $t('anyState') }}</option>
-      <option value="null">{{ $t('reviewState.null') }}</option>
-      <option value="'approved'">{{ $t('reviewState.approved') }}</option>
-      <option value="'hasIssues'">{{ $t('reviewState.hasIssues') }}</option>
-      <option value="'edited'">{{ $t('reviewState.edited') }}</option>
-      <option value="'rejected'">{{ $t('reviewState.rejected') }}</option>
+      <option v-for="reviewState of reviewStates" :key="reviewState"
+        :value="odataLiteral(reviewState)">
+        {{ $t(`reviewState.${reviewState}`) }}
+      </option>
     </select>
     <span class="form-label">{{ $t('field.reviewState') }}</span>
   </label>
 </template>
 
 <script>
+import useReviewState from '../../../composables/review-state';
+import { odataLiteral } from '../../../util/odata';
+
 export default {
   name: 'SubmissionFiltersReviewState',
   props: {
@@ -38,6 +40,10 @@ export default {
     }
   },
   emits: ['update:modelValue'],
+  setup() {
+    const { reviewStates } = useReviewState();
+    return { reviewStates };
+  },
   computed: {
     selectValue: {
       get() {
@@ -47,6 +53,9 @@ export default {
         this.$emit('input', value !== '' ? [value] : []);
       }
     }
+  },
+  methods: {
+    odataLiteral
   }
 };
 </script>
