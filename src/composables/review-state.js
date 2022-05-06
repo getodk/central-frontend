@@ -9,12 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-
-/*
-This mixin includes methods related to submission review state.
-
-The mixin factory does not take any options.
-*/
+import { always } from 'ramda';
 
 const icons = {
   hasIssues: 'icon-comments',
@@ -23,13 +18,7 @@ const icons = {
   rejected: 'icon-times-circle'
 };
 
-// @vue/component
-const mixin = {
-  methods: {
-    reviewStateIcon(reviewState) {
-      return reviewState == null ? 'icon-dot-circle-o' : icons[reviewState];
-    }
-  }
-};
-
-export default () => mixin;
+export default always({
+  reviewStateIcon: (reviewState) =>
+    (reviewState == null ? 'icon-dot-circle-o' : icons[reviewState])
+});

@@ -54,16 +54,14 @@ import { last } from 'ramda';
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import MarkdownView from '../markdown/view.vue';
-
-import reviewState from '../../mixins/review-state';
 import SubmissionDiffItem from './diff-item.vue';
 
+import useReviewState from '../../composables/review-state';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionFeedEntry',
   components: { ActorLink, DateTime, MarkdownView, SubmissionDiffItem },
-  mixins: [reviewState()],
   props: {
     projectId: {
       type: String,
@@ -81,6 +79,10 @@ export default {
       type: Object,
       required: true
     }
+  },
+  setup() {
+    const { reviewStateIcon } = useReviewState();
+    return { reviewStateIcon };
   },
   computed: {
     ...requestData(['diffs']),
