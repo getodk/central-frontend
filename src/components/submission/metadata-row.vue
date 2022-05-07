@@ -55,13 +55,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 
-import reviewState from '../../mixins/review-state';
+import useReviewState from '../../composables/review-state';
 import { apiPaths } from '../../util/request';
 
 export default {
   name: 'SubmissionMetadataRow',
   components: { DateTime },
-  mixins: [reviewState()],
   props: {
     projectId: {
       type: String,
@@ -81,6 +80,10 @@ export default {
       required: true
     },
     canUpdate: Boolean
+  },
+  setup() {
+    const { reviewStateIcon } = useReviewState();
+    return { reviewStateIcon };
   },
   computed: {
     missingMedia() {

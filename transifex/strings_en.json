@@ -697,6 +697,9 @@
       "string": "Forum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
     },
+    "loading": {
+      "string": "Loading…"
+    },
     "no": {
       "string": "No"
     },
@@ -2492,11 +2495,6 @@
         }
       }
     },
-    "Loading": {
-      "text": {
-        "string": "Loading…"
-      }
-    },
     "MarkdownTextarea": {
       "markdownSupported": {
         "string": "Markdown supported",
@@ -3561,6 +3559,9 @@
           "string": "Submitted by",
           "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
         }
+      },
+      "unknown": {
+        "string": "Unknown submitter"
       }
     },
     "SubmissionList": {

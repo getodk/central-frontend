@@ -11,15 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="submission-filters-submitter" class="form-group">
-    <select class="form-control" :value="value"
-      @change="$emit('input', $event.target.value)">
+    <select v-if="initiallyLoading" class="form-control" disabled>
+      <option value="">{{ $t('common.loading') }}</option>
+    </select>
+    <select v-else v-model="selectValue" class="form-control">
       <option value="">{{ $t('common.anybody') }}</option>
-      <template v-if="submitters != null">
-        <option v-for="submitter of submitters" :key="submitter.id"
-          :value="submitter.id.toString()">
-          {{ submitter.displayName }}
-        </option>
-      </template>
+      <option v-if="unknown" :value="value">{{ $t('unknown') }}</option>
+      <option v-for="submitter of submitters" :key="submitter.id"
+        :value="submitter.id.toString()">
+        {{ submitter.displayName }}
+      </option>
     </select>
     <span class="form-label">{{ $t('field.submitter') }}</span>
   </label>
@@ -37,9 +38,26 @@ export default {
     }
   },
   emits: ['update:modelValue'],
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['submitters'])
+  computed: {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    ...requestData(['submitters']),
+    initiallyLoading() {
+      return this.$store.getters.initiallyLoading(['submitters']);
+    },
+    selectValue: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit('input', value);
+      }
+    },
+    unknown() {
+      return this.value !== '' &&
+        !this.submitters.some(submitter => this.value === submitter.id.toString());
+    }
+  }
 };
 </script>
 
@@ -56,7 +74,8 @@ export default {
       // This is the text of a form field that shows the names of users who have
       // submitted data.
       "submitter": "Submitted by"
-    }
+    },
+    "unknown": "Unknown submitter"
   }
 }
 </i18n>

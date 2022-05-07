@@ -1,8 +1,22 @@
-import { instanceNameOrId } from '../../src/util/odata';
+import { instanceNameOrId, odataLiteral } from '../../src/util/odata';
 
 import testData from '../data';
 
 describe('util/odata', () => {
+  describe('odataLiteral()', () => {
+    it('returns null for null', () => {
+      odataLiteral(null).should.equal('null');
+    });
+
+    it('encloses a string in single quotes', () => {
+      odataLiteral('foo').should.equal("'foo'");
+    });
+
+    it('escapes single quotes', () => {
+      odataLiteral("'foo'").should.equal("'''foo'''");
+    });
+  });
+
   describe('instanceNameOrId()', () => {
     it('returns the instance name if it is string', () => {
       testData.extendedForms.createPast(1, {

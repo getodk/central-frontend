@@ -75,13 +75,16 @@ import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
-import reviewState from '../../mixins/review-state';
+import useReviewState from '../../composables/review-state';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'SubmissionBasicDetails',
   components: { DateTime, FormVersionString, Loading, PageSection },
-  mixins: [reviewState()],
+  setup() {
+    const { reviewStateIcon } = useReviewState();
+    return { reviewStateIcon };
+  },
   computed: {
     ...requestData(['submission', 'submissionVersion']),
     initiallyLoading() {

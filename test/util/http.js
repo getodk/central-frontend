@@ -308,6 +308,7 @@ class MockHttp {
     // previousPromise is used to chain series.
     previousPromise = null,
     location = null,
+    confirmBeforeMount = true,
     mount = null,
     request = null,
     // Array of response callbacks
@@ -318,6 +319,7 @@ class MockHttp {
     this._container = container;
     this._previousPromise = previousPromise;
     this._location = location;
+    this._confirmBeforeMount = confirmBeforeMount;
     this._mount = mount;
     this._request = request;
     this._responses = responses;
@@ -330,6 +332,7 @@ class MockHttp {
       container: this._container,
       previousPromise: this._previousPromise,
       location: this._location,
+      confirmBeforeMount: this._confirmBeforeMount,
       mount: this._mount,
       request: this._request,
       responses: this._responses,
@@ -344,10 +347,16 @@ class MockHttp {
   //////////////////////////////////////////////////////////////////////////////
   // REQUESTS
 
-  route(location) {
+  // Specifies the location to navigate to. If this is the first navigation,
+  // then the navigation will be triggered before the component is mounted. In
+  // that case, by default, mockHttp() will wait for a confirmed navigation
+  // before mounting the component. To instead mount the component immediately,
+  // without waiting, specify `false` for the optional second argument (this is
+  // rare).
+  route(location, confirmBeforeMount = true) {
     if (this._location != null)
       throw new Error('cannot call route() more than once in a single series');
-    return this._with({ location });
+    return this._with({ location, confirmBeforeMount });
   }
 
   mount(component, options = undefined, throwIfEmit = undefined) {
@@ -710,6 +719,7 @@ class MockHttp {
   _navigate() {
     const { router } = this._container;
     if (router == null) throw new Error('container does not contain a router');
+    // TODO/vue3. Simplify this.
     return new Promise(resolve => {
       const removeHook = router.afterEach(() => {
         removeHook();
@@ -721,10 +731,8 @@ class MockHttp {
 
   _navigateAndMount() {
     if (this._location != null && this._mount != null) {
-      // If both this.route() and this.mount() were specified, then this is the
-      // first navigation. In that case, we trigger the navigation, then mount
-      // the component without waiting for a confirmed navigation, matching what
-      // happens in production.
+      if (this._confirmBeforeMount)
+        return this._navigate().then(() => { this._component = this._mount(); });
       const promise = this._navigate();
       this._component = this._mount();
       return promise;
@@ -871,7 +879,9 @@ export const load = (
   }
 
   return mockHttp()
-    .route(location)
+    // We will mount the component without waiting for a confirmed navigation
+    // because that is the behavior in production for the root component.
+    .route(location, false)
     .mount(App, mergeMountOptions(mountOptions, {
       container: { router: testRouter() }
     }))

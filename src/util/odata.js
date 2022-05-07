@@ -10,10 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-// eslint-disable-next-line import/prefer-default-export
-export const instanceNameOrId = (submission) => {
-  const { meta } = submission;
+// Converts a string value or `null` to an OData literal value.
+export const odataLiteral = (value) => (value != null
+  ? `'${value.replaceAll("'", "''")}'`
+  : 'null');
+
+export const instanceNameOrId = (odata) => {
+  const { meta } = odata;
   return meta != null && typeof meta.instanceName === 'string'
     ? meta.instanceName
-    : submission.__id;
+    : odata.__id;
 };

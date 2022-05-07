@@ -10,6 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+import { odataLiteral } from './odata';
+
 export const queryString = (query) => {
   if (query == null) return '';
   const entries = Object.entries(query);
@@ -101,8 +103,8 @@ export const apiPaths = {
   submission: submissionPath(''),
   odataSubmission: (projectId, xmlFormId, instanceId) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
-    const encodedInstanceId = encodeURIComponent(instanceId.replaceAll("'", "''"));
-    return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions('${encodedInstanceId}')`;
+    const encodedInstanceId = encodeURIComponent(odataLiteral(instanceId));
+    return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions(${encodedInstanceId})`;
   },
   editSubmission: submissionPath('/edit'),
   submissionAttachment: (projectId, xmlFormId, draft, instanceId, attachmentName) => {
