@@ -12,10 +12,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <label id="submission-filters-submitter" class="form-group">
     <select v-if="initiallyLoading" class="form-control" disabled>
-      <option>{{ $t('common.loading') }}</option>
+      <option value="">{{ $t('common.loading') }}</option>
     </select>
-    <select v-else class="form-control" :value="value"
-      @change="$emit('input', $event.target.value)">
+    <select v-else v-model="selectValue" class="form-control">
       <option value="">{{ $t('common.anybody') }}</option>
       <option v-if="unknown" :value="value">{{ $t('unknown') }}</option>
       <option v-for="submitter of submitters" :key="submitter.id"
@@ -45,6 +44,14 @@ export default {
     ...requestData(['submitters']),
     initiallyLoading() {
       return this.$store.getters.initiallyLoading(['submitters']);
+    },
+    selectValue: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit('input', value);
+      }
     },
     unknown() {
       return this.value !== '' &&
