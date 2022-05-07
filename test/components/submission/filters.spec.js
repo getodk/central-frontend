@@ -46,7 +46,7 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.containEql('__system/submitterId eq 1');
+            filter.should.equal('__system/submitterId eq 1');
           }
         })
         .afterResponses(component => {
@@ -60,7 +60,7 @@ describe('SubmissionFilters', () => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
             // For now, we only use the first ?reviewState query parameter.
-            filter.should.containEql("(__system/reviewState eq 'approved')");
+            filter.should.equal("(__system/reviewState eq 'approved')");
           }
         })
         .afterResponses(component => {
@@ -73,7 +73,7 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.containEql('__system/submissionDate ge 1970-01-01T00:00:00.000Z and __system/submissionDate le 1970-01-02T23:59:59.999Z');
+            filter.should.equal('__system/submissionDate ge 1970-01-01T00:00:00.000Z and __system/submissionDate le 1970-01-02T23:59:59.999Z');
           }
         })
         .afterResponses(component => {
@@ -98,6 +98,7 @@ describe('SubmissionFilters', () => {
         'submitterId=-1',
         'submitterId=foo',
         'submitterId',
+        'submitterId=1&submitterId=1',
         'reviewState=foo',
         'reviewState',
         'start=1970-01-01',
@@ -106,7 +107,9 @@ describe('SubmissionFilters', () => {
         'start=1970-01-01&end',
         'start=foo&end=1970-01-01',
         'start&end=1970-01-01',
-        'start=1970-01-02&end=1970-01-01'
+        'start=1970-01-02&end=1970-01-01',
+        'start=1970-01-01&end=1970-01-02&start=1970-01-01',
+        'start=1970-01-01&end=1970-01-02&end=1970-01-02'
       ];
       for (const queryString of cases) {
         it(`does not filter if the query string is ?${queryString}`, () =>
@@ -165,7 +168,7 @@ describe('SubmissionFilters', () => {
 
     it('re-renders the table', () => {
       testData.extendedForms.createPast(1, { submissions: 3 });
-      const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+      const fieldKey = testData.extendedFieldKeys.last();
       testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
       return loadComponent({
         props: { top: () => 2 }
@@ -288,7 +291,6 @@ describe('SubmissionFilters', () => {
 
   it('specifies the filters together', () => {
     testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-    testData.extendedForms.createPast(1, { submissions: 1 });
     const fieldKey = testData.extendedFieldKeys.createPast(1).last();
     testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
     return loadComponent()
@@ -313,7 +315,7 @@ describe('SubmissionFilters', () => {
       })
       .beforeEachResponse((_, { url }) => {
         const filter = relativeUrl(url).searchParams.get('$filter');
-        filter.should.match(/__system\/submitterId eq \d+ and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)/);
+        filter.should.match(/^__system\/submitterId eq \d+ and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)$/);
       })
       .respondWithData(() => testData.submissionOData(0))
       .afterResponse(component => {
