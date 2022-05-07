@@ -17,19 +17,13 @@ except according to the terms contained in the LICENSE file.
       :autocomplete="autocomplete" @input="$emit('input', $event.target.value)"
       @change="$emit('change', $event.target.value)">
     <span class="form-label">{{ placeholder }}{{ star }}</span>
-    <password v-if="autocomplete === 'new-password'" :value="value"
-      strength-meter-only
-      strength-meter-class="Password__strength-meter password-strength"/>
     <slot name="after"></slot>
   </label>
 </template>
 
 <script>
-import { loadAsync } from '../util/load-async';
-
 export default {
   name: 'FormGroup',
-  components: { Password: loadAsync('Password') },
   inheritAttrs: false,
   props: {
     value: {

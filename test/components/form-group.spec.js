@@ -71,7 +71,7 @@ describe('FormGroup', () => {
     formGroup.get('input').attributes().autocomplete.should.equal('name');
   });
 
-  it("shows password strength meter if autocomplete prop equals 'new-password'", async () => {
+  it.skip("shows password strength meter if autocomplete prop equals 'new-password'", async () => {
     const formGroup = mountComponent({
       props: { value: 'foo', autocomplete: 'new-password' }
     });
