@@ -9,6 +9,7 @@ import { load, mockHttp } from '../util/http';
 import { mockLogin } from '../util/session';
 import { mockRouter } from '../util/router';
 import { setData } from '../util/store';
+import { withSetup } from '../util/lifecycle';
 
 describe('util/session', () => {
   describe('session restore', () => {
@@ -574,7 +575,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -592,8 +593,7 @@ describe('util/session', () => {
         .respondWithSuccess()
         .afterResponse(() => {
           should.not.exist(store.state.request.data.session);
-        })
-        .finally(cleanup);
+        });
     });
 
     it('sets the ?next query parameter', () => {
@@ -622,7 +622,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -639,15 +639,14 @@ describe('util/session', () => {
           alert.state.should.be.true();
           alert.type.should.equal('info');
           alert.message.should.startWith('Your session has expired.');
-        })
-        .finally(cleanup);
+        });
     });
 
     it('does not attempt to log out if there was already a logout', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -661,8 +660,7 @@ describe('util/session', () => {
         .complete()
         .testNoRequest(() => {
           clock.tick(240000);
-        })
-        .finally(cleanup);
+        });
     });
   });
 
@@ -710,7 +708,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -725,15 +723,14 @@ describe('util/session', () => {
           alert.state.should.be.true();
           alert.type.should.equal('info');
           alert.message.should.startWith('Your session will expire in 2 minutes,');
-        })
-        .finally(cleanup);
+        });
     });
 
     it('does not show the alert more than once for the same session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -763,15 +760,14 @@ describe('util/session', () => {
         .afterResponse(() => {
           clock.tick(120000);
           alert.state.should.be.true();
-        })
-        .finally(cleanup);
+        });
     });
 
     it('does not show the alert if there was already a logout', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -786,8 +782,7 @@ describe('util/session', () => {
           alert.blank();
           clock.tick(120000);
           alert.state.should.be.false();
-        })
-        .finally(cleanup);
+        });
     });
   });
 
@@ -795,7 +790,7 @@ describe('util/session', () => {
     it('logs out after sessionExpires changes', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)
@@ -811,14 +806,13 @@ describe('util/session', () => {
         .respondWithProblem(401.2)
         .afterResponse(() => {
           should.not.exist(store.state.request.data.session);
-        })
-        .finally(cleanup);
+        });
     });
 
     it('logs out after local storage is cleared', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)
@@ -834,8 +828,7 @@ describe('util/session', () => {
         .respondWithSuccess()
         .afterResponse(() => {
           should.not.exist(store.state.request.data.session);
-        })
-        .finally(cleanup);
+        });
     });
 
     it('sets the ?next query parameter', () => {
@@ -857,7 +850,7 @@ describe('util/session', () => {
     it('does not attempt to log out if there was already a logout', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)
@@ -872,14 +865,13 @@ describe('util/session', () => {
             key: 'sessionExpires',
             url: window.location.href
           }));
-        })
-        .finally(cleanup);
+        });
     });
 
     it('does not log out after a different item in local storage changes', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      const cleanup = useSessions(container);
+      withSetup(() => useSessions(container), { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)
@@ -891,8 +883,7 @@ describe('util/session', () => {
             key: 'foo',
             url: window.location.href
           }));
-        })
-        .finally(cleanup);
+        });
     });
   });
 });
