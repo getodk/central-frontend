@@ -10,6 +10,7 @@ import { ago } from '../../../src/util/date-time';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockResponse } from '../../util/axios';
 
 describe('FormShow', () => {
   beforeEach(mockLogin);
@@ -27,6 +28,26 @@ describe('FormShow', () => {
       { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
       { url: '/v1/projects/1/forms/a%20b/draft/attachments' }
     ]);
+  });
+
+  describe('requestData reconciliation', () => {
+    it('updates attachments if it is defined but formDraft is not', async () => {
+      testData.extendedForms.createPast(1);
+      const attachments = testData.standardFormAttachments.createPast(1).sorted();
+      const app = await load('/projects/1/forms/f', {}, {
+        attachments: () => attachments
+      });
+      app.vm.$store.state.request.data.attachments.isEmpty().should.be.true();
+    });
+
+    it('updates formDraft if it is defined but attachments is not', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { draft: true });
+      const app = await load('/projects/1/forms/f', {}, {
+        attachments: () => mockResponse.problem(404.1)
+      });
+      app.vm.$store.state.request.data.formDraft.isEmpty().should.be.true();
+    });
   });
 
   it('re-renders the router view after a route change', () => {

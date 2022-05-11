@@ -30,6 +30,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject, watchSyncEffect } from '@vue/composition-api';
+
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -38,7 +40,6 @@ import SubmissionDataAccess from '../submission/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 
 import modal from '../../mixins/modal';
-import reconcileData from '../../store/modules/request/reconcile';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -64,6 +65,22 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { store } = inject('container');
+    // We do not reconcile odataChunk with either form.lastSubmission or
+    // project.lastSubmission.
+    watchSyncEffect(() => {
+      const { form, odataChunk } = store.state.request.data;
+      if (form != null && odataChunk != null &&
+        form.submissions !== odataChunk['@odata.count'] &&
+        !odataChunk.filtered) {
+        store.commit('setData', {
+          key: 'form',
+          value: form.with({ submissions: odataChunk['@odata.count'] })
+        });
+      }
+    });
+  },
   data() {
     return {
       analyze: {
@@ -82,7 +99,6 @@ export default {
   },
   created() {
     this.fetchData();
-    this.reconcileSubmissionCount();
   },
   methods: {
     fetchData() {
@@ -90,23 +106,6 @@ export default {
         key: 'keys',
         url: apiPaths.submissionKeys(this.projectId, this.xmlFormId)
       }]).catch(noop);
-    },
-    reconcileSubmissionCount() {
-      // We do not reconcile odataChunk with either form.lastSubmission or
-      // project.lastSubmission.
-      const deactivate = reconcileData.add(
-        'form', 'odataChunk',
-        (form, odataChunk, commit) => {
-          if (form.submissions !== odataChunk['@odata.count'] &&
-            !odataChunk.filtered) {
-            commit('setData', {
-              key: 'form',
-              value: this.form.with({ submissions: odataChunk['@odata.count'] })
-            });
-          }
-        }
-      );
-      this.$once('hook:beforeDestroy', deactivate);
     }
   }
 };

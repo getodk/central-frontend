@@ -18,7 +18,6 @@ import { pick } from 'ramda';
 
 import Option from '../../util/option';
 import Presenter from '../../presenters/base';
-import reconcileData from './request/reconcile';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
 import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../../util/request';
 
@@ -356,8 +355,6 @@ return {
                 value: updateData(data[key], response.data, update)
               });
             }
-
-            reconcileData.reconcile(key, data, commit);
 
             if (success != null) success(data);
           });

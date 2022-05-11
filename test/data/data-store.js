@@ -112,28 +112,26 @@ class Store extends Collection {
     return this._objects.splice(start, deleteCount);
   }
 
-  // Updates an existing object in place, setting the properties specified by
-  // `props`. If the object has an updatedAt property, it is set to the current
-  // time. Returns the updated object.
+  // Updates an object in the store, setting the properties specified by
+  // `props`. If the object has an updatedAt property, it will be set to the
+  // current time. Returns the updated object.
   update(index, props = undefined) {
-    const object = this.get(index);
-    if (object == null) throw new Error('invalid index');
-    if (props != null) {
-      if (Object.prototype.hasOwnProperty.call(props, 'createdAt')) {
-        // Objects are ordered in the store in order of creation. If the factory
-        // returns objects with a createdAt property, then the objects should
-        // also be ordered by createdAt. (The order by createdAt should match
-        // the actual order of creation.) Because of that, update() does not
-        // support updating an object's createdAt property.
-        throw new Error('createdAt cannot be updated');
-      }
-      Object.assign(object, props);
+    const normalizedIndex = index >= 0 ? index : this._objects.length + index;
+    if (normalizedIndex >= this._objects.length || normalizedIndex < 0)
+      throw new Error('invalid index');
+    if (props != null && 'createdAt' in props) {
+      // Objects are ordered in the store in order of creation. If the factory
+      // returns objects with a createdAt property, then the objects should also
+      // be ordered by createdAt. (The order by createdAt should match the
+      // actual order of creation.) Because of that, update() does not support
+      // updating an object's createdAt property.
+      throw new Error('createdAt cannot be updated');
     }
-    if (Object.prototype.hasOwnProperty.call(object, 'updatedAt')) {
-      // eslint-disable-next-line no-param-reassign
-      object.updatedAt = new Date().toISOString();
-    }
-    return object;
+    const object = this._objects[normalizedIndex];
+    const updated = { ...object, ...props };
+    if ('updatedAt' in object) updated.updatedAt = new Date().toISOString();
+    this._objects[normalizedIndex] = updated;
+    return updated;
   }
 }
 

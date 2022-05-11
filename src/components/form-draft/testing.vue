@@ -49,6 +49,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject, watchSyncEffect } from '@vue/composition-api';
+
 // Import PageSection before FloatRow in order to have the same import order as
 // FormSubmissions: see https://github.com/vuejs/vue-cli/issues/3771
 import PageSection from '../page/section.vue';
@@ -61,7 +63,6 @@ import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
 
 import Option from '../../util/option';
-import reconcileData from '../../store/modules/request/reconcile';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -77,6 +78,22 @@ export default {
     Loading,
     SentenceSeparator,
     SubmissionList
+  },
+  setup() {
+    const { store } = inject('container');
+    watchSyncEffect(() => {
+      const { formDraft, odataChunk } = store.state.request.data;
+      if (formDraft != null && odataChunk != null && formDraft.isDefined() &&
+        formDraft.get().submissions !== odataChunk['@odata.count'] &&
+        !odataChunk.filtered) {
+        store.commit('setData', {
+          key: 'formDraft',
+          value: Option.of(formDraft.get().with({
+            submissions: odataChunk['@odata.count']
+          }))
+        });
+      }
+    });
   },
   props: {
     projectId: {
@@ -115,7 +132,6 @@ export default {
   },
   created() {
     this.fetchData();
-    this.reconcileSubmissionCount();
   },
   methods: {
     fetchData() {
@@ -124,24 +140,6 @@ export default {
         key: 'keys',
         url: apiPaths.submissionKeys(this.projectId, this.xmlFormId, true)
       }]).catch(noop);
-    },
-    reconcileSubmissionCount() {
-      const deactivate = reconcileData.add(
-        'formDraft', 'odataChunk',
-        (formDraft, odataChunk, commit) => {
-          if (formDraft.isDefined() &&
-            formDraft.get().submissions !== odataChunk['@odata.count'] &&
-            !odataChunk.filtered) {
-            commit('setData', {
-              key: 'formDraft',
-              value: Option.of(formDraft.get().with({
-                submissions: odataChunk['@odata.count']
-              }))
-            });
-          }
-        }
-      );
-      this.$once('hook:beforeDestroy', deactivate);
     }
   }
 };
