@@ -42,12 +42,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject } from '@vue/composition-api';
+
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
-import audit from '../../mixins/audit';
 import routes from '../../mixins/routes';
+import useAudit from '../../composables/audit';
 
 const typeByCategory = {
   user: 'resource.user',
@@ -88,13 +90,18 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 export default {
   name: 'AuditRow',
   components: { ActorLink, DateTime, Selectable },
-  mixins: [audit(), routes()],
+  mixins: [routes()],
   inject: ['container'],
   props: {
     audit: {
       type: Object,
       required: true
     }
+  },
+  setup() {
+    const { i18n } = inject('container');
+    const { actionMessage } = useAudit(i18n);
+    return { actionMessage };
   },
   computed: {
     category() {

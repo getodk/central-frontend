@@ -10,11 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-/*
-This mixin includes methods related to audit log entries.
-
-The mixin factory does not take any options.
-*/
+// useAudit() returns functions related to audit log entries.
 
 // Returns the i18n path to use to describe the specified audit action.
 const actionPath = (action) => {
@@ -26,18 +22,10 @@ const actionPath = (action) => {
   return `audit.action.${category}.${subactionKey}`;
 };
 
-// @vue/component
-const mixin = {
-  inject: ['container'],
-  methods: {
-    // Returns a message describing an audit action.
-    actionMessage(action) {
-      const { i18n } = this.container;
-      const path = actionPath(action);
-      // Using i18n.te(), because this.$te() does not fall back to root.
-      return i18n.te(path, i18n.fallbackLocale) ? i18n.t(path) : null;
-    }
+export default (i18n) => ({
+  // Returns a message describing an audit action.
+  actionMessage: (action) => {
+    const path = actionPath(action);
+    return i18n.te(path, i18n.fallbackLocale) ? i18n.t(path) : null;
   }
-};
-
-export default () => mixin;
+});
