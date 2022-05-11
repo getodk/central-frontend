@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
       <template #body>
         <div id="archived-projects">
           <div v-for="project of archivedProjects" :key="project.id">
-            <div class="title">
+            <div class="project-title">
               <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
             </div>
           </div>
@@ -137,7 +137,7 @@ export default {
 @import '../../assets/scss/mixins';
 
 #archived-projects {
-  .title {
+  .project-title {
     a { @include text-link; }
     color: $color-action-foreground;
     font-size: 24px;
