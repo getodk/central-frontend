@@ -12,5 +12,5 @@ except according to the terms contained in the LICENSE file.
 import { watch } from '@vue/composition-api';
 
 // eslint-disable-next-line import/prefer-default-export
-export const watchSync = (sources, callback, options = undefined) =>
-  watch(sources, callback, { ...options, flush: 'sync' });
+export const watchSync = (source, callback, options = undefined) =>
+  watch(source, callback, { ...options, flush: 'sync' });

@@ -15,28 +15,20 @@ describe('UserEdit', () => {
       mockLogin({ displayName: 'Alice' });
     });
 
-    it('updates currentUser if editing the current user', () =>
-      load('/')
-        .afterResponses(() => {
-          testData.extendedUsers.update(0, { displayName: 'ALICE' });
-        })
-        .load('/account/edit')
-        .afterResponses(app => {
-          const { displayName } = app.vm.$store.state.request.data.currentUser;
-          displayName.should.equal('ALICE');
-        }));
+    it('updates currentUser if editing the current user', async () => {
+      testData.extendedUsers.update(0, { displayName: 'ALICE' });
+      const component = await load('/account/edit', { root: false });
+      const { currentUser } = component.vm.$store.state.request.data;
+      currentUser.displayName.should.equal('ALICE');
+    });
 
-    it('does not update currentUser if editing a different user', () => {
+    it('does not update currentUser if editing a different user', async () => {
       const { id } = testData.extendedUsers
         .createPast(1, { displayName: 'ALICE' })
         .last();
-      return load('/')
-        .complete()
-        .load(`/users/${id}`)
-        .afterResponses(app => {
-          const { displayName } = app.vm.$store.state.request.data.currentUser;
-          displayName.should.equal('Alice');
-        });
+      const component = await load(`/users/${id}`, { root: false });
+      const { currentUser } = component.vm.$store.state.request.data;
+      currentUser.displayName.should.equal('Alice');
     });
   });
 });

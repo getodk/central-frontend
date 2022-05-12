@@ -59,6 +59,7 @@ export default {
   },
   setup() {
     const { store } = inject('container');
+    // TODO/vue3. Could watchSyncEffect() be used instead?
     watchSync(() => store.state.request.data.user, (user) => {
       const { currentUser } = store.state.request.data;
       // We test whether `user` is `null`, because if there is a navigation

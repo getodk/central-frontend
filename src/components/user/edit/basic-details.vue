@@ -52,7 +52,7 @@ export default {
   },
   // The component assumes that this data will exist when the component is
   // created.
-  computed: requestData(['currentUser', 'user']),
+  computed: requestData(['user']),
   methods: {
     submit() {
       this.request({

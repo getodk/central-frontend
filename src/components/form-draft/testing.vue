@@ -79,6 +79,16 @@ export default {
     SentenceSeparator,
     SubmissionList
   },
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    xmlFormId: {
+      type: String,
+      required: true
+    }
+  },
   setup() {
     const { store } = inject('container');
     watchSyncEffect(() => {
@@ -94,16 +104,6 @@ export default {
         });
       }
     });
-  },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    }
   },
   computed: {
     // The component does not assume that this data will exist when the

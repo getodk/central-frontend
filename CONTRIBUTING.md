@@ -145,7 +145,7 @@ Use the `get` action of the [`request` module](/src/store/modules/request.js) of
 
 The `get` action may transform the response data, for example, by wrapping the data within a presenter object. These transformations are defined in [`/src/store/modules/request/keys.js`](/src/store/modules/request/keys.js). In general, `request/keys.js` defines the specific behavior that the `request` module implements for each type of data.
 
-In some cases, different responses may contradict each other, for example, if responses are returned at different times or if there are concurrent users. Some components will use `watchSyncEffect()` to do what they can to reconcile the data. For example, [`ProjectShow`](/src/components/project/show.vue) uses `watchSyncEffect()` to reconcile `projects`, `forms`, and `fieldKeys`.
+In some cases, different responses may contradict each other, for example, if responses are returned at different times or if there are concurrent users. Some components will use `watchSyncEffect()` to do what they can to reconcile the data. For example, [`ProjectShow`](/src/components/project/show.vue) uses `watchSyncEffect()` to reconcile `project`, `forms`, and `fieldKeys`.
 
 Some routes require certain conditions to be true about the response data. For example, a route might require the user to be able to perform certain verbs. This is implemented using the [`validateData`](/src/routes.js) route meta field.
 

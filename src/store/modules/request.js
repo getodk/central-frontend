@@ -202,8 +202,8 @@ return {
            thumb, if the callback changes local state that is only used in the
            DOM, use then(). If the callback changes the store state or changes
            local state that is used outside the DOM, avoid inconsistent state by
-           specifying `success`. The callback will be run after the data is
-           reconciled, but before the validateData watchers.
+           specifying `success`. Note that the callback will be run before the
+           validateData watchers.
 
       Existing Data
       -------------
