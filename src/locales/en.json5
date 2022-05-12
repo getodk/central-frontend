@@ -184,6 +184,8 @@
     "review": "Review",
     "save": "Save",
     "saveSettings": "Save settings",
+    // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
+    "sort": "Sort",
     "update": "Update",
     "yesProceed": "Yes, proceed",
     // This text is shown on a button that the user clicks to show a preview of something

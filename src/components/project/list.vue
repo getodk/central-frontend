@@ -150,6 +150,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This header is shown above a section of a page, specificially a list of names of archived projects.
     "archived": "Archived Projects",
     "action": {
       // This is the text of a button that is used to create a new Project.

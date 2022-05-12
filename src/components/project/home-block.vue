@@ -133,9 +133,13 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This text is shown in a small label next to a Project name to indicate that the Project is encrypted.
     "encrypted": "Encrypted",
     "encryptionTip": "This Project uses managed encryption.",
+    // This clickable text is shown below a table of forms where only a few out of the total number ("count") of forms is shown.
     "showMore": "Show {count} total",
+    // This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms.
+    // "Count" refers to the number of forms.
     "showFewer": "Show fewer of {count} total"
   }
 }

@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="project-sort">
     <form class="form-inline" @submit.prevent>
-      <span id="project-sort-label">{{ $t('sort') }}</span>
+      <span id="project-sort-label">{{ $t('action.sort') }}</span>
       <label id="project-sort-modes" class="form-group">
         <select :value="value" class="form-control"
           @change="$emit('input', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
-          <option value="latest">{{ $t('sortOptions.latest') }}</option>
+          <option value="latest">{{ $t('header.lastSubmission') }}</option>
           <option value="newest">{{ $t('sortOptions.newest') }}</option>
         </select>
       </label>
@@ -51,16 +51,14 @@ export default {
   }
 
 }
-
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "sort": "Sort",
+    // This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects.
     "sortOptions": {
       "alphabetical": "Alphabetical",
-      "latest": "Latest Submission",
       "newest": "Newest"
     }
   }

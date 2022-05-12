@@ -376,6 +376,10 @@
       "string": "Save settings",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "sort": {
+      "string": "Sort",
+      "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
     "update": {
       "string": "Update",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -2817,21 +2821,25 @@
     },
     "ProjectHomeBlock": {
       "encrypted": {
-        "string": "Encrypted"
+        "string": "Encrypted",
+        "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
       },
       "encryptionTip": {
         "string": "This Project uses managed encryption."
       },
       "showMore": {
-        "string": "Show {count} total"
+        "string": "Show {count} total",
+        "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
       "showFewer": {
-        "string": "Show fewer of {count} total"
+        "string": "Show fewer of {count} total",
+        "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       }
     },
     "ProjectList": {
       "archived": {
-        "string": "Archived Projects"
+        "string": "Archived Projects",
+        "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
       },
       "action": {
         "create": {
@@ -2983,18 +2991,14 @@
       }
     },
     "ProjectSort": {
-      "sort": {
-        "string": "Sort"
-      },
       "sortOptions": {
         "alphabetical": {
-          "string": "Alphabetical"
-        },
-        "latest": {
-          "string": "Latest Submission"
+          "string": "Alphabetical",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         },
         "newest": {
-          "string": "Newest"
+          "string": "Newest",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
     },
