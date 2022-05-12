@@ -52,7 +52,7 @@ export default {
   },
   // The component assumes that this data will exist when the component is
   // created.
-  computed: requestData(['currentUser', 'user']),
+  computed: requestData(['user']),
   methods: {
     submit() {
       this.request({
@@ -65,12 +65,6 @@ export default {
             key: 'user',
             value: this.user.with(response.data)
           });
-          if (this.user.id === this.currentUser.id) {
-            this.$store.commit('setData', {
-              key: 'currentUser',
-              value: this.currentUser.with(response.data)
-            });
-          }
           this.alert.success(this.$t('alert.success'));
         })
         .catch(noop);

@@ -18,7 +18,6 @@ import { pick } from 'ramda';
 
 import Option from '../../util/option';
 import Presenter from '../../presenters/base';
-import reconcileData from './request/reconcile';
 import { getters as dataGetters, keys as allKeys, transforms } from './request/keys';
 import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../../util/request';
 
@@ -203,8 +202,8 @@ return {
            thumb, if the callback changes local state that is only used in the
            DOM, use then(). If the callback changes the store state or changes
            local state that is used outside the DOM, avoid inconsistent state by
-           specifying `success`. The callback will be run after the data is
-           reconciled, but before the validateData watchers.
+           specifying `success`. Note that the callback will be run before the
+           validateData watchers.
 
       Existing Data
       -------------
@@ -356,8 +355,6 @@ return {
                 value: updateData(data[key], response.data, update)
               });
             }
-
-            reconcileData.reconcile(key, data, commit);
 
             if (success != null) success(data);
           });

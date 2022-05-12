@@ -25,6 +25,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import VueRouter from 'vue-router';
+import { inject } from '@vue/composition-api';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
@@ -37,7 +38,10 @@ export default {
   name: 'App',
   components: { Alert, Navbar },
   mixins: [callWait()],
-  inject: ['container', 'alert'],
+  inject: ['alert'],
+  setup() {
+    useSessions(inject('container'));
+  },
   data() {
     return {
       calls: {}
@@ -50,7 +54,6 @@ export default {
     }
   },
   created() {
-    this.$once('hook:beforeDestroy', useSessions(this.container));
     this.callWait('checkVersion', this.checkVersion, (tries) =>
       (tries === 0 ? 15000 : 60000));
   },

@@ -175,10 +175,6 @@ export default {
         key: 'formDraft',
         value: Option.none()
       });
-      this.$store.commit('setData', {
-        key: 'attachments',
-        value: Option.none()
-      });
     },
     afterPublish() {
       this.$emit('fetch-form');

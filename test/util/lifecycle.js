@@ -2,6 +2,7 @@ import { createLocalVue, mount as vtuMount } from '@vue/test-utils';
 import { last, lensPath, view } from 'ramda';
 
 import { $tcn } from '../../src/util/i18n';
+import { noop } from '../../src/util/util';
 
 import createTestContainer from './container';
 
@@ -111,4 +112,19 @@ export const mergeMountOptions = (options, defaults) => {
     }
   }
   return merged;
+};
+
+// withSetup() mounts a simple component whose setup() function will call f().
+// The component will be mounted with the specified options, after which
+// withSetup() will return the return value of f(). withSetup() is a useful way
+// to test a composable that uses provide/inject or lifecycle hooks. See:
+// https://vuejs.org/guide/scaling-up/testing.html#testing-composables
+export const withSetup = (f, options = undefined) => {
+  let result;
+  const setup = () => {
+    result = f();
+    return noop;
+  };
+  mount({ setup }, options);
+  return result;
 };

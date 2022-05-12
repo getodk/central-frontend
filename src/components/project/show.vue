@@ -58,38 +58,17 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { inject, watchSyncEffect } from '@vue/composition-api';
+
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import reconcileData from '../../store/modules/request/reconcile';
+
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
-
-reconcileData.add(
-  'project', 'forms',
-  (project, forms, commit) => {
-    if (project.forms !== forms.length) {
-      commit('setData', {
-        key: 'project',
-        value: project.with({ forms: forms.length })
-      });
-    }
-  }
-);
-reconcileData.add(
-  'project', 'fieldKeys',
-  (project, fieldKeys, commit) => {
-    if (project.appUsers !== fieldKeys.length) {
-      commit('setData', {
-        key: 'project',
-        value: project.with({ appUsers: fieldKeys.length })
-      });
-    }
-  }
-);
 
 export default {
   name: 'ProjectShow',
@@ -100,6 +79,28 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    const { store } = inject('container');
+    watchSyncEffect(() => {
+      const { project, forms } = store.state.request.data;
+      if (project != null && forms != null && project.forms !== forms.length) {
+        store.commit('setData', {
+          key: 'project',
+          value: project.with({ forms: forms.length })
+        });
+      }
+    });
+    watchSyncEffect(() => {
+      const { project, fieldKeys } = store.state.request.data;
+      if (project != null && fieldKeys != null &&
+        project.appUsers !== fieldKeys.length) {
+        store.commit('setData', {
+          key: 'project',
+          value: project.with({ appUsers: fieldKeys.length })
+        });
+      }
+    });
   },
   computed: {
     ...requestData(['project']),

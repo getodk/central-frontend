@@ -22,6 +22,24 @@ describe('ProjectShow', () => {
     ]);
   });
 
+  describe('requestData reconciliation', () => {
+    beforeEach(mockLogin);
+
+    it('reconciles project and forms', async () => {
+      testData.extendedProjects.createPast(1, { forms: 1 });
+      testData.extendedForms.createPast(2);
+      const app = await load('/projects/1');
+      app.vm.$store.state.request.data.project.forms.should.equal(2);
+    });
+
+    it('reconciles project and fieldKeys', async () => {
+      testData.extendedProjects.createPast(1, { appUsers: 1 });
+      testData.extendedFieldKeys.createPast(2);
+      const app = await load('/projects/1/app-users');
+      app.vm.$store.state.request.data.project.appUsers.should.equal(2);
+    });
+  });
+
   it('re-renders the router view after a route change', () => {
     mockLogin();
     testData.extendedProjects.createPast(2);
@@ -40,51 +58,37 @@ describe('ProjectShow', () => {
       });
   });
 
-  it("shows the project's name", async () => {
-    mockLogin();
-    testData.extendedProjects.createPast(1, { name: 'My Project' });
-    const app = await load('/projects/1');
-    app.get('#page-head-title').text().should.equal('My Project');
-  });
-
-  it("appends (archived) to an archived project's name", async () => {
-    mockLogin();
-    testData.extendedProjects.createPast(1, {
-      name: 'My Project',
-      archived: true
+  describe('title', () => {
+    it("shows the project's name", async () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { name: 'My Project' });
+      const app = await load('/projects/1');
+      app.get('#page-head-title').text().should.equal('My Project');
     });
-    const app = await load('/projects/1');
-    app.get('#page-head-title').text().should.equal('My Project (archived)');
-  });
 
-  it('updates (archived) after a locale change', async () => {
-    mockLogin();
-    testData.extendedProjects.createPast(1, {
-      name: 'My Project',
-      archived: true
-    });
-    const app = await load('/projects/1');
-    const title = app.get('#page-head-title');
-    title.text().should.equal('My Project (archived)');
-    await loadLocale(app.vm.$container, 'es');
-    await app.vm.$nextTick();
-    title.text().should.equal('My Project (archivado)');
-  });
-
-  it('shows a loading message until response for project is received', () => {
-    mockLogin();
-    testData.extendedProjects.createPast(1);
-    return load('/projects/1/settings')
-      .beforeEachResponse(app => {
-        const loading = app.findAllComponents(Loading);
-        loading.length.should.equal(2);
-        loading[0].props().state.should.equal(true);
-      })
-      .afterResponses(app => {
-        const loading = app.findAllComponents(Loading);
-        loading.length.should.equal(2);
-        loading[0].props().state.should.equal(false);
+    it("appends (archived) to an archived project's name", async () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, {
+        name: 'My Project',
+        archived: true
       });
+      const app = await load('/projects/1');
+      app.get('#page-head-title').text().should.equal('My Project (archived)');
+    });
+
+    it('updates (archived) after a locale change', async () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, {
+        name: 'My Project',
+        archived: true
+      });
+      const app = await load('/projects/1');
+      const title = app.get('#page-head-title');
+      title.text().should.equal('My Project (archived)');
+      await loadLocale(app.vm.$container, 'es');
+      await app.vm.$nextTick();
+      title.text().should.equal('My Project (archivado)');
+    });
   });
 
   describe('tabs', () => {
@@ -107,5 +111,21 @@ describe('ProjectShow', () => {
         li[0].should.be.hidden(true);
       });
     }
+  });
+
+  it('shows a loading message until response for project is received', () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1);
+    return load('/projects/1/settings')
+      .beforeEachResponse(app => {
+        const loading = app.findAllComponents(Loading);
+        loading.length.should.equal(2);
+        loading[0].props().state.should.equal(true);
+      })
+      .afterResponses(app => {
+        const loading = app.findAllComponents(Loading);
+        loading.length.should.equal(2);
+        loading[0].props().state.should.equal(false);
+      });
   });
 });

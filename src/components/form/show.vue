@@ -25,28 +25,19 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
+import { inject, watchSyncEffect } from '@vue/composition-api';
 
 import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageBody from '../page/body.vue';
+
 import callWait from '../../mixins/call-wait';
-import reconcileData from '../../store/modules/request/reconcile';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
-
-reconcileData.add(
-  'formDraft', 'attachments',
-  (formDraft, attachments, commit) => {
-    if (formDraft.isDefined() && attachments.isEmpty())
-      commit('setData', { key: 'formDraft', value: Option.none() });
-    else if (formDraft.isEmpty() && attachments.isDefined())
-      commit('setData', { key: 'attachments', value: Option.none() });
-  }
-);
 
 const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
 
@@ -63,6 +54,18 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    const { store } = inject('container');
+    watchSyncEffect(() => {
+      const { formDraft, attachments } = store.state.request.data;
+      if (formDraft != null && attachments != null) {
+        if (formDraft.isDefined() && attachments.isEmpty())
+          store.commit('setData', { key: 'formDraft', value: Option.none() });
+        else if (formDraft.isEmpty() && attachments.isDefined())
+          store.commit('setData', { key: 'attachments', value: Option.none() });
+      }
+    });
   },
   data() {
     return {

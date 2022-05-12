@@ -121,6 +121,10 @@ Most components are named according to the combination of a resource and an acti
 
 Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
 
+### Composables
+
+Each component may use one or more of the composables in [`/src/composables/`](/src/composables/). Most composables will reside in that directory, but if it makes sense to group a composable with other functionality, it may be defined elsewhere. For example, the `useSessions()` composable is defined in [`/src/util/session.js`](/src/util/session.js).
+
 ### Router
 
 We support a number of route meta fields, which we document in [`/src/routes.js`](/src/routes.js). The router ([`/src/router.js`](/src/router.js)) contains a fair amount of logic, which is driven largely by the meta fields.
@@ -141,7 +145,7 @@ Use the `get` action of the [`request` module](/src/store/modules/request.js) of
 
 The `get` action may transform the response data, for example, by wrapping the data within a presenter object. These transformations are defined in [`/src/store/modules/request/keys.js`](/src/store/modules/request/keys.js). In general, `request/keys.js` defines the specific behavior that the `request` module implements for each type of data.
 
-In some cases, different responses may contradict each other, for example, if responses are returned at different times or if there are concurrent users. In that case, the `get` action will do what it can to reconcile the data. This reconciliation mechanism is implemented using the [`reconcileData`](/src/store/modules/request/reconcile.js) object. Each specific reconciliation is defined in the component that uses it.
+In some cases, different responses may contradict each other, for example, if responses are returned at different times or if there are concurrent users. Some components will use `watchSyncEffect()` to do what they can to reconcile the data. For example, [`ProjectShow`](/src/components/project/show.vue) uses `watchSyncEffect()` to reconcile `project`, `forms`, and `fieldKeys`.
 
 Some routes require certain conditions to be true about the response data. For example, a route might require the user to be able to perform certain verbs. This is implemented using the [`validateData`](/src/routes.js) route meta field.
 

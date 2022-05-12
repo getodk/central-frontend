@@ -342,6 +342,13 @@ describe('FormDraftPublish', () => {
         app.vm.$route.path.should.equal('/projects/1/forms/f');
       }));
 
+    it('sets formDraft and attachments in store to empty options', async () => {
+      const app = await publish();
+      const { formDraft, attachments } = app.vm.$store.state.request.data;
+      formDraft.isEmpty().should.be.true();
+      attachments.isEmpty().should.be.true();
+    });
+
     it('shows the create draft button', () =>
       publish().then(app => {
         app.get('#form-head-create-draft-button').should.be.visible();
