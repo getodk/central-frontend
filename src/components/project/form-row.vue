@@ -18,19 +18,9 @@ except according to the terms contained in the LICENSE file.
       </link-if-can>
     </td>
     <template v-if="form.publishedAt != null">
-      <td class="review-state">
-        <router-link :to="submissionsPath.received">
-          {{ $n(form.reviewStates.received, 'default') }}<span class="icon-dot-circle-o"></span>
-        </router-link>
-      </td>
-      <td class="review-state">
-        <router-link :to="submissionsPath.hasIssues">
-          {{ $n(form.reviewStates.hasIssues, 'default') }}<span class="icon-comments"></span>
-        </router-link>
-      </td>
-      <td class="review-state">
-        <router-link :to="submissionsPath.edited">
-          {{ $n(form.reviewStates.edited, 'default') }}<span class="icon-pencil"></span>
+      <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
+        <router-link :to="submissionsPath[reviewState]">
+          {{ $n(form.reviewStates[reviewState], 'default') }}<span :class="reviewStateIcon(reviewState)"></span>
         </router-link>
       </td>
       <td class="last-submission">
@@ -65,6 +55,8 @@ import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
+import useReviewState from '../../composables/review-state';
+
 export default {
   name: 'ProjectFormRow',
   components: { DateTime, LinkIfCan },
@@ -75,32 +67,26 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { reviewStates, reviewStateIcon } = useReviewState();
+    return { reviewStates, reviewStateIcon };
+  },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
     ...requestData(['project']),
+    visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
     submissionsPath() {
+      const submissionPath = this.formPath(
+        this.form.projectId,
+        this.form.xmlFormId,
+        this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+      );
       return {
-        received: `${this.formPath(
-          this.form.projectId,
-          this.form.xmlFormId,
-          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
-        )}?reviewState=null`,
-        edited: `${this.formPath(
-          this.form.projectId,
-          this.form.xmlFormId,
-          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
-        )}?reviewState=%27edited%27`,
-        hasIssues: `${this.formPath(
-          this.form.projectId,
-          this.form.xmlFormId,
-          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
-        )}?reviewState=%27hasIssues%27`,
-        all: this.formPath(
-          this.form.projectId,
-          this.form.xmlFormId,
-          this.form.publishedAt != null ? 'submissions' : 'draft/testing'
-        )
+        received: `${submissionPath}?reviewState=null`,
+        edited: `${submissionPath}?reviewState=%27edited%27`,
+        hasIssues: `${submissionPath}?reviewState=%27hasIssues%27`,
+        all: submissionPath
       };
     }
   }
