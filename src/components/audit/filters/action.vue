@@ -23,11 +23,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import audit from '../../../mixins/audit';
+import { inject } from '@vue/composition-api';
+
+import useAudit from '../../../composables/audit';
 
 export default {
   name: 'AuditFiltersAction',
-  mixins: [audit()],
   props: {
     value: {
       type: String,
@@ -35,6 +36,11 @@ export default {
     }
   },
   emits: ['update:modelValue'],
+  setup() {
+    const { i18n } = inject('container');
+    const { actionMessage } = useAudit(i18n);
+    return { actionMessage };
+  },
   computed: {
     options() {
       return [
