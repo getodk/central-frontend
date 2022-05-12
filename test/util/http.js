@@ -51,7 +51,7 @@ component once the responses have been processed:
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
-      component.findAllComponents(ProjectRow).length.should.equal(3);
+      component.findAllComponents(ProjectHomeBlock).length.should.equal(3);
     });
 
 It is not until afterResponses() that the component is actually mounted and the
@@ -77,7 +77,7 @@ Mocha. You can call then(), catch(), or finally() on the thenable:
     .respondWithData(() => testData.extendedProjects.sorted())
     .respondWithData(() => testData.standardUsers.sorted())
     .afterResponses(component => {
-      component.findAllComponents(ProjectRow).length.should.equal(3);
+      component.findAllComponents(ProjectHomeBlock).length.should.equal(3);
     })
     .then(() => {
       console.log('table has 3 rows');
