@@ -575,7 +575,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -622,7 +622,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -646,7 +646,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -708,7 +708,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -730,7 +730,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -767,7 +767,7 @@ describe('util/session', () => {
       const clock = sinon.useFakeTimers();
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store, alert } = container;
       setData(store, {
         session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
@@ -790,7 +790,7 @@ describe('util/session', () => {
     it('logs out after sessionExpires changes', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)
@@ -812,7 +812,7 @@ describe('util/session', () => {
     it('logs out after local storage is cleared', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)
@@ -850,7 +850,7 @@ describe('util/session', () => {
     it('does not attempt to log out if there was already a logout', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)
@@ -871,7 +871,7 @@ describe('util/session', () => {
     it('does not log out after a different item in local storage changes', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       const container = createTestContainer({ router: mockRouter() });
-      withSetup(() => useSessions(container), { container });
+      withSetup(useSessions, { container });
       const { store } = container;
       setData(store, { session: testData.sessions.createNew() });
       return mockHttp(container)

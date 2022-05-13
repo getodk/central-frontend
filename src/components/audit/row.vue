@@ -42,8 +42,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject } from '@vue/composition-api';
-
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
@@ -99,8 +97,7 @@ export default {
     }
   },
   setup() {
-    const { i18n } = inject('container');
-    const { actionMessage } = useAudit(i18n);
+    const { actionMessage } = useAudit();
     return { actionMessage };
   },
   computed: {

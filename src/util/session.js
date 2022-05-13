@@ -65,7 +65,7 @@ hand-in-hand.
 */
 
 import VueRouter from 'vue-router';
-import { onBeforeUnmount } from '@vue/composition-api';
+import { inject, onBeforeUnmount } from '@vue/composition-api';
 
 import { apiPaths, isProblem, requestAlertMessage } from './request';
 import { forceReplace } from './router';
@@ -178,7 +178,8 @@ const logOutAfterStorageChange = (container) => (event) => {
   }
 };
 
-export const useSessions = (container) => {
+export const useSessions = () => {
+  const container = inject('container');
   const id = setInterval(logOutBeforeSessionExpires(container), 15000);
   const handler = logOutAfterStorageChange(container);
   window.addEventListener('storage', handler);
