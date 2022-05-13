@@ -29,22 +29,18 @@ import VueRouter from 'vue-router';
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
-import callWait from '../mixins/call-wait';
+import useCallWait from '../composables/call-wait';
 import { requestData } from '../store/modules/request';
 import { useSessions } from '../util/session';
 
 export default {
   name: 'App',
   components: { Alert, Navbar },
-  mixins: [callWait()],
   inject: ['alert'],
   setup() {
     useSessions();
-  },
-  data() {
-    return {
-      calls: {}
-    };
+    const { callWait } = useCallWait();
+    return { callWait };
   },
   computed: {
     ...requestData(['centralVersion']),
