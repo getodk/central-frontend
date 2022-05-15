@@ -25,27 +25,22 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import VueRouter from 'vue-router';
-import { inject } from '@vue/composition-api';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
-import callWait from '../mixins/call-wait';
+import useCallWait from '../composables/call-wait';
 import { requestData } from '../store/modules/request';
 import { useSessions } from '../util/session';
 
 export default {
   name: 'App',
   components: { Alert, Navbar },
-  mixins: [callWait()],
   inject: ['alert'],
   setup() {
-    useSessions(inject('container'));
-  },
-  data() {
-    return {
-      calls: {}
-    };
+    useSessions();
+    const { callWait } = useCallWait();
+    return { callWait };
   },
   computed: {
     ...requestData(['centralVersion']),

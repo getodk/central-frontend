@@ -109,7 +109,7 @@ except according to the terms contained in the LICENSE file.
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 
-import callWait from '../../mixins/call-wait';
+import useCallWait from '../../composables/call-wait';
 import { apiPaths, isProblem } from '../../util/request';
 import { requestData } from '../../store/modules/request';
 
@@ -118,7 +118,6 @@ export default {
   // cause messages to be moved in Transifex.
   name: 'SubmissionDecrypt',
   components: { FormGroup, Modal },
-  mixins: [callWait()],
   inject: ['alert', 'logger'],
   props: {
     state: Boolean,
@@ -126,9 +125,12 @@ export default {
     odataFilter: String
   },
   emits: ['hide'],
+  setup() {
+    const { callWait, cancelCall } = useCallWait();
+    return { callWait, cancelCall };
+  },
   data() {
     return {
-      calls: {},
       splitSelectMultiples: false,
       removeGroupNames: false,
       deletedFields: false,

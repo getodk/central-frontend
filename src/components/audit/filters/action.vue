@@ -23,8 +23,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject } from '@vue/composition-api';
-
 import useAudit from '../../../composables/audit';
 
 export default {
@@ -37,8 +35,7 @@ export default {
   },
   emits: ['update:modelValue'],
   setup() {
-    const { i18n } = inject('container');
-    const { actionMessage } = useAudit(i18n);
+    const { actionMessage } = useAudit();
     return { actionMessage };
   },
   computed: {

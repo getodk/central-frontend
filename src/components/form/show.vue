@@ -32,9 +32,9 @@ import Loading from '../loading.vue';
 import Option from '../../util/option';
 import PageBody from '../page/body.vue';
 
-import callWait from '../../mixins/call-wait';
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
+import useCallWait from '../../composables/call-wait';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -44,7 +44,7 @@ const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
 export default {
   name: 'FormShow',
   components: { FormHead, Loading, PageBody },
-  mixins: [callWait(), request(), routes()],
+  mixins: [request(), routes()],
   props: {
     projectId: {
       type: String,
@@ -66,10 +66,12 @@ export default {
           store.commit('setData', { key: 'attachments', value: Option.none() });
       }
     });
+
+    const { callWait, cancelCall } = useCallWait();
+    return { callWait, cancelCall };
   },
   data() {
     return {
-      calls: {},
       awaitingResponse: false
     };
   },
