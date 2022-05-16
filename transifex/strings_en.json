@@ -2279,6 +2279,16 @@
       }
     },
     "FormOverviewRightNow": {
+      "xmlFormId": {
+        "full": {
+          "string": "{id} of this Form.",
+          "developer_comment": "{id} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nID"
+        },
+        "id": {
+          "string": "ID",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {id} is in the following text:\n\n{id} of this Form."
+        }
+      },
       "version": {
         "full": {
           "string": "{publishedVersion} of this Form.",

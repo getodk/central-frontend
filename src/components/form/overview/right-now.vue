@@ -16,6 +16,18 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('common.rightNow') }}</span>
     </template>
     <template #body>
+      <summary-item id="form-overview-right-now-id" icon="tag">
+        <template #heading>
+          <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
+        </template>
+        <template #body>
+          <i18n-t tag="p" keypath="xmlFormId.full">
+            <template #id>
+              <strong>{{ $t('xmlFormId.id') }}</strong>
+            </template>
+          </i18n-t>
+        </template>
+      </summary-item>
       <summary-item icon="file-o">
         <template #heading>
           <form-version-string :version="form.version"/>
@@ -32,15 +44,16 @@ except according to the terms contained in the LICENSE file.
           </div>
         </template>
       </summary-item>
-      <summary-item :icon="stateIcon">
+      <summary-item id="form-overview-right-now-state" :icon="stateIcon">
         <template #heading>
           {{ $t(`formState.${form.state}`) }}
         </template>
         <template #body>
-          {{ $t(`stateCaption.${form.state}`) }}
+          <p>{{ $t(`stateCaption.${form.state}`) }}</p>
         </template>
       </summary-item>
-      <summary-item :to="formPath('submissions')" icon="inbox">
+      <summary-item id="form-overview-right-now-submissions"
+        :to="formPath('submissions')" icon="inbox">
         <template #heading>
           {{ $n(form.submissions, 'default') }}
           <span class="icon-angle-right"></span>
@@ -95,26 +108,27 @@ export default {
 </script>
 
 <style lang="scss">
-#form-overview-right-now {
-  // .icon-lock is a little more narrow than .icon-file-o and .icon-inbox, so we
-  // use this to center it.
-  .icon-lock {
-    margin-left: 6px;
-    margin-right: 6px;
-  }
+@import '../../../assets/scss/variables';
 
-  &.open-form {
-    .icon-file-o, .icon-inbox {
-      margin-left: 4px;
-      margin-right: 4px;
-    }
+#form-overview-right-now.open-form {
+  .icon-tag, .icon-file-o, .icon-inbox {
+    margin-left: 4px;
+    margin-right: 4px;
   }
+}
+
+#form-overview-right-now-id .summary-item-heading span {
+  font-family: $font-family-monospace;
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
+    "xmlFormId": {
+      "full": "{id} of this Form.",
+      "id": "ID"
+    },
     "version": {
       "full": "{publishedVersion} of this Form.",
       "publishedVersion": "Published version"

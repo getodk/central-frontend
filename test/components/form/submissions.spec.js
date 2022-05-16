@@ -1,7 +1,5 @@
 import EnketoFill from '../../../src/components/enketo/fill.vue';
-import FormOverviewRightNow from '../../../src/components/form/overview/right-now.vue';
 import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
-import SummaryItem from '../../../src/components/summary-item.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -51,9 +49,8 @@ describe('FormSubmissions', () => {
       testData.extendedSubmissions.createPast(11);
       return load('/projects/1/forms/f')
         .afterResponses(app => {
-          const items = app.getComponent(FormOverviewRightNow)
-            .findAllComponents(SummaryItem);
-          items[2].get('.summary-item-heading').text().should.equal('10');
+          const item = app.get('#form-overview-right-now-submissions');
+          item.get('.summary-item-heading').text().should.equal('10');
         })
         .load('/projects/1/forms/f/submissions', {
           project: false, form: false, formDraft: false, attachments: false
@@ -61,9 +58,8 @@ describe('FormSubmissions', () => {
         .complete()
         .route('/projects/1/forms/f')
         .then(app => {
-          const items = app.getComponent(FormOverviewRightNow)
-            .findAllComponents(SummaryItem);
-          items[2].get('.summary-item-heading').text().should.equal('11');
+          const item = app.get('#form-overview-right-now-submissions');
+          item.get('.summary-item-heading').text().should.equal('11');
         });
     });
   });
