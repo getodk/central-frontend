@@ -30,7 +30,7 @@ describe('FormOverviewRightNow', () => {
   it('shows the form ID', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'my_form' });
     const item = findItem(mountComponent(), 'id');
-    const span = item.get('.summary-item-heading span');
+    const span = item.get('.summary-item-heading .linkable span');
     span.text().should.equal('my_form');
     span.attributes().title.should.equal('my_form');
   });

@@ -117,7 +117,7 @@ export default {
   }
 }
 
-#form-overview-right-now-id .summary-item-heading span {
+#form-overview-right-now-id .summary-item-heading {
   font-family: $font-family-monospace;
 }
 </style>
