@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </td>
       <td class="last-submission">
-        <div v-if="form.lastSubmission != null">
+        <template v-if="form.lastSubmission != null">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath.all">
               <date-time :iso="form.lastSubmission" relative="past"/>
@@ -48,8 +48,8 @@ except according to the terms contained in the LICENSE file.
             <date-time :iso="form.lastSubmission" relative="past"/>
             <span class="icon-clock-o"></span>
           </template>
-        </div>
-        <div v-else>{{ $t('submission.noSubmission') }}</div>
+        </template>
+        <template v-else>{{ $t('submission.noSubmission') }}</template>
       </td>
       <td class="total-submissions">
         <template v-if="canLinkToSubmissions">
@@ -66,7 +66,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template v-else>
       <td class="not-published" colspan="5">
-        {{ $t('unpublished') }}
+        <span>{{ $t('unpublished') }}</span>
         <span class="icon-asterisk"></span>
       </td>
     </template>
@@ -158,7 +158,7 @@ export default {
 {
   "en": {
     // This text is shown in the Forms table in place of submission counts
-    // when the Form has not been published and in pla there are no submission
+    // when the Form has not been published and there are no submission
     // counts to show.
     "unpublished": "Not published yet"
   }

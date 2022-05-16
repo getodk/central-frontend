@@ -24,7 +24,7 @@ const createProjectsWithForms = (projects, forms) => {
   for (const [i, projectOptions] of projects.entries()) {
     const project = testData.extendedProjects.createPast(1, projectOptions).last();
     for (const formOptions of forms[i]) {
-      const form = testData.extendedForms.createPast(1, { project, reviewStates: {}, ...formOptions }).last();
+      const form = testData.extendedForms.createPast(1, { project, ...formOptions }).last();
       project.formList.push(form);
     }
   }
@@ -56,11 +56,11 @@ describe('ProjectList', () => {
   it('shows archived projects at the bottom of the page', () => {
     testData.extendedProjects.createPast(2);
     testData.extendedProjects.createPast(3, { archived: true });
-    mountComponent().findAll('#archived-projects .project-title').length.should.equal(3);
+    mountComponent().findAll('#project-list-archived .project-title').length.should.equal(3);
   });
 
   it('does not show archived header if no archived projects exist', () => {
-    mountComponent().find('#archived-projects').exists().should.be.false();
+    mountComponent().find('#project-list-archived').exists().should.be.false();
   });
 
   describe('sorting', () => {
@@ -117,14 +117,14 @@ describe('ProjectList', () => {
     });
 
     it('sorts archived projects by latest submission by default', () => {
-      const archived = mountComponent().findAll('#archived-projects .project-title');
+      const archived = mountComponent().findAll('#project-list-archived .project-title');
       archived.map((projDiv) => projDiv.text()).should.eql(['E', 'D']);
     });
 
     it('changes sort of archived projects', async () => {
       const component = mountComponent();
       await component.find('#project-sort select').setValue('alphabetical');
-      const archived = component.findAll('#archived-projects .project-title');
+      const archived = component.findAll('#project-list-archived .project-title');
       archived.map((projDiv) => projDiv.text()).should.eql(['D', 'E']);
     });
 

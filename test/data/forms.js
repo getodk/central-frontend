@@ -51,7 +51,7 @@ const forms = dataStore({
     createdBy = extendedUsers.size !== 0
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
-    reviewStates = undefined,
+    reviewStates = {},
     fields = [testDataFields.string('/s')],
 
     ...rest

@@ -2816,7 +2816,7 @@
     "ProjectFormRow": {
       "unpublished": {
         "string": "Not published yet",
-        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and in pla there are no submission counts to show."
+        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and there are no submission counts to show."
       }
     },
     "ProjectHomeBlock": {

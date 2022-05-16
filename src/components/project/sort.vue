@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="project-sort">
     <form class="form-inline" @submit.prevent>
       <span id="project-sort-label">{{ $t('action.sort') }}</span>
-      <label id="project-sort-modes" class="form-group">
+      <label class="form-group">
         <select :value="value" class="form-control"
           @change="$emit('input', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>

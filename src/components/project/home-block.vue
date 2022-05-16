@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
       <span v-if="project.keyId" class="encrypted badge"
         :title="$t('encryptionTip')">
-        <span class="icon-lock project-icon"></span>
+        <span class="icon-lock"></span>
         {{ $t('encrypted') }}
         </span>
     </div>
@@ -94,7 +94,6 @@ export default {
   margin-bottom: 15px;
 
   .title {
-    color: $color-action-foreground;
     font-size: 24px;
     font-weight: 500;
     margin-bottom: 5px;

@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('archived') }}</span>
       </template>
       <template #body>
-        <div id="archived-projects">
+        <div id="project-list-archived">
           <div v-for="project of archivedProjects" :key="project.id">
             <div class="project-title">
               <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
@@ -136,10 +136,8 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#archived-projects {
+#project-list-archived {
   .project-title {
-    a { @include text-link; }
-    color: $color-action-foreground;
     font-size: 24px;
     font-weight: 500;
   }

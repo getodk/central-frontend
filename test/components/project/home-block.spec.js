@@ -79,9 +79,9 @@ describe('ProjectHomeBlock', () => {
 
   it('sorts the forms by a given sort function', () => {
     const project = testData.extendedProjects.createPast(1).last();
-    testData.extendedForms.createPast(1, { name: 'Bravo', xmlFormId: 'a', reviewStates: {} });
-    testData.extendedForms.createPast(1, { name: 'Charlie', xmlFormId: 'b', reviewStates: {} });
-    testData.extendedForms.createPast(1, { name: 'Alpha', xmlFormId: 'c', reviewStates: {} });
+    testData.extendedForms.createPast(1, { name: 'Bravo', xmlFormId: 'a' });
+    testData.extendedForms.createPast(1, { name: 'Charlie', xmlFormId: 'b' });
+    testData.extendedForms.createPast(1, { name: 'Alpha', xmlFormId: 'c' });
     // extendedForms.sorted() (to get a full list of forms) sorts by name
     project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     project.formList.map((form) => form.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
@@ -92,10 +92,10 @@ describe('ProjectHomeBlock', () => {
 
   it('shows correctly sorted forms before and after cutoff forms', async () => {
     const project = testData.extendedProjects.createPast(1).last();
-    testData.extendedForms.createPast(1, { name: 'aaa_z', xmlFormId: 'z', reviewStates: {} });
-    testData.extendedForms.createPast(1, { name: 'bbb_y', xmlFormId: 'y', reviewStates: {} });
+    testData.extendedForms.createPast(1, { name: 'aaa_z', xmlFormId: 'z' });
+    testData.extendedForms.createPast(1, { name: 'bbb_y', xmlFormId: 'y' });
     testData.extendedForms.createPast(1, { name: 'ccc_w', xmlFormId: 'w', reviewStates: {} });
-    testData.extendedForms.createPast(1, { name: 'ddd_x', xmlFormId: 'x', reviewStates: {} });
+    testData.extendedForms.createPast(1, { name: 'ddd_x', xmlFormId: 'x' });
     project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     let rows = block.findAllComponents(FormRow);
