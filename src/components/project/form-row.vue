@@ -12,31 +12,56 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="project-form-row">
     <!--todo: come back and figure out all the permissions-->
-    <td class="name">
-      <link-if-can :to="primaryFormPath(form)">
+    <td class="form-name">
+      <template v-if="canLinkToFormOverview">
+        <router-link :to="primaryFormPath(form)">{{ form.nameOrId() }}</router-link>
+      </template>
+      <template v-else-if="canLinkToSubmissions">
+        <router-link :to="submissionsPath.all">{{ form.nameOrId() }}</router-link>
+      </template>
+      <template v-else>
         {{ form.nameOrId() }}
-      </link-if-can>
+      </template>
     </td>
     <template v-if="form.publishedAt != null">
       <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
-        <router-link :to="submissionsPath[reviewState]">
-          {{ $n(form.reviewStates[reviewState], 'default') }}<span :class="reviewStateIcon(reviewState)"></span>
-        </router-link>
+        <template v-if="canLinkToSubmissions">
+          <router-link :to="submissionsPath[reviewState]">
+            <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
+            <span :class="reviewStateIcon(reviewState)"></span>
+          </router-link>
+        </template>
+        <template v-else>
+          <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
+          <span :class="reviewStateIcon(reviewState)"></span>
+        </template>
       </td>
       <td class="last-submission">
         <div v-if="form.lastSubmission != null">
-          <router-link :to="submissionsPath.all">
+          <template v-if="canLinkToSubmissions">
+            <router-link :to="submissionsPath.all">
+              <date-time :iso="form.lastSubmission" relative="past"/>
+              <span class="icon-clock-o"></span>
+            </router-link>
+          </template>
+          <template v-else>
             <date-time :iso="form.lastSubmission" relative="past"/>
             <span class="icon-clock-o"></span>
-          </router-link>
+          </template>
         </div>
         <div v-else>{{ $t('submission.noSubmission') }}</div>
       </td>
       <td class="total-submissions">
-        <router-link :to="submissionsPath.all">
+        <template v-if="canLinkToSubmissions">
+          <router-link :to="submissionsPath.all">
+            <span>{{ $n(form.submissions, 'default') }}</span>
+            <span class="icon-asterisk"></span>
+          </router-link>
+        </template>
+        <template v-else>
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
-        </router-link>
+        </template>
       </td>
     </template>
     <template v-else>
@@ -50,31 +75,37 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
-import LinkIfCan from '../link-if-can.vue';
 import Form from '../../presenters/form';
+import Project from '../../presenters/project';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
 
 import useReviewState from '../../composables/review-state';
 
 export default {
   name: 'ProjectFormRow',
-  components: { DateTime, LinkIfCan },
+  components: { DateTime },
   mixins: [routes()],
   props: {
     form: {
       type: Form,
       required: true
+    },
+    project: {
+      type: Project,
+      required: true
     }
   },
   setup() {
-    const { reviewStates, reviewStateIcon } = useReviewState();
-    return { reviewStates, reviewStateIcon };
+    const { reviewStateIcon } = useReviewState();
+    return { reviewStateIcon };
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['project']),
+    canLinkToFormOverview() {
+      return this.project.permits('form.update');
+    },
+    canLinkToSubmissions() {
+      return this.project.permits('submission.list');
+    },
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
     submissionsPath() {
       const submissionPath = this.formPath(

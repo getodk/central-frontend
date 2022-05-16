@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
         </span>
     </div>
     <table v-if="visibleForms != null" class="project-form-table table">
-      <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form"/>
+      <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :project="project"/>
     </table>
     <div v-if="showExpander">
       <span class="expand-button" @click.prevent="toggleExpanded">
