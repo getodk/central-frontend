@@ -27,14 +27,6 @@ const findItem = (component, idSuffix) => {
 describe('FormOverviewRightNow', () => {
   beforeEach(mockLogin);
 
-  it('shows the form ID', () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'my_form' });
-    const item = findItem(mountComponent(), 'id');
-    const span = item.get('.summary-item-heading .linkable span');
-    span.text().should.equal('my_form');
-    span.attributes().title.should.equal('my_form');
-  });
-
   it('shows the version string of the primary form version', () => {
     testData.extendedForms.createPast(1);
     testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
