@@ -16,7 +16,7 @@ const mountComponent = () => mount(ProjectFormRow, {
     form: new Form(testData.extendedForms.last()),
     project: new Project(testData.extendedProjects.last())
   },
-  container: { router: mockRouter('/projects/1') }
+  container: { router: mockRouter('/') }
 });
 
 describe('ProjectFormRow', () => {
