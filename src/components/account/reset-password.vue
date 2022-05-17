@@ -62,9 +62,10 @@ export default {
     submit() {
       const { email } = this;
       this.post('/v1/users/reset/initiate', { email })
-        .then(() => this.$router.push('/login'))
         .then(() => {
-          this.alert.success(this.$t('alert.success', { email }));
+          const message = this.$t('alert.success', { email });
+          return this.$router.push('/login')
+            .then(() => { this.alert.success(message); });
         })
         .catch(noop);
     }

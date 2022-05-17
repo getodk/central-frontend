@@ -74,9 +74,10 @@ export default {
         headers,
         data: { new: this.password }
       })
-        .then(() => this.$router.push('/login'))
         .then(() => {
-          this.alert.success(this.$t('alert.success'));
+          const message = this.$t('alert.success');
+          return this.$router.push('/login')
+            .then(() => { this.alert.success(message); });
         })
         .catch(noop);
     }

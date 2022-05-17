@@ -118,10 +118,9 @@ export default {
       this.$emit('fetch-project', true);
     },
     afterArchive(project) {
+      const message = this.$t('alert.archive', project);
       this.$router.push(this.projectPath())
-        .then(() => {
-          this.alert.success(this.$t('alert.archive', project));
-        });
+        .then(() => { this.alert.success(message); });
     }
   }
 };
