@@ -198,12 +198,11 @@ describe('ProjectFormRow', () => {
       });
     });
 
-    describe('Project Viewer', () => {
+    describe('Project Manager', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-        const lastSubmission = new Date().toISOString();
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', reviewStates: { received: 2, hasIssues: 1, edited: 3 }, lastSubmission, submissions: 6 });
+        testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
+        testData.extendedForms.createPast(1, { xmlFormId: 'a b', reviewStates: { received: 2, hasIssues: 1, edited: 3 }, submissions: 6 });
       });
 
       it('links to the correct filtered submissions for each review state', () => {
@@ -230,8 +229,7 @@ describe('ProjectFormRow', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-        const lastSubmission = new Date().toISOString();
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', reviewStates: { received: 2, hasIssues: 1, edited: 3 }, lastSubmission, submissions: 6 });
+        testData.extendedForms.createPast(1, { xmlFormId: 'a b', reviewStates: { received: 2, hasIssues: 1, edited: 3 }, submissions: 6 });
       });
 
       it('links to the correct filtered submissions for each review state', () => {
@@ -258,8 +256,7 @@ describe('ProjectFormRow', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
-        const lastSubmission = new Date().toISOString();
-        testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'a b', reviewStates: { received: 2, hasIssues: 2, edited: 2 }, lastSubmission, submissions: 6 });
+        testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'a b', reviewStates: { received: 2, hasIssues: 2, edited: 2 }, submissions: 6 });
       });
 
       it('does not render a link for each review state', () => {
