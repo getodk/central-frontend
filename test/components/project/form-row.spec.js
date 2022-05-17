@@ -125,14 +125,15 @@ describe('ProjectFormRow', () => {
   describe('review states', () => {
     beforeEach(mockLogin);
 
-    it('shows the correct counts for each review state', () => {
+    it('shows the correct counts and icons for each review state', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', reviewStates: { received: 2345, hasIssues: 1, edited: 3 } });
       const columns = mountComponent().findAll('.review-state');
       columns.length.should.equal(3);
       columns.map((col) => col.get('a').text()).should.eql(['2,345', '1', '3']);
+      columns[0].find('.icon-dot-circle-o').exists().should.be.true();
+      columns[1].find('.icon-comments').exists().should.be.true();
+      columns[2].find('.icon-pencil').exists().should.be.true();
     });
-
-    // TODO: check each icon
 
     it('shows blank review state columns when the form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
@@ -154,6 +155,12 @@ describe('ProjectFormRow', () => {
       dateTimes[0].props().iso.should.equal(lastSubmission);
     });
 
+    it('shows the correct icon', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
+      const cell = mountComponent().find('.last-submission');
+      cell.find('.icon-clock-o').exists().should.be.true();
+    });
+
     it('shows (none) if no submission', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 0 });
       mountComponent().find('.last-submission').text().should.equal('(none)');
@@ -163,8 +170,6 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       mountComponent().find('.last-submission').exists().should.be.false();
     });
-
-    // TODO: has clock icon
   });
 
   describe('submission count', () => {
@@ -182,7 +187,11 @@ describe('ProjectFormRow', () => {
       row.find('.not-published').text().should.equal('Not published yet');
     });
 
-    // TODO: astrisk icon
+    it('shows the correct icon', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
+      const cell = mountComponent().find('.total-submissions');
+      cell.find('.icon-asterisk').exists().should.be.true();
+    });
   });
 
   describe('all submission links', () => {
