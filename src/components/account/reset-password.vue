@@ -60,11 +60,11 @@ export default {
   },
   methods: {
     submit() {
-      this
-        .post('/v1/users/reset/initiate', { email: this.email })
+      const { email } = this;
+      this.post('/v1/users/reset/initiate', { email })
         .then(() => this.$router.push('/login'))
         .then(() => {
-          this.alert.success(this.$t('alert.success', { email: this.email }));
+          this.alert.success(this.$t('alert.success', { email }));
         })
         .catch(noop);
     }
