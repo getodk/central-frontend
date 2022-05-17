@@ -20,7 +20,12 @@ except according to the terms contained in the LICENSE file.
         <router-link :to="submissionsPath.all">{{ form.nameOrId() }}</router-link>
       </template>
       <template v-else>
-        {{ form.nameOrId() }}
+        <template v-if="canLinkToEnketo">
+          <a :href="enketoPath">{{ form.nameOrId() }}</a>
+        </template>
+        <template v-else>
+          {{ form.nameOrId() }}
+        </template>
       </template>
     </td>
     <template v-if="form.publishedAt != null">
@@ -80,6 +85,7 @@ import Project from '../../presenters/project';
 import routes from '../../mixins/routes';
 
 import useReviewState from '../../composables/review-state';
+import { enketoBasePath } from '../../util/util';
 
 export default {
   name: 'ProjectFormRow',
@@ -106,6 +112,9 @@ export default {
     canLinkToSubmissions() {
       return this.project.permits('submission.list');
     },
+    canLinkToEnketo() {
+      return this.form.publishedAt != null && this.form.state === 'open' && this.form.enketoId !== null;
+    },
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
     submissionsPath() {
       const submissionPath = this.formPath(
@@ -119,6 +128,10 @@ export default {
         hasIssues: `${submissionPath}?reviewState=%27hasIssues%27`,
         all: submissionPath
       };
+    },
+    enketoPath() {
+      const encodedId = encodeURIComponent(this.form.enketoId);
+      return `${enketoBasePath}/${encodedId}`;
     }
   }
 };

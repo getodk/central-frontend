@@ -92,15 +92,30 @@ describe('ProjectFormRow', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
-        testData.extendedForms.createPast(1, { name: 'My Form' });
       });
 
-      it('does not render a link', () => {
+      it('links to enketo form fill if form is open', () => {
+        testData.extendedForms.createPast(1, { name: 'My Form', enketoId: 'xyz', state: 'open' });
+        const row = mountComponent();
+        const link = row.get('.form-name a');
+        link.text().should.equal('My Form');
+        link.attributes().href.should.equal('/-/xyz');
+      });
+
+      it('does not render a link to enketo if closed', () => {
+        testData.extendedForms.createPast(1, { name: 'My Form', enketoId: 'xyz', state: 'closed' });
         const row = mountComponent();
         const name = row.get('.form-name');
         name.find('a').exists().should.be.false();
         name.text().should.equal('My Form');
-        // TODO: could link to enketo form instead of nothing
+      });
+
+      it('does not render a link if enketo not ready for this form', () => {
+        testData.extendedForms.createPast(1, { name: 'My Form', enketoId: null, state: 'open' });
+        const row = mountComponent();
+        const name = row.get('.form-name');
+        name.find('a').exists().should.be.false();
+        name.text().should.equal('My Form');
       });
 
       // draft forms not shown in project-form-row to data collectors
