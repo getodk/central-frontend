@@ -23,14 +23,14 @@ except according to the terms contained in the LICENSE file.
       <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :project="project"/>
     </table>
     <div v-if="showExpander">
-      <span class="expand-button" @click.prevent="toggleExpanded">
+      <a href="#" class="expand-button" @click.prevent="toggleExpanded">
         <template v-if="!expanded">
           {{ $tcn('showMore', numForms) }}<span class="icon-angle-down"></span>
         </template>
         <template v-else>
           {{ $tcn('showFewer', numForms) }}<span class="icon-angle-up"></span>
         </template>
-      </span>
+      </a>
     </div>
   </div>
 </template>
@@ -118,6 +118,7 @@ export default {
     font-size: 14px;
     color: #888;
     cursor: pointer;
+    text-decoration: none;
   }
 
   .icon-angle-down, .icon-angle-up {
