@@ -376,6 +376,10 @@
       "string": "Save settings",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "sort": {
+      "string": "Sort",
+      "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
     "update": {
       "string": "Update",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -658,6 +662,10 @@
     },
     "encryptionMessage": {
       "string": "Data preview is not available due to encryption."
+    },
+    "noSubmission": {
+      "string": "(none)",
+      "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     }
   },
   "common": {
@@ -2805,7 +2813,34 @@
         }
       }
     },
+    "ProjectFormRow": {
+      "unpublished": {
+        "string": "Not published yet",
+        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and there are no submission counts to show."
+      }
+    },
+    "ProjectHomeBlock": {
+      "encrypted": {
+        "string": "Encrypted",
+        "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
+      },
+      "encryptionTip": {
+        "string": "This Project uses managed encryption."
+      },
+      "showMore": {
+        "string": "Show {count} total",
+        "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
+      },
+      "showFewer": {
+        "string": "Show fewer of {count} total",
+        "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
+      }
+    },
     "ProjectList": {
+      "archived": {
+        "string": "Archived Projects",
+        "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
+      },
       "action": {
         "create": {
           "string": "New",
@@ -2898,15 +2933,6 @@
         }
       }
     },
-    "ProjectRow": {
-      "noSubmission": {
-        "string": "(none)",
-        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
-      },
-      "encryptionTip": {
-        "string": "This Project uses managed encryption."
-      }
-    },
     "ProjectSettings": {
       "encryption": {
         "title": {
@@ -2961,6 +2987,18 @@
       "alert": {
         "archive": {
           "string": "The Project “{name}” was archived."
+        }
+      }
+    },
+    "ProjectSort": {
+      "sortOptions": {
+        "alphabetical": {
+          "string": "Alphabetical",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
+        },
+        "newest": {
+          "string": "Newest",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
     },

@@ -51,6 +51,7 @@ const forms = dataStore({
     createdBy = extendedUsers.size !== 0
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
+    reviewStates = {},
     fields = [testDataFields.string('/s')],
 
     ...rest
@@ -73,6 +74,7 @@ const forms = dataStore({
       updatedAt: null,
       // Extended metadata
       createdBy: toActor(createdBy),
+      reviewStates,
       // An actual form does not have this property. We include it here for ease
       // of access during testing.
       _fields: fields
@@ -213,6 +215,7 @@ const formProps = [
   'state',
   'createdAt',
   'updatedAt',
+  'reviewStates',
   '_fields'
 ];
 const extendedFormProps = ['createdBy'];

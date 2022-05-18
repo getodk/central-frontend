@@ -23,7 +23,9 @@ const props = [
   'forms',
   'lastSubmission',
   'appUsers',
-  'verbs'
+  'verbs',
+  // Nested form details
+  'formList'
 ];
 
 export default class Project extends Presenter.define(props) {

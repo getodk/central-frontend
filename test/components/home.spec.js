@@ -8,7 +8,7 @@ describe('Home', () => {
     it('sends the correct requests', () => {
       mockLogin();
       return load('/', { root: false }).testRequests([
-        { url: '/v1/projects', extended: true },
+        { url: '/v1/projects?forms=true' },
         { url: '/v1/users' }
       ]);
     });
@@ -16,7 +16,7 @@ describe('Home', () => {
     it('does not send request for users if user does not have a sidewide role', () => {
       mockLogin({ role: 'none' });
       return load('/', { root: false }, { users: false }).testRequests([
-        { url: '/v1/projects', extended: true }
+        { url: '/v1/projects?forms=true' }
       ]);
     });
   });

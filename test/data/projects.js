@@ -42,7 +42,8 @@ export const extendedProjects = dataStore({
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
     // The current user's role on the project
-    role = 'none'
+    role = 'none',
+    formList = []
   }) => ({
     id,
     name,
@@ -57,12 +58,13 @@ export const extendedProjects = dataStore({
     forms,
     lastSubmission,
     appUsers,
-    verbs: verbsForUserAndRole(currentUser, role)
+    verbs: verbsForUserAndRole(currentUser, role),
+    formList
   }),
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });
 
 export const standardProjects = view(
   extendedProjects,
-  omit(['forms', 'lastSubmission', 'appUsers', 'verbs'])
+  omit(['forms', 'lastSubmission', 'appUsers', 'verbs', 'formList'])
 );

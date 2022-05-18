@@ -184,6 +184,8 @@
     "review": "Review",
     "save": "Save",
     "saveSettings": "Save settings",
+    // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
+    "sort": "Sort",
     "update": "Update",
     "yesProceed": "Yes, proceed",
     // This text is shown on a button that the user clicks to show a preview of something
@@ -292,7 +294,10 @@
     // This is shown when the Edit button is disabled.
     "editDisabled": "You cannot edit encrypted Submissions.",
     "binaryLinkTitle": "File was submitted. Click to download.",
-    "encryptionMessage": "Data preview is not available due to encryption."
+    "encryptionMessage": "Data preview is not available due to encryption.",
+    // This text is shown under the "Latest Submission" column of the tables
+    // for Projects and Forms. It is shown for a Project or Form with no Submissions.
+    "noSubmission": "(none)"
   },
   "common": {
     // This is a title shown above a section of the page.
