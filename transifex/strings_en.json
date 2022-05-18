@@ -2337,20 +2337,21 @@
       }
     },
     "FormRow": {
+      "test": {
+        "string": "Test",
+        "developer_comment": "This appears on a button linking to the draft testing form page"
+      },
+      "unpublished": {
+        "string": "Not published yet"
+      },
       "action": {
         "fill": {
           "string": "Fill Form",
           "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       },
-      "formClosedTip": {
-        "string": "This Form is Closed. It is not downloadable and does not accept Submissions."
-      },
       "formClosingTip": {
         "string": "This Form is Closing. It is not downloadable but still accepts Submissions."
-      },
-      "formUnpublishedTip": {
-        "string": "This Form does not yet have a published version."
       }
     },
     "FormSettings": {
@@ -2382,8 +2383,32 @@
         }
       }
     },
+    "FormSort": {
+      "sortOptions": {
+        "alphabetical": {
+          "string": "Alphabetical",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
+        },
+        "newest": {
+          "string": "Newest",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
+        }
+      }
+    },
     "FormTable": {
       "header": {
+        "closedForms": {
+          "string": "Closed Forms",
+          "developer_comment": "This is the text of a column header in a table of Forms."
+        },
+        "reviewStates": {
+          "string": "Review States",
+          "developer_comment": "This is the text of a table column header."
+        },
+        "latest": {
+          "string": "Latest",
+          "developer_comment": "This is the text of a table column header."
+        },
         "idAndVersion": {
           "string": "ID and Version",
           "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."

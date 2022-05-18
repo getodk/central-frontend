@@ -19,9 +19,11 @@ except according to the terms contained in the LICENSE file.
           @click="showModal('newForm')">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
+        <form-sort v-model="sortMode"/>
       </template>
       <template #body>
-        <form-table/>
+        <form-table :sort-func="sortFunction"/>
+        <form-table :sort-func="sortFunction" :show-closed="true"/>
         <loading :state="$store.getters.initiallyLoading(['forms'])"/>
         <p v-if="forms != null && forms.length === 0"
           class="empty-table-message">
@@ -39,25 +41,63 @@ import FormNew from './new.vue';
 import FormTable from './table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
+import FormSort from './sort.vue';
+
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'FormList',
-  components: { FormTable, FormNew, Loading, PageSection },
+  components: { FormTable, FormNew, FormSort, Loading, PageSection },
   mixins: [modal(), routes()],
   inject: ['alert'],
   data() {
     return {
       newForm: {
         state: false
-      }
+      },
+      sortMode: 'alphabetical'
     };
   },
   // The component does not assume that this data will exist when the component
   // is created.
-  computed: requestData(['project', 'forms']),
+  computed: {
+    ...requestData(['project', 'forms']),
+    sortFunction() {
+      const sortFunctions = {
+        alphabetical: (a, b) => {
+          // sort uses `name` field for both projects and forms
+          // but some forms don't have a name
+          const nameA = a.name != null ? a.name : a.nameOrId();
+          const nameB = b.name != null ? b.name : b.nameOrId();
+          return nameA.localeCompare(nameB);
+        },
+        latest: (a, b) => {
+          const dateA = a.lastSubmission;
+          const dateB = b.lastSubmission;
+          // break tie alphabetically if both lastSub dates are null
+          if (dateA == null && dateB == null) {
+            const nameA = a.name != null ? a.name : a.nameOrId();
+            const nameB = b.name != null ? b.name : b.nameOrId();
+            return nameA.localeCompare(nameB);
+          }
+          // null submission dates should go at the end
+          if (dateA == null)
+            return 1;
+          if (dateB == null)
+            return -1;
+          return new Date(dateB) - new Date(dateA);
+        },
+        newest: (a, b) => {
+          const dateA = a.createdAt;
+          const dateB = b.createdAt;
+          return new Date(dateB) - new Date(dateA);
+        }
+      };
+      return sortFunctions[this.sortMode];
+    }
+  },
   methods: {
     afterCreate(form) {
       const message = this.$t('alert.create', { name: form.nameOrId() });

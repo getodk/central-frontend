@@ -13,28 +13,25 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-trash-row">
     <td class="name">
       <span class="form-name">{{ form.nameOrId() }}</span>
+      <span class="form-id">({{ form.xmlFormId }})</span>
+    </td>
+    <td class="deleted">
       <i18n-t tag="div" keypath="deletedDate" class="deleted-date">
         <template #dateTime>
           <date-time :iso="form.deletedAt"/>
         </template>
       </i18n-t>
     </td>
-    <td class="id-and-version">
-      <div class="form-id">
-        <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
-      </div>
-      <div v-if="form.version != null && form.version !== ''" class="version">
-        <span :title="form.version">{{ form.version }}</span>
-      </div>
-    </td>
-    <td class="submissions">
-      <div>{{ $tcn('count.submission', form.submissions) }}</div>
-      <i18n-t v-if="form.lastSubmission != null" tag="div"
-        keypath="common.lastSubmission">
-        <template #dateTime>
+    <td class="last-submission">
+       <template v-if="form.lastSubmission != null">
           <date-time :iso="form.lastSubmission" relative="past"/>
+          <span class="icon-clock-o"></span>
         </template>
-      </i18n-t>
+        <template v-else>{{ $t('submission.noSubmission') }}</template>
+    </td>
+    <td class="total-submissions">
+      <span>{{ $n(form.submissions, 'default') }}</span>
+      <span class="icon-asterisk"></span>
     </td>
     <td class="actions">
       <button class="form-trash-row-restore-button btn btn-default" type="button"
@@ -92,42 +89,51 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+@import '../../assets/scss/variables';
 
 .form-trash-row {
   .table tbody & td { vertical-align: middle; }
 
-  // column widths
+  td {
+    font-size: 16px;
+    padding: 3px 0px 3px 6px;
+    color: #333;
+  }
+
   .name {
-    width: 500px;
-    max-width: 500px;
-    @include text-overflow-ellipsis;
+    font-size: 18px;
   }
 
-  .id-and-version {
-    width: 180px;
-    max-width: 180px;
+  .form-id {
+    font-family: $font-family-monospace;
+    font-size: 14px;
+    margin-left: 6px;
   }
 
-  .submissions {
-    width: 180px;
-    max-width: 180px;
+  .deleted {
+    width: 300px;
+    text-align: right;
+  }
+
+  .last-submission {
+    width: 150px;
+  }
+
+  .total-submissions {
+    width: 100px;
+  }
+
+  .last-submission, .total-submissions {
+    text-align: right;
+    & [class*='icon'] {
+      margin-left: 5px;
+      color: #888;
+    }
   }
 
   .actions {
-    width: 180px;
-    max-width: 180px;
+    width: 100px;
   }
-
-  .form-name {
-    font-size: 20px;
-  }
-
-  .form-id, .version {
-    @include text-overflow-ellipsis;
-    font-family: $font-family-monospace;
-  }
-
-  .version { color: #888; }
 
   .deleted-date {
     color: $color-danger;
