@@ -40,7 +40,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
 
 #project-sort {
   float: right;

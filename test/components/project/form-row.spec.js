@@ -27,7 +27,6 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
       const link = mountComponent().find('.form-name a');
       link.text().should.equal('My Form');
-      link.props().to.should.equal('/projects/1/forms/f');
     });
 
     it('shows the xmlFormId if the form does not have a name', () => {

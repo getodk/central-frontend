@@ -39,11 +39,6 @@ describe('ProjectList', () => {
   });
 
   it('renders a row for each project', () => {
-    testData.extendedProjects.createPast(2);
-    mountComponent().findAllComponents(ProjectHomeBlock).length.should.equal(2);
-  });
-
-  it('renders a row for each project', () => {
     createProjectsWithForms(
       [{ name: 'Alpha Project' }, { name: 'Bravo Project' }],
       [[{}, {}], [{}, {}, {}, {}, {}]]
@@ -67,18 +62,18 @@ describe('ProjectList', () => {
     beforeEach(() => {
       createProjectsWithForms(
         [
-          { name: 'A', lastSubmission: ago({ days: 15 }).toISO(), createdAt: ago({ days: 30 }).toISO() },
-          { name: 'B', lastSubmission: ago({ days: 5 }).toISO(), createdAt: ago({ days: 40 }).toISO() },
-          { name: 'C', lastSubmission: ago({ days: 10 }).toISO(), createdAt: ago({ days: 20 }).toISO() },
+          { name: 'A', lastSubmission: ago({ days: 15 }).toISO() },
+          { name: 'B', lastSubmission: ago({ days: 5 }).toISO() },
+          { name: 'C', lastSubmission: ago({ days: 10 }).toISO() },
           { name: 'D', lastSubmission: ago({ days: 10 }).toISO(), archived: true },
           { name: 'E', lastSubmission: ago({ days: 5 }).toISO(), archived: true }
         ],
         [
           [{ lastSubmission: ago({ days: 15 }).toISO() }],
           [
-            { name: 'X', lastSubmission: ago({ days: 20 }).toISO(), createdAt: ago({ days: 37 }).toISO() },
-            { name: 'Y', lastSubmission: ago({ days: 10 }).toISO(), createdAt: ago({ days: 39 }).toISO() },
-            { name: 'Z', lastSubmission: ago({ days: 5 }).toISO(), createdAt: ago({ days: 38 }).toISO() }
+            { name: 'X', lastSubmission: ago({ days: 20 }).toISO() },
+            { name: 'Y', lastSubmission: ago({ days: 10 }).toISO() },
+            { name: 'Z', lastSubmission: ago({ days: 5 }).toISO() }
           ],
           [{ lastSubmission: ago({ days: 10 }).toISO() }],
           [{}],
@@ -105,15 +100,15 @@ describe('ProjectList', () => {
       formRows.map((row) => row.props().form.name).should.eql(['X', 'Y', 'Z']);
     });
 
-    it.skip('changes sort to newest', async () => {
-      // TODO don't know how to control createdAt date on projects and forms
+    it('changes sort to newest', async () => {
+      // createdAt fields will be in order of test data creation
       const component = mountComponent();
       await component.find('#project-sort select').setValue('newest');
       const blocks = component.findAllComponents(ProjectHomeBlock);
       blocks.length.should.equal(3);
-      blocks.map((block) => block.props().project.name).should.eql(['C', 'A', 'B']);
-      const formRows = blocks[2].findAllComponents(FormRow);
-      formRows.map((row) => row.props().form.name).should.eql(['X', 'Z', 'Y']);
+      blocks.map((block) => block.props().project.name).should.eql(['C', 'B', 'A']);
+      const formRows = blocks[1].findAllComponents(FormRow);
+      formRows.map((row) => row.props().form.name).should.eql(['Z', 'Y', 'X']);
     });
 
     it('sorts archived projects by latest submission by default', () => {
@@ -127,8 +122,40 @@ describe('ProjectList', () => {
       const archived = component.findAll('#project-list-archived .project-title');
       archived.map((projDiv) => projDiv.text()).should.eql(['D', 'E']);
     });
+  });
 
-    // TODO: tests that sort projects and forms with empty last submissions in the right way
+  describe('sorting with ties', () => {
+    it('sorts projects alphabetically when last submission is null', async () => {
+      createProjectsWithForms(
+        [
+          { name: 'C_no_subs' },
+          { name: 'B_no_subs' },
+          { name: 'X_subs', lastSubmission: ago({ days: 15 }).toISO() },
+          { name: 'A_no_subs' }
+        ],
+        [
+          [],
+          [],
+          [
+            { name: 'C' },
+            { name: 'X', lastSubmission: ago({ days: 10 }).toISO() },
+            { name: 'Y', lastSubmission: ago({ days: 5 }).toISO() },
+            { name: 'B' },
+            { name: 'A' }
+          ],
+          []
+        ]
+      );
+
+      const component = mountComponent();
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      await component.find('#project-sort select').setValue('latest');
+      blocks.length.should.equal(4);
+      blocks.map((block) => block.props().project.name).should.eql(['X_subs', 'A_no_subs', 'B_no_subs', 'C_no_subs']);
+      await blocks[0].get('.expand-button').trigger('click');
+      const formRows = blocks[0].findAllComponents(FormRow);
+      formRows.map((row) => row.props().form.name).should.eql(['Y', 'X', 'A', 'B', 'C']);
+    });
   });
 
   it('shows the appropriate number of forms based on total project/form numbers', () => {

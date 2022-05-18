@@ -37,15 +37,15 @@ describe('ProjectHomeBlock', () => {
     mountComponent().find('.encrypted').exists().should.be.true();
   });
 
-  it('shows nothing when there are zero forms', () => {
+  it('shows empty table when there are zero forms', () => {
     testData.extendedProjects.createPast(1);
-    const table = mountComponent().get('.project-form-table');
-    table.isEmpty().should.be.true();
+    const table = mountComponent().find('.project-form-table');
+    table.exists().should.be.false();
   });
 
   it('shows the correct number of forms if there are only a few', () => {
     const project = testData.extendedProjects.createPast(1).last();
-    testData.extendedForms.createPast(3, { reviewStates: {} });
+    testData.extendedForms.createPast(3);
     project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
@@ -54,7 +54,7 @@ describe('ProjectHomeBlock', () => {
 
   it('shows the correct number of forms if there are a lot and some should be hidden', () => {
     const project = testData.extendedProjects.createPast(1).last();
-    testData.extendedForms.createPast(4, { reviewStates: {} });
+    testData.extendedForms.createPast(4);
     project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
@@ -66,7 +66,7 @@ describe('ProjectHomeBlock', () => {
 
   it('expands the forms to show more forms', async () => {
     const project = testData.extendedProjects.createPast(1).last();
-    testData.extendedForms.createPast(4, { reviewStates: {} });
+    testData.extendedForms.createPast(4);
     project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
@@ -94,7 +94,7 @@ describe('ProjectHomeBlock', () => {
     const project = testData.extendedProjects.createPast(1).last();
     testData.extendedForms.createPast(1, { name: 'aaa_z', xmlFormId: 'z' });
     testData.extendedForms.createPast(1, { name: 'bbb_y', xmlFormId: 'y' });
-    testData.extendedForms.createPast(1, { name: 'ccc_w', xmlFormId: 'w', reviewStates: {} });
+    testData.extendedForms.createPast(1, { name: 'ccc_w', xmlFormId: 'w' });
     testData.extendedForms.createPast(1, { name: 'ddd_x', xmlFormId: 'x' });
     project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();

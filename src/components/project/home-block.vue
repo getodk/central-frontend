@@ -19,11 +19,11 @@ except according to the terms contained in the LICENSE file.
         {{ $t('encrypted') }}
         </span>
     </div>
-    <table v-if="visibleForms != null" class="project-form-table table">
+    <table v-if="visibleForms.length > 0" class="project-form-table table">
       <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :project="project"/>
     </table>
-    <div v-if="showExpander">
-      <a href="#" class="expand-button" @click.prevent="toggleExpanded">
+    <div v-if="showExpander" class="expand-button-container">
+      <a href="#" role="button" class="expand-button" @click.prevent="toggleExpanded">
         <template v-if="!expanded">
           {{ $tcn('showMore', numForms) }}<span class="icon-angle-down"></span>
         </template>
@@ -113,12 +113,16 @@ export default {
     margin-bottom: 4px;
   }
 
-  .expand-button {
+  .expand-button-container {
     margin-left: 15px;
     font-size: 14px;
     color: #888;
-    cursor: pointer;
-    text-decoration: none;
+  }
+  .expand-button {
+    @include text-link;
+    &:focus {
+      background-color: transparent;
+    }
   }
 
   .icon-angle-down, .icon-angle-up {

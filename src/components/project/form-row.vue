@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="project-form-row">
-    <!--todo: come back and figure out all the permissions-->
     <td class="form-name">
       <template v-if="canLinkToFormOverview">
         <router-link :to="primaryFormPath(form)">{{ form.nameOrId() }}</router-link>
@@ -21,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else>
         <template v-if="canLinkToEnketo">
-          <a :href="enketoPath">{{ form.nameOrId() }}</a>
+          <a :href="enketoPath" target="_blank">{{ form.nameOrId() }}</a>
         </template>
         <template v-else>
           {{ form.nameOrId() }}
@@ -120,7 +119,7 @@ export default {
       const submissionPath = this.formPath(
         this.form.projectId,
         this.form.xmlFormId,
-        this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+        'submissions'
       );
       return {
         received: `${submissionPath}?reviewState=null`,
@@ -141,8 +140,6 @@ export default {
 @import '../../assets/scss/mixins';
 
 .project-form-row {
-  .table tbody & td { vertical-align: middle; }
-
   td {
     font-size: 16px;
     padding: 3px 0px 3px 6px;
