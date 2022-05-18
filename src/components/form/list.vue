@@ -60,12 +60,9 @@ export default {
   computed: requestData(['project', 'forms']),
   methods: {
     afterCreate(form) {
+      const message = this.$t('alert.create', { name: form.nameOrId() });
       this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'))
-        .then(() => {
-          this.alert.success(this.$t('alert.create', {
-            name: form.nameOrId()
-          }));
-        });
+        .then(() => { this.alert.success(message); });
     }
   }
 };

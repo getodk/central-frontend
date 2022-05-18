@@ -120,9 +120,12 @@ export default {
               // outside Frontend, the buttons might be re-enabled before the
               // external page is loaded.
               this.disabled = false;
-              this.$router.replace(location).catch(noop);
-              if (this.password.length < 10)
-                this.alert.info(this.$t('alert.changePassword'));
+              const message = this.$t('alert.changePassword');
+              this.$router.replace(location)
+                .catch(noop)
+                .then(() => {
+                  if (this.password.length < 10) this.alert.info(message);
+                });
             },
             (url) => {
               window.location.replace(url);

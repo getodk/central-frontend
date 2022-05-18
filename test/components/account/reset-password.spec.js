@@ -67,7 +67,21 @@ describe('AccountResetPassword', () => {
 
     it('shows a success alert', async () => {
       const app = await submit();
-      app.should.alert('success');
+      app.should.alert('success', (message) => {
+        message.should.startWith('An email has been sent to alice@getodk.org');
+      });
     });
+
+    it('shows correct email in alert even if value of input has changed', () =>
+      submit()
+        .beforeEachResponse(app => {
+          const input = app.get('#account-reset-password input');
+          return input.setValue('bob@getodk.org');
+        })
+        .afterResponse(app => {
+          app.should.alert('success', (message) => {
+            message.should.containEql('alice@getodk.org');
+          });
+        }));
   });
 });

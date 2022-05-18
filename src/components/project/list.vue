@@ -130,10 +130,9 @@ export default {
   },
   methods: {
     afterCreate(project) {
+      const message = this.$t('alert.create');
       this.$router.push(this.projectPath(project.id))
-        .then(() => {
-          this.alert.success(this.$t('alert.create'));
-        });
+        .then(() => { this.alert.success(message); });
     }
   }
 };
