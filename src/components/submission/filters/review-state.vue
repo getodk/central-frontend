@@ -88,6 +88,9 @@ export default {
   "it": {
     "anyState": "(Qualsiasi Stato)"
   },
+  "ja": {
+    "anyState": "（全ての状態）"
+  },
   "sw": {
     "anyState": "(hali lolote)"
   }

@@ -114,7 +114,9 @@ export default {
   "cs": {
     "title": "Základní detaily",
     "field": {
-      "name": "Název projektu"
+      "name": "Název projektu",
+      "description": "Popis Projektu",
+      "note": "Sem přidejte poznámky, odkazy, návody a další zdroje."
     },
     "alert": {
       "success": "Nastavení projektu uloženo."
@@ -123,7 +125,9 @@ export default {
   "de": {
     "title": "Basisinformationen",
     "field": {
-      "name": "Projektname"
+      "name": "Projektname",
+      "description": "Projektbeschreibung",
+      "note": "Fügen Sie hier Notizen, Links, Anweisungen und andere Ressourcen hinzu."
     },
     "alert": {
       "success": "Projekteinstellungen wurden gespeichert"
@@ -132,7 +136,9 @@ export default {
   "es": {
     "title": "Detalles básicos",
     "field": {
-      "name": "Nombre del proyecto"
+      "name": "Nombre del proyecto",
+      "description": "Descripción del Proyecto",
+      "note": "Agregue notas, enlaces, instrucciones y otros recursos aquí."
     },
     "alert": {
       "success": "¡Configuración del proyecto guardada!"
@@ -141,7 +147,9 @@ export default {
   "fr": {
     "title": "Détails basiques",
     "field": {
-      "name": "Nom du projet"
+      "name": "Nom du projet",
+      "description": "Description du projet",
+      "note": "Ajoutez des notes, des liens, des instructions ou autres ressources ici."
     },
     "alert": {
       "success": "Paramètres du projet enregistrés !"
@@ -159,7 +167,9 @@ export default {
   "it": {
     "title": "Dettagli di base",
     "field": {
-      "name": "Nome del Progetto"
+      "name": "Nome del Progetto",
+      "description": "Descrizione del progetto",
+      "note": "Aggiungi note, collegamenti, istruzioni e altre risorse qui."
     },
     "alert": {
       "success": "Impostazioni del progetto salvate!"

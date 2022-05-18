@@ -201,6 +201,15 @@ export default {
       "conflict": "Questo formulario non può essere ripristinato perché esiste un formulario attivo con lo stesso ID."
     }
   },
+  "ja": {
+    "action": {
+      "restore": "復元"
+    },
+    "deletedDate": "削除 {dateTime}",
+    "disabled": {
+      "conflict": "このフォームは、同一IDのフォームが有効化されているため、復元できません。"
+    }
+  },
   "sw": {
     "action": {
       "restore": "Ondoa kufuta"

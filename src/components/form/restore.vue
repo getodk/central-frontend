@@ -127,6 +127,14 @@ export default {
       "Se il Formulario viene nuovamente eliminato, ci vorranno altri 30 giorni prima che venga rimosso."
     ]
   },
+  "ja": {
+    "title": "フォームの復元",
+    "introduction": [
+      "フォーム{name}を本当に復元しますか？",
+      "全てのデータ、設定、権限を含んだ以前のフォームの状態に復元されます",
+      "フォームを再削除した場合、完全に削除されるまで、さらに30日を要します。"
+    ]
+  },
   "sw": {
     "title": "Ondoa kufuta fomu",
     "introduction": [

@@ -376,6 +376,10 @@
       "string": "hifadhi mipangilio",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "sort": {
+      "string": "",
+      "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
     "update": {
       "string": "sasisha",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -505,6 +509,9 @@
     },
     "submission": {
       "string": "{count, plural, one {Uwasilishaji} other {Mawasilisho}}"
+    },
+    "user": {
+      "string": "{count, plural, one {} other {}}"
     },
     "webUser": {
       "string": "{count, plural, one {mtumiaji wa wavuti} other {watumiaji wa mtandao}}"
@@ -655,6 +662,10 @@
     },
     "encryptionMessage": {
       "string": "Onyesho la kukagua data halipatikani kwa sababu ya usimbaji fiche"
+    },
+    "noSubmission": {
+      "string": "",
+      "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     }
   },
   "common": {
@@ -682,9 +693,20 @@
       "string": "Eneo la Hatari",
       "developer_comment": "This is a title shown above a section of the page."
     },
+    "docs": {
+      "string": "",
+      "developer_comment": "This is the text of a link that links to the documentation."
+    },
     "filter": {
       "string": "chujio",
       "developer_comment": "This text is shown next to options for filtering a table."
+    },
+    "forum": {
+      "string": "",
+      "developer_comment": "This is the text of a link that links to the ODK forum."
+    },
+    "loading": {
+      "string": ""
     },
     "no": {
       "string": "Hapana"
@@ -743,16 +765,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": {
-        "string": "leo",
-        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"today 01:23\". The string may appear on its own or be part of a sentence."
-      },
-      "yesterday": {
-        "string": "jana",
-        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"yesterday 01:23\". The string may appear on its own or be part of a sentence."
-      }
-    },
     "request": {
       "noRequest": {
         "string": "Hitilafu fulani imetokea: hakukuwa na ombi."
@@ -2250,10 +2262,6 @@
       }
     },
     "FormOverview": {
-      "checklist": {
-        "string": "Orodha ya ukaguzi",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "draft": {
         "none": {
           "title": {
@@ -2460,9 +2468,39 @@
         "developer_comment": "This is the title at the top of a pop-up."
       }
     },
-    "Loading": {
-      "text": {
-        "string": "Inapakia..."
+    "Home": {
+      "heading": {
+        "0": {
+          "string": ""
+        }
+      }
+    },
+    "HomeNews": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "HomeSummary": {
+      "projects": {
+        "body": {
+          "string": ""
+        }
+      },
+      "users": {
+        "body": {
+          "string": ""
+        }
+      },
+      "docs": {
+        "body": {
+          "string": ""
+        }
+      },
+      "forum": {
+        "body": {
+          "string": ""
+        }
       }
     },
     "MarkdownTextarea": {
@@ -2504,14 +2542,6 @@
       }
     },
     "NavbarHelpDropdown": {
-      "docs": {
-        "string": "hati",
-        "developer_comment": "This is the text of a link that links to the documentation."
-      },
-      "forum": {
-        "string": "Jukwaa",
-        "developer_comment": "This is the text of a link that links to the ODK forum."
-      },
       "version": {
         "string": "Toleo",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -2563,6 +2593,14 @@
       "field": {
         "name": {
           "string": "Jina la mradi",
+          "developer_comment": "This is the text of a form field."
+        },
+        "description": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        },
+        "note": {
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -2775,95 +2813,38 @@
         }
       }
     },
-    "ProjectIntroduction": {
-      "title": {
-        "string": "Miradi ni nini?",
-        "developer_comment": "This is the title at the top of a pop-up."
+    "ProjectFormRow": {
+      "unpublished": {
+        "string": "",
+        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and there are no submission counts to show."
+      }
+    },
+    "ProjectHomeBlock": {
+      "encrypted": {
+        "string": "",
+        "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
       },
-      "introduction": {
-        "0": {
-          "string": "Miradi hukuruhusu kupanga Fomu na Watumiaji zinazohusiana. Watumiaji wa Wavuti wanaweza kupewa Majukumu ambayo huwaruhusu kutekeleza vitendo fulani ndani ya Mradi, ikijumuisha kutumia kivinjari cha wavuti kujaza Fomu. Watumiaji wa Programu za Mradi wanaweza tu kuona Fomu katika Mradi ambao wanaweza kufikia."
-        }
+      "encryptionTip": {
+        "string": ""
+      },
+      "showMore": {
+        "string": "",
+        "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
+      },
+      "showFewer": {
+        "string": "",
+        "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       }
     },
     "ProjectList": {
-      "heading": {
-        "0": {
-          "string": "Karibu Central."
-        },
-        "1": {
-          "string": "Hebu tufanye baadhi ya mambo.",
-          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
-        }
-      },
-      "gettingStarted": {
-        "title": {
-          "string": "Kuanza",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
-        "body": {
-          "0": {
-            "full": {
-              "string": "Iwapo huna uhakika pa kuanzia, kuna mwongozo wa kuanza na hati za mtumiaji zinazopatikana kwenye {docsWebsite}.",
-              "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
-            },
-            "docsWebsite": {
-              "string": "Tovuti ya Hati za ODK",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
-            }
-          },
-          "1": {
-            "full": {
-              "string": "Kwa kuongeza, unaweza kupata usaidizi kutoka kwa wengine kwenye {forum} wakati wowote, ambapo unaweza kutafuta maswali ya awali au kuuliza moja yako mwenyewe.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
-            },
-            "forum": {
-              "string": "ODK jamii forum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
-            }
-          }
-        }
-      },
-      "news": {
-        "string": "Habari",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "rightNow": {
-        "users": {
-          "full": {
-            "string": "{count, plural, one {{webUsers} ambaye anaweza kusimamia Miradi kupitia tovuti hii.} other {{webUsers} ambao wanaweza kusimamia Miradi kupitia tovuti hii.}}",
-            "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
-          },
-          "webUsers": {
-            "string": "{count, plural, one {Mtumiaji wa Mtandao} other {Watumiaji wa Mtandao}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
-          }
-        },
-        "projects": {
-          "full": {
-            "string": "{count, plural, one {{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa.} other {{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa.}}",
-            "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
-          },
-          "projects": {
-            "string": "{count, plural, one {Mradi} other {Miradi}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text. (The plural form of the text is shown.)\n\n{projects} which can organize Forms and App Users for device deployment."
-          }
-        }
-      },
-      "projectsTitle": {
-        "string": "Miradi",
-        "developer_comment": "This is a title shown above a section of the page."
+      "archived": {
+        "string": "",
+        "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
       },
       "action": {
         "create": {
           "string": "Mpya",
           "developer_comment": "This is the text of a button that is used to create a new Project."
-        }
-      },
-      "header": {
-        "forms": {
-          "string": "Fomu",
-          "developer_comment": "This is the text of a table column header."
         }
       },
       "emptyTable": {
@@ -2914,6 +2895,22 @@
         }
       }
     },
+    "ProjectOverviewDescription": {
+      "instructions": {
+        "full": {
+          "string": "",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\n{projectSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Settings"
+        },
+        "projectSettings": {
+          "string": "",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectSettings} is in the following text:\n\nAdd Project notes, links, instructions and other resources to this space in {projectSettings}."
+        }
+      },
+      "note": {
+        "string": "",
+        "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
+      }
+    },
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
@@ -2934,18 +2931,6 @@
           "string": "{count, plural, one {Fomu} other {Fomu}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
         }
-      }
-    },
-    "ProjectRow": {
-      "help": {
-        "string": "Miradi ni nini?"
-      },
-      "noSubmission": {
-        "string": "(Hakuna)",
-        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
-      },
-      "encryptionTip": {
-        "string": "Mradi huu unatumia usimbaji fiche unaodhibitiwa"
       }
     },
     "ProjectSettings": {
@@ -3002,6 +2987,18 @@
       "alert": {
         "archive": {
           "string": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
+        }
+      }
+    },
+    "ProjectSort": {
+      "sortOptions": {
+        "alphabetical": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
+        },
+        "newest": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
     },
@@ -3439,6 +3436,9 @@
         },
         "submit": {
           "string": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena."
+        },
+        "parseError": {
+          "string": ""
         }
       }
     },
@@ -3597,6 +3597,9 @@
           "string": "Iliyowasilishwa na",
           "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
         }
+      },
+      "unknown": {
+        "string": ""
       }
     },
     "SubmissionList": {

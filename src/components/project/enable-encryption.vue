@@ -707,6 +707,9 @@ export default {
     ],
     "field": {
       "hint": "パスフレーズのヒント（任意）"
+    },
+    "alert": {
+      "passphraseTooShort": "パスフレーズを10文字以上で入力してください。"
     }
   },
   "sw": {

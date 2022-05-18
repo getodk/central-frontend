@@ -183,6 +183,7 @@
     "form": "Formulario | Formulari",
     "project": "Progetto | Progetti",
     "submission": "Invio | Invii",
+    "user": "Utente | Utenti",
     "webUser": "Utente Web | Utenti Web"
   },
   "count": {
@@ -245,7 +246,10 @@
     "basicInfo": "Informazioni di base",
     "currentDraft": "La tua bozza attuale",
     "dangerZone": "Zona pericolo",
+    "docs": "Documentazione",
     "filter": "Filtro",
+    "forum": "Forum",
+    "loading": "Caricando...",
     "no": "No",
     "noResults": "Nessun risultato",
     "rightNow": "Adesso",
@@ -272,10 +276,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": "oggi",
-      "yesterday": "ieri"
-    },
     "request": {
       "noRequest": "Qualcosa è andato storto: non c'era nessuna request.",
       "noResponse": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request.",

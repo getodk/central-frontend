@@ -217,7 +217,9 @@ export default {
   },
   "ja": {
     "reviewState": "レビュー・ステータス",
+    "formVersion": "フォームのバージョン",
     "deviceId": "デバイスID",
+    "userAgent": "ユーザーエージェント",
     "attachments": "メディアファイル",
     "present": "{count}件の提出済メディアファイル",
     "expected": "{count}件の期待されるメディアファイル数",
