@@ -86,7 +86,8 @@ export default {
   "cs": {
     "field": {
       "submitter": "Odesláno od"
-    }
+    },
+    "unknown": "Neznámý odesílatel"
   },
   "de": {
     "field": {
@@ -96,7 +97,8 @@ export default {
   "es": {
     "field": {
       "submitter": "Enviado por"
-    }
+    },
+    "unknown": "Remitente desconocido"
   },
   "fr": {
     "field": {
@@ -111,7 +113,8 @@ export default {
   "it": {
     "field": {
       "submitter": "Inviato da"
-    }
+    },
+    "unknown": "Utente invio sconosciuto"
   },
   "ja": {
     "field": {

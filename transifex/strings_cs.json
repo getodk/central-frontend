@@ -376,6 +376,10 @@
       "string": "Uložit nastavení",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "sort": {
+      "string": "",
+      "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
     "update": {
       "string": "Aktualizovat",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -505,6 +509,9 @@
     },
     "submission": {
       "string": "{count, plural, one {Podaný příspěvek} few {Podaných příspěvků} many {Podaných příspěvků} other {Podané příspěvky}}"
+    },
+    "user": {
+      "string": "{count, plural, one {Uživatel} few {Uživatelé} many {Uživatelů} other {Uživatelé}}"
     },
     "webUser": {
       "string": "{count, plural, one {Webový uživatel} few {Weboví uživatelé} many {Webových uživatelů} other {Weboví uživatelé}}"
@@ -655,6 +662,10 @@
     },
     "encryptionMessage": {
       "string": "Náhled dat není k dispozici kvůli šifrování."
+    },
+    "noSubmission": {
+      "string": "",
+      "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     }
   },
   "common": {
@@ -682,9 +693,20 @@
       "string": "Nebezpečná zóna",
       "developer_comment": "This is a title shown above a section of the page."
     },
+    "docs": {
+      "string": "Dokumentace",
+      "developer_comment": "This is the text of a link that links to the documentation."
+    },
     "filter": {
       "string": "Filtr",
       "developer_comment": "This text is shown next to options for filtering a table."
+    },
+    "forum": {
+      "string": "Fórum",
+      "developer_comment": "This is the text of a link that links to the ODK forum."
+    },
+    "loading": {
+      "string": "Načítání..."
     },
     "no": {
       "string": "Ne"
@@ -743,16 +765,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": {
-        "string": "dnes",
-        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"today 01:23\". The string may appear on its own or be part of a sentence."
-      },
-      "yesterday": {
-        "string": "včera",
-        "developer_comment": "This will be part of a longer string that shows the date and time, for example: \"yesterday 01:23\". The string may appear on its own or be part of a sentence."
-      }
-    },
     "request": {
       "noRequest": {
         "string": "Něco se pokazilo: nebyl žádný požadavek."
@@ -949,16 +961,16 @@
           "string": "Počet záznamů v protokolu auditů"
         },
         "num_archived_projects": {
-          "string": ""
+          "string": "Počet archivovaných projektů"
         },
         "num_unique_managers": {
-          "string": ""
+          "string": "Number of unique Project Managers"
         },
         "num_unique_viewers": {
-          "string": ""
+          "string": "Počet unikátních diváků projektu"
         },
         "num_unique_collectors": {
-          "string": ""
+          "string": "Počet jedinečných sběračů dat"
         },
         "backups_configured": {
           "string": "Konfigurace záloh"
@@ -1000,7 +1012,7 @@
           "string": "Počet formulářů s audity"
         },
         "num_reused_form_ids": {
-          "string": ""
+          "string": "Počet opakovaně použitých ID formulářů"
         },
         "num_submissions_received": {
           "string": "Počet přijatých podání"
@@ -2250,10 +2262,6 @@
       }
     },
     "FormOverview": {
-      "checklist": {
-        "string": "Odškrtávací seznam",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "draft": {
         "none": {
           "title": {
@@ -2460,9 +2468,39 @@
         "developer_comment": "This is the title at the top of a pop-up."
       }
     },
-    "Loading": {
-      "text": {
-        "string": "Načítání ..."
+    "Home": {
+      "heading": {
+        "0": {
+          "string": "Vítejte v Centralu."
+        }
+      }
+    },
+    "HomeNews": {
+      "title": {
+        "string": "Novinky",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "HomeSummary": {
+      "projects": {
+        "body": {
+          "string": "Central je organizován do Projektů, které obsahují vlastní Formuláře a související data."
+        }
+      },
+      "users": {
+        "body": {
+          "string": "Uživatelé mohou být přiřazeni k projektům, aby je mohli spravovat nebo shromažďovat či kontrolovat předložená data."
+        }
+      },
+      "docs": {
+        "body": {
+          "string": "Na webových stránkách ODK Docs je k dispozici úvodní příručka a uživatelská dokumentace."
+        }
+      },
+      "forum": {
+        "body": {
+          "string": "Vždy můžete získat pomoc od ostatních na fóru, kde můžete také vyhledávat předchozí dotazy."
+        }
       }
     },
     "MarkdownTextarea": {
@@ -2504,14 +2542,6 @@
       }
     },
     "NavbarHelpDropdown": {
-      "docs": {
-        "string": "Dokumenty",
-        "developer_comment": "This is the text of a link that links to the documentation."
-      },
-      "forum": {
-        "string": "Fórum",
-        "developer_comment": "This is the text of a link that links to the ODK forum."
-      },
       "version": {
         "string": "Verze",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -2563,6 +2593,14 @@
       "field": {
         "name": {
           "string": "Název projektu",
+          "developer_comment": "This is the text of a form field."
+        },
+        "description": {
+          "string": "Popis Projektu",
+          "developer_comment": "This is the text of a form field."
+        },
+        "note": {
+          "string": "Sem přidejte poznámky, odkazy, návody a další zdroje.",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -2775,95 +2813,38 @@
         }
       }
     },
-    "ProjectIntroduction": {
-      "title": {
-        "string": "Co jsou Projekty?",
-        "developer_comment": "This is the title at the top of a pop-up."
+    "ProjectFormRow": {
+      "unpublished": {
+        "string": "",
+        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and there are no submission counts to show."
+      }
+    },
+    "ProjectHomeBlock": {
+      "encrypted": {
+        "string": "",
+        "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
       },
-      "introduction": {
-        "0": {
-          "string": "Projekty umožňují seskupovat související formuláře a uživatele. Webovým uživatelům mohou být přiděleny role, které jim umožní provádět určité akce v rámci projektu, včetně použití webového prohlížeče k vyplnění formulářů. Uživatelé aplikace pro projekt mohou vidět pouze formuláře v projektu, ke kterým mají přístup."
-        }
+      "encryptionTip": {
+        "string": ""
+      },
+      "showMore": {
+        "string": "",
+        "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
+      },
+      "showFewer": {
+        "string": "",
+        "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       }
     },
     "ProjectList": {
-      "heading": {
-        "0": {
-          "string": "Vítejte v Centralu."
-        },
-        "1": {
-          "string": "Pojďme udělat pár věcí.",
-          "developer_comment": "This is a tagline displayed next to \"Welcome to Central\". The text adds visual balance to the page and does not need to be translated literally to your language. The text should be action-oriented, collaborative, and a little bit fun."
-        }
-      },
-      "gettingStarted": {
-        "title": {
-          "string": "Začínáme",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
-        "body": {
-          "0": {
-            "full": {
-              "string": "Pokud si nejste jisti, kde začít, je k dispozici příručka pro začínající a uživatelská dokumentace na {docsWebsite}.",
-              "developer_comment": "{docsWebsite} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK Docs website"
-            },
-            "docsWebsite": {
-              "string": "Webové stránky ODK Docs",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {docsWebsite} is in the following text:\n\nIf you’re not sure where to begin, there is a getting started guide and user documentation available on the {docsWebsite}."
-            }
-          },
-          "1": {
-            "full": {
-              "string": "Kromě toho můžete vždy získat pomoc od ostatních na {forum}, kde můžete prohledávat předchozí otázky, nebo položit vlastní.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nODK community forum"
-            },
-            "forum": {
-              "string": "ODK komunitním fóru",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIn addition, you can always get help from others on the {forum}, where you can search previous questions or ask one of your own."
-            }
-          }
-        }
-      },
-      "news": {
-        "string": "Novinky",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "rightNow": {
-        "users": {
-          "full": {
-            "string": "{count, plural, one {{webUsers} který může spravovat projekty prostřednictvím tohoto webu.} few {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.} many {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.} other {{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.}}",
-            "developer_comment": "The count of Web Users is shown separately above this text.\n\n{webUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nWeb Users"
-          },
-          "webUsers": {
-            "string": "{count, plural, one {Webový uživatel} few {Weboví uživatelé} many {Weboví uživatelé} other {Weboví uživatelé}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {webUsers} is in the following text. (The plural form of the text is shown.)\n\n{webUsers} who can administer Projects through this website."
-          }
-        },
-        "projects": {
-          "full": {
-            "string": "{count, plural, one {{projects} který může organizovat uživatele formulářů a aplikací pro nasazení zařízení.} few {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.} many {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.} other {{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.}}",
-            "developer_comment": "The count of Projects is shown separately above this text.\n\n{projects} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nProjects"
-          },
-          "projects": {
-            "string": "{count, plural, one {Projekt} few {Projekty} many {Projektů} other {Projektů}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projects} is in the following text. (The plural form of the text is shown.)\n\n{projects} which can organize Forms and App Users for device deployment."
-          }
-        }
-      },
-      "projectsTitle": {
-        "string": "Projekty",
-        "developer_comment": "This is a title shown above a section of the page."
+      "archived": {
+        "string": "",
+        "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
       },
       "action": {
         "create": {
           "string": "Nový",
           "developer_comment": "This is the text of a button that is used to create a new Project."
-        }
-      },
-      "header": {
-        "forms": {
-          "string": "Formuláře",
-          "developer_comment": "This is the text of a table column header."
         }
       },
       "emptyTable": {
@@ -2914,6 +2895,22 @@
         }
       }
     },
+    "ProjectOverviewDescription": {
+      "instructions": {
+        "full": {
+          "string": "Přidejte poznámky k projektu, odkazy, pokyny a další zdroje do tohoto prostoru v {projectSettings}.",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\n{projectSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Settings"
+        },
+        "projectSettings": {
+          "string": "Nastavení Projektu",
+          "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectSettings} is in the following text:\n\nAdd Project notes, links, instructions and other resources to this space in {projectSettings}."
+        }
+      },
+      "note": {
+        "string": "Tento návrh mohou zobrazit pouze projektoví manažeři.",
+        "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
+      }
+    },
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
@@ -2934,18 +2931,6 @@
           "string": "{count, plural, one {Formulář} few {Formulářů} many {Formulářů} other {Formuláře}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
         }
-      }
-    },
-    "ProjectRow": {
-      "help": {
-        "string": "Co jsou Projekty?"
-      },
-      "noSubmission": {
-        "string": "(žádné)",
-        "developer_comment": "This text is shown under the \"Latest Submission\" column of the Projects table. It is shown for a Project with no Submissions."
-      },
-      "encryptionTip": {
-        "string": "Tento projekt používá spravované šifrování."
       }
     },
     "ProjectSettings": {
@@ -3002,6 +2987,18 @@
       "alert": {
         "archive": {
           "string": "Projekt „{name}“ byl archivován."
+        }
+      }
+    },
+    "ProjectSort": {
+      "sortOptions": {
+        "alphabetical": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
+        },
+        "newest": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
     },
@@ -3402,7 +3399,7 @@
         "string": "Šifrované formuláře nelze tímto způsobem zpracovávat."
       },
       "deletedFieldsDisabledForDraft": {
-        "string": ""
+        "string": "Návrhy formulářů nelze tímto způsobem zpracovávat."
       },
       "introduction": {
         "0": {
@@ -3439,6 +3436,9 @@
         },
         "submit": {
           "string": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
+        },
+        "parseError": {
+          "string": "Při vyžádání vašich dat se něco pokazilo."
         }
       }
     },
@@ -3597,6 +3597,9 @@
           "string": "Odesláno od",
           "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
         }
+      },
+      "unknown": {
+        "string": "Neznámý odesílatel"
       }
     },
     "SubmissionList": {

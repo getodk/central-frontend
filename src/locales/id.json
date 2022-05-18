@@ -261,10 +261,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": "hari ini",
-      "yesterday": "semalam"
-    },
     "request": {
       "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
       "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda"

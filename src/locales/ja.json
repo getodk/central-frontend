@@ -89,6 +89,8 @@
         "update_draft_delete": "下書きの削除",
         "attachment_update": "メディアファイルの更新",
         "submission_export": "提出済フォームのダウンロード",
+        "restore": "復元",
+        "purge": "完全に削除",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -206,6 +208,7 @@
     "projectRoles": "プロジェクトでの役割"
   },
   "alert": {
+    "passwordTooShort": "10文字以上の長さのパスワードを入力してください。",
     "updateReviewState": "レビュー・ステータス保存完了！"
   },
   "moreInfo": {
@@ -253,7 +256,8 @@
       "settings": "設定",
       "overview": "概要"
     },
-    "total": "全期間"
+    "total": "全期間",
+    "lastSubmission": "（最終提出 {dateTime}）"
   },
   "mixin": {
     "request": {
@@ -268,10 +272,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": "今日",
-      "yesterday": "昨日"
-    },
     "request": {
       "noRequest": "問題発生：リクエストがありません。",
       "noResponse": "問題発生：リクエストへの応答がありません。",

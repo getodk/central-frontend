@@ -386,6 +386,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "noSelectMultiple": "Tento formulář nemá žádná pole pro výběr více položek.",
     "encryptedForm": "Šifrované formuláře nelze tímto způsobem zpracovávat.",
+    "deletedFieldsDisabledForDraft": "Návrhy formulářů nelze tímto způsobem zpracovávat.",
     "introduction": [
       "Abyste mohli tato data stáhnout, budete muset zadat vaše přístupové heslo. Vaše přístupové heslo bude použito pouze k dešifrování vašich dat ke stažení, a poté ho server znovu zapomene."
     ],
@@ -400,7 +401,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu.",
-      "submit": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
+      "submit": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu.",
+      "parseError": "Při vyžádání vašich dat se něco pokazilo."
     }
   },
   "de": {
@@ -413,6 +415,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "noSelectMultiple": "Dieses Formular enthält keine Mehrfachauswahlfelder.",
     "encryptedForm": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden.",
+    "deletedFieldsDisabledForDraft": "Formularentwürfe können auf diese Weise nicht bearbeitet werden.",
     "introduction": [
       "Um die Daten herunterzuladen wird Ihre Passphrase benötigt. Diese wird nur zum Entschlüsseln der Daten für den Download benutzt und nicht gespeichert."
     ],
@@ -440,6 +443,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "noSelectMultiple": "Este formulario no tiene ningún campo de selección múltiple.",
     "encryptedForm": "Los formularios cifrados no se pueden procesar de esta manera.",
+    "deletedFieldsDisabledForDraft": "Los borradores no se pueden procesar de esta manera.",
     "introduction": [
       "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada, al finalizar el proceso el servidor la olvidará."
     ],
@@ -454,7 +458,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "La descarga de datos aún no está disponible. Vuelva a intentarlo en un momento.",
-      "submit": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente."
+      "submit": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente.",
+      "parseError": "Algo salió mal al solicitar tus datos."
     }
   },
   "fr": {
@@ -467,6 +472,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "noSelectMultiple": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\").",
     "encryptedForm": "Les formulaires chiffrés ne peuvent être traités de cette manière.",
+    "deletedFieldsDisabledForDraft": "Les ébauches de formulaires ne peuvent être utilisées comme cela.",
     "introduction": [
       "Pour télécharger ces données, vous devrez fournir votre phrase secrète. Votre phrase secrète sera utilisée uniquement pour déchiffrer vos données pour le téléchargement, après quoi le serveur l'oubliera à nouveau"
     ],
@@ -503,6 +509,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "noSelectMultiple": "Questo formulario non ha campi a scelta multipla selezionati.",
     "encryptedForm": "I moduli crittografati non possono essere elaborati in questo modo.",
+    "deletedFieldsDisabledForDraft": "Le bozze non possono essere elaborate in questo modo.",
     "introduction": [
       "Per scaricare questi dati, dovrai fornire la tua passphrase. La tua passphrase verrà utilizzata solo per decifrare i tuoi dati per il download, dopodiché il server la cancellerà."
     ],
@@ -517,15 +524,35 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Il download dei dati non è ancora disponibile. Si prega di riprovare in un altro momento.",
-      "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questa finestra. Se stai ancora aspettando e il download non è iniziato, riprova."
+      "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questa finestra. Se stai ancora aspettando e il download non è iniziato, riprova.",
+      "parseError": "Qualcosa è andato storto durante la richiesta dei tuoi dati"
     }
   },
   "ja": {
+    "title": "提出済フォームをダウンロードする",
+    "exportOptions": "エクスポート設定",
+    "field": {
+      "splitSelectMultiples": "複数選択項目を列に切り分ける。",
+      "removeGroupNames": "グループ名を取り除く",
+      "deletedFields": "既に削除されたフォームの項目を含む。"
+    },
+    "noSelectMultiple": "このフォームには複数選択項目がありません。",
+    "encryptedForm": "この方法でフォームの暗号化は行えません。",
+    "deletedFieldsDisabledForDraft": "この方法で下書きの処理は行えません。",
     "introduction": [
       "このデータをダウンロードするためには、パスフレーズを入力する必要があります。パスフレーズは、データをダウンロードする際の復号時にのみ使用され、その後、サーバーはパスフレーズを保持しません。"
     ],
     "hint": "ヒント：{hint}",
+    "noRepeat": "このフォームはリピート項目がありません。",
+    "action": {
+      "download": {
+        "mainTable": "主なデータ（リピートを含まない）",
+        "allTables": "全てのデータ",
+        "withMedia": "全てのデータとメディアファイル"
+      }
+    },
     "alert": {
+      "unavailable": "データのダウンロードはまだ利用できません。しばらく待って、再試行してください。",
       "submit": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。開始されない場合は、もう一度試して下さい。"
     }
   },

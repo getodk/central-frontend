@@ -152,7 +152,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "checklist": "Odškrtávací seznam",
     "draft": {
       "none": {
         "title": "Žádný aktuální koncept",
@@ -167,7 +166,6 @@ export default {
     }
   },
   "de": {
-    "checklist": "Checkliste",
     "draft": {
       "none": {
         "title": "Kein aktueller Entwurf",
@@ -182,7 +180,6 @@ export default {
     }
   },
   "es": {
-    "checklist": "Lista de verificación",
     "draft": {
       "none": {
         "title": "Sin borrador actual",
@@ -197,7 +194,6 @@ export default {
     }
   },
   "fr": {
-    "checklist": "Liste de contrôle",
     "draft": {
       "none": {
         "title": "Pas d'ébauche en cours",
@@ -212,7 +208,6 @@ export default {
     }
   },
   "id": {
-    "checklist": "Daftar periksa",
     "draft": {
       "none": {
         "title": "Belum ada draf",
@@ -227,7 +222,6 @@ export default {
     }
   },
   "it": {
-    "checklist": "Lista di controllo",
     "draft": {
       "none": {
         "title": "Nessuna bozza corrente",
@@ -242,7 +236,6 @@ export default {
     }
   },
   "ja": {
-    "checklist": "チェックリスト",
     "draft": {
       "none": {
         "title": "現在、下書きはありません。",
@@ -257,7 +250,6 @@ export default {
     }
   },
   "sw": {
-    "checklist": "Orodha ya ukaguzi",
     "draft": {
       "none": {
         "title": "Hakuna Rasimu ya Sasa",

@@ -170,50 +170,8 @@ export default {
 <i18n>
 {
   "cs": {
-    "heading": [
-      "Vítejte v Centralu.",
-      "Pojďme udělat pár věcí."
-    ],
-    "gettingStarted": {
-      "title": "Začínáme",
-      "body": [
-        {
-          "full": "Pokud si nejste jisti, kde začít, je k dispozici příručka pro začínající a uživatelská dokumentace na {docsWebsite}.",
-          "docsWebsite": "Webové stránky ODK Docs"
-        },
-        {
-          "full": "Kromě toho můžete vždy získat pomoc od ostatních na {forum}, kde můžete prohledávat předchozí otázky, nebo položit vlastní.",
-          "forum": "ODK komunitním fóru"
-        }
-      ]
-    },
-    "news": "Novinky",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers} který může spravovat projekty prostřednictvím tohoto webu.",
-          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.",
-          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu.",
-          "{webUsers} kteří mohou spravovat projekty prostřednictvím tohoto webu."
-        ],
-        "webUsers": "Webový uživatel | Weboví uživatelé | Weboví uživatelé | Weboví uživatelé"
-      },
-      "projects": {
-        "full": [
-          "{projects} který může organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
-          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
-          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení.",
-          "{projects} které mohou organizovat uživatele formulářů a aplikací pro nasazení zařízení."
-        ],
-        "projects": "Projekt | Projekty | Projektů | Projektů"
-      }
-    },
-    "projectsTitle": "Projekty",
     "action": {
       "create": "Nový"
-    },
-    "header": {
-      "forms": "Formuláře"
     },
     "emptyTable": "Nejsou žádné projekty, které byste mohli vidět.",
     "alert": {
@@ -221,46 +179,8 @@ export default {
     }
   },
   "de": {
-    "heading": [
-      "Willkommen bei Central",
-      "Lasst uns einige Dinge erledigen."
-    ],
-    "gettingStarted": {
-      "title": "Erste Schritte",
-      "body": [
-        {
-          "full": "Wenn Sie unsicher sind, wo sie anfangen sollen: Es gibt ein Erste-Schritte-Tutorial und die Benutzerdokumentation auf der {docsWebsite}.",
-          "docsWebsite": "ODK Dokumentationswebseite"
-        },
-        {
-          "full": "Außerdem können Sie im {forum} immer Hilfe von anderen erhalten. Dort können Sie auch nach Antworten auf ähnliche Fragen suchen und eigenen Fragen stellen.",
-          "forum": "ODK-Community-Forum"
-        }
-      ]
-    },
-    "news": "Neuigkeiten",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers}, der Projekte auf dieser Webseite verwalten kann.",
-          "{webUsers}, die Projekte auf dieser Webseite verwalten können."
-        ],
-        "webUsers": "Web-Benutzer | Web-Benutzer"
-      },
-      "projects": {
-        "full": [
-          "{projects}, das Formulare und App-Benutzer von Mobilgeräten verwaltet.",
-          "{projects}, die Formulare und App-Benutzer von Mobilgeräten verwalten."
-        ],
-        "projects": "Projekt | Projekte"
-      }
-    },
-    "projectsTitle": "Projekte",
     "action": {
       "create": "Neu"
-    },
-    "header": {
-      "forms": "Formulare"
     },
     "emptyTable": "Es gibt für Sie keine Formulare zum Anzeigen.",
     "alert": {
@@ -268,46 +188,8 @@ export default {
     }
   },
   "es": {
-    "heading": [
-      "Bienvenido a Central.",
-      "Hagamos algunas cosas."
-    ],
-    "gettingStarted": {
-      "title": "Introducción",
-      "body": [
-        {
-          "full": "Si no está seguro de dónde empezar, consulte la guía de inicio y documentación del usuario dispuesta en {docsWebsite}.",
-          "docsWebsite": "el sitio de documentación de ODK"
-        },
-        {
-          "full": "Adicionalmente, siempre puede obtener ayuda de otros en el {forum}, donde puede buscar por preguntas previas o hacer una por su cuenta.",
-          "forum": "foro de comunidad ODK"
-        }
-      ]
-    },
-    "news": "Novedades",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers} que puede administrar proyectos a través de este sitio web.",
-          "{webUsers} que pueden administrar proyectos a través de este sitios web."
-        ],
-        "webUsers": "Usuario web | Usuarios web"
-      },
-      "projects": {
-        "full": [
-          "{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos.",
-          "{projects} que pueda organizar formularios y Usuarios móviles para la implementación de dispositivos."
-        ],
-        "projects": "Proyecto | Proyectos"
-      }
-    },
-    "projectsTitle": "Proyectos",
     "action": {
       "create": "Nuevo"
-    },
-    "header": {
-      "forms": "Formularios"
     },
     "emptyTable": "No existen proyectos para mostrar.",
     "alert": {
@@ -315,46 +197,8 @@ export default {
     }
   },
   "fr": {
-    "heading": [
-      "Bienvenue dans Central.",
-      "Faisons des progrès."
-    ],
-    "gettingStarted": {
-      "title": "Commencer",
-      "body": [
-        {
-          "full": "Si vous ne savez pas par où commencer, il y a un guide de démarrage et une documentation utilisateur sur le {docsWebsite}.",
-          "docsWebsite": "site web de la documentaion d'ODK"
-        },
-        {
-          "full": "De plus, vous pouvez toujours bénéficier de l'aide des autres utilisateurs sur le forum {forum}, en cherchant parmi les anciens sujets ou en en ouvrant un nouveau.",
-          "forum": "forum de la communauté ODK"
-        }
-      ]
-    },
-    "news": "Nouvelles",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers} pouvant administrer les projets à travers ce site.",
-          "{webUsers} pouvant administrer les projets à travers ce site."
-        ],
-        "webUsers": "Utilisateur Web | Utilisateurs web"
-      },
-      "projects": {
-        "full": [
-          "{projects} qui regroupe des formulaires et des utilisateurs mobiles pour le déploiement d'appareils.",
-          "{projects} qui regroupent des formulaires et des utilisateurs mobiles pour le déploiement d'appareils."
-        ],
-        "projects": "Projet | Projets"
-      }
-    },
-    "projectsTitle": "Projets",
     "action": {
       "create": "Nouveau"
-    },
-    "header": {
-      "forms": "Formulaires"
     },
     "emptyTable": "Il n'y a pas de projets à voir.",
     "alert": {
@@ -362,44 +206,8 @@ export default {
     }
   },
   "id": {
-    "heading": [
-      "Selamat datang di Central.",
-      "Ayo selesaikan beberapa hal."
-    ],
-    "gettingStarted": {
-      "title": "Mulai",
-      "body": [
-        {
-          "full": "Apabila Anda tidak yakin harus memulai dari mana, {docsWebsite} menyediakan Panduan Awal dan Dokumentasi Pengguna yang dapat membantu Anda.",
-          "docsWebsite": "Website ODK Docs"
-        },
-        {
-          "full": "Selain itu, Anda selalu bisa mendapatkan pertolongan dari orang lain lewat {forum}, di mana Anda bisa mencari pertanyaan-pertanyaan yang sudah ditanyakan atau menanyakan pertanyaan Anda sendiri.",
-          "forum": "Forum komunitas ODK"
-        }
-      ]
-    },
-    "news": "Berita",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers} dapat mengelola Proyek lewat website ini."
-        ],
-        "webUsers": "Pengguna Web"
-      },
-      "projects": {
-        "full": [
-          "{projects} dapat mengorganisir Formulir dan Pengguna Aplikasi untuk penyebaran perangkat."
-        ],
-        "projects": "Proyek"
-      }
-    },
-    "projectsTitle": "Proyek",
     "action": {
       "create": "Baru"
-    },
-    "header": {
-      "forms": "Formulir"
     },
     "emptyTable": "Tidak ada Proyek untuk dilihat.",
     "alert": {
@@ -407,46 +215,8 @@ export default {
     }
   },
   "it": {
-    "heading": [
-      "Benvenuto su Central",
-      "Facciamo alcune cose."
-    ],
-    "gettingStarted": {
-      "title": "Iniziamo",
-      "body": [
-        {
-          "full": "Se non sai da dove cominciare, sono disponibili una guida introduttiva e la documentazione per l'utente sul {docsWebsite}.",
-          "docsWebsite": "Sito web della documentazione ODK"
-        },
-        {
-          "full": "Inoltre, puoi sempre ricevere aiuto dagli altri sul {forum}, dove puoi cercare domande precedenti o farne una tua.",
-          "forum": "Forum della comunità ODK"
-        }
-      ]
-    },
-    "news": "Novità",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers} che può amministrare i Progetti attraverso questo sito web.",
-          "{webUsers} che possono amministrare i Progetti attraverso questo sito web."
-        ],
-        "webUsers": "Utente Web | Utenti web"
-      },
-      "projects": {
-        "full": [
-          "{projects} che può organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi.",
-          "{projects} che possono organizzare i formulari e gli utenti dell'app per la distribuzione sui dispositivi."
-        ],
-        "projects": "Progetto | Progetti"
-      }
-    },
-    "projectsTitle": "Progetti",
     "action": {
       "create": "Nuovo"
-    },
-    "header": {
-      "forms": "Formulari"
     },
     "emptyTable": "Non ci sono progetti da visualizzare.",
     "alert": {
@@ -454,44 +224,8 @@ export default {
     }
   },
   "ja": {
-    "heading": [
-      "Centralへようこそ",
-      "頑張って成し遂げましょう！"
-    ],
-    "gettingStarted": {
-      "title": "はじめに",
-      "body": [
-        {
-          "full": "何から手をつければいいのかわからない方のために、{docsWebsite}にはスタートアップガイドやユーザードキュメントが用意されています。",
-          "docsWebsite": "ODK DocsのWebサイト"
-        },
-        {
-          "full": "また、{forum}では、過去の質問を検索、または自分で質問をすることで、いつでもコミュニティメンバーの助けを得られます。",
-          "forum": "ODKコミュニティーフォーラム"
-        }
-      ]
-    },
-    "news": "ニュース",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers}は、プロジェクトの管理ができます。"
-        ],
-        "webUsers": "Webユーザー"
-      },
-      "projects": {
-        "full": [
-          "{projects}はデバイスに対してフォームとアプリユーザーの管理ができます。"
-        ],
-        "projects": "プロジェクト"
-      }
-    },
-    "projectsTitle": "プロジェクト",
     "action": {
       "create": "新規作成"
-    },
-    "header": {
-      "forms": "フォーム"
     },
     "emptyTable": "あなたが閲覧できるプロジェクトはありません。",
     "alert": {
@@ -499,46 +233,8 @@ export default {
     }
   },
   "sw": {
-    "heading": [
-      "Karibu Central.",
-      "Hebu tufanye baadhi ya mambo."
-    ],
-    "gettingStarted": {
-      "title": "Kuanza",
-      "body": [
-        {
-          "full": "Iwapo huna uhakika pa kuanzia, kuna mwongozo wa kuanza na hati za mtumiaji zinazopatikana kwenye {docsWebsite}.",
-          "docsWebsite": "Tovuti ya Hati za ODK"
-        },
-        {
-          "full": "Kwa kuongeza, unaweza kupata usaidizi kutoka kwa wengine kwenye {forum} wakati wowote, ambapo unaweza kutafuta maswali ya awali au kuuliza moja yako mwenyewe.",
-          "forum": "ODK jamii forum"
-        }
-      ]
-    },
-    "news": "Habari",
-    "rightNow": {
-      "users": {
-        "full": [
-          "{webUsers} ambaye anaweza kusimamia Miradi kupitia tovuti hii.",
-          "{webUsers} ambao wanaweza kusimamia Miradi kupitia tovuti hii."
-        ],
-        "webUsers": "Mtumiaji wa Mtandao | Watumiaji wa Mtandao"
-      },
-      "projects": {
-        "full": [
-          "{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa.",
-          "{projects} ambayo inaweza kupanga Fomu na Watumiaji wa Programu kwa ajili ya kusambaza kifaa."
-        ],
-        "projects": "Mradi | Miradi"
-      }
-    },
-    "projectsTitle": "Miradi",
     "action": {
       "create": "Mpya"
-    },
-    "header": {
-      "forms": "Fomu"
     },
     "emptyTable": "Hakuna Miradi kwako kuona.",
     "alert": {

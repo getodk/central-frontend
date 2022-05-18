@@ -183,6 +183,7 @@
     "form": "Formulaire | Formulaires",
     "project": "Projet | Projets",
     "submission": "Soumission | Soumissions",
+    "user": "Utilisateur | Utilisateurs",
     "webUser": "Utilisateur Web | Utilisateurs web"
   },
   "count": {
@@ -245,7 +246,9 @@
     "basicInfo": "Information de base",
     "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
+    "docs": "Documents",
     "filter": "Filtrer",
+    "forum": "Forum",
     "no": "Non",
     "noResults": "Aucun résultat",
     "rightNow": "Présentement",
@@ -272,10 +275,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": "aujourd'hui",
-      "yesterday": "hier"
-    },
     "request": {
       "noRequest": "Quelque-chose s'est mal passé : il n'y avait pas de requête.",
       "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",

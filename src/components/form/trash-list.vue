@@ -192,6 +192,14 @@ export default {
     },
     "message": "I formulari e i dati relativi ai formulari vengono eliminati dopo 30 giorni nel Cestino"
   },
+  "ja": {
+    "title": "ゴミ箱",
+    "trashCount": "({count})",
+    "alert": {
+      "restore": "フォーム”{name}”は復元されました。"
+    },
+    "message": "フォームとフォームに関連したデータは30日後に削除されます。"
+  },
   "sw": {
     "title": "Takataka",
     "trashCount": "({count})",

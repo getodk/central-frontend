@@ -272,10 +272,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": "leo",
-      "yesterday": "jana"
-    },
     "request": {
       "noRequest": "Hitilafu fulani imetokea: hakukuwa na ombi.",
       "noResponse": "Hitilafu fulani imetokea: hakukuwa na jibu kwa ombi lako.",

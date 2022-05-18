@@ -183,6 +183,7 @@
     "form": "Formular | Formulare",
     "project": "Projekt | Projekte",
     "submission": "Übermittlung | Übermittlungen",
+    "user": "Benutzer | Benutzer",
     "webUser": "Web-Benutzer | Web-Benutzer"
   },
   "count": {
@@ -245,7 +246,9 @@
     "basicInfo": "Basis-Informationen",
     "currentDraft": "Ihr aktueller Entwurf",
     "dangerZone": "Gefahrenbereich",
+    "docs": "Dokumentation",
     "filter": "Filter",
+    "forum": "Forum",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "rightNow": "Aktuell",
@@ -272,10 +275,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": "heute",
-      "yesterday": "gestern"
-    },
     "request": {
       "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
       "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",

@@ -183,6 +183,7 @@
     "form": "Formulář | Formulářů | Formulářů | Formuláře",
     "project": "Projekt | Projektů | Projektů | Projekty",
     "submission": "Podaný příspěvek | Podaných příspěvků | Podaných příspěvků | Podané příspěvky",
+    "user": "Uživatel | Uživatelé | Uživatelů | Uživatelé",
     "webUser": "Webový uživatel | Weboví uživatelé | Webových uživatelů | Weboví uživatelé"
   },
   "count": {
@@ -245,7 +246,10 @@
     "basicInfo": "Základní informace",
     "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
+    "docs": "Dokumentace",
     "filter": "Filtr",
+    "forum": "Fórum",
+    "loading": "Načítání...",
     "no": "Ne",
     "noResults": "Žádné výsledky",
     "rightNow": "Právě teď",
@@ -272,10 +276,6 @@
     }
   },
   "util": {
-    "dateTime": {
-      "today": "dnes",
-      "yesterday": "včera"
-    },
     "request": {
       "noRequest": "Něco se pokazilo: nebyl žádný požadavek.",
       "noResponse": "Něco se pokazilo: nebyla žádná odezva na váš požadavek.",

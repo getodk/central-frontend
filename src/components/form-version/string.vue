@@ -71,6 +71,9 @@ export default {
   "it": {
     "blank": "(vuoto)"
   },
+  "ja": {
+    "blank": "(未設定)"
+  },
   "sw": {
     "blank": "(tupu)"
   }

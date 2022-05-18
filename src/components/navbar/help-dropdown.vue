@@ -52,43 +52,27 @@ export default {
 <i18n>
 {
   "cs": {
-    "docs": "Dokumenty",
-    "forum": "Fórum",
     "version": "Verze"
   },
   "de": {
-    "docs": "Dokumentation",
-    "forum": "Forum",
     "version": "Version"
   },
   "es": {
-    "docs": "Documentos",
-    "forum": "Foro",
     "version": "Versión"
   },
   "fr": {
-    "docs": "Documentation",
-    "forum": "Forum",
     "version": "Version"
   },
   "id": {
-    "docs": "Dokumen",
-    "forum": "Forum",
     "version": "Versi"
   },
   "it": {
-    "docs": "Documentazione",
-    "forum": "Forum",
     "version": "Versione"
   },
   "ja": {
-    "docs": "Docs",
-    "forum": "フォーラム",
     "version": "バージョン"
   },
   "sw": {
-    "docs": "hati",
-    "forum": "Jukwaa",
     "version": "Toleo"
   }
 }
