@@ -21,15 +21,19 @@ except according to the terms contained in the LICENSE file.
     @click.prevent="$emit('click')">
     <slot></slot>
   </a>
-  <div v-else class="linkable">
+  <component :is="tag" v-else class="linkable">
     <slot></slot>
-  </div>
+  </component>
 </template>
 
 <script>
 export default {
   name: 'Linkable',
   props: {
+    tag: {
+      type: String,
+      default: 'span'
+    },
     to: String,
     clickable: Boolean
   },

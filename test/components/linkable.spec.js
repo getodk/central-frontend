@@ -42,10 +42,19 @@ describe('Linkable', () => {
     a.find('#content').exists().should.be.true();
   });
 
-  it('renders a <div> otherwise', () => {
-    const linkable = mountComponent();
-    linkable.element.tagName.should.equal('DIV');
-    linkable.find('a').exists().should.be.false();
-    linkable.find('#content').exists().should.be.true();
+  describe('to prop does not exist and clickable prop is false', () => {
+    it('renders a <span> by default', () => {
+      const linkable = mountComponent();
+      linkable.element.tagName.should.equal('SPAN');
+      linkable.find('a').exists().should.be.false();
+      linkable.find('#content').exists().should.be.true();
+    });
+
+    it('uses the tag prop', () => {
+      const linkable = mountComponent({
+        props: { tag: 'div' }
+      });
+      linkable.element.tagName.should.equal('DIV');
+    });
   });
 });

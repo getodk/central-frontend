@@ -32,15 +32,16 @@ except according to the terms contained in the LICENSE file.
           </div>
         </template>
       </summary-item>
-      <summary-item :icon="stateIcon">
+      <summary-item id="form-overview-right-now-state" :icon="stateIcon">
         <template #heading>
           {{ $t(`formState.${form.state}`) }}
         </template>
         <template #body>
-          {{ $t(`stateCaption.${form.state}`) }}
+          <p>{{ $t(`stateCaption.${form.state}`) }}</p>
         </template>
       </summary-item>
-      <summary-item :to="formPath('submissions')" icon="inbox">
+      <summary-item id="form-overview-right-now-submissions"
+        :to="formPath('submissions')" icon="inbox">
         <template #heading>
           {{ $n(form.submissions, 'default') }}
           <span class="icon-angle-right"></span>
@@ -95,19 +96,10 @@ export default {
 </script>
 
 <style lang="scss">
-#form-overview-right-now {
-  // .icon-lock is a little more narrow than .icon-file-o and .icon-inbox, so we
-  // use this to center it.
-  .icon-lock {
-    margin-left: 6px;
-    margin-right: 6px;
-  }
-
-  &.open-form {
-    .icon-file-o, .icon-inbox {
-      margin-left: 4px;
-      margin-right: 4px;
-    }
+#form-overview-right-now.open-form {
+  .icon-file-o, .icon-inbox {
+    margin-left: 4px;
+    margin-right: 4px;
   }
 }
 </style>

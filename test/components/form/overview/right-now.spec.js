@@ -18,6 +18,11 @@ const mountComponent = () => {
     }
   });
 };
+const findItem = (component, idSuffix) => {
+  const id = `form-overview-right-now-${idSuffix}`;
+  const items = component.findAllComponents(SummaryItem);
+  return items.find(item => item.attributes().id === id);
+};
 
 describe('FormOverviewRightNow', () => {
   beforeEach(mockLogin);
@@ -42,9 +47,7 @@ describe('FormOverviewRightNow', () => {
   describe('form state', () => {
     it('renders correctly if the form is open', () => {
       testData.extendedForms.createPast(1, { state: 'open' });
-      const items = mountComponent().findAllComponents(SummaryItem);
-      items.length.should.equal(3);
-      const item = items[1];
+      const item = findItem(mountComponent(), 'state');
       item.props().icon.should.equal('exchange');
       item.get('.summary-item-heading').text().should.equal('Open');
       item.get('.summary-item-body').text().should.equal('This Form is downloadable and is accepting Submissions.');
@@ -52,7 +55,7 @@ describe('FormOverviewRightNow', () => {
 
     it('renders correctly if the form is closing', () => {
       testData.extendedForms.createPast(1, { state: 'closing' });
-      const item = mountComponent().findAllComponents(SummaryItem)[1];
+      const item = findItem(mountComponent(), 'state');
       item.props().icon.should.equal('clock-o');
       item.get('.summary-item-heading').text().should.equal('Closing');
       item.get('.summary-item-body').text().should.equal('This Form is not downloadable but still accepts Submissions.');
@@ -60,7 +63,7 @@ describe('FormOverviewRightNow', () => {
 
     it('renders correctly if the form is closed', () => {
       testData.extendedForms.createPast(1, { state: 'closed' });
-      const item = mountComponent().findAllComponents(SummaryItem)[1];
+      const item = findItem(mountComponent(), 'state');
       item.props().icon.should.equal('ban');
       item.get('.summary-item-heading').text().should.equal('Closed');
       item.get('.summary-item-body').text().should.equal('This Form is not downloadable and does not accept Submissions.');
@@ -70,14 +73,13 @@ describe('FormOverviewRightNow', () => {
   describe('submissions', () => {
     it('shows the count', () => {
       testData.extendedForms.createPast(1, { submissions: 123 });
-      const items = mountComponent().findAllComponents(SummaryItem);
-      items.length.should.equal(3);
-      items[2].get('.summary-item-heading').text().should.equal('123');
+      const item = findItem(mountComponent(), 'submissions');
+      item.get('.summary-item-heading').text().should.equal('123');
     });
 
     it('links to the submissions page', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      const item = mountComponent().findAllComponents(SummaryItem)[2];
+      const item = findItem(mountComponent(), 'submissions');
       item.props().to.should.equal('/projects/1/forms/a%20b/submissions');
     });
   });
