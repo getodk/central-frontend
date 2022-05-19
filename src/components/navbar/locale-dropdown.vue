@@ -36,7 +36,6 @@ import { loadLocale } from '../../util/i18n';
 import { localStore } from '../../util/storage';
 import { locales } from '../../i18n';
 import { noop } from '../../util/util';
-import { updateDocumentTitle } from '../../util/router';
 
 export default {
   name: 'NavbarLocaleDropdown',
@@ -57,7 +56,6 @@ export default {
       return loadLocale(this.container, locale)
         .then(() => {
           localStore.setItem('locale', locale);
-          updateDocumentTitle(this.$route, this.$store);
         })
         .catch(noop)
         .finally(() => {

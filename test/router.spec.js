@@ -842,7 +842,7 @@ describe('createCentralRouter()', () => {
     });
   });
 
-  describe('updateDocumentTitle()', () => {
+  describe('title meta field', () => {
     beforeEach(() => {
       mockLogin();
       testData.extendedProjects.createPast(1, { name: 'My Project Name' });
@@ -995,7 +995,7 @@ describe('createCentralRouter()', () => {
     });
   });
 
-  describe('updateDocumentTitle() - logged out', () => {
+  describe('title meta field - logged out', () => {
     it('shows page title on login screen', () =>
       load('/login')
         .restoreSession(false)

@@ -11,9 +11,10 @@ except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
 import { last } from 'ramda';
+import { ref, watchEffect } from '@vue/composition-api';
 
 import createRoutes from './routes';
-import { canRoute, forceReplace, preservesData, updateDocumentTitle } from './util/router';
+import { canRoute, forceReplace, preservesData } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
@@ -136,7 +137,7 @@ router.beforeEach((to, from, next) => {
 
 /*
 Set up watchers on the response data, and update them whenever the validateData
-or title.key meta field changes.
+meta field changes.
 
 If a component sets up its own watchers on the response data, they should be run
 after the router's watchers. (That might not be the case if the component
@@ -155,13 +156,6 @@ of the `key` attribute.)
         if (value != null && !validator(value)) forceReplace(container, '/');
       }));
     }
-
-    if (meta.title.key != null) {
-      const { key } = meta.title;
-      unwatch.push(store.watch((state) => state.request.data[key], () => {
-        updateDocumentTitle(to, store);
-      }));
-    }
   });
 
   // TODO/vue3. Remove this once there is a factory for the store.
@@ -173,6 +167,24 @@ of the `key` attribute.)
     });
     return init.call(router, app);
   };
+}
+
+{
+  // `title` meta field
+  // TODO/vue3. Simplify this.
+  const currentRoute = ref(VueRouter.START_LOCATION);
+  router.afterEach(to => { currentRoute.value = to; });
+  const removeHook = router.afterEach(() => {
+    watchEffect(() => {
+      const { title } = currentRoute.value.meta;
+      const parts = title(store.state.request.data);
+      // Append ODK Central to every title, filter out any null values (e.g.
+      // project name before the project object was loaded), join with
+      // separator.
+      document.title = parts.concat('ODK Central').filter(x => x).join(' | ');
+    });
+    removeHook();
+  });
 }
 
 
@@ -205,15 +217,6 @@ router.afterEach(() => {
 
 router.afterEach(() => {
   alert.blank();
-});
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// PAGE TITLES
-
-router.afterEach((to) => {
-  updateDocumentTitle(to, store);
 });
 
 
