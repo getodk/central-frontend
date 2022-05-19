@@ -9,6 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { map } from 'ramda';
+
 import Field from './field';
 import Form from './form';
 import Project from './project';
@@ -18,13 +20,12 @@ import User from './user';
 // from() to each subclass. The from() method will create a new presenter
 // object, similar to the constructor, but it will also automatically pass in
 // the `i18n` object.
-export default (i18n) => {
-  const classes = {};
-  for (const klass of [Field, Form, Project, User]) {
+export default (i18n) => map(
+  (klass) => {
     const subclass = class extends klass {};
     // eslint-disable-next-line new-cap
     subclass.from = (data) => new subclass(data, i18n);
-    classes[klass.name] = subclass;
-  }
-  return classes;
-};
+    return subclass;
+  },
+  { Field, Form, Project, User }
+);
