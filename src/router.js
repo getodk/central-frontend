@@ -40,7 +40,7 @@ has finished loading its async component. (More specifically, only once the
 parent AsyncRoute component finishes loading its async component will that async
 component render the <router-view> that will create the child AsyncRoute
 component, which will start loading its async component.) In order to load async
-components in parallel, we use a navigation guard to kick-start the load of all
+components in parallel, we use a navigation hook to kick-start the load of all
 async components associated with the route. */
 router.afterEach(to => {
   for (const routeRecord of to.matched) {
@@ -203,7 +203,7 @@ router.afterEach(() => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// OTHER NAVIGATION GUARDS
+// OTHER NAVIGATION HOOKS
 
 router.afterEach(() => {
   alert.blank();
