@@ -643,7 +643,7 @@ const routes = [
   }),
 
   asyncRoute({
-    path: '/dl/*',
+    path: '/dl/:_(.+)',
     component: 'Download',
     loading: 'page',
     key: () => '/dl',
@@ -653,7 +653,7 @@ const routes = [
   }),
 
   asyncRoute({
-    path: '*',
+    path: '/:_(.*)',
     component: 'NotFound',
     loading: 'page',
     meta: {
