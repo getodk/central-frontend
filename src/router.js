@@ -157,16 +157,6 @@ of the `key` attribute.)
       }));
     }
   });
-
-  // TODO/vue3. Remove this once there is a factory for the store.
-  const { init } = router;
-  router.init = (app) => {
-    app.$once('hook:beforeDestroy', () => {
-      for (const f of unwatch)
-        f();
-    });
-    return init.call(router, app);
-  };
 }
 
 {
