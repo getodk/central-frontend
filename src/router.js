@@ -150,7 +150,15 @@ of the `key` attribute.)
 
     for (const [key, validator] of to.meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
-        if (value != null && !validator(value)) forceReplace(container, '/');
+        if (value != null && !validator(value)) {
+          // We are about to navigate to /. That alone should clear any data for
+          // which there is a validateData condition. However, navigation is
+          // asynchronous, and we need to make sure that the invalid data is not
+          // used before the navigation is confirmed, for example, in the next
+          // DOM update. Given that, we clear the data immediately.
+          store.commit('clearData', key);
+          forceReplace(container, '/');
+        }
       }));
     }
   });

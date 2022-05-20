@@ -97,6 +97,8 @@ import SummaryItem from '../summary-item.vue';
 import Option from '../../util/option';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
+
+import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { noop } from '../../util/util';
@@ -170,35 +172,27 @@ export default {
       this.hideModal('upload');
       this.alert.success(this.$t('alert.upload'));
     },
-    clearDraft() {
-      this.$store.commit('setData', {
-        key: 'formDraft',
-        value: Option.none()
-      });
-    },
     afterPublish() {
       this.$emit('fetch-form');
-      this.$store.commit('clearData', 'formVersions');
-      this.clearDraft();
-      this.$router.push(this.formPath())
-        .then(() => {
-          this.alert.success(this.$t('alert.publish'));
-        });
+      afterNextNavigation(this.$router, () => {
+        this.$store.commit('clearData', 'formVersions');
+        this.$store.commit('setData', { key: 'formDraft', value: Option.none() });
+        this.alert.success(this.$t('alert.publish'));
+      });
+      this.$router.push(this.formPath());
     },
     afterAbandon(form) {
       if (form.publishedAt != null) {
-        this.clearDraft();
-        this.$router.push(this.formPath())
-          .then(() => {
-            this.alert.success(this.$t('alert.abandon'));
-          });
+        afterNextNavigation(this.$router, () => {
+          this.$store.commit('setData', { key: 'formDraft', value: Option.none() });
+          this.alert.success(this.$t('alert.abandon'));
+        });
+        this.$router.push(this.formPath());
       } else {
-        this.$router.push(this.projectPath())
-          .then(() => {
-            this.alert.success(this.$t('alert.delete', {
-              name: form.nameOrId()
-            }));
-          });
+        afterNextNavigation(this.$router, () => {
+          this.alert.success(this.$t('alert.delete', { name: form.nameOrId() }));
+        });
+        this.$router.push(this.projectPath());
       }
     }
   }
