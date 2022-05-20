@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
-import { last } from 'ramda';
 
 // Returns the props for a route component.
 export const routeProps = (route, props) => {
@@ -41,9 +40,9 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
 */
 export const preservesData = (key, to, from) => {
   if (from === VueRouter.START_LOCATION) return true;
-  const forKey = last(to.matched).meta.preserveData[key];
+  const forKey = to.meta.preserveData[key];
   if (forKey == null) return false;
-  const params = forKey[last(from.matched).name];
+  const params = forKey[from.name];
   if (params == null) return false;
   return params.every(param => to.params[param] === from.params[param]);
 };
@@ -57,8 +56,7 @@ condition specified for the `to` route. Otherwise it returns `true`.
   - store. The Vuex store.
 */
 export const canRoute = (to, from, store) => {
-  const { validateData } = last(to.matched).meta;
-  for (const [key, validator] of validateData) {
+  for (const [key, validator] of to.meta.validateData) {
     // If the data for the request key will be cleared after the navigation is
     // confirmed, we do not need to validate it.
     if (preservesData('*', to, from) || preservesData(key, to, from)) {

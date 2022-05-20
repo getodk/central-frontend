@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
-import { last } from 'ramda';
 import { ref, watchEffect } from '@vue/composition-api';
 
 import createRoutes from './routes';
@@ -71,7 +70,7 @@ router.afterEach(to => {
       // Implements the restoreSession meta field. A test can skip this request
       // by setting the session before the initial navigation.
       async (to) => {
-        if (last(to.matched).meta.restoreSession &&
+        if (to.meta.restoreSession &&
           store.state.request.data.session == null) {
           await restoreSession(store);
           await logIn(container, false);
@@ -93,14 +92,13 @@ router.afterEach(to => {
 
 // Implements the requireLogin and requireAnonymity meta fields.
 router.beforeEach((to, from, next) => {
-  const { meta } = last(to.matched);
   const { session } = store.state.request.data;
-  if (meta.requireLogin) {
+  if (to.meta.requireLogin) {
     if (session != null)
       next();
     else
       next({ path: '/login', query: { next: to.fullPath } });
-  } else if (meta.requireAnonymity) { // eslint-disable-line no-lonely-if
+  } else if (to.meta.requireAnonymity) {
     if (session != null)
       next('/');
     else
@@ -150,8 +148,7 @@ of the `key` attribute.)
     while (unwatch.length !== 0)
       unwatch.pop()();
 
-    const { meta } = last(to.matched);
-    for (const [key, validator] of meta.validateData) {
+    for (const [key, validator] of to.meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
         if (value != null && !validator(value)) forceReplace(container, '/');
       }));
