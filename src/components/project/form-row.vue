@@ -29,43 +29,49 @@ except according to the terms contained in the LICENSE file.
     </td>
     <template v-if="form.publishedAt != null">
       <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
-        <template v-if="canLinkToSubmissions">
-          <router-link :to="submissionsPath[reviewState]">
-            <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-            <span :class="reviewStateIcon(reviewState)"></span>
-          </router-link>
-        </template>
-        <template v-else>
-          <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-          <span :class="reviewStateIcon(reviewState)"></span>
-        </template>
-      </td>
-      <td class="last-submission">
-        <template v-if="form.lastSubmission != null">
+        <span :title="$t(`reviewState.${reviewState}`)">
           <template v-if="canLinkToSubmissions">
-            <router-link :to="submissionsPath.all">
-              <date-time :iso="form.lastSubmission" relative="past"/>
-              <span class="icon-clock-o"></span>
+            <router-link :to="submissionsPath[reviewState]">
+              <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
+              <span :class="reviewStateIcon(reviewState)"></span>
             </router-link>
           </template>
           <template v-else>
-            <date-time :iso="form.lastSubmission" relative="past"/>
-            <span class="icon-clock-o"></span>
+            <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
+            <span :class="reviewStateIcon(reviewState)"></span>
           </template>
-        </template>
-        <template v-else>{{ $t('submission.noSubmission') }}</template>
+        </span>
+      </td>
+      <td class="last-submission">
+        <span :title="$t('header.lastSubmission')">
+          <template v-if="form.lastSubmission != null">
+            <template v-if="canLinkToSubmissions">
+              <router-link :to="submissionsPath.all">
+                <date-time :iso="form.lastSubmission" relative="past"/>
+                <span class="icon-clock-o"></span>
+              </router-link>
+            </template>
+            <template v-else>
+              <date-time :iso="form.lastSubmission" relative="past"/>
+              <span class="icon-clock-o"></span>
+            </template>
+          </template>
+          <template v-else>{{ $t('submission.noSubmission') }}</template>
+        </span>
       </td>
       <td class="total-submissions">
-        <template v-if="canLinkToSubmissions">
-          <router-link :to="submissionsPath.all">
+        <span :title="$t('common.total')">
+          <template v-if="canLinkToSubmissions">
+            <router-link :to="submissionsPath.all">
+              <span>{{ $n(form.submissions, 'default') }}</span>
+              <span class="icon-asterisk"></span>
+            </router-link>
+          </template>
+          <template v-else>
             <span>{{ $n(form.submissions, 'default') }}</span>
             <span class="icon-asterisk"></span>
-          </router-link>
-        </template>
-        <template v-else>
-          <span>{{ $n(form.submissions, 'default') }}</span>
-          <span class="icon-asterisk"></span>
-        </template>
+          </template>
+        </span>
       </td>
     </template>
     <template v-else>

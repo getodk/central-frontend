@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <div v-html="renderedMarkdown"></div>
+  <div class="markdown-view" v-html="renderedMarkdown"></div>
 </template>
 
 <script>
@@ -52,3 +52,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.markdown-view {
+  overflow-wrap: break-word;
+}
+</style>

@@ -132,6 +132,9 @@ describe('ProjectFormRow', () => {
       columns[0].find('.icon-dot-circle-o').exists().should.be.true();
       columns[1].find('.icon-comments').exists().should.be.true();
       columns[2].find('.icon-pencil').exists().should.be.true();
+      columns[0].find('span').attributes().title.should.equal('Received');
+      columns[1].find('span').attributes().title.should.equal('Has issues');
+      columns[2].find('span').attributes().title.should.equal('Edited');
     });
 
     it('shows blank review state columns when the form is a draft', () => {
@@ -158,6 +161,7 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.last-submission');
       cell.find('.icon-clock-o').exists().should.be.true();
+      cell.find('span').attributes().title.should.equal('Latest Submission');
     });
 
     it('shows (none) if no submission', () => {
@@ -190,6 +194,7 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
       cell.find('.icon-asterisk').exists().should.be.true();
+      cell.find('span').attributes().title.should.equal('Total');
     });
   });
 

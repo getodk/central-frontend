@@ -186,10 +186,6 @@ export default {
 
   .actor-link { font-weight: normal; }
 
-  .body {
-    overflow-wrap: break-word;
-  }
-
   .body > p:last-child { margin: 0 0 0px; }
 }
 </style>
