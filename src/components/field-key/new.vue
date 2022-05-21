@@ -72,6 +72,7 @@ import SentenceSeparator from '../sentence-separator.vue';
 
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
+import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { requestData } from '../../store/modules/request';
@@ -143,8 +144,10 @@ export default {
         this.complete();
     },
     navigateToFormAccess(navigate, event) {
-      // Clear fieldKeys so that the Form Access tab will fetch it again.
-      this.$store.commit('clearData', 'fieldKeys');
+      afterNextNavigation(this.$router, () => {
+        // Clear fieldKeys so that the Form Access tab will fetch it again.
+        this.$store.commit('clearData', 'fieldKeys');
+      });
       navigate(event);
     },
     createAnother() {

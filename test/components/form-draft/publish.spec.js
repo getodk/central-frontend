@@ -342,9 +342,11 @@ describe('FormDraftPublish', () => {
         app.vm.$route.path.should.equal('/projects/1/forms/f');
       }));
 
-    it('sets formDraft and attachments in store to empty options', async () => {
+    it('updates the response data in the store', async () => {
       const app = await publish();
-      const { formDraft, attachments } = app.vm.$store.state.request.data;
+      const { data } = app.vm.$store.state.request;
+      const { formVersions, formDraft, attachments } = data;
+      should.not.exist(formVersions);
       formDraft.isEmpty().should.be.true();
       attachments.isEmpty().should.be.true();
     });

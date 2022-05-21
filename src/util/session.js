@@ -122,11 +122,10 @@ export const logOut = (container, setNext) => {
 
   const promises = [];
   const { router, store } = container;
-  const { expiresAt } = store.state.request.data.session;
   // If the session has expired (for example, while the computer was asleep), we
   // do not send a request, which would result in an error. (Using Date.parse()
   // rather than DateTime.fromISO() in order to reduce the bundle.)
-  if (Date.parse(expiresAt) > Date.now())
+  if (Date.parse(store.state.request.data.session.expiresAt) > Date.now())
     promises.push(requestLogout(container));
 
   // We do not navigate to /login for a logout during login or during the

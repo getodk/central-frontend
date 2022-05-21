@@ -43,12 +43,15 @@ first set up and mounted.
 
 afterNextNavigation() can provide an answer to some of these subtle timing
 issues, allowing the response data to be updated after the navigation has been
-confirmed but before the DOM has been updated.
+confirmed, but before the DOM has been updated.
 */
 export const afterNextNavigation = (router, callback) => {
   const removeHook = router.afterEach((to, from) => {
     callback(to, from);
-    // TODO/vue3. Can nextTick() be removed?
+    // It looks like we can't remove an afterEach hook while Vue Router is
+    // iterating over the afterEach hooks: if we synchronously removed this
+    // hook, the next afterEach hook for the navigation would be skipped.
+    // (Though this is probably the last hook.)
     nextTick(removeHook);
   });
 };

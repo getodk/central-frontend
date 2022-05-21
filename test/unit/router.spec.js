@@ -66,6 +66,20 @@ describe('util/router', () => {
           callback.callCount.should.equal(1);
         });
     });
+
+    it('can run multiple callbacks', () => {
+      const callbacks = [sinon.fake(), sinon.fake()];
+      return load('/')
+        .afterResponses(app => {
+          afterNextNavigation(app.vm.$router, callbacks[0]);
+          afterNextNavigation(app.vm.$router, callbacks[1]);
+        })
+        .load('/users')
+        .afterResponses(() => {
+          callbacks[0].called.should.be.true();
+          callbacks[1].called.should.be.true();
+        });
+    });
   });
 
   describe('forceReplace()', () => {

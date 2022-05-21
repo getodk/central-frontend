@@ -28,13 +28,13 @@ Router does not support it directly: see
 https://github.com/vuejs/vue-router/pull/2140. Instead, we use a wrapper
 component, AsyncRoute, that will load and render the async component.
 
-TODO/vue3. Update these comments.
-Because we use a wrapper component, navigation itself is not asynchronous. For
-example, if a user clicks a link to /users but has not loaded UserList yet, they
-will immediately navigate to /users, where they will see a loading message; they
-will not stay on the previous page while UserList loads. However, a downside of
-this approach is that an async component cannot use an in-component navigation
-guard.
+Every navigation is asynchronous, but because we use a wrapper component, the
+navigation should be completed almost instantly, as a microtask. For example, if
+a user clicks a link to /users but has not loaded the UserList component yet,
+they will navigate to /users almost instantly, where they will see a loading
+message; they will not stay at the previous route while UserList loads. This
+approach should make it easier to reason about navigation. However, one downside
+is that an async component cannot use an in-component navigation guard.
 
 Route Names
 -----------

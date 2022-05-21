@@ -97,7 +97,6 @@ import SummaryItem from '../summary-item.vue';
 import Option from '../../util/option';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';

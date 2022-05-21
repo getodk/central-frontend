@@ -154,8 +154,8 @@ of the `key` attribute.)
           // We are about to navigate to /. That alone should clear any data for
           // which there is a validateData condition. However, navigation is
           // asynchronous, and we need to make sure that the invalid data is not
-          // used before the navigation is confirmed, for example, in the next
-          // DOM update. Given that, we clear the data immediately.
+          // used before the navigation is confirmed, for example, to update the
+          // DOM. Given that, we clear the data immediately.
           store.commit('clearData', key);
           forceReplace(container, '/');
         }
