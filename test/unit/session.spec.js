@@ -358,6 +358,20 @@ describe('util/session', () => {
             app.vm.$route.fullPath.should.equal('/login');
           }));
 
+      // Response data is cleared differently depending on whether the user is
+      // logged out during the initial navigation or after it.
+      it('clears response data', () =>
+        load('/users')
+          .complete()
+          .request(app => logOut(app.vm.$container, false))
+          .respondWithSuccess()
+          .afterResponse(app => {
+            const { data } = app.vm.$store.state.request;
+            should.not.exist(data.session);
+            should.not.exist(data.currentUser);
+            should.not.exist(data.roles);
+          }));
+
       it('sets the ?next query parameter if setNext is true', () =>
         load('/users?foo=bar#baz')
           .complete()

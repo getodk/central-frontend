@@ -67,8 +67,8 @@ hand-in-hand.
 import VueRouter from 'vue-router';
 import { inject, onBeforeUnmount } from '@vue/composition-api';
 
+import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
-import { forceReplace } from './router';
 import { localStore } from './storage';
 import { noop } from './util';
 
@@ -110,36 +110,48 @@ const requestLogout = ({ store, i18n, alert, http }) => {
     });
 };
 
-export const logOut = (container, setNext) => {
-  removeSessionFromStorage();
-  const { router, store } = container;
-  const { expiresAt } = store.state.request.data.session;
-  // If the session has expired (for example, while the computer was asleep), we
-  // do not send a request, which would result in an error. (Using Date.parse()
-  // rather than DateTime.fromISO() in order to reduce the bundle.)
-  const promise = Date.parse(expiresAt) > Date.now()
-    ? requestLogout(container)
-    : Promise.resolve();
+const resetRequestData = (store) => {
   // We clear all data and cancel any requests. However, that isn't ideal for
   // centralVersion, and we may need to revisit this logic in the future.
   store.commit('clearData');
-  // Below, we navigate to /login. That alone would cancel many requests.
-  // However, we also need to cancel requests for data that does not change with
-  // navigation. There are also some cases in which we don't navigate to /login.
   store.commit('cancelRequests');
+};
 
-  // TODO/vue3. Update this comment.
+export const logOut = (container, setNext) => {
+  removeSessionFromStorage();
+
+  const promises = [];
+  const { router, store } = container;
+  // If the session has expired (for example, while the computer was asleep), we
+  // do not send a request, which would result in an error. (Using Date.parse()
+  // rather than DateTime.fromISO() in order to reduce the bundle.)
+  if (Date.parse(store.state.request.data.session.expiresAt) > Date.now())
+    promises.push(requestLogout(container));
+
   // We do not navigate to /login for a logout during login or during the
-  // initial navigation. After the initial navigation, navigation is
-  // synchronous, so a logout during navigation is not possible.
-  if (router.currentRoute !== VueRouter.START_LOCATION &&
-    router.currentRoute.path !== '/login') {
-    const location = { path: '/login' };
-    if (setNext) location.query = { next: router.currentRoute.fullPath };
-    forceReplace(container, location);
+  // initial navigation.
+  if (router.currentRoute === VueRouter.START_LOCATION ||
+    router.currentRoute.path === '/login') {
+    resetRequestData(store);
+  } else {
+    // We clear most data after navigating to /login. However, we need to clear
+    // the session now in order to be able to navigate to /login.
+    store.commit('clearData', 'session');
+    // We are about to navigate to /login. That alone would clear most data and
+    // cancel most requests. However, we also need to account for data that does
+    // not change with navigation.
+    afterNextNavigation(router, () => { resetRequestData(store); });
+    // This navigation will be asynchronous (as all navigation is), but it
+    // shouldn't be possible for it to be canceled. It is also not possible for
+    // there to be a second logout during the navigation, in part because the
+    // session has been cleared.
+    promises.push(forceReplace(container, {
+      path: '/login',
+      query: setNext ? { next: router.currentRoute.fullPath } : {}
+    }));
   }
 
-  return promise;
+  return Promise.all(promises);
 };
 
 // We check for upcoming session expiration on an interval. We take that

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
-import { last } from 'ramda';
+import { nextTick } from '@vue/composition-api';
 
 // Returns the props for a route component.
 export const routeProps = (route, props) => {
@@ -19,6 +19,41 @@ export const routeProps = (route, props) => {
   if (typeof props === 'function') return props(route);
   // Object mode
   return props;
+};
+
+/*
+afterNextNavigation() provides a way to run a callback after a navigation has
+been confirmed but before the next DOM update. That is mostly only needed when
+response data will be updated as part of the navigation.
+
+Because navigation is asynchronous, if response data is updated before the
+navigation is confirmed, the current route component or other processes may use
+the updated data. In some cases, that can lead to unexpected behavior. For
+example, if the updated data violates a validateData condition, the user may be
+sent to / instead.
+
+Because router.push() and router.replace() will return a promise that resolves
+after the navigation is confirmed, another approach could be to update the
+response data in a then() callback. The DOM will be updated after the navigation
+is confirmed: usually that will involve the old route component being unmounted
+and the new route component being mounted. However, any then() callback will be
+run after the DOM is updated. That means that if the response data is updated in
+a then() callback, the new route component could use outdated data when it is
+first set up and mounted.
+
+afterNextNavigation() can provide an answer to some of these subtle timing
+issues, allowing the response data to be updated after the navigation has been
+confirmed, but before the DOM has been updated.
+*/
+export const afterNextNavigation = (router, callback) => {
+  const removeHook = router.afterEach((to, from) => {
+    callback(to, from);
+    // It looks like we can't remove an afterEach hook while Vue Router is
+    // iterating over the afterEach hooks: if we synchronously removed this
+    // hook, the next afterEach hook for the navigation would be skipped.
+    // (Though this is probably the last hook.)
+    nextTick(removeHook);
+  });
 };
 
 export const forceReplace = ({ router, unsavedChanges }, location) => {
@@ -41,9 +76,9 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
 */
 export const preservesData = (key, to, from) => {
   if (from === VueRouter.START_LOCATION) return true;
-  const forKey = last(to.matched).meta.preserveData[key];
+  const forKey = to.meta.preserveData[key];
   if (forKey == null) return false;
-  const params = forKey[last(from.matched).name];
+  const params = forKey[from.name];
   if (params == null) return false;
   return params.every(param => to.params[param] === from.params[param]);
 };
@@ -57,8 +92,7 @@ condition specified for the `to` route. Otherwise it returns `true`.
   - store. The Vuex store.
 */
 export const canRoute = (to, from, store) => {
-  const { validateData } = last(to.matched).meta;
-  for (const [key, validator] of validateData) {
+  for (const [key, validator] of to.meta.validateData) {
     // If the data for the request key will be cleared after the navigation is
     // confirmed, we do not need to validate it.
     if (preservesData('*', to, from) || preservesData(key, to, from)) {
@@ -67,18 +101,4 @@ export const canRoute = (to, from, store) => {
     }
   }
   return true;
-};
-
-/*
-updateDocumentTitle(to, store) updates the document title based on the route's title info.
-
-  - to. A Route object for the current route.
-  - store. Gets destructured in title parts() to pick out the name of the
-    resource object (e.g. project or form).
-*/
-export const updateDocumentTitle = (to, store) => {
-  const titlePath = to.meta.title.parts(store.state.request.data);
-  // Append ODK Central to every title, filter out any null values (e.g.
-  // project name before the project object was loaded), join with separator.
-  document.title = titlePath.concat('ODK Central').filter(x => x).join(' | ');
 };

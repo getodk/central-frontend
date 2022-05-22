@@ -10,10 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
-import { last } from 'ramda';
+import { ref, watchEffect } from '@vue/composition-api';
 
 import createRoutes from './routes';
-import { canRoute, forceReplace, preservesData, updateDocumentTitle } from './util/router';
+import { canRoute, forceReplace, preservesData } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
@@ -39,7 +39,7 @@ has finished loading its async component. (More specifically, only once the
 parent AsyncRoute component finishes loading its async component will that async
 component render the <router-view> that will create the child AsyncRoute
 component, which will start loading its async component.) In order to load async
-components in parallel, we use a navigation guard to kick-start the load of all
+components in parallel, we use a navigation hook to kick-start the load of all
 async components associated with the route. */
 router.afterEach(to => {
   for (const routeRecord of to.matched) {
@@ -70,7 +70,7 @@ router.afterEach(to => {
       // Implements the restoreSession meta field. A test can skip this request
       // by setting the session before the initial navigation.
       async (to) => {
-        if (last(to.matched).meta.restoreSession &&
+        if (to.meta.restoreSession &&
           store.state.request.data.session == null) {
           await restoreSession(store);
           await logIn(container, false);
@@ -92,14 +92,13 @@ router.afterEach(to => {
 
 // Implements the requireLogin and requireAnonymity meta fields.
 router.beforeEach((to, from, next) => {
-  const { meta } = last(to.matched);
   const { session } = store.state.request.data;
-  if (meta.requireLogin) {
+  if (to.meta.requireLogin) {
     if (session != null)
       next();
     else
       next({ path: '/login', query: { next: to.fullPath } });
-  } else if (meta.requireAnonymity) { // eslint-disable-line no-lonely-if
+  } else if (to.meta.requireAnonymity) {
     if (session != null)
       next('/');
     else
@@ -136,7 +135,7 @@ router.beforeEach((to, from, next) => {
 
 /*
 Set up watchers on the response data, and update them whenever the validateData
-or title.key meta field changes.
+meta field changes.
 
 If a component sets up its own watchers on the response data, they should be run
 after the router's watchers. (That might not be the case if the component
@@ -149,30 +148,38 @@ of the `key` attribute.)
     while (unwatch.length !== 0)
       unwatch.pop()();
 
-    const { meta } = last(to.matched);
-    for (const [key, validator] of meta.validateData) {
+    for (const [key, validator] of to.meta.validateData) {
       unwatch.push(store.watch((state) => state.request.data[key], (value) => {
-        if (value != null && !validator(value)) forceReplace(container, '/');
-      }));
-    }
-
-    if (meta.title.key != null) {
-      const { key } = meta.title;
-      unwatch.push(store.watch((state) => state.request.data[key], () => {
-        updateDocumentTitle(to, store);
+        if (value != null && !validator(value)) {
+          // We are about to navigate to /. That alone should clear any data for
+          // which there is a validateData condition. However, navigation is
+          // asynchronous, and we need to make sure that the invalid data is not
+          // used before the navigation is confirmed, for example, to update the
+          // DOM. Given that, we clear the data immediately.
+          store.commit('clearData', key);
+          forceReplace(container, '/');
+        }
       }));
     }
   });
+}
 
-  // TODO/vue3. Remove this once there is a factory for the store.
-  const { init } = router;
-  router.init = (app) => {
-    app.$once('hook:beforeDestroy', () => {
-      for (const f of unwatch)
-        f();
+{
+  // `title` meta field
+  // TODO/vue3. Simplify this.
+  const currentRoute = ref(VueRouter.START_LOCATION);
+  router.afterEach(to => { currentRoute.value = to; });
+  const removeHook = router.afterEach(() => {
+    watchEffect(() => {
+      const { title } = currentRoute.value.meta;
+      const parts = title(store.state.request.data);
+      // Append ODK Central to every title, filter out any null values (e.g.
+      // project name before the project object was loaded), join with
+      // separator.
+      document.title = parts.concat('ODK Central').filter(x => x).join(' | ');
     });
-    return init.call(router, app);
-  };
+    removeHook();
+  });
 }
 
 
@@ -201,19 +208,10 @@ router.afterEach(() => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// OTHER NAVIGATION GUARDS
+// OTHER NAVIGATION HOOKS
 
 router.afterEach(() => {
   alert.blank();
-});
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// PAGE TITLES
-
-router.afterEach((to) => {
-  updateDocumentTitle(to, store);
 });
 
 
