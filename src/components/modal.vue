@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';

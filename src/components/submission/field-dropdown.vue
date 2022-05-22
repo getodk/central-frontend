@@ -72,7 +72,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { equals } from 'ramda';
 import { mapGetters } from 'vuex';
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 
 // This constant is also used in the `disabled` message.
 const maxCheckedCount = 100;

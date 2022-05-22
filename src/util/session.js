@@ -65,7 +65,7 @@ hand-in-hand.
 */
 
 import VueRouter from 'vue-router';
-import { inject, onBeforeUnmount } from '@vue/composition-api';
+import { inject, onBeforeUnmount } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';

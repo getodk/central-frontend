@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent } from '@vue/composition-api';
+import { defineAsyncComponent } from 'vue';
 
 import NavbarActions from './navbar/actions.vue';
 import NavbarHelpDropdown from './navbar/help-dropdown.vue';

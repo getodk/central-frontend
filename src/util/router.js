@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
-import { nextTick } from '@vue/composition-api';
+import { nextTick } from 'vue';
 
 // Returns the props for a route component.
 export const routeProps = (route, props) => {

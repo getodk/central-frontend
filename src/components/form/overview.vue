@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent } from '@vue/composition-api';
+import { defineAsyncComponent } from 'vue';
 
 import FormDraftChecklist from '../form-draft/checklist.vue';
 import FormOverviewRightNow from './overview/right-now.vue';

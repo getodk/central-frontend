@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { inject, watchSyncEffect } from '@vue/composition-api';
+import { inject, watchSyncEffect } from 'vue';
 
 import FormHead from './head.vue';
 import Loading from '../loading.vue';

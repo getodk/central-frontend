@@ -39,7 +39,7 @@ own popover functionality, perhaps using Popper.
 </template>
 
 <script>
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 import 'bootstrap/js/tooltip';
 import 'bootstrap/js/popover';
 

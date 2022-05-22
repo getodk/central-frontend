@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 
 import Loading from './loading.vue';
 import PageBody from './page/body.vue';

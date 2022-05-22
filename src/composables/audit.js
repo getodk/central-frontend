@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 // useAudit() returns functions related to audit log entries.
 
-import { inject } from '@vue/composition-api';
+import { inject } from 'vue';
 
 // Returns the i18n path to use to describe the specified audit action.
 const actionPath = (action) => {

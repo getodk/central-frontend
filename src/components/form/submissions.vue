@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject, watchSyncEffect } from '@vue/composition-api';
+import { inject, watchSyncEffect } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
-import { ref, watchEffect } from '@vue/composition-api';
+import { ref, watchEffect } from 'vue';
 
 import createRoutes from './routes';
 import { canRoute, forceReplace, preservesData } from './util/router';

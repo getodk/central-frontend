@@ -55,7 +55,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import pako from 'pako/lib/deflate';
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
