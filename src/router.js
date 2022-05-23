@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import VueRouter from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
@@ -21,8 +21,8 @@ import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
-export default (container, mode = 'hash') => {
-  const router = new VueRouter({ mode, routes: createRoutes(container) });
+export default (container, history = createWebHashHistory()) => {
+  const router = createRouter({ history, routes: createRoutes(container) });
   const { store, alert, unsavedChanges } = container;
 
 

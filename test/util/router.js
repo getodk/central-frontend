@@ -1,5 +1,5 @@
 import { RouterLinkStub } from '@vue/test-utils';
-import { START_LOCATION } from 'vue-router';
+import { START_LOCATION, createMemoryHistory } from 'vue-router';
 import { tap } from 'ramda';
 
 import RouterViewStub from './components/router-view-stub.vue';
@@ -11,12 +11,12 @@ import createTestContainer from './container';
 
 // Returns a function to create a real router configured for use in testing.
 export const testRouter = (modify = noop) => (container) =>
-  // Using abstract mode because there were issues using hash mode. In hash
-  // mode, when the router is injected into a root component, the router
-  // examines the hash to determine the initial location. But that becomes an
-  // issue during testing, because the hash diverges from the current route over
-  // time: Headless Chrome seems to rate-limit hash changes.
-  tap(modify, createCentralRouter(container, 'abstract'));
+  // Using memory mode because there were issues using hash mode. In hash mode,
+  // when the router is injected into a root component, the router examines the
+  // hash to determine the initial location. But that becomes an issue during
+  // testing, because the hash diverges from the current route over time:
+  // Headless Chrome seems to rate-limit hash changes.
+  tap(modify, createCentralRouter(container, createMemoryHistory()));
 
 const { router } = createTestContainer({ router: testRouter() });
 export const resolveRoute = (location) => router.resolve(location).route;
