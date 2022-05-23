@@ -9,10 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 
 import createRequestModule from './modules/request';
 
-export default (container) => new Vuex.Store({
+export default (container) => createStore({
   modules: { request: createRequestModule(container) }
 });
