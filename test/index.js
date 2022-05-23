@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { enableAutoUnmount } from '@vue/test-utils';
 import 'should';
 
 // These files must be imported before the rest.
@@ -8,7 +9,6 @@ import '../src/jquery';
 import '../src/bootstrap';
 
 import testData from './data';
-import { destroyAll } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
 import './assertions';
@@ -24,13 +24,13 @@ before(loadAsyncRouteComponents);
 
 beforeEach(testData.seed);
 
-afterEach(() => {
-  destroyAll();
+enableAutoUnmount(afterEach);
 
+afterEach(() => {
   const afterScript = document.querySelector('body > script:last-of-type + *');
   if (afterScript != null) {
     console.error(document.body.innerHTML); // eslint-disable-line no-console
-    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
+    throw new Error('Unexpected element after last script element. Have all Bootstrap elements been removed?');
   }
 });
 

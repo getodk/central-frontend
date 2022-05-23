@@ -9,28 +9,6 @@ import createTestContainer from './container';
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DESTROY
-
-const componentsToDestroy = [];
-
-export const destroyAll = () => {
-  for (const component of componentsToDestroy) {
-    // Vue Test Utils always seems to create a parent component, so we also
-    // destroy that. This is particularly important when the router is injected
-    // into the component: see
-    // https://github.com/vuejs/vue-test-utils/issues/1862
-    const parent = component.vm.$parent;
-    if (parent.$el.parentNode != null)
-      parent.$el.parentNode.removeChild(parent.$el);
-    // This will also destroy `component`.
-    parent.$destroy();
-  }
-  componentsToDestroy.splice(0);
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // MOUNT
 
 /*
@@ -74,10 +52,7 @@ export const mount = (component, options = {}) => {
   if (container.router != null)
     mountOptions.parentComponent.router = container.router;
 
-  const wrapper = vtuMount(component, mountOptions);
-  componentsToDestroy.push(wrapper);
-
-  return wrapper;
+  return vtuMount(component, mountOptions);
 };
 
 // TODO/vue3. Update this list for Vue 3.
