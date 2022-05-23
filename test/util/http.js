@@ -716,28 +716,19 @@ class MockHttp {
       });
   }
 
-  _navigate() {
-    const { router } = this._container;
-    if (router == null) throw new Error('container does not contain a router');
-    // TODO/vue3. Simplify this.
-    return new Promise(resolve => {
-      const removeHook = router.afterEach(() => {
-        removeHook();
-        resolve();
-      });
-      router.push(this._location).catch(noop);
-    });
-  }
-
   _navigateAndMount() {
-    if (this._location != null && this._mount != null) {
-      if (this._confirmBeforeMount)
-        return this._navigate().then(() => { this._component = this._mount(); });
-      const promise = this._navigate();
-      this._component = this._mount();
+    if (this._location != null) {
+      const { router } = this._container;
+      if (router == null)
+        throw new Error('container does not contain a router');
+      const promise = router.push(this._location);
+      if (this._mount != null) {
+        if (this._confirmBeforeMount)
+          return promise.then(() => { this._component = this._mount(); });
+        this._component = this._mount();
+      }
       return promise;
     }
-    if (this._location != null) return this._navigate();
     if (this._mount != null) this._component = this._mount();
     return Promise.resolve();
   }
