@@ -71,7 +71,7 @@ export default {
   created() {
     this.load();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.cancel();
   },
   methods: {
@@ -96,7 +96,7 @@ export default {
             are multiple pending promises for the same async component, and they
             will each now be resolved (though all but the last have been
             canceled).
-          - The AsyncRoute component may be destroyed.
+          - The AsyncRoute component may be unmounted.
         */
         .then(m => {
           if (!canceled) {

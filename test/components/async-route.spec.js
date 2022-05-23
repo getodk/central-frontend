@@ -87,10 +87,10 @@ describe('AsyncRoute', () => {
       asyncRoute.getComponent(Loading).props().state.should.be.false();
     });
 
-    it('does not show an alert if AsyncRoute component has been destroyed', async () => {
+    it('does not show an alert if AsyncRoute component has been unmounted', async () => {
       setLoader('MyComponent', () => Promise.reject());
       const asyncRoute = mountComponent({ componentName: 'MyComponent' });
-      asyncRoute.destroy();
+      asyncRoute.unmount();
       await wait();
       asyncRoute.should.not.alert();
     });

@@ -75,7 +75,7 @@ export default {
     document.addEventListener('click', this.hideAfterClick, true);
     window.addEventListener('resize', this.hideAfterResize);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.target != null) this.hide();
     document.removeEventListener('click', this.hideAfterClick, true);
     window.removeEventListener('resize', this.hideAfterResize);

@@ -73,6 +73,7 @@ export default {
               },
               60000
             );
+            // TODO/vue3
             this.$once('hook:beforeDestroy', () => {
               clearInterval(id);
             });

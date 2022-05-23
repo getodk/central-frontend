@@ -140,7 +140,7 @@ export default {
     this.wrappers.parent = $(this.$el).on('hidden.bs.dropdown', this.afterHide);
     this.wrappers.toggle = $(this.$refs.select);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.wrappers.parent.off('hidden.bs.dropdown');
   },
   methods: {
