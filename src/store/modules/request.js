@@ -12,7 +12,6 @@ except according to the terms contained in the LICENSE file.
 
 // This module sends GET requests and stores the resulting response data.
 
-import Vue from 'vue';
 import { mapState } from 'vuex';
 import { pick } from 'ramda';
 
@@ -134,7 +133,7 @@ return {
     },
     setDataProp({ data }, { key, prop, value }) {
       const target = data[key] instanceof Option ? data[key].get() : data[key];
-      Vue.set(target, prop, value);
+      target[prop] = value;
     },
     setFromResponse({ data }, { key, response }) {
       const transform = transforms[key];
