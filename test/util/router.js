@@ -1,5 +1,5 @@
-import VueRouter from 'vue-router';
 import { RouterLinkStub } from '@vue/test-utils';
+import { START_LOCATION } from 'vue-router';
 import { tap } from 'ramda';
 
 import RouterViewStub from './components/router-view-stub.vue';
@@ -29,7 +29,7 @@ class MockRouter {
   constructor(location) {
     this.currentRoute = location != null
       ? resolveRoute(location)
-      : VueRouter.START_LOCATION;
+      : START_LOCATION;
   }
 
   install(Vue) {

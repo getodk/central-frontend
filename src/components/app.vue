@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import VueRouter from 'vue-router';
+import { START_LOCATION } from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
@@ -45,7 +45,7 @@ export default {
   computed: {
     ...requestData(['centralVersion']),
     routerReady() {
-      return this.$route !== VueRouter.START_LOCATION;
+      return this.$route !== START_LOCATION;
     }
   },
   created() {

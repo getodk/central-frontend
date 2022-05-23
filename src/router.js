@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import VueRouter from 'vue-router';
-import { ref, watchEffect } from 'vue';
+import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
 import { canRoute, forceReplace, preservesData } from './util/router';
@@ -153,11 +153,9 @@ of the `key` attribute.)
 {
   // `title` meta field
   // TODO/vue3. Simplify this.
-  const currentRoute = ref(VueRouter.START_LOCATION);
-  router.afterEach(to => { currentRoute.value = to; });
   const removeHook = router.afterEach(() => {
     watchEffect(() => {
-      const { title } = currentRoute.value.meta;
+      const { title } = router.currentRoute.value.meta;
       const parts = title(store.state.request.data);
       // Append ODK Central to every title, filter out any null values (e.g.
       // project name before the project object was loaded), join with

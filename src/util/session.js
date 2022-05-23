@@ -64,7 +64,7 @@ Firefox, and Safari, blocking cookies and blocking local storage seem to go
 hand-in-hand.
 */
 
-import VueRouter from 'vue-router';
+import { START_LOCATION } from 'vue-router';
 import { inject, onBeforeUnmount } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
@@ -130,7 +130,7 @@ export const logOut = (container, setNext) => {
 
   // We do not navigate to /login for a logout during login or during the
   // initial navigation.
-  if (router.currentRoute === VueRouter.START_LOCATION ||
+  if (router.currentRoute === START_LOCATION ||
     router.currentRoute.path === '/login') {
     resetRequestData(store);
   } else {
