@@ -19,7 +19,7 @@ export const testRouter = (modify = noop) => (container) =>
   tap(modify, createCentralRouter(container, createMemoryHistory()));
 
 const { router } = createTestContainer({ router: testRouter() });
-export const resolveRoute = (location) => router.resolve(location).route;
+export const resolveRoute = router.resolve.bind(router);
 
 // A router-like object that cannot navigate. In a sense, the object is like a
 // read-only router: the object's current route will never change after the
@@ -42,8 +42,9 @@ class MockRouter {
   }
 }
 
+MockRouter.prototype.resolve = resolveRoute;
 // TODO/vue3. Update this list for Vue 3.
-for (const name of ['resolve', 'getRoutes'])
+for (const name of ['getRoutes'])
   MockRouter.prototype[name] = router[name].bind(router);
 
 for (const prop in router) {
