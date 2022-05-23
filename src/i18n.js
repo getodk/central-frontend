@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import VueI18n from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 
 // Bundle en messages, since en is the fallback locale. Other locales are loaded
 // asynchronously.
@@ -102,7 +102,7 @@ for (const locale of locales.keys()) {
 ////////////////////////////////////////////////////////////////////////////////
 // EXPORT
 
-export default () => new VueI18n({
+export default () => createI18n({
   locale: fallbackLocale,
   fallbackLocale,
   messages: { [fallbackLocale]: fallbackMessages },

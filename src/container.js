@@ -32,20 +32,20 @@ export default ({
   store = createCentralStore,
   i18n = createCentralI18n(),
   alert = createAlert(),
-  unsavedChanges = createUnsavedChanges(i18n),
+  unsavedChanges = createUnsavedChanges(i18n.global),
   config = defaultConfig,
   http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
   logger = console
 } = {}) => {
   const container = {
-    i18n,
+    i18n: i18n.global,
     alert,
     unsavedChanges,
     config,
     http,
     logger,
-    ...subclassPresenters(i18n)
+    ...subclassPresenters(i18n.global)
   };
   container.store = store(container);
   if (router != null) container.router = router(container);
