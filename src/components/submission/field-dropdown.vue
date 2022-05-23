@@ -80,7 +80,7 @@ const maxCheckedCount = 100;
 export default {
   name: 'SubmissionFieldDropdown',
   props: {
-    value: {
+    modelValue: {
       type: Array,
       required: true
     }
@@ -90,12 +90,12 @@ export default {
     const checked = {};
     for (const field of this.$store.getters.selectableFields)
       checked[field.path] = false;
-    for (const field of this.value)
+    for (const field of this.modelValue)
       checked[field.path] = true;
 
     return {
       checked,
-      checkedCount: this.value.length,
+      checkedCount: this.modelValue.length,
       search: '',
       // jQuery wrappers
       wrappers: markRaw({
@@ -108,7 +108,7 @@ export default {
     ...mapGetters(['selectableFields']),
     placeholder() {
       return this.$t('placeholder', {
-        selected: this.$n(this.value.length, 'default'),
+        selected: this.$n(this.modelValue.length, 'default'),
         total: this.$n(this.selectableFields.length, 'default')
       });
     },
@@ -127,7 +127,7 @@ export default {
     }
   },
   watch: {
-    value(value) {
+    modelValue(value) {
       for (const field of this.selectableFields)
         this.checked[field.path] = false;
       for (const field of value)
@@ -183,7 +183,8 @@ export default {
     afterHide() {
       const newValue = this.selectableFields.filter(field =>
         this.checked[field.path]);
-      if (!equals(newValue, this.value)) this.$emit('input', newValue);
+      if (!equals(newValue, this.modelValue))
+        this.$emit('update:modelValue', newValue);
 
       this.search = '';
     }

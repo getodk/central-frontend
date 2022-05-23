@@ -12,10 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <label class="form-group" :class="{ 'has-error': hasError }">
     <slot name="before"></slot>
-    <input ref="input" v-bind="$attrs" class="form-control" :value="value"
+    <input ref="input" v-bind="$attrs" class="form-control" :value="modelValue"
       :placeholder="`${placeholder}${star}`" :required="required"
-      :autocomplete="autocomplete" @input="$emit('input', $event.target.value)"
-      @change="$emit('change', $event.target.value)">
+      :autocomplete="autocomplete"
+      @input="$emit('update:modelValue', $event.target.value)">
     <span class="form-label">{{ placeholder }}{{ star }}</span>
     <slot name="after"></slot>
   </label>
@@ -26,7 +26,7 @@ export default {
   name: 'FormGroup',
   inheritAttrs: false,
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     },
@@ -34,20 +34,14 @@ export default {
       type: String,
       required: true
     },
-    required: {
-      type: Boolean,
-      default: false
-    },
-    hasError: {
-      type: Boolean,
-      default: false
-    },
+    required: Boolean,
+    hasError: Boolean,
     autocomplete: {
       type: String,
       required: true
     }
   },
-  emits: ['change', 'update:modelValue'],
+  emits: ['update:modelValue'],
   computed: {
     star() {
       return this.required ? ' *' : '';

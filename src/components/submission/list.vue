@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
     <div v-show="fields != null">
       <div id="submission-list-actions">
         <form class="form-inline" @submit.prevent>
-          <submission-filters v-if="!draft" :submitter-id.sync="submitterId"
-            :submission-date.sync="submissionDateRange"
-            :review-state.sync="reviewStates"/>
+          <submission-filters v-if="!draft" v-model:submitterId="submitterId"
+            v-model:submissionDate="submissionDateRange"
+            v-model:reviewState="reviewStates"/>
           <submission-field-dropdown
             v-if="fields != null && selectableFields.length > 11"
             v-model="selectedFields"/>

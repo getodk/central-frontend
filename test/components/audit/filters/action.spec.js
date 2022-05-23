@@ -2,9 +2,9 @@ import AuditFiltersAction from '../../../../src/components/audit/filters/action.
 
 import { mount } from '../../../util/lifecycle';
 
-const mountComponent = ({ value = 'nonverbose' } = {}) =>
+const mountComponent = ({ modelValue = 'nonverbose' } = {}) =>
   mount(AuditFiltersAction, {
-    props: { value }
+    props: { modelValue }
   });
 
 describe('AuditFiltersAction', () => {
@@ -28,14 +28,14 @@ describe('AuditFiltersAction', () => {
     });
   });
 
-  it('sets the value of the select element to the value prop', () => {
-    const select = mountComponent({ value: 'user' }).get('select');
+  it('sets the value of the select element to the modelValue prop', () => {
+    const select = mountComponent({ modelValue: 'user' }).get('select');
     select.element.value.should.equal('user');
   });
 
-  it('emits an input event', () => {
-    const component = mountComponent({ value: 'nonverbose' });
+  it('emits an update:modelValue event', () => {
+    const component = mountComponent({ modelValue: 'nonverbose' });
     component.get('select').setValue('user');
-    component.emitted().input.should.eql([['user']]);
+    component.emitted('update:modelValue').should.eql([['user']]);
   });
 });

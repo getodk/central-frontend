@@ -29,12 +29,12 @@ import { odataLiteral } from '../../../util/odata';
 export default {
   name: 'SubmissionFiltersReviewState',
   props: {
-    // `value` is an array because at one point, the filter was a
+    // modelValue is an array because at one point, the filter was a
     // <select multiple>. However, the native <select multiple> was a confusing
-    // user experience, so we made the filter a single-select. `value` is still
-    // an array because the filter will hopefully become a multiselect again at
-    // some point (one with an improved user experience).
-    value: {
+    // user experience, so we made the filter a single-select. modelValue is
+    // still an array because the filter will hopefully become a multiselect
+    // again at some point (one with an improved user experience).
+    modelValue: {
       type: Array,
       required: true
     }
@@ -47,10 +47,10 @@ export default {
   computed: {
     selectValue: {
       get() {
-        return this.value.length !== 0 ? this.value[0] : '';
+        return this.modelValue.length !== 0 ? this.modelValue[0] : '';
       },
       set(value) {
-        this.$emit('input', value !== '' ? [value] : []);
+        this.$emit('update:modelValue', value !== '' ? [value] : []);
       }
     }
   },
