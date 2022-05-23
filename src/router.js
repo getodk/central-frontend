@@ -150,10 +150,8 @@ of the `key` attribute.)
   });
 }
 
-{
   // `title` meta field
-  // TODO/vue3. Simplify this.
-  const removeHook = router.afterEach(() => {
+  router.isReady().then(() => {
     watchEffect(() => {
       const { title } = router.currentRoute.value.meta;
       const parts = title(store.state.request.data);
@@ -162,9 +160,7 @@ of the `key` attribute.)
       // separator.
       document.title = parts.concat('ODK Central').filter(x => x).join(' | ');
     });
-    removeHook();
   });
-}
 
 
 
