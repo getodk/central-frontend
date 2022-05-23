@@ -2,8 +2,6 @@ import sinon from 'sinon';
 import { enableAutoUnmount } from '@vue/test-utils';
 import 'should';
 
-// These files must be imported before the rest.
-import './plugins';
 import '../src/styles';
 import '../src/jquery';
 import '../src/bootstrap';

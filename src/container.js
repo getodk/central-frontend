@@ -9,9 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import VueI18n from 'vue-i18n';
-import VueRouter from 'vue-router';
-import Vuex from 'vuex';
 import axios from 'axios';
 
 import createAlert from './alert';
@@ -49,19 +46,12 @@ export default ({
   };
   container.store = store(container);
   if (router != null) container.router = router(container);
-  container.install = (Vue) => {
-    Vue.use(Vuex);
-    Vue.use(VueI18n);
-    if (container.router != null)
-      Vue.use(container.router instanceof VueRouter ? VueRouter : container.router);
-  };
-  container.provide = {
-    container,
-    alert,
-    unsavedChanges,
-    config,
-    http,
-    logger
+  container.install = (app) => {
+    app.use(container.store).use(i18n);
+    if (container.router != null) app.use(container.router);
+    app.provide('container', container);
+    for (const key of ['alert', 'unsavedChanges', 'config', 'http', 'logger'])
+      app.provide(key, container[key]);
   };
   return container;
 };

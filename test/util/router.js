@@ -33,13 +33,13 @@ class MockRouter {
       : START_LOCATION);
   }
 
-  install(Vue) {
+  install(app) {
     // eslint-disable-next-line no-param-reassign
-    Vue.prototype.$router = this;
+    app.config.globalProperties.$router = this;
     // eslint-disable-next-line no-param-reassign
-    Vue.prototype.$route = this.currentRoute.value;
-    Vue.component('router-link', RouterLinkStub);
-    Vue.component('router-view', RouterViewStub);
+    app.config.globalProperties.$route = this.currentRoute.value;
+    app.component('router-link', RouterLinkStub);
+    app.component('router-view', RouterViewStub);
   }
 }
 

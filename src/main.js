@@ -9,9 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import Vue from 'vue';
+import { createApp } from 'vue';
 
-import './plugins';
 // The global styles must be imported before any component so that they precede
 // components' styles.
 import './styles';
@@ -25,15 +24,7 @@ import { $tcn } from './util/i18n';
 import './jquery';
 import './bootstrap';
 
-const container = createContainer();
-Vue.use(container);
-Vue.prototype.$tcn = $tcn;
-
-new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App),
-  router: container.router,
-  store: container.store,
-  i18n: container.i18n,
-  provide: container.provide
-});
+const app = createApp(App);
+app.use(createContainer());
+app.config.globalProperties.$tcn = $tcn;
+app.mount('#app');
