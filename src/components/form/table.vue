@@ -25,13 +25,13 @@ except according to the terms contained in the LICENSE file.
           </th>
           <th class="last-submission">{{ $t('header.latest') }}</th>
           <th class="total-submissions">{{ $t('common.total') }}</th>
-          <th v-if="columns.has('actions')" class="actions">{{ $t('header.actions') }}</th>
+          <th v-if="showActions" class="actions">{{ $t('header.actions') }}</th>
         </tr>
       </template>
     </thead>
     <tbody v-if="forms != null">
       <form-row v-for="form of formsToShow" :key="form.xmlFormId" :form="form"
-        :columns="columns"/>
+        :hide-actions="!showActions"/>
     </tbody>
   </table>
 </template>
@@ -57,15 +57,8 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     ...requestData(['project', 'forms']),
-    columns() {
-      const columns = new Set(['name']);
-      // Hide columns from a project viewer.
-      if (this.project.permits('project.update') ||
-        this.project.permits('submission.create'))
-        columns.add('idAndVersion').add('actions');
-      // Hide the Submissions column from a Data Collector.
-      if (this.project.permits('submission.list')) columns.add('submissions');
-      return columns;
+    showActions() {
+      return this.project.permits('project.update') || this.project.permits('submission.create');
     },
     showHeader() {
       return !(this.showClosed && this.formsToShow.length === 0);

@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
 
     <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
       <template v-if="form.publishedAt != null">
-        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions?reviewState=${reviewState}`)">
+        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions?reviewState=${urlFilterEncode.get(reviewState)}`)">
           <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
           <span :class="reviewStateIcon(reviewState)"></span>
         </link-if-can>
@@ -50,7 +50,7 @@ except according to the terms contained in the LICENSE file.
       </td>
     </template>
 
-    <td v-if="columns.has('actions')" class="actions">
+    <td v-if="!hideActions" class="actions">
       <template v-if="form.state !== 'closed'">
         <template v-if="form.state === 'closing'">
           <span :title="$t('formClosingTip')">
@@ -96,10 +96,7 @@ export default {
       type: Form,
       required: true
     },
-    columns: {
-      type: Set,
-      required: true
-    }
+    hideActions: Boolean
   },
   setup() {
     const { reviewStateIcon } = useReviewState();
@@ -110,6 +107,12 @@ export default {
     // created.
     ...requestData(['project']),
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
+    urlFilterEncode() {
+      return new Map()
+        .set('received', 'null')
+        .set('hasIssues', '%27hasIssues%27')
+        .set('edited', '%27edited%27');
+    },
     draftTestingPath() {
       return this.formPath(
         this.form.projectId,
