@@ -14,8 +14,6 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import axios from 'axios';
 
-import Translation from './components/i18n-t';
-
 import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
@@ -56,7 +54,6 @@ export default ({
     Vue.use(VueI18n);
     if (container.router != null)
       Vue.use(container.router instanceof VueRouter ? VueRouter : container.router);
-    Vue.component('i18n-t', Translation);
   };
   container.provide = {
     container,
