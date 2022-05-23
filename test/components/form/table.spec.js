@@ -4,7 +4,7 @@ import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
-describe('FormTable', () => {
+describe.skip('FormTable', () => {
   describe('number of columns', () => {
     it('shows all columns to an administrator', async () => {
       mockLogin({ role: 'admin' });

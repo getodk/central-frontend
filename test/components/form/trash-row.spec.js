@@ -15,7 +15,7 @@ const mountComponent = (formData) => mount(FormTrashRow, {
 });
 
 describe('FormTrashRow', () => {
-  describe('form name and deleted timestamp', () => {
+  describe('form name', () => {
     beforeEach(mockLogin);
 
     it('shows the form name if it has one', () => {
@@ -27,7 +27,10 @@ describe('FormTrashRow', () => {
       const formData = { xmlFormId: 'f', name: null };
       mountComponent(formData).get('.form-name').text().should.equal('f');
     });
+  });
 
+  describe('deleted timestamp', () => {
+    beforeEach(mockLogin);
     it('shows the deleted timestamp', () => {
       const deletedDate = new Date().toISOString();
       const formData = { xmlFormId: 'f', name: null, deletedAt: deletedDate };
@@ -39,22 +42,12 @@ describe('FormTrashRow', () => {
     });
   });
 
-  describe('form id and version', () => {
+  describe('form id', () => {
     beforeEach(mockLogin);
 
     it('shows the xmlFormId', () => {
       const formData = { xmlFormId: 'f' };
-      mountComponent(formData).get('.form-id').text().should.equal('f');
-    });
-
-    it('shows the version string', () => {
-      const formData = { version: 'v1' };
-      mountComponent(formData).get('.version').text().should.equal('v1');
-    });
-
-    it('does not render the version string if it is empty', () => {
-      const formData = { version: '' };
-      mountComponent(formData).find('.version').exists().should.be.false();
+      mountComponent(formData).get('.form-id').text().should.equal('(f)');
     });
   });
 
@@ -63,17 +56,22 @@ describe('FormTrashRow', () => {
 
     it('shows the submission count', () => {
       const formData = { submissions: 12345 };
-      const text = mountComponent(formData).get('.submissions div').text();
-      text.should.equal('12,345 Submissions');
+      const text = mountComponent(formData).get('.total-submissions').text();
+      text.should.equal('12,345');
+    });
+
+    it('shows the submission count when 0', () => {
+      const formData = { submissions: 0 };
+      const text = mountComponent(formData).get('.total-submissions').text();
+      text.should.equal('0');
     });
 
     it('shows the date', () => {
       const lastSubmission = new Date().toISOString();
       const formData = { submissions: 1, lastSubmission };
       const row = mountComponent(formData);
-      const divs = row.findAll('.submissions div');
-      divs.length.should.equal(2); // submission count and last submission timestamp
-      divs[1].text().should.match(/^\(last .+\)$/);
+      const text = row.get('.last-submission').text();
+      text.should.match(/ago$/);
       const dateTimes = row.findAllComponents(DateTime);
       dateTimes.length.should.equal(2); // deleted timestamp and last submission timestamp
       dateTimes[1].props().iso.should.equal(lastSubmission);
@@ -81,7 +79,7 @@ describe('FormTrashRow', () => {
 
     it('does not render date if there is no last submission', () => {
       const formData = { submissions: 0 };
-      mountComponent(formData).findAll('.submissions div').length.should.equal(1);
+      mountComponent(formData).get('.last-submission').text().should.equal('(none)');
     });
   });
 
