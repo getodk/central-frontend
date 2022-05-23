@@ -44,8 +44,7 @@ class MockRouter {
 }
 
 MockRouter.prototype.resolve = resolveRoute;
-// TODO/vue3. Update this list for Vue 3.
-for (const name of ['getRoutes'])
+for (const name of ['getRoutes', 'hasRoute'])
   MockRouter.prototype[name] = router[name].bind(router);
 
 for (const prop in router) {
