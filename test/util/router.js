@@ -1,5 +1,6 @@
 import { RouterLinkStub } from '@vue/test-utils';
 import { START_LOCATION, createMemoryHistory } from 'vue-router';
+import { ref } from 'vue';
 import { tap } from 'ramda';
 
 import RouterViewStub from './components/router-view-stub.vue';
@@ -27,16 +28,16 @@ export const resolveRoute = router.resolve.bind(router);
 // testRouter().
 class MockRouter {
   constructor(location) {
-    this.currentRoute = location != null
+    this.currentRoute = ref(location != null
       ? resolveRoute(location)
-      : START_LOCATION;
+      : START_LOCATION);
   }
 
   install(Vue) {
     // eslint-disable-next-line no-param-reassign
     Vue.prototype.$router = this;
     // eslint-disable-next-line no-param-reassign
-    Vue.prototype.$route = this.currentRoute;
+    Vue.prototype.$route = this.currentRoute.value;
     Vue.component('router-link', RouterLinkStub);
     Vue.component('router-view', RouterViewStub);
   }
