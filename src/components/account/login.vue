@@ -66,11 +66,8 @@ export default {
   mounted() {
     this.$refs.email.focus();
   },
-  beforeRouteLeave(to, from, next) {
-    if (this.disabled)
-      next(false);
-    else
-      next();
+  beforeRouteLeave() {
+    return !this.disabled;
   },
   methods: {
     navigateToNext(

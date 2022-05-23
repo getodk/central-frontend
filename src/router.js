@@ -78,10 +78,9 @@ router.afterEach(to => {
       }
     ];
 
-    const removeGuard = router.beforeEach(async (to, _, next) => {
+    const removeGuard = router.beforeEach(async (to) => {
       await Promise.allSettled(requests.map(request => request(to)));
       removeGuard();
-      next();
     });
   }
 
@@ -91,21 +90,13 @@ router.afterEach(to => {
 // LOGIN
 
 // Implements the requireLogin and requireAnonymity meta fields.
-router.beforeEach((to, from, next) => {
+router.beforeEach(to => {
   const { session } = store.state.request.data;
-  if (to.meta.requireLogin) {
-    if (session != null)
-      next();
-    else
-      next({ path: '/login', query: { next: to.fullPath } });
-  } else if (to.meta.requireAnonymity) {
-    if (session != null)
-      next('/');
-    else
-      next();
-  } else {
-    next();
-  }
+  if (to.meta.requireLogin && session == null)
+    return { path: '/login', query: { next: to.fullPath } };
+  if (to.meta.requireAnonymity && session != null)
+    return '/';
+  return true;
 });
 
 
@@ -126,12 +117,7 @@ router.afterEach((to, from) => {
 
 // validateData
 
-router.beforeEach((to, from, next) => {
-  if (canRoute(to, from, store))
-    next();
-  else
-    next('/');
-});
+router.beforeEach((to, from) => (canRoute(to, from, store) ? true : '/'));
 
 /*
 Set up watchers on the response data, and update them whenever the validateData
@@ -194,12 +180,7 @@ window.addEventListener('beforeunload', (event) => {
   event.returnValue = ''; // eslint-disable-line no-param-reassign
 });
 
-router.beforeEach((to, from, next) => {
-  if (unsavedChanges.confirm())
-    next();
-  else
-    next(false);
-});
+router.beforeEach(() => unsavedChanges.confirm());
 
 router.afterEach(() => {
   unsavedChanges.zero();

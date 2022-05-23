@@ -600,12 +600,7 @@ const routes = [
           },
           title: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')]
         },
-        beforeEnter: (to, from, next) => {
-          if (config.showsBackups)
-            next();
-          else
-            next('/');
-        }
+        beforeEnter: () => (config.showsBackups ? true : '/')
       }),
       asyncRoute({
         path: 'audits',
@@ -632,12 +627,7 @@ const routes = [
             i18n.t('systemHome.title')
           ]
         },
-        beforeEnter: (to, from, next) => {
-          if (config.showsAnalytics)
-            next();
-          else
-            next('/');
-        }
+        beforeEnter: () => (config.showsAnalytics ? true : '/')
       })
     ]
   }),
