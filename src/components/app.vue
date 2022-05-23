@@ -62,25 +62,18 @@ export default {
         alert: false
       }])
         .then(() => {
-          if (previousVersion != null && this.centralVersion !== previousVersion) {
-            this.alert.info(this.$t('alert.versionChange'));
-            // Keep alerting the user about the version change. One benefit of
-            // this is that the user should see the alert even if there is
-            // another alert (say, about session expiration).
-            const id = setInterval(
-              () => {
-                this.alert.info(this.$t('alert.versionChange'));
-              },
-              60000
-            );
-            // TODO/vue3
-            this.$once('hook:beforeDestroy', () => {
-              clearInterval(id);
-            });
-            return true;
-          }
+          if (previousVersion == null || this.centralVersion === previousVersion)
+            return false;
 
-          return false;
+          // Alert the user about the version change, then keep alerting them.
+          // One benefit of this approach is that the user should see the alert
+          // even if there is another alert (say, about session expiration).
+          this.callWait(
+            'alertVersionChange',
+            () => { this.alert.info(this.$t('alert.versionChange')); },
+            (tries) => (tries === 0 ? 0 : 60000)
+          );
+          return true;
         })
         // This error could be the result of logout, which will cancel all
         // requests.
