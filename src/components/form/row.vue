@@ -19,7 +19,8 @@ except according to the terms contained in the LICENSE file.
 
     <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
       <template v-if="form.publishedAt != null">
-        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions?reviewState=${urlFilterEncode.get(reviewState)}`)">
+        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
+          :title="$t(`reviewState.${reviewState}`)">
           <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
           <span :class="reviewStateIcon(reviewState)"></span>
         </link-if-can>
@@ -29,7 +30,8 @@ except according to the terms contained in the LICENSE file.
     <template v-if="form.publishedAt != null">
       <td class="last-submission">
         <template v-if="form.lastSubmission != null">
-          <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)">
+          <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)"
+            :title="$t('header.lastSubmission')">
             <date-time :iso="form.lastSubmission" relative="past"/>
             <span class="icon-clock-o"></span>
           </link-if-can>
@@ -37,7 +39,8 @@ except according to the terms contained in the LICENSE file.
         <template v-else>{{ $t('submission.noSubmission') }}</template>
       </td>
       <td class="total-submissions">
-        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)">
+        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)"
+          :title="$t('common.total')">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
         </link-if-can>
@@ -45,12 +48,12 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template v-else>
       <td class="not-published" colspan="2">
-        <span>{{ $t('unpublished') }}</span>
+        <span>{{ $t('formState.unpublished') }}</span>
         <span class="icon-asterisk"></span>
       </td>
     </template>
 
-    <td v-if="!hideActions" class="actions">
+    <td v-if="showActions" class="actions">
       <template v-if="form.state !== 'closed'">
         <template v-if="form.state === 'closing'">
           <span :title="$t('formClosingTip')">
@@ -68,7 +71,7 @@ except according to the terms contained in the LICENSE file.
         <template v-else>
           <router-link :to="draftTestingPath" class="btn btn-default">
             <span class="icon-pencil"></span>
-            <span>{{ $t('test') }}</span>
+            <span>{{ $t('action.test') }}</span>
           </router-link>
          </template>
       </template>
@@ -96,7 +99,10 @@ export default {
       type: Form,
       required: true
     },
-    hideActions: Boolean
+    showActions: {
+      type: Boolean,
+      default: true
+    }
   },
   setup() {
     const { reviewStateIcon } = useReviewState();
@@ -151,7 +157,6 @@ export default {
   }
 
   .actions {
-    text-align: center;
     width: 100px,
   }
 
@@ -179,17 +184,13 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This appears on a button linking to the draft testing form page
-    "test": "Test",
-    "unpublished": "Not published yet",
-    // This text shows when the last Submission was received. {dateTime} shows
-    // the date and time, for example: "2020/01/01 01:23". It may show a
-    // formatted date like "2020/01/01", or it may use a word like "today",
-    // "yesterday", or "Sunday".
     "action": {
-      "fill": "Fill Form"
+      // This appears on a button linking to a fillable Form
+      "fill": "Fill Form",
+      // This appears on a button linking to the draft testing form page
+      "test": "Test"
     },
-    "formClosingTip": "This Form is Closing. It is not downloadable but still accepts Submissions."
+    "formClosingTip": "This Form is Closing and accepting its final Submissions. It is not downloadable but still accepts Submissions."
   }
 }
 </i18n>

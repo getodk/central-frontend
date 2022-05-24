@@ -115,6 +115,10 @@
     "closed": {
       "string": "Closed",
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
+    },
+    "unpublished": {
+      "string": "Not published yet",
+      "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
   "reviewState": {
@@ -2337,21 +2341,18 @@
       }
     },
     "FormRow": {
-      "test": {
-        "string": "Test",
-        "developer_comment": "This appears on a button linking to the draft testing form page"
-      },
-      "unpublished": {
-        "string": "Not published yet"
-      },
       "action": {
         "fill": {
           "string": "Fill Form",
-          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+          "developer_comment": "This appears on a button linking to a fillable Form"
+        },
+        "test": {
+          "string": "Test",
+          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
-        "string": "This Form is Closing. It is not downloadable but still accepts Submissions."
+        "string": "This Form is Closing and accepting its final Submissions. It is not downloadable but still accepts Submissions."
       }
     },
     "FormSettings": {
@@ -2403,11 +2404,11 @@
         },
         "reviewStates": {
           "string": "Review States",
-          "developer_comment": "This is the text of a table column header."
+          "developer_comment": "This is text of a column header in a table of Forms"
         },
         "latest": {
           "string": "Latest",
-          "developer_comment": "This is the text of a table column header."
+          "developer_comment": "This is the text of a column header referring to how recent a Form's latest submission was."
         },
         "idAndVersion": {
           "string": "ID and Version",
@@ -2836,12 +2837,6 @@
           "string": "State",
           "developer_comment": "This is the text of a table column header."
         }
-      }
-    },
-    "ProjectFormRow": {
-      "unpublished": {
-        "string": "Not published yet",
-        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and there are no submission counts to show."
       }
     },
     "ProjectHomeBlock": {

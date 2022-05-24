@@ -58,7 +58,9 @@
     "closing": "Closing",
     // Form States control the lifecycle state of each Form. "Closed" is one
     // Form State.
-    "closed": "Closed"
+    "closed": "Closed",
+    // This is a note about a Form that is not yet published.
+    "unpublished": "Not published yet"
   },
   // This is a possible Review State for a Submission.
   "reviewState": {

@@ -88,7 +88,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
 @import '../../assets/scss/variables';
 
 .form-trash-row {
@@ -125,7 +124,7 @@ export default {
 
   .last-submission, .total-submissions {
     text-align: right;
-    & [class*='icon'] {
+    [class*='icon'] {
       margin-left: 5px;
       color: #888;
     }

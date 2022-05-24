@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table v-if="project != null && showHeader" class="table form-table">
+  <table v-if="project != null && showTable" class="table form-table">
     <thead>
       <template v-if="showClosed">
         <tr>
@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
     </thead>
     <tbody v-if="forms != null">
       <form-row v-for="form of formsToShow" :key="form.xmlFormId" :form="form"
-        :hide-actions="!showActions"/>
+        :show-actions="showActions"/>
     </tbody>
   </table>
 </template>
@@ -60,8 +60,12 @@ export default {
     showActions() {
       return this.project.permits('project.update') || this.project.permits('submission.create');
     },
-    showHeader() {
-      return !(this.showClosed && this.formsToShow.length === 0);
+    showTable() {
+      // Show the table (incluidng header) if there are forms, or if it is the
+      // non-closed form table.
+      // In the case that there are no (non-closed) forms, a loading message
+      // or "no forms" message will be shown below the header.
+      return this.formsToShow.length > 0 || !this.showClosed;
     },
     formsToShow() {
       if (this.forms === null)
@@ -71,7 +75,7 @@ export default {
         ? this.forms.filter(form => form.state === 'closed')
         : this.forms.filter(form => form.state !== 'closed');
       filteredForms.sort(this.sortFunc);
-      return this.project.permits('submission.list')
+      return this.project.permits('submission.list') && this.project.permits('form.update')
         ? filteredForms
         : filteredForms.filter(form => form.publishedAt != null);
     }
@@ -88,14 +92,9 @@ export default {
     text-align: right;
   }
 
-  .actions {
-    text-align: left;
-  }
-
-
   th.review-state {
     background-color: #ccc;
-    border-bottom: 2px solid #aaa;
+    box-shadow: inset 0em -2px #aaa;
   }
 }
 
@@ -107,7 +106,10 @@ export default {
     "header": {
       // This is the text of a column header in a table of Forms.
       "closedForms": "Closed Forms",
+      // This is text of a column header in a table of Forms
       "reviewStates": "Review States",
+      // This is the text of a column header referring to how recent
+      // a Form's latest submission was.
       "latest": "Latest",
       // This is the text of a column header in a table of Forms. The column
       // shows the ID of each Form, as well as the name of its primary version.
