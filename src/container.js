@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import axios from 'axios';
+import { Translation } from 'vue-i18n';
 
 import createAlert from './alert';
 import createCentralI18n from './i18n';
@@ -47,7 +48,10 @@ export default ({
   container.store = store(container);
   if (router != null) container.router = router(container);
   container.install = (app) => {
-    app.use(container.store).use(i18n);
+    app.use(container.store);
+    // Register <i18n-t>, since we specify `false` for the fullInstall option of
+    // vue-cli-plugin-i18n.
+    app.use(i18n).component(Translation.name, Translation);
     if (container.router != null) app.use(container.router);
     app.provide('container', container);
     for (const key of ['alert', 'unsavedChanges', 'config', 'http', 'logger'])
