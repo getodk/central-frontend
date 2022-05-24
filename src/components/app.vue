@@ -71,7 +71,7 @@ export default {
           this.callWait(
             'alertVersionChange',
             () => { this.alert.info(this.$t('alert.versionChange')); },
-            (tries) => (tries === 0 ? 0 : 60000)
+            (count) => (count === 0 ? 0 : 60000)
           );
           return true;
         })
