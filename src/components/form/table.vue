@@ -20,9 +20,7 @@ except according to the terms contained in the LICENSE file.
       <template v-else>
         <tr>
           <th>{{ $t('header.name') }}</th>
-          <th class="review-state" colspan="3">
-            {{ $t('header.reviewStates') }}
-          </th>
+          <th class="review-state" colspan="3">{{ $t('header.reviewStates') }}</th>
           <th class="last-submission">{{ $t('header.latest') }}</th>
           <th class="total-submissions">{{ $t('common.total') }}</th>
           <th v-if="showActions" class="actions">{{ $t('header.actions') }}</th>

@@ -47,7 +47,7 @@ describe('FormTrashRow', () => {
 
     it('shows the xmlFormId', () => {
       const formData = { xmlFormId: 'f' };
-      mountComponent(formData).get('.form-id').text().should.equal('(f)');
+      mountComponent(formData).get('.form-id').text().should.equal('f');
     });
   });
 
@@ -66,7 +66,7 @@ describe('FormTrashRow', () => {
       text.should.equal('0');
     });
 
-    it('shows the date', () => {
+    it('shows the time since last submission', () => {
       const lastSubmission = new Date().toISOString();
       const formData = { submissions: 1, lastSubmission };
       const row = mountComponent(formData);
@@ -77,7 +77,7 @@ describe('FormTrashRow', () => {
       dateTimes[1].props().iso.should.equal(lastSubmission);
     });
 
-    it('does not render date if there is no last submission', () => {
+    it('does not render time if there is no last submission', () => {
       const formData = { submissions: 0 };
       mountComponent(formData).get('.last-submission').text().should.equal('(none)');
     });

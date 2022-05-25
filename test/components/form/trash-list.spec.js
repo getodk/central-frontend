@@ -7,7 +7,7 @@ import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
-describe.skip('FormTrashList', () => {
+describe('FormTrashList', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedProjects.createPast(1);

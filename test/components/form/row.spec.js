@@ -92,34 +92,81 @@ describe('FormRow', () => {
 
   describe('review state counts', () => {
     beforeEach(mockLogin);
+
+    it('shows the correct counts and icons for each review state', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', reviewStates: { received: 2345, hasIssues: 1, edited: 3 } });
+      const columns = mountComponent().findAll('.review-state');
+      columns.length.should.equal(3);
+      columns.map((col) => col.get('a').text()).should.eql(['2,345', '1', '3']);
+      columns[0].find('.icon-dot-circle-o').exists().should.be.true();
+      columns[1].find('.icon-comments').exists().should.be.true();
+      columns[2].find('.icon-pencil').exists().should.be.true();
+      columns[0].find('a').attributes().title.should.equal('Received');
+      columns[1].find('a').attributes().title.should.equal('Has issues');
+      columns[2].find('a').attributes().title.should.equal('Edited');
+    });
+
+    it('shows blank review state columns when the form is a draft', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
+      const columns = mountComponent().findAll('.review-state');
+      columns.length.should.equal(3);
+      columns.map((col) => col.text().should.be.empty());
+    });
   });
 
-  describe('submission date and counts', () => {
+  describe('last submission', () => {
     beforeEach(mockLogin);
 
-    it('shows the date', () => {
+    it('shows the correct time since the last submission', () => {
       const lastSubmission = new Date().toISOString();
-      testData.extendedForms.createPast(1, { lastSubmission, state: 'open' });
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', lastSubmission });
       const row = mountComponent();
-      const text = row.get('.last-submission').text();
-      text.should.match(/ago$/);
+      row.find('.last-submission').text().should.match(/ago$/);
       const dateTimes = row.findAllComponents(DateTime);
       dateTimes.length.should.equal(1);
       dateTimes[0].props().iso.should.equal(lastSubmission);
     });
 
-    it('does not render date if there have been no submissions', () => {
-      testData.extendedForms.createPast(1, { state: 'open', submissions: 0 });
-      mountComponent().get('.last-submission').text().should.equal('(none)');
+    it('shows the correct icon', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
+      const cell = mountComponent().find('.last-submission');
+      cell.find('.icon-clock-o').exists().should.be.true();
+      cell.find('a').attributes().title.should.equal('Latest Submission');
     });
 
-    it('shows the submission count', () => {
-      testData.extendedForms.createPast(1, { state: 'open', submissions: 12345 });
-      const text = mountComponent().get('.total-submissions').text();
-      text.should.equal('12,345');
+    it('shows (none) if no submission', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 0 });
+      mountComponent().find('.last-submission').text().should.equal('(none)');
+    });
+
+    it('shows blank last submission column when the form is a draft', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
+      mountComponent().find('.last-submission').exists().should.be.false();
     });
   });
 
+  describe('submission count', () => {
+    beforeEach(mockLogin);
+
+    it('shows the correct count for all submissions', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1234 });
+      mountComponent().find('.total-submissions').text().should.equal('1,234');
+    });
+
+    it('shows "not published yet" when form is a draft', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
+      const row = mountComponent();
+      row.find('.total-submissions').exists().should.be.false();
+      row.find('.not-published').text().should.equal('Not published yet');
+    });
+
+    it('shows the correct icon', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
+      const cell = mountComponent().find('.total-submissions');
+      cell.find('.icon-asterisk').exists().should.be.true();
+      cell.find('a').attributes().title.should.equal('Total');
+    });
+  });
   describe('all submission links', () => {
     describe('Administrator', () => {
       beforeEach(() => {
@@ -232,6 +279,21 @@ describe('FormRow', () => {
   });
 
   describe('actions', () => {
+    it('never shows an action for a closed form', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { state: 'closed' });
+      const actions = mountComponent().get('.actions');
+      actions.text().should.be.empty();
+    });
+
+    it('shows the correct action (closing note but no link) for a closing form', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { state: 'closing' });
+      const actions = mountComponent().get('.actions');
+      actions.text().should.equal('Closing');
+      actions.find('.closing-icon').exists().should.be.true();
+    });
+
     it('shows the preview button to an administrator', () => {
       mockLogin({ role: 'admin' });
       testData.extendedForms.createPast(1, { state: 'open' });
@@ -251,14 +313,19 @@ describe('FormRow', () => {
 
     it('does not render preview button for form without published version', () => {
       mockLogin();
-      testData.extendedForms.createPast(1, { draft: true });
+      testData.extendedForms.createPast(1, { state: null, draft: true });
       const row = mountComponent();
       row.findComponent(EnketoPreview).exists().should.be.false();
       row.findComponent(EnketoFill).exists().should.be.false();
     });
 
-    // TODO: change right above test to check for preview link
-    // TODO: Test closed form behavior (doesnt show any action)
-    // TODO: check that test that is closing says that and doesn't have button
+    it('shows a "Test" button to admin on non-published version', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { state: null, draft: true });
+      const actions = mountComponent().find('.actions');
+      actions.text().should.equal('Test');
+      actions.find('.icon-pencil').exists().should.be.true();
+      actions.find('a').props().to.should.equal('/projects/1/forms/f/draft/testing');
+    });
   });
 });
