@@ -88,7 +88,6 @@ describe('FormList', () => {
 
     it('sorts by alphabetical by default', async () => {
       const app = await load('/projects/1');
-      //await app.find('#form-sort select').setValue('latest');
       const tables = app.findAllComponents(FormTable);
       const forms = tables[0].findAllComponents(FormRow);
       const closedForms = tables[1].findAllComponents(FormRow);

@@ -12,6 +12,8 @@ import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(FormRow, {
+  // additional FormRow prop `showActions` is tested through form/table.spec.js and
+  // visibility of actions column by different roles
   props: { form: new Form(testData.extendedForms.last()) },
   container: {
     requestData: {
@@ -27,12 +29,12 @@ describe('FormRow', () => {
     beforeEach(mockLogin);
 
     it("shows the form's name if it has one", () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: 'My Form', state: 'open' });
+      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: 'My Form' });
       mountComponent().get('.name a').text().should.equal('My Form');
     });
 
     it('shows the xmlFormId if the form does not have a name', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: null, state: 'open' });
+      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: null });
       mountComponent().get('.name a').text().should.equal('f');
     });
   });
@@ -42,10 +44,9 @@ describe('FormRow', () => {
       beforeEach(mockLogin);
 
       it('links to form overview for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 2, state: 'open' });
-        const links = mountComponent().findAllComponents(LinkIfCan);
-        links.length.should.equal(6);
-        links[0].props().to.should.equal('/projects/1/forms/a%20b');
+        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
+        const { to } = mountComponent().getComponent(LinkIfCan).props();
+        to.should.equal('/projects/1/forms/a%20b');
       });
 
       it('links to .../draft for a form without a published version', () => {
@@ -62,7 +63,7 @@ describe('FormRow', () => {
       });
 
       it('links to .../submissions for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', state: 'open' });
+        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
         const { to } = mountComponent().getComponent(LinkIfCan).props();
         to.should.equal('/projects/1/forms/a%20b/submissions');
       });
@@ -78,7 +79,7 @@ describe('FormRow', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
-        testData.extendedForms.createPast(1, { name: 'My Form', state: 'open' });
+        testData.extendedForms.createPast(1, { name: 'My Form' });
       });
 
       it('does not render a link', () => {
@@ -157,7 +158,9 @@ describe('FormRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       const row = mountComponent();
       row.find('.total-submissions').exists().should.be.false();
-      row.find('.not-published').text().should.equal('Not published yet');
+      const cell = row.find('.not-published');
+      cell.text().should.equal('Not published yet');
+      cell.find('.icon-asterisk').exists().should.be.true();
     });
 
     it('shows the correct icon', () => {
@@ -313,7 +316,7 @@ describe('FormRow', () => {
 
     it('does not render preview button for form without published version', () => {
       mockLogin();
-      testData.extendedForms.createPast(1, { state: null, draft: true });
+      testData.extendedForms.createPast(1, { state: 'open', draft: true });
       const row = mountComponent();
       row.findComponent(EnketoPreview).exists().should.be.false();
       row.findComponent(EnketoFill).exists().should.be.false();
@@ -321,7 +324,7 @@ describe('FormRow', () => {
 
     it('shows a "Test" button to admin on non-published version', () => {
       mockLogin();
-      testData.extendedForms.createPast(1, { state: null, draft: true });
+      testData.extendedForms.createPast(1, { state: 'open', draft: true });
       const actions = mountComponent().find('.actions');
       actions.text().should.equal('Test');
       actions.find('.icon-pencil').exists().should.be.true();

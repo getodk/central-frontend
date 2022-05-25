@@ -20,7 +20,7 @@ const mountComponent = (showClosed = false) => mount(FormTable, {
       forms: testData.extendedForms.sorted(),
       project: testData.extendedProjects.last()
     },
-    router: mockRouter('/')
+    router: mockRouter('/projects/1')
   }
 });
 
@@ -46,8 +46,7 @@ describe('FormTable', () => {
       headers.should.eql(['Name', 'Review States', 'Latest', 'Total']);
       const td = table.findAll('td');
       td.length.should.equal(6);
-      td[0].classes('name').should.be.true();
-      td[1].classes('review-state').should.be.true();
+      td[5].classes('total-submissions').should.be.true();
     });
 
     it('shows the correct columns to a Data Collector', async () => {
@@ -60,12 +59,6 @@ describe('FormTable', () => {
       headers.should.eql(['Name', 'Review States', 'Latest', 'Total', 'Actions']);
       const td = table.findAll('td');
       td.length.should.equal(7);
-      td[0].classes('name').should.be.true();
-      td[1].classes('review-state').should.be.true();
-      td[2].classes('review-state').should.be.true();
-      td[3].classes('review-state').should.be.true();
-      td[4].classes('last-submission').should.be.true();
-      td[5].classes('total-submissions').should.be.true();
       td[6].classes('actions').should.be.true();
     });
   });
@@ -88,7 +81,7 @@ describe('FormTable', () => {
     it('does not show a form without a published version to a project viewer', async () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 2 });
-      testData.extendedForms.createPast(1, { name: 'My Published Form' });
+      testData.extendedForms.createPast(1, { name: 'My Published Form', state: 'open' });
       testData.extendedForms.createPast(1, {
         name: 'My Draft Form',
         draft: true,
@@ -102,7 +95,7 @@ describe('FormTable', () => {
     it('does not show form without published version to Data Collector', async () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'formfill', forms: 2 });
-      testData.extendedForms.createPast(1, { name: 'My Published Form' });
+      testData.extendedForms.createPast(1, { name: 'My Published Form', state: 'open' });
       testData.extendedForms.createPast(1, {
         name: 'My Draft Form',
         draft: true,
@@ -115,7 +108,7 @@ describe('FormTable', () => {
   });
 
   describe('sorting', () => {
-    it('applies sorting to forms in table', async () => {
+    it('applies sorting to forms in table', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(1, { name: 'aaa_z', xmlFormId: 'z', state: 'open' });
@@ -130,7 +123,7 @@ describe('FormTable', () => {
   });
 
   describe('closed vs. non-closed table', () => {
-    it('filters out closed forms if showClosed is false', async () => {
+    it('filters out closed forms if showClosed is false', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(1, { name: 'a_open', xmlFormId: 'a', state: 'open' });
@@ -141,7 +134,7 @@ describe('FormTable', () => {
       rows.map((row) => row.props().form.name).should.eql(['a_open', 'c_closing']);
     });
 
-    it('filters out non-closed forms if showClosed is true', async () => {
+    it('filters out non-closed forms if showClosed is true', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(1, { name: 'a_open', xmlFormId: 'a', state: 'open' });
@@ -153,7 +146,7 @@ describe('FormTable', () => {
       rows.map((row) => row.props().form.name).should.eql(['b_closed', 'd_closed']);
     });
 
-    it('does not show table header if no closed forms to show', async () => {
+    it('does not show table header if no closed forms to show', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(1, { state: 'open' });
@@ -164,7 +157,7 @@ describe('FormTable', () => {
       table.findAllComponents(FormRow).length.should.equal(0);
     });
 
-    it('does show table header even if no non-open forms to show', async () => {
+    it('does show table header even if no non-open forms to show', () => {
       mockLogin();
       testData.extendedProjects.createPast(1);
       testData.extendedForms.createPast(1, { state: 'closed' });
