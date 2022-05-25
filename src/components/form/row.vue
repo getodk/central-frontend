@@ -13,47 +13,67 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-row">
     <td class="name">
       <link-if-can :to="primaryFormPath(form)">
-        <span v-if="form.publishedAt == null" class="icon-edit form-icon-unpublished form-icon"
-          :title="$t('formUnpublishedTip')"></span>
-        <span v-else-if="form.state === 'closed'" class="icon-ban form-icon-closed form-icon"
-          :title="$t('formClosedTip')"></span>
-        <span v-else-if="form.state === 'closing'" class="icon-clock-o form-icon-closing form-icon"
-          :title="$t('formClosingTip')"></span>
-        <span :class="[form.state === 'closed' ? 'form-name-closed' : '']">{{ form.nameOrId() }}</span><span class="icon-angle-right"></span>
+        {{ form.nameOrId() }}
       </link-if-can>
     </td>
-    <td v-if="columns.has('idAndVersion')" class="id-and-version">
-      <div class="form-id">
-        <span :title="form.xmlFormId">{{ form.xmlFormId }}</span>
-      </div>
-      <div v-if="form.version != null && form.version !== ''" class="version">
-        <span :title="form.version">{{ form.version }}</span>
-      </div>
-    </td>
-    <td v-if="columns.has('submissions')" class="submissions">
-      <div v-if="form.publishedAt != null">
-        <router-link :to="submissionsPath">
-          <span>{{ $tcn('count.submission', form.submissions) }}</span>
-          <span class="icon-angle-right"></span>
-        </router-link>
-      </div>
-      <div v-if="form.lastSubmission != null">
-        <router-link :to="submissionsPath">
-          <i18n-t keypath="common.lastSubmission">
-            <template #dateTime>
-              <date-time :iso="form.lastSubmission" relative="past"/>
-            </template>
-          </i18n-t>
-        </router-link>
-      </div>
-    </td>
-    <td v-if="columns.has('actions')" class="actions">
+
+    <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
       <template v-if="form.publishedAt != null">
-        <enketo-preview v-if="project.permits('project.update')"
-          :form-version="form"/>
-        <enketo-fill v-else :form-version="form">
-          <span class="icon-edit"></span>{{ $t('action.fill') }}
-        </enketo-fill>
+        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
+          :title="$t(`reviewState.${reviewState}`)">
+          <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
+          <span :class="reviewStateIcon(reviewState)"></span>
+        </link-if-can>
+      </template>
+    </td>
+
+    <template v-if="form.publishedAt != null">
+      <td class="last-submission">
+        <template v-if="form.lastSubmission != null">
+          <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)"
+            :title="$t('header.lastSubmission')">
+            <date-time :iso="form.lastSubmission" relative="past"/>
+            <span class="icon-clock-o"></span>
+          </link-if-can>
+        </template>
+        <template v-else>{{ $t('submission.noSubmission') }}</template>
+      </td>
+      <td class="total-submissions">
+        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)"
+          :title="$t('common.total')">
+          <span>{{ $n(form.submissions, 'default') }}</span>
+          <span class="icon-asterisk"></span>
+        </link-if-can>
+      </td>
+    </template>
+    <template v-else>
+      <td class="not-published" colspan="2">
+        <span>{{ $t('formState.unpublished') }}</span>
+        <span class="icon-asterisk"></span>
+      </td>
+    </template>
+
+    <td v-if="showActions" class="actions">
+      <template v-if="form.state !== 'closed'">
+        <template v-if="form.state === 'closing'">
+          <span :title="$t('formClosingTip')">
+          <span class="icon-clock-o closing-icon"></span>
+          <span>{{ $t('formState.closing') }}</span>
+          </span>
+        </template>
+        <template v-else-if="form.publishedAt != null">
+          <enketo-preview v-if="project.permits('project.update')"
+            :form-version="form"/>
+          <enketo-fill v-else :form-version="form">
+            <span class="icon-edit"></span>{{ $t('action.fill') }}
+          </enketo-fill>
+        </template>
+        <template v-else>
+          <router-link :to="draftTestingPath" class="btn btn-default">
+            <span class="icon-pencil"></span>
+            <span>{{ $t('action.test') }}</span>
+          </router-link>
+         </template>
       </template>
     </td>
   </tr>
@@ -67,6 +87,8 @@ import LinkIfCan from '../link-if-can.vue';
 import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
+import useReviewState from '../../composables/review-state';
+
 
 export default {
   name: 'FormRow',
@@ -77,20 +99,31 @@ export default {
       type: Form,
       required: true
     },
-    columns: {
-      type: Set,
-      required: true
+    showActions: {
+      type: Boolean,
+      default: true
     }
+  },
+  setup() {
+    const { reviewStateIcon } = useReviewState();
+    return { reviewStateIcon };
   },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
     ...requestData(['project']),
-    submissionsPath() {
+    visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
+    urlFilterEncode() {
+      return new Map()
+        .set('received', 'null')
+        .set('hasIssues', '%27hasIssues%27')
+        .set('edited', '%27edited%27');
+    },
+    draftTestingPath() {
       return this.formPath(
         this.form.projectId,
         this.form.xmlFormId,
-        this.form.publishedAt != null ? 'submissions' : 'draft/testing'
+        'draft/testing'
       );
     }
   }
@@ -103,70 +136,47 @@ export default {
 .form-row {
   .table tbody & td { vertical-align: middle; }
 
-  // column widths
+  td {
+    font-size: 16px;
+    padding: 3px 0px 3px 6px;
+    color: #333;
+  }
+
   .name {
-    width: 500px;
-    max-width: 500px;
-    @include text-overflow-ellipsis;
+    font-size: 18px;
   }
 
-  .id-and-version {
-    width: 180px;
-    max-width: 180px;
-  }
-
-  .submissions {
-    width: 180px;
-    max-width: 180px;
+  .review-state, .total-submissions, .not-published {
+    a { @include text-link; }
+    text-align: right;
+    width: 100px;
+    & [class*='icon'] {
+      margin-left: 5px;
+      color: #888;
+    }
   }
 
   .actions {
-    width: 180px;
-    max-width: 180px;
+    width: 100px,
   }
 
-  .name {
-    .link-if-can { font-size: 24px; }
+  .last-submission{
     a { @include text-link; }
-
-    .icon-angle-right {
-      font-size: 20px;
-      margin-left: 9px;
-    }
-
-    .form-icon {
-      font-size: 20px;
-      margin-right: 9px;
-      cursor: help;
-    }
-
-    .form-name-closed {
-      color: #999;
-    }
-
-    .form-icon-unpublished {
-      color: #999;
-    }
-
-    .form-icon-closed{
-      color: $color-danger;
-    }
-
-    .form-icon-closing{
-      color: $color-warning;
+    text-align: right;
+    width: 150px;
+    & [class*='icon'] {
+      margin-left: 5px;
+      color: #888;
     }
   }
 
-  .form-id, .version {
-    @include text-overflow-ellipsis;
-    font-family: $font-family-monospace;
+  .closing-icon {
+    margin-right: 5px;
+    color: #888;
   }
 
-  .version { color: #888; }
-
-  .submissions {
-    a { @include text-link; }
-    .icon-angle-right { margin-left: 6px; }
+  td.review-state {
+    background-color: #eee;
   }
 }
 </style>
@@ -174,16 +184,13 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This text shows when the last Submission was received. {dateTime} shows
-    // the date and time, for example: "2020/01/01 01:23". It may show a
-    // formatted date like "2020/01/01", or it may use a word like "today",
-    // "yesterday", or "Sunday".
     "action": {
-      "fill": "Fill Form"
+      // This appears on a button linking to a fillable Form
+      "fill": "Fill Form",
+      // This appears on a button linking to the draft testing form page
+      "test": "Test"
     },
-    "formClosedTip": "This Form is Closed. It is not downloadable and does not accept Submissions.",
-    "formClosingTip": "This Form is Closing. It is not downloadable but still accepts Submissions.",
-    "formUnpublishedTip": "This Form does not yet have a published version.",
+    "formClosingTip": "This Form is Closing and accepting its final Submissions. It is not downloadable but still accepts Submissions."
   }
 }
 </i18n>

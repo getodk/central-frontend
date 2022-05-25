@@ -121,7 +121,7 @@ describe('ProjectFormRow', () => {
     });
   });
 
-  describe('review states', () => {
+  describe('review state counts', () => {
     beforeEach(mockLogin);
 
     it('shows the correct counts and icons for each review state', () => {

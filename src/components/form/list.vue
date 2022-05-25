@@ -19,9 +19,11 @@ except according to the terms contained in the LICENSE file.
           @click="showModal('newForm')">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
+        <form-sort v-model="sortMode"/>
       </template>
       <template #body>
-        <form-table/>
+        <form-table :sort-func="sortFunction"/>
+        <form-table :sort-func="sortFunction" :show-closed="true"/>
         <loading :state="$store.getters.initiallyLoading(['forms'])"/>
         <p v-if="forms != null && forms.length === 0"
           class="empty-table-message">
@@ -39,25 +41,34 @@ import FormNew from './new.vue';
 import FormTable from './table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
+import FormSort from './sort.vue';
+
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { requestData } from '../../store/modules/request';
+import sortFunctions from '../../util/sort';
 
 export default {
   name: 'FormList',
-  components: { FormTable, FormNew, Loading, PageSection },
+  components: { FormTable, FormNew, FormSort, Loading, PageSection },
   mixins: [modal(), routes()],
   inject: ['alert'],
   data() {
     return {
       newForm: {
         state: false
-      }
+      },
+      sortMode: 'alphabetical'
     };
   },
   // The component does not assume that this data will exist when the component
   // is created.
-  computed: requestData(['project', 'forms']),
+  computed: {
+    ...requestData(['project', 'forms']),
+    sortFunction() {
+      return sortFunctions[this.sortMode];
+    }
+  },
   methods: {
     afterCreate(form) {
       const message = this.$t('alert.create', { name: form.nameOrId() });
