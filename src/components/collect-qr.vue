@@ -9,10 +9,12 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- eslint-disable vue/no-v-html -->
 <template>
-  <!-- eslint-disable-next-line vue/no-v-html -->
   <span class="collect-qr" v-html="imgHtml"></span>
 </template>
+<!-- eslint-enable vue/no-v-html -->
 
 <script>
 import qrcode from 'qrcode-generator';

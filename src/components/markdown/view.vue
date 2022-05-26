@@ -9,10 +9,12 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- eslint-disable vue/no-v-html -->
 <template>
-  <!-- eslint-disable-next-line vue/no-v-html -->
   <div class="markdown-view" v-html="renderedMarkdown"></div>
 </template>
+<!-- eslint-enable vue/no-v-html -->
 
 <script>
 import DOMPurify from 'dompurify';
