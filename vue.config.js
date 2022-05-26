@@ -21,6 +21,13 @@ module.exports = {
     // https://cli.vuejs.org/guide/troubleshooting.html#symbolic-links-in-node-modules
     if (process.env.VUE_APP_RESOLVE_SYMLINKS === 'false')
       config.resolve.symlinks(false);
+
+    if (process.env.NODE_ENV === 'test') {
+      config.resolve.alias.set(
+        '@vue/test-utils',
+        '@vue/test-utils/dist/vue-test-utils.esm-bundler.js'
+      );
+    }
   },
   lintOnSave: false,
   pluginOptions: {
