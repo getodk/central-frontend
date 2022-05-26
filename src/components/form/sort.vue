@@ -14,8 +14,8 @@ except according to the terms contained in the LICENSE file.
     <form class="form-inline" @submit.prevent>
       <span id="form-sort-label">{{ $t('action.sort') }}</span>
       <label class="form-group">
-        <select :value="value" class="form-control"
-          @change="$emit('input', $event.target.value)">
+        <select :value="modelValue" class="form-control"
+          @change="$emit('update:modelValue', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
           <option value="latest">{{ $t('header.lastSubmission') }}</option>
           <option value="newest">{{ $t('sortOptions.newest') }}</option>
@@ -31,11 +31,12 @@ export default {
   name: 'FormSort',
   components: {},
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     }
-  }
+  },
+  emits: ['update:modelValue']
 };
 </script>
 
