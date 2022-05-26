@@ -180,19 +180,19 @@ describe('FormRow', () => {
       it('links to the correct filtered submissions for each review state', () => {
         const columns = mountComponent().findAll('.review-state');
         columns.length.should.equal(3);
-        columns.map((col) => col.get('a').props().to).should.eql([
+        columns.map((col) => col.getComponent('a').props().to).should.eql([
           '/projects/1/forms/a%20b/submissions?reviewState=null',
           '/projects/1/forms/a%20b/submissions?reviewState=%27hasIssues%27',
           '/projects/1/forms/a%20b/submissions?reviewState=%27edited%27']);
       });
 
       it('last submission has the correct links', () => {
-        const link = mountComponent().get('.last-submission a');
+        const link = mountComponent().getComponent('.last-submission a');
         link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
       });
 
       it('submission count links to the right place', () => {
-        const link = mountComponent().get('.total-submissions a');
+        const link = mountComponent().getComponent('.total-submissions a');
         link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
       });
     });
@@ -207,19 +207,19 @@ describe('FormRow', () => {
       it('links to the correct filtered submissions for each review state', () => {
         const columns = mountComponent().findAll('.review-state');
         columns.length.should.equal(3);
-        columns.map((col) => col.get('a').props().to).should.eql([
+        columns.map((col) => col.getComponent('a').props().to).should.eql([
           '/projects/1/forms/a%20b/submissions?reviewState=null',
           '/projects/1/forms/a%20b/submissions?reviewState=%27hasIssues%27',
           '/projects/1/forms/a%20b/submissions?reviewState=%27edited%27']);
       });
 
       it('last submission has the correct links', () => {
-        const link = mountComponent().get('.last-submission a');
+        const link = mountComponent().getComponent('.last-submission a');
         link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
       });
 
       it('submission count links to the right place', () => {
-        const link = mountComponent().get('.total-submissions a');
+        const link = mountComponent().getComponent('.total-submissions a');
         link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
       });
     });
@@ -234,19 +234,19 @@ describe('FormRow', () => {
       it('links to the correct filtered submissions for each review state', () => {
         const columns = mountComponent().findAll('.review-state');
         columns.length.should.equal(3);
-        columns.map((col) => col.get('a').props().to).should.eql([
+        columns.map((col) => col.getComponent('a').props().to).should.eql([
           '/projects/1/forms/a%20b/submissions?reviewState=null',
           '/projects/1/forms/a%20b/submissions?reviewState=%27hasIssues%27',
           '/projects/1/forms/a%20b/submissions?reviewState=%27edited%27']);
       });
 
       it('last submission has the correct links', () => {
-        const link = mountComponent().get('.last-submission a');
+        const link = mountComponent().getComponent('.last-submission a');
         link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
       });
 
       it('submission count links to the right place', () => {
-        const link = mountComponent().get('.total-submissions a');
+        const link = mountComponent().getComponent('.total-submissions a');
         link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
       });
     });
@@ -328,7 +328,7 @@ describe('FormRow', () => {
       const actions = mountComponent().find('.actions');
       actions.text().should.equal('Test');
       actions.find('.icon-pencil').exists().should.be.true();
-      actions.find('a').props().to.should.equal('/projects/1/forms/f/draft/testing');
+      actions.getComponent('a').props().to.should.equal('/projects/1/forms/f/draft/testing');
     });
   });
 });
