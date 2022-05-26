@@ -103,7 +103,7 @@ function request({
   const { data } = axiosConfig;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
-    this.alert.danger(this.$t('mixin.request.alert.fileSize', data));
+    this.alert.danger(this.$t('mixin.request.alert.fileSize', { name: data.name }));
     return Promise.reject(new Error('file size exceeds limit'));
   }
 
