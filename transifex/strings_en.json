@@ -2723,13 +2723,11 @@
               }
             }
           }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "string": "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
-            }
-          }
+        }
+      },
+      "success": {
+        "0": {
+          "string": "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
         }
       },
       "field": {
