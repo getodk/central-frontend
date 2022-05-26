@@ -29,7 +29,7 @@ module.exports = {
       fallbackLocale: 'en',
       localeDir: 'locales',
       enableLegacy: true,
-      runtimeOnly: true,
+      runtimeOnly: process.env.NODE_ENV !== 'test',
       fullInstall: false
     }
   }
