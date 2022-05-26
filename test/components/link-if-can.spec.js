@@ -37,7 +37,9 @@ describe('LinkIfCan', () => {
     mockLogin({ role: 'none' });
     const component = mount(LinkIfCan, {
       props: { to: '/users' },
-      slots: { default: '<span class="icon-angle-right"></span>' },
+      slots: {
+        default: { template: '<span class="icon-angle-right"></span>' }
+      },
       container: { router: mockRouter('/') },
       attachTo: document.body
     });

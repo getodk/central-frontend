@@ -82,7 +82,9 @@ describe('MarkdownTextarea', () => {
   it('uses the default slot', () => {
     const component = mountComponent({
       props: { showFooter: true },
-      slots: { default: '<button id="some-button">Button text</button>' }
+      slots: {
+        default: { template: '<button id="some-button">Button text</button>' }
+      }
     });
     component.find('#some-button').exists().should.be.true();
   });

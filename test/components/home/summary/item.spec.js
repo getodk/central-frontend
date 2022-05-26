@@ -8,8 +8,8 @@ const mountComponent = (options = undefined) =>
   mount(HomeSummaryItem, mergeMountOptions(options, {
     props: { icon: 'user-circle' },
     slots: {
-      title: '<span id="title">Some Title</span>',
-      body: '<span id="body">Some body text</span>'
+      title: { template: '<span id="title">Some Title</span>' },
+      body: { template: '<span id="body">Some body text</span>' }
     },
     container: { router: mockRouter('/') }
   }));

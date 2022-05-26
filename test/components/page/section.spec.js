@@ -4,7 +4,10 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (options) => mount(PageSection, {
   ...options,
-  slots: { heading: '<span>Some Title</span>', body: '<p>Some body text</p>' }
+  slots: {
+    heading: { template: '<span>Some Title</span>' },
+    body: { template: '<p>Some body text</p>' }
+  }
 });
 
 describe('PageSection', () => {

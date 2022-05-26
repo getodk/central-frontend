@@ -27,6 +27,7 @@ module.exports = {
         '@vue/test-utils',
         '@vue/test-utils/dist/vue-test-utils.esm-bundler.js'
       );
+      config.resolve.alias.set('vue$', 'vue/dist/vue.esm-bundler.js');
     }
   },
   lintOnSave: false,

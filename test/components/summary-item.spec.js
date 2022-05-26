@@ -8,8 +8,8 @@ const mountComponent = (options = undefined) =>
   mount(SummaryItem, mergeMountOptions(options, {
     props: { icon: 'check' },
     slots: {
-      heading: '<span>Some heading</span>',
-      body: '<span>Some body</span>'
+      heading: { template: '<span>Some heading</span>' },
+      body: { template: '<span>Some body</span>' }
     },
     global: {
       stubs: { RouterLink: RouterLinkStub }
