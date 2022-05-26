@@ -83,7 +83,10 @@ describe('DateRangePicker', () => {
         props: { modelValue: ['1970-01-02', '1970-01-03'] }
       });
       await component.setProps({ modelValue: ['1970-01-04', '1970-01-05'].map(fromISO) });
-      component.vm.flatpickrValue.should.equal('1970/01/04 to 1970/01/05');
+      component.vm.flatpickrValue.map(toISO).should.eql([
+        '1970-01-04T00:00',
+        '1970-01-05T00:00'
+      ]);
       const input = component.get('input');
       input.element.value.should.equal('1970/01/04 to 1970/01/05');
     });
@@ -93,7 +96,10 @@ describe('DateRangePicker', () => {
         props: { modelValue: ['1970-01-02', '1970-01-03'] }
       });
       await component.setProps({ modelValue: ['1970-01-04', '1970-01-04'].map(fromISO) });
-      component.vm.flatpickrValue.should.equal('1970/01/04');
+      component.vm.flatpickrValue.map(toISO).should.eql([
+        '1970-01-04T00:00',
+        '1970-01-04T00:00'
+      ]);
       component.get('input').element.value.should.equal('1970/01/04');
     });
 
@@ -102,7 +108,7 @@ describe('DateRangePicker', () => {
         props: { modelValue: ['1970-01-02', '1970-01-03'] }
       });
       await component.setProps({ modelValue: [] });
-      should.not.exist(component.vm.flatpickrValue);
+      component.vm.flatpickrValue.should.eql([]);
       component.get('input').element.value.should.equal('');
     });
   });

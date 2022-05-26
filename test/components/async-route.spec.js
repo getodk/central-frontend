@@ -69,7 +69,7 @@ describe('AsyncRoute', () => {
     await wait();
     const { vm } = asyncRoute.getComponent(TestUtilP);
     await asyncRoute.setProps({ k: '1' });
-    asyncRoute.getComponent(TestUtilP).vm.should.not.equal(vm);
+    should(asyncRoute.getComponent(TestUtilP).vm).not.equal(vm);
   });
 
   describe('after a load error', () => {

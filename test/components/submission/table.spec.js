@@ -156,11 +156,11 @@ describe('SubmissionTable', () => {
       const tbody = component.get('#submission-table-metadata tbody');
       tbody.classes('submission-table-actions-trigger-hover').should.be.true();
       const btn = tbody.findAll('.btn');
-      await btn[0].trigger('focus');
+      await btn[0].trigger('focusin');
       tbody.classes('submission-table-actions-trigger-focus').should.be.true();
       await component.getComponent(SubmissionMetadataRow).trigger('mousemove');
       tbody.classes('submission-table-actions-trigger-hover').should.be.true();
-      await btn[1].trigger('focus');
+      await btn[1].trigger('focusin');
       await component.getComponent(SubmissionDataRow).trigger('mousemove');
       tbody.classes('submission-table-actions-trigger-hover').should.be.true();
     });

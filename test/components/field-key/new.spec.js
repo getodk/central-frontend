@@ -5,11 +5,13 @@ import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true, managed: true },
   container: {
-    requestData: { project: testData.extendedProjects.last() }
+    requestData: { project: testData.extendedProjects.last() },
+    router: mockRouter('/')
   }
 });
 

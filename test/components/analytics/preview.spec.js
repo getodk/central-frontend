@@ -52,7 +52,7 @@ describe('AnalyticsPreview', () => {
   it('shows system metrics', async () => {
     const modal = await mockHttpForComponent();
     const table = modal.getComponent(AnalyticsMetricsTable);
-    table.props().metrics.should.equal(analyticsPreview.system);
+    table.props().metrics.should.eql(analyticsPreview.system);
   });
 
   it('shows the project number and plurailization for a single project', async () => {
@@ -87,8 +87,8 @@ describe('AnalyticsPreview', () => {
     const modal = await mockHttpForComponent();
     const tables = modal.findAllComponents(AnalyticsMetricsTable);
     const projectMetrics = analyticsPreview.projects[1];
-    tables[1].props().metrics.should.equal(projectMetrics.users);
-    tables[2].props().metrics.should.equal(projectMetrics.forms);
+    tables[1].props().metrics.should.eql(projectMetrics.users);
+    tables[2].props().metrics.should.eql(projectMetrics.forms);
   });
 
   it('shows submission metrics split into two tables', async () => {

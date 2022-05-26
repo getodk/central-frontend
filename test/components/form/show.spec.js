@@ -66,7 +66,7 @@ describe('FormShow', () => {
         form: () => testData.extendedForms.last()
       })
       .afterResponses(app => {
-        app.getComponent(FormOverview).vm.should.not.equal(vm);
+        should(app.getComponent(FormOverview).vm).not.equal(vm);
       });
   });
 

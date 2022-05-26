@@ -64,6 +64,7 @@ describe('App', () => {
           })
           .respondWithData(() => 'v1.3')
           .afterResponse(app => {
+            clock.tick(0);
             app.should.alert('info', (message) => {
               message.should.startWith('The server has been updated.');
             });
@@ -102,9 +103,10 @@ describe('App', () => {
             clock.tick(60000);
           })
           .respondWithData(() => 'v1.3')
-          .afterResponse(app => {
+          .afterResponse(async (app) => {
+            clock.tick(0);
             app.vm.$container.alert.blank();
-            clock.tick(60000);
+            await clock.tickAsync(60000);
             app.should.alert('info', (message) => {
               message.should.startWith('The server has been updated.');
             });
@@ -182,6 +184,7 @@ describe('App', () => {
           })
           .respondWithData(() => 'v1.3')
           .afterResponse(app => {
+            clock.tick(0);
             app.should.alert('info', (message) => {
               message.should.startWith('The server has been updated.');
             });

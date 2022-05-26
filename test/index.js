@@ -23,8 +23,10 @@ before(loadAsyncRouteComponents);
 beforeEach(testData.seed);
 
 enableAutoUnmount(afterEach);
-
 afterEach(() => {
+  const app = document.querySelector('[data-v-app]');
+  if (app != null) app.parentNode.removeChild(app);
+
   const afterScript = document.querySelector('body > script:last-of-type + *');
   if (afterScript != null) {
     console.error(document.body.innerHTML); // eslint-disable-line no-console

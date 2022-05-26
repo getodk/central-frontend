@@ -67,6 +67,7 @@ describe('SubmissionUpdateReviewState', () => {
       attachTo: document.body
     }));
     await modal.setProps({ state: true });
+    await modal.vm.$nextTick();
     modal.get('input[value="hasIssues"]').should.be.focused();
   });
 
