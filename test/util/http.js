@@ -288,7 +288,7 @@ import * as commonTests from './http/common';
 import { loadAsyncCache } from './load-async';
 import { mergeMountOptions, mount as lifecycleMount } from './lifecycle';
 import { mockAxiosError, mockResponse } from './axios';
-import { mockRouter, resolveRoute, testRouter } from './router';
+import { mockRouter, resolveRoute, testRouter, withInstallLocation } from './router';
 import { wait, waitUntil } from './util';
 
 // Returns the components associated with a route. If the route is lazy-loaded,
@@ -308,7 +308,6 @@ class MockHttp {
     // previousPromise is used to chain series.
     previousPromise = null,
     location = null,
-    confirmBeforeMount = true,
     mount = null,
     request = null,
     // Array of response callbacks
@@ -319,7 +318,6 @@ class MockHttp {
     this._container = container;
     this._previousPromise = previousPromise;
     this._location = location;
-    this._confirmBeforeMount = confirmBeforeMount;
     this._mount = mount;
     this._request = request;
     this._responses = responses;
@@ -332,7 +330,6 @@ class MockHttp {
       container: this._container,
       previousPromise: this._previousPromise,
       location: this._location,
-      confirmBeforeMount: this._confirmBeforeMount,
       mount: this._mount,
       request: this._request,
       responses: this._responses,
@@ -353,10 +350,10 @@ class MockHttp {
   // before mounting the component. To instead mount the component immediately,
   // without waiting, specify `false` for the optional second argument (this is
   // rare).
-  route(location, confirmBeforeMount = true) {
+  route(location) {
     if (this._location != null)
       throw new Error('cannot call route() more than once in a single series');
-    return this._with({ location, confirmBeforeMount });
+    return this._with({ location });
   }
 
   mount(component, options = undefined, throwIfEmit = undefined) {
@@ -573,14 +570,20 @@ class MockHttp {
     if (typeof optionsOrCallback === 'function')
       return this.afterResponses({ callback: optionsOrCallback });
     const { callback, pollWork = undefined } = optionsOrCallback;
+    if (this._container == null) throw new Error('container required');
     const promise = this._initialPromise()
       // Starting with Promise.resolve() in case this._navigateAndMount() throws
       // an error.
       .then(() => Promise.resolve()
-        .then(() => this._navigateAndMount())
-        // If both this.route() and this.request() were specified, then wait for
-        // any async components associated with the route to load.
-        .then(this._location && this._request != null ? wait : noop)
+        .then(() => {
+          const navigation = this._navigateAndMount();
+          // If there was a navigation, and this.request() was also specified,
+          // then wait for any async components associated with the route to
+          // load.
+          return navigation != null
+            ? navigation.then(this._request != null ? wait : noop)
+            : undefined;
+        })
         .then(() => {
           if (this._request == null) return undefined;
           this._checkStateBeforeRequest();
@@ -613,7 +616,6 @@ class MockHttp {
       : Promise.resolve({});
     // `component` is the component that the previous promise mounted (if any).
     return promise.then(({ component }) => {
-      if (this._container == null) throw new Error('container required');
       this._container.http.respond(this._http());
       this._component = component;
       this._requestCount = 0;
@@ -717,20 +719,21 @@ class MockHttp {
   }
 
   _navigateAndMount() {
+    const { router } = this._container;
     if (this._location != null) {
-      const { router } = this._container;
       if (router == null)
         throw new Error('container does not contain a router');
       const promise = router.push(this._location);
-      if (this._mount != null) {
-        if (this._confirmBeforeMount)
-          return promise.then(() => { this._component = this._mount(); });
-        this._component = this._mount();
-      }
-      return promise;
+      // Return a promise that resolves to `undefined`.
+      return this._mount == null
+        ? promise.then(noop)
+        : promise.then(() => { this._component = this._mount(); });
     }
-    if (this._mount != null) this._component = this._mount();
-    return Promise.resolve();
+    if (this._mount != null) {
+      this._component = this._mount();
+      if (router != null) return router.isReady();
+    }
+    return undefined;
   }
 
   _checkStateBeforeRequest() {
@@ -785,9 +788,10 @@ class MockHttp {
   // PROMISE METHODS
 
   toPromise() {
-    const anySetup = this._location != null || this._mount != null ||
-      this._request != null || this._responses.length !== 0 ||
-      this._beforeAnyResponse != null || this._beforeEachResponse != null;
+    const anySetup = this._container != null || this._location != null ||
+      this._mount != null || this._request != null ||
+      this._responses.length !== 0 || this._beforeAnyResponse != null ||
+      this._beforeEachResponse != null;
     if (!anySetup && this._previousPromise == null) return Promise.resolve();
     const promise = anySetup
       ? this.complete()._previousPromise
@@ -872,9 +876,8 @@ export const load = (
   return mockHttp()
     // We will mount the component without waiting for a confirmed navigation
     // because that is the behavior in production for the root component.
-    .route(location, false)
     .mount(App, mergeMountOptions(mountOptions, {
-      container: { router: testRouter() }
+      container: { router: testRouter(withInstallLocation(location)) }
     }))
     .modify(series => (respondForOptions !== false
       ? series.respondFor(location, respondForOptions)

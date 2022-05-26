@@ -19,6 +19,21 @@ export const testRouter = (modify = noop) => (container) =>
   // route over time: Headless Chrome seems to rate-limit hash changes.
   tap(modify, createCentralRouter(container, createMemoryHistory()));
 
+export const withInstallLocation = (location) => {
+  if (typeof location !== 'string')
+    throw new Error('location must be a string');
+  return (router) => {
+    const { history } = router.options;
+    const { get } = Object.getOwnPropertyDescriptor(history, 'location');
+    Object.defineProperty(history, 'location', {
+      get: () => {
+        Object.defineProperty(history, 'location', { get });
+        return location;
+      }
+    });
+  };
+};
+
 const { router } = createTestContainer({ router: testRouter() });
 export const resolveRoute = router.resolve.bind(router);
 
@@ -31,6 +46,12 @@ class MockRouter {
     this.currentRoute = ref(location != null
       ? resolveRoute(location)
       : markRaw(START_LOCATION));
+  }
+
+  isReady() {
+    if (this.currentRoute.value === START_LOCATION)
+      throw new Error('not ready');
+    return Promise.resolve();
   }
 
   install(app) {

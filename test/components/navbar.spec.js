@@ -26,14 +26,9 @@ describe('Navbar', () => {
         });
     });
 
-    it('shows the navbar for AccountClaim', () => {
-      const location = {
-        path: '/account/claim',
-        query: { token: 'a'.repeat(64) }
-      };
-      return load(location).then(app => {
-        app.getComponent(Navbar).should.be.visible();
-      });
+    it('shows the navbar for AccountClaim', async () => {
+      const app = await load(`/account/claim?token=${'a'.repeat(64)}`);
+      app.getComponent(Navbar).should.be.visible();
     });
   });
 });
