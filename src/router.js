@@ -13,7 +13,7 @@ import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
-import { canRoute, forceReplace, preservesData } from './util/router';
+import { canRoute, forceReplace, preservesData, unlessFailure } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
@@ -41,13 +41,13 @@ component render the <router-view> that will create the child AsyncRoute
 component, which will start loading its async component.) In order to load async
 components in parallel, we use a navigation hook to kick-start the load of all
 async components associated with the route. */
-router.afterEach(to => {
+router.afterEach(unlessFailure(to => {
   for (const routeRecord of to.matched) {
     const { asyncRoute } = routeRecord.meta;
     // AsyncRoute will handle any error.
     if (asyncRoute != null) loadAsync(asyncRoute.componentName)().catch(noop);
   }
-});
+}));
 
 
 
@@ -105,7 +105,7 @@ router.beforeEach(to => {
 // RESPONSE DATA
 
 // Implements the preserveData meta field.
-router.afterEach((to, from) => {
+router.afterEach(unlessFailure((to, from) => {
   if (preservesData('*', to, from)) return;
   for (const key of requestKeys) {
     if (!preservesData(key, to, from)) {
@@ -113,7 +113,7 @@ router.afterEach((to, from) => {
       if (store.getters.loading(key)) store.commit('cancelRequest', key);
     }
   }
-});
+}));
 
 // validateData
 
@@ -130,7 +130,7 @@ of the `key` attribute.)
 */
 {
   const unwatch = [];
-  router.afterEach(to => {
+  router.afterEach(unlessFailure(to => {
     while (unwatch.length !== 0)
       unwatch.pop()();
 
@@ -147,7 +147,7 @@ of the `key` attribute.)
         }
       }));
     }
-  });
+  }));
 }
 
   // `title` meta field
@@ -179,18 +179,18 @@ window.addEventListener('beforeunload', (event) => {
 
 router.beforeEach(() => unsavedChanges.confirm());
 
-router.afterEach(() => {
+router.afterEach(unlessFailure(() => {
   unsavedChanges.zero();
-});
+}));
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // OTHER NAVIGATION HOOKS
 
-router.afterEach(() => {
+router.afterEach(unlessFailure(() => {
   alert.blank();
-});
+}));
 
 
 

@@ -21,6 +21,11 @@ export const routeProps = (route, props) => {
   return props;
 };
 
+// TODO/vue3. Add tests.
+export const unlessFailure = (callback) => (to, from, failure) => {
+  if (failure == null) callback(to, from);
+};
+
 /*
 afterNextNavigation() provides a way to run a callback after a navigation has
 been confirmed but before the next DOM update. That is mostly only needed when
@@ -46,8 +51,8 @@ issues, allowing the response data to be updated after the navigation has been
 confirmed, but before the DOM has been updated.
 */
 export const afterNextNavigation = (router, callback) => {
-  const removeHook = router.afterEach((to, from) => {
-    callback(to, from);
+  const removeHook = router.afterEach((to, from, failure) => {
+    if (failure == null) callback(to, from);
     // It looks like we can't remove an afterEach hook while Vue Router is
     // iterating over the afterEach hooks: if we synchronously removed this
     // hook, the next afterEach hook for the navigation would be skipped.
