@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
         <tbody v-if="forms.length !== 0">
           <project-form-access-row v-for="form of forms" :key="form.xmlFormId"
             :form="form" :changes="changesByForm[form.xmlFormId]"
-            @update:fieldKeyAccess="updateFieldKeyAccess"/>
+            @update:field-key-access="updateFieldKeyAccess"/>
         </tbody>
       </table>
     </div>

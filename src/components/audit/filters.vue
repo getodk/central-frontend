@@ -15,10 +15,10 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
     </div>
     <audit-filters-action :model-value="action"
-      @update:modelValue="$emit('update:action', $event)"/>
+      @update:model-value="$emit('update:action', $event)"/>
     <date-range-picker :model-value="dateRange"
       :placeholder="$t('field.dateRange')" required
-      @update:modelValue="$emit('update:dateRange', $event)"/>
+      @update:model-value="$emit('update:dateRange', $event)"/>
   </form>
 </template>
 

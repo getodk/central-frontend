@@ -59,8 +59,8 @@ class MockRouter {
     app.config.globalProperties.$router = this;
     // eslint-disable-next-line no-param-reassign
     app.config.globalProperties.$route = this.currentRoute.value;
-    app.component('router-link', RouterLinkStub);
-    app.component('router-view', RouterViewStub);
+    app.component('RouterLink', RouterLinkStub);
+    app.component('RouterView', RouterViewStub);
   }
 }
 

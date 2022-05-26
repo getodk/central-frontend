@@ -56,6 +56,9 @@ export default {
   components: { FormGroup, Spinner },
   mixins: [request()],
   inject: ['container', 'alert'],
+  beforeRouteLeave() {
+    return !this.disabled;
+  },
   data() {
     return {
       disabled: false,
@@ -65,9 +68,6 @@ export default {
   },
   mounted() {
     this.$refs.email.focus();
-  },
-  beforeRouteLeave() {
-    return !this.disabled;
   },
   methods: {
     navigateToNext(
