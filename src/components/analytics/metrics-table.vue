@@ -78,6 +78,7 @@ export default {
       "num_unique_collectors": "Number of unique Data Collectors",
       "backups_configured": "Backups configured",
       "database_size": "System database size",
+      "uses_external_db": "Server uses an external database",
       "num_managers": "Number of Project Managers",
       "num_viewers": "Number of Project Viewers",
       "num_data_collectors": "Number of Data Collectors",
@@ -90,6 +91,9 @@ export default {
       "num_forms_with_encryption": "Number of Forms with encryption",
       "num_forms_with_audits": "Number of Forms with audits",
       "num_reused_form_ids": "Number of reused Form IDs",
+      "num_open_forms": "Number of open Forms",
+      "num_closing_forms": "Number of closing Forms",
+      "num_closed_forms": "Number of closed Forms",
       "num_submissions_received": "Number of Submissions - Received",
       "num_submissions_approved": "Number of Submissions - Approved",
       "num_submissions_has_issues": "Number of Submissions - Has Issues",
@@ -99,7 +103,8 @@ export default {
       "num_submissions_with_comments": "Number of Submissions with comments",
       "num_submissions_from_app_users": "Number of Submissions from App Users",
       "num_submissions_from_public_links": "Number of Submissions from Public Links",
-      "num_submissions_from_web_users": "Number of Submissions from Web Users"
+      "num_submissions_from_web_users": "Number of Submissions from Web Users",
+      "has_description": "Project has a description"
     }
   }
 }

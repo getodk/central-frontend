@@ -982,6 +982,9 @@
         "database_size": {
           "string": "System database size"
         },
+        "uses_external_db": {
+          "string": "Server uses an external database"
+        },
         "num_managers": {
           "string": "Number of Project Managers"
         },
@@ -1018,6 +1021,15 @@
         "num_reused_form_ids": {
           "string": "Number of reused Form IDs"
         },
+        "num_open_forms": {
+          "string": "Number of open Forms"
+        },
+        "num_closing_forms": {
+          "string": "Number of closing Forms"
+        },
+        "num_closed_forms": {
+          "string": "Number of closed Forms"
+        },
         "num_submissions_received": {
           "string": "Number of Submissions - Received"
         },
@@ -1047,6 +1059,9 @@
         },
         "num_submissions_from_web_users": {
           "string": "Number of Submissions from Web Users"
+        },
+        "has_description": {
+          "string": "Project has a description"
         }
       }
     },
@@ -1078,6 +1093,10 @@
       "submissionStates": {
         "string": "Submission States",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
+      },
+      "other": {
+        "string": "Other",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
       }
     },
     "App": {
