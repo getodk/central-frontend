@@ -1,6 +1,6 @@
 import { RouterLinkStub } from '@vue/test-utils';
 import { START_LOCATION, createMemoryHistory } from 'vue-router';
-import { ref } from 'vue';
+import { markRaw, ref } from 'vue';
 import { tap } from 'ramda';
 
 import RouterViewStub from './components/router-view-stub.vue';
@@ -30,7 +30,7 @@ class MockRouter {
   constructor(location) {
     this.currentRoute = ref(location != null
       ? resolveRoute(location)
-      : START_LOCATION);
+      : markRaw(START_LOCATION));
   }
 
   install(app) {
@@ -48,7 +48,7 @@ for (const name of ['getRoutes', 'hasRoute'])
   MockRouter.prototype[name] = router[name].bind(router);
 
 for (const prop in router) {
-  if (!(prop in MockRouter.prototype)) {
+  if (!(prop in MockRouter.prototype || prop === 'currentRoute')) {
     Object.defineProperty(MockRouter.prototype, prop, {
       get: () => { throw new Error(`${prop} not supported in mock router`); }
     });
