@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
@@ -151,15 +151,18 @@ of the `key` attribute.)
 }
 
   // `title` meta field
-  router.isReady().then(() => {
-    watchEffect(() => {
+  watchEffect(() => {
+    // router.currentRoute.value === START_LOCATION when the watchEffect() is
+    // first run, as well as when the application instance is unmounted (in
+    // testing).
+    if (router.currentRoute.value !== START_LOCATION) {
       const { title } = router.currentRoute.value.meta;
       const parts = title(store.state.request.data);
       // Append ODK Central to every title, filter out any null values (e.g.
       // project name before the project object was loaded), join with
       // separator.
       document.title = parts.concat('ODK Central').filter(x => x).join(' | ');
-    });
+    }
   });
 
 
