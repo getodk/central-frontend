@@ -155,12 +155,13 @@ export default {
 
   .review-state, .total-submissions, .not-published {
     text-align: right;
-    width: 100px;
+    padding-right: 10px;
+    width: 80px;
   }
 
   .last-submission{
     text-align: right;
-    width: 150px;
+    width: 170px;
   }
 
   [class*='icon'] {
