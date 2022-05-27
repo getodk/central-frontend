@@ -132,7 +132,7 @@ describe('FormRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.last-submission');
       cell.find('.icon-clock-o').exists().should.be.true();
-      cell.find('a').attributes().title.should.equal('Latest Submission');
+      cell.find('span').attributes().title.should.equal('Latest Submission');
     });
 
     it('shows (none) if no submission', () => {

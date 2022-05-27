@@ -56,8 +56,9 @@ describe('FormTrashRow', () => {
 
     it('shows the submission count', () => {
       const formData = { submissions: 12345 };
-      const text = mountComponent(formData).get('.total-submissions').text();
-      text.should.equal('12,345');
+      const cell = mountComponent(formData).get('.total-submissions');
+      cell.text().should.equal('12,345');
+      cell.find('span').attributes().title.should.equal('Total');
     });
 
     it('shows the submission count when 0', () => {
@@ -70,8 +71,9 @@ describe('FormTrashRow', () => {
       const lastSubmission = new Date().toISOString();
       const formData = { submissions: 1, lastSubmission };
       const row = mountComponent(formData);
-      const text = row.get('.last-submission').text();
-      text.should.match(/ago$/);
+      const cell = row.get('.last-submission');
+      cell.text().should.match(/ago$/);
+      cell.find('span').attributes().title.should.equal('Latest Submission');
       const dateTimes = row.findAllComponents(DateTime);
       dateTimes.length.should.equal(2); // deleted timestamp and last submission timestamp
       dateTimes[1].props().iso.should.equal(lastSubmission);
@@ -79,7 +81,9 @@ describe('FormTrashRow', () => {
 
     it('does not render time if there is no last submission', () => {
       const formData = { submissions: 0 };
-      mountComponent(formData).get('.last-submission').text().should.equal('(none)');
+      const cell = mountComponent(formData).get('.last-submission');
+      cell.text().should.equal('(none)');
+      cell.find('span').attributes().title.should.equal('Latest Submission');
     });
   });
 

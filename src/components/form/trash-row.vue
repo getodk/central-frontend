@@ -23,17 +23,21 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </td>
     <td class="last-submission">
-       <template v-if="form.lastSubmission != null">
+      <span :title="$t('header.lastSubmission')">
+        <template v-if="form.lastSubmission != null">
           <date-time :iso="form.lastSubmission" relative="past"/>
           <span class="icon-clock-o"></span>
         </template>
         <template v-else>{{ $t('submission.noSubmission') }}</template>
+      </span>
     </td>
     <td class="total-submissions">
-      <!-- form.submissions should always exist in production, but it doesn't
-      exist in some tests. -->
-      <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>
-      <span class="icon-asterisk"></span>
+      <span :title="$t('common.total')">
+        <!-- form.submissions should always exist in production, but it doesn't
+        exist in some tests. -->
+        <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>
+        <span class="icon-asterisk"></span>
+      </span>
     </td>
     <td class="actions">
       <button class="form-trash-row-restore-button btn btn-default" type="button"
