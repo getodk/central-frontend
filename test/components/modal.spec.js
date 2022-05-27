@@ -8,20 +8,27 @@ import { mergeMountOptions, mount } from '../util/lifecycle';
 const mountComponent = (options = undefined) =>
   mount(Modal, mergeMountOptions(options, {
     props: { state: true, hideable: true, backdrop: true },
-    slots: { title: 'Some Title', body: '<p>Some text</p>' }
+    slots: {
+      title: { template: 'Some Title' },
+      body: { template: '<p>Some text</p>' }
+    }
   }));
 
 describe('Modal', () => {
   it('uses the title slot', () => {
     const modal = mountComponent({
-      slots: { title: 'foo' }
+      slots: {
+        title: { template: 'foo' }
+      }
     });
     modal.get('.modal-title').text().should.equal('foo');
   });
 
   it('uses the body slot', () => {
     const modal = mountComponent({
-      slots: { body: '<pre>foo</pre>' }
+      slots: {
+        body: { template: '<pre>foo</pre>' }
+      }
     });
     modal.get('.modal-body pre').text().should.equal('foo');
   });
@@ -99,7 +106,9 @@ describe('Modal', () => {
 
   it("updates the modal's position after its body changes", async () => {
     const modal = mountComponent({
-      slots: { body: '<p>Some text</p>' },
+      slots: {
+        body: { template: '<p>Some text</p>' }
+      },
       attachTo: document.body
     });
     const bs = sinon.fake(modal.vm.bs);

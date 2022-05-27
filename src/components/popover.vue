@@ -39,7 +39,7 @@ own popover functionality, perhaps using Popper.
 </template>
 
 <script>
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 import 'bootstrap/js/tooltip';
 import 'bootstrap/js/popover';
 
@@ -75,7 +75,7 @@ export default {
     document.addEventListener('click', this.hideAfterClick, true);
     window.addEventListener('resize', this.hideAfterResize);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.target != null) this.hide();
     document.removeEventListener('click', this.hideAfterClick, true);
     window.removeEventListener('resize', this.hideAfterResize);

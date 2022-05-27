@@ -10,9 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <!-- We use v-show rather than v-if so that this.$refs.dropZone is in the DOM
-  from the first render. -->
   <div v-show="attachments != null" id="form-attachment-list" ref="dropZone">
+    <!-- ^^^ We use v-show rather than v-if so that this.$refs.dropZone is in
+    the DOM from the first render. -->
+
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('uploadFilesModal')">
@@ -55,7 +56,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import pako from 'pako/lib/deflate';
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';

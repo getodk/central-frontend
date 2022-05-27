@@ -1,11 +1,9 @@
-//import ProjectEnableEncryption from '../../../src/components/project/enable-encryption.vue';
+import ProjectEnableEncryption from '../../../src/components/project/enable-encryption.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-
-const ProjectEnableEncryption = null;
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true },
@@ -14,7 +12,7 @@ const mountOptions = (options = undefined) => mergeMountOptions(options, {
   }
 });
 
-describe.skip('ProjectEnableEncryption', () => {
+describe('ProjectEnableEncryption', () => {
   beforeEach(mockLogin);
 
   describe('enable encryption button', () => {

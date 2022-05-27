@@ -418,19 +418,19 @@ describe('util/request', () => {
     });
 
     it('returns a message if there was no request', () => {
-      const message = requestAlertMessage(createCentralI18n(), new Error());
+      const message = requestAlertMessage(createCentralI18n().global, new Error());
       message.should.equal('Something went wrong: there was no request.');
     });
 
     it('returns a message if there was no response', () => {
       const error = new Error();
       error.request = {};
-      const message = requestAlertMessage(createCentralI18n(), error);
+      const message = requestAlertMessage(createCentralI18n().global, error);
       message.should.equal('Something went wrong: there was no response to your request.');
     });
 
     it('returns a message with status code if request URL does not start with /v1', () => {
-      const message = requestAlertMessage(createCentralI18n(), mockAxiosError({
+      const message = requestAlertMessage(createCentralI18n().global, mockAxiosError({
         status: 500,
         data: { code: 500.1, message: 'Message from Google' },
         config: { url: 'https://www.google.com' }
@@ -439,7 +439,7 @@ describe('util/request', () => {
     });
 
     it('returns a message with status code if response is not a Problem', () => {
-      const message = requestAlertMessage(createCentralI18n(), mockAxiosError({
+      const message = requestAlertMessage(createCentralI18n().global, mockAxiosError({
         status: 500,
         data: { x: 1 },
         config: { url: '/v1/projects/1/forms/f' }
@@ -448,7 +448,7 @@ describe('util/request', () => {
     });
 
     it('returns the message of a Problem', () => {
-      const i18n = createCentralI18n();
+      const i18n = createCentralI18n().global;
       const message = requestAlertMessage(i18n, errorWithProblem());
       message.should.equal('Message from API');
     });
@@ -456,7 +456,7 @@ describe('util/request', () => {
     describe('problemToAlert', () => {
       it('returns the message from the function', () => {
         const message = requestAlertMessage(
-          createCentralI18n(),
+          createCentralI18n().global,
           errorWithProblem(),
           (problem) =>
             `Message from problemToAlert: ${problem.message} (${problem.code})`
@@ -466,7 +466,7 @@ describe('util/request', () => {
 
       it('returns the Problem message if the function returns null', () => {
         const message = requestAlertMessage(
-          createCentralI18n(),
+          createCentralI18n().global,
           errorWithProblem(),
           () => null
         );
@@ -475,7 +475,7 @@ describe('util/request', () => {
     });
 
     describe('i18n', () => {
-      const i18n = createCentralI18n();
+      const i18n = createCentralI18n().global;
       i18n.setLocaleMessage('la', {
         problem: {
           '401_2': 'Message for locale: {message} ({code})'

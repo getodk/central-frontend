@@ -5,14 +5,14 @@ import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
   mount(MarkdownTextarea, mergeMountOptions(options, {
-    props: { value: '', defaultText: 'default text' }
+    props: { modelValue: '', defaultText: 'default text' }
   }));
 
 describe('MarkdownTextarea', () => {
-  it('emits an input event', () => {
+  it('emits an update:modelValue event', () => {
     const component = mountComponent();
     component.get('textarea').setValue('foo');
-    component.emitted().input.should.eql([['foo']]);
+    component.emitted('update:modelValue').should.eql([['foo']]);
   });
 
   it('shows placeholder text and no actions as default behavior', () => {
@@ -27,9 +27,9 @@ describe('MarkdownTextarea', () => {
     const component = mountComponent();
     const actions = component.get('.markdown-textarea-actions');
     actions.should.be.hidden();
-    await component.setProps({ value: 'foo' });
+    await component.setProps({ modelValue: 'foo' });
     actions.should.be.visible();
-    await component.setProps({ value: '' });
+    await component.setProps({ modelValue: '' });
     actions.should.be.hidden();
   });
 
@@ -46,9 +46,9 @@ describe('MarkdownTextarea', () => {
     });
     const actions = component.get('.markdown-textarea-actions');
     actions.should.be.visible();
-    await component.setProps({ value: 'foo' });
+    await component.setProps({ modelValue: 'foo' });
     actions.should.be.visible();
-    await component.setProps({ value: '' });
+    await component.setProps({ modelValue: '' });
     actions.should.be.visible();
   });
 
@@ -60,7 +60,7 @@ describe('MarkdownTextarea', () => {
   it('shows markdown preview after input and button click', async () => {
     const component = mountComponent();
     component.find('.preview-container').exists().should.be.false();
-    await component.setProps({ value: 'foo' });
+    await component.setProps({ modelValue: 'foo' });
     component.find('.preview-container').exists().should.be.false();
     const previewButton = component.get('.md-preview-btn');
     await previewButton.trigger('click');
@@ -71,7 +71,7 @@ describe('MarkdownTextarea', () => {
 
   it('shows rendered markdown', async () => {
     const component = mountComponent({
-      props: { value: 'this is **bold**' }
+      props: { modelValue: 'this is **bold**' }
     });
     await component.get('.md-preview-btn').trigger('click');
     const preview = component.getComponent(MarkdownView);
@@ -82,7 +82,9 @@ describe('MarkdownTextarea', () => {
   it('uses the default slot', () => {
     const component = mountComponent({
       props: { showFooter: true },
-      slots: { default: '<button id="some-button">Button text</button>' }
+      slots: {
+        default: { template: '<button id="some-button">Button text</button>' }
+      }
     });
     component.find('#some-button').exists().should.be.true();
   });
@@ -109,12 +111,12 @@ describe('MarkdownTextarea', () => {
     rows.should.equal('5');
   });
 
-  it('allows a null value to be passed to it', () => {
+  it('allows the modelValue prop to be null', () => {
     // the textarea may be displaying null content returned from the API
     // e.g. project.description before it is set.
     const component = mountComponent({
-      props: { value: null }
+      props: { modelValue: null }
     });
-    should.not.exist(component.props().value);
+    should.not.exist(component.props().modelValue);
   });
 });

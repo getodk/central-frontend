@@ -19,7 +19,7 @@ const mountComponent = (options) => {
     ...options.container
   });
   return mount(FormDraftChecklist, {
-    props: { status: container.router.currentRoute.path.endsWith('/draft') },
+    props: { status: container.router.currentRoute.value.path.endsWith('/draft') },
     container
   });
 };

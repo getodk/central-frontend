@@ -54,7 +54,7 @@ describe('FormList', () => {
       testData.extendedForms.createPast(1, { state: 'open' });
       const app = await load('/projects/1');
       const closedTable = app.findAllComponents(FormTable)[1];
-      closedTable.html().should.be.empty();
+      closedTable.find('*').exists().should.be.false();
     });
   });
 

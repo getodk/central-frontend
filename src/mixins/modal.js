@@ -39,7 +39,6 @@ const mixin = {
   }
 };
 
-// @vue/component
 const mixinForAsyncModals = (asyncModals) => ({
   methods: {
     showModal(name) {

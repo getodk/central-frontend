@@ -87,7 +87,7 @@ const mixin = {
         if (this.disabled !== true && this.ondrop != null) this.ondrop(event);
       });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     const componentName = this.$options.name;
     $(this.$refs.dropZone).off(`.${componentName}`);
   }

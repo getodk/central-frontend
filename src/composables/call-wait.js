@@ -41,7 +41,7 @@ check should be canceled after a route update, it is the component's
 responsibility to do so.
 */
 
-import { onBeforeUnmount } from '@vue/composition-api';
+import { onBeforeUnmount } from 'vue';
 
 export default () => {
   const calls = {};

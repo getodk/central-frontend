@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     </select>
     <select v-else v-model="selectValue" class="form-control">
       <option value="">{{ $t('common.anybody') }}</option>
-      <option v-if="unknown" :value="value">{{ $t('unknown') }}</option>
+      <option v-if="unknown" :value="modelValue">{{ $t('unknown') }}</option>
       <option v-for="submitter of submitters" :key="submitter.id"
         :value="submitter.id.toString()">
         {{ submitter.displayName }}
@@ -32,7 +32,7 @@ import { requestData } from '../../../store/modules/request';
 export default {
   name: 'SubmissionFiltersSubmitter',
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     }
@@ -47,15 +47,15 @@ export default {
     },
     selectValue: {
       get() {
-        return this.value;
+        return this.modelValue;
       },
       set(value) {
-        this.$emit('input', value);
+        this.$emit('update:modelValue', value);
       }
     },
     unknown() {
-      return this.value !== '' &&
-        !this.submitters.some(submitter => this.value === submitter.id.toString());
+      return this.modelValue !== '' &&
+        !this.submitters.some(submitter => this.modelValue === submitter.id.toString());
     }
   }
 };

@@ -67,6 +67,7 @@ describe('SubmissionUpdateReviewState', () => {
       attachTo: document.body
     }));
     await modal.setProps({ state: true });
+    await modal.vm.$nextTick();
     modal.get('input[value="hasIssues"]').should.be.focused();
   });
 
@@ -86,7 +87,7 @@ describe('SubmissionUpdateReviewState', () => {
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
     modal.get('input[value="hasIssues"]').element.checked.should.be.true();
-    modal.getComponent(MarkdownTextarea).props().value.should.equal('');
+    modal.getComponent(MarkdownTextarea).props().modelValue.should.equal('');
   });
 
   describe('request', () => {

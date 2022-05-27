@@ -11,17 +11,24 @@ except according to the terms contained in the LICENSE file.
 */
 module.exports = {
   chainWebpack: (config) => {
-    /* eslint-disable indent */
-    config.module
-      .rule('json5')
-        .test(/\/src\/locales\/en\.json5$/)
-        .type('javascript/auto')
-        .use('json5')
-          .loader('json5-loader');
-    /* eslint-enable indent */
-
     // We don't want to prefetch all locale files.
     config.plugins.delete('prefetch');
+
+    // Set VUE_APP_RESOLVE_SYMLINKS to `false` if you use symlinks in
+    // development: vue-cli-plugin-i18n doesn't seem to play well with symlinks.
+    // You can set VUE_APP_RESOLVE_SYMLINKS in a file named .env.local. See
+    // also:
+    // https://cli.vuejs.org/guide/troubleshooting.html#symbolic-links-in-node-modules
+    if (process.env.VUE_APP_RESOLVE_SYMLINKS === 'false')
+      config.resolve.symlinks(false);
+
+    if (process.env.NODE_ENV === 'test') {
+      config.resolve.alias.set(
+        '@vue/test-utils',
+        '@vue/test-utils/dist/vue-test-utils.esm-bundler.js'
+      );
+      config.resolve.alias.set('vue$', 'vue/dist/vue.esm-bundler.js');
+    }
   },
   lintOnSave: false,
   pluginOptions: {
@@ -29,7 +36,9 @@ module.exports = {
       locale: 'en',
       fallbackLocale: 'en',
       localeDir: 'locales',
-      enableInSFC: true
+      enableLegacy: true,
+      runtimeOnly: process.env.NODE_ENV !== 'test',
+      fullInstall: false
     }
   }
 };

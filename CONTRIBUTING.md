@@ -133,7 +133,7 @@ Every navigation is asynchronous. That is most visible for the initial navigatio
 
 If the user navigates to a location to which the `validateData` meta field forbids access, the user will be redirected to either `/` (if they are logged in) or `/login` (if they are not logged in). That means that unless the user is already at `/` or `/login`, navigating to a different location will always result in some confirmed navigation: either the first navigation will be confirmed, or the redirect will be confirmed. In other words, the user is guaranteed to navigate elsewhere: the route will change.
 
-A navigation can happen at any time. Before the user's session expires, the user will be automatically redirected to `/login`. And in general, the user is permitted to change the route at any time. That means that components should be prepared to be destroyed at any point. For example, if a component starts asynchronous work, it should probably check when that work completes whether the route has changed.
+A navigation can happen at any time. Before the user's session expires, the user will be automatically redirected to `/login`. And in general, the user is permitted to change the route at any time. That means that components should be prepared to be unmounted at any point. For example, if a component starts asynchronous work, it should probably check when that work completes whether the route has changed.
 
 The [`usePath()`](/src/composables/path.js) composable returns router-related functions. Additionally, some router-related utilities are defined in [`/src/util/router.js`](/src/util/router.js).
 

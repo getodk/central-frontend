@@ -73,7 +73,7 @@ describe('FormHead', () => {
           'Public Access',
           'Settings',
           'Status',
-          'Media Files  1',
+          'Media Files 1',
           'Testing'
         ]);
       });
@@ -136,7 +136,7 @@ describe('FormHead', () => {
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
         const text = tabs.map(tab => tab.text());
-        text.should.eql(['Status', 'Media Files  2', 'Testing']);
+        text.should.eql(['Status', 'Media Files 2', 'Testing']);
       });
     });
 

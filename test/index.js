@@ -1,27 +1,15 @@
 import sinon from 'sinon';
-import { Wrapper } from '@vue/test-utils';
+import { enableAutoUnmount } from '@vue/test-utils';
 import 'should';
 
-// These files must be imported before the rest.
-import './plugins';
 import '../src/styles';
 import '../src/jquery';
 import '../src/bootstrap';
 
 import testData from './data';
-import { destroyAll } from './util/lifecycle';
 import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
 import './assertions';
-
-// TODO/vue3. Remove this.
-for (const name of ['findAll', 'findAllComponents']) {
-  const f = Wrapper.prototype[name];
-  // eslint-disable-next-line func-names
-  Wrapper.prototype[name] = function(selector) {
-    return f.call(this, selector).wrappers;
-  };
-}
 
 
 
@@ -34,13 +22,15 @@ before(loadAsyncRouteComponents);
 
 beforeEach(testData.seed);
 
+enableAutoUnmount(afterEach);
 afterEach(() => {
-  destroyAll();
+  const app = document.querySelector('[data-v-app]');
+  if (app != null) app.parentNode.removeChild(app);
 
   const afterScript = document.querySelector('body > script:last-of-type + *');
   if (afterScript != null) {
     console.error(document.body.innerHTML); // eslint-disable-line no-console
-    throw new Error('Unexpected element after last script element. Have all components and Bootstrap elements been destroyed?');
+    throw new Error('Unexpected element after last script element. Have all Bootstrap elements been removed?');
   }
 });
 

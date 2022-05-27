@@ -520,7 +520,7 @@ describe('FormAttachmentList', () => {
           upload('a')
             .respondWithSuccess()
             .afterResponse(async (component) => {
-              await component.trigger('dragenter', {
+              await component.get('#form-attachment-list').trigger('dragenter', {
                 dataTransfer: fileDataTransfer(blankFiles(['d']))
               });
               component.find('.form-attachment-row.success').exists().should.be.false();
@@ -584,7 +584,7 @@ describe('FormAttachmentList', () => {
             const component = await load('/projects/1/forms/f/draft/attachments', {
               root: false
             });
-            await component.trigger('dragenter', {
+            await component.get('#form-attachment-list').trigger('dragenter', {
               dataTransfer: fileDataTransfer(blankFiles(['a', 'b']))
             });
             for (const row of component.findAllComponents(FormAttachmentRow))
@@ -595,7 +595,7 @@ describe('FormAttachmentList', () => {
             const component = await load('/projects/1/forms/f/draft/attachments', {
               root: false
             });
-            await component.trigger('dragenter', {
+            await component.get('#form-attachment-list').trigger('dragenter', {
               dataTransfer: fileDataTransfer(blankFiles(['a', 'b']))
             });
             const popup = component.get('#form-attachment-popups-main');
@@ -606,7 +606,7 @@ describe('FormAttachmentList', () => {
 
         describe('drop', () => {
           testMultipleFileSelection((component, files) =>
-            dragAndDrop(component, files));
+            dragAndDrop(component.get('#form-attachment-list'), files));
         });
 
         describe('confirming the uploads', () => {
@@ -624,7 +624,10 @@ describe('FormAttachmentList', () => {
             load('/projects/1/forms/f/draft/attachments', { root: false })
               .complete()
               .request(async (component) => {
-                await dragAndDrop(component, blankFiles(['a', 'b', 'c']));
+                await dragAndDrop(
+                  component.get('#form-attachment-list'),
+                  blankFiles(['a', 'b', 'c'])
+                );
                 const button = component.get('#form-attachment-popups-main .btn-primary');
                 return button.trigger('click');
               })
@@ -684,7 +687,7 @@ describe('FormAttachmentList', () => {
 
               it('unhighlights attachments once a new drag starts', async () => {
                 const component = await confirmUploads(3);
-                await component.trigger('dragenter', {
+                await component.get('#form-attachment-list').trigger('dragenter', {
                   dataTransfer: fileDataTransfer(blankFiles(['y', 'z']))
                 });
                 component.find('.form-attachment-row.success').exists().should.be.false();
@@ -794,7 +797,7 @@ describe('FormAttachmentList', () => {
             const component = await load('/projects/1/forms/f/draft/attachments', {
               root: false
             });
-            await component.trigger('dragenter', {
+            await component.get('#form-attachment-list').trigger('dragenter', {
               dataTransfer: fileDataTransfer(blankFiles(['a']))
             });
             for (const row of component.findAllComponents(FormAttachmentRow))
@@ -805,7 +808,7 @@ describe('FormAttachmentList', () => {
             const component = await load('/projects/1/forms/f/draft/attachments', {
               root: false
             });
-            await component.trigger('dragenter', {
+            await component.get('#form-attachment-list').trigger('dragenter', {
               dataTransfer: fileDataTransfer(blankFiles(['a']))
             });
             const popup = component.get('#form-attachment-popups-main');
@@ -816,14 +819,17 @@ describe('FormAttachmentList', () => {
         });
 
         testSingleFileSelection((component, files) =>
-          dragAndDrop(component, files));
+          dragAndDrop(component.get('#form-attachment-list'), files));
 
         describe('confirming the upload', () => {
           testSingleFileUpload(attachmentName =>
             load('/projects/1/forms/f/draft/attachments', { root: false })
               .complete()
               .request(async (component) => {
-                await dragAndDrop(component, blankFiles([attachmentName]));
+                await dragAndDrop(
+                  component.get('#form-attachment-list'),
+                  blankFiles([attachmentName])
+                );
                 const button = component.get('#form-attachment-popups-main .btn-primary');
                 return button.trigger('click');
               }));
@@ -868,7 +874,7 @@ describe('FormAttachmentList', () => {
 
   describe('dragging and dropping a single file over a row', () => {
     const dragAndDropOntoRow = (component, attachmentName, filename) => {
-      const rows = component.findAllComponents(FormAttachmentRow);
+      const rows = component.findAll('.form-attachment-row');
       const attachments = testData.standardFormAttachments.sorted();
       rows.length.should.equal(attachments.length);
       const index = attachments.findIndex(attachment =>
@@ -887,7 +893,7 @@ describe('FormAttachmentList', () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
-        const rows = component.findAllComponents(FormAttachmentRow);
+        const rows = component.findAll('.form-attachment-row');
         await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
@@ -901,7 +907,7 @@ describe('FormAttachmentList', () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
-        const rows = component.findAllComponents(FormAttachmentRow);
+        const rows = component.findAll('.form-attachment-row');
         await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
@@ -914,7 +920,7 @@ describe('FormAttachmentList', () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
-        await component.getComponent(FormAttachmentRow).trigger('dragenter', {
+        await component.get('.form-attachment-row').trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
         component.find('.form-attachment-row .label').exists().should.be.false();
@@ -927,7 +933,7 @@ describe('FormAttachmentList', () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
-        await component.getComponent(FormAttachmentRow).trigger('dragenter', {
+        await component.get('.form-attachment-row').trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
         const popup = component.get('#form-attachment-popups-main');
@@ -1031,7 +1037,7 @@ describe('FormAttachmentList', () => {
         return load('/projects/1/forms/f/draft/attachments', { root: false })
           .complete()
           .request(component =>
-            dragAndDrop(component.getComponent(FormAttachmentRow), [file]))
+            dragAndDrop(component.get('.form-attachment-row'), [file]))
           .beforeEachResponse((_, { headers, data }) => {
             const encoding = gzip ? 'gzip' : 'identity';
             headers['Content-Encoding'].should.equal(encoding);

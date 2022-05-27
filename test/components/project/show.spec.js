@@ -54,7 +54,7 @@ describe('ProjectShow', () => {
         project: () => testData.extendedProjects.last()
       })
       .afterResponses(app => {
-        app.getComponent(ProjectOverview).vm.should.not.equal(vm);
+        should(app.getComponent(ProjectOverview).vm).not.equal(vm);
       });
   });
 

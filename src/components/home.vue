@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent } from '@vue/composition-api';
+import { defineAsyncComponent } from 'vue';
 
 import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';

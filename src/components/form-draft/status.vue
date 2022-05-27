@@ -82,7 +82,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent } from '@vue/composition-api';
+import { defineAsyncComponent } from 'vue';
 
 import FormDraftAbandon from './abandon.vue';
 import FormDraftChecklist from './checklist.vue';

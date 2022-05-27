@@ -30,7 +30,9 @@ except according to the terms contained in the LICENSE file.
         <template v-else>{{ $t('submission.noSubmission') }}</template>
     </td>
     <td class="total-submissions">
-      <span>{{ $n(form.submissions, 'default') }}</span>
+      <!-- form.submissions should always exist in production, but it doesn't
+      exist in some tests. -->
+      <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>
       <span class="icon-asterisk"></span>
     </td>
     <td class="actions">

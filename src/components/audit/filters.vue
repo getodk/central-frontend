@@ -14,10 +14,11 @@ except according to the terms contained in the LICENSE file.
     <div class="form-group">
       <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
     </div>
-    <audit-filters-action :value="action"
-      @input="$emit('update:action', $event)"/>
-    <date-range-picker :value="dateRange" :placeholder="$t('field.dateRange')"
-      required @input="$emit('update:dateRange', $event)"/>
+    <audit-filters-action :model-value="action"
+      @update:model-value="$emit('update:action', $event)"/>
+    <date-range-picker :model-value="dateRange"
+      :placeholder="$t('field.dateRange')" required
+      @update:model-value="$emit('update:dateRange', $event)"/>
   </form>
 </template>
 

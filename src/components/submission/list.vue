@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
     <div v-show="fields != null">
       <div id="submission-list-actions">
         <form class="form-inline" @submit.prevent>
-          <submission-filters v-if="!draft" :submitter-id.sync="submitterId"
-            :submission-date.sync="submissionDateRange"
-            :review-state.sync="reviewStates"/>
+          <submission-filters v-if="!draft" v-model:submitterId="submitterId"
+            v-model:submissionDate="submissionDateRange"
+            v-model:reviewState="reviewStates"/>
           <submission-field-dropdown
             v-if="fields != null && selectableFields.length > 11"
             v-model="selectedFields"/>
@@ -256,7 +256,7 @@ export default {
   mounted() {
     document.addEventListener('scroll', this.afterScroll);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
@@ -383,10 +383,10 @@ export default {
         submission.__id === originalSubmission.__id);
       if (index !== -1) {
         const submission = this.submissions[index];
-        this.$set(this.submissions, index, {
+        this.submissions[index] = {
           ...submission,
           __system: { ...submission.__system, reviewState }
-        });
+        };
         this.$refs.table.afterReview(index);
       }
     }

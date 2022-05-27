@@ -9,8 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import VueRouter from 'vue-router';
-import { nextTick } from '@vue/composition-api';
+import { START_LOCATION } from 'vue-router';
+import { nextTick } from 'vue';
 
 // Returns the props for a route component.
 export const routeProps = (route, props) => {
@@ -19,6 +19,11 @@ export const routeProps = (route, props) => {
   if (typeof props === 'function') return props(route);
   // Object mode
   return props;
+};
+
+// TODO/vue3. Add tests.
+export const unlessFailure = (callback) => (to, from, failure) => {
+  if (failure == null) callback(to, from);
 };
 
 /*
@@ -46,8 +51,8 @@ issues, allowing the response data to be updated after the navigation has been
 confirmed, but before the DOM has been updated.
 */
 export const afterNextNavigation = (router, callback) => {
-  const removeHook = router.afterEach((to, from) => {
-    callback(to, from);
+  const removeHook = router.afterEach((to, from, failure) => {
+    if (failure == null) callback(to, from);
     // It looks like we can't remove an afterEach hook while Vue Router is
     // iterating over the afterEach hooks: if we synchronously removed this
     // hook, the next afterEach hook for the navigation would be skipped.
@@ -75,7 +80,7 @@ the route changes from `from` to `to`. Otherwise it returns `false`.
   - from. A Route object.
 */
 export const preservesData = (key, to, from) => {
-  if (from === VueRouter.START_LOCATION) return true;
+  if (from === START_LOCATION) return true;
   const forKey = to.meta.preserveData[key];
   if (forKey == null) return false;
   const params = forKey[from.name];

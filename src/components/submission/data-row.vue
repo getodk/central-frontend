@@ -44,9 +44,9 @@ import { formatDate, formatDateTime, formatTime } from '../../util/date-time';
 
 /*
 We may render many rows and/or many columns, so performance matters in this
-component. SubmissionDataRow components may be frequently created or destroyed,
+component. SubmissionDataRow components may be frequently created or unmounted,
 so it matters how long it takes to render a component and how long it takes to
-destroy one. (Note that destroying may take longer than rendering!)
+unmount one. (Note that unmounting may take longer than rendering!)
 
 We used to have a SubmissionCell component, but that was too slow: now
 everything is done in this component. We also used to have an i18n custom block,

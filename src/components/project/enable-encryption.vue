@@ -115,7 +115,7 @@ except according to the terms contained in the LICENSE file.
         <p class="modal-introduction">
           <strong>{{ $t('common.success') }}</strong>
           <sentence-separator/>
-          <span>{{ $t('steps[2].introduction[0]') }}</span>
+          <span>{{ $t('success[0]') }}</span>
         </p>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary"
@@ -303,12 +303,10 @@ export default {
             "no": "no"
           }
         ]
-      },
-      {
-        "introduction": [
-          "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
-        ]
       }
+    ],
+    "success": [
+      "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
     ],
     "field": {
       "hint": "Passphrase hint (optional)"
@@ -365,11 +363,6 @@ export default {
             "no": "žádný"
           }
         ]
-      },
-      {
-        "introduction": [
-          "Pro tento projekt bylo nakonfigurováno šifrování. K provedení šifrování bude muset mobilní zařízení načíst, nebo znovu načíst nejnovější formuláře."
-        ]
       }
     ],
     "field": {
@@ -420,11 +413,6 @@ export default {
             "full": "Passphrasen haben keine Längen- oder Inhaltsbeschränkungen. Es gibt {no} Möglichkeit eine verlorene Passphrase wiederherzustellen!",
             "no": "keine"
           }
-        ]
-      },
-      {
-        "introduction": [
-          "Für dieses Projekt wurde Verschlüsselung aktiviert. Alle Mobilgeräte müssen die neuesten Formulare herunterladen damit die Verschlüsselung auch durchgeführt wird."
         ]
       }
     ],
@@ -477,11 +465,6 @@ export default {
             "no": "no"
           }
         ]
-      },
-      {
-        "introduction": [
-          "El cifrado ha sido configurado para este proyecto. Cualquier dispositivo móvil tendrá que buscar o volver a buscar los últimos formularios para que el cifrado se lleve a cabo."
-        ]
       }
     ],
     "field": {
@@ -532,11 +515,6 @@ export default {
             "full": "La phrase secrète n'est soumise à aucune restriction de longueur ou de contenu, mais si vous la perdez, il n'y a {no} moyen de la récupérer, ni de récupérer vos données !",
             "no": "non"
           }
-        ]
-      },
-      {
-        "introduction": [
-          "Le chiffrement a été configuré pour ce projet. Tout appareil mobile devra aller récupérer ou aller récupérer à nouveau les derniers formulaires pour que le chiffrement puisse avoir lieu."
         ]
       }
     ],
@@ -589,11 +567,6 @@ export default {
             "no": "tidak ada"
           }
         ]
-      },
-      {
-        "introduction": [
-          "Enkripsi telah dikonfigurasi untuk Proyek ini. Setiap perangkat seluler harus mengambil ulang formulir terbaru untuk mengaktifkan enkripsi."
-        ]
       }
     ],
     "field": {
@@ -641,11 +614,6 @@ export default {
             "full": "Non ci sono restrizioni sulla lunghezza o sul contenuto della passphrase, ma se la perdi, {no} c'è un modo per recuperarla o recuperare i tuoi dati!",
             "no": "no"
           }
-        ]
-      },
-      {
-        "introduction": [
-          "La crittografia è stata configurata per questo progetto. Tutti i dispositivi mobili dovranno prendere o recuperare i formulari più recenti affinché la crittografia possa avvenire."
         ]
       }
     ],
@@ -698,11 +666,6 @@ export default {
             "no": "ません"
           }
         ]
-      },
-      {
-        "introduction": [
-          "このプロジェクトでは、暗号化が設定されています。モバイル端末で暗号化を行うためには、最新のフォームを取得または再取得する必要があります。"
-        ]
       }
     ],
     "field": {
@@ -753,11 +716,6 @@ export default {
             "full": "Hakuna urefu au vizuizi vya maudhui kwenye kaulisiri, lakini ukiipoteza, hakuna njia {no} ya kuirejesha au data yako!",
             "no": "Hapana"
           }
-        ]
-      },
-      {
-        "introduction": [
-          "Usimbaji fiche umesanidiwa kwa Mradi huu. Kifaa chochote cha rununu kitalazimika kuleta au kuleta tena Fomu za hivi punde zaidi ili usimbaji fiche ufanyike."
         ]
       }
     ],

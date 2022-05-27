@@ -12,21 +12,22 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="loading === 'tab'">
     <loading :state="showsLoading"/>
-    <component :is="component" v-if="component != null" :key="k" v-bind="props"
-      v-on="$listeners"/>
+    <component :is="component" v-if="component != null" :key="k"
+      v-bind="propsAndAttrs"/>
   </div>
   <page-body v-else-if="showsLoading">
     <loading :state="true"/>
   </page-body>
   <component :is="component" v-else-if="component != null" :key="k"
-    v-bind="props" v-on="$listeners"/>
+    v-bind="propsAndAttrs"/>
 </template>
 
 <script>
-import { markRaw } from '@vue/composition-api';
+import { markRaw } from 'vue';
 
 import Loading from './loading.vue';
 import PageBody from './page/body.vue';
+
 import { loadAsync, loadedAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
@@ -34,6 +35,7 @@ export default {
   name: 'AsyncRoute',
   components: { Loading, PageBody },
   inject: ['alert'],
+  inheritAttrs: false,
   // See routes.js for more information about these props.
   props: {
     componentName: {
@@ -65,13 +67,20 @@ export default {
       cancel: noop
     };
   },
+  computed: {
+    propsAndAttrs() {
+      // The main use of this.$attrs is to pass along event listeners to the
+      // component.
+      return { ...this.props, ...this.$attrs };
+    }
+  },
   watch: {
     componentName: 'load'
   },
   created() {
     this.load();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.cancel();
   },
   methods: {
@@ -96,7 +105,7 @@ export default {
             are multiple pending promises for the same async component, and they
             will each now be resolved (though all but the last have been
             canceled).
-          - The AsyncRoute component may be destroyed.
+          - The AsyncRoute component may be unmounted.
         */
         .then(m => {
           if (!canceled) {

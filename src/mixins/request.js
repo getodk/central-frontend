@@ -103,7 +103,7 @@ function request({
   const { data } = axiosConfig;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
-    this.alert.danger(this.$t('mixin.request.alert.fileSize', data));
+    this.alert.danger(this.$t('mixin.request.alert.fileSize', { name: data.name }));
     return Promise.reject(new Error('file size exceeds limit'));
   }
 
@@ -114,7 +114,7 @@ function request({
   return this.http.request(withAuth(axiosConfig, session))
     .catch(error => {
       // this.$route seems to be defined even after the component has been
-      // destroyed.
+      // unmounted.
       if (this.$route !== initialRoute) throw new Error('route change');
 
       if (fulfillProblem != null && error.response != null &&

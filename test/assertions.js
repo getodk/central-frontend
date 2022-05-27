@@ -1,9 +1,8 @@
 import should from 'should';
-import { Wrapper } from '@vue/test-utils';
 
-const unwrapElement = (elementOrWrapper) => (elementOrWrapper instanceof Wrapper
-  ? elementOrWrapper.element
-  : elementOrWrapper);
+const unwrapElement = (elementOrWrapper) => (elementOrWrapper instanceof HTMLElement
+  ? elementOrWrapper
+  : elementOrWrapper.element);
 
 // Asserts that an element is not individually hidden and that all its ancestors
 // are also not hidden. To test style-based visibility, attach the component to

@@ -10,9 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <!-- SubmissionTable assumes that this element does not have a class
-  binding. -->
   <tr class="submission-metadata-row">
+    <!-- ^^^ SubmissionTable assumes that this element does not have a class
+    binding. -->
+
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="!draft" class="submitter-name"
       :title="submission.__system.submitterName">

@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import VueRouter from 'vue-router';
+import { START_LOCATION } from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
@@ -45,7 +45,7 @@ export default {
   computed: {
     ...requestData(['centralVersion']),
     routerReady() {
-      return this.$route !== VueRouter.START_LOCATION;
+      return this.$route !== START_LOCATION;
     }
   },
   created() {
@@ -62,24 +62,18 @@ export default {
         alert: false
       }])
         .then(() => {
-          if (previousVersion != null && this.centralVersion !== previousVersion) {
-            this.alert.info(this.$t('alert.versionChange'));
-            // Keep alerting the user about the version change. One benefit of
-            // this is that the user should see the alert even if there is
-            // another alert (say, about session expiration).
-            const id = setInterval(
-              () => {
-                this.alert.info(this.$t('alert.versionChange'));
-              },
-              60000
-            );
-            this.$once('hook:beforeDestroy', () => {
-              clearInterval(id);
-            });
-            return true;
-          }
+          if (previousVersion == null || this.centralVersion === previousVersion)
+            return false;
 
-          return false;
+          // Alert the user about the version change, then keep alerting them.
+          // One benefit of this approach is that the user should see the alert
+          // even if there is another alert (say, about session expiration).
+          this.callWait(
+            'alertVersionChange',
+            () => { this.alert.info(this.$t('alert.versionChange')); },
+            (count) => (count === 0 ? 0 : 60000)
+          );
+          return true;
         })
         // This error could be the result of logout, which will cancel all
         // requests.

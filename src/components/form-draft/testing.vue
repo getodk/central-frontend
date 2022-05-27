@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject, watchSyncEffect } from '@vue/composition-api';
+import { inject, watchSyncEffect } from 'vue';
 
 // Import PageSection before FloatRow in order to have the same import order as
 // FormSubmissions: see https://github.com/vuejs/vue-cli/issues/3771

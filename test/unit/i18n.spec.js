@@ -61,7 +61,7 @@ describe('util/i18n', () => {
   });
 
   describe('$tcn()', () => {
-    const i18n = createCentralI18n();
+    const i18n = createCentralI18n().global;
     i18n.setLocaleMessage('la', {
       forms: '{count} Forma | {count} Formae',
       parts: '{name} est omnis divisa in partem {count}. | {name} est omnis divisa in partes {count}.'

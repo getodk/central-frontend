@@ -3,7 +3,7 @@ import subclassPresenters from '../../src/presenters';
 
 import testData from '../data';
 
-const { Project } = subclassPresenters(createCentralI18n());
+const { Project } = subclassPresenters(createCentralI18n().global);
 
 describe('Project', () => {
   describe('nameWithArchived()', () => {

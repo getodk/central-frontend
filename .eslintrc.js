@@ -4,7 +4,7 @@ module.exports = {
     ecmaVersion: 2020
   },
   extends: [
-    'plugin:vue/recommended',
+    'plugin:vue/vue3-recommended',
     '@vue/airbnb'
   ],
   env: {
@@ -50,6 +50,7 @@ module.exports = {
       asyncArrow: 'always'
     }],
     'spaced-comment': 'off',
+    'vue/first-attribute-linebreak': 'off',
     'vue/html-closing-bracket-newline': ['error', {
       singleline: 'never',
       multiline: 'never'
@@ -70,6 +71,7 @@ module.exports = {
       math: 'always'
     }],
     'vue/max-attributes-per-line': 'off',
+    'vue/multi-word-component-names': 'off',
     'vue/require-default-prop': 'off',
     'vue/singleline-html-element-content-newline': 'off'
   }

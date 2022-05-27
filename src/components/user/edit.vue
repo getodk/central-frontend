@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject } from '@vue/composition-api';
+import { inject } from 'vue';
 
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';

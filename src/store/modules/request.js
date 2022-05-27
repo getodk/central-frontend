@@ -12,7 +12,6 @@ except according to the terms contained in the LICENSE file.
 
 // This module sends GET requests and stores the resulting response data.
 
-import Vue from 'vue';
 import { mapState } from 'vuex';
 import { pick } from 'ramda';
 
@@ -134,7 +133,7 @@ return {
     },
     setDataProp({ data }, { key, prop, value }) {
       const target = data[key] instanceof Option ? data[key].get() : data[key];
-      Vue.set(target, prop, value);
+      target[prop] = value;
     },
     setFromResponse({ data }, { key, response }) {
       const transform = transforms[key];
@@ -229,7 +228,7 @@ return {
         One common example of specifying `false` for `resend` arises with tabbed
         navigation. Say a component associated with one tab sends a request for
         a particular key. In most cases, navigating from that tab to another
-        tab, then back to the original tab will destroy and recreate the
+        tab, then back to the original tab will unmount and recreate the
         component. However, in that case, we usually do not need to send a new
         request for the data that the component needs.
 

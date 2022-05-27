@@ -14,13 +14,13 @@ except according to the terms contained in the LICENSE file.
     <div class="form-group">
       <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
     </div>
-    <submission-filters-submitter :value="submitterId"
-      @input="$emit('update:submitterId', $event)"/>
-    <date-range-picker :value="submissionDate"
+    <submission-filters-submitter :model-value="submitterId"
+      @update:model-value="$emit('update:submitterId', $event)"/>
+    <date-range-picker :model-value="submissionDate"
       :placeholder="$t('field.submissionDate')"
-      @input="$emit('update:submissionDate', $event)"/>
-    <submission-filters-review-state :value="reviewState"
-      @input="$emit('update:reviewState', $event)"/>
+      @update:model-value="$emit('update:submissionDate', $event)"/>
+    <submission-filters-review-state :model-value="reviewState"
+      @update:model-value="$emit('update:reviewState', $event)"/>
   </span>
 </template>
 

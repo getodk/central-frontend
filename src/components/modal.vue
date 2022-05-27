@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { markRaw } from '@vue/composition-api';
+import { inject, markRaw, watch, watchPostEffect } from 'vue';
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
@@ -69,6 +69,14 @@ export default {
     large: Boolean
   },
   emits: ['shown', 'hide'],
+  setup(props) {
+    const alert = inject('alert');
+    let oldAlertAt;
+    watchPostEffect(() => { oldAlertAt = alert.at; });
+    watch(() => props.state, (state) => {
+      if (state || alert.at === oldAlertAt) alert.blank();
+    });
+  },
   data() {
     id += 1;
     return {
@@ -82,9 +90,6 @@ export default {
     };
   },
   computed: {
-    stateAndAlertAt() {
-      return [this.state, this.alert.at];
-    },
     titleId() {
       return `modal-title${this.id}`;
     }
@@ -98,16 +103,6 @@ export default {
       } else {
         this.hide();
       }
-    },
-    // Hides the alert when this.state changes. We use a strategy similar to the
-    // one here: https://github.com/vuejs/vue/issues/844.
-    stateAndAlertAt([newState, newAlertAt], [oldState, oldAlertAt]) {
-      if (newState === oldState) return;
-      // If the modal is being hidden, and the alert has also changed, do not
-      // hide the alert: if the alert is visible, then #app-alert will be shown.
-      // This allows the modal to display an alert after it is hidden.
-      if (!newState && newAlertAt !== oldAlertAt) return;
-      this.alert.blank();
     }
   },
   mounted() {
@@ -123,7 +118,7 @@ export default {
 
     if (this.state) this.show();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.state) this.hide();
   },
   methods: {

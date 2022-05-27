@@ -9,13 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import VueCompositionAPI from '@vue/composition-api';
-import VueI18n from 'vue-i18n';
-import VueRouter from 'vue-router';
-import Vuex from 'vuex';
 import axios from 'axios';
-
-import Translation from './components/i18n-t';
+import { Translation } from 'vue-i18n';
 
 import createAlert from './alert';
 import createCentralI18n from './i18n';
@@ -35,38 +30,32 @@ export default ({
   store = createCentralStore,
   i18n = createCentralI18n(),
   alert = createAlert(),
-  unsavedChanges = createUnsavedChanges(i18n),
+  unsavedChanges = createUnsavedChanges(i18n.global),
   config = defaultConfig,
   http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
   logger = console
 } = {}) => {
   const container = {
-    i18n,
+    i18n: i18n.global,
     alert,
     unsavedChanges,
     config,
     http,
     logger,
-    ...subclassPresenters(i18n)
+    ...subclassPresenters(i18n.global)
   };
   container.store = store(container);
   if (router != null) container.router = router(container);
-  container.install = (Vue) => {
-    Vue.use(VueCompositionAPI);
-    Vue.use(Vuex);
-    Vue.use(VueI18n);
-    if (container.router != null)
-      Vue.use(container.router instanceof VueRouter ? VueRouter : container.router);
-    Vue.component('i18n-t', Translation);
-  };
-  container.provide = {
-    container,
-    alert,
-    unsavedChanges,
-    config,
-    http,
-    logger
+  container.install = (app) => {
+    app.use(container.store);
+    // Register <i18n-t>, since we specify `false` for the fullInstall option of
+    // vue-cli-plugin-i18n.
+    app.use(i18n).component(Translation.name, Translation);
+    if (container.router != null) app.use(container.router);
+    app.provide('container', container);
+    for (const key of ['alert', 'unsavedChanges', 'config', 'http', 'logger'])
+      app.provide(key, container[key]);
   };
   return container;
 };

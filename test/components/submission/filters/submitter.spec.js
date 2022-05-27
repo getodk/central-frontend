@@ -6,9 +6,9 @@ import { loadSubmissionList } from '../../../util/submission';
 import { mockLogin } from '../../../util/session';
 import { mount } from '../../../util/lifecycle';
 
-const mountComponent = ({ value = '' } = {}) =>
+const mountComponent = ({ modelValue = '' } = {}) =>
   mount(SubmissionFiltersSubmitter, {
-    props: { value },
+    props: { modelValue },
     container: {
       requestData: {
         submitters: testData.extendedFieldKeys
@@ -57,9 +57,9 @@ describe('SubmissionFiltersSubmitter', () => {
     options[2].text().should.equal('App User 2');
   });
 
-  it('sets the value of the select element to the value prop', () => {
+  it('sets the value of the select element to the modelValue prop', () => {
     const id = testData.extendedFieldKeys.createPast(1).last().id.toString();
-    mountComponent({ value: id }).get('select').element.value.should.equal(id);
+    mountComponent({ modelValue: id }).get('select').element.value.should.equal(id);
   });
 
   it('sets value of select element once submitters have loaded', () => {
@@ -81,31 +81,31 @@ describe('SubmissionFiltersSubmitter', () => {
       });
   });
 
-  it('renders correctly if the value prop is an unknown submitter', () => {
-    const option = mountComponent({ value: '42' }).get('option[value="42"]');
+  it('renders correctly if the modelValue prop is an unknown submitter', () => {
+    const option = mountComponent({ modelValue: '42' }).get('option[value="42"]');
     option.text().should.equal('Unknown submitter');
   });
 
-  it('updates value of select element after value prop changes', async () => {
+  it('updates value of select element after modelValue prop changes', async () => {
     const id = testData.extendedFieldKeys.createPast(1).last().id.toString();
-    const component = mountComponent({ value: '' });
-    await component.setProps({ value: id });
+    const component = mountComponent({ modelValue: '' });
+    await component.setProps({ modelValue: id });
     component.get('select').element.value.should.equal(id);
   });
 
   it('updates value of select after prop changes to unknown submitter', async () => {
     testData.extendedFieldKeys.createPast(1);
-    const component = mountComponent({ value: '' });
-    await component.setProps({ value: '42' });
+    const component = mountComponent({ modelValue: '' });
+    await component.setProps({ modelValue: '42' });
     component.get('select').element.value.should.equal('42');
   });
 
-  it('emits an input event', () => {
+  it('emits an update:modelValue event', () => {
     const { id } = testData.extendedFieldKeys
       .createPast(1, 'App User 1')
       .last();
-    const component = mountComponent({ value: '' });
+    const component = mountComponent({ modelValue: '' });
     component.get('select').setValue(id.toString());
-    component.emitted().input.should.eql([[id.toString()]]);
+    component.emitted('update:modelValue').should.eql([[id.toString()]]);
   });
 });

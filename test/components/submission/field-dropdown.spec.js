@@ -18,7 +18,7 @@ const strings = (min, max) => {
 describe('SubmissionFieldDropdown', () => {
   it('renders a checkbox for each selectable field', () => {
     const dropdown = mount(SubmissionFieldDropdown, {
-      props: { value: [] },
+      props: { modelValue: [] },
       container: {
         requestData: {
           fields: [repeat('/r'), string('/r/s1'), string('/s2'), string('/s3')]
@@ -31,7 +31,7 @@ describe('SubmissionFieldDropdown', () => {
 
   it('adds a title attribute for checkbox that includes group name', () => {
     const dropdown = mount(SubmissionFieldDropdown, {
-      props: { value: [] },
+      props: { modelValue: [] },
       container: {
         requestData: { fields: [group('/g'), string('/g/s1')] }
       }
@@ -42,13 +42,13 @@ describe('SubmissionFieldDropdown', () => {
   });
 
   describe('checked boxes', () => {
-    it('checks boxes based on the value prop', () => {
+    it('checks boxes based on the modelValue prop', () => {
       const container = createTestContainer({
         requestData: { fields: strings(1, 2) }
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [fields[0]] },
+        props: { modelValue: [fields[0]] },
         container
       });
       const checkboxes = dropdown.findAll('input[type="checkbox"]');
@@ -56,28 +56,28 @@ describe('SubmissionFieldDropdown', () => {
       checkboxes[1].element.checked.should.be.false();
     });
 
-    it('updates the checkboxes after the value prop changes', async () => {
+    it('updates the checkboxes after the modelValue prop changes', async () => {
       const container = createTestContainer({
         requestData: { fields: strings(1, 2) }
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [fields[0]] },
+        props: { modelValue: [fields[0]] },
         container
       });
       const checkboxes = dropdown.findAll('input[type="checkbox"]');
       checkboxes[0].element.checked.should.be.true();
       checkboxes[1].element.checked.should.be.false();
-      await dropdown.setProps({ value: [fields[1]] });
+      await dropdown.setProps({ modelValue: [fields[1]] });
       checkboxes[0].element.checked.should.be.false();
       checkboxes[1].element.checked.should.be.true();
     });
   });
 
   describe('after the dropdown is hidden', () => {
-    it('emits an input event if the selection has changed', async () => {
+    it('emits an update:modelValue event if selection has changed', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [string('/s1')] }
         },
@@ -86,14 +86,14 @@ describe('SubmissionFieldDropdown', () => {
       await dropdown.get('select').trigger('click');
       await dropdown.get('input[type="checkbox"]').setChecked();
       await dropdown.get('select').trigger('click');
-      const value = dropdown.emitted().input[0][0];
+      const value = dropdown.emitted('update:modelValue')[0][0];
       value.length.should.equal(1);
       value[0].path.should.equal('/s1');
     });
 
-    it('does not emit an input event if selection has not changed', async () => {
+    it('does not emit an update:modelValue event if selection has not changed', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [string('/s1')] }
         },
@@ -103,7 +103,7 @@ describe('SubmissionFieldDropdown', () => {
       await dropdown.get('input[type="checkbox"]').setChecked();
       await dropdown.get('input[type="checkbox"]').setChecked(false);
       await dropdown.get('select').trigger('click');
-      should.not.exist(dropdown.emitted().input);
+      should.not.exist(dropdown.emitted('update:modelValue'));
     });
   });
 
@@ -113,7 +113,7 @@ describe('SubmissionFieldDropdown', () => {
     });
     const { fields } = container.store.state.request.data;
     const dropdown = mount(SubmissionFieldDropdown, {
-      props: { value: fields.slice(0, 100) },
+      props: { modelValue: fields.slice(0, 100) },
       container
     });
     const disabled = dropdown.findAll('.checkbox.disabled');
@@ -129,7 +129,7 @@ describe('SubmissionFieldDropdown', () => {
   describe('placeholder', () => {
     it('shows the number of selectable fields', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [repeat('/r'), string('/r/s1'), string('/s2')] }
         }
@@ -143,7 +143,7 @@ describe('SubmissionFieldDropdown', () => {
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [fields[0]] },
+        props: { modelValue: [fields[0]] },
         container
       });
       dropdown.get('option').text().should.equal('1 of 2');
@@ -151,7 +151,7 @@ describe('SubmissionFieldDropdown', () => {
 
     it('does not update after a checkbox is checked', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [string('/s1')] }
         }
@@ -160,15 +160,15 @@ describe('SubmissionFieldDropdown', () => {
       dropdown.get('option').text().should.equal('0 of 1');
     });
 
-    it('updates after the value prop changes', async () => {
+    it('updates after the modelValue prop changes', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [string('/s1')] }
         }
       });
       const { fields } = dropdown.vm.$store.state.request.data;
-      await dropdown.setProps({ value: fields });
+      await dropdown.setProps({ modelValue: fields });
       dropdown.get('option').text().should.equal('1 of 1');
     });
   });
@@ -176,7 +176,7 @@ describe('SubmissionFieldDropdown', () => {
   describe('search', () => {
     it('adds a class for a field the matches the search', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: strings(1, 2) }
         }
@@ -190,7 +190,7 @@ describe('SubmissionFieldDropdown', () => {
 
     it('searches the group name', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [group('/g'), string('/g/s1'), string('/s2')] }
         }
@@ -203,7 +203,7 @@ describe('SubmissionFieldDropdown', () => {
 
     it('completes a case-insensitive search', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [string('/s'), string('/S'), string('/x')] }
         }
@@ -216,7 +216,7 @@ describe('SubmissionFieldDropdown', () => {
 
     it('shows a message if there are no matches', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [string('/s1')] }
         },
@@ -234,7 +234,7 @@ describe('SubmissionFieldDropdown', () => {
 
     it('resets after the dropdown is hidden', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [string('/s1')] }
         },
@@ -249,7 +249,7 @@ describe('SubmissionFieldDropdown', () => {
     describe('.close button', async () => {
       it('shows the button after input', async () => {
         const dropdown = mount(SubmissionFieldDropdown, {
-          props: { value: [] },
+          props: { modelValue: [] },
           container: {
             requestData: { fields: [string('/s1')] }
           }
@@ -263,7 +263,7 @@ describe('SubmissionFieldDropdown', () => {
       describe('after the button is clicked', () => {
         it('resets the search', async () => {
           const dropdown = mount(SubmissionFieldDropdown, {
-            props: { value: [] },
+            props: { modelValue: [] },
             container: {
               requestData: { fields: [string('/s1')] }
             }
@@ -275,7 +275,7 @@ describe('SubmissionFieldDropdown', () => {
 
         it('focuses the input', async () => {
           const dropdown = mount(SubmissionFieldDropdown, {
-            props: { value: [] },
+            props: { modelValue: [] },
             container: {
               requestData: { fields: [string('/s1')] }
             },
@@ -293,7 +293,7 @@ describe('SubmissionFieldDropdown', () => {
   describe('select all', () => {
     it('checks all checkboxes', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: strings(1, 2) }
         }
@@ -305,7 +305,7 @@ describe('SubmissionFieldDropdown', () => {
 
     it('only checks search results', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: strings(1, 2) }
         }
@@ -319,7 +319,7 @@ describe('SubmissionFieldDropdown', () => {
 
     it('disables an unchecked box if 100 checkboxes become checked', async () => {
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: [] },
+        props: { modelValue: [] },
         container: {
           requestData: { fields: [...strings(1, 100), string('/x')] }
         }
@@ -335,7 +335,7 @@ describe('SubmissionFieldDropdown', () => {
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: fields.slice(0, 100) },
+        props: { modelValue: fields.slice(0, 100) },
         container
       });
       dropdown.get('.toggle-all a').classes('disabled').should.be.true();
@@ -347,7 +347,7 @@ describe('SubmissionFieldDropdown', () => {
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: fields.slice(0, 99) },
+        props: { modelValue: fields.slice(0, 99) },
         container
       });
       const checkboxes = dropdown.findAll('input[type="checkbox"]');
@@ -365,7 +365,7 @@ describe('SubmissionFieldDropdown', () => {
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: fields },
+        props: { modelValue: fields },
         container
       });
       await dropdown.findAll('.toggle-all a')[1].trigger('click');
@@ -379,7 +379,7 @@ describe('SubmissionFieldDropdown', () => {
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: fields },
+        props: { modelValue: fields },
         container
       });
       await dropdown.get('.search input').setValue('1');
@@ -395,7 +395,7 @@ describe('SubmissionFieldDropdown', () => {
       });
       const { fields } = container.store.state.request.data;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { value: fields.slice(0, 100) },
+        props: { modelValue: fields.slice(0, 100) },
         container
       });
       const last = dropdown.findAll('.checkbox')[100];
@@ -423,7 +423,7 @@ describe('SubmissionFieldDropdown', () => {
     });
     testData.extendedSubmissions.createPast(1);
     const component = await loadSubmissionList();
-    const selected = component.getComponent(SubmissionFieldDropdown).props().value;
+    const selected = component.getComponent(SubmissionFieldDropdown).props().modelValue;
     selected.map(field => field.path).should.eql([
       '/s2', '/s3', '/s4', '/s5', '/s6',
       '/s7', '/s8', '/s9', '/s10', '/s11'

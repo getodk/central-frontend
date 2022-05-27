@@ -9,11 +9,11 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import VueRouter from 'vue-router';
-import { ref, watchEffect } from '@vue/composition-api';
+import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
+import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
-import { canRoute, forceReplace, preservesData } from './util/router';
+import { canRoute, forceReplace, preservesData, unlessFailure } from './util/router';
 import { keys as requestKeys } from './store/modules/request/keys';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
@@ -21,8 +21,8 @@ import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 
-export default (container, mode = 'hash') => {
-  const router = new VueRouter({ mode, routes: createRoutes(container) });
+export default (container, history = createWebHashHistory()) => {
+  const router = createRouter({ history, routes: createRoutes(container) });
   const { store, alert, unsavedChanges } = container;
 
 
@@ -41,13 +41,13 @@ component render the <router-view> that will create the child AsyncRoute
 component, which will start loading its async component.) In order to load async
 components in parallel, we use a navigation hook to kick-start the load of all
 async components associated with the route. */
-router.afterEach(to => {
+router.afterEach(unlessFailure(to => {
   for (const routeRecord of to.matched) {
     const { asyncRoute } = routeRecord.meta;
     // AsyncRoute will handle any error.
     if (asyncRoute != null) loadAsync(asyncRoute.componentName)().catch(noop);
   }
-});
+}));
 
 
 
@@ -78,10 +78,9 @@ router.afterEach(to => {
       }
     ];
 
-    const removeGuard = router.beforeEach(async (to, _, next) => {
+    const removeGuard = router.beforeEach(async (to) => {
       await Promise.allSettled(requests.map(request => request(to)));
       removeGuard();
-      next();
     });
   }
 
@@ -91,21 +90,13 @@ router.afterEach(to => {
 // LOGIN
 
 // Implements the requireLogin and requireAnonymity meta fields.
-router.beforeEach((to, from, next) => {
+router.beforeEach(to => {
   const { session } = store.state.request.data;
-  if (to.meta.requireLogin) {
-    if (session != null)
-      next();
-    else
-      next({ path: '/login', query: { next: to.fullPath } });
-  } else if (to.meta.requireAnonymity) {
-    if (session != null)
-      next('/');
-    else
-      next();
-  } else {
-    next();
-  }
+  if (to.meta.requireLogin && session == null)
+    return { path: '/login', query: { next: to.fullPath } };
+  if (to.meta.requireAnonymity && session != null)
+    return '/';
+  return true;
 });
 
 
@@ -114,7 +105,7 @@ router.beforeEach((to, from, next) => {
 // RESPONSE DATA
 
 // Implements the preserveData meta field.
-router.afterEach((to, from) => {
+router.afterEach(unlessFailure((to, from) => {
   if (preservesData('*', to, from)) return;
   for (const key of requestKeys) {
     if (!preservesData(key, to, from)) {
@@ -122,16 +113,11 @@ router.afterEach((to, from) => {
       if (store.getters.loading(key)) store.commit('cancelRequest', key);
     }
   }
-});
+}));
 
 // validateData
 
-router.beforeEach((to, from, next) => {
-  if (canRoute(to, from, store))
-    next();
-  else
-    next('/');
-});
+router.beforeEach((to, from) => (canRoute(to, from, store) ? true : '/'));
 
 /*
 Set up watchers on the response data, and update them whenever the validateData
@@ -144,7 +130,7 @@ of the `key` attribute.)
 */
 {
   const unwatch = [];
-  router.afterEach(to => {
+  router.afterEach(unlessFailure(to => {
     while (unwatch.length !== 0)
       unwatch.pop()();
 
@@ -161,26 +147,23 @@ of the `key` attribute.)
         }
       }));
     }
-  });
+  }));
 }
 
-{
   // `title` meta field
-  // TODO/vue3. Simplify this.
-  const currentRoute = ref(VueRouter.START_LOCATION);
-  router.afterEach(to => { currentRoute.value = to; });
-  const removeHook = router.afterEach(() => {
-    watchEffect(() => {
-      const { title } = currentRoute.value.meta;
+  watchEffect(() => {
+    // router.currentRoute.value === START_LOCATION when the watchEffect() is
+    // first run, as well as when the application instance is unmounted (in
+    // testing).
+    if (router.currentRoute.value !== START_LOCATION) {
+      const { title } = router.currentRoute.value.meta;
       const parts = title(store.state.request.data);
       // Append ODK Central to every title, filter out any null values (e.g.
       // project name before the project object was loaded), join with
       // separator.
       document.title = parts.concat('ODK Central').filter(x => x).join(' | ');
-    });
-    removeHook();
+    }
   });
-}
 
 
 
@@ -194,25 +177,20 @@ window.addEventListener('beforeunload', (event) => {
   event.returnValue = ''; // eslint-disable-line no-param-reassign
 });
 
-router.beforeEach((to, from, next) => {
-  if (unsavedChanges.confirm())
-    next();
-  else
-    next(false);
-});
+router.beforeEach(() => unsavedChanges.confirm());
 
-router.afterEach(() => {
+router.afterEach(unlessFailure(() => {
   unsavedChanges.zero();
-});
+}));
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // OTHER NAVIGATION HOOKS
 
-router.afterEach(() => {
+router.afterEach(unlessFailure(() => {
   alert.blank();
-});
+}));
 
 
 

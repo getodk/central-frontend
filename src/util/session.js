@@ -64,8 +64,8 @@ Firefox, and Safari, blocking cookies and blocking local storage seem to go
 hand-in-hand.
 */
 
-import VueRouter from 'vue-router';
-import { inject, onBeforeUnmount } from '@vue/composition-api';
+import { START_LOCATION } from 'vue-router';
+import { inject, onBeforeUnmount } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
@@ -130,8 +130,8 @@ export const logOut = (container, setNext) => {
 
   // We do not navigate to /login for a logout during login or during the
   // initial navigation.
-  if (router.currentRoute === VueRouter.START_LOCATION ||
-    router.currentRoute.path === '/login') {
+  if (router.currentRoute.value === START_LOCATION ||
+    router.currentRoute.value.path === '/login') {
     resetRequestData(store);
   } else {
     // We clear most data after navigating to /login. However, we need to clear
@@ -147,7 +147,7 @@ export const logOut = (container, setNext) => {
     // session has been cleared.
     promises.push(forceReplace(container, {
       path: '/login',
-      query: setNext ? { next: router.currentRoute.fullPath } : {}
+      query: setNext ? { next: router.currentRoute.value.fullPath } : {}
     }));
   }
 

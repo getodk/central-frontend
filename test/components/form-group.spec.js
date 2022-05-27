@@ -8,33 +8,23 @@ import { mergeMountOptions, mount } from '../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
   mount(FormGroup, mergeMountOptions(options, {
-    props: { value: '', placeholder: 'My input', autocomplete: 'off' }
+    props: { modelValue: '', placeholder: 'My input', autocomplete: 'off' }
   }));
 
 describe('FormGroup', () => {
-  it('uses the value prop', () => {
+  it('uses the modelValue prop', () => {
     const formGroup = mountComponent({
-      props: { value: 'x' }
+      props: { modelValue: 'x' }
     });
     formGroup.get('input').element.value.should.equal('x');
   });
 
-  it('emits an input event', async () => {
+  it('emits an update:modelValue event', async () => {
     const formGroup = mountComponent({
-      props: { value: 'x' }
+      props: { modelValue: 'x' }
     });
     await formGroup.get('input').setValue('y');
-    formGroup.emitted().input.should.eql([['y']]);
-  });
-
-  it('emits a change event', async () => {
-    const formGroup = mountComponent({
-      props: { value: 'x' }
-    });
-    const input = formGroup.get('input');
-    input.element.value = 'y';
-    await input.trigger('change');
-    formGroup.emitted().change.should.eql([['y']]);
+    formGroup.emitted('update:modelValue').should.eql([['y']]);
   });
 
   describe('required prop', () => {
@@ -73,7 +63,7 @@ describe('FormGroup', () => {
 
   it.skip("shows password strength meter if autocomplete prop equals 'new-password'", async () => {
     const formGroup = mountComponent({
-      props: { value: 'foo', autocomplete: 'new-password' }
+      props: { modelValue: 'foo', autocomplete: 'new-password' }
     });
     const Password = await loadAsync('Password')();
     await formGroup.vm.$nextTick();
