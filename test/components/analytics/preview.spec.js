@@ -13,7 +13,8 @@ const analyticsPreview = {
       submissions: {
         num_submissions_received: { recent: 0, total: 0 },
         num_submissions_from_web_users: { recent: 0, total: 0 }
-      }
+      },
+      other: { has_description: 0 }
     },
     {
       users: { num_managers: { recent: 1, total: 1 } },
@@ -21,7 +22,8 @@ const analyticsPreview = {
       submissions: {
         num_submissions_received: { recent: 1, total: 1 },
         num_submissions_from_web_users: { recent: 1, total: 1 }
-      }
+      },
+      other: { has_description: 1 }
     }
   ]
 };
@@ -46,7 +48,7 @@ describe('AnalyticsPreview', () => {
 
   it('renders the correct number of tables', async () => {
     const modal = await mockHttpForComponent();
-    modal.findAllComponents(AnalyticsMetricsTable).length.should.equal(5);
+    modal.findAllComponents(AnalyticsMetricsTable).length.should.equal(6);
   });
 
   it('shows system metrics', async () => {
@@ -98,5 +100,12 @@ describe('AnalyticsPreview', () => {
     const stateMetrics = { num_submissions_received: { recent: 1, total: 1 } };
     tables[3].props().metrics.should.eql(subMetrics);
     tables[4].props().metrics.should.eql(stateMetrics);
+  });
+
+  it('shows other metrics', async () => {
+    const modal = await mockHttpForComponent();
+    const table = modal.findAllComponents(AnalyticsMetricsTable)[5];
+    const subMetrics = { has_description: 1 };
+    table.props().metrics.should.eql(subMetrics);
   });
 });

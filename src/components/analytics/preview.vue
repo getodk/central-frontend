@@ -35,6 +35,8 @@ except according to the terms contained in the LICENSE file.
               :metrics="submissionSummary"/>
             <analytics-metrics-table :title="$t('submissionStates')"
               :metrics="submissionStateSummary"/>
+            <analytics-metrics-table :title="$t('other')"
+              :metrics="otherSummary"/>
           </div>
         </div>
       </template>
@@ -102,6 +104,9 @@ export default {
     },
     numProjects() {
       return this.analyticsPreview.projects.length;
+    },
+    otherSummary() {
+      return this.firstProject.other;
     }
   },
   watch: {
@@ -170,7 +175,10 @@ export default {
     },
     // This is the title of a single table in the analytics metrics report
     // of metrics about submission state (approved, rejected, etc)
-    "submissionStates": "Submission States"
+    "submissionStates": "Submission States",
+    // This is the title of a single table in the analytics metrics report
+    // of other additional metrics that don't fit into other categories
+    "other": "Other"
   }
 }
 </i18n>
