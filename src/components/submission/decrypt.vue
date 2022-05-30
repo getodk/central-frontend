@@ -487,7 +487,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Le téléchargement des données n'est pas encore disponible. Merci de réessayer dans un moment.",
-      "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer."
+      "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer.",
+      "parseError": "Quelque chose s'est mal passé pendant la requête de vos données"
     }
   },
   "id": {

@@ -183,8 +183,8 @@ export default {
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente de usuario",
     "attachments": "Archivos multimedia",
-    "present": "{count} file | {count} files",
-    "expected": "{count} expected | {count} esperado",
+    "present": "{count} file | {count} files | {count} files",
+    "expected": "{count} expected | {count} esperado | {count} esperado",
     "attachmentSummary": "{present} / {expected}"
   },
   "fr": {
@@ -193,8 +193,8 @@ export default {
     "deviceId": "ID d'appareil",
     "userAgent": "\"User agent\"",
     "attachments": "Fichiers média",
-    "present": "{count} fichier | {count} fichiers",
-    "expected": "{count} attendu | {count} attendus",
+    "present": "{count} fichier | {count} fichiers | {count} fichiers",
+    "expected": "{count} attendu | {count} attendus | {count} attendus",
     "attachmentSummary": "{present} / {expected}"
   },
   "id": {
@@ -211,8 +211,8 @@ export default {
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente utente",
     "attachments": "File multimediali",
-    "present": "{count} file | {count} files",
-    "expected": "{count} atteso | {count} attesi",
+    "present": "{count} file | {count} files | {count} files",
+    "expected": "{count} atteso | {count} attesi | {count} attesi",
     "attachmentSummary": "{present} / {expected}"
   },
   "ja": {

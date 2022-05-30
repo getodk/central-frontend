@@ -179,7 +179,7 @@ except according to the terms contained in the LICENSE file.
         "body": [
           {
             "none": "Nadie ha enviado datos a este formulario todavía.",
-            "any": "Se ha enviado un total de {count} envío a este servidor. | Se han enviado un total de {count} envíos a este servidor."
+            "any": "Se ha enviado un total de {count} envío a este servidor. | Se han enviado un total de {count} envíos a este servidor. | Se han enviado un total de {count} envíos a este servidor."
           },
           {
             "full": "{clickHere} para aprender sobre las diferentes maneras de enviar datos.",
@@ -192,7 +192,7 @@ except according to the terms contained in the LICENSE file.
         "body": [
           {
             "none": "Una vez que haya datos para este formulario, puede exportarlo o sincronizarlo para monitorear y analizar los datos en cuanto a calidad y resultados.",
-            "any": "Puede exportar o sincronizar el {count} envío en este formulario para monitorearlo y analizarlo en cuanto a calidad y resultados. | Puede exportar o sincronizar los {count} envíos en este formulario para monitorearlos y analizarlos en cuanto a calidad y resultados."
+            "any": "Puede exportar o sincronizar el {count} envío en este formulario para monitorearlo y analizarlo en cuanto a calidad y resultados. | Puede exportar o sincronizar los {count} envíos en este formulario para monitorearlos y analizarlos en cuanto a calidad y resultados. | Puede exportar o sincronizar los {count} envíos en este formulario para monitorearlos y analizarlos en cuanto a calidad y resultados."
           },
           {
             "full": "Puede hacerlo con los botones descargar y analizar en la {submissionsTab}",
@@ -226,7 +226,7 @@ except according to the terms contained in the LICENSE file.
         "body": [
           {
             "none": "Personne n'a encore soumis de données pour ce formulaire.",
-            "any": "Un total de {count} soumission a été faite. | Un total de {count} soumissions ont été faites."
+            "any": "Un total de {count} soumission a été faite. | Un total de {count} soumissions ont été faites. | Un total de {count} soumissions ont été faites."
           },
           {
             "full": "{clickHere} pour vous renseigner sur les diverses méthodes d'envoi de données.",
@@ -239,7 +239,7 @@ except according to the terms contained in the LICENSE file.
         "body": [
           {
             "none": "Dés qu'il y a des données pour ce formulaire, vous pouvez les exporter ou les synchroniser pour suivre et analyser leur qualité et les résultats.",
-            "any": "Vous pouvez exporter ou synchroniser la {count} soumission de ce formulaire pour suivre et analyser la qualité des données et les résultats. | Vous pouvez exporter ou synchroniser les {count} soumissions de ce formulaire pour suivre et analyser la qualité des données et les résultats."
+            "any": "Vous pouvez exporter ou synchroniser la {count} soumission de ce formulaire pour suivre et analyser la qualité des données et les résultats. | Vous pouvez exporter ou synchroniser les {count} soumissions de ce formulaire pour suivre et analyser la qualité des données et les résultats. | Vous pouvez exporter ou synchroniser les {count} soumissions de ce formulaire pour suivre et analyser la qualité des données et les résultats."
           },
           {
             "full": "Vous pouvez faire cela en utilisant les boutons \"Télécharger\" et \"Analyser\" de l'{submissionsTab}.",
@@ -320,7 +320,7 @@ except according to the terms contained in the LICENSE file.
         "body": [
           {
             "none": "Nessuno ha ancora inviato dati a questo formulario.",
-            "any": "Un totale di {count} invio è stato fatto. | Un totale di {count} invii è stato fatto."
+            "any": "Un totale di {count} invio è stato fatto. | Un totale di {count} invii è stato fatto. | Un totale di {count} invii è stato fatto."
           },
           {
             "full": "{clickHere} per conoscere le diverse modalità di invio dei dati.",
@@ -333,7 +333,7 @@ except according to the terms contained in the LICENSE file.
         "body": [
           {
             "none": "Una volta che ci sono dati per questo formulario, puoi esportarlo o sincronizzarlo per monitorare e analizzare i dati per qualità e risultati.",
-            "any": "Puoi esportare o sincronizzare il {count} invio su questo formulario per monitorarlo e analizzarlo per qualità e risultati. | Puoi esportare o sincronizzare i {count} invii su questo formulario per monitorarli e analizzarli per qualità e risultati."
+            "any": "Puoi esportare o sincronizzare il {count} invio su questo formulario per monitorarlo e analizzarlo per qualità e risultati. | Puoi esportare o sincronizzare i {count} invii su questo formulario per monitorarli e analizzarli per qualità e risultati. | Puoi esportare o sincronizzare i {count} invii su questo formulario per monitorarli e analizzarli per qualità e risultati."
           },
           {
             "full": "Puoi farlo con i pulsanti Scarica e Analizza sul {submissionsTab}.",

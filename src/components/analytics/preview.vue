@@ -221,7 +221,7 @@ export default {
     ],
     "projects": {
       "title": "Resúmenes de proyectos",
-      "subtitle": "(Mostrando el Proyecto más activo de {count} Proyecto) | (Mostrando el Proyecto más activo de {count} Proyectos)"
+      "subtitle": "(Mostrando el Proyecto más activo de {count} Proyecto) | (Mostrando el Proyecto más activo de {count} Proyectos) | (Mostrando el Proyecto más activo de {count} Proyectos)"
     },
     "submissionStates": "Estados de envío"
   },
@@ -234,7 +234,7 @@ export default {
     ],
     "projects": {
       "title": "Résumés du projet",
-      "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
+      "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
     },
     "submissionStates": "États des soumissions"
   },
@@ -247,7 +247,7 @@ export default {
     ],
     "projects": {
       "title": "Riepiloghi del progetto",
-      "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti)"
+      "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti) | (Visualizzazione del progetto più attivo di {count} Progetti)"
     },
     "submissionStates": "Stato invio"
   },

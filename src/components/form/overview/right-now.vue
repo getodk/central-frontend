@@ -169,8 +169,8 @@ export default {
       "closed": "Este formulario no se puede descargar y no acepta envíos."
     },
     "submissions": {
-      "full": "{submissions} ha sido guardada para este formulario | {submissions} han sido guardadas para este formulario.",
-      "submissions": "Envío | Envíos"
+      "full": "{submissions} ha sido guardada para este formulario | {submissions} han sido guardadas para este formulario. | {submissions} han sido guardadas para este formulario.",
+      "submissions": "Envío | Envíos | Envíos"
     }
   },
   "fr": {
@@ -184,8 +184,8 @@ export default {
       "closed": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions."
     },
     "submissions": {
-      "full": "{submissions} a été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire.",
-      "submissions": "Soumission | Soumissions"
+      "full": "{submissions} a été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire.",
+      "submissions": "Soumission | Soumissions | Soumissions"
     }
   },
   "id": {
@@ -214,8 +214,8 @@ export default {
       "closed": "Questo Formulario non è scaricabile e non accetta Invii."
     },
     "submissions": {
-      "full": "{submissions} è stato salvato per questo formulario | {submissions} sono state salvate per questo formulario",
-      "submissions": "Invio | Invii"
+      "full": "{submissions} è stato salvato per questo formulario | {submissions} sono state salvate per questo formulario | {submissions} sono state salvate per questo formulario",
+      "submissions": "Invio | Invii | Invii"
     }
   },
   "ja": {

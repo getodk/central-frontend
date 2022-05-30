@@ -372,25 +372,25 @@ $popup-width: 300px;
       "dragover": "Arrastre sobre la entrada del archivo que desea reemplazar con el archivo y suéltela para cargar.",
       "dropToPrepare": {
         "full": "Suelte ahora para preparar {countOfFiles} para subir a este formulario.",
-        "countOfFiles": "{count} archivo | {count} archivos"
+        "countOfFiles": "{count} archivo | {count} archivos | {count} archivos"
       }
     },
     "afterSelection": {
       "matched": {
-        "full": "{countOfFiles} listo para subir. | {countOfFiles} listos para subir.",
-        "countOfFiles": "{count} | {count} archivos"
+        "full": "{countOfFiles} listo para subir. | {countOfFiles} listos para subir. | {countOfFiles} listos para subir.",
+        "countOfFiles": "{count} | {count} archivos | {count} archivos"
       },
       "someUnmatched": {
-        "full": "{countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino. | {countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino.",
-        "countOfFiles": "{count} archivos | {count} archivos"
+        "full": "{countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino. | {countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino. | {countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino.",
+        "countOfFiles": "{count} archivos | {count} archivos | {count} archivos"
       },
-      "noneMatched": "No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos. | No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos."
+      "noneMatched": "No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos. | No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos. | No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos."
     },
     "duringUpload": {
-      "total": "Por favor espere, cargando su {count} archivo: | Por favor espere, cargando sus {count} archivos:",
+      "total": "Por favor espere, cargando su {count} archivo: | Por favor espere, cargando sus {count} archivos: | Por favor espere, cargando sus {count} archivos:",
       "current": "Enviando {filename} ({percentUploaded})",
       "remaining": {
-        "beforeLast": "{count} archivo permanece. | {count} archivos permanecen.",
+        "beforeLast": "{count} archivo permanece. | {count} archivos permanecen. | {count} archivos permanecen.",
         "last": "Este es el último archivo."
       }
     }
@@ -402,25 +402,25 @@ $popup-width: 300px;
       "dragover": "Glissez/déposez le nouveau fichier sur celui que vous voulez remplacer.",
       "dropToPrepare": {
         "full": "Déposez maintenant pour préparer le téléversement de {countOfFiles} vers ce formualire.",
-        "countOfFiles": "{count} fichier | {count} fichiers"
+        "countOfFiles": "{count} fichier | {count} fichiers | {count} fichiers"
       }
     },
     "afterSelection": {
       "matched": {
-        "full": "{countOfFiles} prêts à être téléversés for upload. | {countOfFiles} prêts à être téléversés.",
-        "countOfFiles": "{count} fichier | {count} fichiers"
+        "full": "{countOfFiles} prêts à être téléversés for upload. | {countOfFiles} prêts à être téléversés. | {countOfFiles} prêts à être téléversés.",
+        "countOfFiles": "{count} fichier | {count} fichiers | {count} fichiers"
       },
       "someUnmatched": {
-        "full": "{countOfFiles} a un nom que nous ne reconnaissons pas et qui sera ignoré. Pour le téléverser, renommez le ou déposez le sur sa cible. | {countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles.",
-        "countOfFiles": "{count} fichier | {count} fichiers"
+        "full": "{countOfFiles} a un nom que nous ne reconnaissons pas et qui sera ignoré. Pour le téléverser, renommez le ou déposez le sur sa cible. | {countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles. | {countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles.",
+        "countOfFiles": "{count} fichier | {count} fichiers | {count} fichiers"
       },
-      "noneMatched": "Nous ne reconnaissons pas le fichier que vous tentez de téléverser. Renommez le pour qu'il corresponde aux noms listez ci-dessous, ou déposez le individuellement sur sa cible. | Nous ne reconnaissons aucun des fichiers que vous tentez de téléverser. Renommez les pour qu'ils correspondent aux noms listez ci-dessous, ou déposez les un à un sur leurs cibles."
+      "noneMatched": "Nous ne reconnaissons pas le fichier que vous tentez de téléverser. Renommez le pour qu'il corresponde aux noms listez ci-dessous, ou déposez le individuellement sur sa cible. | Nous ne reconnaissons aucun des fichiers que vous tentez de téléverser. Renommez les pour qu'ils correspondent aux noms listez ci-dessous, ou déposez les un à un sur leurs cibles. | Nous ne reconnaissons aucun des fichiers que vous tentez de téléverser. Renommez les pour qu'ils correspondent aux noms listez ci-dessous, ou déposez les un à un sur leurs cibles."
     },
     "duringUpload": {
-      "total": "Merci de patienter, téléversement de votre {count} fichier en cours : | Merci de patienter, téléversement de vos {count} fichiers en cours :",
+      "total": "Merci de patienter, téléversement de votre {count} fichier en cours : | Merci de patienter, téléversement de vos {count} fichiers en cours : | Merci de patienter, téléversement de vos {count} fichiers en cours :",
       "current": "Envoi de {filename} ({percentUploaded})",
       "remaining": {
-        "beforeLast": "{count} fichier restant. | {count} fichiers restants.",
+        "beforeLast": "{count} fichier restant. | {count} fichiers restants. | {count} fichiers restants.",
         "last": "Ceci est le dernier fichier."
       }
     }
@@ -462,25 +462,25 @@ $popup-width: 300px;
       "dragover": "Trascina sulla voce del file che desideri sostituire con il file e rilascia per caricarla.",
       "dropToPrepare": {
         "full": "Rilascia ora per preparare {countOfFiles} per il caricamento in questo formulario.",
-        "countOfFiles": "{count} file | {count} files"
+        "countOfFiles": "{count} file | {count} files | {count} files"
       }
     },
     "afterSelection": {
       "matched": {
-        "full": "{countOfFiles} prontio per essere caricato. | {countOfFiles} pronti per essere caricati.",
-        "countOfFiles": "{count} file | {count} files"
+        "full": "{countOfFiles} prontio per essere caricato. | {countOfFiles} pronti per essere caricati. | {countOfFiles} pronti per essere caricati.",
+        "countOfFiles": "{count} file | {count} files | {count} files"
       },
       "someUnmatched": {
-        "full": "{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo. | {countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.",
-        "countOfFiles": "{count} file | {count} files"
+        "full": "{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo. | {countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi. | {countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.",
+        "countOfFiles": "{count} file | {count} files | {count} files"
       },
-      "noneMatched": "Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo. | Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi."
+      "noneMatched": "Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo. | Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi. | Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi."
     },
     "duringUpload": {
-      "total": "Attendere prego, caricando il tuo {count} file: | Attendere prego, caricando i tuoi {count} files:",
+      "total": "Attendere prego, caricando il tuo {count} file: | Attendere prego, caricando i tuoi {count} files: | Attendere prego, caricando i tuoi {count} files:",
       "current": "Inviando {filename} ({percentUploaded})",
       "remaining": {
-        "beforeLast": "{count} file rimasto. | {count} files rimanenti.",
+        "beforeLast": "{count} file rimasto. | {count} files rimanenti. | {count} files rimanenti.",
         "last": "Questo è l'ultimo file"
       }
     }

@@ -115,6 +115,10 @@
     "closed": {
       "string": "Chiuso",
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
+    },
+    "unpublished": {
+      "string": "",
+      "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
   "reviewState": {
@@ -499,35 +503,35 @@
   },
   "plural": {
     "appUser": {
-      "string": "{count, plural, one {Utente dell'applicazione} other {Utenti dell'applicazione}}"
+      "string": "{count, plural, one {Utente dell'applicazione} many {Utenti dell'applicazione} other {Utenti dell'applicazione}}"
     },
     "form": {
-      "string": "{count, plural, one {Formulario} other {Formulari}}"
+      "string": "{count, plural, one {Formulario} many {Formulari} other {Formulari}}"
     },
     "project": {
-      "string": "{count, plural, one {Progetto} other {Progetti}}"
+      "string": "{count, plural, one {Progetto} many {Progetti} other {Progetti}}"
     },
     "submission": {
-      "string": "{count, plural, one {Invio} other {Invii}}"
+      "string": "{count, plural, one {Invio} many {Invii} other {Invii}}"
     },
     "user": {
-      "string": "{count, plural, one {Utente} other {Utenti}}"
+      "string": "{count, plural, one {Utente} many {Utenti} other {Utenti}}"
     },
     "webUser": {
-      "string": "{count, plural, one {Utente Web} other {Utenti Web}}"
+      "string": "{count, plural, one {Utente Web} many {Utenti Web} other {Utenti Web}}"
     }
   },
   "count": {
     "appUser": {
-      "string": "{count, plural, one {{count} Utente dell'applicazione} other {{count} Utenti dell'applicazione}}",
+      "string": "{count, plural, one {{count} Utente dell'applicazione} many {{count} Utenti dell'applicazione} other {{count} Utenti dell'applicazione}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "form": {
-      "string": "{count, plural, one {{count} Formulario} other {{count} Formulari}}",
+      "string": "{count, plural, one {{count} Formulario} many {{count} Formulari} other {{count} Formulari}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "submission": {
-      "string": "{count, plural, one {{count} Invio} other {{count} Invii}}",
+      "string": "{count, plural, one {{count} Invio} many {{count} Invii} other {{count} Invii}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
@@ -978,6 +982,9 @@
         "database_size": {
           "string": "System database size"
         },
+        "uses_external_db": {
+          "string": ""
+        },
         "num_managers": {
           "string": "Numero di responsabili del progetto"
         },
@@ -1014,6 +1021,15 @@
         "num_reused_form_ids": {
           "string": "Numero di ID formulario riutilizzati"
         },
+        "num_open_forms": {
+          "string": ""
+        },
+        "num_closing_forms": {
+          "string": ""
+        },
+        "num_closed_forms": {
+          "string": ""
+        },
         "num_submissions_received": {
           "string": "Numero di invii - Ricevuti"
         },
@@ -1043,6 +1059,9 @@
         },
         "num_submissions_from_web_users": {
           "string": "Numero di invii ricevuti da utenti web"
+        },
+        "has_description": {
+          "string": ""
         }
       }
     },
@@ -1068,12 +1087,16 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Visualizzazione del progetto più attivo di {count} Progetto)} other {(Visualizzazione del progetto più attivo di {count} Progetti)}}"
+          "string": "{count, plural, one {(Visualizzazione del progetto più attivo di {count} Progetto)} many {(Visualizzazione del progetto più attivo di {count} Progetti)} other {(Visualizzazione del progetto più attivo di {count} Progetti)}}"
         }
       },
       "submissionStates": {
         "string": "Stato invio",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
+      },
+      "other": {
+        "string": "",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
       }
     },
     "App": {
@@ -1594,7 +1617,7 @@
           "developer_comment": "{message} is an error message from the server."
         },
         "someUploaded": {
-          "string": "{count, plural, one {{message} Solamente {uploaded} su {total} files è stato caricato con successo} other {{message} Solamente {uploaded} su {total} files sono stati caricati con successo}}",
+          "string": "{count, plural, one {{message} Solamente {uploaded} su {total} files è stato caricato con successo} many {{message} Solamente {uploaded} su {total} files sono stati caricati con successo} other {{message} Solamente {uploaded} su {total} files sono stati caricati con successo}}",
           "developer_comment": "This string is an error message. It is shown only if the user tried to upload multiple files. {message} is an error message from the server. {uploaded} and {total} are numbers. {uploaded} is at least 1, and {total} is at least 2. The string will be pluralized based on {uploaded}."
         }
       },
@@ -1603,7 +1626,7 @@
           "string": "Qualcosa è andato storto durante la lettura di \"{filename}\". "
         },
         "success": {
-          "string": "{count, plural, one {{count} file è stato caricato con successo} other {{count} files sono stati caricati con successo}}"
+          "string": "{count, plural, one {{count} file è stato caricato con successo} many {{count} files sono stati caricati con successo} other {{count} files sono stati caricati con successo}}"
         }
       }
     },
@@ -1647,7 +1670,7 @@
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, one {{count} file} other {{count} files}}",
+            "string": "{count, plural, one {{count} file} many {{count} files} other {{count} files}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text:\n\nDrop now to prepare {countOfFiles} for upload to this Form."
           }
         }
@@ -1655,31 +1678,31 @@
       "afterSelection": {
         "matched": {
           "full": {
-            "string": "{count, plural, one {{countOfFiles} prontio per essere caricato.} other {{countOfFiles} pronti per essere caricati.}}",
+            "string": "{count, plural, one {{countOfFiles} prontio per essere caricato.} many {{countOfFiles} pronti per essere caricati.} other {{countOfFiles} pronti per essere caricati.}}",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, one {{count} file} other {{count} files}}",
+            "string": "{count, plural, one {{count} file} many {{count} files} other {{count} files}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
           }
         },
         "someUnmatched": {
           "full": {
-            "string": "{count, plural, one {{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo.} other {{countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.}}",
+            "string": "{count, plural, one {{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo.} many {{countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.} other {{countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.}}",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
-            "string": "{count, plural, one {{count} file} other {{count} files}}",
+            "string": "{count, plural, one {{count} file} many {{count} files} other {{count} files}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
           }
         },
         "noneMatched": {
-          "string": "{count, plural, one {Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo.} other {Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi.}}"
+          "string": "{count, plural, one {Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo.} many {Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi.} other {Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi.}}"
         }
       },
       "duringUpload": {
         "total": {
-          "string": "{count, plural, one {Attendere prego, caricando il tuo {count} file:} other {Attendere prego, caricando i tuoi {count} files:}}"
+          "string": "{count, plural, one {Attendere prego, caricando il tuo {count} file:} many {Attendere prego, caricando i tuoi {count} files:} other {Attendere prego, caricando i tuoi {count} files:}}"
         },
         "current": {
           "string": "Inviando {filename} ({percentUploaded})",
@@ -1687,7 +1710,7 @@
         },
         "remaining": {
           "beforeLast": {
-            "string": "{count, plural, one {{count} file rimasto.} other {{count} files rimanenti.}}"
+            "string": "{count, plural, one {{count} file rimasto.} many {{count} files rimanenti.} other {{count} files rimanenti.}}"
           },
           "last": {
             "string": "Questo è l'ultimo file"
@@ -1786,7 +1809,7 @@
                 "string": "Nessuno ha ancora inviato dati a questo formulario."
               },
               "any": {
-                "string": "{count, plural, one {Un totale di {count} invio è stato fatto.} other {Un totale di {count} invii è stato fatto.}}"
+                "string": "{count, plural, one {Un totale di {count} invio è stato fatto.} many {Un totale di {count} invii è stato fatto.} other {Un totale di {count} invii è stato fatto.}}"
               }
             },
             "1": {
@@ -1812,7 +1835,7 @@
                 "string": "Una volta che ci sono dati per questo formulario, puoi esportarlo o sincronizzarlo per monitorare e analizzare i dati per qualità e risultati."
               },
               "any": {
-                "string": "{count, plural, one {Puoi esportare o sincronizzare il {count} invio su questo formulario per monitorarlo e analizzarlo per qualità e risultati.} other {Puoi esportare o sincronizzare i {count} invii su questo formulario per monitorarli e analizzarli per qualità e risultati.}}"
+                "string": "{count, plural, one {Puoi esportare o sincronizzare il {count} invio su questo formulario per monitorarlo e analizzarlo per qualità e risultati.} many {Puoi esportare o sincronizzare i {count} invii su questo formulario per monitorarli e analizzarli per qualità e risultati.} other {Puoi esportare o sincronizzare i {count} invii su questo formulario per monitorarli e analizzarli per qualità e risultati.}}"
               }
             },
             "1": {
@@ -2310,11 +2333,11 @@
       },
       "submissions": {
         "full": {
-          "string": "{count, plural, one {{submissions} è stato salvato per questo formulario} other {{submissions} sono state salvate per questo formulario}}",
+          "string": "{count, plural, one {{submissions} è stato salvato per questo formulario} many {{submissions} sono state salvate per questo formulario} other {{submissions} sono state salvate per questo formulario}}",
           "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
         },
         "submissions": {
-          "string": "{count, plural, one {Invio} other {Invii}}",
+          "string": "{count, plural, one {Invio} many {Invii} other {Invii}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
         }
       }
@@ -2340,17 +2363,15 @@
       "action": {
         "fill": {
           "string": "Compila il Formulario",
-          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+          "developer_comment": "This appears on a button linking to a fillable Form"
+        },
+        "test": {
+          "string": "",
+          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
-      "formClosedTip": {
-        "string": "Questo Formulario è chiuso. Non è scaricabile e non accetta Invii."
-      },
       "formClosingTip": {
-        "string": "Questo Formulario è in fase di chiusura. Non è scaricabile e ma tuttavia accetta Invii."
-      },
-      "formUnpublishedTip": {
-        "string": "Questo formulario non ha ancora una versione pubblicata. "
+        "string": ""
       }
     },
     "FormSettings": {
@@ -2382,8 +2403,32 @@
         }
       }
     },
+    "FormSort": {
+      "sortOptions": {
+        "alphabetical": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
+        },
+        "newest": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
+        }
+      }
+    },
     "FormTable": {
       "header": {
+        "closedForms": {
+          "string": "",
+          "developer_comment": "This is the text of a column header in a table of Forms."
+        },
+        "reviewStates": {
+          "string": "",
+          "developer_comment": "This is text of a column header in a table of Forms"
+        },
+        "latest": {
+          "string": "",
+          "developer_comment": "This is the text of a column header referring to how recent a Form's latest submission was."
+        },
         "idAndVersion": {
           "string": "ID e Versione",
           "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
@@ -2697,13 +2742,11 @@
               }
             }
           }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "string": "La crittografia è stata configurata per questo progetto. Tutti i dispositivi mobili dovranno prendere o recuperare i formulari più recenti affinché la crittografia possa avvenire. "
-            }
-          }
+        }
+      },
+      "success": {
+        "0": {
+          "string": ""
         }
       },
       "field": {
@@ -2813,12 +2856,6 @@
         }
       }
     },
-    "ProjectFormRow": {
-      "unpublished": {
-        "string": "",
-        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and there are no submission counts to show."
-      }
-    },
     "ProjectHomeBlock": {
       "encrypted": {
         "string": "",
@@ -2914,21 +2951,21 @@
     "ProjectOverviewRightNow": {
       "appUsers": {
         "full": {
-          "string": "{count, plural, one {{appUsers} che può utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.} other {{appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.}}",
+          "string": "{count, plural, one {{appUsers} che può utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.} many {{appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.} other {{appUsers} che possono utilizzare un client di raccolta dati per scaricare e inviare i dati del formulario a questo progetto.}}",
           "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
         },
         "appUsers": {
-          "string": "{count, plural, one {Utente dell'applicazione} other {Utenti dell'applicazione}}",
+          "string": "{count, plural, one {Utente dell'applicazione} many {Utenti dell'applicazione} other {Utenti dell'applicazione}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
         }
       },
       "forms": {
         "full": {
-          "string": "{count, plural, one {{forms} che può essere scaricato e dato come sondaggio.} other {{forms} che possono essere scaricati e dati come sondaggi.}}",
+          "string": "{count, plural, one {{forms} che può essere scaricato e dato come sondaggio.} many {{forms} che possono essere scaricati e dati come sondaggi.} other {{forms} che possono essere scaricati e dati come sondaggi.}}",
           "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
         },
         "forms": {
-          "string": "{count, plural, one {Formulari} other {Formulari}}",
+          "string": "{count, plural, one {Formulari} many {Formulari} other {Formulari}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
         }
       }
@@ -3338,10 +3375,10 @@
         "string": "File multimediali"
       },
       "present": {
-        "string": "{count, plural, one {{count} file} other {{count} files}}"
+        "string": "{count, plural, one {{count} file} many {{count} files} other {{count} files}}"
       },
       "expected": {
-        "string": "{count, plural, one {{count} atteso} other {{count} attesi}}",
+        "string": "{count, plural, one {{count} atteso} many {{count} attesi} other {{count} attesi}}",
         "developer_comment": "This shows the number of files that were expected to be submitted."
       },
       "attachmentSummary": {
@@ -3462,7 +3499,7 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {Scarica {count} record} other {Scarica {count} records}}",
+            "string": "{count, plural, one {Scarica {count} record} many {Scarica {count} records} other {Scarica {count} records}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
@@ -3471,7 +3508,7 @@
               "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
             },
             "withCount": {
-              "string": "{count, plural, one {Scarica {count} record corrispondente} other {Scarica {count} records corrispondenti}}",
+              "string": "{count, plural, one {Scarica {count} record corrispondente} many {Scarica {count} records corrispondenti} other {Scarica {count} records corrispondenti}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
@@ -3609,19 +3646,19 @@
           "developer_comment": "This text is shown when the number of Submissions loading is unknown."
         },
         "all": {
-          "string": "{count, plural, one {Cricando {count} invio...} other {Cricando {count} invii...}}"
+          "string": "{count, plural, one {Cricando {count} invio...} many {Cricando {count} invii...} other {Cricando {count} invii...}}"
         },
         "first": {
-          "string": "{count, plural, one {Loading the first {top} of {count} Submission…} other {Caricando il primo {top} di {count} Invio…}}",
+          "string": "{count, plural, one {Loading the first {top} of {count} Submission…} many {Caricando il primo {top} di {count} Invio…} other {Caricando il primo {top} di {count} Invio…}}",
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "middle": {
-          "string": "{count, plural, one {Caricamento di {top} in più di {count} invio rimanente...} other {Caricamento di {top} in più di {count} invii rimanenti...}}",
+          "string": "{count, plural, one {Caricamento di {top} in più di {count} invio rimanente...} many {Caricamento di {top} in più di {count} invii rimanenti...} other {Caricamento di {top} in più di {count} invii rimanenti...}}",
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "last": {
           "multiple": {
-            "string": "{count, plural, one {Caricando l'ultimo {count} invio…} other {Caricando gli ultimi {count} invii…}}"
+            "string": "{count, plural, one {Caricando l'ultimo {count} invio…} many {Caricando gli ultimi {count} invii…} other {Caricando gli ultimi {count} invii…}}"
           },
           "one": {
             "string": "Caricamento dell'ultimo invio in corso..."
@@ -3633,12 +3670,12 @@
             "developer_comment": "This text is shown when the number of Submissions loading is unknown."
           },
           "middle": {
-            "string": "{count, plural, one {Caricamento di {top} in più di {count} invio corrispondente rimanente...} other {Caricamento di {top} in più di {count} invii corrispondenti rimanenti...}}",
+            "string": "{count, plural, one {Caricamento di {top} in più di {count} invio corrispondente rimanente...} many {Caricamento di {top} in più di {count} invii corrispondenti rimanenti...} other {Caricamento di {top} in più di {count} invii corrispondenti rimanenti...}}",
             "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
           },
           "last": {
             "multiple": {
-              "string": "{count, plural, one {Caricando l'ultimo {count} invio corrispondente…} other {Caricando gli ultimi {count} invii corrispondenti…}}"
+              "string": "{count, plural, one {Caricando l'ultimo {count} invio corrispondente…} many {Caricando gli ultimi {count} invii corrispondenti…} other {Caricando gli ultimi {count} invii corrispondenti…}}"
             },
             "one": {
               "string": "Cricando gli ultimi invii corrispondenti..."

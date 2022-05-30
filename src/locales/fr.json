@@ -145,6 +145,7 @@
     "review": "Réviser",
     "save": "Enregistrer",
     "saveSettings": "Enregistrer les réglages",
+    "sort": "Trier",
     "update": "Actualiser",
     "yesProceed": "Oui, procéder",
     "showPreview": "Aperçu",
@@ -179,17 +180,17 @@
     "type": "Type"
   },
   "plural": {
-    "appUser": "Utilisateur mobile | Utilisateurs mobiles",
-    "form": "Formulaire | Formulaires",
-    "project": "Projet | Projets",
-    "submission": "Soumission | Soumissions",
-    "user": "Utilisateur | Utilisateurs",
-    "webUser": "Utilisateur Web | Utilisateurs web"
+    "appUser": "Utilisateur mobile | Utilisateurs mobiles | Utilisateurs mobiles",
+    "form": "Formulaire | Formulaires | Formulaires",
+    "project": "Projet | Projets | Projets",
+    "submission": "Soumission | Soumissions | Soumissions",
+    "user": "Utilisateur | Utilisateurs | Utilisateurs",
+    "webUser": "Utilisateur Web | Utilisateurs web | Utilisateurs web"
   },
   "count": {
-    "appUser": "{count} utilisateur mobile | {count} utilisateurs mobiles",
-    "form": "{count} Formulaire | {count} Formulaires",
-    "submission": "{count} Soumission | {count} Soumissions"
+    "appUser": "{count} utilisateur mobile | {count} utilisateurs mobiles | {count} utilisateurs mobiles",
+    "form": "{count} Formulaire | {count} Formulaires | {count} Formulaires",
+    "submission": "{count} Soumission | {count} Soumissions | {count} Soumissions"
   },
   "resource": {
     "appUser": "Utilisateur mobile",
@@ -237,7 +238,8 @@
     },
     "editDisabled": "Vous ne pouvez pas éditer les soumissions chiffrées",
     "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger.",
-    "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement."
+    "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement.",
+    "noSubmission": "(aucun)"
   },
   "common": {
     "activity": "Activitée",
@@ -249,6 +251,7 @@
     "docs": "Documents",
     "filter": "Filtrer",
     "forum": "Forum",
+    "loading": "Chargement...",
     "no": "Non",
     "noResults": "Aucun résultat",
     "rightNow": "Présentement",

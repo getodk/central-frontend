@@ -97,10 +97,10 @@ export default {
   "es": {
     "action": {
       "download": {
-        "unfiltered": "Descargar {count} registros | Descargar {count} registros",
+        "unfiltered": "Descargar {count} registros | Descargar {count} registros | Descargar {count} registros",
         "filtered": {
           "withoutCount": "Descargar registros coincidentes",
-          "withCount": "Descargar {count} registros coincidentes. | Descargar {count} registros coincidentes"
+          "withCount": "Descargar {count} registros coincidentes. | Descargar {count} registros coincidentes | Descargar {count} registros coincidentes"
         }
       }
     }
@@ -108,10 +108,10 @@ export default {
   "fr": {
     "action": {
       "download": {
-        "unfiltered": "Télécharger {count} soumission | Télécharger {count} soumissions",
+        "unfiltered": "Télécharger {count} soumission | Télécharger {count} soumissions | Télécharger {count} soumissions",
         "filtered": {
           "withoutCount": "Télécharger les enregistrements correspondants",
-          "withCount": "Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s)"
+          "withCount": "Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s)"
         }
       }
     }
@@ -130,10 +130,10 @@ export default {
   "it": {
     "action": {
       "download": {
-        "unfiltered": "Scarica {count} record | Scarica {count} records",
+        "unfiltered": "Scarica {count} record | Scarica {count} records | Scarica {count} records",
         "filtered": {
           "withoutCount": "Scarica records corrispondenti",
-          "withCount": "Scarica {count} record corrispondente | Scarica {count} records corrispondenti"
+          "withCount": "Scarica {count} record corrispondente | Scarica {count} records corrispondenti | Scarica {count} records corrispondenti"
         }
       }
     }

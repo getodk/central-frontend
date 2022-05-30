@@ -115,6 +115,10 @@
     "closed": {
       "string": "Tutup",
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
+    },
+    "unpublished": {
+      "string": "",
+      "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
   "reviewState": {
@@ -978,6 +982,9 @@
         "database_size": {
           "string": "Ukuran database sistem"
         },
+        "uses_external_db": {
+          "string": ""
+        },
         "num_managers": {
           "string": ""
         },
@@ -1014,6 +1021,15 @@
         "num_reused_form_ids": {
           "string": ""
         },
+        "num_open_forms": {
+          "string": ""
+        },
+        "num_closing_forms": {
+          "string": ""
+        },
+        "num_closed_forms": {
+          "string": ""
+        },
         "num_submissions_received": {
           "string": ""
         },
@@ -1043,6 +1059,9 @@
         },
         "num_submissions_from_web_users": {
           "string": "Jumlah Kiriman dari Pengguna Web"
+        },
+        "has_description": {
+          "string": ""
         }
       }
     },
@@ -1074,6 +1093,10 @@
       "submissionStates": {
         "string": "",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
+      },
+      "other": {
+        "string": "",
+        "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
       }
     },
     "App": {
@@ -2340,17 +2363,15 @@
       "action": {
         "fill": {
           "string": "Isi Formulir",
-          "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+          "developer_comment": "This appears on a button linking to a fillable Form"
+        },
+        "test": {
+          "string": "",
+          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
-      "formClosedTip": {
-        "string": "Formulir ini telah tertutup. Formulir tidak dapat diunduh dan tidak menerima kiriman."
-      },
       "formClosingTip": {
-        "string": "Formulir ini telah ditutup. Formulir tidak dapat diunduh namun tetap dapat menerima kiriman."
-      },
-      "formUnpublishedTip": {
-        "string": "Formulir ini belum memiliki versi yang dipublikasikan."
+        "string": ""
       }
     },
     "FormSettings": {
@@ -2382,8 +2403,32 @@
         }
       }
     },
+    "FormSort": {
+      "sortOptions": {
+        "alphabetical": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
+        },
+        "newest": {
+          "string": "",
+          "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
+        }
+      }
+    },
     "FormTable": {
       "header": {
+        "closedForms": {
+          "string": "",
+          "developer_comment": "This is the text of a column header in a table of Forms."
+        },
+        "reviewStates": {
+          "string": "",
+          "developer_comment": "This is text of a column header in a table of Forms"
+        },
+        "latest": {
+          "string": "",
+          "developer_comment": "This is the text of a column header referring to how recent a Form's latest submission was."
+        },
         "idAndVersion": {
           "string": "ID dan Versi",
           "developer_comment": "This is the text of a column header in a table of Forms. The column shows the ID of each Form, as well as the name of its primary version."
@@ -2697,13 +2742,11 @@
               }
             }
           }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "string": "Enkripsi telah dikonfigurasi untuk Proyek ini. Setiap perangkat seluler harus mengambil ulang formulir terbaru untuk mengaktifkan enkripsi. "
-            }
-          }
+        }
+      },
+      "success": {
+        "0": {
+          "string": ""
         }
       },
       "field": {
@@ -2811,12 +2854,6 @@
           "string": "Status",
           "developer_comment": "This is the text of a table column header."
         }
-      }
-    },
-    "ProjectFormRow": {
-      "unpublished": {
-        "string": "",
-        "developer_comment": "This text is shown in the Forms table in place of submission counts when the Form has not been published and there are no submission counts to show."
       }
     },
     "ProjectHomeBlock": {
