@@ -14,10 +14,10 @@ const locales = {
   en: {},
   cs: {},
   de: {},
-  es: {},
-  fr: { pluralCategories: ['one', 'other'] },
+  es: { pluralCategories: ['one', 'many', 'other'] },
+  fr: {},
   id: {},
-  it: {},
+  it: { pluralCategories: ['one', 'many', 'other'] },
   ja: { warnVariableSeparator: false },
   sw: {}
 };
@@ -30,7 +30,9 @@ const sourceLocale = 'en';
   for (const [locale, options] of Object.entries(locales)) {
     const normalized = { ...defaults, ...options };
 
-    if (normalized.pluralCategories == null) {
+    if (normalized.pluralCategories != null) {
+      normalized.pluralCategories = [...normalized.pluralCategories].sort();
+    } else {
       const pluralRules = new Intl.PluralRules([locale]);
       normalized.pluralCategories = pluralRules.resolvedOptions().pluralCategories;
     }
