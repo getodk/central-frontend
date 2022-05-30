@@ -264,7 +264,8 @@
   },
   "alert": {
     "passwordTooShort": "Please input a password at least 10 characters long.",
-    "updateReviewState": "Review State saved!"
+    "updateReviewState": "Review State saved!",
+    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
   },
   "moreInfo": {
     "clickHere": {
