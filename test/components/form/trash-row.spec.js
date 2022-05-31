@@ -42,15 +42,6 @@ describe('FormTrashRow', () => {
     });
   });
 
-  describe('form id', () => {
-    beforeEach(mockLogin);
-
-    it('shows the xmlFormId', () => {
-      const formData = { xmlFormId: 'f' };
-      mountComponent(formData).get('.form-id').text().should.equal('f');
-    });
-  });
-
   describe('last submission count and date', () => {
     beforeEach(mockLogin);
 

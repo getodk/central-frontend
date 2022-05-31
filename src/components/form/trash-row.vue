@@ -13,7 +13,6 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-trash-row">
     <td class="name">
       <span class="form-name">{{ form.nameOrId() }}</span>
-      <span class="form-id-container">(<span class="form-id">{{ form.xmlFormId }}</span>)</span>
     </td>
     <td class="deleted">
       <i18n-t tag="div" keypath="deletedDate" class="deleted-date">
@@ -107,12 +106,6 @@ export default {
 
   .name {
     font-size: 18px;
-  }
-
-  .form-id-container {
-    font-family: $font-family-monospace;
-    font-size: 14px;
-    margin-left: 6px;
   }
 
   .deleted {
