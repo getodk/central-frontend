@@ -45,7 +45,7 @@ describe('ProjectList', () => {
     );
     const list = mountComponent();
     list.findAllComponents(ProjectHomeBlock).length.should.equal(2);
-    list.findAllComponents(FormRow).length.should.equal(5);
+    list.findAllComponents(FormRow).length.should.equal(7);
   });
 
   it('shows archived projects at the bottom of the page', () => {
@@ -152,14 +152,13 @@ describe('ProjectList', () => {
       await component.find('#project-sort select').setValue('latest');
       blocks.length.should.equal(4);
       blocks.map((block) => block.props().project.name).should.eql(['X_subs', 'A_no_subs', 'B_no_subs', 'C_no_subs']);
-      await blocks[0].get('.expand-button').trigger('click');
       const formRows = blocks[0].findAllComponents(FormRow);
       formRows.map((row) => row.props().form.name).should.eql(['Y', 'X', 'A', 'B', 'C']);
     });
   });
 
   describe('dynamic numbers of forms', () => {
-    it('one project with many forms', async () => {
+    it('renders correctly when there is one project with many forms', () => {
       createProjectsWithForms(
         [{ name: 'Project 1' }, { name: 'Project 2' }],
         [
@@ -175,7 +174,7 @@ describe('ProjectList', () => {
       blocks[1].findAllComponents(FormRow).length.should.equal(1);
     });
 
-    it('evenly distributed projects with exactly 15 forms', async () => {
+    it('renders correctly when exactly 15 forms evenly distributed between projects', () => {
       createProjectsWithForms(
         [{ name: 'Project 1' }, { name: 'Project 2' }, { name: 'Project 3' }],
         [
@@ -193,7 +192,25 @@ describe('ProjectList', () => {
       blocks[2].findAllComponents(FormRow).length.should.equal(5);
     });
 
-    it('keeping same limit across home blocks', async () => {
+    it('renders 15 of 16 almost-evenly distributed forms', () => {
+      createProjectsWithForms(
+        [{ name: 'Project 1' }, { name: 'Project 2' }, { name: 'Project 3' }],
+        [
+          [{}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(FormRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(5);
+      blocks[0].findAllComponents(FormRow).length.should.equal(5);
+      blocks[1].findAllComponents(FormRow).length.should.equal(5);
+      blocks[2].findAllComponents(FormRow).length.should.equal(5);
+    });
+
+    it('uses the samee form limit across home blocks', () => {
       createProjectsWithForms(
         [
           { name: 'Project 1' },
@@ -218,7 +235,7 @@ describe('ProjectList', () => {
       blocks[3].findAllComponents(FormRow).length.should.equal(3);
     });
 
-    it('few forms', async () => {
+    it('renders correctly with a small number of forms', () => {
       createProjectsWithForms(
         [
           { name: 'Project 1' },
@@ -237,7 +254,7 @@ describe('ProjectList', () => {
       blocks[1].findAllComponents(FormRow).length.should.equal(2);
     });
 
-    it('few forms, higher limit than actual form number', async () => {
+    it('it renders correctly with a small number of forms but where one project is above the limit', () => {
       createProjectsWithForms(
         [
           { name: 'Project 1' },
@@ -256,14 +273,14 @@ describe('ProjectList', () => {
       blocks[1].findAllComponents(FormRow).length.should.equal(2);
     });
 
-    it('takes into account closed forms', async () => {
+    it('takes into account closed forms', () => {
       createProjectsWithForms(
         [
           { name: 'Project 1' },
           { name: 'Project 2' }
         ],
         [
-          [{}, {}, {}, { state: 'closed' }],
+          [{}, {}, {}, { state: 'closed' }, { state: 'closed' }],
           [{}, {}]
         ]
       );
