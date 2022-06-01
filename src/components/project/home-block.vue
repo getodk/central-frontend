@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     visibleForms() {
-      const sortedForms = [...this.project.formList];
+      const sortedForms = [...this.project.formList].filter((f) => f.state !== 'closed');
       sortedForms.sort(this.sortFunc);
       return this.expanded
         ? sortedForms

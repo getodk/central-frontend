@@ -158,8 +158,121 @@ describe('ProjectList', () => {
     });
   });
 
-  it('shows the appropriate number of forms based on total project/form numbers', () => {
-    // TODO (not implemented yet)
+  describe('dynamic numbers of forms', () => {
+    it('one project with many forms', async () => {
+      createProjectsWithForms(
+        [{ name: 'Project 1' }, { name: 'Project 2' }],
+        [
+          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+          [{}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(FormRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(14);
+      blocks[0].findAllComponents(FormRow).length.should.equal(14);
+      blocks[1].findAllComponents(FormRow).length.should.equal(1);
+    });
+
+    it('evenly distributed projects with exactly 15 forms', async () => {
+      createProjectsWithForms(
+        [{ name: 'Project 1' }, { name: 'Project 2' }, { name: 'Project 3' }],
+        [
+          [{}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(FormRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(5);
+      blocks[0].findAllComponents(FormRow).length.should.equal(5);
+      blocks[1].findAllComponents(FormRow).length.should.equal(5);
+      blocks[2].findAllComponents(FormRow).length.should.equal(5);
+    });
+
+    it('keeping same limit across home blocks', async () => {
+      createProjectsWithForms(
+        [
+          { name: 'Project 1' },
+          { name: 'Project 2' },
+          { name: 'Project 3' },
+          { name: 'Project 4' }
+        ],
+        [
+          [{}, {}, {}, {}],
+          [{}, {}, {}, {}],
+          [{}, {}, {}, {}],
+          [{}, {}, {}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(FormRow).length.should.equal(12);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(3);
+      blocks[0].findAllComponents(FormRow).length.should.equal(3);
+      blocks[1].findAllComponents(FormRow).length.should.equal(3);
+      blocks[2].findAllComponents(FormRow).length.should.equal(3);
+      blocks[3].findAllComponents(FormRow).length.should.equal(3);
+    });
+
+    it('few forms', async () => {
+      createProjectsWithForms(
+        [
+          { name: 'Project 1' },
+          { name: 'Project 2' }
+        ],
+        [
+          [{}, {}, {}, {}],
+          [{}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(FormRow).length.should.equal(6);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(4);
+      blocks[0].findAllComponents(FormRow).length.should.equal(4);
+      blocks[1].findAllComponents(FormRow).length.should.equal(2);
+    });
+
+    it('few forms, higher limit than actual form number', async () => {
+      createProjectsWithForms(
+        [
+          { name: 'Project 1' },
+          { name: 'Project 2' }
+        ],
+        [
+          [{}, {}, {}],
+          [{}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(FormRow).length.should.equal(5);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(4);
+      blocks[0].findAllComponents(FormRow).length.should.equal(3);
+      blocks[1].findAllComponents(FormRow).length.should.equal(2);
+    });
+
+    it('takes into account closed forms', async () => {
+      createProjectsWithForms(
+        [
+          { name: 'Project 1' },
+          { name: 'Project 2' }
+        ],
+        [
+          [{}, {}, {}, { state: 'closed' }],
+          [{}, {}]
+        ]
+      );
+      const component = mountComponent();
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(4);
+      blocks[0].findAllComponents(FormRow).length.should.equal(3);
+      blocks[1].findAllComponents(FormRow).length.should.equal(2);
+    });
   });
 });
 

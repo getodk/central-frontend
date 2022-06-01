@@ -106,4 +106,15 @@ describe('ProjectHomeBlock', () => {
     rows = block.findAllComponents(FormRow);
     rows.map((row) => row.props().form.name).should.eql(['ccc_w', 'ddd_x', 'bbb_y', 'aaa_z']);
   });
+
+  it('hides closed forms', () => {
+    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedForms.createPast(1, { name: 'a' });
+    testData.extendedForms.createPast(1, { name: 'b', state: 'closed' });
+    testData.extendedForms.createPast(1, { name: 'c', state: 'closing' });
+    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
+    const block = mountComponent();
+    const rows = block.findAllComponents(FormRow);
+    rows.map((row) => row.props().form.name).should.eql(['a', 'c']);
+  });
 });
