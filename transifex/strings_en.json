@@ -603,6 +603,9 @@
     },
     "updateReviewState": {
       "string": "Review State saved!"
+    },
+    "versionChange": {
+      "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
     }
   },
   "moreInfo": {
@@ -1097,13 +1100,6 @@
       "other": {
         "string": "Other",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
-      }
-    },
-    "App": {
-      "alert": {
-        "versionChange": {
-          "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
-        }
       }
     },
     "AsyncRoute": {

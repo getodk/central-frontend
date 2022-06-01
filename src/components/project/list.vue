@@ -168,6 +168,7 @@ export default {
     }
   },
   "fr": {
+    "archived": "Projets archivés",
     "action": {
       "create": "Nouveau"
     },

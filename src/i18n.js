@@ -65,9 +65,14 @@ const pluralizationRules = {
     */
     return 2;
   },
+  // es, fr, and it have three plural forms in Transifex: one, many, and other.
+  // However, we never use "many".
+  es: (count) => (count === 1 ? 0 : 2),
   id: noPlural,
   ja: noPlural
 };
+pluralizationRules.fr = pluralizationRules.es;
+pluralizationRules.it = pluralizationRules.es;
 
 
 

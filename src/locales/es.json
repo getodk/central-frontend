@@ -179,17 +179,17 @@
     "type": "Tipo"
   },
   "plural": {
-    "appUser": "Usuario móvil | Usuarios móviles",
-    "form": "Formulario | Formularios",
-    "project": "Proyecto | Proyectos",
-    "submission": "Envío | Envíos",
-    "user": "Usuario | Usuarios",
-    "webUser": "Usuario web | Usuarios web"
+    "appUser": "Usuario móvil | Usuarios móviles | Usuarios móviles",
+    "form": "Formulario | Formularios | Formularios",
+    "project": "Proyecto | Proyectos | Proyectos",
+    "submission": "Envío | Envíos | Envíos",
+    "user": "Usuario | Usuarios | Usuarios",
+    "webUser": "Usuario web | Usuarios web | Usuarios web"
   },
   "count": {
-    "appUser": "{count} usuario móvil | {count} usuarios móviles",
-    "form": "{count} formulario | {count} formularios",
-    "submission": "{count} Envío | {count} envíos"
+    "appUser": "{count} usuario móvil | {count} usuarios móviles | {count} usuarios móviles",
+    "form": "{count} formulario | {count} formularios | {count} formularios",
+    "submission": "{count} Envío | {count} envíos | {count} envíos"
   },
   "resource": {
     "appUser": "Usuario móvil",

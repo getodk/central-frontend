@@ -531,18 +531,18 @@ export default {
   "es": {
     "loading": {
       "withoutCount": "Cargando los envíos...",
-      "all": "Cargando {count} envío... | Cargando {count} envíos...",
-      "first": "Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios...",
-      "middle": "Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes...",
+      "all": "Cargando {count} envío... | Cargando {count} envíos... | Cargando {count} envíos...",
+      "first": "Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios...",
+      "middle": "Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes...",
       "last": {
-        "multiple": "Cargando el último {count} envío... | Cargando los últimos {count} envíos...",
+        "multiple": "Cargando el último {count} envío... | Cargando los últimos {count} envíos... | Cargando los últimos {count} envíos...",
         "one": "Cargando el último envío..."
       },
       "filtered": {
         "withoutCount": "Cargando envíos coincidentes…",
-        "middle": "Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes...",
+        "middle": "Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes...",
         "last": {
-          "multiple": "Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes…",
+          "multiple": "Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes…",
           "one": "Cargando el último envío coincidente…"
         }
       }
@@ -553,18 +553,18 @@ export default {
   "fr": {
     "loading": {
       "withoutCount": "Chargement des soumissions...",
-      "all": "Chargement de {count} soumission... | Chargement de {count} soumissions...",
-      "first": "Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions...",
-      "middle": "Chargement de {top} autres de {count} soumission restante... | Chargement de {top} autres des {count} soumissions restantes...",
+      "all": "Chargement de {count} soumission... | Chargement de {count} soumissions... | Chargement de {count} soumissions...",
+      "first": "Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions...",
+      "middle": "Chargement de {top} autres de {count} soumission restante... | Chargement de {top} autres des {count} soumissions restantes... | Chargement de {top} autres des {count} soumissions restantes...",
       "last": {
-        "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions...",
+        "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions... | Chargement des {count} dernières soumissions...",
         "one": "Chargement la dernière soumission..."
       },
       "filtered": {
         "withoutCount": "Chargement des soumissions correspondantes...",
-        "middle": "Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes...",
+        "middle": "Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes...",
         "last": {
-          "multiple": "Chargement d'{count} dernière soumission correspondante... | Chargement des {count} dernières soumissions correspondantes...",
+          "multiple": "Chargement d'{count} dernière soumission correspondante... | Chargement des {count} dernières soumissions correspondantes... | Chargement des {count} dernières soumissions correspondantes...",
           "one": "Chargement de la dernière soumission correspondante..."
         }
       }
@@ -597,18 +597,18 @@ export default {
   "it": {
     "loading": {
       "withoutCount": "Caricando invii...",
-      "all": "Cricando {count} invio... | Cricando {count} invii...",
-      "first": "Loading the first {top} of {count} Submission… | Caricando il primo {top} di {count} Invio…",
-      "middle": "Caricamento di {top} in più di {count} invio rimanente... | Caricamento di {top} in più di {count} invii rimanenti...",
+      "all": "Cricando {count} invio... | Cricando {count} invii... | Cricando {count} invii...",
+      "first": "Loading the first {top} of {count} Submission… | Caricando il primo {top} di {count} Invio… | Caricando il primo {top} di {count} Invio…",
+      "middle": "Caricamento di {top} in più di {count} invio rimanente... | Caricamento di {top} in più di {count} invii rimanenti... | Caricamento di {top} in più di {count} invii rimanenti...",
       "last": {
-        "multiple": "Caricando l'ultimo {count} invio… | Caricando gli ultimi {count} invii…",
+        "multiple": "Caricando l'ultimo {count} invio… | Caricando gli ultimi {count} invii… | Caricando gli ultimi {count} invii…",
         "one": "Caricamento dell'ultimo invio in corso..."
       },
       "filtered": {
         "withoutCount": "Cricando invii corrispondenti...",
-        "middle": "Caricamento di {top} in più di {count} invio corrispondente rimanente... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti...",
+        "middle": "Caricamento di {top} in più di {count} invio corrispondente rimanente... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti...",
         "last": {
-          "multiple": "Caricando l'ultimo {count} invio corrispondente… | Caricando gli ultimi {count} invii corrispondenti…",
+          "multiple": "Caricando l'ultimo {count} invio corrispondente… | Caricando gli ultimi {count} invii corrispondenti… | Caricando gli ultimi {count} invii corrispondenti…",
           "one": "Cricando gli ultimi invii corrispondenti..."
         }
       }

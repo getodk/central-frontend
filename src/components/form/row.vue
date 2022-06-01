@@ -202,66 +202,42 @@ export default {
   "cs": {
     "action": {
       "fill": "Vyplnit formulář"
-    },
-    "formClosedTip": "Tento formulář je uzavřen. Nelze jej stáhnout a nepřijímá příspěvky.",
-    "formClosingTip": "Tento formulář se uzavírá. Nelze jej stáhnout, ale stále přijímá příspěvky.",
-    "formUnpublishedTip": "Tento formulář dosud nemá publikovanou verzi."
+    }
   },
   "de": {
     "action": {
       "fill": "Formular ausfüllen"
-    },
-    "formClosedTip": "Dieses Formular ist geschlossen. Es kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert.",
-    "formClosingTip": "Dieses Formular steht auf Schließen. Es kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
-    "formUnpublishedTip": "Es gibt bisher noch keine veröffentlichte Version dieses Formulars."
+    }
   },
   "es": {
     "action": {
       "fill": "Llenar formulario"
-    },
-    "formClosedTip": "Este Formulario está cerrado. No se puede descargar y no acepta envíos.",
-    "formClosingTip": "Este Formulario se está cerrando. No se puede descargar, pero aún acepta Envíos.",
-    "formUnpublishedTip": "Este Formulario aún no tiene una versión publicada."
+    }
   },
   "fr": {
     "action": {
       "fill": "Remplir le formulaire"
-    },
-    "formClosedTip": "Ce formulaire est fermé. Il n'est plus téléchargeable et n'accepte plus de soumissions.",
-    "formClosingTip": "Ce formulaire est en cours de fermeture. Il n'est plus téléchargeable mais peut toujours recevoir des soumissions.",
-    "formUnpublishedTip": "Ce formulaire ne dispose pas encore de version publiée."
+    }
   },
   "id": {
     "action": {
       "fill": "Isi Formulir"
-    },
-    "formClosedTip": "Formulir ini telah tertutup. Formulir tidak dapat diunduh dan tidak menerima kiriman.",
-    "formClosingTip": "Formulir ini telah ditutup. Formulir tidak dapat diunduh namun tetap dapat menerima kiriman.",
-    "formUnpublishedTip": "Formulir ini belum memiliki versi yang dipublikasikan."
+    }
   },
   "it": {
     "action": {
       "fill": "Compila il Formulario"
-    },
-    "formClosedTip": "Questo Formulario è chiuso. Non è scaricabile e non accetta Invii.",
-    "formClosingTip": "Questo Formulario è in fase di chiusura. Non è scaricabile e ma tuttavia accetta Invii.",
-    "formUnpublishedTip": "Questo formulario non ha ancora una versione pubblicata."
+    }
   },
   "ja": {
     "action": {
       "fill": "フォームに記入"
-    },
-    "formClosedTip": "このフォームは終了しています。ダウンロードやフォームの提出は出来ません。",
-    "formClosingTip": "このフォームはクロージング状態です。ダウンロードは出来ませんが、フォームの提出は受け付けています。",
-    "formUnpublishedTip": "このフォームは公開バージョンがまだありません。"
+    }
   },
   "sw": {
     "action": {
       "fill": "Jaza Fomu"
-    },
-    "formClosedTip": "Fomu Hii Imefungwa. Haiwezi kupakuliwa na haikubali Mawasilisho.",
-    "formClosingTip": "Fomu Hii Inafungwa. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho.",
-    "formUnpublishedTip": "Fomu hii bado haina toleo lililochapishwa."
+    }
   }
 }
 </i18n>

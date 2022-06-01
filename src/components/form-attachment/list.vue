@@ -487,11 +487,11 @@ export default {
     },
     "problem": {
       "noneUploaded": "{message} No se cargaron archivos correctamente",
-      "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
+      "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
     },
     "alert": {
       "readError": "Algo salió mal mientras leía {filename}",
-      "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente."
+      "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente."
     }
   },
   "fr": {
@@ -507,11 +507,11 @@ export default {
     },
     "problem": {
       "noneUploaded": "{message} Aucun fichier n'a été correctement téléversé.",
-      "someUploaded": "{message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès. | {message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès."
+      "someUploaded": "{message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès. | {message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès. | {message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès."
     },
     "alert": {
       "readError": "Quelque-chose s'est mal passé pendant la lecture de “{filename}”.",
-      "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés."
+      "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés."
     }
   },
   "id": {
@@ -547,11 +547,11 @@ export default {
     },
     "problem": {
       "noneUploaded": "{message} Nessun file è stato caricato correttamente.",
-      "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"
+      "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"
     },
     "alert": {
       "readError": "Qualcosa è andato storto durante la lettura di \"{filename}\".",
-      "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo"
+      "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo"
     }
   },
   "ja": {
