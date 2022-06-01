@@ -54,6 +54,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { sum } from 'ramda';
+
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectNew from './new.vue';
@@ -106,16 +108,19 @@ export default {
       if (this.projects.length >= 15)
         return limit;
 
+      const formCounts = this.projects.map((project) =>
+        project.formList.filter((f) => f.state !== 'closed').length);
+      const totalForms = sum(formCounts);
+
       // eslint-disable-next-line no-constant-condition
       while (true) {
         limit += 1;
-        let totalForms = 0;
-        let shownForms = 0;
-        for (const project of this.projects) {
-          const numForms = project.formList.filter((f) => f.state !== 'closed').length;
-          totalForms += numForms;
-          shownForms += Math.min(numForms, limit);
-        }
+        const shownForms = formCounts.reduce(
+          // eslint-disable-next-line no-loop-func
+          (acc, count) => acc + Math.min(count, limit),
+          0
+        );
+
         // If we have exceeded the number of forms
         // to show, back up to previous limit.
         if (shownForms > 15)
