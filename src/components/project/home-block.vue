@@ -95,14 +95,16 @@ export default {
 
   .title {
     font-size: 24px;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     margin-bottom: 5px;
   }
 
   .encrypted {
     margin-left: 9px;
     color: #333;
-    background-color: #ccc;
+    background-color: #ddd;
+    border: 1px solid #ccc;
     font-weight: 400;
   }
 
