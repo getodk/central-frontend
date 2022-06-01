@@ -67,7 +67,8 @@ describe('AnalyticsPreview', () => {
           submissions: {
             num_submissions_received: { recent: 0, total: 0 },
             num_submissions_from_web_users: { recent: 0, total: 0 }
-          }
+          },
+          other: { has_description: 1 }
         }
       ]
     };
