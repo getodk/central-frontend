@@ -3421,9 +3421,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "Include previously deleted Form fields",
+          "string": "Include fields not in the published version of the Form",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "deletedFieldsHelp": {
+        "string": "Use this option if you need to see data collected with previous versions of this Form."
       },
       "noSelectMultiple": {
         "string": "This Form does not have any select multiple fields."

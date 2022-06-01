@@ -38,9 +38,13 @@ except according to the terms contained in the LICENSE file.
             :class="{ disabled: deletedFieldsTitle != null }">
             <label :title="deletedFieldsTitle">
               <input v-model="deletedFields" type="checkbox"
-                :disabled="deletedFieldsTitle != null">
+                :disabled="deletedFieldsTitle != null"
+                aria-describedby="submission-download-deleted-fields-help">
               {{ $t('field.deletedFields') }}
             </label>
+            <p id="submission-download-deleted-fields-help" class="help-block">
+              {{ $t('deletedFieldsHelp') }}
+            </p>
           </div>
           <template v-if="managedKey != null">
             <p id="submission-download-passphrase-help"
@@ -297,6 +301,9 @@ export default {
   margin-bottom: 1px;
   margin-top: 5px;
 }
+.modal-dialog:not(.modal-lg) #submission-download-container form {
+  max-width: 305px;
+}
 #submission-download-passphrase-help { margin-top: 21px; }
 #submission-download-container form :last-child { margin-bottom: 0; }
 #submission-download-divider {
@@ -343,8 +350,9 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "field": {
       "splitSelectMultiples": "Split “select multiple” choices into columns",
       "removeGroupNames": "Remove group names",
-      "deletedFields": "Include previously deleted Form fields"
+      "deletedFields": "Include fields not in the published version of the Form"
     },
+    "deletedFieldsHelp": "Use this option if you need to see data collected with previous versions of this Form.",
     "noSelectMultiple": "This Form does not have any select multiple fields.",
     "encryptedForm": "Encrypted Forms cannot be processed in this way.",
     "deletedFieldsDisabledForDraft": "Draft Forms cannot be processed in this way.",
