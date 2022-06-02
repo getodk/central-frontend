@@ -157,6 +157,22 @@ export default {
     }
   }
 
+  .review-state a {
+    display: block;
+    border-radius: 9999px;
+    padding: 4px 8px;
+    margin: -4px;
+    &:hover { background: #fff }
+  }
+
+  .total-submissions a {
+    display: block;
+    border-radius: 9999px;
+    padding: 4px 8px;
+    margin: -4px;
+    &:hover { background: #e8e8e8 }
+  }
+
   .actions {
     width: 100px,
   }

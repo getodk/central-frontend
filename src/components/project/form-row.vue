@@ -148,7 +148,7 @@ export default {
 .project-form-row {
   td {
     font-size: 16px;
-    padding: 3px 0px 3px 6px;
+    padding: 4px 0px 4px 6px;
     color: #333;
     a { @include text-link; }
   }
