@@ -95,7 +95,7 @@ export default {
 
   .title {
     font-size: 24px;
-    font-weight: 600;
+    font-weight: bold;
     letter-spacing: -0.02em;
     margin-bottom: 5px;
   }
