@@ -31,14 +31,30 @@ const createProjectsWithForms = (projects, forms) => {
 };
 
 describe('ProjectList', () => {
-  beforeEach(mockLogin);
+  describe('no projects', () => {
+    it('shows the correct message if the user can project.create', () => {
+      mockLogin();
+      const message = mountComponent().get('.empty-table-message');
+      message.should.be.visible();
+      message.text().should.startWith('To get started, create a Project.');
+    });
 
-  it('shows a message if there are no projects', () => {
-    // TODO: show something fancier when there are no projects and update test
-    mountComponent().get('.empty-table-message').should.be.visible();
+    it('shows the correct message if the user cannot project.create', () => {
+      mockLogin({ role: 'none' });
+      const message = mountComponent().get('.empty-table-message');
+      message.should.be.visible();
+      message.text().should.startWith('There are no Projects to show.');
+    });
+
+    it('shows the message if there are only archived projects', () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { archived: true });
+      mountComponent().get('.empty-table-message').should.be.visible();
+    });
   });
 
   it('renders a row for each project', () => {
+    mockLogin();
     createProjectsWithForms(
       [{ name: 'Alpha Project' }, { name: 'Bravo Project' }],
       [[{}, {}], [{}, {}, {}, {}, {}]]
@@ -49,17 +65,20 @@ describe('ProjectList', () => {
   });
 
   it('shows archived projects at the bottom of the page', () => {
+    mockLogin();
     testData.extendedProjects.createPast(2);
     testData.extendedProjects.createPast(3, { archived: true });
     mountComponent().findAll('#project-list-archived .project-title').length.should.equal(3);
   });
 
   it('does not show archived header if no archived projects exist', () => {
+    mockLogin();
     mountComponent().find('#project-list-archived').exists().should.be.false();
   });
 
   describe('sorting', () => {
     beforeEach(() => {
+      mockLogin();
       createProjectsWithForms(
         [
           { name: 'A', lastSubmission: ago({ days: 15 }).toISO() },
@@ -125,6 +144,8 @@ describe('ProjectList', () => {
   });
 
   describe('sorting with ties', () => {
+    beforeEach(mockLogin);
+
     it('sorts projects alphabetically when last submission is null', async () => {
       createProjectsWithForms(
         [
@@ -158,6 +179,8 @@ describe('ProjectList', () => {
   });
 
   describe('dynamic numbers of forms', () => {
+    beforeEach(mockLogin);
+
     it('renders correctly when there is one project with many forms', () => {
       createProjectsWithForms(
         [{ name: 'Project 1' }, { name: 'Project 2' }],

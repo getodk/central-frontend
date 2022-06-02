@@ -28,9 +28,17 @@ except according to the terms contained in the LICENSE file.
             :max-forms="maxForms"/>
         </div>
         <loading :state="$store.getters.initiallyLoading(['projects'])"/>
-        <p v-if="projects != null && projects.length === 0"
+        <p v-if="projects != null && activeProjects.length === 0"
           class="empty-table-message">
-          {{ $t('emptyTable') }}
+          <template v-if="currentUser.can('project.create')">
+            {{ $t('emptyTable.canCreate') }}<sentence-separator/>
+            <i18n-t keypath="moreInfo.clickHere.full">
+              <template #clickHere>
+                <doc-link to="central-projects/">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+              </template>
+            </i18n-t>
+          </template>
+          <template v-else>{{ $t('emptyTable.cannotCreate') }}</template>
         </p>
       </template>
     </page-section>
@@ -56,11 +64,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { sum } from 'ramda';
 
+import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import ProjectNew from './new.vue';
 import ProjectHomeBlock from './home-block.vue';
 import ProjectSort from './sort.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
@@ -70,11 +80,13 @@ import sortFunctions from '../../util/sort';
 export default {
   name: 'ProjectList',
   components: {
+    DocLink,
     Loading,
     PageSection,
     ProjectNew,
     ProjectHomeBlock,
-    ProjectSort
+    ProjectSort,
+    SentenceSeparator
   },
   mixins: [modal(), routes()],
   inject: ['alert'],
@@ -166,7 +178,10 @@ export default {
       // This is the text of a button that is used to create a new Project.
       "create": "New"
     },
-    "emptyTable": "There are no Projects for you to see.",
+    "emptyTable": {
+      "canCreate": "To get started, create a Project. Projects help you organize your data by grouping related Forms and Users.",
+      "cannotCreate": "There are no Projects to show. If you expect to see Projects here, talk to the person who gave you this account. They may need to assign a Project Role for Projects you’re supposed to see."
+    },
     "alert": {
       "create": "Your new Project has been successfully created."
     }
