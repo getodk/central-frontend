@@ -2881,7 +2881,12 @@
         }
       },
       "emptyTable": {
-        "string": "There are no Projects for you to see."
+        "canCreate": {
+          "string": "To get started, create a Project. Projects help you organize your data by grouping related Forms and Users."
+        },
+        "cannotCreate": {
+          "string": "There are no Projects to show. If you expect to see Projects here, talk to the person who gave you this account. They may need to assign a Project Role for Projects you’re supposed to see."
+        }
       },
       "alert": {
         "create": {
