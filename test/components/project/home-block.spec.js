@@ -17,6 +17,8 @@ const mountComponent = () => mount(ProjectHomeBlock, {
     // This is a placeholder sort function. The real one will be
     // passed through from project/list.vue
     sortFunc: (a, b) => a.xmlFormId.localeCompare(b.xmlFormId)
+    // maxForms prop defaults to 3 and that default is used in the following tests.
+    // Tests that alter maxForms can be found in project/list.spec.js
   },
   container: { router: mockRouter('/') }
 });
@@ -107,14 +109,20 @@ describe('ProjectHomeBlock', () => {
     rows.map((row) => row.props().form.name).should.eql(['ccc_w', 'ddd_x', 'bbb_y', 'aaa_z']);
   });
 
-  it('hides closed forms', () => {
+  it('counts forms correctly in the expander even when filtering out closed forms', async () => {
     const project = testData.extendedProjects.createPast(1).last();
-    testData.extendedForms.createPast(1, { name: 'a' });
+    testData.extendedForms.createPast(1, { name: 'a', state: 'closing' });
     testData.extendedForms.createPast(1, { name: 'b', state: 'closed' });
-    testData.extendedForms.createPast(1, { name: 'c', state: 'closing' });
+    testData.extendedForms.createPast(1, { name: 'c' });
+    testData.extendedForms.createPast(1, { name: 'd' });
+    testData.extendedForms.createPast(1, { name: 'e' });
     project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
+    const expand = block.find('.expand-button');
+    expand.exists().should.be.true();
+    expand.text().should.equal('Show 4 total');
+    await expand.trigger('click');
     const rows = block.findAllComponents(FormRow);
-    rows.map((row) => row.props().form.name).should.eql(['a', 'c']);
+    rows.map((row) => row.props().form.name).should.eql(['a', 'c', 'd', 'e']);
   });
 });

@@ -210,7 +210,7 @@ describe('ProjectList', () => {
       blocks[2].findAllComponents(FormRow).length.should.equal(5);
     });
 
-    it('uses the samee form limit across home blocks', () => {
+    it('uses the same form limit across home blocks', () => {
       createProjectsWithForms(
         [
           { name: 'Project 1' },
@@ -235,7 +235,7 @@ describe('ProjectList', () => {
       blocks[3].findAllComponents(FormRow).length.should.equal(3);
     });
 
-    it('renders correctly with a small number of forms', () => {
+    it('renders correctly with a small number of forms where one project is above the original limit', () => {
       createProjectsWithForms(
         [
           { name: 'Project 1' },
@@ -254,7 +254,7 @@ describe('ProjectList', () => {
       blocks[1].findAllComponents(FormRow).length.should.equal(2);
     });
 
-    it('it renders correctly with a small number of forms but where one project is above the limit', () => {
+    it('it renders correctly with a small number of forms', () => {
       createProjectsWithForms(
         [
           { name: 'Project 1' },
