@@ -60,9 +60,7 @@ const forms = dataStore({
     draft = !inPast,
     publishedAt = undefined,
     enketoOnceId = !draft ? 'zyx' : null,
-    state = !inPast
-      ? 'open'
-      : faker.random.arrayElement(['open', 'closing', 'closed']),
+    state = 'open',
     createdBy = extendedUsers.size !== 0
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
