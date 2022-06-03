@@ -43,7 +43,8 @@
   "formState": {
     "open": "Abierto",
     "closing": "Cerrando",
-    "closed": "Cerrado"
+    "closed": "Cerrado",
+    "unpublished": "Aún no publicado"
   },
   "reviewState": {
     "received": "Recibido",
@@ -145,6 +146,7 @@
     "review": "Revisar",
     "save": "Guardar",
     "saveSettings": "Guardar las configuraciónes",
+    "sort": "Ordenar",
     "update": "Actualizar",
     "yesProceed": "Sí, continuar",
     "showPreview": "Vista previa",
@@ -237,7 +239,8 @@
     },
     "editDisabled": "No puede editar envíos encriptados.",
     "binaryLinkTitle": "Se envió el archivo. Haga clic para descargar.",
-    "encryptionMessage": "La vista previa de datos no está disponible debido al cifrado."
+    "encryptionMessage": "La vista previa de datos no está disponible debido al cifrado.",
+    "noSubmission": "(ninguno)"
   },
   "common": {
     "activity": "Actividad",

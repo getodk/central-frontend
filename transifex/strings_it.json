@@ -117,7 +117,7 @@
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
     },
     "unpublished": {
-      "string": "",
+      "string": "Non ancora pubblicato",
       "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
@@ -381,7 +381,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "sort": {
-      "string": "",
+      "string": "Ordina",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
     "update": {
@@ -603,6 +603,9 @@
     },
     "updateReviewState": {
       "string": "Stato revisione salvato!"
+    },
+    "versionChange": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -668,7 +671,7 @@
       "string": "L'anteprima dei dati non è disponibile a causa della crittografia."
     },
     "noSubmission": {
-      "string": "",
+      "string": "(nessuno)",
       "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     }
   },
@@ -983,7 +986,7 @@
           "string": "System database size"
         },
         "uses_external_db": {
-          "string": ""
+          "string": "Il server utilizza una base di dati esterna"
         },
         "num_managers": {
           "string": "Numero di responsabili del progetto"
@@ -1022,13 +1025,13 @@
           "string": "Numero di ID formulario riutilizzati"
         },
         "num_open_forms": {
-          "string": ""
+          "string": "Numero di formulari aperti"
         },
         "num_closing_forms": {
-          "string": ""
+          "string": "Numero di formulari in fase di chiusura"
         },
         "num_closed_forms": {
-          "string": ""
+          "string": "Numero di formulari chiusi"
         },
         "num_submissions_received": {
           "string": "Numero di invii - Ricevuti"
@@ -1061,7 +1064,7 @@
           "string": "Numero di invii ricevuti da utenti web"
         },
         "has_description": {
-          "string": ""
+          "string": "Il Progetto ha una descrizione"
         }
       }
     },
@@ -1095,15 +1098,8 @@
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
       "other": {
-        "string": "",
+        "string": "Altro",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
-      }
-    },
-    "App": {
-      "alert": {
-        "versionChange": {
-          "string": "Il server è stato aggiornato. Aggiorna la pagina per evitare comportamenti imprevedibili."
-        }
       }
     },
     "AsyncRoute": {
@@ -2366,12 +2362,12 @@
           "developer_comment": "This appears on a button linking to a fillable Form"
         },
         "test": {
-          "string": "",
+          "string": "Test",
           "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
-        "string": ""
+        "string": "Questo Formulario è in fase di chiusura e accetta i suoi ultimi Invii. Non è scaricabile ma tuttavia accetta Invii."
       }
     },
     "FormSettings": {
@@ -2406,11 +2402,11 @@
     "FormSort": {
       "sortOptions": {
         "alphabetical": {
-          "string": "",
+          "string": "Alfabetico",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         },
         "newest": {
-          "string": "",
+          "string": "Il più nuovo",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
       }
@@ -2418,15 +2414,15 @@
     "FormTable": {
       "header": {
         "closedForms": {
-          "string": "",
+          "string": "Formulari chiusi",
           "developer_comment": "This is the text of a column header in a table of Forms."
         },
         "reviewStates": {
-          "string": "",
+          "string": "Stati Revisione",
           "developer_comment": "This is text of a column header in a table of Forms"
         },
         "latest": {
-          "string": "",
+          "string": "Ultimo",
           "developer_comment": "This is the text of a column header referring to how recent a Form's latest submission was."
         },
         "idAndVersion": {
@@ -2746,7 +2742,7 @@
       },
       "success": {
         "0": {
-          "string": ""
+          "string": "La crittografia è stata configurata per questo progetto. Tutti i dispositivi mobili dovranno prendere o recuperare i formulari più recenti affinché la crittografia possa avvenire. "
         }
       },
       "field": {
@@ -2858,24 +2854,24 @@
     },
     "ProjectHomeBlock": {
       "encrypted": {
-        "string": "",
+        "string": "Crittografato",
         "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
       },
       "encryptionTip": {
-        "string": ""
+        "string": "Questo progetto utilizza la crittografia gestita."
       },
       "showMore": {
-        "string": "",
+        "string": "Mostra {count} del totale",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
       "showFewer": {
-        "string": "",
+        "string": "Mostra meno {count} del totale",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       }
     },
     "ProjectList": {
       "archived": {
-        "string": "",
+        "string": "Progetti archiviati",
         "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
       },
       "action": {
@@ -2885,7 +2881,12 @@
         }
       },
       "emptyTable": {
-        "string": "Non ci sono progetti da visualizzare."
+        "canCreate": {
+          "string": ""
+        },
+        "cannotCreate": {
+          "string": ""
+        }
       },
       "alert": {
         "create": {
@@ -3030,11 +3031,11 @@
     "ProjectSort": {
       "sortOptions": {
         "alphabetical": {
-          "string": "",
+          "string": "Alfabetico",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         },
         "newest": {
-          "string": "",
+          "string": "Il più nuovo",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
@@ -3425,9 +3426,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "Includi campi del formulario eliminati in precedenza",
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "deletedFieldsHelp": {
+        "string": ""
       },
       "noSelectMultiple": {
         "string": "Questo formulario non ha campi a scelta multipla selezionati."

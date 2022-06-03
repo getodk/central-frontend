@@ -117,7 +117,7 @@
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
     },
     "unpublished": {
-      "string": "",
+      "string": "Noch nicht veröffentlicht",
       "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
@@ -381,7 +381,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "sort": {
-      "string": "",
+      "string": "Sortieren",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
     "update": {
@@ -603,6 +603,9 @@
     },
     "updateReviewState": {
       "string": "Überprüfungsstatus gespeichert!"
+    },
+    "versionChange": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -668,7 +671,7 @@
       "string": "Datenvorschau wegen Verschlüsselung nicht verfügbar"
     },
     "noSubmission": {
-      "string": "",
+      "string": "(keine)",
       "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     }
   },
@@ -710,7 +713,7 @@
       "developer_comment": "This is the text of a link that links to the ODK forum."
     },
     "loading": {
-      "string": ""
+      "string": "Wird geladen..."
     },
     "no": {
       "string": "Nein"
@@ -983,7 +986,7 @@
           "string": "Systemdatenbankgröße"
         },
         "uses_external_db": {
-          "string": ""
+          "string": "Der Server verwendet eine externe Datenbank"
         },
         "num_managers": {
           "string": "Anzahl Projekt-Manager"
@@ -1022,13 +1025,13 @@
           "string": "Anzahl der wiederverwendeten Formular-IDs"
         },
         "num_open_forms": {
-          "string": ""
+          "string": "Anzahl offener Formulare"
         },
         "num_closing_forms": {
-          "string": ""
+          "string": "Anzahl der schliessenden Formulare"
         },
         "num_closed_forms": {
-          "string": ""
+          "string": "Anzahl geschlossener Formulare"
         },
         "num_submissions_received": {
           "string": "Anzahl ausgefüllte Formulare - erhalten"
@@ -1061,7 +1064,7 @@
           "string": "Anzahl Einreichungen von Web Benutzern"
         },
         "has_description": {
-          "string": ""
+          "string": "Das Projekt hat eine Beschreibung"
         }
       }
     },
@@ -1095,15 +1098,8 @@
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
       "other": {
-        "string": "",
+        "string": "Anderes",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
-      }
-    },
-    "App": {
-      "alert": {
-        "versionChange": {
-          "string": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden. "
-        }
       }
     },
     "AsyncRoute": {
@@ -2366,12 +2362,12 @@
           "developer_comment": "This appears on a button linking to a fillable Form"
         },
         "test": {
-          "string": "",
+          "string": "testen",
           "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
-        "string": ""
+        "string": "Dieses Formular steht auf Schliessen und akzeptiert seine endgültigen Übermittlungen. Es kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert."
       }
     },
     "FormSettings": {
@@ -2406,11 +2402,11 @@
     "FormSort": {
       "sortOptions": {
         "alphabetical": {
-          "string": "",
+          "string": "Alphabetisch",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         },
         "newest": {
-          "string": "",
+          "string": "Neueste",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
       }
@@ -2418,15 +2414,15 @@
     "FormTable": {
       "header": {
         "closedForms": {
-          "string": "",
+          "string": "Geschlossene Formulare",
           "developer_comment": "This is the text of a column header in a table of Forms."
         },
         "reviewStates": {
-          "string": "",
+          "string": "Überprüfungsstaaten",
           "developer_comment": "This is text of a column header in a table of Forms"
         },
         "latest": {
-          "string": "",
+          "string": "Letzte",
           "developer_comment": "This is the text of a column header referring to how recent a Form's latest submission was."
         },
         "idAndVersion": {
@@ -2529,22 +2525,22 @@
     "HomeSummary": {
       "projects": {
         "body": {
-          "string": ""
+          "string": "Central ist in Projekte organisiert, die jeweils ihre eigenen Formulare und zugehörigen Daten enthalten."
         }
       },
       "users": {
         "body": {
-          "string": ""
+          "string": "Benutzer können Projekten zugewiesen werden, um sie zu verwalten oder eingereichte Daten zu sammeln oder zu überprüfen."
         }
       },
       "docs": {
         "body": {
-          "string": ""
+          "string": "Es gibt ein Erste-Schritte-Tutorial und die Benutzerdokumentation auf der ODK Docs Webseite."
         }
       },
       "forum": {
         "body": {
-          "string": ""
+          "string": "Sie können im Forum immer Hilfe von anderen erhalten. Dort können Sie auch nach Antworten auf ähnliche Fragen suchen."
         }
       }
     },
@@ -2746,7 +2742,7 @@
       },
       "success": {
         "0": {
-          "string": ""
+          "string": "Für dieses Projekt wurde Verschlüsselung aktiviert. Alle Mobilgeräte müssen die neuesten Formulare herunterladen damit die Verschlüsselung auch durchgeführt wird."
         }
       },
       "field": {
@@ -2858,24 +2854,24 @@
     },
     "ProjectHomeBlock": {
       "encrypted": {
-        "string": "",
+        "string": "Verschlüsselt",
         "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
       },
       "encryptionTip": {
-        "string": ""
+        "string": "Dieses Projekt verwendet verwaltete Verschlüsselung."
       },
       "showMore": {
-        "string": "",
+        "string": "Zeige {count} von insgesamt",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
       "showFewer": {
-        "string": "",
+        "string": "Zeige weniger {count} von insgesamt",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       }
     },
     "ProjectList": {
       "archived": {
-        "string": "",
+        "string": "Archivierte Projekte",
         "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
       },
       "action": {
@@ -2885,7 +2881,12 @@
         }
       },
       "emptyTable": {
-        "string": "Es gibt für Sie keine Formulare zum Anzeigen."
+        "canCreate": {
+          "string": ""
+        },
+        "cannotCreate": {
+          "string": ""
+        }
       },
       "alert": {
         "create": {
@@ -3030,11 +3031,11 @@
     "ProjectSort": {
       "sortOptions": {
         "alphabetical": {
-          "string": "",
+          "string": "Alphabetisch",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         },
         "newest": {
-          "string": "",
+          "string": "Neueste",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
@@ -3425,9 +3426,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "Zuvor gelöschte Formularfelder einschließen",
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "deletedFieldsHelp": {
+        "string": ""
       },
       "noSelectMultiple": {
         "string": "Dieses Formular enthält keine Mehrfachauswahlfelder."
@@ -3475,7 +3479,7 @@
           "string": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut."
         },
         "parseError": {
-          "string": ""
+          "string": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
         }
       }
     },
@@ -3636,7 +3640,7 @@
         }
       },
       "unknown": {
-        "string": ""
+        "string": "Unbekannter Einsender"
       }
     },
     "SubmissionList": {

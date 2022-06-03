@@ -196,25 +196,24 @@ export default {
     "action": {
       "create": "Nový"
     },
-    "emptyTable": "Nejsou žádné projekty, které byste mohli vidět.",
     "alert": {
       "create": "Váš nový projekt byl úspěšně vytvořen."
     }
   },
   "de": {
+    "archived": "Archivierte Projekte",
     "action": {
       "create": "Neu"
     },
-    "emptyTable": "Es gibt für Sie keine Formulare zum Anzeigen.",
     "alert": {
       "create": "Ihr neues Projekt wurde erfolgreich erstellt."
     }
   },
   "es": {
+    "archived": "Proyectos archivados",
     "action": {
       "create": "Nuevo"
     },
-    "emptyTable": "No existen proyectos para mostrar.",
     "alert": {
       "create": "Su proyecto ha sido creado exitosamente"
     }
@@ -224,7 +223,6 @@ export default {
     "action": {
       "create": "Nouveau"
     },
-    "emptyTable": "Il n'y a pas de projets à voir.",
     "alert": {
       "create": "Votre nouveau projet a été créé avec succès."
     }
@@ -233,16 +231,15 @@ export default {
     "action": {
       "create": "Baru"
     },
-    "emptyTable": "Tidak ada Proyek untuk dilihat.",
     "alert": {
       "create": "Proyek baru Anda telah sukses dibuat."
     }
   },
   "it": {
+    "archived": "Progetti archiviati",
     "action": {
       "create": "Nuovo"
     },
-    "emptyTable": "Non ci sono progetti da visualizzare.",
     "alert": {
       "create": "Il tuo nuovo progetto è stato creato con successo."
     }
@@ -251,7 +248,6 @@ export default {
     "action": {
       "create": "新規作成"
     },
-    "emptyTable": "あなたが閲覧できるプロジェクトはありません。",
     "alert": {
       "create": "新規プロジェクトは正しく作成されました。"
     }
@@ -260,7 +256,6 @@ export default {
     "action": {
       "create": "Mpya"
     },
-    "emptyTable": "Hakuna Miradi kwako kuona.",
     "alert": {
       "create": "Mradi wako mpya umeundwa."
     }

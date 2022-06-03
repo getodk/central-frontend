@@ -127,16 +127,25 @@ export default {
   },
   "de": {
     "header": {
+      "closedForms": "Geschlossene Formulare",
+      "reviewStates": "Überprüfungsstaaten",
+      "latest": "Letzte",
       "idAndVersion": "ID und Version"
     }
   },
   "es": {
     "header": {
+      "closedForms": "Formularios cerrados",
+      "reviewStates": "Estados de revisión",
+      "latest": "Más reciente",
       "idAndVersion": "ID y versión"
     }
   },
   "fr": {
     "header": {
+      "closedForms": "Formulaires fermés",
+      "reviewStates": "États de révision",
+      "latest": "Plus ancien",
       "idAndVersion": "Identifiant et version"
     }
   },
@@ -147,6 +156,9 @@ export default {
   },
   "it": {
     "header": {
+      "closedForms": "Formulari chiusi",
+      "reviewStates": "Stati Revisione",
+      "latest": "Ultimo",
       "idAndVersion": "ID e Versione"
     }
   },

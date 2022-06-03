@@ -43,7 +43,8 @@
   "formState": {
     "open": "Ouvert",
     "closing": "Fermeture",
-    "closed": "Fermé"
+    "closed": "Fermé",
+    "unpublished": "Pas encore publié"
   },
   "reviewState": {
     "received": "Reçue",

@@ -163,6 +163,7 @@ export default {
       "num_unique_collectors": "Anzahl eindeutiger Datensammler",
       "backups_configured": "Sicherungskopien konfiguriert.",
       "database_size": "Systemdatenbankgröße",
+      "uses_external_db": "Der Server verwendet eine externe Datenbank",
       "num_managers": "Anzahl Projekt-Manager",
       "num_viewers": "Anzahl Projekt-Betrachter",
       "num_data_collectors": "Anzahl Datensammler",
@@ -175,6 +176,9 @@ export default {
       "num_forms_with_encryption": "Anzahl Formulare mit Verschlüsselung",
       "num_forms_with_audits": "Anzahl Formulare mit Audits",
       "num_reused_form_ids": "Anzahl der wiederverwendeten Formular-IDs",
+      "num_open_forms": "Anzahl offener Formulare",
+      "num_closing_forms": "Anzahl der schliessenden Formulare",
+      "num_closed_forms": "Anzahl geschlossener Formulare",
       "num_submissions_received": "Anzahl ausgefüllte Formulare - erhalten",
       "num_submissions_approved": "Anzahl ausgefüllte Formulare - genehmigt",
       "num_submissions_has_issues": "Anzahl ausgefüllte Formulare - mit Problemen",
@@ -184,7 +188,8 @@ export default {
       "num_submissions_with_comments": "Anzahl ausgefüllter Formulare mit Kommentaren",
       "num_submissions_from_app_users": "Anzahl ausgefüllter Formulare von App-Benutzern",
       "num_submissions_from_public_links": "Anzahl Einreichungen von Zugangslink",
-      "num_submissions_from_web_users": "Anzahl Einreichungen von Web Benutzern"
+      "num_submissions_from_web_users": "Anzahl Einreichungen von Web Benutzern",
+      "has_description": "Das Projekt hat eine Beschreibung"
     }
   },
   "es": {
@@ -200,6 +205,7 @@ export default {
       "num_unique_collectors": "Número de recopiladores de datos unicos",
       "backups_configured": "Copias de seguridad configuradas",
       "database_size": "Tamaño de la base de datos del sistema",
+      "uses_external_db": "El servidor utiliza una base de datos externa",
       "num_managers": "Número de jefes de proyecto",
       "num_viewers": "Número de observadores del proyecto",
       "num_data_collectors": "Número de recopiladores de datos",
@@ -212,6 +218,9 @@ export default {
       "num_forms_with_encryption": "Número de formularios con cifrado",
       "num_forms_with_audits": "Número de formularios con auditorías",
       "num_reused_form_ids": "Número de ID de formulario reutilizados",
+      "num_open_forms": "Número de formularios abiertos",
+      "num_closing_forms": "Número de formularios de cierre",
+      "num_closed_forms": "Número de formularios cerrados",
       "num_submissions_received": "Número de envíos - Recibidos",
       "num_submissions_approved": "Número de envíos - Aprobados",
       "num_submissions_has_issues": "Número de envíos - Con problemas",
@@ -221,7 +230,8 @@ export default {
       "num_submissions_with_comments": "Número de envíos con comentarios",
       "num_submissions_from_app_users": "Número de envíos de Usuarios móviles",
       "num_submissions_from_public_links": "Número de envíos de enlaces públicos",
-      "num_submissions_from_web_users": "Número de envíos de usuarios web"
+      "num_submissions_from_web_users": "Número de envíos de usuarios web",
+      "has_description": "El proyecto tiene una descripción"
     }
   },
   "fr": {
@@ -237,6 +247,7 @@ export default {
       "num_unique_collectors": "Nombre de collecteurs de données uniques",
       "backups_configured": "Sauvegardes configurées",
       "database_size": "Taille de la base de données du système",
+      "uses_external_db": "Le serveur utilise une base de données externe",
       "num_managers": "Nombre de gestionnaires de projet",
       "num_viewers": "Nombre de lecteurs de projet",
       "num_data_collectors": "Nombre de collecteurs de données",
@@ -249,6 +260,9 @@ export default {
       "num_forms_with_encryption": "Nombre de formulaires avec chiffrement",
       "num_forms_with_audits": "Nombre de formulaires avec audits",
       "num_reused_form_ids": "Nombre d'ID de formulaires réutilisés",
+      "num_open_forms": "Nombre de formulaires ouverts",
+      "num_closing_forms": "Nombre de formulaires en cours de fermeture",
+      "num_closed_forms": "Nombre de formulaires fermés",
       "num_submissions_received": "Nombre de soumissions - Reçues",
       "num_submissions_approved": "Nombre de soumissions - Approuvées",
       "num_submissions_has_issues": "Nombre de soumissions - Avec problèmes",
@@ -258,7 +272,8 @@ export default {
       "num_submissions_with_comments": "Nombre de soumissions avec commentaires",
       "num_submissions_from_app_users": "Nombre de soumissions depuis les utilisateurs d'application",
       "num_submissions_from_public_links": "Nombre de soumissions depuis les liens d'accès public",
-      "num_submissions_from_web_users": "Nombre de soumissions par des utilisateurs web"
+      "num_submissions_from_web_users": "Nombre de soumissions par des utilisateurs web",
+      "has_description": "Le projet a une description"
     }
   },
   "id": {
@@ -289,6 +304,7 @@ export default {
       "num_unique_collectors": "Numero di raccoglitori di dati unici",
       "backups_configured": "Backups configurati.",
       "database_size": "System database size",
+      "uses_external_db": "Il server utilizza una base di dati esterna",
       "num_managers": "Numero di responsabili del progetto",
       "num_viewers": "Numero di visualizzatori del progetto",
       "num_data_collectors": "Numero di raccoglitori di dati",
@@ -301,6 +317,9 @@ export default {
       "num_forms_with_encryption": "Numero di formulari con crittografia abilitata",
       "num_forms_with_audits": "Numero di formulari con audit",
       "num_reused_form_ids": "Numero di ID formulario riutilizzati",
+      "num_open_forms": "Numero di formulari aperti",
+      "num_closing_forms": "Numero di formulari in fase di chiusura",
+      "num_closed_forms": "Numero di formulari chiusi",
       "num_submissions_received": "Numero di invii - Ricevuti",
       "num_submissions_approved": "Numero di invii - Approvati",
       "num_submissions_has_issues": "Numero di invii - Con problemi",
@@ -310,7 +329,8 @@ export default {
       "num_submissions_with_comments": "Numero di invii con commenti",
       "num_submissions_from_app_users": "Numero di invii ricevuti da utenti applicazione",
       "num_submissions_from_public_links": "Numero di invii ricevuti da link pubblici",
-      "num_submissions_from_web_users": "Numero di invii ricevuti da utenti web"
+      "num_submissions_from_web_users": "Numero di invii ricevuti da utenti web",
+      "has_description": "Il Progetto ha una descrizione"
     }
   },
   "ja": {

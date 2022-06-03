@@ -416,6 +416,9 @@ export default {
         ]
       }
     ],
+    "success": [
+      "Für dieses Projekt wurde Verschlüsselung aktiviert. Alle Mobilgeräte müssen die neuesten Formulare herunterladen damit die Verschlüsselung auch durchgeführt wird."
+    ],
     "field": {
       "hint": "Optionale Merkhilfe für die Passphrase"
     },
@@ -467,6 +470,9 @@ export default {
         ]
       }
     ],
+    "success": [
+      "El cifrado ha sido configurado para este proyecto. Cualquier dispositivo móvil tendrá que buscar o volver a buscar los últimos formularios para que el cifrado se lleve a cabo."
+    ],
     "field": {
       "hint": "Sugerencia de frase de contraseña (opcional)"
     },
@@ -517,6 +523,9 @@ export default {
           }
         ]
       }
+    ],
+    "success": [
+      "Le chiffrement a été configuré pour ce projet. Tous les appareils mobiles devront récupérer ou rerécupérer les derniers formulaires pour que le chiffrement puisse avoir lieu."
     ],
     "field": {
       "hint": "Indice de phrase de passe (optionnel)"
@@ -616,6 +625,9 @@ export default {
           }
         ]
       }
+    ],
+    "success": [
+      "La crittografia è stata configurata per questo progetto. Tutti i dispositivi mobili dovranno prendere o recuperare i formulari più recenti affinché la crittografia possa avvenire."
     ],
     "field": {
       "hint": "Suggerimento per la passphrase (opzionale)"

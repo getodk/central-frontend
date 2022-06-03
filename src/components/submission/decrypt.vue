@@ -389,8 +389,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Možnosti exportu",
     "field": {
       "splitSelectMultiples": "Rozdělení možností \"vybrat více\" do sloupců",
-      "removeGroupNames": "Odstranění názvů skupin",
-      "deletedFields": "Zahrnout dříve odstraněná pole formuláře"
+      "removeGroupNames": "Odstranění názvů skupin"
     },
     "noSelectMultiple": "Tento formulář nemá žádná pole pro výběr více položek.",
     "encryptedForm": "Šifrované formuláře nelze tímto způsobem zpracovávat.",
@@ -418,8 +417,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Exportoptionen",
     "field": {
       "splitSelectMultiples": "Unterteilen Sie „mehrere auswählen“-Optionen in Spalten",
-      "removeGroupNames": "Gruppennamen entfernen",
-      "deletedFields": "Zuvor gelöschte Formularfelder einschließen"
+      "removeGroupNames": "Gruppennamen entfernen"
     },
     "noSelectMultiple": "Dieses Formular enthält keine Mehrfachauswahlfelder.",
     "encryptedForm": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden.",
@@ -438,7 +436,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal.",
-      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut."
+      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut.",
+      "parseError": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
     }
   },
   "es": {
@@ -446,8 +445,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Opciones de exportación",
     "field": {
       "splitSelectMultiples": "Divida las opciones de \"selección múltiple\" en columnas",
-      "removeGroupNames": "Eliminar nombres de grupos",
-      "deletedFields": "Incluir campos de formulario eliminados anteriormente"
+      "removeGroupNames": "Eliminar nombres de grupos"
     },
     "noSelectMultiple": "Este formulario no tiene ningún campo de selección múltiple.",
     "encryptedForm": "Los formularios cifrados no se pueden procesar de esta manera.",
@@ -475,8 +473,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Options d'exportation",
     "field": {
       "splitSelectMultiples": "Séparer le contenu des questions à choix multiples en plusieurs colonnes.",
-      "removeGroupNames": "Supprimer les noms de groupe",
-      "deletedFields": "Inclure les champs du formulaire précédemment supprimés."
+      "removeGroupNames": "Supprimer les noms de groupe"
     },
     "noSelectMultiple": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\").",
     "encryptedForm": "Les formulaires chiffrés ne peuvent être traités de cette manière.",
@@ -513,8 +510,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Opzioni di esportazione",
     "field": {
       "splitSelectMultiples": "Dividi le scelte \"select multiple\" in colonne",
-      "removeGroupNames": "Rimuovi i nomi dei gruppi",
-      "deletedFields": "Includi campi del formulario eliminati in precedenza"
+      "removeGroupNames": "Rimuovi i nomi dei gruppi"
     },
     "noSelectMultiple": "Questo formulario non ha campi a scelta multipla selezionati.",
     "encryptedForm": "I moduli crittografati non possono essere elaborati in questo modo.",
@@ -542,8 +538,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "エクスポート設定",
     "field": {
       "splitSelectMultiples": "複数選択項目を列に切り分ける。",
-      "removeGroupNames": "グループ名を取り除く",
-      "deletedFields": "既に削除されたフォームの項目を含む。"
+      "removeGroupNames": "グループ名を取り除く"
     },
     "noSelectMultiple": "このフォームには複数選択項目がありません。",
     "encryptedForm": "この方法でフォームの暗号化は行えません。",
@@ -570,8 +565,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Chaguzi za export",
     "field": {
       "splitSelectMultiples": "Gawanya chaguo za \"chagua nyingi\" kwenye safu wima",
-      "removeGroupNames": "Ondoa majina ya kikundi",
-      "deletedFields": "Jumuisha sehemu za Fomu zilizofutwa hapo awali"
+      "removeGroupNames": "Ondoa majina ya kikundi"
     },
     "noSelectMultiple": "Fomu hii haina sehemu nyingi zilizochaguliwa",
     "encryptedForm": "Fomu Zilizosimbwa kwa njia fiche haziwezi kuchakatwa kwa njia hii",

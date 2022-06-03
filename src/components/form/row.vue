@@ -222,18 +222,24 @@ export default {
   },
   "de": {
     "action": {
-      "fill": "Formular ausfüllen"
-    }
+      "fill": "Formular ausfüllen",
+      "test": "testen"
+    },
+    "formClosingTip": "Dieses Formular steht auf Schliessen und akzeptiert seine endgültigen Übermittlungen. Es kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert."
   },
   "es": {
     "action": {
-      "fill": "Llenar formulario"
-    }
+      "fill": "Llenar formulario",
+      "test": "Probar"
+    },
+    "formClosingTip": "Este formulario se está cerrando y aceptando sus Envíos finales. No se puede descargar, pero aún acepta Envíos."
   },
   "fr": {
     "action": {
-      "fill": "Remplir le formulaire"
-    }
+      "fill": "Remplir le formulaire",
+      "test": "Test"
+    },
+    "formClosingTip": "Ce formulaire est en cours de fermeture et accepte ses dernières soumissions. Il n'est plus téléchargeable mais peut encore recevoir des soumissions."
   },
   "id": {
     "action": {
@@ -242,8 +248,10 @@ export default {
   },
   "it": {
     "action": {
-      "fill": "Compila il Formulario"
-    }
+      "fill": "Compila il Formulario",
+      "test": "Test"
+    },
+    "formClosingTip": "Questo Formulario è in fase di chiusura e accetta i suoi ultimi Invii. Non è scaricabile ma tuttavia accetta Invii."
   },
   "ja": {
     "action": {

@@ -603,6 +603,9 @@
     },
     "updateReviewState": {
       "string": "レビュー・ステータス保存完了！"
+    },
+    "versionChange": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -1097,13 +1100,6 @@
       "other": {
         "string": "",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
-      }
-    },
-    "App": {
-      "alert": {
-        "versionChange": {
-          "string": "サーバーがアップデートされました。予期しない動作を避けるため、ページを更新してください。"
-        }
       }
     },
     "AsyncRoute": {
@@ -2885,7 +2881,12 @@
         }
       },
       "emptyTable": {
-        "string": "あなたが閲覧できるプロジェクトはありません。"
+        "canCreate": {
+          "string": ""
+        },
+        "cannotCreate": {
+          "string": ""
+        }
       },
       "alert": {
         "create": {
@@ -3425,9 +3426,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "既に削除されたフォームの項目を含む。",
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "deletedFieldsHelp": {
+        "string": ""
       },
       "noSelectMultiple": {
         "string": "このフォームには複数選択項目がありません。"
