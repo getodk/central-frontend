@@ -43,7 +43,8 @@
   "formState": {
     "open": "Offen",
     "closing": "Schließen",
-    "closed": "Geschlossen"
+    "closed": "Geschlossen",
+    "unpublished": "Noch nicht veröffentlicht"
   },
   "reviewState": {
     "received": "Empfangen",
@@ -145,6 +146,7 @@
     "review": "Überprüfen",
     "save": "Speichern",
     "saveSettings": "Einstellungen speichern",
+    "sort": "Sortieren",
     "update": "Aktualisieren",
     "yesProceed": "Ja, fortfahren",
     "showPreview": "Vorschau",
@@ -237,7 +239,8 @@
     },
     "editDisabled": "Sie können verschlüsselte Übermittlungen nicht bearbeiten.",
     "binaryLinkTitle": "Datei wurde übermittelt. Zum Downloaden klicken.",
-    "encryptionMessage": "Datenvorschau wegen Verschlüsselung nicht verfügbar"
+    "encryptionMessage": "Datenvorschau wegen Verschlüsselung nicht verfügbar",
+    "noSubmission": "(keine)"
   },
   "common": {
     "activity": "Aktivität",
@@ -249,6 +252,7 @@
     "docs": "Dokumentation",
     "filter": "Filter",
     "forum": "Forum",
+    "loading": "Wird geladen...",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "rightNow": "Aktuell",

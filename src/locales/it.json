@@ -43,7 +43,8 @@
   "formState": {
     "open": "Aperto",
     "closing": "In chiusura",
-    "closed": "Chiuso"
+    "closed": "Chiuso",
+    "unpublished": "Non ancora pubblicato"
   },
   "reviewState": {
     "received": "Ricevuto",
@@ -145,6 +146,7 @@
     "review": "Rivedi",
     "save": "Salvare",
     "saveSettings": "Salva le impostazioni",
+    "sort": "Ordina",
     "update": "Aggiorna",
     "yesProceed": "Si, procedere",
     "showPreview": "Anteprima",
@@ -237,7 +239,8 @@
     },
     "editDisabled": "Non puoi modificare invii criptati",
     "binaryLinkTitle": "Il file è stato inviato. Clicca per scaricare.",
-    "encryptionMessage": "L'anteprima dei dati non è disponibile a causa della crittografia."
+    "encryptionMessage": "L'anteprima dei dati non è disponibile a causa della crittografia.",
+    "noSubmission": "(nessuno)"
   },
   "common": {
     "activity": "Attività",

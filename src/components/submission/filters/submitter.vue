@@ -92,7 +92,8 @@ export default {
   "de": {
     "field": {
       "submitter": "Übermittelt von"
-    }
+    },
+    "unknown": "Unbekannter Einsender"
   },
   "es": {
     "field": {
@@ -103,7 +104,8 @@ export default {
   "fr": {
     "field": {
       "submitter": "Soumis par"
-    }
+    },
+    "unknown": "Expéditeur inconnu"
   },
   "id": {
     "field": {

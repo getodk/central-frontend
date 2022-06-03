@@ -603,6 +603,9 @@
     },
     "updateReviewState": {
       "string": "Kagua Jimbo limehifadhiwa!"
+    },
+    "versionChange": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -1097,13 +1100,6 @@
       "other": {
         "string": "",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
-      }
-    },
-    "App": {
-      "alert": {
-        "versionChange": {
-          "string": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka yasiyotabirika."
-        }
       }
     },
     "AsyncRoute": {
@@ -2885,7 +2881,12 @@
         }
       },
       "emptyTable": {
-        "string": "Hakuna Miradi kwako kuona."
+        "canCreate": {
+          "string": ""
+        },
+        "cannotCreate": {
+          "string": ""
+        }
       },
       "alert": {
         "create": {
@@ -3425,9 +3426,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "Jumuisha sehemu za Fomu zilizofutwa hapo awali",
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "deletedFieldsHelp": {
+        "string": ""
       },
       "noSelectMultiple": {
         "string": "Fomu hii haina sehemu nyingi zilizochaguliwa"

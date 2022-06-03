@@ -603,6 +603,9 @@
     },
     "updateReviewState": {
       "string": "Status Ulasan disimpan!"
+    },
+    "versionChange": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -1097,13 +1100,6 @@
       "other": {
         "string": "",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
-      }
-    },
-    "App": {
-      "alert": {
-        "versionChange": {
-          "string": ""
-        }
       }
     },
     "AsyncRoute": {
@@ -2885,7 +2881,12 @@
         }
       },
       "emptyTable": {
-        "string": "Tidak ada Proyek untuk dilihat."
+        "canCreate": {
+          "string": ""
+        },
+        "cannotCreate": {
+          "string": ""
+        }
       },
       "alert": {
         "create": {
@@ -3428,6 +3429,9 @@
           "string": "",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "deletedFieldsHelp": {
+        "string": ""
       },
       "noSelectMultiple": {
         "string": ""

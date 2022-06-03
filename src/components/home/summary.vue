@@ -144,6 +144,20 @@ export default {
       "body": "Vždy můžete získat pomoc od ostatních na fóru, kde můžete také vyhledávat předchozí dotazy."
     }
   },
+  "de": {
+    "projects": {
+      "body": "Central ist in Projekte organisiert, die jeweils ihre eigenen Formulare und zugehörigen Daten enthalten."
+    },
+    "users": {
+      "body": "Benutzer können Projekten zugewiesen werden, um sie zu verwalten oder eingereichte Daten zu sammeln oder zu überprüfen."
+    },
+    "docs": {
+      "body": "Es gibt ein Erste-Schritte-Tutorial und die Benutzerdokumentation auf der ODK Docs Webseite."
+    },
+    "forum": {
+      "body": "Sie können im Forum immer Hilfe von anderen erhalten. Dort können Sie auch nach Antworten auf ähnliche Fragen suchen."
+    }
+  },
   "es": {
     "projects": {
       "body": "Central está organizado en Proyectos, cada uno de los cuales contiene sus propios Formularios y datos relacionados."

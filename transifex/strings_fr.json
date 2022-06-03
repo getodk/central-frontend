@@ -117,7 +117,7 @@
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
     },
     "unpublished": {
-      "string": "",
+      "string": "Pas encore publié",
       "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
@@ -603,6 +603,9 @@
     },
     "updateReviewState": {
       "string": "État sauvegardé!"
+    },
+    "versionChange": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -983,7 +986,7 @@
           "string": "Taille de la base de données du système"
         },
         "uses_external_db": {
-          "string": ""
+          "string": "Le serveur utilise une base de données externe"
         },
         "num_managers": {
           "string": "Nombre de gestionnaires de projet"
@@ -1022,13 +1025,13 @@
           "string": "Nombre d'ID de formulaires réutilisés"
         },
         "num_open_forms": {
-          "string": ""
+          "string": "Nombre de formulaires ouverts"
         },
         "num_closing_forms": {
-          "string": ""
+          "string": "Nombre de formulaires en cours de fermeture"
         },
         "num_closed_forms": {
-          "string": ""
+          "string": "Nombre de formulaires fermés"
         },
         "num_submissions_received": {
           "string": "Nombre de soumissions - Reçues"
@@ -1061,7 +1064,7 @@
           "string": "Nombre de soumissions par des utilisateurs web"
         },
         "has_description": {
-          "string": ""
+          "string": "Le projet a une description"
         }
       }
     },
@@ -1095,15 +1098,8 @@
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
       "other": {
-        "string": "",
+        "string": "Autre",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
-      }
-    },
-    "App": {
-      "alert": {
-        "versionChange": {
-          "string": "Le serveur a été mis à jour. Merci de rafraîchir la page afin d'éviter un comportement imprévisible."
-        }
       }
     },
     "AsyncRoute": {
@@ -2366,12 +2362,12 @@
           "developer_comment": "This appears on a button linking to a fillable Form"
         },
         "test": {
-          "string": "",
+          "string": "Test",
           "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
-        "string": ""
+        "string": "Ce formulaire est en cours de fermeture et accepte ses dernières soumissions. Il n'est plus téléchargeable mais peut encore recevoir des soumissions."
       }
     },
     "FormSettings": {
@@ -2406,11 +2402,11 @@
     "FormSort": {
       "sortOptions": {
         "alphabetical": {
-          "string": "",
+          "string": "Alphabétique",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         },
         "newest": {
-          "string": "",
+          "string": "Plus récent",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
       }
@@ -2418,15 +2414,15 @@
     "FormTable": {
       "header": {
         "closedForms": {
-          "string": "",
+          "string": "Formulaires fermés",
           "developer_comment": "This is the text of a column header in a table of Forms."
         },
         "reviewStates": {
-          "string": "",
+          "string": "États de révision",
           "developer_comment": "This is text of a column header in a table of Forms"
         },
         "latest": {
-          "string": "",
+          "string": "Plus ancien",
           "developer_comment": "This is the text of a column header referring to how recent a Form's latest submission was."
         },
         "idAndVersion": {
@@ -2746,7 +2742,7 @@
       },
       "success": {
         "0": {
-          "string": ""
+          "string": "Le chiffrement a été configuré pour ce projet. Tous les appareils mobiles devront récupérer ou rerécupérer les derniers formulaires pour que le chiffrement puisse avoir lieu."
         }
       },
       "field": {
@@ -2862,14 +2858,14 @@
         "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
       },
       "encryptionTip": {
-        "string": ""
+        "string": "Ce projet utilise un chiffrement des données."
       },
       "showMore": {
-        "string": "",
+        "string": "Montrer {count} total",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
       "showFewer": {
-        "string": "",
+        "string": "Réduire {count} total",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       }
     },
@@ -2885,7 +2881,12 @@
         }
       },
       "emptyTable": {
-        "string": "Il n'y a pas de projets à voir."
+        "canCreate": {
+          "string": ""
+        },
+        "cannotCreate": {
+          "string": ""
+        }
       },
       "alert": {
         "create": {
@@ -3425,9 +3426,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "Inclure les champs du formulaire précédemment supprimés.",
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "deletedFieldsHelp": {
+        "string": ""
       },
       "noSelectMultiple": {
         "string": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\")."
@@ -3636,7 +3640,7 @@
         }
       },
       "unknown": {
-        "string": ""
+        "string": "Expéditeur inconnu"
       }
     },
     "SubmissionList": {

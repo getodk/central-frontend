@@ -210,7 +210,8 @@ export default {
       "title": "Projekt-Übersicht",
       "subtitle": "(Zeigt das aktivste Projekt der {count} Projekt) | (Zeigt das aktivste Projekt der {count} Projekte)"
     },
-    "submissionStates": "Einsendungenstatus"
+    "submissionStates": "Einsendungenstatus",
+    "other": "Anderes"
   },
   "es": {
     "title": "Informe de uso anonimizado",
@@ -223,7 +224,8 @@ export default {
       "title": "Resúmenes de proyectos",
       "subtitle": "(Mostrando el Proyecto más activo de {count} Proyecto) | (Mostrando el Proyecto más activo de {count} Proyectos) | (Mostrando el Proyecto más activo de {count} Proyectos)"
     },
-    "submissionStates": "Estados de envío"
+    "submissionStates": "Estados de envío",
+    "other": "Otro"
   },
   "fr": {
     "title": "Rapport d'utilisation anonymisé",
@@ -236,7 +238,8 @@ export default {
       "title": "Résumés du projet",
       "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
     },
-    "submissionStates": "États des soumissions"
+    "submissionStates": "États des soumissions",
+    "other": "Autre"
   },
   "it": {
     "title": "Report di utilizzo anonimo",
@@ -249,7 +252,8 @@ export default {
       "title": "Riepiloghi del progetto",
       "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti) | (Visualizzazione del progetto più attivo di {count} Progetti)"
     },
-    "submissionStates": "Stato invio"
+    "submissionStates": "Stato invio",
+    "other": "Altro"
   },
   "ja": {
     "title": "匿名化された利用状況報告",
