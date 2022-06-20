@@ -1,4 +1,6 @@
 import ProjectOverviewDescription from '../../../src/components/project/overview/description.vue';
+import FormList from '../../../src/components/form/list.vue';
+import FormRow from '../../../src/components/form/row.vue';
 import FormTrashList from '../../../src/components/form/trash-list.vue';
 import FormTrashRow from '../../../src/components/form/trash-row.vue';
 
@@ -99,6 +101,46 @@ describe('ProjectOverview', () => {
           app.getComponent(FormTrashList).should.be.visible();
           app.findAllComponents(FormTrashRow).length.should.equal(1);
         });
+    });
+  });
+
+  describe('duplicate form names', () => {
+    it('shows form ID in parentheses next to form names that are duplicated', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'foo' });
+      testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'bar' });
+      testData.extendedForms.createPast(1, { name: 'Different Name', xmlFormId: 'baz' });
+      const app = await load('/projects/1', {}, {});
+      const rows = app.getComponent(FormList).findAllComponents(FormRow);
+      rows.map((row) => row.find('.name').text()).should.eql([
+        'Different Name',
+        'Same Name(foo)',
+        'Same Name(bar)'
+      ]);
+    });
+
+    it('shows form ID even when form is in separate closed table', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'foo', state: 'closed' });
+      testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'bar', state: 'open' });
+      const app = await load('/projects/1', {}, {});
+      const rows = app.getComponent(FormList).findAllComponents(FormRow);
+      rows.map((row) => row.find('.name').text()).should.eql([
+        'Same Name(bar)',
+        'Same Name(foo)'
+      ]);
+    });
+
+    it('shows form ID even when duplicate form name is in trash', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'foo' });
+      const app = await load('/projects/1', {}, {
+        deletedForms: () => [{ name: 'Same Name', xmlFormId: 'bar', deletedAt: new Date().toISOString() }]
+      });
+      const formList = app.getComponent(FormList);
+      formList.find('.duplicate-form-id').text().should.equal('(foo)');
+      const trashList = app.getComponent(FormTrashList);
+      trashList.find('.duplicate-form-id').text().should.equal('(bar)');
     });
   });
 });

@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
           {{ form.nameOrId() }}
         </template>
       </template>
+      <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
     <template v-if="form.publishedAt != null">
       <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
@@ -137,6 +138,10 @@ export default {
     enketoPath() {
       const encodedId = encodeURIComponent(this.form.enketoId);
       return `${enketoBasePath}/${encodedId}`;
+    },
+    showIdForDuplicateName() {
+      const formNames = this.project.formList.map((form) => (form.xmlFormId !== this.form.xmlFormId ? form.nameOrId() : null));
+      return formNames.includes(this.form.nameOrId());
     }
   }
 };
@@ -151,6 +156,11 @@ export default {
     padding: 4px 0px 4px 6px;
     color: #333;
     a { @include text-link; }
+  }
+
+  .duplicate-form-id {
+    font-family: $font-family-monospace;
+    padding-left: 6px;
   }
 
   .review-state, .total-submissions, .not-published {

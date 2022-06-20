@@ -15,6 +15,7 @@ except according to the terms contained in the LICENSE file.
       <link-if-can :to="primaryFormPath(form)">
         {{ form.nameOrId() }}
       </link-if-can>
+      <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
 
     <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
@@ -112,7 +113,7 @@ export default {
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['project']),
+    ...requestData(['project', 'forms', 'deletedForms']),
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
     urlFilterEncode() {
       return new Map()
@@ -126,6 +127,11 @@ export default {
         this.form.xmlFormId,
         'draft/testing'
       );
+    },
+    showIdForDuplicateName() {
+      const allForms = [...this.forms || [], ...this.deletedForms || []];
+      const formNames = allForms.flatMap((form) => ((form.xmlFormId !== this.form.xmlFormId) ? form.nameOrId() : []));
+      return formNames.includes(this.form.nameOrId());
     }
   }
 };
@@ -145,6 +151,11 @@ export default {
 
   .name {
     font-size: 18px;
+  }
+
+  .duplicate-form-id {
+    font-family: $font-family-monospace;
+    padding-left: 6px;
   }
 
   .review-state, .total-submissions, .not-published {

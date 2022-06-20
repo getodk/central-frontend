@@ -13,6 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-trash-row">
     <td class="name">
       <span class="form-name">{{ form.nameOrId() }}</span>
+      <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
     <td class="deleted">
       <i18n-t tag="div" keypath="deletedDate" class="deleted-date">
@@ -67,7 +68,7 @@ export default {
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['forms']),
+    ...requestData(['forms', 'deletedForms']),
     activeFormIds() {
       // returns ids of existing forms to disable restoring deleted
       // forms with conflicting ids (also prevented on backend)
@@ -82,6 +83,11 @@ export default {
       if (this.disabled)
         return this.$t('disabled.conflict');
       return null;
+    },
+    showIdForDuplicateName() {
+      const allForms = [...this.forms || [], ...this.deletedForms || []];
+      const formNames = allForms.flatMap((form) => ((form.xmlFormId !== this.form.xmlFormId) ? form.nameOrId() : []));
+      return formNames.includes(this.form.nameOrId());
     }
   },
   methods: {
@@ -106,6 +112,11 @@ export default {
 
   .name {
     font-size: 18px;
+  }
+
+  .duplicate-form-id {
+    font-family: $font-family-monospace;
+    padding-left: 6px;
   }
 
   .deleted {

@@ -125,4 +125,19 @@ describe('ProjectHomeBlock', () => {
     const rows = block.findAllComponents(FormRow);
     rows.map((row) => row.props().form.name).should.eql(['a', 'c', 'd', 'e']);
   });
+
+  it('shows form ID in parentheses next to duplicated form names', () => {
+    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'a' });
+    testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'b' });
+    testData.extendedForms.createPast(1, { name: 'Different Name', xmlFormId: 'c' });
+    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
+    const block = mountComponent();
+    const rows = block.findAllComponents(FormRow);
+    rows.map((row) => row.find('.form-name').text()).should.eql([
+      'Same Name(a)',
+      'Same Name(b)',
+      'Different Name'
+    ]);
+  });
 });
