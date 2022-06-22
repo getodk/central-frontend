@@ -119,6 +119,18 @@ describe('ProjectOverview', () => {
       ]);
     });
 
+    it('considers different capitalizations to be the same and shows form ID', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'foo' });
+      testData.extendedForms.createPast(1, { name: 'same NAME', xmlFormId: 'bar' });
+      const app = await load('/projects/1', {}, {});
+      const rows = app.getComponent(FormList).findAllComponents(FormRow);
+      rows.map((row) => row.find('.name').text()).should.eql([
+        'same NAME(bar)',
+        'Same Name(foo)'
+      ]);
+    });
+
     it('shows form ID even when form is in separate closed table', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'foo', state: 'closed' });

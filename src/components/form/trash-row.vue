@@ -51,6 +51,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
 import { requestData } from '../../store/modules/request';
@@ -69,6 +71,7 @@ export default {
     // The component assumes that this data will exist when the component is
     // created.
     ...requestData(['forms', 'deletedForms']),
+    ...mapGetters(['duplicateFormNames']),
     activeFormIds() {
       // returns ids of existing forms to disable restoring deleted
       // forms with conflicting ids (also prevented on backend)
@@ -85,9 +88,8 @@ export default {
       return null;
     },
     showIdForDuplicateName() {
-      const allForms = [...this.forms || [], ...this.deletedForms || []];
-      const formNames = allForms.flatMap((form) => ((form.xmlFormId !== this.form.xmlFormId) ? form.nameOrId() : []));
-      return formNames.includes(this.form.nameOrId());
+      const name = this.form.nameOrId().toLowerCase();
+      return this.duplicateFormNames.has(name);
     }
   },
   methods: {

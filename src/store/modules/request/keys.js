@@ -197,6 +197,16 @@ const dataGetters = {
         result.push(audit);
     }
     return result;
+  },
+
+  // Returns a set containing just the form names that appear more than once
+  // in a project. Used on project overview to show form ID next to form name
+  // when form names are duplicated.
+  duplicateFormNames: ({ data: { forms, deletedForms } }) => {
+    const allForms = [...forms || [], ...deletedForms || []];
+    const formNames = allForms.map((form) => (form.nameOrId().toLowerCase()));
+    const findDuplicates = a => a.filter((item, index) => a.indexOf(item) !== index);
+    return new Set(findDuplicates(formNames));
   }
 };
 export const getters = dataGetters;

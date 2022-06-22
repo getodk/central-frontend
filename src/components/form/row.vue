@@ -82,6 +82,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import DateTime from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
@@ -114,6 +116,7 @@ export default {
     // The component assumes that this data will exist when the component is
     // created.
     ...requestData(['project', 'forms', 'deletedForms']),
+    ...mapGetters(['duplicateFormNames']),
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
     urlFilterEncode() {
       return new Map()
@@ -129,9 +132,8 @@ export default {
       );
     },
     showIdForDuplicateName() {
-      const allForms = [...this.forms || [], ...this.deletedForms || []];
-      const formNames = allForms.flatMap((form) => ((form.xmlFormId !== this.form.xmlFormId) ? form.nameOrId() : []));
-      return formNames.includes(this.form.nameOrId());
+      const name = this.form.nameOrId().toLowerCase();
+      return this.duplicateFormNames.has(name);
     }
   }
 };

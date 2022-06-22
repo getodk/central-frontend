@@ -46,21 +46,21 @@ describe('FormTrashRow', () => {
     beforeEach(mockLogin);
 
     it('shows the submission count', () => {
-      const formData = { submissions: 12345 };
+      const formData = { name: 'a form', submissions: 12345 };
       const cell = mountComponent(formData).get('.total-submissions');
       cell.text().should.equal('12,345');
       cell.find('span').attributes().title.should.equal('Total');
     });
 
     it('shows the submission count when 0', () => {
-      const formData = { submissions: 0 };
+      const formData = { name: 'a form', submissions: 0 };
       const text = mountComponent(formData).get('.total-submissions').text();
       text.should.equal('0');
     });
 
     it('shows the time since last submission', () => {
       const lastSubmission = new Date().toISOString();
-      const formData = { submissions: 1, lastSubmission };
+      const formData = { name: 'a form', submissions: 1, lastSubmission };
       const row = mountComponent(formData);
       const cell = row.get('.last-submission');
       cell.text().should.match(/ago$/);
@@ -71,7 +71,7 @@ describe('FormTrashRow', () => {
     });
 
     it('does not render time if there is no last submission', () => {
-      const formData = { submissions: 0 };
+      const formData = { name: 'a form', submissions: 0 };
       const cell = mountComponent(formData).get('.last-submission');
       cell.text().should.equal('(none)');
       cell.find('span').attributes().title.should.equal('Latest Submission');
@@ -82,7 +82,7 @@ describe('FormTrashRow', () => {
     beforeEach(mockLogin);
 
     it('shows the undelete button', () => {
-      const button = mountComponent({}).get('.form-trash-row-restore-button');
+      const button = mountComponent({ name: 'foo' }).get('.form-trash-row-restore-button');
       button.element.tagName.should.equal('BUTTON');
       button.element.disabled.should.be.false();
     });
