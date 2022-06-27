@@ -92,7 +92,6 @@ import Form from '../../presenters/form';
 import Project from '../../presenters/project';
 import routes from '../../mixins/routes';
 
-import { requestData } from '../../store/modules/request';
 import useReviewState from '../../composables/review-state';
 import { enketoBasePath } from '../../util/util';
 
