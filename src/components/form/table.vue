@@ -122,6 +122,9 @@ export default {
 {
   "cs": {
     "header": {
+      "closedForms": "Zavřené formuláře",
+      "reviewStates": "Přehled stavů",
+      "latest": "Poslední",
       "idAndVersion": "ID a Verze"
     }
   },

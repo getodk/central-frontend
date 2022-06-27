@@ -212,7 +212,8 @@
   },
   "alert": {
     "passwordTooShort": "Si prega di inserire una password di almeno 10 caratteri.",
-    "updateReviewState": "Stato revisione salvato!"
+    "updateReviewState": "Stato revisione salvato!",
+    "versionChange": "Il server è stato aggiornato. Aggiorna la pagina per evitare comportamenti imprevedibili."
   },
   "moreInfo": {
     "clickHere": {

@@ -212,7 +212,8 @@
   },
   "alert": {
     "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
-    "updateReviewState": "Überprüfungsstatus gespeichert!"
+    "updateReviewState": "Überprüfungsstatus gespeichert!",
+    "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden."
   },
   "moreInfo": {
     "clickHere": {

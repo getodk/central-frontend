@@ -365,6 +365,9 @@ export default {
         ]
       }
     ],
+    "success": [
+      "Pro tento projekt bylo nakonfigurováno šifrování. Všechna mobilní zařízení budou muset načíst nebo znovu načíst nejnovější Formuláře, aby mohlo dojít k šifrování."
+    ],
     "field": {
       "hint": "Přístupová fráze (volitelné)"
     },

@@ -126,6 +126,7 @@ export default {
       "num_unique_collectors": "Počet jedinečných sběračů dat",
       "backups_configured": "Konfigurace záloh",
       "database_size": "Velikost systémové databáze",
+      "uses_external_db": "Server používá externí databázi",
       "num_managers": "Počet projektových manažerů",
       "num_viewers": "Počet diváků projektu",
       "num_data_collectors": "Počet sběračů dat",
@@ -138,6 +139,9 @@ export default {
       "num_forms_with_encryption": "Počet formulářů se šifrováním",
       "num_forms_with_audits": "Počet formulářů s audity",
       "num_reused_form_ids": "Počet opakovaně použitých ID formulářů",
+      "num_open_forms": "Počet otevřených formulářů",
+      "num_closing_forms": "Počet uzavíraných formulářů",
+      "num_closed_forms": "Počet uzavřených formulářů",
       "num_submissions_received": "Počet přijatých podání",
       "num_submissions_approved": "Počet podání - schváleno",
       "num_submissions_has_issues": "Počet podání - Má problémy",
@@ -147,7 +151,8 @@ export default {
       "num_submissions_with_comments": "Počet podání s komentáři",
       "num_submissions_from_app_users": "Počet podání od uživatelů aplikace",
       "num_submissions_from_public_links": "Počet podání z veřejných odkazů",
-      "num_submissions_from_web_users": "Počet podání od uživatelů webu"
+      "num_submissions_from_web_users": "Počet podání od uživatelů webu",
+      "has_description": "Projekt má popis"
     }
   },
   "de": {

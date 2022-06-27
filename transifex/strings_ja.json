@@ -1775,97 +1775,6 @@
         }
       }
     },
-    "FormChecklist": {
-      "clickForInfo": {
-        "string": "さらに詳細を知るには、こちらをクリックして下さい。"
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "最初の下書きバージョンを公開",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "お疲れ様でした！"
-            },
-            "1": {
-              "string": "フォームは公開されました。フォームの提出を受付ける準備が整いました。このフォームや関連するメディアファイルに変更を行いたい場合、新しい下書きフォームを作成することができます。"
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "調査クライアントへのフォームのダウンロードとフォームの提出",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "このフォームには、どなたもまだデータを提出していません。"
-              },
-              "any": {
-                "string": "{count, plural, other {合計{count}件のフォームの提出が完了しました。}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "{clickHere}して、様々なフォーム提出の方法を知る。",
-                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
-              },
-              "clickHere": {
-                "string": "ここをクリック",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "提出されたデータの評価と解析",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "このフォームのデータがあれば、それをエクスポートまたは同期して、その品質と結果を、監視および解析することができます。"
-              },
-              "any": {
-                "string": "{count, plural, other {このフォームの{count}件の提出済フォームをエクスポートまたは同期して、その品質と結果を、監視および解析することができます。}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "{submissionsTab}の「ダウンロード」と「解析」ボタンで行うことができます。",
-                "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
-              },
-              "submissionsTab": {
-                "string": "提出済フォームのタブ",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "フォームへのアクセス除外者を管理",
-            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "あなたはデータ収集を終えましたので、{formAccessTab}にあるフォームの状態のコントロールを使って、これから先、例えば、アプリユーザーがこのフォームを閲覧できるか、新しい提出フォームを作成できるかを設定できます。",
-                "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
-              },
-              "formAccessTab": {
-                "string": "プロジェクトページのフォームアクセスタブ",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
-              }
-            }
-          }
-        }
-      }
-    },
     "FormDelete": {
       "title": {
         "string": "フォームの削除",
@@ -2905,34 +2814,6 @@
         }
       }
     },
-    "ProjectOverviewAbout": {
-      "title": {
-        "string": "プロジェクトについて",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "body": {
-        "0": {
-          "full": {
-            "string": "プロジェクトでは、関連するフォームやユーザーをグループ化できます。Webユーザーには役割が与えられ、ブラウザを使ってフォームを入力するなど、プロジェクト内で特定の操作を実行できます。プロジェクトのアプリユーザーは、自分が{accessTo}を持つプロジェクト内のフォームのみを閲覧できます。",
-            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
-          },
-          "accessTo": {
-            "string": "アクセス権",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
-          }
-        },
-        "1": {
-          "full": {
-            "string": "ご意見があれば、{forumThread}を確認して下さい。",
-            "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
-          },
-          "forumThread": {
-            "string": "フォーラムのスレッド",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
-          }
-        }
-      }
-    },
     "ProjectOverviewDescription": {
       "instructions": {
         "full": {
@@ -2947,28 +2828,6 @@
       "note": {
         "string": "",
         "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
-      }
-    },
-    "ProjectOverviewRightNow": {
-      "appUsers": {
-        "full": {
-          "string": "{count, plural, other {{appUsers}は、データ収集クライアントを用い、このプロジェクトのフォームのダウンロードと提出が可能です。}}",
-          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
-        },
-        "appUsers": {
-          "string": "{count, plural, other {アプリユーザー}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
-        }
-      },
-      "forms": {
-        "full": {
-          "string": "{count, plural, other {{forms}は、ダウンロードし、調査が可能です。}}",
-          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
-        },
-        "forms": {
-          "string": "{count, plural, other {フォーム}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
-        }
       }
     },
     "ProjectSettings": {
@@ -3503,16 +3362,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {{count}件のレコードのダウンロード}}",
+            "string": "{count, plural, other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "照合されたレコードのダウンロード",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, other {{count}件の該当レコードのダウンロード}}",
+              "string": "{count, plural, other {}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }

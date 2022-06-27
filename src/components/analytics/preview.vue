@@ -197,7 +197,8 @@ export default {
       "title": "Shrnutí projektu",
       "subtitle": "(Zobrazuje {count} nejaktivnější projekt projektu) | (Zobrazuje {count} nejaktivnější projekty projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu)"
     },
-    "submissionStates": "Stavy odeslání"
+    "submissionStates": "Stavy odeslání",
+    "other": "Jiné"
   },
   "de": {
     "title": "Anonymisierter Nutzungsbericht",

@@ -43,7 +43,8 @@
   "formState": {
     "open": "Otevřít",
     "closing": "Dokončení",
-    "closed": "Dokončeno"
+    "closed": "Dokončeno",
+    "unpublished": "Zatím nezveřejněno"
   },
   "reviewState": {
     "received": "Přijato",
@@ -145,6 +146,7 @@
     "review": "Zkontrolovat",
     "save": "Uložit",
     "saveSettings": "Uložit nastavení",
+    "sort": "Seřadit",
     "update": "Aktualizovat",
     "yesProceed": "Ano, pokračovat",
     "showPreview": "Náhled",
@@ -210,7 +212,8 @@
   },
   "alert": {
     "passwordTooShort": "Zadejte heslo dlouhé alespoň 10 znaků.",
-    "updateReviewState": "Stav kontroly uložen!"
+    "updateReviewState": "Stav kontroly uložen!",
+    "versionChange": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
   },
   "moreInfo": {
     "clickHere": {
@@ -237,7 +240,8 @@
     },
     "editDisabled": "Šifrované příspěvky nemůžete upravovat.",
     "binaryLinkTitle": "Soubor byl odeslán. Kliknutím stáhnete.",
-    "encryptionMessage": "Náhled dat není k dispozici kvůli šifrování."
+    "encryptionMessage": "Náhled dat není k dispozici kvůli šifrování.",
+    "noSubmission": "(žádný)"
   },
   "common": {
     "activity": "Aktivita",

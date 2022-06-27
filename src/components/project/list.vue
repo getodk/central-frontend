@@ -193,8 +193,13 @@ export default {
 <i18n>
 {
   "cs": {
+    "archived": "Archivované projekty",
     "action": {
       "create": "Nový"
+    },
+    "emptyTable": {
+      "canCreate": "Chcete-li začít, vytvořte projekt. Projekty vám pomohou uspořádat data seskupením souvisejících formulářů a uživatelů.",
+      "cannotCreate": "Neexistují žádné projekty, které by bylo možné zobrazit. Pokud očekáváte, že se zde Projekty zobrazí, obraťte se na osobu, která vám tento účet poskytla. Možná bude potřebovat přiřadit Projektovou roli pro Projekty, které byste měli vidět."
     },
     "alert": {
       "create": "Váš nový projekt byl úspěšně vytvořen."
@@ -205,6 +210,10 @@ export default {
     "action": {
       "create": "Neu"
     },
+    "emptyTable": {
+      "canCreate": "Erstellen Sie zunächst ein Projekt. Projekte helfen Ihnen, Ihre Daten zu organisieren, indem Sie verwandte Formulare und Benutzer gruppieren.",
+      "cannotCreate": "Es gibt keine anzuzeigenden Projekte. Wenn Sie erwarten, dass Projekte hier angezeigt werden, sprechen Sie mit der Person, die Ihnen dieses Konto gegeben hat. Sie müssen möglicherweise eine Projektrolle für Projekte zuweisen, die Sie sehen sollen."
+    },
     "alert": {
       "create": "Ihr neues Projekt wurde erfolgreich erstellt."
     }
@@ -214,6 +223,10 @@ export default {
     "action": {
       "create": "Nuevo"
     },
+    "emptyTable": {
+      "canCreate": "Para comenzar, cree un Proyecto. Los proyectos lo ayudan a organizar sus datos agrupando formularios y usuarios relacionados.",
+      "cannotCreate": "No hay Proyectos para mostrar. Si espera ver Proyectos aquí, hable con la persona que le dio esta cuenta. Es posible que deban asignar un rol de proyecto para los proyectos que se supone que debe ver."
+    },
     "alert": {
       "create": "Su proyecto ha sido creado exitosamente"
     }
@@ -222,6 +235,10 @@ export default {
     "archived": "Projets archivés",
     "action": {
       "create": "Nouveau"
+    },
+    "emptyTable": {
+      "canCreate": "Pour démarrer, créez un Projet. Les projets vous aident à organiser vos données en regroupant des formulaires et des utilisateurs qui sont liés",
+      "cannotCreate": "Il n'y a pas de Projet à afficher. Si vous vous attendiez à en voir ici, contactez la personne qui vous a créé ce compte. Il pourrait devoir vous attribuer un rôle de projet pour les projets que vous êtes censé voir."
     },
     "alert": {
       "create": "Votre nouveau projet a été créé avec succès."
@@ -239,6 +256,10 @@ export default {
     "archived": "Progetti archiviati",
     "action": {
       "create": "Nuovo"
+    },
+    "emptyTable": {
+      "canCreate": "Per iniziare, crea un progetto. I progetti ti aiutano a organizzare i tuoi dati raggruppando i formulari e gli utenti correlati.",
+      "cannotCreate": "Non ci sono progetti da mostrare. Se prevedi di vedere Progetti qui, parla con la persona che ti ha fornito questo account. Potrebbe essere necessario assegnare un ruolo di progetto per i progetti che dovresti vedere."
     },
     "alert": {
       "create": "Il tuo nuovo progetto è stato creato con successo."

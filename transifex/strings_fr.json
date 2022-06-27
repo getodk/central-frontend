@@ -605,7 +605,7 @@
       "string": "État sauvegardé!"
     },
     "versionChange": {
-      "string": ""
+      "string": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu."
     }
   },
   "moreInfo": {
@@ -1775,97 +1775,6 @@
         }
       }
     },
-    "FormChecklist": {
-      "clickForInfo": {
-        "string": "Cliquez ici pour en savoir plus."
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "Publier votre première ébauche",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "Beau travail !"
-            },
-            "1": {
-              "string": "Vous avez publié votre formulaire. Il est prêt à accepter des soumissions. Si vous voulez apporter des changements au formulaire ou à ses fichiers médias, vous pouvez créer une nouvelle ébauche."
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "Télécharger le formulaire sur les clients et envoyer des données",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "Personne n'a encore soumis de données pour ce formulaire."
-              },
-              "any": {
-                "string": "{count, plural, one {Un total de {count} soumission a été faite.} many {Un total de {count} soumissions ont été faites.} other {Un total de {count} soumissions ont été faites.}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "{clickHere} pour vous renseigner sur les diverses méthodes d'envoi de données.",
-                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
-              },
-              "clickHere": {
-                "string": "Cliquez ici",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "Évaluer et analyser les données soumises",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "Dés qu'il y a des données pour ce formulaire, vous pouvez les exporter ou les synchroniser pour suivre et analyser leur qualité et les résultats."
-              },
-              "any": {
-                "string": "{count, plural, one {Vous pouvez exporter ou synchroniser la {count} soumission de ce formulaire pour suivre et analyser la qualité des données et les résultats.} many {Vous pouvez exporter ou synchroniser les {count} soumissions de ce formulaire pour suivre et analyser la qualité des données et les résultats.} other {Vous pouvez exporter ou synchroniser les {count} soumissions de ce formulaire pour suivre et analyser la qualité des données et les résultats.}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "Vous pouvez faire cela en utilisant les boutons \"Télécharger\" et \"Analyser\" de l'{submissionsTab}.",
-                "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
-              },
-              "submissionsTab": {
-                "string": "onglet \"soumissions\"",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "Gérer les limitations d'accès au formulaire",
-            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "Lorsque vous arrivez à la fin de votre collecte de données, vous pouvez utiliser les contrôles de l'État du formulaire sur {formAccessTab} pour contrôler si, par exemple, les utilisateurs mobiles seront en mesure de voir ou de créer de nouvelles soumissions à ce formulaire.",
-                "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
-              },
-              "formAccessTab": {
-                "string": "onglet \"accès aux formulaires\" de la page du projet",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
-              }
-            }
-          }
-        }
-      }
-    },
     "FormDelete": {
       "title": {
         "string": "Supprimer le formulaire",
@@ -2882,10 +2791,10 @@
       },
       "emptyTable": {
         "canCreate": {
-          "string": ""
+          "string": "Pour démarrer, créez un Projet. Les projets vous aident à organiser vos données en regroupant des formulaires et des utilisateurs qui sont liés"
         },
         "cannotCreate": {
-          "string": ""
+          "string": "Il n'y a pas de Projet à afficher. Si vous vous attendiez à en voir ici, contactez la personne qui vous a créé ce compte. Il pourrait devoir vous attribuer un rôle de projet pour les projets que vous êtes censé voir."
         }
       },
       "alert": {
@@ -2905,34 +2814,6 @@
         }
       }
     },
-    "ProjectOverviewAbout": {
-      "title": {
-        "string": "A propos des projets",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "body": {
-        "0": {
-          "full": {
-            "string": "Un projet vous permet de regrouper des formulaires et des usagers. Les utilisateurs web peuvent avoir des rôles qui leur permettent d'exécuter certaines actions dans ce projet, incluant remplir un formulaire depuis leur navigateur. Les utilisateurs mobiles pour ce projet ne peuvent que voir les formulaires auxquels ils ont {accessTo}.",
-            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
-          },
-          "accessTo": {
-            "string": "accès",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
-          }
-        },
-        "1": {
-          "full": {
-            "string": "Si vous avez des commentaires, veuillez participer à {forumThread}.",
-            "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
-          },
-          "forumThread": {
-            "string": "ce fil de discussion du forum",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
-          }
-        }
-      }
-    },
     "ProjectOverviewDescription": {
       "instructions": {
         "full": {
@@ -2947,28 +2828,6 @@
       "note": {
         "string": "Sels les Gestionnaires de projet peuvent voir cette suggestion.",
         "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
-      }
-    },
-    "ProjectOverviewRightNow": {
-      "appUsers": {
-        "full": {
-          "string": "{count, plural, one {{appUsers} qui peut utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données.} many {{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données.} other {{appUsers} qui peuvent utiliser un client de collecte de données pour télécharger les formulaires du projet et soumettre des données.}}",
-          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
-        },
-        "appUsers": {
-          "string": "{count, plural, one {Utilisateur mobile} many {Utilisateurs mobiles} other {Utilisateurs mobiles}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
-        }
-      },
-      "forms": {
-        "full": {
-          "string": "{count, plural, one {{forms} qui peuvent être téléchargés et donnés sous forme d'enquêtes.} many {{forms} qui peuvent être téléchargés et donnés sous forme d'enquêtes.} other {{forms} qui peuvent être téléchargés et donnés sous forme d'enquêtes.}}",
-          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
-        },
-        "forms": {
-          "string": "{count, plural, one {Formulaire} many {Formulaires} other {Formulaires}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
-        }
       }
     },
     "ProjectSettings": {
@@ -3503,16 +3362,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {Télécharger {count} soumission} many {Télécharger {count} soumissions} other {Télécharger {count} soumissions}}",
+            "string": "{count, plural, one {} many {} other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "Télécharger les enregistrements correspondants",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, one {Télécharger {count} enregistrement(s) correspondant(s)} many {Télécharger {count} enregistrement(s) correspondant(s)} other {Télécharger {count} enregistrement(s) correspondant(s)}}",
+              "string": "{count, plural, one {} many {} other {}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
