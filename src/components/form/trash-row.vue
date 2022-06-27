@@ -88,7 +88,7 @@ export default {
       return null;
     },
     showIdForDuplicateName() {
-      const name = this.form.nameOrId().toLowerCase();
+      const name = this.form.nameOrId().toLocaleLowerCase();
       return this.duplicateFormNames.has(name);
     }
   },

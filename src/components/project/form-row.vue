@@ -85,11 +85,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
 import Project from '../../presenters/project';
 import routes from '../../mixins/routes';
 
+import { requestData } from '../../store/modules/request';
 import useReviewState from '../../composables/review-state';
 import { enketoBasePath } from '../../util/util';
 
@@ -112,6 +115,7 @@ export default {
     return { reviewStateIcon };
   },
   computed: {
+    ...mapGetters(['duplicateFormNamesPerProject']),
     canLinkToFormOverview() {
       return this.project.permits('form.update');
     },
@@ -140,8 +144,11 @@ export default {
       return `${enketoBasePath}/${encodedId}`;
     },
     showIdForDuplicateName() {
-      const formNames = this.project.formList.map((form) => (form.xmlFormId !== this.form.xmlFormId ? form.nameOrId() : null));
-      return formNames.includes(this.form.nameOrId());
+      const formNames = this.duplicateFormNamesPerProject[this.project.id];
+      if (formNames) {
+        return formNames.has(this.form.nameOrId().toLocaleLowerCase());
+      }
+      return false;
     }
   }
 };
