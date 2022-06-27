@@ -56,12 +56,12 @@ export default {
   "en": {
     "action": {
       "download": {
-        "unfiltered": "Download {count} record | Download {count} records",
+        "unfiltered": "Download {count} Submission | Download {count} Submissions",
         "filtered": {
           // This is the text of a button. This text is shown when the number of
-          // matching records is unknown.
-          "withoutCount": "Download matching records",
-          "withCount": "Download {count} matching record | Download {count} matching records"
+          // matching Submissions is unknown.
+          "withoutCount": "Download matching Submissions",
+          "withCount": "Download {count} matching Submission | Download {count} matching Submissions"
         }
       }
     }

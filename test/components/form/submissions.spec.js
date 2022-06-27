@@ -41,7 +41,7 @@ describe('FormSubmissions', () => {
         root: false
       });
       const text = component.getComponent(SubmissionDownloadButton).text();
-      text.should.equal('Download 1 record…');
+      text.should.equal('Download 1 Submission…');
     });
 
     it('updates the form overview if the count changes', () => {

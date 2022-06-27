@@ -350,9 +350,9 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "field": {
       "splitSelectMultiples": "Split “select multiple” choices into columns",
       "removeGroupNames": "Remove group names",
-      "deletedFields": "Include fields not in the published version of the Form"
+      "deletedFields": "Include fields not in the published Form"
     },
-    "deletedFieldsHelp": "Use this option if you need to see data collected with previous versions of this Form.",
+    "deletedFieldsHelp": "Use this option if you need to see fields referenced in previous Form versions.",
     "noSelectMultiple": "This Form does not have any select multiple fields.",
     "encryptedForm": "Encrypted Forms cannot be processed in this way.",
     "deletedFieldsDisabledForDraft": "Draft Forms cannot be processed in this way.",
