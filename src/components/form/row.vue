@@ -217,8 +217,10 @@ export default {
 {
   "cs": {
     "action": {
-      "fill": "Vyplnit formulář"
-    }
+      "fill": "Vyplnit formulář",
+      "test": "Test"
+    },
+    "formClosingTip": "Tento formulář se uzavírá a přijímá poslední podání. Není ke stažení, ale stále přijímá příspěvky."
   },
   "de": {
     "action": {

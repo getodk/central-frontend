@@ -1775,97 +1775,6 @@
         }
       }
     },
-    "FormChecklist": {
-      "clickForInfo": {
-        "string": "Klik di sini untuk mencari lebih banyak."
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "Terbitkan versi pertama draf Anda",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "Kerja bagus!"
-            },
-            "1": {
-              "string": "Formulir Anda telah diterbitkan dan siap menerima kiriman data. Apabila Anda ingin membuat perubahan terhadap formulir atau file media, Anda dapat membuat draf baru."
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "Unduh formulir survei klien dan ajukan data",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "Belum ada pengajuan data di formulir ini."
-              },
-              "any": {
-                "string": "{count, plural, other {Total {count} kiriman data sudah dibuat.}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "{clickHere} untuk mempelajari cara-cara mengajukan data.",
-                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
-              },
-              "clickHere": {
-                "string": "Klik di sini",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "Evaluasi dan analisis data yang telah masuk",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "Setelah ada data untuk formulir ini, Anda bisa mengeskpor atau mensinkronisasi data tersebut ke monitor dan menganalisisnya untuk kualitas dan hasil."
-              },
-              "any": {
-                "string": "{count, plural, other {Anda bisa mengekspor atau mensinkronisasi {count} data yang sudah masuk di formulir ini ke monitor dan menganalisisnya untuk kualitas dan hasil.}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "Anda bisa melakukannya dengan menekan tombol Unduh dan Analisis pada {submissionsTab}.",
-                "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
-              },
-              "submissionsTab": {
-                "string": "Tab kiriman data",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "Atur formulir yang sudah tidak aktif",
-            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "Setelah Anda selesai mengumpulkan data, Anda bisa menggunakan pengaturan Status Formulir pada {formAccessTab} untuk mengatur, misalnya, apakah Pengguna Aplikasi masih bisa melihat atau membuat kiriman data baru untuk formulir ini.",
-                "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
-              },
-              "formAccessTab": {
-                "string": "Tab Akses Formulir pada laman Proyek",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
-              }
-            }
-          }
-        }
-      }
-    },
     "FormDelete": {
       "title": {
         "string": "Hapus Formulir",
@@ -2905,34 +2814,6 @@
         }
       }
     },
-    "ProjectOverviewAbout": {
-      "title": {
-        "string": "Tentang Proyek",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "body": {
-        "0": {
-          "full": {
-            "string": "Proyek memudahkan anda mengelompokkan Formulir dan Pengguna yang saling berhubungan. Pengguna Web dapat diberikan Peran yang akan memberikan mereka hak untuk melakukan beberapa tindakan dalam Proyek, termasuk menggunakan web browser untuk mengisi Formulir. Pengguna Aplikasi untuk Proyek hanya dapat melihat Formulir Proyek {accessTo}.",
-            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
-          },
-          "accessTo": {
-            "string": "yang aksesnya sudah diberikan kepada mereka",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
-          }
-        },
-        "1": {
-          "full": {
-            "string": "Apabila Anda memiliki masukan, silakan kunjungi {forumThread}.",
-            "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
-          },
-          "forumThread": {
-            "string": "utas forum ini",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
-          }
-        }
-      }
-    },
     "ProjectOverviewDescription": {
       "instructions": {
         "full": {
@@ -2947,28 +2828,6 @@
       "note": {
         "string": "",
         "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
-      }
-    },
-    "ProjectOverviewRightNow": {
-      "appUsers": {
-        "full": {
-          "string": "{count, plural, other {{appUsers} yang dapat menggunakan klien pengumpul data untuk mengunduh dan mengirim data formulir ke Proyek ini.}}",
-          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
-        },
-        "appUsers": {
-          "string": "{count, plural, other {Pengguna Aplikasi}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
-        }
-      },
-      "forms": {
-        "full": {
-          "string": "{count, plural, other {}}",
-          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
-        },
-        "forms": {
-          "string": "{count, plural, other {Formulir}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
-        }
       }
     },
     "ProjectSettings": {
@@ -3503,16 +3362,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {Unduh {count} pencatatan}}",
+            "string": "{count, plural, other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "Unduh pencatatan yang cocok",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, other {Unduh {count} pencatatan yang cocok}}",
+              "string": "{count, plural, other {}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }

@@ -117,7 +117,7 @@
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
     },
     "unpublished": {
-      "string": "",
+      "string": "Zatím nezveřejněno",
       "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
@@ -381,7 +381,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "sort": {
-      "string": "",
+      "string": "Seřadit",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
     "update": {
@@ -605,7 +605,7 @@
       "string": "Stav kontroly uložen!"
     },
     "versionChange": {
-      "string": ""
+      "string": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
     }
   },
   "moreInfo": {
@@ -671,7 +671,7 @@
       "string": "Náhled dat není k dispozici kvůli šifrování."
     },
     "noSubmission": {
-      "string": "",
+      "string": "(žádný)",
       "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     }
   },
@@ -986,7 +986,7 @@
           "string": "Velikost systémové databáze"
         },
         "uses_external_db": {
-          "string": ""
+          "string": "Server používá externí databázi"
         },
         "num_managers": {
           "string": "Počet projektových manažerů"
@@ -1025,13 +1025,13 @@
           "string": "Počet opakovaně použitých ID formulářů"
         },
         "num_open_forms": {
-          "string": ""
+          "string": "Počet otevřených formulářů"
         },
         "num_closing_forms": {
-          "string": ""
+          "string": "Počet uzavíraných formulářů"
         },
         "num_closed_forms": {
-          "string": ""
+          "string": "Počet uzavřených formulářů"
         },
         "num_submissions_received": {
           "string": "Počet přijatých podání"
@@ -1064,7 +1064,7 @@
           "string": "Počet podání od uživatelů webu"
         },
         "has_description": {
-          "string": ""
+          "string": "Projekt má popis"
         }
       }
     },
@@ -1098,7 +1098,7 @@
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
       "other": {
-        "string": "",
+        "string": "Jiné",
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
       }
     },
@@ -1775,97 +1775,6 @@
         }
       }
     },
-    "FormChecklist": {
-      "clickForInfo": {
-        "string": "klikněte sem a dozvíte se více"
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "Zveřejněte svou první verzi konceptu",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "Skvělá práce!"
-            },
-            "1": {
-              "string": "Publikovali jste svůj formulář. Je připraven přijímat příspěvky. Pokud chcete provést změny ve formuláři nebo jeho mediálních souborech, můžete vytvořit nový koncept."
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "Stáhněte si formulář o klientech průzkumu a odešlete data",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "Do tohoto formuláře zatím nikdo nezadal žádné údaje."
-              },
-              "any": {
-                "string": "{count, plural, one {Celkem byl odeslán {count} příspěvek.} few {Celkem byly odeslány {count} příspěvky} many {Celkem bylo odesláno {count} příspěvků.} other {Celkem bylo odesláno {count} příspěvků.}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "{clickHere} abyste se dozvěděli o různých způsobech zadávání údajů.",
-                "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nClick here"
-              },
-              "clickHere": {
-                "string": "Klikněte zde",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\n{clickHere} to learn about the different ways to submit data."
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "Vyhodnotit a analyzovat odeslaná data",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "none": {
-                "string": "Jakmile budou pro tento formulář k dispozici data, můžete je exportovat nebo synchronizovat a sledovat a analyzovat data z hlediska kvality a výsledků."
-              },
-              "any": {
-                "string": "{count, plural, one {Můžete exportovat nebo synchronizovat {count} příspěvek v tomto formuláři a sledovat a analyzovat příspěvek z hlediska kvality a výsledků.} few {Můžete exportovat nebo synchronizovat {count} příspěvky v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.} many {Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.} other {Můžete exportovat nebo synchronizovat {count} příspěvků v tomto formuláři a sledovat a analyzovat příspěvky z hlediska kvality a výsledků.}}"
-              }
-            },
-            "1": {
-              "full": {
-                "string": "Můžete to udělat pomocí tlačítek Stáhnout a Analyzovat na {submissionsTab}.",
-                "developer_comment": "{submissionsTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSubmissions tab"
-              },
-              "submissionsTab": {
-                "string": "Karta příspěvků",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissionsTab} is in the following text:\n\nYou can do this with the Download and Analyze buttons on the {submissionsTab}."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "Spravovat časové uspání formulářů",
-            "developer_comment": "This is the title of a checklist item. \"Retirement\" refers to reducing access to the form. For example, removing the ability to download the form or to submit to it."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "Až budete na konci svého sběru dat, můžete pomocí ovládacích prvků Stav formuláře na {formAccessTab} ovládat, zda například Uživatelé aplikace budou moci vidět nebo vytvářet nová odeslání do tohoto formuláře.",
-                "developer_comment": "{formAccessTab} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access tab of the Project page"
-              },
-              "formAccessTab": {
-                "string": "Karta Přístup k formuláři na stránce Projektu",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessTab} is in the following text:\n\nAs you come to the end of your data collection, you can use the Form State controls on the {formAccessTab} to control whether, for example, App Users will be able to see or create new Submissions to this Form."
-              }
-            }
-          }
-        }
-      }
-    },
     "FormDelete": {
       "title": {
         "string": "Odstranit formulář",
@@ -2362,12 +2271,12 @@
           "developer_comment": "This appears on a button linking to a fillable Form"
         },
         "test": {
-          "string": "",
+          "string": "Test",
           "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
-        "string": ""
+        "string": "Tento formulář se uzavírá a přijímá poslední podání. Není ke stažení, ale stále přijímá příspěvky."
       }
     },
     "FormSettings": {
@@ -2402,11 +2311,11 @@
     "FormSort": {
       "sortOptions": {
         "alphabetical": {
-          "string": "",
+          "string": "Abecední",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         },
         "newest": {
-          "string": "",
+          "string": "Nejnovější",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
       }
@@ -2414,15 +2323,15 @@
     "FormTable": {
       "header": {
         "closedForms": {
-          "string": "",
+          "string": "Zavřené formuláře",
           "developer_comment": "This is the text of a column header in a table of Forms."
         },
         "reviewStates": {
-          "string": "",
+          "string": "Přehled stavů",
           "developer_comment": "This is text of a column header in a table of Forms"
         },
         "latest": {
-          "string": "",
+          "string": "Poslední",
           "developer_comment": "This is the text of a column header referring to how recent a Form's latest submission was."
         },
         "idAndVersion": {
@@ -2742,7 +2651,7 @@
       },
       "success": {
         "0": {
-          "string": ""
+          "string": "Pro tento projekt bylo nakonfigurováno šifrování. Všechna mobilní zařízení budou muset načíst nebo znovu načíst nejnovější Formuláře, aby mohlo dojít k šifrování."
         }
       },
       "field": {
@@ -2854,24 +2763,24 @@
     },
     "ProjectHomeBlock": {
       "encrypted": {
-        "string": "",
+        "string": "Šifrováno",
         "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
       },
       "encryptionTip": {
-        "string": ""
+        "string": "Tento projekt používá řízené šifrování."
       },
       "showMore": {
-        "string": "",
+        "string": "Zobrazit celkem {count}",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
       "showFewer": {
-        "string": "",
+        "string": "Zobrazit méně naž {count} z celkového počtu",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       }
     },
     "ProjectList": {
       "archived": {
-        "string": "",
+        "string": "Archivované projekty",
         "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
       },
       "action": {
@@ -2882,10 +2791,10 @@
       },
       "emptyTable": {
         "canCreate": {
-          "string": ""
+          "string": "Chcete-li začít, vytvořte projekt. Projekty vám pomohou uspořádat data seskupením souvisejících formulářů a uživatelů."
         },
         "cannotCreate": {
-          "string": ""
+          "string": "Neexistují žádné projekty, které by bylo možné zobrazit. Pokud očekáváte, že se zde Projekty zobrazí, obraťte se na osobu, která vám tento účet poskytla. Možná bude potřebovat přiřadit Projektovou roli pro Projekty, které byste měli vidět."
         }
       },
       "alert": {
@@ -2905,34 +2814,6 @@
         }
       }
     },
-    "ProjectOverviewAbout": {
-      "title": {
-        "string": "O Projektech",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "body": {
-        "0": {
-          "full": {
-            "string": "Projekty umožňují seskupovat související formuláře a uživatele. Webovým uživatelům mohou být přiděleny role, které jim umožní provádět určité akce v rámci tohoto projektu, včetně použití webového prohlížeče k vyplnění formulářů. Uživatelé aplikace pro tento projekt mohou vidět pouze formuláře v tomto projektu, ke kterému mají {accessTo}.",
-            "developer_comment": "{accessTo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\naccess to"
-          },
-          "accessTo": {
-            "string": "přístup",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {accessTo} is in the following text:\n\nProjects let you group related Forms and Users. Web Users can be given Roles that let them perform certain actions within this Project, including using a web browser to fill out Forms. App Users for this Project can only see Forms in this Project which they have {accessTo}."
-          }
-        },
-        "1": {
-          "full": {
-            "string": "Pokud chcete poskytnout zpětnou vazbu, navštivte prosím {forumThread}.",
-            "developer_comment": "{forumThread} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis forum thread"
-          },
-          "forumThread": {
-            "string": "toto diskusní fórum",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forumThread} is in the following text:\n\nIf you have any feedback, please visit {forumThread}."
-          }
-        }
-      }
-    },
     "ProjectOverviewDescription": {
       "instructions": {
         "full": {
@@ -2947,28 +2828,6 @@
       "note": {
         "string": "Tento návrh mohou zobrazit pouze projektoví manažeři.",
         "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
-      }
-    },
-    "ProjectOverviewRightNow": {
-      "appUsers": {
-        "full": {
-          "string": "{count, plural, one {{appUsers} který může pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} few {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} many {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.} other {{appUsers} kteří mohou pomocí klienta pro sběr dat stahovat a odesílat data formuláře do tohoto projektu.}}",
-          "developer_comment": "The count of App Users is shown separately above this text.\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nApp Users"
-        },
-        "appUsers": {
-          "string": "{count, plural, one {Uživatel aplikace} few {Uživatelů aplikace} many {Uživatelů aplikace} other {Uživatelé aplikace}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text. (The plural form of the text is shown.)\n\n{appUsers} who can use a data collection client to download and submit Form data to this Project."
-        }
-      },
-      "forms": {
-        "full": {
-          "string": "{count, plural, one {{forms} který lze stáhnout a zadat jako dotazník. } few {{forms}  které lze stáhnout a zadat jako dotazník.} many {{forms} které lze stáhnout a zadat jako dotazník.} other {{forms}  které lze stáhnout a zadat jako dotazník.}}",
-          "developer_comment": "The count of Forms is shown separately above this text.\n\n{forms} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nForms"
-        },
-        "forms": {
-          "string": "{count, plural, one {Formulář} few {Formulářů} many {Formulářů} other {Formuláře}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forms} is in the following text. (The plural form of the text is shown.)\n\n{forms} which can be downloaded and given as surveys."
-        }
       }
     },
     "ProjectSettings": {
@@ -3031,11 +2890,11 @@
     "ProjectSort": {
       "sortOptions": {
         "alphabetical": {
-          "string": "",
+          "string": "Abecedně",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         },
         "newest": {
-          "string": "",
+          "string": "Nejnovější",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
@@ -3503,16 +3362,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {Stáhnout {count} záznam} few {Stáhout {count} záznamy} many {Stáhnout {count} záznamů} other {Stáhnout {count} záznamů}}",
+            "string": "{count, plural, one {} few {} many {} other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "Stáhnout odpovídající záznamy",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, one {Stáhnout {count} odpovídající záznam} few {Stáhnout {count} odpovídající záznamy} many {Stáhnout {count} odpovídajících záznamů} other {Stáhnout {count} odpovídající záznamy}}",
+              "string": "{count, plural, one {} few {} many {} other {}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
