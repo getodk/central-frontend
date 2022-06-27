@@ -3285,12 +3285,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "Include fields not in the published version of the Form",
+          "string": "Include fields not in the published Form",
           "developer_comment": "This is the text of a form field."
         }
       },
       "deletedFieldsHelp": {
-        "string": "Use this option if you need to see data collected with previous versions of this Form."
+        "string": "Use this option if you need to see fields referenced in previous Form versions."
       },
       "noSelectMultiple": {
         "string": "This Form does not have any select multiple fields."
@@ -3362,16 +3362,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {Download {count} record} other {Download {count} records}}",
+            "string": "{count, plural, one {Download {count} Submission} other {Download {count} Submissions}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "Download matching records",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching records is unknown."
+              "string": "Download matching Submissions",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, one {Download {count} matching record} other {Download {count} matching records}}",
+              "string": "{count, plural, one {Download {count} matching Submission} other {Download {count} matching Submissions}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
