@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
           {{ form.nameOrId() }}
         </template>
       </template>
+      <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
     <template v-if="form.publishedAt != null">
       <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
@@ -84,6 +85,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
 import Project from '../../presenters/project';
@@ -111,6 +114,7 @@ export default {
     return { reviewStateIcon };
   },
   computed: {
+    ...mapGetters(['duplicateFormNamesPerProject']),
     canLinkToFormOverview() {
       return this.project.permits('form.update');
     },
@@ -137,6 +141,13 @@ export default {
     enketoPath() {
       const encodedId = encodeURIComponent(this.form.enketoId);
       return `${enketoBasePath}/${encodedId}`;
+    },
+    showIdForDuplicateName() {
+      const formNames = this.duplicateFormNamesPerProject[this.project.id];
+      if (formNames) {
+        return formNames.has(this.form.nameOrId().toLocaleLowerCase());
+      }
+      return false;
     }
   }
 };
@@ -151,6 +162,11 @@ export default {
     padding: 4px 0px 4px 6px;
     color: #333;
     a { @include text-link; }
+  }
+
+  .duplicate-form-id {
+    font-family: $font-family-monospace;
+    padding-left: 6px;
   }
 
   .review-state, .total-submissions, .not-published {

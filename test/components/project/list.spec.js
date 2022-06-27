@@ -314,5 +314,31 @@ describe('ProjectList', () => {
       blocks[1].findAllComponents(FormRow).length.should.equal(2);
     });
   });
+
+  describe('duplicate form names', () => {
+    beforeEach(mockLogin);
+
+    it('calculates duplicate form names per project', () => {
+      createProjectsWithForms(
+        [{ name: 'Project 1' }, { name: 'Project 2' }],
+        [
+          [{ name: 'A', xmlFormId: 'a_1' }, { name: 'A', xmlFormId: 'a_2' }, { name: 'B', xmlFormId: 'b_1' }],
+          [{ name: 'C', xmlFormId: 'c_1' }, { name: 'c', xmlFormId: 'c_2' }, { name: 'B', xmlFormId: 'b_1' }]
+        ]
+      );
+      const component = mountComponent();
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].findAllComponents(FormRow).map((row) => row.find('.form-name').text()).should.eql([
+        'A(a_1)',
+        'A(a_2)',
+        'B'
+      ]);
+      blocks[1].findAllComponents(FormRow).map((row) => row.find('.form-name').text()).should.eql([
+        'B',
+        'c(c_2)',
+        'C(c_1)'
+      ]);
+    });
+  });
 });
 
