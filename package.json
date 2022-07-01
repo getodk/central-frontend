@@ -54,5 +54,9 @@
     "should": "~13.2",
     "sinon": "~9",
     "vue-cli-plugin-i18n": "~2"
+  },
+  "engines": {
+    "node": "14",
+    "npm": "6"
   }
 }
