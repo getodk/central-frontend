@@ -44,6 +44,7 @@
     "eslint-plugin-import": "~2",
     "eslint-plugin-vue": "~9",
     "faker": "~4.1",
+    "foreman": "^3.0.1",
     "jsqr": "~1.0",
     "karma": "~6",
     "karma-chrome-launcher": "~3",
