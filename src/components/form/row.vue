@@ -82,7 +82,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { inject } from 'vue';
 
 import DateTime from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
@@ -109,14 +109,15 @@ export default {
     }
   },
   setup() {
+    const { responseData } = inject('container');
+    const { duplicateFormNames } = responseData.getters;
     const { reviewStateIcon } = useReviewState();
-    return { reviewStateIcon };
+    return { duplicateFormNames, reviewStateIcon };
   },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
     ...requestData(['project', 'forms', 'deletedForms']),
-    ...mapGetters(['duplicateFormNames']),
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
     urlFilterEncode() {
       return new Map()

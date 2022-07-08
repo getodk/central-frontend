@@ -16,6 +16,7 @@ import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createCentralStore from './store';
+import createResponseData from './response-data';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import subclassPresenters from './presenters';
@@ -29,6 +30,7 @@ export default ({
   // passed a partial container.
   store = createCentralStore,
   i18n = createCentralI18n(),
+  responseData = createResponseData,
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n.global),
   config = defaultConfig,
@@ -46,6 +48,7 @@ export default ({
     ...subclassPresenters(i18n.global)
   };
   container.store = store(container);
+  container.responseData = responseData(container);
   if (router != null) container.router = router(container);
   container.install = (app) => {
     app.use(container.store);
