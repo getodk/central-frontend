@@ -109,7 +109,7 @@ export default {
     }
   },
   setup() {
-    const { responseData } = inject('container');
+    const responseData = inject('responseData');
     const { duplicateFormNames } = responseData.getters;
     const { reviewStateIcon } = useReviewState();
     return { duplicateFormNames, reviewStateIcon };

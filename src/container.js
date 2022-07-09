@@ -21,6 +21,15 @@ import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import subclassPresenters from './presenters';
 
+const provide = [
+  'responseData',
+  'alert',
+  'unsavedChanges',
+  'config',
+  'http',
+  'logger'
+];
+
 export default ({
   // `router` must be a function that returns an object. The function will be
   // passed a partial container. It is also possible to create a container
@@ -56,8 +65,9 @@ export default ({
     // vue-cli-plugin-i18n.
     app.use(i18n).component(Translation.name, Translation);
     if (container.router != null) app.use(container.router);
+
     app.provide('container', container);
-    for (const key of ['alert', 'unsavedChanges', 'config', 'http', 'logger'])
+    for (const key of provide)
       app.provide(key, container[key]);
   };
   return container;

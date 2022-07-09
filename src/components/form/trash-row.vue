@@ -68,7 +68,7 @@ export default {
   },
   emits: ['start-restore'],
   setup() {
-    const { responseData } = inject('container');
+    const responseData = inject('responseData');
     const { duplicateFormNames } = responseData.getters;
     return { duplicateFormNames };
   },

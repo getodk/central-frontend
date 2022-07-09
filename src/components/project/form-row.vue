@@ -110,7 +110,7 @@ export default {
     }
   },
   setup() {
-    const { responseData } = inject('container');
+    const responseData = inject('responseData');
     const { duplicateFormNamesPerProject } = responseData.getters;
     const { reviewStateIcon } = useReviewState();
     return { duplicateFormNamesPerProject, reviewStateIcon };
