@@ -85,7 +85,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { inject } from 'vue';
 
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
@@ -110,11 +110,12 @@ export default {
     }
   },
   setup() {
+    const responseData = inject('responseData');
+    const { duplicateFormNamesPerProject } = responseData.getters;
     const { reviewStateIcon } = useReviewState();
-    return { reviewStateIcon };
+    return { duplicateFormNamesPerProject, reviewStateIcon };
   },
   computed: {
-    ...mapGetters(['duplicateFormNamesPerProject']),
     canLinkToFormOverview() {
       return this.project.permits('form.update');
     },

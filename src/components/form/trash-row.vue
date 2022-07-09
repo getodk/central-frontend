@@ -51,7 +51,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { inject } from 'vue';
 
 import DateTime from '../date-time.vue';
 import Form from '../../presenters/form';
@@ -67,11 +67,15 @@ export default {
     }
   },
   emits: ['start-restore'],
+  setup() {
+    const responseData = inject('responseData');
+    const { duplicateFormNames } = responseData.getters;
+    return { duplicateFormNames };
+  },
   computed: {
     // The component assumes that this data will exist when the component is
     // created.
     ...requestData(['forms', 'deletedForms']),
-    ...mapGetters(['duplicateFormNames']),
     activeFormIds() {
       // returns ids of existing forms to disable restoring deleted
       // forms with conflicting ids (also prevented on backend)

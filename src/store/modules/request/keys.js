@@ -197,38 +197,6 @@ const dataGetters = {
         result.push(audit);
     }
     return result;
-  },
-
-  // Returns a set containing just the form names that appear more than once
-  // in a project. Used on project overview to show form ID next to form name
-  // when form names are duplicated.
-  duplicateFormNames: ({ data: { forms, deletedForms } }) => {
-    const allForms = [...forms || [], ...deletedForms || []];
-    const seenNames = new Set();
-    const dupeNames = new Set();
-    for (const form of allForms) {
-      const formName = form.nameOrId().toLocaleLowerCase();
-      if (seenNames.has(formName)) dupeNames.add(formName);
-      seenNames.add(formName);
-    }
-    return dupeNames;
-  },
-
-  // Returns an object of Sets containing duplicate project names for use
-  // by the Project list page.
-  duplicateFormNamesPerProject: ({ data: { projects } }) => {
-    if (projects == null) return {};
-    const dupeNamesByProject = {};
-    for (const project of projects) {
-      const seenNames = new Set();
-      dupeNamesByProject[project.id] = new Set();
-      for (const form of project.formList) {
-        const formName = form.nameOrId().toLocaleLowerCase();
-        if (seenNames.has(formName)) dupeNamesByProject[project.id].add(formName);
-        seenNames.add(formName);
-      }
-    }
-    return dupeNamesByProject;
   }
 };
 export const getters = dataGetters;
