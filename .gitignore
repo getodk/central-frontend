@@ -28,5 +28,5 @@ npm-debug.log*
 *.sln
 *.sw?
 
-/tmp/
-!/tmp/.gitkeep
+/.nginx/
+!/.nginx/.gitkeep
