@@ -48,7 +48,7 @@ Next, build ODK Central Frontend files for development by running `npm run dev`.
 Finally, run NGINX by changing the working directory to the root directory of the repository, then typing the following:
 
 ```bash
-nginx -c nginx.conf -p $PWD
+nginx -c "$PWD/nginx.conf" -p "$PWD"
 ```
 
 NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests. We specify `-p "$PWD"` so that relative paths in [`nginx.conf`](/nginx.conf) are relative to the repository root.
