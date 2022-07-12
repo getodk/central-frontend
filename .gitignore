@@ -27,3 +27,6 @@ npm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+/.nginx/*
+!/.nginx/.gitkeep

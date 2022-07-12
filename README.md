@@ -33,7 +33,7 @@ First, install Node.js 14.
 
 Next, install dependencies by running `npm install`.
 
-Install NGINX. Depending on your operating system and how you install NGINX, you may need to change the absolute paths in the development [`nginx.conf`](/nginx.conf).
+Install NGINX.
 
 You will also need to set up [ODK Central Backend](https://github.com/getodk/central-backend). You will need to create a user using an ODK Central Backend command line script. You will probably also want to promote that user to a sitewide administrator.
 
@@ -48,10 +48,10 @@ Next, build ODK Central Frontend files for development by running `npm run dev`.
 Finally, run NGINX by changing the working directory to the root directory of the repository, then typing the following:
 
 ```bash
-nginx -c "$PWD/nginx.conf" -p "$PWD/dist/"
+nginx -c "$PWD/nginx.conf" -p "$PWD"
 ```
 
-NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests. We specify `-p "$PWD/dist/"` so that relative paths in [`nginx.conf`](/nginx.conf) are relative to `dist/`.
+NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests. We specify `-p "$PWD"` so that relative paths in [`nginx.conf`](/nginx.conf) are relative to the repository root.
 
 ODK Central Frontend will be available on port 8989.
 
