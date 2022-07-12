@@ -8,6 +8,9 @@
     "lint": "vue-cli-service lint --no-fix --max-warnings 0 src/ bin/ test/ *.js",
     "test": "NODE_ENV=test karma start"
   },
+  "volta": {
+    "node": "14.17.6"
+  },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
   },
