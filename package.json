@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service build --mode development --watch",
+    "dev": "nf start",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix --max-warnings 0 src/ bin/ test/ *.js",
     "test": "NODE_ENV=test karma start"
@@ -44,6 +44,7 @@
     "eslint-plugin-import": "~2",
     "eslint-plugin-vue": "~9",
     "faker": "~4.1",
+    "foreman": "^3.0.1",
     "jsqr": "~1.0",
     "karma": "~6",
     "karma-chrome-launcher": "~3",
