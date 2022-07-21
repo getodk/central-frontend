@@ -45,7 +45,7 @@ First, run ODK Central Backend.
 
 Next, build ODK Central Frontend files for development by running `npm run dev`.  The files will be outputted to `dist/`.  As you update the source code, the files will be automatically rebuilt.  `npm run dev` will also start NGINX, which will serve the files.
 
-NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests. We specify `-p "$PWD"` so that relative paths in [`nginx.conf`](/nginx.conf) are relative to the repository root.
+NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests.
 
 ODK Central Frontend will be available on port 8989.
 
