@@ -47,7 +47,7 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
 
 
 ### Notes on existing Central Frontend configuration
-- The following lines have already been added to [`nginx.conf`](../nginx.conf). They create a reverse proxy for the Enketo server in the same way as the reverse proxy to the ODK Central Backend server.
+- The following lines have already been added to [`main.nginx.conf`](../main.nginx.conf). They create a reverse proxy for the Enketo server in the same way as the reverse proxy to the ODK Central Backend server.
 
 ```
     location /- {
