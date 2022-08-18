@@ -239,7 +239,7 @@ export default {
     a relatively low-resource device: we expect that a CSV file will not exceed
     a few dozen MBs.
 
-    Note that the development nginx.conf does not support request body
+    Note that the development main.nginx.conf does not support request body
     decompression. That means that in development, if this component gzips a CSV
     file, Backend will store the gzipped contents rather than the file's
     original contents.

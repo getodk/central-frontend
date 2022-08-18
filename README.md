@@ -60,6 +60,6 @@ ODK Central Frontend communicates with ODK Central Backend in part using a sessi
 
 To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation](https://cli.vuejs.org/) for Vue CLI.
 
-Note that this repository's `nginx.conf` is for development only.
+Note that this repository's `main.nginx.conf` is for development only.
 
 For more information on deploying to production, see the [`central`](https://github.com/getodk/central) repository.
