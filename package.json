@@ -9,7 +9,7 @@
     "test": "NODE_ENV=test karma start"
   },
   "volta": {
-    "node": "14.19.3"
+    "node": "16.17.0"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
@@ -60,7 +60,7 @@
     "vue-cli-plugin-i18n": "~2"
   },
   "engines": {
-    "node": "14",
-    "npm": "6"
+    "node": "16",
+    "npm": "8"
   }
 }

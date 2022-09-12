@@ -29,7 +29,7 @@ We need your help to make ODK Central Frontend as useful as possible! Please see
 
 ## Setting up your development environment
 
-First, install Node.js 14.
+First, install Node.js 16.
 
 Next, install dependencies by running `npm install`.
 
