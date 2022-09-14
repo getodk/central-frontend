@@ -16,7 +16,15 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
-        <p>{{ $t('introduction[1]') }}</p>
+        <p>
+          <span>{{ $t('introduction[1]') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.clickHere.full">
+            <template #clickHere>
+              <a href="https://forum.getodk.org/t/backups-to-google-drive-from-central-will-stop-working-after-oct-3/38895" target="_blank">{{ $t('moreInfo.clickHere.clickHere') }}</a>
+            </template>
+          </i18n-t>
+        </p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
@@ -34,6 +42,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Modal from '../modal.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
@@ -41,7 +50,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'BackupTerminate',
-  components: { Modal, Spinner },
+  components: { Modal, SentenceSeparator, Spinner },
   mixins: [request()],
   props: {
     state: {
@@ -74,7 +83,7 @@ export default {
     "title": "Terminate Automatic Backups",
     "introduction": [
       "Are you sure you want to terminate your automatic backups?",
-      "You will have to reconfigure them again from scratch to start them again, and this action cannot be undone."
+      "If you terminate your automatic backups, you will not be able to start them again. Automatic backups are a deprecated feature, but there are other ways to back up the data on the server."
     ]
   }
 }

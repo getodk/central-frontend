@@ -13,8 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
-      <backup-status @create="showModal('newBackup')"
-        @terminate="showModal('terminate')"/>
+      <backup-status @terminate="showModal('terminate')"/>
       <page-section v-if="audits.length !== 0">
         <template #heading>
           <span>{{ $t('auditsTitle') }}</span>
@@ -24,8 +23,6 @@ except according to the terms contained in the LICENSE file.
         </template>
       </page-section>
     </template>
-    <backup-new v-bind="newBackup" @hide="hideModal('newBackup')"
-      @success="afterCreate"/>
     <backup-terminate v-bind="terminate" @hide="hideModal('terminate')"
       @success="afterTerminate"/>
   </div>
@@ -33,12 +30,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import AuditTable from '../audit/table.vue';
-import BackupNew from './new.vue';
 import BackupTerminate from './terminate.vue';
 import BackupStatus from './status.vue';
 import Loading from '../loading.vue';
-import Option from '../../util/option';
 import PageSection from '../page/section.vue';
+
+import Option from '../../util/option';
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -50,7 +47,6 @@ export default {
   name: 'BackupList',
   components: {
     AuditTable,
-    BackupNew,
     BackupStatus,
     BackupTerminate,
     Loading,
@@ -60,9 +56,6 @@ export default {
   inject: ['alert'],
   data() {
     return {
-      newBackup: {
-        state: false
-      },
       terminate: {
         state: false
       }
@@ -98,11 +91,6 @@ export default {
         }
       ]).catch(noop);
     },
-    afterCreate() {
-      this.fetchData();
-      this.hideModal('newBackup');
-      this.alert.success(this.$t('alert.create'));
-    },
     afterTerminate() {
       this.hideModal('terminate');
       this.alert.success(this.$t('alert.terminate'));
@@ -121,8 +109,7 @@ export default {
     // This is a title shown above a section of the page.
     "auditsTitle": "Latest Backups",
     "alert": {
-      "create": "Success! Automatic backups are now configured.",
-      "terminate": "Your automatic backups were terminated. It is recommended that you set up a new one as soon as possible."
+      "terminate": "Your automatic backups were terminated."
     }
   }
 }
