@@ -12,11 +12,11 @@ describe('SystemHome', () => {
 
   it('renders the tabs', () => {
     const component = mount(SystemHome, {
-      container: { router: mockRouter('/system/backups') }
+      container: { router: mockRouter('/system/audits') }
     });
     const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub);
     const to = links.map(link => link.props().to);
-    to.should.eql(['/system/backups', '/system/audits', '/system/analytics']);
+    to.should.eql(['/system/audits', '/system/analytics', '/system/backups']);
   });
 
   it('hides the Backups tab if the showsBackups config is false', () => {
@@ -26,17 +26,17 @@ describe('SystemHome', () => {
         config: { showsBackups: false }
       }
     });
-    component.get('#page-head-tabs li').should.be.hidden();
+    component.get('#page-head-tabs li:last-child').should.be.hidden();
   });
 
   it('hides "Usage Reporting" tab if showsAnalytics config is false', () => {
     const component = mount(SystemHome, {
       container: {
-        router: mockRouter('/system/backups'),
+        router: mockRouter('/system/audits'),
         config: { showsAnalytics: false }
       }
     });
-    component.findAll('#page-head-tabs li')[2].should.be.hidden();
+    component.get('#page-head-tabs li:nth-child(2)').should.be.hidden();
   });
 
   describe('active tab', () => {
