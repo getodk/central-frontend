@@ -13,6 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
+      <backup-deprecation/>
       <backup-status @terminate="showModal('terminate')"/>
       <page-section v-if="audits.length !== 0">
         <template #heading>
@@ -30,8 +31,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import AuditTable from '../audit/table.vue';
-import BackupTerminate from './terminate.vue';
+import BackupDeprecation from './deprecation.vue';
 import BackupStatus from './status.vue';
+import BackupTerminate from './terminate.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
@@ -47,6 +49,7 @@ export default {
   name: 'BackupList',
   components: {
     AuditTable,
+    BackupDeprecation,
     BackupStatus,
     BackupTerminate,
     Loading,

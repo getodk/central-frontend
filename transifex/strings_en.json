@@ -1145,6 +1145,11 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": "On January 31st, 2023, backups to Google Drive will stop working."
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Latest Backups",
