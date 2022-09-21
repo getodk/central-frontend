@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <sentence-separator/>
       <i18n-t keypath="moreInfo.clickHere.full">
         <template #clickHere>
-          <a href="https://forum.getodk.org/t/backups-to-google-drive-from-central-will-stop-working-after-oct-3/38895" target="_blank">{{ $t('moreInfo.clickHere.clickHere') }}</a>
+          <a href="https://forum.getodk.org/t/backups-to-google-drive-from-central-will-stop-working-after-jan-31st/38895" target="_blank">{{ $t('moreInfo.clickHere.clickHere') }}</a>
         </template>
       </i18n-t>
     </p>
@@ -29,7 +29,7 @@ import SentenceSeparator from '../sentence-separator.vue';
 import { requestData } from '../../store/modules/request';
 
 export default {
-  name: 'BackupsDeprecation',
+  name: 'BackupDeprecation',
   components: { SentenceSeparator },
   // The component assumes that this data will exist when the component is
   // created.
