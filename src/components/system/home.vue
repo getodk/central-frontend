@@ -14,12 +14,6 @@ except according to the terms contained in the LICENSE file.
     <page-head>
       <template #title>{{ $t('systemHome.title') }}</template>
       <template #tabs>
-        <li v-show="config.showsBackups" :class="tabClass('backups')"
-          role="presentation">
-          <router-link :to="tabPath('backups')">
-            {{ $t('systemHome.tab.backups') }}
-          </router-link>
-        </li>
         <li :class="tabClass('audits')" role="presentation">
           <router-link :to="tabPath('audits')">
             {{ $t('systemHome.tab.audits') }}
@@ -29,6 +23,12 @@ except according to the terms contained in the LICENSE file.
           role="presentation">
           <router-link :to="tabPath('analytics')">
             {{ $t('systemHome.tab.analytics') }}
+          </router-link>
+        </li>
+        <li v-show="config.showsBackups" :class="tabClass('backups')"
+          role="presentation">
+          <router-link :to="tabPath('backups')">
+            {{ $t('systemHome.tab.backups') }}
           </router-link>
         </li>
       </template>

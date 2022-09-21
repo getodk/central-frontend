@@ -1145,100 +1145,19 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": "On January 31st, 2023, backups to Google Drive will stop working."
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Latest Backups",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
-        "create": {
-          "string": "Success! Automatic backups are now configured."
-        },
         "terminate": {
-          "string": "Your automatic backups were terminated. It is recommended that you set up a new one as soon as possible."
-        }
-      }
-    },
-    "BackupNew": {
-      "title": {
-        "string": "Set up Backups",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "steps": {
-        "0": {
-          "warning": {
-            "full": {
-              "string": "This backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
-            },
-            "forum": {
-              "string": "the forum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
-            }
-          },
-          "introduction": {
-            "0": {
-              "string": "If you want, you may set up an encryption passphrase which must be used to unlock the backup."
-            },
-            "1": {
-              "string": "There is no way to recover the passphrase if you lose it!"
-            },
-            "2": {
-              "string": "Be sure to pick something you will remember, or write it down somewhere safe."
-            }
-          }
-        },
-        "1": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "For safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "here",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
-              }
-            },
-            "1": {
-              "string": "When you press next, Google will confirm that you wish to allow the server to access your account. The only thing the server will be allowed to touch are the backup files it creates."
-            },
-            "2": {
-              "string": "Once you confirm this, you will be asked to copy and paste some text back here."
-            }
-          }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Welcome back! Did you get some text to copy and paste? If not, click {here} to try again.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "here",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
-              }
-            },
-            "1": {
-              "string": "Otherwise, paste it below and you are done!"
-            }
-          }
-        }
-      },
-      "field": {
-        "passphrase": {
-          "string": "Passphrase (optional)",
-          "developer_comment": "This is the text of a form field."
-        },
-        "confirmationText": {
-          "string": "Confirmation text",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "problem": {
-        "verify": {
-          "string": "Please try again, and go to the community forum if the problem continues."
+          "string": "Your automatic backups were terminated."
         }
       }
     },
@@ -1258,20 +1177,7 @@
           "string": "Backups are not configured."
         },
         "1": {
-          "string": "The data server has not been set up to automatically back up its data anywhere."
-        },
-        "2": {
-          "full": {
-            "string": "Unless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe.",
-            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
-          },
-          "recommended": {
-            "string": "strongly recommended",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
-          }
-        },
-        "3": {
-          "string": "Automatic data backups happen through this system once a day. All your data is encrypted with a password you provide so that only you can unlock it."
+          "string": "In earlier versions of ODK Central, it was possible to set up automatic backups to Google Drive. That feature has been deprecated, but there are other ways to back up the data on the server. We strongly recommend that all users back up their data."
         }
       },
       "neverRun": {
@@ -1282,14 +1188,7 @@
           "string": "If you have configured backups within the last couple of days, this is normal. Otherwise, something has gone wrong."
         },
         "2": {
-          "full": {
-            "string": "In that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminate",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": "In that case, the most likely fix is to restart the service."
         }
       },
       "somethingWentWrong": {
@@ -1307,14 +1206,7 @@
           }
         },
         "2": {
-          "full": {
-            "string": "The most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminate",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": "The most likely fix is to restart the service."
         }
       },
       "success": {
@@ -1328,10 +1220,6 @@
         }
       },
       "action": {
-        "setUp": {
-          "string": "Set up now",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "download": {
           "string": "Download backup now",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1357,7 +1245,7 @@
           "string": "Are you sure you want to terminate your automatic backups?"
         },
         "1": {
-          "string": "You will have to reconfigure them again from scratch to start them again, and this action cannot be undone."
+          "string": "If you terminate your automatic backups, you will not be able to start them again. Automatic backups are a deprecated feature, but there are other ways to back up the data on the server."
         }
       }
     },

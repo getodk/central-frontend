@@ -27,7 +27,10 @@ const assertContent = (component, iconClass, title, buttonText) => {
   const status = component.get('#backup-status');
   status.get('p').text().should.equal(title);
 
-  status.get('button').text().should.equal(buttonText);
+  if (buttonText == null)
+    status.find('button').exists().should.be.false();
+  else
+    status.get('button').text().should.equal(buttonText);
 };
 
 describe('BackupStatus', () => {
@@ -38,7 +41,7 @@ describe('BackupStatus', () => {
       mountComponent(),
       'icon-question-circle',
       'Backups are not configured.',
-      'Set up now…'
+      null
     );
   });
 

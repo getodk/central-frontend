@@ -26,7 +26,7 @@ describe('NavbarLinks', () => {
     });
     const links = component.findAllComponents(RouterLinkStub);
     const to = links.map(link => link.props().to);
-    to.should.eql(['/', '/users', '/system/backups']);
+    to.should.eql(['/', '/users', '/system/audits']);
   });
 
   it('renders the correct links for a user without a sitewide role', () => {
@@ -38,18 +38,6 @@ describe('NavbarLinks', () => {
     links.map(link => link.props().to).should.eql(['/']);
   });
 
-  it('links to /system/audits if the showsBackups config is false', () => {
-    mockLogin();
-    const component = mount(NavbarLinks, {
-      container: {
-        router: mockRouter('/'),
-        config: { showsBackups: false }
-      }
-    });
-    const { to } = component.findAllComponents(RouterLinkStub)[2].props();
-    to.should.equal('/system/audits');
-  });
-
   describe('active link', () => {
     beforeEach(mockLogin);
 
@@ -59,7 +47,7 @@ describe('NavbarLinks', () => {
       ['/projects/1', '/'],
       ['/users', '/users'],
       ['/users/1/edit', '/users'],
-      ['/system/audits', '/system/backups']
+      ['/system/analytics', '/system/audits']
     ];
     for (const [location, activeLink] of cases) {
       it(`marks ${activeLink} as active for ${location}`, () => {

@@ -15,23 +15,21 @@ except according to the terms contained in the LICENSE file.
 
     <template v-if="status === 'notConfigured'">
       <p>{{ $t('notConfigured[0]') }}</p>
-      <p><strong>{{ $t('notConfigured[1]') }}</strong></p>
-      <i18n-t tag="p" keypath="notConfigured[2].full">
-        <template #recommended>
-          <strong>{{ $t('notConfigured[2].recommended') }}</strong>
-        </template>
-      </i18n-t>
-      <p>{{ $t('notConfigured[3]') }}</p>
+      <p>
+        <span>{{ $t('notConfigured[1]') }}</span>
+        <sentence-separator/>
+        <i18n-t keypath="moreInfo.clickHere.full">
+          <template #clickHere>
+            <a href="https://forum.getodk.org/t/backups-to-google-drive-from-central-will-stop-working-after-jan-31st/38895" target="_blank">{{ $t('moreInfo.clickHere.clickHere') }}</a>
+          </template>
+        </i18n-t>
+      </p>
     </template>
     <template v-else-if="status === 'neverRun'">
       <p>{{ $t('neverRun[0]') }}</p>
       <p>{{ $t('neverRun[1]') }}</p>
       <p>
-        <i18n-t keypath="neverRun[2].full">
-          <template #terminate>
-            <strong>{{ $t('neverRun[2].terminate') }}</strong>
-          </template>
-        </i18n-t>
+        <span>{{ $t('neverRun[2]') }}</span>
         <sentence-separator/>
         <i18n-t keypath="getHelp.full">
           <template #forum>
@@ -48,11 +46,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </i18n-t>
       <p>
-        <i18n-t keypath="somethingWentWrong[2].full">
-          <template #terminate>
-            <strong>{{ $t('somethingWentWrong[2].terminate') }}</strong>
-          </template>
-        </i18n-t>
+        <span>{{ $t('somethingWentWrong[2]') }}</span>
         <sentence-separator/>
         <i18n-t keypath="getHelp.full">
           <template #forum>
@@ -72,23 +66,15 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </template>
 
-    <div>
-      <template v-if="status === 'notConfigured'">
-        <button type="button" class="btn btn-primary" @click="$emit('create')">
-          <span class="icon-plus-circle"></span>{{ $t('action.setUp') }}&hellip;
-        </button>
-      </template>
-      <template v-else>
-        <a class="btn btn-primary" :class="{ disabled: downloading }"
-          href="/v1/backup" @click="download">
-          <span class="icon-arrow-circle-down"></span>{{ $t('action.download') }}
-          <spinner :state="downloading"/>
-        </a>
-        <button type="button" class="btn btn-danger"
-          @click="$emit('terminate')">
-          <span class="icon-times-circle"></span>{{ $t('action.terminate') }}&hellip;
-        </button>
-      </template>
+    <div v-if="status !== 'notConfigured'">
+      <a class="btn btn-primary" :class="{ disabled: downloading }"
+        href="/v1/backup" @click="download">
+        <span class="icon-arrow-circle-down"></span>{{ $t('action.download') }}
+        <spinner :state="downloading"/>
+      </a>
+      <button type="button" class="btn btn-danger" @click="$emit('terminate')">
+        <span class="icon-times-circle"></span>{{ $t('action.terminate') }}&hellip;
+      </button>
     </div>
   </div>
 </template>
@@ -108,7 +94,7 @@ export default {
   name: 'BackupStatus',
   components: { DateTime: DateTimeComponent, SentenceSeparator, Spinner },
   inject: ['alert'],
-  emits: ['create', 'terminate'],
+  emits: ['terminate'],
   data() {
     return {
       downloading: false
@@ -191,20 +177,12 @@ export default {
     },
     "notConfigured": [
       "Backups are not configured.",
-      "The data server has not been set up to automatically back up its data anywhere.",
-      {
-        "full": "Unless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe.",
-        "recommended": "strongly recommended"
-      },
-      "Automatic data backups happen through this system once a day. All your data is encrypted with a password you provide so that only you can unlock it."
+      "In earlier versions of ODK Central, it was possible to set up automatic backups to Google Drive. That feature has been deprecated, but there are other ways to back up the data on the server. We strongly recommend that all users back up their data."
     ],
     "neverRun": [
       "The configured backup has not yet run.",
       "If you have configured backups within the last couple of days, this is normal. Otherwise, something has gone wrong.",
-      {
-        "full": "In that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
-        "terminate": "terminate"
-      }
+      "In that case, the most likely fix is to restart the service."
     ],
     "somethingWentWrong": [
       "Something is wrong!",
@@ -212,10 +190,7 @@ export default {
         "full": "The latest backup that completed successfully was {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "more than three days ago"
       },
-      {
-        "full": "The most likely fixes are to {terminate} the connection and set it up again, or to restart the service.",
-        "terminate": "terminate"
-      }
+      "The most likely fix is to restart the service."
     ],
     "success": [
       // This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working.
@@ -227,7 +202,6 @@ export default {
       "The last backup completed successfully {dateTime}."
     ],
     "action": {
-      "setUp": "Set up now",
       "download": "Download backup now",
       "terminate": "Terminate"
     },

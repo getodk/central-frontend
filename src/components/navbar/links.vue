@@ -22,9 +22,9 @@ except according to the terms contained in the LICENSE file.
         {{ $t('resource.users') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
-    <li v-if="canRoute(systemPath)"
+    <li v-if="canRoute('/system/audits')"
       :class="{ active: routePathStartsWith('/system') }">
-      <router-link :to="systemPath">
+      <router-link to="/system/audits">
         {{ $t('common.system') }} <span class="sr-only">{{ $t('current') }}</span>
       </router-link>
     </li>
@@ -37,13 +37,9 @@ import routes from '../../mixins/routes';
 export default {
   name: 'NavbarLinks',
   mixins: [routes()],
-  inject: ['config'],
   computed: {
     projectsLinkIsActive() {
       return this.$route.path === '/' || this.routePathStartsWith('/projects');
-    },
-    systemPath() {
-      return this.config.showsBackups ? '/system/backups' : '/system/audits';
     }
   },
   methods: {
