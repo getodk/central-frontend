@@ -1145,100 +1145,19 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": ""
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Hifadhi Nakala za Hivi Punde",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
-        "create": {
-          "string": "Mafanikio! Hifadhi rudufu za kiotomatiki sasa zimesanidiwa."
-        },
         "terminate": {
-          "string": "Nakala zako za kiotomatiki zimekatishwa. Inapendekezwa kuwa usanidi mpya haraka iwezekanavyo"
-        }
-      }
-    },
-    "BackupNew": {
-      "title": {
-        "string": "Sanidi Hifadhi Nakala",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "steps": {
-        "0": {
-          "warning": {
-            "full": {
-              "string": "Hifadhi rudufu hii kwa sasa haijumuishi viungo vya Fomu ya Wavuti. Ukishiriki Viungo vya Ufikiaji wa Umma au kuunganisha kwa nje moja kwa moja kwa Fomu za Wavuti kwa ajili ya kufanya Mawasilisho mapya, tunapendekeza kwa dhati kwamba ufanye hifadhi kamili ya mfumo hadi hili lishughulikiwe. Iwapo itabidi urejeshe kutoka kwa nakala na uishie na viungo vilivyovunjika vya Onyesho la Kuchungulia, tafadhali ichapishe kwenye {forum} ili upate usaidizi.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
-            },
-            "forum": {
-              "string": "jukwaa",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
-            }
-          },
-          "introduction": {
-            "0": {
-              "string": "Ukipenda, unaweza kusanidi kaulisiri ya usimbaji ambayo lazima itumike kufungua nakala rudufu."
-            },
-            "1": {
-              "string": "Hakuna njia ya kurejesha kaulisiri ikiwa utaipoteza!"
-            },
-            "2": {
-              "string": "Hakikisha umechagua kitu ambacho utakumbuka, au uandike mahali salama"
-            }
-          }
-        },
-        "1": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Kwa usalama, seva hutuma data yako kwenye Hifadhi ya Google. Unaweza kujiandikisha kwa akaunti isiyolipishwa {here}",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "hapa",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
-              }
-            },
-            "1": {
-              "string": "Unapobofya inayofuata, Google itathibitisha kwamba ungependa kuruhusu seva kufikia akaunti yako. Kitu pekee ambacho seva itaruhusiwa kugusa ni faili za chelezo inazounda"
-            },
-            "2": {
-              "string": "Ukishathibitisha hili, utaombwa kunakili na kubandika maandishi hapa nyuma."
-            }
-          }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Karibu tena! Je, umepata maandishi ya kunakili na kubandika? Ikiwa sivyo, bofya {here} ili kujaribu tena.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "hapa",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
-              }
-            },
-            "1": {
-              "string": "Vinginevyo, bandika hapa chini na umemaliza!"
-            }
-          }
-        }
-      },
-      "field": {
-        "passphrase": {
-          "string": "Nenosiri (hiari)",
-          "developer_comment": "This is the text of a form field."
-        },
-        "confirmationText": {
-          "string": "Maandishi ya uthibitisho",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "problem": {
-        "verify": {
-          "string": "Tafadhali jaribu tena, na uende kwenye jamii forum tatizo likiendelea."
+          "string": ""
         }
       }
     },
@@ -1258,20 +1177,7 @@
           "string": "Hifadhi rudufu hazijasanidiwa."
         },
         "1": {
-          "string": "Seva ya data haijawekwa ili kuhifadhi nakala kiotomatiki data yake popote pale."
-        },
-        "2": {
-          "full": {
-            "string": "Isipokuwa umeweka aina nyingine ya kuhifadhi nakala ya data ambayo seva haijui, {recommended} ufanye hivi sasa. Ikiwa huna uhakika, ni bora kufanya hivyo ili tu kuwa salama.",
-            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
-          },
-          "recommended": {
-            "string": "inapendekezwa sana",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
-          }
-        },
-        "3": {
-          "string": "Hifadhi rudufu za data otomatiki hufanyika kupitia mfumo huu mara moja kwa siku. Data yako yote imesimbwa kwa njia fiche kwa nenosiri ulilotoa ili wewe tu uweze kulifungua."
+          "string": ""
         }
       },
       "neverRun": {
@@ -1282,14 +1188,7 @@
           "string": "Ikiwa umesanidi nakala rudufu ndani ya siku chache zilizopita, hii ni kawaida. Vinginevyo, kitu kimeenda vibaya."
         },
         "2": {
-          "full": {
-            "string": "Katika hali hiyo, marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "sitisha",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "somethingWentWrong": {
@@ -1307,14 +1206,7 @@
           }
         },
         "2": {
-          "full": {
-            "string": "Marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "sitisha",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "success": {
@@ -1328,10 +1220,6 @@
         }
       },
       "action": {
-        "setUp": {
-          "string": "Sanidi sasa",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "download": {
           "string": "Pakua nakala rudufu sasa",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1357,7 +1245,7 @@
           "string": "Je, una uhakika kuwa ungependa kusitisha hifadhi rudufu zako otomatiki?"
         },
         "1": {
-          "string": "Utalazimika kuzisanidi tena kutoka mwanzo ili kuzianzisha tena, na kitendo hiki hakiwezi kutenduliwa"
+          "string": ""
         }
       }
     },

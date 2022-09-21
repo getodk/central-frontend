@@ -1145,100 +1145,19 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": ""
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Nejnovější zálohy",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
-        "create": {
-          "string": "Skvěle! Nyní jsou nakonfigurovány automatické zálohy."
-        },
         "terminate": {
-          "string": "Vaše automatické zálohování bylo ukončeno. Doporučujeme, abyste si nové zálohování nastavili co nejdříve."
-        }
-      }
-    },
-    "BackupNew": {
-      "title": {
-        "string": "Nastavení záloh",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "steps": {
-        "0": {
-          "warning": {
-            "full": {
-              "string": "Tato záloha aktuálně neobsahuje odkazy na webové formuláře. Pokud sdílíte veřejné přístupové odkazy nebo externě odkazujete přímo na webové formuláře za účelem vytváření nových příspěvků, důrazně doporučujeme provést také úplnou zálohu systému, dokud nebude tento problém vyřešen. Pokud musíte obnovit ze zálohy a skončit s nefunkčními odkazy na náhled, pošlete příspěvek na {forum} a požádejte o pomoc.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
-            },
-            "forum": {
-              "string": "fórum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
-            }
-          },
-          "introduction": {
-            "0": {
-              "string": "Pokud chcete, můžete nastavit šifrovací přístupové heslo, které musí být použito k odemknutí zálohy."
-            },
-            "1": {
-              "string": "Pokud heslo ztratíte, není možné jej obnovit."
-            },
-            "2": {
-              "string": "Nezapomeňte si vybrat něco, na co si vzpomenete, nebo si je zapište na bezpečné místo."
-            }
-          }
-        },
-        "1": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Pro účely úschovy server odešle vaše data na Google Drive. Můžete si zaregistrovat bezplatný účet {here}.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "zde",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
-              }
-            },
-            "1": {
-              "string": "Po dalším stisknutí Google potvrdí, že chcete serveru povolit přístup k vašemu účtu. Jediné, čeho se bude server moci dotknout, jsou záložní soubory, které vytvoří."
-            },
-            "2": {
-              "string": "Jakmile to potvrdíte, budete požádáni o zkopírování a vložení textu sem."
-            }
-          }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Vítej zpět! Dostali jste nějaký text ke kopírování a vložení? Pokud ne, zkuste to znovu kliknutím  {here}.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "zde",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
-              }
-            },
-            "1": {
-              "string": "Jinak jej vložte níže a máte hotovo!"
-            }
-          }
-        }
-      },
-      "field": {
-        "passphrase": {
-          "string": "Heslo (volitelné)",
-          "developer_comment": "This is the text of a form field."
-        },
-        "confirmationText": {
-          "string": "Potvrzovací text",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "problem": {
-        "verify": {
-          "string": "Zkuste to prosím znovu a přejděte na komunitní fórum, pokud problém přetrvává."
+          "string": ""
         }
       }
     },
@@ -1258,20 +1177,7 @@
           "string": "Zálohy nejsou nakonfigurovány."
         },
         "1": {
-          "string": "Datový server nebyl nastaven tak, aby automaticky zálohoval jeho data kdekoli."
-        },
-        "2": {
-          "full": {
-            "string": "Pokud jste nenastavili nějakou jinou formu zálohování dat, o které server neví, je {recommended}, že to uděláte nyní. Pokud si nejste jisti, je nejlepší to udělat jen proto, abyste byli v bezpečí.",
-            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
-          },
-          "recommended": {
-            "string": "silně doporučeno",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
-          }
-        },
-        "3": {
-          "string": "Automatické zálohování dat probíhá prostřednictvím tohoto systému jednou denně. Všechna vaše data jsou zašifrována pomocí hesla, které zadáte, abyste je mohli odemknout pouze vy."
+          "string": ""
         }
       },
       "neverRun": {
@@ -1282,14 +1188,7 @@
           "string": "Pokud jste nakonfigurovali zálohování v posledních několika dnech, je to normální. Jinak se něco pokazilo."
         },
         "2": {
-          "full": {
-            "string": "V takovém případě je nejpravděpodobnější opravou {terminate} připojení a opětovné nastavení nebo restartování služby.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "ukončení",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "somethingWentWrong": {
@@ -1307,14 +1206,7 @@
           }
         },
         "2": {
-          "full": {
-            "string": "Nejpravděpodobnější opravou je {terminate} připojení a znovu nastavení, nebo restartování služby.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "ukončit",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "success": {
@@ -1328,10 +1220,6 @@
         }
       },
       "action": {
-        "setUp": {
-          "string": "Nastavit nyní",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "download": {
           "string": "Stáhnout zálohu hned",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1357,7 +1245,7 @@
           "string": "Opravdu chcete ukončit automatické zálohování?"
         },
         "1": {
-          "string": "Budete je muset znovu nakonfigurovat od nuly, abyste je mohli znovu spustit, a tuto akci nelze vrátit zpět."
+          "string": ""
         }
       }
     },
@@ -3285,12 +3173,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "",
+          "string": "Zahrnout pole, která nejsou ve zveřejněném formuláři",
           "developer_comment": "This is the text of a form field."
         }
       },
       "deletedFieldsHelp": {
-        "string": ""
+        "string": "Tuto možnost použijte, pokud potřebujete zobrazit pole odkazovaná v předchozích verzích formuláře."
       },
       "noSelectMultiple": {
         "string": "Tento formulář nemá žádná pole pro výběr více položek."
@@ -3367,7 +3255,7 @@
           },
           "filtered": {
             "withoutCount": {
-              "string": "",
+              "string": "Stáhnout odpovídající příspěvky",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {

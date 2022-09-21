@@ -389,8 +389,10 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Možnosti exportu",
     "field": {
       "splitSelectMultiples": "Rozdělení možností \"vybrat více\" do sloupců",
-      "removeGroupNames": "Odstranění názvů skupin"
+      "removeGroupNames": "Odstranění názvů skupin",
+      "deletedFields": "Zahrnout pole, která nejsou ve zveřejněném formuláři"
     },
+    "deletedFieldsHelp": "Tuto možnost použijte, pokud potřebujete zobrazit pole odkazovaná v předchozích verzích formuláře.",
     "noSelectMultiple": "Tento formulář nemá žádná pole pro výběr více položek.",
     "encryptedForm": "Šifrované formuláře nelze tímto způsobem zpracovávat.",
     "deletedFieldsDisabledForDraft": "Návrhy formulářů nelze tímto způsobem zpracovávat.",
@@ -417,8 +419,10 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Exportoptionen",
     "field": {
       "splitSelectMultiples": "Unterteilen Sie „mehrere auswählen“-Optionen in Spalten",
-      "removeGroupNames": "Gruppennamen entfernen"
+      "removeGroupNames": "Gruppennamen entfernen",
+      "deletedFields": "Felder einschließen, die nicht in der veröffentlichten Version des Formulars enthalten sind"
     },
+    "deletedFieldsHelp": "Verwenden Sie diese Option, um Felder aus früheren Versionen des Formulars anzuzeigen.",
     "noSelectMultiple": "Dieses Formular enthält keine Mehrfachauswahlfelder.",
     "encryptedForm": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden.",
     "deletedFieldsDisabledForDraft": "Formularentwürfe können auf diese Weise nicht bearbeitet werden.",
@@ -473,8 +477,10 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Options d'exportation",
     "field": {
       "splitSelectMultiples": "Séparer le contenu des questions à choix multiples en plusieurs colonnes.",
-      "removeGroupNames": "Supprimer les noms de groupe"
+      "removeGroupNames": "Supprimer les noms de groupe",
+      "deletedFields": "Inclut les champs qui ne sont pas dans le formulaire publié"
     },
+    "deletedFieldsHelp": "Utilisez cette option si vous avez besoin de champs référencés dans les versions précédentes du formulaire",
     "noSelectMultiple": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\").",
     "encryptedForm": "Les formulaires chiffrés ne peuvent être traités de cette manière.",
     "deletedFieldsDisabledForDraft": "Les ébauches de formulaires ne peuvent être utilisées comme cela.",
