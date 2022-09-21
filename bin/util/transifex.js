@@ -394,7 +394,7 @@ const _restructure = (
           logThenThrow(value, 'cannot link to a linked locale message');
         }
         if (value.full != null || Array.isArray(value)) {
-          // Supporting this case would add complexity to
+          // Supporting these cases would add complexity to
           // deletePartialTranslation(), because then linking to an untranslated
           // message could result in a partial translation, which would then be
           // removed.
@@ -612,24 +612,29 @@ class Translations {
   toJSON(key) {
     if (this.isArray()) {
       const result = [];
-      let emptyPluralForms = 0;
-      let emptyObjects = 0;
       for (let i = 0; i < this.size; i += 1) {
         const value = this.get(i).toJSON(i.toString());
+        // Because of logic below, `value` can be `undefined` only if
+        // this.get(i) is a Translation object.
+        if (value === undefined) {
+          // If we were to add `value` to `result`, `result` would become a
+          // sparse array, which JSON does not support. Instead, we stop adding
+          // to `result` here. As a result, the length of the translated array
+          // will differ from the length of the source array. See
+          // deletePartialTranslation() for related comments.
+          break;
+        }
         result.push(value);
-        if (value === undefined)
-          emptyPluralForms += 1;
-        else if (Object.keys(value).length === 0)
-          emptyObjects += 1;
       }
-      if (emptyPluralForms + emptyObjects === this.size) {
-        // `this` has only empty translations. If possible, we return
-        // `undefined` so that there is not an empty array in the JSON. However,
-        // we do not return `undefined` if doing so would result in a sparse
-        // array: JSON does not support sparse arrays.
+      const anyPresent = result.some(value => typeof value === 'string' ||
+        Object.keys(value).length !== 0);
+      if (!anyPresent) {
+        // There are no translations to return. If possible, we return
+        // `undefined` in order to minimize the JSON. However, we return an
+        // empty array if the parent object is an array in order to prevent the
+        // parent object from becoming a sparse array.
         return /^\d+$/.test(key) ? [] : undefined;
       }
-      if (emptyPluralForms !== 0) logThenThrow(this, 'sparse array');
       return result;
     }
 
@@ -685,8 +690,9 @@ translation so that the resulting text is not a mix of locales. For example:
   }
 }
 
-We also remove an array if one of its elements is an untranslated message,
-because JSON does not support sparse arrays. For example:
+If one of the elements of an array is an untranslated message, we also remove
+the subsequent translations, because JSON does not support sparse arrays. For
+example:
 
 {
   "en": {
@@ -698,20 +704,26 @@ because JSON does not support sparse arrays. For example:
   },
   "es": {
     "introduction": [
-      // Since this message is untranslated, the entire array will be removed.
+      "uno",
+      // Since this message is untranslated, "tres" will be removed.
       "",
-      "dos",
       "tres"
     ]
   }
 }
 
 If https://github.com/kazupon/vue-i18n/issues/563 is implemented, we might not
-need to discard the array.
+need to discard the subsequent translations.
 */
-const deletePartialTranslation = ({ translated, parent }) => {
-  if ((parent.has('full') || parent.isArray()) && translated.isEmpty())
-    parent.clear();
+const deletePartialTranslation = ({ translated, parent, key }) => {
+  if (translated != null && translated.isEmpty()) {
+    if (parent.has('full')) {
+      parent.clear();
+    } else if (parent.isArray()) {
+      for (let i = Number.parseInt(key, 10) + 1; i < parent.size; i += 1)
+        parent.delete(i);
+    }
+  }
 };
 
 const validateTranslation = (locale) => ({ source, translated, path }) => {
