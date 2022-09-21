@@ -480,7 +480,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       "removeGroupNames": "Supprimer les noms de groupe",
       "deletedFields": "Inclut les champs qui ne sont pas dans le formulaire publié"
     },
-    "deletedFieldsHelp": "Utilisez cette option si vous avez besoin des champs référencés dans le versions précédentes du formulaire",
+    "deletedFieldsHelp": "Utilisez cette option si vous avez besoin de champs référencés dans les versions précédentes du formulaire",
     "noSelectMultiple": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\").",
     "encryptedForm": "Les formulaires chiffrés ne peuvent être traités de cette manière.",
     "deletedFieldsDisabledForDraft": "Les ébauches de formulaires ne peuvent être utilisées comme cela.",

@@ -131,7 +131,10 @@ export default {
     "auditsTitle": "Últimas copias de seguridad"
   },
   "fr": {
-    "auditsTitle": "Dernières Sauvegardes"
+    "auditsTitle": "Dernières Sauvegardes",
+    "alert": {
+      "terminate": "Vos sauvegardes automatiques ont été interrompues."
+    }
   },
   "id": {
     "auditsTitle": "Data Cadangan Terakhir"

@@ -314,18 +314,21 @@ export default {
       "forum": "forum de la communauté"
     },
     "notConfigured": [
-      "Sauvegarde non configuré"
+      "Sauvegarde non configuré",
+      "Dans les versions précédentes d'ODK Central, il était possible de mettre en place des sauvegardes automatiques sur Google Drive. Cette fonctionnalité est dépréciée, mais il y a d'autres moyens de sauvegarder les données du serveur. Nous recommandons fortement à tous les utilisateurs de sauvegarder leurs données."
     ],
     "neverRun": [
       "La sauvegarde configurée n'a pas encore été lancée.",
-      "Si vous avez configuré des sauvegardes au cours des deux derniers jours, c'est normal. Sinon, quelque-chose s'est mal passé."
+      "Si vous avez configuré des sauvegardes au cours des deux derniers jours, c'est normal. Sinon, quelque-chose s'est mal passé.",
+      "Dans ce cas, la solution la plus probable consiste à redémarrer le service."
     ],
     "somethingWentWrong": [
       "Quelque-chose ne va pas.",
       {
         "full": "La dernière sauvegarde correctement terminée était {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "plus de trois jours auparavant."
-      }
+      },
+      "La solution la plus probable consiste à redémarrer le service."
     ],
     "success": [
       "La sauvegarde fonctionne.",

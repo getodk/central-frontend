@@ -1147,7 +1147,7 @@
     },
     "BackupDeprecation": {
       "text": {
-        "string": ""
+        "string": "Le 31 janvier 2023, les sauvegardes sur Google Drive cesseront de fonctionner"
       }
     },
     "BackupList": {
@@ -1157,7 +1157,7 @@
       },
       "alert": {
         "terminate": {
-          "string": ""
+          "string": "Vos sauvegardes automatiques ont été interrompues."
         }
       }
     },
@@ -1177,7 +1177,7 @@
           "string": "Sauvegarde non configuré"
         },
         "1": {
-          "string": ""
+          "string": "Dans les versions précédentes d'ODK Central, il était possible de mettre en place des sauvegardes automatiques sur Google Drive. Cette fonctionnalité est dépréciée, mais il y a d'autres moyens de sauvegarder les données du serveur. Nous recommandons fortement à tous les utilisateurs de sauvegarder leurs données."
         }
       },
       "neverRun": {
@@ -1188,7 +1188,7 @@
           "string": "Si vous avez configuré des sauvegardes au cours des deux derniers jours, c'est normal. Sinon, quelque-chose s'est mal passé."
         },
         "2": {
-          "string": ""
+          "string": "Dans ce cas, la solution la plus probable consiste à redémarrer le service."
         }
       },
       "somethingWentWrong": {
@@ -1206,7 +1206,7 @@
           }
         },
         "2": {
-          "string": ""
+          "string": "La solution la plus probable consiste à redémarrer le service."
         }
       },
       "success": {
@@ -1245,7 +1245,7 @@
           "string": "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?"
         },
         "1": {
-          "string": ""
+          "string": "Si vous interrompez vos sauvegardes automatiques, vous ne pourrez plus les redémarrer. Les sauvegardes automatiques est une fonctionnalité dépréciée, mais il y a d'autres moyens de sauvegarder les données du serveur. "
         }
       }
     },
@@ -3178,7 +3178,7 @@
         }
       },
       "deletedFieldsHelp": {
-        "string": "Utilisez cette option si vous avez besoin des champs référencés dans le versions précédentes du formulaire"
+        "string": "Utilisez cette option si vous avez besoin de champs référencés dans les versions précédentes du formulaire"
       },
       "noSelectMultiple": {
         "string": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\")."

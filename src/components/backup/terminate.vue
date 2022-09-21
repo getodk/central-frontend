@@ -113,7 +113,8 @@ export default {
   "fr": {
     "title": "Terminer les Sauvegardes Automatiques",
     "introduction": [
-      "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?"
+      "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?",
+      "Si vous interrompez vos sauvegardes automatiques, vous ne pourrez plus les redémarrer. Les sauvegardes automatiques est une fonctionnalité dépréciée, mais il y a d'autres moyens de sauvegarder les données du serveur."
     ]
   },
   "id": {
