@@ -364,7 +364,7 @@ export default {
           {
             "status": "Si vous avez apporté des changements au formulaire lui-même, y compris au texte des questions ou au règles logiques, il est temps de téléverser le nouveau XML ou XLSForm en utilisant le bouton de droite.",
             "link": {
-              "full": "Si vous avez apporté des changements au formulaire lui-même, y compris au texte des questions ou au règles logiques, il est temps de {upload} the new XML or XLSForm.",
+              "full": "Si vous avez apporté des changements au formulaire lui-même, y compris au texte des questions ou au règles logiques, il est temps de {upload} le nouveau XML ou XLSForm.",
               "upload": "téléverser"
             }
           }

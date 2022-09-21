@@ -1145,100 +1145,19 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": ""
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Ultimo backup",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
-        "create": {
-          "string": "Successo! I backup automatici sono ora configurati."
-        },
         "terminate": {
-          "string": "I tuoi backup automatici sono stati terminati. Si consiglia di impostarne uno nuovo il prima possibile."
-        }
-      }
-    },
-    "BackupNew": {
-      "title": {
-        "string": "Configura i Backup",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "steps": {
-        "0": {
-          "warning": {
-            "full": {
-              "string": "Questo backup attualmente non include collegamenti a formulari Web. Se condividi link di accesso pubblico o ti colleghi esternamente direttamente a Web Forms per creare nuovi Invii, ti consigliamo vivamente di eseguire anche un backup completo del sistema fino a quando questo non viene risolto. Se devi eseguire il ripristino dal backup e ti ritrovi con collegamenti di anteprima non funzionanti, pubblica su {forum} per ottenere assistenza.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
-            },
-            "forum": {
-              "string": "il Forum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
-            }
-          },
-          "introduction": {
-            "0": {
-              "string": "Se lo desideri, puoi impostare una passphrase di crittografia che deve essere utilizzata per sbloccare il backup."
-            },
-            "1": {
-              "string": "Non c'è modo di recuperare la passphrase se la perdi!"
-            },
-            "2": {
-              "string": "Assicurati di scegliere qualcosa che ricorderai o scrivilo in un posto sicuro."
-            }
-          }
-        },
-        "1": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Per motivi di sicurezza, il server invia i tuoi dati a Google Drive. Puoi registrarti {here} per un account gratuito. ",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "qui",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
-              }
-            },
-            "1": {
-              "string": "Quando premi Avanti, Google confermerà che desideri consentire al server di accedere al tuo account. L'unica cosa che il server potrà manipolare sono i file di backup che crea."
-            },
-            "2": {
-              "string": "Una volta confermato, ti verrà chiesto di copiare e incollare del testo qui."
-            }
-          }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Ben tornato! Hai ricevuto del testo da copiare e incollare? In caso contrario, fai clic {here} per riprovare. ",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "qui",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
-              }
-            },
-            "1": {
-              "string": "Altrimenti, incollalo qui sotto e avrai finito! "
-            }
-          }
-        }
-      },
-      "field": {
-        "passphrase": {
-          "string": "Passphrase (opzionale)",
-          "developer_comment": "This is the text of a form field."
-        },
-        "confirmationText": {
-          "string": "Testo di conferma",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "problem": {
-        "verify": {
-          "string": "Riprova e vai al forum della community se il problema persiste. "
+          "string": ""
         }
       }
     },
@@ -1258,20 +1177,7 @@
           "string": "I backup non sono configurati."
         },
         "1": {
-          "string": "Il server di dati non è stato configurato per eseguire automaticamente il backup dei dati da nessuna parte."
-        },
-        "2": {
-          "full": {
-            "string": "A meno che tu non abbia impostato un'altra forma di backup dei dati di cui il server non è a conoscenza, è {recommended} farlo ora. Se non sei sicuro, è meglio farlo solo per essere al sicuro.",
-            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
-          },
-          "recommended": {
-            "string": "fortemente raccomandato",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
-          }
-        },
-        "3": {
-          "string": "I backup automatici dei dati vengono eseguiti tramite questo sistema una volta al giorno. Tutti i tuoi dati sono crittografati con una password che fornisci in modo che solo tu possa accedervi."
+          "string": ""
         }
       },
       "neverRun": {
@@ -1282,14 +1188,7 @@
           "string": "Se hai configurato i backup negli ultimi due giorni, è normale. Altrimenti qualcosa è andato storto."
         },
         "2": {
-          "full": {
-            "string": "In tal caso, le soluzioni più probabili sono {terminate} la connessione e configurarla di nuovo o riavviare il servizio.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminare",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "somethingWentWrong": {
@@ -1307,14 +1206,7 @@
           }
         },
         "2": {
-          "full": {
-            "string": "Le soluzioni più probabili sono {terminate} la connessione e configurarla di nuovo o riavviare il servizio.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminare",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "success": {
@@ -1328,10 +1220,6 @@
         }
       },
       "action": {
-        "setUp": {
-          "string": "Configura adesso",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "download": {
           "string": "Scarica il backup ora",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1357,7 +1245,7 @@
           "string": "Sei sicuro di voler terminare i tuoi backup automatici? "
         },
         "1": {
-          "string": "Per riavviarli dovrai riconfigurarli di nuovo da zero e questa azione non può essere annullata. "
+          "string": ""
         }
       }
     },

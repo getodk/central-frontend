@@ -1145,100 +1145,19 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": ""
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Últimas copias de seguridad",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
-        "create": {
-          "string": "¡Exitoso! Las copias de seguridad automáticas están ahora configuradas."
-        },
         "terminate": {
-          "string": "Sus copias de seguridad automáticas terminaron. Se recomienda que configure uno nuevo tan pronto como sea posible."
-        }
-      }
-    },
-    "BackupNew": {
-      "title": {
-        "string": "Configurar copias de seguridad.",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "steps": {
-        "0": {
-          "warning": {
-            "full": {
-              "string": "Actualmente, esta copia de seguridad no incluye enlaces a Formulario web. Si comparte enlaces de acceso público o un enlace externo directamente a formularios web para realizar nuevos envíos, le recomendamos encarecidamente que también haga una copia de seguridad completa del sistema hasta que se solucione este problema. Si tiene que restaurar desde la copia de seguridad y termina con enlaces de vista previa rotos, publique en el {forum} para obtener ayuda.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
-            },
-            "forum": {
-              "string": "el foro",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
-            }
-          },
-          "introduction": {
-            "0": {
-              "string": "Si usted quiere, puede configurar una frase de contraseña de cifrado que debe usarse para desbloquear la copia de seguridad."
-            },
-            "1": {
-              "string": "¡No hay forma de recuperar la frase de contraseña si la pierde!"
-            },
-            "2": {
-              "string": "Asegúrese de elegir algo que recordará o anótelo en un lugar seguro."
-            }
-          }
-        },
-        "1": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Para su custodia, el servidor envía sus datos a Google Drive. Puedes registrarte para obtener una cuenta gratuita {here}.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "aquí",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
-              }
-            },
-            "1": {
-              "string": "Cuando presione siguiente, Google confirmará que desea permitir que el servidor acceda a su cuenta. Lo único que el servidor podrá tocar son los archivos de respaldo que crea."
-            },
-            "2": {
-              "string": "Una vez que confirme esto, se le pedirá que copie y pegue algún texto aquí."
-            }
-          }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "¡Bienvenido de vuelta! ¿Recibió algún texto para copiar y pegar? Si no, hacer clic {here} para volver a intentarlo.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "Aquí",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
-              }
-            },
-            "1": {
-              "string": "De lo contrario, péguelo a continuación y listo!"
-            }
-          }
-        }
-      },
-      "field": {
-        "passphrase": {
-          "string": "Frase de contraseña (opcional)",
-          "developer_comment": "This is the text of a form field."
-        },
-        "confirmationText": {
-          "string": "Texto de confirmación",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "problem": {
-        "verify": {
-          "string": "Vuelva a intentarlo, y vaya al foro de la comunidad si el problema continúa."
+          "string": ""
         }
       }
     },
@@ -1258,20 +1177,7 @@
           "string": "Las copias de seguridad no están configuradas."
         },
         "1": {
-          "string": "El servidor de datos no se ha configurado para hacer una copia de seguridad automática de sus datos en ninguna parte."
-        },
-        "2": {
-          "full": {
-            "string": "A menos que haya configurado algún otro formulario de copia de seguridad de datos que el servidor desconozca, es {recommended} que lo haga ahora. Si no está seguro, lo mejor es hacerlo solo para estar seguro.",
-            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
-          },
-          "recommended": {
-            "string": "muy recomendado",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
-          }
-        },
-        "3": {
-          "string": "Las copias de seguridad automáticas de datos se realizan a través de este sistema una vez al día. Todos sus datos están encriptados con una contraseña que proporcione para que solo usted pueda desbloquearla."
+          "string": ""
         }
       },
       "neverRun": {
@@ -1282,14 +1188,7 @@
           "string": "Si ha configurado copias de seguridad en los últimos días, esto es normal. De lo contrario, algo ha salido mal."
         },
         "2": {
-          "full": {
-            "string": "En ese caso, las soluciones más probables son {terminate} la conexión y configurarla nuevamente, o reiniciar el servicio.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminar",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "somethingWentWrong": {
@@ -1307,14 +1206,7 @@
           }
         },
         "2": {
-          "full": {
-            "string": "Las soluciones más probables son {terminate} la conexión y configurarla nuevamente, o reiniciar el servicio.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminar",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "success": {
@@ -1328,10 +1220,6 @@
         }
       },
       "action": {
-        "setUp": {
-          "string": "Configurar ahora",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "download": {
           "string": "Descargar copia de seguridad ahora",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1357,7 +1245,7 @@
           "string": "¿Está seguro que quiere terminar sus copias de seguridad automáticas?"
         },
         "1": {
-          "string": "Tendrá que volver a configurarlos desde cero para iniciarlos nuevamente, y esta acción no se puede deshacer."
+          "string": ""
         }
       }
     },

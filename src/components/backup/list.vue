@@ -122,60 +122,28 @@ export default {
 <i18n>
 {
   "cs": {
-    "auditsTitle": "Nejnovější zálohy",
-    "alert": {
-      "create": "Skvěle! Nyní jsou nakonfigurovány automatické zálohy.",
-      "terminate": "Vaše automatické zálohování bylo ukončeno. Doporučujeme, abyste si nové zálohování nastavili co nejdříve."
-    }
+    "auditsTitle": "Nejnovější zálohy"
   },
   "de": {
-    "auditsTitle": "Letzte Sicherheitskopien",
-    "alert": {
-      "create": "Automatische Sicherungskopien sind jetzt eingerichtet.",
-      "terminate": "Ihre automatischen Backups wurden abgestellt. Wir empfehlen diese schnellstmöglich wieder zu konfigurieren."
-    }
+    "auditsTitle": "Letzte Sicherheitskopien"
   },
   "es": {
-    "auditsTitle": "Últimas copias de seguridad",
-    "alert": {
-      "create": "¡Exitoso! Las copias de seguridad automáticas están ahora configuradas.",
-      "terminate": "Sus copias de seguridad automáticas terminaron. Se recomienda que configure uno nuevo tan pronto como sea posible."
-    }
+    "auditsTitle": "Últimas copias de seguridad"
   },
   "fr": {
-    "auditsTitle": "Dernières Sauvegardes",
-    "alert": {
-      "create": "Succès ! Les sauvegardes automatiques sont maintenant configurées",
-      "terminate": "Vos sauvegardes automatiques ont été interrompus. Il est recommandé d'en mettre une nouvelle en place dès que possible."
-    }
+    "auditsTitle": "Dernières Sauvegardes"
   },
   "id": {
-    "auditsTitle": "Data Cadangan Terakhir",
-    "alert": {
-      "create": "Berhasil! Data cadangan otomatis telah dikonfigurasi.",
-      "terminate": "Data cadangan otomatis Anda telah berakhir. Anda direkomendasikan untuk menyetel cadangan otomatis baru secepatnya."
-    }
+    "auditsTitle": "Data Cadangan Terakhir"
   },
   "it": {
-    "auditsTitle": "Ultimo backup",
-    "alert": {
-      "create": "Successo! I backup automatici sono ora configurati.",
-      "terminate": "I tuoi backup automatici sono stati terminati. Si consiglia di impostarne uno nuovo il prima possibile."
-    }
+    "auditsTitle": "Ultimo backup"
   },
   "ja": {
-    "auditsTitle": "最新のバックアップ",
-    "alert": {
-      "create": "成功です！自動バックアップは設定されました。",
-      "terminate": "自動バックアップを停止しました。 なるべく早急に新たなバックアップ設定を行うことを推奨します。"
-    }
+    "auditsTitle": "最新のバックアップ"
   },
   "sw": {
-    "auditsTitle": "Hifadhi Nakala za Hivi Punde",
-    "alert": {
-      "create": "Mafanikio! Hifadhi rudufu za kiotomatiki sasa zimesanidiwa.",
-      "terminate": "Nakala zako za kiotomatiki zimekatishwa. Inapendekezwa kuwa usanidi mpya haraka iwezekanavyo"
-    }
+    "auditsTitle": "Hifadhi Nakala za Hivi Punde"
   }
 }
 </i18n>

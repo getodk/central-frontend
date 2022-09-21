@@ -1145,100 +1145,19 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": ""
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Letzte Sicherheitskopien",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
-        "create": {
-          "string": "Automatische Sicherungskopien sind jetzt eingerichtet."
-        },
         "terminate": {
-          "string": "Ihre automatischen Backups wurden abgestellt. Wir empfehlen diese schnellstmöglich wieder zu konfigurieren."
-        }
-      }
-    },
-    "BackupNew": {
-      "title": {
-        "string": "Sicherheitskopien einrichten",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "steps": {
-        "0": {
-          "warning": {
-            "full": {
-              "string": "Dieses Backup enthält aktuell keine Web-Formular-Links. Wenn Sie öffentliche Zugangslinks teilen oder extern auf Web-Formular-Links verlinken, um neue Übermittlungen zu machen, empfehlen wir, dass Sie auch ein vollständiges System-Backup durchführen, bis dies gelöst ist. Wenn Sie aus einem Backup wiederherstellen müssen und defekte Vorschau-Links erhalten, erstellen Sie einen Eintrag im {forum}, um Hilfe zu erhalten.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
-            },
-            "forum": {
-              "string": "das Forum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
-            }
-          },
-          "introduction": {
-            "0": {
-              "string": "Sie können das Backup optional mit einer Passphrase sichern. Das Backup kann dann nur mit dieser Passphrase entschlüsselt werden."
-            },
-            "1": {
-              "string": "Eine verlorene Passphrase kann nicht wiederhergestellt werden!"
-            },
-            "2": {
-              "string": "Wählen Sie etwas gut Merkbares, oder bewahren Sie es an einem sicheren Ort schriftlich auf."
-            }
-          }
-        },
-        "1": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Wir sichern Ihre Daten in Google Drive. Sie können {here} ein kostenloses Benutzerkonto erstellen.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "hier",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
-              }
-            },
-            "1": {
-              "string": "Wenn Sie \"weiter\" wählen, wird Google sich bestätigen lassen, dass der Server auf ihr System zugreifen darf. Der Server darf ausschließlich auf die erzeugten Backup-Dateien zugreifen."
-            },
-            "2": {
-              "string": "Wenn Sie das bestätigen, werden Sie gebeten, etwas Text mit Copy-and-Paste hier einzufügen."
-            }
-          }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Willkommen zurück! Haben Sie einen Text zum Einfügen bekommen? Wenn nicht, klicken Sie bitte {here}.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "hier",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
-              }
-            },
-            "1": {
-              "string": "Oder einfach unten einfügen und fertig."
-            }
-          }
-        }
-      },
-      "field": {
-        "passphrase": {
-          "string": "Passphrase (optional)",
-          "developer_comment": "This is the text of a form field."
-        },
-        "confirmationText": {
-          "string": "Bestätigungstext",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "problem": {
-        "verify": {
-          "string": "Bitte versuchen Sie es nochmal, und besuchen Sie das Community Forum, wenn es weiterhin nicht funktioniert."
+          "string": ""
         }
       }
     },
@@ -1258,20 +1177,7 @@
           "string": "Sicherungskopien sind nicht konfiguriert."
         },
         "1": {
-          "string": "Der Datenserver ist nicht für eine automatische Sicherung konfiguriert."
-        },
-        "2": {
-          "full": {
-            "string": "Wenn Sie nicht irgendeine andere Methode der Datensicherung implementiert haben, von der der Server nichts weiß, wird {recommended}, dass  Sie jetzt eine Konfiguration vornehmen. Wenn Sie sich nicht sicher sind, ob eine Datensicherung besteht, konfigurieren Sie einfach eine weitere - doppelt gesichert schläft sich's bessert.",
-            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
-          },
-          "recommended": {
-            "string": "dringend empfohlen",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
-          }
-        },
-        "3": {
-          "string": "Automatische Sicherungen des gesamten Systems werden einmal am Tag durchgeführt. Alle Ihre Daten werden mit einem von Ihnen vergebenen Passwort verschlüsselt, und nur Sie können sie entschlüsseln."
+          "string": ""
         }
       },
       "neverRun": {
@@ -1282,14 +1188,7 @@
           "string": "Wenn Sie die Sicherungen in den letzten Tagen konfiguriert haben, ist dies normal. Wenn nicht, ist irgendetwas schief gegangen."
         },
         "2": {
-          "full": {
-            "string": "In diesem Falle ist es am besten, wenn Sie die Verbindung {terminate} und danach neu starten. Alternativ können Sie den Dienst neu starten.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "beenden",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "somethingWentWrong": {
@@ -1307,14 +1206,7 @@
           }
         },
         "2": {
-          "full": {
-            "string": "Am besten {terminate} Sie die Verbindung und starten sie neu; alternativ können Sie auch den Dienst neu starten.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "beenden",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "success": {
@@ -1328,10 +1220,6 @@
         }
       },
       "action": {
-        "setUp": {
-          "string": "Jetzt konfigurieren",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "download": {
           "string": "Backup jetzt herunterladen",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1357,7 +1245,7 @@
           "string": "Sind Sie sicher, dass Sie die automatischen Sicherungskopien beenden möchten?"
         },
         "1": {
-          "string": "Sie müssen Sie danach wieder neue konfigurieren, um sie wieder zu starten. Diese Aktion kann nicht rückgängig gemacht werden."
+          "string": ""
         }
       }
     },
@@ -3285,12 +3173,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "",
+          "string": "Felder einschließen, die nicht in der veröffentlichten Version des Formulars enthalten sind",
           "developer_comment": "This is the text of a form field."
         }
       },
       "deletedFieldsHelp": {
-        "string": ""
+        "string": "Verwenden Sie diese Option, um Felder aus früheren Versionen des Formulars anzuzeigen."
       },
       "noSelectMultiple": {
         "string": "Dieses Formular enthält keine Mehrfachauswahlfelder."
@@ -3362,16 +3250,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {} other {}}",
+            "string": "{count, plural, one {{count} Übermittlung herunterladen} other {{count} Übermittlungen herunterladen}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "",
+              "string": "Passende Übermittlungen herunterladen",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, one {} other {}}",
+              "string": "{count, plural, one {{count} passende Übermittlung herunterladen} other {{count} passende Übermittlungen herunterladen}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }

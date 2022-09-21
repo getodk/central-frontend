@@ -95,57 +95,49 @@ export default {
   "cs": {
     "title": "Ukončit automatické zálohování",
     "introduction": [
-      "Opravdu chcete ukončit automatické zálohování?",
-      "Budete je muset znovu nakonfigurovat od nuly, abyste je mohli znovu spustit, a tuto akci nelze vrátit zpět."
+      "Opravdu chcete ukončit automatické zálohování?"
     ]
   },
   "de": {
     "title": "Automatische Sicherungskopien beenden",
     "introduction": [
-      "Sind Sie sicher, dass Sie die automatischen Sicherungskopien beenden möchten?",
-      "Sie müssen Sie danach wieder neue konfigurieren, um sie wieder zu starten. Diese Aktion kann nicht rückgängig gemacht werden."
+      "Sind Sie sicher, dass Sie die automatischen Sicherungskopien beenden möchten?"
     ]
   },
   "es": {
     "title": "Terminar copias de seguridad automáticas",
     "introduction": [
-      "¿Está seguro que quiere terminar sus copias de seguridad automáticas?",
-      "Tendrá que volver a configurarlos desde cero para iniciarlos nuevamente, y esta acción no se puede deshacer."
+      "¿Está seguro que quiere terminar sus copias de seguridad automáticas?"
     ]
   },
   "fr": {
     "title": "Terminer les Sauvegardes Automatiques",
     "introduction": [
-      "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?",
-      "Vous devrez les reconfigurer à partir de zéro pour les faire redémarrer, et cette action ne peut être annulée."
+      "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?"
     ]
   },
   "id": {
     "title": "Putuskan Data Cadangan Otomatis",
     "introduction": [
-      "Apakah Anda yakin ingin memutus data cadangan otomatis?",
-      "Anda harus mengonfigurasi ulang dari awal untuk mengaktifkannya kembali, dan tindakan ini tidak bisa dibatalkan/dikembalikan."
+      "Apakah Anda yakin ingin memutus data cadangan otomatis?"
     ]
   },
   "it": {
     "title": "Termina i backup automatici",
     "introduction": [
-      "Sei sicuro di voler terminare i tuoi backup automatici?",
-      "Per riavviarli dovrai riconfigurarli di nuovo da zero e questa azione non può essere annullata."
+      "Sei sicuro di voler terminare i tuoi backup automatici?"
     ]
   },
   "ja": {
     "title": "自動バックアップの停止",
     "introduction": [
-      "自動バックアップを本当に停止しますか？",
-      "バックアップを再開するには、また初めから設定し直す必要があります。なお、この操作は取り消しできません。"
+      "自動バックアップを本当に停止しますか？"
     ]
   },
   "sw": {
     "title": "Sitisha Hifadhi Nakala za Kiotomatiki",
     "introduction": [
-      "Je, una uhakika kuwa ungependa kusitisha hifadhi rudufu zako otomatiki?",
-      "Utalazimika kuzisanidi tena kutoka mwanzo ili kuzianzisha tena, na kitendo hiki hakiwezi kutenduliwa"
+      "Je, una uhakika kuwa ungependa kusitisha hifadhi rudufu zako otomatiki?"
     ]
   }
 }

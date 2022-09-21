@@ -221,31 +221,17 @@ export default {
       "forum": "komunitní fórum"
     },
     "notConfigured": [
-      "Zálohy nejsou nakonfigurovány.",
-      "Datový server nebyl nastaven tak, aby automaticky zálohoval jeho data kdekoli.",
-      {
-        "full": "Pokud jste nenastavili nějakou jinou formu zálohování dat, o které server neví, je {recommended}, že to uděláte nyní. Pokud si nejste jisti, je nejlepší to udělat jen proto, abyste byli v bezpečí.",
-        "recommended": "silně doporučeno"
-      },
-      "Automatické zálohování dat probíhá prostřednictvím tohoto systému jednou denně. Všechna vaše data jsou zašifrována pomocí hesla, které zadáte, abyste je mohli odemknout pouze vy."
+      "Zálohy nejsou nakonfigurovány."
     ],
     "neverRun": [
       "Nakonfigurované zálohování dosud nebylo spuštěno.",
-      "Pokud jste nakonfigurovali zálohování v posledních několika dnech, je to normální. Jinak se něco pokazilo.",
-      {
-        "full": "V takovém případě je nejpravděpodobnější opravou {terminate} připojení a opětovné nastavení nebo restartování služby.",
-        "terminate": "ukončení"
-      }
+      "Pokud jste nakonfigurovali zálohování v posledních několika dnech, je to normální. Jinak se něco pokazilo."
     ],
     "somethingWentWrong": [
       "Něco je špatně!",
       {
         "full": "Poslední úspěšná záloha byla {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "před více než třemi dny"
-      },
-      {
-        "full": "Nejpravděpodobnější opravou je {terminate} připojení a znovu nastavení, nebo restartování služby.",
-        "terminate": "ukončit"
       }
     ],
     "success": [
@@ -253,7 +239,6 @@ export default {
       "Poslední záloha byla úspěšně dokončena {dateTime}."
     ],
     "action": {
-      "setUp": "Nastavit nyní",
       "download": "Stáhnout zálohu hned",
       "terminate": "Ukončit"
     },
@@ -267,31 +252,17 @@ export default {
       "forum": "Community-Forum"
     },
     "notConfigured": [
-      "Sicherungskopien sind nicht konfiguriert.",
-      "Der Datenserver ist nicht für eine automatische Sicherung konfiguriert.",
-      {
-        "full": "Wenn Sie nicht irgendeine andere Methode der Datensicherung implementiert haben, von der der Server nichts weiß, wird {recommended}, dass Sie jetzt eine Konfiguration vornehmen. Wenn Sie sich nicht sicher sind, ob eine Datensicherung besteht, konfigurieren Sie einfach eine weitere - doppelt gesichert schläft sich's bessert.",
-        "recommended": "dringend empfohlen"
-      },
-      "Automatische Sicherungen des gesamten Systems werden einmal am Tag durchgeführt. Alle Ihre Daten werden mit einem von Ihnen vergebenen Passwort verschlüsselt, und nur Sie können sie entschlüsseln."
+      "Sicherungskopien sind nicht konfiguriert."
     ],
     "neverRun": [
       "Die konfigurierte Sicherung ist wurde noch nicht ausgeführt.",
-      "Wenn Sie die Sicherungen in den letzten Tagen konfiguriert haben, ist dies normal. Wenn nicht, ist irgendetwas schief gegangen.",
-      {
-        "full": "In diesem Falle ist es am besten, wenn Sie die Verbindung {terminate} und danach neu starten. Alternativ können Sie den Dienst neu starten.",
-        "terminate": "beenden"
-      }
+      "Wenn Sie die Sicherungen in den letzten Tagen konfiguriert haben, ist dies normal. Wenn nicht, ist irgendetwas schief gegangen."
     ],
     "somethingWentWrong": [
       "Irgendetwas hat da nicht geklappt.",
       {
         "full": "Die letzte vollständige Sicherung wurde {moreThanThreeDaysAgo} ausgeführt.",
         "moreThanThreeDaysAgo": "vor mehr als drei Tagen."
-      },
-      {
-        "full": "Am besten {terminate} Sie die Verbindung und starten sie neu; alternativ können Sie auch den Dienst neu starten.",
-        "terminate": "beenden"
       }
     ],
     "success": [
@@ -299,7 +270,6 @@ export default {
       "Die letzte Sicherungskopie wurde erstellt: {dateTime}"
     ],
     "action": {
-      "setUp": "Jetzt konfigurieren",
       "download": "Backup jetzt herunterladen",
       "terminate": "Beenden"
     },
@@ -313,31 +283,17 @@ export default {
       "forum": "foro de la comunidad"
     },
     "notConfigured": [
-      "Las copias de seguridad no están configuradas.",
-      "El servidor de datos no se ha configurado para hacer una copia de seguridad automática de sus datos en ninguna parte.",
-      {
-        "full": "A menos que haya configurado algún otro formulario de copia de seguridad de datos que el servidor desconozca, es {recommended} que lo haga ahora. Si no está seguro, lo mejor es hacerlo solo para estar seguro.",
-        "recommended": "muy recomendado"
-      },
-      "Las copias de seguridad automáticas de datos se realizan a través de este sistema una vez al día. Todos sus datos están encriptados con una contraseña que proporcione para que solo usted pueda desbloquearla."
+      "Las copias de seguridad no están configuradas."
     ],
     "neverRun": [
       "La copia de seguridad configurada aún no se ha ejecutado.",
-      "Si ha configurado copias de seguridad en los últimos días, esto es normal. De lo contrario, algo ha salido mal.",
-      {
-        "full": "En ese caso, las soluciones más probables son {terminate} la conexión y configurarla nuevamente, o reiniciar el servicio.",
-        "terminate": "terminar"
-      }
+      "Si ha configurado copias de seguridad en los últimos días, esto es normal. De lo contrario, algo ha salido mal."
     ],
     "somethingWentWrong": [
       "¡Algo está mal!",
       {
         "full": "La última copia de seguridad que se completó correctamente fue {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "hace más de tres días"
-      },
-      {
-        "full": "Las soluciones más probables son {terminate} la conexión y configurarla nuevamente, o reiniciar el servicio.",
-        "terminate": "terminar"
       }
     ],
     "success": [
@@ -345,7 +301,6 @@ export default {
       "Última copia de seguridad completada con éxito {dateTime}"
     ],
     "action": {
-      "setUp": "Configurar ahora",
       "download": "Descargar copia de seguridad ahora",
       "terminate": "Terminar"
     },
@@ -359,31 +314,17 @@ export default {
       "forum": "forum de la communauté"
     },
     "notConfigured": [
-      "Sauvegarde non configuré",
-      "Le serveur de données n'a pas été configuré pour sauvegarder automatiquement ses données.",
-      {
-        "full": "À moins que vous n'ayez mis en place une autre forme de sauvegarde des données dont le serveur n'a pas connaissance, il est {recommended} de le faire maintenant. Si vous n'êtes pas sûr, il est préférable de le faire juste pour être sûr.",
-        "recommended": "fortement recommandé"
-      },
-      "Les sauvegardes automatiques de données de ce serveur sont quotidiennes. Toutes vos données sont cryptées avec une mot de passe que vous avez fourni de manière à ce que vous seul puissiez les déverrouiller."
+      "Sauvegarde non configuré"
     ],
     "neverRun": [
       "La sauvegarde configurée n'a pas encore été lancée.",
-      "Si vous avez configuré des sauvegardes au cours des deux derniers jours, c'est normal. Sinon, quelque-chose s'est mal passé.",
-      {
-        "full": "Dans ce cas, les solutions les plus probables consistent à {terminate} la connexion et à la rétablir, ou à redémarrer le service.",
-        "terminate": "terminer"
-      }
+      "Si vous avez configuré des sauvegardes au cours des deux derniers jours, c'est normal. Sinon, quelque-chose s'est mal passé."
     ],
     "somethingWentWrong": [
       "Quelque-chose ne va pas.",
       {
         "full": "La dernière sauvegarde correctement terminée était {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "plus de trois jours auparavant."
-      },
-      {
-        "full": "Les solutions les plus probables consistent à {terminate} la connexion et à la rétablir, ou à redémarrer le service.",
-        "terminate": "terminer"
       }
     ],
     "success": [
@@ -391,7 +332,6 @@ export default {
       "La dernière sauvegarde correctement exécutée {dateTime}."
     ],
     "action": {
-      "setUp": "Paramétrer maintenant",
       "download": "Télécharger la sauvegarde maintenant",
       "terminate": "Terminer"
     },
@@ -405,31 +345,17 @@ export default {
       "forum": "Forum komunitas"
     },
     "notConfigured": [
-      "Data cadangan tidak terkonfigurasi.",
-      "Server belum diatur untuk melakukan data cadangan otomatis dimanapun.",
-      {
-        "full": "Apabila Anda belum memiliki pengaturan data cadangan sama sekali, {recommended} Anda mengatur cadangan sekarang demi keamanan data Anda.",
-        "recommended": "sangat direkomendasikan"
-      },
-      "Data cadangan otomatis diproses sistem ini satu kali sehari. Semua data Anda dienkripsi dengan kata sandi yang telah Anda tentukan sehingga hanya Anda yang dapat membukanya."
+      "Data cadangan tidak terkonfigurasi."
     ],
     "neverRun": [
       "Data candangan yang dikonfigurasi belum berjalan.",
-      "Hal ini adalah normal ppabila Anda memiliki data cadangan yang telah dikonfigurasi dalam beberapa hari terakhir. Jika tidak, terjadi sebuah kesalahan.",
-      {
-        "full": "Dalam hal ini, saran perbaikan utama adalah dengan {terminate} koneksi dan mengaturnya ulang, atau dengan mengatur ulang servis.",
-        "terminate": "memutus"
-      }
+      "Hal ini adalah normal ppabila Anda memiliki data cadangan yang telah dikonfigurasi dalam beberapa hari terakhir. Jika tidak, terjadi sebuah kesalahan."
     ],
     "somethingWentWrong": [
       "Terjadi kesalahan!",
       {
         "full": "Data cadangan terakhir yang sukses dibuat adalah {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "lebih dari tiga hari yang lalu"
-      },
-      {
-        "full": "Saran perbaikan utama adalah dengan {terminate} koneksi dan mengaturnya ulang, atau mengatur ulang servis.",
-        "terminate": "memutus"
       }
     ],
     "success": [
@@ -437,7 +363,6 @@ export default {
       "Data cadangan terakhir telah sukses dibuat {dateTime}."
     ],
     "action": {
-      "setUp": "Atur sekarang",
       "download": "Unduh cadangan sekarang",
       "terminate": "Putuskan"
     },
@@ -451,31 +376,17 @@ export default {
       "forum": "forum comunitario"
     },
     "notConfigured": [
-      "I backup non sono configurati.",
-      "Il server di dati non è stato configurato per eseguire automaticamente il backup dei dati da nessuna parte.",
-      {
-        "full": "A meno che tu non abbia impostato un'altra forma di backup dei dati di cui il server non è a conoscenza, è {recommended} farlo ora. Se non sei sicuro, è meglio farlo solo per essere al sicuro.",
-        "recommended": "fortemente raccomandato"
-      },
-      "I backup automatici dei dati vengono eseguiti tramite questo sistema una volta al giorno. Tutti i tuoi dati sono crittografati con una password che fornisci in modo che solo tu possa accedervi."
+      "I backup non sono configurati."
     ],
     "neverRun": [
       "Il backup configurato non è ancora stato eseguito.",
-      "Se hai configurato i backup negli ultimi due giorni, è normale. Altrimenti qualcosa è andato storto.",
-      {
-        "full": "In tal caso, le soluzioni più probabili sono {terminate} la connessione e configurarla di nuovo o riavviare il servizio.",
-        "terminate": "terminare"
-      }
+      "Se hai configurato i backup negli ultimi due giorni, è normale. Altrimenti qualcosa è andato storto."
     ],
     "somethingWentWrong": [
       "Qualcosa non funziona!",
       {
         "full": "L'ultimo backup completato con successo è stato {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "più di tre giorni fa"
-      },
-      {
-        "full": "Le soluzioni più probabili sono {terminate} la connessione e configurarla di nuovo o riavviare il servizio.",
-        "terminate": "terminare"
       }
     ],
     "success": [
@@ -483,7 +394,6 @@ export default {
       "L'ultimo backup è stato completato con successo {dateTime}."
     ],
     "action": {
-      "setUp": "Configura adesso",
       "download": "Scarica il backup ora",
       "terminate": "Terminare"
     },
@@ -497,31 +407,17 @@ export default {
       "forum": "コミュニティーフォーラム"
     },
     "notConfigured": [
-      "バックアップは設定されていません。",
-      "データサーバは自動バックアップの設定をされていません。",
-      {
-        "full": "他の方法でデータをバックアップしている場合を除き、今すぐバックアップすることを{recommended}。確信が持てない場合は、安全のために設定することが望ましいです。",
-        "recommended": "強く推奨します"
-      },
-      "自動バックアップは本システム経由で毎日行われます。全てのデータは、あなたが設定したパスワードで暗号化されバックアップされ、あなたによって復号が可能です。"
+      "バックアップは設定されていません。"
     ],
     "neverRun": [
       "設定されたバックアップは未実行です。",
-      "ここ数日の間にバックアップの設定をしたのならば、これは正常です。そうでない場合は、何か問題が起きています。",
-      {
-        "full": "その場合、最も可能性の高い対処法は、Googleとの連携を{terminate}し、再設定することです。もしくは、サービスを再起動することです。",
-        "terminate": "切断"
-      }
+      "ここ数日の間にバックアップの設定をしたのならば、これは正常です。そうでない場合は、何か問題が起きています。"
     ],
     "somethingWentWrong": [
       "何か問題があります！",
       {
         "full": "最終のバックアップは、{moreThanThreeDaysAgo}に正常に完了しています。",
         "moreThanThreeDaysAgo": "3日以上前"
-      },
-      {
-        "full": "最も可能性の高い対処法は、Googleとの連携を{terminate}して再度設定することです。または、サービスを再起動することです。",
-        "terminate": "切断"
       }
     ],
     "success": [
@@ -529,7 +425,6 @@ export default {
       "{dateTime}に最新のバックアップは成功しています。"
     ],
     "action": {
-      "setUp": "今すぐ設定",
       "download": "今すぐバックアップをダウンロード",
       "terminate": "停止"
     },
@@ -543,31 +438,17 @@ export default {
       "forum": "jamii forum"
     },
     "notConfigured": [
-      "Hifadhi rudufu hazijasanidiwa.",
-      "Seva ya data haijawekwa ili kuhifadhi nakala kiotomatiki data yake popote pale.",
-      {
-        "full": "Isipokuwa umeweka aina nyingine ya kuhifadhi nakala ya data ambayo seva haijui, {recommended} ufanye hivi sasa. Ikiwa huna uhakika, ni bora kufanya hivyo ili tu kuwa salama.",
-        "recommended": "inapendekezwa sana"
-      },
-      "Hifadhi rudufu za data otomatiki hufanyika kupitia mfumo huu mara moja kwa siku. Data yako yote imesimbwa kwa njia fiche kwa nenosiri ulilotoa ili wewe tu uweze kulifungua."
+      "Hifadhi rudufu hazijasanidiwa."
     ],
     "neverRun": [
       "Hifadhi rudufu iliyosanidiwa bado haijatekelezwa",
-      "Ikiwa umesanidi nakala rudufu ndani ya siku chache zilizopita, hii ni kawaida. Vinginevyo, kitu kimeenda vibaya.",
-      {
-        "full": "Katika hali hiyo, marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma.",
-        "terminate": "sitisha"
-      }
+      "Ikiwa umesanidi nakala rudufu ndani ya siku chache zilizopita, hii ni kawaida. Vinginevyo, kitu kimeenda vibaya."
     ],
     "somethingWentWrong": [
       "Kuna kitu hakiko sawa",
       {
         "full": "Hifadhi rudufu ya hivi punde iliyokamilika kwa ufanisi ilikuwa {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "zaidi ya siku tatu zilizopita"
-      },
-      {
-        "full": "Marekebisho yanayowezekana zaidi ni {terminate} muunganisho na kuusanidi tena, au kuanzisha upya huduma",
-        "terminate": "sitisha"
       }
     ],
     "success": [
@@ -575,7 +456,6 @@ export default {
       "Hifadhi rudufu ya mwisho ilikamilika {dateTime}."
     ],
     "action": {
-      "setUp": "Sanidi sasa",
       "download": "Pakua nakala rudufu sasa",
       "terminate": "Sitisha"
     },

@@ -1145,100 +1145,19 @@
         }
       }
     },
+    "BackupDeprecation": {
+      "text": {
+        "string": ""
+      }
+    },
     "BackupList": {
       "auditsTitle": {
         "string": "Dernières Sauvegardes",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "alert": {
-        "create": {
-          "string": "Succès ! Les sauvegardes automatiques sont maintenant configurées"
-        },
         "terminate": {
-          "string": "Vos sauvegardes automatiques ont été interrompus. Il est recommandé d'en mettre une nouvelle en place dès que possible."
-        }
-      }
-    },
-    "BackupNew": {
-      "title": {
-        "string": "Configurer des sauvegardes",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "steps": {
-        "0": {
-          "warning": {
-            "full": {
-              "string": "Cette sauvegarde n'inclue pas les liens de formulaires Web. Si vous partagez des liens d'accès public ou partagez des liens directs à vos formulaires Web, nous recommandons fortement que vous fassiez également une sauvegarde complete du système jusqu'à ce que ceci soit adressé. Si vous devez restaurer vos données d'une sauvegarde et vous retrouvez avec des liens d'aperçu qui ne fonctionnent pas, veuillez écrire un message sur {forum} pour recevoir de l'aide.",
-              "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthe forum"
-            },
-            "forum": {
-              "string": "le forum",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nThis backup does not currently include Web Form links. If you share Public Access Links or externally link directly to Web Forms for making new Submissions, we strongly recommend that you also make a full system backup until this is addressed. If you have to restore from backup and end up with broken Preview links, please post to {forum} to get help."
-            }
-          },
-          "introduction": {
-            "0": {
-              "string": "Si vous le désirez, vous pouvez définir une phrase de passe de cryptage pour déverrouiller la sauvegarde."
-            },
-            "1": {
-              "string": "Il n'y a aucun moyen de retrouver la phrase de passe si vous la perdez !"
-            },
-            "2": {
-              "string": "Soyez sûr de choisir quelque-chose dont vous vous souviendrez, ou écrivez le dans un endroit sûr."
-            }
-          }
-        },
-        "1": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Pour la sauvegarde, le serveur envoie vos données à Google Drive. Vous pouvez créer un compte gratuit {here}.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "ici",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nFor safekeeping, the server sends your data to Google Drive. You can sign up for a free account {here}."
-              }
-            },
-            "1": {
-              "string": "Lorsque vous appuyez sur le bouton suivant, Google confirmera que vous souhaitez autoriser le serveur à accéder à votre compte. La seule chose que le serveur sera autorisé à toucher sont les fichiers de sauvegarde qu'il crée."
-            },
-            "2": {
-              "string": "Une fois que vous aurez confirmé cela, il vous sera demandé de copier et de coller du texte ici."
-            }
-          }
-        },
-        "2": {
-          "introduction": {
-            "0": {
-              "full": {
-                "string": "Bienvenue à nouveau ! Vous avez reçu du texte à copier-coller ? Si ce n'est pas le cas, cliquez {here} pour réessayer.",
-                "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-              },
-              "here": {
-                "string": "ici",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nWelcome back! Did you get some text to copy and paste? If not, click {here} to try again."
-              }
-            },
-            "1": {
-              "string": "Sinon, collez ci-bas et c'est fini !"
-            }
-          }
-        }
-      },
-      "field": {
-        "passphrase": {
-          "string": "Phrase de passe (optionnel)",
-          "developer_comment": "This is the text of a form field."
-        },
-        "confirmationText": {
-          "string": "Texte de confirmation",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "problem": {
-        "verify": {
-          "string": "Merci d'essayer à nouveau, et de consulter le forum de la communauté si le problème persiste."
+          "string": ""
         }
       }
     },
@@ -1258,20 +1177,7 @@
           "string": "Sauvegarde non configuré"
         },
         "1": {
-          "string": "Le serveur de données n'a pas été configuré pour sauvegarder automatiquement ses données."
-        },
-        "2": {
-          "full": {
-            "string": "À moins que vous n'ayez mis en place une autre forme de sauvegarde des données dont le serveur n'a pas connaissance, il est {recommended} de le faire maintenant. Si vous n'êtes pas sûr, il est préférable de le faire juste pour être sûr.",
-            "developer_comment": "{recommended} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nstrongly recommended"
-          },
-          "recommended": {
-            "string": "fortement recommandé",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {recommended} is in the following text:\n\nUnless you have set up some other form of data backup that the server doesn’t know about, it is {recommended} that you do this now. If you are not sure, it is best to do it just to be safe."
-          }
-        },
-        "3": {
-          "string": "Les sauvegardes automatiques de données de ce serveur sont quotidiennes. Toutes vos données sont cryptées avec une mot de passe que vous avez fourni de manière à ce que vous seul puissiez les déverrouiller."
+          "string": ""
         }
       },
       "neverRun": {
@@ -1282,14 +1188,7 @@
           "string": "Si vous avez configuré des sauvegardes au cours des deux derniers jours, c'est normal. Sinon, quelque-chose s'est mal passé."
         },
         "2": {
-          "full": {
-            "string": "Dans ce cas, les solutions les plus probables consistent à {terminate} la connexion et à la rétablir, ou à redémarrer le service.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminer",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nIn that case, the most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "somethingWentWrong": {
@@ -1307,14 +1206,7 @@
           }
         },
         "2": {
-          "full": {
-            "string": "Les solutions les plus probables consistent à {terminate} la connexion et à la rétablir, ou à redémarrer le service.",
-            "developer_comment": "{terminate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nterminate"
-          },
-          "terminate": {
-            "string": "terminer",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {terminate} is in the following text:\n\nThe most likely fixes are to {terminate} the connection and set it up again, or to restart the service."
-          }
+          "string": ""
         }
       },
       "success": {
@@ -1328,10 +1220,6 @@
         }
       },
       "action": {
-        "setUp": {
-          "string": "Paramétrer maintenant",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "download": {
           "string": "Télécharger la sauvegarde maintenant",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1357,7 +1245,7 @@
           "string": "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?"
         },
         "1": {
-          "string": "Vous devrez les reconfigurer à partir de zéro pour les faire redémarrer, et cette action ne peut être annulée."
+          "string": ""
         }
       }
     },
@@ -1854,7 +1742,7 @@
               },
               "link": {
                 "full": {
-                  "string": "Si vous avez apporté des changements au formulaire lui-même, y compris au texte des questions ou au règles logiques, il est temps de {upload} the new XML or XLSForm.",
+                  "string": "Si vous avez apporté des changements au formulaire lui-même, y compris au texte des questions ou au règles logiques, il est temps de {upload} le nouveau XML ou XLSForm.",
                   "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
@@ -3285,12 +3173,12 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "",
+          "string": "Inclut les champs qui ne sont pas dans le formulaire publié",
           "developer_comment": "This is the text of a form field."
         }
       },
       "deletedFieldsHelp": {
-        "string": ""
+        "string": "Utilisez cette option si vous avez besoin des champs référencés dans le versions précédentes du formulaire"
       },
       "noSelectMultiple": {
         "string": "Ce formulaire ne contient aucun champ à choix multiples (de type \"select_multiple\")."
@@ -3362,16 +3250,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {Télécharger {count} soumission} many {Télécharger {count} soumissions} other {Télécharger {count} soumission(s)}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "",
+              "string": "Télécharger les soumissions correspondantes",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, one {} many {} other {}}",
+              "string": "{count, plural, one {Télécharger {count} soumission correspondant} many {Télécharger {count} soumissions correspondantes} other {Télécharger {count} souission(s) correspondant(s)}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }

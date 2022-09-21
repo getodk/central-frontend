@@ -122,7 +122,10 @@ export default {
     ]
   },
   "id": {
-    "title": "Hapus Formulir"
+    "title": "Hapus Formulir",
+    "introduction": [
+      "Apakah Anda yakin ingin menghapus Formulir {name} dan semua kiriman data di dalamnya?"
+    ]
   },
   "it": {
     "title": "Cancellare il formulario",
