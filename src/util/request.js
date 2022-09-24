@@ -131,6 +131,12 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedRootId}/versions/${encodedInstanceId}`;
   },
   publicLinks: formPath('/public-links'),
+  datasets: projectPath('/datasets'),
+  datasetDownload: (projectId, datasetName) => {
+    // This encoding might not be necessary.
+    const encodedName = encodeURIComponent(datasetName);
+    return `/v1/projects/${projectId}/datasets/${encodedName}/download`;
+  },
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,

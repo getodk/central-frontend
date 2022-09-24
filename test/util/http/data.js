@@ -38,6 +38,7 @@ const defaults = {
   diffs: () => ({}),
   submissionVersion: () => ({}),
   publicLinks: () => testData.standardPublicLinks.sorted(),
+  datasets: () => testData.extendedDatasets.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
 
   backupsConfig: () => {
@@ -78,6 +79,7 @@ const mapsByComponent = {
     'roles',
     'formSummaryAssignments'
   ]),
+  DatasetList: mapKeys(['datasets']),
   ProjectSettings: new Map(),
   FormShow: mapKeys(['project', 'form', 'formDraft', 'attachments']),
   FormOverview: new Map(),

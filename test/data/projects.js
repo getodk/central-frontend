@@ -29,8 +29,11 @@ export const extendedProjects = dataStore({
     description = '',
     archived = false,
     // The default value of this property does not necessarily match
+    // testData.extendedDatasets.
+    datasets = 0,
+    // The default value of this property does not necessarily match
     // testData.extendedForms.
-    forms = 0,
+    forms = datasets === 0 ? 0 : 1,
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
     appUsers = 0,
@@ -57,6 +60,7 @@ export const extendedProjects = dataStore({
     // Extended metadata
     forms,
     lastSubmission,
+    datasets,
     appUsers,
     verbs: verbsForUserAndRole(currentUser, role),
     formList
@@ -66,5 +70,5 @@ export const extendedProjects = dataStore({
 
 export const standardProjects = view(
   extendedProjects,
-  omit(['forms', 'lastSubmission', 'appUsers', 'verbs', 'formList'])
+  omit(['forms', 'lastSubmission', 'datasets', 'appUsers', 'verbs', 'formList'])
 );

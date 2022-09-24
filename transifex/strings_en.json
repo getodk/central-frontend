@@ -548,6 +548,10 @@
       "string": "Server Configuration",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "datasets": {
+      "string": "Datasets",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "form": {
       "string": "Form",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -1246,6 +1250,14 @@
         },
         "1": {
           "string": "If you terminate your automatic backups, you will not be able to start them again. Automatic backups are a deprecated feature, but there are other ways to back up the data on the server."
+        }
+      }
+    },
+    "DatasetRow": {
+      "action": {
+        "download": {
+          "string": "Download data (.csv)",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
