@@ -46,20 +46,34 @@ describe('ProjectShow', () => {
       app.vm.$store.state.request.data.project.appUsers.should.equal(2);
     });
 
-    it('clears datasets after a request for forms', () => {
-      testData.extendedDatasets.createPast(1);
-      return load('/projects/1/datasets')
-        .afterResponses(app => {
-          should.exist(app.vm.$store.state.request.data.datasets);
-        })
-        .load('/projects/1', { project: false })
-        .afterResponses(app => {
-          should.not.exist(app.vm.$store.state.request.data.datasets);
-        })
-        .load('/projects/1/datasets', { project: false })
-        .afterResponses(app => {
-          should.exist(app.vm.$store.state.request.data.datasets);
-        });
+    describe('forms and datasets', () => {
+      beforeEach(() => {
+        testData.extendedDatasets.createPast(1);
+      });
+
+      it('clears datasets after a request for forms', () =>
+        load('/projects/1/datasets')
+          .afterResponses(app => {
+            should.exist(app.vm.$store.state.request.data.datasets);
+          })
+          .load('/projects/1', { project: false })
+          .afterResponses(app => {
+            should.not.exist(app.vm.$store.state.request.data.datasets);
+          })
+          .load('/projects/1/datasets', { project: false })
+          .afterResponses(app => {
+            should.exist(app.vm.$store.state.request.data.datasets);
+          }));
+
+      it('does not clear datasets if forms are not re-requested', () =>
+        load('/projects/1')
+          .complete()
+          .load('/projects/1/datasets', { project: false })
+          .complete()
+          .route('/projects/1')
+          .afterResponses(app => {
+            should.exist(app.vm.$store.state.request.data.datasets);
+          }));
     });
   });
 

@@ -119,7 +119,7 @@ export default {
     });
   },
   computed: {
-    ...requestData(['project', 'datasets']),
+    ...requestData(['project', 'forms', 'datasets']),
     tabPathPrefix() {
       return this.projectPath();
     }
@@ -143,9 +143,11 @@ export default {
         extended: true,
         resend
       }]).catch(noop);
-      // Clear this.datasets in case a change to this.forms has also changed
-      // this.datasets.
-      if (this.datasets != null) this.$store.commit('clearData', 'datasets');
+
+      // If we send a request for this.forms, then we also clear this.datasets
+      // in case a change to this.forms has also changed this.datasets.
+      if (this.forms == null && this.datasets != null)
+        this.$store.commit('clearData', 'datasets');
     },
     fetchFieldKeys(resend) {
       this.$store.dispatch('get', [{

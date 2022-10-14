@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table id="dataset-table">
+  <table id="dataset-table" class="table">
     <thead>
       <tr>
         <th>{{ $t('header.name') }}</th>
