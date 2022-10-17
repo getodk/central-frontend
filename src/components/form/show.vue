@@ -18,7 +18,8 @@ except according to the terms contained in the LICENSE file.
       <!-- <router-view> may send its own requests before the server has
       responded to the requests from FormShow. -->
       <router-view v-show="dataExists && !awaitingResponse"
-        @fetch-form="fetchForm" @fetch-draft="fetchDraft"/>
+        @fetch-project="fetchProject" @fetch-form="fetchForm"
+        @fetch-draft="fetchDraft"/>
     </page-body>
   </div>
 </template>
@@ -88,12 +89,12 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchProject() {
+    fetchProject(resend) {
       this.$store.dispatch('get', [{
         key: 'project',
         url: apiPaths.project(this.projectId),
         extended: true,
-        resend: false
+        resend
       }]).catch(noop);
     },
     // Wait for up to a total of 10 minutes, not including request time.
@@ -173,7 +174,7 @@ export default {
       ]).catch(noop);
     },
     fetchData() {
-      this.fetchProject();
+      this.fetchProject(false);
       this.fetchForm();
       this.fetchDraft();
     },

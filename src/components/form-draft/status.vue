@@ -129,7 +129,7 @@ export default {
       required: true
     }
   },
-  emits: ['fetch-draft', 'fetch-form'],
+  emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   data() {
     return {
       // Modals
@@ -172,8 +172,13 @@ export default {
       this.alert.success(this.$t('alert.upload'));
     },
     afterPublish() {
+      // We need to clear the form before navigating to the form overview: if
+      // the form didn't already have a published version, then there would be a
+      // validateData violation if we didn't clear it.
       this.$emit('fetch-form');
       afterNextNavigation(this.$router, () => {
+        // Re-request the project in case its `datasets` property has changed.
+        this.$emit('fetch-project', true);
         this.$store.commit('clearData', 'formVersions');
         this.$store.commit('setData', { key: 'formDraft', value: Option.none() });
         this.alert.success(this.$t('alert.publish'));

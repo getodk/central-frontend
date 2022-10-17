@@ -22,6 +22,7 @@ const props = [
   // Extended metadata
   'forms',
   'lastSubmission',
+  'datasets',
   'appUsers',
   'verbs',
   // Nested form details

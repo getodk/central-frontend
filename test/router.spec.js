@@ -124,6 +124,7 @@ describe('createCentralRouter()', () => {
       '/projects/1/users',
       '/projects/1/app-users',
       '/projects/1/form-access',
+      '/projects/1/datasets',
       '/projects/1/settings',
       '/projects/1/forms/f',
       '/projects/1/forms/f/versions',
@@ -203,7 +204,9 @@ describe('createCentralRouter()', () => {
 
     describe('navigating between project routes', () => {
       beforeEach(() => {
-        testData.extendedProjects.createPast(1, { appUsers: 0 });
+        testData.extendedProjects.createPast(1, { datasets: 1 });
+        testData.extendedDatasets.createPast(1);
+        testData.extendedForms.createPast(1);
       });
 
       it('preserves data while navigating to/from the project overview', () =>
@@ -291,6 +294,14 @@ describe('createCentralRouter()', () => {
             .route('/projects/1/form-access')
             .then(dataExists(['formSummaryAssignments'])));
       });
+
+      it('preserves data while navigating to/from .../datasets', () =>
+        load('/projects/1/datasets')
+          .complete()
+          .route('/projects/1/settings')
+          .complete()
+          .route('/projects/1/datasets')
+          .then(dataExists(['project', 'datasets'])));
 
       it('preserves data while navigating to/from .../settings', () =>
         load('/projects/1')
@@ -408,45 +419,57 @@ describe('createCentralRouter()', () => {
     describe('project viewer', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
-
-        testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
-
-        const project = testData.extendedProjects
-          .createPast(1, { role: 'viewer', forms: 1, appUsers: 1 })
-          .last();
-        testData.extendedForms.createPast(1, { project });
-        testData.extendedFormVersions.createPast(1, { draft: true });
-        testData.standardFormAttachments.createPast(1);
       });
 
-      describe('project routes', () => {
-        describe('.../settings', () => {
-          it('redirects a user whose first navigation is to the route', () =>
-            load('/projects/1/settings')
-              .respondFor('/', { users: false })
-              .afterResponses(app => {
-                app.vm.$route.path.should.equal('/');
-              }));
+      describe('ProjectSettings', () => {
+        it('redirects a user whose first navigation is to the route', () => {
+          testData.extendedProjects.createPast(1, { role: 'viewer' });
+          return load('/projects/1/settings')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            });
+        });
 
-          it('redirects a user navigating from a different project route', () =>
-            load('/projects/1', {}, { deletedForms: false })
-              .complete()
-              .route('/projects/1/settings')
-              .respondFor('/', { users: false })
-              .afterResponse(app => {
-                app.vm.$route.path.should.equal('/');
-              }));
+        it('redirects a user navigating from a different project route', () => {
+          testData.extendedProjects.createPast(1, { role: 'viewer' });
+          return load('/projects/1', {}, { deletedForms: false })
+            .complete()
+            .route('/projects/1/settings')
+            .respondFor('/', { users: false })
+            .afterResponse(app => {
+              app.vm.$route.path.should.equal('/');
+            });
+        });
 
-          it('redirects a user navigating from a different project', () =>
-            load('/projects/1/settings', {}, {
-              project: () => testData.extendedProjects.first()
-            })
-              .complete()
-              .load('/projects/2/settings')
-              .respondFor('/', { users: false })
-              .afterResponses(app => {
-                app.vm.$route.path.should.equal('/');
-              }));
+        it('redirects a user navigating from a different project', () => {
+          const managerProject = testData.extendedProjects
+            .createPast(1, { role: 'manager' })
+            .last();
+          testData.extendedProjects.createPast(1, { role: 'viewer' });
+          return load('/projects/1/settings', {}, {
+            project: () => managerProject
+          })
+            .complete()
+            .load('/projects/2/settings')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            });
+        });
+      });
+
+      describe('other project routes', () => {
+        beforeEach(() => {
+          testData.extendedProjects.createPast(1, {
+            role: 'viewer',
+            forms: 1,
+            datasets: 1,
+            appUsers: 1
+          });
+          testData.extendedForms.createPast(1);
+          testData.extendedDatasets.createPast(1);
+          testData.extendedFieldKeys.createPast(1);
         });
 
         it('does not redirect the user from the project overview', async () => {
@@ -481,9 +504,21 @@ describe('createCentralRouter()', () => {
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
+
+        it('does not redirect the user from .../datasets', async () => {
+          const app = await load('/projects/1/datasets');
+          app.vm.$route.path.should.equal('/projects/1/datasets');
+        });
       });
 
       describe('form routes', () => {
+        beforeEach(() => {
+          testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
+          testData.extendedForms.createPast(1);
+          testData.extendedFormVersions.createPast(1, { draft: true });
+          testData.standardFormAttachments.createPast(1);
+        });
+
         it('redirects the user from the form overview', () =>
           load('/projects/1/forms/f')
             .respondFor('/', { users: false })
@@ -539,10 +574,11 @@ describe('createCentralRouter()', () => {
     describe('Data Collector', () => {
       beforeEach(() => {
         mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
+        testData.extendedProjects.createPast(1, {
+          role: 'formfill',
+          datasets: 1
+        });
         testData.extendedForms.createPast(1);
-        testData.extendedFormVersions.createPast(1, { draft: true });
-        testData.standardFormAttachments.createPast(1);
       });
 
       it('does not redirect the user from the project overview', async () => {
@@ -555,6 +591,7 @@ describe('createCentralRouter()', () => {
         '/projects/1/users',
         '/projects/1/app-users',
         '/projects/1/form-access',
+        '/projects/1/datasets',
         '/projects/1/settings',
         // FormShow
         '/projects/1/forms/f',
@@ -577,6 +614,46 @@ describe('createCentralRouter()', () => {
               app.vm.$route.path.should.equal('/');
             }));
       }
+    });
+
+    describe('project without datasets', () => {
+      beforeEach(mockLogin);
+
+      it('redirects a user whose first navigation is to the route', () => {
+        testData.extendedProjects.createPast(1);
+        return load('/projects/1/datasets')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
+
+      it('redirects a user navigating from a different project route', () => {
+        testData.extendedProjects.createPast(1);
+        return load('/projects/1')
+          .complete()
+          .route('/projects/1/datasets')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
+
+      it('redirects a user navigating from a different project', () => {
+        // Creating the dataset will also create a project.
+        testData.extendedDatasets.createPast(1);
+        // Create a second project.
+        testData.extendedProjects.createPast(1);
+        return load('/projects/1/datasets', {}, {
+          project: () => testData.extendedProjects.first()
+        })
+          .complete()
+          .load('/projects/2/datasets', { datasets: () => [] })
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
     });
 
     describe('form without a published version', () => {
@@ -845,8 +922,13 @@ describe('createCentralRouter()', () => {
   describe('title meta field', () => {
     beforeEach(() => {
       mockLogin();
-      testData.extendedProjects.createPast(1, { name: 'My Project Name' });
+      testData.extendedProjects.createPast(1, {
+        name: 'My Project Name',
+        forms: 1,
+        datasets: 1
+      });
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
+      testData.extendedDatasets.createPast(1);
     });
 
     // There is approximately 1 test per route
@@ -880,6 +962,11 @@ describe('createCentralRouter()', () => {
     it('shows project name in title for /projects/1/form-access', async () => {
       await load('/projects/1/form-access');
       document.title.should.equal('Form Access | My Project Name | ODK Central');
+    });
+
+    it('shows project name in title for /projects/1/datasets', async () => {
+      await load('/projects/1/datasets');
+      document.title.should.equal('Datasets | My Project Name | ODK Central');
     });
 
     it('shows project name in title for /projects/1/settings', async () => {

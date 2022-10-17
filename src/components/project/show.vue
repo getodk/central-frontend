@@ -39,6 +39,12 @@ except according to the terms contained in the LICENSE file.
             {{ $t('projectShow.tab.formAccess') }}
           </router-link>
         </li>
+        <li v-if="canRoute(tabPath('datasets'))" :class="tabClass('datasets')"
+          role="presentation">
+          <router-link :to="tabPath('datasets')">
+            {{ $t('resource.datasets') }}
+          </router-link>
+        </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
           role="presentation">
           <router-link :to="tabPath('settings')">
@@ -92,6 +98,16 @@ export default {
       }
     });
     watchSyncEffect(() => {
+      const { project, datasets } = store.state.request.data;
+      if (project != null && datasets != null &&
+        project.datasets !== datasets.length) {
+        store.commit('setData', {
+          key: 'project',
+          value: project.with({ datasets: datasets.length })
+        });
+      }
+    });
+    watchSyncEffect(() => {
       const { project, fieldKeys } = store.state.request.data;
       if (project != null && fieldKeys != null &&
         project.appUsers !== fieldKeys.length) {
@@ -103,7 +119,7 @@ export default {
     });
   },
   computed: {
-    ...requestData(['project']),
+    ...requestData(['project', 'forms', 'datasets']),
     tabPathPrefix() {
       return this.projectPath();
     }
@@ -127,6 +143,11 @@ export default {
         extended: true,
         resend
       }]).catch(noop);
+
+      // If we send a request for this.forms, then we also clear this.datasets
+      // in case a change to this.forms has also changed this.datasets.
+      if (this.forms == null && this.datasets != null)
+        this.$store.commit('clearData', 'datasets');
     },
     fetchFieldKeys(resend) {
       this.$store.dispatch('get', [{

@@ -32,11 +32,48 @@ describe('ProjectShow', () => {
       app.vm.$store.state.request.data.project.forms.should.equal(2);
     });
 
+    it('reconciles project and datasets', async () => {
+      testData.extendedProjects.createPast(1, { datasets: 1 });
+      testData.extendedDatasets.createPast(2);
+      const app = await load('/projects/1/datasets');
+      app.vm.$store.state.request.data.project.datasets.should.equal(2);
+    });
+
     it('reconciles project and fieldKeys', async () => {
       testData.extendedProjects.createPast(1, { appUsers: 1 });
       testData.extendedFieldKeys.createPast(2);
       const app = await load('/projects/1/app-users');
       app.vm.$store.state.request.data.project.appUsers.should.equal(2);
+    });
+
+    describe('forms and datasets', () => {
+      beforeEach(() => {
+        testData.extendedDatasets.createPast(1);
+      });
+
+      it('clears datasets after a request for forms', () =>
+        load('/projects/1/datasets')
+          .afterResponses(app => {
+            should.exist(app.vm.$store.state.request.data.datasets);
+          })
+          .load('/projects/1', { project: false })
+          .afterResponses(app => {
+            should.not.exist(app.vm.$store.state.request.data.datasets);
+          })
+          .load('/projects/1/datasets', { project: false })
+          .afterResponses(app => {
+            should.exist(app.vm.$store.state.request.data.datasets);
+          }));
+
+      it('does not clear datasets if forms are not re-requested', () =>
+        load('/projects/1')
+          .complete()
+          .load('/projects/1/datasets', { project: false })
+          .complete()
+          .route('/projects/1')
+          .afterResponses(app => {
+            should.exist(app.vm.$store.state.request.data.datasets);
+          }));
     });
   });
 
@@ -92,25 +129,64 @@ describe('ProjectShow', () => {
   });
 
   describe('tabs', () => {
-    it('shows the tabs to an administrator', async () => {
+    it('shows all tabs to an administrator', async () => {
       mockLogin({ role: 'admin' });
-      testData.extendedProjects.createPast(1);
+      testData.extendedDatasets.createPast(1);
+      testData.extendedForms.createPast(1);
       const app = await load('/projects/1', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
-      li.length.should.be.above(1);
+      li.map(wrapper => wrapper.get('a').text()).should.eql([
+        'Overview',
+        'Project Roles',
+        'App Users',
+        'Form Access',
+        'Datasets',
+        'Settings'
+      ]);
       li[0].should.be.visible(true);
     });
 
-    for (const role of ['viewer', 'formfill']) {
-      it(`does not show the tabs to a ${role}`, async () => {
+    describe('project viewer', () => {
+      beforeEach(() => {
         mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role });
-        const app = await load('/projects/1', { attachTo: document.body }, { deletedForms: false });
+      });
+
+      it('shows the correct tabs if the project has a dataset', async () => {
+        testData.extendedProjects.createPast(1, {
+          datasets: 1,
+          role: 'viewer'
+        });
+        testData.extendedForms.createPast(1);
+        const app = await load('/projects/1', { attachTo: document.body }, {
+          deletedForms: false
+        });
+        const li = app.findAll('#page-head-tabs li');
+        const text = li.map(wrapper => wrapper.get('a').text());
+        text.should.eql(['Overview', 'Datasets']);
+        li[0].should.be.visible(true);
+      });
+
+      it('does not show tabs if project does not have a dataset', async () => {
+        testData.extendedProjects.createPast(1, { role: 'viewer' });
+        const app = await load('/projects/1', { attachTo: document.body }, {
+          deletedForms: false
+        });
         const li = app.findAll('#page-head-tabs li');
         li.length.should.equal(1);
         li[0].should.be.hidden(true);
       });
-    }
+    });
+
+    it('does not show tabs to a Data Collector', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'formfill' });
+      const app = await load('/projects/1', { attachTo: document.body }, {
+        deletedForms: false
+      });
+      const li = app.findAll('#page-head-tabs li');
+      li.length.should.equal(1);
+      li[0].should.be.hidden(true);
+    });
   });
 
   it('shows a loading message until response for project is received', () => {

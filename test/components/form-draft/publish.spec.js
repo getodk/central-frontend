@@ -329,8 +329,16 @@ describe('FormDraftPublish', () => {
           testData.extendedFormDrafts.publish(-1);
           return { success: true };
         })
-        .respondWithData(() => testData.extendedForms.last());
+        .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedProjects.last());
     };
+
+    it('sends requests for the project and form', () =>
+      publish().testRequests([
+        null,
+        { url: '/v1/projects/1/forms/f', extended: true },
+        { url: '/v1/projects/1', extended: true }
+      ]));
 
     it('shows a success alert', () =>
       publish().then(app => {
@@ -376,6 +384,7 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.extendedProjects.last())
         .complete()
         .route('/projects/1/forms/f/versions')
         .respondWithData(() => testData.extendedFormVersions.sorted())
@@ -383,5 +392,17 @@ describe('FormDraftPublish', () => {
           app.findAllComponents(FormVersionRow).length.should.equal(2);
         });
     });
+
+    it('allows navigation to Datasets tab if publish creates first dataset', () =>
+      publish()
+        .beforeAnyResponse(() => {
+          testData.extendedProjects.update(-1, { datasets: 1 });
+          testData.extendedDatasets.createPast(1);
+        })
+        .complete()
+        .load('/projects/1/datasets', { project: false })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/datasets');
+        }));
   });
 });

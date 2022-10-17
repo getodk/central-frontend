@@ -342,6 +342,23 @@ const routes = [
         }
       }),
       asyncRoute({
+        path: 'datasets',
+        component: 'DatasetList',
+        props: true,
+        loading: 'tab',
+        meta: {
+          validateData: {
+            project: (project) =>
+              project.permits(['dataset.list', 'entity.list']) &&
+              project.datasets !== 0
+          },
+          title: ({ project }) => [
+            i18n.t('resource.datasets'),
+            project != null ? project.name : null
+          ]
+        }
+      }),
+      asyncRoute({
         path: 'settings',
         component: 'ProjectSettings',
         loading: 'tab',
@@ -736,6 +753,7 @@ preserveDataForKey({
     'ProjectUserList',
     'FieldKeyList',
     'ProjectFormAccess',
+    'DatasetList',
     'ProjectSettings'
   ],
   params: ['projectId']
@@ -763,6 +781,7 @@ preserveDataForKey({
     'ProjectUserList',
     'FieldKeyList',
     'ProjectFormAccess',
+    'DatasetList',
     'ProjectSettings',
     // FormShow
     'FormOverview',

@@ -279,6 +279,15 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/public-links');
     });
 
+    it('datasets', () => {
+      apiPaths.datasets(1).should.equal('/v1/projects/1/datasets');
+    });
+
+    it('datasetDownload', () => {
+      const path = apiPaths.datasetDownload(1, 'a b');
+      path.should.equal('/v1/projects/1/datasets/a%20b/download');
+    });
+
     it('fieldKeys', () => {
       apiPaths.fieldKeys(1).should.equal('/v1/projects/1/app-users');
     });

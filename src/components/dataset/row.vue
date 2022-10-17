@@ -1,0 +1,60 @@
+<!--
+Copyright 2022 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <tr class="dataset-row">
+    <td class="name">
+      <span :title="dataset.name">{{ dataset.name }}</span>
+    </td>
+    <td>
+      <a class="btn btn-primary" :href="href">
+        <span class="icon-download"></span>{{ $t('action.download') }}
+      </a>
+    </td>
+  </tr>
+</template>
+
+<script>
+import { apiPaths } from '../../util/request';
+
+export default {
+  name: 'DatasetRow',
+  props: {
+    dataset: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    href() {
+      return apiPaths.datasetDownload(this.dataset.projectId, this.dataset.name);
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/mixins';
+
+.dataset-row {
+  .name { @include text-overflow-ellipsis; }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "download": "Download data (.csv)"
+    }
+  }
+}
+</i18n>

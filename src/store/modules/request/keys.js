@@ -52,6 +52,7 @@ export const keys = [
   'diffs',
   'submissionVersion',
   'publicLinks',
+  'datasets',
   'fieldKeys',
 
   'backupsConfig',
