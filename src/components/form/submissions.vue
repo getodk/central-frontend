@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <page-section v-show="keys != null">
+    <loading :state="keys.initiallyLoading"/>
+    <page-section v-show="keys.dataExists">
       <template #heading>
         <span>{{ $t('resource.submissions') }}</span>
         <enketo-fill v-if="rendersEnketoFill" :form-version="form">
@@ -30,8 +30,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject, watchSyncEffect } from 'vue';
-
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -42,7 +40,7 @@ import SubmissionList from '../submission/list.vue';
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormSubmissions',
@@ -66,20 +64,9 @@ export default {
     }
   },
   setup() {
-    const { store } = inject('container');
-    // We do not reconcile odataChunk with either form.lastSubmission or
-    // project.lastSubmission.
-    watchSyncEffect(() => {
-      const { form, odataChunk } = store.state.request.data;
-      if (form != null && odataChunk != null &&
-        form.submissions !== odataChunk['@odata.count'] &&
-        !odataChunk.filtered) {
-        store.commit('setData', {
-          key: 'form',
-          value: form.with({ submissions: odataChunk['@odata.count'] })
-        });
-      }
-    });
+    const { project, form, createResource } = useRequestData();
+    const keys = createResource('keys');
+    return { project, form, keys };
   },
   data() {
     return {
@@ -89,12 +76,9 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project', 'form', 'keys']),
     rendersEnketoFill() {
-      return this.project != null &&
-        this.project.permits('submission.create') && this.form != null;
+      return this.project.dataExists &&
+        this.project.permits('submission.create') && this.form.dataExists;
     }
   },
   created() {
@@ -102,10 +86,9 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'keys',
+      this.keys.request({
         url: apiPaths.submissionKeys(this.projectId, this.xmlFormId)
-      }]).catch(noop);
+      }).catch(noop);
     }
   }
 };

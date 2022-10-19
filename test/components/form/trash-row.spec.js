@@ -1,18 +1,27 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FormTrashRow from '../../../src/components/form/trash-row.vue';
 
-import Form from '../../../src/presenters/form';
+import useProject from '../../../src/request-data/project';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (formData) => mount(FormTrashRow, {
-  props: { form: new Form(formData) },
-  container: {
-    requestData: { forms: testData.extendedForms.sorted() }
-  }
-});
+const mountComponent = (deletedForm) => {
+  const container = createTestContainer({
+    requestData: testRequestData([useProject], {
+      forms: testData.extendedForms.sorted(),
+      deletedForms: [deletedForm]
+    })
+  });
+  const { deletedForms } = container.requestData.localResources;
+  return mount(FormTrashRow, {
+    props: { form: deletedForms[0] },
+    container
+  });
+};
 
 describe('FormTrashRow', () => {
   describe('form name', () => {

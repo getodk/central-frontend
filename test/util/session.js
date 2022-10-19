@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { clone } from 'ramda';
 
 import testData from '../data';
 
@@ -19,15 +20,15 @@ export const mockLogin = (options = undefined) => {
   loggedIn = true;
 };
 
-mockLogin.setRequestData = (store) => {
+mockLogin.setRequestData = (requestData) => {
   if (loggedIn) {
-    store.commit('setFromResponse', {
-      key: 'session',
-      response: { status: 200, data: testData.sessions.first() }
+    requestData.session.setFromResponse({
+      status: 200,
+      data: clone(testData.sessions.first())
     });
-    store.commit('setFromResponse', {
-      key: 'currentUser',
-      response: { status: 200, data: testData.extendedUsers.first() }
+    requestData.currentUser.setFromResponse({
+      status: 200,
+      data: clone(testData.extendedUsers.first())
     });
   }
 };

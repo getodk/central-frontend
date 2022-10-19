@@ -15,7 +15,7 @@ export const standardKeys = dataStore({
     hint = managed && faker.random.boolean() ? 'helpful hint' : null
   }) => ({
     id,
-    get public() { throw new Error('not implemented'); },
+    public: 'mybase64key',
     managed,
     hint,
     createdAt: inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()

@@ -2,11 +2,15 @@ import SubmissionActivity from '../../../src/components/submission/activity.vue'
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
+import useFields from '../../../src/request-data/fields';
+import useSubmission from '../../../src/request-data/submission';
+
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 import { wait } from '../../util/util';
 
 const mountComponent = () => {
@@ -25,7 +29,10 @@ const mountComponent = () => {
     },
     container: {
       router: mockRouter('/projects/1/submissions/s'),
-      requestData: { project, submission, fields, audits, comments, diffs }
+      requestData: testRequestData(
+        [useSubmission, useFields],
+        { project, submission, audits, comments, diffs, fields }
+      )
     }
   });
 };
@@ -119,11 +126,11 @@ describe('SubmissionActivity', () => {
         component.should.alert('success');
       });
 
-      it('updates the store', async () => {
+      it('updates the submission resource', async () => {
         const component = await submit();
-        const { submission } = component.vm.$store.state.request.data;
+        const { submission } = component.vm;
         submission.__system.reviewState.should.equal('hasIssues');
-        // Check that other properties were copied correctly.
+        // Check that the rest of the submission is intact.
         submission.__id.should.equal('c d');
         submission.__system.submitterId.should.equal('1');
       });

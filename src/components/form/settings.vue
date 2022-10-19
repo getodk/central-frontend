@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="form != null" id="form-settings">
+  <div v-if="form.dataExists" id="form-settings">
     <div class="row">
       <div class="col-xs-6">
         <div class="panel panel-simple">
@@ -49,15 +49,20 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormDelete from './delete.vue';
+
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormSettings',
   components: { FormDelete },
   mixins: [modal(), routes()],
   inject: ['alert'],
+  setup() {
+    const { form } = useRequestData();
+    return { form };
+  },
   data() {
     return {
       deleteForm: {
@@ -65,12 +70,9 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['form']),
   methods: {
-    afterDelete(form) {
-      const message = this.$t('alert.delete', { name: form.nameOrId() });
+    afterDelete() {
+      const message = this.$t('alert.delete', { name: this.form.nameOrId });
       this.$router.push(this.projectPath())
         .then(() => { this.alert.success(message); });
     }

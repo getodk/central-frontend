@@ -3,10 +3,14 @@ import DateTime from '../../../src/components/date-time.vue';
 import MarkdownView from '../../../src/components/markdown/view.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
 
+import useFields from '../../../src/request-data/fields';
+import useSubmission from '../../../src/request-data/submission';
+
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
+import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (options = undefined) =>
   mount(SubmissionFeedEntry, mergeMountOptions(options, {
@@ -20,10 +24,10 @@ const mountComponent = (options = undefined) =>
     },
     container: {
       router: mockRouter('/projects/1/submissions/s'),
-      requestData: {
+      requestData: testRequestData([useSubmission, useFields], {
         diffs: {},
         fields: testData.extendedForms.last()._fields
-      }
+      })
     }
   }));
 
@@ -176,7 +180,7 @@ describe('SubmissionFeedEntry', () => {
 
   describe('diffs', () => {
     beforeEach(() => {
-      // This form with fields is needed to set fields in the store
+      // This form with fields is needed to set requestData.fields
       testData.extendedForms.createPast(1, {
         xmlFormId: 'a',
         fields: [testData.fields.string('/name'), testData.fields.string('/age'), testData.fields.binary('/photo')]

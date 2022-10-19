@@ -2,17 +2,21 @@ import ProjectList from '../../../src/components/project/list.vue';
 import ProjectHomeBlock from '../../../src/components/project/home-block.vue';
 import FormRow from '../../../src/components/project/form-row.vue';
 
+import useProjects from '../../../src/request-data/projects';
 import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
 const mountComponent = () => mount(ProjectList, {
   container: {
-    router: mockRouter('/'),
-    requestData: { projects: testData.extendedProjects.sorted() }
+    requestData: testRequestData([useProjects], {
+      projects: testData.extendedProjects.sorted()
+    }),
+    router: mockRouter('/')
   }
 });
 

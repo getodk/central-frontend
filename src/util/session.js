@@ -88,8 +88,8 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ store, i18n, alert, http }) => {
-  const { token } = store.state.request.data.session;
+const requestLogout = ({ i18n, requestData, alert, http }) => {
+  const { token } = requestData.session;
   return http.delete(apiPaths.session(token), {
     headers: { Authorization: `Bearer ${token}` }
   })
@@ -110,37 +110,39 @@ const requestLogout = ({ store, i18n, alert, http }) => {
     });
 };
 
-const resetRequestData = (store) => {
+const resetRequestData = (requestData) => {
   // We clear all data and cancel any requests. However, that isn't ideal for
-  // centralVersion, and we may need to revisit this logic in the future.
-  store.commit('clearData');
-  store.commit('cancelRequests');
+  // requestData.centralVersion, and we may need to revisit this logic in the
+  // future.
+  for (const resource of requestData.resources)
+    resource.reset();
 };
 
 export const logOut = (container, setNext) => {
   removeSessionFromStorage();
 
   const promises = [];
-  const { router, store } = container;
+  const { router, requestData } = container;
+  const { session } = requestData;
   // If the session has expired (for example, while the computer was asleep), we
   // do not send a request, which would result in an error. (Using Date.parse()
   // rather than DateTime.fromISO() in order to reduce the bundle.)
-  if (Date.parse(store.state.request.data.session.expiresAt) > Date.now())
+  if (Date.parse(session.expiresAt) > Date.now())
     promises.push(requestLogout(container));
 
   // We do not navigate to /login for a logout during login or during the
   // initial navigation.
   if (router.currentRoute.value === START_LOCATION ||
     router.currentRoute.value.path === '/login') {
-    resetRequestData(store);
+    resetRequestData(requestData);
   } else {
     // We clear most data after navigating to /login. However, we need to clear
     // the session now in order to be able to navigate to /login.
-    store.commit('clearData', 'session');
+    session.data = null;
     // We are about to navigate to /login. That alone would clear most data and
     // cancel most requests. However, we also need to account for data that does
     // not change with navigation.
-    afterNextNavigation(router, () => { resetRequestData(store); });
+    afterNextNavigation(router, () => { resetRequestData(requestData); });
     // This navigation will be asynchronous (as all navigation is), but it
     // shouldn't be possible for it to be canceled. It is also not possible for
     // there to be a second logout during the navigation, in part because the
@@ -158,11 +160,11 @@ export const logOut = (container, setNext) => {
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
 const logOutBeforeSessionExpires = (container) => {
-  const { store, i18n, alert } = container;
+  const { i18n, requestData, alert } = container;
+  const { session } = requestData;
   let alerted;
   return () => {
-    const { session } = store.state.request.data;
-    if (session == null) return;
+    if (!session.dataExists) return;
     const millisUntilExpires = Date.parse(session.expiresAt) - Date.now();
     const millisUntilLogout = millisUntilExpires - 60000;
     if (millisUntilLogout <= 0) {
@@ -185,7 +187,7 @@ const logOutBeforeSessionExpires = (container) => {
 const logOutAfterStorageChange = (container) => (event) => {
   // event.key == null if the user clears local storage in Chrome.
   if ((event.key == null || event.key === 'sessionExpires') &&
-    container.store.state.request.data.session != null) {
+    container.requestData.session.dataExists) {
     logOut(container, true).catch(noop);
   }
 };
@@ -201,7 +203,7 @@ export const useSessions = () => {
   });
 };
 
-export const restoreSession = (store) => {
+export const restoreSession = (session) => {
   const sessionExpires = localStore.getItem('sessionExpires');
   // We send a request if sessionExpires == null, partly in case there was a
   // logout error.
@@ -211,11 +213,7 @@ export const restoreSession = (store) => {
   // immediately before the session expires, such that the session expires
   // before logOutBeforeSessionExpires() logs out the user. However, that case
   // is unlikely, and the worst case should be that the user sees 401 messages.
-  return store.dispatch('get', [{
-    key: 'session',
-    url: '/v1/sessions/restore',
-    alert: false
-  }])
+  return session.request({ url: '/v1/sessions/restore', alert: false })
     .catch(error => {
       // The user's session may be removed without the user logging out, for
       // example, if a backup is restored. In that case, the request will result
@@ -233,14 +231,15 @@ export const restoreSession = (store) => {
     });
 };
 
-/* The session must be set in the store before logIn() is called, meaning that
+/* requestData.session must be set before logIn() is called, meaning that
 logIn() will be preceded by either the request to restore the session or a
 request to create a session. We do not watch for a logout during either request.
 However, if there is a logout during the request to restore the session, then
 the request for the current user should result in an error. If there is a logout
 during a request to create a session, then the new session will be used. */
 export const logIn = (container, newSession) => {
-  const { store, config } = container;
+  const { requestData, config } = container;
+  const { session, currentUser, analyticsConfig } = requestData;
   if (newSession) {
     /* If two tabs submit the login form at the same time, then both will end up
     logged out: the first tab to log in will set sessionExpires; then the second
@@ -249,20 +248,15 @@ export const logIn = (container, newSession) => {
     (very unlikely) case that the two sessions have the same expiration date,
     because sessionExpires is removed before it is set. */
     localStore.removeItem('sessionExpires');
-    const { expiresAt } = store.state.request.data.session;
-    localStore.setItem('sessionExpires', Date.parse(expiresAt).toString());
+    localStore.setItem('sessionExpires', Date.parse(session.expiresAt).toString());
   }
 
-  return store.dispatch('get', [{
-    key: 'currentUser',
-    url: '/v1/users/current',
-    extended: true
-  }])
+  return currentUser.request({ url: '/v1/users/current', extended: true })
     .catch(error => {
       // If there is a logout while the request for the current user is in
       // progress, then the request will be canceled. This callback will then be
       // run, in which case we simply re-throw the error.
-      if (store.state.request.data.session == null) throw error;
+      if (!session.dataExists) throw error;
 
       return logOut(container, false)
         .then(() => {
@@ -270,14 +264,9 @@ export const logIn = (container, newSession) => {
         });
     })
     .then(() => {
-      if (config.showsAnalytics &&
-        store.state.request.data.currentUser.can('config.read')) {
-        store.dispatch('get', [{
-          key: 'analyticsConfig',
-          url: '/v1/config/analytics',
-          fulfillProblem: ({ code }) => code === 404.1,
-          alert: false
-        }]).catch(noop);
+      if (config.showsAnalytics && currentUser.can('config.read')) {
+        analyticsConfig.request({ url: '/v1/config/analytics', alert: false })
+          .catch(noop);
       }
     });
 };

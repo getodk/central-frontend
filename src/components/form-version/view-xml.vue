@@ -21,7 +21,7 @@ Somewhat related: https://support.google.com/chrome/thread/10921150?hl=en -->
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <pre><spinner :state="initiallyLoading"/><code>{{ formattedXml }}</code></pre>
+      <pre><spinner :state="formVersionXml.initiallyLoading"/><code>{{ formattedXml }}</code></pre>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
           {{ $t('action.close') }}
@@ -39,7 +39,8 @@ import formatXml from 'xml-formatter';
 
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import { requestData } from '../../store/modules/request';
+
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormVersionViewXml',
@@ -51,18 +52,23 @@ export default {
     }
   },
   emits: ['hide'],
+  setup() {
+    const { formVersionXml } = useRequestData();
+    return { formVersionXml };
+  },
   computed: {
-    ...requestData(['formVersionXml']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['formVersionXml']);
-    },
     // XSLT might be a way to implement this without a dependency, but Firefox
     // doesn't seem to support the `indent` attribute of <xsl:output>:
     // https://stackoverflow.com/questions/376373/pretty-printing-xml-with-javascript
     formattedXml() {
-      return this.formVersionXml != null
-        ? formatXml(this.formVersionXml, { collapseContent: true })
+      return this.formVersionXml.dataExists
+        ? formatXml(this.formVersionXml.data, { collapseContent: true })
         : '';
+    }
+  },
+  watch: {
+    state(state) {
+      if (!state) this.formVersionXml.reset();
     }
   }
 };

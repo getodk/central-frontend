@@ -4,12 +4,26 @@ import FormRestore from '../../../src/components/form/restore.vue';
 import FormTrashRow from '../../../src/components/form/trash-row.vue';
 import FormRow from '../../../src/components/form/row.vue';
 
-import Form from '../../../src/presenters/form';
+import useProject from '../../../src/request-data/project';
+
 import { ago } from '../../../src/util/date-time';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { testRequestData } from '../../util/request-data';
+
+const mountOptions = (form) => {
+  const container = createTestContainer({
+    requestData: testRequestData([useProject], { deletedForms: [form] })
+  });
+  const { deletedForms } = container.requestData.localResources;
+  return {
+    props: { state: true, form: deletedForms[0] },
+    container
+  };
+};
 
 describe('FormRestore', () => {
   beforeEach(() => {
@@ -29,12 +43,7 @@ describe('FormRestore', () => {
 
   it('implements some standard button things', () =>
     mockHttp()
-      .mount(FormRestore, {
-        props: {
-          state: true,
-          form: new Form({ xmlFormId: 'a', projectId: 1 })
-        }
-      })
+      .mount(FormRestore, mountOptions({ xmlFormId: 'a', projectId: 1 }))
       .testStandardButton({
         button: '.btn-danger',
         disabled: ['.btn-link'],

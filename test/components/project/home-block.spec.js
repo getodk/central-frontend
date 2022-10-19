@@ -3,25 +3,35 @@ import { RouterLinkStub } from '@vue/test-utils';
 import ProjectHomeBlock from '../../../src/components/project/home-block.vue';
 import FormRow from '../../../src/components/project/form-row.vue';
 
-import Form from '../../../src/presenters/form';
-import Project from '../../../src/presenters/project';
+import useProjects from '../../../src/request-data/projects';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => mount(ProjectHomeBlock, {
-  props: {
-    project: new Project(testData.extendedProjects.last()),
-    // This is a placeholder sort function. The real one will be
-    // passed through from project/list.vue
-    sortFunc: (a, b) => a.xmlFormId.localeCompare(b.xmlFormId)
-    // maxForms prop defaults to 3 and that default is used in the following tests.
-    // Tests that alter maxForms can be found in project/list.spec.js
-  },
-  container: { router: mockRouter('/') }
-});
+const mountComponent = () => {
+  const projectData = { ...testData.extendedProjects.last() };
+  projectData.formList = testData.extendedForms.sorted();
+  const container = createTestContainer({
+    requestData: testRequestData([useProjects], { projects: [projectData] }),
+    router: mockRouter('/')
+  });
+  const { projects } = container.requestData.localResources;
+  return mount(ProjectHomeBlock, {
+    props: {
+      project: projects[0],
+      // This is a placeholder sort function. The real one will be
+      // passed through from project/list.vue
+      sortFunc: (a, b) => a.xmlFormId.localeCompare(b.xmlFormId)
+      // maxForms prop defaults to 3 and that default is used in the following tests.
+      // Tests that alter maxForms can be found in project/list.spec.js
+    },
+    container
+  });
+};
 
 describe('ProjectHomeBlock', () => {
   beforeEach(mockLogin);
@@ -46,18 +56,16 @@ describe('ProjectHomeBlock', () => {
   });
 
   it('shows the correct number of forms if there are only a few', () => {
-    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedProjects.createPast(1);
     testData.extendedForms.createPast(3);
-    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
     block.find('.expand-button').exists().should.be.false();
   });
 
   it('shows the correct number of forms if there are a lot and some should be hidden', () => {
-    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedProjects.createPast(1);
     testData.extendedForms.createPast(4);
-    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
     const expand = block.find('.expand-button');
@@ -67,9 +75,8 @@ describe('ProjectHomeBlock', () => {
   });
 
   it('expands the forms to show more forms', async () => {
-    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedProjects.createPast(1);
     testData.extendedForms.createPast(4);
-    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
     const expand = block.find('.expand-button');
@@ -80,25 +87,25 @@ describe('ProjectHomeBlock', () => {
   });
 
   it('sorts the forms by a given sort function', () => {
-    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedProjects.createPast(1);
     testData.extendedForms.createPast(1, { name: 'Bravo', xmlFormId: 'a' });
     testData.extendedForms.createPast(1, { name: 'Charlie', xmlFormId: 'b' });
     testData.extendedForms.createPast(1, { name: 'Alpha', xmlFormId: 'c' });
-    // extendedForms.sorted() (to get a full list of forms) sorts by name
-    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
-    project.formList.map((form) => form.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
-    const rows = mountComponent().findAllComponents(FormRow);
+    const block = mountComponent();
+    const { formList } = block.props().project;
+    // formList is sorted by `name`.
+    formList.map((form) => form.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
+    const rows = block.findAllComponents(FormRow);
     // Test component's sort function defined above will sort by xmlFormId
     rows.map((row) => row.props().form.name).should.eql(['Bravo', 'Charlie', 'Alpha']);
   });
 
   it('shows correctly sorted forms before and after cutoff forms', async () => {
-    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedProjects.createPast(1);
     testData.extendedForms.createPast(1, { name: 'aaa_z', xmlFormId: 'z' });
     testData.extendedForms.createPast(1, { name: 'bbb_y', xmlFormId: 'y' });
     testData.extendedForms.createPast(1, { name: 'ccc_w', xmlFormId: 'w' });
     testData.extendedForms.createPast(1, { name: 'ddd_x', xmlFormId: 'x' });
-    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     let rows = block.findAllComponents(FormRow);
     // Test component's sort function defined above will sort by xmlFormId
@@ -110,13 +117,12 @@ describe('ProjectHomeBlock', () => {
   });
 
   it('counts forms correctly in the expander even when filtering out closed forms', async () => {
-    const project = testData.extendedProjects.createPast(1).last();
+    testData.extendedProjects.createPast(1);
     testData.extendedForms.createPast(1, { name: 'a', state: 'closing' });
     testData.extendedForms.createPast(1, { name: 'b', state: 'closed' });
     testData.extendedForms.createPast(1, { name: 'c' });
     testData.extendedForms.createPast(1, { name: 'd' });
     testData.extendedForms.createPast(1, { name: 'e' });
-    project.formList.push(...testData.extendedForms.sorted().map((form) => new Form(form)));
     const block = mountComponent();
     const expand = block.find('.expand-button');
     expand.exists().should.be.true();

@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       <div v-if="form" class="modal-introduction">
         <i18n-t tag="p" keypath="introduction[0]">
           <template #name>
-            <strong>{{ form.nameOrId() }}</strong>
+            <strong>{{ form.nameOrId }}</strong>
           </template>
         </i18n-t>
         <p>{{ $t('introduction[1]') }}</p>

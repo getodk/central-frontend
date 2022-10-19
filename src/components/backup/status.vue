@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
       <i18n-t tag="p" keypath="success[1]">
         <template #dateTime>
           <strong id="backup-status-most-recently-logged-at">
-            <date-time :iso="auditsForBackupsConfig[0].loggedAt"/>
+            <date-time :iso="latestAudit.loggedAt"/>
           </strong>
         </template>
       </i18n-t>
@@ -81,43 +81,70 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { mapGetters } from 'vuex';
 
 import DateTimeComponent from '../date-time.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import { ago } from '../../util/date-time';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'BackupStatus',
   components: { DateTime: DateTimeComponent, SentenceSeparator, Spinner },
   inject: ['alert'],
   emits: ['terminate'],
+  setup() {
+    // The component assumes that this data will exist when the component is
+    // is created.
+    const { backupsConfig, audits } = useRequestData();
+    return { backupsConfig, audits };
+  },
   data() {
     return {
       downloading: false
     };
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['backupsConfig']),
-    ...mapGetters(['auditsForBackupsConfig']),
+    // Returns the latest backup attempt for the current backups config.
+    latestAudit() {
+      if (!(this.audits.dataExists && this.backupsConfig.dataExists))
+        return null;
+      if (this.backupsConfig.isEmpty()) return null;
+      for (const audit of this.audits) {
+        if (audit.loggedAt < this.backupsConfig.get().setAt) {
+          // Any backup attempts that follow are for a previous config:
+          // this.audits is sorted descending by loggedAt.
+          return null;
+        }
+
+        const { details } = audit;
+        /* This will evaluate to `false` only if an attempt for a previous
+        config was logged after the current config was created, which seems
+        unlikely. A failed attempt might not have a configSetAt property, which
+        means that if a failed attempt was logged after the current config was
+        created, we might not be able to determine whether the attempt
+        corresponds to the current config or (again unlikely) to a previous one.
+        We assume that an attempt without a configSetAt property corresponds to
+        the current config. */
+        if (details.configSetAt === this.backupsConfig.get().setAt ||
+          details.configSetAt == null)
+          return audit;
+      }
+      return null;
+    },
     status() {
       if (this.backupsConfig.isEmpty()) return 'notConfigured';
-      const latestAudit = this.auditsForBackupsConfig[0];
       // The earliest DateTime that is still considered recent for the purposes
       // of this component
       const recentThreshold = ago({ days: 3 });
       // No recent backup attempt
-      if (latestAudit == null ||
-        DateTime.fromISO(latestAudit.loggedAt) < recentThreshold) {
+      if (this.latestAudit == null ||
+        DateTime.fromISO(this.latestAudit.loggedAt) < recentThreshold) {
         const setAt = DateTime.fromISO(this.backupsConfig.get().setAt);
         return setAt < recentThreshold ? 'somethingWentWrong' : 'neverRun';
       }
-      return latestAudit.details.success ? 'success' : 'somethingWentWrong';
+      return this.latestAudit.details.success ? 'success' : 'somethingWentWrong';
     },
     iconClass() {
       switch (this.status) {

@@ -12,16 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="home-summary">
     <div>
-      <loading :state="loadingProjects"/>
-      <home-summary-item v-if="projects != null" icon="archive"
+      <loading :state="projects.initiallyLoading"/>
+      <home-summary-item v-if="projects.dataExists" icon="archive"
         :count="projects.length">
         <template #title>{{ $tc('plural.project', projects.length) }}</template>
         <template #body>{{ $t('projects.body') }}</template>
       </home-summary-item>
     </div>
     <div v-if="currentUser.can('user.list')">
-      <loading :state="loadingUsers"/>
-      <home-summary-item v-if="users != null" to="/users" icon="user-circle"
+      <loading :state="users.initiallyLoading"/>
+      <home-summary-item v-if="users.dataExists" to="/users" icon="user-circle"
         :count="users.length">
         <template #title>{{ $tc('plural.user', users.length) }}</template>
         <template #body>{{ $t('users.body') }}</template>
@@ -44,34 +44,21 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'HomeSummary'
+};
+</script>
+<script setup>
 import HomeSummaryItem from './summary/item.vue';
 import Loading from '../loading.vue';
 
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'HomeSummary',
-  components: { HomeSummaryItem, Loading },
-  computed: {
-    ...requestData(['currentUser', 'users', 'projects']),
-    loadingProjects() {
-      return this.$store.getters.initiallyLoading(['projects']);
-    },
-    loadingUsers() {
-      return this.$store.getters.initiallyLoading(['users']);
-    }
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      if (this.currentUser.can('user.list'))
-        this.$store.dispatch('get', [{ key: 'users', url: '/v1/users' }]).catch(noop);
-    }
-  }
-};
+const { currentUser, projects, createResource } = useRequestData();
+const users = createResource('users');
+if (currentUser.can('user.list'))
+  users.request({ url: '/v1/users' }).catch(noop);
 </script>
 
 <style lang="scss">

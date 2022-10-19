@@ -36,9 +36,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 let id = 0;
 
@@ -46,11 +46,15 @@ export default {
   name: 'FormVersionDefDropdown',
   props: {
     version: {
-      type: Form,
+      type: Object,
       required: true
     }
   },
   emits: ['view-xml'],
+  setup() {
+    const { formVersionXml } = useRequestData();
+    return { formVersionXml };
+  },
   data() {
     id += 1;
     return {
@@ -75,10 +79,7 @@ export default {
         : apiPaths.formDraftDef(projectId, xmlFormId, extension);
     },
     viewXml() {
-      this.$store.dispatch('get', [{
-        key: 'formVersionXml',
-        url: this.defPath('.xml')
-      }]).catch(noop);
+      this.formVersionXml.request({ url: this.defPath('.xml') }).catch(noop);
       this.$emit('view-xml');
     }
   }

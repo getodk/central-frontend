@@ -2,22 +2,33 @@ import { Settings } from 'luxon';
 
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 
-import Field from '../../../src/presenters/field';
+import useFields from '../../../src/request-data/fields';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
+import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (props = undefined) => mount(SubmissionDataRow, {
-  props: {
-    projectId: '1',
-    xmlFormId: 'f',
-    draft: false,
-    submission: testData.submissionOData().value[0],
-    fields: testData.extendedForms.last()._fields.map(field => new Field(field)),
-    ...props
-  }
-});
+const mountComponent = (props = undefined) => {
+  const container = createTestContainer({
+    requestData: testRequestData([useFields], {
+      fields: testData.extendedForms.last()._fields
+    })
+  });
+  const { fields } = container.requestData.localResources;
+  return mount(SubmissionDataRow, {
+    props: {
+      projectId: '1',
+      xmlFormId: 'f',
+      draft: false,
+      submission: testData.submissionOData().value[0],
+      fields: fields.data,
+      ...props
+    },
+    container
+  });
+};
 
 describe('SubmissionDataRow', () => {
   it('shows an empty string if the value of a field does not exist', () => {

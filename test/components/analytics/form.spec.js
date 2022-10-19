@@ -171,7 +171,7 @@ describe('AnalyticsForm', () => {
         })
         .respondWithSuccess()
         .afterResponse(form => {
-          const { analyticsConfig } = form.vm.$store.state.request.data;
+          const { analyticsConfig } = form.vm.$container.requestData;
           analyticsConfig.isEmpty().should.be.true();
         }));
   });
@@ -221,7 +221,7 @@ describe('AnalyticsForm', () => {
           value: { enabled: false }
         }))
         .afterResponse(form => {
-          const { analyticsConfig } = form.vm.$store.state.request.data;
+          const { analyticsConfig } = form.vm.$container.requestData;
           analyticsConfig.get().value.enabled.should.be.false();
         }));
   });
@@ -304,7 +304,7 @@ describe('AnalyticsForm', () => {
           value: { enabled: true }
         }))
         .afterResponse(form => {
-          const { analyticsConfig } = form.vm.$store.state.request.data;
+          const { analyticsConfig } = form.vm.$container.requestData;
           analyticsConfig.get().value.enabled.should.be.true();
         }));
   });

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table v-if="project != null && showTable" class="table form-table">
+  <table v-if="project.dataExists && showTable" class="table form-table">
     <thead>
       <template v-if="showClosed">
         <tr>
@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </template>
     </thead>
-    <tbody v-if="forms != null">
+    <tbody v-if="forms.dataExists">
       <form-row v-for="form of formsToShow" :key="form.xmlFormId" :form="form"
         :show-actions="showActions"/>
     </tbody>
@@ -36,7 +36,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormRow from './row.vue';
-import { requestData } from '../../store/modules/request';
+
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormTable',
@@ -51,10 +52,13 @@ export default {
       default: false
     }
   },
-  computed: {
+  setup() {
+    const { project, forms } = useRequestData();
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['project', 'forms']),
+    return { project, forms };
+  },
+  computed: {
     showActions() {
       return this.project.permits('project.update') || this.project.permits('submission.create');
     },
@@ -66,7 +70,7 @@ export default {
       return this.formsToShow.length > 0 || !this.showClosed;
     },
     formsToShow() {
-      if (this.forms === null)
+      if (!this.forms.dataExists)
         return [];
       // Hide any form without a published version from a Data Collector.
       const filteredForms = this.showClosed

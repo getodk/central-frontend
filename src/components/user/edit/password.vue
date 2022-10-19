@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <h1 class="panel-title">{{ $t('title') }}</h1>
     </div>
     <div class="panel-body">
-      <form v-if="user != null && user.id === currentUser.id"
+      <form v-if="user.dataExists && user.id === currentUser.id"
         @submit.prevent="submit">
         <input :value="currentUser.email" autocomplete="username">
         <form-group id="user-edit-password-old-password" v-model="oldPassword"
@@ -46,13 +46,17 @@ import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'UserEditPassword',
   components: { FormGroup, Spinner },
   mixins: [request()],
   inject: ['alert'],
+  setup() {
+    const { currentUser, user } = useRequestData();
+    return { currentUser, user };
+  },
   data() {
     return {
       awaitingResponse: false,
@@ -63,7 +67,6 @@ export default {
       mismatch: false
     };
   },
-  computed: requestData(['currentUser', 'user']),
   methods: {
     validate() {
       this.tooShort = false;

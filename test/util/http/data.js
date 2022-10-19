@@ -1,116 +1,153 @@
+import useForm from '../../../src/request-data/form';
+import useProject from '../../../src/request-data/project';
+
 import testData from '../../data';
 import { mockResponse } from '../axios';
 
-// The names of the following properties correspond to request keys.
-const defaults = {
+// The names of the following properties correspond to requestData resources.
+const responseDefaults = {
+  // Resources created in createResources()
+  roles: () => testData.standardRoles.sorted(),
+  project: () => testData.extendedProjects.last(),
+
+  // useProject()
+  forms: () => testData.extendedForms.sorted(),
+  fieldKeys: () => testData.extendedFieldKeys.sorted(),
+  // useForm()
+  formVersions: () => testData.extendedFormVersions.published(),
+  // useFields()
+  fields: () => testData.extendedForms.last()._fields,
+
+  // Common local resources
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
-
-  roles: () => testData.standardRoles.sorted(),
-  actors: () => testData.standardUsers.sorted().map(testData.toActor),
-
-  projects: () => testData.extendedProjects.sorted(),
-  project: () => testData.extendedProjects.last(),
-  projectAssignments: () => testData.extendedProjectAssignments.sorted(),
-  forms: () => testData.extendedForms.sorted(),
-  deletedForms: () => [],
-  formSummaryAssignments: () =>
-    testData.standardFormSummaryAssignments.sorted(),
-  form: () => testData.extendedForms.last(),
-  fields: () => testData.extendedForms.last()._fields,
-  formVersions: () => testData.extendedFormVersions.published(),
-  formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
-    ? testData.extendedFormDrafts.last()
-    : mockResponse.problem(404.1)),
-  attachments: () => (testData.extendedFormVersions.last().publishedAt == null
-    ? testData.standardFormAttachments.sorted()
-    : mockResponse.problem(404.1)),
-  odataChunk: () => testData.submissionOData(250),
+  odata: testData.submissionOData,
   keys: () => testData.standardKeys.sorted(),
-  submitters: () => testData.extendedFieldKeys
-    .sorted()
-    .sort((fieldKey1, fieldKey2) =>
-      fieldKey1.displayName.localeCompare(fieldKey2.displayName))
-    .map(testData.toActor),
-  submission: testData.submissionOData,
-  audits: () => testData.extendedAudits.sorted(),
-  comments: () => testData.extendedComments.sorted(),
-  diffs: () => ({}),
-  submissionVersion: () => ({}),
-  publicLinks: () => testData.standardPublicLinks.sorted(),
-  datasets: () => testData.extendedDatasets.sorted(),
-  fieldKeys: () => testData.extendedFieldKeys.sorted(),
-
-  backupsConfig: () => {
-    const config = testData.standardConfigs.forKey('backups');
-    return config != null ? config : mockResponse.problem(404.1);
-  },
-  analyticsConfig: () => {
-    const config = testData.standardConfigs.forKey('analytics');
-    return config != null ? config : mockResponse.problem(404.1);
-  }
+  audits: () => testData.extendedAudits.sorted()
 };
 
-// Maps each request key to its corresponding callback. Returns a Map so that
-// iteration is guaranteed to be ordered.
-const mapKeys = (keys, componentDefaults = undefined) => keys.reduce(
-  (map, key) => map.set(
-    key,
-    componentDefaults != null && componentDefaults[key] != null
-      ? componentDefaults[key]
-      : defaults[key]
-  ),
-  new Map()
-);
+for (const [resourceName, callback] of Object.entries(responseDefaults))
+  responseDefaults[resourceName] = () => mockResponse.of(callback());
 
-const mapsByComponent = {
-  AccountLogin: new Map(),
-  AccountResetPassword: new Map(),
-  AccountClaim: new Map(),
+const componentResponses = (map) => Object.entries(map)
+  .map(([resourceName, callbackOrTrue]) => {
+    const callback = callbackOrTrue === true
+      ? responseDefaults[resourceName]
+      : () => mockResponse.of(callbackOrTrue());
+    return [resourceName, callback];
+  });
 
-  Home: mapKeys(['projects', 'users']),
-  ProjectShow: mapKeys(['project']),
-  ProjectOverview: mapKeys(['forms', 'deletedForms']),
-  ProjectUserList: mapKeys(['roles', 'projectAssignments']),
-  FieldKeyList: mapKeys(['fieldKeys']),
-  ProjectFormAccess: mapKeys([
-    'forms',
-    'fieldKeys',
-    'roles',
-    'formSummaryAssignments'
-  ]),
-  DatasetList: mapKeys(['datasets']),
-  ProjectSettings: new Map(),
-  FormShow: mapKeys(['project', 'form', 'formDraft', 'attachments']),
-  FormOverview: new Map(),
-  FormVersionList: mapKeys(['formVersions']),
-  FormSubmissions: mapKeys(['keys', 'fields', 'odataChunk', 'submitters']),
-  PublicLinkList: mapKeys(['publicLinks']),
-  FormSettings: new Map(),
-  FormDraftStatus: mapKeys(['formVersions']),
-  FormAttachmentList: new Map(),
-  FormDraftTesting: mapKeys(['keys', 'fields', 'odataChunk']),
-  SubmissionShow: mapKeys(['project', 'submission', 'submissionVersion', 'fields', 'audits', 'comments', 'diffs']),
+const responsesByComponent = {
+  AccountLogin: [],
+  AccountResetPassword: [],
+  AccountClaim: [],
 
-  UserHome: new Map(),
-  UserList: mapKeys(['users', 'actors']),
-  UserEdit: mapKeys(['user']),
-  AccountEdit: mapKeys(['user']),
+  Home: componentResponses({
+    projects: () => testData.extendedProjects.sorted(),
+    users: true
+  }),
+  ProjectShow: componentResponses({ project: true }),
+  ProjectOverview: componentResponses({ forms: true, deletedForms: () => [] }),
+  ProjectUserList: componentResponses({
+    roles: true,
+    projectAssignments: () => testData.extendedProjectAssignments.sorted()
+  }),
+  FieldKeyList: componentResponses({ fieldKeys: true }),
+  ProjectFormAccess: componentResponses({
+    forms: true,
+    fieldKeys: true,
+    roles: true,
+    formSummaryAssignments: () => testData.standardFormSummaryAssignments.sorted()
+  }),
+  DatasetList: componentResponses({
+    datasets: () => testData.extendedDatasets.sorted()
+  }),
+  ProjectSettings: [],
+  FormShow: componentResponses({
+    project: true,
+    form: () => testData.extendedForms.last(),
+    formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
+      ? testData.extendedFormDrafts.last()
+      : mockResponse.problem(404.1)),
+    attachments: () => (testData.extendedFormVersions.last().publishedAt == null
+      ? testData.standardFormAttachments.sorted()
+      : mockResponse.problem(404.1))
+  }),
+  FormOverview: [],
+  FormVersionList: componentResponses({ formVersions: true }),
+  FormSubmissions: componentResponses({
+    keys: true,
+    fields: true,
+    odata: true,
+    submitters: () => testData.extendedFieldKeys
+      .sorted()
+      .sort((fieldKey1, fieldKey2) =>
+        fieldKey1.displayName.localeCompare(fieldKey2.displayName))
+      .map(testData.toActor)
+  }),
+  PublicLinkList: componentResponses({
+    publicLinks: () => testData.standardPublicLinks.sorted()
+  }),
+  FormSettings: [],
+  FormDraftStatus: componentResponses({ formVersions: true }),
+  FormAttachmentList: [],
+  FormDraftTesting: componentResponses({
+    keys: true,
+    fields: true,
+    odata: true
+  }),
+  SubmissionShow: componentResponses({
+    project: true,
+    submission: testData.submissionOData,
+    submissionVersion: () => ({}),
+    fields: true,
+    audits: true,
+    comments: () => testData.extendedComments.sorted(),
+    diffs: () => ({})
+  }),
 
-  SystemHome: new Map(),
-  BackupList: mapKeys(['backupsConfig', 'audits'], {
+  UserHome: [],
+  UserList: componentResponses({
+    users: true,
+    adminIds: () => testData.standardUsers.sorted().map(testData.toActor)
+  }),
+  UserEdit: componentResponses({ user: true }),
+  AccountEdit: componentResponses({ user: true }),
+
+  SystemHome: [],
+  BackupList: componentResponses({
+    backupsConfig: () => {
+      const config = testData.standardConfigs.forKey('backups');
+      return config != null ? config : mockResponse.problem(404.1);
+    },
     audits: () => testData.standardAudits.sorted()
   }),
-  AuditList: mapKeys(['audits']),
-  AnalyticsList: mapKeys(['analyticsConfig', 'audits']),
+  AuditList: componentResponses({ audits: true }),
+  AnalyticsList: componentResponses({
+    analyticsConfig: () => {
+      const config = testData.standardConfigs.forKey('analytics');
+      return config != null ? config : mockResponse.problem(404.1);
+    },
+    audits: true
+  }),
 
-  Download: new Map(),
+  Download: [],
 
-  NotFound: new Map()
+  NotFound: []
+};
+
+// For nested routes, specify the requestData composables that the parent route
+// component uses.
+const composablesByParent = {
+  ProjectShow: [useProject],
+  FormShow: [useForm]
 };
 
 export default (name) => {
-  const map = mapsByComponent[name];
-  if (map == null) throw new Error(`unknown component ${name}`);
-  return map;
+  const responses = responsesByComponent[name];
+  if (responses == null) throw new Error(`unknown component ${name}`);
+  const composables = composablesByParent[name] != null
+    ? composablesByParent[name]
+    : [];
+  return { composables, responses };
 };

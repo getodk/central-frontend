@@ -20,22 +20,23 @@ except according to the terms contained in the LICENSE file.
         <th>{{ $t('header.details') }}</th>
       </tr>
     </thead>
-    <tbody v-if="audits != null">
+    <tbody v-if="audits.dataExists">
       <audit-row v-for="(audit, index) in audits" :key="index" :audit="audit"/>
     </tbody>
   </table>
 </template>
 
 <script>
+export default {
+  name: 'AuditTable'
+};
+</script>
+<script setup>
 import AuditRow from './row.vue';
 
-export default {
-  name: 'AuditTable',
-  components: { AuditRow },
-  props: {
-    audits: Array
-  }
-};
+import { useRequestData } from '../../request-data';
+
+const { audits } = useRequestData();
 </script>
 
 <style lang="scss">

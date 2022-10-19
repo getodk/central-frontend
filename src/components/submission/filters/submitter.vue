@@ -11,23 +11,25 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="submission-filters-submitter" class="form-group">
-    <select v-if="initiallyLoading" class="form-control" disabled>
+    <select v-if="submitters.initiallyLoading" class="form-control" disabled>
       <option value="">{{ $t('common.loading') }}</option>
     </select>
     <select v-else v-model="selectValue" class="form-control">
       <option value="">{{ $t('common.anybody') }}</option>
       <option v-if="unknown" :value="modelValue">{{ $t('unknown') }}</option>
-      <option v-for="submitter of submitters" :key="submitter.id"
-        :value="submitter.id.toString()">
-        {{ submitter.displayName }}
-      </option>
+      <template v-if="submitters.dataExists">
+        <option v-for="submitter of submitters" :key="submitter.id"
+          :value="submitter.id.toString()">
+          {{ submitter.displayName }}
+        </option>
+      </template>
     </select>
     <span class="form-label">{{ $t('field.submitter') }}</span>
   </label>
 </template>
 
 <script>
-import { requestData } from '../../../store/modules/request';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'SubmissionFiltersSubmitter',
@@ -38,13 +40,13 @@ export default {
     }
   },
   emits: ['update:modelValue'],
-  computed: {
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['submitters']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['submitters']);
-    },
+    const { submitters } = useRequestData();
+    return { submitters };
+  },
+  computed: {
     selectValue: {
       get() {
         return this.modelValue;
@@ -54,8 +56,8 @@ export default {
       }
     },
     unknown() {
-      return this.modelValue !== '' &&
-        !this.submitters.some(submitter => this.modelValue === submitter.id.toString());
+      return this.modelValue !== '' && (!this.submitters.dataExists ||
+        !this.submitters.some(submitter => this.modelValue === submitter.id.toString()));
     }
   }
 };

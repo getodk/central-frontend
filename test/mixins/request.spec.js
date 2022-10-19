@@ -65,17 +65,6 @@ describe('mixins/request', () => {
         .afterResponse(component => {
           component.should.alert('danger', 'Message from problemToAlert');
         }));
-
-    it('shows an i18n message', () =>
-      mockHttp()
-        .mount(TestUtilRequest)
-        .request(component =>
-          component.vm.request({ method: 'DELETE', url: '/v1/projects/1' })
-            .catch(noop))
-        .respondWithProblem(404.1)
-        .afterResponse(component => {
-          component.should.alert('danger', 'Message for locale');
-        }));
   });
 
   describe('fulfillProblem', () => {

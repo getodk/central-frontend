@@ -1,8 +1,10 @@
 import SubmissionDiffItem from '../../../src/components/submission/diff-item.vue';
 
-import testData from '../../data';
+import useFields from '../../../src/request-data/fields';
 
+import testData from '../../data';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (entry) => mount(SubmissionDiffItem, {
   props: {
@@ -14,7 +16,9 @@ const mountComponent = (entry) => mount(SubmissionDiffItem, {
     newVersionId: 'v2'
   },
   container: {
-    requestData: { fields: testData.extendedForms.last()._fields }
+    requestData: testRequestData([useFields], {
+      fields: testData.extendedForms.last()._fields
+    })
   }
 });
 

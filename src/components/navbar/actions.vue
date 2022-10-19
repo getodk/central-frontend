@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
 import request from '../../mixins/request';
 import { logOut } from '../../util/session';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'NavbarActions',
@@ -53,9 +53,12 @@ export default {
       default: false
     }
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['currentUser']),
+  setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { currentUser } = useRequestData();
+    return { currentUser };
+  },
   methods: {
     logOut() {
       if (this.unsavedChanges.confirm()) {

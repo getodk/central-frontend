@@ -37,7 +37,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import routes from '../../mixins/routes';
-import Project from '../../presenters/project';
 
 import ProjectFormRow from './form-row.vue';
 
@@ -47,7 +46,7 @@ export default {
   mixins: [routes()],
   props: {
     project: {
-      type: Project,
+      type: Object,
       required: true
     },
     sortFunc: {

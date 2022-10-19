@@ -14,14 +14,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import UserEdit from '../user/edit.vue';
-import { requestData } from '../../store/modules/request';
-
 export default {
-  name: 'AccountEdit',
-  components: { UserEdit },
-  // The component assumes that this data will exist when the component is
-  // created.
-  computed: requestData(['currentUser'])
+  name: 'AccountEdit'
 };
+</script>
+<script setup>
+import UserEdit from '../user/edit.vue';
+
+import { useRequestData } from '../../request-data';
+
+const { currentUser } = useRequestData();
 </script>

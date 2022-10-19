@@ -90,7 +90,7 @@ export default {
       return null;
     },
     rawValue(submission, field) {
-      return path(field.splitPath(), submission);
+      return path(field.pathElements, submission);
     },
     formattedValue(submission, field) {
       const rawValue = this.rawValue(submission, field);

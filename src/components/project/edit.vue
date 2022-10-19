@@ -33,48 +33,45 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'ProjectEdit'
+};
+</script>
+<script setup>
+import { inject, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import MarkdownTextarea from '../markdown/textarea.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'ProjectEdit',
-  components: { FormGroup, Spinner, MarkdownTextarea },
-  mixins: [request()],
-  inject: ['alert'],
-  data() {
-    return {
-      awaitingResponse: false,
-      name: this.$store.state.request.data.project.name,
-      description: this.$store.state.request.data.project.description
-    };
-  },
-  computed: requestData(['project']),
-  methods: {
-    submit() {
-      const { name, description } = this;
-      this.patch(apiPaths.project(this.project.id), { name, description })
-        .then(response => {
-          this.$store.commit('setData', {
-            key: 'project',
-            // We do not simply specify response.data, because it does not
-            // include extended metadata.
-            value: this.project.with({
-              name,
-              description,
-              updatedAt: response.data.updatedAt
-            })
-          });
-          this.alert.success(this.$t('alert.success'));
-        })
-        .catch(noop);
+// The component assumes that this data will exist when the component is
+// created.
+const { project } = useRequestData();
+const { awaitingResponse } = project.toRefs();
+
+const name = ref(project.name);
+const description = ref(project.description);
+
+const { t } = useI18n();
+const alert = inject('alert');
+const submit = () => {
+  project.request({
+    method: 'PATCH',
+    url: apiPaths.project(project.id),
+    data: { name: name.value, description: description.value },
+    patch: ({ data }) => {
+      project.name = data.name;
+      project.description = data.description;
+      project.updatedAt = data.updatedAt;
     }
-  }
+  })
+    .then(() => { alert.success(t('alert.success')); })
+    .catch(noop);
 };
 </script>
 

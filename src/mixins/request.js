@@ -61,25 +61,10 @@ following options:
 
   - problemToAlert. If the request results in an error response, request() shows
     an alert. By default, the alert message is the same as that of the Backend
-    Problem. However, there are two ways to show a different message:
-
-    1. If a function is specified for problemToAlert, request() passes the
-       Problem to the function, which has the option to return a different
-       message. If the function returns `null` or `undefined`, the Problem's
-       message is used.
-    2. If problemToAlert has not been specified, request() will check whether
-       the component has specified an i18n message for the Problem code. For
-       example:
-
-       <i18n lang="json5">
-       {
-         "en": {
-           "problem": {
-             "404_1": "Not found."
-           }
-         }
-       }
-       </i18n>
+    Problem. However, if a function is specified for problemToAlert, request()
+    passes the Problem to the function, which has the option to return a
+    different message. If the function returns `null` or `undefined`, the
+    Problem's message is used.
 
 Return Value
 ------------
@@ -100,18 +85,19 @@ function request({
   problemToAlert = undefined,
   ...axiosConfig
 }) {
+  const { requestData, alert, http, logger } = this.container;
+
   const { data } = axiosConfig;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
-    this.alert.danger(this.$t('mixin.request.alert.fileSize', { name: data.name }));
+    alert.danger(this.$t('mixin.request.alert.fileSize', { name: data.name }));
     return Promise.reject(new Error('file size exceeds limit'));
   }
 
   if (this.awaitingResponse != null) this.awaitingResponse = true;
 
-  const { session } = this.$store.state.request.data;
   const initialRoute = this.$route;
-  return this.http.request(withAuth(axiosConfig, session))
+  return http.request(withAuth(axiosConfig, requestData.session.token))
     .catch(error => {
       // this.$route seems to be defined even after the component has been
       // unmounted.
@@ -123,8 +109,8 @@ function request({
 
       if (this.awaitingResponse != null) this.awaitingResponse = false;
 
-      logAxiosError(this.logger, error);
-      this.alert.danger(requestAlertMessage(this.$i18n, error, problemToAlert));
+      logAxiosError(logger, error);
+      alert.danger(requestAlertMessage(this.$i18n, error, problemToAlert));
       throw error;
     })
     .then(response => {
@@ -137,7 +123,7 @@ function request({
 
 // @vue/component
 const mixin = {
-  inject: ['alert', 'http', 'logger'],
+  inject: ['container'],
   watch: {
     $route() {
       if (this.awaitingResponse != null) this.awaitingResponse = false;

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <page-section>
       <template #heading>
         <span>{{ $t('title') }}</span>
-        <button v-if="project != null && project.permits('form.create')"
+        <button v-if="project.dataExists && project.permits('form.create')"
           id="form-list-create-button" type="button" class="btn btn-primary"
           @click="showModal('newForm')">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
@@ -24,8 +24,8 @@ except according to the terms contained in the LICENSE file.
       <template #body>
         <form-table :sort-func="sortFunction"/>
         <form-table :sort-func="sortFunction" :show-closed="true"/>
-        <loading :state="$store.getters.initiallyLoading(['forms'])"/>
-        <p v-if="forms != null && forms.length === 0"
+        <loading :state="forms.initiallyLoading"/>
+        <p v-if="forms.dataExists && forms.length === 0"
           class="empty-table-message">
           {{ $t('emptyTable') }}
         </p>
@@ -45,14 +45,20 @@ import FormSort from './sort.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
 import sortFunctions from '../../util/sort';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormList',
   components: { FormTable, FormNew, FormSort, Loading, PageSection },
   mixins: [modal(), routes()],
   inject: ['alert'],
+  setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { project, forms } = useRequestData();
+    return { project, forms };
+  },
   data() {
     return {
       newForm: {
@@ -61,17 +67,16 @@ export default {
       sortMode: 'alphabetical'
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
   computed: {
-    ...requestData(['project', 'forms']),
     sortFunction() {
       return sortFunctions[this.sortMode];
     }
   },
   methods: {
     afterCreate(form) {
-      const message = this.$t('alert.create', { name: form.nameOrId() });
+      const message = this.$t('alert.create', {
+        name: form.name != null ? form.name : form.xmlFormId
+      });
       this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'))
         .then(() => { this.alert.success(message); });
     }

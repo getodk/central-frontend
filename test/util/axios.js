@@ -8,7 +8,19 @@ const logUnhandledRequest = (config) => {
 
 export const mockAxios = () => {
   let respond = logUnhandledRequest;
-  const http = (config) => respond(config);
+  const http = async (config) => {
+    const response = await respond(config);
+
+    const { signal } = config;
+    if (signal != null && signal.aborted) {
+      const error = new Error('axios abort error');
+      error.config = config;
+      error.request = {};
+      throw error;
+    }
+
+    return response;
+  };
   http.respond = (f) => { respond = f != null ? f : logUnhandledRequest; };
 
   http.request = http;
@@ -47,7 +59,7 @@ export const mockResponse = {
 };
 
 export const mockAxiosError = (response) => {
-  const error = new Error();
+  const error = new Error('axios response error');
   error.config = response.config;
   error.request = {};
   error.response = response;

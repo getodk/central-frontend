@@ -2,31 +2,49 @@ import sinon from 'sinon';
 
 import SubmissionDownload from '../../../src/components/submission/decrypt.vue';
 
+import useFields from '../../../src/request-data/fields';
 import { noop } from '../../../src/util/util';
+import { useRequestData } from '../../../src/request-data';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
+import { mergeMountOptions, mount, withSetup } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 import { relativeUrl } from '../../util/request';
+import { testRequestData } from '../../util/request-data';
 import { waitUntil } from '../../util/util';
 
-const mountComponent = (options = {}) => {
-  const props = {
-    state: true,
-    formVersion: testData.extendedForms.last(),
-    ...options.props
-  };
-  return mount(SubmissionDownload, {
-    ...options,
-    props,
-    container: {
-      requestData: {
-        fields: props.formVersion._fields,
-        keys: testData.standardKeys.sorted()
-      }
-    }
+const mountComponent = (options = undefined) => {
+  // First, merge mount options in order to get the test data associated with
+  // the formVersion prop.
+  const merged = mergeMountOptions(options, {
+    props: { state: true, formVersion: testData.extendedForms.last() }
   });
+
+  // Next, use that test data to set requestData.
+  if (merged.container == null) merged.container = {};
+  const { props } = merged;
+  merged.container.requestData = testRequestData(['keys', useFields], {
+    [props.formVersion.publishedAt != null ? 'form' : 'formDraft']: props.formVersion,
+    fields: props.formVersion._fields,
+    keys: testData.standardKeys.sorted()
+  });
+
+  // Now, use requestData to set the formVersion prop to a resource or resource
+  // view rather than to test data.
+  merged.container = createTestContainer(merged.container);
+  props.formVersion = props.formVersion.publishedAt != null
+    ? merged.container.requestData.form
+    : withSetup(
+      () => {
+        const { resourceView } = useRequestData();
+        return resourceView('formDraft', (data) => data.get());
+      },
+      { container: merged.container }
+    );
+
+  return mount(SubmissionDownload, merged);
 };
 
 const aUrl = (a) => relativeUrl(a.attributes().href);

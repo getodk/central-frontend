@@ -108,6 +108,7 @@ for (const locale of locales.keys()) {
 // EXPORT
 
 export default () => createI18n({
+  allowComposition: true,
   locale: fallbackLocale,
   fallbackLocale,
   messages: { [fallbackLocale]: fallbackMessages },

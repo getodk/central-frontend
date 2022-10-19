@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <page-section>
           <template #heading>
             <span>{{ $t('title') }}</span>
-            <enketo-fill v-if="formDraft != null" :form-version="formDraft">
+            <enketo-fill v-if="formDraft.dataExists" :form-version="formDraft">
               <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
             </enketo-fill>
           </template>
@@ -36,21 +36,19 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="col-xs-4">
         <float-row>
-          <collect-qr v-if="formDraft != null" :settings="qrSettings"
+          <collect-qr v-if="formDraft.dataExists" :settings="qrSettings"
             error-correction-level="Q" :cell-size="3"/>
         </float-row>
       </div>
     </div>
 
-    <loading :state="$store.getters.initiallyLoading(['keys'])"/>
-    <submission-list v-show="keys != null" :project-id="projectId"
+    <loading :state="keys.initiallyLoading"/>
+    <submission-list v-show="keys.dataExists" :project-id="projectId"
       :xml-form-id="xmlFormId" draft/>
   </div>
 </template>
 
 <script>
-import { inject, watchSyncEffect } from 'vue';
-
 // Import PageSection before FloatRow in order to have the same import order as
 // FormSubmissions: see https://github.com/vuejs/vue-cli/issues/3771
 import PageSection from '../page/section.vue';
@@ -62,10 +60,9 @@ import Loading from '../loading.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
 
-import Option from '../../util/option';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormDraftTesting',
@@ -90,25 +87,12 @@ export default {
     }
   },
   setup() {
-    const { store } = inject('container');
-    watchSyncEffect(() => {
-      const { formDraft, odataChunk } = store.state.request.data;
-      if (formDraft != null && odataChunk != null && formDraft.isDefined() &&
-        formDraft.get().submissions !== odataChunk['@odata.count'] &&
-        !odataChunk.filtered) {
-        store.commit('setData', {
-          key: 'formDraft',
-          value: Option.of(formDraft.get().with({
-            submissions: odataChunk['@odata.count']
-          }))
-        });
-      }
-    });
+    const { resourceView, createResource } = useRequestData();
+    const formDraft = resourceView('formDraft', (data) => data.get());
+    const keys = createResource('keys');
+    return { formDraft, keys };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData([{ key: 'formDraft', getOption: true }, 'keys']),
     qrSettings() {
       const url = apiPaths.serverUrlForFormDraft(
         this.formDraft.draftToken,
@@ -122,7 +106,7 @@ export default {
           autosend: 'wifi_and_cellular'
         },
         project: {
-          name: this.$t('collectProjectName', this.formDraft),
+          name: this.$t('collectProjectName', { name: this.formDraft.nameOrId }),
           icon: '📝'
         },
         // Collect requires the settings to have an `admin` property.
@@ -135,11 +119,10 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        // We do not reconcile `keys` and formDraft.keyId.
-        key: 'keys',
+      // We do not reconcile this.keys and this.formDraft.keyId.
+      this.keys.request({
         url: apiPaths.submissionKeys(this.projectId, this.xmlFormId, true)
-      }]).catch(noop);
+      }).catch(noop);
     }
   }
 };

@@ -3,21 +3,28 @@ import { RouterLinkStub } from '@vue/test-utils';
 import ProjectFormRow from '../../../src/components/project/form-row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 
-import Form from '../../../src/presenters/form';
+import useProjects from '../../../src/request-data/projects';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
-import Project from '../../../src/presenters/project';
+import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => mount(ProjectFormRow, {
-  props: {
-    form: new Form(testData.extendedForms.last()),
-    project: new Project(testData.extendedProjects.last())
-  },
-  container: { router: mockRouter('/') }
-});
+const mountComponent = () => {
+  const projectData = { ...testData.extendedProjects.last() };
+  projectData.formList = testData.extendedForms.sorted();
+  const container = createTestContainer({
+    requestData: testRequestData([useProjects], { projects: [projectData] }),
+    router: mockRouter('/')
+  });
+  const project = container.requestData.localResources.projects[0];
+  return mount(ProjectFormRow, {
+    props: { form: project.formList[0], project },
+    container
+  });
+};
 
 describe('ProjectFormRow', () => {
   describe('form name', () => {

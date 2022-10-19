@@ -75,7 +75,7 @@ import routes from '../../mixins/routes';
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FieldKeyNew',
@@ -93,6 +93,11 @@ export default {
     }
   },
   emits: ['hide', 'success'],
+  setup() {
+    // The modal assumes that this data will exist when the modal is shown.
+    const { project, fieldKeys } = useRequestData();
+    return { project, fieldKeys };
+  },
   data() {
     return {
       awaitingResponse: false,
@@ -103,8 +108,6 @@ export default {
       created: null
     };
   },
-  // The modal assumes that this data will exist when the modal is shown.
-  computed: requestData(['project']),
   watch: {
     state(state) {
       if (!state) {
@@ -145,8 +148,8 @@ export default {
     },
     navigateToFormAccess(navigate, event) {
       afterNextNavigation(this.$router, () => {
-        // Clear fieldKeys so that the Form Access tab will fetch it again.
-        this.$store.commit('clearData', 'fieldKeys');
+        // Clear this.fieldKeys so that the Form Access tab will fetch it again.
+        this.fieldKeys.data = null;
       });
       navigate(event);
     },

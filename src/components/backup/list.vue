@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           <span>{{ $t('auditsTitle') }}</span>
         </template>
         <template #body>
-          <audit-table :audits="audits"/>
+          <audit-table/>
         </template>
       </page-section>
     </template>
@@ -37,13 +37,10 @@ import BackupTerminate from './terminate.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
-import Option from '../../util/option';
 import modal from '../../mixins/modal';
+import useBackups from '../../request-data/backups';
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-const REQUEST_KEYS = ['backupsConfig', 'audits'];
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'BackupList',
@@ -57,6 +54,13 @@ export default {
   },
   mixins: [modal()],
   inject: ['alert'],
+  setup() {
+    const { backupsConfig, audits } = useBackups();
+    const { resourceStates } = useRequestData();
+    return {
+      backupsConfig, audits, ...resourceStates([backupsConfig, audits])
+    };
+  },
   data() {
     return {
       terminate: {
@@ -64,43 +68,24 @@ export default {
       }
     };
   },
-  computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(REQUEST_KEYS),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
-    }
-  },
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [
-        {
-          key: 'backupsConfig',
-          url: '/v1/config/backups',
-          fulfillProblem: ({ code }) => code === 404.1
-        },
-        {
-          key: 'audits',
-          // A backup audit log entry does not have an actor or actee, so we do
-          // not need to request extended metadata.
+      Promise.allSettled([
+        this.backupsConfig.request({ url: '/v1/config/backups' }),
+        // A backup audit log entry does not have an actor or actee, so we do
+        // not need to request extended metadata.
+        this.audits.request({
           url: apiPaths.audits({ action: 'backup', limit: 10 })
-        }
-      ]).catch(noop);
+        })
+      ]);
     },
     afterTerminate() {
       this.hideModal('terminate');
       this.alert.success(this.$t('alert.terminate'));
-      this.$store.commit('setData', {
-        key: 'backupsConfig',
-        value: Option.none()
-      });
+      this.backupsConfig.setToNone();
     }
   }
 };

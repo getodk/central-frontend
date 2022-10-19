@@ -15,13 +15,3 @@ export default {
   }
 };
 </script>
-
-<i18n lang="json5">
-{
-  "en": {
-    "problem": {
-      "404_1": "Message for locale"
-    }
-  }
-}
-</i18n>

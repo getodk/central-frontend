@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="user != null">
-      <template v-if="user != null" #title>{{ user.displayName }}</template>
+    <page-head v-show="user.dataExists">
+      <template v-if="user.dataExists" #title>{{ user.displayName }}</template>
     </page-head>
     <page-body>
-      <loading :state="$store.getters.initiallyLoading(['user'])"/>
-      <div v-show="user != null" class="row">
+      <loading :state="user.initiallyLoading"/>
+      <div v-show="user.dataExists" class="row">
         <div class="col-xs-7">
-          <user-edit-basic-details v-if="user != null"/>
+          <user-edit-basic-details v-if="user.dataExists"/>
         </div>
         <div class="col-xs-5">
           <user-edit-password/>
@@ -29,7 +29,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject } from 'vue';
+export default {
+  name: 'UserEdit'
+};
+</script>
+<script setup>
+import { useRoute } from 'vue-router';
 
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
@@ -37,54 +42,21 @@ import PageHead from '../page/head.vue';
 import UserEditBasicDetails from './edit/basic-details.vue';
 import UserEditPassword from './edit/password.vue';
 
+import useUser from '../../request-data/user';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-import { watchSync } from '../../util/reactivity';
+import { setDocumentTitle } from '../../util/reactivity';
 
-export default {
-  name: 'UserEdit',
-  components: {
-    Loading,
-    PageBody,
-    PageHead,
-    UserEditBasicDetails,
-    UserEditPassword
-  },
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    const { store } = inject('container');
-    // TODO/vue3. Could watchSyncEffect() be used instead?
-    watchSync(() => store.state.request.data.user, (user) => {
-      const { currentUser } = store.state.request.data;
-      // We test whether `user` is `null`, because if there is a navigation
-      // away, `user` will be cleared before the component is unmounted,
-      // triggering the watcher.
-      if (user != null && user.id === currentUser.id) {
-        store.commit('setData', {
-          key: 'currentUser',
-          value: currentUser.with(user.object)
-        });
-      }
-    });
-  },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['user']),
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [
-        { key: 'user', url: apiPaths.user(this.id) }
-      ]).catch(noop);
-    }
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
   }
-};
+});
+
+const user = useUser();
+user.request({ url: apiPaths.user(props.id) }).catch(noop);
+
+const route = useRoute();
+if (route.meta.title == null) setDocumentTitle(() => [user.displayName]);
 </script>

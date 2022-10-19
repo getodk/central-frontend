@@ -29,7 +29,6 @@ import FormVersionDefDropdown from './def-dropdown.vue';
 import FormVersionString from './string.vue';
 import TimeAndUser from '../time-and-user.vue';
 
-import Form from '../../presenters/form';
 import routes from '../../mixins/routes';
 
 export default {
@@ -38,7 +37,7 @@ export default {
   mixins: [routes()],
   props: {
     version: {
-      type: Form,
+      type: Object,
       required: true
     }
   },

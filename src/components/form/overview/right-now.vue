@@ -65,7 +65,7 @@ import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
 
 import routes from '../../../mixins/routes';
-import { requestData } from '../../../store/modules/request';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'FormOverviewRightNow',
@@ -77,10 +77,13 @@ export default {
   },
   mixins: [routes()],
   emits: ['view-xml'],
-  computed: {
+  setup() {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['form']),
+    const { form } = useRequestData();
+    return { form };
+  },
+  computed: {
     stateIcon() {
       switch (this.form.state) {
         case 'open':

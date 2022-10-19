@@ -38,28 +38,53 @@ const optionsToMerge = [
   ['global', 'mocks'],
   ['global', 'provide'],
   ['global', 'stubs'],
-  ['container'],
-  ['container', 'requestData']
+  ['container']
 ];
 
 // Merges two sets of options for mount().
 export const mergeMountOptions = (options, defaults) => {
-  if (options == null) return defaults;
+  if (options != null && options.container != null && defaults.container != null &&
+    (options.container.install != null || defaults.container.install != null))
+    throw new Error('cannot merge container options');
   const merged = { ...defaults, ...options };
   for (const path of optionsToMerge) {
-    const lens = lensPath(path);
-    const option = view(lens, options);
-    if (option != null) {
-      const defaultOption = view(lens, defaults);
-      if (defaultOption != null) {
-        const parent = path.slice(0, -1).reduce(
-          (obj, prop) => obj[prop],
-          merged
-        );
-        parent[last(path)] = { ...defaultOption, ...option };
+    const viewPath = view(lensPath(path));
+    const option = options != null ? viewPath(options) : undefined;
+    const defaultOption = viewPath(defaults);
+    if (option != null || defaultOption != null) {
+      const parent = path.slice(0, -1).reduce((obj, prop) => obj[prop], merged);
+      parent[last(path)] = { ...defaultOption, ...option };
+    }
+  }
+
+  // Merge container.requestData.
+  if (merged.container != null && merged.container.install == null) {
+    const option = options != null && options.container != null
+      ? options.container.requestData
+      : undefined;
+    const defaultOption = defaults.container != null
+      ? defaults.container.requestData
+      : undefined;
+    if (option != null || defaultOption != null) {
+      if (typeof option !== 'function' && typeof defaultOption !== 'function') {
+        merged.container.requestData = { ...option, ...defaultOption };
+      } else if (typeof option === 'function' && typeof defaultOption === 'function') {
+        throw new Error('cannot merge requestData options');
+      } else {
+        const [factory, seedData] = typeof option === 'function'
+          ? [option, defaultOption]
+          : [defaultOption, option];
+        merged.container.requestData = seedData == null
+          ? factory
+          : (container) => {
+            const requestData = factory(container);
+            requestData.seed(seedData);
+            return requestData;
+          };
       }
     }
   }
+
   return merged;
 };
 

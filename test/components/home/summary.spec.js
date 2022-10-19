@@ -1,15 +1,20 @@
 import HomeSummary from '../../../src/components/home/summary.vue';
 import HomeSummaryItem from '../../../src/components/home/summary/item.vue';
 
+import useProjects from '../../../src/request-data/projects';
+
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
+import { testRequestData } from '../../util/request-data';
 
 const mountOptions = () => ({
   container: {
-    router: mockRouter('/'),
-    requestData: { projects: testData.extendedProjects.sorted() }
+    requestData: testRequestData([useProjects], {
+      projects: testData.extendedProjects.sorted()
+    }),
+    router: mockRouter('/')
   }
 });
 

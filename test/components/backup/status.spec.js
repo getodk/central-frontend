@@ -2,6 +2,7 @@ import BackupStatus from '../../../src/components/backup/status.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
+import useBackups from '../../../src/request-data/backups';
 import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
@@ -9,15 +10,16 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockResponse } from '../../util/axios';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
 const mountComponent = () => {
   const config = testData.standardConfigs.forKey('backups');
   return mount(BackupStatus, {
     container: {
-      requestData: {
+      requestData: testRequestData([useBackups], {
         backupsConfig: config != null ? config : mockResponse.problem(404.1),
         audits: testData.standardAudits.sorted()
-      }
+      })
     }
   });
 };

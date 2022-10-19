@@ -57,7 +57,7 @@ import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
 
 import useReviewState from '../../composables/review-state';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
@@ -81,11 +81,11 @@ export default {
     }
   },
   setup() {
+    const { diffs } = useRequestData();
     const { reviewStateIcon } = useReviewState();
-    return { reviewStateIcon };
+    return { diffs, reviewStateIcon };
   },
   computed: {
-    ...requestData(['diffs']),
     updateOrEdit() {
       return this.entry.action === 'submission.update' ||
         this.entry.action === 'submission.update.version';

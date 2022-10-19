@@ -1,61 +1,48 @@
-import { getters } from '../../../src/store/modules/request/keys';
+import createTestContainer from '../util/container';
+import testData from '../data';
 
-import testData from '../../data';
+describe('createResources()', () => {
+  describe('project', () => {
+    const createResource = () => {
+      const { requestData } = createTestContainer({
+        requestData: { project: testData.extendedProjects.last() }
+      });
+      return requestData.project;
+    };
 
-describe('store/modules/request/keys', () => {
-  describe('getters', () => {
-    describe('selectableFields', () => {
-      const selectablePaths = (fields) =>
-        getters.selectableFields({ data: { fields } }).map(field => field.path);
-      const { group, repeat, string, int } = testData.fields;
-
-      it('returns a field outside a group', () => {
-        selectablePaths([int('/i')]).should.eql(['/i']);
+    describe('nameWithArchived()', () => {
+      it("sets it to the project's name if the project is not archived", () => {
+        testData.extendedProjects.createNew({ name: 'My Project' });
+        createResource().nameWithArchived.should.equal('My Project');
       });
 
-      it('returns a field inside a group, but not the group itself', () => {
-        selectablePaths([group('/g'), int('/g/i')]).should.eql(['/g/i']);
+      it('appends (archived) if the project is archived', () => {
+        testData.extendedProjects.createPast(1, {
+          name: 'My Project',
+          archived: true
+        });
+        createResource().nameWithArchived.should.equal('My Project (archived)');
+      });
+    });
+  });
+
+  describe('form', () => {
+    const createResource = () => {
+      const { requestData } = createTestContainer({
+        requestData: { form: testData.extendedForms.last() }
+      });
+      return requestData.form;
+    };
+
+    describe('nameOrId', () => {
+      it("sets it to the form's name if the form has one", () => {
+        testData.extendedForms.createNew({ name: 'My Form' });
+        createResource().nameOrId.should.equal('My Form');
       });
 
-      it('filters out /meta/instanceID', () => {
-        const selectable = selectablePaths([
-          group('/meta'),
-          string('/meta/instanceID'),
-          int('/i')
-        ]);
-        selectable.should.eql(['/i']);
-      });
-
-      it('filters out /instanceID', () => {
-        selectablePaths([string('/instanceID'), int('/i')]).should.eql(['/i']);
-      });
-
-      it('filters out repeat groups', () => {
-        const selectable = selectablePaths([
-          /* eslint-disable indent */
-          int('/int1'),
-          repeat('/repeat1'),
-            int('/repeat1/int2'),
-            repeat('/repeat1/repeat2'),
-              int('/repeat1/repeat2/int3'),
-          int('/int4'),
-          group('/group1'),
-            int('/group1/int5'),
-            repeat('/group1/repeat3'),
-              int('/group1/repeat3/int6'),
-            int('/group1/int7')
-          /* eslint-enable indent */
-        ]);
-        selectable.should.eql([
-          '/int1',
-          '/int4',
-          '/group1/int5',
-          '/group1/int7'
-        ]);
-      });
-
-      it('returns an empty array if there are no selectable fields', () => {
-        selectablePaths([repeat('/r'), int('/r/i')]).length.should.equal(0);
+      it('sets it to the xmlFormId if the form does not have a name', () => {
+        testData.extendedForms.createNew({ name: null });
+        createResource().nameOrId.should.equal('f');
       });
     });
   });

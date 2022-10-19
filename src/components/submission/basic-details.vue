@@ -76,23 +76,21 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
 import useReviewState from '../../composables/review-state';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionBasicDetails',
   components: { DateTime, FormVersionString, Loading, PageSection },
   setup() {
+    const { submission, submissionVersion, resourceStates } = useRequestData();
     const { reviewStateIcon } = useReviewState();
-    return { reviewStateIcon };
+    return {
+      submission, submissionVersion,
+      ...resourceStates([submission, submissionVersion]),
+      reviewStateIcon
+    };
   },
   computed: {
-    ...requestData(['submission', 'submissionVersion']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['submission', 'submissionVersion']);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(['submission', 'submissionVersion']);
-    },
     attachments() {
       const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
       return this.$t('attachmentSummary', {

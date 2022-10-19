@@ -11,12 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-back v-show="submission != null" :to="formPath('submissions')">
+    <page-back v-show="submission.dataExists" :to="formPath('submissions')">
       <template #title>{{ $t('back.title') }}</template>
       <template #back>{{ $t('back.back') }}</template>
     </page-back>
-    <page-head v-show="submission != null">
-      <template #title>{{ submission != null ? instanceNameOrId : '' }}</template>
+    <page-head v-show="submission.dataExists">
+      <template #title>{{ submission.dataExists ? submission.instanceNameOrId : '' }}</template>
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
@@ -39,6 +39,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
+
 import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
@@ -49,10 +51,11 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
+import useFields from '../../request-data/fields';
+import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
-import { instanceNameOrId } from '../../util/odata';
-import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { setDocumentTitle } from '../../util/reactivity';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionShow',
@@ -81,6 +84,21 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { project, resourceStates } = useRequestData();
+    const { submission, submissionVersion, audits, comments, diffs } = useSubmission();
+    const fields = useFields();
+
+    const { t } = useI18n();
+    setDocumentTitle(() => (submission.dataExists
+      ? [`${t('title.details')}: ${submission.instanceNameOrId}`]
+      : [t('title.details')]));
+
+    return {
+      project, submission, submissionVersion, audits, comments, diffs, fields,
+      ...resourceStates([project, submission])
+    };
+  },
   data() {
     return {
       updateReviewState: {
@@ -88,100 +106,72 @@ export default {
       }
     };
   },
-  computed: {
-    ...requestData(['submission']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['project', 'submission']);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(['project', 'submission']);
-    },
-    instanceNameOrId() {
-      return instanceNameOrId(this.submission);
-    }
-  },
   created() {
     this.fetchData();
   },
   methods: {
     fetchActivityData() {
-      this.$store.dispatch('get', [
-        {
-          key: 'audits',
+      Promise.allSettled([
+        this.audits.request({
           url: apiPaths.submissionAudits(
             this.projectId,
             this.xmlFormId,
             this.instanceId
           ),
           extended: true
-        },
-        {
-          key: 'comments',
+        }),
+        this.comments.request({
           url: apiPaths.submissionComments(
             this.projectId,
             this.xmlFormId,
             this.instanceId
           ),
           extended: true
-        },
-        {
-          key: 'diffs',
+        }),
+        this.diffs.request({
           url: apiPaths.submissionDiffs(
             this.projectId,
             this.xmlFormId,
             this.instanceId
           )
-        }
-      ]).catch(noop);
+        })
+      ]);
     },
     fetchData() {
-      // We do not reconcile project.lastSubmission and
-      // submission.__system.submisionDate.
-      this.$store.dispatch('get', [
-        {
-          key: 'project',
+      Promise.allSettled([
+        // We do not reconcile this.project.lastSubmission and
+        // this.submission.__system.submissionDate.
+        this.project.request({
           url: apiPaths.project(this.projectId),
           extended: true,
           resend: false
-        },
-        {
-          key: 'submission',
+        }),
+        this.submission.request({
           url: apiPaths.odataSubmission(
             this.projectId,
             this.xmlFormId,
             this.instanceId
           )
-        },
-        {
-          key: 'submissionVersion',
+        }),
+        this.submissionVersion.request({
           url: apiPaths.submissionVersion(
             this.projectId,
             this.xmlFormId,
             this.instanceId,
             this.instanceId
           )
-        },
-        {
-          key: 'fields',
-          url: apiPaths.fields(
-            this.projectId,
-            this.xmlFormId
-          )
-        }
-      ]).catch(noop);
+        }),
+        this.fields.request({
+          url: apiPaths.fields(this.projectId, this.xmlFormId)
+        })
+      ]);
       this.fetchActivityData();
     },
     afterUpdateReviewState(submission, reviewState) {
       this.fetchActivityData();
       this.hideModal('updateReviewState');
       this.alert.success(this.$t('alert.updateReviewState'));
-      this.$store.commit('setData', {
-        key: 'submission',
-        value: {
-          ...submission,
-          __system: { ...submission.__system, reviewState }
-        }
-      });
+      this.submission.__system.reviewState = reviewState;
     }
   }
 };

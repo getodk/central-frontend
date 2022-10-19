@@ -29,21 +29,21 @@ describe('ProjectShow', () => {
       testData.extendedProjects.createPast(1, { forms: 1 });
       testData.extendedForms.createPast(2);
       const app = await load('/projects/1');
-      app.vm.$store.state.request.data.project.forms.should.equal(2);
+      app.vm.$container.requestData.project.forms.should.equal(2);
     });
 
     it('reconciles project and datasets', async () => {
       testData.extendedProjects.createPast(1, { datasets: 1 });
       testData.extendedDatasets.createPast(2);
       const app = await load('/projects/1/datasets');
-      app.vm.$store.state.request.data.project.datasets.should.equal(2);
+      app.vm.$container.requestData.project.datasets.should.equal(2);
     });
 
     it('reconciles project and fieldKeys', async () => {
       testData.extendedProjects.createPast(1, { appUsers: 1 });
       testData.extendedFieldKeys.createPast(2);
       const app = await load('/projects/1/app-users');
-      app.vm.$store.state.request.data.project.appUsers.should.equal(2);
+      app.vm.$container.requestData.project.appUsers.should.equal(2);
     });
 
     describe('forms and datasets', () => {
@@ -54,15 +54,18 @@ describe('ProjectShow', () => {
       it('clears datasets after a request for forms', () =>
         load('/projects/1/datasets')
           .afterResponses(app => {
-            should.exist(app.vm.$store.state.request.data.datasets);
+            const { datasets } = app.vm.$container.requestData.localResources;
+            datasets.dataExists.should.be.true();
           })
           .load('/projects/1', { project: false })
           .afterResponses(app => {
-            should.not.exist(app.vm.$store.state.request.data.datasets);
+            const { datasets } = app.vm.$container.requestData.localResources;
+            datasets.dataExists.should.be.false();
           })
           .load('/projects/1/datasets', { project: false })
           .afterResponses(app => {
-            should.exist(app.vm.$store.state.request.data.datasets);
+            const { datasets } = app.vm.$container.requestData.localResources;
+            datasets.dataExists.should.be.true();
           }));
 
       it('does not clear datasets if forms are not re-requested', () =>
@@ -72,7 +75,8 @@ describe('ProjectShow', () => {
           .complete()
           .route('/projects/1')
           .afterResponses(app => {
-            should.exist(app.vm.$store.state.request.data.datasets);
+            const { datasets } = app.vm.$container.requestData.localResources;
+            datasets.dataExists.should.be.true();
           }));
     });
   });

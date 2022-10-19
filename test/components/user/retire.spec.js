@@ -1,8 +1,6 @@
 import UserRetire from '../../../src/components/user/retire.vue';
 import UserRow from '../../../src/components/user/row.vue';
 
-import User from '../../../src/presenters/user';
-
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -39,7 +37,7 @@ describe('UserRetire', () => {
       .last();
     return mockHttp()
       .mount(UserRetire, {
-        props: { state: true, user: new User(user) }
+        props: { state: true, user }
       })
       .testStandardButton({
         button: '.btn-danger',

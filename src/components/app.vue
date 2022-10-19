@@ -30,7 +30,7 @@ import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
 import useCallWait from '../composables/call-wait';
-import { requestData } from '../store/modules/request';
+import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
 
 export default {
@@ -39,11 +39,12 @@ export default {
   inject: ['alert'],
   setup() {
     useSessions();
+
+    const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();
-    return { callWait };
+    return { centralVersion, callWait };
   },
   computed: {
-    ...requestData(['centralVersion']),
     routerReady() {
       return this.$route !== START_LOCATION;
     }
@@ -54,15 +55,14 @@ export default {
   },
   methods: {
     checkVersion() {
-      const previousVersion = this.centralVersion;
-      return this.$store.dispatch('get', [{
-        key: 'centralVersion',
+      const previousVersion = this.centralVersion.data;
+      return this.centralVersion.request({
         url: '/version.txt',
         clear: false,
         alert: false
-      }])
+      })
         .then(() => {
-          if (previousVersion == null || this.centralVersion === previousVersion)
+          if (previousVersion == null || this.centralVersion.data === previousVersion)
             return false;
 
           // Alert the user about the version change, then keep alerting them.

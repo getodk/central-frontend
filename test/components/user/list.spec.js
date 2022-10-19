@@ -48,7 +48,7 @@ describe('UserList', () => {
       role: 'none'
     });
     const component = await load('/users', { root: false }, {
-      actors: () => [testData.toActor(testData.standardUsers.first())]
+      adminIds: () => [testData.toActor(testData.standardUsers.first())]
     });
     const selects = component.findAll('.user-row select');
     selects.map(select => select.element.value).should.eql(['admin', '']);
@@ -80,7 +80,7 @@ describe('UserList', () => {
           role: 'none'
         });
       return load('/users', { root: false }, {
-        actors: () =>
+        adminIds: () =>
           testData.extendedUsers.sorted().slice(0, 2).map(testData.toActor)
       })
         .complete()

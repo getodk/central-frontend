@@ -26,21 +26,18 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { inject, watchSyncEffect } from 'vue';
 
 import FormHead from './head.vue';
 import Loading from '../loading.vue';
-import Option from '../../util/option';
 import PageBody from '../page/body.vue';
 
 import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import useCallWait from '../../composables/call-wait';
+import useForm from '../../request-data/form';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormShow',
@@ -57,45 +54,31 @@ export default {
     }
   },
   setup() {
-    const { store } = inject('container');
-    watchSyncEffect(() => {
-      const { formDraft, attachments } = store.state.request.data;
-      if (formDraft != null && attachments != null) {
-        if (formDraft.isDefined() && attachments.isEmpty())
-          store.commit('setData', { key: 'formDraft', value: Option.none() });
-        else if (formDraft.isEmpty() && attachments.isDefined())
-          store.commit('setData', { key: 'attachments', value: Option.none() });
-      }
-    });
+    const { project, resourceStates } = useRequestData();
+    const { form, formDraft, attachments } = useForm();
 
     const { callWait, cancelCall } = useCallWait();
-    return { callWait, cancelCall };
+    return {
+      project, form, formDraft, attachments,
+      ...resourceStates([project, form, formDraft, attachments]),
+      callWait, cancelCall
+    };
   },
   data() {
     return {
       awaitingResponse: false
     };
   },
-  computed: {
-    ...requestData(requestKeys),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(requestKeys);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    }
-  },
   created() {
     this.fetchData();
   },
   methods: {
     fetchProject(resend) {
-      this.$store.dispatch('get', [{
-        key: 'project',
+      this.project.request({
         url: apiPaths.project(this.projectId),
         extended: true,
         resend
-      }]).catch(noop);
+      }).catch(noop);
     },
     // Wait for up to a total of 10 minutes, not including request time.
     waitToRequestEnketoId(tries) {
@@ -107,11 +90,8 @@ export default {
     fetchForm() {
       this.cancelCall('fetchEnketoIdsForForm');
       const url = apiPaths.form(this.projectId, this.xmlFormId);
-      this.$store.dispatch('get', [{
-        key: 'form',
-        url,
-        extended: true,
-        success: () => {
+      this.form.request({ url, extended: true })
+        .then(() => {
           if (this.form.enketoId != null && this.form.enketoOnceId != null)
             return;
           if (this.form.publishedAt == null) return;
@@ -123,55 +103,53 @@ export default {
           this.callWait(
             'fetchEnketoIdsForForm',
             async () => {
-              await this.$store.dispatch('get', [{
-                key: 'form',
+              await this.form.request({
                 url,
-                update: ['enketoId', 'enketoOnceId'],
+                patch: ({ data }) => {
+                  this.form.enketoId = data.enketoId;
+                  this.form.enketoOnceId = data.enketoOnceId;
+                },
                 alert: false
-              }]);
+              });
               return this.form.enketoId != null &&
                 this.form.enketoOnceId != null;
             },
             this.waitToRequestEnketoId
           );
-        }
-      }]).catch(noop);
+        })
+        .catch(noop);
     },
     fetchDraft() {
       this.cancelCall('fetchEnketoIdForDraft');
       const draftUrl = apiPaths.formDraft(this.projectId, this.xmlFormId);
-      this.$store.dispatch('get', [
-        {
-          key: 'formDraft',
-          url: draftUrl,
-          extended: true,
-          fulfillProblem: ({ code }) => code === 404.1,
-          success: () => {
+      Promise.allSettled([
+        this.formDraft.request({ url: draftUrl, extended: true })
+          .then(() => {
             if (this.formDraft.isEmpty()) return;
             if (this.formDraft.get().enketoId != null) return;
             this.callWait(
               'fetchEnketoIdForDraft',
               async () => {
-                await this.$store.dispatch('get', [{
-                  key: 'formDraft',
+                await this.formDraft.request({
                   url: draftUrl,
-                  update: ['enketoId'],
+                  patch: ({ data }) => {
+                    if (this.formDraft.isDefined())
+                      this.formDraft.get().enketoId = data.enketoId;
+                  },
                   alert: false
-                }]);
+                });
+                if (this.formDraft.isEmpty()) return true;
                 // We do not check that the form draft has not changed, for
                 // example, by another user concurrently modifying the draft.
                 return this.formDraft.get().enketoId != null;
               },
               this.waitToRequestEnketoId
             );
-          }
-        },
-        {
-          key: 'attachments',
-          url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId),
-          fulfillProblem: ({ code }) => code === 404.1
-        }
-      ]).catch(noop);
+          }),
+        this.attachments.request({
+          url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId)
+        })
+      ]);
     },
     fetchData() {
       this.fetchProject(false);

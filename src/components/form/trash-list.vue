@@ -31,12 +31,14 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { ascend, sortWith } from 'ramda';
+
 import FormTrashRow from './trash-row.vue';
 import FormRestore from './restore.vue';
-import { requestData } from '../../store/modules/request';
+
+import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import modal from '../../mixins/modal';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormTrashList',
@@ -44,6 +46,12 @@ export default {
   mixins: [modal()],
   inject: ['alert'],
   emits: ['restore'],
+  setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { project, deletedForms } = useRequestData();
+    return { project, deletedForms };
+  },
   data() {
     return {
       restoreForm: {
@@ -53,15 +61,12 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project', 'deletedForms']),
     count() {
-      return (this.deletedForms != null ? this.deletedForms.length : 0);
+      return (this.deletedForms.dataExists ? this.deletedForms.length : 0);
     },
     sortedDeletedForms() {
       const sortByDeletedAt = sortWith([ascend(entry => entry.deletedAt)]);
-      return sortByDeletedAt(this.deletedForms);
+      return sortByDeletedAt(this.deletedForms.data);
     }
   },
   created() {
@@ -69,12 +74,11 @@ export default {
   },
   methods: {
     fetchDeletedForms(resend) {
-      this.$store.dispatch('get', [{
-        key: 'deletedForms',
+      this.deletedForms.request({
         url: apiPaths.deletedForms(this.project.id),
         extended: true,
         resend
-      }]).catch(noop);
+      }).catch(noop);
     },
     showRestore(form) {
       this.restoreForm.form = form;

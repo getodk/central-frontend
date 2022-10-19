@@ -1,12 +1,14 @@
 import FormTable from '../../../src/components/form/table.vue';
 import FormRow from '../../../src/components/form/row.vue';
 
+import useProject from '../../../src/request-data/project';
 
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (showClosed = false) => mount(FormTable, {
   props: {
@@ -16,10 +18,10 @@ const mountComponent = (showClosed = false) => mount(FormTable, {
     sortFunc: (a, b) => a.xmlFormId.localeCompare(b.xmlFormId)
   },
   container: {
-    requestData: {
+    requestData: testRequestData([useProject], {
       forms: testData.extendedForms.sorted(),
       project: testData.extendedProjects.last()
-    },
+    }),
     router: mockRouter('/projects/1')
   }
 });

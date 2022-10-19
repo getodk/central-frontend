@@ -3,10 +3,13 @@ import DatasetRow from '../../../src/components/dataset/row.vue';
 
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
 const mountComponent = () => mount(DatasetTable, {
   container: {
-    requestData: { datasets: testData.extendedDatasets.sorted() }
+    requestData: testRequestData(['datasets'], {
+      datasets: testData.extendedDatasets.sorted()
+    })
   }
 });
 

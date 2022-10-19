@@ -23,14 +23,12 @@ except according to the terms contained in the LICENSE file.
 import EnketoPreview from '../enketo/preview.vue';
 import FormVersionDefDropdown from './def-dropdown.vue';
 
-import Form from '../../presenters/form';
-
 export default {
   name: 'FormVersionStandardButtons',
   components: { EnketoPreview, FormVersionDefDropdown },
   props: {
     version: {
-      type: Form,
+      type: Object,
       required: true
     }
   },

@@ -22,6 +22,7 @@ module.exports = {
     'comma-dangle': ['error', 'never'],
     curly: 'off',
     'implicit-arrow-linebreak': 'off',
+    'import/first': 'off',
     'lines-between-class-members': ['error', 'always', {
       exceptAfterSingleLine: true
     }],
@@ -41,6 +42,7 @@ module.exports = {
       minProperties: 0,
       consistent: true
     }],
+    'object-property-newline': 'off',
     'operator-linebreak': ['error', 'after', {
       overrides: { '?': 'before', ':': 'before' }
     }],

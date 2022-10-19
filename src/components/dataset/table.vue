@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <th>{{ $t('header.actions') }}</th>
       </tr>
     </thead>
-    <tbody v-if="datasets != null">
+    <tbody v-if="datasets.dataExists">
       <dataset-row v-for="dataset of datasets" :key="dataset.id"
         :dataset="dataset"/>
     </tbody>
@@ -25,17 +25,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'DatasetTable'
+};
+</script>
+<script setup>
 import DatasetRow from './row.vue';
 
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'DatasetTable',
-  components: { DatasetRow },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['datasets'])
-};
+// The component does not assume that this data will exist when the component is
+// created.
+const { datasets } = useRequestData();
 </script>
 
 <style lang="scss">

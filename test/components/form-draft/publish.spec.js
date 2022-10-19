@@ -3,21 +3,24 @@ import { RouterLinkStub } from '@vue/test-utils';
 import FormDraftPublish from '../../../src/components/form-draft/publish.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 
+import useForm from '../../../src/request-data/form';
+
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
 const mountOptions = (options = undefined) => ({
   props: { state: false },
   container: {
     router: mockRouter('/projects/1/forms/f/draft'),
-    requestData: {
+    requestData: testRequestData([useForm], {
       formVersions: testData.extendedFormVersions.published(),
       formDraft: testData.extendedFormDrafts.last(),
       attachments: testData.standardFormAttachments.sorted()
-    }
+    })
   },
   ...options
 });
@@ -350,13 +353,12 @@ describe('FormDraftPublish', () => {
         app.vm.$route.path.should.equal('/projects/1/forms/f');
       }));
 
-    it('updates the response data in the store', async () => {
+    it('updates requestData', async () => {
       const app = await publish();
-      const { data } = app.vm.$store.state.request;
-      const { formVersions, formDraft, attachments } = data;
-      should.not.exist(formVersions);
-      formDraft.isEmpty().should.be.true();
-      attachments.isEmpty().should.be.true();
+      const { requestData } = app.vm.$container;
+      requestData.localResources.formVersions.dataExists.should.be.false();
+      requestData.formDraft.isEmpty().should.be.true();
+      requestData.attachments.isEmpty().should.be.true();
     });
 
     it('shows the create draft button', () =>

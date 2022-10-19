@@ -8,6 +8,7 @@ import NotFound from '../../../src/components/not-found.vue';
 import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
+import { block } from '../../util/util';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockResponse } from '../../util/axios';
@@ -37,7 +38,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f', {}, {
         attachments: () => attachments
       });
-      app.vm.$store.state.request.data.attachments.isEmpty().should.be.true();
+      app.vm.$container.requestData.attachments.isEmpty().should.be.true();
     });
 
     it('updates formDraft if it is defined but attachments is not', async () => {
@@ -46,7 +47,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f', {}, {
         attachments: () => mockResponse.problem(404.1)
       });
-      app.vm.$store.state.request.data.formDraft.isEmpty().should.be.true();
+      app.vm.$container.requestData.formDraft.isEmpty().should.be.true();
     });
   });
 
@@ -116,7 +117,7 @@ describe('FormShow', () => {
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
-          const { formDraft } = app.vm.$store.state.request.data;
+          const { formDraft } = app.vm.$container.requestData;
           formDraft.get().enketoId.should.equal('xyz');
         })
         .testNoRequest(() => {
@@ -142,7 +143,7 @@ describe('FormShow', () => {
           return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
-          const { formDraft } = app.vm.$store.state.request.data;
+          const { formDraft } = app.vm.$container.requestData;
           formDraft.get().enketoId.should.equal('xyz');
         });
     });
@@ -156,6 +157,35 @@ describe('FormShow', () => {
           clock.tick(3000);
         })
         .respondWithProblem()
+        .complete()
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
+    });
+
+    it('stops fetching the enketoId if there is no longer a draft', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, {
+        draft: true,
+        enketoId: null
+      });
+      const [lock, unlock] = block();
+      return load('/projects/1/forms/f/draft')
+        .complete()
+        .request(async (app) => {
+          await app.get('#form-draft-status-abandon-button').trigger('click');
+          app.vm.$router.afterEach(unlock);
+          return app.get('#form-draft-abandon .btn-danger').trigger('click');
+        })
+        .beforeEachResponse(async (app, config, i) => {
+          if (i === 0)
+            clock.tick(3000);
+          else
+            await lock;
+        })
+        .respondWithSuccess()
+        .respondWithData(() => testData.standardFormDrafts.last())
         .complete()
         .testNoRequest(() => {
           clock.tick(3000);
@@ -267,7 +297,7 @@ describe('FormShow', () => {
           return testData.standardForms.last();
         })
         .afterResponse(app => {
-          const { form } = app.vm.$store.state.request.data;
+          const { form } = app.vm.$container.requestData;
           form.enketoId.should.equal('xyz');
         })
         .testNoRequest(() => {
@@ -296,7 +326,7 @@ describe('FormShow', () => {
           return testData.standardForms.last();
         })
         .afterResponse(app => {
-          const { form } = app.vm.$store.state.request.data;
+          const { form } = app.vm.$container.requestData;
           form.enketoId.should.equal('xyz');
         });
     });
@@ -356,7 +386,7 @@ describe('FormShow', () => {
           return testData.standardFormDrafts.last();
         })
         .afterResponses(app => {
-          const { form, formDraft } = app.vm.$store.state.request.data;
+          const { form, formDraft } = app.vm.$container.requestData;
           form.enketoId.should.equal('xyz');
           formDraft.get().enketoId.should.equal('abc');
         })
@@ -383,7 +413,7 @@ describe('FormShow', () => {
             return testData.standardForms.last();
           })
           .afterResponse(app => {
-            const { form } = app.vm.$store.state.request.data;
+            const { form } = app.vm.$container.requestData;
             form.enketoOnceId.should.equal('zyx');
           })
           .testNoRequest(() => {
@@ -414,7 +444,7 @@ describe('FormShow', () => {
           return testData.standardForms.last();
         })
         .afterResponse(app => {
-          const { form } = app.vm.$store.state.request.data;
+          const { form } = app.vm.$container.requestData;
           form.enketoOnceId.should.equal('zyx');
         });
     });

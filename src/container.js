@@ -11,18 +11,16 @@ except according to the terms contained in the LICENSE file.
 */
 import axios from 'axios';
 import { Translation } from 'vue-i18n';
+import { createPinia } from 'pinia';
 
 import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
-import createCentralStore from './store';
-import createResponseData from './response-data';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
-import subclassPresenters from './presenters';
+import { createRequestData } from './request-data';
 
 const provide = [
-  'responseData',
   'alert',
   'unsavedChanges',
   'config',
@@ -33,13 +31,12 @@ const provide = [
 export default ({
   // `router` must be a function that returns an object. The function will be
   // passed a partial container. It is also possible to create a container
-  // without a router by specifying `null`.
+  // without a router by specifying `null` (the default in testing).
   router = createCentralRouter,
-  // `store` must be a function that returns an object. The function will be
-  // passed a partial container.
-  store = createCentralStore,
   i18n = createCentralI18n(),
-  responseData = createResponseData,
+  // requestData must be a function that returns an object. The function will be
+  // passed a partial container.
+  requestData = createRequestData,
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n.global),
   config = defaultConfig,
@@ -48,22 +45,22 @@ export default ({
   logger = console
 } = {}) => {
   const container = {
+    pinia: createPinia(),
     i18n: i18n.global,
     alert,
     unsavedChanges,
     config,
     http,
-    logger,
-    ...subclassPresenters(i18n.global)
+    logger
   };
-  container.store = store(container);
-  container.responseData = responseData(container);
+  container.requestData = requestData(container);
   if (router != null) container.router = router(container);
   container.install = (app) => {
-    app.use(container.store);
     // Register <i18n-t>, since we specify `false` for the fullInstall option of
     // vue-cli-plugin-i18n.
     app.use(i18n).component(Translation.name, Translation);
+    app.use(container.pinia);
+    app.use(container.requestData);
     if (container.router != null) app.use(container.router);
 
     app.provide('container', container);

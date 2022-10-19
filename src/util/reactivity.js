@@ -9,8 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { watch } from 'vue';
+import { watch, watchEffect } from 'vue';
 
-// eslint-disable-next-line import/prefer-default-export
 export const watchSync = (source, callback, options = undefined) =>
   watch(source, callback, { ...options, flush: 'sync' });
+
+export const setDocumentTitle = (title) => watchEffect(() => {
+  // Append ODK Central to every title, filter out any null values (e.g. project
+  // name before the project object was loaded), join with separator.
+  document.title = title().concat('ODK Central').filter(x => x).join(' | ');
+});

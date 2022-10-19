@@ -1,13 +1,11 @@
 import UserResetPassword from '../../../src/components/user/reset-password.vue';
 
-import User from '../../../src/presenters/user';
-
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 const mountOptions = () => ({
-  props: { state: true, user: new User(testData.standardUsers.first()) }
+  props: { state: true, user: testData.standardUsers.first() }
 });
 
 describe('UserResetPassword', () => {

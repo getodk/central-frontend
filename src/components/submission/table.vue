@@ -24,11 +24,11 @@ except according to the terms contained in the LICENSE file.
         :class="`submission-table-actions-trigger-${actionsTrigger}`"
         @mousemove="setActionsTrigger('hover')"
         @focusin="setActionsTrigger('focus')" @click="review">
-        <template v-if="submissions != null">
-          <submission-metadata-row v-for="(submission, index) in submissions"
+        <template v-if="odata.dataExists">
+          <submission-metadata-row v-for="(submission, index) in odata.value"
             :key="submission.__id" :project-id="projectId"
             :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
-            :row-number="originalCount - index" :can-update="canUpdate"
+            :row-number="odata.originalCount - index" :can-update="canUpdate"
             :data-index="index"/>
         </template>
       </tbody>
@@ -39,17 +39,16 @@ except according to the terms contained in the LICENSE file.
           <tr v-if="fields != null">
             <!-- Adding a title attribute in case the column header is so long
             that it is truncated. -->
-            <th v-for="field of fields" :key="field.path"
-              :title="field.header()">
-              {{ field.header() }}
+            <th v-for="field of fields" :key="field.path" :title="field.header">
+              {{ field.header }}
             </th>
             <th>{{ $t('header.instanceId') }}</th>
           </tr>
         </thead>
         <tbody @mousemove="setActionsTrigger('hover')"
           @mouseover="toggleHoverClass" @mouseleave="removeHoverClass">
-          <template v-if="submissions != null && fields != null">
-            <submission-data-row v-for="(submission, index) in submissions"
+          <template v-if="odata.dataExists && fields != null">
+            <submission-data-row v-for="(submission, index) in odata.value"
               :key="submission.__id" :project-id="projectId"
               :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
               :fields="fields" :data-index="index"/>
@@ -64,7 +63,7 @@ except according to the terms contained in the LICENSE file.
 import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
 
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 // We may render many rows, so this component makes use of event delegation and
 // other optimizations.
@@ -82,11 +81,15 @@ export default {
       required: true
     },
     draft: Boolean,
-    submissions: Array,
-    fields: Array,
-    originalCount: Number
+    fields: Array
   },
   emits: ['review'],
+  setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { project, odata } = useRequestData();
+    return { project, odata };
+  },
   data() {
     return {
       /*
@@ -111,11 +114,8 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project']),
     canUpdate() {
-      return this.project != null && this.project.permits('submission.update');
+      return this.project.dataExists && this.project.permits('submission.update');
     }
   },
   watch: {
@@ -124,7 +124,7 @@ export default {
     following cases in mind:
 
       - There may be fewer submissions after the refresh than before. In that
-        case, it is possible that this.submissions.length <= this.dataHover.
+        case, it is possible that this.odata.value.length <= this.dataHover.
       - A submission may be in a different row after the refresh. For example,
         if the user hovers over the first row, and after the refresh, that
         submission is in the second row, then the second row will incorrectly
@@ -133,7 +133,7 @@ export default {
     In some cases, it would be ideal not to remove the class or to add the class
     to the row for a different submission. That logic is not in place right now.
     */
-    submissions: 'removeHoverClass'
+    'odata.data': 'removeHoverClass'
   },
   methods: {
     setActionsTrigger(trigger) {
@@ -163,7 +163,7 @@ export default {
       if (!this.canUpdate) return;
       const tr = event.target.closest('tr');
       if (tr.querySelector('.review-button').contains(event.target))
-        this.$emit('review', this.submissions[tr.dataset.index]);
+        this.$emit('review', this.odata.value[tr.dataset.index]);
     },
     // Using a method instead of a prop in case the same submission is updated
     // twice in a row.

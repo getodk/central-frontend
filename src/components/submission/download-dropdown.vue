@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   // Ideally, this component would be named SubmissionDownloadButton, but that
@@ -29,23 +29,23 @@ export default {
     filtered: Boolean
   },
   emits: ['download'],
+  setup() {
+    const { odata } = useRequestData();
+    return { odata };
+  },
   computed: {
-    ...requestData(['odataChunk']),
     text() {
       if (!this.filtered) {
-        if (this.formVersion == null) return '';
+        if (!this.formVersion.dataExists) return '';
         return this.$tcn(
           'action.download.unfiltered',
           this.formVersion.submissions
         );
       }
 
-      if (this.odataChunk == null)
-        return this.$t('action.download.filtered.withoutCount');
-      return this.$tcn(
-        'action.download.filtered.withCount',
-        this.odataChunk['@odata.count']
-      );
+      return !this.odata.dataExists
+        ? this.$t('action.download.filtered.withoutCount')
+        : this.$tcn('action.download.filtered.withCount', this.odata.count);
     }
   }
 };

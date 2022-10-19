@@ -13,13 +13,13 @@ except according to the terms contained in the LICENSE file.
   <page-section id="submission-activity">
     <template #heading>
       <span>{{ $t('common.activity') }}</span>
-      <template v-if="project != null && project.permits('submission.update')">
+      <template v-if="project.dataExists && project.permits('submission.update')">
         <button id="submission-activity-update-review-state-button"
           type="button" class="btn btn-default"
           @click="$emit('update-review-state')">
           <span class="icon-check"></span>{{ $t('action.review') }}
         </button>
-        <template v-if="submission != null">
+        <template v-if="submission.dataExists">
           <a v-if="submission.__system.status == null"
             id="submission-activity-edit-button" class="btn btn-default"
             :href="editPath">
@@ -55,7 +55,7 @@ import SubmissionComment from './comment.vue';
 import SubmissionFeedEntry from './feed-entry.vue';
 
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionActivity',
@@ -75,16 +75,16 @@ export default {
     }
   },
   emits: ['update-review-state', 'comment'],
-  computed: {
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['project', 'submission', 'audits', 'comments', 'diffs', 'fields']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['audits', 'comments', 'diffs', 'fields']);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(['audits', 'comments', 'diffs', 'fields']);
-    },
+    const { project, submission, audits, comments, diffs, fields, resourceStates } = useRequestData();
+    return {
+      project, submission, audits, comments, diffs, fields,
+      ...resourceStates([audits, comments, diffs, fields])
+    };
+  },
+  computed: {
     editPath() {
       return apiPaths.editSubmission(
         this.projectId,

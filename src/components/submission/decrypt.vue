@@ -115,7 +115,7 @@ import Modal from '../modal.vue';
 
 import useCallWait from '../../composables/call-wait';
 import { apiPaths, isProblem } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   // Ideally, this component would be named SubmissionDownload, but that would
@@ -130,8 +130,9 @@ export default {
   },
   emits: ['hide'],
   setup() {
+    const { session, keys, fields } = useRequestData();
     const { callWait, cancelCall } = useCallWait();
-    return { callWait, cancelCall };
+    return { session, keys, fields, callWait, cancelCall };
   },
   data() {
     return {
@@ -142,25 +143,24 @@ export default {
     };
   },
   computed: {
-    ...requestData(['session', 'fields', 'keys']),
     managedKey() {
-      return this.keys != null ? this.keys.find(key => key.managed) : null;
+      return this.keys.dataExists ? this.keys.find(key => key.managed) : null;
     },
     splitSelectMultiplesTitle() {
-      if (this.fields != null &&
+      if (this.fields.dataExists &&
         !this.fields.some(({ selectMultiple }) => selectMultiple === true))
         return this.$t('noSelectMultiple');
-      return this.formVersion != null && this.formVersion.keyId != null
+      return this.formVersion.dataExists && this.formVersion.keyId != null
         ? this.$t('encryptedForm')
         : null;
     },
     deletedFieldsTitle() {
-      return this.formVersion != null && this.formVersion.publishedAt == null
+      return this.formVersion.dataExists && this.formVersion.publishedAt == null
         ? this.$t('deletedFieldsDisabledForDraft')
         : null;
     },
     noRepeat() {
-      return this.fields != null &&
+      return this.fields.dataExists &&
         !this.fields.some(({ type }) => type === 'repeat');
     }
   },
@@ -175,7 +175,7 @@ export default {
   },
   methods: {
     href(extension, query = undefined) {
-      if (this.formVersion == null) return '#';
+      if (!this.formVersion.dataExists) return '#';
       const fullQuery = {
         ...query,
         $filter: this.odataFilter,

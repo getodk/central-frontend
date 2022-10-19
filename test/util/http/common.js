@@ -1,5 +1,7 @@
 // Common tests for a series of request-response cycles
 
+import { pick } from 'ramda';
+
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
@@ -16,6 +18,10 @@ export function testRequests(expectedConfigs) {
       // expectedConfigs[i] == null, the request is intentionally not checked
       // (presumably because it is checked elsewhere).
       if (i < expectedConfigs.length && expectedConfigs[i] != null) {
+        const normalized = pick(['method', 'url', 'headers', 'data'], config);
+        if (normalized.method == null) normalized.method = 'GET';
+        if (normalized.headers == null) normalized.headers = {};
+
         const { extended = false, ...expectedConfig } = expectedConfigs[i];
         if (expectedConfig.method == null) expectedConfig.method = 'GET';
         if (extended) {
@@ -24,10 +30,12 @@ export function testRequests(expectedConfigs) {
             'X-Extended-Metadata': 'true'
           };
         }
-        const session = component != null
-          ? component.vm.$store.state.request.data.session
-          : null;
-        config.should.eql(withAuth(expectedConfig, session));
+        const expectedWithAuth = withAuth(expectedConfig, component != null
+          ? component.vm.$container.requestData.session.token
+          : null);
+        if (expectedWithAuth.headers == null) expectedWithAuth.headers = {};
+
+        normalized.should.eql(expectedWithAuth);
       }
     })
     .afterResponses(() => {

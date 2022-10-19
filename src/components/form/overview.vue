@@ -13,10 +13,10 @@ except according to the terms contained in the LICENSE file.
   <div id="form-overview">
     <div class="row">
       <div class="col-xs-6">
-        <form-overview-right-now v-if="form != null"
+        <form-overview-right-now v-if="form.dataExists"
           @view-xml="showModal('viewXml')"/>
       </div>
-      <div v-if="formDraft != null" id="form-overview-draft" class="col-xs-6">
+      <div v-if="formDraft.dataExists" id="form-overview-draft" class="col-xs-6">
         <page-section v-if="formDraft.isDefined()">
           <template #heading>
             <span>{{ $t('common.currentDraft') }}</span>
@@ -67,7 +67,7 @@ import SummaryItem from '../summary-item.vue';
 
 import modal from '../../mixins/modal';
 import { loadAsync } from '../../util/load-async';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormOverview',
@@ -91,6 +91,10 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { form, formDraft } = useRequestData();
+    return { form, formDraft };
+  },
   data() {
     return {
       // Modals
@@ -98,10 +102,7 @@ export default {
         state: false
       }
     };
-  },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['form', 'formDraft'])
+  }
 };
 </script>
 

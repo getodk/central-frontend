@@ -30,6 +30,7 @@ const _formPath = (projectId, xmlFormId, suffix = '') => {
 
 // @vue/component
 const mixin = {
+  inject: ['container'],
   methods: {
     /*
     Returns a path to a project page. Do not use projectPath() for Backend
@@ -91,7 +92,8 @@ const mixin = {
       return `/users/${id}/edit`;
     },
     canRoute(location) {
-      return canRoute(this.$router.resolve(location), this.$route, this.$store);
+      const { requestData } = this.container;
+      return canRoute(this.$router.resolve(location), this.$route, requestData);
     }
   }
 };

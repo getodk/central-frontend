@@ -23,36 +23,27 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
+export default {
+  name: 'Home'
+};
+</script>
+<script setup>
+import { defineAsyncComponent, inject } from 'vue';
 
 import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';
 import ProjectList from './project/list.vue';
 
+import useProjects from '../request-data/projects';
 import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
-export default {
-  name: 'Home',
-  components: {
-    HomeConfigSection: defineAsyncComponent(loadAsync('HomeConfigSection')),
-    HomeNews,
-    HomeSummary,
-    ProjectList
-  },
-  inject: ['config'],
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'projects',
-        url: '/v1/projects?forms=true'
-      }]).catch(noop);
-    }
-  }
-};
+const HomeConfigSection = defineAsyncComponent(loadAsync('HomeConfigSection'));
+
+const projects = useProjects();
+projects.request({ url: '/v1/projects?forms=true' }).catch(noop);
+
+const config = inject('config');
 </script>
 
 <style lang="scss">

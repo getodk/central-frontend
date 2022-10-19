@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-
 import { odataLiteral } from './odata';
 
 export const queryString = (query) => {
@@ -143,13 +142,13 @@ export const apiPaths = {
   audits: (query) => `/v1/audits${queryString(query)}`
 };
 
-export const withAuth = (config, session) => {
+export const withAuth = (config, token) => {
   const { headers } = config;
   if ((headers == null || headers.Authorization == null) &&
-    config.url.startsWith('/v1/') && session != null) {
+    config.url.startsWith('/v1/') && token != null) {
     return {
       ...config,
-      headers: { ...headers, Authorization: `Bearer ${session.token}` }
+      headers: { ...headers, Authorization: `Bearer ${token}` }
     };
   }
   return config;
@@ -174,15 +173,9 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
     return i18n.t('util.request.errorNotProblem', response);
 
   const problem = response.data;
-
   if (problemToAlert != null) {
     const message = problemToAlert(problem);
     return message != null ? message : problem.message;
   }
-
-  const key = problem.code.toString().replace('.', '_');
-  const path = `problem.${key}`;
-  if (i18n.te(path, i18n.fallbackLocale)) return i18n.t(path, problem);
-
   return problem.message;
 };

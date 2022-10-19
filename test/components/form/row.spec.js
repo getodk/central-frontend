@@ -4,25 +4,31 @@ import EnketoPreview from '../../../src/components/enketo/preview.vue';
 import FormRow from '../../../src/components/form/row.vue';
 import LinkIfCan from '../../../src/components/link-if-can.vue';
 
-import Form from '../../../src/presenters/form';
+import useProject from '../../../src/request-data/project';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => mount(FormRow, {
-  // additional FormRow prop `showActions` is tested through form/table.spec.js and
-  // visibility of actions column by different roles
-  props: { form: new Form(testData.extendedForms.last()) },
-  container: {
-    requestData: {
-      forms: testData.extendedForms.sorted(),
-      project: testData.extendedProjects.last()
-    },
+const mountComponent = () => {
+  const container = createTestContainer({
+    requestData: testRequestData([useProject], {
+      project: testData.extendedProjects.last(),
+      forms: testData.extendedForms.sorted()
+    }),
     router: mockRouter('/projects/1')
-  }
-});
+  });
+  const { forms } = container.requestData.localResources;
+  return mount(FormRow, {
+    // additional FormRow prop `showActions` is tested through form/table.spec.js and
+    // visibility of actions column by different roles
+    props: { form: forms[0] },
+    container
+  });
+};
 
 describe('FormRow', () => {
   describe('form name', () => {

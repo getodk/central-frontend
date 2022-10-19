@@ -55,7 +55,7 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'PublicLinkCreate',
@@ -68,6 +68,11 @@ export default {
     }
   },
   emits: ['hide', 'success'],
+  setup() {
+    // The modal assumes that this data will exist when the modal is shown.
+    const { form } = useRequestData();
+    return { form };
+  },
   data() {
     return {
       awaitingResponse: false,
@@ -75,8 +80,6 @@ export default {
       once: false
     };
   },
-  // The modal assumes that this data will exist when the modal is shown.
-  computed: requestData(['form']),
   watch: {
     state(state) {
       if (!state) {

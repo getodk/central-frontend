@@ -64,9 +64,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { last } from 'ramda';
-import { mapGetters } from 'vuex';
 
 import { apiPaths } from '../../util/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionDiffItem',
@@ -102,8 +102,11 @@ export default {
       }
     }
   },
+  setup() {
+    const { fields } = useRequestData();
+    return { fields };
+  },
   computed: {
-    ...mapGetters(['binaryFieldPaths']),
     isAtomicChange() {
       // Check whether the change is of a single field (atomic)
       // or if it is of a whole subtree being added or removed.
@@ -147,7 +150,7 @@ export default {
       const fullPath = this.parentPath.concat(this.entry.path.filter((field) => field[0] !== undefined));
       const fullPathStr = fullPath.map((field) => (Array.isArray(field) ? field[0] : field)).join('/');
       const basicPath = `/${fullPathStr}`;
-      if (this.binaryFieldPaths.has(basicPath))
+      if (this.fields.binaryPaths.has(basicPath))
         return true;
       return false;
     }

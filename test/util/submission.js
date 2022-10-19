@@ -5,6 +5,7 @@ import { mergeMountOptions } from './lifecycle';
 import { mockHttp } from './http';
 import { mockResponse } from './axios';
 import { mockRouter } from './router';
+import { testRequestData } from './request-data';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loadSubmissionList = (mountOptions = {}) => {
@@ -18,14 +19,14 @@ export const loadSubmissionList = (mountOptions = {}) => {
       top: SubmissionList.props.top.default
     },
     container: {
-      requestData: {
+      requestData: testRequestData(['keys'], {
         project,
         form,
         formDraft: form.publishedAt == null
           ? testData.extendedFormDrafts.last()
           : mockResponse.problem(404.1),
         keys: testData.standardKeys.sorted()
-      },
+      }),
       router: mockRouter(form.publishedAt != null
         ? `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/submissions`
         : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft/testing`)

@@ -82,9 +82,9 @@ describe('AccountLogin', () => {
       .respondWithData(() => testData.extendedUsers.first())
       .respondFor('/', { users: false })
       .afterResponses(app => {
-        const { data } = app.vm.$store.state.request;
-        should.exist(data.session);
-        should.exist(data.currentUser);
+        const { requestData } = app.vm.$container;
+        requestData.session.dataExists.should.be.true();
+        requestData.currentUser.dataExists.should.be.true();
       });
   });
 

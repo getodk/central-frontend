@@ -63,14 +63,14 @@ are Project Manager, Project Viewer, and Data Collector. -->
           <th>{{ $t('header.projectRole') }}</th>
         </tr>
       </thead>
-      <tbody v-if="roles != null && tableAssignments != null">
+      <tbody v-if="roles.dataExists && tableAssignments.dataExists">
         <project-user-row v-for="assignment of tableAssignments"
           :key="assignment.actor.id" :assignment="assignment"
           @increment-count="incrementCount" @decrement-count="decrementCount"
           @change="afterAssignmentChange"/>
       </tbody>
     </table>
-    <loading :state="initiallyLoading || $store.getters.loading('users')"/>
+    <loading :state="initiallyLoading || searchAssignments.awaitingResponse"/>
     <p v-show="emptyMessage !== ''" class="empty-table-message">
       {{ emptyMessage }}
     </p>
@@ -84,7 +84,7 @@ import ProjectUserRow from './row.vue';
 
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectUserList',
@@ -96,28 +96,33 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { currentUser, roles, projectAssignments, createResource, resourceStates } = useRequestData();
+    // searchAssignments.data is an array that contains an assignment-like
+    // object for each user returned for the search. roleId may be `null` for
+    // one or more of these objects. searchAssignments is not updated after an
+    // assignment change: it is a snapshot of assignments at the time of the
+    // search.
+    const searchAssignments = createResource('searchAssignments', () => ({
+      transformResponse: ({ data }) => data.map(user => {
+        const assignment = projectAssignments.find(a => a.actor.id === user.id);
+        return assignment != null ? assignment : { actor: user, roleId: null };
+      })
+    }));
+    return {
+      currentUser, roles, projectAssignments, searchAssignments,
+      ...resourceStates([roles, projectAssignments])
+    };
+  },
   data() {
     return {
       // Search term
       q: '',
-      // searchAssignments is an array that contains an assignment-like object
-      // for each user returned for the most recent search. roleId may be `null`
-      // for one or more of these objects. searchAssignments is not updated
-      // after an assignment change: it is a snapshot of assignments at the time
-      // of the search.
-      searchAssignments: null,
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
     };
   },
   computed: {
-    ...requestData(['currentUser', 'roles', 'projectAssignments']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(['roles', 'projectAssignments']);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(['roles', 'projectAssignments']);
-    },
     searchDisabled() {
       if (!this.dataExists) return true;
       /*
@@ -137,15 +142,14 @@ export default {
     },
     // The assignments to show in the table
     tableAssignments() {
-      if (this.$store.getters.loading('users')) return null;
-      if (this.searchAssignments != null) return this.searchAssignments;
-      return this.projectAssignments;
+      return this.q !== '' ? this.searchAssignments : this.projectAssignments;
     },
     emptyMessage() {
-      if (!this.dataExists || this.$store.getters.loading('users')) return '';
-      return this.searchAssignments != null
-        ? (this.searchAssignments.length === 0 ? this.$t('common.noResults') : '')
-        : (this.projectAssignments.length === 0 ? this.$t('emptyTable') : '');
+      if (!(this.tableAssignments.dataExists && this.tableAssignments.length === 0))
+        return '';
+      return this.tableAssignments === this.projectAssignments
+        ? this.$t('emptyTable')
+        : this.$t('common.noResults');
     }
   },
   created() {
@@ -153,39 +157,23 @@ export default {
   },
   methods: {
     fetchData(resend) {
-      this.$store.dispatch('get', [
-        {
-          key: 'roles',
-          url: '/v1/roles',
-          resend: false
-        },
-        {
-          key: 'projectAssignments',
+      Promise.allSettled([
+        this.roles.request({ url: '/v1/roles', resend: false }),
+        this.projectAssignments.request({
           url: apiPaths.projectAssignments(this.projectId),
           extended: true,
           resend
-        }
-      ]).catch(noop);
+        })
+      ]);
     },
     clearSearch() {
       this.fetchData(true);
       this.q = '';
-      this.searchAssignments = null;
+      this.searchAssignments.data = null;
     },
     search() {
-      this.$store.dispatch('get', [{
-        key: 'users',
-        url: apiPaths.users({ q: this.q }),
-        success: ({ users }) => {
-          this.searchAssignments = users.map(user => {
-            const assignment = this.projectAssignments
-              .find(a => a.actor.id === user.id);
-            return assignment != null
-              ? assignment
-              : { actor: user, roleId: null };
-          });
-        }
-      }]).catch(noop);
+      this.searchAssignments.request({ url: apiPaths.users({ q: this.q }) })
+        .catch(noop);
     },
     changeQ(q) {
       this.q = q;
@@ -212,22 +200,14 @@ export default {
       const index = this.projectAssignments
         .findIndex(assignment => assignment.actor.id === actor.id);
       // If `role` is `null`, then rather than remove the assignment from
-      // projectAssignments, we set its roleId to `null`. That way, the user
-      // will remain in the table until a new request is sent for
-      // projectAssignments.
+      // this.projectAssignments, we set its roleId to `null`. That way, the
+      // user will remain in the table until a new request is sent for
+      // this.projectAssignments.
       const assignment = { actor, roleId: role != null ? role.id : null };
-      if (index !== -1) {
-        this.$store.commit('setDataProp', {
-          key: 'projectAssignments',
-          prop: index,
-          value: assignment
-        });
-      } else {
-        this.$store.commit('setData', {
-          key: 'projectAssignments',
-          value: [...this.projectAssignments, assignment]
-        });
-      }
+      if (index !== -1)
+        this.projectAssignments[index] = assignment;
+      else
+        this.projectAssignments.push(assignment);
 
       // Show the alert.
       if (deleteWithoutPost) {

@@ -61,8 +61,7 @@ describe('BackupTerminate', () => {
 
     it('updates the backups status', async () => {
       const component = await submit();
-      const { backupsConfig } = component.vm.$store.state.request.data;
-      backupsConfig.isEmpty().should.be.true();
+      component.vm.backupsConfig.isEmpty().should.be.true();
     });
 
     it('shows a success alert', async () => {

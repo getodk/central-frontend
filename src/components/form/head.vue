@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="form-head">
     <page-back :to="projectPath()" link-title>
-      <template #title>{{ project != null ? project.nameWithArchived() : '' }}</template>
+      <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
       <template #back>{{ $t('projectNav.action.back') }}</template>
     </page-back>
     <div id="form-head-form-nav" class="row">
@@ -21,8 +21,8 @@ except according to the terms contained in the LICENSE file.
           <!-- Using .col-xs-6 so that if the form name is long, it is not
           behind #form-head-draft-nav. -->
           <div class="col-xs-6">
-            <div v-if="form != null" class="h1" :title="form.nameOrId()">
-              {{ form.nameOrId() }}
+            <div v-if="form.dataExists" class="h1" :title="form.nameOrId">
+              {{ form.nameOrId }}
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ except according to the terms contained in the LICENSE file.
                 :class="tabClass('draft/attachments')" role="presentation">
                 <router-link :to="tabPath('draft/attachments')">
                   {{ $t('formHead.draftNav.tab.attachments') }}
-                  <template v-if="attachments != null">
-                    <span v-show="missingAttachmentCount !== 0" class="badge">
-                      {{ $n(missingAttachmentCount, 'default') }}
+                  <template v-if="attachments.dataExists">
+                    <span v-show="attachments.missingCount !== 0" class="badge">
+                      {{ $n(attachments.missingCount, 'default') }}
                     </span>
                   </template>
                 </router-link>
@@ -107,37 +107,33 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import PageBack from '../page/back.vue';
 
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
-import { requestData } from '../../store/modules/request';
-
-const requestKeys = ['project', 'form', 'formDraft', 'attachments'];
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
   components: { PageBack },
   mixins: [routes(), tab()],
   emits: ['create-draft'],
-  computed: {
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(requestKeys),
-    ...mapGetters(['missingAttachmentCount']),
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    },
+    const { project, form, formDraft, attachments, resourceStates } = useRequestData();
+    const { dataExists } = resourceStates([project, form, formDraft, attachments]);
+    return { project, form, formDraft, attachments, dataExists };
+  },
+  computed: {
     tabPathPrefix() {
       return this.formPath();
     },
     rendersFormTabs() {
-      return this.project != null && this.project.permits(['form.update']);
+      return this.project.dataExists && this.project.permits(['form.update']);
     },
     formTabTitle() {
-      return this.form != null && this.form.publishedAt == null
+      return this.form.dataExists && this.form.publishedAt == null
         ? this.$t('formNav.tabTitle')
         : null;
     },
@@ -149,7 +145,7 @@ export default {
   methods: {
     formTabClass(path) {
       const htmlClass = this.tabClass(path);
-      if (this.form != null && this.form.publishedAt == null)
+      if (this.form.dataExists && this.form.publishedAt == null)
         htmlClass.disabled = true;
       return htmlClass;
     }
