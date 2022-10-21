@@ -65,6 +65,7 @@ const forms = dataStore({
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
     fields = [testDataFields.string('/s')],
+    entityRelated = false,
 
     ...extraVersionOptions
   }) => {
@@ -76,6 +77,7 @@ const forms = dataStore({
       name,
       enketoOnceId,
       state,
+      entityRelated,
       // If publishedAt was specified, set createdAt to publishedAt in order to
       // ensure that createdAt is not after publishedAt.
       createdAt: !draft && publishedAt != null
@@ -231,7 +233,7 @@ export const extendedForms = view(
   (form) => {
     const version = findVersionForForm(form);
     return {
-      ...pick([...basicFormProps, 'enketoId', 'createdBy'], form),
+      ...pick([...basicFormProps, 'enketoId', 'createdBy', 'entityRelated'], form),
       ...pick([...basicVersionProps, 'excelContentType'], version),
       ...pick(
         ['submissions', 'lastSubmission', 'reviewStates'],

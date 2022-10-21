@@ -75,4 +75,27 @@ describe('FormDraftTesting', () => {
         });
     });
   });
+
+  describe('dataset preview box', () => {
+    it('shows the dataset preview box', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
+      const path = '/projects/1/forms/f/draft/testing';
+      return load(path)
+      .then(c => {      
+        c.find('.panel-dialog').exists().should.be.true();
+      });
+    });
+
+    it('does not show the dataset preview box', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { draft: true });
+      const path = '/projects/1/forms/f/draft/testing';
+      return load(path)
+      .then(c => {      
+        c.find('.panel-dialog').exists().should.not.be.true();
+      });
+    });
+  })
+  
 });
