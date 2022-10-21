@@ -35,6 +35,30 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[0]') }}</p>
         <p>{{ $t('introduction[1]') }}</p>
         <p v-if="draftVersionStringIsDuplicate">{{ $t('introduction[2]') }}</p>
+        <hr/>
+        <i18n-t v-if="false" tag="p" keypath="dataset.introduction">
+          <template #inAddition>
+            <strong>{{ $t('dataset.inAddition') }}</strong>
+          </template>
+        </i18n-t>        
+        <ul v-if="false" class="dataset-list">
+          <i18n-t tag="li" keypath="dataset.newDataset">
+            <!-- <template #icon>
+              <span class="icon-plus-circle"></span>
+            </template> -->
+            <template #datasetName>
+              <strong>People</strong>
+            </template>
+            <template #fieldList>
+              <ul class="field-list">
+                <li>Name</li>
+                <li>Age</li>
+                <li>City</li>
+              </ul>
+            </template>
+          </i18n-t>
+        </ul>
+        
       </div>
       <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
@@ -159,6 +183,30 @@ export default {
 };
 </script>
 
+<style lang="scss">
+@import '../../assets/scss/variables';
+@import '../../assets/css/icomoon';
+
+.dataset-list {
+  list-style: none;
+
+  li::before {
+    @extend [class^="icon-"];
+    content: '\f055';
+  }
+}
+
+.field-list{
+  list-style: none;
+
+  li::before {
+    @extend [class^="icon-"];
+    content: '\f055';
+  }
+}
+
+</style>
+
 <i18n lang="json5">
 {
   "en": {
@@ -188,6 +236,16 @@ export default {
     },
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
+    },
+    "dataset": {
+      "introduction": "{inAddition}, this Form definition requires the following changes to be made to this Project:",
+      "inAddition": "In addition",
+      "newDataset": "{icon} A new dataset {datasetName} will be created with the following fields: {fieldList}",
+      "newDatasetNoField": "A new Dataset {datasetName} will be created with only system fields.",
+      "existingDataset": "Following fields will be added to existing Dataset {datasetName}:",
+      "existingFields": "Form definition includes following dataset fields which are already there in the Dataset {datasetName}",
+      "noChange": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset and all its fields are already present in the project, following are the dataset fields defined by the form:",
+      "noChangeNoField": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset is already present in the project. This Form has not defined any dataset fields."
     }
   }
 }
