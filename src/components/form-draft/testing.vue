@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
             </enketo-fill>
           </template>
           <template #body>
-            <div v-if="form && form.entityRelated" class="panel-dialog">
+            <div v-if="form.entityRelated" class="panel-dialog">
               <div class="panel-heading">
                 <span class="panel-title">
                   <span class="icon-database"></span>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
                 </span>
               </div>
               <div class="panel-body">
-                <p>                  
+                <p>
                   {{ $t('datasetsPreview.body[0]') }}
                 </p>
                 <p>
@@ -106,10 +106,10 @@ export default {
     }
   },
   setup() {
-    const { resourceView, createResource } = useRequestData();
+    const { resourceView, createResource, form } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
     const keys = createResource('keys');
-    const form = createResource('form');
+    // const form = createResource('form');
     return { formDraft, keys, form };
   },
   computed: {
