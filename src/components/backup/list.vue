@@ -74,7 +74,10 @@ export default {
   methods: {
     fetchData() {
       Promise.allSettled([
-        this.backupsConfig.request({ url: '/v1/config/backups' }),
+        this.backupsConfig.request({
+          url: '/v1/config/backups',
+          fulfillProblem: ({ code }) => code === 404.1
+        }),
         // A backup audit log entry does not have an actor or actee, so we do
         // not need to request extended metadata.
         this.audits.request({

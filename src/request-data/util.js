@@ -55,13 +55,10 @@ export const transformForms = (response) => {
 ////////////////////////////////////////////////////////////////////////////////
 // SETUP FUNCTIONS
 
-const optionResource = {
-  requestDefaults: { fulfillProblem: ({ code }) => code === 404.1 },
-  setToNone() { this.data = Option.none(); }
-};
+function setToNone() { this.data = Option.none(); }
 export const setupOption = (transformData = identity) => ({
-  ...optionResource,
   transformResponse: (response) => (response.status === 404
     ? Option.none()
-    : Option.of(transformData(response.data)))
+    : Option.of(transformData(response.data))),
+  setToNone
 });

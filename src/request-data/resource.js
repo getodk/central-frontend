@@ -159,29 +159,24 @@ class Resource extends BaseResource {
   will react to the changes to the store state, for example, running watchers
   and updating the DOM.
   */
-  request(config) {
-    const withDefaults = this.requestDefaults != null
-      ? { ...this.requestDefaults, ...config }
-      : config;
-    const {
-      // The request
-      method = 'GET',
-      url,
-      headers = undefined,
-      extended = false,
-      data = undefined,
+  request({
+    // The request
+    method = 'GET',
+    url,
+    headers = undefined,
+    extended = false,
+    data = undefined,
 
-      // Response handling
-      fulfillProblem = undefined,
-      alert: alertOption = true,
-      problemToAlert = undefined,
+    // Response handling
+    fulfillProblem = undefined,
+    alert: alertOption = true,
+    problemToAlert = undefined,
 
-      // Existing data
-      patch = undefined,
-      clear = method === 'GET' && patch == null,
-      resend = true
-    } = withDefaults;
-
+    // Existing data
+    patch = undefined,
+    clear = method === 'GET' && patch == null,
+    resend = true
+  }) {
     /*
     We need to handle three cases:
 

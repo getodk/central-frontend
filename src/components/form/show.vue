@@ -123,7 +123,11 @@ export default {
       this.cancelCall('fetchEnketoIdForDraft');
       const draftUrl = apiPaths.formDraft(this.projectId, this.xmlFormId);
       Promise.allSettled([
-        this.formDraft.request({ url: draftUrl, extended: true })
+        this.formDraft.request({
+          url: draftUrl,
+          extended: true,
+          fulfillProblem: ({ code }) => code === 404.1
+        })
           .then(() => {
             if (this.formDraft.isEmpty()) return;
             if (this.formDraft.get().enketoId != null) return;
@@ -147,7 +151,8 @@ export default {
             );
           }),
         this.attachments.request({
-          url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId)
+          url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId),
+          fulfillProblem: ({ code }) => code === 404.1
         })
       ]);
     },

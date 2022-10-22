@@ -265,8 +265,11 @@ export const logIn = (container, newSession) => {
     })
     .then(() => {
       if (config.showsAnalytics && currentUser.can('config.read')) {
-        analyticsConfig.request({ url: '/v1/config/analytics', alert: false })
-          .catch(noop);
+        analyticsConfig.request({
+          url: '/v1/config/analytics',
+          fulfillProblem: ({ code }) => code === 404.1,
+          alert: false
+        }).catch(noop);
       }
     });
 };

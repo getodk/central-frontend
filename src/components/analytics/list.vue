@@ -77,7 +77,10 @@ export default {
   methods: {
     fetchData() {
       Promise.allSettled([
-        this.analyticsConfig.request({ url: '/v1/config/analytics' }),
+        this.analyticsConfig.request({
+          url: '/v1/config/analytics',
+          fulfillProblem: ({ code }) => code === 404.1
+        }),
         this.audits.request({
           url: apiPaths.audits({ action: 'analytics', limit: 10 })
         })
