@@ -92,17 +92,17 @@ export default {
       const url = apiPaths.form(this.projectId, this.xmlFormId);
       this.form.request({ url, extended: true })
         .then(() => {
-          if (this.form.enketoId != null && this.form.enketoOnceId != null)
-            return;
           if (this.form.publishedAt == null) return;
-          // If Enketo hasn't finished processing the form in 15 minutes,
-          // something else has probably gone wrong.
-          if (Date.now() -
-            DateTime.fromISO(this.form.publishedAt).toMillis() > 900000)
-            return;
           this.callWait(
             'fetchEnketoIdsForForm',
             async () => {
+              if (this.form.enketoId != null && this.form.enketoOnceId != null)
+                return true;
+              // If Enketo hasn't finished processing the form in 15 minutes,
+              // something else has probably gone wrong.
+              if (Date.now() -
+                DateTime.fromISO(this.form.publishedAt).toMillis() > 900000)
+                return true;
               await this.form.request({
                 url,
                 patch: ({ data }) => {
@@ -111,8 +111,9 @@ export default {
                 },
                 alert: false
               });
-              return this.form.enketoId != null &&
-                this.form.enketoOnceId != null;
+              // The next call will check whether the form now has both Enketo
+              // IDs.
+              return false;
             },
             this.waitToRequestEnketoId
           );
@@ -129,23 +130,28 @@ export default {
           fulfillProblem: ({ code }) => code === 404.1
         })
           .then(() => {
-            if (this.formDraft.isEmpty()) return;
-            if (this.formDraft.get().enketoId != null) return;
             this.callWait(
               'fetchEnketoIdForDraft',
               async () => {
+                if (this.formDraft.isEmpty() ||
+                  this.formDraft.get().enketoId != null)
+                  return true;
                 await this.formDraft.request({
                   url: draftUrl,
                   patch: ({ data }) => {
-                    if (this.formDraft.isDefined())
+                    // Do nothing if the form draft has been set to
+                    // Option.none() after a different, concurrent request, for
+                    // example, after the draft is published.
+                    if (this.formDraft.isDefined()) {
+                      // We do not check that the draft has not changed, for
+                      // example, by another user concurrently modifying the
+                      // draft.
                       this.formDraft.get().enketoId = data.enketoId;
+                    }
                   },
                   alert: false
                 });
-                if (this.formDraft.isEmpty()) return true;
-                // We do not check that the form draft has not changed, for
-                // example, by another user concurrently modifying the draft.
-                return this.formDraft.get().enketoId != null;
+                return false;
               },
               this.waitToRequestEnketoId
             );

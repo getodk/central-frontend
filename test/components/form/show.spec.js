@@ -170,16 +170,38 @@ describe('FormShow', () => {
         draft: true,
         enketoId: null
       });
+      return load('/projects/1/forms/f/draft')
+        .complete()
+        .request(async (app) => {
+          await app.get('#form-draft-status-abandon-button').trigger('click');
+          return app.get('#form-draft-abandon .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .complete()
+        .testNoRequest(() => {
+          clock.tick(3000);
+        });
+    });
+
+    it('stops fetching enketoId if draft was deleted by concurrent request', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, {
+        draft: true,
+        enketoId: null
+      });
       const [lock, unlock] = block();
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(async (app) => {
           await app.get('#form-draft-status-abandon-button').trigger('click');
+          // We will wait for the navigation to the form overview before
+          // returning the response for the form draft.
           app.vm.$router.afterEach(unlock);
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
-        .beforeEachResponse(async (app, config, i) => {
-          if (i === 0)
+        .beforeEachResponse(async (_, { method }) => {
+          if (method === 'DELETE')
             clock.tick(3000);
           else
             await lock;
