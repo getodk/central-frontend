@@ -67,7 +67,8 @@ export const testRequestData = (localResources, seedData = undefined) => (contai
             const { createResource } = useRequestData();
             createResource(composableOrName);
           }));
-      // Using a strategy similar to withSetup().
+      // Using a strategy similar to withSetup(). (We can't use withSetup() here
+      // because that would result in a cyclical dependency.)
       const setup = () => {
         for (const composable of composables)
           composable();

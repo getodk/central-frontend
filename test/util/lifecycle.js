@@ -67,7 +67,7 @@ export const mergeMountOptions = (options, defaults) => {
       : undefined;
     if (option != null || defaultOption != null) {
       if (typeof option !== 'function' && typeof defaultOption !== 'function') {
-        merged.container.requestData = { ...option, ...defaultOption };
+        merged.container.requestData = { ...defaultOption, ...option };
       } else if (typeof option === 'function' && typeof defaultOption === 'function') {
         throw new Error('cannot merge requestData options');
       } else {

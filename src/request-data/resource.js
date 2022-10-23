@@ -1,5 +1,5 @@
 /*
-Copyright 2017 ODK Central Developers
+Copyright 2019 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -225,16 +225,21 @@ class Resource extends BaseResource {
 
     this[_store].awaitingResponse = true;
     const cleanup = () => {
-      // If another request is sent, thereby canceling this request, then
-      // this[_abortController] !== abortController.
+      // Each request is associated with its own AbortController. If another
+      // request is sent for this same resource, then that will cancel this
+      // request and immediately set this[_abortController] to the
+      // AbortController associated with the new request. In that case, we will
+      // let the new request complete this part of the cleanup.
       if (this[_abortController] === abortController) {
         this[_store].awaitingResponse = false;
         this[_abortController] = null;
       }
+
       // We can't call removeHook() in the same tick as the navigation hook.
-      // (See src/util/router.js for related comments.) However, the navigation
-      // hook calls abortController.abort(), which will cause cleanup() to be
-      // called in a later tick -- so there shouldn't be an issue.
+      // (See src/util/router.js for related comments.) However, there shouldn't
+      // be an issue here: if the navigation hook calls abortController.abort(),
+      // then that will cause cleanup() to be called very soon, yet
+      // asynchronously (in a different tick from the navigation hook).
       removeHook();
     };
 

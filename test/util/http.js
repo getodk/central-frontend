@@ -274,7 +274,6 @@ There is a lot you can do with mockHttp() and load(). You can learn more by
 reviewing the comments above each method below.
 */
 
-import { START_LOCATION } from 'vue-router';
 import { clone, identity, last, pick } from 'ramda';
 
 import App from '../../src/components/app.vue';
@@ -607,16 +606,19 @@ class MockHttp {
       : noop;
 
     try {
+      const routeBefore = router != null ? router.currentRoute.value : null;
       if (this._location != null) await router.push(this._location);
-      if (this._mount != null) this._component = this._mount();
-      const mountTriggeredNavigation = this._mount != null && router != null &&
-        router.currentRoute.value === START_LOCATION;
-      if (mountTriggeredNavigation) await router.isReady();
+      if (this._mount != null) {
+        this._component = this._mount();
+        // Mounting may have triggered the initial navigation.
+        if (router != null) await router.isReady();
+      }
 
       if (this._request != null) {
         // If there has been a navigation, then wait for any async components
         // associated with the route to load.
-        if (this._location != null || mountTriggeredNavigation) await wait();
+        if (router != null && router.currentRoute.value !== routeBefore)
+          await wait();
 
         this._checkStateBeforeRequest();
         await this._request(this._component);

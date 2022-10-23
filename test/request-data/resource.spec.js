@@ -70,6 +70,7 @@ describe('createResource()', () => {
               url: '/v1/projects/1',
               patch: noop
             }).catch(noop))
+            .beforeAnyResponse(() => { requestData.project.data = null; })
             .respondWithData(() => projectData)
             .afterResponse(() => {
               requestData.project.awaitingResponse.should.be.false();

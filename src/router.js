@@ -135,7 +135,7 @@ reused after a route change, but that shouldn't happen given our use of the
     for (const [resource, validator] of to.meta.validateData) {
       stop.push(watchEffect(() => {
         if (resource.dataExists && !validator()) {
-          // TODO. Update these comments.
+          // TODO/requestData. Update these comments.
           // We are about to navigate to /. That alone should clear any data for
           // which there is a validateData condition. However, navigation is
           // asynchronous, and we need to make sure that the invalid data is not
