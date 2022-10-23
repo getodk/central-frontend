@@ -18,8 +18,8 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
         <p>{{ $t('introduction[2]') }}</p>
       </div>
-      <loading :state="$store.getters.initiallyLoading(['analyticsPreview'])"/>
-      <template v-if="analyticsPreview">
+      <loading :state="analyticsPreview.initiallyLoading"/>
+      <template v-if="analyticsPreview.dataExists">
         <analytics-metrics-table :title="$t('common.system')" :metrics="systemSummary"/>
         <div id="analytics-preview-project-summary">
           <span class="header">{{ $t('projects.title') }}</span>
@@ -51,12 +51,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { omit, pick } from 'ramda';
+
 import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import AnalyticsMetricsTable from './metrics-table.vue';
 
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 // Metrics to filter out (with pick/omit) and put in
 // a separate table
@@ -75,8 +76,12 @@ export default {
     state: Boolean
   },
   emits: ['hide'],
+  setup() {
+    const { createResource } = useRequestData();
+    const analyticsPreview = createResource('analyticsPreview');
+    return { analyticsPreview };
+  },
   computed: {
-    ...requestData(['analyticsPreview']),
     systemSummary() {
       return this.analyticsPreview.system;
     },
@@ -111,15 +116,16 @@ export default {
   },
   watch: {
     state(state) {
-      if (state) this.fetchData();
+      if (state)
+        this.fetchData();
+      else
+        this.analyticsPreview.reset();
     }
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'analyticsPreview',
-        url: '/v1/analytics/preview'
-      }]).catch(noop);
+      this.analyticsPreview.request({ url: '/v1/analytics/preview' })
+        .catch(noop);
     }
   }
 };

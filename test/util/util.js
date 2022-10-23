@@ -5,7 +5,7 @@ export const mockLogger = () => ({ log: sinon.fake(), error: sinon.fake() });
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// setTimeout()
+// WAITING
 
 // In case setTimeout() is faked
 const nativeSetTimeout = setTimeout;
@@ -23,3 +23,9 @@ export const waitUntil = (f) => new Promise(resolve => {
   };
   waiter();
 });
+
+export const block = () => {
+  let unlock;
+  const lock = new Promise(resolve => { unlock = resolve; });
+  return [lock, unlock];
+};

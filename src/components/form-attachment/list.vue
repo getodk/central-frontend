@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="attachments != null" id="form-attachment-list" ref="dropZone">
+  <div v-show="attachments.dataExists" id="form-attachment-list" ref="dropZone">
     <!-- ^^^ We use v-show rather than v-if so that this.$refs.dropZone is in
     the DOM from the first render. -->
 
@@ -30,13 +30,13 @@ except according to the terms contained in the LICENSE file.
           <th class="form-attachment-list-uploaded">{{ $t('header.uploaded') }}</th>
         </tr>
       </thead>
-      <tbody v-if="form != null && attachments != null">
-        <form-attachment-row v-for="(attachment, index) in attachments"
+      <tbody v-if="form.dataExists && attachments.dataExists">
+        <form-attachment-row v-for="attachment of attachments.values()"
           :key="attachment.name" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
-          :updated-attachments="updatedAttachments" :data-index="index"/>
+          :updated-attachments="updatedAttachments" :data-name="attachment.name"/>
       </tbody>
     </table>
     <form-attachment-popups
@@ -67,7 +67,7 @@ import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormAttachmentList',
@@ -79,6 +79,11 @@ export default {
   },
   mixins: [dropZone(), modal(), request()],
   inject: ['alert'],
+  setup() {
+    const { form, resourceView } = useRequestData();
+    const attachments = resourceView('attachments', (data) => data.get());
+    return { form, attachments };
+  },
   data() {
     return {
       dragDepth: 0,
@@ -109,8 +114,8 @@ export default {
              - progress. The latest ProgressEvent for the current upload.
         4. Properties set once the uploads have finished or stopped and reset
            once a new drag is started or another file input selection is made
-           - updatedAttachments. An array of the attachments for which files
-             were successfully uploaded.
+           - updatedAttachments. A Set of the names of the attachments for which
+             files were successfully uploaded.
       */
       countOfFilesOverDropZone: 0,
       dragoverAttachment: null,
@@ -122,7 +127,7 @@ export default {
         current: null,
         progress: null
       },
-      updatedAttachments: [],
+      updatedAttachments: new Set(),
       // Modals
       uploadFilesModal: {
         state: false
@@ -135,9 +140,6 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['form', { key: 'attachments', getOption: true }]),
     disabled() {
       return this.uploadStatus.total !== 0;
     }
@@ -148,7 +150,7 @@ export default {
 
     afterFileInputSelection(files) {
       this.hideModal('uploadFilesModal');
-      if (this.updatedAttachments.length !== 0) this.updatedAttachments = [];
+      this.updatedAttachments.clear();
       this.matchFilesToAttachments(files);
     },
 
@@ -167,14 +169,14 @@ export default {
       const { items } = jQueryEvent.originalEvent.dataTransfer;
       this.countOfFilesOverDropZone = this.fileItemCount(items);
       if (this.countOfFilesOverDropZone === 1) {
-        const $tr = $(jQueryEvent.target)
+        const tr = jQueryEvent.target
           .closest('#form-attachment-list-table tbody tr');
-        this.dragoverAttachment = $tr.length !== 0
-          ? this.attachments[$tr.data('index')]
+        this.dragoverAttachment = tr != null
+          ? this.attachments.get(tr.dataset.name)
           : null;
       }
       this.cancelUploads();
-      if (this.updatedAttachments.length !== 0) this.updatedAttachments = [];
+      this.updatedAttachments.clear();
     },
     ondragleave() {
       if (!this.fileIsOverDropZone) {
@@ -209,7 +211,7 @@ export default {
       // files is a FileList, not an Array, hence the style of for-loop.
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];
-        const attachment = this.attachments.find(a => a.name === file.name);
+        const attachment = this.attachments.get(file.name);
         if (attachment != null)
           this.plannedUploads.push({ attachment, file });
         else
@@ -270,8 +272,8 @@ export default {
         reader.readAsText(file);
       });
     },
-    // uploadFile() may mutate `updatedAttachments`.
-    uploadFile({ attachment, file }, updatedAttachments) {
+    // uploadFile() may mutate `updates`.
+    uploadFile({ attachment, file }, updates) {
       // We decrement uploadStatus.remaining here rather than after the POST so
       // that uploadStatus.remaining and uploadStatus.current continue to be in
       // sync.
@@ -315,17 +317,8 @@ export default {
           // This may differ a little from updatedAt on the server, but that
           // should be OK.
           const updatedAt = new Date().toISOString();
-          updatedAttachments.push({ ...attachment, exists: true, updatedAt });
+          updates.push([attachment.name, updatedAt]);
         });
-    },
-    updateAttachment(updatedAttachment) {
-      const index = this.attachments.findIndex(attachment =>
-        attachment.name === updatedAttachment.name);
-      this.$store.commit('setDataProp', {
-        key: 'attachments',
-        prop: index,
-        value: updatedAttachment
-      });
     },
     uploadFiles() {
       this.uploading = true;
@@ -333,27 +326,33 @@ export default {
       this.uploadStatus.total = this.plannedUploads.length;
       // This will soon be decremented by 1.
       this.uploadStatus.remaining = this.plannedUploads.length + 1;
-      const updated = [];
+      const updates = [];
       // Using `let` and this approach so that uploadStatus.total and
       // uploadStatus.current are initialized in the same tick, and
       // uploadStatus.remaining does not continue to be greater than
       // uploadStatus.total.
-      let promise = this.uploadFile(this.plannedUploads[0], updated);
+      let promise = this.uploadFile(this.plannedUploads[0], updates);
       for (let i = 1; i < this.plannedUploads.length; i += 1) {
         const upload = this.plannedUploads[i];
-        promise = promise.then(() => this.uploadFile(upload, updated));
+        promise = promise.then(() => this.uploadFile(upload, updates));
       }
       const initialRoute = this.$route;
       promise
         .catch(noop)
         .finally(() => {
           if (this.$route !== initialRoute) return;
-          if (updated.length === this.uploadStatus.total)
-            this.alert.success(this.$tcn('alert.success', updated.length));
-          for (const attachment of updated)
-            this.updateAttachment(attachment);
+          if (updates.length === this.uploadStatus.total)
+            this.alert.success(this.$tcn('alert.success', updates.length));
+          this.attachments.patch(() => {
+            for (const [name, updatedAt] of updates) {
+              const attachment = this.attachments.get(name);
+              attachment.exists = true;
+              attachment.updatedAt = updatedAt;
+
+              this.updatedAttachments.add(name);
+            }
+          });
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
-          if (updated.length !== 0) this.updatedAttachments = updated;
           this.uploading = false;
         });
       this.plannedUploads = [];

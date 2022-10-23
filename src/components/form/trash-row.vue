@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="form-trash-row">
     <td class="name">
-      <span class="form-name">{{ form.nameOrId() }}</span>
+      <span class="form-name">{{ form.nameOrId }}</span>
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
     <td class="deleted">
@@ -51,35 +51,31 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject } from 'vue';
-
 import DateTime from '../date-time.vue';
-import Form from '../../presenters/form';
-import { requestData } from '../../store/modules/request';
+
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormTrashRow',
   components: { DateTime },
   props: {
     form: {
-      type: Form,
+      type: Object,
       required: true
     }
   },
   emits: ['start-restore'],
   setup() {
-    const responseData = inject('responseData');
-    const { duplicateFormNames } = responseData.getters;
-    return { duplicateFormNames };
-  },
-  computed: {
     // The component assumes that this data will exist when the component is
     // created.
-    ...requestData(['forms', 'deletedForms']),
+    const { forms, deletedForms, duplicateFormNames } = useRequestData();
+    return { forms, deletedForms, duplicateFormNames };
+  },
+  computed: {
     activeFormIds() {
       // returns ids of existing forms to disable restoring deleted
       // forms with conflicting ids (also prevented on backend)
-      return (this.forms != null
+      return (this.forms.dataExists
         ? this.forms.map((f) => f.xmlFormId)
         : []);
     },
@@ -92,7 +88,8 @@ export default {
       return null;
     },
     showIdForDuplicateName() {
-      const name = this.form.nameOrId().toLocaleLowerCase();
+      if (this.duplicateFormNames == null) return false;
+      const name = this.form.nameOrId.toLocaleLowerCase();
       return this.duplicateFormNames.has(name);
     }
   },

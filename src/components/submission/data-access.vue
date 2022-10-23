@@ -26,24 +26,26 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionDataAccess',
   props: {
-    formVersion: Form
+    formVersion: Object
   },
   emits: ['analyze'],
-  computed: {
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['keys']),
+    const { keys } = useRequestData();
+    return { keys };
+  },
+  computed: {
     analyzeDisabled() {
       // If an encrypted form has no submissions, then there will never be
       // decrypted submissions available to OData (as long as the form remains
       // encrypted).
-      if (this.formVersion != null && this.formVersion.keyId != null &&
+      if (this.formVersion.dataExists && this.formVersion.keyId != null &&
         this.formVersion.submissions === 0)
         return true;
       if (this.keys != null && this.keys.length !== 0) return true;

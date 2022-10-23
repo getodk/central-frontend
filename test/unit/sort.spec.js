@@ -1,8 +1,10 @@
 import sortFunctions from '../../src/util/sort';
+import useProject from '../../src/request-data/project';
 import { ago } from '../../src/util/date-time';
-import Form from '../../src/presenters/form';
 
+import createTestContainer from '../util/container';
 import testData from '../data';
+import { testRequestData } from '../util/request-data';
 
 describe('util/sort', () => {
   it('has the expected sort functions', () => {
@@ -39,10 +41,16 @@ describe('util/sort', () => {
   });
 
   it('can sort forms by name and xmlFormId if name is null', () => {
-    const forms = [];
-    forms.push(new Form({ name: null, xmlFormId: 'a_id' }));
-    forms.push(new Form({ name: 'B', xmlFormId: 'name_b' }));
-    forms.push(new Form({ name: null, xmlFormId: 'c_id' }));
+    testData.extendedForms
+      .createPast(1, { name: null, xmlFormId: 'a_id' })
+      .createPast(1, { name: 'B', xmlFormId: 'name_b' })
+      .createPast(1, { name: null, xmlFormId: 'c_id' });
+    const { requestData } = createTestContainer({
+      requestData: testRequestData([useProject], {
+        forms: testData.extendedForms.sorted()
+      })
+    });
+    const { forms } = requestData.localResources;
     forms.sort(sortFunctions.alphabetical);
     forms.map((form) => form.xmlFormId).should.eql(['a_id', 'name_b', 'c_id']);
   });

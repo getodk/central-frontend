@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-settings">
-    <div v-if="project != null" class="row">
+    <div v-if="project.dataExists" class="row">
       <div class="col-xs-8">
         <project-edit/>
       </div>
@@ -87,7 +87,7 @@ import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectSettings',
@@ -101,6 +101,10 @@ export default {
   mixins: [modal(), routes()],
   inject: ['alert'],
   emits: ['fetch-project'],
+  setup() {
+    const { project } = useRequestData();
+    return { project };
+  },
   data() {
     return {
       enableEncryption: {
@@ -111,14 +115,13 @@ export default {
       }
     };
   },
-  computed: requestData(['project']),
   methods: {
     afterEnableEncryption() {
       this.hideModal('enableEncryption');
       this.$emit('fetch-project', true);
     },
-    afterArchive(project) {
-      const message = this.$t('alert.archive', project);
+    afterArchive() {
+      const message = this.$t('alert.archive', this.project);
       this.$router.push(this.projectPath())
         .then(() => { this.alert.success(message); });
     }

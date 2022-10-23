@@ -69,6 +69,8 @@ describe('AsyncRoute', () => {
     await wait();
     const { vm } = asyncRoute.getComponent(TestUtilP);
     await asyncRoute.setProps({ k: '1' });
+    await asyncRoute.vm.$nextTick();
+    await asyncRoute.vm.$nextTick();
     should(asyncRoute.getComponent(TestUtilP).vm).not.equal(vm);
   });
 

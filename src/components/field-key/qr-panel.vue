@@ -72,7 +72,7 @@ import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FieldKeyQrPanel',
@@ -81,8 +81,11 @@ export default {
     fieldKey: Object,
     managed: Boolean
   },
+  setup() {
+    const { project } = useRequestData();
+    return { project };
+  },
   computed: {
-    ...requestData(['project']),
     settings() {
       const url = apiPaths.serverUrlForFieldKey(
         this.fieldKey.token,

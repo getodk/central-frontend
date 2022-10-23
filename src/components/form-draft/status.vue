@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
-    <div v-show="formVersions != null" class="row">
+    <loading :state="formVersions.initiallyLoading"/>
+    <div v-show="formVersions.dataExists" class="row">
       <div class="col-xs-6">
         <page-section>
           <template #heading>
@@ -29,9 +29,9 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $t('common.currentDraft') }}</span>
           </template>
           <template #body>
-            <summary-item v-if="formDraft != null" icon="file-o">
+            <summary-item v-if="formDraft.dataExists" icon="file-o">
               <template #heading>
-                <form-version-string :version="formDraft.version"/>
+                <form-version-string :version="formDraft.get().version"/>
               </template>
               <template #body>
                 <i18n-t tag="p" keypath="currentDraft.versionCaption.full">
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
                   </template>
                 </i18n-t>
                 <div id="form-draft-status-standard-buttons-container">
-                  <form-version-standard-buttons :version="formDraft"
+                  <form-version-standard-buttons :version="formDraft.get()"
                     @view-xml="showModal('viewXml')"/>
                 </div>
                 <div>
@@ -76,7 +76,7 @@ except according to the terms contained in the LICENSE file.
       @success="afterUpload"/>
     <form-draft-publish v-bind="publish" @hide="hideModal('publish')"
       @success="afterPublish"/>
-    <form-draft-abandon v-if="form != null" v-bind="abandon"
+    <form-draft-abandon v-if="form.dataExists" v-bind="abandon"
       @hide="hideModal('abandon')" @success="afterAbandon"/>
   </div>
 </template>
@@ -94,14 +94,13 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
 
-import Option from '../../util/option';
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormDraftStatus',
@@ -130,6 +129,10 @@ export default {
     }
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
+  setup() {
+    const { form, formVersions, formDraft } = useRequestData();
+    return { form, formVersions, formDraft };
+  },
   data() {
     return {
       // Modals
@@ -147,24 +150,16 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData([
-    'form',
-    'formVersions',
-    { key: 'formDraft', getOption: true }
-  ]),
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'formVersions',
+      this.formVersions.request({
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,
         resend: false
-      }]).catch(noop);
+      }).catch(noop);
     },
     afterUpload() {
       this.$emit('fetch-draft');
@@ -179,22 +174,23 @@ export default {
       afterNextNavigation(this.$router, () => {
         // Re-request the project in case its `datasets` property has changed.
         this.$emit('fetch-project', true);
-        this.$store.commit('clearData', 'formVersions');
-        this.$store.commit('setData', { key: 'formDraft', value: Option.none() });
+        this.formVersions.data = null;
+        this.formDraft.setToNone();
         this.alert.success(this.$t('alert.publish'));
       });
       this.$router.push(this.formPath());
     },
-    afterAbandon(form) {
-      if (form.publishedAt != null) {
+    afterAbandon() {
+      if (this.form.publishedAt != null) {
         afterNextNavigation(this.$router, () => {
-          this.$store.commit('setData', { key: 'formDraft', value: Option.none() });
+          this.formDraft.setToNone();
           this.alert.success(this.$t('alert.abandon'));
         });
         this.$router.push(this.formPath());
       } else {
+        const { nameOrId } = this.form;
         afterNextNavigation(this.$router, () => {
-          this.alert.success(this.$t('alert.delete', { name: form.nameOrId() }));
+          this.alert.success(this.$t('alert.delete', { name: nameOrId }));
         });
         this.$router.push(this.projectPath());
       }

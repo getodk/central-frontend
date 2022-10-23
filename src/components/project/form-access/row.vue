@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span v-if="form.publishedAt == null" class="icon-edit"
           :title="$t('draftTitle')">
         </span>
-        <router-link :to="primaryFormPath(form)" :title="form.nameOrId()">{{ form.nameOrId() }}</router-link>
+        <router-link :to="primaryFormPath(form)" :title="form.nameOrId">{{ form.nameOrId }}</router-link>
       </td>
       <td>
         <div class="form-group">
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template v-else>
       <td></td>
-      <td v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id"
+      <td v-for="fieldKey of fieldKeys.withToken" :key="fieldKey.id"
         class="project-form-access-row-access">
         <div class="checkbox">
           <label>
@@ -51,17 +51,15 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
-import Form from '../../../presenters/form';
 import routes from '../../../mixins/routes';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectFormAccessRow',
   mixins: [routes()],
   props: {
     form: {
-      type: Form,
+      type: Object,
       required: true
     },
     changes: {
@@ -74,8 +72,11 @@ export default {
     }
   },
   emits: ['update:state', 'update:fieldKeyAccess'],
+  setup() {
+    const { fieldKeys } = useRequestData();
+    return { fieldKeys };
+  },
   computed: {
-    ...mapGetters(['fieldKeysWithToken']),
     htmlClass() {
       return {
         'project-form-access-row': true,

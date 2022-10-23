@@ -13,17 +13,17 @@ import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
-import { canRoute, forceReplace, preservesData, unlessFailure } from './util/router';
-import { keys as requestKeys } from './store/modules/request/keys';
+import { canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
+import { setDocumentTitle } from './util/reactivity';
 
 export default (container, history = createWebHashHistory()) => {
   const router = createRouter({ history, routes: createRoutes(container) });
-  const { store, alert, unsavedChanges } = container;
+  const { requestData, alert, unsavedChanges } = container;
 
 
 
@@ -57,6 +57,7 @@ router.afterEach(unlessFailure(to => {
   // During the initial navigation, the router sends requests for essential data
   // that is needed to render the app.
 
+  const { session } = requestData;
   {
     const requests = [
       () => {
@@ -70,9 +71,8 @@ router.afterEach(unlessFailure(to => {
       // Implements the restoreSession meta field. A test can skip this request
       // by setting the session before the initial navigation.
       async (to) => {
-        if (to.meta.restoreSession &&
-          store.state.request.data.session == null) {
-          await restoreSession(store);
+        if (to.meta.restoreSession && !session.dataExists) {
+          await restoreSession(session);
           await logIn(container, false);
         }
       }
@@ -86,63 +86,62 @@ router.afterEach(unlessFailure(to => {
 
 
 
-////////////////////////////////////////////////////////////////////////////////
-// LOGIN
+  //////////////////////////////////////////////////////////////////////////////
+  // LOGIN
 
-// Implements the requireLogin and requireAnonymity meta fields.
-router.beforeEach(to => {
-  const { session } = store.state.request.data;
-  if (to.meta.requireLogin && session == null)
-    return { path: '/login', query: { next: to.fullPath } };
-  if (to.meta.requireAnonymity && session != null)
-    return '/';
-  return true;
-});
-
+  // Implements the requireLogin and requireAnonymity meta fields.
+  router.beforeEach(to => {
+    if (to.meta.requireLogin && !session.dataExists)
+      return { path: '/login', query: { next: to.fullPath } };
+    if (to.meta.requireAnonymity && session.dataExists)
+      return '/';
+    return true;
+  });
 
 
-////////////////////////////////////////////////////////////////////////////////
-// RESPONSE DATA
 
-// Implements the preserveData meta field.
-router.afterEach(unlessFailure((to, from) => {
-  if (preservesData('*', to, from)) return;
-  for (const key of requestKeys) {
-    if (!preservesData(key, to, from)) {
-      if (store.state.request.data[key] != null) store.commit('clearData', key);
-      if (store.getters.loading(key)) store.commit('cancelRequest', key);
+  //////////////////////////////////////////////////////////////////////////////
+  // requestData
+
+  // Implements the preserveData meta field.
+  router.afterEach(unlessFailure((to, from) => {
+    const preserved = preservedData(to, from, requestData);
+    if (preserved.size === requestData.resources.size) return;
+    for (const resource of requestData.resources) {
+      if (!preserved.has(resource)) resource.reset();
     }
-  }
-}));
+  }));
 
-// validateData
+  // validateData
 
-router.beforeEach((to, from) => (canRoute(to, from, store) ? true : '/'));
+  router.beforeEach((to, from) =>
+    (canRoute(to, from, requestData) ? true : '/'));
 
 /*
-Set up watchers on the response data, and update them whenever the validateData
-meta field changes.
+Set up watchers on requestData, and update them whenever the validateData meta
+field changes.
 
-If a component sets up its own watchers on the response data, they should be run
-after the router's watchers. (That might not be the case if the component
-instance is reused after a route change, but that shouldn't happen given our use
-of the `key` attribute.)
+If a component sets up its own watchers on requestData, they should be run after
+the router's watchers. (That might not be the case if the component instance is
+reused after a route change, but that shouldn't happen given our use of the
+`key` option of asyncRoute().)
 */
 {
-  const unwatch = [];
+  const stop = [];
   router.afterEach(unlessFailure(to => {
-    while (unwatch.length !== 0)
-      unwatch.pop()();
+    while (stop.length !== 0)
+      stop.pop()();
 
-    for (const [key, validator] of to.meta.validateData) {
-      unwatch.push(store.watch((state) => state.request.data[key], (value) => {
-        if (value != null && !validator(value)) {
+    for (const [resource, validator] of to.meta.validateData) {
+      stop.push(watchEffect(() => {
+        if (resource.dataExists && !validator()) {
+          // TODO/requestData. Update these comments.
           // We are about to navigate to /. That alone should clear any data for
           // which there is a validateData condition. However, navigation is
           // asynchronous, and we need to make sure that the invalid data is not
           // used before the navigation is confirmed, for example, to update the
           // DOM. Given that, we clear the data immediately.
-          store.commit('clearData', key);
+          resource.data = null;
           forceReplace(container, '/');
         }
       }));
@@ -151,18 +150,12 @@ of the `key` attribute.)
 }
 
   // `title` meta field
-  watchEffect(() => {
-    // router.currentRoute.value === START_LOCATION when the watchEffect() is
-    // first run, as well as when the application instance is unmounted (in
-    // testing).
-    if (router.currentRoute.value !== START_LOCATION) {
-      const { title } = router.currentRoute.value.meta;
-      const parts = title(store.state.request.data);
-      // Append ODK Central to every title, filter out any null values (e.g.
-      // project name before the project object was loaded), join with
-      // separator.
-      document.title = parts.concat('ODK Central').filter(x => x).join(' | ');
-    }
+  setDocumentTitle(() => {
+    // router.currentRoute.value === START_LOCATION when the router is first
+    // created, as well as when the app instance is unmounted (in testing).
+    if (router.currentRoute.value === START_LOCATION) return [];
+    const { title } = router.currentRoute.value.meta;
+    return title != null ? title() : [];
   });
 
 

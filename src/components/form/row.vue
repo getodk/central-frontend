@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="form-row">
     <td class="name">
       <link-if-can :to="primaryFormPath(form)">
-        {{ form.nameOrId() }}
+        {{ form.nameOrId }}
       </link-if-can>
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
@@ -82,17 +82,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject } from 'vue';
-
 import DateTime from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
 import LinkIfCan from '../link-if-can.vue';
-import Form from '../../presenters/form';
-import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
-import useReviewState from '../../composables/review-state';
 
+import routes from '../../mixins/routes';
+import { useRequestData } from '../../request-data';
+import useReviewState from '../../composables/review-state';
 
 export default {
   name: 'FormRow',
@@ -100,7 +97,7 @@ export default {
   mixins: [routes()],
   props: {
     form: {
-      type: Form,
+      type: Object,
       required: true
     },
     showActions: {
@@ -109,15 +106,11 @@ export default {
     }
   },
   setup() {
-    const responseData = inject('responseData');
-    const { duplicateFormNames } = responseData.getters;
+    const { project, duplicateFormNames } = useRequestData();
     const { reviewStateIcon } = useReviewState();
-    return { duplicateFormNames, reviewStateIcon };
+    return { project, duplicateFormNames, reviewStateIcon };
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['project', 'forms', 'deletedForms']),
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],
     urlFilterEncode() {
       return new Map()
@@ -133,7 +126,8 @@ export default {
       );
     },
     showIdForDuplicateName() {
-      const name = this.form.nameOrId().toLocaleLowerCase();
+      if (this.duplicateFormNames == null) return false;
+      const name = this.form.nameOrId.toLocaleLowerCase();
       return this.duplicateFormNames.has(name);
     }
   }

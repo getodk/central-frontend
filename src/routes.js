@@ -9,10 +9,11 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { always, equals } from 'ramda';
+
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
 
-import { instanceNameOrId } from './util/odata';
 import { routeProps } from './util/router';
 
 export default (container) => {
@@ -78,50 +79,34 @@ The following meta fields are supported for bottom-level routes:
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
 
-  Response Data
-  -------------
+  requestData
+  -----------
 
-  - preserveData (optional)
-
-    By default, whenever the route changes, data is cleared for all request
-    keys. preserveData specifies exceptions to that rule. Here is an example
-    value:
-
-    {
-      // Do not clear data for the 'project' key if the user is navigating from
-      // the route named 'ProjectOverview' and if the routes' params match on
-      // 'projectId'.
-      project: {
-        ProjectOverview: ['projectId']
-      },
-
-      // Do not clear data for any key if the user is navigating from a route
-      // named 'ProjectUserList' or FieldKeyList' and if the routes' params
-      // match on ['projectId'].
-      '*': {
-        ProjectUserList: ['projectId']
-        FieldKeyList: ['projectId']
-      }
-    }
-
-    Do not set preserveData directly: use preserveDataForKey() instead.
-
+  - preserveData (optional). By default, whenever the route changes, all
+    app-wide requestData resources are cleared. preserveData specifies
+    exceptions to that rule. preserveData holds an array of functions, each of
+    which can preserve one or more app-wide resources. Each function is passed
+    the new and old routes and should return either an array of resources to
+    preserve or a boolean. If a function returns `true`, all app-wide resources
+    will be preserved. preserveData meta fields are set in a section below.
+    preserveData does not affect local resources, which are tied to the
+    lifecycle of the component, not the route.
   - validateData (optional)
 
     Some routes can be navigated to only if certain conditions are met. For
     example, the user may have to be able to perform certain verbs sitewide.
 
-    validateData checks that conditions about the response data are met.
-    (Perhaps more precisely, it checks that no condition is violated.) Here is
-    an example value:
+    validateData checks that conditions about requestData are met. (Perhaps more
+    precisely, it checks that no condition is violated.) Here is an example
+    value:
 
     {
       // Specifies a condition for currentUser: the user must be able to
       // user.list sitewide.
-      currentUser: (currentUser) => currentUser.can('user.list'),
+      currentUser: () => currentUser.can('user.list'),
       // Specifies a condition for `project`: the user must be able to
       // assignment.list for the project.
-      project: (project) => project.permits('assignment.list')
+      project: () => project.permits('assignment.list')
     }
 
     Before the user navigates to the route, any data that will be preserved
@@ -146,31 +131,26 @@ The following meta fields are supported for bottom-level routes:
     combine to build the full document title.
 
     The `title` function likely uses the i18n translations (specified in
-    `src/locales/en.json5`).
-
-    It may also use fields of a particular resource (e.g. `project.name`). This is
-    passed in as title({ <object> }) where the object is destructured from the
-    Vuex store: `store.state.request.data` (which has data stored at various keys
-    described here: `src/store/modules/request/keys.js`).
+    `src/locales/en.json5`). It may also use fields of a particular resource
+    (e.g. `project.name`).
 
     The IMPORTANT thing to note is that most resources are loaded asynchronously
-    after the page is loaded, so the Project, Form, User, etc. object may not have
-    information about it right away. The `title` function should account for the
-    possibility that the data for a particular resource does not exist. (Note
-    that the array that the `title` function returns may contain `null`
-    elements.) The result of the `title` function will be watched, and the
-    document title will be updated once the data exists. If the information
-    about a resource is already loaded, from viewing different pages about the
-    same project or form for example, the proper title will be set immediately
-    after the navigation is confirmed.
+    after the page is loaded, so the Project, Form, User, etc. resource may not
+    have data right away. Because of that, the `title` function should account
+    for the possibility of a resource that does not have data yet. (Note that
+    the array that the `title` function returns may contain `null` elements.)
+    The result of the `title` function will be watched, and the document title
+    will be updated once the resource has data. If a resource already has data,
+    from viewing different pages about the same project or form for example, the
+    proper title will be set immediately after the navigation is confirmed.
 
     Here is an example `title` function with
     * i18n
-    * fetching information from an object that may be null
+    * fetching information from a resource that might not have data
 
-    ({ project }) => [
+    () => [
       i18n.t('title.project.appUsers'),
-      project != null ? project.name : null
+      project.name // project.name may be `null`
     ]
 */
 
@@ -187,11 +167,11 @@ standard route config to asyncRoute() with the following additions:
     The `key` option determines whether a component is re-rendered after a route
     update, for example, after a param change.
 
-    By default, we use the `key` attribute to re-render the component whenever
-    the route path changes. In other words, we opt out of the default Vue
-    Router behavior, which reuses the component instance. Re-rendering the
-    component simplifies component code and makes it easier to reason about
-    component state.
+    By default, we use a mechanism similar to the `key` attribute to re-render
+    the component whenever the route path changes. In other words, we opt out of
+    the default Vue Router behavior, which reuses the component instance.
+    Re-rendering the component simplifies component code and makes it easier to
+    reason about component state.
 
     However, when using nested routes, we may wish to reuse a parent component
     instance while re-rendering a child component. To reuse a component instance
@@ -219,7 +199,8 @@ const asyncRoute = (options) => {
   return config;
 };
 
-const { i18n, config } = container;
+const { i18n, requestData, config } = container;
+const { currentUser, project, form, formDraft, attachments } = requestData;
 const routes = [
   {
     path: '/login',
@@ -275,9 +256,9 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits('form.list')
+            project: () => project.permits('form.list')
           },
-          title: ({ project }) => [project != null ? project.name : null]
+          title: () => [project.name]
         }
       }),
       asyncRoute({
@@ -287,16 +268,13 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits([
+            project: () => project.permits([
               'assignment.list',
               'assignment.create',
               'assignment.delete'
             ])
           },
-          title: ({ project }) => [
-            i18n.t('resource.projectRoles'),
-            project != null ? project.name : null
-          ]
+          title: () => [i18n.t('resource.projectRoles'), project.name]
         }
       }),
       asyncRoute({
@@ -306,16 +284,13 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits([
+            project: () => project.permits([
               'field_key.list',
               'field_key.create',
               'session.end'
             ])
           },
-          title: ({ project }) => [
-            i18n.t('resource.appUsers'),
-            project != null ? project.name : null
-          ]
+          title: () => [i18n.t('resource.appUsers'), project.name]
         }
       }),
       asyncRoute({
@@ -325,7 +300,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits([
+            project: () => project.permits([
               'form.list',
               'field_key.list',
               'assignment.list',
@@ -335,10 +310,7 @@ const routes = [
               'assignment.delete'
             ])
           },
-          title: ({ project }) => [
-            i18n.t('projectShow.tab.formAccess'),
-            project != null ? project.name : null
-          ]
+          title: () => [i18n.t('projectShow.tab.formAccess'), project.name]
         }
       }),
       asyncRoute({
@@ -348,14 +320,10 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) =>
-              project.permits(['dataset.list', 'entity.list']) &&
+            project: () => project.permits(['dataset.list', 'entity.list']) &&
               project.datasets !== 0
           },
-          title: ({ project }) => [
-            i18n.t('resource.datasets'),
-            project != null ? project.name : null
-          ]
+          title: () => [i18n.t('resource.datasets'), project.name]
         }
       }),
       asyncRoute({
@@ -364,12 +332,9 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits(['project.update'])
+            project: () => project.permits(['project.update'])
           },
-          title: ({ project }) => [
-            i18n.t('common.tab.settings'),
-            project != null ? project.name : null
-          ]
+          title: () => [i18n.t('common.tab.settings'), project.name]
         }
       })
     ]
@@ -392,13 +357,12 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) =>
-              // Including form.update in order to exclude project viewers and
-              // Data Collectors.
-              project.permits(['form.read', 'form.update']),
-            form: (form) => form.publishedAt != null
+            // Including form.update in order to exclude project viewers and
+            // Data Collectors.
+            project: () => project.permits(['form.read', 'form.update']),
+            form: () => form.publishedAt != null
           },
-          title: ({ form }) => [form != null ? form.nameOrId() : null]
+          title: () => [form.nameOrId]
         }
       }),
       asyncRoute({
@@ -408,15 +372,11 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) =>
-              // Including submission.list in order to exclude Data Collectors.
-              project.permits(['form.read', 'submission.list']),
-            form: (form) => form.publishedAt != null
+            // Including submission.list in order to exclude Data Collectors.
+            project: () => project.permits(['form.read', 'submission.list']),
+            form: () => form.publishedAt != null
           },
-          title: ({ form }) => [
-            i18n.t('formHead.tab.versions'),
-            form != null ? form.nameOrId() : null
-          ]
+          title: () => [i18n.t('formHead.tab.versions'), form.nameOrId]
         }
       }),
       asyncRoute({
@@ -426,17 +386,14 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits([
+            project: () => project.permits([
               'form.read',
               'submission.list',
               'submission.read'
             ]),
-            form: (form) => form.publishedAt != null
+            form: () => form.publishedAt != null
           },
-          title: ({ form }) => [
-            i18n.t('resource.submissions'),
-            form != null ? form.nameOrId() : null
-          ]
+          title: () => [i18n.t('resource.submissions'), form.nameOrId]
         }
       }),
       asyncRoute({
@@ -446,18 +403,15 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits([
+            project: () => project.permits([
               'form.read',
               'public_link.list',
               'public_link.create',
               'session.end'
             ]),
-            form: (form) => form.publishedAt != null
+            form: () => form.publishedAt != null
           },
-          title: ({ form }) => [
-            i18n.t('formHead.tab.publicAccess'),
-            form != null ? form.nameOrId() : null
-          ]
+          title: () => [i18n.t('formHead.tab.publicAccess'), form.nameOrId]
         }
       }),
       asyncRoute({
@@ -466,14 +420,14 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) =>
-              project.permits(['form.read', 'form.update', 'form.delete']),
-            form: (form) => form.publishedAt != null
+            project: () => project.permits([
+              'form.read',
+              'form.update',
+              'form.delete'
+            ]),
+            form: () => form.publishedAt != null
           },
-          title: ({ form }) => [
-            i18n.t('common.tab.settings'),
-            form != null ? form.nameOrId() : null
-          ]
+          title: () => [i18n.t('common.tab.settings'), form.nameOrId]
         }
       }),
       asyncRoute({
@@ -483,14 +437,14 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) =>
-              project.permits(['form.read', 'form.update', 'form.delete']),
-            formDraft: (formDraft) => formDraft.isDefined()
+            project: () => project.permits([
+              'form.read',
+              'form.update',
+              'form.delete'
+            ]),
+            formDraft: () => formDraft.isDefined()
           },
-          title: ({ form }) => [
-            i18n.t('formHead.draftNav.tab.status'),
-            form != null ? form.nameOrId() : null
-          ]
+          title: () => [i18n.t('formHead.draftNav.tab.status'), form.nameOrId]
         }
       }),
       asyncRoute({
@@ -499,14 +453,13 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits(['form.read', 'form.update']),
-            attachments: (option) => option
-              .map(attachments => attachments.length !== 0)
-              .orElse(false)
+            project: () => project.permits(['form.read', 'form.update']),
+            attachments: () => attachments.isDefined() &&
+              attachments.get().size !== 0
           },
-          title: ({ form }) => [
+          title: () => [
             i18n.t('formHead.draftNav.tab.attachments'),
-            form != null ? form.nameOrId() : null
+            form.nameOrId
           ]
         }
       }),
@@ -517,16 +470,16 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: (project) => project.permits([
+            project: () => project.permits([
               'form.read',
               'submission.list',
               'submission.read'
             ]),
-            formDraft: (formDraft) => formDraft.isDefined()
+            formDraft: () => formDraft.isDefined()
           },
-          title: ({ form }) => [
+          title: () => [
             i18n.t('formHead.draftNav.tab.testing'),
-            form != null ? form.nameOrId() : null
+            form.nameOrId
           ]
         }
       })
@@ -539,11 +492,8 @@ const routes = [
     loading: 'page',
     meta: {
       validateData: {
-        project: (project) => project.permits('submission.read')
-      },
-      title: ({ submission }) => (submission == null
-        ? [i18n.t('title.details')]
-        : [`${i18n.t('title.details')}: ${instanceNameOrId(submission)}`])
+        project: () => project.permits('submission.read')
+      }
     }
   }),
 
@@ -559,7 +509,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            currentUser: (currentUser) => currentUser.can([
+            currentUser: () => currentUser.can([
               'user.list',
               'assignment.list',
               'user.create',
@@ -581,10 +531,8 @@ const routes = [
     loading: 'page',
     meta: {
       validateData: {
-        currentUser: (currentUser) =>
-          currentUser.can(['user.read', 'user.update'])
-      },
-      title: ({ user }) => [user != null ? user.displayName : null]
+        currentUser: () => currentUser.can(['user.read', 'user.update'])
+      }
     }
   }),
   asyncRoute({
@@ -608,7 +556,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            currentUser: (currentUser) => currentUser.can([
+            currentUser: () => currentUser.can([
               'config.read',
               'config.set',
               'backup.run',
@@ -625,7 +573,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            currentUser: (currentUser) => currentUser.can('audit.read')
+            currentUser: () => currentUser.can('audit.read')
           },
           title: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')]
         }
@@ -636,8 +584,11 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            currentUser: (currentUser) =>
-              currentUser.can(['config.read', 'config.set', 'analytics.read'])
+            currentUser: () => currentUser.can([
+              'config.read',
+              'config.set',
+              'analytics.read'
+            ])
           },
           title: () => [
             i18n.t('systemHome.tab.analytics'),
@@ -676,19 +627,19 @@ const routes = [
 ////////////////////////////////////////////////////////////////////////////////
 // TRAVERSE ROUTES
 
-const routesByName = {};
+const routesByName = new Map();
 {
   // Normalizes the values of meta fields, including by setting defaults.
   const normalizeMeta = (meta) => ({
     restoreSession: true,
     requireLogin: true,
     requireAnonymity: false,
-    preserveData: {},
-    title: () => [],
+    preserveData: [],
     ...meta,
-    validateData: meta != null && meta.validateData != null
-      ? Object.entries(meta.validateData)
-      : []
+    validateData: meta == null || meta.validateData == null
+      ? []
+      : Object.entries(meta.validateData)
+        .map(([name, validator]) => [requestData[name], validator])
   });
 
   const stack = [...routes];
@@ -701,66 +652,47 @@ const routesByName = {};
         stack.push(child);
     } else {
       route.meta = normalizeMeta(route.meta);
-      routesByName[route.name] = route;
+      routesByName.set(route.name, route);
     }
   }
 }
+  /* eslint-enable indent */ // TODO/vue3
 
 
 
-////////////////////////////////////////////////////////////////////////////////
-// PRESERVE DATA
+  //////////////////////////////////////////////////////////////////////////////
+  // PRESERVE DATA
 
-/*
-preserveDataForKey() sets the preserveData meta field so that when the route
-changes from `from` to `to`, and the routes' params match on `params`, the data
-for `key` is not cleared.
+  // Data that is always preserved after navigation
+  const alwaysPreserve = always([
+    requestData.session,
+    currentUser,
+    requestData.centralVersion,
+    requestData.analyticsConfig,
+    requestData.roles
+  ]);
+  for (const route of routesByName.values())
+    route.meta.preserveData.push(alwaysPreserve);
 
-  - key. A request key or '*'.
-  - to. An array of route names.
-  - from (default: `to`). An array of route names.
-  - params. An array of param names.
-*/
-const preserveDataForKey = ({ key, to, params, from = to }) => {
-  for (const toName of to) {
-    const { preserveData } = routesByName[toName].meta;
-    if (preserveData[key] == null) preserveData[key] = {};
-    const paramsByFrom = preserveData[key];
-    for (const fromName of from)
-      paramsByFrom[fromName] = params;
-  }
-};
+  // Preserves data when navigating from one of the specified routes to another.
+  const preserveDataBetweenRoutes = (routeNames, f) => {
+    const nameSet = new Set(routeNames);
+    const preserve = (to, from) => nameSet.has(from.name) && f(to, from);
+    for (const name of nameSet)
+      routesByName.get(name).meta.preserveData.push(preserve);
+  };
 
-// Data that does not change with navigation
-{
-  const keys = [
-    'centralVersion',
-    'session',
-    'currentUser',
-    'roles',
-    'analyticsConfig'
-  ];
-  const names = Object.keys(routesByName);
-  for (const key of keys)
-    preserveDataForKey({ key, to: names, params: [] });
-}
-
-// Tabs
-preserveDataForKey({
-  key: '*',
-  to: [
+  // Preserve data when navigating between tabs.
+  const preserveBetweenTabs = (to, from) => equals(to.params, from.params);
+  const projectRoutes = [
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
     'ProjectFormAccess',
     'DatasetList',
     'ProjectSettings'
-  ],
-  params: ['projectId']
-});
-preserveDataForKey({
-  key: '*',
-  to: [
+  ];
+  const formRoutes = [
     'FormOverview',
     'FormVersionList',
     'FormSubmissions',
@@ -769,34 +701,17 @@ preserveDataForKey({
     'FormDraftStatus',
     'FormAttachmentList',
     'FormDraftTesting'
-  ],
-  params: ['projectId', 'xmlFormId']
-});
+  ];
+  preserveDataBetweenRoutes(projectRoutes, preserveBetweenTabs);
+  preserveDataBetweenRoutes(formRoutes, preserveBetweenTabs);
 
-preserveDataForKey({
-  key: 'project',
-  to: [
-    // ProjectShow
-    'ProjectOverview',
-    'ProjectUserList',
-    'FieldKeyList',
-    'ProjectFormAccess',
-    'DatasetList',
-    'ProjectSettings',
-    // FormShow
-    'FormOverview',
-    'FormVersionList',
-    'FormSubmissions',
-    'PublicLinkList',
-    'FormSettings',
-    'FormDraftStatus',
-    'FormAttachmentList',
-    'FormDraftTesting',
-    // SubmissionShow
-    'SubmissionShow'
-  ],
-  params: ['projectId']
-});
+  // Preserve requestData.project.
+  preserveDataBetweenRoutes(
+    [...projectRoutes, ...formRoutes, 'SubmissionShow'],
+    (to, from) => (to.params.projectId === from.params.projectId
+      ? [project]
+      : false)
+  );
 
 
 

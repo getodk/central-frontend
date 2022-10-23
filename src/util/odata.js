@@ -11,13 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 
 // Converts a string value or `null` to an OData literal value.
+// eslint-disable-next-line import/prefer-default-export
 export const odataLiteral = (value) => (value != null
   ? `'${value.replaceAll("'", "''")}'`
   : 'null');
-
-export const instanceNameOrId = (odata) => {
-  const { meta } = odata;
-  return meta != null && typeof meta.instanceName === 'string'
-    ? meta.instanceName
-    : odata.__id;
-};

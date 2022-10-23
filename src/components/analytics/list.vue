@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <span>{{ $t('auditsTitle') }}</span>
         </template>
         <template #body>
-          <audit-table :audits="audits"/>
+          <audit-table/>
         </template>
       </page-section>
     </template>
@@ -45,10 +45,7 @@ import PageSection from '../page/section.vue';
 
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-const requestKeys = ['analyticsConfig', 'audits'];
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'AnalyticsList',
@@ -60,6 +57,13 @@ export default {
     PageSection
   },
   mixins: [modal()],
+  setup() {
+    const { analyticsConfig, createResource, resourceStates } = useRequestData();
+    const audits = createResource('audits');
+    return {
+      analyticsConfig, audits, ...resourceStates([analyticsConfig, audits])
+    };
+  },
   data() {
     return {
       preview: {
@@ -67,31 +71,20 @@ export default {
       }
     };
   },
-  computed: {
-    ...requestData(requestKeys),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(requestKeys);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(requestKeys);
-    }
-  },
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [
-        {
-          key: 'analyticsConfig',
+      Promise.allSettled([
+        this.analyticsConfig.request({
           url: '/v1/config/analytics',
           fulfillProblem: ({ code }) => code === 404.1
-        },
-        {
-          key: 'audits',
+        }),
+        this.audits.request({
           url: apiPaths.audits({ action: 'analytics', limit: 10 })
-        }
-      ]).catch(noop);
+        })
+      ]);
     }
   }
 };

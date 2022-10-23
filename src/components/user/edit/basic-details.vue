@@ -30,46 +30,44 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'UserEditBasicDetails'
+};
+</script>
+<script setup>
+import { inject, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 import FormGroup from '../../form-group.vue';
 import Spinner from '../../spinner.vue';
-import request from '../../../mixins/request';
+
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { useRequestData } from '../../../request-data';
 
-export default {
-  name: 'UserEditBasicDetails',
-  components: { FormGroup, Spinner },
-  mixins: [request()],
-  inject: ['alert'],
-  data() {
-    const { email, displayName } = this.$store.state.request.data.user;
-    return {
-      awaitingResponse: false,
-      email,
-      displayName
-    };
-  },
-  // The component assumes that this data will exist when the component is
-  // created.
-  computed: requestData(['user']),
-  methods: {
-    submit() {
-      this.request({
-        method: 'PATCH',
-        url: apiPaths.user(this.user.id),
-        data: { email: this.email, displayName: this.displayName }
-      })
-        .then(response => {
-          this.$store.commit('setData', {
-            key: 'user',
-            value: this.user.with(response.data)
-          });
-          this.alert.success(this.$t('alert.success'));
-        })
-        .catch(noop);
+// The component assumes that this data will exist when the component is
+// created.
+const { user } = useRequestData();
+const { awaitingResponse } = user.toRefs();
+
+const email = ref(user.email);
+const displayName = ref(user.displayName);
+
+const { t } = useI18n();
+const alert = inject('alert');
+const submit = () => {
+  user.request({
+    method: 'PATCH',
+    url: apiPaths.user(user.id),
+    data: { email: email.value, displayName: displayName.value },
+    patch: ({ data }) => {
+      user.email = data.email;
+      user.displayName = data.displayName;
+      user.updatedAt = data.updatedAt;
     }
-  }
+  })
+    .then(() => { alert.success(t('alert.success')); })
+    .catch(noop);
 };
 </script>
 

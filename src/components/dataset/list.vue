@@ -12,37 +12,33 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <dataset-table/>
-    <loading :state="$store.getters.initiallyLoading(['datasets'])"/>
+    <loading :state="datasets.initiallyLoading"/>
   </div>
 </template>
 
 <script>
+export default {
+  name: 'DatasetList'
+};
+</script>
+<script setup>
 import DatasetTable from './table.vue';
 import Loading from '../loading.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'DatasetList',
-  components: { DatasetTable, Loading },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.$store.dispatch('get', [{
-        key: 'datasets',
-        url: apiPaths.datasets(this.projectId),
-        resend: false
-      }]).catch(noop);
-    }
+const props = defineProps({
+  projectId: {
+    type: String,
+    required: true
   }
-};
+});
+
+const { datasets } = useRequestData();
+datasets.request({
+  url: apiPaths.datasets(props.projectId),
+  resend: false
+}).catch(noop);
 </script>

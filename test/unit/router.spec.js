@@ -6,11 +6,12 @@ import createTestContainer from '../util/container';
 import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
-import { resolveRoute, testRouter } from '../util/router';
+import { testRouter } from '../util/router';
 
 describe('util/router', () => {
   describe('routeProps()', () => {
-    const route = resolveRoute('/projects/1');
+    const { router } = createTestContainer({ router: testRouter() });
+    const route = router.resolve('/projects/1');
 
     it('returns an empty object if props is undefined', () => {
       routeProps(route, undefined).should.eql({});

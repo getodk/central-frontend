@@ -45,7 +45,7 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormDraftAbandon',
@@ -58,15 +58,18 @@ export default {
     }
   },
   emits: ['hide', 'success'],
+  setup() {
+    // The component assumes that this data will exist when the component is
+    // created.
+    const { form } = useRequestData();
+    return { form };
+  },
   data() {
     return {
       awaitingResponse: false
     };
   },
   computed: {
-    // The component assumes that this data will exist when the component is
-    // created.
-    ...requestData(['form']),
     title() {
       return this.form.publishedAt != null
         ? this.$t('title.abandon')
@@ -85,7 +88,7 @@ export default {
           // project.forms and project.lastSubmission may now be out-of-date. If
           // the user navigates to ProjectOverview, project.forms should be
           // updated. project.lastSubmission is not used within ProjectShow.
-          this.$emit('success', this.form);
+          this.$emit('success');
         })
         .catch(noop);
     }

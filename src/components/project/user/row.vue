@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
             :disabled="disabled" :title="selectTitle"
             :aria-label="$t('field.projectRole')"
             @change="change($event.target.value)">
-            <option v-for="role of $store.getters.projectRoles" :key="role.id"
+            <option v-for="role of roles.projectRoles" :key="role.id"
               :value="role.id.toString()">
               {{ $t(`role.${role.system}`) }}
             </option>
@@ -44,7 +44,7 @@ import Spinner from '../../spinner.vue';
 import request from '../../../mixins/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
-import { requestData } from '../../../store/modules/request';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectUserRow',
@@ -57,6 +57,10 @@ export default {
     }
   },
   emits: ['increment-count', 'decrement-count', 'change'],
+  setup() {
+    const { currentUser, roles, project } = useRequestData();
+    return { currentUser, roles, project };
+  },
   data() {
     return {
       // If two requests are sent, there may be a moment between them when
@@ -68,7 +72,6 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser', 'roles', 'project']),
     disabled() {
       return this.assignment.actor.id === this.currentUser.id ||
         this.awaitingResponse;

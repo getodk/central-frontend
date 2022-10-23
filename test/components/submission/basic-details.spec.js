@@ -2,17 +2,20 @@ import DateTime from '../../../src/components/date-time.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 import SubmissionBasicDetails from '../../../src/components/submission/basic-details.vue';
 
+import useSubmission from '../../../src/request-data/submission';
+
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
+import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (options = undefined) =>
   mount(SubmissionBasicDetails, mergeMountOptions(options, {
     container: {
-      requestData: {
+      requestData: testRequestData([useSubmission], {
         submission: testData.submissionOData(),
         submissionVersion: {}
-      }
+      })
     }
   }));
 

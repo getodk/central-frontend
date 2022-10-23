@@ -326,7 +326,7 @@ describe('util/request', () => {
 
   describe('withAuth()', () => {
     it('specifies the session token in the Authorization header', () => {
-      withAuth({ url: '/v1/users' }, { token: 'xyz' }).should.eql({
+      withAuth({ url: '/v1/users' }, 'xyz').should.eql({
         url: '/v1/users',
         headers: { Authorization: 'Bearer xyz' }
       });
@@ -334,10 +334,10 @@ describe('util/request', () => {
 
     it('does not add an Authorization header if URL does not start with /v1', () => {
       const config = { url: '/version.txt' };
-      withAuth(config, { token: 'xyz' }).should.equal(config);
+      withAuth(config, 'xyz').should.equal(config);
     });
 
-    it('does not add an Authorization header if there is no session', () => {
+    it('does not add an Authorization header if there is not a token', () => {
       const config = { url: '/v1/users' };
       withAuth(config, null).should.equal(config);
     });
@@ -347,7 +347,7 @@ describe('util/request', () => {
         url: '/v1/users',
         headers: { Authorization: 'auth' }
       };
-      withAuth(config, { token: 'xyz' }).should.equal(config);
+      withAuth(config, 'xyz').should.equal(config);
     });
 
     it('preserves other headers and options', () => {
@@ -356,7 +356,7 @@ describe('util/request', () => {
         url: '/v1/users',
         headers: { 'X-Extended-Metadata': 'true' }
       };
-      withAuth(config, { token: 'xyz' }).should.eql({
+      withAuth(config, 'xyz').should.eql({
         method: 'GET',
         url: '/v1/users',
         headers: { 'X-Extended-Metadata': 'true', Authorization: 'Bearer xyz' }
@@ -420,6 +420,8 @@ describe('util/request', () => {
   });
 
   describe('requestAlertMessage()', () => {
+    const i18n = createCentralI18n().global;
+
     const errorWithProblem = (code = 500.1) => mockAxiosError({
       status: Math.floor(code),
       data: { code, message: 'Message from API' },
@@ -427,19 +429,19 @@ describe('util/request', () => {
     });
 
     it('returns a message if there was no request', () => {
-      const message = requestAlertMessage(createCentralI18n().global, new Error());
+      const message = requestAlertMessage(i18n, new Error());
       message.should.equal('Something went wrong: there was no request.');
     });
 
     it('returns a message if there was no response', () => {
       const error = new Error();
       error.request = {};
-      const message = requestAlertMessage(createCentralI18n().global, error);
+      const message = requestAlertMessage(i18n, error);
       message.should.equal('Something went wrong: there was no response to your request.');
     });
 
     it('returns a message with status code if request URL does not start with /v1', () => {
-      const message = requestAlertMessage(createCentralI18n().global, mockAxiosError({
+      const message = requestAlertMessage(i18n, mockAxiosError({
         status: 500,
         data: { code: 500.1, message: 'Message from Google' },
         config: { url: 'https://www.google.com' }
@@ -448,7 +450,7 @@ describe('util/request', () => {
     });
 
     it('returns a message with status code if response is not a Problem', () => {
-      const message = requestAlertMessage(createCentralI18n().global, mockAxiosError({
+      const message = requestAlertMessage(i18n, mockAxiosError({
         status: 500,
         data: { x: 1 },
         config: { url: '/v1/projects/1/forms/f' }
@@ -457,7 +459,6 @@ describe('util/request', () => {
     });
 
     it('returns the message of a Problem', () => {
-      const i18n = createCentralI18n().global;
       const message = requestAlertMessage(i18n, errorWithProblem());
       message.should.equal('Message from API');
     });
@@ -465,7 +466,7 @@ describe('util/request', () => {
     describe('problemToAlert', () => {
       it('returns the message from the function', () => {
         const message = requestAlertMessage(
-          createCentralI18n().global,
+          i18n,
           errorWithProblem(),
           (problem) =>
             `Message from problemToAlert: ${problem.message} (${problem.code})`
@@ -475,58 +476,8 @@ describe('util/request', () => {
 
       it('returns the Problem message if the function returns null', () => {
         const message = requestAlertMessage(
-          createCentralI18n().global,
+          i18n,
           errorWithProblem(),
-          () => null
-        );
-        message.should.equal('Message from API');
-      });
-    });
-
-    describe('i18n', () => {
-      const i18n = createCentralI18n().global;
-      i18n.setLocaleMessage('la', {
-        problem: {
-          '401_2': 'Message for locale: {message} ({code})'
-        }
-      });
-      i18n.locale = 'la';
-      i18n.setLocaleMessage('ett', {
-        problem: {
-          '401_2': 'Message for fallback (401.2)',
-          '404_1': 'Message for fallback (404.1)'
-        }
-      });
-      i18n.fallbackLocale = 'ett';
-
-      it('returns an i18n message for the Problem code', () => {
-        const message = requestAlertMessage(i18n, errorWithProblem(401.2));
-        message.should.equal('Message for locale: Message from API (401.2)');
-      });
-
-      it('returns the Problem message if there is no i18n message', () => {
-        const message = requestAlertMessage(i18n, errorWithProblem());
-        message.should.equal('Message from API');
-      });
-
-      it('returns an i18n message for the fallback locale', () => {
-        const message = requestAlertMessage(i18n, errorWithProblem(404.1));
-        message.should.equal('Message for fallback (404.1)');
-      });
-
-      it('does not return i18n message if problemToAlert function returns string', () => {
-        const message = requestAlertMessage(
-          i18n,
-          errorWithProblem(401.2),
-          () => 'Message from problemToAlert'
-        );
-        message.should.equal('Message from problemToAlert');
-      });
-
-      it('does not return i18n message if problemToAlert function returns null', () => {
-        const message = requestAlertMessage(
-          i18n,
-          errorWithProblem(401.2),
           () => null
         );
         message.should.equal('Message from API');

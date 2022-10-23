@@ -72,7 +72,9 @@ export default {
         method: 'POST',
         url: '/v1/users/reset/verify',
         headers,
-        data: { new: this.password }
+        data: { new: this.password },
+        problemToAlert: (problem) =>
+          (problem.code === 401.2 ? this.$t('problem.401_2', problem) : null)
       })
         .then(() => {
           const message = this.$t('alert.success');

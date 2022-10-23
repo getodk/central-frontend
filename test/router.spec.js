@@ -197,9 +197,14 @@ describe('createCentralRouter()', () => {
   describe('preserveData', () => {
     beforeEach(mockLogin);
 
-    const dataExists = (keys) => (app) => {
-      for (const key of keys)
-        should.exist(app.vm.$store.state.request.data[key]);
+    const dataExists = (names) => (app) => {
+      const { requestData } = app.vm.$container;
+      for (const name of names) {
+        const resource = requestData[name] != null
+          ? requestData[name]
+          : requestData.localResources[name];
+        resource.dataExists.should.be.true();
+      }
     };
 
     describe('navigating between project routes', () => {

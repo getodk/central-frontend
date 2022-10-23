@@ -35,14 +35,14 @@ either is an Administrator or has no role. -->
           <th class="actions">{{ $t('header.actions') }}</th>
         </tr>
       </thead>
-      <tbody v-if="users != null && adminIds != null">
+      <tbody v-if="dataExists">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :admin="adminIds.has(user.id)" :highlighted="highlighted"
           @assigned-role="afterAssignRole" @reset-password="showResetPassword"
           @retire="showRetire"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['users', 'actors'])"/>
+    <loading :state="initiallyLoading"/>
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
@@ -61,8 +61,7 @@ import UserRetire from './retire.vue';
 import UserRow from './row.vue';
 
 import modal from '../../mixins/modal';
-import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'UserList',
@@ -76,10 +75,17 @@ export default {
   },
   mixins: [modal()],
   inject: ['alert'],
+  setup() {
+    const { createResource, resourceStates } = useRequestData();
+    const users = createResource('users');
+    const adminIds = createResource('adminIds', () => ({
+      transformResponse: ({ data }) =>
+        data.reduce((set, actor) => set.add(actor.id), new Set())
+    }));
+    return { users, adminIds, ...resourceStates([users, adminIds]) };
+  },
   data() {
     return {
-      // The ids of the users who are administrators
-      adminIds: null,
       // The id of the highlighted user
       highlighted: null,
       // Modals
@@ -96,30 +102,15 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['users']),
   created() {
     this.fetchData();
   },
   methods: {
     fetchData() {
-      this.adminIds = null;
-      return this.$store.dispatch('get', [
-        {
-          key: 'users',
-          url: '/v1/users'
-        },
-        {
-          key: 'actors',
-          url: '/v1/assignments/admin',
-          success: ({ actors }) => {
-            this.adminIds = new Set();
-            for (const actor of actors)
-              this.adminIds.add(actor.id);
-          }
-        }
-      ]).catch(noop);
+      Promise.allSettled([
+        this.users.request({ url: '/v1/users' }),
+        this.adminIds.request({ url: '/v1/assignments/admin' })
+      ]);
     },
     afterCreate(user) {
       this.fetchData();
@@ -149,7 +140,7 @@ export default {
       In cases like this, the current user will likely refresh Frontend or redo
       the change.
       */
-      if (this.adminIds != null) {
+      if (this.adminIds.dataExists) {
         if (admin) {
           this.adminIds.add(user.id);
         } else {

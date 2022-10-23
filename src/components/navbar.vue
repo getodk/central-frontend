@@ -56,7 +56,7 @@ import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 import modal from '../mixins/modal';
 import routes from '../mixins/routes';
 import { loadAsync } from '../util/load-async';
-import { requestData } from '../store/modules/request';
+import { useRequestData } from '../request-data';
 
 export default {
   name: 'Navbar',
@@ -69,6 +69,12 @@ export default {
   },
   mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
   inject: ['config'],
+  setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { currentUser, analyticsConfig } = useRequestData();
+    return { currentUser, analyticsConfig };
+  },
   data() {
     return {
       analyticsIntroduction: {
@@ -77,20 +83,17 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['currentUser', 'analyticsConfig']),
     // Usually once the user is logged in (either after their session has been
     // restored or after they have submitted the login form), we render a fuller
     // navbar. However, if after submitting the login form, the user is
     // redirected to outside Frontend, they will remain on /login until they are
     // redirected. In that case, we do not render the fuller navbar.
     loggedIn() {
-      return this.currentUser != null && this.$route.path !== '/login';
+      return this.currentUser.dataExists && this.$route.path !== '/login';
     },
     showsAnalyticsNotice() {
       return this.config.showsAnalytics && this.loggedIn &&
-        this.canRoute('/system/analytics') && this.analyticsConfig != null &&
+        this.canRoute('/system/analytics') && this.analyticsConfig.dataExists &&
         this.analyticsConfig.isEmpty() &&
         Date.now() - Date.parse(this.currentUser.createdAt) >= /* 14 days */ 1209600000;
     }

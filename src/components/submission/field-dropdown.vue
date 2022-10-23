@@ -51,14 +51,14 @@ except according to the terms contained in the LICENSE file.
       </li>
       <li>
         <ul>
-          <li v-for="field of selectableFields" :key="field.path"
+          <li v-for="field of fields.selectable" :key="field.path"
             :class="{ 'search-match': matchesSearch(field) }">
             <div class="checkbox"
               :class="{ disabled: disablesCheckbox(field) }">
               <label :title="disablesCheckbox(field) ? $t('disabled') : null">
                 <input type="checkbox" :checked="checked[field.path]"
                   :disabled="disablesCheckbox(field)" @change="toggle(field)">
-                <span :title="!disablesCheckbox(field) ? field.header() : null">{{ field.name }}</span>
+                <span :title="!disablesCheckbox(field) ? field.header : null">{{ field.name }}</span>
               </label>
             </div>
           </li>
@@ -71,8 +71,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { equals } from 'ramda';
-import { mapGetters } from 'vuex';
 import { markRaw } from 'vue';
+
+import { useRequestData } from '../../request-data';
 
 // This constant is also used in the `disabled` message.
 const maxCheckedCount = 100;
@@ -86,9 +87,13 @@ export default {
     }
   },
   emits: ['update:modelValue'],
+  setup() {
+    const { fields } = useRequestData();
+    return { fields };
+  },
   data() {
     const checked = {};
-    for (const field of this.$store.getters.selectableFields)
+    for (const field of this.fields.selectable)
       checked[field.path] = false;
     for (const field of this.modelValue)
       checked[field.path] = true;
@@ -105,11 +110,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['selectableFields']),
     placeholder() {
       return this.$t('placeholder', {
         selected: this.$n(this.modelValue.length, 'default'),
-        total: this.$n(this.selectableFields.length, 'default')
+        total: this.$n(this.fields.selectable.length, 'default')
       });
     },
     searchToLowerCase() {
@@ -117,7 +121,7 @@ export default {
     },
     disablesSelectAll() {
       if (this.checkedCount === maxCheckedCount) return true;
-      const countIfSelectAll = this.selectableFields.reduce(
+      const countIfSelectAll = this.fields.selectable.reduce(
         (count, field) => (!this.checked[field.path] && this.matchesSearch(field)
           ? count + 1
           : count),
@@ -128,7 +132,7 @@ export default {
   },
   watch: {
     modelValue(value) {
-      for (const field of this.selectableFields)
+      for (const field of this.fields.selectable)
         this.checked[field.path] = false;
       for (const field of value)
         this.checked[field.path] = true;
@@ -153,11 +157,11 @@ export default {
     },
     matchesSearch(field) {
       return this.search === '' ||
-        field.header().toLowerCase().includes(this.searchToLowerCase);
+        field.header.toLowerCase().includes(this.searchToLowerCase);
     },
     selectAll() {
       if (this.disablesSelectAll) return;
-      for (const field of this.selectableFields) {
+      for (const field of this.fields.selectable) {
         if (!this.checked[field.path] && this.matchesSearch(field)) {
           this.checked[field.path] = true;
           this.checkedCount += 1;
@@ -165,7 +169,7 @@ export default {
       }
     },
     selectNone() {
-      for (const field of this.selectableFields) {
+      for (const field of this.fields.selectable) {
         if (this.checked[field.path] && this.matchesSearch(field)) {
           this.checked[field.path] = false;
           this.checkedCount -= 1;
@@ -181,7 +185,7 @@ export default {
       this.checkedCount += fieldWasChecked ? -1 : 1;
     },
     afterHide() {
-      const newValue = this.selectableFields.filter(field =>
+      const newValue = this.fields.selectable.filter(field =>
         this.checked[field.path]);
       if (!equals(newValue, this.modelValue))
         this.$emit('update:modelValue', newValue);

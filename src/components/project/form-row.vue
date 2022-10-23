@@ -13,17 +13,17 @@ except according to the terms contained in the LICENSE file.
   <tr class="project-form-row">
     <td class="form-name">
       <template v-if="canLinkToFormOverview">
-        <router-link :to="primaryFormPath(form)">{{ form.nameOrId() }}</router-link>
+        <router-link :to="primaryFormPath(form)">{{ form.nameOrId }}</router-link>
       </template>
       <template v-else-if="canLinkToSubmissions">
-        <router-link :to="submissionsPath.all">{{ form.nameOrId() }}</router-link>
+        <router-link :to="submissionsPath.all">{{ form.nameOrId }}</router-link>
       </template>
       <template v-else>
         <template v-if="canLinkToEnketo">
-          <a :href="enketoPath" target="_blank">{{ form.nameOrId() }}</a>
+          <a :href="enketoPath" target="_blank">{{ form.nameOrId }}</a>
         </template>
         <template v-else>
-          {{ form.nameOrId() }}
+          {{ form.nameOrId }}
         </template>
       </template>
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
@@ -85,15 +85,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject } from 'vue';
-
 import DateTime from '../date-time.vue';
-import Form from '../../presenters/form';
-import Project from '../../presenters/project';
-import routes from '../../mixins/routes';
 
+import routes from '../../mixins/routes';
 import useReviewState from '../../composables/review-state';
 import { enketoBasePath } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectFormRow',
@@ -101,17 +98,17 @@ export default {
   mixins: [routes()],
   props: {
     form: {
-      type: Form,
+      type: Object,
       required: true
     },
     project: {
-      type: Project,
+      type: Object,
       required: true
     }
   },
   setup() {
-    const responseData = inject('responseData');
-    const { duplicateFormNamesPerProject } = responseData.getters;
+    const { projects } = useRequestData();
+    const { duplicateFormNamesPerProject } = projects.toRefs();
     const { reviewStateIcon } = useReviewState();
     return { duplicateFormNamesPerProject, reviewStateIcon };
   },
@@ -146,7 +143,7 @@ export default {
     showIdForDuplicateName() {
       const formNames = this.duplicateFormNamesPerProject[this.project.id];
       if (formNames) {
-        return formNames.has(this.form.nameOrId().toLocaleLowerCase());
+        return formNames.has(this.form.nameOrId.toLocaleLowerCase());
       }
       return false;
     }

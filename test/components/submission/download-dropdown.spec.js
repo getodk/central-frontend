@@ -1,12 +1,23 @@
 import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (options = undefined) =>
-  mount(SubmissionDownloadButton, mergeMountOptions(options, {
-    props: { formVersion: testData.extendedForms.last() }
-  }));
+const mountComponent = (options = undefined) => {
+  const merged = mergeMountOptions(options, {
+    container: {
+      requestData: testRequestData(['odata'], {
+        form: testData.extendedForms.last()
+      })
+    }
+  });
+  merged.container = createTestContainer(merged.container);
+  if (merged.props == null) merged.props = {};
+  merged.props.formVersion = merged.container.requestData.form;
+  return mount(SubmissionDownloadButton, merged);
+};
 
 describe('SubmissionDownloadButton', () => {
   describe('text', () => {
@@ -31,10 +42,8 @@ describe('SubmissionDownloadButton', () => {
         const dropdown = mountComponent({
           props: { filtered: true }
         });
-        dropdown.vm.$store.commit('setData', {
-          key: 'odataChunk',
-          value: { '@odata.count': 1 }
-        });
+        const { odata } = dropdown.vm.$container.requestData.localResources;
+        odata.data = { count: 1 };
         await dropdown.vm.$nextTick();
         const text = dropdown.get('button').text();
         text.should.equal('Download 1 matching Submission…');

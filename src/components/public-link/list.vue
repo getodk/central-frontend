@@ -37,8 +37,8 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <public-link-table :highlighted="highlighted" @revoke="showRevoke"/>
-    <loading :state="$store.getters.initiallyLoading(['publicLinks'])"/>
-    <p v-if="publicLinks != null && publicLinks.length === 0"
+    <loading :state="publicLinks.initiallyLoading"/>
+    <p v-if="publicLinks.dataExists && publicLinks.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
@@ -65,7 +65,7 @@ import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'PublicLinkList',
@@ -90,6 +90,10 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { publicLinks } = useRequestData();
+    return { publicLinks };
+  },
   data() {
     return {
       // The id of the highlighted public link
@@ -107,19 +111,15 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['publicLinks']),
   created() {
     this.fetchData(false);
   },
   methods: {
     fetchData(resend) {
-      this.$store.dispatch('get', [{
-        key: 'publicLinks',
+      this.publicLinks.request({
         url: apiPaths.publicLinks(this.projectId, this.xmlFormId),
         resend
-      }]).catch(noop);
+      }).catch(noop);
       this.highlighted = null;
     },
     showRevoke(publicLink) {

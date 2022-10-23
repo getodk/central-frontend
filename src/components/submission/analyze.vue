@@ -94,7 +94,7 @@ import Modal from '../modal.vue';
 import Selectable from '../selectable.vue';
 
 import { apiPaths } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionAnalyze',
@@ -103,15 +103,18 @@ export default {
     state: Boolean
   },
   emits: ['hide'],
+  setup() {
+    const { form } = useRequestData();
+    return { form };
+  },
   data() {
     return {
       tool: 'microsoft'
     };
   },
   computed: {
-    ...requestData(['form']),
     odataUrl() {
-      if (this.form == null) return '';
+      if (!this.form.dataExists) return '';
       const path = apiPaths.odataSvc(this.form.projectId, this.form.xmlFormId);
       return `${window.location.origin}${path}`;
     }

@@ -40,14 +40,14 @@ except according to the terms contained in the LICENSE file.
           <th class="actions">{{ $t('header.actions') }}</th>
         </tr>
       </thead>
-      <tbody v-if="fieldKeys != null">
+      <tbody v-if="fieldKeys.dataExists">
         <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.id"
           :field-key="fieldKey" :highlighted="highlighted"
           @show-code="showPopover" @revoke="showRevoke"/>
       </tbody>
     </table>
-    <loading :state="$store.getters.initiallyLoading(['fieldKeys'])"/>
-    <p v-if="fieldKeys != null && fieldKeys.length === 0"
+    <loading :state="fieldKeys.initiallyLoading"/>
+    <p v-if="fieldKeys.dataExists && fieldKeys.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
@@ -77,7 +77,7 @@ import ProjectSubmissionOptions from '../project/submission-options.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FieldKeyList',
@@ -100,6 +100,10 @@ export default {
     }
   },
   emits: ['fetch-field-keys'],
+  setup() {
+    const { fieldKeys } = useRequestData();
+    return { fieldKeys };
+  },
   data() {
     return {
       // The id of the highlighted app user
@@ -123,9 +127,6 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['fieldKeys']),
   created() {
     this.fetchData(false);
   },

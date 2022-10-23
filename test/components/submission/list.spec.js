@@ -293,7 +293,7 @@ describe('SubmissionList', () => {
         it('does nothing upon scroll if submissions request results in error', () => {
           createSubmissions(251);
           return load('/projects/1/forms/f/submissions', { root: false }, {
-            odataChunk: mockResponse.problem
+            odata: mockResponse.problem
           })
             .complete()
             .testNoRequest(component => {
@@ -460,14 +460,13 @@ describe('SubmissionList', () => {
             });
         });
 
-        it('does not update originalCount', () => {
+        it('does not update requestData.odata.originalCount', () => {
           createSubmissions(251);
           return load('/projects/1/forms/f/submissions', { root: false })
             .afterResponses(component => {
-              const { originalCount } = component.getComponent(SubmissionList).vm;
-              originalCount.should.equal(251);
-              const { form } = component.vm.$store.state.request.data;
-              form.submissions.should.equal(251);
+              const { requestData } = component.vm.$container;
+              requestData.localResources.odata.originalCount.should.equal(251);
+              requestData.form.submissions.should.equal(251);
             })
             .request(component => {
               sinon.replace(
@@ -482,10 +481,9 @@ describe('SubmissionList', () => {
               return testData.submissionOData(2, 250);
             })
             .afterResponse(component => {
-              const { originalCount } = component.getComponent(SubmissionList).vm;
-              originalCount.should.equal(251);
-              const { form } = component.vm.$store.state.request.data;
-              form.submissions.should.equal(252);
+              const { requestData } = component.vm.$container;
+              requestData.localResources.odata.originalCount.should.equal(251);
+              requestData.form.submissions.should.equal(252);
             });
         });
       });

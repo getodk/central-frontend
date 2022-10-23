@@ -2,8 +2,6 @@ import faker from 'faker';
 import { DateTime } from 'luxon';
 import { comparator, hasPath, lensPath, omit, set } from 'ramda';
 
-import Field from '../../src/presenters/field';
-
 import { dataStore, view } from './data-store';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
@@ -53,15 +51,16 @@ const odataValue = (field, instanceId) => {
 
 // Returns random OData for a submission. `partial` seeds the OData.
 const odata = (instanceId, versionFields, partial) => versionFields
-  .map(field => new Field(field))
   .reduce(
     (data, field) => {
       if (field.type === 'repeat') return data;
+      const path = field.path.split('/');
+      path.shift();
       // `partial` may have already specified a value for the field.
-      return hasPath(field.splitPath(), data)
+      return hasPath(path, data)
         ? data
         : set(
-          lensPath(field.splitPath()),
+          lensPath(path),
           field.type === 'structure' ? {} : odataValue(field, instanceId),
           data
         );

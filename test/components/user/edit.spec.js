@@ -18,7 +18,7 @@ describe('UserEdit', () => {
     it('updates currentUser if editing the current user', async () => {
       testData.extendedUsers.update(0, { displayName: 'ALICE' });
       const component = await load('/account/edit', { root: false });
-      const { currentUser } = component.vm.$store.state.request.data;
+      const { currentUser } = component.vm.$container.requestData;
       currentUser.displayName.should.equal('ALICE');
     });
 
@@ -27,7 +27,7 @@ describe('UserEdit', () => {
         .createPast(1, { displayName: 'ALICE' })
         .last();
       const component = await load(`/users/${id}`, { root: false });
-      const { currentUser } = component.vm.$store.state.request.data;
+      const { currentUser } = component.vm.$container.requestData;
       currentUser.displayName.should.equal('Alice');
     });
   });

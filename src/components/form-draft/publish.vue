@@ -68,8 +68,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -78,7 +76,7 @@ import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormDraftPublish',
@@ -92,6 +90,13 @@ export default {
     }
   },
   emits: ['hide', 'success'],
+  setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { formVersions, attachments, resourceView } = useRequestData();
+    const formDraft = resourceView('formDraft', (data) => data.get());
+    return { formVersions, formDraft, attachments };
+  },
   data() {
     return {
       awaitingResponse: false,
@@ -106,24 +111,17 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData([
-      'formVersions',
-      { key: 'formDraft', getOption: true },
-      'attachments'
-    ]),
-    ...mapGetters(['missingAttachmentCount']),
     draftVersionStringIsDuplicate() {
-      if (this.formVersions == null || this.formDraft == null) return false;
+      if (!(this.formVersions.dataExists && this.formDraft.dataExists))
+        return false;
       return this.formVersions.some(version =>
         version.version === this.formDraft.version);
     },
     rendersAttachmentsWarning() {
-      return this.attachments != null && this.missingAttachmentCount !== 0;
+      return this.attachments.dataExists && this.attachments.missingCount !== 0;
     },
     rendersTestingWarning() {
-      return this.formDraft != null && this.formDraft.submissions === 0;
+      return this.formDraft.dataExists && this.formDraft.submissions === 0;
     }
   },
   watch: {

@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <p>{{ project != null ? $t('introduction[0]', project) : '' }}</p>
+        <p>{{ project.dataExists ? $t('introduction[0]', project) : '' }}</p>
         <i18n-t tag="p" keypath="introduction[1].full">
           <template #noUndo>
             <strong>{{ $t('introduction[1].noUndo') }}</strong>
@@ -38,49 +38,40 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'ProjectArchive'
+};
+</script>
+<script setup>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'ProjectArchive',
-  components: { Modal, Spinner },
-  mixins: [request()],
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide', 'success'],
-  data() {
-    return {
-      awaitingResponse: false
-    };
-  },
-  computed: requestData(['project']),
-  methods: {
-    archive() {
-      this.patch(apiPaths.project(this.project.id), { archived: true })
-        .then(response => {
-          this.$store.commit('setData', {
-            key: 'project',
-            // We do not simply specify response.data, because it does not
-            // include extended metadata.
-            value: this.project.with({
-              archived: true,
-              updatedAt: response.data.updatedAt
-            })
-          });
-          this.$emit('success', this.project);
-        })
-        .catch(noop);
-    }
+defineProps({
+  state: {
+    type: Boolean,
+    default: false
   }
+});
+const emit = defineEmits(['hide', 'success']);
+
+const { project } = useRequestData();
+const { awaitingResponse } = project.toRefs();
+const archive = () => {
+  project.request({
+    method: 'PATCH',
+    url: apiPaths.project(project.id),
+    data: { archived: true },
+    patch: ({ data }) => {
+      project.archived = true;
+      project.updatedAt = data.updatedAt;
+    }
+  })
+    .then(() => { emit('success'); })
+    .catch(noop);
 };
 </script>
 

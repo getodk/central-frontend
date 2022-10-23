@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="access-link">
       <template v-if="publicLink.token == null">{{ $t('revoked') }}</template>
-      <template v-else-if="form != null">
+      <template v-else-if="form.dataExists">
         <selectable v-if="enketoId != null">{{ url }}</selectable>
         <span v-else class="unavailable" :title="$t('unavailable.title')">
           <span>{{ $t('unavailable.text') }}</span>
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
 import Selectable from '../selectable.vue';
 
 import { enketoBasePath } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'PublicLinkRow',
@@ -53,10 +53,13 @@ export default {
     highlighted: Number
   },
   emits: ['revoke'],
-  computed: {
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    ...requestData(['form']),
+    const { form } = useRequestData();
+    return { form };
+  },
+  computed: {
     htmlClass() {
       return {
         'public-link-row': true,

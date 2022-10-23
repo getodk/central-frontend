@@ -1,5 +1,5 @@
 /*
-Copyright 2017 ODK Central Developers
+Copyright 2022 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -9,10 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { createStore } from 'vuex';
+import { noargs } from '../util/util';
+import { setupOption } from './util';
+import { useRequestData } from './index';
 
-import createRequestModule from './modules/request';
-
-export default (container) => createStore({
-  modules: { request: createRequestModule(container) }
-});
+export default () => {
+  const { createResource } = useRequestData();
+  const backupsConfig = createResource('backupsConfig', noargs(setupOption));
+  const audits = createResource('audits');
+  return { backupsConfig, audits };
+};

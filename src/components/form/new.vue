@@ -16,7 +16,7 @@ definition for an existing form -->
   <modal id="form-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
     <template #title>
-      {{ formDraft == null ? $t('title.create') : $t('title.update') }}
+      {{ !formDraft.dataExists ? $t('title.create') : $t('title.update') }}
     </template>
     <template #body>
       <div v-show="warnings != null" class="modal-warnings">
@@ -28,7 +28,7 @@ definition for an existing form -->
         <p>
           <span>{{ $t('warningsText[1]') }}</span>
           <sentence-separator/>
-          <template v-if="formDraft == null">{{ $t('warningsText[2].create') }}</template>
+          <template v-if="!formDraft.dataExists">{{ $t('warningsText[2].create') }}</template>
           <template v-else>{{ $t('warningsText[2].update') }}</template>
         </p>
         <p>
@@ -40,7 +40,7 @@ definition for an existing form -->
       </div>
       <div class="modal-introduction">
         <p>
-          <template v-if="formDraft == null">{{ $t('introduction[0].create') }}</template>
+          <template v-if="!formDraft.dataExists">{{ $t('introduction[0].create') }}</template>
           <template v-else>{{ $t('introduction[0].update') }}</template>
           <sentence-separator/>
           <i18n-t keypath="introduction[1].full">
@@ -49,7 +49,7 @@ definition for an existing form -->
             </template>
           </i18n-t>
         </p>
-        <p v-if="formDraft == null">{{ $t('introduction[2]') }}</p>
+        <p v-if="!formDraft.dataExists">{{ $t('introduction[2]') }}</p>
       </div>
       <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
         <i18n-t tag="div" keypath="dropZone.full">
@@ -89,13 +89,13 @@ import Spinner from '../spinner.vue';
 import dropZone from '../../mixins/drop-zone';
 import request from '../../mixins/request';
 import { apiPaths, isProblem } from '../../util/request';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormNew',
   components: { DocLink, Modal, SentenceSeparator, Spinner },
   mixins: [dropZone(), request()],
-  inject: ['container', 'alert'],
+  inject: ['alert'],
   props: {
     state: {
       type: Boolean,
@@ -103,6 +103,13 @@ export default {
     }
   },
   emits: ['hide', 'success'],
+  setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { project, resourceView } = useRequestData();
+    const formDraft = resourceView('formDraft', (data) => data.get());
+    return { project, formDraft };
+  },
   data() {
     return {
       dragDepth: 0,
@@ -112,9 +119,6 @@ export default {
     };
   },
   computed: {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    ...requestData(['project', { key: 'formDraft', getOption: true }]),
     disabled() {
       return this.awaitingResponse;
     },
@@ -171,7 +175,7 @@ export default {
       const initialRoute = this.$route;
       this.request({
         method: 'POST',
-        url: this.formDraft == null
+        url: !this.formDraft.dataExists
           ? apiPaths.forms(this.project.id, query)
           : apiPaths.formDraft(this.project.id, this.formDraft.xmlFormId, query),
         headers,
@@ -205,8 +209,7 @@ export default {
             // project.forms may now be out-of-date. However, if the user
             // navigates to the project overview, it should be updated.
 
-            const { Form } = this.container;
-            this.$emit('success', Form.from(data));
+            this.$emit('success', data);
           }
         })
         .catch(() => {

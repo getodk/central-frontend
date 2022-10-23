@@ -184,7 +184,7 @@ describe('SubmissionMetadataRow', () => {
 
       it('updates the submission', async () => {
         const component = await submit();
-        const submission = component.vm.submissions[0];
+        const submission = component.vm.odata.value[0];
         submission.__system.reviewState.should.equal('hasIssues');
         // Check that other properties were copied correctly.
         submission.__id.should.equal('foo');

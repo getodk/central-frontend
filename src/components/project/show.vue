@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-head v-show="project != null">
-      <template v-if="project != null" #title>
-        {{ project.nameWithArchived() }}
+    <page-head v-show="project.dataExists">
+      <template v-if="project.dataExists" #title>
+        {{ project.nameWithArchived }}
       </template>
       <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
@@ -54,27 +54,25 @@ except according to the terms contained in the LICENSE file.
       </template>
     </page-head>
     <page-body>
-      <loading :state="$store.getters.initiallyLoading(['project'])"/>
+      <loading :state="project.initiallyLoading"/>
       <!-- <router-view> may send its own requests before the server has
       responded to ProjectShow's request for the project. -->
-      <router-view v-show="project != null" @fetch-project="fetchProject"
+      <router-view v-show="project.dataExists" @fetch-project="fetchProject"
         @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"/>
     </page-body>
   </div>
 </template>
 
 <script>
-import { inject, watchSyncEffect } from 'vue';
-
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
+import useProject from '../../request-data/project';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
 
 export default {
   name: 'ProjectShow',
@@ -87,39 +85,10 @@ export default {
     }
   },
   setup() {
-    const { store } = inject('container');
-    watchSyncEffect(() => {
-      const { project, forms } = store.state.request.data;
-      if (project != null && forms != null && project.forms !== forms.length) {
-        store.commit('setData', {
-          key: 'project',
-          value: project.with({ forms: forms.length })
-        });
-      }
-    });
-    watchSyncEffect(() => {
-      const { project, datasets } = store.state.request.data;
-      if (project != null && datasets != null &&
-        project.datasets !== datasets.length) {
-        store.commit('setData', {
-          key: 'project',
-          value: project.with({ datasets: datasets.length })
-        });
-      }
-    });
-    watchSyncEffect(() => {
-      const { project, fieldKeys } = store.state.request.data;
-      if (project != null && fieldKeys != null &&
-        project.appUsers !== fieldKeys.length) {
-        store.commit('setData', {
-          key: 'project',
-          value: project.with({ appUsers: fieldKeys.length })
-        });
-      }
-    });
+    const { project, forms, datasets, fieldKeys } = useProject();
+    return { project, forms, datasets, fieldKeys };
   },
   computed: {
-    ...requestData(['project', 'forms', 'datasets']),
     tabPathPrefix() {
       return this.projectPath();
     }
@@ -129,33 +98,29 @@ export default {
   },
   methods: {
     fetchProject(resend) {
-      this.$store.dispatch('get', [{
-        key: 'project',
+      this.project.request({
         url: apiPaths.project(this.projectId),
         extended: true,
         resend
-      }]).catch(noop);
+      }).catch(noop);
     },
     fetchForms(resend) {
-      this.$store.dispatch('get', [{
-        key: 'forms',
+      this.forms.request({
         url: apiPaths.forms(this.projectId),
         extended: true,
         resend
-      }]).catch(noop);
+      }).catch(noop);
 
       // If we send a request for this.forms, then we also clear this.datasets
       // in case a change to this.forms has also changed this.datasets.
-      if (this.forms == null && this.datasets != null)
-        this.$store.commit('clearData', 'datasets');
+      if (!this.forms.dataExists) this.datasets.data = null;
     },
     fetchFieldKeys(resend) {
-      this.$store.dispatch('get', [{
-        key: 'fieldKeys',
+      this.fieldKeys.request({
         url: apiPaths.fieldKeys(this.projectId),
         extended: true,
         resend
-      }]).catch(noop);
+      }).catch(noop);
     }
   }
 };

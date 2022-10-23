@@ -21,14 +21,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Form from '../../presenters/form';
 import { enketoBasePath } from '../../util/util';
 
 export default {
   name: 'EnketoPreview',
   props: {
     formVersion: {
-      type: Form,
+      type: Object,
       required: true
     }
   },

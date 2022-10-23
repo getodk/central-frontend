@@ -1,11 +1,23 @@
 import FormTrashList from '../../../src/components/form/trash-list.vue';
 import FormTrashRow from '../../../src/components/form/trash-row.vue';
 
+import useProject from '../../../src/request-data/project';
 import { ago } from '../../../src/util/date-time';
 
 import testData from '../../data';
+import { mergeMountOptions } from '../../util/lifecycle';
 import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { testRequestData } from '../../util/request-data';
+
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  container: {
+    requestData: testRequestData([useProject], {
+      project: testData.extendedProjects.last(),
+      forms: testData.extendedForms.sorted()
+    })
+  }
+});
 
 describe('FormTrashList', () => {
   beforeEach(() => {
@@ -14,35 +26,24 @@ describe('FormTrashList', () => {
   });
 
   describe('requests', () => {
-    it('requests deletedForms if not yet in store', () =>
+    it('requests requestData.deletedForms if it does not yet have data', () =>
       mockHttp()
-        .mount(FormTrashList, {
-          container: {
-            requestData: { project: testData.extendedProjects.last() }
-          }
-        })
+        .mount(FormTrashList, mountOptions())
         .respondWithData(() => []));
 
-    it('does not request deletedForms if in store already', () =>
+    it('does not request requestData.deletedForms if has data already', () =>
       mockHttp()
-        .mount(FormTrashList, {
+        .mount(FormTrashList, mountOptions({
           container: {
-            requestData: {
-              project: testData.extendedProjects.last(),
-              deletedForms: []
-            }
+            requestData: { deletedForms: [] }
           }
-        })
+        }))
         .testNoRequest());
   });
 
   it('does not render component if there are no deleted forms', () =>
     mockHttp()
-      .mount(FormTrashList, {
-        container: {
-          requestData: { project: testData.extendedProjects.last() }
-        }
-      })
+      .mount(FormTrashList, mountOptions())
       .respondWithData(() => [])
       .afterResponses(component => {
         component.find('div').exists().should.be.false();
@@ -50,14 +51,7 @@ describe('FormTrashList', () => {
 
   it('shows the correct number of rows', () =>
     mockHttp()
-      .mount(FormTrashList, {
-        container: {
-          requestData: {
-            project: testData.extendedProjects.last(),
-            forms: testData.extendedForms.sorted()
-          }
-        }
-      })
+      .mount(FormTrashList, mountOptions())
       .respondWithData(() => [
         { xmlFormId: 'a', deletedAt: new Date().toISOString() },
         { xmlFormId: 'b', deletedAt: new Date().toISOString() }
@@ -68,14 +62,7 @@ describe('FormTrashList', () => {
 
   it('shows the rows sorted with recently deleted on the bottom', () =>
     mockHttp()
-      .mount(FormTrashList, {
-        container: {
-          requestData: {
-            project: testData.extendedProjects.last(),
-            forms: testData.extendedForms.sorted()
-          }
-        }
-      })
+      .mount(FormTrashList, mountOptions())
       .respondWithData(() => [
         { xmlFormId: '15_days_ago', deletedAt: ago({ days: 15 }).toISO() },
         { xmlFormId: '10_days_ago', deletedAt: ago({ days: 10 }).toISO() },
@@ -90,14 +77,7 @@ describe('FormTrashList', () => {
 
   it('shows the correct headers', () =>
     mockHttp()
-      .mount(FormTrashList, {
-        container: {
-          requestData: {
-            project: testData.extendedProjects.last(),
-            forms: testData.extendedForms.sorted()
-          }
-        }
-      })
+      .mount(FormTrashList, mountOptions())
       .respondWithData(() => [{ xmlFormId: 'a', deletedAt: new Date().toISOString() }])
       .afterResponses(component => {
         component.get('#form-trash-list-title').text().should.equal('Trash');

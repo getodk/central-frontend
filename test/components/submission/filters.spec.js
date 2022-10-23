@@ -363,7 +363,7 @@ describe('SubmissionFilters', () => {
     });
     return load('/projects/1/forms/f/submissions')
       .afterResponses(app => {
-        app.vm.$store.state.request.data.form.submissions.should.equal(2);
+        app.vm.$container.requestData.form.submissions.should.equal(2);
       })
       .request(app => {
         const select = app.get('#submission-filters-submitter select');
@@ -374,7 +374,7 @@ describe('SubmissionFilters', () => {
         '@odata.count': 1
       }))
       .afterResponse(app => {
-        app.vm.$store.state.request.data.form.submissions.should.equal(2);
+        app.vm.$container.requestData.form.submissions.should.equal(2);
       });
   });
 

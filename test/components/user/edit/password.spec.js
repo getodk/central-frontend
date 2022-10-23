@@ -1,14 +1,19 @@
 import FormGroup from '../../../../src/components/form-group.vue';
 import UserEditPassword from '../../../../src/components/user/edit/password.vue';
 
+import useUser from '../../../../src/request-data/user';
+
 import testData from '../../../data';
 import { load, mockHttp } from '../../../util/http';
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
 import { mockLogin } from '../../../util/session';
-import { mount } from '../../../util/lifecycle';
+import { testRequestData } from '../../../util/request-data';
 
-const mountOptions = () => ({
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
   container: {
-    requestData: { user: testData.standardUsers.first() }
+    requestData: testRequestData([useUser], {
+      user: testData.standardUsers.first()
+    })
   }
 });
 const submit =
@@ -54,11 +59,11 @@ describe('UserEditPassword', () => {
 
   it("does not render form if it is not current user's own account", async () => {
     const user = testData.standardUsers.createPast(1).last();
-    const component = mount(UserEditPassword, {
+    const component = mount(UserEditPassword, mountOptions({
       container: {
         requestData: { user }
       }
-    });
+    }));
     component.find('form').exists().should.be.false();
   });
 

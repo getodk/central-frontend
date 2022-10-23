@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="project-form-access-table" class="clearfix">
     <table class="table table-frozen"
-      :class="{ 'no-field-keys': fieldKeysWithToken.length === 0 }">
+      :class="{ 'no-field-keys': fieldKeys.withToken.length === 0 }">
       <thead>
         <tr>
           <th>{{ $t('header.form') }}</th>
@@ -31,12 +31,12 @@ except according to the terms contained in the LICENSE file.
           @update:state="updateState"/>
       </tbody>
     </table>
-    <div v-if="fieldKeysWithToken.length !== 0" class="table-container">
+    <div v-if="fieldKeys.withToken.length !== 0" class="table-container">
       <table class="table">
         <thead>
           <tr>
             <th><div>{{ $t('resource.appUsers') }}</div></th>
-            <th v-for="fieldKey of fieldKeysWithToken" :key="fieldKey.id"
+            <th v-for="fieldKey of fieldKeys.withToken" :key="fieldKey.id"
               :title="fieldKey.displayName">
               <div>{{ fieldKey.displayName }}</div>
             </th>
@@ -54,11 +54,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import ProjectFormAccessRow from './row.vue';
 
-import { requestData } from '../../../store/modules/request';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectFormAccessTable',
@@ -70,9 +68,9 @@ export default {
     }
   },
   emits: ['show-states', 'update:state', 'update:fieldKeyAccess'],
-  computed: {
-    ...requestData(['forms']),
-    ...mapGetters(['fieldKeysWithToken'])
+  setup() {
+    const { forms, fieldKeys } = useRequestData();
+    return { forms, fieldKeys };
   },
   methods: {
     updateState(form, state) {

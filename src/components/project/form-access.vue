@@ -47,8 +47,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import ProjectFormAccessStates from './form-access/states.vue';
@@ -60,9 +58,7 @@ import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
-
-const REQUEST_KEYS = ['roles', 'project', 'forms', 'fieldKeys', 'formSummaryAssignments'];
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectFormAccess',
@@ -83,6 +79,13 @@ export default {
     }
   },
   emits: ['fetch-forms', 'fetch-field-keys'],
+  setup() {
+    const { roles, project, forms, formSummaryAssignments, fieldKeys, resourceStates } = useRequestData();
+    return {
+      roles, project, forms, fieldKeys, formSummaryAssignments,
+      ...resourceStates([roles, project, forms, fieldKeys, formSummaryAssignments])
+    };
+  },
   data() {
     return {
       awaitingResponse: false,
@@ -94,14 +97,6 @@ export default {
     };
   },
   computed: {
-    ...requestData(REQUEST_KEYS),
-    ...mapGetters(['rolesBySystem', 'fieldKeysWithToken']),
-    initiallyLoading() {
-      return this.$store.getters.initiallyLoading(REQUEST_KEYS);
-    },
-    dataExists() {
-      return this.$store.getters.dataExists(REQUEST_KEYS);
-    },
     saveDisabled() {
       return !this.dataExists || this.changeCount === 0 ||
         this.awaitingResponse;
@@ -112,7 +107,7 @@ export default {
     // token, even those without an assignment to the form.
     fieldKeyAccessByForm() {
       const byFieldKey = {};
-      for (const fieldKey of this.fieldKeysWithToken)
+      for (const fieldKey of this.fieldKeys.withToken)
         byFieldKey[fieldKey.id] = false;
 
       const byForm = Object.create(null);
@@ -122,7 +117,7 @@ export default {
       for (const assignment of this.formSummaryAssignments) {
         const forForm = byForm[assignment.xmlFormId];
         // Skip any assignment whose form is not in this.forms or whose app user
-        // is not in this.fieldKeysWithToken.
+        // is not in this.fieldKeys.withToken.
         if (forForm != null && forForm[assignment.actorId] != null)
           forForm[assignment.actorId] = true;
       }
@@ -143,8 +138,8 @@ export default {
           const changes = this.changesByForm[form.xmlFormId];
 
           const assignments = [];
-          const roleId = this.rolesBySystem['app-user'].id;
-          for (const fieldKey of this.fieldKeysWithToken) {
+          const roleId = this.roles.bySystem['app-user'].id;
+          for (const fieldKey of this.fieldKeys.withToken) {
             if (changes.current.fieldKeyAccess[fieldKey.id])
               assignments.push({ actorId: fieldKey.id, roleId });
           }
@@ -153,7 +148,8 @@ export default {
             xmlFormId: form.xmlFormId,
             state: changes.current.state,
             // If there is an assignment on Backend whose app user is not in
-            // this.fieldKeysWithToken, then Backend will delete the assignment.
+            // this.fieldKeys.withToken, then Backend will delete the
+            // assignment.
             assignments
           };
         })
@@ -178,18 +174,13 @@ export default {
     fetchData(resend) {
       this.$emit('fetch-forms', resend);
       this.$emit('fetch-field-keys', resend);
-      this.$store.dispatch('get', [
-        {
-          key: 'roles',
-          url: '/v1/roles',
-          resend: false
-        },
-        {
-          key: 'formSummaryAssignments',
+      Promise.allSettled([
+        this.roles.request({ url: '/v1/roles', resend: false }),
+        this.formSummaryAssignments.request({
           url: apiPaths.formSummaryAssignments(this.projectId, 'app-user'),
           resend
-        }
-      ]).catch(noop);
+        })
+      ]);
     },
     // initChangesByForm() initializes this.changesByForm. Contrary to what its
     // name may suggest, this.changesByForm does not store only changes. Rather,

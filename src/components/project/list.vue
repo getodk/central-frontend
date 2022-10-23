@@ -22,13 +22,13 @@ except according to the terms contained in the LICENSE file.
         <project-sort v-model="sortMode"/>
       </template>
       <template #body>
-        <div v-if="projects != null">
+        <div v-if="projects.dataExists">
           <project-home-block v-for="project of activeProjects" :key="project.id"
             :project="project" :sort-func="sortFunction"
             :max-forms="maxForms"/>
         </div>
-        <loading :state="$store.getters.initiallyLoading(['projects'])"/>
-        <p v-if="projects != null && activeProjects.length === 0"
+        <loading :state="projects.initiallyLoading"/>
+        <p v-if="projects.dataExists && activeProjects.length === 0"
           class="empty-table-message">
           <template v-if="currentUser.can('project.create')">
             {{ $t('emptyTable.canCreate') }}<sentence-separator/>
@@ -74,8 +74,8 @@ import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
-import { requestData } from '../../store/modules/request';
 import sortFunctions from '../../util/sort';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectList',
@@ -90,6 +90,10 @@ export default {
   },
   mixins: [modal(), routes()],
   inject: ['alert'],
+  setup() {
+    const { currentUser, projects } = useRequestData();
+    return { currentUser, projects };
+  },
   data() {
     return {
       newProject: {
@@ -99,17 +103,16 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser', 'projects']),
     sortFunction() {
       return sortFunctions[this.sortMode];
     },
     activeProjects() {
-      if (this.projects == null) return [];
+      if (!this.projects.dataExists) return [];
       const filteredProjects = this.projects.filter((p) => !(p.archived));
       return filteredProjects.sort(this.sortFunction);
     },
     archivedProjects() {
-      if (this.projects == null) return [];
+      if (!this.projects.dataExists) return [];
       const filteredProjects = this.projects.filter((p) => (p.archived));
       return filteredProjects.sort(this.sortFunction);
     },

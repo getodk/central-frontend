@@ -70,7 +70,7 @@ const acteeSpeciesByCategory = {
     path: (actee, { projectPath }) => projectPath(actee.id)
   },
   form: {
-    title: (actee, { Form }) => Form.from(actee).nameOrId(),
+    title: (actee) => (actee.name != null ? actee.name : actee.xmlFormId),
     path: (actee, { primaryFormPath }) => primaryFormPath(actee)
   },
   public_link: {
@@ -89,7 +89,6 @@ export default {
   name: 'AuditRow',
   components: { ActorLink, DateTime, Selectable },
   mixins: [routes()],
-  inject: ['container'],
   props: {
     audit: {
       type: Object,
@@ -122,7 +121,7 @@ export default {
       if (actee.purgedAt != null)
         return { title: actee.purgedName, purged: true };
 
-      const title = species.title(actee, this.container);
+      const title = species.title(actee);
       // soft-deleted actee (use species title but don't make a link)
       if (actee.deletedAt != null) return { title, deleted: true };
 

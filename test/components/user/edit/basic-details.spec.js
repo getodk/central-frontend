@@ -1,13 +1,18 @@
 import UserEditBasicDetails from '../../../../src/components/user/edit/basic-details.vue';
 
+import useUser from '../../../../src/request-data/user';
+
 import testData from '../../../data';
 import { load, mockHttp } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
 import { mount } from '../../../util/lifecycle';
+import { testRequestData } from '../../../util/request-data';
 
 const mountOptions = () => ({
   container: {
-    requestData: { user: testData.standardUsers.first() }
+    requestData: testRequestData([useUser], {
+      user: testData.standardUsers.first()
+    })
   }
 });
 

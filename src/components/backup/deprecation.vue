@@ -24,17 +24,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'BackupDeprecation'
+};
+</script>
+<script setup>
 import SentenceSeparator from '../sentence-separator.vue';
 
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'BackupDeprecation',
-  components: { SentenceSeparator },
-  // The component assumes that this data will exist when the component is
-  // created.
-  computed: requestData(['backupsConfig'])
-};
+// The component assumes that this data will exist when the component is
+// created.
+const { backupsConfig } = useRequestData();
 </script>
 
 <style lang="scss">

@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <th class="actions">{{ $t('header.actions') }}</th>
       </tr>
     </thead>
-    <tbody v-if="publicLinks != null">
+    <tbody v-if="publicLinks.dataExists">
       <public-link-row v-for="publicLink of publicLinks" :key="publicLink.id"
         :public-link="publicLink" :highlighted="highlighted"
         @revoke="$emit('revoke', $event)"/>
@@ -28,21 +28,23 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'PublicLinkTable'
+};
+</script>
+<script setup>
 import PublicLinkRow from './row.vue';
 
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'PublicLinkTable',
-  components: { PublicLinkRow },
-  props: {
-    highlighted: Number
-  },
-  emits: ['revoke'],
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['publicLinks'])
-};
+defineProps({
+  highlighted: Number
+});
+defineEmits(['revoke']);
+
+// The component does not assume that this data will exist when the component is
+// created.
+const { publicLinks } = useRequestData();
 </script>
 
 <style lang="scss">

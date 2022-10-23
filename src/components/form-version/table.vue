@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <th>{{ $t('header.definition') }}</th>
       </tr>
     </thead>
-    <tbody v-if="formVersions != null">
+    <tbody v-if="formVersions.dataExists">
       <form-version-row v-for="version of formVersions" :key="version.version"
         :version="version" @view-xml="$emit('view-xml')"/>
     </tbody>
@@ -26,17 +26,20 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import FormVersionRow from './row.vue';
-import { requestData } from '../../store/modules/request';
-
 export default {
-  name: 'FormVersionTable',
-  components: { FormVersionRow },
-  emits: ['view-xml'],
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['formVersions'])
+  name: 'FormVersionTable'
 };
+</script>
+<script setup>
+import FormVersionRow from './row.vue';
+
+import { useRequestData } from '../../request-data';
+
+defineEmits(['view-xml']);
+
+// The component does not assume that this data will exist when the component is
+// created.
+const { formVersions } = useRequestData();
 </script>
 
 <style lang="scss">

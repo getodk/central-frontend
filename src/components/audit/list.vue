@@ -14,9 +14,9 @@ except according to the terms contained in the LICENSE file.
     <p class="page-body-heading">{{ $t('heading[0]') }}</p>
     <audit-filters v-model:action="filters.action"
       v-model:dateRange="filters.dateRange"/>
-    <audit-table :audits="audits"/>
-    <loading :state="$store.getters.initiallyLoading(['audits'])"/>
-    <p v-show="audits != null && audits.length === 0"
+    <audit-table/>
+    <loading :state="audits.initiallyLoading"/>
+    <p v-show="audits.dataExists && audits.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
@@ -32,11 +32,16 @@ import Loading from '../loading.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'AuditList',
   components: { AuditFilters, AuditTable, Loading },
+  setup() {
+    const { createResource } = useRequestData();
+    const audits = createResource('audits');
+    return { audits };
+  },
   data() {
     const today = DateTime.local().startOf('day');
     return {
@@ -46,9 +51,6 @@ export default {
       }
     };
   },
-  // The component does not assume that this data will exist when the component
-  // is created.
-  computed: requestData(['audits']),
   watch: {
     'filters.action': 'fetchData',
     'filters.dateRange': 'fetchData'
@@ -59,15 +61,14 @@ export default {
   methods: {
     fetchData() {
       const { action, dateRange } = this.filters;
-      this.$store.dispatch('get', [{
-        key: 'audits',
+      this.audits.request({
         url: apiPaths.audits({
           action,
           start: dateRange[0].toISO(),
           end: dateRange[1].endOf('day').toISO()
         }),
         extended: true
-      }]).catch(noop);
+      }).catch(noop);
     }
   }
 };

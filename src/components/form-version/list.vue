@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <form-version-table @view-xml="showModal('viewXml')"/>
-    <loading :state="$store.getters.initiallyLoading(['formVersions'])"/>
+    <loading :state="formVersions.initiallyLoading"/>
 
     <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
   </div>
@@ -28,6 +28,7 @@ import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormVersionList',
@@ -47,6 +48,10 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { formVersions } = useRequestData();
+    return { formVersions };
+  },
   data() {
     return {
       viewXml: {
@@ -59,13 +64,12 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('get', [{
-        // We do not reconcile `form` and `formVersions`.
-        key: 'formVersions',
+      // We do not reconcile requestData.form and requestData.formVersions.
+      this.formVersions.request({
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,
         resend: false
-      }]).catch(noop);
+      }).catch(noop);
     }
   }
 };

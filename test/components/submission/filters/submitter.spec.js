@@ -3,22 +3,23 @@ import SubmissionFiltersSubmitter from '../../../../src/components/submission/fi
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { loadSubmissionList } from '../../../util/submission';
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
 import { mockLogin } from '../../../util/session';
-import { mount } from '../../../util/lifecycle';
+import { testRequestData } from '../../../util/request-data';
 
-const mountComponent = ({ modelValue = '' } = {}) =>
-  mount(SubmissionFiltersSubmitter, {
-    props: { modelValue },
+const mountComponent = (options = undefined) =>
+  mount(SubmissionFiltersSubmitter, mergeMountOptions(options, {
+    props: { modelValue: '' },
     container: {
-      requestData: {
+      requestData: testRequestData(['submitters'], {
         submitters: testData.extendedFieldKeys
           .sorted()
           .sort((fieldKey1, fieldKey2) =>
             fieldKey1.displayName.localeCompare(fieldKey2.displayName))
           .map(testData.toActor)
-      }
+      })
     }
-  });
+  }));
 
 describe('SubmissionFiltersSubmitter', () => {
   describe('submitters are loading', () => {
@@ -59,7 +60,10 @@ describe('SubmissionFiltersSubmitter', () => {
 
   it('sets the value of the select element to the modelValue prop', () => {
     const id = testData.extendedFieldKeys.createPast(1).last().id.toString();
-    mountComponent({ modelValue: id }).get('select').element.value.should.equal(id);
+    const component = mountComponent({
+      props: { modelValue: id }
+    });
+    component.get('select').element.value.should.equal(id);
   });
 
   it('sets value of select element once submitters have loaded', () => {
@@ -81,21 +85,37 @@ describe('SubmissionFiltersSubmitter', () => {
       });
   });
 
-  it('renders correctly if the modelValue prop is an unknown submitter', () => {
-    const option = mountComponent({ modelValue: '42' }).get('option[value="42"]');
-    option.text().should.equal('Unknown submitter');
+  describe('modelValue prop is an unknown submitter', () => {
+    it('renders correctly if submitters were loaded', () => {
+      const component = mountComponent({
+        props: { modelValue: '42' }
+      });
+      const option = component.get('option[value="42"]');
+      option.text().should.equal('Unknown submitter');
+    });
+
+    it('renders correctly if there was an error loading submitters', () => {
+      const component = mount(SubmissionFiltersSubmitter, {
+        props: { modelValue: '42' },
+        // !submitters.dataExists and also !submitters.awaitingResponse, meaning
+        // that there was an error response.
+        container: { requestData: testRequestData(['submitters']) }
+      });
+      const option = component.get('option[value="42"]');
+      option.text().should.equal('Unknown submitter');
+    });
   });
 
   it('updates value of select element after modelValue prop changes', async () => {
     const id = testData.extendedFieldKeys.createPast(1).last().id.toString();
-    const component = mountComponent({ modelValue: '' });
+    const component = mountComponent();
     await component.setProps({ modelValue: id });
     component.get('select').element.value.should.equal(id);
   });
 
   it('updates value of select after prop changes to unknown submitter', async () => {
     testData.extendedFieldKeys.createPast(1);
-    const component = mountComponent({ modelValue: '' });
+    const component = mountComponent();
     await component.setProps({ modelValue: '42' });
     component.get('select').element.value.should.equal('42');
   });
@@ -104,7 +124,7 @@ describe('SubmissionFiltersSubmitter', () => {
     const { id } = testData.extendedFieldKeys
       .createPast(1, 'App User 1')
       .last();
-    const component = mountComponent({ modelValue: '' });
+    const component = mountComponent();
     component.get('select').setValue(id.toString());
     component.emitted('update:modelValue').should.eql([[id.toString()]]);
   });

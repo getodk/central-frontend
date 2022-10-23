@@ -6,7 +6,7 @@ import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountOptions = (props) => ({
+const mountOptions = (props = undefined) => ({
   props: {
     projectId: '1',
     xmlFormId: testData.extendedForms.last().xmlFormId,

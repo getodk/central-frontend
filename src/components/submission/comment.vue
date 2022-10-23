@@ -33,7 +33,7 @@ import Spinner from '../spinner.vue';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { requestData } from '../../store/modules/request';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionComment',
@@ -55,6 +55,10 @@ export default {
     feed: Array
   },
   emits: ['success'],
+  setup() {
+    const { currentUser } = useRequestData();
+    return { currentUser };
+  },
   data() {
     return {
       awaitingResponse: false,
@@ -62,7 +66,6 @@ export default {
     };
   },
   computed: {
-    ...requestData(['currentUser']),
     editWithoutComment() {
       if (this.feed == null) return false;
       for (const entry of this.feed) {

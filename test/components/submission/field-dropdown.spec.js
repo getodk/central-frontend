@@ -2,10 +2,13 @@ import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionFieldDropdown from '../../../src/components/submission/field-dropdown.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
 
+import useFields from '../../../src/request-data/fields';
+
 import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
 import { mount } from '../../util/lifecycle';
+import { testRequestData } from '../../util/request-data';
 
 const { repeat, group, string } = testData.fields;
 const strings = (min, max) => {
@@ -20,9 +23,9 @@ describe('SubmissionFieldDropdown', () => {
     const dropdown = mount(SubmissionFieldDropdown, {
       props: { modelValue: [] },
       container: {
-        requestData: {
+        requestData: testRequestData([useFields], {
           fields: [repeat('/r'), string('/r/s1'), string('/s2'), string('/s3')]
-        }
+        })
       }
     });
     const text = dropdown.findAll('.checkbox span').map(label => label.text());
@@ -33,7 +36,9 @@ describe('SubmissionFieldDropdown', () => {
     const dropdown = mount(SubmissionFieldDropdown, {
       props: { modelValue: [] },
       container: {
-        requestData: { fields: [group('/g'), string('/g/s1')] }
+        requestData: testRequestData([useFields], {
+          fields: [group('/g'), string('/g/s1')]
+        })
       }
     });
     const span = dropdown.get('.checkbox span');
@@ -44,9 +49,9 @@ describe('SubmissionFieldDropdown', () => {
   describe('checked boxes', () => {
     it('checks boxes based on the modelValue prop', () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 2) }
+        requestData: testRequestData([useFields], { fields: strings(1, 2) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [fields[0]] },
         container
@@ -58,9 +63,9 @@ describe('SubmissionFieldDropdown', () => {
 
     it('updates the checkboxes after the modelValue prop changes', async () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 2) }
+        requestData: testRequestData([useFields], { fields: strings(1, 2) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [fields[0]] },
         container
@@ -79,7 +84,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [string('/s1')] }
+          requestData: testRequestData([useFields], { fields: [string('/s1')] })
         },
         attachTo: document.body
       });
@@ -95,7 +100,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [string('/s1')] }
+          requestData: testRequestData([useFields], { fields: [string('/s1')] })
         },
         attachTo: document.body
       });
@@ -109,9 +114,9 @@ describe('SubmissionFieldDropdown', () => {
 
   it('disables an unchecked box after 100 fields have been selected', () => {
     const container = createTestContainer({
-      requestData: { fields: strings(1, 101) }
+      requestData: testRequestData([useFields], { fields: strings(1, 101) })
     });
-    const { fields } = container.store.state.request.data;
+    const { fields } = container.requestData.localResources;
     const dropdown = mount(SubmissionFieldDropdown, {
       props: { modelValue: fields.slice(0, 100) },
       container
@@ -131,7 +136,9 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [repeat('/r'), string('/r/s1'), string('/s2')] }
+          requestData: testRequestData([useFields], {
+            fields: [repeat('/r'), string('/r/s1'), string('/s2')]
+          })
         }
       });
       dropdown.get('option').text().should.endWith(' of 1');
@@ -139,9 +146,9 @@ describe('SubmissionFieldDropdown', () => {
 
     it('shows the number of selected fields', () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 2) }
+        requestData: testRequestData([useFields], { fields: strings(1, 2) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [fields[0]] },
         container
@@ -153,7 +160,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [string('/s1')] }
+          requestData: testRequestData([useFields], { fields: [string('/s1')] })
         }
       });
       await dropdown.get('input[type="checkbox"]').setChecked();
@@ -164,11 +171,11 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [string('/s1')] }
+          requestData: testRequestData([useFields], { fields: [string('/s1')] })
         }
       });
-      const { fields } = dropdown.vm.$store.state.request.data;
-      await dropdown.setProps({ modelValue: fields });
+      const { fields } = dropdown.vm.$container.requestData.localResources;
+      await dropdown.setProps({ modelValue: fields.data });
       dropdown.get('option').text().should.equal('1 of 1');
     });
   });
@@ -178,7 +185,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: strings(1, 2) }
+          requestData: testRequestData([useFields], { fields: strings(1, 2) })
         }
       });
       dropdown.findAll('.search-match').length.should.equal(2);
@@ -192,7 +199,9 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [group('/g'), string('/g/s1'), string('/s2')] }
+          requestData: testRequestData([useFields], {
+            fields: [group('/g'), string('/g/s1'), string('/s2')]
+          })
         }
       });
       await dropdown.get('.search input').setValue('g');
@@ -205,7 +214,9 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [string('/s'), string('/S'), string('/x')] }
+          requestData: testRequestData([useFields], {
+            fields: [string('/s'), string('/S'), string('/x')]
+          })
         }
       });
       await dropdown.get('.search input').setValue('s');
@@ -218,7 +229,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [string('/s1')] }
+          requestData: testRequestData([useFields], { fields: [string('/s1')] })
         },
         attachTo: document.body
       });
@@ -236,7 +247,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [string('/s1')] }
+          requestData: testRequestData([useFields], { fields: [string('/s1')] })
         },
         attachTo: document.body
       });
@@ -251,7 +262,7 @@ describe('SubmissionFieldDropdown', () => {
         const dropdown = mount(SubmissionFieldDropdown, {
           props: { modelValue: [] },
           container: {
-            requestData: { fields: [string('/s1')] }
+            requestData: testRequestData([useFields], { fields: [string('/s1')] })
           }
         });
         const button = dropdown.get('.close');
@@ -265,7 +276,7 @@ describe('SubmissionFieldDropdown', () => {
           const dropdown = mount(SubmissionFieldDropdown, {
             props: { modelValue: [] },
             container: {
-              requestData: { fields: [string('/s1')] }
+              requestData: testRequestData([useFields], { fields: [string('/s1')] })
             }
           });
           await dropdown.get('.search input').setValue('1');
@@ -277,7 +288,7 @@ describe('SubmissionFieldDropdown', () => {
           const dropdown = mount(SubmissionFieldDropdown, {
             props: { modelValue: [] },
             container: {
-              requestData: { fields: [string('/s1')] }
+              requestData: testRequestData([useFields], { fields: [string('/s1')] })
             },
             attachTo: document.body
           });
@@ -295,7 +306,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: strings(1, 2) }
+          requestData: testRequestData([useFields], { fields: strings(1, 2) })
         }
       });
       await dropdown.get('.toggle-all a').trigger('click');
@@ -307,7 +318,7 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: strings(1, 2) }
+          requestData: testRequestData([useFields], { fields: strings(1, 2) })
         }
       });
       await dropdown.get('.search input').setValue('1');
@@ -321,7 +332,9 @@ describe('SubmissionFieldDropdown', () => {
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: [] },
         container: {
-          requestData: { fields: [...strings(1, 100), string('/x')] }
+          requestData: testRequestData([useFields], {
+            fields: [...strings(1, 100), string('/x')]
+          })
         }
       });
       await dropdown.get('.search input').setValue('s');
@@ -331,9 +344,9 @@ describe('SubmissionFieldDropdown', () => {
 
     it('is disabled if 100 checkboxes are checked', () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 101) }
+        requestData: testRequestData([useFields], { fields: strings(1, 101) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: fields.slice(0, 100) },
         container
@@ -343,9 +356,9 @@ describe('SubmissionFieldDropdown', () => {
 
     it('is disabled if selecting all would check more than 100 checkboxes', async () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 101) }
+        requestData: testRequestData([useFields], { fields: strings(1, 101) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: fields.slice(0, 99) },
         container
@@ -361,11 +374,11 @@ describe('SubmissionFieldDropdown', () => {
   describe('select none', () => {
     it('unchecks all checkboxes', async () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 2) }
+        requestData: testRequestData([useFields], { fields: strings(1, 2) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { modelValue: fields },
+        props: { modelValue: fields.data },
         container
       });
       await dropdown.findAll('.toggle-all a')[1].trigger('click');
@@ -375,11 +388,11 @@ describe('SubmissionFieldDropdown', () => {
 
     it('only unchecks search results', async () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 2) }
+        requestData: testRequestData([useFields], { fields: strings(1, 2) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
-        props: { modelValue: fields },
+        props: { modelValue: fields.data },
         container
       });
       await dropdown.get('.search input').setValue('1');
@@ -391,9 +404,9 @@ describe('SubmissionFieldDropdown', () => {
 
     it('re-enables a disabled checkbox', async () => {
       const container = createTestContainer({
-        requestData: { fields: strings(1, 101) }
+        requestData: testRequestData([useFields], { fields: strings(1, 101) })
       });
-      const { fields } = container.store.state.request.data;
+      const { fields } = container.requestData.localResources;
       const dropdown = mount(SubmissionFieldDropdown, {
         props: { modelValue: fields.slice(0, 100) },
         container
