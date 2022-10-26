@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
     <loading :state="formVersions.initiallyLoading"/>
     <div v-show="formVersions.dataExists" class="row">
       <div class="col-xs-6">
+        
         <page-section>
           <template #heading>
             <span>{{ $t('draftChecklist.title') }}</span>
@@ -21,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             <form-draft-checklist status/>
           </template>
-        </page-section>
+        </page-section>        
       </div>
       <div class="col-xs-6">
         <page-section>
@@ -51,6 +52,7 @@ except according to the terms contained in the LICENSE file.
                 </div>
               </template>
             </summary-item>
+            <dataset-summary></dataset-summary>            
           </template>
         </page-section>
         <page-section>
@@ -93,6 +95,7 @@ import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
+import DatasetSummary from '../dataset-summary/dataset-summary.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
@@ -114,7 +117,8 @@ export default {
     FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
     Loading,
     PageSection,
-    SummaryItem
+    SummaryItem,
+    DatasetSummary
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes()],
   inject: ['alert'],
@@ -130,8 +134,8 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
-    const { form, formVersions, formDraft } = useRequestData();
-    return { form, formVersions, formDraft };
+    const { form, formVersions, formDraft, datasetDiff } = useRequestData();
+    return { form, formVersions, formDraft, datasetDiff };
   },
   data() {
     return {
@@ -155,11 +159,17 @@ export default {
   },
   methods: {
     fetchData() {
-      this.formVersions.request({
-        url: apiPaths.formVersions(this.projectId, this.xmlFormId),
-        extended: true,
-        resend: false
-      }).catch(noop);
+      Promise.allSettled([
+        this.formVersions.request({
+          url: apiPaths.formVersions(this.projectId, this.xmlFormId),
+          extended: true,
+          resend: false
+        }),
+        this.datasetDiff.request({
+          url: apiPaths.formDraftDsDiff(this.projectId, this.xmlFormId),          
+          resend: false
+        })
+    ]).catch(noop);
     },
     afterUpload() {
       this.$emit('fetch-draft');

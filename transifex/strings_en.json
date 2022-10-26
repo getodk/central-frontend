@@ -1876,6 +1876,9 @@
         },
         "2": {
           "string": "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you."
+        },
+        "3": {
+          "string": "Would you like to proceed?"
         }
       },
       "field": {
@@ -1887,6 +1890,32 @@
       "problem": {
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
+        }
+      },
+      "dataset": {
+        "introduction": {
+          "string": "{inAddition}, this Form definition requires the following changes to be made to this Project:"
+        },
+        "inAddition": {
+          "string": "In addition"
+        },
+        "newDataset": {
+          "string": "A new dataset {datasetName} will be created."
+        },
+        "newProperty": {
+          "string": "In dataset {datasetName}, a new field {propertyName} will be created."
+        },
+        "existingDataset": {
+          "string": "Following fields will be added to existing Dataset {datasetName}:"
+        },
+        "existingFields": {
+          "string": "Form definition includes following dataset fields which are already there in the Dataset {datasetName}"
+        },
+        "noChange": {
+          "string": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset and all its fields are already present in the project, following are the dataset fields defined by the form:"
+        },
+        "noChangeNoField": {
+          "string": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset is already present in the project. This Form has not defined any dataset fields."
         }
       }
     },

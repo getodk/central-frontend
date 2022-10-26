@@ -1,0 +1,29 @@
+<template>
+    <summary-item icon="file-o" v-if="datasetDiff.length > 0">
+        <template #heading>
+        {{datasetDiff.length}}
+        </template>
+        <template #body>
+            <p>Datasets are updated by this Form:</p>        
+            <template v-for="(dataset, index) in datasetDiff">
+                <row :dataset="dataset"></row>
+                <hr v-if="index < datasetDiff.length - 1" />
+            </template>
+        </template>
+    </summary-item>
+</template>
+
+<script>
+import SummaryItem from '../summary-item.vue';
+import { useRequestData } from '../../request-data';
+import Row from './row.vue';
+
+export default {
+    name: 'DatasetSummary',
+    components: { SummaryItem, Row },
+    setup() {
+        const { datasetDiff } = useRequestData();
+        return { datasetDiff };
+    }
+};
+</script>
