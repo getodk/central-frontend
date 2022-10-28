@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[0]') }}</p>
         <p>{{ $t('introduction[1]') }}</p>
 
-        <template v-if="true">
+        <template v-if="formDraft.entityRelated">
           <hr/>
           <i18n-t tag="p" keypath="dataset.introduction">
             <template #inAddition>
