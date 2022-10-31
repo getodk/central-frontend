@@ -1,5 +1,5 @@
 <template>
-    <summary-item icon="file-o" v-if="datasetDiff.length > 0">
+    <summary-item icon="link" v-if="datasetDiff.length > 0">
         <template #heading>
         {{datasetDiff.length}}
         </template>
@@ -21,9 +21,15 @@ import Row from './row.vue';
 export default {
     name: 'DatasetSummary',
     components: { SummaryItem, Row },
-    setup() {
-        const { datasetDiff } = useRequestData();
-        return { datasetDiff };
+    props: {
+        isDraft:{
+            type: Boolean,
+            Default: false
+        }
+    },
+    setup(props) {
+        const { formDraftDatasetDiff, formDatasetDiff } = useRequestData();
+        return { datasetDiff: props.isDraft ? formDraftDatasetDiff : formDatasetDiff };
     }
 };
 </script>

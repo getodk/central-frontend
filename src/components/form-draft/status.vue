@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
                 </div>
               </template>
             </summary-item>
-            <dataset-summary></dataset-summary>            
+            <dataset-summary :isDraft="true"></dataset-summary>            
           </template>
         </page-section>
         <page-section>
@@ -134,8 +134,8 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
-    const { form, formVersions, formDraft, datasetDiff } = useRequestData();
-    return { form, formVersions, formDraft, datasetDiff };
+    const { form, formVersions, formDraft, formDraftDatasetDiff } = useRequestData();
+    return { form, formVersions, formDraft, formDraftDatasetDiff };
   },
   data() {
     return {
@@ -165,7 +165,7 @@ export default {
           extended: true,
           resend: false
         }),
-        this.datasetDiff.request({
+        this.formDraftDatasetDiff.request({
           url: apiPaths.formDraftDsDiff(this.projectId, this.xmlFormId),          
           resend: false
         })

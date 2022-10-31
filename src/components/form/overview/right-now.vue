@@ -40,6 +40,7 @@ except according to the terms contained in the LICENSE file.
           <p>{{ $t(`stateCaption.${form.state}`) }}</p>
         </template>
       </summary-item>
+      <dataset-summary></dataset-summary>
       <summary-item id="form-overview-right-now-submissions"
         :to="formPath('submissions')" icon="inbox">
         <template #heading>
@@ -63,7 +64,10 @@ import FormVersionStandardButtons from '../../form-version/standard-buttons.vue'
 import FormVersionString from '../../form-version/string.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
+import DatasetSummary from '../../dataset-summary/dataset-summary.vue';
 
+import { apiPaths } from '../../../util/request';
+import { noop } from '../../../util/util';
 import routes from '../../../mixins/routes';
 import { useRequestData } from '../../../request-data';
 
@@ -73,15 +77,16 @@ export default {
     FormVersionStandardButtons,
     FormVersionString,
     PageSection,
-    SummaryItem
+    SummaryItem,
+    DatasetSummary
   },
   mixins: [routes()],
   emits: ['view-xml'],
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
-    const { form } = useRequestData();
-    return { form };
+    const { form, formDatasetDiff } = useRequestData();
+    return { form, formDatasetDiff };
   },
   computed: {
     stateIcon() {
@@ -93,6 +98,17 @@ export default {
         default: // 'closed'
           return 'ban';
       }
+    }
+  },
+  created() {
+    this.fetchFormDatasetDiff();
+  },
+  methods:{
+    fetchFormDatasetDiff(){
+      this.formDatasetDiff.request({
+        url: apiPaths.formDsDiff(this.form.projectId, this.form.xmlFormId),          
+        resend: false
+      }).catch(noop);
     }
   }
 };

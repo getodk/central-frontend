@@ -12,7 +12,7 @@
                 
             </div>
             <div class="col-xs-6 properties-count">
-                {{ newProperties.length }} of {{ dataset.properties.length }} properties
+                {{ inFormProperties.length }} of {{ dataset.properties.length }} properties
                 <a href="javascript:void(0)" role="button" class="expand-button" @click.prevent="toggleExpanded">                
                     <span v-if="!expanded" class="icon-chevron-right"></span>
                     <span v-else class="icon-chevron-down"></span>                
@@ -21,10 +21,10 @@
         </div>
         <div :hidden="!expanded" class="row">
             <div class="col-xs-12">
-                <span v-for="(property,index) in dataset.properties">
+                <span v-for="(property,index) in inFormProperties">
                     <span>{{ property.name }}</span>
                     <span v-if="property.isNew" class="icon-plus-circle property-new"></span>
-                    <span v-if="index < dataset.properties.length - 1">, </span>
+                    <span v-if="index < inFormProperties.length - 1">, </span>
                 </span>
             </div>
         </div>
@@ -49,6 +49,9 @@ export default {
     computed:{
         newProperties() {
             return this.dataset.properties.filter(p => p.isNew)
+        },
+        inFormProperties() {
+            return this.dataset.properties.filter(p => p.inForm)
         }
     },
     methods: {

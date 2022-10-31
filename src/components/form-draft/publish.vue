@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </i18n-t>
           <ul class="dataset-list">
-            <template v-for="dataset of datasetDiff">            
+            <template v-for="dataset of formDraftDatasetDiff">            
               <i18n-t v-if="true || dataset.isNew" tag="li" keypath="dataset.newDataset">
                 <template #datasetName>
                   <strong>{{ dataset.name }}</strong>
@@ -125,9 +125,9 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { formVersions, attachments, resourceView, datasetDiff } = useRequestData();
+    const { formVersions, attachments, resourceView, formDraftDatasetDiff } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
-    return { formVersions, formDraft, attachments, datasetDiff };
+    return { formVersions, formDraft, attachments, formDraftDatasetDiff };
   },
   data() {
     return {
