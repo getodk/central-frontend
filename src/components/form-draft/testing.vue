@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
             </enketo-fill>
           </template>
           <template #body>
-            <div v-if="form.entityRelated" class="panel-dialog">
+            <div v-if="formDraft.entityRelated" class="panel-dialog">
               <div class="panel-heading">
                 <span class="panel-title">
                   <span class="icon-database"></span>
@@ -106,11 +106,10 @@ export default {
     }
   },
   setup() {
-    const { resourceView, createResource, form } = useRequestData();
+    const { resourceView, createResource } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
     const keys = createResource('keys');
-    // const form = createResource('form');
-    return { formDraft, keys, form };
+    return { formDraft, keys };
   },
   computed: {
     qrSettings() {
