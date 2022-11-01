@@ -266,7 +266,7 @@ export const standardFormDrafts = view(
 export const extendedFormDrafts = view(
   formVersions,
   (version) => ({
-    ...pick([...basicFormProps, 'createdBy'], findFormForVersion(version)),
+    ...pick([...basicFormProps, 'createdBy', 'entityRelated'], findFormForVersion(version)),
     ...pick(
       [...basicVersionProps, 'enketoId', 'excelContentType', 'submissions', 'reviewStates'],
       version
