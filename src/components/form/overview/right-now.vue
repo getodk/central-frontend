@@ -66,8 +66,6 @@ import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
 import DatasetSummary from '../../dataset-summary/dataset-summary.vue';
 
-import { apiPaths } from '../../../util/request';
-import { noop } from '../../../util/util';
 import routes from '../../../mixins/routes';
 import { useRequestData } from '../../../request-data';
 
@@ -98,17 +96,6 @@ export default {
         default: // 'closed'
           return 'ban';
       }
-    }
-  },
-  created() {
-    this.fetchFormDatasetDiff();
-  },
-  methods:{
-    fetchFormDatasetDiff(){
-      this.formDatasetDiff.request({
-        url: apiPaths.formDsDiff(this.form.projectId, this.form.xmlFormId),          
-        resend: false
-      }).catch(noop);
     }
   }
 };

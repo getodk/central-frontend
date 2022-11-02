@@ -109,7 +109,7 @@ describe('FormDraftPublish', () => {
       await modal.setProps({ state: true });
       modal.get('input').should.be.visible();
       // Explanatory text
-      modal.findAll('.modal-introduction p').length.should.equal(3);
+      modal.findAll('.modal-introduction p').length.should.equal(4);
     });
 
     it('does not show input if version string of draft is different', async () => {
@@ -121,7 +121,7 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false();
-      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
     it('does not show the input for a form without a published version', async () => {
@@ -129,7 +129,7 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false();
-      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
     it('focuses the input', async () => {
@@ -298,7 +298,7 @@ describe('FormDraftPublish', () => {
         modal.get('input').should.be.visible();
         // Explanatory text does not include last duplicate draft paragraph
         // because that explanation appears in the alert in this scenario.
-        modal.findAll('.modal-introduction p').length.should.equal(2);
+        modal.findAll('.modal-introduction p').length.should.equal(3);
       });
   });
 
@@ -315,7 +315,7 @@ describe('FormDraftPublish', () => {
       .afterResponse(modal => {
         modal.should.alert('danger');
         modal.find('input').exists().should.be.false();
-        modal.findAll('.modal-introduction p').length.should.equal(2);
+        modal.findAll('.modal-introduction p').length.should.equal(3);
       });
   });
 

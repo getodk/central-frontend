@@ -84,7 +84,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, watch } from 'vue';
 
 import FormDraftAbandon from './abandon.vue';
 import FormDraftChecklist from './checklist.vue';
@@ -158,18 +158,35 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchData() {
-      Promise.allSettled([
-        this.formVersions.request({
-          url: apiPaths.formVersions(this.projectId, this.xmlFormId),
-          extended: true,
-          resend: false
-        }),
+    watchFormDraft() {      
+      watch(() => this.formDraft.dataExists, () => {
+        if(this.formDraft.dataExists){
+          this.fetchDsDiff();
+        }
+      });
+    },
+    fetchDsDiff() {      
+      if(this.formDraft.data.get().entityRelated){
         this.formDraftDatasetDiff.request({
           url: apiPaths.formDraftDsDiff(this.projectId, this.xmlFormId),          
           resend: false
-        })
-    ]).catch(noop);
+        }).catch(noop);
+      } 
+    },
+    fetchData() {
+      if(this.formDraft.dataExists){
+        this.fetchDsDiff();
+      }
+      else{
+        this.watchFormDraft();
+      }
+      
+      this.formVersions.request({
+        url: apiPaths.formVersions(this.projectId, this.xmlFormId),
+        extended: true,
+        resend: false
+      })
+      .catch(noop);
     },
     afterUpload() {
       this.$emit('fetch-draft');
