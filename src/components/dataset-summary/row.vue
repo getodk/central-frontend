@@ -19,7 +19,7 @@
                 </a>
             </div>
         </div>
-        <div :hidden="!expanded" class="row">
+        <div v-show="expanded" class="row property-list">
             <div class="col-xs-12">
                 <span v-for="(property,index) in inFormProperties">
                     <span>{{ property.name }}</span>
