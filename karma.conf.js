@@ -36,7 +36,7 @@ module.exports = (config) => {
     reporters: ['spec'],
     singleRun: true,
     customLaunchers: {
-      ChromeDebugging:{
+      ChromeDebugging: {
         base: 'Chrome',
         flags: ['--remote-debugging-port=8333']
       }

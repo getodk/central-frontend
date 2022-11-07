@@ -14,15 +14,14 @@ except according to the terms contained in the LICENSE file.
     <loading :state="formVersions.initiallyLoading"/>
     <div v-show="formVersions.dataExists" class="row">
       <div class="col-xs-6">
-        
-        <page-section>
+<page-section>
           <template #heading>
             <span>{{ $t('draftChecklist.title') }}</span>
           </template>
           <template #body>
             <form-draft-checklist status/>
           </template>
-        </page-section>        
+        </page-section>
       </div>
       <div class="col-xs-6">
         <page-section>
@@ -52,7 +51,7 @@ except according to the terms contained in the LICENSE file.
                 </div>
               </template>
             </summary-item>
-            <dataset-summary :isDraft="true"></dataset-summary>            
+            <dataset-summary :is-draft="true"/>
           </template>
         </page-section>
         <page-section>
@@ -158,35 +157,34 @@ export default {
     this.fetchData();
   },
   methods: {
-    watchFormDraft() {      
+    watchFormDraft() {
       watch(() => this.formDraft.dataExists, () => {
-        if(this.formDraft.dataExists){
+        if (this.formDraft.dataExists) {
           this.fetchDsDiff();
         }
       });
     },
-    fetchDsDiff() {      
-      if(this.formDraft.data.get().entityRelated){
+    fetchDsDiff() {
+      if (this.formDraft.data.get().entityRelated) {
         this.formDraftDatasetDiff.request({
-          url: apiPaths.formDraftDsDiff(this.projectId, this.xmlFormId),          
+          url: apiPaths.formDraftDsDiff(this.projectId, this.xmlFormId),
           resend: false
         }).catch(noop);
-      } 
+      }
     },
     fetchData() {
-      if(this.formDraft.dataExists){
+      if (this.formDraft.dataExists) {
         this.fetchDsDiff();
-      }
-      else{
+      } else {
         this.watchFormDraft();
       }
-      
+
       this.formVersions.request({
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,
         resend: false
       })
-      .catch(noop);
+        .catch(noop);
     },
     afterUpload() {
       this.$emit('fetch-draft');

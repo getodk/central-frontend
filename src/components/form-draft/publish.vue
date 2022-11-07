@@ -36,36 +36,36 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
 
         <template v-if="formDraft.entityRelated">
-          <hr/>
+          <hr>
           <i18n-t tag="p" keypath="dataset.introduction">
             <template #inAddition>
               <strong>{{ $t('dataset.inAddition') }}</strong>
             </template>
           </i18n-t>
           <ul class="dataset-list">
-            <template v-for="dataset of formDraftDatasetDiff">            
-              <i18n-t v-if="true || dataset.isNew" tag="li" keypath="dataset.newDataset">
+            <template v-for="dataset of formDraftDatasetDiff" :key="dataset.name">
+              <i18n-t v-if="dataset.isNew" tag="li" keypath="dataset.newDataset">
                 <template #datasetName>
                   <strong>{{ dataset.name }}</strong>
-                </template>                
+                </template>
               </i18n-t>
-              <template v-for="property of dataset.properties">
-                <i18n-t v-if="true || property.isNew" tag="li" keypath="dataset.newProperty">
+              <template v-for="property of dataset.properties" :key="property.name">
+                <i18n-t v-if="property.isNew" tag="li" keypath="dataset.newProperty">
                   <template #datasetName>
                     <strong>{{ dataset.name }}</strong>
-                  </template>      
+                  </template>
                   <template #propertyName>
                     <strong>{{ property.name }}</strong>
-                  </template>           
-                </i18n-t>   
+                  </template>
+                </i18n-t>
               </template>
-            </template>                 
+            </template>
           </ul>
         </template>
-        
-        <hr v-if="draftVersionStringIsDuplicate" />
+
+        <hr v-if="draftVersionStringIsDuplicate">
         <p v-if="draftVersionStringIsDuplicate">{{ $t('introduction[2]') }}</p>
-        
+
         <p>{{ $t('introduction[3]') }}</p>
       </div>
       <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">

@@ -87,10 +87,10 @@ export default {
       if (tries < 70) return 15000;
       return null;
     },
-    fetchFormDatasetDiff(){
+    fetchFormDatasetDiff() {
       this.formDatasetDiff.request({
-        url: apiPaths.formDsDiff(this.form.projectId, this.form.xmlFormId),          
-        resend: false        
+        url: apiPaths.formDsDiff(this.form.projectId, this.form.xmlFormId),
+        resend: false
       }).catch(noop);
     },
     fetchForm() {
@@ -98,7 +98,7 @@ export default {
       const url = apiPaths.form(this.projectId, this.xmlFormId);
       this.form.request({ url, extended: true })
         .then(() => {
-          if (this.form.publishedAt != null && this.form.entityRelated){            
+          if (this.form.publishedAt != null && this.form.entityRelated) {
             this.fetchFormDatasetDiff();
           }
           if (this.form.publishedAt == null) return;

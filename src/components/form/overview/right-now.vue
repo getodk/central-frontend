@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
           <p>{{ $t(`stateCaption.${form.state}`) }}</p>
         </template>
       </summary-item>
-      <dataset-summary></dataset-summary>
+      <dataset-summary/>
       <summary-item id="form-overview-right-now-submissions"
         :to="formPath('submissions')" icon="inbox">
         <template #heading>

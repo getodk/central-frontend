@@ -4,7 +4,7 @@ import FormVersionViewXml from '../../../src/components/form-version/view-xml.vu
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { PropertyEnum as Property } from "../../util/ds-property-enum";
+import Property from '../../util/ds-property-enum';
 
 describe('FormDraftStatus', () => {
   beforeEach(mockLogin);
@@ -29,8 +29,8 @@ describe('FormDraftStatus', () => {
   it('sends dataset-diff requests when form is entityRelated', async () => {
     const requests = [];
     testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
-    testData.formDraftDatasetDiffs.createPast(1, {isNew: true, properties: [Property.NewProperty]});
-    const component = await load('/projects/1/forms/f/draft')
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty] });
+    await load('/projects/1/forms/f/draft')
       .respondWithData(() => testData.formDraftDatasetDiffs.sorted())
       .beforeEachResponse((_, config) => requests.push(config.url))
       .afterResponses(() => requests.should.containEql('/v1/projects/1/forms/f/draft/dataset-diff'));
@@ -38,8 +38,8 @@ describe('FormDraftStatus', () => {
 
   it('does not sends dataset-diff requests when form is not entityRelated', async () => {
     const requests = [];
-    testData.extendedForms.createPast(1, { draft: true, entityRelated: false });    
-    const component = await load('/projects/1/forms/f/draft')      
+    testData.extendedForms.createPast(1, { draft: true, entityRelated: false });
+    await load('/projects/1/forms/f/draft')
       .beforeEachResponse((_, config) => requests.push(config.url))
       .afterResponses(() => requests.should.not.containEql('/v1/projects/1/forms/f/draft/dataset-diff'));
   });
