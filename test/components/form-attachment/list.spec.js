@@ -3,6 +3,7 @@ import pako from 'pako';
 import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
+import RestoreLink from '../../../src/components/form-attachment/restore-link.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 
 import { noop } from '../../../src/util/util';
@@ -56,7 +57,7 @@ describe('FormAttachmentList', () => {
     it('shows a download link if the attachment exists', async () => {
       testData.standardFormAttachments.createPast(1, {
         name: 'foo bar.jpg',
-        exists: true
+        blobExists: true
       });
       const component = await load('/projects/1/forms/f/draft/attachments', {
         root: false
@@ -68,7 +69,7 @@ describe('FormAttachmentList', () => {
     describe('updatedAt', () => {
       it('formats updatedAt for an existing attachment', async () => {
         const { updatedAt } = testData.standardFormAttachments
-          .createPast(1, { exists: true })
+          .createPast(1, { blobExists: true })
           .last();
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
@@ -131,8 +132,8 @@ describe('FormAttachmentList', () => {
       beforeEach(() => {
         testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
-          .createPast(1, { name: 'a', exists: true })
-          .createPast(1, { name: 'b', exists: false })
+          .createPast(1, { name: 'a', blobExists: true })
+          .createPast(1, { name: 'b', blobExists: false })
           .createPast(1, { name: 'c' });
       });
 
@@ -164,8 +165,8 @@ describe('FormAttachmentList', () => {
       beforeEach(() => {
         testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
-          .createPast(1, { name: 'a', exists: true })
-          .createPast(1, { name: 'b', exists: false })
+          .createPast(1, { name: 'a', blobExists: true })
+          .createPast(1, { name: 'b', blobExists: false })
           .createPast(1, { name: 'c' });
       });
 
@@ -295,10 +296,10 @@ describe('FormAttachmentList', () => {
       beforeEach(() => {
         testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
-          .createPast(1, { name: 'a', exists: true })
-          .createPast(1, { name: 'b', exists: false })
-          .createPast(1, { name: 'c', exists: true })
-          .createPast(1, { name: 'd', exists: false });
+          .createPast(1, { name: 'a', blobExists: true })
+          .createPast(1, { name: 'b', blobExists: false })
+          .createPast(1, { name: 'c', blobExists: true })
+          .createPast(1, { name: 'd', blobExists: false });
       });
 
       it('highlights only the matching row', async () => {
@@ -433,10 +434,10 @@ describe('FormAttachmentList', () => {
     beforeEach(() => {
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments
-        .createPast(1, { name: 'a', exists: true })
-        .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
+        .createPast(1, { name: 'a', blobExists: true })
+        .createPast(1, { name: 'b', blobExists: false, hasUpdatedAt: false })
         // Deleted attachment
-        .createPast(1, { name: 'c', exists: false, hasUpdatedAt: true });
+        .createPast(1, { name: 'c', blobExists: false, hasUpdatedAt: true });
     });
 
     it('shows a backdrop', () =>
@@ -617,10 +618,10 @@ describe('FormAttachmentList', () => {
           beforeEach(() => {
             testData.extendedForms.createPast(1, { draft: true });
             testData.standardFormAttachments
-              .createPast(1, { name: 'a', exists: true })
-              .createPast(1, { name: 'b', exists: false, hasUpdatedAt: false })
+              .createPast(1, { name: 'a', blobExists: true })
+              .createPast(1, { name: 'b', blobExists: false, hasUpdatedAt: false })
               // Deleted attachment
-              .createPast(1, { name: 'c', exists: false, hasUpdatedAt: true })
+              .createPast(1, { name: 'c', blobExists: false, hasUpdatedAt: true })
               .createPast(1, { name: 'd' });
           });
 
@@ -911,7 +912,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows a Replace label if the attachment exists', async () => {
-        testData.standardFormAttachments.createPast(2, { exists: true });
+        testData.standardFormAttachments.createPast(2, { blobExists: true });
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
@@ -923,8 +924,22 @@ describe('FormAttachmentList', () => {
         rows[1].get('.label').should.be.hidden();
       });
 
+      it('shows a Override label if the dataset exists', async () => {
+        testData.standardFormAttachments.createPast(2, { datasetExists: true });
+        const component = await load('/projects/1/forms/f/draft/attachments', {
+          root: false
+        });
+        const rows = component.findAll('.form-attachment-row');
+        await rows[0].trigger('dragenter', {
+          dataTransfer: fileDataTransfer(blankFiles(['a']))
+        });
+        rows[0].get('.label').text().should.be.eql('Override');
+        rows[0].get('.label').should.be.visible();
+        rows[1].get('.label').should.be.hidden();
+      });
+
       it('does not show a Replace label if attachment does not exist', async () => {
-        testData.standardFormAttachments.createPast(2, { exists: false });
+        testData.standardFormAttachments.createPast(2, { blobExists: false });
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
@@ -963,8 +978,8 @@ describe('FormAttachmentList', () => {
       beforeEach(() => {
         testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments
-          .createPast(1, { name: 'a', exists: true })
-          .createPast(1, { name: 'b', exists: false });
+          .createPast(1, { name: 'a', blobExists: true })
+          .createPast(1, { name: 'b', blobExists: false });
       });
 
       it('is shown after the drop', async () => {
@@ -1063,5 +1078,48 @@ describe('FormAttachmentList', () => {
           });
       });
     }
+  });
+
+  describe('dataset linking', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1, { draft: true });
+    });
+
+    it('autolinks dataset', async () => {
+      testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', datasetExists: true });
+      const component = await load('/projects/1/forms/f/draft/attachments', {
+        root: false
+      });
+      component.get('td.form-attachment-list-uploaded .dataset-label').text().should.equal('Linked to Dataset shovels');
+      component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');
+    });
+
+    describe('restore dataset link', () => {
+      beforeEach(() => {
+        testData.extendedDatasets.createPast(1, { name: 'shovels' });
+        testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', blobExists: true });
+      });
+
+      it('shows Restore button', async () => {
+        const component = await load('/projects/1/forms/f/draft/attachments', {
+          root: false
+        });
+        component.get('td.form-attachment-list-action .btn-restore').exists().should.be.true();
+      });
+
+      it('restores dataset link', async () => {
+        await load('/projects/1/forms/f/draft/attachments', { root: false })
+          .complete()
+          .request(async (component) => {
+            await component.get('td.form-attachment-list-action .btn-restore').trigger('click');
+            component.getComponent(RestoreLink).get('.btn-restore').trigger('click');
+          })
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('td.form-attachment-list-uploaded .dataset-label').text().should.equal('Linked to Dataset shovels');
+            component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');
+          });
+      });
+    });
   });
 });

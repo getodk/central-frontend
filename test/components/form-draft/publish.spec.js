@@ -56,7 +56,7 @@ describe('FormDraftPublish', () => {
   describe('warnings', () => {
     it('shows a warning if an attachment is missing', async () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
-      testData.standardFormAttachments.createPast(1, { exists: false });
+      testData.standardFormAttachments.createPast(1, { blobExists: false });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.findAll('.modal-warnings li').length.should.equal(1);
@@ -85,7 +85,7 @@ describe('FormDraftPublish', () => {
 
     it('shows both warnings if both conditions are true', async () => {
       testData.extendedForms.createPast(1, { draft: true });
-      testData.standardFormAttachments.createPast(1, { exists: false });
+      testData.standardFormAttachments.createPast(1, { blobExists: false });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.findAll('.modal-warnings li').length.should.equal(2);

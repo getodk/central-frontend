@@ -112,7 +112,7 @@ describe('FormDraftChecklist', () => {
     });
 
     it('is marked as complete if all attachments exist', () => {
-      testData.standardFormAttachments.createPast(1, { exists: true });
+      testData.standardFormAttachments.createPast(1, { blobExists: true });
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
@@ -122,8 +122,8 @@ describe('FormDraftChecklist', () => {
 
     it('is marked as a current step if an attachment is missing', () => {
       testData.standardFormAttachments
-        .createPast(1, { exists: true })
-        .createPast(1, { exists: false });
+        .createPast(1, { blobExists: true })
+        .createPast(1, { blobExists: false });
       const checklist = mountComponent({
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });

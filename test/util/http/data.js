@@ -90,7 +90,9 @@ const responsesByComponent = {
   }),
   FormSettings: [],
   FormDraftStatus: componentResponses({ formVersions: true }),
-  FormAttachmentList: [],
+  FormAttachmentList: componentResponses({
+    datasets: () => testData.extendedDatasets.sorted()
+  }),
   FormDraftTesting: componentResponses({
     keys: true,
     fields: true,
