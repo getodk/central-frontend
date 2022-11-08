@@ -61,7 +61,7 @@ export default {
     attachment() {
       return this.plannedUploads.length === 1
         ? this.plannedUploads[0].attachment
-        : { name: '', exists: false };
+        : { name: '', blobExists: false, exists: false }; // revisit this
     },
     file() {
       return this.plannedUploads.length === 1
