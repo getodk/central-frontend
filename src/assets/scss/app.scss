@@ -709,6 +709,28 @@ becomes more complicated.
   }
 }
 
+.panel-dialog {  
+  border: 2px solid $color-accent-primary;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+  background-color: #fff;
+  max-width: 77ch;
+
+  .panel-heading {    
+    border: none;
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      line-height: inherit;
+      color: $color-accent-primary;
+    }
+  }
+  .panel-body {
+    padding: 0 15px;
+  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////

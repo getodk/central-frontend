@@ -21,6 +21,25 @@ except according to the terms contained in the LICENSE file.
             </enketo-fill>
           </template>
           <template #body>
+            <div v-if="formDraft.entityRelated" class="panel-dialog">
+              <div class="panel-heading">
+                <span class="panel-title">
+                  <span class="icon-database"></span>
+                  {{ $t('datasetsPreview.title') }}
+                </span>
+              </div>
+              <div class="panel-body">
+                <p>
+                  {{ $t('datasetsPreview.body[0]') }}
+                </p>
+                <p>
+                  {{ $t('datasetsPreview.body[1]') }}
+                </p>
+                <p>
+                  {{ $t('datasetsPreview.body[2]') }}
+                </p>
+              </div>
+            </div>
             <p>{{ $t('body[0]') }}</p>
             <p>
               <span>{{ $t('body[1]') }}</span>
@@ -147,7 +166,16 @@ export default {
     ],
     // This text will be shown in ODK Collect when testing a Draft Form. {name}
     // is the title of the Draft Form.
-    "collectProjectName": "[Draft] {name}"
+    "collectProjectName": "[Draft] {name}",
+    "datasetsPreview": {
+      // This is a title shown above a section of the page.
+      "title": "Datasets Preview",
+      "body": [
+        "This Form can add Entities to a Dataset.",
+        "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a Draft state.",
+        "For now, we recommend publishing your Dataset-related Forms, and not approving any submissions (and therefore not create any unwanted entities) until you are sure the Form is ready."
+      ]
+    }
   }
 }
 </i18n>
