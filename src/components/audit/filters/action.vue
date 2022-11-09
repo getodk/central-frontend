@@ -76,6 +76,9 @@ export default {
         this.actionOption('public_link.assignment.delete'),
         this.actionOption('public_link.session.end'),
         this.actionOption('public_link.delete'),
+        this.categoryOption('dataset'),
+        this.actionOption('dataset.create'),
+        this.actionOption('dataset.update'),
         this.categoryOption('config'),
         this.actionOption('config.set')
       ];

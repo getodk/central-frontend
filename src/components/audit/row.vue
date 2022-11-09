@@ -53,6 +53,7 @@ const typeByCategory = {
   user: 'resource.user',
   project: 'resource.project',
   form: 'resource.form',
+  dataset: 'resource.dataset',
   public_link: 'resource.publicLink',
   field_key: 'resource.appUser',
   config: 'resource.config',
@@ -72,6 +73,9 @@ const acteeSpeciesByCategory = {
   form: {
     title: (actee) => (actee.name != null ? actee.name : actee.xmlFormId),
     path: (actee, { primaryFormPath }) => primaryFormPath(actee)
+  },
+  dataset: {
+    title: (actee) => actee.name
   },
   public_link: {
     title: getDisplayName

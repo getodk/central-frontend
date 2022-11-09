@@ -273,6 +273,28 @@ describe('AuditTable', () => {
     });
   });
 
+  describe('dataset target', () => {
+    const cases = [
+      ['dataset.create', ['Dataset', 'Create']],
+      ['dataset.update', ['Dataset', 'Update']]
+    ];
+
+    for (const [action, type] of cases) {
+      it(`renders a ${action} audit correctly`, () => {
+        testData.extendedAudits.createPast(1, {
+          actor: testData.extendedUsers.first(),
+          action,
+          actee: testData.extendedDatasets
+            .createPast(1, { name: 'people' })
+            .last()
+        });
+        const row = mountComponent();
+        testType(row, type);
+        testTarget(row, 'people');
+      });
+    }
+  });
+
   describe('app user target', () => {
     const cases = [
       ['field_key.create', ['App User', 'Create']],
