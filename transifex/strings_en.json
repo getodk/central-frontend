@@ -1951,14 +1951,15 @@
       },
       "datasetsPreview": {
         "title": {
-          "string": "Datasets Preview"
+          "string": "Datasets Preview",
+          "developer_comment": "This is a title shown above a section of the page."
         },
         "body": {
           "0": {
-            "string": "This form can add entities to a dataset."
+            "string": "This Form can add Entities to a Dataset."
           },
           "1": {
-            "string": "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a draft state."
+            "string": "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a Draft state."
           },
           "2": {
             "string": "For now, we recommend publishing your Dataset-related Forms, and not approving any submissions (and therefore not create any unwanted entities) until you are sure the Form is ready."

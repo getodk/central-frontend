@@ -168,10 +168,11 @@ export default {
     // is the title of the Draft Form.
     "collectProjectName": "[Draft] {name}",
     "datasetsPreview": {
+      // This is a title shown above a section of the page.
       "title": "Datasets Preview",
       "body": [
-        "This form can add entities to a dataset.",
-        "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a draft state.",
+        "This Form can add Entities to a Dataset.",
+        "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a Draft state.",
         "For now, we recommend publishing your Dataset-related Forms, and not approving any submissions (and therefore not create any unwanted entities) until you are sure the Form is ready."
       ]
     }
