@@ -153,6 +153,38 @@ describe('SubmissionFeedEntry', () => {
       title.find('.icon-comment').exists().should.be.true();
       title.text().should.equal('Comment by Alice');
     });
+
+    describe('entity.create audit', () => {
+      it('renders correctly for newly created entity with ideally formatted details', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.create',
+          details: { entity: { uuid: 'xyz', label: 'EntityName', dataset: 'DatasetName' } }
+        });
+        const title = mountComponent().get('.title');
+        title.text().should.equal('Created Entity EntityName in DatasetName Dataset');
+      });
+
+      it('renders okay and does not crash for action where entity details are missing', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.create',
+          details: { entity: { uuid: 'xyz' } }
+        });
+        const title = mountComponent().get('.title');
+        title.text().should.equal('Created Entity  in  Dataset');
+      });
+    });
+
+    describe('entity.create.error audit', () => {
+      it('renders entity creation error message and help text', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.create.error',
+          details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
+        });
+        const title = mountComponent().get('.title');
+        title.text().should.equal('Problem creating Entity');
+        title.get('.submission-feed-entry-entity-error').attributes().title.should.equal('ID empty or missing.');
+      });
+    });
   });
 
   describe('body', () => {

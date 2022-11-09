@@ -31,6 +31,17 @@ except according to the terms contained in the LICENSE file.
             <template #name><actor-link :actor="entry.actor"/></template>
           </i18n-t>
         </template>
+        <template v-else-if="entry.action === 'entity.create'">
+          <span class="icon-check entity-icon submission-feed-entry-icon"></span>
+          <i18n-t keypath="title.entity.create">
+            <template #label><span class="submission-feed-entry-entity-data">{{ entityLabel(entry) }}</span></template>
+            <template #dataset><span class="submission-feed-entry-entity-data">{{ entityDataset(entry) }}</span></template>
+          </i18n-t>
+        </template>
+        <template v-else-if="entry.action === 'entity.create.error'">
+          <span class="icon-warning entity-icon submission-feed-entry-icon"></span>
+          <span class="submission-feed-entry-entity-error" :title="entityProblem(entry)">{{ $t('title.entity.error') }}</span>
+        </template>
         <template v-else>
           <span class="icon-comment submission-feed-entry-icon"></span>
           <i18n-t keypath="title.comment">
@@ -135,6 +146,21 @@ export default {
   methods: {
     updateOrEditIcon(state) {
       return `${this.reviewStateIcon(state)} submission-feed-entry-icon`;
+    },
+    entityLabel(entry) {
+      if ('entity' in entry.details)
+        return entry.details.entity.label;
+      return '';
+    },
+    entityDataset(entry) {
+      if ('entity' in entry.details)
+        return entry.details.entity.dataset;
+      return '';
+    },
+    entityProblem(entry) {
+      if ('problem' in entry.details && 'problemDetails' in entry.details.problem)
+        return entry.details.problem.problemDetails.reason;
+      return '';
     }
   }
 };
@@ -142,6 +168,7 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+@import '../../assets/scss/variables';
 
 .submission-feed-entry {
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.05);
@@ -173,9 +200,19 @@ export default {
       text-align: center;
       width: 18px;
     }
+
+    .submission-feed-entry-entity-data {
+      font-weight: normal;
+      color: $color-action-foreground;
+    }
+
+    .submission-feed-entry-entity-error {
+      cursor: help;
+    }
   }
 
   .icon-cloud-upload, .icon-comment { color: #bbb; }
+  .entity-icon { color: $color-action-foreground; }
   .review-state {
     color: #999;
     &.hasIssues { color: $color-warning; }
@@ -202,6 +239,10 @@ you could split it into:
 
 Submitted • {name} */
       "create": "Submitted by {name}",
+      "entity": {
+        "create": "Created Entity {label} in {dataset} Dataset",
+        "error": "Problem creating Entity",
+      },
       "updateReviewState": {
         "null": {
           /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
