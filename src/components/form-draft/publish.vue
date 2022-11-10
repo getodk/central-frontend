@@ -35,11 +35,11 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[0]') }}</p>
         <p>{{ $t('introduction[1]') }}</p>
 
-        <template v-if="formDraft.entityRelated">
+        <template v-if="formDraft.entityRelated && hasDatasetDiff">
           <hr>
-          <i18n-t tag="p" keypath="dataset.introduction">
+          <i18n-t tag="p" keypath="dataset.introduction.full">
             <template #inAddition>
-              <strong>{{ $t('dataset.inAddition') }}</strong>
+              <strong>{{ $t('dataset.introduction.inAddition') }}</strong>
             </template>
           </i18n-t>
           <ul class="dataset-list">
@@ -100,6 +100,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { any } from 'ramda';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -154,6 +155,10 @@ export default {
     },
     rendersTestingWarning() {
       return this.formDraft.dataExists && this.formDraft.submissions === 0;
+    },
+    hasDatasetDiff() {
+      return this.formDraftDatasetDiff.dataExists &&
+        any(d => d.isNew || any(p => p.isNew, d.properties), this.formDraftDatasetDiff.data);
     }
   },
   watch: {
@@ -250,14 +255,12 @@ export default {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     },
     "dataset": {
-      "introduction": "{inAddition}, this Form definition requires the following changes to be made to this Project:",
-      "inAddition": "In addition",
-      "newDataset": "A new dataset {datasetName} will be created.",
-      "newProperty": "In dataset {datasetName}, a new field {propertyName} will be created.",
-      "existingDataset": "Following fields will be added to existing Dataset {datasetName}:",
-      "existingFields": "Form definition includes following dataset fields which are already there in the Dataset {datasetName}",
-      "noChange": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset and all its fields are already present in the project, following are the dataset fields defined by the form:",
-      "noChangeNoField": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset is already present in the project. This Form has not defined any dataset fields."
+      "introduction": {
+        "full": "{inAddition} this Form definition requires the following changes to be made to this Project:",
+        "inAddition": "In addition,"
+      },
+      "newDataset": "A new Dataset {datasetName} will be created.",
+      "newProperty": "In Dataset {datasetName}, a new field {propertyName} will be created."
     }
   }
 }

@@ -40,7 +40,9 @@ except according to the terms contained in the LICENSE file.
           <p>{{ $t(`stateCaption.${form.state}`) }}</p>
         </template>
       </summary-item>
-      <dataset-summary/>
+      <dataset-summary v-if="form.dataExists && form.entityRelated"
+          :project-id="form.projectId"
+          :xml-form-id="form.xmlFormId"/>
       <summary-item id="form-overview-right-now-submissions"
         :to="formPath('submissions')" icon="inbox">
         <template #heading>
@@ -64,7 +66,7 @@ import FormVersionStandardButtons from '../../form-version/standard-buttons.vue'
 import FormVersionString from '../../form-version/string.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
-import DatasetSummary from '../../dataset-summary/dataset-summary.vue';
+import DatasetSummary from '../../dataset/dataset-summary.vue';
 
 import routes from '../../../mixins/routes';
 import { useRequestData } from '../../../request-data';

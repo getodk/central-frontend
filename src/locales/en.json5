@@ -353,6 +353,9 @@
     // formatted date like "2020/01/01", or it may use a word like "today",
     // "yesterday", or "Sunday".
     "lastSubmission": "(last {dateTime})",
+    "punctuations": {
+      "comma": ","
+    }
   },
   "mixin": {
     "request": {

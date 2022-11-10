@@ -770,6 +770,11 @@
     "lastSubmission": {
       "string": "(last {dateTime})",
       "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    },
+    "punctuations": {
+      "comma": {
+        "string": ","
+      }
     }
   },
   "mixin": {
@@ -1267,12 +1272,28 @@
         }
       }
     },
+    "DatasetDatasetSummary": {
+      "datasetUpdates": {
+        "string": "{count, plural, one {Dataset is updated by this Form:} other {Datasets are updated by this Form:}}",
+        "developer_comment": "Number of dataset(s) is shown separately above this text"
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "Download data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetSummaryRow": {
+      "new": {
+        "string": "New!",
+        "developer_comment": "This is shown when a dataset is new"
+      },
+      "properties": {
+        "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
+        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
       }
     },
     "Download": {
@@ -1894,28 +1915,20 @@
       },
       "dataset": {
         "introduction": {
-          "string": "{inAddition}, this Form definition requires the following changes to be made to this Project:"
-        },
-        "inAddition": {
-          "string": "In addition"
+          "full": {
+            "string": "{inAddition} this Form definition requires the following changes to be made to this Project:",
+            "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
+          },
+          "inAddition": {
+            "string": "In addition,",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} this Form definition requires the following changes to be made to this Project:"
+          }
         },
         "newDataset": {
-          "string": "A new dataset {datasetName} will be created."
+          "string": "A new Dataset {datasetName} will be created."
         },
         "newProperty": {
-          "string": "In dataset {datasetName}, a new field {propertyName} will be created."
-        },
-        "existingDataset": {
-          "string": "Following fields will be added to existing Dataset {datasetName}:"
-        },
-        "existingFields": {
-          "string": "Form definition includes following dataset fields which are already there in the Dataset {datasetName}"
-        },
-        "noChange": {
-          "string": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset and all its fields are already present in the project, following are the dataset fields defined by the form:"
-        },
-        "noChangeNoField": {
-          "string": "{inAddition}, Form definition includes a definition for Dataset {datasetName} but dataset is already present in the project. This Form has not defined any dataset fields."
+          "string": "In Dataset {datasetName}, a new field {propertyName} will be created."
         }
       }
     },

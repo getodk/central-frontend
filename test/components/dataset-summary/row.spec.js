@@ -1,4 +1,4 @@
-import Row from '../../../src/components/dataset-summary/row.vue';
+import Row from '../../../src/components/dataset/summary/row.vue';
 import Property from '../../util/ds-property-enum';
 
 import testData from '../../data';
@@ -21,7 +21,7 @@ describe('Dataset summary row', () => {
       });
       component.get('.dataset-name').text().should.be.equal(dataset.name);
       component.find('.dataset-new').exists().should.be.equal(data.isNew);
-      component.get('.properties-count').text().should.be.equal(`${inFormProperties.length} of ${dataset.properties.length} properties`);
+      component.get('.properties-count').text().should.be.equal(`${inFormProperties.length} of ${dataset.properties.length} ${dataset.properties.length === 1 ? 'property' : 'properties'}`);
 
       // check name of the properties is hidden
       component.get('.property-list').should.be.hidden();

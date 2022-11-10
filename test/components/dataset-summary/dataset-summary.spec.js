@@ -1,16 +1,17 @@
-import DatasetSummary from '../../../src/components/dataset-summary/dataset-summary.vue';
+import DatasetSummary from '../../../src/components/dataset/dataset-summary.vue';
 import Property from '../../util/ds-property-enum';
-
+import useForm from '../../../src/request-data/form';
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { mockRouter } from '../../util/router';
+import { testRequestData } from '../../util/request-data';
 
 const getContainer = () => ({
   router: mockRouter(),
-  requestData: {
+  requestData: testRequestData([useForm], {
     formDraftDatasetDiff: testData.formDraftDatasetDiffs.sorted(),
     formDatasetDiff: testData.formDatasetDiffs.sorted()
-  }
+  })
 });
 
 describe('Dataset summary', () => {

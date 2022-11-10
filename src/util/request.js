@@ -76,8 +76,7 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}/versions/${encodedVersion}${extension}`;
   },
   formDraft: formPath('/draft'),
-  formDsDiff: formPath('/dataset-diff'),
-  formDraftDsDiff: formPath('/draft/dataset-diff'),
+  formDraftDatasetDiff: formPath('/draft/dataset-diff'),
   formDraftDef: (projectId, xmlFormId, extension) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft${extension}`;

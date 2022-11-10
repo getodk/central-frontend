@@ -54,12 +54,12 @@ export default {
     }
   },
   setup() {
-    const { project, resourceStates, formDatasetDiff } = useRequestData();
+    const { project, resourceStates } = useRequestData();
     const { form, formDraft, attachments } = useForm();
 
     const { callWait, cancelCall } = useCallWait();
     return {
-      project, form, formDraft, attachments, formDatasetDiff,
+      project, form, formDraft, attachments,
       ...resourceStates([project, form, formDraft, attachments]),
       callWait, cancelCall
     };
@@ -87,20 +87,11 @@ export default {
       if (tries < 70) return 15000;
       return null;
     },
-    fetchFormDatasetDiff() {
-      this.formDatasetDiff.request({
-        url: apiPaths.formDsDiff(this.form.projectId, this.form.xmlFormId),
-        resend: false
-      }).catch(noop);
-    },
     fetchForm() {
       this.cancelCall('fetchEnketoIdsForForm');
       const url = apiPaths.form(this.projectId, this.xmlFormId);
       this.form.request({ url, extended: true })
         .then(() => {
-          if (this.form.publishedAt != null && this.form.entityRelated) {
-            this.fetchFormDatasetDiff();
-          }
           if (this.form.publishedAt == null) return;
           this.callWait(
             'fetchEnketoIdsForForm',

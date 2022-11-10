@@ -1,0 +1,123 @@
+<!--
+Copyright 2022 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <div class="dataset-row">
+    <div class="row">
+      <div class="col-xs-6">
+        <span class="dataset-name">{{ dataset.name }}</span>
+        <span v-if="dataset.isNew" class="dataset-new">
+          <span class="icon-plus-circle"></span>
+          {{ $t('new') }}
+        </span>
+      </div>
+      <div class="col-xs-6 properties-count">
+        {{ $tcn('properties', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
+        <!-- {{ inFormProperties.length }} of {{ dataset.properties.length }} properties -->
+        <a href="javascript:void(0)" role="button" class="expand-button" @click.prevent="toggleExpanded">
+          <span v-if="!expanded" class="icon-chevron-right"></span>
+          <span v-else class="icon-chevron-down"></span>
+        </a>
+      </div>
+    </div>
+    <div v-show="expanded" class="row property-list">
+      <div class="col-xs-12">
+        <span v-for="(property, index) in inFormProperties" :key="property.name">
+          <span>{{ property.name }}</span>
+          <span v-if="property.isNew" class="icon-plus-circle property-new"></span>
+          <span v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma' ) }}&nbsp;</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'DatasetSummaryRow',
+  props: {
+    dataset: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      expanded: false
+    };
+  },
+  computed: {
+    newProperties() {
+      return this.dataset.properties.filter(p => p.isNew);
+    },
+    inFormProperties() {
+      return this.dataset.properties.filter(p => p.inForm);
+    }
+  },
+  methods: {
+    toggleExpanded() {
+      this.expanded = !this.expanded;
+    }
+  }
+};
+
+</script>
+
+<style lang="scss">
+@import '../../../assets/scss/_variables.scss';
+
+.dataset-row {
+    max-width: 77ch;
+    .dataset-name {
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .dataset-new {
+        vertical-align: super;
+        color: $color-success;
+        margin-left: 2px;
+    }
+
+    .property-new {
+        margin-left: 2px;
+        color: $color-success;
+        vertical-align: super;
+    }
+
+    .properties-count {
+        line-height: 28px;
+    }
+    a {
+        color: #666;
+
+        &:focus {
+            background-color: inherit;
+        }
+    }
+    .expand-button {
+      margin-left: 5px;
+    }
+}
+
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is shown when a dataset is new
+    "new":"New!",
+    // {inform} is the number of dataset properties defined by the form.
+    // {count} is the total number of properties. The string will be pluralized based on {count}.
+    "properties": "{inform} of {count} property | {inform} of {count} properties"
+  }
+}
+</i18n>

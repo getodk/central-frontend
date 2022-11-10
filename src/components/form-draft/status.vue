@@ -51,7 +51,10 @@ except according to the terms contained in the LICENSE file.
                 </div>
               </template>
             </summary-item>
-            <dataset-summary :is-draft="true"/>
+            <dataset-summary v-if="formDraft.dataExists && formDraft.get().entityRelated"
+              :is-draft="true"
+              :project-id="projectId"
+              :xml-form-id="xmlFormId"/>
           </template>
         </page-section>
         <page-section>
@@ -83,7 +86,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent, watch } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import FormDraftAbandon from './abandon.vue';
 import FormDraftChecklist from './checklist.vue';
@@ -94,7 +97,7 @@ import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
-import DatasetSummary from '../dataset-summary/dataset-summary.vue';
+import DatasetSummary from '../dataset/dataset-summary.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
@@ -133,8 +136,8 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
-    const { form, formVersions, formDraft, formDraftDatasetDiff } = useRequestData();
-    return { form, formVersions, formDraft, formDraftDatasetDiff };
+    const { form, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    return { form, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff };
   },
   data() {
     return {
@@ -157,28 +160,7 @@ export default {
     this.fetchData();
   },
   methods: {
-    watchFormDraft() {
-      watch(() => this.formDraft.dataExists, () => {
-        if (this.formDraft.dataExists) {
-          this.fetchDsDiff();
-        }
-      });
-    },
-    fetchDsDiff() {
-      if (this.formDraft.data.get().entityRelated) {
-        this.formDraftDatasetDiff.request({
-          url: apiPaths.formDraftDsDiff(this.projectId, this.xmlFormId),
-          resend: false
-        }).catch(noop);
-      }
-    },
     fetchData() {
-      if (this.formDraft.dataExists) {
-        this.fetchDsDiff();
-      } else {
-        this.watchFormDraft();
-      }
-
       this.formVersions.request({
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,
@@ -188,6 +170,7 @@ export default {
     },
     afterUpload() {
       this.$emit('fetch-draft');
+      this.formDraftDatasetDiff.reset();
       this.hideModal('upload');
       this.alert.success(this.$t('alert.upload'));
     },
@@ -196,6 +179,8 @@ export default {
       // the form didn't already have a published version, then there would be a
       // validateData violation if we didn't clear it.
       this.$emit('fetch-form');
+      this.formDraftDatasetDiff.reset();
+      this.formDatasetDiff.reset();
       afterNextNavigation(this.$router, () => {
         // Re-request the project in case its `datasets` property has changed.
         this.$emit('fetch-project', true);
@@ -206,6 +191,7 @@ export default {
       this.$router.push(this.formPath());
     },
     afterAbandon() {
+      this.formDraftDatasetDiff.reset();
       if (this.form.publishedAt != null) {
         afterNextNavigation(this.$router, () => {
           this.formDraft.setToNone();

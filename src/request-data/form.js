@@ -19,7 +19,9 @@ export default () => {
   }));
   const formVersionXml = createResource('formVersionXml');
   const publicLinks = createResource('publicLinks');
+  const formDraftDatasetDiff = createResource('formDraftDatasetDiff');
+  const formDatasetDiff = createResource('formDatasetDiff');
   return {
-    form, formDraft, attachments, formVersions, formVersionXml, publicLinks
+    form, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff
   };
 };
