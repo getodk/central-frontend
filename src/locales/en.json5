@@ -79,6 +79,7 @@
       "user": "Web User Actions",
       "project": "Project Actions",
       "form": "Form Actions",
+      "dataset": "Dataset Actions",
       "field_key": "App User Actions",
       "public_link": "Public Access Link Actions",
       "config": "Server Configuration Actions",
@@ -101,6 +102,12 @@
       // type of action that can be taken on a Server Configuration.
       "config": {
         "set": "Set"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Dataset.
+      "dataset": {
+        "create": "@:audit.action.default.create",
+        "update": "Update"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on an App User.
@@ -249,6 +256,7 @@
     "appUser": "App User",
     "appUsers": "App Users",
     "config": "Server Configuration",
+    "dataset": "Dataset",
     "datasets": "Datasets",
     "form": "Form",
     "forms": "Forms",
