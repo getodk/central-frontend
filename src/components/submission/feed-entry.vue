@@ -203,7 +203,6 @@ export default {
 
     .submission-feed-entry-entity-data {
       font-weight: normal;
-      color: $color-action-foreground;
     }
 
     .submission-feed-entry-entity-error {
