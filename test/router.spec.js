@@ -1022,7 +1022,8 @@ describe('createCentralRouter()', () => {
     it('shows form name in title for <form url>/draft/attachments', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f2', name: 'My Draft Form', draft: true });
       testData.standardFormAttachments.createPast(1, { form: testData.extendedForms.last() });
-      await load('/projects/1/forms/f2/draft/attachments');
+      await load('/projects/1/forms/f2/draft/attachments')
+        .respondWithSuccess();
       document.title.should.equal('Media Files | My Draft Form | ODK Central');
     });
 

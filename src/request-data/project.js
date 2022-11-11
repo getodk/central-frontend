@@ -24,7 +24,6 @@ export default () => {
     transformResponse: transformForms
   }));
   const formSummaryAssignments = createResource('formSummaryAssignments');
-  const datasets = createResource('datasets');
   const fieldKeys = createResource('fieldKeys', () => ({
     withToken: computeIfExists(() =>
       fieldKeys.filter(fieldKey => fieldKey.token != null))
@@ -34,11 +33,6 @@ export default () => {
     if (project.dataExists && forms.dataExists &&
       project.forms !== forms.length)
       project.forms = forms.length;
-  });
-  watchSyncEffect(() => {
-    if (project.dataExists && datasets.dataExists &&
-      project.datasets !== datasets.length)
-      project.datasets = datasets.length;
   });
   watchSyncEffect(() => {
     if (project.dataExists && fieldKeys.dataExists &&
@@ -64,6 +58,6 @@ export default () => {
 
   return {
     project, projectAssignments, forms, deletedForms, formSummaryAssignments,
-    datasets, fieldKeys, duplicateFormNames
+    fieldKeys, duplicateFormNames
   };
 };

@@ -3,12 +3,14 @@ import pako from 'pako';
 import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
-import RestoreLink from '../../../src/components/form-attachment/restore-link.vue';
+import FormAttachmentRestoreLink from '../../../src/components/form-attachment/restore-link.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 
 import { noop } from '../../../src/util/util';
 
 import testData from '../../data';
+import { testRequestData } from '../../util/request-data';
+import useDatasets from '../../../src/request-data/datasets';
 import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/file';
 import { isBefore } from '../../util/date-time';
 import { load } from '../../util/http';
@@ -1096,23 +1098,34 @@ describe('FormAttachmentList', () => {
 
     describe('restore dataset link', () => {
       beforeEach(() => {
+        testData.extendedProjects.createPast(1, {
+          name: 'My Project Name',
+          forms: 1,
+          datasets: 1
+        });
         testData.extendedDatasets.createPast(1, { name: 'shovels' });
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', blobExists: true });
       });
 
       it('shows Restore button', async () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
-          root: false
-        });
+          root: false,
+          container: { requestData: testRequestData([useDatasets]) }
+        })
+          .respondWithData(() => testData.extendedDatasets.sorted());
         component.get('td.form-attachment-list-action .btn-restore').exists().should.be.true();
       });
 
       it('restores dataset link', async () => {
-        await load('/projects/1/forms/f/draft/attachments', { root: false })
+        await load('/projects/1/forms/f/draft/attachments', {
+          root: false,
+          container: { requestData: testRequestData([useDatasets]) }
+        })
+          .respondWithData(() => testData.extendedDatasets.sorted())
           .complete()
           .request(async (component) => {
             await component.get('td.form-attachment-list-action .btn-restore').trigger('click');
-            component.getComponent(RestoreLink).get('.btn-restore').trigger('click');
+            component.getComponent(FormAttachmentRestoreLink).get('.btn-restore').trigger('click');
           })
           .respondWithSuccess()
           .afterResponse(component => {

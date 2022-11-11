@@ -35,6 +35,7 @@ import request from '../../mixins/request';
 import routes from '../../mixins/routes';
 import useCallWait from '../../composables/call-wait';
 import useForm from '../../request-data/form';
+import useDatasets from '../../request-data/datasets';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -56,6 +57,7 @@ export default {
   setup() {
     const { project, resourceStates } = useRequestData();
     const { form, formDraft, attachments } = useForm();
+    useDatasets();
 
     const { callWait, cancelCall } = useCallWait();
     return {

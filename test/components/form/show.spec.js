@@ -73,12 +73,10 @@ describe('FormShow', () => {
 
   it('shows a loading message until all responses are received', () => {
     testData.extendedProjects.createPast(1);
-    testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: true });
+    testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: false });
     testData.standardFormAttachments.createPast(1);
-    return load('/projects/1/forms/f/draft/attachments')
-      .beforeEachResponse((app, { url }) => {
-        // TODO need to find a way to show loading in show.vue when dataset is loading
-        if (url === '/v1/projects/1/datasets') return;
+    return load('/projects/1/forms/f')
+      .beforeEachResponse(app => {
         const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
         loading[0].props().state.should.eql(true);
@@ -238,7 +236,6 @@ describe('FormShow', () => {
         return load('/projects/1/forms/f/draft')
           .complete()
           .route('/projects/1/forms/f/draft/attachments')
-          .respondWithData(() => testData.extendedDatasets.sorted())
           .complete()
           .request(() => {
             clock.tick(3000);

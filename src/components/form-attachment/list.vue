@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="attachments.dataExists" id="form-attachment-list" ref="dropZone">
+  <div id="form-attachment-list" ref="dropZone">
     <!-- ^^^ We use v-show rather than v-if so that this.$refs.dropZone is in
     the DOM from the first render. -->
 
@@ -49,33 +49,30 @@ except according to the terms contained in the LICENSE file.
       :name-mismatch="nameMismatch" :upload-status="uploadStatus"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
 
-    <form-attachment-upload-files v-bind="uploadFilesModal"
-      @hide="hideModal('uploadFilesModal')" @select="afterFileInputSelection"/>
-    <form-attachment-name-mismatch :state="nameMismatch.state"
-      :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
-      @confirm="uploadFiles" @cancel="cancelUploads"/>
+    <form-attachment-upload-files v-bind="uploadFilesModal" @hide="hideModal('uploadFilesModal')"
+      @select="afterFileInputSelection"/>
+    <form-attachment-name-mismatch :state="nameMismatch.state" :planned-uploads="plannedUploads"
+      @hide="hideModal('nameMismatch')" @confirm="uploadFiles" @cancel="cancelUploads"/>
 
-    <restore-link v-if="attachments != null" v-bind="restoreModal"
-      @hide="hideModal('restoreModal')" @success="afterRestore"/>
-</div>
+    <form-attachment-restore-link v-bind="restoreModal" @hide="hideModal('restoreModal')"
+      @success="afterRestore"/>
+  </div>
 </template>
 
 <script>
 import pako from 'pako/lib/deflate';
 import { markRaw } from 'vue';
-
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import RestoreLink from './restore-link.vue';
+import FormAttachmentRestoreLink from './restore-link.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
-import useProject from '../../request-data/project';
 
 export default {
   name: 'FormAttachmentList',
@@ -84,7 +81,7 @@ export default {
     FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles,
-    RestoreLink
+    FormAttachmentRestoreLink
   },
   mixins: [dropZone(), modal(), request()],
   inject: ['alert'],
@@ -95,10 +92,9 @@ export default {
     }
   },
   setup() {
-    const { form, resourceView } = useRequestData();
-    const { datasets } = useProject();
+    const { project, form, resourceView, datasets } = useRequestData();
     const attachments = resourceView('attachments', (data) => data.get());
-    return { form, attachments, datasets };
+    return { project, form, attachments, datasets };
   },
   data() {
     return {
@@ -164,11 +160,16 @@ export default {
       return this.uploadStatus.total !== 0;
     },
     dsHashset() {
-      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
+      return this.datasets && this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
     }
   },
-  created() {
-    this.fetchDatasets();
+  watch: {
+    'project.dataExists': {
+      handler(dataExists) {
+        if (dataExists && this.project.datasets > 0) this.fetchDatasets();
+      },
+      immediate: true
+    }
   },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
@@ -393,8 +394,9 @@ export default {
         resend: false
       }).catch(noop);
     },
-    showRestoreModal(name) {
+    showRestoreModal({ name, action }) {
       this.restoreModal.attachmentName = name;
+      this.restoreModal.action = action;
       this.showModal('restoreModal');
     },
     afterRestore() {
@@ -446,6 +448,15 @@ export default {
     // Set the column to a minimum width such that when a Replace label is
     // added to a row, it does not cause additional wrapping.
     min-width: 250px;
+  }
+
+  .form-attachment-list-action {
+
+    button {
+      // adjusting for td padding
+      margin-top: -8px;
+      margin-bottom: -4px;
+    }
   }
 }
 </style>

@@ -1692,17 +1692,34 @@
       }
     },
     "FormAttachmentRestoreLink": {
-      "title": {
-        "string": "Restore Dataset Link",
-        "developer_comment": "This is the title at the top of a pop-up."
+      "restore": {
+        "title": {
+          "string": "Restore Dataset Link",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "introduction": {
+          "string": "Are you sure you want to restore the Dataset link? The override file you uploaded will be deleted. You can always upload it again later."
+        },
+        "action": {
+          "restore": {
+            "string": "Restore",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
       },
-      "introduction": {
-        "string": "Are you sure you want to restore the Dataset link? The override file you uploaded will be deleted. You can always upload it again later."
-      },
-      "action": {
-        "restore": {
-          "string": "Restore",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+      "link": {
+        "title": {
+          "string": "Link Dataset",
+          "developer_comment": "This is the title at the top of a pop-up."
+        },
+        "introduction": {
+          "string": "Are you sure you want to link the Dataset?"
+        },
+        "action": {
+          "restore": {
+            "string": "Link",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
         }
       }
     },
@@ -1746,6 +1763,9 @@
       },
       "restoreDatasetLink": {
         "string": "Restore Dataset Link"
+      },
+      "linkDataset": {
+        "string": "Link Dataset"
       },
       "override": {
         "string": "Override"

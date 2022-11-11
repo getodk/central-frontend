@@ -71,6 +71,7 @@ import PageHead from '../page/head.vue';
 import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
 import useProject from '../../request-data/project';
+import useDatasets from '../../request-data/datasets';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
@@ -85,7 +86,8 @@ export default {
     }
   },
   setup() {
-    const { project, forms, datasets, fieldKeys } = useProject();
+    const { project, forms, fieldKeys } = useProject();
+    const datasets = useDatasets();
     return { project, forms, datasets, fieldKeys };
   },
   computed: {

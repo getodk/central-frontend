@@ -23,13 +23,11 @@ except according to the terms contained in the LICENSE file.
     <td class="form-attachment-list-uploaded">
       <template v-if="attachment.datasetExists">
         <span class="icon-link"></span>
-        <span class="dataset-label">
-          <i18n-t keypath="linkedToDataset">
+        <i18n-t tag="span" keypath="linkedToDataset" class="dataset-label">
           <template #datasetName>
             <a ref="link" :href="datasetLink" target="_blank"> {{ datasetName }}</a>
           </template>
         </i18n-t>
-        </span>
         <span v-show="targeted" class="label label-primary">
           {{ $t('override') }}
         </span>
@@ -52,8 +50,11 @@ except according to the terms contained in the LICENSE file.
         {{ $t('uploadToOverride') }}
       </template>
       <template v-else-if="linkable && !attachment.datasetExists">
-        <button type="button" class="btn btn-primary btn-restore" @click="$emit('restore', attachment.name)">
-          <span class="icon-link"></span>{{ $t('restoreDatasetLink') }}
+        <button type="button" class="btn btn-primary btn-restore" @click="$emit('restore', {
+          name: attachment.name,
+          action: attachment.blobExists ? 'restore' : 'link'
+        })">
+          <span class="icon-link"></span>{{ attachment.blobExists ? $t('restoreDatasetLink') : $t('linkDataset') }}
         </button>
       </template>
     </td>
@@ -94,8 +95,6 @@ export default {
   },
   emits: ['restore'],
   setup() {
-  // emits: ['restore'],
-  // computed: {
     // The component assumes that this data will exist when the component is
     // created.
     const { form } = useRequestData();
@@ -208,6 +207,7 @@ export default {
     "linkedToDataset": "Linked to Dataset {datasetName}",
     "uploadToOverride": "Upload a file to override.",
     "restoreDatasetLink": "Restore Dataset Link",
+    "linkDataset": "Link Dataset",
     "override": "Override"
   }
 }

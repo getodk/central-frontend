@@ -1,5 +1,5 @@
 <!--
-Copyright 2020 ODK Central Developers
+Copyright 2022 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -12,15 +12,15 @@ except according to the terms contained in the LICENSE file.
 <template>
     <modal id="attachment-dataset-restore" :state="state" :hideable="!awaitingResponse"
       backdrop @hide="$emit('hide')">
-      <template #title>{{ $t('title') }}</template>
+      <template #title>{{ $t(action + '.title') }}</template>
       <template #body>
         <div class="modal-introduction">
-            <p>{{ $t('introduction') }}</p>
+            <p>{{ $t(action + '.introduction') }}</p>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-danger btn-restore"
             :disabled="awaitingResponse" @click="restore">
-            {{ $t('action.restore') }} <spinner :state="awaitingResponse"/>
+            {{ $t(action + '.action.restore') }} <spinner :state="awaitingResponse"/>
           </button>
           <button type="button" class="btn btn-link" :disabled="awaitingResponse"
             @click="$emit('hide')">
@@ -41,7 +41,7 @@ import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
-  name: 'RestoreLink',
+  name: 'FormAttachmentRestoreLink',
   components: { Modal, Spinner },
   mixins: [request()],
   props: {
@@ -52,6 +52,11 @@ export default {
     attachmentName: {
       type: String,
       required: true
+    },
+    // possible values: restore, link
+    action: {
+      type: String,
+      default: 'restore'
     }
   },
   emits: ['hide', 'success'],
@@ -86,11 +91,21 @@ export default {
   <i18n lang="json5">
   {
     "en": {
-      // This is the title at the top of a pop-up.
-      "title": "Restore Dataset Link",
-      "introduction": "Are you sure you want to restore the Dataset link? The override file you uploaded will be deleted. You can always upload it again later.",
-      "action": {
-        "restore": "Restore"
+      "restore": {
+        // This is the title at the top of a pop-up.
+        "title": "Restore Dataset Link",
+        "introduction": "Are you sure you want to restore the Dataset link? The override file you uploaded will be deleted. You can always upload it again later.",
+        "action": {
+          "restore": "Restore"
+        }
+      },
+      "link": {
+        // This is the title at the top of a pop-up.
+        "title": "Link Dataset",
+        "introduction": "Are you sure you want to link the Dataset?",
+        "action": {
+          "restore": "Link"
+        }
       }
     }
   }
