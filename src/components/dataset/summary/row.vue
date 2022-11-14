@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         <span v-for="(property, index) in inFormProperties" :key="property.name">
           <span>{{ property.name }}</span>
           <span v-if="property.isNew" class="icon-plus-circle property-new"></span>
-          <span v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma' ) }}&nbsp;</span>
+          <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma' ) }}<sentence-separator/></template>
         </span>
       </div>
     </div>
@@ -41,9 +41,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import SentenceSeparator from '../../sentence-separator.vue';
 
 export default {
   name: 'DatasetSummaryRow',
+  components: { SentenceSeparator },
   props: {
     dataset: {
       type: Object,
@@ -74,9 +76,11 @@ export default {
 
 <style lang="scss">
 @import '../../../assets/scss/_variables.scss';
+@import '../../../assets/scss/mixins';
 
 .dataset-row {
-    max-width: 77ch;
+    @include text-block;
+
     .dataset-name {
         font-weight: bold;
         font-size: 18px;
