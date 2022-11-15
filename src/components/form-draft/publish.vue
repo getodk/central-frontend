@@ -50,7 +50,7 @@ except according to the terms contained in the LICENSE file.
                 </template>
               </i18n-t>
               <template v-for="property of dataset.properties" :key="property.name">
-                <i18n-t v-if="property.isNew" tag="li" keypath="dataset.newProperty">
+                <i18n-t v-if="property.isNew && property.inForm" tag="li" keypath="dataset.newProperty">
                   <template #datasetName>
                     <strong>{{ dataset.name }}</strong>
                   </template>
@@ -158,7 +158,7 @@ export default {
     },
     hasDatasetDiff() {
       return this.formDraftDatasetDiff.dataExists &&
-        any(d => d.isNew || any(p => p.isNew, d.properties), this.formDraftDatasetDiff.data);
+        any(d => d.isNew || any(p => p.isNew && p.inForm, d.properties), this.formDraftDatasetDiff.data);
     }
   },
   watch: {
