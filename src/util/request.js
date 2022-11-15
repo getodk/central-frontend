@@ -62,7 +62,7 @@ export const apiPaths = {
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
-  formDatasetDiff: formPath('/draft/dataset-diff'),
+  formDatasetDiff: formPath('/dataset-diff'),
   odataSvc: formOrDraftPath('.svc'),
   formActors: (projectId, xmlFormId, role) => {
     const encodedFormId = encodeURIComponent(xmlFormId);

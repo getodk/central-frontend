@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <loading :state="formVersions.initiallyLoading"/>
     <div v-show="formVersions.dataExists" class="row">
       <div class="col-xs-6">
-<page-section>
+        <page-section>
           <template #heading>
             <span>{{ $t('draftChecklist.title') }}</span>
           </template>
@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
             </summary-item>
             <dataset-summary v-if="formDraft.dataExists && formDraft.get().entityRelated"
               :is-draft="true"
-              :project-id="projectId"
+              :project-id="Number(projectId)"
               :xml-form-id="xmlFormId"/>
           </template>
         </page-section>

@@ -19,23 +19,20 @@ except according to the terms contained in the LICENSE file.
           {{ $t('new') }}
         </span>
       </div>
-      <div class="col-xs-6 properties-count">
+      <div class="col-xs-6 properties-count" role="button" @click.prevent="toggleExpanded">
         {{ $tcn('properties', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
-        <!-- {{ inFormProperties.length }} of {{ dataset.properties.length }} properties -->
-        <a href="javascript:void(0)" role="button" class="expand-button" @click.prevent="toggleExpanded">
+        <a href="javascript:void(0)" class="expand-button">
           <span v-if="!expanded" class="icon-chevron-right"></span>
           <span v-else class="icon-chevron-down"></span>
         </a>
       </div>
     </div>
-    <div v-show="expanded" class="row property-list">
-      <div class="col-xs-12">
-        <span v-for="(property, index) in inFormProperties" :key="property.name">
-          <span>{{ property.name }}</span>
-          <span v-if="property.isNew" class="icon-plus-circle property-new"></span>
-          <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma' ) }}<sentence-separator/></template>
-        </span>
-      </div>
+    <div v-show="expanded" class="property-list">
+      <span v-for="(property, index) in inFormProperties" :key="property.name">
+        <span>{{ property.name }}</span>
+        <span v-if="property.isNew" class="icon-plus-circle property-new"></span>
+        <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma' ) }}<sentence-separator/></template>
+      </span>
     </div>
   </div>
 </template>
