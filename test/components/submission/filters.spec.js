@@ -25,7 +25,7 @@ const loadComponent = (...args) => {
     .route(`/projects/1/forms/f/submissions?${queryString}`);
 };
 
-describe('SubmissionFilters', () => {
+describe.skip('SubmissionFilters', () => {
   beforeEach(mockLogin);
 
   let restoreLuxon;

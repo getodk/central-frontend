@@ -309,7 +309,8 @@
     "encryptionMessage": "Data preview is not available due to encryption.",
     // This text is shown under the "Latest Submission" column of the tables
     // for Projects and Forms. It is shown for a Project or Form with no Submissions.
-    "noSubmission": "(none)"
+    "noSubmission": "(none)",
+    "emptyTable": "There are no Submissions yet."
   },
   "common": {
     // This is a title shown above a section of the page.
@@ -328,6 +329,7 @@
     "dangerZone": "Danger Zone",
     // This is the text of a link that links to the documentation.
     "docs": "Docs",
+    "error": "Error",
     // This text is shown next to options for filtering a table.
     "filter": "Filter",
     // This is the text of a link that links to the ODK forum.

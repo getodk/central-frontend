@@ -691,6 +691,9 @@
     "noSubmission": {
       "string": "(none)",
       "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
+    },
+    "emptyTable": {
+      "string": "There are no Submissions yet."
     }
   },
   "common": {
@@ -721,6 +724,9 @@
     "docs": {
       "string": "Docs",
       "developer_comment": "This is the text of a link that links to the documentation."
+    },
+    "error": {
+      "string": "Error"
     },
     "filter": {
       "string": "Filter",
@@ -2394,6 +2400,14 @@
         "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
       }
     },
+    "Multiselect": {
+      "action": {
+        "select": {
+          "string": "Select {all} / {none}",
+          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        }
+      }
+    },
     "Navbar": {
       "action": {
         "toggle": {
@@ -3396,24 +3410,20 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "disabled": {
-        "string": "Cannot select more than 100 columns."
-      },
       "action": {
         "select": {
-          "full": {
-            "string": "Select {all} / {none}",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {all} has the text: All\n- {none} has the text: None"
-          },
           "all": {
             "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which\n        columns to display in a table. It will be inserted where {all} is in the\n        following text:\n\n        Select {all} / {none}"
           },
           "none": {
             "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which\n        columns to display in a table. It will be inserted where {none} is in\n        the following text:\n\n        Select {all} / {none}"
           }
         }
+      },
+      "warning": {
+        "string": "Selecting too many columns might slow down your computer."
       }
     },
     "SubmissionFilters": {
@@ -3425,16 +3435,48 @@
       }
     },
     "SubmissionFiltersReviewState": {
-      "anyState": {
-        "string": "(Any State)",
-        "developer_comment": "This text is shown in a dropdown that allows the user to filter to show only Submissions in a particular Review State."
+      "placeholder": {
+        "string": "{selected} of {total}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
+      },
+      "action": {
+        "select": {
+          "all": {
+            "string": "All",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one\n        or more Review States. It will be inserted where {all} is in the\n        following text:\n\n        Select {all} / {none}"
+          },
+          "none": {
+            "string": "None",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one\n        or more Review States. It will be inserted where {none} is in the\n        following text:\n\n        Select {all} / {none}"
+          }
+        }
       }
     },
     "SubmissionFiltersSubmitter": {
       "field": {
         "submitter": {
           "string": "Submitted by",
-          "developer_comment": "This is the text of a form field that shows the names of users who have submitted data."
+          "developer_comment": "This is the text of a form field that shows the names of submitters."
+        },
+        "search": {
+          "string": "Search submitters…",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "string": "{selected} of {total}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
+      },
+      "action": {
+        "select": {
+          "all": {
+            "string": "All",
+            "developer_comment": "This is the text of a dropdown that allows the user to select one or\n        more submitters. It will be inserted where {all} is in the following\n        text:\n\n        Select {all} / {none}"
+          },
+          "none": {
+            "string": "None",
+            "developer_comment": "This is the text of a dropdown that allows the user to select one or\n        more submitters. It will be inserted where {none} is in the following\n        text:\n\n        Select {all} / {none}"
+          }
         }
       },
       "unknown": {
@@ -3484,9 +3526,6 @@
             }
           }
         }
-      },
-      "emptyTable": {
-        "string": "There are no Submissions yet."
       },
       "noMatching": {
         "string": "There are no matching Submissions."

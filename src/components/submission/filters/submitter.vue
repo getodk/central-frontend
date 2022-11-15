@@ -10,72 +10,98 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label id="submission-filters-submitter" class="form-group">
-    <select v-if="submitters.initiallyLoading" class="form-control" disabled>
-      <option value="">{{ $t('common.loading') }}</option>
-    </select>
-    <select v-else v-model="selectValue" class="form-control">
-      <option value="">{{ $t('common.anybody') }}</option>
-      <option v-if="unknown" :value="modelValue">{{ $t('unknown') }}</option>
-      <template v-if="submitters.dataExists">
-        <option v-for="submitter of submitters" :key="submitter.id"
-          :value="submitter.id.toString()">
-          {{ submitter.displayName }}
-        </option>
-      </template>
-    </select>
-    <span class="form-label">{{ $t('field.submitter') }}</span>
-  </label>
+  <multiselect id="submission-filters-submitter" :model-value="modelValue"
+    :options="options" :loading="submitters.initiallyLoading"
+    :label="$t('field.submitter')" :placeholder="placeholder"
+    :all="$t('action.select.all')" :none="$t('action.select.none')"
+    :search="$t('field.search')" :empty="$t('submission.emptyTable')"
+    @update:model-value="update"/>
 </template>
 
 <script>
-import { useRequestData } from '../../../request-data';
-
 export default {
-  name: 'SubmissionFiltersSubmitter',
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue'],
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { submitters } = useRequestData();
-    return { submitters };
-  },
-  computed: {
-    selectValue: {
-      get() {
-        return this.modelValue;
-      },
-      set(value) {
-        this.$emit('update:modelValue', value);
-      }
-    },
-    unknown() {
-      return this.modelValue !== '' && (!this.submitters.dataExists ||
-        !this.submitters.some(submitter => this.modelValue === submitter.id.toString()));
-    }
-  }
+  name: 'SubmissionFiltersSubmitter'
 };
 </script>
+<script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-<style lang="scss">
-#submission-filters-submitter {
-  select { width: 201px; }
-}
-</style>
+import Multiselect from '../../multiselect.vue';
+
+import { useRequestData } from '../../../request-data';
+
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    required: true
+  }
+});
+const emit = defineEmits(['update:modelValue']);
+
+// The component does not assume that this data will exist when the
+// component is created.
+const { submitters } = useRequestData();
+
+const { t } = useI18n();
+const unknown = computed(() => props.modelValue.reduce(
+  (set, id) => (submitters.ids.has(id) ? set : set.add(id)),
+  new Set()
+));
+const options = computed(() => {
+  if (!submitters.dataExists) return null;
+  const result = submitters.map(({ id, displayName }) =>
+    ({ value: id, text: displayName }));
+  for (const id of unknown.value)
+    result.unshift({ value: id, text: t('unknown') });
+  return result;
+});
+
+const update = (value) => {
+  const withoutUnknown = unknown.value.size === 0
+    ? value
+    : value.filter(id => !unknown.value.has(id));
+  if (withoutUnknown.length !== 0)
+    emit('update:modelValue', withoutUnknown);
+  // If no submitters or only unknown submitters are selected, then the
+  // selection falls back to all submitters. But it could be that that's the
+  // selection already, in which case there is no change to emit.
+  else if (!(props.modelValue.length === submitters.length &&
+    unknown.value.size === 0))
+    emit('update:modelValue', [...submitters.ids]);
+};
+
+const placeholder = (counts) => t('placeholder', counts);
+</script>
 
 <i18n lang="json5">
 {
   "en": {
     "field": {
-      // This is the text of a form field that shows the names of users who have
-      // submitted data.
-      "submitter": "Submitted by"
+      // This is the text of a form field that shows the names of submitters.
+      "submitter": "Submitted by",
+      "search": "Search submitters…"
+    },
+    // This is the text of a dropdown that allows the user to select one or more
+    // "submitters". A submitter can be a user, a team of users, a Public Access
+    // Link, or an automation. {selected} is the number of submitters selected;
+    // {total} is the total number of submitters.
+    "placeholder": "{selected} of {total}",
+    "action": {
+      "select": {
+        /* This is the text of a dropdown that allows the user to select one or
+        more submitters. It will be inserted where {all} is in the following
+        text:
+
+        Select {all} / {none} */
+        "all": "All",
+        /* This is the text of a dropdown that allows the user to select one or
+        more submitters. It will be inserted where {none} is in the following
+        text:
+
+        Select {all} / {none} */
+        "none": "None"
+      }
     },
     "unknown": "Unknown submitter"
   }

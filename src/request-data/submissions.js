@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 import { last } from 'ramda';
 import { reactive, shallowReactive } from 'vue';
 
+import { computeIfExists } from './util';
 import { useRequestData } from './index';
 
 export default () => {
@@ -59,6 +60,9 @@ export default () => {
       odata.skip += chunk.value.length;
     }
   }));
-  const submitters = createResource('submitters');
+  const submitters = createResource('submitters', () => ({
+    ids: computeIfExists(() =>
+      submitters.reduce((set, { id }) => set.add(id), new Set()))
+  }));
   return { odata, submitters };
 };

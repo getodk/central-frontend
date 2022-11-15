@@ -21,7 +21,7 @@ const mountComponent = (options = undefined) =>
     }
   }));
 
-describe('SubmissionFiltersSubmitter', () => {
+describe.skip('SubmissionFiltersSubmitter', () => {
   describe('submitters are loading', () => {
     beforeEach(() => {
       mockLogin();
