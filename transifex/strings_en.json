@@ -1267,6 +1267,41 @@
         }
       }
     },
+    "DatasetIntroduction": {
+      "title": {
+        "string": "Welcome to the Datasets preview!"
+      },
+      "body": {
+        "0": {
+          "string": "Datasets are a new way to create and manage data attachments in ODK. They allow you to use data gathered in Submissions to be downloaded and used as part of another Form."
+        },
+        "1": {
+          "string": "Datasets can be attached {icon1} to Forms and their data queried just like any other attached CSV data file.",
+          "developer_comment": "{icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow."
+        },
+        "2": {
+          "string": "When a Submission related to a Dataset is approved {icon2}, the selected data is added {icon3} to the Dataset, so that the next time a client downloads the Form, the new data will be included in the data download.",
+          "developer_comment": "{icon2} and {icon3} are icons that display the numbers 2 and 3. They refer to the second and third steps in an image that depicts this workflow."
+        },
+        "3": {
+          "string": "In a future version, you will be able to upload {icon4} a CSV to a Dataset directly.",
+          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow."
+        },
+        "4": {
+          "string": "Datasets are configured during Form design."
+        }
+      },
+      "getStarted": {
+        "full": {
+          "string": "For more information on how to get started, {clickHere}.",
+          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
+        },
+        "clickHere": {
+          "string": "click here",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
+        }
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
