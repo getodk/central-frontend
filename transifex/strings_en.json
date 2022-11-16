@@ -1701,6 +1701,9 @@
         "1": {
           "string": "This action will move the Form to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
         }
+      },
+      "noDeleteEntities": {
+        "string": "Any Entities created by this Form’s Submissions will not be deleted. In a future version of Central, it will be possible to delete Entities."
       }
     },
     "FormDraftAbandon": {
