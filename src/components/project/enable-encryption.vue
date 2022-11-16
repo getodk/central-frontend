@@ -52,6 +52,10 @@ except according to the terms contained in the LICENSE file.
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[0][6]') }}</p>
             </div>
+            <div class="info-item">
+              <span class="icon-close"></span>
+              <p>{{ $t('steps[0].introduction[0][7]') }}</p>
+            </div>
           </div>
           <div class="info-block">
             <p>{{ $t('steps[0].introduction[1][0]') }}</p>
@@ -279,7 +283,8 @@ export default {
             ],
             "You will no longer be able to preview Submission data online.",
             "You will no longer be able to connect to data over OData.",
-            "You will no longer be able to edit Submissions in your web browser."
+            "You will no longer be able to edit Submissions in your web browser.",
+            "New Submissions will no longer be processed into Entities."
           ],
           [
             "In addition, the following are true in this version of ODK Central:",

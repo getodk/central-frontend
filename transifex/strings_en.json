@@ -2527,6 +2527,9 @@
               },
               "6": {
                 "string": "You will no longer be able to edit Submissions in your web browser."
+              },
+              "7": {
+                "string": "New Submissions will no longer be processed into Entities."
               }
             },
             "1": {
