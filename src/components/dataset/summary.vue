@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <summary-item v-if="datasetDiff.length > 0" icon="link">
+  <summary-item v-if="datasetDiff.dataExists && datasetDiff.length > 0" icon="link">
     <template #heading>
       {{ datasetDiff.length }}
     </template>

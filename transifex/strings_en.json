@@ -219,6 +219,10 @@
         "update": {
           "string": "Update",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+        },
+        "update_publish": {
+          "string": "Publish",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         }
       },
       "field_key": {
@@ -1272,12 +1276,6 @@
         }
       }
     },
-    "DatasetDatasetSummary": {
-      "datasetUpdates": {
-        "string": "{count, plural, one {Dataset is updated by this Form:} other {Datasets are updated by this Form:}}",
-        "developer_comment": "Number of dataset(s) is shown separately above this text"
-      }
-    },
     "DatasetRow": {
       "action": {
         "download": {
@@ -1286,9 +1284,15 @@
         }
       }
     },
+    "DatasetSummary": {
+      "datasetUpdates": {
+        "string": "{count, plural, one {Dataset is updated by this Form:} other {Datasets are updated by this Form:}}",
+        "developer_comment": "Number of dataset(s) is shown separately above this text"
+      }
+    },
     "DatasetSummaryRow": {
       "new": {
-        "string": "New!",
+        "string": "new!",
         "developer_comment": "This is shown when a dataset is new"
       },
       "properties": {
@@ -1916,12 +1920,12 @@
       "dataset": {
         "introduction": {
           "full": {
-            "string": "{inAddition} this Form definition requires the following changes to be made to this Project:",
+            "string": "{inAddition} publishing this Form definition will make the following changes to this Project:",
             "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
           },
           "inAddition": {
             "string": "In addition,",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} this Form definition requires the following changes to be made to this Project:"
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
           }
         },
         "newDataset": {

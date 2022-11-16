@@ -66,7 +66,7 @@ import FormVersionStandardButtons from '../../form-version/standard-buttons.vue'
 import FormVersionString from '../../form-version/string.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
-import DatasetSummary from '../../dataset/dataset-summary.vue';
+import DatasetSummary from '../../dataset/summary.vue';
 
 import routes from '../../../mixins/routes';
 import { useRequestData } from '../../../request-data';

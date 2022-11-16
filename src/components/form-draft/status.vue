@@ -97,7 +97,7 @@ import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
-import DatasetSummary from '../dataset/dataset-summary.vue';
+import DatasetSummary from '../dataset/summary.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';

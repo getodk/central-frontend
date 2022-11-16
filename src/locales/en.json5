@@ -107,7 +107,8 @@
       // type of action that can be taken on a Dataset.
       "dataset": {
         "create": "@:audit.action.default.create",
-        "update": "Update"
+        "update": "Update",
+        "update_publish": "Publish"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on an App User.

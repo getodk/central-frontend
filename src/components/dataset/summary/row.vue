@@ -115,7 +115,7 @@ export default {
 {
   "en": {
     // This is shown when a dataset is new
-    "new":"New!",
+    "new": "new!",
     // {inform} is the number of dataset properties defined by the form.
     // {count} is the total number of properties. The string will be pluralized based on {count}.
     "properties": "{inform} of {count} property | {inform} of {count} properties"

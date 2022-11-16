@@ -11,6 +11,7 @@ import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
+import Property from '../../util/ds-property-enum';
 
 const mountOptions = (options = undefined) => ({
   props: { state: false },
@@ -19,7 +20,8 @@ const mountOptions = (options = undefined) => ({
     requestData: testRequestData([useForm], {
       formVersions: testData.extendedFormVersions.published(),
       formDraft: testData.extendedFormDrafts.last(),
-      attachments: testData.standardFormAttachments.sorted()
+      attachments: testData.standardFormAttachments.sorted(),
+      formDraftDatasetDiff: testData.formDraftDatasetDiffs.sorted()
     })
   },
   ...options
@@ -109,7 +111,8 @@ describe('FormDraftPublish', () => {
       await modal.setProps({ state: true });
       modal.get('input').should.be.visible();
       // Explanatory text
-      modal.findAll('.modal-introduction p').length.should.equal(4);
+      modal.findAll('.modal-introduction p').length.should.equal(3);
+      modal.findAll('form p').length.should.equal(1);
     });
 
     it('does not show input if version string of draft is different', async () => {
@@ -406,5 +409,27 @@ describe('FormDraftPublish', () => {
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/datasets');
         }));
+  });
+
+  it('shows dataset delta', async () => {
+    testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty, Property.InFormProperty, Property.DefaultProperty] });
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [Property.NewProperty] });
+    const modal = mount(FormDraftPublish, mountOptions());
+    await modal.setProps({ state: true });
+
+    const delta = modal.findAll('.dataset-list li');
+
+    let liCounter = -1;
+    testData.formDraftDatasetDiffs.sorted().forEach(ds => {
+      if (ds.isNew) {
+        delta[liCounter += 1].text().should.match(/A new Dataset \w+ will be created./);
+      }
+      ds.properties.forEach(p => {
+        if (p.isNew) {
+          delta[liCounter += 1].text().should.match(/In Dataset \w+, a new field \w+ will be created./);
+        }
+      });
+    });
   });
 });

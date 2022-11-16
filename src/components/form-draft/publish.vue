@@ -66,11 +66,12 @@ except according to the terms contained in the LICENSE file.
         <hr v-if="draftVersionStringIsDuplicate">
         <p v-if="draftVersionStringIsDuplicate">{{ $t('introduction[2]') }}</p>
 
-        <p>{{ $t('introduction[3]') }}</p>
+        <p v-if="!draftVersionStringIsDuplicate">{{ $t('introduction[3]') }}</p>
       </div>
       <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
           :placeholder="$t('field.version')" required autocomplete="off"/>
+        <p>{{ $t('introduction[3]') }}</p>
         <!-- We specify two nearly identical .modal-actions, because here we
         want the Proceed button to be a submit button (which means that browsers
         will do some basic form validation when it is clicked). -->
@@ -256,7 +257,7 @@ export default {
     },
     "dataset": {
       "introduction": {
-        "full": "{inAddition} this Form definition requires the following changes to be made to this Project:",
+        "full": "{inAddition} publishing this Form definition will make the following changes to this Project:",
         "inAddition": "In addition,"
       },
       "newDataset": "A new Dataset {datasetName} will be created.",

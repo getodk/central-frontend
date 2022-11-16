@@ -1,4 +1,4 @@
-import DatasetSummary from '../../../src/components/dataset/dataset-summary.vue';
+import DatasetSummary from '../../../src/components/dataset/summary.vue';
 import Property from '../../util/ds-property-enum';
 import useForm from '../../../src/request-data/form';
 import testData from '../../data';
