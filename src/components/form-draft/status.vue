@@ -51,6 +51,10 @@ except according to the terms contained in the LICENSE file.
                 </div>
               </template>
             </summary-item>
+            <dataset-summary v-if="formDraft.dataExists && formDraft.get().entityRelated"
+              :is-draft="true"
+              :project-id="Number(projectId)"
+              :xml-form-id="xmlFormId"/>
           </template>
         </page-section>
         <page-section>
@@ -93,6 +97,7 @@ import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
+import DatasetSummary from '../dataset/summary.vue';
 
 import modal from '../../mixins/modal';
 import routes from '../../mixins/routes';
@@ -114,7 +119,8 @@ export default {
     FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
     Loading,
     PageSection,
-    SummaryItem
+    SummaryItem,
+    DatasetSummary
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes()],
   inject: ['alert'],
@@ -130,8 +136,8 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
-    const { form, formVersions, formDraft } = useRequestData();
-    return { form, formVersions, formDraft };
+    const { form, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    return { form, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff };
   },
   data() {
     return {
@@ -159,10 +165,12 @@ export default {
         url: apiPaths.formVersions(this.projectId, this.xmlFormId),
         extended: true,
         resend: false
-      }).catch(noop);
+      })
+        .catch(noop);
     },
     afterUpload() {
       this.$emit('fetch-draft');
+      this.formDraftDatasetDiff.reset();
       this.hideModal('upload');
       this.alert.success(this.$t('alert.upload'));
     },
@@ -171,6 +179,8 @@ export default {
       // the form didn't already have a published version, then there would be a
       // validateData violation if we didn't clear it.
       this.$emit('fetch-form');
+      this.formDraftDatasetDiff.reset();
+      this.formDatasetDiff.reset();
       afterNextNavigation(this.$router, () => {
         // Re-request the project in case its `datasets` property has changed.
         this.$emit('fetch-project', true);
@@ -181,6 +191,7 @@ export default {
       this.$router.push(this.formPath());
     },
     afterAbandon() {
+      this.formDraftDatasetDiff.reset();
       if (this.form.publishedAt != null) {
         afterNextNavigation(this.$router, () => {
           this.formDraft.setToNone();

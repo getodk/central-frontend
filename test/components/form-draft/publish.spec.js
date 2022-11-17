@@ -11,6 +11,7 @@ import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
+import Property from '../../util/ds-property-enum';
 
 const mountOptions = (options = undefined) => ({
   props: { state: false },
@@ -19,7 +20,8 @@ const mountOptions = (options = undefined) => ({
     requestData: testRequestData([useForm], {
       formVersions: testData.extendedFormVersions.published(),
       formDraft: testData.extendedFormDrafts.last(),
-      attachments: testData.standardFormAttachments.sorted()
+      attachments: testData.standardFormAttachments.sorted(),
+      formDraftDatasetDiff: testData.formDraftDatasetDiffs.sorted()
     })
   },
   ...options
@@ -110,6 +112,7 @@ describe('FormDraftPublish', () => {
       modal.get('input').should.be.visible();
       // Explanatory text
       modal.findAll('.modal-introduction p').length.should.equal(3);
+      modal.findAll('form p').length.should.equal(1);
     });
 
     it('does not show input if version string of draft is different', async () => {
@@ -121,7 +124,7 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false();
-      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
     it('does not show the input for a form without a published version', async () => {
@@ -129,7 +132,7 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false();
-      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
     it('focuses the input', async () => {
@@ -299,6 +302,7 @@ describe('FormDraftPublish', () => {
         // Explanatory text does not include last duplicate draft paragraph
         // because that explanation appears in the alert in this scenario.
         modal.findAll('.modal-introduction p').length.should.equal(2);
+        modal.findAll('form p').length.should.equal(1);
       });
   });
 
@@ -315,7 +319,7 @@ describe('FormDraftPublish', () => {
       .afterResponse(modal => {
         modal.should.alert('danger');
         modal.find('input').exists().should.be.false();
-        modal.findAll('.modal-introduction p').length.should.equal(2);
+        modal.findAll('.modal-introduction p').length.should.equal(3);
       });
   });
 
@@ -406,5 +410,27 @@ describe('FormDraftPublish', () => {
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/datasets');
         }));
+  });
+
+  it('shows dataset delta', async () => {
+    testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty] });
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [Property.NewProperty, Property.InFormProperty, Property.DefaultProperty] });
+    const modal = mount(FormDraftPublish, mountOptions());
+    await modal.setProps({ state: true });
+
+    const delta = modal.findAll('.dataset-list li');
+
+    let liCounter = -1;
+    testData.formDraftDatasetDiffs.sorted().forEach(ds => {
+      if (ds.isNew) {
+        delta[liCounter += 1].text().should.match(/A new Dataset \w+ will be created./);
+      }
+      ds.properties.forEach(p => {
+        if (p.isNew) {
+          delta[liCounter += 1].text().should.match(/In Dataset \w+, a new property \w+ will be created./);
+        }
+      });
+    });
   });
 });

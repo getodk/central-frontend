@@ -79,6 +79,7 @@ export default {
         this.categoryOption('dataset'),
         this.actionOption('dataset.create'),
         this.actionOption('dataset.update'),
+        this.actionOption('dataset.update.publish'),
         this.categoryOption('config'),
         this.actionOption('config.set')
       ];

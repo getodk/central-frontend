@@ -219,6 +219,10 @@
         "update": {
           "string": "Update",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+        },
+        "update_publish": {
+          "string": "Publish",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         }
       },
       "field_key": {
@@ -770,6 +774,11 @@
     "lastSubmission": {
       "string": "(last {dateTime})",
       "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    },
+    "punctuations": {
+      "comma": {
+        "string": ","
+      }
     }
   },
   "mixin": {
@@ -1308,6 +1317,22 @@
           "string": "Download data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetSummary": {
+      "datasetUpdates": {
+        "string": "{count, plural, one {Dataset is updated by this Form:} other {Datasets are updated by this Form:}}",
+        "developer_comment": "Number of dataset(s) is shown separately above this text"
+      }
+    },
+    "DatasetSummaryRow": {
+      "new": {
+        "string": "new!",
+        "developer_comment": "This is shown when a dataset is new"
+      },
+      "properties": {
+        "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
+        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
       }
     },
     "Download": {
@@ -1914,6 +1939,9 @@
         },
         "2": {
           "string": "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you."
+        },
+        "3": {
+          "string": "Would you like to proceed?"
         }
       },
       "field": {
@@ -1925,6 +1953,24 @@
       "problem": {
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
+        }
+      },
+      "dataset": {
+        "introduction": {
+          "full": {
+            "string": "{inAddition} publishing this Form definition will make the following changes to this Project:",
+            "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
+          },
+          "inAddition": {
+            "string": "In addition,",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
+          }
+        },
+        "newDataset": {
+          "string": "A new Dataset {datasetName} will be created."
+        },
+        "newProperty": {
+          "string": "In Dataset {datasetName}, a new property {propertyName} will be created."
         }
       }
     },

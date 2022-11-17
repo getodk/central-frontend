@@ -4,6 +4,7 @@ import FormVersionViewXml from '../../../src/components/form-version/view-xml.vu
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import Property from '../../util/ds-property-enum';
 
 describe('FormDraftStatus', () => {
   beforeEach(mockLogin);
@@ -23,5 +24,23 @@ describe('FormDraftStatus', () => {
       hide: '.btn-primary',
       respond: (series) => series.respondWithData(() => '<x/>')
     });
+  });
+
+  it('sends dataset-diff requests when form is entityRelated', async () => {
+    const requests = [];
+    testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty] });
+    await load('/projects/1/forms/f/draft')
+      .respondWithData(() => testData.formDraftDatasetDiffs.sorted())
+      .beforeEachResponse((_, config) => requests.push(config.url))
+      .afterResponses(() => requests.should.containEql('/v1/projects/1/forms/f/draft/dataset-diff'));
+  });
+
+  it('does not sends dataset-diff requests when form is not entityRelated', async () => {
+    const requests = [];
+    testData.extendedForms.createPast(1, { draft: true, entityRelated: false });
+    await load('/projects/1/forms/f/draft')
+      .beforeEachResponse((_, config) => requests.push(config.url))
+      .afterResponses(() => requests.should.not.containEql('/v1/projects/1/forms/f/draft/dataset-diff'));
   });
 });

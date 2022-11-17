@@ -34,6 +34,12 @@ module.exports = (config) => {
     webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadless'],
     reporters: ['spec'],
-    singleRun: true
+    singleRun: true,
+    customLaunchers: {
+      ChromeDebugging: {
+        base: 'Chrome',
+        flags: ['--remote-debugging-port=8333']
+      }
+    }
   });
 };

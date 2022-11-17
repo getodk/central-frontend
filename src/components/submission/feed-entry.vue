@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </template>
         <template v-else-if="entry.action === 'entity.create'">
-          <span class="icon-check entity-icon submission-feed-entry-icon"></span>
+          <span class="icon-magic-wand entity-icon submission-feed-entry-icon"></span>
           <i18n-t keypath="title.entity.create">
             <template #label><span class="submission-feed-entry-entity-data">{{ entityLabel(entry) }}</span></template>
             <template #dataset><span class="submission-feed-entry-entity-data">{{ entityDataset(entry) }}</span></template>
