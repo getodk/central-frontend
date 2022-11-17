@@ -66,7 +66,7 @@ except according to the terms contained in the LICENSE file.
         <hr v-if="draftVersionStringIsDuplicate">
         <p v-if="draftVersionStringIsDuplicate">{{ $t('introduction[2]') }}</p>
 
-        <p v-if="!draftVersionStringIsDuplicate">{{ $t('introduction[3]') }}</p>
+        <p v-if="!draftVersionStringIsDuplicate && !versionConflict">{{ $t('introduction[3]') }}</p>
       </div>
       <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
@@ -261,7 +261,7 @@ export default {
         "inAddition": "In addition,"
       },
       "newDataset": "A new Dataset {datasetName} will be created.",
-      "newProperty": "In Dataset {datasetName}, a new field {propertyName} will be created."
+      "newProperty": "In Dataset {datasetName}, a new property {propertyName} will be created."
     }
   }
 }

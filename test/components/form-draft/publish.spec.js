@@ -301,7 +301,8 @@ describe('FormDraftPublish', () => {
         modal.get('input').should.be.visible();
         // Explanatory text does not include last duplicate draft paragraph
         // because that explanation appears in the alert in this scenario.
-        modal.findAll('.modal-introduction p').length.should.equal(3);
+        modal.findAll('.modal-introduction p').length.should.equal(2);
+        modal.findAll('form p').length.should.equal(1);
       });
   });
 
@@ -413,8 +414,8 @@ describe('FormDraftPublish', () => {
 
   it('shows dataset delta', async () => {
     testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
-    testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty, Property.InFormProperty, Property.DefaultProperty] });
-    testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [Property.NewProperty] });
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty] });
+    testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [Property.NewProperty, Property.InFormProperty, Property.DefaultProperty] });
     const modal = mount(FormDraftPublish, mountOptions());
     await modal.setProps({ state: true });
 
@@ -427,7 +428,7 @@ describe('FormDraftPublish', () => {
       }
       ds.properties.forEach(p => {
         if (p.isNew) {
-          delta[liCounter += 1].text().should.match(/In Dataset \w+, a new field \w+ will be created./);
+          delta[liCounter += 1].text().should.match(/In Dataset \w+, a new property \w+ will be created./);
         }
       });
     });

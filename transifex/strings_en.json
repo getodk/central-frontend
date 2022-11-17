@@ -1932,7 +1932,7 @@
           "string": "A new Dataset {datasetName} will be created."
         },
         "newProperty": {
-          "string": "In Dataset {datasetName}, a new field {propertyName} will be created."
+          "string": "In Dataset {datasetName}, a new property {propertyName} will be created."
         }
       }
     },
