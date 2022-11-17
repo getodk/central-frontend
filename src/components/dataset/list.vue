@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <dataset-introduction/>
     <dataset-table/>
     <loading :state="datasets.initiallyLoading"/>
   </div>
@@ -22,6 +23,7 @@ export default {
 };
 </script>
 <script setup>
+import DatasetIntroduction from './introduction.vue';
 import DatasetTable from './table.vue';
 import Loading from '../loading.vue';
 

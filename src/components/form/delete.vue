@@ -21,6 +21,9 @@ except according to the terms contained in the LICENSE file.
           </template>
         </i18n-t>
         <p>{{ $t('introduction[1]') }}</p>
+        <p v-if="form.dataExists && form.entityRelated">
+          {{ $t('noDeleteEntities') }}
+        </p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
@@ -57,6 +60,8 @@ export default {
   },
   emits: ['hide', 'success'],
   setup() {
+    // The component does not assume that this data will exist when the
+    // component is created.
     const { form } = useRequestData();
     return { form };
   },
@@ -88,7 +93,8 @@ export default {
     "introduction": [
       "Are you sure you want to delete the Form {name} and all of its Submissions?",
       "This action will move the Form to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
-    ]
+    ],
+    "noDeleteEntities": "Any Entities created by this Form’s Submissions will not be deleted. In a future version of Central, it will be possible to delete Entities."
   }
 }
 </i18n>
