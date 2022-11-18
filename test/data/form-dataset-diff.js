@@ -9,15 +9,15 @@ export const formDatasetDiffs = dataStore({
   factory: ({
     properties
   }) => ({
-    name: faker.hacker.noun(),
+    name: faker.random.alphaNumeric(10),
     properties: properties.map(p => {
       switch (p) {
         case Property.InFormProperty:
-          return { name: faker.hacker.noun(), inForm: true };
+          return { name: faker.random.alphaNumeric(10), inForm: true };
         case Property.NewProperty:
-          return { name: faker.hacker.noun(), inForm: true };
+          return { name: faker.random.alphaNumeric(10), inForm: true };
         default:
-          return { name: faker.hacker.noun(), inForm: false };
+          return { name: faker.random.alphaNumeric(10), inForm: false };
       }
     })
   }),
