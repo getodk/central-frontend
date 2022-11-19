@@ -18,6 +18,6 @@ describe('DatasetRow', () => {
   it('links to the CSV file', () => {
     testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
     const { href } = mountComponent().get('a').attributes();
-    href.should.equal('/v1/projects/1/datasets/my_dataset/download');
+    href.should.equal('/v1/projects/1/datasets/my_dataset/entities.csv');
   });
 });

@@ -133,10 +133,9 @@ export const apiPaths = {
   },
   publicLinks: formPath('/public-links'),
   datasets: projectPath('/datasets'),
-  datasetDownload: (projectId, datasetName) => {
-    // This encoding might not be necessary.
+  entities: (projectId, datasetName) => {
     const encodedName = encodeURIComponent(datasetName);
-    return `/v1/projects/${projectId}/datasets/${encodedName}/download`;
+    return `/v1/projects/${projectId}/datasets/${encodedName}/entities.csv`;
   },
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>

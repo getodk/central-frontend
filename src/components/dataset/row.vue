@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     href() {
-      return apiPaths.datasetDownload(this.dataset.projectId, this.dataset.name);
+      return apiPaths.entities(this.dataset.projectId, this.dataset.name);
     }
   }
 };
