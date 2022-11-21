@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-link"></span>
         <i18n-t tag="span" keypath="linkedToDataset" class="dataset-label">
           <template #datasetName>
-            <a ref="link" :href="datasetLink" target="_blank"> {{ datasetName }}</a>
+            <a :href="datasetLink" target="_blank">{{ datasetName }}</a>
           </template>
         </i18n-t>
         <span v-show="targeted" class="label label-primary">
@@ -45,18 +45,20 @@ except according to the terms contained in the LICENSE file.
         </span>
       </template>
     </td>
-    <td class="form-attachment-list-action text-right">
-      <template v-if="attachment.datasetExists">
-        {{ $t('uploadToOverride') }}
-      </template>
-      <template v-else-if="linkable && !attachment.datasetExists">
-        <button type="button" class="btn btn-primary btn-restore" @click="$emit('restore', {
-          name: attachment.name,
-          action: attachment.blobExists ? 'restore' : 'link'
-        })">
-          <span class="icon-link"></span>{{ attachment.blobExists ? $t('restoreDatasetLink') : $t('linkDataset') }}
+    <td class="form-attachment-list-action">
+      <div>
+        <template v-if="attachment.datasetExists">
+          {{ $t('uploadToOverride') }}
+        </template>
+        <template v-else-if="linkable && !attachment.datasetExists">
+          <button type="button" class="btn btn-primary btn-link-dataset" @click="$emit('link', {
+            name: attachment.name,
+            blobExists: attachment.blobExists
+          })">
+          <span class="icon-link"></span>{{ $t('action.linkDataset') }}
         </button>
       </template>
+    </div>
     </td>
   </tr>
 </template>
@@ -65,11 +67,10 @@ except according to the terms contained in the LICENSE file.
 import DateTime from '../date-time.vue';
 import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
-import LinkIfCan from '../link-if-can.vue';
 
 export default {
   name: 'FormAttachmentRow',
-  components: { DateTime, LinkIfCan },
+  components: { DateTime },
   props: {
     attachment: {
       type: Object,
@@ -93,7 +94,7 @@ export default {
       default: false
     }
   },
-  emits: ['restore'],
+  emits: ['link'],
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
@@ -135,10 +136,10 @@ export default {
       );
     },
     datasetName() {
-      return this.attachment.name.replace(/.csv$/, '');
+      return this.attachment.name.replace(/.csv$/i, '');
     },
     datasetLink() {
-      return apiPaths.datasetDownload(this.form.projectId, this.datasetName);
+      return apiPaths.entities(this.form.projectId, this.datasetName);
     }
   }
 };
@@ -169,7 +170,7 @@ export default {
 
     .icon-exclamation-triangle {
       color: #e1bf50;
-      margin-right: 2px;
+      margin-right: $margin-right-icon;
 
       + span {
         cursor: help;
@@ -178,9 +179,24 @@ export default {
 
     .form-attachment-list-uploaded{
       .icon-link {
-        margin-right: 2px;
+        margin-right: $margin-right-icon;
         color: $color-action-foreground;
       }
+    }
+
+    .form-attachment-list-action {
+
+      div {
+        text-align: 0right;
+        width: 200px;
+
+        button {
+          // adjusting for td padding
+          margin-top: -8px;
+          margin-bottom: -4px;
+        }
+      }
+
     }
   }
 }
@@ -204,10 +220,14 @@ export default {
       "text": "Not yet uploaded",
       "title": "To upload files, drag and drop one or more files onto this page"
     },
+    // This is shown for a Media File that is linked to a Dataset
     "linkedToDataset": "Linked to Dataset {datasetName}",
     "uploadToOverride": "Upload a file to override.",
-    "restoreDatasetLink": "Restore Dataset Link",
-    "linkDataset": "Link Dataset",
+    "action": {
+      "linkDataset": "Link Dataset"
+    },
+    // This is a label that is shown next to a Media File that is linked to a Dataset,
+    // which would be overriden if the selected files were uploaded.
     "override": "Override"
   }
 }

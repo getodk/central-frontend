@@ -3,14 +3,12 @@ import pako from 'pako';
 import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
-import FormAttachmentRestoreLink from '../../../src/components/form-attachment/restore-link.vue';
+import FormAttachmentLinkDataset from '../../../src/components/form-attachment/link-dataset.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 
 import { noop } from '../../../src/util/util';
 
 import testData from '../../data';
-import { testRequestData } from '../../util/request-data';
-import useDatasets from '../../../src/request-data/datasets';
 import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/file';
 import { isBefore } from '../../util/date-time';
 import { load } from '../../util/http';
@@ -1096,7 +1094,7 @@ describe('FormAttachmentList', () => {
       component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');
     });
 
-    describe('restore dataset link', () => {
+    describe('link dataset', () => {
       beforeEach(() => {
         testData.extendedProjects.createPast(1, {
           name: 'My Project Name',
@@ -1107,25 +1105,23 @@ describe('FormAttachmentList', () => {
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', blobExists: true });
       });
 
-      it('shows Restore button', async () => {
+      it('shows Link Dataset button', async () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
-          root: false,
-          container: { requestData: testRequestData([useDatasets]) }
+          root: false
         })
           .respondWithData(() => testData.extendedDatasets.sorted());
-        component.get('td.form-attachment-list-action .btn-restore').exists().should.be.true();
+        component.get('td.form-attachment-list-action .btn-link-dataset').exists().should.be.true();
       });
 
-      it('restores dataset link', async () => {
+      it('links dataset', async () => {
         await load('/projects/1/forms/f/draft/attachments', {
-          root: false,
-          container: { requestData: testRequestData([useDatasets]) }
+          root: false
         })
           .respondWithData(() => testData.extendedDatasets.sorted())
           .complete()
           .request(async (component) => {
-            await component.get('td.form-attachment-list-action .btn-restore').trigger('click');
-            component.getComponent(FormAttachmentRestoreLink).get('.btn-restore').trigger('click');
+            await component.get('td.form-attachment-list-action .btn-link-dataset').trigger('click');
+            component.getComponent(FormAttachmentLinkDataset).get('.btn-link-dataset').trigger('click');
           })
           .respondWithSuccess()
           .afterResponse(component => {

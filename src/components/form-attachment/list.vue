@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-attachment-list" ref="dropZone">
-    <!-- ^^^ We use v-show rather than v-if so that this.$refs.dropZone is in
-    the DOM from the first render. -->
-
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('uploadFilesModal')">
@@ -39,7 +36,7 @@ except according to the terms contained in the LICENSE file.
           :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments" :data-name="attachment.name"
           :linkable="!!dsHashset && dsHashset.has(attachment.name)"
-          @restore="showRestoreModal($event)"/>
+          @link="showLinkDatasetModal($event)"/>
       </tbody>
     </table>
     <form-attachment-popups
@@ -49,13 +46,15 @@ except according to the terms contained in the LICENSE file.
       :name-mismatch="nameMismatch" :upload-status="uploadStatus"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
 
-    <form-attachment-upload-files v-bind="uploadFilesModal" @hide="hideModal('uploadFilesModal')"
-      @select="afterFileInputSelection"/>
-    <form-attachment-name-mismatch :state="nameMismatch.state" :planned-uploads="plannedUploads"
-      @hide="hideModal('nameMismatch')" @confirm="uploadFiles" @cancel="cancelUploads"/>
+    <form-attachment-upload-files v-bind="uploadFilesModal"
+      @hide="hideModal('uploadFilesModal')" @select="afterFileInputSelection"/>
+    <form-attachment-name-mismatch :state="nameMismatch.state"
+      :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
+      @confirm="uploadFiles" @cancel="cancelUploads"/>
 
-    <form-attachment-restore-link v-bind="restoreModal" @hide="hideModal('restoreModal')"
-      @success="afterRestore"/>
+
+    <form-attachment-link-dataset v-bind="linkDatasetModal" @hide="hideModal('linkDatasetModal')"
+      @success="afterLinkDataset"/>
   </div>
 </template>
 
@@ -66,7 +65,7 @@ import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import FormAttachmentRestoreLink from './restore-link.vue';
+import FormAttachmentLinkDataset from './link-dataset.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
@@ -81,7 +80,7 @@ export default {
     FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles,
-    FormAttachmentRestoreLink
+    FormAttachmentLinkDataset
   },
   mixins: [dropZone(), modal(), request()],
   inject: ['alert'],
@@ -147,7 +146,7 @@ export default {
       nameMismatch: {
         state: false
       },
-      restoreModal: {
+      linkDatasetModal: {
         state: false,
         attachmentName: ''
       },
@@ -160,7 +159,7 @@ export default {
       return this.uploadStatus.total !== 0;
     },
     dsHashset() {
-      return this.datasets && this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
+      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
     }
   },
   watch: {
@@ -345,7 +344,6 @@ export default {
           // should be OK.
           const updatedAt = new Date().toISOString();
           updates.push([attachment.name, updatedAt]);
-          //updatedAttachments.push({ ...attachment, blobExists: true, datasetExists: false, updatedAt });
         });
     },
     uploadFiles() {
@@ -394,24 +392,24 @@ export default {
         resend: false
       }).catch(noop);
     },
-    showRestoreModal({ name, action }) {
-      this.restoreModal.attachmentName = name;
-      this.restoreModal.action = action;
-      this.showModal('restoreModal');
+    showLinkDatasetModal({ name, blobExists }) {
+      this.linkDatasetModal.attachmentName = name;
+      this.linkDatasetModal.blobExists = blobExists;
+      this.showModal('linkDatasetModal');
     },
-    afterRestore() {
-      this.alert.success(this.$t('alert.restore', {
-        attachmentName: this.restoreModal.attachmentName
+    afterLinkDataset() {
+      this.alert.success(this.$t('alert.link', {
+        attachmentName: this.linkDatasetModal.attachmentName
       }));
 
       this.attachments.patch(() => {
-        const attachment = this.attachments.get(this.restoreModal.attachmentName);
+        const attachment = this.attachments.get(this.linkDatasetModal.attachmentName);
         attachment.datasetExists = true;
         attachment.blobExists = false;
         attachment.exists = true;
       });
 
-      this.hideModal('restoreModal');
+      this.hideModal('linkDatasetModal');
     }
   }
 };
@@ -447,16 +445,10 @@ export default {
   .form-attachment-list-uploaded {
     // Set the column to a minimum width such that when a Replace label is
     // added to a row, it does not cause additional wrapping.
-    min-width: 250px;
-  }
+    min-width: 300px;
 
-  .form-attachment-list-action {
-
-    button {
-      // adjusting for td padding
-      margin-top: -8px;
-      margin-bottom: -4px;
-    }
+    // So that column doesn't grow infinitely
+    width: 1px;
   }
 }
 </style>
@@ -489,7 +481,7 @@ export default {
     "alert": {
       "readError": "Something went wrong while reading “{filename}”.",
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
-      "restore": "Dataset link for {attachmentName} restored successfully."
+      "link": "Dataset linked successfully."
     }
   }
 }
