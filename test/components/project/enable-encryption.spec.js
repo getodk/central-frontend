@@ -119,7 +119,7 @@ describe('ProjectEnableEncryption', () => {
       .mount(ProjectEnableEncryption, mountOptions())
       .afterResponses(modal => modal.get('.btn-primary').trigger('click'))
       .testStandardButton({
-        button: '.btn-primary',
+        button: 'button[type="submit"]',
         disabled: ['.btn-link'],
         request: async (modal) => {
           await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');

@@ -342,6 +342,10 @@
       "string": "Edit profile",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "finish": {
+      "string": "Finish",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "logIn": {
       "string": "Log in",
       "developer_comment": "This is the text for an action, for example, the text of a button."

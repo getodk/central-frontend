@@ -101,9 +101,9 @@ except according to the terms contained in the LICENSE file.
           <form-group v-model="hint" :placeholder="$t('field.hint')"
             autocomplete="off"/>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-primary"
+            <button type="submit" class="btn btn-danger"
               :disabled="awaitingResponse">
-              {{ $t('action.next') }} <spinner :state="awaitingResponse"/>
+              {{ $t('action.finish') }} <spinner :state="awaitingResponse"/>
             </button>
             <button type="button" class="btn btn-link"
               :disabled="awaitingResponse" @click="$emit('hide')">
