@@ -19,6 +19,19 @@ except according to the terms contained in the LICENSE file.
       <p>{{ $t('heading[0]') }}</p>
       <p>{{ $t('heading[1]') }}</p>
     </div>
+    <div v-if="datasetLinkable" class="panel-dialog">
+      <div class="panel-heading">
+        <span class="panel-title">
+          <span class="icon-database"></span>
+          {{ $t('datasetsPreview.title') }}
+        </span>
+      </div>
+      <div class="panel-body">
+        <p>
+          {{ $t('datasetsPreview.body[0]') }}
+        </p>
+      </div>
+    </div>
     <table id="form-attachment-list-table" class="table">
       <thead>
         <tr>
@@ -59,6 +72,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { any } from 'ramda';
 import pako from 'pako/lib/deflate';
 import { markRaw } from 'vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
@@ -160,6 +174,11 @@ export default {
     },
     dsHashset() {
       return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
+    },
+    datasetLinkable() {
+      return this.attachments.dataExists &&
+        this.datasets.dataExists &&
+        any(d => this.attachments.data.has(`${d.name}.csv`), this.datasets.data);
     }
   },
   watch: {
@@ -420,6 +439,10 @@ export default {
   // Extend to the bottom of the page (or slightly beyond it) so that the drop
   // zone includes the entire page below the PageHead.
   min-height: calc(100vh - 146px);
+
+  .panel-dialog {
+    margin-bottom: 20px;
+  }
 }
 
 #form-attachment-list-table {
@@ -482,6 +505,13 @@ export default {
       "readError": "Something went wrong while reading “{filename}”.",
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
       "link": "Dataset linked successfully."
+    },
+    "datasetsPreview": {
+      // This is a title shown above a section of the page.
+      "title": "Datasets Preview",
+      "body": [
+        "This Form can use Datasets of the Project. For now, we recommend testing the use of your Datasets by uploading temporary data as .csv files while testing, then link the Datasets once you are ready."
+      ]
     }
   }
 }

@@ -1621,6 +1621,17 @@
         "link": {
           "string": "Dataset linked successfully."
         }
+      },
+      "datasetsPreview": {
+        "title": {
+          "string": "Datasets Preview",
+          "developer_comment": "This is a title shown above a section of the page."
+        },
+        "body": {
+          "0": {
+            "string": "This Form can use Datasets of the Project. For now, we recommend testing the use of your Datasets by uploading temporary data as .csv files while testing, then link the Datasets once you are ready."
+          }
+        }
       }
     },
     "FormAttachmentNameMismatch": {

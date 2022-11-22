@@ -1094,6 +1094,33 @@ describe('FormAttachmentList', () => {
       component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');
     });
 
+    describe('Datasets preview hint', () => {
+      beforeEach(() => {
+        testData.extendedProjects.createPast(1, {
+          name: 'My Project Name',
+          forms: 1,
+          datasets: 1
+        });
+        testData.extendedDatasets.createPast(1, { name: 'shovels' });
+      });
+
+      const loadAttachmentComponent = () => load('/projects/1/forms/f/draft/attachments', {
+        root: false
+      }).respondWithData(() => testData.extendedDatasets.sorted());
+
+      it('shows Datasets preview hint', async () => {
+        testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', datasetExists: true });
+        const component = await loadAttachmentComponent();
+        component.get('.panel-dialog').exists().should.be.true();
+      });
+
+      it('does not show Datasets preview hint if there is no linkable dataset', async () => {
+        testData.standardFormAttachments.createPast(1, { type: 'file', name: 'people.csv', datasetExists: true });
+        const component = await loadAttachmentComponent();
+        component.find('.panel-dialog').exists().should.be.false();
+      });
+    });
+
     describe('link dataset', () => {
       beforeEach(() => {
         testData.extendedProjects.createPast(1, {
