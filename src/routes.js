@@ -451,6 +451,7 @@ const routes = [
         path: 'draft/attachments',
         component: 'FormAttachmentList',
         loading: 'tab',
+        props: true,
         meta: {
           validateData: {
             project: () => project.permits(['form.read', 'form.update']),

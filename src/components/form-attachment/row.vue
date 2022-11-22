@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr :class="htmlClass">
     <td class="form-attachment-list-type">{{ type }}</td>
     <td :title="attachment.name" class="form-attachment-list-name">
-      <a v-if="attachment.exists" :href="href" target="_blank">
+      <a v-if="attachment.blobExists" :href="href" target="_blank">
         {{ attachment.name }}
       </a>
       <template v-else>
@@ -21,7 +21,18 @@ except according to the terms contained in the LICENSE file.
       </template>
     </td>
     <td class="form-attachment-list-uploaded">
-      <template v-if="attachment.exists">
+      <template v-if="attachment.datasetExists">
+        <span class="icon-link"></span>
+        <i18n-t tag="span" keypath="linkedToDataset" class="dataset-label">
+          <template #datasetName>
+            <a :href="datasetLink" target="_blank">{{ datasetName }}</a>
+          </template>
+        </i18n-t>
+        <span v-show="targeted" class="label label-primary">
+          {{ $t('override') }}
+        </span>
+      </template>
+      <template v-else-if="attachment.blobExists">
         <date-time :iso="attachment.updatedAt"/>
         <span v-show="targeted" class="label label-primary">
           {{ $t('replace') }}
@@ -33,6 +44,21 @@ except according to the terms contained in the LICENSE file.
           {{ $t('notUploaded.text') }}
         </span>
       </template>
+    </td>
+    <td class="form-attachment-list-action">
+      <div>
+        <template v-if="attachment.datasetExists">
+          {{ $t('uploadToOverride') }}
+        </template>
+        <template v-else-if="linkable && !attachment.datasetExists">
+          <button type="button" class="btn btn-primary btn-link-dataset" @click="$emit('link', {
+            name: attachment.name,
+            blobExists: attachment.blobExists
+          })">
+          <span class="icon-link"></span>{{ $t('action.linkDataset') }}
+        </button>
+      </template>
+    </div>
     </td>
   </tr>
 </template>
@@ -62,8 +88,13 @@ export default {
     updatedAttachments: {
       type: Set,
       required: true
+    },
+    linkable: {
+      type: Boolean,
+      default: false
     }
   },
+  emits: ['link'],
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
@@ -103,6 +134,12 @@ export default {
         this.form.xmlFormId,
         this.attachment.name
       );
+    },
+    datasetName() {
+      return this.attachment.name.replace(/.csv$/i, '');
+    },
+    datasetLink() {
+      return apiPaths.entities(this.form.projectId, this.datasetName);
     }
   }
 };
@@ -133,11 +170,33 @@ export default {
 
     .icon-exclamation-triangle {
       color: #e1bf50;
-      margin-right: 2px;
+      margin-right: $margin-right-icon;
 
       + span {
         cursor: help;
       }
+    }
+
+    .form-attachment-list-uploaded{
+      .icon-link {
+        margin-right: $margin-right-icon;
+        color: $color-action-foreground;
+      }
+    }
+
+    .form-attachment-list-action {
+
+      div {
+        text-align: right;
+        width: 200px;
+
+        button {
+          // adjusting for td padding
+          margin-top: -8px;
+          margin-bottom: -4px;
+        }
+      }
+
     }
   }
 }
@@ -160,7 +219,16 @@ export default {
       // This is shown for a Media File that has not been uploaded.
       "text": "Not yet uploaded",
       "title": "To upload files, drag and drop one or more files onto this page"
-    }
+    },
+    // This is shown for a Media File that is linked to a Dataset
+    "linkedToDataset": "Linked to Dataset {datasetName}",
+    "uploadToOverride": "Upload a file to override.",
+    "action": {
+      "linkDataset": "Link Dataset"
+    },
+    // This is a label that is shown next to a Media File that is linked to a Dataset,
+    // which would be overriden if the selected files were uploaded.
+    "override": "Override"
   }
 }
 </i18n>

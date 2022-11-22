@@ -1,5 +1,6 @@
 import useForm from '../../../src/request-data/form';
 import useProject from '../../../src/request-data/project';
+import useDatasets from '../../../src/request-data/datasets';
 
 import testData from '../../data';
 import { mockResponse } from '../axios';
@@ -139,8 +140,8 @@ const responsesByComponent = {
 // For nested routes, specify the requestData composables that the parent route
 // component uses.
 const composablesByParent = {
-  ProjectShow: [useProject],
-  FormShow: [useForm]
+  ProjectShow: [useProject, useDatasets],
+  FormShow: [useForm, useDatasets]
 };
 
 export default (name) => {

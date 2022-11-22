@@ -369,7 +369,7 @@ describe('FormNew', () => {
 
     it('shows the updated count of missing attachments', () => {
       testData.extendedForms.createPast(1, { draft: true });
-      testData.standardFormAttachments.createPast(1, { exists: false });
+      testData.standardFormAttachments.createPast(1, { blobExists: false });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
           const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
@@ -384,7 +384,7 @@ describe('FormNew', () => {
             version: 'v2',
             draft: true
           });
-          testData.standardFormAttachments.createNew({ exists: false });
+          testData.standardFormAttachments.createNew({ blobExists: false });
           return { success: true };
         })
         .respondWithData(() => testData.extendedFormDrafts.last())

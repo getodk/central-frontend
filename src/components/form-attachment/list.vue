@@ -10,10 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="attachments.dataExists" id="form-attachment-list" ref="dropZone">
-    <!-- ^^^ We use v-show rather than v-if so that this.$refs.dropZone is in
-    the DOM from the first render. -->
-
+  <div id="form-attachment-list" ref="dropZone">
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('uploadFilesModal')">
@@ -28,6 +25,7 @@ except according to the terms contained in the LICENSE file.
           <th class="form-attachment-list-type">{{ $t('header.type') }}</th>
           <th class="form-attachment-list-name">{{ $t('header.name') }}</th>
           <th class="form-attachment-list-uploaded">{{ $t('header.uploaded') }}</th>
+          <th class="form-attachment-list-action"></th>
         </tr>
       </thead>
       <tbody v-if="form.dataExists && attachments.dataExists">
@@ -36,7 +34,9 @@ except according to the terms contained in the LICENSE file.
           :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
-          :updated-attachments="updatedAttachments" :data-name="attachment.name"/>
+          :updated-attachments="updatedAttachments" :data-name="attachment.name"
+          :linkable="!!dsHashset && dsHashset.has(attachment.name)"
+          @link="showLinkDatasetModal($event)"/>
       </tbody>
     </table>
     <form-attachment-popups
@@ -51,17 +51,21 @@ except according to the terms contained in the LICENSE file.
     <form-attachment-name-mismatch :state="nameMismatch.state"
       :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
+
+
+    <form-attachment-link-dataset v-bind="linkDatasetModal" @hide="hideModal('linkDatasetModal')"
+      @success="afterLinkDataset"/>
   </div>
 </template>
 
 <script>
 import pako from 'pako/lib/deflate';
 import { markRaw } from 'vue';
-
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
+import FormAttachmentLinkDataset from './link-dataset.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
@@ -75,14 +79,21 @@ export default {
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
     FormAttachmentRow,
-    FormAttachmentUploadFiles
+    FormAttachmentUploadFiles,
+    FormAttachmentLinkDataset
   },
   mixins: [dropZone(), modal(), request()],
   inject: ['alert'],
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    }
+  },
   setup() {
-    const { form, resourceView } = useRequestData();
+    const { project, form, resourceView, datasets } = useRequestData();
     const attachments = resourceView('attachments', (data) => data.get());
-    return { form, attachments };
+    return { project, form, attachments, datasets };
   },
   data() {
     return {
@@ -135,6 +146,10 @@ export default {
       nameMismatch: {
         state: false
       },
+      linkDatasetModal: {
+        state: false,
+        attachmentName: ''
+      },
       // Used for testing
       uploading: false
     };
@@ -142,6 +157,17 @@ export default {
   computed: {
     disabled() {
       return this.uploadStatus.total !== 0;
+    },
+    dsHashset() {
+      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
+    }
+  },
+  watch: {
+    'project.dataExists': {
+      handler(dataExists) {
+        if (dataExists && this.project.datasets > 0) this.fetchDatasets();
+      },
+      immediate: true
     }
   },
   methods: {
@@ -346,6 +372,8 @@ export default {
           this.attachments.patch(() => {
             for (const [name, updatedAt] of updates) {
               const attachment = this.attachments.get(name);
+              attachment.blobExists = true;
+              attachment.datasetExists = false;
               attachment.exists = true;
               attachment.updatedAt = updatedAt;
 
@@ -357,6 +385,31 @@ export default {
         });
       this.plannedUploads = [];
       this.unmatchedFiles = [];
+    },
+    fetchDatasets() {
+      this.datasets.request({
+        url: apiPaths.datasets(this.projectId),
+        resend: false
+      }).catch(noop);
+    },
+    showLinkDatasetModal({ name, blobExists }) {
+      this.linkDatasetModal.attachmentName = name;
+      this.linkDatasetModal.blobExists = blobExists;
+      this.showModal('linkDatasetModal');
+    },
+    afterLinkDataset() {
+      this.alert.success(this.$t('alert.link', {
+        attachmentName: this.linkDatasetModal.attachmentName
+      }));
+
+      this.attachments.patch(() => {
+        const attachment = this.attachments.get(this.linkDatasetModal.attachmentName);
+        attachment.datasetExists = true;
+        attachment.blobExists = false;
+        attachment.exists = true;
+      });
+
+      this.hideModal('linkDatasetModal');
     }
   }
 };
@@ -392,7 +445,10 @@ export default {
   .form-attachment-list-uploaded {
     // Set the column to a minimum width such that when a Replace label is
     // added to a row, it does not cause additional wrapping.
-    min-width: 250px;
+    min-width: 300px;
+
+    // So that column doesn't grow infinitely
+    width: 1px;
   }
 }
 </style>
@@ -424,7 +480,8 @@ export default {
     },
     "alert": {
       "readError": "Something went wrong while reading “{filename}”.",
-      "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded."
+      "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
+      "link": "Dataset linked successfully."
     }
   }
 }

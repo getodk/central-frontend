@@ -1,0 +1,106 @@
+<!--
+Copyright 2022 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <modal id="form-attachment-link-dataset" :state="state" :hideable="!awaitingResponse"
+    backdrop @hide="$emit('hide')">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <div class="modal-introduction">
+          <p>
+            <span>{{ $t('introduction[0]') }}</span>
+            <sentence-separator/>
+            <template v-if="blobExists">{{ $t('introduction[1]') }}</template>
+          </p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary btn-link-dataset"
+          :disabled="awaitingResponse" @click="link">
+          {{ $t('action.link') }} <spinner :state="awaitingResponse"/>
+        </button>
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+          @click="$emit('hide')">
+          {{ $t('action.cancel') }}
+        </button>
+      </div>
+    </template>
+  </modal>
+</template>
+
+<script>
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
+import SentenceSeparator from '../sentence-separator.vue';
+
+import request from '../../mixins/request';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
+
+export default {
+  name: 'FormAttachmentLinkDataset',
+  components: { Modal, Spinner, SentenceSeparator },
+  mixins: [request()],
+  props: {
+    state: {
+      type: Boolean,
+      default: false
+    },
+    attachmentName: {
+      type: String,
+      required: true
+    },
+    blobExists: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['hide', 'success'],
+  setup() {
+    const { form } = useRequestData();
+    return { form };
+  },
+  data() {
+    return {
+      awaitingResponse: false
+    };
+  },
+  methods: {
+    link() {
+      this.request({
+        method: 'PATCH',
+        url: apiPaths.formDraftAttachment(this.form.projectId, this.form.xmlFormId, this.attachmentName),
+        data: { dataset: true }
+      })
+        .then(() => {
+          this.$emit('success', this.form);
+        })
+        .catch(noop);
+    }
+  }
+};
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is the title at the top of a pop-up.
+    "title": "Link Dataset",
+    "introduction": [
+      "Are you sure you want to link the Dataset?",
+      "The file you uploaded will be deleted. You can always upload it again later."
+    ],
+    "action": {
+      "link": "Link"
+    }
+  }
+}
+</i18n>

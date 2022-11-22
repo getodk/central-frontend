@@ -63,7 +63,7 @@ describe('FormHead', () => {
     it('shows all tabs to an administrator', () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
-      testData.standardFormAttachments.createPast(1, { exists: false });
+      testData.standardFormAttachments.createPast(1, { blobExists: false });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
         tabs.map(tab => tab.text()).should.eql([
@@ -132,7 +132,7 @@ describe('FormHead', () => {
       }));
 
     it('is shown if there are form attachments', () => {
-      testData.standardFormAttachments.createPast(2, { exists: false });
+      testData.standardFormAttachments.createPast(2, { blobExists: false });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
         const text = tabs.map(tab => tab.text());
@@ -142,7 +142,7 @@ describe('FormHead', () => {
 
     describe('badge', () => {
       it('shows the correct count if all files are missing', () => {
-        testData.standardFormAttachments.createPast(2, { exists: false });
+        testData.standardFormAttachments.createPast(2, { blobExists: false });
         return load('/projects/1/forms/f/draft/attachments').then(app => {
           const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
           badge.text().should.equal('2');
@@ -151,8 +151,8 @@ describe('FormHead', () => {
 
       it('shows the correct count if only some files are missing', () => {
         testData.standardFormAttachments
-          .createPast(1, { exists: true })
-          .createPast(2, { exists: false });
+          .createPast(1, { blobExists: true })
+          .createPast(2, { blobExists: false });
         return load('/projects/1/forms/f/draft/attachments').then(app => {
           const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
           badge.text().should.equal('2');
@@ -160,7 +160,7 @@ describe('FormHead', () => {
       });
 
       it('is not shown if all files exist', () => {
-        testData.standardFormAttachments.createPast(2, { exists: true });
+        testData.standardFormAttachments.createPast(2, { blobExists: true });
         return load('/projects/1/forms/f/draft/attachments').then(app => {
           const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
           badge.should.be.hidden();

@@ -1560,6 +1560,26 @@
         }
       }
     },
+    "FormAttachmentLinkDataset": {
+      "title": {
+        "string": "Link Dataset",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to link the Dataset?"
+        },
+        "1": {
+          "string": "The file you uploaded will be deleted. You can always upload it again later."
+        }
+      },
+      "action": {
+        "link": {
+          "string": "Link",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "FormAttachmentList": {
       "action": {
         "upload": {
@@ -1597,6 +1617,9 @@
         },
         "success": {
           "string": "{count, plural, one {{count} file has been successfully uploaded.} other {{count} files have been successfully uploaded.}}"
+        },
+        "link": {
+          "string": "Dataset linked successfully."
         }
       }
     },
@@ -1719,6 +1742,23 @@
         "title": {
           "string": "To upload files, drag and drop one or more files onto this page"
         }
+      },
+      "linkedToDataset": {
+        "string": "Linked to Dataset {datasetName}",
+        "developer_comment": "This is shown for a Media File that is linked to a Dataset"
+      },
+      "uploadToOverride": {
+        "string": "Upload a file to override."
+      },
+      "action": {
+        "linkDataset": {
+          "string": "Link Dataset",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "override": {
+        "string": "Override",
+        "developer_comment": "This is a label that is shown next to a Media File that is linked to a Dataset, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {

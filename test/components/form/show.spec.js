@@ -73,9 +73,9 @@ describe('FormShow', () => {
 
   it('shows a loading message until all responses are received', () => {
     testData.extendedProjects.createPast(1);
-    testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: true });
+    testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: false });
     testData.standardFormAttachments.createPast(1);
-    return load('/projects/1/forms/f/draft/attachments')
+    return load('/projects/1/forms/f')
       .beforeEachResponse(app => {
         const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
