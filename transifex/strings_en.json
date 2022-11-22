@@ -779,6 +779,10 @@
       "comma": {
         "string": ","
       }
+    },
+    "datasetsPreview": {
+      "string": "Datasets Preview",
+      "developer_comment": "This is a title shown above a section of the page."
     }
   },
   "mixin": {
@@ -1621,6 +1625,13 @@
         "link": {
           "string": "Dataset linked successfully."
         }
+      },
+      "datasetsPreview": {
+        "body": {
+          "0": {
+            "string": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
+          }
+        }
       }
     },
     "FormAttachmentNameMismatch": {
@@ -2088,10 +2099,6 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
-        "title": {
-          "string": "Datasets Preview",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
         "body": {
           "0": {
             "string": "This Form can add Entities to a Dataset."

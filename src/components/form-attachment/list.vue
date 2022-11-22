@@ -19,6 +19,26 @@ except according to the terms contained in the LICENSE file.
       <p>{{ $t('heading[0]') }}</p>
       <p>{{ $t('heading[1]') }}</p>
     </div>
+    <div v-if="datasetLinkable" class="panel-dialog">
+      <div class="panel-heading">
+        <span class="panel-title">
+          <span class="icon-database"></span>
+          {{ $t('common.datasetsPreview') }}
+        </span>
+      </div>
+      <div class="panel-body">
+        <p>
+          <span>{{ $t('datasetsPreview.body[0]') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.clickHere.full">
+            <template #clickHere>
+              <!-- TODO. Specify the `to` prop. -->
+              <doc-link>{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            </template>
+          </i18n-t>
+        </p>
+      </div>
+    </div>
     <table id="form-attachment-list-table" class="table">
       <thead>
         <tr>
@@ -35,7 +55,7 @@ except according to the terms contained in the LICENSE file.
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments" :data-name="attachment.name"
-          :linkable="!!dsHashset && dsHashset.has(attachment.name)"
+          :linkable="attachment.type === 'file' && !!dsHashset && dsHashset.has(attachment.name.replace(/\.[^.]+$/i,''))"
           @link="showLinkDatasetModal($event)"/>
       </tbody>
     </table>
@@ -59,6 +79,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { any } from 'ramda';
 import pako from 'pako/lib/deflate';
 import { markRaw } from 'vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
@@ -66,12 +87,14 @@ import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
+import DocLink from '../doc-link.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+import SentenceSeparator from '../sentence-separator.vue';
 
 export default {
   name: 'FormAttachmentList',
@@ -80,7 +103,9 @@ export default {
     FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles,
-    FormAttachmentLinkDataset
+    FormAttachmentLinkDataset,
+    DocLink,
+    SentenceSeparator
   },
   mixins: [dropZone(), modal(), request()],
   inject: ['alert'],
@@ -159,7 +184,12 @@ export default {
       return this.uploadStatus.total !== 0;
     },
     dsHashset() {
-      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
+      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}`)) : null;
+    },
+    datasetLinkable() {
+      return this.attachments.dataExists &&
+        this.dsHashset &&
+        any(a => a.type === 'file' && this.dsHashset.has(a.name.replace(/\.[^.]+$/i, '')), Array.from(this.attachments.values()));
     }
   },
   watch: {
@@ -420,6 +450,11 @@ export default {
   // Extend to the bottom of the page (or slightly beyond it) so that the drop
   // zone includes the entire page below the PageHead.
   min-height: calc(100vh - 146px);
+
+  .panel-dialog {
+    margin-top: -5px;
+    margin-bottom: 25px;
+  }
 }
 
 #form-attachment-list-table {
@@ -482,6 +517,11 @@ export default {
       "readError": "Something went wrong while reading “{filename}”.",
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
       "link": "Dataset linked successfully."
+    },
+    "datasetsPreview": {
+      "body": [
+        "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
+      ]
     }
   }
 }
