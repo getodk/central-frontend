@@ -101,9 +101,9 @@ except according to the terms contained in the LICENSE file.
           <form-group v-model="hint" :placeholder="$t('field.hint')"
             autocomplete="off"/>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-primary"
+            <button type="submit" class="btn btn-danger"
               :disabled="awaitingResponse">
-              {{ $t('action.next') }} <spinner :state="awaitingResponse"/>
+              {{ $t('action.finish') }} <spinner :state="awaitingResponse"/>
             </button>
             <button type="button" class="btn btn-link"
               :disabled="awaitingResponse" @click="$emit('hide')">
@@ -307,7 +307,7 @@ export default {
         "introduction": [
           "First, you will need to choose a passphrase. This passphrase will be required to decrypt your Submissions. For your privacy, the server will not remember this passphrase: only people with the passphrase will be able to decrypt and read your Submission data.",
           {
-            "full": "There are no length or content restrictions on the passphrase, but if you lose it, there is {no} way to recover it or your data!",
+            "full": "If you lose the passphrase, there is {no} way to recover it or your data!",
             "no": "no"
           }
         ]
