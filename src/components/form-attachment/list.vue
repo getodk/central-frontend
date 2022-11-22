@@ -27,9 +27,12 @@ except according to the terms contained in the LICENSE file.
         </span>
       </div>
       <div class="panel-body">
-        <p>
-          {{ $t('datasetsPreview.body[0]') }}
-        </p>
+        <i18n-t tag="p" keypath="datasetsPreview.body.full">
+          <template #documentation>
+            <!-- TODO. Specify the `to` prop. -->
+            <doc-link>{{ $t('datasetsPreview.body.documentation') }}</doc-link>
+          </template>
+        </i18n-t>
       </div>
     </div>
     <table id="form-attachment-list-table" class="table">
@@ -80,6 +83,7 @@ import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
+import DocLink from '../doc-link.vue';
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import request from '../../mixins/request';
@@ -94,7 +98,8 @@ export default {
     FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles,
-    FormAttachmentLinkDataset
+    FormAttachmentLinkDataset,
+    DocLink
   },
   mixins: [dropZone(), modal(), request()],
   inject: ['alert'],
@@ -509,9 +514,10 @@ export default {
     "datasetsPreview": {
       // This is a title shown above a section of the page.
       "title": "Datasets Preview",
-      "body": [
-        "This Form can use Datasets of the Project. For now, we recommend testing the use of your Datasets by uploading temporary data as .csv files while testing, then link the Datasets once you are ready."
-      ]
+      "body": {
+        "full": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic. For information, please see {documentation}.",
+        "documentation": "documentation"
+      }
     }
   }
 }

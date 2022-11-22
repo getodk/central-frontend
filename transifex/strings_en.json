@@ -1628,8 +1628,13 @@
           "developer_comment": "This is a title shown above a section of the page."
         },
         "body": {
-          "0": {
-            "string": "This Form can use Datasets of the Project. For now, we recommend testing the use of your Datasets by uploading temporary data as .csv files while testing, then link the Datasets once you are ready."
+          "full": {
+            "string": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic. For information, please see {documentation}.",
+            "developer_comment": "{documentation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ndocumentation"
+          },
+          "documentation": {
+            "string": "documentation",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {documentation} is in the following text:\n\nOne or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic. For information, please see {documentation}."
           }
         }
       }
