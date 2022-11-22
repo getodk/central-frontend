@@ -16,8 +16,9 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
           <p>
-            {{ $t('introduction[0]') }}
-            <template v-if="blobExists"> {{ $t('introduction[1]') }}</template>
+            <span>{{ $t('introduction[0]') }}</span>
+            <sentence-separator/>
+            <template v-if="blobExists">{{ $t('introduction[1]') }}</template>
           </p>
       </div>
       <div class="modal-actions">
@@ -25,7 +26,7 @@ except according to the terms contained in the LICENSE file.
           :disabled="awaitingResponse" @click="link">
           {{ $t('action.link') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn" :disabled="awaitingResponse"
+        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
         </button>
@@ -37,6 +38,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 
 import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
@@ -45,7 +47,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormAttachmentLinkDataset',
-  components: { Modal, Spinner },
+  components: { Modal, Spinner, SentenceSeparator },
   mixins: [request()],
   props: {
     state: {

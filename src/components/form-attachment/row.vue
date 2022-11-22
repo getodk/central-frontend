@@ -187,7 +187,7 @@ export default {
     .form-attachment-list-action {
 
       div {
-        text-align: 0right;
+        text-align: right;
         width: 200px;
 
         button {
