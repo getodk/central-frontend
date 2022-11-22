@@ -2707,12 +2707,12 @@
             },
             "1": {
               "full": {
-                "string": "There are no length or content restrictions on the passphrase, but if you lose it, there is {no} way to recover it or your data!",
+                "string": "If you lose the passphrase, there is {no} way to recover it or your data!",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
                 "string": "no",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nThere are no length or content restrictions on the passphrase, but if you lose it, there is {no} way to recover it or your data!"
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nIf you lose the passphrase, there is {no} way to recover it or your data!"
               }
             }
           }
