@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
               <div class="panel-heading">
                 <span class="panel-title">
                   <span class="icon-database"></span>
-                  {{ $t('datasetsPreview.title') }}
+                  {{ $t('common.datasetsPreview') }}
                 </span>
               </div>
               <div class="panel-body">
@@ -168,8 +168,6 @@ export default {
     // is the title of the Draft Form.
     "collectProjectName": "[Draft] {name}",
     "datasetsPreview": {
-      // This is a title shown above a section of the page.
-      "title": "Datasets Preview",
       "body": [
         "This Form can add Entities to a Dataset.",
         "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a Draft state.",

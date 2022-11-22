@@ -779,6 +779,10 @@
       "comma": {
         "string": ","
       }
+    },
+    "datasetsPreview": {
+      "string": "Datasets Preview",
+      "developer_comment": "This is a title shown above a section of the page."
     }
   },
   "mixin": {
@@ -1623,18 +1627,9 @@
         }
       },
       "datasetsPreview": {
-        "title": {
-          "string": "Datasets Preview",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
         "body": {
-          "full": {
-            "string": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic. For information, please see {documentation}.",
-            "developer_comment": "{documentation} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ndocumentation"
-          },
-          "documentation": {
-            "string": "documentation",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {documentation} is in the following text:\n\nOne or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic. For information, please see {documentation}."
+          "0": {
+            "string": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
           }
         }
       }
@@ -2104,10 +2099,6 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
-        "title": {
-          "string": "Datasets Preview",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
         "body": {
           "0": {
             "string": "This Form can add Entities to a Dataset."

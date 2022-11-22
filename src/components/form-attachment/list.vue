@@ -23,16 +23,20 @@ except according to the terms contained in the LICENSE file.
       <div class="panel-heading">
         <span class="panel-title">
           <span class="icon-database"></span>
-          {{ $t('datasetsPreview.title') }}
+          {{ $t('common.datasetsPreview') }}
         </span>
       </div>
       <div class="panel-body">
-        <i18n-t tag="p" keypath="datasetsPreview.body.full">
-          <template #documentation>
-            <!-- TODO. Specify the `to` prop. -->
-            <doc-link>{{ $t('datasetsPreview.body.documentation') }}</doc-link>
-          </template>
-        </i18n-t>
+        <p>
+          <span>{{ $t('datasetsPreview.body[0]') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.clickHere.full">
+            <template #clickHere>
+              <!-- TODO. Specify the `to` prop. -->
+              <doc-link>{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            </template>
+          </i18n-t>
+        </p>
       </div>
     </div>
     <table id="form-attachment-list-table" class="table">
@@ -51,7 +55,7 @@ except according to the terms contained in the LICENSE file.
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments" :data-name="attachment.name"
-          :linkable="!!dsHashset && dsHashset.has(attachment.name)"
+          :linkable="attachment.type === 'file' && !!dsHashset && dsHashset.has(attachment.name.replace(/\.[^.]+$/i,''))"
           @link="showLinkDatasetModal($event)"/>
       </tbody>
     </table>
@@ -90,6 +94,7 @@ import request from '../../mixins/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+import SentenceSeparator from '../sentence-separator.vue';
 
 export default {
   name: 'FormAttachmentList',
@@ -99,7 +104,8 @@ export default {
     FormAttachmentRow,
     FormAttachmentUploadFiles,
     FormAttachmentLinkDataset,
-    DocLink
+    DocLink,
+    SentenceSeparator
   },
   mixins: [dropZone(), modal(), request()],
   inject: ['alert'],
@@ -178,12 +184,12 @@ export default {
       return this.uploadStatus.total !== 0;
     },
     dsHashset() {
-      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}.csv`)) : null;
+      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}`)) : null;
     },
     datasetLinkable() {
       return this.attachments.dataExists &&
-        this.datasets.dataExists &&
-        any(d => this.attachments.data.has(`${d.name}.csv`), this.datasets.data);
+        this.dsHashset &&
+        any(a => a.type === 'file' && this.dsHashset.has(a.name.replace(/\.[^.]+$/i, '')), Array.from(this.attachments.values()));
     }
   },
   watch: {
@@ -446,7 +452,8 @@ export default {
   min-height: calc(100vh - 146px);
 
   .panel-dialog {
-    margin-bottom: 20px;
+    margin-top: -5px;
+    margin-bottom: 25px;
   }
 }
 
@@ -512,12 +519,9 @@ export default {
       "link": "Dataset linked successfully."
     },
     "datasetsPreview": {
-      // This is a title shown above a section of the page.
-      "title": "Datasets Preview",
-      "body": {
-        "full": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic. For information, please see {documentation}.",
-        "documentation": "documentation"
-      }
+      "body": [
+        "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
+      ]
     }
   }
 }

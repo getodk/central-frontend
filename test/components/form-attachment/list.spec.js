@@ -1115,7 +1115,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('does not show Datasets preview hint if there is no linkable dataset', async () => {
-        testData.standardFormAttachments.createPast(1, { type: 'file', name: 'people.csv', datasetExists: true });
+        testData.standardFormAttachments.createPast(1, { type: 'file', name: 'people.csv', datasetExists: false });
         const component = await loadAttachmentComponent();
         component.find('.panel-dialog').exists().should.be.false();
       });
