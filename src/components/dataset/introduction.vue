@@ -12,30 +12,35 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="dataset-introduction" class="panel-dialog">
     <div class="panel-heading">
-      <span class="panel-title">{{ $t('title') }}</span>
+      <span class="panel-title h1">{{ $t('title') }}</span>
     </div>
-    <div class="panel-body">
-      <p>{{ $t('body[0]') }}</p>
-      <i18n-t tag="p" keypath="body[1]">
-        <template #icon1><span class="step-number">(1)</span></template>
-      </i18n-t>
-      <i18n-t tag="p" keypath="body[2]">
-        <template #icon2><span class="step-number">(2)</span></template>
-        <template #icon3><span class="step-number">(3)</span></template>
-      </i18n-t>
-      <i18n-t tag="p" keypath="body[3]">
-        <template #icon4><span class="step-number">(4)</span></template>
-      </i18n-t>
-      <p>
-        <span>{{ $t('body[4]') }}</span>
-        <sentence-separator/>
-        <i18n-t keypath="getStarted.full">
-          <template #clickHere>
-            <!-- TODO. Specify the `to` prop. -->
-            <doc-link>{{ $t('getStarted.clickHere') }}</doc-link>
-          </template>
+    <div class="panel-body row">
+      <div class="col-md-3">
+        <p>{{ $t('body[0]') }}</p>
+        <i18n-t tag="p" keypath="body[1]">
+          <template #icon1><span class="step-number">(1)</span></template>
         </i18n-t>
-      </p>
+        <i18n-t tag="p" keypath="body[2]">
+          <template #icon2><span class="step-number">(2)</span></template>
+          <template #icon3><span class="step-number">(3)</span></template>
+        </i18n-t>
+        <i18n-t tag="p" keypath="body[3]">
+          <template #icon4><span class="step-number">(4)</span></template>
+        </i18n-t>
+        <p>
+          <span>{{ $t('body[4]') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="getStarted.full">
+            <template #clickHere>
+              <!-- TODO. Specify the `to` prop. -->
+              <doc-link>{{ $t('getStarted.clickHere') }}</doc-link>
+            </template>
+          </i18n-t>
+        </p>
+      </div>
+      <div class="col-md-9 image-wrapper">
+        <img src="../../../public/images/entities-intro.svg" alt="entities-workflow">
+      </div>
     </div>
   </div>
 </template>
@@ -51,8 +56,43 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/_variables.scss';
+
 #dataset-introduction {
-  .step-number { font-style: italic; }
+  &.panel-dialog {
+    width: 100%;
+    max-width: 770px;
+    margin-bottom: 20px;
+
+    .panel-title {
+      font-size: 30px;
+    }
+  }
+
+  .step-number {
+    font-style: italic;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    max-width: 720px;
+  }
+}
+
+@media (min-width: $screen-md-min) {
+  #dataset-introduction {
+    &.panel-dialog {
+      max-width: 1045px;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    .image-wrapper {
+      display: flex;
+    }
+  }
 }
 </style>
 
