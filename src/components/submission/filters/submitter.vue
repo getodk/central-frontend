@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <multiselect id="submission-filters-submitter" :model-value="modelValue"
+  <multiselect id="submission-filters-submitter" :model-value="selectValue"
     :options="options" :loading="submitters.initiallyLoading"
     :label="$t('field.submitter')" :placeholder="placeholder"
     :all="$t('action.select.all')" :none="$t('action.select.none')"
@@ -24,7 +24,7 @@ export default {
 };
 </script>
 <script setup>
-import { computed } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Multiselect from '../../multiselect.vue';
@@ -57,18 +57,32 @@ const options = computed(() => {
   return result;
 });
 
+const selectValue = ref(props.modelValue);
+watch(() => props.modelValue, (value) => { selectValue.value = value; });
 const update = (value) => {
-  const withoutUnknown = unknown.value.size === 0
-    ? value
-    : value.filter(id => !unknown.value.has(id));
-  if (withoutUnknown.length !== 0)
-    emit('update:modelValue', withoutUnknown);
-  // If no submitters or only unknown submitters are selected, then the
-  // selection falls back to all submitters. But it could be that that's the
-  // selection already, in which case there is no change to emit.
-  else if (!(props.modelValue.length === submitters.length &&
-    unknown.value.size === 0))
-    emit('update:modelValue', [...submitters.ids]);
+  if (unknown.value.size !== 0) {
+    // Filter out unknown submitters. If that results in no submitters, then
+    // fall back to all submitters.
+    const withoutUnknown = value.filter(id => !unknown.value.has(id));
+    emit('update:modelValue', withoutUnknown.size !== 0
+      ? withoutUnknown
+      : [...submitters.ids]);
+  } else if (value.length !== 0) {
+    emit('update:modelValue', value);
+  } else {
+    // If no submitters are selected, then the selection falls back to all
+    // submitters. If that's not the selection already, then we emit all
+    // submitters. Otherwise, there's no change to emit, but we still need to
+    // make a temporary change to selectValue in order to force the Multiselect
+    // to recheck the checkboxes.
+    const all = [...submitters.ids];
+    if (props.modelValue.length !== all.length) {
+      emit('update:modelValue', all);
+    } else {
+      selectValue.value = value;
+      nextTick(() => { selectValue.value = all; });
+    }
+  }
 };
 
 const placeholder = (counts) => t('placeholder', counts);

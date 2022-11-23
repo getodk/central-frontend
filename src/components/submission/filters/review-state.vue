@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <multiselect id="submission-filters-review-state" :model-value="modelValue"
+  <multiselect id="submission-filters-review-state" :model-value="selectValue"
     :options="options" :label="$t('field.reviewState')"
     :placeholder="placeholder" :all="$t('action.select.all')"
     :none="$t('action.select.none')" @update:model-value="update"/>
@@ -22,7 +22,7 @@ export default {
 };
 </script>
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { inject, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Multiselect from '../../multiselect.vue';
@@ -48,13 +48,22 @@ const options = reviewStates.map(reviewState => ({
 const selectValue = ref(props.modelValue);
 watch(() => props.modelValue, (value) => { selectValue.value = value; });
 const update = (value) => {
-  if (value.length !== 0)
+  if (value.length !== 0) {
     emit('update:modelValue', value);
-  // If no review states are selected, then the selection falls back to all
-  // review states. But if that's the selection already, then there is no change
-  // to emit.
-  else if (props.modelValue.length !== reviewStates.length)
-    emit('update:modelValue', reviewStates);
+  } else {
+    // If no review states are selected, then the selection falls back to all
+    // review states. If that's not the selection already, then we emit all
+    // review states. Otherwise, there's no change to emit, but we still need to
+    // make a temporary change to selectValue in order to force the Multiselect
+    // to recheck the checkboxes.
+    const all = options.map(option => option.value);
+    if (props.modelValue.length !== all.length) {
+      emit('update:modelValue', all);
+    } else {
+      selectValue.value = value;
+      nextTick(() => { selectValue.value = all; });
+    }
+  }
 };
 
 const { t } = useI18n();
