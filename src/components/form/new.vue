@@ -275,7 +275,7 @@ $drop-zone-vpadding: 15px;
         "full": "If you don’t already have one, there are {tools} to help you design your Form.",
         "tools": "tools available"
       },
-      "If you have media, you will be able to upload that on the next page, after the Form has been created."
+      "If you have Form Attachments, you will be able to provide those on the next page, after the Form has been created."
     ],
     "dropZone": {
       "full": "Drop a file here, or {chooseOne} to upload.",

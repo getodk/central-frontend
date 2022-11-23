@@ -50,10 +50,6 @@
           "string": "Status",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
-        "attachments": {
-          "string": "Media Files",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "testing": {
           "string": "Testing",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -582,6 +578,10 @@
       "string": "Forms",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "formAttachments": {
+      "string": "Form Attachments",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "project": {
       "string": "Project",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -676,9 +676,9 @@
     }
   },
   "submission": {
-    "missingMedia": {
-      "string": "Missing media",
-      "developer_comment": "This is a possible state for a Submission."
+    "missingAttachment": {
+      "string": "Missing Attachment",
+      "developer_comment": "This is a possible state for a Submission. It means that the Submission is missing one or more expected Attachments."
     },
     "action": {
       "edit": {
@@ -1714,7 +1714,7 @@
         },
         "current": {
           "string": "Sending {filename} ({percentUploaded})",
-          "developer_comment": "Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form."
+          "developer_comment": "Displayed in a pop-up to indicate a file that is currently being uploaded to be attached to a Form."
         },
         "remaining": {
           "beforeLast": {
@@ -1835,15 +1835,15 @@
       "introduction": {
         "abandon": {
           "0": {
-            "string": "You are about to permanently delete the Draft version of this Form. This means that the draft Form definition, any draft Media Files you have uploaded, and all test Submissions will be removed."
+            "string": "You are about to permanently delete the Draft version of this Form. This means that the draft Form definition, any draft Form Attachments you have uploaded, and all test Submissions will be removed."
           },
           "1": {
-            "string": "Your published Form definition, its Media Files, and Submissions will not be affected."
+            "string": "Your published Form definition, its Form Attachments, and Submissions will not be affected."
           }
         },
         "deleteForm": {
           "0": {
-            "string": "You are about to delete this draft Form definition, along with any draft Media Files you have uploaded, and all test Submissions. Because you have not yet published it, this entire Form will be deleted and moved to the Trash."
+            "string": "You are about to delete this draft Form definition, along with any draft Form Attachments you have uploaded, and all test Submissions. Because you have not yet published it, this entire Form will be deleted and moved to the Trash."
           }
         }
       },
@@ -1882,12 +1882,12 @@
             "0": {
               "status": {
                 "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
-                "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated."
+                "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated."
               },
               "link": {
                 "full": {
                   "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
-                  "developer_comment": "This refers to changes to the Form definition as opposed to just the media associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
+                  "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
                 },
                 "upload": {
                   "string": "upload",
@@ -1899,18 +1899,18 @@
         },
         "2": {
           "title": {
-            "string": "Upload Form Media Files",
+            "string": "Upload Form Attachments",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "full": {
-                "string": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
-                "developer_comment": "{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+                "string": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab.",
+                "developer_comment": "{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
               },
-              "mediaFiles": {
-                "string": "Media Files",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab."
+              "formAttachments": {
+                "string": "Form Attachments",
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab."
               }
             }
           }
@@ -1966,12 +1966,12 @@
       "warnings": {
         "attachments": {
           "full": {
-            "string": "You have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later.",
-            "developer_comment": "This is a warning shown to the user.\n\n{mediaFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nMedia Files"
+            "string": "You have not provided all the {formAttachments} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to provide those Attachments later.",
+            "developer_comment": "This is a warning shown to the user.\n\n{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
           },
-          "mediaFiles": {
-            "string": "Media Files",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {mediaFiles} is in the following text:\n\nYou have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later."
+          "formAttachments": {
+            "string": "Form Attachments",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYou have not provided all the {formAttachments} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to provide those Attachments later."
           }
         },
         "testing": {
@@ -1987,7 +1987,7 @@
       },
       "introduction": {
         "0": {
-          "string": "You are about to make this Draft the published version of your Form. This will finalize any changes you have made to the Form definition and its attached Media Files."
+          "string": "You are about to make this Draft the published version of your Form. This will finalize any changes you have made to the Form definition and Form Attachments."
         },
         "1": {
           "string": "Existing Form Submissions will be unaffected, but all Draft test Submissions will be removed."
@@ -2075,7 +2075,7 @@
           "string": "Success! The new Form definition has been saved as your Draft."
         },
         "publish": {
-          "string": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Media Files."
+          "string": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments."
         },
         "abandon": {
           "string": "The Draft version of this Form has been successfully deleted."
@@ -2197,7 +2197,7 @@
           }
         },
         "2": {
-          "string": "If you have media, you will be able to upload that on the next page, after the Form has been created."
+          "string": "If you have Form Attachments, you will be able to provide those on the next page, after the Form has been created."
         }
       },
       "dropZone": {
@@ -2263,7 +2263,7 @@
             "developer_comment": "This is a title shown above a section of the page."
           },
           "body": {
-            "string": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Media Files, start by creating a Draft using the button above."
+            "string": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Attachments, start by creating a Draft using the button above."
           }
         },
         "any": {
@@ -3301,7 +3301,8 @@
         "string": "User agent"
       },
       "attachments": {
-        "string": "Media files"
+        "string": "Attachments",
+        "developer_comment": "This refers specifically to Submission Attachments."
       },
       "present": {
         "string": "{count, plural, one {{count} file} other {{count} files}}"
@@ -3393,9 +3394,9 @@
             "string": "All data tables",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
-          "withMedia": {
-            "string": "All data and media files",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
+          "withAttachments": {
+            "string": "All data and Attachments",
+            "developer_comment": "\"Attachments\" refers to Submission Attachments."
           }
         }
       },

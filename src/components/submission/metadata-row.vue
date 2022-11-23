@@ -87,19 +87,19 @@ export default {
     return { reviewStateIcon };
   },
   computed: {
-    missingMedia() {
+    missingAttachment() {
       const { __system } = this.submission;
       return __system.reviewState == null &&
         __system.attachmentsPresent !== __system.attachmentsExpected;
     },
     stateIcon() {
-      return this.missingMedia
+      return this.missingAttachment
         ? 'icon-circle-o'
         : this.reviewStateIcon(this.submission.__system.reviewState);
     },
     stateText() {
-      return this.missingMedia
-        ? this.$t('submission.missingMedia')
+      return this.missingAttachment
+        ? this.$t('submission.missingAttachment')
         : this.$t(`reviewState.${this.submission.__system.reviewState}`);
     },
     editPath() {

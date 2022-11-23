@@ -87,7 +87,7 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div class="submission-download-action">
             <span class="submission-download-action-label">
-              <span class="icon-image"></span>{{ $t('action.download.withMedia') }}
+              <span class="icon-image"></span>{{ $t('action.download.withAttachments') }}
             </span>
             <div>
               <a :href="href('.csv.zip')" class="btn btn-primary">
@@ -369,7 +369,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
         // This is the text of a button. "Repeats" refers to repeat groups.
         "mainTable": "Main data table (no repeats)",
         "allTables": "All data tables",
-        "withMedia": "All data and media files"
+        // "Attachments" refers to Submission Attachments.
+        "withAttachments": "All data and Attachments"
       }
     },
     "alert": {

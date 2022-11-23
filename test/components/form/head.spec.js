@@ -73,7 +73,7 @@ describe('FormHead', () => {
           'Public Access',
           'Settings',
           'Status',
-          'Media Files 1',
+          'Form Attachments 1',
           'Testing'
         ]);
       });
@@ -119,7 +119,7 @@ describe('FormHead', () => {
     });
   });
 
-  describe('Media Files tab', () => {
+  describe('Form Attachments tab', () => {
     beforeEach(() => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
@@ -136,7 +136,7 @@ describe('FormHead', () => {
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
         const text = tabs.map(tab => tab.text());
-        text.should.eql(['Status', 'Media Files 2', 'Testing']);
+        text.should.eql(['Status', 'Form Attachments 2', 'Testing']);
       });
     });
 

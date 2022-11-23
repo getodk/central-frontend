@@ -136,7 +136,7 @@ export default {
       "none": {
         // This is a title shown above a section of the page.
         "title": "No Current Draft",
-        "body": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Media Files, start by creating a Draft using the button above."
+        "body": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Attachments, start by creating a Draft using the button above."
       },
       "any": {
         "versionCaption": {

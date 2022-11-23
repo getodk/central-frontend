@@ -60,10 +60,10 @@ describe('FormNew', () => {
         text.should.startWith('To create a Form,');
       });
 
-      it('renders the paragraph about media files', () => {
+      it('renders the paragraph about form attachments', () => {
         const modal = mount(FormNew, mountOptions());
         const text = modal.findAll('.modal-introduction p')[1].text();
-        text.should.containEql('media');
+        text.should.containEql('Form Attachments');
       });
     });
   });
