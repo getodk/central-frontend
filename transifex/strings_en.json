@@ -1597,7 +1597,7 @@
       },
       "heading": {
         "0": {
-          "string": "Based on the Form you uploaded, the following files are expected. You can see which ones have been uploaded or are still missing."
+          "string": "Based on the Form you uploaded, the following Form Attachments are expected. You can see which ones have been provided or are still missing."
         },
         "1": {
           "string": "To upload files, drag and drop one or more files onto the page."
@@ -1730,24 +1730,24 @@
       "type": {
         "image": {
           "string": "Image",
-          "developer_comment": "This is a type of Media File."
+          "developer_comment": "This is a type of Form Attachment."
         },
         "audio": {
           "string": "Audio",
-          "developer_comment": "This is a type of Media File."
+          "developer_comment": "This is a type of Form Attachment."
         },
         "video": {
           "string": "Video",
-          "developer_comment": "This is a type of Media File."
+          "developer_comment": "This is a type of Form Attachment."
         },
         "file": {
           "string": "Data File",
-          "developer_comment": "This is a type of Media File."
+          "developer_comment": "This is a type of Form Attachment."
         }
       },
       "replace": {
         "string": "Replace",
-        "developer_comment": "This is a label that is shown next to a Media File that would be replaced if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that would be replaced if the selected files were uploaded."
       },
       "notUploaded": {
         "text": {
@@ -1760,7 +1760,7 @@
       },
       "linkedToDataset": {
         "string": "Linked to Dataset {datasetName}",
-        "developer_comment": "This is shown for a Media File that is linked to a Dataset"
+        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
       },
       "uploadToOverride": {
         "string": "Upload a file to override."
@@ -1773,7 +1773,7 @@
       },
       "override": {
         "string": "Override",
-        "developer_comment": "This is a label that is shown next to a Media File that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
