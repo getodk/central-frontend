@@ -93,7 +93,7 @@ describe('FormNew', () => {
         text.should.startWith('To update the Draft,');
       });
 
-      it('does not render the paragraph about media files', () => {
+      it('does not render the paragraph about form attachments', () => {
         const modal = mount(FormNew, mountOptions());
         modal.findAll('.modal-introduction p').length.should.equal(1);
       });
