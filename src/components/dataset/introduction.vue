@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div class="col-md-9 image-wrapper">
-        <img src="../../../public/images/entities-intro.svg" alt="entities-workflow">
+        <img src="../../../public/images/entities-intro.svg" :alt="$t('datasetsWorkflow')">
       </div>
     </div>
   </div>
@@ -113,7 +113,8 @@ export default {
     "getStarted": {
       "full": "For more information on how to get started, {clickHere}.",
       "clickHere": "click here"
-    }
+    },
+    "datasetsWorkflow": "Datasets workflow"
   }
 }
 </i18n>
