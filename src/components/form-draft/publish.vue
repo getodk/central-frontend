@@ -19,8 +19,8 @@ except according to the terms contained in the LICENSE file.
         <ul>
           <i18n-t v-if="rendersAttachmentsWarning" tag="li"
             keypath="warnings.attachments.full">
-            <template #mediaFiles>
-              <router-link :to="formPath('draft/attachments')">{{ $t('warnings.attachments.mediaFiles') }}</router-link>
+            <template #formAttachments>
+              <router-link :to="formPath('draft/attachments')">{{ $t('warnings.attachments.formAttachments') }}</router-link>
             </template>
           </i18n-t>
           <i18n-t v-if="rendersTestingWarning" tag="li"
@@ -232,8 +232,8 @@ export default {
     "warnings": {
       "attachments": {
         // This is a warning shown to the user.
-        "full": "You have not provided all the {mediaFiles} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to upload those files later.",
-        "mediaFiles": "Media Files"
+        "full": "You have not provided all the {formAttachments} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to provide those Attachments later.",
+        "formAttachments": "Form Attachments"
       },
       "testing": {
         // This is a warning shown to the user.
@@ -242,7 +242,7 @@ export default {
       }
     },
     "introduction": [
-      "You are about to make this Draft the published version of your Form. This will finalize any changes you have made to the Form definition and its attached Media Files.",
+      "You are about to make this Draft the published version of your Form. This will finalize any changes you have made to the Form definition and Form Attachments.",
       "Existing Form Submissions will be unaffected, but all Draft test Submissions will be removed.",
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"

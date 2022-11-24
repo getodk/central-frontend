@@ -26,7 +26,6 @@
     "draftNav": {
       "tab": {
         "status": "Status",
-        "attachments": "Media Files",
         "testing": "Testing"
       }
     }
@@ -262,6 +261,7 @@
     "datasets": "Datasets",
     "form": "Form",
     "forms": "Forms",
+    "formAttachments": "Form Attachments",
     "project": "Project",
     "projects": "Projects",
     "publicLink": "Public Access Link",
@@ -299,8 +299,9 @@
     }
   },
   "submission": {
-    // This is a possible state for a Submission.
-    "missingMedia": "Missing media",
+    // This is a possible state for a Submission. It means that the Submission
+    // is missing one or more expected Attachments.
+    "missingAttachment": "Missing Attachment",
     "action": {
       // {count} is the number of previous edits.
       "edit": "Edit ({count})"

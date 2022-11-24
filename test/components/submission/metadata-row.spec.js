@@ -102,7 +102,7 @@ describe('SubmissionMetadataRow', () => {
       state.text().should.equal('Rejected');
     });
 
-    it('reports missing media if the review state is null', () => {
+    it('reports a missing attachment if the review state is null', () => {
       testData.extendedSubmissions.createPast(1, {
         attachmentsPresent: 0,
         attachmentsExpected: 1,
@@ -110,10 +110,10 @@ describe('SubmissionMetadataRow', () => {
       });
       const state = mountComponent().get('.state');
       state.find('.icon-circle-o').exists().should.be.true();
-      state.text().should.equal('Missing media');
+      state.text().should.equal('Missing Attachment');
     });
 
-    it('does not report missing media if the review state is not null', () => {
+    it('does not report a missing attachment if review state is not null', () => {
       testData.extendedSubmissions.createPast(1, {
         attachmentsPresent: 0,
         attachmentsExpected: 1,

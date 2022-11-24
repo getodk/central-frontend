@@ -146,7 +146,7 @@ describe('SubmissionBasicDetails', () => {
       const spans = mountComponent().findAll('dl :nth-child(6) dd span');
       spans.length.should.equal(3);
       spans[1].classes('icon-exclamation-triangle').should.be.true();
-      spans[2].text().should.equal('Missing media');
+      spans[2].text().should.equal('Missing Attachment');
     });
 
     it('does not render if no attachments are expected', () => {

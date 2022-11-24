@@ -106,11 +106,11 @@ export default {
     },
     "introduction": {
       "abandon": [
-        "You are about to permanently delete the Draft version of this Form. This means that the draft Form definition, any draft Media Files you have uploaded, and all test Submissions will be removed.",
-        "Your published Form definition, its Media Files, and Submissions will not be affected."
+        "You are about to permanently delete the Draft version of this Form. This means that the draft Form definition, any draft Form Attachments you have uploaded, and all test Submissions will be removed.",
+        "Your published Form definition, its Form Attachments, and Submissions will not be affected."
       ],
       "deleteForm": [
-        "You are about to delete this draft Form definition, along with any draft Media Files you have uploaded, and all test Submissions. Because you have not yet published it, this entire Form will be deleted and moved to the Trash."
+        "You are about to delete this draft Form definition, along with any draft Form Attachments you have uploaded, and all test Submissions. Because you have not yet published it, this entire Form will be deleted and moved to the Trash."
       ]
     },
     "action": {

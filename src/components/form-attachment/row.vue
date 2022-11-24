@@ -205,14 +205,14 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is a type of Media File.
+    // This is a type of Form Attachment.
     "type": {
       "image": "Image",
       "audio": "Audio",
       "video": "Video",
       "file": "Data File"
     },
-    // This is a label that is shown next to a Media File that would be replaced
+    // This is a label that is shown next to a Form Attachment that would be replaced
     // if the selected files were uploaded.
     "replace": "Replace",
     "notUploaded": {
@@ -220,13 +220,13 @@ export default {
       "text": "Not yet uploaded",
       "title": "To upload files, drag and drop one or more files onto this page"
     },
-    // This is shown for a Media File that is linked to a Dataset
+    // This is shown for a Form Attachment that is linked to a Dataset
     "linkedToDataset": "Linked to Dataset {datasetName}",
     "uploadToOverride": "Upload a file to override.",
     "action": {
       "linkDataset": "Link Dataset"
     },
-    // This is a label that is shown next to a Media File that is linked to a Dataset,
+    // This is a label that is shown next to a Form Attachment that is linked to a Dataset,
     // which would be overriden if the selected files were uploaded.
     "override": "Override"
   }

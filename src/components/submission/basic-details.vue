@@ -58,9 +58,9 @@ except according to the terms contained in the LICENSE file.
           <dt>{{ $t('attachments') }}</dt>
           <dd>
             <span>{{ attachments }}</span>
-            <template v-if="missingMedia">
+            <template v-if="missingAttachment">
               <span class="icon-exclamation-triangle"></span>
-              <span>{{ $t('submission.missingMedia') }}</span>
+              <span>{{ $t('submission.missingAttachment') }}</span>
             </template>
           </dd>
         </div>
@@ -98,7 +98,7 @@ export default {
         expected: this.$tcn('expected', attachmentsExpected)
       });
     },
-    missingMedia() {
+    missingAttachment() {
       const { attachmentsPresent, attachmentsExpected } = this.submission.__system;
       return attachmentsPresent !== attachmentsExpected;
     }
@@ -140,7 +140,8 @@ export default {
     "formVersion": "Form version",
     "deviceId": "Device ID",
     "userAgent": "User agent",
-    "attachments": "Media files",
+    // This refers specifically to Submission Attachments.
+    "attachments": "Attachments",
     "present": "{count} file | {count} files",
     // This shows the number of files that were expected to be submitted.
     "expected": "{count} expected | {count} expected",

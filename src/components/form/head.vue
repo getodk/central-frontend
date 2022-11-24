@@ -84,7 +84,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="canRoute(tabPath('draft/attachments'))"
                 :class="tabClass('draft/attachments')" role="presentation">
                 <router-link :to="tabPath('draft/attachments')">
-                  {{ $t('formHead.draftNav.tab.attachments') }}
+                  {{ $t('resource.formAttachments') }}
                   <template v-if="attachments.dataExists">
                     <span v-show="attachments.missingCount !== 0" class="badge">
                       {{ $n(attachments.missingCount, 'default') }}

@@ -458,10 +458,7 @@ const routes = [
             attachments: () => attachments.isDefined() &&
               attachments.get().size !== 0
           },
-          title: () => [
-            i18n.t('formHead.draftNav.tab.attachments'),
-            form.nameOrId
-          ]
+          title: () => [i18n.t('resource.formAttachments'), form.nameOrId]
         }
       }),
       asyncRoute({

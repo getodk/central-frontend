@@ -495,7 +495,7 @@ export default {
       "upload": "Upload files"
     },
     "heading": [
-      "Based on the Form you uploaded, the following files are expected. You can see which ones have been uploaded or are still missing.",
+      "Based on the Form you uploaded, the following Form Attachments are expected. You can see which ones have been provided or are still missing.",
       "To upload files, drag and drop one or more files onto the page."
     ],
     "header": {

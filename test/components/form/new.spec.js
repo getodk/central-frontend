@@ -60,10 +60,10 @@ describe('FormNew', () => {
         text.should.startWith('To create a Form,');
       });
 
-      it('renders the paragraph about media files', () => {
+      it('renders the paragraph about form attachments', () => {
         const modal = mount(FormNew, mountOptions());
         const text = modal.findAll('.modal-introduction p')[1].text();
-        text.should.containEql('media');
+        text.should.containEql('Form Attachments');
       });
     });
   });
@@ -93,7 +93,7 @@ describe('FormNew', () => {
         text.should.startWith('To update the Draft,');
       });
 
-      it('does not render the paragraph about media files', () => {
+      it('does not render the paragraph about form attachments', () => {
         const modal = mount(FormNew, mountOptions());
         modal.findAll('.modal-introduction p').length.should.equal(1);
       });

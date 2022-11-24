@@ -272,7 +272,7 @@ $popup-width: 300px;
     "duringDragover": {
       // {attachmentName} is formatted in bold.
       "dropToUpload": "Drop now to upload this file as {attachmentName}.",
-      "dragover": "Drag over the file entry you wish to replace with the file and drop to upload.",
+      "dragover": "Drag over the Form Attachment you wish to replace with the file and drop to upload.",
       "dropToPrepare": {
         "full": "Drop now to prepare {countOfFiles} for upload to this Form.",
         "countOfFiles": "{count} file | {count} files"
@@ -291,7 +291,7 @@ $popup-width: 300px;
     },
     "duringUpload": {
       "total": "Please wait, uploading your {count} file: | Please wait, uploading your {count} files:",
-      // Displayed in a pop-up to indicate a Media File that is currently being uploaded to be attached to a Form.
+      // Displayed in a pop-up to indicate a file that is currently being uploaded to be attached to a Form.
       "current": "Sending {filename} ({percentUploaded})",
       "remaining": {
         "beforeLast": "{count} file remains. | {count} files remain.",

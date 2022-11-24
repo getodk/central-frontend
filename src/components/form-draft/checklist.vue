@@ -35,8 +35,8 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('steps[2].title') }}</template>
       <p>
         <i18n-t keypath="steps[2].body[0].full">
-          <template #mediaFiles>
-            <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].mediaFiles') }}</router-link>
+          <template #formAttachments>
+            <router-link :to="formPath('draft/attachments')">{{ $t('steps[2].body[0].formAttachments') }}</router-link>
           </template>
         </i18n-t>
         <sentence-separator/>
@@ -121,12 +121,12 @@ export default {
         "body": [
           {
             // This refers to changes to the Form definition as opposed to just
-            // the media associated with the Form. The word "XLSForm" should not
+            // the Attachments associated with the Form. The word "XLSForm" should not
             // be translated.
             "status": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
             "link": {
               // This refers to changes to the Form definition as opposed to
-              // just the media associated with the Form. The word "XLSForm"
+              // just the Attachments associated with the Form. The word "XLSForm"
               // should not be translated.
               "full": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
               "upload": "upload"
@@ -136,11 +136,11 @@ export default {
       },
       {
         // This is the title of a checklist item.
-        "title": "Upload Form Media Files",
+        "title": "Upload Form Attachments",
         "body": [
           {
-            "full": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {mediaFiles} tab.",
-            "mediaFiles": "Media Files"
+            "full": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab.",
+            "formAttachments": "Form Attachments"
           }
         ]
       },

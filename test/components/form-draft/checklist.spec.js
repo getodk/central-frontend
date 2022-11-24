@@ -90,7 +90,7 @@ describe('FormDraftChecklist', () => {
     });
   });
 
-  describe('Upload Form Media Files', () => {
+  describe('Upload Form Attachments', () => {
     beforeEach(() => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });

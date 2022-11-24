@@ -241,7 +241,7 @@ export default {
     },
     "alert": {
       "upload": "Success! The new Form definition has been saved as your Draft.",
-      "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Media Files.",
+      "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments.",
       "abandon": "The Draft version of this Form has been successfully deleted.",
       "delete": "The Form “{name}” was deleted."
     }

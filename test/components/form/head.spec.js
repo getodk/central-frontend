@@ -73,7 +73,7 @@ describe('FormHead', () => {
           'Public Access',
           'Settings',
           'Status',
-          'Media Files 1',
+          'Form Attachments 1',
           'Testing'
         ]);
       });
@@ -119,7 +119,7 @@ describe('FormHead', () => {
     });
   });
 
-  describe('Media Files tab', () => {
+  describe('Form Attachments tab', () => {
     beforeEach(() => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
@@ -136,12 +136,12 @@ describe('FormHead', () => {
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
         const text = tabs.map(tab => tab.text());
-        text.should.eql(['Status', 'Media Files 2', 'Testing']);
+        text.should.eql(['Status', 'Form Attachments 2', 'Testing']);
       });
     });
 
     describe('badge', () => {
-      it('shows the correct count if all files are missing', () => {
+      it('shows the correct count if all form attachments are missing', () => {
         testData.standardFormAttachments.createPast(2, { blobExists: false });
         return load('/projects/1/forms/f/draft/attachments').then(app => {
           const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
@@ -149,7 +149,7 @@ describe('FormHead', () => {
         });
       });
 
-      it('shows the correct count if only some files are missing', () => {
+      it('shows correct count if only some form attachments are missing', () => {
         testData.standardFormAttachments
           .createPast(1, { blobExists: true })
           .createPast(2, { blobExists: false });
@@ -159,7 +159,7 @@ describe('FormHead', () => {
         });
       });
 
-      it('is not shown if all files exist', () => {
+      it('is not shown if all form attachments exist', () => {
         testData.standardFormAttachments.createPast(2, { blobExists: true });
         return load('/projects/1/forms/f/draft/attachments').then(app => {
           const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
