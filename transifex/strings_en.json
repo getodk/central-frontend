@@ -1317,6 +1317,9 @@
           "string": "click here",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
         }
+      },
+      "datasetsWorkflow": {
+        "string": "Datasets workflow"
       }
     },
     "DatasetRow": {
