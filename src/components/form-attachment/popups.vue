@@ -272,7 +272,7 @@ $popup-width: 300px;
     "duringDragover": {
       // {attachmentName} is formatted in bold.
       "dropToUpload": "Drop now to upload this file as {attachmentName}.",
-      "dragover": "Drag over the file entry you wish to replace with the file and drop to upload.",
+      "dragover": "Drag over the Form Attachment you wish to replace with the file and drop to upload.",
       "dropToPrepare": {
         "full": "Drop now to prepare {countOfFiles} for upload to this Form.",
         "countOfFiles": "{count} file | {count} files"

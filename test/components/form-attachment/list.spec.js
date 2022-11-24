@@ -823,7 +823,7 @@ describe('FormAttachmentList', () => {
             const popup = component.get('#form-attachment-popups-main');
             popup.should.be.visible();
             const text = popup.get('p').text();
-            text.should.startWith('Drag over the file entry you wish to replace');
+            text.should.startWith('Drag over the Form Attachment you wish to replace');
           });
         });
 

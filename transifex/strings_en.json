@@ -1670,7 +1670,7 @@
           "developer_comment": "{attachmentName} is formatted in bold."
         },
         "dragover": {
-          "string": "Drag over the file entry you wish to replace with the file and drop to upload."
+          "string": "Drag over the Form Attachment you wish to replace with the file and drop to upload."
         },
         "dropToPrepare": {
           "full": {
