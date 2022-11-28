@@ -132,6 +132,11 @@ export default {
   },
   data() {
     return {
+      // selectedFields will be an array of fields. It needs to be shallow so
+      // that the elements of the array are not reactive proxies. That's
+      // important for SubmissionFieldDropdown, which will do exact equality
+      // checks. (The selected fields that it passes to the Multiselect must be
+      // among the options.)
       selectedFields: shallowRef(null),
       refreshing: false,
       download: {

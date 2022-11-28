@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
     <span class="form-label">{{ label }}</span>
     <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
     hide it. -->
-    <ul class="dropdown-menu" aria-labelledby="toggleId" @click.stop>
+    <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
       <li v-if="search != null" class="search">
         <div class="form-group">
           <input ref="searchInput" v-model="searchValue" class="form-control"
@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
       </li>
       <li>
         <ul ref="optionList" class="option-list"
-          :class="{ all: searchValue === '' }" @change="changeCheckbox">
+          :class="{ 'shows-all': searchValue === '' }" @change="changeCheckbox">
           <template v-if="options != null">
             <li v-for="({ value, key = value, text = value, title = text }, i) in options"
               :key="key" :class="{ 'search-match': searchMatches.has(value) }">
@@ -68,13 +68,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 let id = 1;
-
-export default {
-  name: 'Multiselect'
-};
 </script>
 <script setup>
-import { computed, inject, onMounted, onUnmounted, ref, shallowReactive, shallowRef, watch, watchEffect } from 'vue';
+import { computed, inject, onBeforeUnmount, onMounted, onUnmounted, ref, shallowReactive, shallowRef, watch, watchEffect } from 'vue';
 
 const props = defineProps({
   /*
@@ -104,9 +100,9 @@ const props = defineProps({
     required: false
   },
   // props.modelValue is an array of the values of the options that have been
-  // selected. The relative order of the values in props.modelValue may differ
-  // from their relative order in props.options. The component assumes that
-  // props.modelValue will not change while the dropdown is shown.
+  // selected. The relative order of the values in modelValue may differ from
+  // from their relative order in options. The component assumes that modelValue
+  // will not change while the dropdown is shown.
   modelValue: {
     type: Array,
     required: true
@@ -115,7 +111,7 @@ const props = defineProps({
   // `true` if the options are loading and `false` if not.
   loading: Boolean,
 
-  // Text for form controls and actions
+  // Text, including for form controls and actions
   label: {
     type: String,
     required: true
@@ -228,17 +224,17 @@ const emitIfChanged = () => {
 };
 
 if (process.env.NODE_ENV === 'development') {
+  const optionValues = computed(() =>
+    props.options.reduce((set, { value }) => set.add(value), new Set()));
+  const notFound = computed(() =>
+    props.modelValue.find(value => !optionValues.value.has(value)));
   watchEffect(() => {
-    if (props.options == null) return;
-    const optionValues = new Set();
-    for (const option of props.options) optionValues.add(option.value);
-    const notFound = props.modelValue.find(value => !optionValues.has(value));
-    if (notFound != null) {
+    if (props.options != null && notFound.value != null) {
       // eslint-disable-next-line no-console
       console.warn('modelValue not among options', {
         options: props.options,
         modelValue: props.modelValue,
-        notFound
+        notFound: notFound.value
       });
     }
   });
@@ -254,13 +250,11 @@ const searchMatches = shallowReactive(new Set());
 const { i18n } = inject('container');
 const textToSearch = computed(() => props.options.map(option => {
   const text = option.text != null ? option.text : option.value.toString();
-  const textToLowerCase = text.toLocaleLowerCase(i18n.locale);
-  const titleToLowerCase = option.title != null
-    ? option.title.toLocaleLowerCase(i18n.locale)
-    : null;
-  return titleToLowerCase != null
-    ? `${titleToLowerCase}${textToLowerCase}`
-    : textToLowerCase;
+  const result = [text.toLocaleLowerCase(i18n.locale)];
+  const { title } = option;
+  if (title != null && title !== text)
+    result.push(title.toLocaleLowerCase(i18n.locale));
+  return result;
 }));
 // We may need to add debouncing here at some point.
 watch(searchValue, (value) => {
@@ -268,7 +262,7 @@ watch(searchValue, (value) => {
   if (value === '') return;
   const searchToLowerCase = value.toLocaleLowerCase(i18n.locale);
   for (let i = 0; i < props.options.length; i += 1) {
-    if (textToSearch.value[i].includes(searchToLowerCase))
+    if (textToSearch.value[i].some(text => text.includes(searchToLowerCase)))
       searchMatches.add(props.options[i].value);
   }
 });
@@ -279,11 +273,12 @@ const clearSearch = () => {
   searchInput.value.focus();
 };
 
-// Fix the width of .option-list during search so that it does not change based
-// on the search results.
-watch(searchValue, () => {
+// Fix the width of .option-list during search so that it doesn't change based
+// on the search results. The width won't change even if the scrollbar
+// disappears or reappears during the search.
+watch(searchValue, (value) => {
   const { style } = optionList.value;
-  if (searchValue.value === '') {
+  if (value === '') {
     style.width = '';
   } else if (style.width === '') {
     const { width } = optionList.value.getBoundingClientRect();
@@ -301,8 +296,8 @@ const $dropdown = computed(() => $(dropdown.value));
 onMounted(() => {
   $dropdown.value.on('shown.bs.dropdown', resetCheckboxes);
   $dropdown.value.on('hidden.bs.dropdown', () => {
-    emitIfChanged();
     searchValue.value = '';
+    emitIfChanged();
   });
 });
 onUnmounted(() => { $dropdown.value.off('.bs.dropdown'); });
@@ -311,9 +306,21 @@ const toggle = ref(null);
 const toggleId = `multiselect-toggle${id}`;
 id += 1;
 const $toggle = computed(() => $(toggle.value));
-const toggleAfterEnter = (event) => {
-  if (event.key === 'Enter') $toggle.value.dropdown('toggle');
+const toggleAfterEnter = ({ key }) => {
+  if (key === 'Enter') $toggle.value.dropdown('toggle');
 };
+
+if (process.env.NODE_ENV === 'test') {
+  const verifyAttached = ({ target }) => {
+    if (target.closest('body') == null)
+      // eslint-disable-next-line no-console
+      console.error('Clicking Multiselect toggle has no effect unless component is attached to body.');
+  };
+  onMounted(() => { toggle.value.addEventListener('click', verifyAttached); });
+  onBeforeUnmount(() => {
+    toggle.value.removeEventListener('click', verifyAttached);
+  });
+}
 
 
 
@@ -350,23 +357,23 @@ const selectNone = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // OTHER PROPS
 
-// Implement props.loading and props.placeholder.
-const selectOption = computed(() => (props.loading
-  ? i18n.t('common.loading')
-  : (props.options == null
-    ? i18n.t('common.error')
-    : props.placeholder({
-      selected: i18n.n(props.modelValue.length, 'default'),
-      total: i18n.n(props.options.length, 'default')
-    }))));
+// Implements props.loading and props.placeholder.
+const selectOption = computed(() => {
+  if (props.loading) return i18n.t('common.loading');
+  if (props.options == null) return i18n.t('common.error');
+  const { placeholder } = props;
+  return placeholder({
+    selected: i18n.n(props.modelValue.length, 'default'),
+    total: i18n.n(props.options.length, 'default')
+  });
+});
 
 // Implements props.empty.
-const emptyMessage = computed(() =>
-  (props.options != null && props.options.length === 0
+const emptyMessage = computed(() => (searchValue.value === ''
+  ? (props.options != null && props.options.length === 0
     ? (props.empty != null ? props.empty : i18n.t('common.noResults'))
-    : (searchValue.value !== '' && searchMatches.size === 0
-      ? i18n.t('common.noResults')
-      : '')));
+    : '')
+  : (searchMatches.size === 0 ? i18n.t('common.noResults') : '')));
 </script>
 
 <style lang="scss">
@@ -380,7 +387,6 @@ const emptyMessage = computed(() =>
     border-radius: 0;
     line-height: $line-height;
     margin-top: 0;
-    width: max-content;
     padding-bottom: 0;
   }
 
@@ -389,7 +395,7 @@ const emptyMessage = computed(() =>
   .search {
     padding: $vpadding $hpadding;
 
-    // In case .multiselect is inside a .form-inline.
+    // The Multiselect component may be inside a .form-inline.
     .form-group { display: block; }
 
     .form-control {
@@ -431,11 +437,11 @@ const emptyMessage = computed(() =>
 
     li {
       display: none;
-      max-width: 275px;
+      max-width: 265px;
       padding-left: $hpadding;
       padding-right: $hpadding;
     }
-    &.all li, li.search-match { display: list-item; }
+    &.shows-all li, li.search-match { display: list-item; }
 
     .checkbox {
       display: block;
@@ -451,8 +457,12 @@ const emptyMessage = computed(() =>
       display: list-item;
       // 22px is the same as the other <li> elements.
       height: 22px;
+      // Give .empty-message a larger max-width to help it not wrap.
       max-width: 375px;
       padding-top: 3px;
+      // This seems to be needed for .empty-message to use the full max-width
+      // available to it.
+      width: max-content;
 
       &:empty { display: none; }
     }
@@ -460,6 +470,7 @@ const emptyMessage = computed(() =>
 
   .after-list {
     padding: $vpadding $hpadding;
+
     &:empty { display: none; }
   }
 }

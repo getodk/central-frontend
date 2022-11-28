@@ -50,10 +50,16 @@ const unknown = computed(() => props.modelValue.reduce(
 ));
 const options = computed(() => {
   if (!submitters.dataExists) return null;
-  const result = submitters.map(({ id, displayName }) =>
-    ({ value: id, text: displayName }));
-  for (const id of unknown.value)
-    result.unshift({ value: id, text: t('unknown') });
+  const result = new Array(submitters.length + unknown.value.size);
+  let i = 0;
+  for (const id of unknown.value) {
+    result[i] = { value: id, text: t('unknown') };
+    i += 1;
+  }
+  for (const { id, displayName } of submitters) {
+    result[i] = { value: id, text: displayName };
+    i += 1;
+  }
   return result;
 });
 
@@ -64,7 +70,7 @@ const update = (value) => {
     // Filter out unknown submitters. If that results in no submitters, then
     // fall back to all submitters.
     const withoutUnknown = value.filter(id => !unknown.value.has(id));
-    emit('update:modelValue', withoutUnknown.size !== 0
+    emit('update:modelValue', withoutUnknown.length !== 0
       ? withoutUnknown
       : [...submitters.ids]);
   } else if (value.length !== 0) {
