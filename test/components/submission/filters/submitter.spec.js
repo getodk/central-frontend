@@ -1,44 +1,58 @@
+import Multiselect from '../../../../src/components/multiselect.vue';
 import SubmissionFiltersSubmitter from '../../../../src/components/submission/filters/submitter.vue';
 
+import useSubmissions from '../../../../src/request-data/submissions';
+
+import createTestContainer from '../../../util/container';
 import testData from '../../../data';
-import { load } from '../../../util/http';
-import { loadSubmissionList } from '../../../util/submission';
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
-import { mockLogin } from '../../../util/session';
+import { mockHttp } from '../../../util/http';
 import { testRequestData } from '../../../util/request-data';
 
-const mountComponent = (options = undefined) =>
-  mount(SubmissionFiltersSubmitter, mergeMountOptions(options, {
-    props: { modelValue: '' },
+const mountComponent = (options = undefined) => {
+  const submitters = testData.extendedFieldKeys.sorted()
+    .sort((fieldKey1, fieldKey2) => (fieldKey1.id < fieldKey2.id ? -1 : 1))
+    .map(testData.toActor);
+  return mount(SubmissionFiltersSubmitter, mergeMountOptions(options, {
+    props: { modelValue: submitters.map(({ id }) => id) },
     container: {
-      requestData: testRequestData(['submitters'], {
-        submitters: testData.extendedFieldKeys
-          .sorted()
-          .sort((fieldKey1, fieldKey2) =>
-            fieldKey1.displayName.localeCompare(fieldKey2.displayName))
-          .map(testData.toActor)
-      })
+      requestData: testRequestData([useSubmissions], { submitters })
     }
   }));
+};
+const toggle = (multiselect) => multiselect.get('select').trigger('click');
 
-describe.skip('SubmissionFiltersSubmitter', () => {
-  describe('submitters are loading', () => {
-    beforeEach(() => {
-      mockLogin();
-      testData.extendedForms.createPast(1);
+describe('SubmissionFiltersSubmitter', () => {
+  it('indicates whether the submitters are loading', () => {
+    const container = createTestContainer({
+      requestData: testRequestData([useSubmissions])
     });
+    const { submitters } = container.requestData.localResources;
+    return mockHttp(container)
+      .mount(SubmissionFiltersSubmitter, {
+        props: { modelValue: [] },
+        container
+      })
+      .request(() => submitters.request({ url: '/v1/.../submitters' }))
+      .beforeAnyResponse(component => {
+        component.getComponent(Multiselect).props().loading.should.be.true();
+      })
+      .respondWithData(() => [])
+      .afterResponse(component => {
+        component.getComponent(Multiselect).props().loading.should.be.false();
+      });
+  });
 
-    it('disables the select element', () =>
-      loadSubmissionList().beforeAnyResponse(component => {
-        const select = component.get('#submission-filters-submitter select');
-        select.element.disabled.should.be.true();
-      }));
-
-    it('shows a loading message', () =>
-      loadSubmissionList().beforeAnyResponse(component => {
-        const options = component.findAll('#submission-filters-submitter option');
-        options.map(option => option.text()).should.eql(['Loading…']);
-      }));
+  it('renders correctly if there was an error loading submitters', () => {
+    const component = mount(SubmissionFiltersSubmitter, {
+      props: { modelValue: [] },
+      // !submitters.dataExists and also !submitters.awaitingResponse, meaning
+      // that there was an error response.
+      container: { requestData: testRequestData([useSubmissions]) }
+    });
+    const { options, loading } = component.getComponent(Multiselect).props();
+    should.not.exist(options);
+    loading.should.be.false();
   });
 
   it('renders the correct options', () => {
@@ -48,84 +62,138 @@ describe.skip('SubmissionFiltersSubmitter', () => {
     const fieldKey2 = testData.extendedFieldKeys
       .createPast(1, { displayName: 'App User 2' })
       .last();
-    const options = mountComponent().findAll('option');
-    options.length.should.equal(3);
-    options[0].attributes().value.should.equal('');
-    options[0].text().should.equal('(Anybody)');
-    options[1].attributes().value.should.equal(fieldKey1.id.toString());
-    options[1].text().should.equal('App User 1');
-    options[2].attributes().value.should.equal(fieldKey2.id.toString());
-    options[2].text().should.equal('App User 2');
+    mountComponent().getComponent(Multiselect).props().options.should.eql([
+      { value: fieldKey1.id, text: 'App User 1' },
+      { value: fieldKey2.id, text: 'App User 2' }
+    ]);
   });
 
-  it('sets the value of the select element to the modelValue prop', () => {
-    const id = testData.extendedFieldKeys.createPast(1).last().id.toString();
+  it('passes the modelValue prop to the Multiselect', () => {
+    const { id } = testData.extendedFieldKeys.createPast(1).last();
     const component = mountComponent({
-      props: { modelValue: id }
+      props: { modelValue: [id] }
     });
-    component.get('select').element.value.should.equal(id);
+    component.getComponent(Multiselect).props().modelValue.should.eql([id]);
   });
 
-  it('sets value of select element once submitters have loaded', () => {
-    mockLogin();
-    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-    const submitter = testData.extendedFieldKeys.createPast(1).last();
-    testData.extendedSubmissions.createPast(1, { submitter });
-    const id = submitter.id.toString();
-    return load(`/projects/1/forms/f/submissions?submitterId=${id}`, { root: false })
-      .beforeEachResponse((component, _, i) => {
-        if (i !== 0) {
-          const select = component.get('#submission-filters-submitter select');
-          select.element.value.should.equal('');
-        }
-      })
-      .afterResponses(component => {
-        const select = component.get('#submission-filters-submitter select');
-        select.element.value.should.equal(id);
-      });
+  it('passes a new value for modelValue prop to Multiselect', async () => {
+    const fieldKey1 = testData.extendedFieldKeys.createPast(1).last();
+    const fieldKey2 = testData.extendedFieldKeys.createPast(1).last();
+    const component = mountComponent({
+      props: { modelValue: [fieldKey1.id, fieldKey2.id] }
+    });
+    await component.setProps({ modelValue: [fieldKey1.id] });
+    const multiselect = component.getComponent(Multiselect);
+    multiselect.props().modelValue.should.eql([fieldKey1.id]);
   });
 
-  describe('modelValue prop is an unknown submitter', () => {
-    it('renders correctly if submitters were loaded', () => {
+  it('passes up an update:modelValue event from the Multiselect', async () => {
+    const fieldKey1 = testData.extendedFieldKeys.createPast(1).last();
+    const fieldKey2 = testData.extendedFieldKeys.createPast(1).last();
+    const component = mountComponent({
+      props: { modelValue: [fieldKey1.id, fieldKey2.id] },
+      attachTo: document.body
+    });
+    const multiselect = component.getComponent(Multiselect);
+    await toggle(multiselect);
+    await multiselect.get('input[type="checkbox"]').setValue(false);
+    await toggle(multiselect);
+    multiselect.emitted('update:modelValue').should.eql([[[fieldKey2.id]]]);
+    component.emitted('update:modelValue').should.eql([[[fieldKey2.id]]]);
+  });
+
+  describe('no submitters are selected', () => {
+    it('falls back to all submitters', async () => {
+      const fieldKey1 = testData.extendedFieldKeys.createPast(1).last();
+      const fieldKey2 = testData.extendedFieldKeys.createPast(1).last();
       const component = mountComponent({
-        props: { modelValue: '42' }
+        props: { modelValue: [fieldKey1.id] },
+        attachTo: document.body
       });
-      const option = component.get('option[value="42"]');
-      option.text().should.equal('Unknown submitter');
+      const multiselect = component.getComponent(Multiselect);
+      await toggle(multiselect);
+      await multiselect.get('.select-none').trigger('click');
+      await toggle(multiselect);
+      multiselect.emitted('update:modelValue').should.eql([[[]]]);
+      component.emitted('update:modelValue').should.eql([[
+        [fieldKey1.id, fieldKey2.id]
+      ]]);
     });
 
-    it('renders correctly if there was an error loading submitters', () => {
-      const component = mount(SubmissionFiltersSubmitter, {
-        props: { modelValue: '42' },
-        // !submitters.dataExists and also !submitters.awaitingResponse, meaning
-        // that there was an error response.
-        container: { requestData: testRequestData(['submitters']) }
+    describe('all submitters were already selected', () => {
+      it('does not emit an event', async () => {
+        const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+        const component = mountComponent({
+          props: { modelValue: [fieldKey.id] },
+          attachTo: document.body
+        });
+        const multiselect = component.getComponent(Multiselect);
+        await toggle(multiselect);
+        await multiselect.get('.select-none').trigger('click');
+        await toggle(multiselect);
+        multiselect.emitted('update:modelValue').should.eql([[[]]]);
+        should.not.exist(component.emitted('update:modelValue'));
       });
-      const option = component.get('option[value="42"]');
-      option.text().should.equal('Unknown submitter');
+
+      it('updates the Multiselect', async () => {
+        const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+        const component = mountComponent({
+          props: { modelValue: [fieldKey.id] },
+          attachTo: document.body
+        });
+        const multiselect = component.getComponent(Multiselect);
+        await toggle(multiselect);
+        await multiselect.get('.select-none').trigger('click');
+        await toggle(multiselect);
+        multiselect.props().modelValue.should.eql([fieldKey.id]);
+        await toggle(multiselect);
+        const input = multiselect.get('input[type="checkbox"]');
+        input.element.checked.should.be.true();
+      });
     });
   });
 
-  it('updates value of select element after modelValue prop changes', async () => {
-    const id = testData.extendedFieldKeys.createPast(1).last().id.toString();
-    const component = mountComponent();
-    await component.setProps({ modelValue: id });
-    component.get('select').element.value.should.equal(id);
-  });
+  describe('modelValue prop includes an unknown submitter', () => {
+    it('renders an option for each unknown submitter', () => {
+      const fieldKey = testData.extendedFieldKeys
+        .createPast(1, { displayName: 'My App User' })
+        .last();
+      const component = mountComponent({
+        props: { modelValue: [23, 42] }
+      });
+      component.getComponent(Multiselect).props().options.should.eql([
+        { value: 23, text: 'Unknown submitter' },
+        { value: 42, text: 'Unknown submitter' },
+        { value: fieldKey.id, text: 'My App User' }
+      ]);
+    });
 
-  it('updates value of select after prop changes to unknown submitter', async () => {
-    testData.extendedFieldKeys.createPast(1);
-    const component = mountComponent();
-    await component.setProps({ modelValue: '42' });
-    component.get('select').element.value.should.equal('42');
-  });
+    it('does not emit unknown submitters if selection is changed', async () => {
+      const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+      const component = mountComponent({
+        props: { modelValue: [23, 42] },
+        attachTo: document.body
+      });
+      const multiselect = component.getComponent(Multiselect);
+      await toggle(multiselect);
+      await multiselect.findAll('input[type="checkbox"]')[2].setValue(true);
+      await toggle(multiselect);
+      multiselect.emitted('update:modelValue').should.eql([[[23, 42, fieldKey.id]]]);
+      component.emitted('update:modelValue').should.eql([[[fieldKey.id]]]);
+    });
 
-  it('emits an update:modelValue event', () => {
-    const { id } = testData.extendedFieldKeys
-      .createPast(1, 'App User 1')
-      .last();
-    const component = mountComponent();
-    component.get('select').setValue(id.toString());
-    component.emitted('update:modelValue').should.eql([[id.toString()]]);
+    it('falls back to all submitters if only unknown submitters are selected', async () => {
+      const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+      const component = mountComponent({
+        props: { modelValue: [23, 42] },
+        attachTo: document.body
+      });
+      const multiselect = component.getComponent(Multiselect);
+      await toggle(multiselect);
+      await multiselect.get('input[type="checkbox"]').setValue(false);
+      await toggle(multiselect);
+      multiselect.emitted('update:modelValue').should.eql([[[42]]]);
+      component.emitted('update:modelValue').should.eql([[[fieldKey.id]]]);
+    });
   });
 });
