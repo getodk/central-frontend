@@ -10,10 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="dataset-row">
+  <div class="dataset-summary-row">
     <div class="row">
-      <div class="col-xs-6">
-        <span class="dataset-name">{{ dataset.name }}</span>
+      <div class="col-xs-6 text-overflow-ellipsis">
+        <span class="dataset-name" :title="dataset.name">{{ dataset.name }}</span>
         <span v-if="dataset.isNew" class="dataset-new">
           <span class="icon-plus-circle"></span>
           {{ $t('new') }}
@@ -75,12 +75,16 @@ export default {
 @import '../../../assets/scss/_variables.scss';
 @import '../../../assets/scss/mixins';
 
-.dataset-row {
+.dataset-summary-row {
     @include text-block;
 
+    .text-overflow-ellipsis {
+      @include text-overflow-ellipsis;
+    }
+
     .dataset-name {
-        font-weight: bold;
-        font-size: 18px;
+      font-weight: bold;
+      font-size: 18px;
     }
     .dataset-new {
         vertical-align: super;
@@ -97,6 +101,7 @@ export default {
     .properties-count {
         line-height: 28px;
     }
+
     a {
         color: #666;
 
@@ -104,8 +109,13 @@ export default {
             background-color: inherit;
         }
     }
+
     .expand-button {
       margin-left: 5px;
+    }
+
+    .property-list {
+      hyphens: auto;
     }
 }
 

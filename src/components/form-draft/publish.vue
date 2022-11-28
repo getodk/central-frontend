@@ -205,6 +205,10 @@ export default {
   list-style: none;
   padding-left: 5px;
 
+  li {
+    hyphens: auto;
+  }
+
   li::before {
     @extend [class^="icon-"];
     content: '\f055';
