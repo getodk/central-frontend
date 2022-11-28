@@ -13,17 +13,16 @@ import { START_LOCATION } from 'vue-router';
 import { T } from 'ramda';
 import { nextTick } from 'vue';
 
-const arrayQueryDefault = (value) =>
-  (value === undefined ? [] : (typeof value === 'function' ? value() : value));
 export const arrayQuery = (query, options = {}) => {
-  if (query == null) return arrayQueryDefault(options.default);
-  if (typeof query === 'string') return [query];
+  if (!Array.isArray(query)) return arrayQuery([query], options);
   const set = new Set();
   const { validator = T } = options;
   for (const value of query) {
     if (value != null && !set.has(value) && validator(value)) set.add(value);
   }
-  return set.size !== 0 ? [...set] : arrayQueryDefault(options.default);
+  if (set.size !== 0) return [...set];
+  const def = options.default;
+  return def != null ? (typeof def === 'function' ? def() : def) : [];
 };
 
 // Returns the props for a route component.
