@@ -180,10 +180,11 @@ const resetCheckboxes = () => {
   needsReset = false;
 };
 
-const noEmit = [];
-// A value that has been emitted since the last time props.modelValue was set.
-// Equals noEmit if no value has been emitted since then.
-let emittedValue = noEmit;
+// emittedValue holds the last value that has been emitted since
+// props.modelValue was last set. It equals `null` if no value has been emitted
+// since then, or if no value has ever been emitted. We use emittedValue for an
+// optimization in order to avoid an extra sync.
+let emittedValue = null;
 
 // This watcher syncs `selected` with props.modelValue and syncs the `checked`
 // property of the checkboxes with props.modelValue.
@@ -199,7 +200,7 @@ watch(
       selected.value = shallowReactive(new Set(modelValue));
       needsReset = true;
     }
-    emittedValue = noEmit;
+    emittedValue = null;
   },
   { deep: true, immediate: true }
 );
