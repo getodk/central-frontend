@@ -17,6 +17,7 @@ const mountComponent = (options) =>
       none: 'None'
     }
   }));
+const toggle = (component) => component.get('select').trigger('click');
 const assertChecked = (component, checked) => {
   const inputs = component.findAll('input[type="checkbox"]');
   inputs.map(input => input.element.checked).should.eql(checked);
@@ -35,7 +36,7 @@ describe('Multiselect', () => {
       props: { options: [{ value: 'foo' }, { value: 'bar' }] },
       attachTo: document.body
     });
-    await component.get('select').trigger('click');
+    await toggle(component);
     for (const checkbox of component.findAll('.checkbox'))
       checkbox.should.be.visible(true);
   });
@@ -88,7 +89,7 @@ describe('Multiselect', () => {
         },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       assertChecked(component, [true, false]);
     });
 
@@ -100,11 +101,10 @@ describe('Multiselect', () => {
         },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
-      await select.trigger('click');
+      await toggle(component);
+      await toggle(component);
       await component.setProps({ modelValue: [1] });
-      await select.trigger('click');
+      await toggle(component);
       assertChecked(component, [false, true]);
     });
 
@@ -115,12 +115,11 @@ describe('Multiselect', () => {
         props: { options, modelValue },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
-      await select.trigger('click');
+      await toggle(component);
+      await toggle(component);
       modelValue[0] = 1;
       await component.vm.$nextTick();
-      await select.trigger('click');
+      await toggle(component);
       assertChecked(component, [false, true]);
     });
 
@@ -132,10 +131,9 @@ describe('Multiselect', () => {
         },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       await component.findAll('input[type="checkbox"]')[1].setValue(true);
-      await select.trigger('click');
+      await toggle(component);
       component.emitted('update:modelValue').should.eql([[[0, 1]]]);
     });
 
@@ -147,12 +145,11 @@ describe('Multiselect', () => {
         },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       const input = component.findAll('input[type="checkbox"]')[1];
       await input.setValue(true);
       await input.setValue(false);
-      await select.trigger('click');
+      await toggle(component);
       should.not.exist(component.emitted('update:modelValue'));
     });
 
@@ -164,15 +161,47 @@ describe('Multiselect', () => {
         },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       const inputs = component.findAll('input[type="checkbox"]');
       await inputs[1].setValue(false);
       await inputs[0].setValue(false);
       await inputs[1].setValue(true);
       await inputs[0].setValue(true);
-      await select.trigger('click');
+      await toggle(component);
       should.not.exist(component.emitted('update:modelValue'));
+    });
+
+    describe('update:modelValue event is ignored', () => {
+      it('does not update checkboxes when dropdown is shown', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0]
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.findAll('input[type="checkbox"]')[1].setValue(true);
+        await toggle(component);
+        await toggle(component);
+        assertChecked(component, [true, true]);
+      });
+
+      it('does not re-emit update:modelValue when dropdown is hidden', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0]
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.findAll('input[type="checkbox"]')[1].setValue(true);
+        await toggle(component);
+        await toggle(component);
+        await toggle(component);
+        component.emitted('update:modelValue').length.should.equal(1);
+      });
     });
   });
 
@@ -184,15 +213,30 @@ describe('Multiselect', () => {
       },
       attachTo: document.body
     });
-    const select = component.get('select');
-    await select.trigger('click');
+    await toggle(component);
     assertChecked(component, [true, false]);
-    await select.trigger('click');
-    await component.setProps({
-      options: [{ value: 1 }, { value: 0 }]
-    });
-    await select.trigger('click');
+    await toggle(component);
+    await component.setProps({ options: [{ value: 1 }, { value: 0 }] });
+    await toggle(component);
     assertChecked(component, [false, true]);
+  });
+
+  it('updates checkboxes if options and modelValue prop change in same tick', async () => {
+    const component = mountComponent({
+      props: {
+        options: [{ value: 0 }],
+        modelValue: [0]
+      },
+      attachTo: document.body
+    });
+    await toggle(component);
+    await toggle(component);
+    await component.setProps({
+      options: [{ value: 0 }, { value: 1 }],
+      modelValue: [0, 1]
+    });
+    await toggle(component);
+    assertChecked(component, [true, true]);
   });
 
   describe('search', () => {
@@ -229,7 +273,7 @@ describe('Multiselect', () => {
         props: { options: users, search: 'Search' },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('c');
       const matches = component.findAll('.search-match');
       matches.map(match => match.text()).should.eql(['Alice']);
@@ -240,7 +284,7 @@ describe('Multiselect', () => {
         props: { options: users, search: 'Search' },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('c');
       const li = component.findAll('.option-list > :not(:last-child)');
       li[0].should.be.visible(true);
@@ -252,7 +296,7 @@ describe('Multiselect', () => {
         props: { options: users, search: 'Search' },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('admin');
       const matches = component.findAll('.search-match');
       matches.map(match => match.text()).should.eql(['Alice']);
@@ -263,7 +307,7 @@ describe('Multiselect', () => {
         props: { options: users.map(omit(['text'])), search: 'Search' },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('1');
       const matches = component.findAll('.search-match');
       matches.map(match => match.text()).should.eql(['1']);
@@ -274,7 +318,7 @@ describe('Multiselect', () => {
         props: { options: users, search: 'Search' },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('1');
       component.findAll('.search-match').length.should.equal(0);
     });
@@ -284,7 +328,7 @@ describe('Multiselect', () => {
         props: { options: users, search: 'Search' },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('C');
       const matches = component.findAll('.search-match');
       matches.map(match => match.text()).should.eql(['Alice']);
@@ -317,7 +361,7 @@ describe('Multiselect', () => {
             props: { options: users, search: 'Search' },
             attachTo: document.body
           });
-          await component.get('select').trigger('click');
+          await toggle(component);
           const input = component.get('.search input');
           await input.setValue('c');
           await component.get('.close').trigger('click');
@@ -331,11 +375,10 @@ describe('Multiselect', () => {
         props: { search: 'Search' },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       const input = component.get('.search input');
       await input.setValue('foo');
-      await select.trigger('click');
+      await toggle(component);
       input.element.value.should.equal('');
     });
   });
@@ -346,7 +389,7 @@ describe('Multiselect', () => {
         props: { options: [] },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       component.get('.empty-message').should.be.visible(true);
     });
 
@@ -355,7 +398,7 @@ describe('Multiselect', () => {
         props: { options: [{ value: 0 }] },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       component.get('.empty-message').should.be.hidden(true);
     });
 
@@ -379,7 +422,7 @@ describe('Multiselect', () => {
           props: { options: [{ value: 'foo' }], search: 'Search' },
           attachTo: document.body
         });
-        await component.get('select').trigger('click');
+        await toggle(component);
         await component.get('.search input').setValue('g');
         component.get('.empty-message').should.be.visible(true);
       });
@@ -389,7 +432,7 @@ describe('Multiselect', () => {
           props: { options: [{ value: 'foo' }], search: 'Search' },
           attachTo: document.body
         });
-        await component.get('select').trigger('click');
+        await toggle(component);
         await component.get('.search input').setValue('f');
         component.get('.empty-message').should.be.hidden(true);
       });
@@ -403,7 +446,7 @@ describe('Multiselect', () => {
           },
           attachTo: document.body
         });
-        await component.get('select').trigger('click');
+        await toggle(component);
         await component.get('.search input').setValue('g');
         component.get('.empty-message').text().should.equal('No results');
       });
@@ -423,7 +466,7 @@ describe('Multiselect', () => {
         props: { options: [{ value: 0 }, { value: 1 }], modelValue: [] },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.select-all').trigger('click');
       assertChecked(component, [true, true]);
     });
@@ -433,10 +476,9 @@ describe('Multiselect', () => {
         props: { options: [{ value: 0 }, { value: 1 }], modelValue: [] },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       await component.get('.select-all').trigger('click');
-      await select.trigger('click');
+      await toggle(component);
       component.emitted('update:modelValue').should.eql([[[0, 1]]]);
     });
 
@@ -449,11 +491,10 @@ describe('Multiselect', () => {
         },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('0');
       await component.get('.select-all').trigger('click');
-      await select.trigger('click');
+      await toggle(component);
       assertChecked(component, [true, false]);
     });
   });
@@ -471,7 +512,7 @@ describe('Multiselect', () => {
         props: { options: [{ value: 0 }, { value: 1 }], modelValue: [0, 1] },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('.select-none').trigger('click');
       assertChecked(component, [false, false]);
     });
@@ -481,10 +522,9 @@ describe('Multiselect', () => {
         props: { options: [{ value: 0 }, { value: 1 }], modelValue: [0, 1] },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       await component.get('.select-none').trigger('click');
-      await select.trigger('click');
+      await toggle(component);
       component.emitted('update:modelValue').should.eql([[[]]]);
     });
 
@@ -497,11 +537,10 @@ describe('Multiselect', () => {
         },
         attachTo: document.body
       });
-      const select = component.get('select');
-      await select.trigger('click');
+      await toggle(component);
       await component.get('.search input').setValue('0');
       await component.get('.select-none').trigger('click');
-      await select.trigger('click');
+      await toggle(component);
       assertChecked(component, [false, true]);
     });
   });
@@ -573,7 +612,7 @@ describe('Multiselect', () => {
         props: { options: [{ value: 0 }], modelValue: [], placeholder },
         attachTo: document.body
       });
-      await component.get('select').trigger('click');
+      await toggle(component);
       await component.get('input[type="checkbox"]').setValue(true);
       placeholder.callCount.should.equal(1);
     });

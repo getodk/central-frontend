@@ -34,13 +34,13 @@ except according to the terms contained in the LICENSE file.
           </button>
         </div>
       </li>
-      <li class="toggle-all">
+      <li class="change-all">
         <i18n-t tag="div" keypath="action.select">
           <template #all>
-            <a class="select-all" href="#" role="button" @click.prevent="selectAll">{{ all }}</a>
+            <a class="select-all" href="#" role="button" @click.prevent="changeAll(true)">{{ all }}</a>
           </template>
           <template #none>
-            <a class="select-none" href="#" role="button" @click.prevent="selectNone">{{ none }}</a>
+            <a class="select-none" href="#" role="button" @click.prevent="changeAll(false)">{{ none }}</a>
           </template>
         </i18n-t>
       </li>
@@ -70,29 +70,30 @@ except according to the terms contained in the LICENSE file.
 let id = 1;
 </script>
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, onUnmounted, ref, shallowReactive, shallowRef, watch, watchEffect } from 'vue';
+import { computed, inject, onBeforeUnmount, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
 
 const props = defineProps({
   /*
   `options` specifies the list of possible options. Each option specifies a
   value, as well as optionally text and other properties:
 
-    - value. This property is required. It specifies the unique value for the
+    - value. This property is required. It specifies a unique value for the
       option, which will be emitted for props.modelValue if the option is
       selected.
     - key. The Multiselect component uses the `key` attribute to uniquely
       identify options. By default, Multiselect passes the `value` property to
       the `key` attribute. However, if `value` is not a primitive, then you must
-      specify a different value using the `key` property. In that case, `key`
-      should be a function of `value`: for example, if `value` changes, then
-      `key` should change.
+      specify a different value using the `key` property. In that case, the
+      `key` property should be a function of `value`: for example, if `value`
+      changes, then `key` should also change.
     - text. The text to show for the option. Defaults to the `value` property.
-    - title. A title to render for the option. This can be used to display
-      additional text.
+    - title. The title to show for the option. This property can be used to
+      display additional text. Defaults to the `text` property.
 
-  If `options` is `null` (for example, because the list of options is loading),
-  then the dropdown will not be shown. The Multiselect component assumes that
-  once `options` exists, it will not become `null` again while the dropdown is
+  If `options` is `null` (for example, because the options are loading), then
+  the dropdown will not be shown.
+
+  The component assumes that `options` will not change while the dropdown is
   shown.
   */
   options: {
@@ -100,9 +101,10 @@ const props = defineProps({
     required: false
   },
   // props.modelValue is an array of the values of the options that have been
-  // selected. The relative order of the values in modelValue may differ from
-  // from their relative order in options. The component assumes that modelValue
-  // will not change while the dropdown is shown.
+  // selected. Every value in modelValue should also be in props.options, unless
+  // props.options is `null`. The relative order of the values in modelValue may
+  // differ from their relative order in props.options. The component assumes
+  // that modelValue will not change while the dropdown is shown.
   modelValue: {
     type: Array,
     required: true
@@ -144,36 +146,60 @@ const optionList = ref(null);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// TRACK SELECTIONS
+// SYNC props.modelValue AND CHECKBOXES
 
 /*
-The component tracks the values of the selected options in `selected`. The
-component keeps `selected` and props.modelValue in sync. If props.modelValue
-changes, then `selected` is updated. If `selected` changes, then when the
-dropdown is hidden, the component will emit an update:modelValue event.
+We try to keep props.modelValue and the checkboxes in sync. Either one can
+change the other. If props.modelValue changes, then the component updates the
+checkboxes. And if the user changes one or more checkboxes, then once the
+dropdown is hidden, the component emits an update:modelValue event. (The parent
+component is allowed to ignore that event, in which case props.modelValue and
+the checkboxes will remain out-of-sync.)
 
-The component also keeps the `checked` property of the checkboxes in sync with
-props.options and props.modelValue. If either prop changes, then the `checked`
-property will be reset when the dropdown is shown.
+To help keep props.modelValue and the checkboxes in sync, we use `selected` to
+track the values of the selected options. `selected` matches which checkboxes
+are checked.
+
+We also use `changes` to track the user's changes since the dropdown was shown.
+`changes` is cleared when the dropdown is hidden and the update:modelValue event
+emitted regardless of whether the parent component actually changes
+props.modelValue. In other words, `changes` tracks the difference between the
+current selection and the selection when the dropdown was shown. That may be the
+same as the difference between props.modelValue and the checkboxes, but it might
+not be (if an update:modelValue event was ignored).
 */
 
-// selected.value will be a Set.
-const selected = shallowRef(null);
-const changeCheckbox = ({ target }) => {
-  const option = props.options[target.dataset.index];
-  if (target.checked)
-    selected.value.add(option.value);
+const selected = new Set();
+const changes = new Set();
+const change = (value) => {
+  if (selected.has(value))
+    selected.delete(value);
   else
-    selected.value.delete(option.value);
+    selected.add(value);
+
+  if (changes.has(value))
+    changes.delete(value);
+  else
+    changes.add(value);
 };
 
-let needsReset = true;
-const resetCheckboxes = () => {
-  if (!needsReset) return;
+let needsSync = true;
+// Syncs the checkboxes and `selected` with props.modelValue.
+const syncWithModelValue = () => {
+  if (!needsSync) return;
+
+  selected.clear();
+  for (const value of props.modelValue) selected.add(value);
+
   const checkboxes = optionList.value.querySelectorAll('input');
   for (let i = 0; i < checkboxes.length; i += 1)
-    checkboxes[i].checked = selected.value.has(props.options[i].value);
-  needsReset = false;
+    checkboxes[i].checked = selected.has(props.options[i].value);
+
+  needsSync = false;
+};
+
+const changeCheckbox = ({ target }) => {
+  change(props.options[target.dataset.index].value);
 };
 
 // emittedValue holds the last value that has been emitted since
@@ -181,47 +207,34 @@ const resetCheckboxes = () => {
 // since then, or if no value has ever been emitted. We use emittedValue for an
 // optimization in order to avoid an extra sync.
 let emittedValue = null;
+const emitIfChanged = () => {
+  if (changes.size === 0) return;
+  changes.clear();
+  emittedValue = [...selected];
+  emit('update:modelValue', emittedValue);
+};
 
-// This watcher syncs `selected` with props.modelValue and syncs the `checked`
-// property of the checkboxes with props.modelValue.
 watch(
   () => props.modelValue,
   (modelValue) => {
+    // If modelValue === emittedValue, then we don't need to sync anything.
     if (modelValue !== emittedValue) {
-      // We need the set to be reactive, but it needs to be shallow reactive in
-      // case a value is an object. In that case, if we used reactive() rather
-      // than shallowReactive() (or if we made `selected` a ref rather than a
-      // shallow ref), then [...selected.value] would contain a reactive proxy
-      // for the value instead of the object.
-      selected.value = shallowReactive(new Set(modelValue));
-      needsReset = true;
+      /* We set needsSync rather than immediately calling syncWithModelValue().
+      We do that for two reasons. First, and most importantly, if
+      props.modelValue and props.options are both changed in the same tick, then
+      any checkboxes for new options won't be rendered yet. Second, if
+      props.modelValue will change multiple times while the dropdown is hidden,
+      syncing multiple times is unnecessary. */
+      needsSync = true;
+      // syncWithModelValue() will also clear `selected`, but we might as well
+      // free up the memory now.
+      selected.clear();
     }
+
     emittedValue = null;
   },
-  { deep: true, immediate: true }
-);
-
-// changedSinceSet is `true` if `selected` has changed at any point since
-// the last time it was reset to props.modelValue; it is `false` if there has
-// been no change. changedSinceSet does not indicate whether `selected`
-// currently differs from props.modelValue.
-let changedSinceSet = false;
-watch(
-  selected,
-  (newSet, oldSet) => { if (newSet === oldSet) changedSinceSet = true; },
   { deep: true }
 );
-// This function is used to sync props.modelValue with `selected`.
-const emitIfChanged = () => {
-  if (!changedSinceSet) return;
-  changedSinceSet = false;
-  const selectedEqualsModelValue = selected.value.size === props.modelValue.length &&
-    props.modelValue.every(value => selected.value.has(value));
-  if (!selectedEqualsModelValue) {
-    emittedValue = [...selected.value];
-    emit('update:modelValue', emittedValue);
-  }
-};
 
 if (process.env.NODE_ENV === 'development') {
   const optionValues = computed(() =>
@@ -294,7 +307,7 @@ watch(searchValue, (value) => {
 const dropdown = ref(null);
 const $dropdown = computed(() => $(dropdown.value));
 onMounted(() => {
-  $dropdown.value.on('shown.bs.dropdown', resetCheckboxes);
+  $dropdown.value.on('shown.bs.dropdown', syncWithModelValue);
   $dropdown.value.on('hidden.bs.dropdown', () => {
     searchValue.value = '';
     emitIfChanged();
@@ -327,28 +340,14 @@ if (process.env.NODE_ENV === 'test') {
 ////////////////////////////////////////////////////////////////////////////////
 // SELECT ALL / NONE
 
-const selectAll = () => {
-  if (selected.value.size === props.options.length) return;
-  if (searchValue.value === '') {
-    for (const { value } of props.options) selected.value.add(value);
-    for (const checkbox of optionList.value.querySelectorAll('input'))
-      checkbox.checked = true;
-  } else {
-    for (const value of searchMatches) selected.value.add(value);
-    const checkboxes = optionList.value.querySelectorAll('.search-match input');
-    for (const checkbox of checkboxes) checkbox.checked = true;
-  }
-};
-const selectNone = () => {
-  if (selected.value.size === 0) return;
-  if (searchValue.value === '') {
-    selected.value.clear();
-    for (const checkbox of optionList.value.querySelectorAll('input'))
-      checkbox.checked = false;
-  } else {
-    for (const value of searchMatches) selected.value.delete(value);
-    const checkboxes = optionList.value.querySelectorAll('.search-match input');
-    for (const checkbox of checkboxes) checkbox.checked = false;
+// `true` for select all, `false` for select none.
+const changeAll = (selectAll) => {
+  if (selected.size === (selectAll ? props.options.length : 0)) return;
+  const selector = [selectAll ? 'input:not(:checked)' : 'input:checked'];
+  if (searchValue.value !== '') selector.unshift('.search-match');
+  for (const input of optionList.value.querySelectorAll(selector.join(' '))) {
+    input.checked = selectAll;
+    change(props.options[input.dataset.index].value);
   }
 };
 
@@ -423,7 +422,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
     }
   }
 
-  .toggle-all { padding: #{0.5 * $vpadding} $hpadding $vpadding; }
+  .change-all { padding: #{0.5 * $vpadding} $hpadding $vpadding; }
 
   .option-list {
     background-color: $color-subpanel-background;
