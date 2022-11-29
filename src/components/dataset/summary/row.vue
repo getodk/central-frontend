@@ -116,6 +116,7 @@ export default {
 
     .property-list {
       hyphens: auto;
+      overflow-wrap: break-word;
     }
 }
 
