@@ -55,14 +55,16 @@ describe('SubmissionFieldDropdown', () => {
 
   it('shows a warning if more than 100 fields are selected', async () => {
     const component = mountComponent({
+      props: { modelValue: [] },
       container: {
         requestData: { fields: strings(1, 101) }
       }
     });
-    const { fields } = component.vm.$container.requestData.localResources;
-    await component.setProps({ modelValue: fields.data });
-    const text = component.get('.multiselect .after-list').text();
-    text.should.equal('Selecting too many columns might slow down your computer.');
+    await component.get('select').trigger('click');
+    const after = component.get('.after-list');
+    after.text().should.equal('');
+    await component.get('.select-all').trigger('click');
+    after.text().should.equal('Selecting too many columns might slow down your computer.');
   });
 
   it('is not rendered if there are 11 selectable fields', async () => {

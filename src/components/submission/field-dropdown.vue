@@ -15,8 +15,8 @@ except according to the terms contained in the LICENSE file.
     :all="$t('action.select.all')" :none="$t('action.select.none')"
     :search="$t('field.search')"
     @update:model-value="$emit('update:modelValue', $event)">
-    <template #after-list>
-      <template v-if="modelValue.length > 100">
+    <template #after-list="{ selected }">
+      <template v-if="selected.size > 100">
         <span class="icon-exclamation-triangle"></span>{{ $t('warning') }}
       </template>
     </template>

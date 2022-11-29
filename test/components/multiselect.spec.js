@@ -633,6 +633,6 @@ describe('Multiselect', () => {
         'after-list': { template: '<span id="foo"></span>' }
       }
     });
-    component.find('#foo').exists().should.be.true();
+    component.find('.after-list #foo').exists().should.be.true();
   });
 });

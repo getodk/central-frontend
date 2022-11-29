@@ -61,7 +61,9 @@ except according to the terms contained in the LICENSE file.
           <li class="empty-message">{{ emptyMessage }}</li>
         </ul>
       </li>
-      <li class="after-list"><slot name="after-list"></slot></li>
+      <li class="after-list">
+        <slot name="after-list" :selected="selected"></slot>
+      </li>
     </ul>
   </div>
 </template>
@@ -169,7 +171,8 @@ same as the difference between props.modelValue and the checkboxes, but it might
 not be (if an update:modelValue event was ignored).
 */
 
-const selected = new Set();
+// `selected` needs to be reactive for the after-list slot.
+const selected = shallowReactive(new Set());
 const changes = new Set();
 const change = (value) => {
   if (selected.has(value))
