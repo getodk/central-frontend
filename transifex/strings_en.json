@@ -3414,11 +3414,11 @@
         "select": {
           "all": {
             "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which\n        columns to display in a table. It will be inserted where {all} is in the\n        following text:\n\n        Select {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
             "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which\n        columns to display in a table. It will be inserted where {none} is in\n        the following text:\n\n        Select {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
       },
@@ -3443,11 +3443,11 @@
         "select": {
           "all": {
             "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one\n        or more Review States. It will be inserted where {all} is in the\n        following text:\n\n        Select {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
             "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one\n        or more Review States. It will be inserted where {none} is in the\n        following text:\n\n        Select {all} / {none}"
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
       }
@@ -3471,11 +3471,11 @@
         "select": {
           "all": {
             "string": "All",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or\n        more submitters. It will be inserted where {all} is in the following\n        text:\n\n        Select {all} / {none}"
+            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
             "string": "None",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or\n        more submitters. It will be inserted where {none} is in the following\n        text:\n\n        Select {all} / {none}"
+            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
       },

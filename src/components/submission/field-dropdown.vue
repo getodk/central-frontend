@@ -92,17 +92,13 @@ const placeholder = (counts) => t('placeholder', counts);
     },
     "action": {
       "select": {
-        /* This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {all} is in the
-        following text:
+        /* This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:
 
-        Select {all} / {none} */
+Select {all} / {none} */
         "all": "All",
-        /* This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {none} is in
-        the following text:
+        /* This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:
 
-        Select {all} / {none} */
+Select {all} / {none} */
         "none": "None"
       }
     },
