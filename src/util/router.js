@@ -10,7 +10,20 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import { START_LOCATION } from 'vue-router';
+import { T } from 'ramda';
 import { nextTick } from 'vue';
+
+export const arrayQuery = (query, options = {}) => {
+  if (!Array.isArray(query)) return arrayQuery([query], options);
+  const set = new Set();
+  const { validator = T } = options;
+  for (const value of query) {
+    if (value != null && !set.has(value) && validator(value)) set.add(value);
+  }
+  if (set.size !== 0) return [...set];
+  const def = options.default;
+  return def != null ? (typeof def === 'function' ? def() : def) : [];
+};
 
 // Returns the props for a route component.
 export const routeProps = (route, props) => {

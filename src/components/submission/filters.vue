@@ -38,7 +38,7 @@ export default {
   },
   props: {
     submitterId: {
-      type: String,
+      type: Array,
       required: true
     },
     submissionDate: {

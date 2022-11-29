@@ -24,6 +24,20 @@ const loadComponent = (...args) => {
   }))
     .route(`/projects/1/forms/f/submissions?${queryString}`);
 };
+const createFieldKeys = (count) => new Array(count).fill(undefined)
+  .map((_, i) => testData.extendedFieldKeys
+    .createPast(1, { displayName: `App User ${i}` })
+    .last());
+const changeMultiselect = (selector, selectedIndexes) => async (component) => {
+  const multiselect = component.get(selector);
+  const toggle = multiselect.get('select');
+  await toggle.trigger('click');
+  await multiselect.get('.select-none').trigger('click');
+  const inputs = multiselect.findAll('input[type="checkbox"]');
+  for (const i of selectedIndexes)
+    await inputs[i].setValue(true); // eslint-disable-line no-await-in-loop
+  return toggle.trigger('click');
+};
 
 describe('SubmissionFilters', () => {
   beforeEach(mockLogin);
@@ -42,16 +56,16 @@ describe('SubmissionFilters', () => {
     });
 
     it('filters on submitter if ?submitter is specified', () =>
-      loadComponent('submitterId=1')
+      loadComponent('submitterId=1&submitterId=2')
         .beforeEachResponse((_, { url }) => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal('__system/submitterId eq 1');
+            filter.should.equal('(__system/submitterId eq 1 or __system/submitterId eq 2)');
           }
         })
         .afterResponses(component => {
           const filters = component.getComponent(SubmissionFilters).props();
-          filters.submitterId.should.equal('1');
+          filters.submitterId.should.eql([1, 2]);
         }));
 
     it('filters on review state if ?reviewState is specified', () =>
@@ -59,13 +73,12 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            // For now, we only use the first ?reviewState query parameter.
-            filter.should.equal("(__system/reviewState eq 'approved')");
+            filter.should.equal("(__system/reviewState eq 'approved' or __system/reviewState eq null)");
           }
         })
         .afterResponses(component => {
           const filters = component.getComponent(SubmissionFilters).props();
-          filters.reviewState.should.eql(["'approved'"]);
+          filters.reviewState.should.eql(["'approved'", 'null']);
         }));
 
     it('filters on submission date if ?start and ?end are specified', () =>
@@ -98,7 +111,6 @@ describe('SubmissionFilters', () => {
         'submitterId=-1',
         'submitterId=foo',
         'submitterId',
-        'submitterId=1&submitterId=1',
         'reviewState=foo',
         'reviewState',
         'start=1970-01-01',
@@ -120,9 +132,9 @@ describe('SubmissionFilters', () => {
             })
             .afterResponses(component => {
               const filters = component.getComponent(SubmissionFilters).props();
-              filters.submitterId.should.equal('');
+              filters.submitterId.should.eql([]);
               filters.submissionDate.should.eql([]);
-              filters.reviewState.should.eql([]);
+              filters.reviewState.length.should.equal(5);
             }));
       }
     });
@@ -130,49 +142,45 @@ describe('SubmissionFilters', () => {
 
   describe('after the submitter filter is changed', () => {
     beforeEach(() => {
-      testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-      testData.extendedFieldKeys.createPast(1);
+      testData.extendedProjects.createPast(1, { forms: 1, appUsers: 3 });
+      testData.extendedForms.createPast(1, { submissions: 3 });
+      const fieldKeys = createFieldKeys(3);
+      testData.extendedSubmissions
+        .createPast(1, { submitter: fieldKeys[2] })
+        .createPast(1, { submitter: fieldKeys[1] })
+        .createPast(1, { submitter: fieldKeys[0] });
     });
 
-    it('sends a request', () => {
-      const fieldKey = testData.extendedFieldKeys.last();
-      testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
-      return loadComponent()
+    it('sends a request', () =>
+      loadComponent({ attachTo: document.body })
         .complete()
-        .request(component => {
-          const select = component.get('#submission-filters-submitter select');
-          return select.setValue(fieldKey.id.toString());
-        })
+        .request(changeMultiselect('#submission-filters-submitter', [0]))
         .beforeEachResponse((_, { url }) => {
           const filter = relativeUrl(url).searchParams.get('$filter');
-          filter.should.equal(`__system/submitterId eq ${fieldKey.id}`);
+          const { id } = testData.extendedFieldKeys.first();
+          filter.should.equal(`(__system/submitterId eq ${id})`);
         })
-        .respondWithData(testData.submissionOData);
-    });
+        .respondWithData(() => ({
+          ...testData.submissionOData(1),
+          '@odata.count': 1
+        })));
 
-    it('updates the URL', () => {
-      const fieldKey = testData.extendedFieldKeys.last();
-      testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
-      return loadComponent()
+    it('updates the URL', () =>
+      loadComponent({ attachTo: document.body })
         .complete()
-        .request(component => {
-          const select = component.get('#submission-filters-submitter select');
-          return select.setValue(fieldKey.id.toString());
-        })
-        .respondWithData(testData.submissionOData)
+        .request(changeMultiselect('#submission-filters-submitter', [0]))
+        .respondWithData(() => ({
+          ...testData.submissionOData(1),
+          '@odata.count': 1
+        }))
         .afterResponse(component => {
           const { submitterId } = component.vm.$route.query;
-          submitterId.should.equal(fieldKey.id.toString());
-        });
-    });
+          const { id } = testData.extendedFieldKeys.first();
+          submitterId.should.eql([id.toString()]);
+        }));
 
-    it('re-renders the table', () => {
-      testData.extendedForms.createPast(1, { submissions: 3 });
-      const fieldKey = testData.extendedFieldKeys.last();
-      testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-      return loadComponent({
-        props: { top: () => 2 }
-      })
+    it('re-renders the table', () =>
+      loadComponent({ props: { top: () => 2 }, attachTo: document.body })
         .complete()
         .request(component => {
           sinon.replace(component.vm, 'scrolledToBottom', () => true);
@@ -182,18 +190,32 @@ describe('SubmissionFilters', () => {
         .afterResponse(component => {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
         })
-        .request(component => {
-          const select = component.get('#submission-filters-submitter select');
-          return select.setValue(fieldKey.id.toString());
-        })
+        .request(changeMultiselect('#submission-filters-submitter', [0]))
         .beforeEachResponse(component => {
           component.findComponent(SubmissionMetadataRow).exists().should.be.false();
         })
-        .respondWithData(() => testData.submissionOData(2, 0))
+        .respondWithData(() => ({
+          ...testData.submissionOData(1),
+          '@odata.count': 1
+        }))
         .afterResponse(component => {
-          component.findAllComponents(SubmissionMetadataRow).length.should.equal(2);
-        });
-    });
+          component.findAllComponents(SubmissionMetadataRow).length.should.equal(1);
+        }));
+
+    it('allows multiple submitters to be selected', () =>
+      loadComponent({ attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-filters-submitter', [0, 1]))
+        .beforeEachResponse((_, { url }) => {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          const id0 = testData.extendedFieldKeys.get(0).id;
+          const id1 = testData.extendedFieldKeys.get(1).id;
+          filter.should.equal(`(__system/submitterId eq ${id0} or __system/submitterId eq ${id1})`);
+        })
+        .respondWithData(() => ({
+          ...testData.submissionOData(2),
+          '@odata.count': 2
+        })));
   });
 
   describe('after the submission date filter is changed', () => {
@@ -247,59 +269,48 @@ describe('SubmissionFilters', () => {
     });
 
     it('sends a request', () =>
-      loadComponent()
+      loadComponent({ attachTo: document.body })
         .complete()
-        .request(component => {
-          const select = component.get('#submission-filters-review-state select');
-          return select.setValue("'approved'");
-        })
+        .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeEachResponse((_, { url }) => {
           const filter = relativeUrl(url).searchParams.get('$filter');
-          filter.should.equal("(__system/reviewState eq 'approved')");
+          filter.should.equal("(__system/reviewState eq 'hasIssues')");
         })
         .respondWithData(testData.submissionOData));
 
     it('updates the URL', () =>
-      loadComponent()
+      loadComponent({ attachTo: document.body })
         .complete()
-        .request(component => {
-          const select = component.get('#submission-filters-review-state select');
-          return select.setValue("'approved'");
-        })
+        .request(changeMultiselect('#submission-filters-review-state', [1]))
         .respondWithData(testData.submissionOData)
         .afterResponse(component => {
-          component.vm.$route.query.reviewState.should.eql(["'approved'"]);
+          component.vm.$route.query.reviewState.should.eql(["'hasIssues'"]);
         }));
-  });
 
-  it.skip('allows multiple review states to be selected', () => {
-    testData.extendedForms.createPast(1);
-    return loadComponent()
-      .complete()
-      .request(component => {
-        const select = component.get('#submission-filters-review-state select');
-        const options = select.findAll('option');
-        options[0].element.selected = true;
-        options[1].element.selected = true;
-        return select.trigger('change');
-      })
-      .beforeEachResponse((_, { url }) => {
-        url.should.match(/&%24filter=%28__system%2FreviewState\+eq\+null\+or\+__system%2FreviewState\+eq\+%27approved%27%29(&|$)/);
-      })
-      .respondWithData(testData.submissionOData);
+    it('allows multiple review states to be selected', () =>
+      loadComponent({ attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-filters-review-state', [0, 1]))
+        .beforeEachResponse((_, { url }) => {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.equal("(__system/reviewState eq null or __system/reviewState eq 'hasIssues')");
+        })
+        .respondWithData(testData.submissionOData));
   });
 
   it('specifies the filters together', () => {
-    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-    testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
-    return loadComponent()
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 2 });
+    const fieldKeys = createFieldKeys(2);
+    testData.extendedSubmissions
+      .createPast(1, { submitter: fieldKeys[1] })
+      .createPast(1, { submitter: fieldKeys[0] });
+    return loadComponent({ attachTo: document.body })
       .complete()
-      .request(component => {
-        const select = component.get('#submission-filters-submitter select');
-        return select.setValue(fieldKey.id.toString());
-      })
-      .respondWithData(testData.submissionOData)
+      .request(changeMultiselect('#submission-filters-submitter', [0]))
+      .respondWithData(() => ({
+        ...testData.submissionOData(1),
+        '@odata.count': 1
+      }))
       .complete()
       .request(component => {
         component.getComponent(DateRangePicker).vm.close([
@@ -307,20 +318,17 @@ describe('SubmissionFilters', () => {
           DateTime.fromISO('1970-01-02').toJSDate()
         ]);
       })
-      .respondWithData(() => testData.submissionOData(0))
+      .respondWithData(() => ({ value: [], '@odata.count': 0 }))
       .complete()
-      .request(component => {
-        const select = component.get('#submission-filters-review-state select');
-        return select.setValue('null');
-      })
+      .request(changeMultiselect('#submission-filters-review-state', [0]))
       .beforeEachResponse((_, { url }) => {
         const filter = relativeUrl(url).searchParams.get('$filter');
-        filter.should.match(/^__system\/submitterId eq \d+ and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)$/);
+        filter.should.match(/^\(__system\/submitterId eq \d+\) and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)$/);
       })
-      .respondWithData(() => testData.submissionOData(0))
+      .respondWithData(() => ({ value: [], '@odata.count': 0 }))
       .afterResponse(component => {
         component.vm.$route.query.should.eql({
-          submitterId: fieldKey.id.toString(),
+          submitterId: [fieldKeys[0].id.toString()],
           start: '1970-01-01',
           end: '1970-01-02',
           reviewState: ['null']
@@ -329,22 +337,17 @@ describe('SubmissionFilters', () => {
   });
 
   it('numbers the rows based on the number of filtered submissions', () => {
-    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 2 });
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
     testData.extendedForms.createPast(1, { submissions: 2 });
-    testData.extendedSubmissions.createPast(1, {
-      submitter: testData.extendedFieldKeys.createPast(1).last()
-    });
-    testData.extendedSubmissions.createPast(1, {
-      submitter: testData.extendedFieldKeys.createPast(1).last()
-    });
-    return loadComponent()
+    const submitter = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions
+      .createPast(1, { reviewState: 'approved', submitter })
+      .createPast(1, { reviewState: null, submitter });
+    return loadComponent({ attachTo: document.body })
       .complete()
-      .request(component => {
-        const select = component.get('#submission-filters-submitter select');
-        return select.setValue(testData.extendedFieldKeys.last().id.toString());
-      })
+      .request(changeMultiselect('#submission-filters-review-state', [0]))
       .respondWithData(() => ({
-        value: [testData.extendedSubmissions.last()._odata],
+        ...testData.submissionOData(1),
         '@odata.count': 1
       }))
       .afterResponse(component => {
@@ -353,24 +356,19 @@ describe('SubmissionFilters', () => {
   });
 
   it('does not update form.submissions', () => {
-    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 2 });
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
     testData.extendedForms.createPast(1, { submissions: 2 });
-    testData.extendedSubmissions.createPast(1, {
-      submitter: testData.extendedFieldKeys.createPast(1).last()
-    });
-    testData.extendedSubmissions.createPast(1, {
-      submitter: testData.extendedFieldKeys.createPast(1).last()
-    });
-    return load('/projects/1/forms/f/submissions')
+    const submitter = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions
+      .createPast(1, { reviewState: 'approved', submitter })
+      .createPast(1, { reviewState: null, submitter });
+    return load('/projects/1/forms/f/submissions', { attachTo: document.body })
       .afterResponses(app => {
         app.vm.$container.requestData.form.submissions.should.equal(2);
       })
-      .request(app => {
-        const select = app.get('#submission-filters-submitter select');
-        return select.setValue(testData.extendedFieldKeys.last().id.toString());
-      })
+      .request(changeMultiselect('#submission-filters-review-state', [0]))
       .respondWithData(() => ({
-        value: [testData.extendedSubmissions.last()._odata],
+        ...testData.submissionOData(1),
         '@odata.count': 1
       }))
       .afterResponse(app => {
@@ -379,19 +377,21 @@ describe('SubmissionFilters', () => {
   });
 
   describe('loading message', () => {
-    it('shows the correct message for the first chunk', () => {
+    const createData = (submissionCount) => {
       testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-      testData.extendedForms.createPast(1, { submissions: 3 });
+      testData.extendedForms.createPast(1, { submissions: submissionCount });
       const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-      testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-      return loadComponent({
-        props: { top: () => 2 }
-      })
+      testData.extendedSubmissions.createPast(submissionCount, {
+        reviewState: null,
+        submitter: fieldKey
+      });
+    };
+
+    it('shows the correct message for the first chunk', () => {
+      createData(3);
+      return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
         .complete()
-        .request(component => {
-          const select = component.get('#submission-filters-submitter select');
-          return select.setValue(fieldKey.id.toString());
-        })
+        .request(changeMultiselect('#submission-filters-review-state', [0]))
         .beforeEachResponse(component => {
           const text = component.get('#submission-list-message-text').text();
           text.trim().should.equal('Loading matching Submissions…');
@@ -400,18 +400,10 @@ describe('SubmissionFilters', () => {
     });
 
     it('shows the correct message for the second chunk', () => {
-      testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-      testData.extendedForms.createPast(1, { submissions: 5 });
-      const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-      testData.extendedSubmissions.createPast(5, { submitter: fieldKey });
-      return loadComponent({
-        props: { top: () => 2 }
-      })
+      createData(5);
+      return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
         .complete()
-        .request(component => {
-          const select = component.get('#submission-filters-submitter select');
-          return select.setValue(fieldKey.id.toString());
-        })
+        .request(changeMultiselect('#submission-filters-review-state', [0]))
         .respondWithData(() => testData.submissionOData(2, 0))
         .complete()
         .request(component => {
@@ -427,18 +419,10 @@ describe('SubmissionFilters', () => {
 
     describe('last chunk', () => {
       it('shows correct message if there is one submission remaining', () => {
-        testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-        testData.extendedForms.createPast(1, { submissions: 3 });
-        const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-        testData.extendedSubmissions.createPast(3, { submitter: fieldKey });
-        return loadComponent({
-          props: { top: () => 2 }
-        })
+        createData(3);
+        return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
           .complete()
-          .request(component => {
-            const select = component.get('#submission-filters-submitter select');
-            return select.setValue(fieldKey.id.toString());
-          })
+          .request(changeMultiselect('#submission-filters-review-state', [0]))
           .respondWithData(() => testData.submissionOData(2, 0))
           .complete()
           .request(component => {
@@ -453,18 +437,10 @@ describe('SubmissionFilters', () => {
       });
 
       it('shows correct message if there is are multiple submissions remaining', () => {
-        testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-        testData.extendedForms.createPast(1, { submissions: 4 });
-        const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-        testData.extendedSubmissions.createPast(4, { submitter: fieldKey });
-        return loadComponent({
-          props: { top: () => 2 }
-        })
+        createData(4);
+        return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
           .complete()
-          .request(component => {
-            const select = component.get('#submission-filters-submitter select');
-            return select.setValue(fieldKey.id.toString());
-          })
+          .request(changeMultiselect('#submission-filters-review-state', [0]))
           .respondWithData(() => testData.submissionOData(2, 0))
           .complete()
           .request(component => {

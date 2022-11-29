@@ -10,72 +10,114 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label id="submission-filters-submitter" class="form-group">
-    <select v-if="submitters.initiallyLoading" class="form-control" disabled>
-      <option value="">{{ $t('common.loading') }}</option>
-    </select>
-    <select v-else v-model="selectValue" class="form-control">
-      <option value="">{{ $t('common.anybody') }}</option>
-      <option v-if="unknown" :value="modelValue">{{ $t('unknown') }}</option>
-      <template v-if="submitters.dataExists">
-        <option v-for="submitter of submitters" :key="submitter.id"
-          :value="submitter.id.toString()">
-          {{ submitter.displayName }}
-        </option>
-      </template>
-    </select>
-    <span class="form-label">{{ $t('field.submitter') }}</span>
-  </label>
+  <multiselect id="submission-filters-submitter" :model-value="selectValue"
+    :options="options" :loading="submitters.initiallyLoading"
+    :label="$t('field.submitter')" :placeholder="placeholder"
+    :all="$t('action.select.all')" :none="$t('action.select.none')"
+    :search="$t('field.search')" :empty="$t('submission.emptyTable')"
+    @update:model-value="update"/>
 </template>
 
 <script>
+export default {
+  name: 'SubmissionFiltersSubmitter'
+};
+</script>
+<script setup>
+import { computed, nextTick, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import Multiselect from '../../multiselect.vue';
+
 import { useRequestData } from '../../../request-data';
 
-export default {
-  name: 'SubmissionFiltersSubmitter',
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue'],
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { submitters } = useRequestData();
-    return { submitters };
-  },
-  computed: {
-    selectValue: {
-      get() {
-        return this.modelValue;
-      },
-      set(value) {
-        this.$emit('update:modelValue', value);
-      }
-    },
-    unknown() {
-      return this.modelValue !== '' && (!this.submitters.dataExists ||
-        !this.submitters.some(submitter => this.modelValue === submitter.id.toString()));
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    required: true
+  }
+});
+const emit = defineEmits(['update:modelValue']);
+
+// The component does not assume that this data will exist when the
+// component is created.
+const { submitters } = useRequestData();
+
+const { t } = useI18n();
+const unknown = computed(() => props.modelValue.reduce(
+  (set, id) => (submitters.ids.has(id) ? set : set.add(id)),
+  new Set()
+));
+const options = computed(() => {
+  if (!submitters.dataExists) return null;
+  const result = new Array(submitters.length + unknown.value.size);
+  let i = 0;
+  for (const id of unknown.value) {
+    result[i] = { value: id, text: t('unknown') };
+    i += 1;
+  }
+  for (const { id, displayName } of submitters) {
+    result[i] = { value: id, text: displayName };
+    i += 1;
+  }
+  return result;
+});
+
+const selectValue = ref(props.modelValue);
+watch(() => props.modelValue, (value) => { selectValue.value = value; });
+const update = (value) => {
+  if (unknown.value.size !== 0) {
+    // Filter out unknown submitters. If that results in no submitters, then
+    // fall back to all submitters.
+    const withoutUnknown = value.filter(id => !unknown.value.has(id));
+    emit('update:modelValue', withoutUnknown.length !== 0
+      ? withoutUnknown
+      : [...submitters.ids]);
+  } else if (value.length !== 0) {
+    emit('update:modelValue', value);
+  } else {
+    // If no submitters are selected, then the selection falls back to all
+    // submitters. If that's not the selection already, then we emit all
+    // submitters. Otherwise, there's no change to emit, but we still need to
+    // make a temporary change to selectValue in order to force the Multiselect
+    // to recheck the checkboxes.
+    const all = [...submitters.ids];
+    if (props.modelValue.length !== all.length) {
+      emit('update:modelValue', all);
+    } else {
+      selectValue.value = value;
+      nextTick(() => { selectValue.value = all; });
     }
   }
 };
-</script>
 
-<style lang="scss">
-#submission-filters-submitter {
-  select { width: 201px; }
-}
-</style>
+const placeholder = (counts) => t('placeholder', counts);
+</script>
 
 <i18n lang="json5">
 {
   "en": {
     "field": {
-      // This is the text of a form field that shows the names of users who have
-      // submitted data.
-      "submitter": "Submitted by"
+      // This is the text of a form field that shows the names of submitters.
+      "submitter": "Submitted by",
+      "search": "Search submitters…"
+    },
+    // This is the text of a dropdown that allows the user to select one or more
+    // "submitters". A submitter can be a user, a team of users, a Public Access
+    // Link, or an automation. {selected} is the number of submitters selected;
+    // {total} is the total number of submitters.
+    "placeholder": "{selected} of {total}",
+    "action": {
+      "select": {
+        /* This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:
+
+Select {all} / {none} */
+        "all": "All",
+        /* This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:
+
+Select {all} / {none} */
+        "none": "None"
+      }
     },
     "unknown": "Unknown submitter"
   }

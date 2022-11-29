@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 
-import { afterNextNavigation, forceReplace, routeProps } from '../../src/util/router';
+import { afterNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
@@ -9,6 +9,46 @@ import { mockLogin } from '../util/session';
 import { testRouter } from '../util/router';
 
 describe('util/router', () => {
+  describe('arrayQuery()', () => {
+    it('returns an empty array for null', () => {
+      arrayQuery(null).should.eql([]);
+    });
+
+    it('wraps a string in an array', () => {
+      arrayQuery('foo').should.eql(['foo']);
+    });
+
+    it('filters out null', () => {
+      arrayQuery(['foo', null, 'bar']).should.eql(['foo', 'bar']);
+    });
+
+    it('deduplicates values', () => {
+      arrayQuery(['foo', 'foo']).should.eql(['foo']);
+    });
+
+    it('validates values', () => {
+      const validator = (value) => value !== 'bar';
+      arrayQuery(['foo', 'bar'], { validator }).should.eql(['foo']);
+    });
+
+    it('validates a string', () => {
+      const validator = (value) => value !== 'bar';
+      arrayQuery('bar', { validator }).should.eql([]);
+    });
+
+    it('returns a default', () => {
+      arrayQuery([], { default: ['foo'] }).should.eql(['foo']);
+    });
+
+    it('returns a default for null', () => {
+      arrayQuery(null, { default: ['foo'] }).should.eql(['foo']);
+    });
+
+    it('calls a default function', () => {
+      arrayQuery([], { default: () => ['foo'] }).should.eql(['foo']);
+    });
+  });
+
   describe('routeProps()', () => {
     const { router } = createTestContainer({ router: testRouter() });
     const route = router.resolve('/projects/1');
