@@ -155,7 +155,7 @@ export default {
   }
 }
 
-#analytics-preview-project-summary {
+#analytics-preview-project-summary, #analytics-preview-dataset-summary {
   padding-bottom: 5px;
 
   .header {
