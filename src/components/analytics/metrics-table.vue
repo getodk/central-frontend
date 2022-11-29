@@ -110,7 +110,7 @@ export default {
       "num_creation_forms": "Number of Forms that update the Dataset",
       "num_followup_forms": "Number of Forms that use the Dataset",
       "num_entities": "Number of Entities in the Dataset",
-      "num_failed_entities": "Number of Entity errors"
+      "num_failed_entities": "Number of Entity creation errors"
     }
   }
 }

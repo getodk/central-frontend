@@ -1117,7 +1117,7 @@
           "string": "Number of Entities in the Dataset"
         },
         "num_failed_entities": {
-          "string": "Number of Entity errors"
+          "string": "Number of Entity creation errors"
         }
       }
     },
@@ -1152,10 +1152,11 @@
       },
       "datasets": {
         "title": {
-          "string": "Dataset and Entity Summaries"
+          "string": "Dataset and Entity Summaries",
+          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Showing the most active Dataset of {count} Dataset)} other {(showing the most active Dataset of {count} Datasets)}}"
+          "string": "{count, plural, one {(Showing the most active Dataset of {count} Dataset)} other {(Showing the most active Dataset of {count} Datasets)}}"
         }
       },
       "other": {

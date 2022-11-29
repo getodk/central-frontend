@@ -1,3 +1,5 @@
+import { assocPath } from 'ramda';
+
 import AnalyticsMetricsTable from '../../../src/components/analytics/metrics-table.vue';
 import AnalyticsPreview from '../../../src/components/analytics/preview.vue';
 
@@ -133,5 +135,15 @@ describe('AnalyticsPreview', () => {
       num_failed_entities: { total: 2, recent: 1 }
     };
     table.props().metrics.should.eql(subMetrics);
+  });
+
+  it('does not show dataset metrics if there is no dataset in any project', async () => {
+    const component = await mockHttp()
+      .mount(AnalyticsPreview)
+      .request(modal => modal.setProps({ state: true }))
+      .respondWithData(() => assocPath(['projects', 1, 'datasets'], [], analyticsPreview));
+
+    component.find('#analytics-preview-dataset-summary').exists().should.be.false();
+    should.not.exist(component.findAllComponents(AnalyticsMetricsTable)[6]);
   });
 });
