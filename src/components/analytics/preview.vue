@@ -39,6 +39,14 @@ except according to the terms contained in the LICENSE file.
               :metrics="otherSummary"/>
           </div>
         </div>
+        <template v-if="numDatasets > 0">
+          <div id="analytics-preview-dataset-summary">
+            <span class="header">{{ $t('datasets.title') }}</span>
+            <span class="explanation">{{ $tcn('datasets.subtitle', numDatasets) }}</span>
+          </div>
+          <analytics-metrics-table :title="$t('resource.datasets')"
+            :metrics="firstDataset"/>
+        </template>
       </template>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
@@ -50,7 +58,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { omit, pick } from 'ramda';
+import { omit, pick, flatten } from 'ramda';
 
 import Loading from '../loading.vue';
 import Modal from '../modal.vue';
@@ -90,6 +98,13 @@ export default {
       return this.analyticsPreview.projects.reduce((a, b) => {
         return (a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b;
       });
+    },
+    firstDataset() {
+      const { id, ...ds } = flatten(this.analyticsPreview.projects.map(p => p.datasets)).reduce((a, b) => ((a.num_entities.recent > b.num_entities.recent) ? a : b), { num_entities: {} });
+      return ds;
+    },
+    numDatasets() {
+      return flatten(this.analyticsPreview.projects.map(p => p.datasets)).length;
     },
     userSummary() {
       return this.firstProject.users;
@@ -140,7 +155,7 @@ export default {
   }
 }
 
-#analytics-preview-project-summary {
+#analytics-preview-project-summary, #analytics-preview-dataset-summary {
   padding-bottom: 5px;
 
   .header {
@@ -182,6 +197,11 @@ export default {
     // This is the title of a single table in the analytics metrics report
     // of metrics about submission state (approved, rejected, etc)
     "submissionStates": "Submission States",
+    "datasets": {
+      // This is the title shown above a series of metrics about Datasets and Entities usage.
+      "title": "Dataset and Entity Summaries",
+      "subtitle": "(Showing the most active Dataset of {count} Dataset) | (Showing the most active Dataset of {count} Datasets)"
+    },
     // This is the title of a single table in the analytics metrics report
     // of other additional metrics that don't fit into other categories
     "other": "Other"
