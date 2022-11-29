@@ -1100,6 +1100,24 @@
         },
         "has_description": {
           "string": "Project has a description"
+        },
+        "description_length": {
+          "string": "Length of the Project description"
+        },
+        "num_properties": {
+          "string": "Number of Properties"
+        },
+        "num_creation_forms": {
+          "string": "Number of Forms that update the Dataset"
+        },
+        "num_followup_forms": {
+          "string": "Number of Forms that use the Dataset"
+        },
+        "num_entities": {
+          "string": "Number of Entities in the Dataset"
+        },
+        "num_failed_entities": {
+          "string": "Number of Entity errors"
         }
       }
     },
@@ -1131,6 +1149,14 @@
       "submissionStates": {
         "string": "Submission States",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
+      },
+      "datasets": {
+        "title": {
+          "string": "Dataset and Entity Summaries"
+        },
+        "subtitle": {
+          "string": "{count, plural, one {(Showing the most active Dataset of {count} Dataset)} other {(showing the most active Dataset of {count} Datasets)}}"
+        }
       },
       "other": {
         "string": "Other",

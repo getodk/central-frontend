@@ -104,7 +104,13 @@ export default {
       "num_submissions_from_app_users": "Number of Submissions from App Users",
       "num_submissions_from_public_links": "Number of Submissions from Public Links",
       "num_submissions_from_web_users": "Number of Submissions from Web Users",
-      "has_description": "Project has a description"
+      "has_description": "Project has a description",
+      "description_length": "Length of the Project description",
+      "num_properties": "Number of Properties",
+      "num_creation_forms": "Number of Forms that update the Dataset",
+      "num_followup_forms": "Number of Forms that use the Dataset",
+      "num_entities": "Number of Entities in the Dataset",
+      "num_failed_entities": "Number of Entity errors"
     }
   }
 }

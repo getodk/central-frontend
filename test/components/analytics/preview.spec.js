@@ -14,7 +14,8 @@ const analyticsPreview = {
         num_submissions_received: { recent: 0, total: 0 },
         num_submissions_from_web_users: { recent: 0, total: 0 }
       },
-      other: { has_description: 0 }
+      other: { has_description: 0, description_length: 0 },
+      datasets: []
     },
     {
       users: { num_managers: { recent: 1, total: 1 } },
@@ -23,7 +24,17 @@ const analyticsPreview = {
         num_submissions_received: { recent: 1, total: 1 },
         num_submissions_from_web_users: { recent: 1, total: 1 }
       },
-      other: { has_description: 1 }
+      other: { has_description: 1, description_length: 40 },
+      datasets: [
+        {
+          id: 1,
+          num_properties: 2,
+          num_creation_forms: 1,
+          num_followup_forms: 1,
+          num_entities: { total: 10, recent: 5 },
+          num_failed_entities: { total: 2, recent: 1 }
+        }
+      ]
     }
   ]
 };
@@ -48,7 +59,7 @@ describe('AnalyticsPreview', () => {
 
   it('renders the correct number of tables', async () => {
     const modal = await mockHttpForComponent();
-    modal.findAllComponents(AnalyticsMetricsTable).length.should.equal(6);
+    modal.findAllComponents(AnalyticsMetricsTable).length.should.equal(7);
   });
 
   it('shows system metrics', async () => {
@@ -68,7 +79,8 @@ describe('AnalyticsPreview', () => {
             num_submissions_received: { recent: 0, total: 0 },
             num_submissions_from_web_users: { recent: 0, total: 0 }
           },
-          other: { has_description: 1 }
+          datasets: [],
+          other: { has_description: 1, description_length: 40 }
         }
       ]
     };
@@ -106,7 +118,20 @@ describe('AnalyticsPreview', () => {
   it('shows other metrics', async () => {
     const modal = await mockHttpForComponent();
     const table = modal.findAllComponents(AnalyticsMetricsTable)[5];
-    const subMetrics = { has_description: 1 };
+    const subMetrics = { has_description: 1, description_length: 40 };
+    table.props().metrics.should.eql(subMetrics);
+  });
+
+  it('shows dataset metrics', async () => {
+    const modal = await mockHttpForComponent();
+    const table = modal.findAllComponents(AnalyticsMetricsTable)[6];
+    const subMetrics = {
+      num_properties: 2,
+      num_creation_forms: 1,
+      num_followup_forms: 1,
+      num_entities: { total: 10, recent: 5 },
+      num_failed_entities: { total: 2, recent: 1 }
+    };
     table.props().metrics.should.eql(subMetrics);
   });
 });
