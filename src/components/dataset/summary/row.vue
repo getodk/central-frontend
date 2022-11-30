@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="dataset-summary-row">
-    <div class="row">
+    <div class="row" role="button" @click.prevent="toggleExpanded">
       <div class="col-xs-6 text-overflow-ellipsis">
         <span class="dataset-name" :title="dataset.name">{{ dataset.name }}</span>
         <span v-if="dataset.isNew" class="dataset-new">
@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t('new') }}
         </span>
       </div>
-      <div class="col-xs-6 properties-count" role="button" @click.prevent="toggleExpanded">
+      <div class="col-xs-6 properties-count">
         {{ $tcn('properties', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
         <a href="javascript:void(0)" class="expand-button">
           <span v-if="!expanded" class="icon-chevron-right"></span>
@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
     <div v-show="expanded" class="property-list">
       <span v-for="(property, index) in inFormProperties" :key="property.name">
         <span>{{ property.name }}</span>
-        <span v-if="property.isNew" class="icon-plus-circle property-new"></span>
+        <span v-if="property.isNew" class="icon-plus-circle property-new" :title="$t('addedByThisDraft')"></span>
         <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma' ) }}<sentence-separator/></template>
       </span>
     </div>
@@ -129,7 +129,9 @@ export default {
     "new": "new!",
     // {inform} is the number of dataset properties defined by the form.
     // {count} is the total number of properties. The string will be pluralized based on {count}.
-    "properties": "{inform} of {count} property | {inform} of {count} properties"
+    "properties": "{inform} of {count} property | {inform} of {count} properties",
+    // This is shown when mouse hovers over plus icon of new Dataset Property
+    "addedByThisDraft": "Added by this Draft"
   }
 }
 </i18n>
