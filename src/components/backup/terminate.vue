@@ -95,7 +95,8 @@ export default {
   "cs": {
     "title": "Ukončit automatické zálohování",
     "introduction": [
-      "Opravdu chcete ukončit automatické zálohování?"
+      "Opravdu chcete ukončit automatické zálohování?",
+      "Pokud automatické zálohování ukončíte, nebude možné je znovu spustit. Automatické zálohování je zastaralá funkce, ale existují jiné způsoby zálohování dat na serveru."
     ]
   },
   "de": {
@@ -126,7 +127,8 @@ export default {
   "it": {
     "title": "Termina i backup automatici",
     "introduction": [
-      "Sei sicuro di voler terminare i tuoi backup automatici?"
+      "Sei sicuro di voler terminare i tuoi backup automatici?",
+      "Se interrompi i backup automatici, non sarai in grado di riavviarli. I backup automatici sono una funzionalità deprecata, ma esistono altri modi per eseguire il backup dei dati sul server."
     ]
   },
   "ja": {

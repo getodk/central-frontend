@@ -20,7 +20,6 @@
     "draftNav": {
       "tab": {
         "status": "Hali",
-        "attachments": "Faili za media",
         "testing": "Upimaji"
       }
     }
@@ -75,6 +74,9 @@
       "backup": "Hifadhi nakala",
       "config": {
         "set": "weka"
+      },
+      "dataset": {
+        "create": "@:audit.action.default.create"
       },
       "field_key": {
         "assignment_create": "kutoa ufikiaji",
@@ -230,7 +232,6 @@
     }
   },
   "submission": {
-    "missingMedia": "Vyombo vya habari vinavyokosekana",
     "action": {
       "edit": "Hariri ({count})"
     },

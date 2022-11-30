@@ -274,7 +274,7 @@ export default {
     },
     "alert": {
       "upload": "Bezva! Nová definice formuláře byla uložena jako koncept.",
-      "publish": "Váš koncept je nyní publikován. Všechna zařízení získávající formuláře pro tento projekt nyní obdrží novou definici formuláře a mediální soubory.",
+      "publish": "Váš návrh je nyní zveřejněn. Všechna zařízení, která načítají formuláře pro tento projekt, nyní obdrží novou definici formuláře a přílohy formuláře.",
       "abandon": "Koncept verze tohoto formuláře byl úspěšně odstraněn.",
       "delete": "Formulář „{name}“ byl odstraněn."
     }
@@ -301,7 +301,6 @@ export default {
     },
     "alert": {
       "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung.",
-      "publish": "Ihr Entwurf ist jetzt veröffentlicht. Alle Geräte, die Formulare für dieses Projekt beziehen, erhalten ab jetzt die neuen Formularedefinitionen und Mediendateien.",
       "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
       "delete": "Das Formular \"{name}\" wurde gelöscht."
     }
@@ -328,7 +327,6 @@ export default {
     },
     "alert": {
       "upload": "¡Éxito! La nueva definición del formulario se ha guardado como su borrador",
-      "publish": "Su borrador ya está publicado. Cualquier dispositivo que recupere formularios para este proyecto ahora recibirá la nueva definición de formulario y archivos multimedia.",
       "abandon": "La versión borrador de este formulario ha sido eliminado con éxito.",
       "delete": "El formulario {name} fue eliminado."
     }
@@ -355,7 +353,6 @@ export default {
     },
     "alert": {
       "upload": "Succès ! La nouvelle définition du formulaire a été enregistrée comme ébauche.",
-      "publish": "Votre ébauche est maintenant publiée. Tout appareil qui récupère des formulaires pour ce projet recevra désormais la nouvelle définition du formulaire et des fichiers médias.",
       "abandon": "La version d'ébauche de ce formulaire a été supprimée avec succès.",
       "delete": "Le formulaire {name} a été supprimé."
     }
@@ -382,7 +379,6 @@ export default {
     },
     "alert": {
       "upload": "Sukses! Definisi formulir baru telah disimpan di Draf.",
-      "publish": "Draf Anda telah diterbitkan. Setiap perangkat yang mengambil Formulir dari Proyek ini akan menerima definisi formulir dan file media yang baru.",
       "abandon": "Versi draf dari formulir ini telah sukses dihapus.",
       "delete": "Formulir {name} sudah dihapus."
     }
@@ -409,7 +405,6 @@ export default {
     },
     "alert": {
       "upload": "Successo! La nuova definizione del formulario è stata salvata come bozza.",
-      "publish": "La tua bozza è ora pubblicata. Tutti i dispositivi che utilizzano i formulari per questo progetto riceveranno ora la nuova definizione del formulario e i file multimediali.",
       "abandon": "La versione bozza di questo formulario è stata eliminata con successo.",
       "delete": "Il Formulario “{name}” è stato cancellato."
     }
@@ -436,7 +431,6 @@ export default {
     },
     "alert": {
       "upload": "成功です！新しい定義フォームが下書きとして保存されました。",
-      "publish": "あなたの下書きが公開されました。このプロジェクトのフォームを使用している全てのデバイスには、更新された定義フォームとメディアファイルが表示されます。",
       "abandon": "このフォームの下書きは正常に削除されました。",
       "delete": "フォーム\"{name}\"は削除されました。"
     }
@@ -463,7 +457,6 @@ export default {
     },
     "alert": {
       "upload": "Mafanikio! Ufafanuzi mpya wa Fomu umehifadhiwa kama Rasimu yako",
-      "publish": "Rasimu yako sasa imechapishwa. Kifaa chochote kinachorejesha Fomu za Mradi huu sasa kitapokea ufafanuzi mpya wa Fomu na Faili za Midia",
       "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi.",
       "delete": "Fomu \"{name}\" ilifutwa."
     }

@@ -309,7 +309,7 @@ $popup-width: 300px;
     "title": "Nahrát soubory",
     "duringDragover": {
       "dropToUpload": "Přetažením nyní nahrajte tento soubor jako {attachmentName}.",
-      "dragover": "Označte soubor, který chcete nahrát a přetažením ho nahrajte.",
+      "dragover": "Přetáhněte přílohu formuláře, kterou chcete nahradit souborem, a upuštěním ji nahrajte.",
       "dropToPrepare": {
         "full": "Přetáhněte nyní {countOfFiles} a připravte se na upload do tohoto formuláře.",
         "countOfFiles": "{count} soubor | {count} souborů | {count} souborů | {count} souborů"
@@ -339,7 +339,6 @@ $popup-width: 300px;
     "title": "Dateien hochladen",
     "duringDragover": {
       "dropToUpload": "Jetzt loslassen, um die Datei als {attachmentName} hochzuladen.",
-      "dragover": "Verwenden Sie Drag-and-Drop, um die Datei hochzuladen und die existierende Datei zu ersetzen.",
       "dropToPrepare": {
         "full": "Lassen Sie die {countOfFiles} hier fallen, um sie hochzuladen.",
         "countOfFiles": "{count} Datei | {count} Dateien"
@@ -369,7 +368,6 @@ $popup-width: 300px;
     "title": "Subir archivos",
     "duringDragover": {
       "dropToUpload": "Suelta ahora para cargar este archivo como {attachmentName}",
-      "dragover": "Arrastre sobre la entrada del archivo que desea reemplazar con el archivo y suéltela para cargar.",
       "dropToPrepare": {
         "full": "Suelte ahora para preparar {countOfFiles} para subir a este formulario.",
         "countOfFiles": "{count} archivo | {count} archivos | {count} archivos"
@@ -399,7 +397,6 @@ $popup-width: 300px;
     "title": "Téléverser des fichiers",
     "duringDragover": {
       "dropToUpload": "Déposer maintenant pour téléverser ce fichier en tant que {attachmentName}.",
-      "dragover": "Glissez/déposez le nouveau fichier sur celui que vous voulez remplacer.",
       "dropToPrepare": {
         "full": "Déposez maintenant pour préparer le téléversement de {countOfFiles} vers ce formualire.",
         "countOfFiles": "{count} fichier | {count} fichiers | {count} fichiers"
@@ -429,7 +426,6 @@ $popup-width: 300px;
     "title": "Unggah Berkas",
     "duringDragover": {
       "dropToUpload": "Lepas sekarang untuk mengunggah dokumen ini dengan nama {attachmentName}.",
-      "dragover": "Seret dan lepas untuk mengunggah entri dokumen yang ingin Anda ubah.",
       "dropToPrepare": {
         "full": "Lepas untuk mempersiapkan unggahan {countOfFiles} ke formulir ini.",
         "countOfFiles": "{count} berkas"
@@ -459,7 +455,6 @@ $popup-width: 300px;
     "title": "Caricare files",
     "duringDragover": {
       "dropToUpload": "Rilascia ora per caricare questo file come {attachmentName}.",
-      "dragover": "Trascina sulla voce del file che desideri sostituire con il file e rilascia per caricarla.",
       "dropToPrepare": {
         "full": "Rilascia ora per preparare {countOfFiles} per il caricamento in questo formulario.",
         "countOfFiles": "{count} file | {count} files | {count} files"
@@ -489,7 +484,6 @@ $popup-width: 300px;
     "title": "ファイルのアップロード",
     "duringDragover": {
       "dropToUpload": "このファイルを{attachmentName}としてアップロードする。",
-      "dragover": "置換したいファイル対象に、ファイルをドラッグ&ドロップするとアップロードされます。",
       "dropToPrepare": {
         "full": "このフォームにアップロードする{countOfFiles}を準備し、今すぐドロップしてください。",
         "countOfFiles": "{count}件のファイル"
@@ -519,7 +513,6 @@ $popup-width: 300px;
     "title": "Pakia Faili",
     "duringDragover": {
       "dropToUpload": "Dondosha sasa ili upakie faili hii kama {attachmentName}.",
-      "dragover": "Buruta juu ya ingizo la faili unalotaka kubadilisha na faili na uangushe ili kupakia",
       "dropToPrepare": {
         "full": "Dondosha sasa ili kuandaa {countOfFiles} kwa ajili ya kupakiwa kwenye Fomu hii.",
         "countOfFiles": "faili {count} | faili {count}"

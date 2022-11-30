@@ -116,10 +116,8 @@ Select {all} / {none} */
       "columns": "Zobrazené sloupce",
       "search": "Hledat sloupce…"
     },
-    "disabled": "Nelze vybrat více než 100 sloupců.",
     "action": {
       "select": {
-        "full": "Vybrat {all} / {none}",
         "all": "Vše",
         "none": "Nic"
       }
@@ -131,10 +129,8 @@ Select {all} / {none} */
       "columns": "angezeigte Spalten",
       "search": "Spalten suchen..."
     },
-    "disabled": "Mehr als 100 Spalten können nicht ausgewählt werden.",
     "action": {
       "select": {
-        "full": "{all} / {none} auswählen",
         "all": "Alle",
         "none": "Keine"
       }
@@ -146,10 +142,8 @@ Select {all} / {none} */
       "columns": "Se muestran las columnas",
       "search": "Buscar columnas…"
     },
-    "disabled": "No se pueden seleccionar más de 100 columnas.",
     "action": {
       "select": {
-        "full": "Seleccionar {all} / {none}",
         "all": "Todas",
         "none": "Ninguna"
       }
@@ -161,10 +155,8 @@ Select {all} / {none} */
       "columns": "Colonnes affichées",
       "search": "Chercher des colonnes"
     },
-    "disabled": "Impossible de sélectionner plus de 100 colonnes.",
     "action": {
       "select": {
-        "full": "Sélectionner {all} / {none}",
         "all": "Tous/toutes",
         "none": "Aucun(e)"
       }
@@ -176,10 +168,8 @@ Select {all} / {none} */
       "columns": "Kolom terlihat",
       "search": "Mencari kolom..."
     },
-    "disabled": "Tidak bisa memilih lebih dari 100 kolom.",
     "action": {
       "select": {
-        "full": "Pilih {all} / {none}",
         "all": "Semua",
         "none": "Jangan Semua"
       }
@@ -191,10 +181,8 @@ Select {all} / {none} */
       "columns": "Colonne mostrate",
       "search": "Cerca colonne..."
     },
-    "disabled": "Non puoi selezionare piu' di 100 colonne.",
     "action": {
       "select": {
-        "full": "Seleziona {all} / {none}",
         "all": "Tutto",
         "none": "Nessuno/a"
       }
@@ -206,10 +194,8 @@ Select {all} / {none} */
       "columns": "表示された列",
       "search": "列を検索"
     },
-    "disabled": "100以上の列は選択できません。",
     "action": {
       "select": {
-        "full": "選択設定 {all}/{none}",
         "all": "全て",
         "none": "なし"
       }
@@ -221,10 +207,8 @@ Select {all} / {none} */
       "columns": "Safu wima zimeonyeshwa",
       "search": "Tafuta safu wima..."
     },
-    "disabled": "Haiwezi kuchagua zaidi ya safu wima 100.",
     "action": {
       "select": {
-        "full": "Chagua {all} / {none}",
         "all": "zote",
         "none": "hakuna"
       }

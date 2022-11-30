@@ -20,7 +20,6 @@
     "draftNav": {
       "tab": {
         "status": "Stato",
-        "attachments": "File multimediali",
         "testing": "Testare"
       }
     }
@@ -76,6 +75,9 @@
       "backup": "Backup",
       "config": {
         "set": "Configura"
+      },
+      "dataset": {
+        "create": "@:audit.action.default.create"
       },
       "field_key": {
         "assignment_create": "Dare accesso",
@@ -197,6 +199,7 @@
     "appUser": "Utente dell'applicazione",
     "appUsers": "Utenti dell'applicazione",
     "config": "Configurazione del Server",
+    "datasets": "Set di dati",
     "form": "Formulario",
     "forms": "Formulari",
     "project": "Progetto",
@@ -234,7 +237,6 @@
     }
   },
   "submission": {
-    "missingMedia": "File multimediale mancnte",
     "action": {
       "edit": "Modifica ({count})"
     },

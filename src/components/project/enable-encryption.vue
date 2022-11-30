@@ -344,7 +344,8 @@ export default {
             ],
             "Již nebudete mít možnost zobrazit online náhled odeslaných údajů.",
             "Již se nebudete moci připojit k datům přes OData.",
-            "Ve svém webovém prohlížeči již nebudete moci upravovat příspěvky."
+            "Ve svém webovém prohlížeči již nebudete moci upravovat příspěvky.",
+            "Nová podání již nebudou zpracovávána do entit."
           ],
           [
             "Kromě toho platí pro tuto verzi ODK Central následující:",
@@ -366,10 +367,7 @@ export default {
       {
         "introduction": [
           "Nejprve si musíte zvolit přístupové heslo. Toto heslo bude vyžadováno k dešifrování vašich příspěvků. Server si toto heslo nebude pamatovat z důvodu vašeho soukromí: pouze lidé s přístupovým slovem budou moci dešifrovat a přečíst vaše údaje o odeslání.",
-          {
-            "full": "Na přístupová hesla neexistují žádná omezení délky ani obsahu, ale pokud je ztratíte, neexistuje {no} způsob, jak je obnovit, nebo jak obnovit vaše data!",
-            "no": "žádný"
-          }
+          {}
         ]
       }
     ],
@@ -420,10 +418,7 @@ export default {
       {
         "introduction": [
           "Zuerst müssen Sie eine Passphrase auswählen. Diese wird dann benötigt, um Ihre Übermittlungen zu entschlüsseln. Zum Schutz Ihrer Daten wird diese Passphrase nicht gespeichert. Nur Benutzer, die diese Passphrase wissen, können Ihre Übermittlungen entschlüsseln.",
-          {
-            "full": "Passphrasen haben keine Längen- oder Inhaltsbeschränkungen. Es gibt {no} Möglichkeit eine verlorene Passphrase wiederherzustellen!",
-            "no": "keine"
-          }
+          {}
         ]
       }
     ],
@@ -474,10 +469,7 @@ export default {
       {
         "introduction": [
           "En primer lugar, necesitará seleccionar una frase de contraseña. Esta frase será requerida para descifrar sus envíos. Por su privacidad, el servidor no recordará esta frase: solo las personas con la frase de contraseña podrán descifrar y leer los datos de sus envíos.",
-          {
-            "full": "No hay restricciones de longitud o de contenido para la frase de contraseña, pero si usted la pierde, {no} habrá forma de recuperarla ni a sus datos!",
-            "no": "no"
-          }
+          {}
         ]
       }
     ],
@@ -528,10 +520,7 @@ export default {
       {
         "introduction": [
           "Tout d'abord vous devrez choisir une phrase de passe. Elle sera requise pour déchiffrer vos données soumises. Pour respecter votre vie privée, le serveur ne retiendra pas cette phrase de passe : seules les personnes disposant de la phrase de passe pourront déchiffrer et lire vos données envoyées.",
-          {
-            "full": "La phrase secrète n'est soumise à aucune restriction de longueur ou de contenu, mais si vous la perdez, il n'y a {no} moyen de la récupérer, ni de récupérer vos données !",
-            "no": "non"
-          }
+          {}
         ]
       }
     ],
@@ -582,10 +571,7 @@ export default {
       {
         "introduction": [
           "Pertama-tama, Anda harus memilih sebuah frasa sandi. Frasa sandi ini akan dibutuhkan untuk mendekripsi kiriman data Anda. Demi pribasi Anda, server tidak akan bisa mengingat frasa sandi ini: hanya orang yang mengetahui frasa sandi yang dapat mendekripsi dan membaca kiriman data Anda.",
-          {
-            "full": "Tidak ada batas panjang atau larangan konten pada frasa sandi, namun apabila Anda kehilangan/lupa, {no} cara untuk mengembalikan frasa sandi maupun data Anda!",
-            "no": "tidak ada"
-          }
+          {}
         ]
       }
     ],
@@ -630,10 +616,7 @@ export default {
       {
         "introduction": [
           "Innanzitutto, dovrai scegliere una passphrase. Questa passphrase sarà necessaria per decifrare i tuoi Invii. Per la tua privacy, il server non ricorderà questa passphrase: solo le persone con la passphrase saranno in grado di decifrare e leggere i tuoi dati di invio.",
-          {
-            "full": "Non ci sono restrizioni sulla lunghezza o sul contenuto della passphrase, ma se la perdi, {no} c'è un modo per recuperarla o recuperare i tuoi dati!",
-            "no": "no"
-          }
+          {}
         ]
       }
     ],
@@ -684,10 +667,7 @@ export default {
       {
         "introduction": [
           "まず、あなたはパスフレーズを設定する必要があります。このパスフレーズは、あなたの提出済フォームを復号する際に求められます。あなたのプライバシーを保護するため、サーバーはパスフレーズを記録しません。設定されたパスフレーズを知っている者のみがあなたの提出済フォームデータを復号できます。",
-          {
-            "full": "パスフレーズの長さや文字に関して、制限はありません。もしパスフレーズを忘れた場合、パスフレーズまたはデータの復元方法はあり{no}。",
-            "no": "ません"
-          }
+          {}
         ]
       }
     ],
@@ -735,10 +715,7 @@ export default {
       {
         "introduction": [
           "Kwanza, utahitaji kuchagua neno la siri. Kaulisiri hii itahitajika ili kusimbua Mawasilisho yako. Kwa faragha yako, seva haitakumbuka kaulisiri hii: watu walio na kaulisiri pekee wataweza kusimbua na kusoma data yako ya Wasilisho.",
-          {
-            "full": "Hakuna urefu au vizuizi vya maudhui kwenye kaulisiri, lakini ukiipoteza, hakuna njia {no} ya kuirejesha au data yako!",
-            "no": "Hapana"
-          }
+          {}
         ]
       }
     ],

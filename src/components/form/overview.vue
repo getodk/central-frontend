@@ -156,7 +156,7 @@ export default {
     "draft": {
       "none": {
         "title": "Žádný aktuální koncept",
-        "body": "Aktuálně neexistuje pracovní verze tohoto formuláře. Pokud chcete provést změny ve formuláři nebo jeho mediálních souborech, začněte vytvořením konceptu pomocí tlačítka výše."
+        "body": "V současné době neexistuje návrh tohoto formuláře. Pokud chcete provést změny ve formuláři nebo jeho přílohách, začněte vytvořením návrhu pomocí výše uvedeného tlačítka."
       },
       "any": {
         "versionCaption": {
@@ -169,8 +169,7 @@ export default {
   "de": {
     "draft": {
       "none": {
-        "title": "Kein aktueller Entwurf",
-        "body": "Es gibt aktuell keine Entwurfsversion dieses Formulars. Wenn Sie Änderungen am Formular oder den dazugehörigen Mediendateien machen wollen, legen Sie mit der Schaltfläche oben erst einen Entwurf an."
+        "title": "Kein aktueller Entwurf"
       },
       "any": {
         "versionCaption": {
@@ -183,8 +182,7 @@ export default {
   "es": {
     "draft": {
       "none": {
-        "title": "Sin borrador actual",
-        "body": "Actualmente no existe una versión borrador de este formulario. Si desea hacer cambios en el formulario o en sus archivos multimedia, empiece por crear un borrador por medio del botón que se encuentra arriba."
+        "title": "Sin borrador actual"
       },
       "any": {
         "versionCaption": {
@@ -197,8 +195,7 @@ export default {
   "fr": {
     "draft": {
       "none": {
-        "title": "Pas d'ébauche en cours",
-        "body": "Ce formulaire n'a pas actuellement d'ébauche en cours. Si vous souhaitez apporter des modifications au formulaire ou à ses fichiers multimédia, commencez par créer une nouvelle ébauche en utilisant le bouton ci-dessus."
+        "title": "Pas d'ébauche en cours"
       },
       "any": {
         "versionCaption": {
@@ -211,8 +208,7 @@ export default {
   "id": {
     "draft": {
       "none": {
-        "title": "Belum ada draf",
-        "body": "Belum ada versi draf untuk formulir ini. Apabila Anda ingin membuat perubahan terhadap formulir atau file media di dalamnya, mulailah dengan membuat sebuah draf menggunakan tombol di atas."
+        "title": "Belum ada draf"
       },
       "any": {
         "versionCaption": {
@@ -225,8 +221,7 @@ export default {
   "it": {
     "draft": {
       "none": {
-        "title": "Nessuna bozza corrente",
-        "body": "Al momento non esiste una versione bozza di questo formulario. Se desideri apportare modifiche al formulario o ai suoi file multimediali, inizia creando una bozza utilizzando il pulsante in alto."
+        "title": "Nessuna bozza corrente"
       },
       "any": {
         "versionCaption": {
@@ -239,8 +234,7 @@ export default {
   "ja": {
     "draft": {
       "none": {
-        "title": "現在、下書きはありません。",
-        "body": "現在、このフォームの下書きはありません。フォームやメディアファイルに変更を加えたい場合は、まず上のボタンで新規下書きを作成して下さい。"
+        "title": "現在、下書きはありません。"
       },
       "any": {
         "versionCaption": {
@@ -253,8 +247,7 @@ export default {
   "sw": {
     "draft": {
       "none": {
-        "title": "Hakuna Rasimu ya Sasa",
-        "body": "Kwa sasa hakuna Rasimu ya toleo la Fomu hii. Ikiwa ungependa kufanya mabadiliko kwenye Fomu au Faili zake za Midia, anza kwa kuunda Rasimu kwa kutumia kitufe kilicho hapo juu"
+        "title": "Hakuna Rasimu ya Sasa"
       },
       "any": {
         "versionCaption": {

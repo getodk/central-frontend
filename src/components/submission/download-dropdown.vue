@@ -75,10 +75,8 @@ export default {
   "cs": {
     "action": {
       "download": {
-        "unfiltered": "Stáhnout {count} záznam | Stáhout {count} záznamy | Stáhnout {count} záznamů | Stáhnout {count} záznamů",
         "filtered": {
-          "withoutCount": "Stáhnout odpovídající záznamy",
-          "withCount": "Stáhnout {count} odpovídající záznam | Stáhnout {count} odpovídající záznamy | Stáhnout {count} odpovídajících záznamů | Stáhnout {count} odpovídající záznamy"
+          "withoutCount": "Stáhnout odpovídající příspěvky"
         }
       }
     }
@@ -86,10 +84,10 @@ export default {
   "de": {
     "action": {
       "download": {
-        "unfiltered": "{count} Datensatz herunterladen | {count} Datensätze herunterladen",
+        "unfiltered": "{count} Übermittlung herunterladen | {count} Übermittlungen herunterladen",
         "filtered": {
-          "withoutCount": "Passende Datensätze herunterladen",
-          "withCount": "{count} passenden Datensatz herunterladen | {count} passende Datensätze herunterladen"
+          "withoutCount": "Passende Übermittlungen herunterladen",
+          "withCount": "{count} passende Übermittlung herunterladen | {count} passende Übermittlungen herunterladen"
         }
       }
     }
@@ -97,10 +95,8 @@ export default {
   "es": {
     "action": {
       "download": {
-        "unfiltered": "Descargar {count} registros | Descargar {count} registros | Descargar {count} registros",
         "filtered": {
-          "withoutCount": "Descargar registros coincidentes",
-          "withCount": "Descargar {count} registros coincidentes. | Descargar {count} registros coincidentes | Descargar {count} registros coincidentes"
+          "withoutCount": "Descargar envíos coincidentes."
         }
       }
     }
@@ -108,21 +104,10 @@ export default {
   "fr": {
     "action": {
       "download": {
-        "unfiltered": "Télécharger {count} soumission | Télécharger {count} soumissions | Télécharger {count} soumissions",
+        "unfiltered": "Télécharger {count} soumission | Télécharger {count} soumissions | Télécharger {count} soumission(s)",
         "filtered": {
-          "withoutCount": "Télécharger les enregistrements correspondants",
-          "withCount": "Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s) | Télécharger {count} enregistrement(s) correspondant(s)"
-        }
-      }
-    }
-  },
-  "id": {
-    "action": {
-      "download": {
-        "unfiltered": "Unduh {count} pencatatan",
-        "filtered": {
-          "withoutCount": "Unduh pencatatan yang cocok",
-          "withCount": "Unduh {count} pencatatan yang cocok"
+          "withoutCount": "Télécharger les soumissions correspondantes",
+          "withCount": "Télécharger {count} soumission correspondant | Télécharger {count} soumissions correspondantes | Télécharger {count} souission(s) correspondant(s)"
         }
       }
     }
@@ -130,32 +115,10 @@ export default {
   "it": {
     "action": {
       "download": {
-        "unfiltered": "Scarica {count} record | Scarica {count} records | Scarica {count} records",
+        "unfiltered": "Scarica {count} Invio | Scarica {count} Invii | Scarica {count} Invii",
         "filtered": {
-          "withoutCount": "Scarica records corrispondenti",
-          "withCount": "Scarica {count} record corrispondente | Scarica {count} records corrispondenti | Scarica {count} records corrispondenti"
-        }
-      }
-    }
-  },
-  "ja": {
-    "action": {
-      "download": {
-        "unfiltered": "{count}件のレコードのダウンロード",
-        "filtered": {
-          "withoutCount": "照合されたレコードのダウンロード",
-          "withCount": "{count}件の該当レコードのダウンロード"
-        }
-      }
-    }
-  },
-  "sw": {
-    "action": {
-      "download": {
-        "unfiltered": "Pakua rekodi {count} | Pakua rekodi {count}",
-        "filtered": {
-          "withoutCount": "Pakua rekodi zinazolingana",
-          "withCount": "Pakua rekodi {count} zinazolingana | Pakua rekodi {count} zinazolingana"
+          "withoutCount": "Scarica invii corrispondenti.",
+          "withCount": "Scarica {count} invio corrispondente. | Scarica {count} invii corrispondenti. | Scarica {count} invii corrispondenti."
         }
       }
     }
