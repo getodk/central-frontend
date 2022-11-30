@@ -207,6 +207,7 @@ export default {
 
   li {
     hyphens: auto;
+    overflow-wrap: break-word;
   }
 
   li::before {
