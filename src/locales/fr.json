@@ -20,7 +20,6 @@
     "draftNav": {
       "tab": {
         "status": "Statut",
-        "attachments": "Fichiers média",
         "testing": "Test"
       }
     }
@@ -76,6 +75,9 @@
       "backup": "Sauvegarder",
       "config": {
         "set": "Spécifier"
+      },
+      "dataset": {
+        "create": "@:audit.action.default.create"
       },
       "field_key": {
         "assignment_create": "Donner accès",
@@ -234,7 +236,6 @@
     }
   },
   "submission": {
-    "missingMedia": "Média manquant",
     "action": {
       "edit": "Éditer ({count})"
     },

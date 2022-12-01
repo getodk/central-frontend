@@ -110,7 +110,10 @@ export default {
 <i18n>
 {
   "cs": {
-    "auditsTitle": "Nejnovější zálohy"
+    "auditsTitle": "Nejnovější zálohy",
+    "alert": {
+      "terminate": "Vaše automatické zálohování je ukončeno."
+    }
   },
   "de": {
     "auditsTitle": "Letzte Sicherheitskopien"
@@ -128,7 +131,10 @@ export default {
     "auditsTitle": "Data Cadangan Terakhir"
   },
   "it": {
-    "auditsTitle": "Ultimo backup"
+    "auditsTitle": "Ultimo backup",
+    "alert": {
+      "terminate": "I tuoi backup automatici sono stati interrotti."
+    }
   },
   "ja": {
     "auditsTitle": "最新のバックアップ"

@@ -279,8 +279,8 @@ export default {
     "title": "Publikovat koncept",
     "warnings": {
       "attachments": {
-        "full": "Nedodali jste všechny {mediaFiles}, které váš formulář vyžaduje. Můžete to ignorovat, pokud si budete přát, ale budete muset vytvořit novou verzi konceptu, abyste tyto soubory mohli později nahrát.",
-        "mediaFiles": "Mediální soubory"
+        "full": "Neposkytli jste všechny {formAttachments}, které váš formulář vyžaduje. Pokud chcete, můžete to ignorovat, ale později budete muset vytvořit novou verzi návrhu a tyto přílohy poskytnout.",
+        "formAttachments": "Přílohy formuláře"
       },
       "testing": {
         "full": "Ještě jste nenahráli {tested} nahráním testovacího podání. Nemusíte to dělat, ale důrazně to doporučujeme.",
@@ -288,9 +288,10 @@ export default {
       }
     },
     "introduction": [
-      "Chystáte se tento Koncept vašeho formuláře publikovat. Tím budou dokončeny všechny změny, které jste provedli v definici formuláře a připojených mediálních souborech.",
+      "Tento návrh se chystáte učinit zveřejněnou verzí svého formuláře. Tím dokončíte všechny změny, které jste provedli v definici formuláře a v přílohách formuláře.",
       "Dosavadní odeslání formulářů nebude ovlivněno, ale všechna rozpracovaná vyplnění formulářů budou odstraněna.",
-      "Každá verze formuláře vyžaduje jedinečný název verze. Váš pracovní formulář má nyní stejný název verze jako dříve publikovaná verze. Nový můžete nastavit tak, že nahrajete definici formuláře s požadovaným jménem, nebo můžete napsat nový a server jej za vás změní."
+      "Každá verze formuláře vyžaduje jedinečný název verze. Váš pracovní formulář má nyní stejný název verze jako dříve publikovaná verze. Nový můžete nastavit tak, že nahrajete definici formuláře s požadovaným jménem, nebo můžete napsat nový a server jej za vás změní.",
+      "Chcete pokračovat?"
     ],
     "field": {
       "version": "Verze"
@@ -302,20 +303,11 @@ export default {
   "de": {
     "title": "Entwurf veröffentlichen",
     "warnings": {
-      "attachments": {
-        "full": "Sie haben die {mediaFiles} für Ihr Formular benötigten Dateien nicht bereitgestellt. Sie können dies ignorieren, aber Sie müssen Entwurfsversionen zum späteren Hochladen bereitstellen.",
-        "mediaFiles": "Mediendateien"
-      },
       "testing": {
         "full": "Sie haben {tested} noch nicht eine Test-Datenübermittlung hochgeladen. Sie müssen das nicht tun, aber es wird dringend empfohlen.",
         "tested": "dieses Formular"
       }
     },
-    "introduction": [
-      "Sie sind dabei, diesen Entwurf in die veröffentlichte Version umzuwandeln. Damit werden alle Änderungen am Formular und den dazugehörenden Mediendateien abgeschlossen.",
-      "Bestehende Übermittlungen sind nicht betroffen, aber alle Übermittlungen für den Testentwurf werden entfernt.",
-      "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen."
-    ],
     "field": {
       "version": "Version"
     },
@@ -326,20 +318,11 @@ export default {
   "es": {
     "title": "Publicar borrador",
     "warnings": {
-      "attachments": {
-        "full": "No ha proporcionado todos los {mediaFiles} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de borrador para cargar esos archivos más tarde.",
-        "mediaFiles": "archivos multimedia"
-      },
       "testing": {
         "full": "Aún no ha {tested} subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
         "tested": "probado este formulario"
       }
     },
-    "introduction": [
-      "Está a punto de hacer de este borrador la versión publicada de su formulario. Esto finalizará cualquier cambio que haya realizado en la definición del formulario y sus archivos multimedia adjuntos.",
-      "Los envíos de formulario existentes no se verán afectados, pero se eliminarán todos los envíos de prueba de borrador.",
-      "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted."
-    ],
     "field": {
       "version": "Versión"
     },
@@ -350,20 +333,11 @@ export default {
   "fr": {
     "title": "Publier l'ébauche",
     "warnings": {
-      "attachments": {
-        "full": "Vous n'avez pas fourni tous les {mediaFiles} requis par votre formulaire. Vous pouvez ignorer cette notification, mais vous devrez créer une nouvelle ébauche pour ajouter ces fichiers plus tard.",
-        "mediaFiles": "fichiers média"
-      },
       "testing": {
         "full": "Vous n'avez pas encore {tested} en téleversant une soumission. Vous n'êtes pas obligé de faire cela, mais c'est fortement recommandé.",
         "tested": "testé ce formulaire"
       }
     },
-    "introduction": [
-      "Vous êtes sur le point de rendre cette ébauche la version publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers médias qui y sont liés.",
-      "Les données existantes pour le formulaire finalisé ne seront pas affectées, mais toutes les données de test de cette ébauche seront supprimées.",
-      "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous."
-    ],
     "field": {
       "version": "Version"
     },
@@ -373,17 +347,6 @@ export default {
   },
   "id": {
     "title": "Terbitkan Draf",
-    "warnings": {
-      "attachments": {
-        "full": "Anda belum melengkapi {mediaFiles} yang dibutuhkan formulir Anda. Anda dapat mengabaikan ini sekarang, tetapi Anda harus membuat Draf versi baru untuk mengunggah file-file tersebut nanti.",
-        "mediaFiles": "File Media"
-      }
-    },
-    "introduction": [
-      "Anda hendak menjadikan Draf ini sebagai versi Formulir yang diterbitkan. Ini akan memfinalisasi semua perubahan definisi formulir dan file media yang Anda buat.",
-      "Kiriman data formulir yang sudah ada tidak akan terpengaruh, tetapi semua Draf kiriman data akan dihapus.",
-      "Setiap versi dari sebuah formulir memerlukan nama yang unik. Saat ini, Draf Formulir Anda memiliki nama yang sama dengan versi yang sudah dipublikasikan sebelumnya. Anda bisa mengatur yang baru dengan mengunggah definisi formulir dengan nama yang Anda kehendaki, atau mengetik nama yang baru di bawah ini dan server akan menggantinya untuk Anda."
-    ],
     "field": {
       "version": "Versi"
     }
@@ -391,20 +354,11 @@ export default {
   "it": {
     "title": "Pubblica bozza",
     "warnings": {
-      "attachments": {
-        "full": "Non hai fornito tutti i {mediaFiles} che il tuo formulario richiede. Puoi ignorarlo se lo desideri, ma dovrai creare una nuova versione bozza per caricare quei file in un secondo momento.",
-        "mediaFiles": "File multimediali"
-      },
       "testing": {
         "full": "Non hai ancora {tested} caricando un invio di prova. Non devi farlo, ma è altamente raccomandato.",
         "tested": "testato questo Formulario"
       }
     },
-    "introduction": [
-      "Stai per rendere questa bozza la versione pubblicata del tuo formulario. Ciò finalizzerà tutte le modifiche apportate alla definizione del formulario e ai suoi file multimediali allegati.",
-      "Gli invii di Formulari esistenti non saranno interessati, ma tutti gli invii di test in bozza verranno rimossi.",
-      "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te."
-    ],
     "field": {
       "version": "Versione"
     },
@@ -415,20 +369,11 @@ export default {
   "ja": {
     "title": "下書きの公開",
     "warnings": {
-      "attachments": {
-        "full": "フォームに必要な{mediaFiles}がすべて用意されていません。これを無視しても構いませんが、後でそれらのファイルをアップロードするために、新しい下書きバージョンを作成する必要があります。",
-        "mediaFiles": "メディアファイル"
-      },
       "testing": {
         "full": "まだテストフォームのアップロードにより、{tested}していません。これは必須ではありませんが、強く推奨します。",
         "tested": "このフォームをテスト"
       }
     },
-    "introduction": [
-      "この下書きを、公開バージョンにしようとしています。これにより、定義フォームやそれに関連するメディアファイルに加えた変更が確定します。",
-      "既存の提出済フォームは影響を受けませんが、全ての下書きへのテスト提出済フォームは削除されます。",
-      "フォームの各バージョンには、それぞれ独自のバージョン名が必要です。現在、あなたの下書きフォームには、以前に公開されたバージョンと同じ名前が付けられています。新しいバージョン名を設定するには、希望する名前を付けた定義フォームをアップロードするか、もしくは、以下に新しい名前を入力すれば、サーバーのほうで変更を行います。"
-    ],
     "field": {
       "version": "バージョン"
     },
@@ -439,20 +384,11 @@ export default {
   "sw": {
     "title": "Chapisha Rasimu",
     "warnings": {
-      "attachments": {
-        "full": "Hujatoa {mediaFiles} zote ambazo Fomu yako inahitaji. Unaweza kupuuza hili ukipenda, lakini utahitaji kutengeneza toleo jipya la Rasimu ili kupakia faili hizo baadaye.",
-        "mediaFiles": "Faili za Midia"
-      },
       "testing": {
         "full": "Bado huja {tested} kwa kupakia Wasilisho la jaribio. Sio lazima kufanya hivi, lakini inashauriwa sana.",
         "tested": "Fomu hii imejaribiwa"
       }
     },
-    "introduction": [
-      "Unakaribia kuifanya Rasimu hii kuwa toleo lililochapishwa la Fomu yako. Hii itakamilisha mabadiliko yoyote ambayo umefanya kwa ufafanuzi wa Fomu na Faili zake za Midia zilizoambatishwa",
-      "Mawasilisho ya Fomu Yaliyopo hayataathiriwa, lakini Mawasilisho yote ya Rasimu ya majaribio yataondolewa",
-      "Kila toleo la Fomu linahitaji jina la toleo la kipekee. Kwa sasa, Rasimu ya Fomu yako ina jina la toleo sawa na toleo lililochapishwa hapo awali. Unaweza kuweka mpya kwa kupakia ufafanuzi wa Fomu kwa jina unalotaka, au unaweza kuandika mpya hapa chini na seva itakubadilisha."
-    ],
     "field": {
       "version": "Toleo"
     },

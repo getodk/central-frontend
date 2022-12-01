@@ -187,7 +187,14 @@ export default {
       "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče.",
       "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
     ],
-    "collectProjectName": "[Návrh] {name}"
+    "collectProjectName": "[Návrh] {name}",
+    "datasetsPreview": {
+      "body": [
+        "Tento formulář může přidávat entity do datové sady.",
+        "V této předběžné verzi datových sad je nutné formulář publikovat, aby se aktualizace datové sady zobrazila. V některé z budoucích verzí aplikace Central budete moci testovat funkce Datasetu ve stavu návrhu.",
+        "Prozatím doporučujeme zveřejňovat formuláře související s datovou sadou a neschvalovat žádná podání (a tedy nevytvářet žádné nežádoucí entity), dokud si nebudete jisti, že je formulář připraven."
+      ]
+    }
   },
   "de": {
     "title": "Entwurfs-Test",

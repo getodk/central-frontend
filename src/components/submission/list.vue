@@ -469,7 +469,6 @@ export default {
         }
       }
     },
-    "emptyTable": "Zatím neexistují žádné příspěvky.",
     "noMatching": "Neexistují žádné odpovídající příspěvky."
   },
   "de": {
@@ -491,7 +490,6 @@ export default {
         }
       }
     },
-    "emptyTable": "Es gibt noch keine Übermittlungen.",
     "noMatching": "Es gibt keine passenden Übermittlungen."
   },
   "es": {
@@ -513,7 +511,6 @@ export default {
         }
       }
     },
-    "emptyTable": "No hay envíos todavía.",
     "noMatching": "No hay envíos coincidentes."
   },
   "fr": {
@@ -535,7 +532,6 @@ export default {
         }
       }
     },
-    "emptyTable": "Il n'y a pas encore de soumissions.",
     "noMatching": "Il n'y a pas de soumission correspondante."
   },
   "id": {
@@ -557,13 +553,12 @@ export default {
         }
       }
     },
-    "emptyTable": "Belum ada kiriman data.",
     "noMatching": "Tidak ada Pengiriman yang cocok."
   },
   "it": {
     "loading": {
       "withoutCount": "Caricando invii...",
-      "all": "Cricando {count} invio... | Cricando {count} invii... | Cricando {count} invii...",
+      "all": "Cricando {count} invio... | Cricando {count} invii... | Caricando {count} invii...",
       "first": "Loading the first {top} of {count} Submission… | Caricando il primo {top} di {count} Invio… | Caricando il primo {top} di {count} Invio…",
       "middle": "Caricamento di {top} in più di {count} invio rimanente... | Caricamento di {top} in più di {count} invii rimanenti... | Caricamento di {top} in più di {count} invii rimanenti...",
       "last": {
@@ -571,15 +566,14 @@ export default {
         "one": "Caricamento dell'ultimo invio in corso..."
       },
       "filtered": {
-        "withoutCount": "Cricando invii corrispondenti...",
+        "withoutCount": "Caricando invii corrispondenti...",
         "middle": "Caricamento di {top} in più di {count} invio corrispondente rimanente... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti...",
         "last": {
           "multiple": "Caricando l'ultimo {count} invio corrispondente… | Caricando gli ultimi {count} invii corrispondenti… | Caricando gli ultimi {count} invii corrispondenti…",
-          "one": "Cricando gli ultimi invii corrispondenti..."
+          "one": "Caricando gli ultimi invii corrispondenti..."
         }
       }
     },
-    "emptyTable": "Non ci sono ancora invii.",
     "noMatching": "Non sono presenti invii corrispondenti."
   },
   "ja": {
@@ -601,7 +595,6 @@ export default {
         }
       }
     },
-    "emptyTable": "表示できる提出済フォームはありません。",
     "noMatching": "照合できる提出済フォームはありません。"
   },
   "sw": {
@@ -623,7 +616,6 @@ export default {
         }
       }
     },
-    "emptyTable": "Bado hakuna Mawasilisho.",
     "noMatching": "Hakuna Mawasilisho yanayolingana."
   }
 }

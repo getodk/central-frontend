@@ -535,7 +535,7 @@ export default {
       "upload": "Nahrát soubory"
     },
     "heading": [
-      "Na základě nahraného formuláře se očekávají následující soubory. Můžete vidět, které z nich byly nahrány nebo stále chybí.",
+      "Na základě nahraného formuláře se očekávají následující přílohy formuláře. Můžete se podívat, které z nich byly poskytnuty nebo které ještě chybí.",
       "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na stránku."
     ],
     "header": {
@@ -547,17 +547,19 @@ export default {
     },
     "alert": {
       "readError": "Při čtení “{filename}” došlo k chybě.",
-      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno."
+      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
+      "link": "Datová sada byla úspěšně propojena."
+    },
+    "datasetsPreview": {
+      "body": [
+        "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy datových sad. Ve výchozím nastavení jsou tyto soubory propojeny s datovými sadami. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit s Datasety, jakmile ověříte logiku formuláře."
+      ]
     }
   },
   "de": {
     "action": {
       "upload": "Dateien hochladen"
     },
-    "heading": [
-      "Bei der Analyse des Formulars ergab sich, dass die folgenden Dateien erwartet werden. Es wird angezeigt, welche Dateien schon hochgeladen wurden und welche noch fehlen.",
-      "Um Dateien hochzuladen, verwenden Sie Drag-and-Drop auf die Seite."
-    ],
     "header": {
       "uploaded": "Hochgeladen"
     },
@@ -574,10 +576,6 @@ export default {
     "action": {
       "upload": "Subir archivos"
     },
-    "heading": [
-      "Según el formulario que cargó, se esperan los siguientes archivos. Puede ver cuáles se han cargado o aún faltan.",
-      "Para cargar archivos, arrastre y suelte uno o más archivos en la página."
-    ],
     "header": {
       "uploaded": "Subido"
     },
@@ -594,10 +592,6 @@ export default {
     "action": {
       "upload": "Téléverser des fichiers"
     },
-    "heading": [
-      "A la lecture du formulaire téléversé, les fichiers suivants sont attendus. Vous pouvez voir lesquels ont été téléversé et ceux manquants.",
-      "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur cette page."
-    ],
     "header": {
       "uploaded": "Téléversés"
     },
@@ -614,10 +608,6 @@ export default {
     "action": {
       "upload": "Unggah dokumen"
     },
-    "heading": [
-      "Berdasarkan formulir yang Anda unggah, beberapa dokumen berikut adalah wajib. Anda dapat melihat mana yang sudah dan belum diunggah.",
-      "Untuk mengunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman."
-    ],
     "header": {
       "uploaded": "Diunggah"
     },
@@ -634,10 +624,6 @@ export default {
     "action": {
       "upload": "Caricare files"
     },
-    "heading": [
-      "In base al formulario caricato, sono previsti i seguenti file. Puoi vedere quali sono stati caricati o mancano ancora.",
-      "Per caricare file, trascina e rilascia uno o più file sulla pagina."
-    ],
     "header": {
       "uploaded": "Caricati"
     },
@@ -654,10 +640,6 @@ export default {
     "action": {
       "upload": "ファイルのアップロード"
     },
-    "heading": [
-      "あなたがアップロードしたフォームには、以下のファイルが必要です。どのファイルがアップロードされ、どのファイルが不足してるのかがわかります。",
-      "１つ以上のファイルをドラッグ＆ドロップしてアップロードする。"
-    ],
     "header": {
       "uploaded": "アップロード済"
     },
@@ -674,10 +656,6 @@ export default {
     "action": {
       "upload": "Pakia faili"
     },
-    "heading": [
-      "Kulingana na Fomu uliyopakia, faili zifuatazo zinatarajiwa. Unaweza kuona ni zipi zimepakiwa au bado hazipo.",
-      "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa"
-    ],
     "header": {
       "uploaded": "Imepakiwa"
     },

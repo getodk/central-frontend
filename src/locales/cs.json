@@ -20,7 +20,6 @@
     "draftNav": {
       "tab": {
         "status": "Stav",
-        "attachments": "Mediální soubory",
         "testing": "Testování"
       }
     }
@@ -76,6 +75,11 @@
       "backup": "Záloha",
       "config": {
         "set": "Nastavit"
+      },
+      "dataset": {
+        "update": "Aktualizovat",
+        "update_publish": "Zveřejnit",
+        "create": "@:audit.action.default.create"
       },
       "field_key": {
         "assignment_create": "Dát přístup",
@@ -133,6 +137,7 @@
     "download": "Stáhnout",
     "edit": "Upravit",
     "editProfile": "Upravit profil",
+    "finish": "Dokončit",
     "logIn": "Přihlásit se",
     "looksGood": "Vypadá to dobře, pokračujte",
     "more": "Více",
@@ -197,8 +202,10 @@
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
     "config": "Konfigurace serveru",
+    "datasets": "Datové sady",
     "form": "Formulář",
     "forms": "Formuláře",
+    "formAttachments": "Přílohy formuláře",
     "project": "Projekt",
     "projects": "Projekty",
     "publicLink": "Veřejný odkaz",
@@ -234,7 +241,6 @@
     }
   },
   "submission": {
-    "missingMedia": "Chybějící média",
     "action": {
       "edit": "Upravit ({count})"
     },
@@ -265,7 +271,11 @@
       "overview": "Přehled"
     },
     "total": "Celkem",
-    "lastSubmission": "(naposledy {dateTime})"
+    "lastSubmission": "(naposledy {dateTime})",
+    "punctuations": {
+      "comma": ","
+    },
+    "datasetsPreview": "Náhled datových sad"
   },
   "mixin": {
     "request": {

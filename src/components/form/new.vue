@@ -324,7 +324,7 @@ $drop-zone-vpadding: 15px;
         "full": "Pokud ještě žádný nemáte, je tu {tools} který vám pomůže navrhnout formulář.",
         "tools": "dostupný nástroj"
       },
-      "Pokud máte médium, budete jej moci po vytvoření formuláře nahrát na další stránku."
+      "Pokud máte přílohy formuláře, budete je moci zadat na další stránce po vytvoření formuláře."
     ],
     "dropZone": {
       "full": "Sem přetáhněte soubor nebo {chooseOne} a nahrajte.",
@@ -364,8 +364,7 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Wenn Sie noch kein Formular haben, gibt es {tools} mit denen Sie Ihr Formular entwickeln können.",
         "tools": "Werkzeuge"
-      },
-      "Wenn Sie Mediendateien haben, können Sie diese auf der folgenden Seite hochladen, nachdem das Formular erstellt wurde."
+      }
     ],
     "dropZone": {
       "full": "Fügen Sie hier eine Datei mit Drag-and-Drop ein, oder {chooseOne} zum Hochladen.",
@@ -405,8 +404,7 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Si aún no tiene uno, hay {tools} para ayudarlo a diseñar su formulario.",
         "tools": "herramientas disponibles"
-      },
-      "Si tiene medios, podrá cargarlos en la página siguiente, después de que se haya creado el formulario."
+      }
     ],
     "dropZone": {
       "full": "Suelta un archivo aquí o {chooseOne} para subir.",
@@ -446,8 +444,7 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Si vous n'en avez as déjà un, il y a des {tools} pour vous aider à concevoir votre formulaire.",
         "tools": "outils disponibles"
-      },
-      "Si vous avez des médias, vous pourrez les envoyer à la page suivante, après que le formulaire aura été créé."
+      }
     ],
     "dropZone": {
       "full": "Déposez un fichier ici, ou {chooseOne} pour le téléverser.",
@@ -487,8 +484,7 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Apabila Anda belum memilikinya, {tools} akan membantu Anda mendesain formulir Anda.",
         "tools": "Perangkat yang tersedia"
-      },
-      "Apabila Anda memiliki media, Anda dapat mengunggahnya pada laman berikutnya setelah formulir berhasil dibuat."
+      }
     ],
     "dropZone": {
       "full": "Lepas dokumen di sini, atau {chooseOne} untuk mengunggah.",
@@ -528,8 +524,7 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Se non ne hai già uno, ci sono {tools} per aiutarti a progettare il tuo formulario.",
         "tools": "strumenti a disposizione"
-      },
-      "Se disponi di file multimediali, potrai caricarli nella pagina successiva, dopo che il formulario è stato creato."
+      }
     ],
     "dropZone": {
       "full": "Trascina un file qui o {chooseOne} per caricarlo.",
@@ -569,8 +564,7 @@ $drop-zone-vpadding: 15px;
       {
         "full": "もしまだフォームをお持ちでない場合、フォームデザインを支援する{tools}。",
         "tools": "ツールを利用できます"
-      },
-      "メディアファイルはフォームを作成後、次のページでアップロードできます。"
+      }
     ],
     "dropZone": {
       "full": "アップロードするには、ここにファイルをドロップする、または、こちらからファイルを{chooseOne}",
@@ -610,8 +604,7 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Ikiwa tayari huna, kuna {tools} za kukusaidia kuunda Fomu yako.",
         "tools": "zana zinazopatikana"
-      },
-      "Ikiwa una media, utaweza kuipakia kwenye ukurasa unaofuata, baada ya kuunda Fomu."
+      }
     ],
     "dropZone": {
       "full": "Dondosha faili hapa, au {chooseOne} ili upakie.",

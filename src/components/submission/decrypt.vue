@@ -406,7 +406,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       "download": {
         "mainTable": "Hlavní datová tabulka (bez opakování)",
         "allTables": "Všechny datové tabulky",
-        "withMedia": "Všechny datové a mediální soubory"
+        "withAttachments": "Všechna data a přílohy"
       }
     },
     "alert": {
@@ -435,8 +435,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Hauptdatentabelle (keine repeats)",
-        "allTables": "Alle Datentabellen",
-        "withMedia": "Alle Daten und Mediendateien"
+        "allTables": "Alle Datentabellen"
       }
     },
     "alert": {
@@ -450,7 +449,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Opciones de exportación",
     "field": {
       "splitSelectMultiples": "Divida las opciones de \"selección múltiple\" en columnas",
-      "removeGroupNames": "Eliminar nombres de grupos"
+      "removeGroupNames": "Eliminar nombres de grupos",
+      "deletedFields": "Incluir campos que no están en el Formulario publicado."
     },
     "noSelectMultiple": "Este formulario no tiene ningún campo de selección múltiple.",
     "encryptedForm": "Los formularios cifrados no se pueden procesar de esta manera.",
@@ -463,8 +463,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Tabla de datos principal (sin repeticiones)",
-        "allTables": "Todas las tablas de datos",
-        "withMedia": "Todos los datos y archivos multimedia"
+        "allTables": "Todas las tablas de datos"
       }
     },
     "alert": {
@@ -493,8 +492,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Principale table de données (sans \"repeats\")",
-        "allTables": "Toutes les tables de données",
-        "withMedia": "Toutes les données et médias associés."
+        "allTables": "Toutes les tables de données"
       }
     },
     "alert": {
@@ -517,8 +515,10 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Opzioni di esportazione",
     "field": {
       "splitSelectMultiples": "Dividi le scelte \"select multiple\" in colonne",
-      "removeGroupNames": "Rimuovi i nomi dei gruppi"
+      "removeGroupNames": "Rimuovi i nomi dei gruppi",
+      "deletedFields": "Includere i campi non nel formulario pubblicato"
     },
+    "deletedFieldsHelp": "Utilizzare questa opzione se è necessario visualizzare i campi a cui si fa riferimento nelle versioni precedenti del formulario.",
     "noSelectMultiple": "Questo formulario non ha campi a scelta multipla selezionati.",
     "encryptedForm": "I moduli crittografati non possono essere elaborati in questo modo.",
     "deletedFieldsDisabledForDraft": "Le bozze non possono essere elaborate in questo modo.",
@@ -530,8 +530,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Tabella dati principale (no repeats)",
-        "allTables": "Tutte le tabelle di dati",
-        "withMedia": "Tutti i dati e i file multimediali"
+        "allTables": "Tutte le tabelle di dati"
       }
     },
     "alert": {
@@ -558,8 +557,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "主なデータ（リピートを含まない）",
-        "allTables": "全てのデータ",
-        "withMedia": "全てのデータとメディアファイル"
+        "allTables": "全てのデータ"
       }
     },
     "alert": {
@@ -585,8 +583,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Jedwali kuu la data (hakuna marudio)",
-        "allTables": "Jedwali zote za data",
-        "withMedia": "Data zote na faili za midia"
+        "allTables": "Jedwali zote za data"
       }
     },
     "alert": {

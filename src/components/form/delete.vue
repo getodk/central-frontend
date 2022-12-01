@@ -107,7 +107,8 @@ export default {
     "introduction": [
       "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?",
       "Tato akce přesune formulář do koše. Po 30 dnech v koši bude trvale vymazán, ale předtím jej lze zrušit."
-    ]
+    ],
+    "noDeleteEntities": "Subjekty vytvořené na základě podání tohoto formuláře nebudou vymazány. V některé z budoucích verzí Centralu bude možné Entity odstranit."
   },
   "de": {
     "title": "Formulare löschen",

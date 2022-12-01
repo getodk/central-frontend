@@ -248,18 +248,21 @@ export default {
       "forum": "komunitní fórum"
     },
     "notConfigured": [
-      "Zálohy nejsou nakonfigurovány."
+      "Zálohy nejsou nakonfigurovány.",
+      "V dřívějších verzích ODK Central bylo možné nastavit automatické zálohování na Disk Google. Tato funkce byla zrušena, ale existují jiné způsoby zálohování dat na serveru. Všem uživatelům důrazně doporučujeme, aby si svá data zálohovali."
     ],
     "neverRun": [
       "Nakonfigurované zálohování dosud nebylo spuštěno.",
-      "Pokud jste nakonfigurovali zálohování v posledních několika dnech, je to normální. Jinak se něco pokazilo."
+      "Pokud jste nakonfigurovali zálohování v posledních několika dnech, je to normální. Jinak se něco pokazilo.",
+      "V takovém případě je nejpravděpodobnější opravou restartování služby."
     ],
     "somethingWentWrong": [
       "Něco je špatně!",
       {
         "full": "Poslední úspěšná záloha byla {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "před více než třemi dny"
-      }
+      },
+      "Nejpravděpodobnější opravou je restartování služby."
     ],
     "success": [
       "Zálohování funguje.",
@@ -406,18 +409,21 @@ export default {
       "forum": "forum comunitario"
     },
     "notConfigured": [
-      "I backup non sono configurati."
+      "I backup non sono configurati.",
+      "Nelle versioni precedenti di ODK Central era possibile impostare backup automatici su Google Drive. Questa funzionalità è stata deprecata, ma esistono altri modi per eseguire il backup dei dati sul server. Consigliamo vivamente a tutti gli utenti di eseguire il backup dei propri dati."
     ],
     "neverRun": [
       "Il backup configurato non è ancora stato eseguito.",
-      "Se hai configurato i backup negli ultimi due giorni, è normale. Altrimenti qualcosa è andato storto."
+      "Se hai configurato i backup negli ultimi due giorni, è normale. Altrimenti qualcosa è andato storto.",
+      "In tal caso, la soluzione più probabile è riavviare il servizio."
     ],
     "somethingWentWrong": [
       "Qualcosa non funziona!",
       {
         "full": "L'ultimo backup completato con successo è stato {moreThanThreeDaysAgo}.",
         "moreThanThreeDaysAgo": "più di tre giorni fa"
-      }
+      },
+      "La soluzione più probabile è riavviare il servizio."
     ],
     "success": [
       "Il Backup sta funzionando.",

@@ -247,7 +247,8 @@ export default {
     "notUploaded": {
       "text": "Nebyl nahrán",
       "title": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na tuto stránku"
-    }
+    },
+    "uploadToOverride": "Nahrajte soubor, který chcete přepsat."
   },
   "de": {
     "type": {

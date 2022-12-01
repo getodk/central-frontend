@@ -20,7 +20,6 @@
     "draftNav": {
       "tab": {
         "status": "ステータス",
-        "attachments": "メディアファイル",
         "testing": "テスト"
       }
     }
@@ -75,6 +74,9 @@
       "backup": "バックアップ",
       "config": {
         "set": "設定"
+      },
+      "dataset": {
+        "create": "@:audit.action.default.create"
       },
       "field_key": {
         "assignment_create": "アクセス権の付与",
@@ -230,7 +232,6 @@
     }
   },
   "submission": {
-    "missingMedia": "メディアファイルが見つかりません",
     "action": {
       "edit": "編集回数（{count}）"
     },

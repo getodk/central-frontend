@@ -20,7 +20,6 @@
     "draftNav": {
       "tab": {
         "status": "Status",
-        "attachments": "File Media",
         "testing": "Uji Coba"
       }
     }
@@ -75,6 +74,9 @@
       "backup": "Pembuatan data cadangan",
       "config": {
         "set": "Set"
+      },
+      "dataset": {
+        "create": "@:audit.action.default.create"
       },
       "field_key": {
         "assignment_create": "Memberi Akses",
@@ -227,7 +229,6 @@
     }
   },
   "submission": {
-    "missingMedia": "Media hilang",
     "action": {
       "edit": "Ubah ({count})"
     },

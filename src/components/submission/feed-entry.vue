@@ -318,6 +318,9 @@ Comment • {name} */
   "cs": {
     "title": {
       "create": "Odesláno od {name}",
+      "entity": {
+        "error": "Problém s vytvořením entity"
+      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} u {name}",

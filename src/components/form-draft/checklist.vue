@@ -198,13 +198,7 @@ export default {
         ]
       },
       {
-        "title": "Nahrát mediální soubory formuláře",
-        "body": [
-          {
-            "full": "Návrh formuláře odkazuje na soubory, které jsou potřebné k prezentaci formuláře. Na kartě {mediaFiles} můžete nahrát nové, nebo aktualizované kopie těchto souborů určených k distribuci.",
-            "mediaFiles": "Mediální soubory"
-          }
-        ]
+        "title": "Nahrát přílohy formuláře"
       },
       {
         "title": "Otestujte formulář vytvořením podání",
@@ -251,15 +245,7 @@ export default {
           }
         ]
       },
-      {
-        "title": "Mediendateien hochladen",
-        "body": [
-          {
-            "full": "Ihre Referenzdateien für den Formularentwurf werden für die Darstellung des Formulars benötigt. Sie können neue oder geänderte Formulare über den Reiter {mediaFiles} hochladen.",
-            "mediaFiles": "Mediendateien"
-          }
-        ]
-      },
+      {},
       {
         "title": "Teste das Formular indem du eine Einreichung erstellst.",
         "body": [
@@ -305,15 +291,7 @@ export default {
           }
         ]
       },
-      {
-        "title": "Subir archivos multimedia de formulario",
-        "body": [
-          {
-            "full": "El diseño de su formulario hace referencia a los archivos necesarios para presentar su formulario. Puede cargar copias nuevas o actualizadas para su distribución en la pestaña {mediaFiles}.",
-            "mediaFiles": "archivos multimedia"
-          }
-        ]
-      },
+      {},
       {
         "title": "Pruebe el formulario creando un envío",
         "body": [
@@ -359,15 +337,7 @@ export default {
           }
         ]
       },
-      {
-        "title": "Téléverser les fichiers média du formulaire",
-        "body": [
-          {
-            "full": "Le modèle de votre formulaire fait référence à des fichiers qui sont nécessaires pour présenter votre formulaire. Vous pouvez télécharger des copies nouvelles ou mises à jour de ces fichiers pour les distribuer sous l'onglet {mediaFiles}.",
-            "mediaFiles": "Fichiers média"
-          }
-        ]
-      },
+      {},
       {
         "title": "Testez le formulaire en créant une soumission",
         "body": [
@@ -413,15 +383,7 @@ export default {
           }
         ]
       },
-      {
-        "title": "Unggah Formulir File Media",
-        "body": [
-          {
-            "full": "Dokumen referensi desain formulir Anda yang dibutuhkan untuk menampilkan formulir Anda. Anda dapat mengunggah distribusi baru atau yang sudah diperbarui di tab {mediaFiles}.",
-            "mediaFiles": "File Media"
-          }
-        ]
-      },
+      {},
       {
         "body": [
           {
@@ -466,15 +428,7 @@ export default {
           }
         ]
       },
-      {
-        "title": "Carica i file multimediali associati al formulario",
-        "body": [
-          {
-            "full": "La definizione del tuo formulario fa rimerimento a files che sono necessari per poter mostrare il tuo Formulario. Puoi caricare copie nuove o aggiornate di questi per la distribuzione nella scheda {mediaFiles} .",
-            "mediaFiles": "File multimediali"
-          }
-        ]
-      },
+      {},
       {
         "title": "Testa il formulario creando un invio",
         "body": [
@@ -520,15 +474,7 @@ export default {
           }
         ]
       },
-      {
-        "title": "フォームのメディアファイルのアップロード",
-        "body": [
-          {
-            "full": "あなたのフォームには、メディアファイルが必要です。これらのファイルの新規または更新されたコピーのアップロードは、{mediaFiles}タブで設定できます。",
-            "mediaFiles": "メディアファイル"
-          }
-        ]
-      },
+      {},
       {
         "title": "提出フォームを作成して、フォームをテストする。",
         "body": [
@@ -574,15 +520,7 @@ export default {
           }
         ]
       },
-      {
-        "title": "Pakia Faili za Midia ya Fomu",
-        "body": [
-          {
-            "full": "Usanifu wa Fomu yako unarejelea faili ambazo zinahitajika ili kuwasilisha Fomu yako. Unaweza kupakia nakala mpya au zilizosasishwa za hizi kwa usambazaji chini ya kichupo cha {mediaFiles}",
-            "mediaFiles": "Faili za Midia"
-          }
-        ]
-      },
+      {},
       {
         "title": "Jaribu Fomu kwa kuunda Wasilisho",
         "body": [

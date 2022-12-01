@@ -130,11 +130,11 @@ export default {
     },
     "introduction": {
       "abandon": [
-        "Chystáte se trvale smazat pracovní verzi tohoto formuláře. To znamená, že definice konceptu formuláře, všechny koncepty mediálních souborů, které jste nahráli, a všechna testovací odeslání budou odstraněna.",
-        "Vaše publikovaná definice formuláře, její mediální soubory a odeslání nebudou ovlivněny."
+        "Chystáte se trvale odstranit pracovní verzi tohoto formuláře. To znamená, že definice návrhu formuláře, všechny vámi nahrané přílohy návrhu formuláře a všechna testovací podání budou odstraněna.",
+        "Vaše zveřejněná definice formuláře, jeho přílohy a podání nebudou ovlivněny."
       ],
       "deleteForm": [
-        "Chystáte se odstranit tento návrh definice formuláře spolu se všemi nahranými návrhy mediálních souborů a všemi testovacími podáními. Protože jste ji ještě nezveřejnili, bude celý tento Formulář odstraněn a přesunut do koše."
+        "Chystáte se odstranit tento návrh definice formuláře spolu se všemi nahranými návrhy příloh formuláře a všemi testovacími podáními. Protože jste jej ještě nezveřejnili, bude celý tento Formulář odstraněn a přesunut do koše."
       ]
     },
     "action": {
@@ -146,15 +146,6 @@ export default {
       "abandon": "Entwurf verwerfen",
       "deleteForm": "Entwurf verwerfen und Formular löschen"
     },
-    "introduction": {
-      "abandon": [
-        "Sie sind dabei, die Entwurfsversion dieses Formulars zu löschen. Das bedeutet, dass das Formular, hochgeladene dazugehörige Mediendateien und alle Test-Übermittlungen entfernt werden.",
-        "Ihre veröffentlichten Forumulardefinitionen, ihre Mediendateien und Übermittlungen werden nicht angetastet."
-      ],
-      "deleteForm": [
-        "Sie sind im Begriff, diese Definition des Formularentwurfes zusammen mit allen Entwürfen von Mediendateien, die Sie hochgeladen haben, und allen Testübermittlungen zu löschen. Da Sie dieses Formular noch nicht veröffentlicht haben, wird dieses gesamte Formular gelöscht und in den Papierkorb verschoben."
-      ]
-    },
     "action": {
       "abandon": "Ja, Löschen"
     }
@@ -163,15 +154,6 @@ export default {
     "title": {
       "abandon": "Abandonar borrador",
       "deleteForm": "Abandonar borrador y borrar formulario"
-    },
-    "introduction": {
-      "abandon": [
-        "Está a punto de borrar permanentemente la versión borrador de este formulario. Esto significa que se borrará el borrador de la definición del formulario, cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba.",
-        "Su definición de formulario publicada, sus archivos multimedia y envíos no se verán afectados."
-      ],
-      "deleteForm": [
-        "Está a punto de borrar este borrador de definición de formulario, junto con cualquier borrador de archivos multimedia que haya cargado y todos los envíos de prueba. Como aún no lo ha publicado, este formulario se eliminará y movido a la Papelera.."
-      ]
     },
     "action": {
       "abandon": "Abandonar"
@@ -182,15 +164,6 @@ export default {
       "abandon": "Abandonner l'ébauche",
       "deleteForm": "Abandonner l'ébauche et supprimer le formulaire"
     },
-    "introduction": {
-      "abandon": [
-        "Vous êtes sur le point de supprimer définitivement la version d'ébauche de ce formulaire. Sa définition, ses fichiers multimédias liés et toutes ses soumissions de test seront supprimés.",
-        "Votre définition de formulaire publiée, ses fichiers média et ses données soumises ne seront pas affectés."
-      ],
-      "deleteForm": [
-        "Vous êtes sur le point de supprimer cette ébauche du formulaire, y compris ses fichiers média associés et toutes ses soumissions de test. Puisque vous n'avez pas encore publié cette ébauche, le formulaire complet sera supprimé et envoyé à la corbeille."
-      ]
-    },
     "action": {
       "abandon": "Abandonner"
     }
@@ -199,12 +172,6 @@ export default {
     "title": {
       "abandon": "Buang Draf",
       "deleteForm": "Buang Draf dan Hapus Formulir"
-    },
-    "introduction": {
-      "abandon": [
-        "Anda hendak menghapus permanen versi draf dari formulir ini. Draf definisi formulir, draf file media yang telah diunggah, dan semua tes kiriman data dalam formulir akan dihapus.",
-        "Definisi formulir, file media, dan kiriman data yang sudah diterbitkan tidak akan terpengaruh."
-      ]
     },
     "action": {
       "abandon": "Buang"
@@ -215,15 +182,6 @@ export default {
       "abandon": "Abbandona bozza",
       "deleteForm": "Abbandona ed elimina la bozza"
     },
-    "introduction": {
-      "abandon": [
-        "Stai per eliminare definitivamente la versione bozza di questo formulario. Ciò significa che la bozza di definizione del formulario, qualsiasi bozza di file multimediali che hai caricato e tutti gli invii di prova verranno rimossi.",
-        "La definizione del formulario pubblicato, i suoi file multimediali e gli invii non saranno interessati."
-      ],
-      "deleteForm": [
-        "Stai per eliminare questa bozza di definizione del formulario, insieme a qualsiasi bozza di file multimediali che hai caricato e tutti gli invii di prova. Poiché non l'hai ancora pubblicato, l'intero formualrio verrà eliminato e spostato nel Cestino."
-      ]
-    },
     "action": {
       "abandon": "Annulla"
     }
@@ -233,15 +191,6 @@ export default {
       "abandon": "下書きの削除",
       "deleteForm": "下書きとフォームの削除"
     },
-    "introduction": {
-      "abandon": [
-        "このフォームの下書きバージョンを永久に削除しようとしています。これは、この定義フォームの下書き、下書きのメディアファイルおよび下書きへのテスト提出済フォームが全て削除されることを意味します。",
-        "あなたの公開した定義フォームやメディアファイル、提出済フォームは影響を受けません。"
-      ],
-      "deleteForm": [
-        "アップロードされたメディアファイルを含む、この下書き、およびテストに用いられた提出済フォームを削除しようとしています。このフォームを公開していないため、全てが削除され、ゴミ箱に移動されます。"
-      ]
-    },
     "action": {
       "abandon": "削除"
     }
@@ -250,15 +199,6 @@ export default {
     "title": {
       "abandon": "acha rasimu",
       "deleteForm": "Achana na Rasimu na ufute Fomu"
-    },
-    "introduction": {
-      "abandon": [
-        "Unakaribia kufuta kabisa Rasimu ya toleo la Fomu hii. Hii inamaanisha kuwa rasimu ya ufafanuzi wa Fomu, rasimu ya Faili zozote za Midia ulizopakia na Mawasilisho yote ya majaribio yataondolewa.",
-        "Ufafanuzi wako wa Fomu uliochapishwa, Faili zake za Midia na Mawasilisho hayataathiriwa"
-      ],
-      "deleteForm": [
-        "Unakaribia kufuta rasimu hii ya ufafanuzi wa Fomu, pamoja na rasimu ya Faili zozote za Midia ambazo umepakia, na Mawasilisho yote ya majaribio. Kwa sababu bado hujaichapisha, Fomu hii yote itafutwa na kuhamishiwa kwenye Tupio."
-      ]
     },
     "action": {
       "abandon": "Achana"

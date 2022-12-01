@@ -161,7 +161,7 @@ export default {
     "formVersion": "Verze formuláře",
     "deviceId": "ID zařízení",
     "userAgent": "Uživatelský agent",
-    "attachments": "Soubory medií",
+    "attachments": "Přílohy",
     "present": "{count} soubor | {count} soubory | {count} souborů | {count} soubory",
     "expected": "{count} očekáván | {count} očekávány | {count} očekáváno | {count} očekávány",
     "attachmentSummary": "{present} / {expected}"
@@ -171,7 +171,6 @@ export default {
     "formVersion": "Formular Version",
     "deviceId": "Geräte-ID",
     "userAgent": "User-Agent",
-    "attachments": "Mediendateien",
     "present": "{count} Datei | {count} Dateien",
     "expected": "{count} erwartet | {count} erwartet",
     "attachmentSummary": "{present} / {expected}"
@@ -181,7 +180,6 @@ export default {
     "formVersion": "Versión formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente de usuario",
-    "attachments": "Archivos multimedia",
     "present": "{count} file | {count} files | {count} files",
     "expected": "{count} expected | {count} esperado | {count} esperado",
     "attachmentSummary": "{present} / {expected}"
@@ -191,7 +189,6 @@ export default {
     "formVersion": "Version de formulaire",
     "deviceId": "ID d'appareil",
     "userAgent": "\"User agent\"",
-    "attachments": "Fichiers média",
     "present": "{count} fichier | {count} fichiers | {count} fichiers",
     "expected": "{count} attendu | {count} attendus | {count} attendus",
     "attachmentSummary": "{present} / {expected}"
@@ -199,7 +196,6 @@ export default {
   "id": {
     "reviewState": "Status ulasan",
     "deviceId": "ID Perangkat",
-    "attachments": "File Media",
     "present": "{count} berkas",
     "expected": "{count} diharapkan",
     "attachmentSummary": "{present} / {expected}"
@@ -209,7 +205,6 @@ export default {
     "formVersion": "Versione formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente utente",
-    "attachments": "File multimediali",
     "present": "{count} file | {count} files | {count} files",
     "expected": "{count} atteso | {count} attesi | {count} attesi",
     "attachmentSummary": "{present} / {expected}"
@@ -219,7 +214,6 @@ export default {
     "formVersion": "フォームのバージョン",
     "deviceId": "デバイスID",
     "userAgent": "ユーザーエージェント",
-    "attachments": "メディアファイル",
     "present": "{count}件の提出済メディアファイル",
     "expected": "{count}件の期待されるメディアファイル数",
     "attachmentSummary": "{present} / {expected}"
@@ -229,7 +223,6 @@ export default {
     "formVersion": "Toleo la fomu",
     "deviceId": "Kitambulisho cha Kifaa",
     "userAgent": "Wakala wa mtumiaji",
-    "attachments": "Faili za media",
     "present": "faili {count} | faili {count}",
     "expected": "{count} inatarajiwa | {count} inatarajiwa",
     "attachmentSummary": "{present} / {expected}"
