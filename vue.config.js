@@ -26,10 +26,6 @@ module.exports = {
       config.resolve.symlinks(false);
 
     if (process.env.NODE_ENV === 'test') {
-      config.resolve.alias.set(
-        '@vue/test-utils',
-        '@vue/test-utils/dist/vue-test-utils.esm-bundler.js'
-      );
       config.resolve.alias.set('vue$', 'vue/dist/vue.esm-bundler.js');
     }
   },
