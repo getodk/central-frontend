@@ -15,7 +15,7 @@ webpackConfigForKarma.devtool = 'inline-source-map';
 
 module.exports = (config) => {
   config.set({
-    frameworks: ['mocha'],
+    frameworks: ['webpack', 'mocha'],
     files: [
       'test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
