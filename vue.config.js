@@ -33,6 +33,11 @@ module.exports = {
       config.resolve.alias.set('vue$', 'vue/dist/vue.esm-bundler.js');
     }
   },
+  css: {
+    loaderOptions: {
+      css: { url: false }
+    }
+  },
   lintOnSave: false,
   pluginOptions: {
     i18n: {
