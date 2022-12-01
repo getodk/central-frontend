@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="dataset-summary-row">
+    <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
     <div class="row" role="button" @click.prevent="toggleExpanded">
       <div class="col-xs-6 text-overflow-ellipsis">
         <span class="dataset-name" :title="dataset.name">{{ dataset.name }}</span>
@@ -31,7 +32,7 @@ except according to the terms contained in the LICENSE file.
       <span v-for="(property, index) in inFormProperties" :key="property.name">
         <span>{{ property.name }}</span>
         <span v-if="property.isNew" class="icon-plus-circle property-new" :title="$t('addedByThisDraft')"></span>
-        <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma' ) }}<sentence-separator/></template>
+        <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma') }}<sentence-separator/></template>
       </span>
     </div>
   </div>

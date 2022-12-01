@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="complete">
-            {{ $t('action.done' ) }}
+            {{ $t('action.done') }}
           </button>
           <button type="button" class="btn btn-link" @click="createAnother">
             {{ $t('action.createAnother') }}

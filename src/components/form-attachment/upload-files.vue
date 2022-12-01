@@ -22,6 +22,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
         <i18n-t tag="p" keypath="introduction[1].full">
           <template #clickHere>
+            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
             <input v-show="false" ref="input" type="file" multiple
               @change="afterChange">
             <a ref="link" href="#" role="button"

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label class="form-group">
+  <label class="form-group"><!-- eslint-disable-line vuejs-accessibility/label-has-for -->
     <!-- We use a class to indicate whether the input is required, because
     flatpickr does not support the `required` attribute:
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->

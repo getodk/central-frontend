@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
 
     <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
       <template v-if="form.publishedAt != null">
-        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
+        <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
           :title="$t(`reviewState.${reviewState}`)">
           <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
           <span :class="reviewStateIcon(reviewState)"></span>
@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
       <td class="last-submission">
         <span :title="$t('header.lastSubmission')">
           <template v-if="form.lastSubmission != null">
-            <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)">
+            <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)">
               <date-time :iso="form.lastSubmission" relative="past"/>
               <span class="icon-clock-o"></span>
             </link-if-can>
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="total-submissions">
-        <link-if-can :to="formPath(form.projectId,form.xmlFormId,`submissions`)"
+        <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)"
           :title="$t('common.total')">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>

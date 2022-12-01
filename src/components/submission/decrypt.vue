@@ -104,6 +104,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <!-- We specify a Frontend page for src so that any cookies are sent when
       the iframe form is submitted. -->
+      <!-- eslint-disable-next-line vuejs-accessibility/iframe-has-title -->
       <iframe v-show="false" ref="iframe" src="/blank.html"></iframe>
     </template>
   </modal>

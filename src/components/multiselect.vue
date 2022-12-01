@@ -48,6 +48,7 @@ except according to the terms contained in the LICENSE file.
         <ul ref="optionList" class="option-list"
           :class="{ 'shows-all': searchValue === '' }" @change="changeCheckbox">
           <template v-if="options != null">
+            <!-- eslint-disable-next-line vue/object-curly-newline -->
             <li v-for="({ value, key = value, text = value, title = text }, i) in options"
               :key="key" :class="{ 'search-match': searchMatches.has(value) }">
               <div class="checkbox">

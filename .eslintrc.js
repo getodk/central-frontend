@@ -28,6 +28,7 @@ module.exports = {
     }],
     'max-classes-per-file': 'off',
     'max-len': 'off',
+    'vue/max-len': 'off',
     'newline-per-chained-call': 'off',
     'no-console': 'error',
     'no-debugger': 'error',
@@ -74,7 +75,11 @@ module.exports = {
     }],
     'vue/max-attributes-per-line': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/no-template-target-blank': 'off',
     'vue/require-default-prop': 'off',
-    'vue/singleline-html-element-content-newline': 'off'
+    'vue/singleline-html-element-content-newline': 'off',
+    'vuejs-accessibility/anchor-has-content': 'off',
+    'vuejs-accessibility/click-events-have-key-events': 'off',
+    'vuejs-accessibility/mouse-events-have-key-events': 'off'
   }
 };
