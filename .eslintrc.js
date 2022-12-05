@@ -77,9 +77,6 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'vue/no-template-target-blank': 'off',
     'vue/require-default-prop': 'off',
-    'vue/singleline-html-element-content-newline': 'off',
-    'vuejs-accessibility/anchor-has-content': 'off',
-    'vuejs-accessibility/click-events-have-key-events': 'off',
-    'vuejs-accessibility/mouse-events-have-key-events': 'off'
+    'vue/singleline-html-element-content-newline': 'off'
   }
 };

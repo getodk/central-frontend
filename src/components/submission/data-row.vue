@@ -15,6 +15,7 @@ except according to the terms contained in the LICENSE file.
       <td v-for="field of fields" :key="field.path" :class="fieldClass(field)"
         :title="field.binary !== true ? formattedValue(submission, field) : null">
         <template v-if="field.binary === true">
+          <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
           <a v-if="rawValue(submission, field) != null" class="binary-link"
             :href="formattedValue(submission, field)" target="_blank"
             :title="$t('submission.binaryLinkTitle')">

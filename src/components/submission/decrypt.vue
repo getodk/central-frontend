@@ -60,6 +60,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </form>
         <div id="submission-download-divider"></div>
+        <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
         <div id="submission-download-actions" @click="download">
           <div class="submission-download-action">
             <span class="submission-download-action-label">

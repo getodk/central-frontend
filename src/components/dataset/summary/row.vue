@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="dataset-summary-row">
-    <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
     <div class="row" role="button" @click.prevent="toggleExpanded">
       <div class="col-xs-6 text-overflow-ellipsis">
         <span class="dataset-name" :title="dataset.name">{{ dataset.name }}</span>
@@ -22,6 +22,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="col-xs-6 properties-count">
         {{ $tcn('properties', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
+        <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
         <a href="javascript:void(0)" class="expand-button">
           <span v-if="!expanded" class="icon-chevron-right"></span>
           <span v-else class="icon-chevron-down"></span>
