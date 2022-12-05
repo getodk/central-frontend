@@ -19,6 +19,7 @@ import createCentralRouter from './router';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import { createRequestData } from './request-data';
+import { noop } from './util/util';
 
 const provide = [
   'alert',
@@ -27,6 +28,8 @@ const provide = [
   'http',
   'logger'
 ];
+
+const piniaMock = { install: noop };
 
 export default ({
   // `router` must be a function that returns an object. The function will be
@@ -45,7 +48,7 @@ export default ({
   logger = console
 } = {}) => {
   const container = {
-    pinia: createPinia(),
+    pinia: process.env.NODE_ENV === 'development' ? createPinia() : piniaMock,
     i18n: i18n.global,
     alert,
     unsavedChanges,
