@@ -1807,7 +1807,7 @@
       },
       "action": {
         "linkDataset": {
-          "string": "Link Dataset",
+          "string": "Link Dataset {datasetName}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },

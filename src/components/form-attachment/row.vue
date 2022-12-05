@@ -53,7 +53,10 @@ except according to the terms contained in the LICENSE file.
         <template v-else-if="linkable && !attachment.datasetExists">
           <button type="button" class="btn btn-primary btn-link-dataset"
             @click="$emit('link', { name: attachment.name, blobExists: attachment.blobExists })">
-          <span class="icon-link"></span>{{ $t('action.linkDataset') }}
+          <span class="icon-link"></span>
+          <i18n-t keypath="action.linkDataset">
+            <template #datasetName>{{ datasetName }}</template>
+          </i18n-t>
         </button>
       </template>
     </div>
@@ -222,7 +225,7 @@ export default {
     "linkedToDataset": "Linked to Dataset {datasetName}",
     "uploadToOverride": "Upload a file to override.",
     "action": {
-      "linkDataset": "Link Dataset"
+      "linkDataset": "Link Dataset {datasetName}"
     },
     // This is a label that is shown next to a Form Attachment that is linked to a Dataset,
     // which would be overriden if the selected files were uploaded.

@@ -228,3 +228,9 @@
 .icon-magic-wand:before {
   content: "\f0d0";
 }
+.icon-caret-left:before {
+  content: "\f0d9";
+}
+.icon-caret-down:before {
+  content: "\e900";
+}

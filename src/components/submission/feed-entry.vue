@@ -40,7 +40,8 @@ except according to the terms contained in the LICENSE file.
         </template>
         <template v-else-if="entry.action === 'entity.create.error'">
           <span class="icon-warning entity-icon submission-feed-entry-icon"></span>
-          <span class="submission-feed-entry-entity-error" :title="entityProblem(entry)">{{ $t('title.entity.error') }}</span>
+          <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
+          <span class="entity-error-message" :title="entityProblem(entry)">{{ entityProblem(entry) }}</span>
         </template>
         <template v-else>
           <span class="icon-comment submission-feed-entry-icon"></span>
@@ -205,13 +206,16 @@ export default {
       font-weight: normal;
     }
 
-    .submission-feed-entry-entity-error {
-      cursor: help;
+    .entity-error-message{
+      font-size: 12px;
+      margin-left: 10px;
+      font-weight: normal;
     }
   }
 
   .icon-cloud-upload, .icon-comment { color: #bbb; }
   .entity-icon { color: $color-action-foreground; }
+  .icon-warning { color: $color-danger; }
   .review-state {
     color: #999;
     &.hasIssues { color: $color-warning; }
