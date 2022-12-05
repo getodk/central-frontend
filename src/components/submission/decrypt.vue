@@ -60,6 +60,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </form>
         <div id="submission-download-divider"></div>
+        <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
         <div id="submission-download-actions" @click="download">
           <div class="submission-download-action">
             <span class="submission-download-action-label">
@@ -104,6 +105,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <!-- We specify a Frontend page for src so that any cookies are sent when
       the iframe form is submitted. -->
+      <!-- eslint-disable-next-line vuejs-accessibility/iframe-has-title -->
       <iframe v-show="false" ref="iframe" src="/blank.html"></iframe>
     </template>
   </modal>

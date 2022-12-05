@@ -16,6 +16,7 @@ except according to the terms contained in the LICENSE file.
         <strong>{{ filename }}</strong>
       </template>
     </i18n-t>
+    <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
     <a v-show="false" ref="link" :href="href" download></a>
   </page-body>
 </template>

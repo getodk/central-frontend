@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="selectable" @click="select">
+  <div class="selectable" @click="select"><!-- eslint-disable-line vuejs-accessibility/click-events-have-key-events, vue/multiline-html-element-content-newline -->
     <slot></slot>
   </div>
 </template>

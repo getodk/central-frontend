@@ -12,10 +12,16 @@ const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js
 
 const { entry, ...webpackConfigForKarma } = webpackConfig;
 webpackConfigForKarma.devtool = 'inline-source-map';
+// See additional warning information.
+webpackConfigForKarma.stats = {
+  ...webpackConfigForKarma.stats,
+  children: true,
+  errorDetails: true
+};
 
 module.exports = (config) => {
   config.set({
-    frameworks: ['mocha'],
+    frameworks: ['webpack', 'mocha'],
     files: [
       'test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },

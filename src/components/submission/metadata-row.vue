@@ -33,6 +33,7 @@ except according to the terms contained in the LICENSE file.
             :title="$t('action.review')">
             <span class="icon-check"></span>
           </button>
+          <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
           <a v-if="submission.__system.status == null" class="btn btn-default"
             :href="editPath" target="_blank" :title="editTitle">
             <span class="icon-pencil"></span>

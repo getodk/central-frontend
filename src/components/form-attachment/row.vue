@@ -51,10 +51,8 @@ except according to the terms contained in the LICENSE file.
           {{ $t('uploadToOverride') }}
         </template>
         <template v-else-if="linkable && !attachment.datasetExists">
-          <button type="button" class="btn btn-primary btn-link-dataset" @click="$emit('link', {
-            name: attachment.name,
-            blobExists: attachment.blobExists
-          })">
+          <button type="button" class="btn btn-primary btn-link-dataset"
+            @click="$emit('link', { name: attachment.name, blobExists: attachment.blobExists })">
           <span class="icon-link"></span>{{ $t('action.linkDataset') }}
         </button>
       </template>

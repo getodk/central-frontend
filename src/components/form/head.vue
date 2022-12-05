@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
             <span id="form-head-draft-nav-title">{{ $t('draftNav.title') }}</span>
             <button v-show="formDraft.isEmpty()"
-              id="form-head-create-draft-button" type="primary"
+              id="form-head-create-draft-button" type="button"
               class="btn btn-primary" @click="$emit('create-draft')">
               <span class="icon-plus-circle"></span>{{ $t('draftNav.action.create') }}
             </button>

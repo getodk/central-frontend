@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 module.exports = {
   chainWebpack: (config) => {
-    // TODO/requestData. Revisit this.
-    config.resolve.alias.set('pinia', 'pinia/dist/pinia.cjs');
-
     // We don't want to prefetch all locale files.
     config.plugins.delete('prefetch');
 
@@ -26,11 +23,12 @@ module.exports = {
       config.resolve.symlinks(false);
 
     if (process.env.NODE_ENV === 'test') {
-      config.resolve.alias.set(
-        '@vue/test-utils',
-        '@vue/test-utils/dist/vue-test-utils.esm-bundler.js'
-      );
       config.resolve.alias.set('vue$', 'vue/dist/vue.esm-bundler.js');
+    }
+  },
+  css: {
+    loaderOptions: {
+      css: { url: false }
     }
   },
   lintOnSave: false,

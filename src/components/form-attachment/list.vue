@@ -55,7 +55,7 @@ except according to the terms contained in the LICENSE file.
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments" :data-name="attachment.name"
-          :linkable="attachment.type === 'file' && !!dsHashset && dsHashset.has(attachment.name.replace(/\.[^.]+$/i,''))"
+          :linkable="attachment.type === 'file' && !!dsHashset && dsHashset.has(attachment.name.replace(/\.[^.]+$/i, ''))"
           @link="showLinkDatasetModal($event)"/>
       </tbody>
     </table>

@@ -18,6 +18,7 @@ except according to the terms contained in the LICENSE file.
       <form @submit.prevent="submit">
         <form-group v-model.trim="name" :placeholder="$t('field.name')" required
           autocomplete="off"/>
+        <!-- eslint-disable-next-line vuejs-accessibility/label-has-for -->
         <label class="form-group">
           <markdown-textarea v-model="description" rows="10"/>
           <span class="form-label">{{ $t('field.description') }}</span>

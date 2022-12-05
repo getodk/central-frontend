@@ -20,6 +20,7 @@ except according to the terms contained in the LICENSE file.
           <th v-if="!draft">{{ $t('header.stateAndActions') }}</th>
         </tr>
       </thead>
+      <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
       <tbody ref="metadataBody"
         :class="`submission-table-actions-trigger-${actionsTrigger}`"
         @mousemove="setActionsTrigger('hover')"
@@ -45,6 +46,7 @@ except according to the terms contained in the LICENSE file.
             <th>{{ $t('header.instanceId') }}</th>
           </tr>
         </thead>
+        <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events -->
         <tbody @mousemove="setActionsTrigger('hover')"
           @mouseover="toggleHoverClass" @mouseleave="removeHoverClass">
           <template v-if="odata.dataExists && fields != null">

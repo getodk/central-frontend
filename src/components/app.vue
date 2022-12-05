@@ -17,6 +17,7 @@ except according to the terms contained in the LICENSE file.
     <alert id="app-alert"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
