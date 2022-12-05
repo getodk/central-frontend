@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 */
 module.exports = {
   chainWebpack: (config) => {
-    // TODO/requestData. Revisit this.
-    config.resolve.alias.set('pinia', 'pinia/dist/pinia.cjs');
-
     // We don't want to prefetch all locale files.
     config.plugins.delete('prefetch');
 
