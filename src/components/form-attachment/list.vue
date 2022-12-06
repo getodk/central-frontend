@@ -32,8 +32,7 @@ except according to the terms contained in the LICENSE file.
           <sentence-separator/>
           <i18n-t keypath="moreInfo.clickHere.full">
             <template #clickHere>
-              <!-- TODO. Specify the `to` prop. -->
-              <doc-link>{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+              <doc-link to="central-datasets/">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
             </template>
           </i18n-t>
         </p>
