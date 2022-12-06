@@ -181,8 +181,9 @@ describe('SubmissionFeedEntry', () => {
           details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
         });
         const title = mountComponent().get('.title');
-        title.text().should.equal('Problem creating Entity');
-        title.get('.submission-feed-entry-entity-error').attributes().title.should.equal('ID empty or missing.');
+        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
+        title.get('.entity-error-message').text().should.equal('ID empty or missing.');
+        title.get('.entity-error-message').attributes().title.should.equal('ID empty or missing.');
       });
     });
   });

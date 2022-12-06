@@ -13,19 +13,19 @@ except according to the terms contained in the LICENSE file.
   <div class="dataset-summary-row">
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
     <div class="row" role="button" @click.prevent="toggleExpanded">
-      <div class="col-xs-6 text-overflow-ellipsis">
-        <span class="dataset-name" :title="dataset.name">{{ dataset.name }}</span>
-        <span v-if="dataset.isNew" class="dataset-new">
+      <div class="col-xs-6 dataset-name-wrap">
+        <div class="dataset-name text-overflow-ellipsis" :title="dataset.name">{{ dataset.name }}</div>
+        <div v-if="dataset.isNew" class="dataset-new">
           <span class="icon-plus-circle"></span>
           {{ $t('new') }}
-        </span>
+        </div>
       </div>
       <div class="col-xs-6 properties-count">
         {{ $tcn('properties', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
         <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
         <a href="javascript:void(0)" class="expand-button">
-          <span v-if="!expanded" class="icon-chevron-right"></span>
-          <span v-else class="icon-chevron-down"></span>
+          <span v-if="!expanded" class="icon-caret-left"></span>
+          <span v-else class="icon-caret-down"></span>
         </a>
       </div>
     </div>
@@ -84,14 +84,19 @@ export default {
       @include text-overflow-ellipsis;
     }
 
-    .dataset-name {
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .dataset-new {
-        vertical-align: super;
-        color: $color-success;
-        margin-left: 2px;
+    .dataset-name-wrap{
+      display: flex;
+
+      .dataset-name {
+        font-weight: bold;
+        font-size: 18px;
+      }
+      .dataset-new {
+          vertical-align: super;
+          color: $color-success;
+          margin-left: 2px;
+          min-width: 46px;
+      }
     }
 
     .property-new {
@@ -106,6 +111,8 @@ export default {
 
     a {
         color: #666;
+        font-size: 20px;
+        vertical-align: middle;
 
         &:focus {
             background-color: inherit;
