@@ -77,6 +77,8 @@
         "set": "Spécifier"
       },
       "dataset": {
+        "update": "Mettre à jour",
+        "update_publish": "Publier",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -135,6 +137,7 @@
     "download": "Télécharger",
     "edit": "Éditer",
     "editProfile": "Éditer le profil",
+    "finish": "Terminer",
     "logIn": "Se connecter",
     "looksGood": "Ça a l'air bon, continuez",
     "more": "Plus",
@@ -199,8 +202,11 @@
     "appUser": "Utilisateur mobile",
     "appUsers": "Utilisateurs mobiles",
     "config": "Configuration du serveur",
+    "dataset": "Dataset",
+    "datasets": "Datasets",
     "form": "Formulaire",
     "forms": "Formulaires",
+    "formAttachments": "Fichiers joints du formulaire",
     "project": "Projet",
     "projects": "Projets",
     "publicLink": "Lien d'accès public",
@@ -236,13 +242,15 @@
     }
   },
   "submission": {
+    "missingAttachment": "Fichier joint manquant",
     "action": {
       "edit": "Éditer ({count})"
     },
     "editDisabled": "Vous ne pouvez pas éditer les soumissions chiffrées",
     "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger.",
     "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement.",
-    "noSubmission": "(aucun)"
+    "noSubmission": "(aucun)",
+    "emptyTable": "Il n'y a pas encore de Soumission"
   },
   "common": {
     "activity": "Activitée",
@@ -252,6 +260,7 @@
     "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
     "docs": "Documents",
+    "error": "Erreur",
     "filter": "Filtrer",
     "forum": "Forum",
     "loading": "Chargement...",
@@ -266,7 +275,8 @@
       "overview": "Aperçu"
     },
     "total": "Total",
-    "lastSubmission": "(dernière {dateTime})"
+    "lastSubmission": "(dernière {dateTime})",
+    "datasetsPreview": "Aperçu des Dataset"
   },
   "mixin": {
     "request": {

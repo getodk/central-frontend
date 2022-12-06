@@ -337,7 +337,15 @@ export default {
           }
         ]
       },
-      {},
+      {
+        "title": "Envoyer les fichiers joints du formulaire",
+        "body": [
+          {
+            "full": "Votre définition de formulaire référence des fichiers nécessaires à la présentation de votre formulaire. Vous pouvez envoyer des copies nouvelles ou mises à jour de ces fichiers sous l'onglet {formAttachments}.",
+            "formAttachments": "Fichiers joints de formulaire"
+          }
+        ]
+      },
       {
         "title": "Testez le formulaire en créant une soumission",
         "body": [

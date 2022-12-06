@@ -218,7 +218,12 @@ export default {
       "Vous pouvez utiliser le code de configuration à droite pour configurer un appareil mobile afin de télécharger cette ébauche. Vous pouvez aussi cliquer le bouton Nouveau ci-dessus pour créer une nouvelle soumission depuis votre navigateur.",
       "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées."
     ],
-    "collectProjectName": "[Brouillon] {name}"
+    "collectProjectName": "[Brouillon] {name}",
+    "datasetsPreview": {
+      "body": [
+        "Ce formulaire peut ajouter des entités à un Dataset."
+      ]
+    }
   },
   "id": {
     "title": "Pengujian Draf",

@@ -409,6 +409,10 @@ Comment • {name} */
   "fr": {
     "title": {
       "create": "Soumis par {name}",
+      "entity": {
+        "create": "Création de l'Entité {label} dans le Dataset {dataset}",
+        "error": "Problème lors de la création de l'entité"
+      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} d'un envoi de {name}",

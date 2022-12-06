@@ -189,6 +189,7 @@ export default {
     "formVersion": "Version de formulaire",
     "deviceId": "ID d'appareil",
     "userAgent": "\"User agent\"",
+    "attachments": "Fichiers joints",
     "present": "{count} fichier | {count} fichiers | {count} fichiers",
     "expected": "{count} attendu | {count} attendus | {count} attendus",
     "attachmentSummary": "{present} / {expected}"

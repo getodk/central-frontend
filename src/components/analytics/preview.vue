@@ -266,6 +266,9 @@ export default {
       "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
     },
     "submissionStates": "États des soumissions",
+    "datasets": {
+      "title": "Résumé des Datasets et des Entités"
+    },
     "other": "Autre"
   },
   "it": {

@@ -129,7 +129,8 @@ export default {
     "introduction": [
       "Êtes vous sûr de vouloir supprimer le formulaire {name} et toutes les données soumises ?",
       "Cette action va envoyer le formulaire à la corbeille. Après 30 jours dans la corbeille, il sera purgé de manière permanente, mais il peut être restauré avant ce délai."
-    ]
+    ],
+    "noDeleteEntities": "Chaque entité crée par cette Soumission de formulaire ne sera pas supprimée. Dans une version future, il sera possible de supprimer des Entités."
   },
   "id": {
     "title": "Hapus Formulir",

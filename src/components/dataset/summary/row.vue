@@ -150,6 +150,11 @@ export default {
 {
   "cs": {
     "new": "nový!"
+  },
+  "fr": {
+    "new": "nouveau !",
+    "properties": "{inform} des {count} propriétés | {inform} des {count} propriétés | {inform} des {count} propriétés",
+    "addedByThisDraft": "Ajouté par cette ébauche"
   }
 }
 </i18n>

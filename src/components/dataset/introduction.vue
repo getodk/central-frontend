@@ -128,6 +128,13 @@ export default {
       "Datové sady představují nový způsob vytváření a správy datových příloh v ODK. Umožňují používat data shromážděná v Podáních, která lze stáhnout a použít jako součást jiného formuláře."
     ],
     "datasetsWorkflow": "Pracovní postup s datovými sadami"
+  },
+  "fr": {
+    "title": "Bienvenue dans l’aperçu des Datasets !",
+    "getStarted": {
+      "full": "Pour plus d'information sur comment démarrer, {clickHere}.",
+      "clickHere": "cliquez ici"
+    }
   }
 }
 </i18n>

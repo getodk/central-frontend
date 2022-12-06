@@ -160,7 +160,8 @@ Select {all} / {none} */
         "all": "Tous/toutes",
         "none": "Aucun(e)"
       }
-    }
+    },
+    "warning": "Sélectionner trop de colonnes peut ralentir votre ordinateur."
   },
   "id": {
     "placeholder": "{selected} dari {total}",

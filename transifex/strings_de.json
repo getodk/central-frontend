@@ -1377,6 +1377,10 @@
       "properties": {
         "string": "{count, plural, one {} other {}}",
         "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      },
+      "addedByThisDraft": {
+        "string": "",
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
       }
     },
     "Download": {

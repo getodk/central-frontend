@@ -592,6 +592,10 @@ export default {
     "action": {
       "upload": "Téléverser des fichiers"
     },
+    "heading": [
+      "Selon le formulaire que vous avez envoyé, les fichiers joints suivantes sont attendues. Vous pouvez voir ceux qui ont été fournis ou qui sont encore manquants.",
+      "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur cette page."
+    ],
     "header": {
       "uploaded": "Téléversés"
     },
@@ -601,7 +605,13 @@ export default {
     },
     "alert": {
       "readError": "Quelque-chose s'est mal passé pendant la lecture de “{filename}”.",
-      "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés."
+      "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés.",
+      "link": "Dataset lié avec succès"
+    },
+    "datasetsPreview": {
+      "body": [
+        "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de Datasets. Par défaut, ils sont liés aux Datasets. Pour tester, vous pouvez envoyer des de fichiers .csv de données temporaires, puis les lier aux Datasets une fois que vous aurez vérifié la logique de votre formulaire."
+      ]
     }
   },
   "id": {
