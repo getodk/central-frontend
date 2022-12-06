@@ -213,11 +213,11 @@
       },
       "dataset": {
         "update": {
-          "string": "",
+          "string": "Mettre à jour",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         },
         "update_publish": {
-          "string": "",
+          "string": "Publier",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         }
       },
@@ -339,7 +339,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "finish": {
-      "string": "",
+      "string": "Terminer",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "logIn": {
@@ -563,11 +563,11 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "dataset": {
-      "string": "",
+      "string": "Dataset",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "datasets": {
-      "string": "",
+      "string": "Datasets",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -579,7 +579,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formAttachments": {
-      "string": "",
+      "string": "Fichiers joints du formulaire",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "project": {
@@ -677,7 +677,7 @@
   },
   "submission": {
     "missingAttachment": {
-      "string": "",
+      "string": "Fichier joint manquant",
       "developer_comment": "This is a possible state for a Submission. It means that the Submission is missing one or more expected Attachments."
     },
     "action": {
@@ -701,7 +701,7 @@
       "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     },
     "emptyTable": {
-      "string": ""
+      "string": "Il n'y a pas encore de Soumission"
     }
   },
   "common": {
@@ -734,7 +734,7 @@
       "developer_comment": "This is the text of a link that links to the documentation."
     },
     "error": {
-      "string": ""
+      "string": "Erreur"
     },
     "filter": {
       "string": "Filtrer",
@@ -791,7 +791,7 @@
       }
     },
     "datasetsPreview": {
-      "string": "",
+      "string": "Aperçu des Dataset",
       "developer_comment": "This is a title shown above a section of the page."
     }
   },
@@ -1108,22 +1108,22 @@
           "string": "Le projet a une description"
         },
         "description_length": {
-          "string": ""
+          "string": "Longueur de la description du Projet"
         },
         "num_properties": {
-          "string": ""
+          "string": "Nombre de propriétés"
         },
         "num_creation_forms": {
-          "string": ""
+          "string": "Nombre de formulaires qui mettent à jour le Dataset"
         },
         "num_followup_forms": {
-          "string": ""
+          "string": "Nombre de formulaires qui utilisent le Dataset"
         },
         "num_entities": {
-          "string": ""
+          "string": "Nombre d'Entités du Dataset"
         },
         "num_failed_entities": {
-          "string": ""
+          "string": "Nombre d'erreurs de création d'Entité"
         }
       }
     },
@@ -1158,7 +1158,7 @@
       },
       "datasets": {
         "title": {
-          "string": "",
+          "string": "Résumé des Datasets et des Entités",
           "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
         },
         "subtitle": {
@@ -1319,35 +1319,35 @@
     },
     "DatasetIntroduction": {
       "title": {
-        "string": ""
+        "string": "Bienvenue dans l’aperçu des Datasets !"
       },
       "body": {
         "0": {
           "string": ""
         },
         "1": {
-          "string": "",
+          "string": "Les Datasets peuvent être joints {icon1} aux formulaires et leurs données peuvent être interrogées comme n'importe quel autre fichier de données CSV joint.",
           "developer_comment": "{icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow."
         },
         "2": {
-          "string": "",
+          "string": "Lorsqu'une soumission concernant un Dataset est approuvée {icon2}, les données sélectionnées sont ajoutées {icon3} au Dataset, de sorte que la prochaine fois qu'un client téléchargera le formulaire, les nouvelles données seront incluses.",
           "developer_comment": "{icon2} and {icon3} are icons that display the numbers 2 and 3. They refer to the second and third steps in an image that depicts this workflow."
         },
         "3": {
-          "string": "",
+          "string": "Dans une version future vous pourrez envoyer {icon4} un CSV directement dans un Dataset",
           "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow."
         },
         "4": {
-          "string": ""
+          "string": "Les Datasets sont configurés pendant la création du formulaire?"
         }
       },
       "getStarted": {
         "full": {
-          "string": "",
+          "string": "Pour plus d'information sur comment démarrer, {clickHere}.",
           "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
         },
         "clickHere": {
-          "string": "",
+          "string": "cliquez ici",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
         }
       },
@@ -1358,25 +1358,29 @@
     "DatasetRow": {
       "action": {
         "download": {
-          "string": "",
+          "string": "Télécharger les données (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
     "DatasetSummary": {
       "datasetUpdates": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Le Dataset est mis à jour par ce formulaire : } many {Les Datasets sont mis à jour par ce formulaire : } other {Les Datasets sont mis à jour par ce formulaire : }}",
         "developer_comment": "Number of dataset(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
       "new": {
-        "string": "",
+        "string": "nouveau !",
         "developer_comment": "This is shown when a dataset is new"
       },
       "properties": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {{inform} des {count} propriétés} many {{inform} des {count} propriétés} other {{inform} des {count} propriétés}}",
         "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      },
+      "addedByThisDraft": {
+        "string": "Ajouté par cette ébauche",
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
       }
     },
     "Download": {
@@ -1606,20 +1610,20 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "",
+        "string": "Lier le Dataset",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Êtes vous sûr de vouloir lier le Dataset ?"
         },
         "1": {
-          "string": ""
+          "string": "Le fichier que vous avez envoyé va être supprimé. Vous pouvez toujours l'envoyer à nouveau."
         }
       },
       "action": {
         "link": {
-          "string": "",
+          "string": "Lien",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -1633,7 +1637,7 @@
       },
       "heading": {
         "0": {
-          "string": ""
+          "string": "Selon le formulaire que vous avez envoyé, les fichiers joints suivantes sont attendues. Vous pouvez voir ceux qui ont été fournis ou qui sont encore manquants."
         },
         "1": {
           "string": "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur cette page."
@@ -1663,13 +1667,13 @@
           "string": "{count, plural, one {{count} fichier a été correctement téléversé.} many {{count} fichiers ont été correctement téléversés.} other {{count} fichiers ont été correctement téléversés.}}"
         },
         "link": {
-          "string": ""
+          "string": "Dataset lié avec succès"
         }
       },
       "datasetsPreview": {
         "body": {
           "0": {
-            "string": ""
+            "string": "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de Datasets. Par défaut, ils sont liés aux Datasets. Pour tester, vous pouvez envoyer des de fichiers .csv de données temporaires, puis les lier aux Datasets une fois que vous aurez vérifié la logique de votre formulaire."
           }
         }
       }
@@ -1795,11 +1799,11 @@
         }
       },
       "linkedToDataset": {
-        "string": "",
+        "string": "Lié au Dataset {datasetName}",
         "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
       },
       "uploadToOverride": {
-        "string": ""
+        "string": "Envoyer un fichier pour écraser."
       },
       "action": {
         "linkDataset": {
@@ -1808,7 +1812,7 @@
         }
       },
       "override": {
-        "string": "",
+        "string": "Écraser",
         "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
       }
     },
@@ -1854,7 +1858,7 @@
         }
       },
       "noDeleteEntities": {
-        "string": ""
+        "string": "Chaque entité crée par cette Soumission de formulaire ne sera pas supprimée. Dans une version future, il sera possible de supprimer des Entités."
       }
     },
     "FormDraftAbandon": {
@@ -1871,15 +1875,15 @@
       "introduction": {
         "abandon": {
           "0": {
-            "string": ""
+            "string": "Vous êtes sur le point de supprimer définitivement l'ébauche de ce formulaire. Cela signifie que sa définition, les pièces jointes associées que vous avez téléchargées et toutes les soumissions de test seront supprimées. "
           },
           "1": {
-            "string": ""
+            "string": "Votre définition de Formulaire publiée, ses Fichiers joints, et les Soumissions ne seront pas affectés."
           }
         },
         "deleteForm": {
           "0": {
-            "string": ""
+            "string": "Vous êtes sur le point de supprimer la définition de cette ébauche de Formulaire, ainsi que chaque Fichier joint envoyés, et toutes les Soumissions de test. Parce-que vous ne l'avez pas encore publié, tout le formulaire sera supprimé et déplacé à la corbeille."
           }
         }
       },
@@ -1935,17 +1939,17 @@
         },
         "2": {
           "title": {
-            "string": "",
+            "string": "Envoyer les fichiers joints du formulaire",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "full": {
-                "string": "",
+                "string": "Votre définition de formulaire référence des fichiers nécessaires à la présentation de votre formulaire. Vous pouvez envoyer des copies nouvelles ou mises à jour de ces fichiers sous l'onglet {formAttachments}.",
                 "developer_comment": "{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
               },
               "formAttachments": {
-                "string": "",
+                "string": "Fichiers joints de formulaire",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab."
               }
             }
@@ -2006,7 +2010,7 @@
             "developer_comment": "This is a warning shown to the user.\n\n{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
           },
           "formAttachments": {
-            "string": "",
+            "string": "Fichiers joints de formulaire",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYou have not provided all the {formAttachments} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to provide those Attachments later."
           }
         },
@@ -2032,7 +2036,7 @@
           "string": "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous."
         },
         "3": {
-          "string": ""
+          "string": "Voulez vous procéder ?"
         }
       },
       "field": {
@@ -2058,7 +2062,7 @@
           }
         },
         "newDataset": {
-          "string": ""
+          "string": "Un nouveau Dataset {datasetName} va être créé."
         },
         "newProperty": {
           "string": ""
@@ -2141,7 +2145,7 @@
       "datasetsPreview": {
         "body": {
           "0": {
-            "string": ""
+            "string": "Ce formulaire peut ajouter des entités à un Dataset."
           },
           "1": {
             "string": ""
@@ -3345,7 +3349,7 @@
         "string": "\"User agent\""
       },
       "attachments": {
-        "string": "",
+        "string": "Fichiers joints",
         "developer_comment": "This refers specifically to Submission Attachments."
       },
       "present": {
@@ -3439,7 +3443,7 @@
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "withAttachments": {
-            "string": "",
+            "string": "Toutes données et fichiers joints",
             "developer_comment": "\"Attachments\" refers to Submission Attachments."
           }
         }
@@ -3500,10 +3504,10 @@
         },
         "entity": {
           "create": {
-            "string": ""
+            "string": "Création de l'Entité {label} dans le Dataset {dataset}"
           },
           "error": {
-            "string": ""
+            "string": "Problème lors de la création de l'entité"
           }
         },
         "updateReviewState": {
@@ -3592,7 +3596,7 @@
         }
       },
       "warning": {
-        "string": ""
+        "string": "Sélectionner trop de colonnes peut ralentir votre ordinateur."
       }
     },
     "SubmissionFilters": {
@@ -3605,7 +3609,7 @@
     },
     "SubmissionFiltersReviewState": {
       "placeholder": {
-        "string": "",
+        "string": "{selected} sur {total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
       },
       "action": {
@@ -3633,7 +3637,7 @@
         }
       },
       "placeholder": {
-        "string": "",
+        "string": "{selected} sur {total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
       },
       "action": {

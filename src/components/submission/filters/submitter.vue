@@ -149,6 +149,7 @@ Select {all} / {none} */
     "field": {
       "submitter": "Soumis par"
     },
+    "placeholder": "{selected} sur {total}",
     "unknown": "Expéditeur inconnu"
   },
   "id": {

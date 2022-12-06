@@ -72,6 +72,11 @@ export default {
       "download": "Descargar datos (.csv)"
     }
   },
+  "fr": {
+    "action": {
+      "download": "Télécharger les données (.csv)"
+    }
+  },
   "it": {
     "action": {
       "download": "Scarica dati (.csv)"

@@ -113,6 +113,16 @@ export default {
       "Určitě chcete datovou sadu propojit?",
       "Nahraný soubor bude odstraněn. Později jej můžete vždy nahrát znovu."
     ]
+  },
+  "fr": {
+    "title": "Lier le Dataset",
+    "introduction": [
+      "Êtes vous sûr de vouloir lier le Dataset ?",
+      "Le fichier que vous avez envoyé va être supprimé. Vous pouvez toujours l'envoyer à nouveau."
+    ],
+    "action": {
+      "link": "Lien"
+    }
   }
 }
 </i18n>

@@ -284,7 +284,13 @@ export default {
       "num_submissions_from_app_users": "Nombre de soumissions depuis les utilisateurs d'application",
       "num_submissions_from_public_links": "Nombre de soumissions depuis les liens d'accès public",
       "num_submissions_from_web_users": "Nombre de soumissions par des utilisateurs web",
-      "has_description": "Le projet a une description"
+      "has_description": "Le projet a une description",
+      "description_length": "Longueur de la description du Projet",
+      "num_properties": "Nombre de propriétés",
+      "num_creation_forms": "Nombre de formulaires qui mettent à jour le Dataset",
+      "num_followup_forms": "Nombre de formulaires qui utilisent le Dataset",
+      "num_entities": "Nombre d'Entités du Dataset",
+      "num_failed_entities": "Nombre d'erreurs de création d'Entité"
     }
   },
   "id": {

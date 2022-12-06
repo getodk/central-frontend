@@ -288,7 +288,10 @@ export default {
     "notUploaded": {
       "text": "Non encore téléversé",
       "title": "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur le tableau de cette page."
-    }
+    },
+    "linkedToDataset": "Lié au Dataset {datasetName}",
+    "uploadToOverride": "Envoyer un fichier pour écraser.",
+    "override": "Écraser"
   },
   "id": {
     "type": {

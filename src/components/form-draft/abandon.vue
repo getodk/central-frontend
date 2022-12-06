@@ -164,6 +164,15 @@ export default {
       "abandon": "Abandonner l'ébauche",
       "deleteForm": "Abandonner l'ébauche et supprimer le formulaire"
     },
+    "introduction": {
+      "abandon": [
+        "Vous êtes sur le point de supprimer définitivement l'ébauche de ce formulaire. Cela signifie que sa définition, les pièces jointes associées que vous avez téléchargées et toutes les soumissions de test seront supprimées.",
+        "Votre définition de Formulaire publiée, ses Fichiers joints, et les Soumissions ne seront pas affectés."
+      ],
+      "deleteForm": [
+        "Vous êtes sur le point de supprimer la définition de cette ébauche de Formulaire, ainsi que chaque Fichier joint envoyés, et toutes les Soumissions de test. Parce-que vous ne l'avez pas encore publié, tout le formulaire sera supprimé et déplacé à la corbeille."
+      ]
+    },
     "action": {
       "abandon": "Abandonner"
     }
