@@ -55,7 +55,7 @@ definition for an existing form -->
         <i18n-t tag="div" keypath="dropZone.full">
           <template #chooseOne>
             <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input v-show="false" ref="input" type="file" @change="afterChange">
+            <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml" @change="afterChange">
             <button type="button" class="btn btn-primary"
               :disabled="awaitingResponse" @click="$refs.input.click()">
               <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
