@@ -10,8 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 export default {
-  // `true` to allow navigation to /system/backups and `false` not to.
-  showsBackups: true,
   // `true` to allow navigation to /system/analytics and `false` not to.
   showsAnalytics: true,
   home: {

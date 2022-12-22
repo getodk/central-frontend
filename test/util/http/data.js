@@ -116,13 +116,6 @@ const responsesByComponent = {
   AccountEdit: componentResponses({ user: true }),
 
   SystemHome: [],
-  BackupList: componentResponses({
-    backupsConfig: () => {
-      const config = testData.standardConfigs.forKey('backups');
-      return config != null ? config : mockResponse.problem(404.1);
-    },
-    audits: () => testData.standardAudits.sorted()
-  }),
   AuditList: componentResponses({ audits: true }),
   AnalyticsList: componentResponses({
     analyticsConfig: () => {

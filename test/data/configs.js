@@ -17,16 +17,11 @@ const configs = dataStore({
   })
 });
 
-const transforms = {
-  backups: ({ value, setAt }) => ({ ...value, setAt })
-};
-
 // eslint-disable-next-line import/prefer-default-export
 export const standardConfigs = view(configs, (config) => {
   const { createdAt, updatedAt, ...withSetAt } = config;
   withSetAt.setAt = updatedAt != null ? updatedAt : createdAt;
-  const transform = transforms[config.key];
-  return transform != null ? transform(withSetAt) : withSetAt;
+  return withSetAt;
 });
 
 standardConfigs.forKey = (key) => {

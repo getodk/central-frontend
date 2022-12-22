@@ -549,23 +549,6 @@ const routes = [
     key: () => '/system',
     children: [
       asyncRoute({
-        path: 'backups',
-        component: 'BackupList',
-        loading: 'tab',
-        meta: {
-          validateData: {
-            currentUser: () => currentUser.can([
-              'config.read',
-              'config.set',
-              'backup.run',
-              'audit.read'
-            ])
-          },
-          title: () => [i18n.t('systemHome.tab.backups'), i18n.t('systemHome.title')]
-        },
-        beforeEnter: () => (config.showsBackups ? true : '/')
-      }),
-      asyncRoute({
         path: 'audits',
         component: 'AuditList',
         loading: 'tab',

@@ -16,17 +16,7 @@ describe('SystemHome', () => {
     });
     const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub);
     const to = links.map(link => link.props().to);
-    to.should.eql(['/system/audits', '/system/analytics', '/system/backups']);
-  });
-
-  it('hides the Backups tab if the showsBackups config is false', () => {
-    const component = mount(SystemHome, {
-      container: {
-        router: mockRouter('/system/audits'),
-        config: { showsBackups: false }
-      }
-    });
-    component.get('#page-head-tabs li:last-child').should.be.hidden();
+    to.should.eql(['/system/audits', '/system/analytics']);
   });
 
   it('hides "Usage Reporting" tab if showsAnalytics config is false', () => {
@@ -40,16 +30,6 @@ describe('SystemHome', () => {
   });
 
   describe('active tab', () => {
-    it('activates correct tab after user navigates to .../backups', () => {
-      const component = mount(SystemHome, {
-        container: { router: mockRouter('/system/backups') }
-      });
-      const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub)
-        .filter(link => (link.element.closest('.active') != null));
-      links.length.should.equal(1);
-      links[0].props().to.should.equal('/system/backups');
-    });
-
     it('activates correct tab after user navigates to .../audits', () => {
       const component = mount(SystemHome, {
         container: { router: mockRouter('/system/audits') }

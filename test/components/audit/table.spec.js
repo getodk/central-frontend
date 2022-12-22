@@ -345,21 +345,6 @@ describe('AuditTable', () => {
     testTarget(row, '');
   });
 
-  it('renders a backup audit correctly', () => {
-    testData.standardConfigs.createPast(1, {
-      key: 'backups',
-      value: { type: 'google' },
-      setAt: ago({ days: 2 }).toISO()
-    });
-    testData.standardAudits.createBackupAudit({
-      success: true,
-      loggedAt: ago({ days: 1 }).toISO()
-    });
-    const row = mountComponent();
-    testType(row, ['Backup']);
-    testTarget(row, '');
-  });
-
   it('renders an analytics audit correctly', () => {
     testData.extendedAudits.createPast(1, { action: 'analytics' });
     const row = mountComponent();

@@ -76,7 +76,6 @@ export default {
       "num_unique_managers": "Number of unique Project Managers",
       "num_unique_viewers": "Number of unique Project Viewers",
       "num_unique_collectors": "Number of unique Data Collectors",
-      "backups_configured": "Backups configured",
       "database_size": "System database size",
       "uses_external_db": "Server uses an external database",
       "num_managers": "Number of Project Managers",

@@ -25,12 +25,6 @@ except according to the terms contained in the LICENSE file.
             {{ $t('systemHome.tab.analytics') }}
           </router-link>
         </li>
-        <li v-show="config.showsBackups" :class="tabClass('backups')"
-          role="presentation">
-          <router-link :to="tabPath('backups')">
-            {{ $t('systemHome.tab.backups') }}
-          </router-link>
-        </li>
       </template>
     </page-head>
     <page-body>
