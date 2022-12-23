@@ -21,15 +21,41 @@ definition for an existing form -->
     <template #body>
       <div v-show="warnings != null" class="modal-warnings">
         <p>{{ $t('warningsText[0]') }}</p>
-        <ul if="warnings != null">
-          <!-- eslint-disable-next-line vue/require-v-for-key -->
-          <li v-for="warning of warnings">{{ warning.trim() }}</li>
-        </ul>
+
+        <p v-if="warnings?.xlsFormWarnings">
+          <strong>{{ $t('warningsText[1]') }}</strong>
+          <ul>
+            <!-- eslint-disable-next-line vue/require-v-for-key -->
+            <li v-for="warning of warnings.xlsFormWarnings">
+{{ removeLearnMore(warning) }}
+              <template v-if="hasLearnMoreLink(warning)">
+                <sentence-separator/>
+                <a :href="getLearnMoreLink(warning)" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
+              </template>
+            </li>
+          </ul>
+        </p>
+
+        <p v-if="warnings?.workflowWarnings">
+          <strong>{{ $t('warningsText[2]') }}</strong>
+          <ul>
+            <!-- eslint-disable-next-line vue/require-v-for-key -->
+            <li v-for="warning of warnings.workflowWarnings">
+              {{ $t('warningsText[3].' + warning.type, { value: warning.details.xmlFormId }) }}
+              <doc-link :to="documentLinks[warning.type]">{{ $t('moreInfo.learnMore') }}</doc-link>
+              <span v-if="warning.type === 'structureChanged'">
+                <br>
+                <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
+              </span>
+            </li>
+          </ul>
+        </p>
+
         <p>
-          <span>{{ $t('warningsText[1]') }}</span>
+          <span>{{ $t('warningsText[4]') }}</span>
           <sentence-separator/>
-          <template v-if="!formDraft.dataExists">{{ $t('warningsText[2].create') }}</template>
-          <template v-else>{{ $t('warningsText[2].update') }}</template>
+          <template v-if="!formDraft.dataExists">{{ $t('warningsText[5].create') }}</template>
+          <template v-else>{{ $t('warningsText[5].update') }}</template>
         </p>
         <p>
           <button type="button" class="btn btn-primary"
@@ -116,7 +142,11 @@ export default {
       dragDepth: 0,
       awaitingResponse: false,
       file: null,
-      warnings: null
+      warnings: null,
+      documentLinks: {
+        deletedFormExists: 'central-forms/#deleting-a-form',
+        structureChanged: 'central-forms/#central-forms-updates'
+      }
     };
   },
   computed: {
@@ -216,6 +246,15 @@ export default {
         .catch(() => {
           if (this.$route === initialRoute) this.warnings = null;
         });
+    },
+    removeLearnMore(value) {
+      return value.replace(/Learn more:.*/, '').trim();
+    },
+    hasLearnMoreLink(value) {
+      return value.match(/Learn more: (.*)/);
+    },
+    getLearnMoreLink(value) {
+      return value.match(/Learn more: (.*)/)[1];
     }
   }
 };
@@ -229,6 +268,7 @@ $drop-zone-vpadding: 15px;
 #form-new .modal-warnings ul {
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  margin-top: 10px;
 }
 
 #form-new-drop-zone {
@@ -295,9 +335,16 @@ $drop-zone-vpadding: 15px;
       "400_15": "The XLSForm could not be converted: {error}",
       "409_3": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
     },
+    // Sub-heading for a warning details
+    "fields": "Fields:",
     "warningsText": [
-      // The word "XLSForm" should not be translated.
-      "This XLSForm file can be used, but it has the following possible problems (conversion warnings):",
+      "This file can be used, but it has the following possible problems:",
+      "Form design warnings:",
+      "Workflow warnings:",
+      {
+        "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this form, you won’t be able to undelete the other one with the matching ID.",
+        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeat. These fields will not be visible in the Submission table or included in exports by default."
+      },
       "Please correct the problems and try again.",
       {
         "create": "If you are sure these problems can be ignored, click the button to create the Form anyway:",
