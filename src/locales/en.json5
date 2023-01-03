@@ -31,10 +31,9 @@
     }
   },
   "systemHome": {
-    // This is the title of the page for managing backups, audit logs, and other system-level functions.
+    // This is the title of the page for audit logs and other system-level functions.
     "title": "System Management",
     "tab": {
-      "backups": "Backups",
       "audits": "Server Audit Logs",
       "analytics": "Usage Reporting"
     }
@@ -95,8 +94,6 @@
       },
       // This is shown in the log of actions performed on the server.
       "analytics": "Report Usage",
-      // This is shown in the log of actions performed on the server.
-      "backup": "Backup",
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Server Configuration.
       "config": {

@@ -55,10 +55,6 @@ const loaders = new Map()
     /* webpackChunkName: "component-audit-list" */
     '../components/audit/list.vue'
   )))
-  .set('BackupList', loader(() => import(
-    /* webpackChunkName: "component-backup-list" */
-    '../components/backup/list.vue'
-  )))
   .set('DatasetList', loader(() => import(
     /* webpackChunkName: "component-dataset-list" */
     '../components/dataset/list.vue'

@@ -4,7 +4,6 @@ import { dataStore, view } from './data-store';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
-import { standardConfigs } from './configs';
 import { toActor } from './actors';
 
 const actionsWithDefaultActor = new Set([
@@ -68,38 +67,3 @@ export const standardAudits = view(
   auditsWithCreatedAt,
   omit(['actor', 'actee', 'createdAt'])
 );
-
-function createBackupAudit({ success, configSetAt = undefined, loggedAt }) {
-  if (loggedAt == null) throw new Error('invalid loggedAt');
-
-  const details = { success };
-  if (success) {
-    if (configSetAt != null) {
-      details.configSetAt = configSetAt;
-    } else {
-      const config = standardConfigs.forKey('backups');
-      if (config == null) throw new Error('backups config not found');
-      details.configSetAt = config.setAt;
-    }
-
-    if (isBefore(loggedAt, details.configSetAt))
-      throw new Error('invalid loggedAt');
-  } else {
-    const error = new Error('error');
-    details.stack = error.stack;
-    details.message = error.message;
-  }
-
-  auditsWithCreatedAt.createPast(1, {
-    actor: null,
-    action: 'backup',
-    actee: null,
-    details,
-    loggedAt
-  });
-
-  return this;
-}
-
-extendedAudits.createBackupAudit = createBackupAudit;
-standardAudits.createBackupAudit = createBackupAudit;

@@ -60,13 +60,9 @@
   "systemHome": {
     "title": {
       "string": "System Management",
-      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      "developer_comment": "This is the title of the page for audit logs and other system-level functions."
     },
     "tab": {
-      "backups": {
-        "string": "Backups",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
       "audits": {
         "string": "Server Audit Logs",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -199,10 +195,6 @@
       },
       "analytics": {
         "string": "Report Usage",
-        "developer_comment": "This is shown in the log of actions performed on the server."
-      },
-      "backup": {
-        "string": "Backup",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "config": {
@@ -1020,9 +1012,6 @@
         "num_unique_collectors": {
           "string": "Number of unique Data Collectors"
         },
-        "backups_configured": {
-          "string": "Backups configured"
-        },
         "database_size": {
           "string": "System database size"
         },
@@ -1210,110 +1199,6 @@
         "details": {
           "string": "Details",
           "developer_comment": "This is the text of a table column header."
-        }
-      }
-    },
-    "BackupDeprecation": {
-      "text": {
-        "string": "On January 31st, 2023, backups to Google Drive will stop working."
-      }
-    },
-    "BackupList": {
-      "auditsTitle": {
-        "string": "Latest Backups",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "alert": {
-        "terminate": {
-          "string": "Your automatic backups were terminated."
-        }
-      }
-    },
-    "BackupStatus": {
-      "getHelp": {
-        "full": {
-          "string": "If you are having trouble, please try the {forum}.",
-          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
-        },
-        "forum": {
-          "string": "community forum",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
-        }
-      },
-      "notConfigured": {
-        "0": {
-          "string": "Backups are not configured."
-        },
-        "1": {
-          "string": "In earlier versions of ODK Central, it was possible to set up automatic backups to Google Drive. That feature has been deprecated, but there are other ways to back up the data on the server. We strongly recommend that all users back up their data."
-        }
-      },
-      "neverRun": {
-        "0": {
-          "string": "The configured backup has not yet run."
-        },
-        "1": {
-          "string": "If you have configured backups within the last couple of days, this is normal. Otherwise, something has gone wrong."
-        },
-        "2": {
-          "string": "In that case, the most likely fix is to restart the service."
-        }
-      },
-      "somethingWentWrong": {
-        "0": {
-          "string": "Something is wrong!"
-        },
-        "1": {
-          "full": {
-            "string": "The latest backup that completed successfully was {moreThanThreeDaysAgo}.",
-            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
-          },
-          "moreThanThreeDaysAgo": {
-            "string": "more than three days ago",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
-          }
-        },
-        "2": {
-          "string": "The most likely fix is to restart the service."
-        }
-      },
-      "success": {
-        "0": {
-          "string": "Backup is working.",
-          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
-        },
-        "1": {
-          "string": "The last backup completed successfully {dateTime}.",
-          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
-        }
-      },
-      "action": {
-        "download": {
-          "string": "Download backup now",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "terminate": {
-          "string": "Terminate",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "alert": {
-        "download": {
-          "string": "The backup is running now, and will be encrypted and downloaded to your computer. This may take a while. Once the download begins, you can leave this page."
-        }
-      }
-    },
-    "BackupTerminate": {
-      "title": {
-        "string": "Terminate Automatic Backups",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "Are you sure you want to terminate your automatic backups?"
-        },
-        "1": {
-          "string": "If you terminate your automatic backups, you will not be able to start them again. Automatic backups are a deprecated feature, but there are other ways to back up the data on the server."
         }
       }
     },

@@ -140,7 +140,6 @@ describe('createCentralRouter()', () => {
       '/users?x=y#z',
       '/users/2/edit',
       '/account/edit',
-      '/system/backups',
       '/system/audits',
       '/system/analytics',
       '/dl/foo.txt'
@@ -398,7 +397,6 @@ describe('createCentralRouter()', () => {
       const paths = [
         '/users',
         '/users/2/edit',
-        '/system/backups',
         '/system/audits',
         '/system/analytics'
       ];
@@ -1065,10 +1063,6 @@ describe('createCentralRouter()', () => {
     });
 
     // System Management routes
-    it('shows static title for /system/backups', async () => {
-      await load('/system/backups');
-      document.title.should.equal('Backups | System Management | ODK Central');
-    });
 
     it('shows static title for /system/audits', async () => {
       await load('/system/audits');
@@ -1099,17 +1093,6 @@ describe('createCentralRouter()', () => {
 
   describe('config', () => {
     beforeEach(mockLogin);
-
-    it('redirects user from /system/backups if showsBackups is false', () => {
-      const container = {
-        config: { showsBackups: false }
-      };
-      return load('/system/backups', { container }, false)
-        .respondFor('/')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        });
-    });
 
     it('redirects user from /system/analytics if showsAnalytics is false', () => {
       const container = {

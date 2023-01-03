@@ -298,29 +298,29 @@ describe('util/request', () => {
     });
 
     it('audits', () => {
-      const path = apiPaths.audits({ action: 'backup' });
-      path.should.equal('/v1/audits?action=backup');
+      const path = apiPaths.audits({ action: 'nonverbose' });
+      path.should.equal('/v1/audits?action=nonverbose');
     });
 
     it('audits?start', () => {
       const path = apiPaths.audits({
-        action: 'backup',
+        action: 'nonverbose',
         start: '2020-01-01T00:00:00.000Z'
       });
-      path.should.equal('/v1/audits?action=backup&start=2020-01-01T00%3A00%3A00.000Z');
+      path.should.equal('/v1/audits?action=nonverbose&start=2020-01-01T00%3A00%3A00.000Z');
     });
 
     it('audits?end', () => {
       const path = apiPaths.audits({
-        action: 'backup',
+        action: 'nonverbose',
         end: '2020-01-01T00:00:00.000Z'
       });
-      path.should.equal('/v1/audits?action=backup&end=2020-01-01T00%3A00%3A00.000Z');
+      path.should.equal('/v1/audits?action=nonverbose&end=2020-01-01T00%3A00%3A00.000Z');
     });
 
     it('audits?limit', () => {
-      const path = apiPaths.audits({ action: 'backup', limit: 10 });
-      path.should.equal('/v1/audits?action=backup&limit=10');
+      const path = apiPaths.audits({ action: 'nonverbose', limit: 10 });
+      path.should.equal('/v1/audits?action=nonverbose&limit=10');
     });
   });
 

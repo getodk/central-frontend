@@ -31,7 +31,6 @@ module.exports = (config) => {
     proxies: {
       '/fonts/': '/base/public/fonts/',
       '/blank.html': '/base/public/blank.html',
-      '/v1/backup': '/base/public/blank.html',
       '/test/files/': '/base/test/files/'
     },
     preprocessors: {
