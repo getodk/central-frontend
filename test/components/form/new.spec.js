@@ -1,3 +1,4 @@
+import { clone } from 'ramda';
 import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FormNew from '../../../src/components/form/new.vue';
 import FormRow from '../../../src/components/form/row.vue';
@@ -501,11 +502,55 @@ describe('FormNew', () => {
       details: {
         error: null,
         result: '<a><b/></a>',
-        warnings: ['warning 1', 'warning 2']
+        warnings: {
+          xlsFormWarnings: ['warning 1', 'warning 2'],
+          workflowWarnings: [
+            { type: 'structureChanged', details: ['Name', 'Age'] },
+            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } }
+          ]
+        }
       }
     };
 
-    it('shows the warnings', () => {
+    it('shows only xls warnings', () => {
+      testData.extendedProjects.createPast(1);
+      const xlsWarnings = clone(xlsFormWarning);
+      delete xlsWarnings.details.warnings.workflowWarnings;
+
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsWarnings)
+        .afterResponse(modal => {
+          const warnings = modal.get('.modal-warnings');
+          warnings.should.be.visible();
+          const text = warnings.findAll('li').map(li => li.text());
+          text.should.eql(['warning 1', 'warning 2']);
+        });
+    });
+
+    it('shows only workflow warnings', () => {
+      testData.extendedProjects.createPast(1);
+      const workflowWarnings = clone(xlsFormWarning);
+      delete workflowWarnings.details.warnings.xlsFormWarnings;
+
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem(workflowWarnings)
+        .afterResponse(modal => {
+          const warnings = modal.get('.modal-warnings');
+          warnings.should.be.visible();
+          const items = warnings.findAll('li');
+          items[0].text().should.startWith('The following fields have been');
+          items[0].get('span').text().should.eql('Fields: Name, Age');
+
+          items[1].text().should.startWith('There is a form with ID "simple" in the Trash');
+          items[1].find('span').exists().should.be.false();
+        });
+    });
+
+    it('shows xls and workflow warnings', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
         .mount(FormNew, mountOptions())
@@ -514,8 +559,36 @@ describe('FormNew', () => {
         .afterResponse(modal => {
           const warnings = modal.get('.modal-warnings');
           warnings.should.be.visible();
-          const text = warnings.findAll('li').map(li => li.text());
-          text.should.eql(['warning 1', 'warning 2']);
+          const items = warnings.findAll('li');
+
+          items[0].text().should.eql('warning 1');
+          items[1].text().should.eql('warning 2');
+
+          items[2].text().should.startWith('The following fields have been');
+          items[2].get('span').text().should.eql('Fields: Name, Age');
+
+          items[3].text().should.startWith('There is a form with ID "simple" in the Trash');
+          items[3].find('span').exists().should.be.false();
+        });
+    });
+
+    it('shows create hyperlink for learn more in xls warnings', () => {
+      testData.extendedProjects.createPast(1);
+      const xlsWarnings = clone(xlsFormWarning);
+      delete xlsWarnings.details.warnings.workflowWarnings;
+      xlsWarnings.details.warnings.xlsFormWarnings[0] += '. Learn more: https://xlsform.org/en/#image';
+
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsWarnings)
+        .afterResponse(modal => {
+          const warnings = modal.get('.modal-warnings');
+          warnings.should.be.visible();
+          const items = warnings.findAll('li');
+          items[0].element.childNodes[0].nodeValue.should.eql('warning 1. ');
+          items[0].find('a').attributes('href').should.eql('https://xlsform.org/en/#image');
+          items[0].find('a').text().should.eql('Learn more.');
         });
     });
 
@@ -577,7 +650,7 @@ describe('FormNew', () => {
           .request(upload)
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
-            const text = component.findAll('.modal-warnings p')[1].text();
+            const text = component.findAll('.modal-warnings p')[3].text();
             text.should.containEql('create the Form');
           });
       });
@@ -589,7 +662,7 @@ describe('FormNew', () => {
           .request(upload)
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
-            const text = component.findAll('.modal-warnings p')[1].text();
+            const text = component.findAll('.modal-warnings p')[3].text();
             text.should.containEql('update the Draft');
           });
       });

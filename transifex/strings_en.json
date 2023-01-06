@@ -2162,15 +2162,32 @@
           "string": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
         }
       },
+      "fields": {
+        "string": "Fields:",
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
+      },
       "warningsText": {
         "0": {
-          "string": "This XLSForm file can be used, but it has the following possible problems (conversion warnings):",
-          "developer_comment": "The word \"XLSForm\" should not be translated."
+          "string": "This file can be used, but it has the following possible problems:"
         },
         "1": {
-          "string": "Please correct the problems and try again."
+          "string": "Form design warnings:"
         },
         "2": {
+          "string": "Workflow warnings:"
+        },
+        "3": {
+          "deletedFormExists": {
+            "string": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID."
+          },
+          "structureChanged": {
+            "string": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+          }
+        },
+        "4": {
+          "string": "Please correct the problems and try again."
+        },
+        "5": {
           "create": {
             "string": "If you are sure these problems can be ignored, click the button to create the Form anyway:"
           },
