@@ -248,13 +248,13 @@ export default {
         });
     },
     removeLearnMore(value) {
-      return value.replace(/Learn more:.*/, '').trim();
+      return value.replace(/Learn more: (https?:\/\/xlsform\.org\/[^.]*)\.?/, '').trim();
     },
     hasLearnMoreLink(value) {
-      return value.match(/Learn more: (.*)/);
+      return value.match(/Learn more: (https?:\/\/xlsform\.org\/[^.]*)\.?/);
     },
     getLearnMoreLink(value) {
-      return value.match(/Learn more: (.*)/)[1];
+      return value.match(/Learn more: (https?:\/\/xlsform\.org\/[^.]*)\.?/)[1];
     }
   }
 };
@@ -335,15 +335,15 @@ $drop-zone-vpadding: 15px;
       "400_15": "The XLSForm could not be converted: {error}",
       "409_3": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
     },
-    // Sub-heading for a warning details
+    // Sub-heading for a warning details, followed by the list of fields
     "fields": "Fields:",
     "warningsText": [
       "This file can be used, but it has the following possible problems:",
       "Form design warnings:",
       "Workflow warnings:",
       {
-        "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this form, you won’t be able to undelete the other one with the matching ID.",
-        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeat. These fields will not be visible in the Submission table or included in exports by default."
+        "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID.",
+        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
       },
       "Please correct the problems and try again.",
       {

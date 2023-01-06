@@ -2279,7 +2279,7 @@
       },
       "fields": {
         "string": "Fields:",
-        "developer_comment": "Sub-heading for a warning details"
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
       },
       "warningsText": {
         "0": {
@@ -2293,10 +2293,10 @@
         },
         "3": {
           "deletedFormExists": {
-            "string": "There is a form with ID \"{value}\" in the Trash. If you upload this form, you won’t be able to undelete the other one with the matching ID."
+            "string": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID."
           },
           "structureChanged": {
-            "string": "The following fields have been deleted, renamed or are now in different groups or repeat. These fields will not be visible in the Submission table or included in exports by default."
+            "string": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
           }
         },
         "4": {
