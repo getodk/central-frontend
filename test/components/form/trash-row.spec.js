@@ -58,7 +58,7 @@ describe('FormTrashRow', () => {
       const formData = { name: 'a form', submissions: 12345 };
       const cell = mountComponent(formData).get('.total-submissions');
       cell.text().should.equal('12,345');
-      cell.find('span').attributes().title.should.equal('Total');
+      cell.find('span').attributes().title.should.equal('Total Submissions');
     });
 
     it('shows the submission count when 0', () => {
