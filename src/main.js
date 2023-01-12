@@ -18,13 +18,11 @@ import './styles';
 import App from './components/app.vue';
 
 import createContainer from './container';
-import { $tcn } from './util/i18n';
 // ./jquery must be imported before any of Bootstrap's JavaScript plugins,
 // because the plugins require jQuery.
 import './jquery';
 import './bootstrap';
 
-const app = createApp(App);
-app.use(createContainer());
-app.config.globalProperties.$tcn = $tcn;
-app.mount('#app');
+createApp(App)
+  .use(createContainer())
+  .mount('#app');

@@ -1,7 +1,6 @@
 import { last, lensPath, view } from 'ramda';
 import { mount as vtuMount } from '@vue/test-utils';
 
-import { $tcn } from '../../src/util/i18n';
 import { noop } from '../../src/util/util';
 
 import createTestContainer from './container';
@@ -26,7 +25,7 @@ export const mount = (component, options = {}) => {
     ? containerOption
     : createTestContainer(containerOption);
   g.plugins = g.plugins != null ? [container, ...g.plugins] : [container];
-  g.mocks = { $tcn, $container: container, ...g.mocks };
+  g.mocks = { $container: container, ...g.mocks };
   return vtuMount(component, { ...mountOptions, global: g });
 };
 

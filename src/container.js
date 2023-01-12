@@ -18,6 +18,7 @@ import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
+import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
 import { noop } from './util/util';
 
@@ -62,6 +63,9 @@ export default ({
     // Register <i18n-t>, since we specify `false` for the fullInstall option of
     // vue-cli-plugin-i18n.
     app.use(i18n).component(Translation.name, Translation);
+    // eslint-disable-next-line no-param-reassign
+    app.config.globalProperties.$tcn = $tcn;
+
     app.use(container.pinia);
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);
