@@ -206,7 +206,7 @@ describe('SubmissionDownload', () => {
     const modal = mountComponent();
     const checkboxes = modal.findAll('input[type="checkbox"]');
     for (const checkbox of checkboxes)
-      await checkbox.setChecked(); // eslint-disable-line no-await-in-loop
+      await checkbox.setChecked();
     const passphrase = modal.get('input[type="password"]');
     await passphrase.setValue('supersecret');
     await modal.setProps({ state: false });
