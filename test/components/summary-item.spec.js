@@ -40,7 +40,7 @@ describe('SummaryItem', () => {
     const a = item.findAll('a');
     a.length.should.equal(3);
     for (const wrapper of a)
-      await wrapper.trigger('click'); // eslint-disable-line no-await-in-loop
+      await wrapper.trigger('click');
     item.emitted().click.length.should.equal(3);
   });
 });

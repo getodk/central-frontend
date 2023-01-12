@@ -35,7 +35,7 @@ const changeMultiselect = (selector, selectedIndexes) => async (component) => {
   await multiselect.get('.select-none').trigger('click');
   const inputs = multiselect.findAll('input[type="checkbox"]');
   for (const i of selectedIndexes)
-    await inputs[i].setValue(true); // eslint-disable-line no-await-in-loop
+    await inputs[i].setValue(true);
   return toggle.trigger('click');
 };
 
