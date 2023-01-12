@@ -6,8 +6,9 @@ import { wait } from '../../util/util';
 
 describe('NavbarLocaleDropdown', () => {
   it('shows the current locale', () => {
-    const text = mount(NavbarLocaleDropdown).get('.dropdown-toggle').text();
-    text.should.equal('en');
+    const toggle = mount(NavbarLocaleDropdown).get('.dropdown-toggle');
+    toggle.text().should.equal('en');
+    toggle.attributes('aria-label').should.equal('English');
   });
 
   it('shows a menu item for each locale', () => {
@@ -41,6 +42,7 @@ describe('NavbarLocaleDropdown', () => {
       selectLocale().then(app => {
         const toggle = app.get('#navbar-locale-dropdown .dropdown-toggle');
         toggle.text().should.equal('es');
+        toggle.attributes('aria-label').should.equal('Español');
       }));
 
     it('saves the new locale in local storage', () =>

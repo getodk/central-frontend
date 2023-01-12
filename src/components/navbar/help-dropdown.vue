@@ -11,9 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <li id="navbar-help-dropdown" class="dropdown">
-    <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
     <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"
-      aria-haspopup="true" aria-expanded="false">
+      :aria-label="$t('help')" aria-haspopup="true" aria-expanded="false">
       <span class="icon-question-circle"></span><span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
@@ -42,6 +41,9 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // This text is used to label a help menu that lists links to useful
+    // resources.
+    "help": "Help",
     // This is the text of a link that shows what version of ODK Central is in
     // use.
     "version": "Version"

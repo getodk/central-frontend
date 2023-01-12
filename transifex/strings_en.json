@@ -2508,6 +2508,10 @@
       }
     },
     "NavbarHelpDropdown": {
+      "help": {
+        "string": "Help",
+        "developer_comment": "This text is used to label a help menu that lists links to useful resources."
+      },
       "version": {
         "string": "Version",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."

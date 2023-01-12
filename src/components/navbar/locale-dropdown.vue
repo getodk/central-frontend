@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <li id="navbar-locale-dropdown" class="dropdown">
     <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"
-      aria-haspopup="true" aria-expanded="false">
+      :aria-label="locales.get($i18n.locale)" aria-haspopup="true"
+      aria-expanded="false">
       {{ $i18n.locale }}<span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
