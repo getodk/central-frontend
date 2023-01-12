@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="app">
+  <div>
     <!-- If the user's session is restored during the initial navigation, that
     will affect how the navbar is rendered. -->
     <navbar v-show="routerReady"/>
