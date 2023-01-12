@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
       </span>
     </td>
     <td class="total-submissions">
-      <span :title="$t('common.total')">
+      <span :title="$t('common.totalSubmissions')">
         <!-- form.submissions should always exist in production, but it doesn't
         exist in some tests. -->
         <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>

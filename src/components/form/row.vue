@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
       </td>
       <td class="total-submissions">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)"
-          :title="$t('common.total')">
+          :title="$t('common.totalSubmissions')">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
         </link-if-can>

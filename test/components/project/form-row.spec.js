@@ -201,7 +201,7 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
       cell.find('.icon-asterisk').exists().should.be.true();
-      cell.find('span').attributes().title.should.equal('Total');
+      cell.find('span').attributes().title.should.equal('Total Submissions');
     });
   });
 

@@ -61,7 +61,7 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="total-submissions">
-        <span :title="$t('common.total')">
+        <span :title="$t('common.totalSubmissions')">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath.all">
               <span>{{ $n(form.submissions, 'default') }}</span>

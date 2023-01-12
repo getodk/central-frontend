@@ -173,7 +173,7 @@ describe('FormRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
       cell.find('.icon-asterisk').exists().should.be.true();
-      cell.find('a').attributes().title.should.equal('Total');
+      cell.find('a').attributes().title.should.equal('Total Submissions');
     });
   });
   describe('all submission links', () => {
