@@ -3,12 +3,17 @@ import should from 'should';
 const unwrapElement = (elementOrWrapper) => (elementOrWrapper instanceof HTMLElement
   ? elementOrWrapper
   : elementOrWrapper.element);
+const verifyAttached = (elementOrWrapper) => {
+  if (!document.body.contains(unwrapElement(elementOrWrapper)))
+    throw new Error('component must be attached to the body');
+};
 
 // Asserts that an element is not individually hidden and that all its ancestors
 // are also not hidden. To test style-based visibility, attach the component to
 // the document, and specify `true` for `computed`.
 should.Assertion.add('visible', function visible(computed = false) {
   this.params = { operator: 'to be visible' };
+  if (computed) verifyAttached(this.obj);
   let element = unwrapElement(this.obj);
   while (element !== document.body && element != null) {
     const { display } = computed ? getComputedStyle(element) : element.style;
@@ -22,6 +27,7 @@ should.Assertion.add('visible', function visible(computed = false) {
 // `computed`.
 should.Assertion.add('hidden', function hidden(computed = false) {
   this.params = { operator: 'to be hidden' };
+  if (computed) verifyAttached(this.obj);
   const element = unwrapElement(this.obj);
   const { display } = computed ? getComputedStyle(element) : element.style;
   display.should.equal('none');
@@ -31,6 +37,7 @@ should.Assertion.add('hidden', function hidden(computed = false) {
 // assertion, it may time out rather than fail. (I am not sure why.)
 should.Assertion.add('focused', function focused() {
   this.params = { operator: 'to be focused' };
+  verifyAttached(this.obj);
   unwrapElement(this.obj).should.equal(document.activeElement);
 });
 
