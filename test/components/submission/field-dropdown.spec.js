@@ -58,7 +58,8 @@ describe('SubmissionFieldDropdown', () => {
       props: { modelValue: [] },
       container: {
         requestData: { fields: strings(1, 101) }
-      }
+      },
+      attachTo: document.body
     });
     await component.get('select').trigger('click');
     const after = component.get('.after-list');
