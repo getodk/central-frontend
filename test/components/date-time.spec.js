@@ -6,18 +6,9 @@ import { mount } from '../util/lifecycle';
 import { setLuxon } from '../util/date-time';
 
 describe('DateTime', () => {
-  {
-    let restoreLuxon;
-    before(() => {
-      restoreLuxon = setLuxon({
-        defaultZoneName: 'UTC',
-        now: '2020-01-01T00:00:00Z'
-      });
-    });
-    after(() => {
-      restoreLuxon();
-    });
-  }
+  beforeEach(() => {
+    setLuxon({ defaultZoneName: 'UTC', now: '2020-01-01T00:00:00Z' });
+  });
 
   it('renders a time element', () => {
     const component = mount(DateTime, {

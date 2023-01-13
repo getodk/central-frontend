@@ -34,14 +34,10 @@ const close = (component, selectedDatesAsISO) => {
 };
 
 describe('DateRangePicker', () => {
-  let restoreLuxon;
-  before(() => {
+  beforeEach(() => {
     // Not specifying a time zone, because flatpickr will use the system time
     // zone even if we specify a different time zone for Luxon.
-    restoreLuxon = setLuxon({ now: fromISO('1970-01-01') });
-  });
-  after(() => {
-    restoreLuxon();
+    setLuxon({ now: fromISO('1970-01-01') });
   });
 
   describe('initial value of flatpickrValue', () => {
