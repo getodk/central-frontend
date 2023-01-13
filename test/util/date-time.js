@@ -22,17 +22,20 @@ const setLuxonSetting = (name, value) => {
   }
 };
 
-// Sets one or more Luxon settings.
+// setLuxon() sets one or more Luxon settings. It will restore the settings to
+// their original values at the end of the test.
+const originalSettings = new Map();
 export const setLuxon = (settings) => {
-  const original = {};
   for (const [name, value] of Object.entries(settings)) {
-    original[name] = Settings[name];
+    if (!originalSettings.has(name)) originalSettings.set(name, Settings[name]);
     setLuxonSetting(name, value);
   }
-  return () => {
-    setLuxon(original);
-  };
 };
+afterEach(() => {
+  for (const [name, value] of originalSettings.entries())
+    Settings[name] = value;
+  originalSettings.clear();
+});
 
 // Returns an ISO string for a date in the past that is no earlier than the
 // specified dates.

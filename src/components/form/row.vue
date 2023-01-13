@@ -30,10 +30,11 @@ except according to the terms contained in the LICENSE file.
 
     <template v-if="form.publishedAt != null">
       <td class="last-submission">
-        <span :title="$t('header.lastSubmission')">
+        <span :title="lastSubmissionTooltip">
           <template v-if="form.lastSubmission != null">
             <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)">
-              <date-time :iso="form.lastSubmission" relative="past"/>
+              <date-time :iso="form.lastSubmission" relative="past"
+                :tooltip="false"/>
               <span class="icon-clock-o"></span>
             </link-if-can>
           </template>
@@ -82,18 +83,21 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import DateTime from '../date-time.vue';
+import { DateTime } from 'luxon';
+
+import DateTimeComponent from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
 import LinkIfCan from '../link-if-can.vue';
 
 import routes from '../../mixins/routes';
-import { useRequestData } from '../../request-data';
 import useReviewState from '../../composables/review-state';
+import { formatDateTime } from '../../util/date-time';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormRow',
-  components: { DateTime, EnketoFill, EnketoPreview, LinkIfCan },
+  components: { DateTime: DateTimeComponent, EnketoFill, EnketoPreview, LinkIfCan },
   mixins: [routes()],
   props: {
     form: {
@@ -129,6 +133,13 @@ export default {
       if (this.duplicateFormNames == null) return false;
       const name = this.form.nameOrId.toLocaleLowerCase();
       return this.duplicateFormNames.has(name);
+    },
+    lastSubmissionTooltip() {
+      const { lastSubmission } = this.form;
+      const header = this.$t('header.lastSubmission');
+      if (lastSubmission == null) return header;
+      const formatted = formatDateTime(DateTime.fromISO(lastSubmission));
+      return `${header}\n${formatted}`;
     }
   }
 };

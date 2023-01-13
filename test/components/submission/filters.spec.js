@@ -42,12 +42,8 @@ const changeMultiselect = (selector, selectedIndexes) => async (component) => {
 describe('SubmissionFilters', () => {
   beforeEach(mockLogin);
 
-  let restoreLuxon;
   beforeEach(() => {
-    restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
-  });
-  afterEach(() => {
-    restoreLuxon();
+    setLuxon({ defaultZoneName: 'UTC' });
   });
 
   describe('initial filters', () => {

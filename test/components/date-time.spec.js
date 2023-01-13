@@ -6,18 +6,9 @@ import { mount } from '../util/lifecycle';
 import { setLuxon } from '../util/date-time';
 
 describe('DateTime', () => {
-  {
-    let restoreLuxon;
-    before(() => {
-      restoreLuxon = setLuxon({
-        defaultZoneName: 'UTC',
-        now: '2020-01-01T00:00:00Z'
-      });
-    });
-    after(() => {
-      restoreLuxon();
-    });
-  }
+  beforeEach(() => {
+    setLuxon({ defaultZoneName: 'UTC', now: '2020-01-01T00:00:00Z' });
+  });
 
   it('renders a time element', () => {
     const component = mount(DateTime, {
@@ -25,13 +16,6 @@ describe('DateTime', () => {
     });
     component.element.tagName.should.equal('TIME');
     component.attributes().datetime.should.equal('2020-01-01T12:34:56Z');
-  });
-
-  it('sets the correct title attribute', () => {
-    const component = mount(DateTime, {
-      props: { iso: '2020-01-01T12:34:56Z' }
-    });
-    component.attributes().title.should.equal('2020/01/01 12:34:56');
   });
 
   describe('relative prop', () => {
@@ -47,6 +31,22 @@ describe('DateTime', () => {
         props: { iso: '2019-12-31T12:34:56Z', relative: 'past' }
       });
       component.text().should.equal('11 hr. ago');
+    });
+  });
+
+  describe('tooltip', () => {
+    it('shows the correct tooltip', () => {
+      const component = mount(DateTime, {
+        props: { iso: '2020-01-01T12:34:56Z' }
+      });
+      component.attributes().title.should.equal('2020/01/01 12:34:56');
+    });
+
+    it('does not show a tooltip if the tooltip prop is false', () => {
+      const component = mount(DateTime, {
+        props: { iso: '2020-01-01T12:34:56Z', tooltip: false }
+      });
+      should.not.exist(component.attributes().title);
     });
   });
 

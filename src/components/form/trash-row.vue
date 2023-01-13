@@ -23,9 +23,10 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </td>
     <td class="last-submission">
-      <span :title="$t('header.lastSubmission')">
+      <span :title="lastSubmissionTooltip">
         <template v-if="form.lastSubmission != null">
-          <date-time :iso="form.lastSubmission" relative="past"/>
+          <date-time :iso="form.lastSubmission" relative="past"
+            :tooltip="false"/>
           <span class="icon-clock-o"></span>
         </template>
         <template v-else>{{ $t('submission.noSubmission') }}</template>
@@ -51,13 +52,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import DateTime from '../date-time.vue';
+import { DateTime } from 'luxon';
 
+import DateTimeComponent from '../date-time.vue';
+
+import { formatDateTime } from '../../util/date-time';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormTrashRow',
-  components: { DateTime },
+  components: { DateTime: DateTimeComponent },
   props: {
     form: {
       type: Object,
@@ -91,6 +95,13 @@ export default {
       if (this.duplicateFormNames == null) return false;
       const name = this.form.nameOrId.toLocaleLowerCase();
       return this.duplicateFormNames.has(name);
+    },
+    lastSubmissionTooltip() {
+      const { lastSubmission } = this.form;
+      const header = this.$t('header.lastSubmission');
+      if (lastSubmission == null) return header;
+      const formatted = formatDateTime(DateTime.fromISO(lastSubmission));
+      return `${header}\n${formatted}`;
     }
   },
   methods: {

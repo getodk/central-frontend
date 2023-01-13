@@ -44,16 +44,18 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="last-submission">
-        <span :title="$t('header.lastSubmission')">
+        <span :title="lastSubmissionTooltip">
           <template v-if="form.lastSubmission != null">
             <template v-if="canLinkToSubmissions">
               <router-link :to="submissionsPath.all">
-                <date-time :iso="form.lastSubmission" relative="past"/>
+                <date-time :iso="form.lastSubmission" relative="past"
+                  :tooltip="false"/>
                 <span class="icon-clock-o"></span>
               </router-link>
             </template>
             <template v-else>
-              <date-time :iso="form.lastSubmission" relative="past"/>
+              <date-time :iso="form.lastSubmission" relative="past"
+                :tooltip="false"/>
               <span class="icon-clock-o"></span>
             </template>
           </template>
@@ -85,16 +87,19 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import DateTime from '../date-time.vue';
+import { DateTime } from 'luxon';
+
+import DateTimeComponent from '../date-time.vue';
 
 import routes from '../../mixins/routes';
 import useReviewState from '../../composables/review-state';
 import { enketoBasePath } from '../../util/util';
+import { formatDateTime } from '../../util/date-time';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectFormRow',
-  components: { DateTime },
+  components: { DateTime: DateTimeComponent },
   mixins: [routes()],
   props: {
     form: {
@@ -146,6 +151,13 @@ export default {
         return formNames.has(this.form.nameOrId.toLocaleLowerCase());
       }
       return false;
+    },
+    lastSubmissionTooltip() {
+      const { lastSubmission } = this.form;
+      const header = this.$t('header.lastSubmission');
+      if (lastSubmission == null) return header;
+      const formatted = formatDateTime(DateTime.fromISO(lastSubmission));
+      return `${header}\n${formatted}`;
     }
   }
 };

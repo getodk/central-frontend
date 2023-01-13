@@ -1,5 +1,3 @@
-import { Settings } from 'luxon';
-
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 
 import useFields from '../../../src/request-data/fields';
@@ -151,15 +149,6 @@ describe('SubmissionDataRow', () => {
   });
 
   describe('time values', () => {
-    const originalSettings = {};
-    before(() => {
-      originalSettings.defaultZoneName = Settings.defaultZoneName;
-      originalSettings.now = Settings.now;
-    });
-    afterEach(() => {
-      setLuxon(originalSettings);
-    });
-
     /*
     Each test case is an array with the following structure:
 
@@ -202,15 +191,6 @@ describe('SubmissionDataRow', () => {
   });
 
   describe('dateTime values', () => {
-    const originalSettings = {};
-    before(() => {
-      originalSettings.defaultZoneName = Settings.defaultZoneName;
-      originalSettings.now = Settings.now;
-    });
-    afterEach(() => {
-      setLuxon(originalSettings);
-    });
-
     /*
     Each test case is an array with the following structure:
 

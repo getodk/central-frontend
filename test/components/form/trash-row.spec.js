@@ -7,6 +7,7 @@ import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
+import { setLuxon } from '../../util/date-time';
 import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (deletedForm) => {
@@ -68,22 +69,23 @@ describe('FormTrashRow', () => {
     });
 
     it('shows the time since last submission', () => {
-      const lastSubmission = new Date().toISOString();
+      setLuxon({ defaultZoneName: 'UTC' });
+      const lastSubmission = '2023-01-01T00:00:00Z';
       const formData = { name: 'a form', submissions: 1, lastSubmission };
-      const row = mountComponent(formData);
-      const cell = row.get('.last-submission');
-      cell.text().should.match(/ago$/);
-      cell.find('span').attributes().title.should.equal('Latest Submission');
-      const dateTimes = row.findAllComponents(DateTime);
-      dateTimes.length.should.equal(2); // deleted timestamp and last submission timestamp
-      dateTimes[1].props().iso.should.equal(lastSubmission);
+      const span = mountComponent(formData).get('.last-submission span');
+      span.text().should.match(/ago$/);
+      const dateTime = span.getComponent(DateTime);
+      dateTime.props().iso.should.equal(lastSubmission);
+      const { title } = span.attributes();
+      title.should.equal('Latest Submission\n2023/01/01 00:00:00');
+      should.not.exist(dateTime.attributes().title);
     });
 
     it('does not render time if there is no last submission', () => {
       const formData = { name: 'a form', submissions: 0 };
-      const cell = mountComponent(formData).get('.last-submission');
-      cell.text().should.equal('(none)');
-      cell.find('span').attributes().title.should.equal('Latest Submission');
+      const span = mountComponent(formData).get('.last-submission span');
+      span.text().should.equal('(none)');
+      span.attributes().title.should.equal('Latest Submission');
     });
   });
 

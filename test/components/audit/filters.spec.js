@@ -33,7 +33,7 @@ describe('AuditFilters', () => {
   it('initially specifies the current date for start and end', () => {
     // Not specifying a time zone, because flatpickr will use the system time
     // zone even if we specify a different time zone for Luxon.
-    const restoreLuxon = setLuxon({ now: '1970-01-01T12:00:00' });
+    setLuxon({ now: '1970-01-01T12:00:00' });
     return load('/system/audits', { root: false })
       .beforeEachResponse((component, { url }) => {
         const params = relativeUrl(url).searchParams;
@@ -49,8 +49,7 @@ describe('AuditFilters', () => {
         const { modelValue } = component.getComponent(DateRangePicker).props();
         modelValue[0].toISO().should.equal(start);
         modelValue[1].toISO().should.equal(start);
-      })
-      .finally(restoreLuxon);
+      });
   });
 
   it('sends a request after the date range is changed', () =>

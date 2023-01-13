@@ -92,22 +92,14 @@ const recentCases = [
 ];
 
 describe('util/date-time', () => {
-  let restoreLuxon;
-  afterEach(() => {
-    if (restoreLuxon != null) {
-      restoreLuxon();
-      restoreLuxon = null;
-    }
-  });
-
   describe('formatDate()', () => {
     it('returns the correct absolute date', () => {
-      restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
+      setLuxon({ defaultZoneName: 'UTC' });
       formatDate(dt('2018-01-01T00:00:00Z')).should.equal('2018/01/01');
     });
 
     it('returns the date in the correct time zone', () => {
-      restoreLuxon = setLuxon({ defaultZoneName: 'UTC-1' });
+      setLuxon({ defaultZoneName: 'UTC-1' });
       formatDate(dt('2018-01-01T00:00:00Z')).should.equal('2017/12/31');
     });
 
@@ -116,7 +108,7 @@ describe('util/date-time', () => {
         const { defaultZoneName = 'UTC', now, iso, formatted } = testCase;
         // eslint-disable-next-line no-loop-func
         it(`formats ${iso} when it is now ${now} (${defaultZoneName})`, () => {
-          restoreLuxon = setLuxon({ defaultZoneName, now });
+          setLuxon({ defaultZoneName, now });
           formatDate(dt(iso), 'recent').should.equal(formatted);
         });
       }
@@ -129,20 +121,20 @@ describe('util/date-time', () => {
 
   describe('formatTime()', () => {
     it('returns the correct hour and minute', () => {
-      restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
+      setLuxon({ defaultZoneName: 'UTC' });
       formatTime(dt('2018-01-01T01:23:45Z'), false).should.equal('01:23');
       formatTime(dt('2018-01-01T23:45:01Z'), false).should.equal('23:45');
     });
 
     it('returns the correct second', () => {
-      restoreLuxon = setLuxon({ defaultZoneName: 'UTC' });
+      setLuxon({ defaultZoneName: 'UTC' });
       const dateTime = dt('2018-01-01T01:23:45Z');
       formatTime(dateTime, true).should.equal('01:23:45');
       formatTime(dateTime).should.equal('01:23:45');
     });
 
     it('returns the time in the correct time zone', () => {
-      restoreLuxon = setLuxon({ defaultZoneName: 'UTC-1' });
+      setLuxon({ defaultZoneName: 'UTC-1' });
       formatTime(dt('2018-01-01T02:00:00Z')).should.equal('01:00:00');
     });
 
@@ -153,7 +145,7 @@ describe('util/date-time', () => {
 
   describe('formatDateTime()', () => {
     beforeEach(() => {
-      restoreLuxon = setLuxon({ defaultZoneName: 'UTC', now: '2018-01-01T00:00:00Z' });
+      setLuxon({ defaultZoneName: 'UTC', now: '2018-01-01T00:00:00Z' });
     });
 
     it('returns the correct absolute date/time', () => {
