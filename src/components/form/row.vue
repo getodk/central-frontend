@@ -75,7 +75,7 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-pencil"></span>
             <span>{{ $t('action.test') }}</span>
           </router-link>
-         </template>
+        </template>
       </template>
     </td>
   </tr>

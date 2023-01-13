@@ -53,13 +53,13 @@ except according to the terms contained in the LICENSE file.
         <template v-else-if="linkable && !attachment.datasetExists">
           <button type="button" class="btn btn-primary btn-link-dataset"
             @click="$emit('link', { name: attachment.name, blobExists: attachment.blobExists })">
-          <span class="icon-link"></span>
-          <i18n-t keypath="action.linkDataset">
-            <template #datasetName>{{ datasetName }}</template>
-          </i18n-t>
-        </button>
-      </template>
-    </div>
+            <span class="icon-link"></span>
+            <i18n-t keypath="action.linkDataset">
+              <template #datasetName>{{ datasetName }}</template>
+            </i18n-t>
+          </button>
+        </template>
+      </div>
     </td>
   </tr>
 </template>
