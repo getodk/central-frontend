@@ -11,6 +11,7 @@ import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { setLuxon } from '../../util/date-time';
 import { testRequestData } from '../../util/request-data';
 
 const mountComponent = () => {
@@ -125,25 +126,29 @@ describe('FormRow', () => {
     beforeEach(mockLogin);
 
     it('shows the correct time since the last submission', () => {
-      const lastSubmission = new Date().toISOString();
-      testData.extendedForms.createPast(1, { xmlFormId: 'a b', lastSubmission });
-      const row = mountComponent();
-      row.find('.last-submission').text().should.match(/ago$/);
-      const dateTimes = row.findAllComponents(DateTime);
-      dateTimes.length.should.equal(1);
-      dateTimes[0].props().iso.should.equal(lastSubmission);
+      setLuxon({ defaultZoneName: 'UTC' });
+      const lastSubmission = '2023-01-01T00:00:00Z';
+      testData.extendedForms.createPast(1, { lastSubmission });
+      const span = mountComponent().get('.last-submission span');
+      span.text().should.match(/ago$/);
+      const dateTime = span.getComponent(DateTime);
+      dateTime.props().iso.should.equal(lastSubmission);
+      const { title } = span.attributes();
+      title.should.equal('Latest Submission\n2023/01/01 00:00:00');
+      should.not.exist(dateTime.attributes().title);
     });
 
     it('shows the correct icon', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
-      const cell = mountComponent().find('.last-submission');
+      testData.extendedForms.createPast(1, { submissions: 4 });
+      const cell = mountComponent().get('.last-submission');
       cell.find('.icon-clock-o').exists().should.be.true();
-      cell.find('span').attributes().title.should.equal('Latest Submission');
     });
 
     it('shows (none) if no submission', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 0 });
-      mountComponent().find('.last-submission').text().should.equal('(none)');
+      testData.extendedForms.createPast(1, { submissions: 0 });
+      const span = mountComponent().get('.last-submission span');
+      span.text().should.equal('(none)');
+      span.attributes().title.should.equal('Latest Submission');
     });
 
     it('shows blank last submission column when the form is a draft', () => {

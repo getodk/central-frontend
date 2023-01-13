@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <time v-if="iso != null" :datetime="iso" :title="format(false)">{{ format(true) }}</time>
+  <time v-if="iso != null" :datetime="iso" :title="title">{{ format(true) }}</time>
   <span v-else>{{ blank }}</span>
 </template>
 
@@ -30,11 +30,18 @@ export default {
     blank: {
       type: String,
       default: ''
+    },
+    tooltip: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
     dateTime() {
       return DateTime.fromISO(this.iso, { locale: this.$i18n.locale });
+    },
+    title() {
+      return this.tooltip ? this.format(false) : null;
     }
   },
   methods: {
