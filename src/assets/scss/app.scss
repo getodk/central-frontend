@@ -784,13 +784,11 @@ becomes more complicated.
       }
 
       > a {
-        pointer-events: none;
-
-        &, &:focus {
+        &, &:hover, &:focus {
           color: #999;
         }
 
-        &:focus {
+        &:hover, &:focus {
           border-bottom-color: transparent;
         }
       }

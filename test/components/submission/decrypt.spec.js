@@ -307,16 +307,6 @@ describe('SubmissionDownload', () => {
       modal.get('a').trigger('click');
       modal.should.alert('info');
     });
-
-    it('does nothing if the link is disabled', () => {
-      const modal = mountComponent();
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true
-      });
-      modal.findAll('a')[1].element.dispatchEvent(event).should.be.false();
-      modal.should.not.alert();
-    });
   });
 
   describe('clicking a link if there is a managed key', () => {
@@ -415,18 +405,6 @@ describe('SubmissionDownload', () => {
       const modal = await setup();
       modal.get('a').trigger('click');
       modal.should.alert('info');
-    });
-
-    it('does nothing if the link is disabled', async () => {
-      const onSubmit = sinon.fake();
-      const modal = await setup(onSubmit);
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true
-      });
-      modal.findAll('a')[1].element.dispatchEvent(event).should.be.false();
-      onSubmit.called.should.be.false();
-      modal.should.not.alert();
     });
 
     it('does nothing if the passphrase is empty', async () => {

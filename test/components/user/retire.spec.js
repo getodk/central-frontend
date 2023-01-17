@@ -26,8 +26,6 @@ describe('UserRetire', () => {
       const li = a.element.parentNode;
       li.classList.contains('disabled').should.be.true();
       li.getAttribute('title').should.equal('You may not retire yourself.');
-      await a.trigger('click');
-      component.getComponent(UserRetire).props().state.should.be.false();
     });
   });
 

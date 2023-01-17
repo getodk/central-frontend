@@ -277,11 +277,9 @@ export default {
     download(event) {
       const a = event.target.closest('a');
       if (a == null) return;
-      const willDownload = !a.classList.contains('disabled') &&
+      const willDownload = this.managedKey == null ||
         this.$refs.form.reportValidity();
-      if (this.managedKey == null) {
-        if (!willDownload) event.preventDefault();
-      } else {
+      if (this.managedKey != null) {
         event.preventDefault();
         if (willDownload) this.decrypt(a.getAttribute('href'));
       }

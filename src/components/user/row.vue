@@ -52,7 +52,8 @@ except according to the terms contained in the LICENSE file.
             </a>
           </li>
           <li :class="{ disabled }" :title="retireTitle">
-            <a class="retire-user" href="#" @click.prevent="retire">
+            <a class="retire-user" href="#"
+              @click.prevent="$emit('retire', user)">
               {{ $t('action.retire') }}&hellip;
             </a>
           </li>
@@ -123,9 +124,6 @@ export default {
           this.$emit('assigned-role', this.user, this.selectedRole === 'admin');
         })
         .catch(noop);
-    },
-    retire() {
-      if (!this.disabled) this.$emit('retire', this.user);
     }
   }
 };

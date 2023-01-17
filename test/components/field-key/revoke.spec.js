@@ -23,8 +23,6 @@ describe('FieldKeyRevoke', () => {
       const app = await load('/projects/1/app-users');
       const li = app.get('.field-key-row .dropdown-menu li');
       li.classes('disabled').should.be.true();
-      await li.get('a').trigger('click');
-      app.getComponent(FieldKeyRevoke).props().state.should.be.false();
     });
   });
 

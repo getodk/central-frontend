@@ -38,7 +38,9 @@ except according to the terms contained in the LICENSE file.
         <ul class="dropdown-menu dropdown-menu-right"
           :aria-labelledby="actionsId">
           <li :class="{ disabled: fieldKey.token == null }">
-            <a href="#" @click.prevent="revoke">{{ $t('action.revokeAccess') }}&hellip;</a>
+            <a href="#" @click.prevent="$emit('revoke', fieldKey)">
+              {{ $t('action.revokeAccess') }}&hellip;
+            </a>
           </li>
         </ul>
       </div>
@@ -69,12 +71,6 @@ export default {
   methods: {
     showCode() {
       this.$emit('show-code', this.fieldKey, this.$refs.popoverLink);
-    },
-    revoke() {
-      // Bootstrap does not truly disable dropdown menu items marked as
-      // disabled.
-      if (this.fieldKey.token == null) return;
-      this.$emit('revoke', this.fieldKey);
     }
   }
 };
