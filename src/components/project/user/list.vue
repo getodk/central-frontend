@@ -44,7 +44,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
       @submit.prevent>
       <label class="form-group">
         <input class="form-control" :value="q" :placeholder="searchLabel"
-          :disabled="searchDisabled" autocomplete="off"
+          :aria-disabled="searchDisabled" autocomplete="off"
           @change="changeQ($event.target.value)">
         <!-- When search is disabled, we hide rather than disable this button,
         because Bootstrap does not have CSS for .close[disabled]. -->

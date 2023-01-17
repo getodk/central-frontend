@@ -557,7 +557,7 @@ describe('Multiselect', () => {
       const component = mountComponent({
         props: { options: null, loading: true }
       });
-      component.get('select').element.disabled.should.be.true();
+      component.get('select').attributes('aria-disabled').should.equal('true');
     });
   });
 
@@ -573,7 +573,7 @@ describe('Multiselect', () => {
       const component = mountComponent({
         props: { options: null, loading: false }
       });
-      component.get('select').element.disabled.should.be.true();
+      component.get('select').attributes('aria-disabled').should.equal('true');
     });
   });
 

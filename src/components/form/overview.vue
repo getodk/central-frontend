@@ -123,7 +123,7 @@ export default {
 
     &:hover, &:focus, &:active:focus {
       background-color: #bbb;
-      &[disabled] { background-color: #ccc; }
+      &[aria-disabled="true"] { background-color: #ccc; }
     }
   }
 }

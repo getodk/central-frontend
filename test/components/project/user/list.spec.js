@@ -78,7 +78,7 @@ describe('ProjectUserList', () => {
         return load('/projects/1/users', { root: false })
           .beforeEachResponse(component => {
             const input = component.get('#project-user-list-search-form input');
-            input.element.disabled.should.be.true();
+            input.attributes('aria-disabled').should.equal('true');
           });
       });
 
@@ -155,20 +155,19 @@ describe('ProjectUserList', () => {
         });
     });
 
-    it('renders the select correctly for the current user', () => {
+    it('renders the select correctly for the current user', async () => {
       createData(['manager', 'manager']);
-      return load('/projects/1/users', { root: false }).afterResponses(component => {
-        const tr = component.findAll('tbody tr');
-        tr.length.should.equal(2);
-        const selects = tr.map(wrapper => wrapper.get('select'));
+      const component = await load('/projects/1/users', { root: false });
+      const tr = component.findAll('tbody tr');
+      tr.length.should.equal(2);
+      const selects = tr.map(wrapper => wrapper.get('select'));
 
-        tr[0].get('td').text().should.equal('User 1');
-        selects[0].element.disabled.should.be.true();
-        selects[0].attributes().title.should.equal('You may not edit your own Project Role.');
+      tr[0].get('td').text().should.equal('User 1');
+      selects[0].attributes('aria-disabled').should.equal('true');
+      selects[0].attributes().title.should.equal('You may not edit your own Project Role.');
 
-        selects[1].element.disabled.should.be.false();
-        should.not.exist(selects[1].attributes().title);
-      });
+      selects[1].attributes('aria-disabled').should.equal('false');
+      should.not.exist(selects[1].attributes().title);
     });
 
     describe('no assignments', () => {
@@ -248,7 +247,7 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            component.get('select').element.disabled.should.be.true();
+            component.get('select').attributes('aria-disabled').should.equal('true');
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -273,7 +272,7 @@ describe('ProjectUserList', () => {
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
             const input = component.get('#project-user-list-search-form input');
-            input.element.disabled.should.be.true();
+            input.attributes('aria-disabled').should.equal('true');
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -379,7 +378,7 @@ describe('ProjectUserList', () => {
     it('does not disable the search input', () =>
       search({ root: false }).beforeAnyResponse(component => {
         const input = component.get('#project-user-list-search-form input');
-        input.element.disabled.should.be.false();
+        input.attributes('aria-disabled').should.equal('false');
       }));
 
     it('shows the .close button', () =>
@@ -498,7 +497,7 @@ describe('ProjectUserList', () => {
     it('disables the search input during the request', () =>
       giveRoleThenClearSearch().beforeAnyResponse(component => {
         const input = component.get('#project-user-list-search-form input');
-        input.element.disabled.should.be.true();
+        input.attributes('aria-disabled').should.equal('true');
       }));
 
     it('hides the .close button during the request', () =>

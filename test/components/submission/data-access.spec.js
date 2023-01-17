@@ -30,7 +30,7 @@ describe('SubmissionDataAccess', () => {
         submissions: 0
       });
       const button = mountComponent().get('button');
-      button.element.disabled.should.be.true();
+      button.attributes('aria-disabled').should.equal('true');
       should.exist(button.attributes().title);
     });
 
@@ -44,7 +44,7 @@ describe('SubmissionDataAccess', () => {
       testData.standardKeys.createPast(1, { managed: false });
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const button = mountComponent().get('button');
-      button.element.disabled.should.be.true();
+      button.attributes('aria-disabled').should.equal('true');
       should.exist(button.attributes().title);
     });
   });

@@ -228,8 +228,8 @@ describe('AccountLogin', () => {
         .afterResponses(app => {
           app.find('#navbar-links').exists().should.be.false();
           app.get('#navbar-actions a').text().should.equal('Not logged in');
-          app.get('#account-login .btn-primary').element.disabled.should.be.true();
-          app.get('#account-login .btn-link').element.disabled.should.be.true();
+          app.get('#account-login .btn-primary').attributes('aria-disabled').should.equal('true');
+          app.get('#account-login .btn-link').attributes('aria-disabled').should.equal('true');
         });
     });
   });

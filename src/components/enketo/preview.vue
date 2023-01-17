@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     :href="href" target="_blank">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </a>
-  <button v-else type="button" class="enketo-preview btn btn-default" disabled
+  <button v-else type="button" class="enketo-preview btn btn-default" aria-disabled="true"
     :title="disabledTitle">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </button>

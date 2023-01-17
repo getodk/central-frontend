@@ -166,7 +166,7 @@ describe('SubmissionActivity', () => {
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       const btn = component.get('#submission-activity-edit-button');
-      btn.element.disabled.should.be.true();
+      btn.attributes('aria-disabled').should.equal('true');
       btn.attributes().title.should.equal('You cannot edit encrypted Submissions.');
     });
 

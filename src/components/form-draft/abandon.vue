@@ -26,10 +26,10 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
-          :disabled="awaitingResponse" @click="abandon">
+          :aria-disabled="awaitingResponse" @click="abandon">
           {{ $t('action.abandon') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+        <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
         </button>

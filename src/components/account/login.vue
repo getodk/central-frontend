@@ -25,11 +25,11 @@ except according to the terms contained in the LICENSE file.
               autocomplete="current-password"/>
             <div class="panel-footer">
               <button type="submit" class="btn btn-primary"
-                :disabled="disabled">
+                :aria-disabled="disabled">
                 {{ $t('action.logIn') }} <spinner :state="disabled"/>
               </button>
               <router-link v-slot="{ navigate }" to="/reset-password" custom>
-                <button type="button" class="btn btn-link" :disabled="disabled"
+                <button type="button" class="btn btn-link" :aria-disabled="disabled"
                   @click="navigate">
                   {{ $t('action.resetPassword') }}
                 </button>

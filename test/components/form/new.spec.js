@@ -253,7 +253,7 @@ describe('FormNew', () => {
         const dropZone = modal.get('#form-new-drop-zone');
         dropZone.classes('form-new-disabled').should.be.true();
         const button = dropZone.get('.btn-primary');
-        button.element.disabled.should.be.true();
+        button.attributes('aria-disabled').should.equal('true');
       })
       .respondWithProblem();
   });

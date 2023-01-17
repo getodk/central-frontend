@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <button id="project-form-access-save-button" type="button"
         class="btn btn-primary"
         :class="{ 'uncommitted-change': changeCount !== 0 }"
-        :disabled="saveDisabled" @click="save">
+        :aria-disabled="saveDisabled" @click="save">
         <span class="icon-floppy-o"></span>{{ $t('action.save') }}
         <spinner :state="awaitingResponse"/>
       </button>

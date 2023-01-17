@@ -102,11 +102,11 @@ except according to the terms contained in the LICENSE file.
             autocomplete="off"/>
           <div class="modal-actions">
             <button type="submit" class="btn btn-danger"
-              :disabled="awaitingResponse">
+              :aria-disabled="awaitingResponse">
               {{ $t('action.finish') }} <spinner :state="awaitingResponse"/>
             </button>
             <button type="button" class="btn btn-link"
-              :disabled="awaitingResponse" @click="$emit('hide')">
+              :aria-disabled="awaitingResponse" @click="$emit('hide')">
               {{ $t('action.neverMind') }}
             </button>
           </div>

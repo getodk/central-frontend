@@ -19,7 +19,8 @@ except according to the terms contained in the LICENSE file.
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRole"
-            :disabled="disabled" :title="selectTitle"
+            :aria-disabled="disabled || awaitingResponse"
+            :title="disabled ? $t('cannotAssignRole') : null"
             :aria-label="$t('field.sitewideRole')"
             @change="assignRole($event.target.value)">
             <option value="admin">{{ $t('role.admin') }}</option>
@@ -51,7 +52,7 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.resetPassword') }}&hellip;
             </a>
           </li>
-          <li :class="{ disabled }" :title="retireTitle">
+          <li :class="{ disabled }" :title="disabled ? $t('cannotRetire') : null">
             <a class="retire-user" href="#"
               @click.prevent="$emit('retire', user)">
               {{ $t('action.retire') }}&hellip;
@@ -97,20 +98,10 @@ export default {
   },
   computed: {
     disabled() {
-      return this.user.id === this.currentUser.id || this.awaitingResponse;
-    },
-    selectTitle() {
-      return this.user.id === this.currentUser.id
-        ? this.$t('cannotAssignRole')
-        : null;
+      return this.user.id === this.currentUser.id;
     },
     actionsButtonId() {
       return `user-row-actions-button${this.user.id}`;
-    },
-    retireTitle() {
-      return this.user.id === this.currentUser.id
-        ? this.$t('cannotRetire')
-        : null;
     }
   },
   methods: {

@@ -60,7 +60,8 @@ describe('ProjectFormAccess', () => {
     it('initially disables the Save button', async () => {
       createData();
       const app = await load('/projects/1/form-access');
-      app.get('#project-form-access-save-button').element.disabled.should.be.true();
+      const button = app.get('#project-form-access-save-button');
+      button.attributes('aria-disabled').should.equal('true');
     });
 
     it('correctly renders the column headers of the table', async () => {
@@ -101,7 +102,7 @@ describe('ProjectFormAccess', () => {
         await app.get('#project-form-access-table select').setValue('open');
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.true();
-        button.element.disabled.should.be.false();
+        button.attributes('aria-disabled').should.equal('false');
       });
 
       it('increments unsavedChanges', async () => {
@@ -123,7 +124,7 @@ describe('ProjectFormAccess', () => {
         // Save button
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.false();
-        button.element.disabled.should.be.true();
+        button.attributes('aria-disabled').should.equal('true');
 
         // unsavedChanges
         app.vm.$container.unsavedChanges.count.should.equal(0);
@@ -146,7 +147,7 @@ describe('ProjectFormAccess', () => {
         await checkbox.setChecked(false);
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.true();
-        button.element.disabled.should.be.false();
+        button.attributes('aria-disabled').should.equal('false');
       });
 
       it('increments unsavedChanges', async () => {
@@ -169,7 +170,7 @@ describe('ProjectFormAccess', () => {
         // Save button
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.false();
-        button.element.disabled.should.be.true();
+        button.attributes('aria-disabled').should.equal('true');
 
         // unsavedChanges
         app.vm.$container.unsavedChanges.count.should.equal(0);
@@ -193,7 +194,7 @@ describe('ProjectFormAccess', () => {
         await checkboxes[1].setChecked();
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.true();
-        button.element.disabled.should.be.false();
+        button.attributes('aria-disabled').should.equal('false');
       });
     });
 
@@ -277,7 +278,8 @@ describe('ProjectFormAccess', () => {
 
       it('disables the Save button', () =>
         saveWithSuccess().afterResponses(app => {
-          app.get('#project-form-access-save-button').element.disabled.should.be.true();
+          const button = app.get('#project-form-access-save-button');
+          button.attributes('aria-disabled').should.equal('true');
         }));
 
       it('updates the table', () =>

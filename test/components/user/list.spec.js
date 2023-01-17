@@ -59,8 +59,8 @@ describe('UserList', () => {
     const component = await load('/users', { root: false });
     const selects = component.findAll('.user-row select');
 
-    selects[0].element.disabled.should.be.true();
-    selects[1].element.disabled.should.be.false();
+    selects[0].attributes('aria-disabled').should.equal('true');
+    selects[1].attributes('aria-disabled').should.equal('false');
 
     should.exist(selects[0].attributes().title);
     should.not.exist(selects[1].attributes().title);
@@ -110,12 +110,12 @@ describe('UserList', () => {
           loadUsersAndChangeRole({ rowIndex, selectValue })
             .beforeAnyResponse(component => {
               const select = component.findAll('.user-row select')[rowIndex];
-              select.element.disabled.should.be.true();
+              select.attributes('aria-disabled').should.equal('true');
             })
             .respondWithSuccess()
             .afterResponse(component => {
               const select = component.findAll('.user-row select')[rowIndex];
-              select.element.disabled.should.be.false();
+              select.attributes('aria-disabled').should.equal('false');
             }));
 
         it('shows a spinner during the request', () =>
