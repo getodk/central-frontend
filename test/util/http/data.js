@@ -63,6 +63,11 @@ const responsesByComponent = {
   DatasetList: componentResponses({
     datasets: () => testData.extendedDatasets.sorted()
   }),
+  DatasetShow: componentResponses({
+    project: true,
+    dataset: () => testData.extendedDatasets.last()
+  }),
+  DatasetOverview: [],
   ProjectSettings: [],
   FormShow: componentResponses({
     project: true,

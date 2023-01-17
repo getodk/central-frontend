@@ -470,6 +470,10 @@
       "string": "Created by",
       "developer_comment": "This is the text of a table column header."
     },
+    "updatedBy": {
+      "string": "Updated by",
+      "developer_comment": "This is the text of a table column header."
+    },
     "displayName": {
       "string": "Display Name",
       "developer_comment": "This is the text of a table column header."
@@ -1247,12 +1251,41 @@
         "string": "Datasets workflow"
       }
     },
+    "DatasetOverview": {
+      "formsCreateEntities": {
+        "string": "{count, plural, one {Form creates Entities in this Dataset} other {Forms create Entities in this Dataset}}"
+      },
+      "formsConsumeData": {
+        "string": "{count, plural, one {Form consumes data from this Dataset} other {Forms consume data from this Dataset}}"
+      },
+      "connectionsToForms": {
+        "string": "Connections to Forms"
+      },
+      "properties": {
+        "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}"
+      },
+      "datasetProperties": {
+        "string": "Dataset Properties"
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "Download data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetShow": {
+      "back": {
+        "string": "Back to Project Datasets",
+        "developer_comment": "This is shown at the top of the page."
+      },
+      "comingSoon": {
+        "string": "(coming soon)"
+      },
+      "data": {
+        "string": "Data"
       }
     },
     "DatasetSummary": {

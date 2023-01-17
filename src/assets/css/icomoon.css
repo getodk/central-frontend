@@ -234,3 +234,6 @@
 .icon-caret-down:before {
   content: "\e900";
 }
+.icon-cube:before {
+  content: "\e901";
+}

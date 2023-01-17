@@ -220,6 +220,7 @@
     // the resource and possibly also when they did so.
     "created": "Created",
     "createdBy": "Created by",
+    "updatedBy": "Updated by",
     "displayName": "Display Name",
     "email": "Email Address",
     "instanceId": "Instance ID",

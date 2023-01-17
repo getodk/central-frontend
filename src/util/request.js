@@ -133,6 +133,10 @@ export const apiPaths = {
   },
   publicLinks: formPath('/public-links'),
   datasets: projectPath('/datasets'),
+  dataset: (projectId, datasetName) => {
+    const encodedName = encodeURIComponent(datasetName);
+    return `/v1/projects/${projectId}/datasets/${encodedName}`;
+  },
   entities: (projectId, datasetName) => {
     const encodedName = encodeURIComponent(datasetName);
     return `/v1/projects/${projectId}/datasets/${encodedName}/entities.csv`;

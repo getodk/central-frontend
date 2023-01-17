@@ -494,7 +494,22 @@ const routes = [
       }
     }
   }),
-
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName',
+    component: 'DatasetShow',
+    props: true,
+    loading: 'page',
+    key: ({ projectId, datasetName }) =>
+      `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`,
+    children: [
+      asyncRoute({
+        path: '',
+        component: 'DatasetOverview',
+        props: true,
+        loading: 'tab'
+      })
+    ]
+  }),
   asyncRoute({
     path: '/users',
     component: 'UserHome',
