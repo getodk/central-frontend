@@ -12,7 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="dataset-row">
     <td class="name">
-      <span :title="dataset.name">{{ dataset.name }}</span>
+      <router-link :title="dataset.name" :to="datasetOverviewPage">{{ dataset.name }}</router-link>
+    </td>
+    <td class="entities">
+      <span>{{ dataset.entities }}</span>
+    </td>
+    <td>
+      <span> <date-time :iso="dataset.lastEntity"/> </span>
     </td>
     <td>
       <a class="btn btn-primary" :href="href">
@@ -24,9 +30,11 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { apiPaths } from '../../util/request';
+import DateTime from '../date-time.vue';
 
 export default {
   name: 'DatasetRow',
+  components: { DateTime },
   props: {
     dataset: {
       type: Object,
@@ -36,6 +44,9 @@ export default {
   computed: {
     href() {
       return apiPaths.entities(this.dataset.projectId, this.dataset.name);
+    },
+    datasetOverviewPage() {
+      return `/projects/${this.dataset.projectId}/datasets/${this.dataset.name}`;
     }
   }
 };
@@ -46,6 +57,10 @@ export default {
 
 .dataset-row {
   .name { @include text-overflow-ellipsis; }
+  .entities {
+    text-align: right;
+    padding-right: 20px;
+  }
 }
 </style>
 

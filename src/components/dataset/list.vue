@@ -11,9 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <dataset-introduction/>
     <dataset-table/>
     <loading :state="datasets.initiallyLoading"/>
+    <dataset-introduction/>
   </div>
 </template>
 
@@ -41,6 +41,7 @@ const props = defineProps({
 const { datasets } = useRequestData();
 datasets.request({
   url: apiPaths.datasets(props.projectId),
+  extended: true,
   resend: false
 }).catch(noop);
 </script>

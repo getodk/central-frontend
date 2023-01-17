@@ -502,9 +502,13 @@
       "string": "Time",
       "developer_comment": "This is the text of a table column header for a column that shows dates and times."
     },
-    "type": {
-      "string": "Type",
-      "developer_comment": "This is the text of a table column header."
+    "entities": {
+      "string": "Total Entities",
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+    },
+    "lastEntity": {
+      "string": "Latest Entity",
+      "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
   "plural": {
