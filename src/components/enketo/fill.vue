@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     :href="href" target="_blank">
     <slot></slot>
   </a>
-  <button v-else type="button" class="enketo-fill btn btn-primary" disabled
+  <button v-else type="button" class="enketo-fill btn btn-primary" aria-disabled="true"
     :title="disabledTitle">
     <slot></slot>
   </button>

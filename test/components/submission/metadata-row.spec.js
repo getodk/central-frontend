@@ -225,7 +225,7 @@ describe('SubmissionMetadataRow', () => {
     it('disables the button if the submission is encrypted', () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const button = mountComponent().findAll('.btn')[1];
-      button.element.disabled.should.be.true();
+      button.attributes('aria-disabled').should.equal('true');
       const { title } = button.attributes();
       title.should.equal('You cannot edit encrypted Submissions.');
     });

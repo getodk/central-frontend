@@ -31,6 +31,7 @@ import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
 import useCallWait from '../composables/call-wait';
+import useDisabled from '../composables/disabled';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
 
@@ -40,6 +41,7 @@ export default {
   inject: ['alert'],
   setup() {
     useSessions();
+    useDisabled();
 
     const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();

@@ -23,7 +23,7 @@ describe('EnketoPreview', () => {
       props: { formVersion: form }
     });
     button.element.tagName.should.equal('BUTTON');
-    button.element.disabled.should.be.true();
+    button.attributes('aria-disabled').should.equal('true');
     button.attributes().title.should.equal('Preview has not finished processing for this Form. Please refresh later and try again.');
   });
 

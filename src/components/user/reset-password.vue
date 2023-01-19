@@ -24,10 +24,10 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
-          :disabled="awaitingResponse" @click="resetPassword">
+          :aria-disabled="awaitingResponse" @click="resetPassword">
           {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+        <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.close') }}
         </button>

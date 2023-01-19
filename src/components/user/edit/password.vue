@@ -27,8 +27,8 @@ except according to the terms contained in the LICENSE file.
         <form-group id="user-edit-password-confirm" v-model="confirm"
           type="password" :placeholder="$t('field.passwordConfirm')" required
           :has-error="mismatch" autocomplete="new-password"/>
-        <button :disabled="awaitingResponse" type="submit"
-          class="btn btn-primary">
+        <button type="submit" class="btn btn-primary"
+          :aria-disabled="awaitingResponse">
           {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
         </button>
       </form>

@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
               autocomplete="new-password"/>
             <div class="panel-footer">
               <button type="submit" class="btn btn-primary"
-                :disabled="awaitingResponse">
+                :aria-disabled="awaitingResponse">
                 {{ $t('action.set') }} <spinner :state="awaitingResponse"/>
               </button>
             </div>

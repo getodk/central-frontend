@@ -21,11 +21,11 @@ except according to the terms contained in the LICENSE file.
             :placeholder="$t('field.displayName')" required autocomplete="off"/>
           <div class="modal-actions">
             <button type="submit" class="btn btn-primary"
-              :disabled="awaitingResponse">
+              :aria-disabled="awaitingResponse">
               {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
             </button>
             <button type="button" class="btn btn-link"
-              :disabled="awaitingResponse" @click="hideOrComplete">
+              :aria-disabled="awaitingResponse" @click="hideOrComplete">
               {{ $t('action.cancel') }}
             </button>
           </div>

@@ -120,7 +120,7 @@ class. */
     + .caret { margin-left: 0; }
   }
 
-  &[disabled], &.disabled, fieldset[disabled] & {
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     cursor: not-allowed;
     opacity: 0.65;
   }
@@ -138,20 +138,20 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:focus, &:active:focus { outline: none; }
   &:focus { box-shadow: $btn-focus-box-shadow; }
-  &[disabled], &.disabled, fieldset[disabled] & { box-shadow: none; }
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & { box-shadow: none; }
 }
 
 .btn-primary {
   background-color: $color-action-background;
 
-  &[disabled], &.disabled, fieldset[disabled] & {
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     background-color: $color-action-background-disabled;
   }
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background-hover;
 
-    &[disabled], &.disabled, fieldset[disabled] & {
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
       background-color: $color-action-background-disabled;
     }
   }
@@ -162,7 +162,7 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:hover, &:focus, &:active:focus {
     background-color: #ccc;
-    &[disabled], &.disabled, fieldset[disabled] & { background-color: #ddd; }
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & { background-color: #ddd; }
   }
 
   > [class^="icon-"]:first-child { color: $color-action-background; }
@@ -173,7 +173,10 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-danger-dark;
-    &[disabled], &.disabled, fieldset[disabled] { background-color: $color-danger; }
+
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] {
+      background-color: $color-danger;
+    }
   }
 }
 
@@ -187,7 +190,7 @@ a, .btn-link {
     text-decoration: underline;
   }
 
-  &.disabled, &[disabled], fieldset[disabled] & {
+  &.disabled, &[aria-disabled="true"], fieldset[disabled] & {
     color: #888;
     text-decoration: none;
   }
@@ -223,7 +226,7 @@ a {
 .btn-link {
   border-radius: 0;
 
-  &, &:active, &[disabled] fieldset[disabled] & {
+  &, &:active, &[aria-disabled="true"], fieldset[disabled] & {
     background-color: transparent;
   }
 
@@ -324,35 +327,29 @@ $form-group-padding-bottom: 15px;
   padding-bottom: $form-group-padding-bottom;
   position: relative;
 
-  &:focus-within {
-    .form-label {
-      color: $color-action-foreground;
-    }
-  }
-
   $form-control-z-index: 1;
   .form-control {
     background: $color-input-background;
     border: none;
     border-bottom: 1px solid $color-input-inactive;
     border-radius: 0;
-    box-shadow: none;
     color: $color-input;
     position: relative;
     z-index: $form-control-z-index;
 
-    &:focus {
+    &, &:focus { box-shadow: none; }
+
+    &:focus:not([aria-disabled="true"]) {
       border-bottom-color: $color-action-foreground;
-      box-shadow: none;
     }
 
     &::placeholder { color: $color-text; }
 
-    &[disabled], &[readonly], fieldset[disabled] & {
+    &[aria-disabled="true"], &[readonly], fieldset[disabled] & {
       &, &::placeholder { color: $color-input-inactive; }
     }
 
-    &[disabled], fieldset[disabled] & { cursor: not-allowed; }
+    &[aria-disabled="true"], fieldset[disabled] & { cursor: not-allowed; }
   }
 
   .form-label {
@@ -364,8 +361,10 @@ $form-group-padding-bottom: 15px;
     transform: translateY(2px);
     transition: 0.15s transform, 0.15s color;
   }
+  &:focus-within .form-label { color: $color-action-foreground; }
   .form-control {
     &:placeholder-shown ~ .form-label { transform: translateY(-15px); }
+    &[aria-disabled="true"] ~ .form-label { color: $color-input-inactive; }
   }
 
   .close {
@@ -479,8 +478,9 @@ select {
     border-color: $color-danger;
 
     &:focus {
-      border-color: $color-danger-dark;
       box-shadow: none;
+
+      &:not([aria-disabled="true"]) { border-color: $color-danger-dark; }
     }
   }
 
@@ -493,7 +493,9 @@ select {
     color: $color-danger;
   }
 
-  .form-control:focus ~ .form-label { color: $color-danger-dark; }
+  .form-control:focus:not([aria-disabled="true"]) ~ .form-label {
+    color: $color-danger-dark;
+  }
 }
 
 // In Safari, the effect of this class is not visible on input and select
@@ -784,13 +786,11 @@ becomes more complicated.
       }
 
       > a {
-        pointer-events: none;
-
-        &, &:focus {
+        &, &:hover, &:focus {
           color: #999;
         }
 
-        &:focus {
+        &:hover, &:focus {
           border-bottom-color: transparent;
         }
       }

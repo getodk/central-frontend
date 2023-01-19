@@ -28,7 +28,7 @@ describe('EnketoFill', () => {
       slots: { default: TestUtilSpan }
     });
     button.element.tagName.should.equal('BUTTON');
-    button.element.disabled.should.be.true();
+    button.attributes('aria-disabled').should.equal('true');
     button.attributes().title.should.equal('Web Form is not available yet. It has not finished being processed. Please refresh later and try again.');
     button.get('span').text().should.equal('Some span text');
   });

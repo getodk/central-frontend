@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
           :placeholder="$t('field.organization')" autocomplete="organization"/>
       </fieldset>
     </fieldset>
-    <button type="submit" class="btn btn-primary" :disabled="awaitingResponse">
+    <button type="submit" class="btn btn-primary" :aria-disabled="awaitingResponse">
       {{ $t('action.saveSettings') }} <spinner :state="awaitingResponse"/>
     </button>
   </form>

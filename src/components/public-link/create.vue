@@ -32,11 +32,11 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="modal-actions">
           <button type="submit" class="btn btn-primary"
-            :disabled="awaitingResponse">
+            :aria-disabled="awaitingResponse">
             {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
           <button type="button" class="btn btn-link"
-            :disabled="awaitingResponse" @click="$emit('hide')">
+            :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
           </button>
         </div>

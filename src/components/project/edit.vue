@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
           <span class="note">{{ $t('field.note') }}</span>
         </label>
         <button type="submit" class="btn btn-primary"
-          :disabled="awaitingResponse">
+          :aria-disabled="awaitingResponse">
           {{ $t('action.saveSettings') }} <spinner :state="awaitingResponse"/>
         </button>
       </form>

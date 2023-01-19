@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
             :href="editPath" target="_blank" :title="editTitle">
             <span class="icon-pencil"></span>
           </a>
-          <button v-else type="button" class="btn btn-default" disabled
+          <button v-else type="button" class="btn btn-default" aria-disabled="true"
             :title="$t('submission.editDisabled')">
             <span class="icon-pencil"></span>
           </button>

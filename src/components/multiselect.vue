@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
     <select :id="toggleId" ref="toggle" class="form-control"
-      :disabled="options == null" data-toggle="dropdown" role="button"
+      :aria-disabled="options == null" data-toggle="dropdown" role="button"
       aria-haspopup="true" aria-expanded="false" :aria-label="label"
       @keydown="toggleAfterEnter" @mousedown.prevent>
       <option value="">{{ selectOption }}</option>

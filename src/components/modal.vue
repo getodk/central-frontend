@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
     <div class="modal-dialog" :class="{ 'modal-lg': large }" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" :disabled="!hideable"
+          <button type="button" class="close" :aria-disabled="!hideable"
             :aria-label="$t('action.close')" @click="hideIfCan">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -197,7 +197,7 @@ export default {
         margin-top: 0;
         opacity: 1;
 
-        &[disabled] {
+        &[aria-disabled="true"] {
           cursor: not-allowed;
         }
       }

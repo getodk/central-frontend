@@ -59,7 +59,7 @@ definition for an existing form -->
         </p>
         <p>
           <button type="button" class="btn btn-primary"
-            :disabled="awaitingResponse" @click="upload(true)">
+            :aria-disabled="awaitingResponse" @click="upload(true)">
             {{ $t('action.uploadAnyway') }} <spinner :state="awaitingResponse"/>
           </button>
         </p>
@@ -83,7 +83,7 @@ definition for an existing form -->
             <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
             <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml" @change="afterChange">
             <button type="button" class="btn btn-primary"
-              :disabled="awaitingResponse" @click="$refs.input.click()">
+              :aria-disabled="awaitingResponse" @click="$refs.input.click()">
               <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
             </button>
           </template>
@@ -94,11 +94,11 @@ definition for an existing form -->
       </div>
       <div class="modal-actions">
         <button id="form-new-upload-button" type="button"
-          class="btn btn-primary" :disabled="awaitingResponse"
+          class="btn btn-primary" :aria-disabled="awaitingResponse"
           @click="upload(false)">
           {{ $t('action.upload') }} <spinner :state="awaitingResponse"/>
         </button>
-        <button type="button" class="btn btn-link" :disabled="awaitingResponse"
+        <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
         </button>

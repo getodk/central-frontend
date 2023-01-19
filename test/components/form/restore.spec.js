@@ -56,9 +56,9 @@ describe('FormRestore', () => {
     return load('/projects/1', {}, {
       deletedForms: () => [{ xmlFormId: 'this_id_exists', id: 111, deletedAt: ago({ days: 15 }).toISO() }]
     })
-      .afterResponses(component => {
-        const button = component.get('[data-form-id="111"]');
-        button.element.disabled.should.be.true();
+      .afterResponses(async (app) => {
+        const button = app.get('[data-form-id="111"]');
+        button.attributes('aria-disabled').should.equal('true');
         button.attributes().title.should.equal('This Form cannot be undeleted because an active Form with the same ID exists.');
       });
   });

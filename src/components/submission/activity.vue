@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
           </a>
           <button v-else id="submission-activity-edit-button" type="button"
-            class="btn btn-default" disabled
+            class="btn btn-default" aria-disabled="true"
             :title="$t('submission.editDisabled')">
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
           </button>

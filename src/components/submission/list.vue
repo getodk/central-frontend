@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
           <button id="submission-list-refresh-button" type="button"
-            class="btn btn-default" :disabled="refreshing"
+            class="btn btn-default" :aria-disabled="refreshing"
             @click="fetchChunk(0, false)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>

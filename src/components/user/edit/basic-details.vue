@@ -20,8 +20,8 @@ except according to the terms contained in the LICENSE file.
           :placeholder="$t('field.email')" required autocomplete="off"/>
         <form-group v-model.trim="displayName" type="text"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
-        <button :disabled="awaitingResponse" type="submit"
-          class="btn btn-primary">
+        <button type="submit" class="btn btn-primary"
+          :aria-disabled="awaitingResponse">
           {{ $t('action.update') }}<spinner :state="awaitingResponse"/>
         </button>
       </form>

@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
               :placeholder="$t('field.email')" required autocomplete="off"/>
             <div class="panel-footer">
               <button type="submit" class="btn btn-primary"
-                :disabled="awaitingResponse">
+                :aria-disabled="awaitingResponse">
                 {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
               </button>
               <router-link v-slot="{ navigate }" to="/login" custom>

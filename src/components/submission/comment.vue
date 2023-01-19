@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <markdown-textarea v-model="body" :default-text="$t('field.comment')"
         :show-footer="editWithoutComment || awaitingResponse" required>
         <button type="submit" class="btn btn-primary"
-          :disabled="awaitingResponse">
+          :aria-disabled="awaitingResponse">
           {{ $t('action.comment') }} <spinner :state="awaitingResponse"/>
         </button>
       </markdown-textarea>

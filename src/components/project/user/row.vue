@@ -20,7 +20,8 @@ except according to the terms contained in the LICENSE file.
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRoleId"
-            :disabled="disabled" :title="selectTitle"
+            :aria-disabled="disabled || awaitingResponse"
+            :title="disabled ? $t('cannotAssignRole') : null"
             :aria-label="$t('field.projectRole')"
             @change="change($event.target.value)">
             <option v-for="role of roles.projectRoles" :key="role.id"
@@ -73,13 +74,7 @@ export default {
   },
   computed: {
     disabled() {
-      return this.assignment.actor.id === this.currentUser.id ||
-        this.awaitingResponse;
-    },
-    selectTitle() {
-      return this.assignment.actor.id === this.currentUser.id
-        ? this.$t('cannotAssignRole')
-        : null;
+      return this.assignment.actor.id === this.currentUser.id;
     }
   },
   methods: {

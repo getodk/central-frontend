@@ -103,15 +103,17 @@ const assertStandardButton = (
   showsAlert
 ) => {
   const button = component.get(buttonSelector);
-  button.element.disabled.should.equal(awaitingResponse);
+  (button.attributes('aria-disabled') === 'true').should.equal(awaitingResponse);
 
   const spinners = component.findAllComponents(Spinner).filter(spinner =>
     button.element.contains(spinner.element));
   spinners.length.should.equal(1);
   spinners[0].props().state.should.equal(awaitingResponse);
 
-  for (const selector of disabledSelectors)
-    component.get(selector).element.disabled.should.equal(awaitingResponse);
+  for (const selector of disabledSelectors) {
+    const wrapper = component.get(selector);
+    (wrapper.attributes('aria-disabled') === 'true').should.equal(awaitingResponse);
+  }
 
   if (modal != null) {
     const parent = (modal === true ? component : component.getComponent(modal));
