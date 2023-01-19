@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="htmlClass">
     <td class="display-name">
-      <span :title="publicLink.displayName">{{ publicLink.displayName }}</span>
+      <span v-tooltip.text>{{ publicLink.displayName }}</span>
     </td>
     <td class="once">
       {{ publicLink.once ? $t('common.yes') : $t('common.no') }}
@@ -21,10 +21,13 @@ except according to the terms contained in the LICENSE file.
       <template v-if="publicLink.token == null">{{ $t('revoked') }}</template>
       <template v-else-if="form.dataExists">
         <selectable v-if="enketoId != null">{{ url }}</selectable>
-        <span v-else class="unavailable" :title="$t('unavailable.title')">
-          <span>{{ $t('unavailable.text') }}</span>
-          <span class="icon-question-circle"></span>
-        </span>
+        <template v-else>
+          <span class="unavailable" aria-hidden="true" v-tooltip.sr-only>
+            <span>{{ $t('unavailable.text') }}</span>
+            <span class="icon-question-circle"></span>
+          </span>
+          <span class="sr-only">{{ $t('unavailable.title') }}</span>
+        </template>
       </template>
     </td>
     <td>
@@ -78,16 +81,11 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+
 .public-link-row {
   .table tbody & td { vertical-align: middle; }
-
-  .display-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .unavailable { cursor: help; }
+  .display-name { @include text-overflow-ellipsis; }
   .icon-question-circle { margin-left: 5px; }
 }
 </style>

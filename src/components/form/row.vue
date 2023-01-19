@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
       <template v-if="form.publishedAt != null">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
-          :title="$t(`reviewState.${reviewState}`)">
+          v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
           <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
           <span :class="reviewStateIcon(reviewState)"></span>
         </link-if-can>
@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
 
     <template v-if="form.publishedAt != null">
       <td class="last-submission">
-        <span :title="lastSubmissionTooltip">
+        <span v-tooltip.no-aria="lastSubmissionTooltip">
           <template v-if="form.lastSubmission != null">
             <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)">
               <date-time :iso="form.lastSubmission" relative="past"
@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
       </td>
       <td class="total-submissions">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)"
-          :title="$t('common.totalSubmissions')">
+          v-tooltip.no-aria="$t('common.totalSubmissions')">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
         </link-if-can>
@@ -59,10 +59,11 @@ except according to the terms contained in the LICENSE file.
     <td v-if="showActions" class="actions">
       <template v-if="form.state !== 'closed'">
         <template v-if="form.state === 'closing'">
-          <span :title="$t('formClosingTip')">
-          <span class="icon-clock-o closing-icon"></span>
-          <span>{{ $t('formState.closing') }}</span>
+          <span aria-hidden="true" v-tooltip.sr-only>
+            <span class="icon-clock-o closing-icon"></span>
+            <span>{{ $t('formState.closing') }}</span>
           </span>
+          <span class="sr-only">{{ $t('formClosingTip') }}</span>
         </template>
         <template v-else-if="form.publishedAt != null">
           <enketo-preview v-if="project.permits('project.update')"

@@ -175,7 +175,7 @@ describe('SubmissionFeedEntry', () => {
     });
 
     describe('entity.create.error audit', () => {
-      it('renders entity creation error message and help text', () => {
+      it('renders entity creation error message and help text', async () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.create.error',
           details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
@@ -183,7 +183,7 @@ describe('SubmissionFeedEntry', () => {
         const title = mountComponent().get('.title');
         title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
         title.get('.entity-error-message').text().should.equal('ID empty or missing.');
-        title.get('.entity-error-message').attributes().title.should.equal('ID empty or missing.');
+        await title.get('.entity-error-message').should.have.textTooltip();
       });
     });
   });

@@ -23,9 +23,9 @@ describe('UserRetire', () => {
     it('is disabled for the current user', async () => {
       const component = await load('/users', { root: false });
       const a = component.get('.user-row .retire-user');
-      const li = a.element.parentNode;
-      li.classList.contains('disabled').should.be.true();
-      li.getAttribute('title').should.equal('You may not retire yourself.');
+      a.element.parentNode.classList.contains('disabled').should.be.true();
+      a.should.have.ariaDescription('You may not retire yourself.');
+      await a.should.have.tooltip();
     });
   });
 

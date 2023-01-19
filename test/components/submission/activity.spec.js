@@ -160,14 +160,15 @@ describe('SubmissionActivity', () => {
       component.find('#submission-activity-edit-button').exists().should.be.false();
     });
 
-    it('disables the button if the submission is encrypted', () => {
+    it('disables the button if the submission is encrypted', async () => {
       mockLogin();
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
       const btn = component.get('#submission-activity-edit-button');
       btn.attributes('aria-disabled').should.equal('true');
-      btn.attributes().title.should.equal('You cannot edit encrypted Submissions.');
+      btn.should.have.ariaDescription('You cannot edit encrypted Submissions.');
+      await btn.should.have.tooltip();
     });
 
     it('sets the correct href attribute', () => {

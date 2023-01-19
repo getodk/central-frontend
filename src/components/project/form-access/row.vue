@@ -13,10 +13,9 @@ except according to the terms contained in the LICENSE file.
   <tr :class="htmlClass">
     <template v-if="frozen">
       <td class="project-form-access-row-form-name">
-        <span v-if="form.publishedAt == null" class="icon-edit"
-          :title="$t('draftTitle')">
-        </span>
-        <router-link :to="primaryFormPath(form)" :title="form.nameOrId">{{ form.nameOrId }}</router-link>
+        <span v-if="form.publishedAt == null" class="icon-edit" v-tooltip.sr-only></span>
+        <router-link :to="primaryFormPath(form)" v-tooltip.text>{{ form.nameOrId }}</router-link>
+        <span v-if="form.publishedAt == null" class="sr-only">&nbsp;{{ $t('draftTitle') }}</span>
       </td>
       <td>
         <div class="form-group">
@@ -127,10 +126,7 @@ export default {
 .project-form-access-row-draft {
   background-color: rgba(0, 0, 0, 0.0225);
 
-  .icon-edit {
-    cursor: help;
-    margin-right: 9px;
-  }
+  .icon-edit { margin-right: 9px; }
 }
 </style>
 

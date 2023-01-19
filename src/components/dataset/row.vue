@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="dataset-row">
     <td class="name">
-      <span :title="dataset.name">{{ dataset.name }}</span>
+      <span v-tooltip.text>{{ dataset.name }}</span>
     </td>
     <td>
       <a class="btn btn-primary" :href="href">

@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       @keydown="toggleAfterEnter" @mousedown.prevent>
       <option value="">{{ selectOption }}</option>
     </select>
-    <span class="form-label">{{ label }}</span>
+    <span class="form-label" aria-hidden="true">{{ label }}</span>
     <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
     hide it. -->
     <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
@@ -49,13 +49,16 @@ except according to the terms contained in the LICENSE file.
           :class="{ 'shows-all': searchValue === '' }" @change="changeCheckbox">
           <template v-if="options != null">
             <!-- eslint-disable-next-line vue/object-curly-newline -->
-            <li v-for="({ value, key = value, text = value, title = text }, i) in options"
+            <li v-for="({ value, key = value, text = value, description }, i) in options"
               :key="key" :class="{ 'search-match': searchMatches.has(value) }">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" :data-index="i">
-                  <span :title="title">{{ text }}</span>
+                  <input type="checkbox" :data-index="i"
+                    :aria-describedby="description != null ? descriptionId(i) : null">
+                  <span v-if="description == null" v-tooltip.text>{{ text }}</span>
+                  <span v-else v-tooltip.no-aria="description">{{ text }}</span>
                 </label>
+                <p v-if="description != null" :id="descriptionId(i)" class="sr-only">{{ description }}</p>
               </div>
             </li>
           </template>
@@ -90,8 +93,8 @@ const props = defineProps({
       `key` property should be a function of `value`: for example, if `value`
       changes, then `key` should also change.
     - text. The text to show for the option. Defaults to the `value` property.
-    - title. The title to show for the option. This property can be used to
-      display additional text. Defaults to the `text` property.
+    - description (optional). Additional text to show for the option. This will
+      be shown in a tooltip and used as the ARIA description of the checkbox.
 
   If `options` is `null` (for example, because the options are loading), then
   the dropdown will not be shown.
@@ -143,6 +146,11 @@ const props = defineProps({
   }
 });
 const emit = defineEmits(['update:modelValue']);
+
+const idPrefix = `multiselect${id}`;
+id += 1;
+const toggleId = `${idPrefix}-toggle`;
+const descriptionId = (i) => `${idPrefix}-description${i}`;
 
 const optionList = ref(null);
 
@@ -268,9 +276,9 @@ const { i18n } = inject('container');
 const textToSearch = computed(() => props.options.map(option => {
   const text = option.text != null ? option.text : option.value.toString();
   const result = [text.toLocaleLowerCase(i18n.locale)];
-  const { title } = option;
-  if (title != null && title !== text)
-    result.push(title.toLocaleLowerCase(i18n.locale));
+  const { description } = option;
+  if (description != null && description !== text)
+    result.push(description.toLocaleLowerCase(i18n.locale));
   return result;
 }));
 // We may need to add debouncing here at some point.
@@ -320,8 +328,6 @@ onMounted(() => {
 onUnmounted(() => { $dropdown.value.off('.bs.dropdown'); });
 
 const toggle = ref(null);
-const toggleId = `multiselect-toggle${id}`;
-id += 1;
 const $toggle = computed(() => $(toggle.value));
 const toggleAfterEnter = ({ key }) => {
   if (key === 'Enter') $toggle.value.dropdown('toggle');

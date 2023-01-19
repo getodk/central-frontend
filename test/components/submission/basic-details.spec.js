@@ -21,23 +21,23 @@ const mountComponent = (options = undefined) =>
 
 describe('SubmissionBasicDetails', () => {
   beforeEach(() => {
-    mockLogin({ displayName: 'Alice' });
+    mockLogin({ displayName: 'Alice Allison' });
   });
 
-  it('shows the instance ID', () => {
-    testData.extendedSubmissions.createPast(1, { instanceId: 'foo' });
+  it('shows the instance ID', async () => {
+    testData.extendedSubmissions.createPast(1, { instanceId: 'foobar' });
     const span = mountComponent().get('dd span');
-    span.text().should.equal('foo');
-    span.attributes().title.should.equal('foo');
+    span.text().should.equal('foobar');
+    await span.should.have.textTooltip();
   });
 
-  it('shows the submitter', () => {
+  it('shows the submitter', async () => {
     testData.extendedSubmissions.createPast(1, {
       submitter: testData.extendedUsers.first()
     });
     const span = mountComponent().get('dl :nth-child(2) dd span');
-    span.text().should.equal('Alice');
-    span.attributes().title.should.equal('Alice');
+    span.text().should.equal('Alice Allison');
+    await span.should.have.textTooltip();
   });
 
   it('shows the submission date', () => {
@@ -94,11 +94,11 @@ describe('SubmissionBasicDetails', () => {
   });
 
   describe('device ID', () => {
-    it('shows the device ID', () => {
-      testData.extendedSubmissions.createPast(1, { deviceId: 'foo' });
+    it('shows the device ID', async () => {
+      testData.extendedSubmissions.createPast(1, { deviceId: 'foobar' });
       const span = mountComponent().get('dl :nth-child(6) dd span');
-      span.text().should.equal('foo');
-      span.attributes().title.should.equal('foo');
+      span.text().should.equal('foobar');
+      await span.should.have.textTooltip();
     });
 
     it('does not render if there is not a device ID', () => {
@@ -117,9 +117,7 @@ describe('SubmissionBasicDetails', () => {
           }
         }
       });
-      const span = component.get('dl :nth-child(6) dd span');
-      span.text().should.equal('Collect');
-      span.attributes().title.should.equal('Collect');
+      component.get('dl :nth-child(6) dd').text().should.equal('Collect');
     });
 
     it('does not render if there is not a user agent', () => {

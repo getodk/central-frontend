@@ -45,13 +45,17 @@ describe('FormAttachmentList', () => {
       }
     });
 
-    it('adds a title attribute for the attachment name', async () => {
-      testData.standardFormAttachments.createPast(1, { name: 'foo.jpg' });
+    it('shows attachment name if attachment does not exist', async () => {
+      testData.standardFormAttachments.createPast(1, {
+        name: 'foo.jpg',
+        blobExists: false
+      });
       const component = await load('/projects/1/forms/f/draft/attachments', {
         root: false
       });
-      const td = component.get('td.form-attachment-list-name');
-      td.attributes().title.should.equal('foo.jpg');
+      const span = component.get('td.form-attachment-list-name span');
+      span.text().should.equal('foo.jpg');
+      await span.should.have.textTooltip();
     });
 
     it('shows a download link if the attachment exists', async () => {
@@ -62,8 +66,11 @@ describe('FormAttachmentList', () => {
       const component = await load('/projects/1/forms/f/draft/attachments', {
         root: false
       });
-      const { href } = component.get('td.form-attachment-list-name a').attributes();
+      const a = component.get('td.form-attachment-list-name a');
+      const { href } = a.attributes();
       href.should.equal('/v1/projects/1/forms/f/draft/attachments/foo%20bar.jpg');
+      a.text().should.equal('foo bar.jpg');
+      await a.should.have.textTooltip();
     });
 
     describe('updatedAt', () => {
@@ -87,11 +94,11 @@ describe('FormAttachmentList', () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
-        const spans = component.findAll('td.form-attachment-list-uploaded span');
-        spans.length.should.equal(2);
-        spans[0].classes('icon-exclamation-triangle').should.be.true();
-        spans[1].attributes().title.should.startWith('To upload files,');
-        spans[1].text().should.equal('Not yet uploaded');
+        const span = component.get('td.form-attachment-list-uploaded span');
+        span.find('.icon-exclamation-triangle').exists().should.be.true();
+        const text = span.get('.icon-exclamation-triangle + span').text();
+        text.should.equal('Not yet uploaded');
+        await span.should.have.tooltip(/^To upload files,/);
       });
 
       it('correctly renders a deleted attachment', async () => {
@@ -102,11 +109,11 @@ describe('FormAttachmentList', () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         });
-        const spans = component.findAll('td.form-attachment-list-uploaded span');
-        spans.length.should.equal(2);
-        spans[0].classes('icon-exclamation-triangle').should.be.true();
-        spans[1].attributes().title.should.startWith('To upload files,');
-        spans[1].text().should.equal('Not yet uploaded');
+        const span = component.get('td.form-attachment-list-uploaded span');
+        span.find('.icon-exclamation-triangle').exists().should.be.true();
+        const text = span.get('.icon-exclamation-triangle + span').text();
+        text.should.equal('Not yet uploaded');
+        await span.should.have.tooltip(/^To upload files,/);
       });
     });
   });

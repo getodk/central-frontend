@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
     </td>
     <template v-if="form.publishedAt != null">
       <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
-        <span :title="$t(`reviewState.${reviewState}`)">
+        <span v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath[reviewState]">
               <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="last-submission">
-        <span :title="lastSubmissionTooltip">
+        <span v-tooltip.no-aria="lastSubmissionTooltip">
           <template v-if="form.lastSubmission != null">
             <template v-if="canLinkToSubmissions">
               <router-link :to="submissionsPath.all">
@@ -63,7 +63,7 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="total-submissions">
-        <span :title="$t('common.totalSubmissions')">
+        <span v-tooltip.no-aria="$t('common.totalSubmissions')">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath.all">
               <span>{{ $n(form.submissions, 'default') }}</span>

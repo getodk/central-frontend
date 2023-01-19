@@ -21,6 +21,7 @@ except according to the terms contained in the LICENSE file.
     <div class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
+    <div id="tooltips"></div>
   </div>
 </template>
 

@@ -27,11 +27,11 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div class="diff-details">
       <template v-if="isAtomicChange">
-        <div class="field-name" :title="fieldName">
+        <div class="field-name" v-tooltip.text>
           {{ fieldName }}
         </div>
         <div class="old-to-new">
-          <span v-if="entry.old" class="data-old" :title="entry.old">
+          <span v-if="entry.old" class="data-old" v-tooltip.text>
             <template v-if="isBinary">
               <a :href="binaryHref(entry.old, true)">{{ entry.old }}</a>
             </template>
@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
           <span class="icon-arrow-circle-right"></span>
-          <span v-if="entry.new" class="data-new" :title="entry.new">
+          <span v-if="entry.new" class="data-new" v-tooltip.text>
             <template v-if="isBinary">
               <a :href="binaryHref(entry.new, false)">{{ entry.new }}</a>
             </template>

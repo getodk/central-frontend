@@ -15,7 +15,7 @@ describe('EnketoPreview', () => {
     button.attributes().href.should.equal('/-/preview/xyz');
   });
 
-  it('renders correctly for a form without an enketoId', () => {
+  it('renders correctly for a form without an enketoId', async () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: null, state: 'open' })
       .last();
@@ -24,11 +24,12 @@ describe('EnketoPreview', () => {
     });
     button.element.tagName.should.equal('BUTTON');
     button.attributes('aria-disabled').should.equal('true');
-    button.attributes().title.should.equal('Preview has not finished processing for this Form. Please refresh later and try again.');
+    button.should.have.ariaDescription('Preview has not finished processing for this Form. Please refresh later and try again.');
+    await button.should.have.tooltip();
   });
 
   describe('form is not open', () => {
-    it('disables the button for a form with a published version', () => {
+    it('disables the button for a form with a published version', async () => {
       const form = testData.extendedForms
         .createPast(1, { enketoId: 'xyz', state: 'closing' })
         .last();
@@ -36,7 +37,8 @@ describe('EnketoPreview', () => {
         props: { formVersion: form }
       });
       button.element.tagName.should.equal('BUTTON');
-      button.attributes().title.should.equal('In this version of ODK Central, preview is only available for Forms in the Open state.');
+      button.should.have.ariaDescription('In this version of ODK Central, preview is only available for Forms in the Open state.');
+      await button.should.have.tooltip();
     });
 
     it('does not disable the button for a draft', () => {

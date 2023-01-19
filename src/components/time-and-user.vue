@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       <date-time :iso="iso"/>
     </template>
     <template #displayName>
-      <link-if-can :to="userPath(user.id)" :title="user.displayName">{{ user.displayName }}</link-if-can>
+      <link-if-can :to="userPath(user.id)" v-tooltip.text>{{ user.displayName }}</link-if-can>
     </template>
   </i18n-t>
   <div v-else>

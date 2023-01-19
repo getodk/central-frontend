@@ -132,7 +132,7 @@ describe('ProjectFormRow', () => {
   describe('review state counts', () => {
     beforeEach(mockLogin);
 
-    it('shows the correct counts and icons for each review state', () => {
+    it('shows the correct counts and icons for each review state', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', reviewStates: { received: 2345, hasIssues: 1, edited: 3 } });
       const columns = mountComponent().findAll('.review-state');
       columns.length.should.equal(3);
@@ -140,9 +140,9 @@ describe('ProjectFormRow', () => {
       columns[0].find('.icon-dot-circle-o').exists().should.be.true();
       columns[1].find('.icon-comments').exists().should.be.true();
       columns[2].find('.icon-pencil').exists().should.be.true();
-      columns[0].find('span').attributes().title.should.equal('Received');
-      columns[1].find('span').attributes().title.should.equal('Has issues');
-      columns[2].find('span').attributes().title.should.equal('Edited');
+      await columns[0].get('span').should.have.tooltip('Received');
+      await columns[1].get('span').should.have.tooltip('Has issues');
+      await columns[2].get('span').should.have.tooltip('Edited');
     });
 
     it('shows blank review state columns when the form is a draft', () => {
@@ -155,7 +155,7 @@ describe('ProjectFormRow', () => {
   describe('last submission', () => {
     beforeEach(mockLogin);
 
-    it('shows the correct time since the last submission', () => {
+    it('shows the correct time since the last submission', async () => {
       setLuxon({ defaultZoneName: 'UTC' });
       const lastSubmission = '2023-01-01T00:00:00Z';
       testData.extendedForms.createPast(1, { lastSubmission });
@@ -163,9 +163,8 @@ describe('ProjectFormRow', () => {
       span.text().should.match(/ago$/);
       const dateTime = span.getComponent(DateTime);
       dateTime.props().iso.should.equal(lastSubmission);
-      const { title } = span.attributes();
-      title.should.equal('Latest Submission\n2023/01/01 00:00:00');
-      should.not.exist(dateTime.attributes().title);
+      await span.should.have.tooltip('Latest Submission\n2023/01/01 00:00:00');
+      await dateTime.should.not.have.tooltip();
     });
 
     it('shows the correct icon', () => {
@@ -174,11 +173,11 @@ describe('ProjectFormRow', () => {
       cell.find('.icon-clock-o').exists().should.be.true();
     });
 
-    it('shows (none) if no submission', () => {
+    it('shows (none) if no submission', async () => {
       testData.extendedForms.createPast(1, { submissions: 0 });
       const span = mountComponent().get('.last-submission span');
       span.text().should.equal('(none)');
-      span.attributes().title.should.equal('Latest Submission');
+      await span.should.have.tooltip('Latest Submission');
     });
 
     it('shows blank last submission column when the form is a draft', () => {
@@ -202,11 +201,11 @@ describe('ProjectFormRow', () => {
       row.find('.not-published').text().should.equal('Not published yet');
     });
 
-    it('shows the correct icon', () => {
+    it('shows the correct icon', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
       cell.find('.icon-asterisk').exists().should.be.true();
-      cell.find('span').attributes().title.should.equal('Total Submissions');
+      await cell.get('span').should.have.tooltip('Total Submissions');
     });
   });
 

@@ -8,11 +8,11 @@ const mountComponent = () => mount(DatasetRow, {
 });
 
 describe('DatasetRow', () => {
-  it('shows the name', () => {
+  it('shows the name', async () => {
     testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
     const span = mountComponent().get('.name span');
     span.text().should.equal('my_dataset');
-    span.attributes().title.should.equal('my_dataset');
+    await span.should.have.textTooltip();
   });
 
   it('links to the CSV file', () => {

@@ -19,7 +19,7 @@ describe('EnketoFill', () => {
     button.get('span').text().should.equal('Some span text');
   });
 
-  it('renders correctly for a form without an enketoId', () => {
+  it('renders correctly for a form without an enketoId', async () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: null, state: 'open' })
       .last();
@@ -29,12 +29,13 @@ describe('EnketoFill', () => {
     });
     button.element.tagName.should.equal('BUTTON');
     button.attributes('aria-disabled').should.equal('true');
-    button.attributes().title.should.equal('Web Form is not available yet. It has not finished being processed. Please refresh later and try again.');
+    button.should.have.ariaDescription('Web Form is not available yet. It has not finished being processed. Please refresh later and try again.');
+    await button.should.have.tooltip();
     button.get('span').text().should.equal('Some span text');
   });
 
   describe('form is not open', () => {
-    it('disables the button for a form with a published version', () => {
+    it('disables the button for a form with a published version', async () => {
       const form = testData.extendedForms
         .createPast(1, { enketoId: 'xyz', state: 'closing' })
         .last();
@@ -43,7 +44,8 @@ describe('EnketoFill', () => {
         slots: { default: TestUtilSpan }
       });
       button.element.tagName.should.equal('BUTTON');
-      button.attributes().title.should.equal('This Form is not accepting new Submissions right now.');
+      button.should.have.ariaDescription('This Form is not accepting new Submissions right now.');
+      await button.should.have.tooltip();
     });
 
     it('does not disable the button for a draft', () => {

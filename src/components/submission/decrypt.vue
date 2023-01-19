@@ -21,12 +21,18 @@ except according to the terms contained in the LICENSE file.
             {{ $t('exportOptions') }}
           </p>
           <div class="checkbox"
-            :class="{ disabled: splitSelectMultiplesTitle != null }">
-            <label :title="splitSelectMultiplesTitle">
+            :class="{ disabled: splitSelectMultiplesDescription != null }">
+            <label v-tooltip.sr-only>
               <input v-model="splitSelectMultiples" type="checkbox"
-                :disabled="splitSelectMultiplesTitle != null">
+                :disabled="splitSelectMultiplesDescription != null"
+                :aria-describedby="splitSelectMultiplesDescribedBy">
               {{ $t('field.splitSelectMultiples') }}
             </label>
+            <p v-if="splitSelectMultiplesDescription != null"
+              id="submission-download-split-select-multiples-disabled"
+              class="sr-only">
+              {{ splitSelectMultiplesDescription }}
+            </p>
           </div>
           <div class="checkbox">
             <label>
@@ -34,14 +40,17 @@ except according to the terms contained in the LICENSE file.
               {{ $t('field.removeGroupNames') }}
             </label>
           </div>
-          <div class="checkbox"
-            :class="{ disabled: deletedFieldsTitle != null }">
-            <label :title="deletedFieldsTitle">
+          <div class="checkbox" :class="{ disabled: deletedFieldsDisabled }">
+            <label v-tooltip.sr-only>
               <input v-model="deletedFields" type="checkbox"
-                :disabled="deletedFieldsTitle != null"
-                aria-describedby="submission-download-deleted-fields-help">
+                :disabled="deletedFieldsDisabled"
+                :aria-describedby="deletedFieldsDescribedBy">
               {{ $t('field.deletedFields') }}
             </label>
+            <p v-if="deletedFieldsDisabled"
+              id="submission-download-deleted-fields-disabled" class="sr-only">
+              {{ $t('deletedFieldsDisabledForDraft') }}
+            </p>
             <p id="submission-download-deleted-fields-help" class="help-block">
               {{ $t('deletedFieldsHelp') }}
             </p>
@@ -74,14 +83,13 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div class="submission-download-action"
             :class="{ disabled: noRepeat }">
-            <span class="submission-download-action-label"
-              :title="noRepeat ? $t('noRepeat') : null">
+            <span class="submission-download-action-label">
               <span class="icon-files-o"></span>{{ $t('action.download.allTables') }}
             </span>
             <div>
               <a :href="href('.csv.zip', { attachments: false })"
                 class="btn btn-primary" :class="{ disabled: noRepeat }"
-                :title="noRepeat ? $t('noRepeat') : null">
+                v-tooltip.aria-describedby="noRepeat ? $t('noRepeat') : null">
                 <span class="icon-download"></span>.zip
               </a>
             </div>
@@ -148,7 +156,7 @@ export default {
     managedKey() {
       return this.keys.dataExists ? this.keys.find(key => key.managed) : null;
     },
-    splitSelectMultiplesTitle() {
+    splitSelectMultiplesDescription() {
       if (this.fields.dataExists &&
         !this.fields.some(({ selectMultiple }) => selectMultiple === true))
         return this.$t('noSelectMultiple');
@@ -156,10 +164,19 @@ export default {
         ? this.$t('encryptedForm')
         : null;
     },
-    deletedFieldsTitle() {
-      return this.formVersion.dataExists && this.formVersion.publishedAt == null
-        ? this.$t('deletedFieldsDisabledForDraft')
+    splitSelectMultiplesDescribedBy() {
+      return this.splitSelectMultiplesDescription != null
+        ? 'submission-download-split-select-multiples-disabled'
         : null;
+    },
+    deletedFieldsDisabled() {
+      return this.formVersion.dataExists && this.formVersion.publishedAt == null;
+    },
+    deletedFieldsDescribedBy() {
+      const ids = ['submission-download-deleted-fields-help'];
+      if (this.deletedFieldsDisabled)
+        ids.push(['submission-download-deleted-fields-disabled']);
+      return ids.join(' ');
     },
     noRepeat() {
       return this.fields.dataExists &&

@@ -12,13 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="htmlClass">
     <td class="form-attachment-list-type">{{ type }}</td>
-    <td :title="attachment.name" class="form-attachment-list-name">
-      <a v-if="attachment.blobExists" :href="href" target="_blank">
+    <td class="form-attachment-list-name">
+      <a v-if="attachment.blobExists" :href="href" target="_blank"
+        v-tooltip.text>
         {{ attachment.name }}
       </a>
-      <template v-else>
-        {{ attachment.name }}
-      </template>
+      <span v-else v-tooltip.text>{{ attachment.name }}</span>
     </td>
     <td class="form-attachment-list-uploaded">
       <template v-if="attachment.datasetExists">
@@ -39,10 +38,11 @@ except according to the terms contained in the LICENSE file.
         </span>
       </template>
       <template v-else>
-        <span class="icon-exclamation-triangle"></span>
-        <span :title="$t('notUploaded.title')">
-          {{ $t('notUploaded.text') }}
+        <span v-tooltip.sr-only>
+          <span class="icon-exclamation-triangle"></span>
+          <span>{{ $t('notUploaded.text') }}</span>
         </span>
+        <span class="sr-only">&nbsp;{{ $t('notUploaded.title') }}</span>
       </template>
     </td>
     <td class="form-attachment-list-action">
@@ -172,10 +172,6 @@ export default {
     .icon-exclamation-triangle {
       color: #e1bf50;
       margin-right: $margin-right-icon;
-
-      + span {
-        cursor: help;
-      }
     }
 
     .form-attachment-list-uploaded{

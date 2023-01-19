@@ -20,20 +20,25 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="initiator">
       <template v-if="audit.actor != null">
-        <span v-if="audit.actor.deletedAt != null" class="icon-trash" :title="$t('deletedMessage')"></span>
+        <span v-if="audit.actor.deletedAt != null" class="icon-trash" v-tooltip.sr-only></span>
         <actor-link :actor="audit.actor"/>
+        <span v-if="audit.actor.deletedAt != null" class="sr-only">
+          &nbsp;{{ $t('deletedMessage') }}
+        </span>
       </template>
     </td>
     <td class="target">
       <template v-if="target != null">
         <router-link v-if="target.path != null" :to="target.path"
-          :title="target.title">
+          v-tooltip.text>
           {{ target.title }}
         </router-link>
         <template v-else>
-          <span v-if="target.deleted" class="icon-trash" :title="$t('deletedMessage')"></span>
-          <span v-else-if="target.purged" class="icon-trash" :title="$t('purgedMessage')"></span>
-          <span :title="target.title">{{ target.title }}</span>
+          <span v-if="target.deleted || target.purged" class="icon-trash" v-tooltip.sr-only></span>
+          <span v-tooltip.text>{{ target.title }}</span>
+          <span v-if="target.deleted || target.purged" class="sr-only">
+            &nbsp;{{ target.deleted ? $t('deletedMessage') : $t('purgedMessage') }}
+          </span>
         </template>
       </template>
     </td>
@@ -156,11 +161,7 @@ export default {
   }
 
   .initiator, .target { @include text-overflow-ellipsis; }
-
-  .icon-trash {
-    cursor: help;
-    margin-right: $margin-right-icon;
-  }
+  .icon-trash { margin-right: $margin-right-icon; }
 }
 </style>
 

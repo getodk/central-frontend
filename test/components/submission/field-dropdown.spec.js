@@ -38,19 +38,19 @@ describe('SubmissionFieldDropdown', () => {
     const s2 = fields.find(field => field.name === 's2');
     const s3 = fields.find(field => field.name === 's3');
     options.should.eql([
-      { value: s2, key: '/s2', text: 's2', title: 's2' },
-      { value: s3, key: '/s3', text: 's3', title: 's3' }
+      { value: s2, key: '/s2', text: 's2', description: 's2' },
+      { value: s3, key: '/s3', text: 's3', description: 's3' }
     ]);
   });
 
-  it('includes the group name in the option title', () => {
+  it('includes the group name in the option description', () => {
     const component = mountComponent({
       container: {
         requestData: { fields: [group('/g'), string('/g/s1')] }
       }
     });
     const { options } = component.getComponent(Multiselect).props();
-    options[0].title.should.equal('g-s1');
+    options[0].description.should.equal('g-s1');
   });
 
   it('shows a warning if more than 100 fields are selected', async () => {

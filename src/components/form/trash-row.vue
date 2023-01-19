@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </td>
     <td class="last-submission">
-      <span :title="lastSubmissionTooltip">
+      <span v-tooltip.no-aria="lastSubmissionTooltip">
         <template v-if="form.lastSubmission != null">
           <date-time :iso="form.lastSubmission" relative="past"
             :tooltip="false"/>
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
       </span>
     </td>
     <td class="total-submissions">
-      <span :title="$t('common.totalSubmissions')">
+      <span v-tooltip.no-aria="$t('common.totalSubmissions')">
         <!-- form.submissions should always exist in production, but it doesn't
         exist in some tests. -->
         <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>
@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="actions">
       <button class="form-trash-row-restore-button btn btn-default" type="button"
-        :aria-disabled="disabled" :title="disabledTitle"
+        :aria-disabled="disabled" v-tooltip.aria-describedby="disabledDescription"
         :data-form-id="form.id"
         @click="openRestoreModal(form)">
         <span class="icon-recycle"></span>{{ $t('action.restore') }}
@@ -86,7 +86,7 @@ export default {
     disabled() {
       return this.activeFormIds.includes(this.form.xmlFormId);
     },
-    disabledTitle() {
+    disabledDescription() {
       if (this.disabled)
         return this.$t('disabled.conflict');
       return null;

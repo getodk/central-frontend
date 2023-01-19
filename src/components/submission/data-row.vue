@@ -12,15 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr :class="htmlClass">
     <template v-if="submission.__system.status == null">
-      <td v-for="field of fields" :key="field.path" :class="fieldClass(field)"
-        :title="field.binary !== true ? formattedValue(submission, field) : null">
+      <td v-for="field of fields" :key="field.path" :class="fieldClass(field)">
         <template v-if="field.binary === true">
-          <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
           <a v-if="rawValue(submission, field) != null" class="binary-link"
             :href="formattedValue(submission, field)" target="_blank"
-            :title="$t('submission.binaryLinkTitle')">
+            :aria-label="$t('submission.binaryLinkTitle')" v-tooltip.aria-label>
             <span class="icon-check"></span> <span class="icon-download"></span>
           </a>
+        </template>
+        <template v-else-if="needsTooltip(field.type)">
+          <span v-tooltip.text>{{ formattedValue(submission, field) }}</span>
         </template>
         <template v-else>{{ formattedValue(submission, field) }}</template>
       </td>
@@ -32,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         <span class="encryption-overlay"></span>
       </td>
     </template>
-    <td :title="submission.__id">{{ submission.__id }}</td>
+    <td>{{ submission.__id }}</td>
   </tr>
 </template>
 
@@ -53,6 +54,8 @@ We used to have a SubmissionCell component, but that was too slow: now
 everything is done in this component. We also used to have an i18n custom block,
 but that again was significantly slower.
 */
+
+const typesWithoutTooltips = ['int', 'decimal', 'date', 'time', 'dateTime', 'geopoint'];
 
 export default {
   name: 'SubmissionDataRow',
@@ -162,6 +165,9 @@ export default {
         default:
           return rawValue;
       }
+    },
+    needsTooltip(type) {
+      return !typesWithoutTooltips.includes(type);
     }
   }
 };

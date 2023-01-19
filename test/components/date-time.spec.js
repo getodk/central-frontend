@@ -35,18 +35,18 @@ describe('DateTime', () => {
   });
 
   describe('tooltip', () => {
-    it('shows the correct tooltip', () => {
+    it('shows the correct tooltip', async () => {
       const component = mount(DateTime, {
         props: { iso: '2020-01-01T12:34:56Z' }
       });
-      component.attributes().title.should.equal('2020/01/01 12:34:56');
+      await component.should.have.tooltip('2020/01/01 12:34:56');
     });
 
-    it('does not show a tooltip if the tooltip prop is false', () => {
+    it('does not show a tooltip if the tooltip prop is false', async () => {
       const component = mount(DateTime, {
         props: { iso: '2020-01-01T12:34:56Z', tooltip: false }
       });
-      should.not.exist(component.attributes().title);
+      await component.should.not.have.tooltip();
     });
   });
 
@@ -58,11 +58,11 @@ describe('DateTime', () => {
       component.element.tagName.should.equal('SPAN');
     });
 
-    it('does not have a title attribute', () => {
+    it('does not show a tooltip', async () => {
       const component = mount(DateTime, {
         props: { iso: null }
       });
-      should.not.exist(component.attributes().title);
+      await component.should.not.have.tooltip();
     });
 
     it('shows the correct text if the prop blank exists', () => {

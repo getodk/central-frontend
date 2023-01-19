@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
           <!-- Using .col-xs-6 so that if the form name is long, it is not
           behind #form-head-draft-nav. -->
           <div class="col-xs-6">
-            <div v-if="form.dataExists" class="h1" :title="form.nameOrId">
+            <div v-if="form.dataExists" class="h1" v-tooltip.text>
               {{ form.nameOrId }}
             </div>
           </div>
@@ -33,34 +33,37 @@ except according to the terms contained in the LICENSE file.
               to render the tabs even if the form does not have a published
               version (in which case canRoute() will return `false`). -->
               <li v-if="rendersFormTabs" :class="formTabClass('')"
-                :title="formTabTitle" role="presentation">
-                <router-link :to="tabPath('')">
+                role="presentation">
+                <router-link :to="tabPath('')"
+                  v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('common.tab.overview') }}
                 </router-link>
               </li>
               <!-- No v-if, because anyone who can navigate to the form should
               be able to navigate to .../versions and .../submissions. -->
-              <li :class="formTabClass('versions')" :title="formTabTitle"
-                role="presentation">
-                <router-link :to="tabPath('versions')">
+              <li :class="formTabClass('versions')" role="presentation">
+                <router-link :to="tabPath('versions')"
+                  v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('formHead.tab.versions') }}
                 </router-link>
               </li>
-              <li :class="formTabClass('submissions')" :title="formTabTitle"
-                role="presentation">
-                <router-link :to="tabPath('submissions')">
+              <li :class="formTabClass('submissions')" role="presentation">
+                <router-link :to="tabPath('submissions')"
+                  v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('resource.submissions') }}
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
-                :title="formTabTitle" role="presentation">
-                <router-link :to="tabPath('public-links')">
+                role="presentation">
+                <router-link :to="tabPath('public-links')"
+                  v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('formHead.tab.publicAccess') }}
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
-                :title="formTabTitle" role="presentation">
-                <router-link :to="tabPath('settings')">
+                role="presentation">
+                <router-link :to="tabPath('settings')"
+                  v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('common.tab.settings') }}
                 </router-link>
               </li>
@@ -132,7 +135,7 @@ export default {
     rendersFormTabs() {
       return this.project.dataExists && this.project.permits(['form.update']);
     },
-    formTabTitle() {
+    formTabDescription() {
       return this.form.dataExists && this.form.publishedAt == null
         ? this.$t('formNav.tabTitle')
         : null;

@@ -28,18 +28,18 @@ const testType = (row, type) => {
   else
     throw new Error('invalid type');
 };
-const testTarget = (row, text, to = undefined) => {
+const testTarget = async (row, text, to = undefined) => {
   if (text === '') {
     row.get('.target').text().should.equal('');
   } else if (to == null) {
     const span = row.get('.target span');
     span.text().should.equal(text);
-    span.attributes().title.should.equal(text);
+    await span.should.have.textTooltip();
   } else {
     const link = row.findAllComponents(RouterLinkStub).find(wrapper =>
       wrapper.element.closest('.target') != null);
     link.text().should.equal(text);
-    link.attributes().title.should.equal(text);
+    await link.should.have.textTooltip();
     link.props().to.should.equal(to);
   }
 };
@@ -76,7 +76,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () => {
+      it(`renders a ${action} audit correctly`, async () => {
         const user = testData.extendedUsers
           .createPast(1, { displayName: 'User 2' })
           .last();
@@ -87,18 +87,18 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        testTarget(row, 'User 2', '/users/2/edit');
+        await testTarget(row, 'User 2', '/users/2/edit');
       });
     }
 
-    it('renders a user.session.create audit correctly', () => {
+    it('renders a user.session.create audit correctly', async () => {
       testData.extendedAudits.createPast(1, { action: 'user.session.create' });
       const row = mountComponent();
       testType(row, ['User', 'Log in']);
-      testTarget(row, 'User 1', '/users/1/edit');
+      await testTarget(row, 'User 1', '/users/1/edit');
     });
 
-    it('renders deleted user targets correctly', () => {
+    it('renders deleted user targets correctly', async () => {
       testData.extendedUsers.createPast(1, { displayName: 'User Name' });
       const deletedUser = testData.toActor(testData.extendedUsers.last());
       deletedUser.deletedAt = ago({ days: 2 }).toISO();
@@ -109,10 +109,10 @@ describe('AuditTable', () => {
       });
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
-      target.text().should.equal('User Name');
+      target.get('span:nth-child(2)').text().should.equal('User Name');
       const icon = target.find('.icon-trash');
       icon.exists().should.be.true();
-      icon.attributes().title.should.equal('This resource has been deleted.');
+      await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
 
@@ -124,7 +124,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () => {
+      it(`renders a ${action} audit correctly`, async () => {
         testData.extendedAudits.createPast(1, {
           actor: testData.extendedUsers.first(),
           action,
@@ -134,11 +134,11 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        testTarget(row, 'My Project', '/projects/1');
+        await testTarget(row, 'My Project', '/projects/1');
       });
     }
 
-    it('renders deleted project targets correctly', () => {
+    it('renders deleted project targets correctly', async () => {
       const deletedProject = testData.standardProjects
         .createPast(1, { name: 'My Project' })
         .last();
@@ -150,10 +150,10 @@ describe('AuditTable', () => {
       });
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
-      target.text().should.equal('My Project');
+      target.get('span:nth-child(2)').text().should.equal('My Project');
       const icon = target.find('.icon-trash');
       icon.exists().should.be.true();
-      icon.attributes().title.should.equal('This resource has been deleted.');
+      await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
 
@@ -174,7 +174,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () => {
+      it(`renders a ${action} audit correctly`, async () => {
         testData.extendedAudits.createPast(1, {
           actor: testData.extendedUsers.first(),
           action,
@@ -184,11 +184,11 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        testTarget(row, 'My Form', '/projects/1/forms/a%20b');
+        await testTarget(row, 'My Form', '/projects/1/forms/a%20b');
       });
     }
 
-    it('renders deleted form targets correctly', () => {
+    it('renders deleted form targets correctly', async () => {
       const deletedForm = testData.standardForms
         .createPast(1, { xmlFormId: 'a', name: 'My Form' })
         .last();
@@ -200,10 +200,10 @@ describe('AuditTable', () => {
       });
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
-      target.text().should.equal('My Form');
+      target.get('span:nth-child(2)').text().should.equal('My Form');
       const icon = target.find('.icon-trash');
       icon.exists().should.be.true();
-      icon.attributes().title.should.equal('This resource has been deleted.');
+      await icon.should.have.tooltip('This resource has been deleted.');
     });
 
     it('shows the xmlFormId if the form does not have a name', () => {
@@ -240,7 +240,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () => {
+      it(`renders a ${action} audit correctly`, async () => {
         testData.extendedAudits.createPast(1, {
           actor: testData.extendedUsers.first(),
           action,
@@ -250,11 +250,11 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        testTarget(row, 'My Public Link');
+        await testTarget(row, 'My Public Link');
       });
     }
 
-    it('renders deleted public link targets correctly', () => {
+    it('renders deleted public link targets correctly', async () => {
       const deletedActor = testData.toActor(testData.standardPublicLinks
         .createPast(1, { displayName: 'My Public Link' })
         .last());
@@ -266,10 +266,10 @@ describe('AuditTable', () => {
       });
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
-      target.text().should.equal('My Public Link');
+      target.get('span:nth-child(2)').text().should.equal('My Public Link');
       const icon = target.find('.icon-trash');
       icon.exists().should.be.true();
-      icon.attributes().title.should.equal('This resource has been deleted.');
+      await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
 
@@ -280,7 +280,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () => {
+      it(`renders a ${action} audit correctly`, async () => {
         testData.extendedAudits.createPast(1, {
           actor: testData.extendedUsers.first(),
           action,
@@ -290,7 +290,7 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        testTarget(row, 'people');
+        await testTarget(row, 'people');
       });
     }
   });
@@ -305,7 +305,7 @@ describe('AuditTable', () => {
     ];
 
     for (const [action, type] of cases) {
-      it(`renders a ${action} audit correctly`, () => {
+      it(`renders a ${action} audit correctly`, async () => {
         testData.extendedAudits.createPast(1, {
           actor: testData.extendedUsers.first(),
           action,
@@ -315,11 +315,11 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        testTarget(row, 'My App User');
+        await testTarget(row, 'My App User');
       });
     }
 
-    it('renders deleted app user targets correctly', () => {
+    it('renders deleted app user targets correctly', async () => {
       const deletedActor = testData.toActor(testData.extendedFieldKeys
         .createPast(1, { displayName: 'My App User' })
         .last());
@@ -331,25 +331,25 @@ describe('AuditTable', () => {
       });
       const target = mountComponent().get('.target');
       target.find('a').exists().should.be.false();
-      target.text().should.equal('My App User');
+      target.get('span:nth-child(2)').text().should.equal('My App User');
       const icon = target.find('.icon-trash');
       icon.exists().should.be.true();
-      icon.attributes().title.should.equal('This resource has been deleted.');
+      await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
 
-  it('renders a config.set audit correctly', () => {
+  it('renders a config.set audit correctly', async () => {
     testData.extendedAudits.createPast(1, { action: 'config.set' });
     const row = mountComponent();
     testType(row, ['Server Configuration', 'Set']);
-    testTarget(row, '');
+    await testTarget(row, '');
   });
 
-  it('renders an analytics audit correctly', () => {
+  it('renders an analytics audit correctly', async () => {
     testData.extendedAudits.createPast(1, { action: 'analytics' });
     const row = mountComponent();
     testType(row, ['Report Usage']);
-    testTarget(row, '');
+    await testTarget(row, '');
   });
 
   it('renders an audit with an unknown action correctly', () => {
@@ -372,7 +372,7 @@ describe('AuditTable', () => {
     testType(mountComponent(), ['something.unknown']);
   });
 
-  it('renders an audit with an unknown action for its category', () => {
+  it('renders an audit with an unknown action for its category', async () => {
     testData.extendedAudits.createPast(1, {
       action: 'project.unknown',
       actee: testData.standardProjects
@@ -381,7 +381,7 @@ describe('AuditTable', () => {
     });
     const row = mountComponent();
     testType(row, ['project.unknown']);
-    testTarget(row, 'My Project', '/projects/1');
+    await testTarget(row, 'My Project', '/projects/1');
   });
 
   describe('initiator', () => {
@@ -397,7 +397,7 @@ describe('AuditTable', () => {
       actorLink.props().actor.displayName.should.equal('User 1');
     });
 
-    it('renders correctly for an audit with a deleted actor', () => {
+    it('renders correctly for an audit with a deleted actor', async () => {
       testData.extendedAudits.createPast(1, {
         actor: testData.extendedUsers
           .createPast(1, {
@@ -411,7 +411,7 @@ describe('AuditTable', () => {
       const row = mountComponent();
       row.findComponent(ActorLink).exists().should.be.true();
       const icon = row.get('.initiator .icon-trash');
-      icon.attributes().title.should.equal('This resource has been deleted.');
+      await icon.should.have.tooltip('This resource has been deleted.');
     });
 
     it('renders correctly for an audit without an actor', () => {
@@ -436,7 +436,7 @@ describe('AuditTable', () => {
     selectable.text().should.equal('{"some":"json"}');
   });
 
-  it('renders a purged form row correctly', () => {
+  it('renders a purged form row correctly', async () => {
     testData.extendedAudits.createPast(1, {
       actor: testData.extendedUsers.first(),
       action: 'form.purge',
@@ -449,10 +449,10 @@ describe('AuditTable', () => {
     });
     const target = mountComponent().get('.target');
     target.find('a').exists().should.be.false();
-    target.text().should.equal('Purged Form');
+    target.get('span:nth-child(2)').text().should.equal('Purged Form');
     const icon = target.find('.icon-trash');
     icon.exists().should.be.true();
-    icon.attributes().title.should.equal('This resource has been purged.');
+    await icon.should.have.tooltip('This resource has been purged.');
     // The purged details aren't part of the audit and don't show up here
     // but the original details of the audit do
     const selectable = mountComponent().getComponent(Selectable);
