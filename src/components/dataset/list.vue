@@ -10,10 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <dataset-table/>
-    <loading :state="datasets.initiallyLoading"/>
-    <dataset-introduction/>
+  <div id="dataset-list-page">
+    <page-section>
+      <template #heading>
+        <h1>Datasets</h1>
+      </template>
+      <template #body>
+        <dataset-table/>
+        <loading :state="datasets.initiallyLoading"/>
+        <dataset-introduction/>
+      </template>
+    </page-section>
   </div>
 </template>
 
@@ -26,6 +33,7 @@ export default {
 import DatasetIntroduction from './introduction.vue';
 import DatasetTable from './table.vue';
 import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -45,3 +53,14 @@ datasets.request({
   resend: false
 }).catch(noop);
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/_variables.scss';
+
+#dataset-list-page{
+  h1{
+    color: $color-accent-primary;
+    margin-top: 0;
+  }
+}
+</style>

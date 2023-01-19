@@ -15,17 +15,27 @@ describe('DatasetRow', () => {
   it('shows the name', () => {
     testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
     const row = mountComponent();
-    const link = row.get('.name a');
+    const link = row.getComponent(RouterLinkStub);
+    link.props().to.should.equal('/projects/1/datasets/my_dataset');
     link.text().should.equal('my_dataset');
     link.attributes().title.should.equal('my_dataset');
-    const { to } = row.getComponent(RouterLinkStub).props();
-    to.should.equal('/projects/1/datasets/my_dataset');
   });
 
-  it('shows the num of entities and newest entity timestamp', () => {
-    testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
+  it('shows the num of entities', () => {
+    testData.extendedDatasets.createPast(1, { name: 'my_dataset', entities: 10 });
     const row = mountComponent();
-    row.get('.entities').text().should.be.greaterThanOrEqual(10);
+    row.get('.entities').text().should.be.eql('10');
+  });
+
+  it('formats the num of entities', () => {
+    testData.extendedDatasets.createPast(1, { name: 'my_dataset', entities: 1000 });
+    const row = mountComponent();
+    row.get('.entities').text().should.be.eql('1,000');
+  });
+
+  it('shows the newest entity timestamp', () => {
+    testData.extendedDatasets.createPast(1, { name: 'my_dataset', lastEntity: new Date().toISOString().replace(/T.*/, '') });
+    const row = mountComponent();
     row.get('time').text().should.be.containEql('today');
   });
 

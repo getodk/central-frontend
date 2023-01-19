@@ -13,8 +13,8 @@ export const extendedDatasets = dataStore({
       ? extendedProjects.first()
       : extendedProjects.createPast(1, { datasets: 1 }).last(),
     name = faker.internet.userName(),
-    entities = faker.random.number({ min: 10, max: 50 }),
-    lastEntity = new Date().toISOString().replace(/T.*/, '')
+    entities = 0,
+    lastEntity = null
   }) => ({
     id,
     projectId: project.id,

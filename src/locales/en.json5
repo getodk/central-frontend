@@ -232,6 +232,7 @@
     // This is the text of a table column header for a column that shows dates
     // and times.
     "time": "Time",
+    "type": "Type",
     // This is the text of a table column header. The column shows the number of entities
     // for the dataset
     "entities": "Total Entities",
