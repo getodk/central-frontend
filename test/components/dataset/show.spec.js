@@ -8,7 +8,7 @@ describe('DatasetShow', () => {
   beforeEach(mockLogin);
 
   it('sends the correct initial requests', () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
+    testData.extendedDatasets.createPast(1, { name: 'a b' });
     return load('/projects/1/datasets/a%20b').testRequests([
       { url: '/v1/projects/1', extended: true },
       { url: '/v1/projects/1/datasets/a%20b' }
@@ -33,7 +33,8 @@ describe('DatasetShow', () => {
         vm = app.getComponent(DatasetOverview);
       })
       .load('/projects/1/datasets/shovels', {
-        dataset: () => testData.extendedDatasets.last()
+        dataset: () => testData.extendedDatasets.last(),
+        project: false
       })
       .afterResponses(app => {
         should(app.getComponent(DatasetOverview).vm).not.equal(vm);

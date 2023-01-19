@@ -1,0 +1,74 @@
+<!--
+Copyright 2023 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+
+<template>
+  <summary-item id="linked-forms" icon="link">
+    <template #heading>
+      {{ linkedForms.length }}
+    </template>
+    <template #body>
+      <p>{{ $tc('formsConsumeData', linkedForms.length) }}</p>
+      <table v-if="linkedForms.length > 0" class="table">
+        <tbody>
+          <tr v-for="(form) in linkedForms" :key="form">
+            <td>
+              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" :title="form.name">{{ form.name }}</router-link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+  </summary-item>
+</template>
+
+<script>
+import SummaryItem from '../../summary-item.vue';
+import routes from '../../../mixins/routes';
+
+export default {
+  name: 'LinkedForms',
+  components: {
+    SummaryItem
+  },
+  mixins: [routes()],
+  props: {
+    linkedForms: {
+      type: Object,
+      required: true
+    },
+    projectId: {
+      type: Number,
+      required: true
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+#linked-forms {
+  .table > tbody > tr:first-child > td {
+    border-top: none;
+  }
+  a {
+    font-size: 16px;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // Number of form(s) is shown separately above this text
+    "formsConsumeData": "Form consumes data from this Dataset | Forms consume data from this Dataset",
+  }
+}
+</i18n>

@@ -200,7 +200,7 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, project, form, formDraft, attachments } = requestData;
+const { currentUser, project, form, formDraft, attachments, dataset } = requestData;
 const routes = [
   {
     path: '/login',
@@ -506,7 +506,13 @@ const routes = [
         path: '',
         component: 'DatasetOverview',
         props: true,
-        loading: 'tab'
+        loading: 'tab',
+        meta: {
+          title: () => [dataset.name],
+          validateData: {
+            project: () => project.permits('dataset.list')
+          }
+        }
       })
     ]
   }),
@@ -703,7 +709,7 @@ const routesByName = new Map();
 
   // Preserve requestData.project.
   preserveDataBetweenRoutes(
-    [...projectRoutes, ...formRoutes, 'SubmissionShow'],
+    [...projectRoutes, ...formRoutes, 'SubmissionShow', 'DatasetOverview'],
     (to, from) => (to.params.projectId === from.params.projectId
       ? [project]
       : false)

@@ -12,13 +12,13 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <div id="dataset-show">
-    <page-back v-show="dataExists && !awaitingResponse" :to="projectPath('datasets')">
+    <page-back v-show="dataExists" :to="projectPath('datasets')">
       <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
       <template #back>{{ $t('back') }}</template>
     </page-back>
-    <page-head v-show="dataExists && !awaitingResponse">
+    <page-head v-show="dataExists">
       <template #title>
-{{ datasetName }}
+        {{ datasetName }}
         <span class="icon-cube"></span>
       </template>
       <template #tabs>
@@ -27,23 +27,11 @@ except according to the terms contained in the LICENSE file.
             {{ $t('common.tab.overview') }}
           </router-link>
         </li>
-        <li class="disabled" role="presentation">
-          <a href="#">
-            {{ $t('data') }}
-            <span class="coming-soon">{{ $t('comingSoon') }}</span>
-          </a>
-        </li>
-        <li class="disabled" role="presentation">
-          <a href="#">
-            {{ $t('common.tab.settings') }}
-            <span class="coming-soon">{{ $t('comingSoon') }}</span>
-          </a>
-        </li>
       </template>
     </page-head>
     <page-body>
-      <loading :state="initiallyLoading || awaitingResponse"/>
-      <router-view v-show="dataExists && !awaitingResponse"/>
+      <loading :state="initiallyLoading"/>
+      <router-view v-show="dataExists"/>
     </page-body>
   </div>
 </template>
@@ -85,14 +73,9 @@ export default {
     const { project, dataset, resourceStates } = useRequestData();
     return { project, dataset, ...resourceStates([project, dataset]) };
   },
-  data() {
-    return {
-      awaitingResponse: false
-    };
-  },
   computed: {
     tabPathPrefix() {
-      return `${this.projectPath('datasets')}/${this.datasetName}`;
+      return this.datasetPath(this.projectId, this.datasetName);
     }
   },
   created() {
@@ -135,9 +118,7 @@ export default {
 {
   "en": {
     // This is shown at the top of the page.
-    "back": "Back to Project Datasets",
-    "comingSoon": "(coming soon)",
-    "data": "Data"
+    "back": "Back to Project Datasets"
   }
 }
 </i18n>

@@ -10,25 +10,23 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="expandable-row">
-    <td>
+  <div class="expandable-row">
+    <div class="title-cell">
       <slot name="title"></slot>
-    </td>
+    </div>
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
-    <td role="button" class="caption-cell" @click.prevent="toggleExpanded">
+    <div role="button" class="caption-cell" @click.prevent="toggleExpanded">
       <slot name="caption"></slot>
-    </td>
+    </div>
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
-    <td role="button" class="button-cell" @click.prevent="toggleExpanded">
+    <div role="button" class="button-cell" @click.prevent="toggleExpanded">
       <span v-if="!expanded" class="icon-caret-left"></span>
       <span v-else class="icon-caret-down"></span>
-    </td>
-  </tr>
-  <tr v-show="expanded" class="expanded-row">
-    <td colspan="3">
-      <slot name="details"></slot>
-    </td>
-  </tr>
+    </div>
+    <div v-show="expanded" class="expanded-row">
+        <slot name="details"></slot>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -54,23 +52,34 @@ export default {
 @import '../assets/scss/mixins';
 
 .expandable-row {
+  display: flex;
+  flex-wrap: wrap;
+
+  &> div {
+    padding: 8px;
+  }
+
+  .title-cell {
+    flex-grow: 1;
+  }
+
   .caption-cell {
     text-align: right;
   }
+
   .button-cell {
     width: 30px;
-    margin-left: 5px;
     font-size: 20px;
+    text-align: right;
+    line-height: normal;
+    padding-bottom: 0px;
+  }
 
-    span {
-      vertical-align: 1px;
-    }
+  .expanded-row{
+    width: 100%;
+    padding: 0 8px 16px 8px;
   }
 }
 
-.table > tbody > tr.expanded-row td{
-  border-top: none;
-  padding-top: 0px;
-}
 
 </style>

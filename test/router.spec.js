@@ -376,6 +376,14 @@ describe('createCentralRouter()', () => {
         .load('/projects/1/forms/f/submissions', { project: false })
         .afterResponses(dataExists(['project']));
     });
+
+    it('preserves project while navigating from dataset detail page', () => {
+      testData.extendedDatasets.createPast(1, { name: 'trees' });
+      return load('/projects/1/datasets/trees')
+        .complete()
+        .load('/projects/1/datasets', { project: false })
+        .afterResponses(dataExists(['project']));
+    });
   });
 
   describe('validateData', () => {
