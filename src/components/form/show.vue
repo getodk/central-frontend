@@ -11,14 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <form-head v-show="dataExists && !awaitingResponse"
-      @create-draft="createDraft"/>
+    <form-head v-show="dataExists && !awaitingResponse" @create-draft="createDraft"/>
     <page-body>
       <loading :state="initiallyLoading || awaitingResponse"/>
       <!-- <router-view> may send its own requests before the server has
       responded to the requests from FormShow. -->
-      <router-view v-show="dataExists && !awaitingResponse"
-        @fetch-project="fetchProject" @fetch-form="fetchForm"
+      <router-view v-show="dataExists && !awaitingResponse" @fetch-project="fetchProject" @fetch-form="fetchForm"
         @fetch-draft="fetchDraft"/>
     </page-body>
   </div>
@@ -56,13 +54,13 @@ export default {
   },
   setup() {
     const { project, resourceStates } = useRequestData();
-    const { form, formDraft, attachments } = useForm();
+    const { form, formAttachments, formDraft, attachments } = useForm();
     useDatasets();
 
     const { callWait, cancelCall } = useCallWait();
     return {
-      project, form, formDraft, attachments,
-      ...resourceStates([project, form, formDraft, attachments]),
+      project, form, formAttachments, formDraft, attachments,
+      ...resourceStates([project, form, formAttachments, formDraft, attachments]),
       callWait, cancelCall
     };
   },
@@ -92,35 +90,41 @@ export default {
     fetchForm() {
       this.cancelCall('fetchEnketoIdsForForm');
       const url = apiPaths.form(this.projectId, this.xmlFormId);
-      this.form.request({ url, extended: true })
-        .then(() => {
-          if (this.form.publishedAt == null) return;
-          this.callWait(
-            'fetchEnketoIdsForForm',
-            async () => {
-              if (this.form.enketoId != null && this.form.enketoOnceId != null)
-                return true;
-              // If Enketo hasn't finished processing the form in 15 minutes,
-              // something else has probably gone wrong.
-              if (Date.now() -
-                DateTime.fromISO(this.form.publishedAt).toMillis() > 900000)
-                return true;
-              await this.form.request({
-                url,
-                patch: ({ data }) => {
-                  this.form.enketoId = data.enketoId;
-                  this.form.enketoOnceId = data.enketoOnceId;
-                },
-                alert: false
-              });
-              // The next call will check whether the form now has both Enketo
-              // IDs.
-              return false;
-            },
-            this.waitToRequestEnketoId
-          );
+      Promise.allSettled([
+        this.form.request({ url, extended: true })
+          .then(() => {
+            if (this.form.publishedAt == null) return;
+            this.callWait(
+              'fetchEnketoIdsForForm',
+              async () => {
+                if (this.form.enketoId != null && this.form.enketoOnceId != null)
+                  return true;
+                // If Enketo hasn't finished processing the form in 15 minutes,
+                // something else has probably gone wrong.
+                if (Date.now() -
+                  DateTime.fromISO(this.form.publishedAt).toMillis() > 900000)
+                  return true;
+                await this.form.request({
+                  url,
+                  patch: ({ data }) => {
+                    this.form.enketoId = data.enketoId;
+                    this.form.enketoOnceId = data.enketoOnceId;
+                  },
+                  alert: false
+                });
+                // The next call will check whether the form now has both Enketo
+                // IDs.
+                return false;
+              },
+              this.waitToRequestEnketoId
+            );
+          })
+          .catch(noop),
+        this.formAttachments.request({
+          url: apiPaths.formAttachments(this.projectId, this.xmlFormId),
+          fulfillProblem: ({ code }) => code === 404.1
         })
-        .catch(noop);
+      ]);
     },
     fetchDraft() {
       this.cancelCall('fetchEnketoIdForDraft');

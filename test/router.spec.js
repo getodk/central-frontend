@@ -331,6 +331,7 @@ describe('createCentralRouter()', () => {
             .load('/projects/1/forms/f/public-links', {
               project: false,
               form: false,
+              formAttachments: false,
               formDraft: false,
               attachments: false
             })

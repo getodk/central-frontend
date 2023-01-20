@@ -337,6 +337,7 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => testData.extendedProjects.last());
     };
 
@@ -344,6 +345,7 @@ describe('FormDraftPublish', () => {
       publish().testRequests([
         null,
         { url: '/v1/projects/1/forms/f', extended: true },
+        { url: '/v1/projects/1/forms/f/attachments' },
         { url: '/v1/projects/1', extended: true }
       ]));
 
@@ -390,6 +392,7 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => testData.extendedProjects.last())
         .complete()
         .route('/projects/1/forms/f/versions')

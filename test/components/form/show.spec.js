@@ -26,6 +26,7 @@ describe('FormShow', () => {
     return load('/projects/1/forms/a%20b').testRequests([
       { url: '/v1/projects/1', extended: true },
       { url: '/v1/projects/1/forms/a%20b', extended: true },
+      { url: '/v1/projects/1/forms/a%20b/attachments' },
       { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
       { url: '/v1/projects/1/forms/a%20b/draft/attachments' }
     ]);
@@ -383,8 +384,9 @@ describe('FormShow', () => {
           app.getComponent(FormShow).vm.fetchForm();
           clock.tick(3000);
         })
-        // There should be only one response, not two.
-        .respondWithData(() => testData.extendedForms.last());
+        // There should be only two response, not three.
+        .respondWithData(() => testData.extendedForms.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted());
     });
 
     it('sends two requests if form and draft both do not have an enketoId', () => {

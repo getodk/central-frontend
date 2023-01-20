@@ -72,6 +72,7 @@ const responsesByComponent = {
   FormShow: componentResponses({
     project: true,
     form: () => testData.extendedForms.last(),
+    formAttachments: () => testData.standardFormAttachments.sorted(),
     formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
       ? testData.extendedFormDrafts.last()
       : mockResponse.problem(404.1)),

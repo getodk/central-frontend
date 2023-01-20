@@ -13,7 +13,7 @@ import { transformForms } from './util';
 import { useRequestData } from './index';
 
 export default () => {
-  const { form, formDraft, attachments, createResource } = useRequestData();
+  const { form, formAttachments, formDraft, attachments, createResource } = useRequestData();
   const formVersions = createResource('formVersions', () => ({
     transformResponse: transformForms
   }));
@@ -22,6 +22,6 @@ export default () => {
   const formDraftDatasetDiff = createResource('formDraftDatasetDiff');
   const formDatasetDiff = createResource('formDatasetDiff');
   return {
-    form, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff
+    form, formAttachments, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff
   };
 };

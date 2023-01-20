@@ -67,6 +67,10 @@ export default ({ i18n }, createResource) => {
 
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));
+
+  // Form attachments (published)
+  createResource('formAttachments');
+
   // Form draft attachments
   const attachments = createResource('attachments', () => ({
     ...setupOption((data) => data.reduce(

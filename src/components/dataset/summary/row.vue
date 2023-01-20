@@ -11,16 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="dataset-summary-row">
-    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
-    <div class="row" role="button" @click.prevent="toggleExpanded">
+    <div class="row">
       <div class="col-xs-6 dataset-name-wrap">
-        <div class="dataset-name text-overflow-ellipsis" v-tooltip.text>{{ dataset.name }}</div>
+        <div class="dataset-name text-overflow-ellipsis" v-tooltip.text>
+          <router-link :to="datasetPath(projectId, dataset.name)" v-tooltip.text>
+            {{ dataset.name }}
+          </router-link>
+        </div>
         <div v-if="dataset.isNew" class="dataset-new">
           <span class="icon-plus-circle"></span>
           {{ $t('new') }}
         </div>
       </div>
-      <div class="col-xs-6 properties-count">
+      <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
+      <div class="col-xs-6 properties-count" role="button" @click.prevent="toggleExpanded">
         {{ $tcn('common.propertiesCount', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
         <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
         <a href="javascript:void(0)" class="expand-button">
@@ -42,13 +46,19 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SentenceSeparator from '../../sentence-separator.vue';
+import routes from '../../../mixins/routes';
 
 export default {
   name: 'DatasetSummaryRow',
   components: { SentenceSeparator },
+  mixins: [routes()],
   props: {
     dataset: {
       type: Object,
+      required: true
+    },
+    projectId: {
+      type: Number,
       required: true
     }
   },
@@ -110,7 +120,7 @@ export default {
         line-height: 28px;
     }
 
-    a {
+    a.expand-button {
         color: #666;
         font-size: 20px;
         vertical-align: middle;
