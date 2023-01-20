@@ -800,6 +800,12 @@
     "propertiesCount": {
       "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
       "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+    },
+    "expand": {
+      "string": "Expand"
+    },
+    "collapse": {
+      "string": "Collapse"
     }
   },
   "mixin": {
@@ -1273,7 +1279,7 @@
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "There are no Properties in this Dataset"
+        "string": "There are no Properties in this Dataset."
       }
     },
     "DatasetOverviewLinkedForms": {

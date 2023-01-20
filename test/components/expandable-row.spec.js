@@ -39,7 +39,7 @@ describe('Dataset summary row', () => {
   });
 
   it('expands details', async () => {
-    await component.get('.button-cell').trigger('click');
+    await component.get('.button-cell a').trigger('click');
     component.get('.expanded-row').should.be.visible();
     component.get('.expanded-row').text().should.be.eql('height, type');
   });
@@ -52,7 +52,7 @@ describe('Dataset summary row', () => {
         };
       }
     });
-    await c.get('.button-cell').trigger('click');
+    await c.get('.button-cell a').trigger('click');
     c.get('.expanded-row').should.be.hidden();
   });
 });

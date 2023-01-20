@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       {{ propertiesByForm.length }}
     </template>
     <template #body>
-      <p>{{ $t('formsCreateEntities') }}</p>
+      <p>{{ $tc('formsCreateEntities', propertiesByForm.length) }}</p>
       <div class="div">
         <expandable-row v-for="(form) in propertiesByForm" :key="form.xmlFormId">
           <template #title>
@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
             {{ $tcn('common.propertiesCount', totalProperties, { inform: $n(form.properties.length, 'default') }) }}
           </template>
           <template #details>
-            <span v-for="(property, index) in form.properties" :key="property">
+            <span v-for="(property, index) in form.properties" :key="property" class="property-list">
               {{ property }}<template v-if="index < form.properties.length - 1">{{
                 $t('common.punctuations.comma')
               }}<sentence-separator/></template>
@@ -54,11 +54,11 @@ export default {
   mixins: [routes()],
   props: {
     properties: {
-      type: Object,
+      type: Array,
       required: true
     },
     projectId: {
-      type: Number,
+      type: String,
       required: true
     }
   },
@@ -102,6 +102,11 @@ export default {
 
   a {
     font-size: 16px;
+  }
+
+  .property-list {
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
 }
 </style>

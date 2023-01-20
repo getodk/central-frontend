@@ -55,11 +55,11 @@ export default {
   mixins: [routes()],
   props: {
     properties: {
-      type: Object,
+      type: Array,
       required: true
     },
     projectId: {
-      type: Number,
+      type: String,
       required: true
     }
   }
@@ -67,7 +67,13 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+
 #dataset-properties {
+  td {
+    @include text-overflow-ellipsis;
+  }
+
   &.table > tbody > tr:first-child > td {
     border-top: none;
   }
@@ -81,7 +87,7 @@ export default {
 <i18n lang="json5">
   {
     "en": {
-      "emptyTable": "There are no Properties in this Dataset"
+      "emptyTable": "There are no Properties in this Dataset."
     }
   }
   </i18n>

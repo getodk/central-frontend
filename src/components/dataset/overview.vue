@@ -39,7 +39,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { useRoute } from 'vue-router';
 import PageSection from '../page/section.vue';
 import ConnectionToForms from './overview/connection-to-forms.vue';
 import LinkedForms from './overview/linked-forms.vue';
@@ -55,13 +54,11 @@ export default {
     LinkedForms,
     DatasetProperties
   },
-  setup() {
-    const route = useRoute();
+  setup(props) {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { dataset, resourceStates } = useRequestData();
-    const { dataExists } = resourceStates([dataset]);
-    return { dataset, dataExists, projectId: Number(route.params.projectId) };
+    const { dataset } = useRequestData();
+    return { dataset, projectId: props.projectId };
   }
 };
 </script>

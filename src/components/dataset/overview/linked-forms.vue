@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <p>{{ $tc('formsConsumeData', linkedForms.length) }}</p>
       <table v-if="linkedForms.length > 0" class="table">
         <tbody>
-          <tr v-for="(form) in linkedForms" :key="form">
+          <tr v-for="(form) in linkedForms" :key="form.xmlFormId">
             <td>
               <router-link :to="publishedFormPath(projectId, form.xmlFormId)" :title="form.name">{{ form.name }}</router-link>
             </td>
@@ -42,11 +42,11 @@ export default {
   mixins: [routes()],
   props: {
     linkedForms: {
-      type: Object,
+      type: Array,
       required: true
     },
     projectId: {
-      type: Number,
+      type: String,
       required: true
     }
   }
@@ -54,7 +54,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+
 #linked-forms {
+  td {
+    @include text-overflow-ellipsis;
+  }
   .table > tbody > tr:first-child > td {
     border-top: none;
   }

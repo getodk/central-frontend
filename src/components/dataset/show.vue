@@ -103,17 +103,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../assets/scss/variables';
-
-#dataset-show {
-  .coming-soon {
-    color: $color-text;
-    font-size: 10px;
-  }
-}
-</style>
-
 <i18n lang="json5">
 {
   "en": {

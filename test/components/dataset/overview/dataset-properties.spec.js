@@ -90,6 +90,6 @@ describe('Dataset Properties', () => {
       name: 'trees', properties: []
     });
     const component = mountComponent();
-    component.text().should.be.eql('There are no Properties in this Dataset');
+    component.text().should.be.eql('There are no Properties in this Dataset.');
   });
 });
