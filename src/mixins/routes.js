@@ -73,6 +73,9 @@ const mixin = {
       }
       return _formPath(projectIdOrSuffix, xmlFormId, suffix);
     },
+    datasetPath(projectId, datasetName) {
+      return `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`;
+    },
     // Returns the path to the primary page for a form. This changes based on
     // the current user's role, as well as whether the form has a published
     // version.

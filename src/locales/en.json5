@@ -232,7 +232,13 @@
     // This is the text of a table column header for a column that shows dates
     // and times.
     "time": "Time",
-    "type": "Type"
+    "type": "Type",
+    // This is the text of a table column header. The column shows the number of entities
+    // for the dataset
+    "entities": "Total Entities",
+    // This is the text of a table column header. The column shows the date and time of the 
+    // newest entity
+    "lastEntity": "Latest Entity"
   },
   "plural": {
     "appUser": "App User | App Users",

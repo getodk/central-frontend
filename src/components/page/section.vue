@@ -51,7 +51,7 @@ export default {
     margin-right: 20px;
   }
 
-  > span:first-child {
+  @mixin page-section-heading {
     color: $color-accent-primary;
     font-weight: 600;
 
@@ -60,6 +60,20 @@ export default {
       position: relative;
       top: -2px;
     }
+  }
+
+  > h1:first-child,
+  > h2:first-child,
+  > h3:first-child,
+  > h4:first-child,
+  > h5:first-child,
+  > h6:first-child{
+    @include page-section-heading();
+    margin-top: 0px; // Bootstrap sets top margin to 20px
+  }
+
+  > span:first-child {
+    @include page-section-heading;
   }
 }
 </style>

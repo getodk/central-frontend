@@ -14,6 +14,8 @@ except according to the terms contained in the LICENSE file.
     <thead>
       <tr>
         <th>{{ $t('header.name') }}</th>
+        <th class="entities">{{ $t('header.entities') }}</th>
+        <th>{{ $t('header.lastEntity') }}</th>
         <th>{{ $t('header.actions') }}</th>
       </tr>
     </thead>
@@ -40,5 +42,12 @@ const { datasets } = useRequestData();
 </script>
 
 <style lang="scss">
-#dataset-table { table-layout: fixed; }
+#dataset-table {
+  table-layout: fixed;
+
+  .entities {
+    text-align: right;
+    padding-right: 10%;
+  }
+}
 </style>
