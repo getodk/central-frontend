@@ -10,10 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="dataset-list-page">
+  <div id="dataset-list">
     <page-section>
       <template #heading>
-        <h1>Datasets</h1>
+        <h1>{{ $t('resource.datasets') }}</h1>
       </template>
       <template #body>
         <dataset-table/>
@@ -53,14 +53,3 @@ datasets.request({
   resend: false
 }).catch(noop);
 </script>
-
-<style lang="scss">
-@import '../../assets/scss/_variables.scss';
-
-#dataset-list-page{
-  h1{
-    color: $color-accent-primary;
-    margin-top: 0;
-  }
-}
-</style>

@@ -47,7 +47,7 @@ const { datasets } = useRequestData();
 
   .entities {
     text-align: right;
-    padding-right: 20px;
+    padding-right: 10%;
   }
 }
 </style>
