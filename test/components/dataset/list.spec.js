@@ -10,7 +10,7 @@ describe('DatasetList', () => {
     return load('/projects/1/datasets', {
       root: false
     }).testRequests([
-      { url: '/v1/projects/1/datasets' }
+      { url: '/v1/projects/1/datasets', extended: true }
     ]);
   });
 });

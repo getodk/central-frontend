@@ -10,10 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <dataset-introduction/>
-    <dataset-table/>
-    <loading :state="datasets.initiallyLoading"/>
+  <div id="dataset-list">
+    <page-section>
+      <template #heading>
+        <h1>{{ $t('resource.datasets') }}</h1>
+      </template>
+      <template #body>
+        <dataset-table/>
+        <loading :state="datasets.initiallyLoading"/>
+        <dataset-introduction/>
+      </template>
+    </page-section>
   </div>
 </template>
 
@@ -26,6 +33,7 @@ export default {
 import DatasetIntroduction from './introduction.vue';
 import DatasetTable from './table.vue';
 import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -41,6 +49,7 @@ const props = defineProps({
 const { datasets } = useRequestData();
 datasets.request({
   url: apiPaths.datasets(props.projectId),
+  extended: true,
   resend: false
 }).catch(noop);
 </script>
