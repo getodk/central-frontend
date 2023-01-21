@@ -1,8 +1,58 @@
 import should from 'should';
+import { DOMWrapper, VueWrapper } from '@vue/test-utils';
 
-const unwrapElement = (elementOrWrapper) => (elementOrWrapper instanceof HTMLElement
-  ? elementOrWrapper
-  : elementOrWrapper.element);
+const isWrapper = (value) =>
+  value instanceof VueWrapper || value instanceof DOMWrapper;
+const unwrapElement = (elementOrWrapper) =>
+  (isWrapper(elementOrWrapper) ? elementOrWrapper.element : elementOrWrapper);
+
+/*
+Let's say an assertion fails for a Vue Test Utils wrapper:
+
+  button.should.be.focused();
+
+If that happens, then for some reason, things start going wrong. The following
+warnings are logged, then Karma times out:
+
+WARN LOG: '[intlify] Not supported 'formatter'.'
+WARN LOG: '[intlify] Not supported 'preserveDirectiveContent'.'
+WARN LOG: '[intlify] Not supported 'formatter'.'
+WARN LOG: '[intlify] Not supported 'preserveDirectiveContent'.'
+
+If the error is caught and logged, then the following warning is logged:
+
+[Vue warn]: Avoid app logic that relies on enumerating keys on a component instance. The keys will be empty in production mode to avoid performance overhead.
+
+To avoid that, the cleanAssertionError() function tries to remove Vue Test Utils
+wrappers from a Should.js assertion error before it is thrown. The function also
+tries to make the error less noisy if it is logged. (mockHttp() often ends up
+logging assertion errors.)
+*/
+/* eslint-disable no-param-reassign */
+const cleanAssertionError = (error) => {
+  if (error.actual != null) {
+    if (isWrapper(error.actual))
+      error.actual = error.actual.element;
+    else if (Array.isArray(error.actual) && error.actual.every(isWrapper))
+      error.actual = error.actual.map(unwrapElement);
+  }
+  // This property can result in extra noise if the error is logged.
+  delete error.assertion;
+  if (error.previous != null) cleanAssertionError(error.previous);
+};
+/* eslint-enable no-param-reassign */
+// Override Assertion.prototype.fail() so that it calls cleanAssertionError().
+const { Assertion, AssertionError } = should;
+const { fail } = Assertion.prototype;
+Assertion.prototype.fail = function cleanFail(...args) {
+  try {
+    fail.apply(this, args);
+  } catch (error) {
+    if (error instanceof AssertionError) cleanAssertionError(error);
+    throw error;
+  }
+};
+
 const verifyAttached = (elementOrWrapper) => {
   if (!document.body.contains(unwrapElement(elementOrWrapper)))
     throw new Error('component must be attached to the body');
@@ -33,8 +83,6 @@ should.Assertion.add('hidden', function hidden(computed = false) {
   display.should.equal('none');
 });
 
-// If a test does not attach the component to the document, then uses this
-// assertion, it may time out rather than fail. (I am not sure why.)
 should.Assertion.add('focused', function focused() {
   this.params = { operator: 'to be focused' };
   verifyAttached(this.obj);
