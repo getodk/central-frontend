@@ -128,6 +128,8 @@ class Tooltip {
     characters. If/when an event listener is triggered for show, we will
     evaluate then whether the text is truncated and show the tooltip if so.
     Presumably the text won't ever be truncated if it is 5 characters or fewer.
+    We check textContent here rather than innerText to avoid triggering a
+    reflow.
 
     For v-tooltip.sr-only, we always add event listeners because we can't easily
     hook into the lifecycle of the .sr-only element. If/when an event listener
@@ -172,7 +174,7 @@ class Tooltip {
         if (closestBlock == null || closestBlock === document.body) return null;
       }
       return closestBlock.scrollWidth > closestBlock.clientWidth
-        ? this.anchor.textContent
+        ? this.anchor.innerText
         : null;
     }
     if (this.type === 'aria-label')
@@ -180,7 +182,7 @@ class Tooltip {
     if (this.type === 'sr-only') {
       for (let sibling = this.anchor.nextElementSibling; sibling != null;
         sibling = sibling.nextElementSibling) {
-        if (sibling.classList.contains('sr-only')) return sibling.textContent;
+        if (sibling.classList.contains('sr-only')) return sibling.innerText;
       }
       return null;
     }
