@@ -46,8 +46,9 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.editProfile') }}
             </router-link>
           </li>
-          <li>
+          <li :class="{ disabled }">
             <a class="reset-password" href="#"
+              v-tooltip.aria-describedby="disabled ? $t('cannotResetPassword') : null"
               @click.prevent="$emit('reset-password', user)">
               {{ $t('action.resetPassword') }}&hellip;
             </a>
@@ -158,6 +159,9 @@ export default {
     "field": {
       "sitewideRole": "Sitewide Role"
     },
+    // An Administrator may reset the password for another Web User, but not for
+    // their own account.
+    "cannotResetPassword": "You may not reset your own password on this page. To change your password, edit your profile.",
     // An Administrator may retire other Web Users, but not their own account.
     "cannotRetire": "You may not retire yourself.",
     "action": {
