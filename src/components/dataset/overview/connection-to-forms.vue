@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         <expandable-row v-for="(form) in propertiesByForm" :key="form.xmlFormId">
           <template #title>
             <div class="form-name">
-              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" :title="form.name">{{ form.name }}</router-link>
+              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" v-tooltip.text>{{ form.name }}</router-link>
             </div>
           </template>
           <template #caption>
