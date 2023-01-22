@@ -77,8 +77,8 @@ describe('ProjectFormAccess', () => {
         ''
         // There is no column for "App User 3".
       ]);
-      th[3].attributes().title.should.equal('App User 2');
-      th[4].attributes().title.should.equal('App User 1');
+      await th[3].get('span').should.have.textTooltip();
+      await th[4].get('span').should.have.textTooltip();
     });
 
     it('shows a message if there are no forms', async () => {

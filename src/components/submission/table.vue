@@ -38,10 +38,8 @@ except according to the terms contained in the LICENSE file.
       <table id="submission-table-data" class="table">
         <thead>
           <tr v-if="fields != null">
-            <!-- Adding a title attribute in case the column header is so long
-            that it is truncated. -->
-            <th v-for="field of fields" :key="field.path" :title="field.header">
-              {{ field.header }}
+            <th v-for="field of fields" :key="field.path">
+              <span v-tooltip.text>{{ field.header }}</span>
             </th>
             <th>{{ $t('header.instanceId') }}</th>
           </tr>

@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
         <template v-else-if="entry.action === 'entity.create.error'">
           <span class="icon-warning entity-icon submission-feed-entry-icon"></span>
           <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
-          <span class="entity-error-message" :title="entityProblem(entry)">{{ entityProblem(entry) }}</span>
+          <span class="entity-error-message" v-tooltip.text>{{ entityProblem(entry) }}</span>
         </template>
         <template v-else>
           <span class="icon-comment submission-feed-entry-icon"></span>

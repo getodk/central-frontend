@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
           </a>
           <button v-else id="submission-activity-edit-button" type="button"
             class="btn btn-default" aria-disabled="true"
-            :title="$t('submission.editDisabled')">
+            v-tooltip.aria-describedby="$t('submission.editDisabled')">
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
           </button>
         </template>

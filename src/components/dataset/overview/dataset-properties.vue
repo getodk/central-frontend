@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
             {{ property.name }}
           </td>
           <td>
-            <router-link v-if="property.forms.length > 0" :to="publishedFormPath(projectId, property.forms[0].xmlFormId)" :title="property.forms[0].name">
+            <router-link v-if="property.forms.length > 0" :to="publishedFormPath(projectId, property.forms[0].xmlFormId)" v-tooltip.text>
               {{ property.forms[0].name }}
             </router-link>
           </td>
@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
         <template v-for="(form, index) in property.forms" :key="form.xmlFormId">
           <tr v-if="index > 0">
             <td>
-              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" :title="form.name">{{ form.name }}</router-link>
+              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" v-tooltip.text>{{ form.name }}</router-link>
             </td>
           </tr>
         </template>

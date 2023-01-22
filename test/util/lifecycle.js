@@ -2,6 +2,7 @@ import { last, lensPath, view } from 'ramda';
 import { mount as vtuMount } from '@vue/test-utils';
 
 import { noop } from '../../src/util/util';
+import vTooltip from '../../src/directives/tooltip';
 
 import createTestContainer from './container';
 
@@ -25,6 +26,7 @@ export const mount = (component, options = {}) => {
     ? containerOption
     : createTestContainer(containerOption);
   g.plugins = g.plugins != null ? [container, ...g.plugins] : [container];
+  g.directives = { tooltip: vTooltip, ...g.directives };
   g.mocks = { $container: container, ...g.mocks };
   return vtuMount(component, { ...mountOptions, global: g });
 };

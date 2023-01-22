@@ -12,13 +12,13 @@ const mountComponent = () => mount(DatasetRow, {
 });
 
 describe('DatasetRow', () => {
-  it('shows the name', () => {
+  it('shows the name', async () => {
     testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
     const row = mountComponent();
     const link = row.getComponent(RouterLinkStub);
     link.props().to.should.equal('/projects/1/datasets/my_dataset');
     link.text().should.equal('my_dataset');
-    link.attributes().title.should.equal('my_dataset');
+    await link.should.have.textTooltip();
   });
 
   it('shows the num of entities', () => {

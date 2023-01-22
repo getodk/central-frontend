@@ -59,7 +59,8 @@ describe('FormRestore', () => {
       .afterResponses(async (app) => {
         const button = app.get('[data-form-id="111"]');
         button.attributes('aria-disabled').should.equal('true');
-        button.attributes().title.should.equal('This Form cannot be undeleted because an active Form with the same ID exists.');
+        button.should.have.ariaDescription('This Form cannot be undeleted because an active Form with the same ID exists.');
+        await button.should.have.tooltip();
       });
   });
 

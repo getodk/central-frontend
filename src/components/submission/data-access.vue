@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     </a>
     <button id="submission-data-access-analyze-button" type="button"
       class="btn btn-default" :aria-disabled="analyzeDisabled"
-      :title="analyzeDisabled ? $t('analyzeDisabled') : null"
+      v-tooltip.aria-describedby="analyzeDisabled ? $t('analyzeDisabled') : null"
       @click="$emit('analyze')">
       <span class="icon-bar-chart"></span>{{ $t('action.analyze') }}&hellip;
     </button>

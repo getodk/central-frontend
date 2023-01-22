@@ -24,22 +24,20 @@ describe('ProjectFormAccessRow', () => {
   });
 
   describe('form name and xmlFormId', () => {
-    it("shows the form's name if the form has one", () => {
+    it("shows the form's name if the form has one", async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f', name: 'My Form' });
-      return load('/projects/1/form-access').then(app => {
-        const a = app.get('.project-form-access-row-form-name a');
-        a.text().should.equal('My Form');
-        a.attributes().title.should.equal('My Form');
-      });
+      const app = await load('/projects/1/form-access');
+      const a = app.get('.project-form-access-row-form-name a');
+      a.text().should.equal('My Form');
+      await a.should.have.textTooltip();
     });
 
-    it('shows the xmlFormId if the form does not have a name', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: null });
-      return load('/projects/1/form-access').then(app => {
-        const a = app.get('.project-form-access-row-form-name a');
-        a.text().should.equal('f');
-        a.attributes().title.should.equal('f');
-      });
+    it('shows the xmlFormId if the form does not have a name', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'my_form', name: null });
+      const app = await load('/projects/1/form-access');
+      const a = app.get('.project-form-access-row-form-name a');
+      a.text().should.equal('my_form');
+      await a.should.have.textTooltip();
     });
   });
 

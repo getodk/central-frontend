@@ -10,12 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <a v-if="disabledTitle == null" class="enketo-fill btn btn-primary"
+  <a v-if="disabledDescription == null" class="enketo-fill btn btn-primary"
     :href="href" target="_blank">
     <slot></slot>
   </a>
   <button v-else type="button" class="enketo-fill btn btn-primary" aria-disabled="true"
-    :title="disabledTitle">
+    v-tooltip.aria-describedby="disabledDescription">
     <slot></slot>
   </button>
 </template>
@@ -32,7 +32,7 @@ export default {
     }
   },
   computed: {
-    disabledTitle() {
+    disabledDescription() {
       if (this.formVersion.publishedAt != null &&
         this.formVersion.state !== 'open')
         return this.$t('disabled.notOpen');

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="dataset-row">
     <td class="name">
-      <router-link :title="dataset.name" :to="datasetOverviewPage">{{ dataset.name }}</router-link>
+      <router-link :to="datasetOverviewPage" v-tooltip.text>{{ dataset.name }}</router-link>
     </td>
     <td class="entities">
       <span>{{ $n(dataset.entities, 'default') }}</span>

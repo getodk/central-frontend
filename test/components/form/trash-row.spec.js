@@ -55,11 +55,11 @@ describe('FormTrashRow', () => {
   describe('last submission count and date', () => {
     beforeEach(mockLogin);
 
-    it('shows the submission count', () => {
+    it('shows the submission count', async () => {
       const formData = { name: 'a form', submissions: 12345 };
       const cell = mountComponent(formData).get('.total-submissions');
       cell.text().should.equal('12,345');
-      cell.find('span').attributes().title.should.equal('Total Submissions');
+      await cell.get('span').should.have.tooltip('Total Submissions');
     });
 
     it('shows the submission count when 0', () => {
@@ -68,7 +68,7 @@ describe('FormTrashRow', () => {
       text.should.equal('0');
     });
 
-    it('shows the time since last submission', () => {
+    it('shows the time since last submission', async () => {
       setLuxon({ defaultZoneName: 'UTC' });
       const lastSubmission = '2023-01-01T00:00:00Z';
       const formData = { name: 'a form', submissions: 1, lastSubmission };
@@ -76,16 +76,15 @@ describe('FormTrashRow', () => {
       span.text().should.match(/ago$/);
       const dateTime = span.getComponent(DateTime);
       dateTime.props().iso.should.equal(lastSubmission);
-      const { title } = span.attributes();
-      title.should.equal('Latest Submission\n2023/01/01 00:00:00');
-      should.not.exist(dateTime.attributes().title);
+      await span.should.have.tooltip('Latest Submission\n2023/01/01 00:00:00');
+      await dateTime.should.not.have.tooltip();
     });
 
-    it('does not render time if there is no last submission', () => {
+    it('does not render time if there is no last submission', async () => {
       const formData = { name: 'a form', submissions: 0 };
       const span = mountComponent(formData).get('.last-submission span');
       span.text().should.equal('(none)');
-      span.attributes().title.should.equal('Latest Submission');
+      await span.should.have.tooltip('Latest Submission');
     });
   });
 
@@ -98,12 +97,13 @@ describe('FormTrashRow', () => {
       button.attributes('aria-disabled').should.equal('false');
     });
 
-    it('disables the undelete button if active form with same id exists', () => {
+    it('disables the undelete button if active form with same id exists', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'foo' });
       const button = mountComponent({ xmlFormId: 'foo' }).get('.form-trash-row-restore-button');
       button.element.tagName.should.equal('BUTTON');
       button.attributes('aria-disabled').should.equal('true');
-      button.attributes().title.should.equal('This Form cannot be undeleted because an active Form with the same ID exists.');
+      button.should.have.ariaDescription('This Form cannot be undeleted because an active Form with the same ID exists.');
+      await button.should.tooltip();
     });
   });
 });

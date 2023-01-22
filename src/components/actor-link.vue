@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <link-if-can v-if="actor.type === 'user' && actor.deletedAt == null" :to="to" class="actor-link" :title="actor.displayName">{{ actor.displayName }}</link-if-can>
-  <span v-else class="actor-link" :title="actor.displayName">{{ actor.displayName }}</span>
+  <link-if-can v-if="actor.type === 'user' && actor.deletedAt == null" :to="to" class="actor-link" v-tooltip.text>{{ actor.displayName }}</link-if-can>
+  <span v-else class="actor-link" v-tooltip.text>{{ actor.displayName }}</span>
 </template>
 
 <script>

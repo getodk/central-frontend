@@ -14,14 +14,14 @@ const mountComponent = () => mount(PublicLinkRow, {
 describe('PublicLinkRow', () => {
   beforeEach(mockLogin);
 
-  it('shows the display name', () => {
+  it('shows the display name', async () => {
     testData.standardPublicLinks.createPast(1, {
       displayName: 'My Public Link'
     });
     const row = mountComponent();
     const span = row.get('.display-name span');
     span.text().should.equal('My Public Link');
-    span.attributes().title.should.equal('My Public Link');
+    await span.should.have.textTooltip();
   });
 
   describe('"Single Submission" column', () => {
@@ -51,7 +51,7 @@ describe('PublicLinkRow', () => {
         url.should.equal('http://localhost:9876/-/single/xyz?st=abc');
       });
 
-      it('indicates if the form does not have an enketoId', () => {
+      it('indicates if the form does not have an enketoId', async () => {
         testData.extendedForms.createPast(1, {
           enketoId: null,
           enketoOnceId: 'zyx'
@@ -62,7 +62,7 @@ describe('PublicLinkRow', () => {
         });
         const span = mountComponent().get('.access-link span');
         span.text().should.equal('Not available yet');
-        should.exist(span.attributes().title);
+        await span.should.have.tooltip('Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again.');
       });
     });
 
@@ -80,7 +80,7 @@ describe('PublicLinkRow', () => {
         url.should.equal('http://localhost:9876/-/single/zyx?st=abc');
       });
 
-      it('indicates if the form does not have an enketoOnceId', () => {
+      it('indicates if the form does not have an enketoOnceId', async () => {
         testData.extendedForms.createPast(1, {
           enketoId: 'xyz',
           enketoOnceId: null
@@ -91,7 +91,7 @@ describe('PublicLinkRow', () => {
         });
         const span = mountComponent().get('.access-link span');
         span.text().should.equal('Not available yet');
-        should.exist(span.attributes().title);
+        await span.should.have.tooltip('Public Access Link is not available yet. It has not finished being processed. Please refresh later and try again.');
       });
     });
 

@@ -22,7 +22,7 @@ describe('SubmissionDataAccess', () => {
       component.emitted().analyze.should.eql([[]]);
     });
 
-    it('disables the button for an encrypted form without submissions', () => {
+    it('disables the button for an encrypted form without submissions', async () => {
       // The button should be disabled even if just the form, not the project,
       // has encryption enabled.
       testData.extendedForms.createPast(1, {
@@ -31,10 +31,11 @@ describe('SubmissionDataAccess', () => {
       });
       const button = mountComponent().get('button');
       button.attributes('aria-disabled').should.equal('true');
-      should.exist(button.attributes().title);
+      button.should.have.ariaDescription();
+      await button.should.have.tooltip();
     });
 
-    it('disables the button if there is a key', () => {
+    it('disables the button if there is a key', async () => {
       testData.extendedProjects.createPast(1, {
         forms: 2,
         lastSubmission: new Date().toISOString()
@@ -45,7 +46,8 @@ describe('SubmissionDataAccess', () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const button = mountComponent().get('button');
       button.attributes('aria-disabled').should.equal('true');
-      should.exist(button.attributes().title);
+      button.should.have.ariaDescription();
+      await button.should.have.tooltip();
     });
   });
 });

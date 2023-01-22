@@ -13,11 +13,13 @@ except according to the terms contained in the LICENSE file.
   <div class="project-home-block">
     <div class="title">
       <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
-      <span v-if="project.keyId" class="encrypted badge"
-        :title="$t('encryptionTip')">
-        <span class="icon-lock"></span>
-        {{ $t('encrypted') }}
+      <template v-if="project.keyId">
+        <span class="encrypted badge" aria-hidden="true" v-tooltip.sr-only>
+          <span class="icon-lock"></span>
+          {{ $t('encrypted') }}
         </span>
+        <span class="sr-only">{{ $t('encryptionTip') }}</span>
+      </template>
     </div>
     <table v-if="visibleForms.length > 0" class="project-form-table table">
       <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :project="project"/>

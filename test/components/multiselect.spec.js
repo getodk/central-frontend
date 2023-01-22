@@ -57,26 +57,29 @@ describe('Multiselect', () => {
     });
   });
 
-  describe('option title', () => {
-    it('uses the title property if it exists', () => {
+  describe('option description', () => {
+    it('uses the description property if it exists', async () => {
       const component = mountComponent({
-        props: { options: [{ value: 'foo', text: 'bar', title: 'baz' }] }
+        props: {
+          options: [
+            { value: 1, text: 'Alice Allison', description: 'Has a role of admin.' }
+          ]
+        }
       });
-      component.get('.checkbox span').attributes().title.should.equal('baz');
+      const checkbox = component.get('.checkbox');
+      checkbox.get('input').should.have.ariaDescription('Has a role of admin.');
+      await checkbox.get('span').should.have.tooltip('Has a role of admin.');
     });
 
-    it('falls back to the text property', () => {
+    it('shows a tooltip for text if description does not exist', async () => {
       const component = mountComponent({
-        props: { options: [{ value: 'foo', text: 'bar' }] }
+        props: { options: [{ value: 1, text: 'Alice Allison' }] },
+        attachTo: document.body
       });
-      component.get('.checkbox span').attributes().title.should.equal('bar');
-    });
-
-    it('falls back again to the value property', () => {
-      const component = mountComponent({
-        props: { options: [{ value: 'foo' }] }
-      });
-      component.get('.checkbox span').attributes().title.should.equal('foo');
+      await toggle(component);
+      const checkbox = component.get('.checkbox');
+      checkbox.get('input').should.not.have.ariaDescription();
+      await checkbox.get('span').should.have.textTooltip();
     });
   });
 
@@ -241,8 +244,8 @@ describe('Multiselect', () => {
 
   describe('search', () => {
     const users = [
-      { value: 1, text: 'Alice', title: 'Has a role of admin.' },
-      { value: 2, text: 'Bob', title: 'Has a role of manager.' }
+      { value: 1, text: 'Alice', description: 'Has a role of admin.' },
+      { value: 2, text: 'Bob', description: 'Has a role of manager.' }
     ];
 
     it('shows a search input if the search prop is specified', () => {
@@ -275,7 +278,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.search input').setValue('c');
-      const matches = component.findAll('.search-match');
+      const matches = component.findAll('.search-match label');
       matches.map(match => match.text()).should.eql(['Alice']);
     });
 
@@ -291,14 +294,14 @@ describe('Multiselect', () => {
       li[1].should.be.hidden(true);
     });
 
-    it('shows options whose title matches', async () => {
+    it('shows options whose description matches', async () => {
       const component = mountComponent({
         props: { options: users, search: 'Search' },
         attachTo: document.body
       });
       await toggle(component);
       await component.get('.search input').setValue('admin');
-      const matches = component.findAll('.search-match');
+      const matches = component.findAll('.search-match label');
       matches.map(match => match.text()).should.eql(['Alice']);
     });
 
@@ -309,7 +312,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.search input').setValue('1');
-      const matches = component.findAll('.search-match');
+      const matches = component.findAll('.search-match label');
       matches.map(match => match.text()).should.eql(['1']);
     });
 
@@ -330,7 +333,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.search input').setValue('C');
-      const matches = component.findAll('.search-match');
+      const matches = component.findAll('.search-match label');
       matches.map(match => match.text()).should.eql(['Alice']);
     });
 

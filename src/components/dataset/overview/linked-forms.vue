@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         <tbody>
           <tr v-for="(form) in linkedForms" :key="form.xmlFormId">
             <td>
-              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" :title="form.name">{{ form.name }}</router-link>
+              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" v-tooltip.text>{{ form.name }}</router-link>
             </td>
           </tr>
         </tbody>

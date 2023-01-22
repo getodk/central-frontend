@@ -12,17 +12,15 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr>
     <td class="display-name">
-      <span :title="assignment.actor.displayName">
-        {{ assignment.actor.displayName }}
-      </span>
+      <span v-tooltip.text>{{ assignment.actor.displayName }}</span>
     </td>
     <td>
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRoleId"
-            :aria-disabled="disabled || awaitingResponse"
-            :title="disabled ? $t('cannotAssignRole') : null"
             :aria-label="$t('field.projectRole')"
+            :aria-disabled="disabled || awaitingResponse"
+            v-tooltip.aria-describedby="disabled ? $t('cannotAssignRole') : null"
             @change="change($event.target.value)">
             <option v-for="role of roles.projectRoles" :key="role.id"
               :value="role.id.toString()">

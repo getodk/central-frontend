@@ -164,10 +164,12 @@ describe('ProjectUserList', () => {
 
       tr[0].get('td').text().should.equal('User 1');
       selects[0].attributes('aria-disabled').should.equal('true');
-      selects[0].attributes().title.should.equal('You may not edit your own Project Role.');
+      selects[0].should.have.ariaDescription('You may not edit your own Project Role.');
+      await selects[0].should.have.tooltip();
 
       selects[1].attributes('aria-disabled').should.equal('false');
-      should.not.exist(selects[1].attributes().title);
+      selects[1].should.not.have.ariaDescription();
+      await selects[1].should.not.have.tooltip();
     });
 
     describe('no assignments', () => {

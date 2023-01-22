@@ -9,7 +9,7 @@ import { mockLogin } from '../../util/session';
 
 describe('UserList', () => {
   beforeEach(() => {
-    mockLogin({ email: 'a@email.com', displayName: 'Alice' });
+    mockLogin({ email: 'a@email.com', displayName: 'Alice Allison' });
   });
 
   it('sends the correct initial requests', () =>
@@ -23,16 +23,16 @@ describe('UserList', () => {
     const link = component.getComponent(UserRow).getComponent(RouterLinkStub);
     should.exist(link.element.closest('.display-name'));
     link.props().to.should.equal('/users/1/edit');
-    link.text().should.equal('Alice');
-    link.attributes().title.should.equal('Alice');
+    link.text().should.equal('Alice Allison');
+    await link.should.have.textTooltip();
   });
 
-  it('shows the email', () =>
-    load('/users', { root: false }).then(component => {
-      const td = component.get('.user-row .email');
-      td.text().should.equal('a@email.com');
-      td.attributes().title.should.equal('a@email.com');
-    }));
+  it('shows the email', async () => {
+    const component = await load('/users', { root: false });
+    const span = component.get('.user-row .email span');
+    span.text().should.equal('a@email.com');
+    await span.should.have.textTooltip();
+  });
 
   it('correctly renders the edit profile action', async () => {
     const component = await load('/users', { root: false });
@@ -62,8 +62,10 @@ describe('UserList', () => {
     selects[0].attributes('aria-disabled').should.equal('true');
     selects[1].attributes('aria-disabled').should.equal('false');
 
-    should.exist(selects[0].attributes().title);
-    should.not.exist(selects[1].attributes().title);
+    selects[0].should.have.ariaDescription('You may not edit your own Sitewide Role.');
+    await selects[0].should.have.tooltip();
+    selects[1].should.not.have.ariaDescription();
+    await selects[1].should.not.have.tooltip();
   });
 
   describe('changing a role', () => {

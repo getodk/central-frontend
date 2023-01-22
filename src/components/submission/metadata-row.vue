@@ -15,9 +15,8 @@ except according to the terms contained in the LICENSE file.
     binding. -->
 
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
-    <td v-if="!draft" class="submitter-name"
-      :title="submission.__system.submitterName">
-      {{ submission.__system.submitterName }}
+    <td v-if="!draft" class="submitter-name">
+      <span v-tooltip.text>{{ submission.__system.submitterName }}</span>
     </td>
     <td><date-time :iso="submission.__system.submissionDate"/></td>
     <td v-if="!draft" class="state-and-actions">
@@ -30,16 +29,17 @@ except according to the terms contained in the LICENSE file.
       <div class="btn-group">
         <template v-if="canUpdate">
           <button type="button" class="review-button btn btn-default"
-            :title="$t('action.review')">
+            :aria-label="$t('action.review')" v-tooltip.aria-label>
             <span class="icon-check"></span>
           </button>
-          <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
           <a v-if="submission.__system.status == null" class="btn btn-default"
-            :href="editPath" target="_blank" :title="editTitle">
+            :href="editPath" target="_blank" :aria-label="editLabel"
+            v-tooltip.aria-label>
             <span class="icon-pencil"></span>
           </a>
-          <button v-else type="button" class="btn btn-default" aria-disabled="true"
-            :title="$t('submission.editDisabled')">
+          <button v-else type="button" class="btn btn-default"
+            :aria-label="editLabel" aria-disabled="true"
+            v-tooltip.aria-describedby="$t('submission.editDisabled')">
             <span class="icon-pencil"></span>
           </button>
         </template>
@@ -110,7 +110,7 @@ export default {
         this.submission.__id
       );
     },
-    editTitle() {
+    editLabel() {
       return this.$t('submission.action.edit', {
         count: this.$n(this.submission.__system.edits, 'default')
       });

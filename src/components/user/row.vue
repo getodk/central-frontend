@@ -12,16 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="user-row" :class="{ success: user.id === highlighted }">
     <td class="display-name">
-      <router-link :to="userPath(user.id)" :title="user.displayName">{{ user.displayName }}</router-link>
+      <router-link :to="userPath(user.id)" v-tooltip.text>{{ user.displayName }}</router-link>
     </td>
-    <td class="email" :title="user.email">{{ user.email }}</td>
+    <td class="email"><span v-tooltip.text>{{ user.email }}</span></td>
     <td class="user-role">
       <form>
         <div class="form-group">
           <select class="form-control" :value="selectedRole"
-            :aria-disabled="disabled || awaitingResponse"
-            :title="disabled ? $t('cannotAssignRole') : null"
             :aria-label="$t('field.sitewideRole')"
+            :aria-disabled="disabled || awaitingResponse"
+            v-tooltip.aria-describedby="disabled ? $t('cannotAssignRole') : null"
             @change="assignRole($event.target.value)">
             <option value="admin">{{ $t('role.admin') }}</option>
             <option value="">{{ $t('role.none') }}</option>
@@ -52,8 +52,9 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.resetPassword') }}&hellip;
             </a>
           </li>
-          <li :class="{ disabled }" :title="disabled ? $t('cannotRetire') : null">
+          <li :class="{ disabled }">
             <a class="retire-user" href="#"
+              v-tooltip.aria-describedby="disabled ? $t('cannotRetire') : null"
               @click.prevent="$emit('retire', user)">
               {{ $t('action.retire') }}&hellip;
             </a>

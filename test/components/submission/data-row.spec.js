@@ -1,31 +1,49 @@
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
+import SubmissionTable from '../../../src/components/submission/table.vue';
 
 import useFields from '../../../src/request-data/fields';
+import useSubmissions from '../../../src/request-data/submissions';
 
 import createTestContainer from '../../util/container';
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
 import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (props = undefined) => {
+  const draft = props != null && props.draft === true;
   const container = createTestContainer({
-    requestData: testRequestData([useFields], {
-      fields: testData.extendedForms.last()._fields
-    })
+    requestData: testRequestData([useFields, useSubmissions], {
+      fields: testData.extendedForms.last()._fields,
+      odata: {
+        status: 200,
+        data: testData.submissionOData(),
+        config: {
+          url: !draft
+            ? '/v1/projects/1/forms/f.svc/Submissions'
+            : '/v1/projects/1/forms/f/draft.svc/Submissions'
+        }
+      }
+    }),
+    router: mockRouter(!draft
+      ? '/projects/1/forms/f/submissions'
+      : '/projects/1/forms/f/draft/testing')
   });
   const { fields } = container.requestData.localResources;
-  return mount(SubmissionDataRow, {
+  // Mounting SubmissionTable because it sets text-overflow for
+  // SubmissionDataRow.
+  const table = mount(SubmissionTable, {
     props: {
       projectId: '1',
       xmlFormId: 'f',
       draft: false,
-      submission: testData.submissionOData().value[0],
       fields: fields.data,
       ...props
     },
     container
   });
+  return table.getComponent(SubmissionDataRow);
 };
 
 describe('SubmissionDataRow', () => {
@@ -37,19 +55,19 @@ describe('SubmissionDataRow', () => {
     testData.extendedSubmissions.createPast(1, { s: null });
     const td = mountComponent().get('td');
     td.text().should.equal('');
-    should.not.exist(td.attributes().title);
   });
 
-  it('correctly formats a string value', () => {
+  it('correctly formats a string value', async () => {
     testData.extendedForms.createPast(1, {
       fields: [testData.fields.string('/s')],
       submissions: 1
     });
-    testData.extendedSubmissions.createPast(1, { s: 'foo' });
+    testData.extendedSubmissions.createPast(1, { s: 'foobar' });
     const td = mountComponent().get('td');
-    td.text().should.equal('foo');
-    td.attributes().title.should.equal('foo');
     td.classes().length.should.equal(0);
+    const span = td.get('span');
+    span.text().should.equal('foobar');
+    await span.should.have.textTooltip();
   });
 
   describe('int values', () => {
@@ -70,7 +88,8 @@ describe('SubmissionDataRow', () => {
       testData.extendedSubmissions.createPast(1, { i: 1000 });
       const td = mountComponent().get('td');
       td.text().should.equal('1,000');
-      td.attributes().title.should.equal('1,000');
+      // No tooltip
+      td.find('span').exists().should.be.false();
     });
   });
 
@@ -116,7 +135,8 @@ describe('SubmissionDataRow', () => {
         testData.extendedSubmissions.createPast(1, { d: rawValue });
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.attributes().title.should.equal(formattedValue);
+        // No tooltip
+        td.find('span').exists().should.be.false();
       });
     }
   });
@@ -143,7 +163,8 @@ describe('SubmissionDataRow', () => {
         testData.extendedSubmissions.createPast(1, { d: rawValue });
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.attributes().title.should.equal(formattedValue);
+        // No tooltip
+        td.find('span').exists().should.be.false();
       });
     }
   });
@@ -185,7 +206,8 @@ describe('SubmissionDataRow', () => {
 
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.attributes().title.should.equal(formattedValue);
+        // No tooltip
+        td.find('span').exists().should.be.false();
       });
     }
   });
@@ -227,22 +249,34 @@ describe('SubmissionDataRow', () => {
 
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
-        td.attributes().title.should.equal(formattedValue);
+        // No tooltip
+        td.find('span').exists().should.be.false();
       });
     }
   });
 
-  it('adds the geopoint-field class for a geopoint value', () => {
-    testData.extendedForms.createPast(1, {
-      fields: [testData.fields.geopoint('/g')],
-      submissions: 1
+  describe('geopoint values', () => {
+    it('adds the geopoint-field class', () => {
+      testData.extendedForms.createPast(1, {
+        fields: [testData.fields.geopoint('/g')],
+        submissions: 1
+      });
+      testData.extendedSubmissions.createPast(1);
+      mountComponent().get('td').classes('geopoint-field').should.be.true();
     });
-    testData.extendedSubmissions.createPast(1);
-    mountComponent().get('td').classes('geopoint-field').should.be.true();
+
+    it('does not render a <span> element for a tooltip', () => {
+      testData.extendedForms.createPast(1, {
+        fields: [testData.fields.geopoint('/g')],
+        submissions: 1
+      });
+      testData.extendedSubmissions.createPast(1);
+      mountComponent().get('td').find('span').exists().should.be.false();
+    });
   });
 
   describe('binary field', () => {
-    it("correctly renders a field of type 'binary'", () => {
+    it("correctly renders a field of type 'binary'", async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.binary('/b')],
         submissions: 1
@@ -253,10 +287,10 @@ describe('SubmissionDataRow', () => {
       });
       const td = mountComponent().get('td');
       td.classes('binary-field').should.be.true();
-      should.not.exist(td.attributes().title);
       const a = td.get('a');
       const { href } = a.attributes();
       href.should.equal('/v1/projects/1/forms/f/submissions/a%20b/attachments/c%20d.jpg');
+      await a.should.have.tooltip('File was submitted. Click to download.');
       a.find('.icon-check').exists().should.be.true();
       a.find('.icon-download').exists().should.be.true();
     });
@@ -299,7 +333,6 @@ describe('SubmissionDataRow', () => {
     const td = mountComponent().findAll('td');
     td.length.should.equal(2);
     td[1].text().should.equal('foo');
-    td[1].attributes().title.should.equal('foo');
   });
 
   it('renders a cell for each field', () => {

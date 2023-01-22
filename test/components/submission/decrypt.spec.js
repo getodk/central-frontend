@@ -62,37 +62,43 @@ describe('SubmissionDownload', () => {
   });
 
   describe('splitSelectMultiples checkbox', () => {
-    it('enables the checkbox if the form has a select_multiple field', () => {
+    it('enables the checkbox if the form has a select_multiple field', async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.selectMultiple('/sm')]
       });
       const checkbox = mountComponent().get('.checkbox');
       checkbox.classes('disabled').should.be.false();
-      checkbox.get('input').element.disabled.should.be.false();
-      should.not.exist(checkbox.get('label').attributes().title);
+      const input = checkbox.get('input');
+      input.element.disabled.should.be.false();
+      input.should.not.have.ariaDescription();
+      await checkbox.get('label').should.not.have.tooltip();
     });
 
-    it('disables checkbox if form does not have a select_multiple field', () => {
+    it('disables checkbox if form does not have a select_multiple field', async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.int('/i')]
       });
       const checkbox = mountComponent().get('.checkbox');
       checkbox.classes('disabled').should.be.true();
-      checkbox.get('input').element.disabled.should.be.true();
-      const { title } = checkbox.get('label').attributes();
-      title.should.equal('This Form does not have any select multiple fields.');
+      const input = checkbox.get('input');
+      input.element.disabled.should.be.true();
+      input.should.have.ariaDescription('This Form does not have any select multiple fields.');
+      const label = checkbox.get('label');
+      await label.should.have.tooltip('This Form does not have any select multiple fields.');
     });
 
-    it('disables the checkbox if the form is encrypted', () => {
+    it('disables the checkbox if the form is encrypted', async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.selectMultiple('/sm')],
         key: testData.standardKeys.createPast(1, { managed: false }).last()
       });
       const checkbox = mountComponent().get('.checkbox');
       checkbox.classes('disabled').should.be.true();
-      checkbox.get('input').element.disabled.should.be.true();
-      const { title } = checkbox.get('label').attributes();
-      title.should.equal('Encrypted Forms cannot be processed in this way.');
+      const input = checkbox.get('input');
+      input.element.disabled.should.be.true();
+      input.should.have.ariaDescription('Encrypted Forms cannot be processed in this way.');
+      const label = checkbox.get('label');
+      await label.should.have.tooltip('Encrypted Forms cannot be processed in this way.');
     });
 
     it('includes splitSelectMultiples in each download link', async () => {
@@ -132,7 +138,7 @@ describe('SubmissionDownload', () => {
         url.searchParams.get('deletedFields').should.equal('true');
     });
 
-    it('disables the checkbox for a form draft', () => {
+    it('disables the checkbox for a form draft', async () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       const modal = mountComponent({
@@ -140,9 +146,14 @@ describe('SubmissionDownload', () => {
       });
       const checkbox = modal.findAll('.checkbox')[2];
       checkbox.classes('disabled').should.be.true();
-      checkbox.get('input').element.disabled.should.be.true();
-      const { title } = checkbox.get('label').attributes();
-      title.should.equal('Draft Forms cannot be processed in this way.');
+      const input = checkbox.get('input');
+      input.element.disabled.should.be.true();
+      input.should.have.ariaDescriptions([
+        'Use this option if you need to see fields referenced in previous Form versions.',
+        'Draft Forms cannot be processed in this way.'
+      ]);
+      const label = checkbox.get('label');
+      await label.should.have.tooltip('Draft Forms cannot be processed in this way.');
     });
   });
 
@@ -251,32 +262,30 @@ describe('SubmissionDownload', () => {
   });
 
   describe('download link for all data tables', () => {
-    it('enables the link if the form has a repeat group', () => {
+    it('enables the link if the form has a repeat group', async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.repeat('/r'), testData.fields.int('/r/i')]
       });
       const modal = mountComponent();
       const action = modal.findAll('.submission-download-action')[1];
       action.classes('disabled').should.be.false();
-      const label = action.get('.submission-download-action-label');
-      should.not.exist(label.attributes().title);
       const a = action.get('a');
       a.classes('disabled').should.be.false();
-      should.not.exist(a.attributes().title);
+      a.should.not.have.ariaDescription();
+      await a.should.not.have.tooltip();
     });
 
-    it('disables the link if the form does not have a repeat group', () => {
+    it('disables the link if the form does not have a repeat group', async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.int('/i')]
       });
       const modal = mountComponent();
       const action = modal.findAll('.submission-download-action')[1];
       action.classes('disabled').should.be.true();
-      const label = action.get('.submission-download-action-label');
-      label.attributes().title.should.equal('This Form does not have repeats.');
       const a = action.get('a');
       a.classes('disabled').should.be.true();
-      a.attributes().title.should.equal('This Form does not have repeats.');
+      a.should.have.ariaDescription('This Form does not have repeats.');
+      await a.should.have.tooltip();
     });
   });
 

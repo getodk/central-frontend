@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
     <div class="row" role="button" @click.prevent="toggleExpanded">
       <div class="col-xs-6 dataset-name-wrap">
-        <div class="dataset-name text-overflow-ellipsis" :title="dataset.name">{{ dataset.name }}</div>
+        <div class="dataset-name text-overflow-ellipsis" v-tooltip.text>{{ dataset.name }}</div>
         <div v-if="dataset.isNew" class="dataset-new">
           <span class="icon-plus-circle"></span>
           {{ $t('new') }}
@@ -32,7 +32,8 @@ except according to the terms contained in the LICENSE file.
     <div v-show="expanded" class="property-list">
       <span v-for="(property, index) in inFormProperties" :key="property.name">
         <span>{{ property.name }}</span>
-        <span v-if="property.isNew" class="icon-plus-circle property-new" :title="$t('addedByThisDraft')"></span>
+        <span v-if="property.isNew" class="icon-plus-circle property-new" v-tooltip.sr-only></span>
+        <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
         <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma') }}<sentence-separator/></template>
       </span>
     </div>

@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span :class="htmlClass" :title="versionOrBlank">{{ versionOrBlank }}</span>
+  <span v-if="version !== ''" class="form-version-string" v-tooltip.text>{{ version }}</span>
+  <span v-else class="form-version-string blank-version">{{ $t('blank') }}</span>
 </template>
 
 <script>
@@ -20,16 +21,6 @@ export default {
     version: {
       type: String,
       required: true
-    }
-  },
-  computed: {
-    htmlClass() {
-      return this.version !== ''
-        ? 'form-version-string'
-        : 'form-version-string blank-version';
-    },
-    versionOrBlank() {
-      return this.version !== '' ? this.version : this.$t('blank');
     }
   }
 };

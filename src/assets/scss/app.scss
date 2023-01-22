@@ -74,6 +74,23 @@ em:lang(ja) {
   font-weight: bold;
 }
 
+.tooltip {
+  /* v-tooltip.aria-describedby tooltips are rendered before they are shown
+  on-screen. `display` is not set to `none` for those tooltips. Instead, they
+  are transparent. However, we do need to position them: otherwise, they would
+  result in extra space at the bottom of the page. I tried using the sr-only
+  class, but that resulted in Floating UI miscalculating the position of the
+  tooltip. Instead, tooltips will be positioned at the top of the page. */
+  top: 0;
+  // Move the tooltip to the left so that it doesn't obstruct the navbar.
+  left: -1000px;
+}
+.tooltip-inner {
+  overflow-wrap: break-word;
+  // Allow the text to have line breaks.
+  white-space: pre-line;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -198,8 +215,8 @@ a, .btn-link {
 
 a {
   &.disabled, fieldset[disabled] & {
-    // Not specifying pointer-events so that the cursor and any title attribute
-    // is shown.
+    // Not specifying pointer-events so that the cursor and any tooltip is
+    // shown.
 
     &.btn { color: #fff; }
   }

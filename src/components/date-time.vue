@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <time v-if="iso != null" :datetime="iso" :title="title">{{ format(true) }}</time>
+  <time v-if="iso != null" :datetime="iso" v-tooltip.no-aria="tooltipText">{{ format(true) }}</time>
   <span v-else>{{ blank }}</span>
 </template>
 
@@ -40,7 +40,7 @@ export default {
     dateTime() {
       return DateTime.fromISO(this.iso, { locale: this.$i18n.locale });
     },
-    title() {
+    tooltipText() {
       return this.tooltip ? this.format(false) : null;
     }
   },

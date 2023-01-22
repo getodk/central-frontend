@@ -50,7 +50,7 @@ const options = computed(() => fields.selectable.map(field => ({
   value: field,
   key: field.path,
   text: field.name,
-  title: field.header
+  description: field.header
 })));
 const { t } = useI18n();
 const placeholder = (counts) => t('placeholder', counts);

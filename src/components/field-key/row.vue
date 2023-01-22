@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="field-key-row" :class="{ success: fieldKey.id === highlighted }">
     <td class="display-name">
-      <span :title="fieldKey.displayName">{{ fieldKey.displayName }}</span>
+      <span v-tooltip.text>{{ fieldKey.displayName }}</span>
     </td>
     <td>
       <time-and-user :iso="fieldKey.createdAt" :user="fieldKey.createdBy"/>

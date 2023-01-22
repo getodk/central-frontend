@@ -40,22 +40,20 @@ describe('FormHead', () => {
       });
     });
 
-    it("shows the form's name", () => {
+    it("shows the form's name", async () => {
       testData.extendedForms.createPast(1, { name: 'My Form' });
-      return load('/projects/1/forms/f').then(app => {
-        const h1 = app.get('#form-head-form-nav .h1');
-        h1.text().should.equal('My Form');
-        h1.attributes().title.should.equal('My Form');
-      });
+      const app = await load('/projects/1/forms/f');
+      const h1 = app.get('#form-head-form-nav .h1');
+      h1.text().should.equal('My Form');
+      await h1.should.have.textTooltip();
     });
 
-    it("shows the form's xmlFormId if the form does not have a name", () => {
-      testData.extendedForms.createPast(1, { name: null });
-      return load('/projects/1/forms/f').then(app => {
-        const h1 = app.get('#form-head-form-nav .h1');
-        h1.text().should.equal('f');
-        h1.attributes().title.should.equal('f');
-      });
+    it("shows the form's xmlFormId if the form does not have a name", async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'my_form', name: null });
+      const app = await load('/projects/1/forms/my_form');
+      const h1 = app.get('#form-head-form-nav .h1');
+      h1.text().should.equal('my_form');
+      await h1.should.have.textTooltip();
     });
   });
 
@@ -91,31 +89,33 @@ describe('FormHead', () => {
       });
     });
 
-    it('disables tabs for a form without a published version', () => {
+    it('disables tabs for a form without a published version', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft').then(app => {
-        const tabs = app.findAll('#form-head-form-tabs li');
-        tabs.length.should.equal(5);
-        for (const tab of tabs) {
-          tab.classes('disabled').should.be.true();
-          tab.attributes().title.should.equal('These functions will become available once you publish your Draft Form');
-        }
-      });
+      const app = await load('/projects/1/forms/f/draft');
+      const tabs = app.findAll('#form-head-form-tabs li');
+      tabs.length.should.equal(5);
+      for (const tab of tabs) {
+        tab.classes('disabled').should.be.true();
+        const a = tab.get('a');
+        a.should.have.ariaDescription('These functions will become available once you publish your Draft Form');
+        await a.should.have.tooltip();
+      }
     });
 
-    it('does not disable tabs for a form with a published version', () => {
+    it('does not disable tabs for a form with a published version', async () => {
       mockLogin();
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft').then(app => {
-        const tabs = app.findAll('#form-head-form-tabs li');
-        tabs.length.should.equal(5);
-        for (const tab of tabs) {
-          tab.classes('disabled').should.be.false();
-          should.not.exist(tab.attributes().title);
-        }
-      });
+      const app = await load('/projects/1/forms/f/draft');
+      const tabs = app.findAll('#form-head-form-tabs li');
+      tabs.length.should.equal(5);
+      for (const tab of tabs) {
+        tab.classes('disabled').should.be.false();
+        const a = tab.get('a');
+        a.should.not.have.ariaDescription();
+        await a.should.not.have.tooltip();
+      }
     });
   });
 

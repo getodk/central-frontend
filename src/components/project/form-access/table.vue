@@ -36,9 +36,8 @@ except according to the terms contained in the LICENSE file.
         <thead>
           <tr>
             <th><div>{{ $t('resource.appUsers') }}</div></th>
-            <th v-for="fieldKey of fieldKeys.withToken" :key="fieldKey.id"
-              :title="fieldKey.displayName">
-              <div>{{ fieldKey.displayName }}</div>
+            <th v-for="fieldKey of fieldKeys.withToken" :key="fieldKey.id">
+              <div><span v-tooltip.text>{{ fieldKey.displayName }}</span></div>
             </th>
             <th></th>
           </tr>

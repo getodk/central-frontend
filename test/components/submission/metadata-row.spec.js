@@ -43,14 +43,14 @@ describe('SubmissionMetadataRow', () => {
   });
 
   describe('submitter name', () => {
-    it('shows the submitter name for a form', () => {
-      mockLogin({ displayName: 'Alice' });
+    it('shows the submitter name for a form', async () => {
+      mockLogin({ displayName: 'Alice Allison' });
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent({ draft: false });
       const td = row.findAll('td')[1];
       td.classes('submitter-name').should.be.true();
-      td.text().should.equal('Alice');
-      td.attributes().title.should.equal('Alice');
+      td.text().should.equal('Alice Allison');
+      await td.get('span').should.have.textTooltip();
     });
 
     it('does not show the submitter name for a form draft', () => {
@@ -206,7 +206,7 @@ describe('SubmissionMetadataRow', () => {
   });
 
   describe('edit button', () => {
-    it('sets the correct href attribute', () => {
+    it('sets the correct href attribute', async () => {
       testData.extendedForms.createPast(1, {
         xmlFormId: 'a b',
         submissions: 1
@@ -216,18 +216,19 @@ describe('SubmissionMetadataRow', () => {
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
 
-    it('sets the correct title attribute', () => {
+    it('sets the correct ARIA label', async () => {
       testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      const { title } = mountComponent().findAll('.btn')[1].attributes();
-      title.should.equal('Edit (1,000)');
+      const btn = mountComponent().findAll('.btn')[1];
+      btn.attributes('aria-label').should.equal('Edit (1,000)');
+      await btn.should.have.tooltip('Edit (1,000)');
     });
 
-    it('disables the button if the submission is encrypted', () => {
+    it('disables the button if the submission is encrypted', async () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const button = mountComponent().findAll('.btn')[1];
       button.attributes('aria-disabled').should.equal('true');
-      const { title } = button.attributes();
-      title.should.equal('You cannot edit encrypted Submissions.');
+      button.should.have.ariaDescription('You cannot edit encrypted Submissions.');
+      await button.should.have.tooltip('You cannot edit encrypted Submissions.');
     });
   });
 
