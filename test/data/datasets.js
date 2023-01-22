@@ -14,13 +14,17 @@ export const extendedDatasets = dataStore({
       : extendedProjects.createPast(1, { datasets: 1 }).last(),
     name = faker.internet.userName(),
     entities = 0,
-    lastEntity = null
+    lastEntity = null,
+    properties = [],
+    linkedForms = []
   }) => ({
     id,
     projectId: project.id,
     name,
     entities,
-    lastEntity
+    lastEntity,
+    properties,
+    linkedForms
   }),
   sort: comparator((dataset1, dataset2) => dataset1.name < dataset2.name)
 });
