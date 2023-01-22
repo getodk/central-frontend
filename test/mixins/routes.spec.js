@@ -64,4 +64,16 @@ describe('mixins/routes', () => {
       mixin.methods.userPath(1).should.equal('/users/1/edit');
     });
   });
+
+  describe('publishedFormPath', () => {
+    it('returns form overview URL when user can route', () => {
+      mixin.methods.canRoute = () => true;
+      mixin.methods.publishedFormPath(1, 'f').should.equal('/projects/1/forms/f');
+    });
+
+    it('returns submissions page URL when user can not route', () => {
+      mixin.methods.canRoute = () => false;
+      mixin.methods.publishedFormPath(1, 'f').should.equal('/projects/1/forms/f/submissions');
+    });
+  });
 });

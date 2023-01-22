@@ -17,6 +17,7 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <p>{{ $tc('datasetUpdates', datasetDiff.length) }}</p>
       <template v-for="(dataset, index) in datasetDiff" :key="dataset.name">
+        <!-- TODO replace it with expandable-row -->
         <dataset-summary-row :dataset="dataset"/>
         <hr v-if="index < datasetDiff.length - 1">
       </template>

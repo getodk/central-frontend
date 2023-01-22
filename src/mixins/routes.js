@@ -76,16 +76,19 @@ const mixin = {
     datasetPath(projectId, datasetName) {
       return `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`;
     },
+    publishedFormPath(projectId, xmlFormId) {
+      const path = this.formPath(projectId, xmlFormId);
+      // A project viewer can't navigate to the form overview, but anyone who
+      // can navigate to the form should be able to navigate to
+      // .../submissions.
+      return this.canRoute(path) ? path : `${path}/submissions`;
+    },
     // Returns the path to the primary page for a form. This changes based on
     // the current user's role, as well as whether the form has a published
     // version.
     primaryFormPath(form) {
       if (form.publishedAt != null) {
-        const path = this.formPath(form.projectId, form.xmlFormId);
-        // A project viewer can't navigate to the form overview, but anyone who
-        // can navigate to the form should be able to navigate to
-        // .../submissions.
-        return this.canRoute(path) ? path : `${path}/submissions`;
+        return this.publishedFormPath(form.projectId, form.xmlFormId);
       } else { // eslint-disable-line no-else-return
         const path = this.formPath(form.projectId, form.xmlFormId, 'draft');
         return this.canRoute(path) ? path : `${path}/testing`;

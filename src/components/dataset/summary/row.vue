@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
       <div class="col-xs-6 properties-count">
-        {{ $tcn('properties', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
+        {{ $tcn('common.propertiesCount', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
         <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
         <a href="javascript:void(0)" class="expand-button">
           <span v-if="!expanded" class="icon-caret-left"></span>
@@ -136,9 +136,6 @@ export default {
   "en": {
     // This is shown when a dataset is new
     "new": "new!",
-    // {inform} is the number of dataset properties defined by the form.
-    // {count} is the total number of properties. The string will be pluralized based on {count}.
-    "properties": "{inform} of {count} property | {inform} of {count} properties",
     // This is shown when mouse hovers over plus icon of new Dataset Property
     "addedByThisDraft": "Added by this Draft"
   }

@@ -405,6 +405,14 @@
     "hidePreview": {
       "string": "Hide preview",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "expand": {
+      "string": "Expand",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "collapse": {
+      "string": "Collapse",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -468,6 +476,10 @@
     },
     "createdBy": {
       "string": "Created by",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "updatedBy": {
+      "string": "Updated by",
       "developer_comment": "This is the text of a table column header."
     },
     "displayName": {
@@ -792,6 +804,10 @@
     "datasetsPreview": {
       "string": "Datasets Preview",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "propertiesCount": {
+      "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
+      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
   "mixin": {
@@ -1247,12 +1263,45 @@
         "string": "Datasets workflow"
       }
     },
+    "DatasetOverview": {
+      "connectionsToForms": {
+        "string": "Connections to Forms",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "datasetProperties": {
+        "string": "Dataset Properties",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "DatasetOverviewConnectionToForms": {
+      "formsCreateEntities": {
+        "string": "{count, plural, one {Form creates Entities in this Dataset} other {Forms create Entities in this Dataset}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewDatasetProperties": {
+      "emptyTable": {
+        "string": "There are no Properties in this Dataset."
+      }
+    },
+    "DatasetOverviewLinkedForms": {
+      "formsConsumeData": {
+        "string": "{count, plural, one {Form consumes data from this Dataset} other {Forms consume data from this Dataset}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "Download data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetShow": {
+      "back": {
+        "string": "Back to Project Datasets",
+        "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
@@ -1265,10 +1314,6 @@
       "new": {
         "string": "new!",
         "developer_comment": "This is shown when a dataset is new"
-      },
-      "properties": {
-        "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
-        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
       },
       "addedByThisDraft": {
         "string": "Added by this Draft",

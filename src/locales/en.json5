@@ -198,7 +198,9 @@
     // This text is shown on a button that the user clicks to show a preview of something
     "showPreview": "Preview",
     // This text is shown on a button that the user clicks to hide a preview of something
-    "hidePreview": "Hide preview"
+    "hidePreview": "Hide preview",
+    "expand": "Expand",
+    "collapse": "Collapse"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -220,6 +222,7 @@
     // the resource and possibly also when they did so.
     "created": "Created",
     "createdBy": "Created by",
+    "updatedBy": "Updated by",
     "displayName": "Display Name",
     "email": "Email Address",
     "instanceId": "Instance ID",
@@ -361,7 +364,10 @@
       "comma": ","
     },
     // This is a title shown above a section of the page.
-    "datasetsPreview": "Datasets Preview"
+    "datasetsPreview": "Datasets Preview",
+    // {inform} is the number of dataset properties defined by the form.
+    // {count} is the total number of properties. The string will be pluralized based on {count}.
+    "propertiesCount": "{inform} of {count} property | {inform} of {count} properties"
   },
   "mixin": {
     "request": {

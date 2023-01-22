@@ -62,6 +62,9 @@ export default ({ i18n }, createResource) => {
   createResource('form', () => ({
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
+
+  createResource('dataset');
+
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));
   // Form draft attachments
