@@ -15,7 +15,14 @@ Use the v-tooltip directive to add a tooltip to an element. The tooltip will be
 shown when the user hovers over the element or focuses it.
 
 There are a few ways to specify the text of a tooltip. In many cases, the text
-will be copied from some place where it already exists in the DOM.
+will be copied from some place where it already exists in the DOM. You can
+choose one of the following:
+
+v-tooltip.text
+v-tooltip.aria-describedby="someValue"
+v-tooltip.aria-label
+v-tooltip.sr-only
+v-tooltip.no-aria="someValue"
 
 If the text of an element may overflow and be truncated, specify v-tooltip.text.
 This will show a tooltip with the text of the element, but only if the text is
@@ -37,9 +44,9 @@ aria-label attribute, not directly to v-tooltip. For example:
   <button :aria-label="someValue" v-tooltip.aria-label ...>
 
 This is different from v-tooltip.aria-describedby, to which the text is passed
-directly. We do it that with way with v-tooltip.aria-describedby because the
+directly. We do it that way with v-tooltip.aria-describedby because the
 aria-describedby attribute is not independently available in the DOM: the
-attribute can only link to the tooltip once the tooltip is rendered.
+attribute can only link to the tooltip once the tooltip has been rendered.
 
 Some icons and other static elements are associated with additional text.
 Because aria-describedby and aria-label don't work as well with static elements,
@@ -173,6 +180,7 @@ class Tooltip {
         // safeguard.
         if (closestBlock == null || closestBlock === document.body) return null;
       }
+      // Check whether the text is truncated.
       return closestBlock.scrollWidth > closestBlock.clientWidth
         ? this.anchor.innerText
         : null;
