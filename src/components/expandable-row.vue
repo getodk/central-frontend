@@ -21,8 +21,8 @@ except according to the terms contained in the LICENSE file.
 
     <div class="button-cell">
       <a href="javascript:void(0)" role="button" @click.prevent="toggleExpanded">
-        <span v-if="!expanded" class="sr-only">{{ $t('common.expand') }}</span>
-        <span v-else class="sr-only">{{ $t('common.collapse') }}</span>
+        <span v-if="!expanded" class="sr-only">{{ $t('action.expand') }}</span>
+        <span v-else class="sr-only">{{ $t('action.collapse') }}</span>
         <span v-if="!expanded" class="icon-caret-left"></span>
         <span v-else class="icon-caret-down"></span>
       </a>
@@ -69,6 +69,7 @@ export default {
 
   .caption-cell {
     text-align: right;
+    flex-grow: 1;
   }
 
   .button-cell {

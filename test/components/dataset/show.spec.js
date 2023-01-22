@@ -1,6 +1,7 @@
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
+import PageBack from '../../../src/components/page/back.vue';
 import DatasetOverview from '../../../src/components/dataset/overview.vue';
 import testData from '../../data';
 
@@ -39,5 +40,27 @@ describe('DatasetShow', () => {
       .afterResponses(app => {
         should(app.getComponent(DatasetOverview).vm).not.equal(vm);
       });
+  });
+
+  it('renders a back link', async () => {
+    const component = await load('/projects/1/datasets/trees');
+    const { to } = component.getComponent(PageBack).props();
+    to.should.equal('/projects/1/datasets');
+  });
+
+  it('show correct project name', async () => {
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
+    testData.extendedDatasets.createPast(1, { name: 'trees', properties: [], linkedForms: [] });
+    return load('/projects/1/datasets/trees').then(app => {
+      app.get('#page-back-title').text().should.equal('My Project');
+    });
+  });
+
+  it('appends (archived) to the project name', async () => {
+    testData.extendedProjects.createPast(1, { name: 'My Project', archived: true });
+    testData.extendedDatasets.createPast(1, { name: 'trees', properties: [], linkedForms: [] });
+    return load('/projects/1/datasets/trees').then(app => {
+      app.get('#page-back-title').text().should.equal('My Project (archived)');
+    });
   });
 });

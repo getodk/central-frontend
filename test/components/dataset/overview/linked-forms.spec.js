@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+import { RouterLinkStub } from '@vue/test-utils';
 import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 
@@ -19,7 +20,7 @@ import testData from '../../../data';
 const mountComponent = () => mount(LinkedForms, {
   props: {
     linkedForms: testData.extendedDatasets.last().linkedForms,
-    projectId: testData.extendedProjects.first().id
+    projectId: testData.extendedProjects.first().id.toString()
   },
   container: {
     router: mockRouter('/')
@@ -40,7 +41,9 @@ describe('Linked Form Table', () => {
     const rows = component.findAll('tr');
 
     rows[0].text().should.be.eql('Diagnosis');
+    rows[0].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/monthly_diagnosis');
     rows[1].text().should.be.eql('National Parks Survey');
+    rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/national_parks_survey');
   });
 
   it('does not break if there is no form', () => {

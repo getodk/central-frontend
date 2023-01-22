@@ -20,7 +20,9 @@ except according to the terms contained in the LICENSE file.
       <div class="div">
         <expandable-row v-for="(form) in propertiesByForm" :key="form.xmlFormId">
           <template #title>
-            <router-link :to="publishedFormPath(projectId, form.xmlFormId)" :title="form.name">{{ form.name }}</router-link>
+            <div class="form-name">
+              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" :title="form.name">{{ form.name }}</router-link>
+            </div>
           </template>
           <template #caption>
             {{ $tcn('common.propertiesCount', totalProperties, { inform: $n(form.properties.length, 'default') }) }}
@@ -91,6 +93,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+
 #connection-to-forms{
   .expandable-row {
     border-bottom: 1px solid #ddd;
@@ -98,6 +102,14 @@ export default {
 
   .expandable-row:last-child {
     border-bottom: none;
+  }
+
+  .title-cell{
+    max-width: calc(100% - 180px);
+
+    .form-name {
+      @include text-overflow-ellipsis;
+    }
   }
 
   a {

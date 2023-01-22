@@ -54,11 +54,21 @@ export default {
     LinkedForms,
     DatasetProperties
   },
-  setup(props) {
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    datasetName: {
+      type: String,
+      required: true
+    }
+  },
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { dataset } = useRequestData();
-    return { dataset, projectId: props.projectId };
+    return { dataset };
   }
 };
 </script>

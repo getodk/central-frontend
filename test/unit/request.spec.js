@@ -283,6 +283,10 @@ describe('util/request', () => {
       apiPaths.datasets(1).should.equal('/v1/projects/1/datasets');
     });
 
+    it('dataset', () => {
+      apiPaths.dataset(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b');
+    });
+
     it('entities', () => {
       const path = apiPaths.entities(1, 'á');
       path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');

@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
 import ExpandableRow from '../../src/components/expandable-row.vue';
 import { mount } from '../util/lifecycle';
 
-describe('Dataset summary row', () => {
+describe('ExpandableRow', () => {
   let component;
 
   beforeEach(() => {
@@ -45,14 +45,13 @@ describe('Dataset summary row', () => {
   });
 
   it('collapses details', async () => {
-    const c = mount(ExpandableRow, {
-      data() {
-        return {
-          expanded: true
-        };
-      }
-    });
-    await c.get('.button-cell a').trigger('click');
-    c.get('.expanded-row').should.be.hidden();
+    // expand
+    await component.get('.button-cell a').trigger('click');
+    component.get('.expanded-row').should.be.visible();
+    component.get('.expanded-row').text().should.be.eql('height, type');
+
+    // collapse
+    await component.get('.button-cell a').trigger('click');
+    component.get('.expanded-row').should.be.hidden();
   });
 });

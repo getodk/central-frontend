@@ -198,7 +198,9 @@
     // This text is shown on a button that the user clicks to show a preview of something
     "showPreview": "Preview",
     // This text is shown on a button that the user clicks to hide a preview of something
-    "hidePreview": "Hide preview"
+    "hidePreview": "Hide preview",
+    "expand": "Expand",
+    "collapse": "Collapse"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -365,9 +367,7 @@
     "datasetsPreview": "Datasets Preview",
     // {inform} is the number of dataset properties defined by the form.
     // {count} is the total number of properties. The string will be pluralized based on {count}.
-    "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
-    "expand": "Expand",
-    "collapse": "Collapse"
+    "propertiesCount": "{inform} of {count} property | {inform} of {count} properties"
   },
   "mixin": {
     "request": {

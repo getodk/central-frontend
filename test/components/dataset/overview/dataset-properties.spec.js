@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+import { RouterLinkStub } from '@vue/test-utils';
 import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 
@@ -19,7 +20,7 @@ import testData from '../../../data';
 const mountComponent = () => mount(DatasetProperties, {
   props: {
     properties: testData.extendedDatasets.last().properties,
-    projectId: testData.extendedProjects.first().id
+    projectId: testData.extendedProjects.first().id.toString()
   },
   container: {
     router: mockRouter('/')
@@ -60,14 +61,19 @@ describe('Dataset Properties', () => {
 
     rows[0].findAll('td')[0].text().should.be.eql('height');
     rows[0].findAll('td')[1].text().should.be.eql('Tree Registration');
+    rows[0].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration');
     rows[1].findAll('td')[0].text().should.be.eql('Tree Registration Adv');
+    rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration_adv');
 
     rows[2].findAll('td')[0].text().should.be.eql('circumference');
     rows[2].findAll('td')[1].text().should.be.eql('Tree Registration Adv');
+    rows[2].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration_adv');
 
     rows[3].findAll('td')[0].text().should.be.eql('type');
     rows[3].findAll('td')[1].text().should.be.eql('Tree Registration');
+    rows[3].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration');
     rows[4].findAll('td')[0].text().should.be.eql('Tree Registration Adv');
+    rows[4].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration_adv');
   });
 
   it('shows the property even if there is no associated form', () => {

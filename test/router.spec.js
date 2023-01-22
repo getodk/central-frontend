@@ -125,6 +125,7 @@ describe('createCentralRouter()', () => {
       '/projects/1/app-users',
       '/projects/1/form-access',
       '/projects/1/datasets',
+      '/projects/1/datasets/trees',
       '/projects/1/settings',
       '/projects/1/forms/f',
       '/projects/1/forms/f/versions',
@@ -590,6 +591,7 @@ describe('createCentralRouter()', () => {
           datasets: 1
         });
         testData.extendedForms.createPast(1);
+        testData.extendedDatasets.createPast(1, { name: 'trees' });
       });
 
       it('does not redirect the user from the project overview', async () => {
@@ -603,6 +605,7 @@ describe('createCentralRouter()', () => {
         '/projects/1/app-users',
         '/projects/1/form-access',
         '/projects/1/datasets',
+        '/projects/1/datasets/trees',
         '/projects/1/settings',
         // FormShow
         '/projects/1/forms/f',
@@ -939,7 +942,7 @@ describe('createCentralRouter()', () => {
         datasets: 1
       });
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
-      testData.extendedDatasets.createPast(1);
+      testData.extendedDatasets.createPast(1, { name: 'Trees' });
     });
 
     // There is approximately 1 test per route
@@ -978,6 +981,11 @@ describe('createCentralRouter()', () => {
     it('shows project name in title for /projects/1/datasets', async () => {
       await load('/projects/1/datasets');
       document.title.should.equal('Datasets | My Project Name | ODK Central');
+    });
+
+    it('shows dataset name in title for /projects/1/datasets/:datasetName', async () => {
+      await load('/projects/1/datasets/trees');
+      document.title.should.equal('Trees | ODK Central');
     });
 
     it('shows project name in title for /projects/1/settings', async () => {
