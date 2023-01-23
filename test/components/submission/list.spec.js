@@ -4,10 +4,12 @@ import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 
 import testData from '../../data';
+import { changeMultiselect } from '../../util/trigger';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mockResponse } from '../../util/axios';
+import { relativeUrl } from '../../util/request';
 
 // Create submissions along with the associated project and form.
 const createSubmissions = (count, factoryOptions = {}) => {
@@ -26,6 +28,7 @@ const _scroll = (component, scrolledToBottom) => {
   // eslint-disable-next-line no-param-reassign
   component.vm.scrolledToBottom = method;
 };
+// eslint-disable-next-line consistent-return
 const scroll = (componentOrBoolean) => {
   if (componentOrBoolean === true || componentOrBoolean === false)
     return (component) => _scroll(component, componentOrBoolean);
@@ -433,5 +436,73 @@ describe('SubmissionList', () => {
         });
       });
     });
+  });
+
+  describe('$select query parameter', () => {
+    // Create a form with 20 string fields. The first string field is in a
+    // group.
+    beforeEach(() => {
+      const { group, string } = testData.fields;
+      const fields = [group('/g'), string('/g/s1')];
+      for (let i = 2; i <= 20; i += 1) fields.push(string(`/s${i}`));
+      testData.extendedForms.createPast(1, { fields });
+    });
+
+    const $select = (url) => relativeUrl(url).searchParams.get('$select');
+
+    it('does not specify $select for the first chunk of submissions', () =>
+      loadSubmissionList().beforeEachResponse((_, { url }) => {
+        if (url.includes('.svc/Submissions')) should.not.exist($select(url));
+      }));
+
+    it('specifies $select for the second chunk', () => {
+      testData.extendedSubmissions.createPast(2);
+      return loadSubmissionList({
+        props: { top: () => 1 }
+      })
+        .complete()
+        .request(scroll)
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
+        })
+        .respondWithData(() => testData.submissionOData(1, 1));
+    });
+
+    it('specifies $select if the refresh button is clicked', () =>
+      loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.get('#submission-list-refresh-button').trigger('click'))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
+        })
+        .respondWithData(() => testData.submissionOData(1, 0)));
+
+    it('specifies $select if a filter is changed', () =>
+      load('/projects/1/forms/f/submissions', { attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-filters-review-state', [0]))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
+        })
+        .respondWithData(testData.submissionOData));
+
+    it('specifies correct $select parameter if different field is selected', () =>
+      loadSubmissionList({ attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-field-dropdown', [19]))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,s20');
+        })
+        .respondWithData(testData.submissionOData));
+
+    it('specifies correct $select parameter if all fields are deselected', () =>
+      loadSubmissionList({ attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-field-dropdown', []))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system');
+        })
+        .respondWithData(testData.submissionOData));
   });
 });

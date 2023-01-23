@@ -220,7 +220,7 @@ describe('SubmissionFilters', () => {
           ]);
         })
         .beforeEachResponse((_, { url }) => {
-          const match = url.match(/&%24filter=__system%2FsubmissionDate\+ge\+([^+]+)\+and\+__system%2FsubmissionDate\+le\+([^+]+)(&|$)/);
+          const match = url.match(/&%24filter=__system%2FsubmissionDate\+ge\+([^+]+)\+and\+__system%2FsubmissionDate\+le\+([^&]+)(&|$)/);
           should.exist(match);
 
           const start = decodeURIComponent(match[1]);

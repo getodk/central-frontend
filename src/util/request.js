@@ -102,10 +102,11 @@ export const apiPaths = {
   submissionKeys: formOrDraftPath('/submissions/keys'),
   submitters: formOrDraftPath('/submissions/submitters'),
   submission: submissionPath(''),
-  odataSubmission: (projectId, xmlFormId, instanceId) => {
+  odataSubmission: (projectId, xmlFormId, instanceId, query = undefined) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(odataLiteral(instanceId));
-    return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions(${encodedInstanceId})`;
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions(${encodedInstanceId})${qs}`;
   },
   editSubmission: submissionPath('/edit'),
   submissionAttachment: (projectId, xmlFormId, draft, instanceId, attachmentName) => {

@@ -219,6 +219,12 @@ export default {
       }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
     },
+    odataSelect() {
+      if (this.selectedFields == null) return null;
+      const paths = this.selectedFields.map(({ path }) => path.replace('/', ''));
+      paths.unshift('__id', '__system');
+      return paths.join(',');
+    },
     odataLoadingMessage() {
       if (!this.odata.awaitingResponse || this.refreshing) return null;
       if (!this.odata.dataExists) {
@@ -269,15 +275,19 @@ export default {
   methods: {
     fetchChunk(skip, clear) {
       this.refreshing = skip === 0 && !clear;
-      const top = this.top(skip);
-      const query = { $top: top, $skip: skip, $count: true, $wkt: true };
-      if (this.odataFilter != null) query.$filter = this.odataFilter;
       this.odata.request({
         url: apiPaths.odataSubmissions(
           this.projectId,
           this.xmlFormId,
           this.draft,
-          query
+          {
+            $top: this.top(skip),
+            $skip: skip,
+            $count: true,
+            $wkt: true,
+            $filter: this.odataFilter,
+            $select: this.odataSelect
+          }
         ),
         clear,
         patch: skip === 0
