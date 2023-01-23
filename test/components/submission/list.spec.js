@@ -1,5 +1,3 @@
-import sinon from 'sinon';
-
 import Spinner from '../../../src/components/spinner.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
@@ -15,6 +13,23 @@ import { mockResponse } from '../../util/axios';
 const createSubmissions = (count, factoryOptions = {}) => {
   testData.extendedForms.createPast(1, { submissions: count });
   testData.extendedSubmissions.createPast(count, factoryOptions);
+};
+const _scroll = (component, scrolledToBottom) => {
+  const method = component.vm.scrolledToBottom;
+  if (method == null) {
+    _scroll(component.getComponent(SubmissionList), scrolledToBottom);
+    return;
+  }
+  // eslint-disable-next-line no-param-reassign
+  component.vm.scrolledToBottom = () => scrolledToBottom;
+  document.dispatchEvent(new Event('scroll'));
+  // eslint-disable-next-line no-param-reassign
+  component.vm.scrolledToBottom = method;
+};
+const scroll = (componentOrBoolean) => {
+  if (componentOrBoolean === true || componentOrBoolean === false)
+    return (component) => _scroll(component, componentOrBoolean);
+  _scroll(componentOrBoolean, true);
 };
 
 describe('SubmissionList', () => {
@@ -191,10 +206,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 2
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 2);
               checkMessage(component, 'Loading 2 more of 10 remaining Submissions…');
@@ -205,9 +217,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 3
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 4);
               checkMessage(component, 'Loading 2 more of 8 remaining Submissions…');
@@ -218,9 +228,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 4 (last small chunk)
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 6);
               checkMessage(component, 'Loading 2 more of 6 remaining Submissions…');
@@ -231,9 +239,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 5
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 3, 8);
               checkMessage(component, 'Loading 3 more of 4 remaining Submissions…');
@@ -244,9 +250,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 6
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 3, 11);
               checkMessage(component, 'Loading the last Submission…');
@@ -264,14 +268,7 @@ describe('SubmissionList', () => {
             keys: mockResponse.problem
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does nothing upon scroll if fields request results in error', () => {
@@ -280,14 +277,7 @@ describe('SubmissionList', () => {
             fields: mockResponse.problem
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does nothing upon scroll if submissions request results in error', () => {
@@ -296,14 +286,7 @@ describe('SubmissionList', () => {
             odata: mockResponse.problem
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does nothing after user scrolls somewhere other than bottom of page', () => {
@@ -312,14 +295,7 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => false
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll(false));
         });
 
         it('clicking refresh button loads first chunk, even after scrolling', () => {
@@ -328,10 +304,7 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
             .request(component =>
@@ -343,9 +316,7 @@ describe('SubmissionList', () => {
             .afterResponse(component => {
               checkIds(component, 2);
             })
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((_, config) => {
               checkTopSkip(config, 2, 2);
             })
@@ -358,25 +329,18 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              // Sends a request.
-              document.dispatchEvent(new Event('scroll'));
-            })
-            .beforeAnyResponse(() => {
-              // This should not send a request. If it does, then the number of
-              // requests will exceed the number of responses, and the
-              // mockHttp() object will throw an error.
-              document.dispatchEvent(new Event('scroll'));
-            })
+            // Sends a request.
+            .request(scroll)
+            // This should not send a request. If it does, then the number of
+            // requests will exceed the number of responses, and the mockHttp()
+            // object will throw an error.
+            .beforeAnyResponse(scroll)
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
             .request(component =>
               component.get('#submission-list-refresh-button').trigger('click'))
-            .beforeAnyResponse(() => {
-              // Should not send a request.
-              document.dispatchEvent(new Event('scroll'));
-            })
+            // Should not send a request.
+            .beforeAnyResponse(scroll)
             .respondWithData(() => testData.submissionOData(2, 0));
         });
 
@@ -386,10 +350,7 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
       });
 
@@ -409,10 +370,7 @@ describe('SubmissionList', () => {
             .complete()
             // 4 submissions exist, but 4 more are about to be created. About to
             // request $top=2, $skip=2.
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 2);
               checkMessage(component, 'Loading the last 2 Submissions…');
@@ -427,9 +385,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // 8 submissions exist. About to request $top=2, $skip=4.
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 4);
               checkMessage(component, 'Loading the last 2 Submissions…');
@@ -441,9 +397,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // 8 submissions exist. About to request $top=2, $skip=6.
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 6);
               checkMessage(component, 'Loading the last 2 Submissions…');
@@ -455,9 +409,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // 8 submissions exist. No request will be sent.
-            .testNoRequest(() => {
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does not update requestData.odata.originalCount', () => {
@@ -468,14 +420,7 @@ describe('SubmissionList', () => {
               requestData.localResources.odata.originalCount.should.equal(251);
               requestData.form.submissions.should.equal(251);
             })
-            .request(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(1);
               return testData.submissionOData(2, 250);
