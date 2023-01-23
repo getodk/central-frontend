@@ -2,6 +2,7 @@ import DatasetTable from '../../../src/components/dataset/table.vue';
 import DatasetRow from '../../../src/components/dataset/row.vue';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
@@ -9,7 +10,8 @@ const mountComponent = () => mount(DatasetTable, {
   container: {
     requestData: testRequestData(['datasets'], {
       datasets: testData.extendedDatasets.sorted()
-    })
+    }),
+    router: mockRouter('/projects/1/datasets')
   }
 });
 
