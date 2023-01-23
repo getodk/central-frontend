@@ -9,7 +9,7 @@ import FormAttachmentUploadFiles from '../../../src/components/form-attachment/u
 import { noop } from '../../../src/util/util';
 
 import testData from '../../data';
-import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/file';
+import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/trigger';
 import { isBefore } from '../../util/date-time';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
