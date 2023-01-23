@@ -1,4 +1,6 @@
 export const changeMultiselect = (selector, selectedIndexes) => async (component) => {
+  if (component.element.getRootNode() !== document)
+    throw new Error('component must be attached to the body');
   const multiselect = component.get(selector);
   const toggle = multiselect.get('select');
   await toggle.trigger('click');
