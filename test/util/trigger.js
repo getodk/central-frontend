@@ -1,3 +1,19 @@
+export const changeMultiselect = (selector, selectedIndexes) => async (component) => {
+  const multiselect = component.get(selector);
+  const toggle = multiselect.get('select');
+  await toggle.trigger('click');
+  await multiselect.get('.select-none').trigger('click');
+  const inputs = multiselect.findAll('input[type="checkbox"]');
+  for (const i of selectedIndexes)
+    await inputs[i].setValue(true);
+  return toggle.trigger('click');
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FILES
+
 export const fileDataTransfer = (files) => {
   const dt = new DataTransfer();
   for (const file of files)
