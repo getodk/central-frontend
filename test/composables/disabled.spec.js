@@ -79,7 +79,7 @@ describe('useDisabled()', () => {
 
   it('disables a .disabled link for a click inside the link', () => {
     const [component, handler] = mountComponent(`<a class="disabled" @click="handler">
-      <span class="icon-question-circle></span>
+      <span class="icon-question-circle"></span>
     </a>`);
     component.get('span').trigger('click');
     event.defaultPrevented.should.be.true();
