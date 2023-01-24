@@ -191,6 +191,15 @@ export default {
       "abandon": "Abbandona bozza",
       "deleteForm": "Abbandona ed elimina la bozza"
     },
+    "introduction": {
+      "abandon": [
+        "Stai per eliminare definitivamente la versione bozza di questo formulario. Ciò significa che la bozza di definizione del formulario, qualsiasi bozza di allegati che hai caricato e tutti gli invii di prova verranno rimossi.",
+        "La definizione del formulario è stata pubblicata, i suoi allegati al formulario e gli invii non saranno interessati."
+      ],
+      "deleteForm": [
+        "Stai per eliminare questa bozza di definizione del formulario, insieme a qualsiasi bozza di allegati che hai caricato e tutti gli invii di prova. Poiché non l'hai ancora pubblicato, l'intero formualrio verrà eliminato e spostato nel Cestino."
+      ]
+    },
     "action": {
       "abandon": "Annulla"
     }

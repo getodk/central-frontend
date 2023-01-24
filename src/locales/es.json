@@ -27,7 +27,6 @@
   "systemHome": {
     "title": "Gestión del sistema",
     "tab": {
-      "backups": "Copias de seguridad",
       "audits": "Registro y auditoría de la actividad del servidor",
       "analytics": "Informes de uso"
     }
@@ -72,11 +71,12 @@
         "delete": "Borrar"
       },
       "analytics": "Informe de uso",
-      "backup": "Copia de seguridad",
       "config": {
         "set": "Establecer"
       },
       "dataset": {
+        "update": "Actualizar",
+        "update_publish": "Publicar",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -266,7 +266,9 @@
       "overview": "Descripción general"
     },
     "total": "Total",
-    "lastSubmission": "(último {dateTime})"
+    "punctuations": {
+      "comma": ","
+    }
   },
   "mixin": {
     "request": {

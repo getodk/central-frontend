@@ -83,6 +83,9 @@ export default {
 {
   "fr": {
     "datasetUpdates": "Le Dataset est mis à jour par ce formulaire : | Les Datasets sont mis à jour par ce formulaire : | Les Datasets sont mis à jour par ce formulaire :"
+  },
+  "it": {
+    "datasetUpdates": "Il set di dati è aggiornato da questo formulario: | I set di dati vengono aggiornati da questo formulario: | I set di dati vengono aggiornati da questo formulario:"
   }
 }
 </i18n>

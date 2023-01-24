@@ -60,13 +60,9 @@
   "systemHome": {
     "title": {
       "string": "Gestión del sistema",
-      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      "developer_comment": "This is the title of the page for audit logs and other system-level functions."
     },
     "tab": {
-      "backups": {
-        "string": "Copias de seguridad",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
       "audits": {
         "string": "Registro y auditoría de la actividad del servidor",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -201,10 +197,6 @@
         "string": "Informe de uso",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
-      "backup": {
-        "string": "Copia de seguridad",
-        "developer_comment": "This is shown in the log of actions performed on the server."
-      },
       "config": {
         "set": {
           "string": "Establecer",
@@ -213,11 +205,11 @@
       },
       "dataset": {
         "update": {
-          "string": "",
+          "string": "Actualizar",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         },
         "update_publish": {
-          "string": "",
+          "string": "Publicar",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         }
       },
@@ -413,6 +405,14 @@
     "hidePreview": {
       "string": "Ocultar vista previa",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "expand": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "collapse": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -478,6 +478,10 @@
       "string": "Creado por",
       "developer_comment": "This is the text of a table column header."
     },
+    "updatedBy": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "displayName": {
       "string": "Nombre para mostrar",
       "developer_comment": "This is the text of a table column header."
@@ -513,6 +517,14 @@
     "type": {
       "string": "Tipo",
       "developer_comment": "This is the text of a table column header."
+    },
+    "entities": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+    },
+    "lastEntity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
   "plural": {
@@ -781,18 +793,21 @@
     "total": {
       "string": "Total"
     },
-    "lastSubmission": {
-      "string": "(último {dateTime})",
-      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "totalSubmissions": {
+      "string": ""
     },
     "punctuations": {
       "comma": {
-        "string": ""
+        "string": ","
       }
     },
     "datasetsPreview": {
       "string": "",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "propertiesCount": {
+      "string": "{count, plural, one {} many {} other {}}",
+      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
   "mixin": {
@@ -1020,9 +1035,6 @@
         "num_unique_collectors": {
           "string": "Número de recopiladores de datos unicos"
         },
-        "backups_configured": {
-          "string": "Copias de seguridad configuradas"
-        },
         "database_size": {
           "string": "Tamaño de la base de datos del sistema"
         },
@@ -1213,110 +1225,6 @@
         }
       }
     },
-    "BackupDeprecation": {
-      "text": {
-        "string": ""
-      }
-    },
-    "BackupList": {
-      "auditsTitle": {
-        "string": "Últimas copias de seguridad",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "alert": {
-        "terminate": {
-          "string": ""
-        }
-      }
-    },
-    "BackupStatus": {
-      "getHelp": {
-        "full": {
-          "string": "Si tiene problemas, pruebe el {forum}.",
-          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
-        },
-        "forum": {
-          "string": "foro de la comunidad",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
-        }
-      },
-      "notConfigured": {
-        "0": {
-          "string": "Las copias de seguridad no están configuradas."
-        },
-        "1": {
-          "string": ""
-        }
-      },
-      "neverRun": {
-        "0": {
-          "string": "La copia de seguridad configurada aún no se ha ejecutado."
-        },
-        "1": {
-          "string": "Si ha configurado copias de seguridad en los últimos días, esto es normal. De lo contrario, algo ha salido mal."
-        },
-        "2": {
-          "string": ""
-        }
-      },
-      "somethingWentWrong": {
-        "0": {
-          "string": "¡Algo está mal!"
-        },
-        "1": {
-          "full": {
-            "string": "La última copia de seguridad que se completó correctamente fue {moreThanThreeDaysAgo}.",
-            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
-          },
-          "moreThanThreeDaysAgo": {
-            "string": "hace más de tres días",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
-          }
-        },
-        "2": {
-          "string": ""
-        }
-      },
-      "success": {
-        "0": {
-          "string": "La copia de seguridad está funcionando",
-          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
-        },
-        "1": {
-          "string": "Última copia de seguridad completada con éxito {dateTime}",
-          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
-        }
-      },
-      "action": {
-        "download": {
-          "string": "Descargar copia de seguridad ahora",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "terminate": {
-          "string": "Terminar",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "alert": {
-        "download": {
-          "string": "La copia de seguridad se está ejecutando ahora y se cifrará y descargará en su computadora. Esto puede tardar un rato. Una vez que comience la descarga, puede salir de esta página"
-        }
-      }
-    },
-    "BackupTerminate": {
-      "title": {
-        "string": "Terminar copias de seguridad automáticas",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "¿Está seguro que quiere terminar sus copias de seguridad automáticas?"
-        },
-        "1": {
-          "string": ""
-        }
-      }
-    },
     "DatasetIntroduction": {
       "title": {
         "string": ""
@@ -1347,12 +1255,39 @@
           "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
         },
         "clickHere": {
-          "string": "",
+          "string": "haga clic aquí",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
         }
       },
       "datasetsWorkflow": {
         "string": ""
+      }
+    },
+    "DatasetOverview": {
+      "connectionsToForms": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "datasetProperties": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "DatasetOverviewConnectionToForms": {
+      "formsCreateEntities": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewDatasetProperties": {
+      "emptyTable": {
+        "string": ""
+      }
+    },
+    "DatasetOverviewLinkedForms": {
+      "formsConsumeData": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetRow": {
@@ -1361,6 +1296,12 @@
           "string": "Descargar datos (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetShow": {
+      "back": {
+        "string": "",
+        "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
@@ -1373,10 +1314,6 @@
       "new": {
         "string": "",
         "developer_comment": "This is shown when a dataset is new"
-      },
-      "properties": {
-        "string": "{count, plural, one {} many {} other {}}",
-        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
       },
       "addedByThisDraft": {
         "string": "",
@@ -2277,20 +2214,37 @@
           "string": "Un formulario ya existe en este proyecto con el ID formulario de {xmlFormId}"
         }
       },
+      "fields": {
+        "string": "",
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
+      },
       "warningsText": {
         "0": {
-          "string": "Este archivo en formato XLS puede ser usado, pero tiene algunos problemas posibles ( advertencias de conversión ):",
-          "developer_comment": "The word \"XLSForm\" should not be translated."
+          "string": ""
         },
         "1": {
-          "string": "Por favor, corrija los problemas e intente nuevamente."
+          "string": ""
         },
         "2": {
+          "string": ""
+        },
+        "3": {
+          "deletedFormExists": {
+            "string": ""
+          },
+          "structureChanged": {
+            "string": ""
+          }
+        },
+        "4": {
+          "string": ""
+        },
+        "5": {
           "create": {
-            "string": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para crear el formulario de todos modos:"
+            "string": ""
           },
           "update": {
-            "string": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para actualizar el borrador de todos modos: "
+            "string": ""
           }
         }
       }
@@ -2606,6 +2560,10 @@
       }
     },
     "NavbarHelpDropdown": {
+      "help": {
+        "string": "",
+        "developer_comment": "This text is used to label a help menu that lists links to useful resources."
+      },
       "version": {
         "string": "Versión",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -3349,7 +3307,7 @@
         "string": "Agente de usuario"
       },
       "attachments": {
-        "string": "",
+        "string": "Adjuntos",
         "developer_comment": "This refers specifically to Submission Attachments."
       },
       "present": {
@@ -3615,11 +3573,11 @@
       "action": {
         "select": {
           "all": {
-            "string": "",
+            "string": "Todos",
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
-            "string": "",
+            "string": "Ninguno",
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
@@ -3637,17 +3595,17 @@
         }
       },
       "placeholder": {
-        "string": "",
+        "string": "{selected} de {total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
       },
       "action": {
         "select": {
           "all": {
-            "string": "",
+            "string": "Todos",
             "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
-            "string": "",
+            "string": "Ninguno",
             "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
@@ -3893,6 +3851,10 @@
           "string": "Rol de sitio",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "cannotResetPassword": {
+        "string": "",
+        "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {
         "string": "No puede retirar su propio usuario",

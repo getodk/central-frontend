@@ -198,7 +198,13 @@ export default {
         ]
       },
       {
-        "title": "Nahrát přílohy formuláře"
+        "title": "Nahrát přílohy formuláře",
+        "body": [
+          {
+            "full": "Návrh vašeho formuláře odkazuje na soubory, které jsou potřebné k prezentaci formuláře. Jejich nové nebo aktualizované kopie můžete nahrát k distribuci na kartě {formAttachments}.",
+            "formAttachments": "Přílohy formuláře"
+          }
+        ]
       },
       {
         "title": "Otestujte formulář vytvořením podání",
@@ -436,7 +442,15 @@ export default {
           }
         ]
       },
-      {},
+      {
+        "title": "Carica gli allegati del formulario",
+        "body": [
+          {
+            "full": "Il design del formulario fa riferimento ai file necessari per presentare il formulario. Puoi caricare copie nuove o aggiornate di questi per la distribuzione nella scheda {formAttachments} .",
+            "formAttachments": "Allegati del formulario"
+          }
+        ]
+      },
       {
         "title": "Testa il formulario creando un invio",
         "body": [

@@ -389,15 +389,7 @@ $drop-zone-vpadding: 15px;
       "400_8": "Zdá se, že definice formuláře, kterou jste nahráli, není pro tento formulář. Má nesprávnou formu (očekává se „{expected}“, a máte „{actual}“).",
       "400_15": "XLSForm nelze převést: {error}",
       "409_3": "Formulář již v tomto projektu existuje s ID formuláře „{xmlFormId}“."
-    },
-    "warningsText": [
-      "Tento soubor XLSForm lze použít, ale má následující možné problémy (upozornění při převodu):",
-      "Opravte problémy a zkuste to znovu.",
-      {
-        "create": "Pokud jste si jisti, že tyto problémy lze ignorovat, formulář přesto vytvořte kliknutím na tlačítko:",
-        "update": "Pokud jste si jisti, že tyto problémy lze ignorovat, klikněte na tlačítko a Koncept aktualizujte:"
-      }
-    ]
+    }
   },
   "de": {
     "title": {
@@ -429,15 +421,7 @@ $drop-zone-vpadding: 15px;
       "400_8": "Die hochgeladene Formulardefinition scheint nicht für dieses Formular zu sein. Es hat die falsche formId (\"{expected}\" erwartet, \"{actual}\" erhalten).",
       "400_15": "Das XLSForm konnte nicht konvertiert werden: {error}",
       "409_3": "Es gibt bereits ein Formular in diesem Projekt mit der Formular ID \"{xmlFormId}\"."
-    },
-    "warningsText": [
-      "Die XLSForm-Datei kann verwendet werden, aber sie hat die folgenden möglichen Probleme (Warnungen bei der Umwandlung):",
-      "Bitte beheben Sie die Probleme und versuchen es erneut.",
-      {
-        "create": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um das Formular trotzdem zu erzeugen:",
-        "update": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um den Entwurf trotzdem zu aktualisieren:"
-      }
-    ]
+    }
   },
   "es": {
     "title": {
@@ -469,15 +453,7 @@ $drop-zone-vpadding: 15px;
       "400_8": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\").",
       "400_15": "El XLSForm no se pudo convertir: {error}",
       "409_3": "Un formulario ya existe en este proyecto con el ID formulario de {xmlFormId}"
-    },
-    "warningsText": [
-      "Este archivo en formato XLS puede ser usado, pero tiene algunos problemas posibles ( advertencias de conversión ):",
-      "Por favor, corrija los problemas e intente nuevamente.",
-      {
-        "create": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para crear el formulario de todos modos:",
-        "update": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para actualizar el borrador de todos modos:"
-      }
-    ]
+    }
   },
   "fr": {
     "title": {
@@ -492,7 +468,8 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Si vous n'en avez as déjà un, il y a des {tools} pour vous aider à concevoir votre formulaire.",
         "tools": "outils disponibles"
-      }
+      },
+      "Si vous avez des fichiers joints pour ce Formulaire, vous pourrez les fournir sur la page suivante, après que le Formulaire aura été créé."
     ],
     "dropZone": {
       "full": "Déposez un fichier ici, ou {chooseOne} pour le téléverser.",
@@ -510,12 +487,19 @@ $drop-zone-vpadding: 15px;
       "400_15": "Le XLSForm n'a pas pu être converti : {error}",
       "409_3": "Un formulaire portant le Form ID {xmlFormId} existe déjà dans ce projet."
     },
+    "fields": "Champs :",
     "warningsText": [
-      "Ce fichier XLSForm peut être utilisé, mais il présente les problèmes possibles suivants (avertissements de conversion) :",
-      "Veuillez corriger les problèmes et réessayer.",
+      "Ce fichier peut être utilisé, mais a possiblement les problèmes suivants :",
+      "Avertissements sur la conception du formulaire :",
+      "Avertissements sur le déroulement des opérations :",
       {
-        "create": "Si vous êtes sûr que ces problèmes peuvent être ignorés, cliquez sur le bouton pour créer quand même le formulaire :",
-        "update": "Si vous êtes sûr que ce problème peut-être ignoré, cliquez sur le bouton pour mettre à jour l'ébauche :"
+        "deletedFormExists": "Il y a un formualire avec l'identifiant \"{value}\" dans la corbeille. Si vous envoyez ce Formulaire, vous ne serez pas en mesure restaurer l'autre ayant le même ID.",
+        "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut."
+      },
+      "Merci de corriger le problème et d'essayer à nouveau.",
+      {
+        "create": "Si vous êtes sûr que ces problèmes peuvent être ignorés, cliquez le bouton pour créer le formulaire malgré tout :",
+        "update": "Si vous êtes sûr que ces problèmes peuvent être ignorés, cliquez le bouton pour mettre à jour l'ébauche malgré tout :"
       }
     ]
   },
@@ -549,15 +533,7 @@ $drop-zone-vpadding: 15px;
       "400_8": "Definisi formulir yang Anda unggah tidak cocok dengan formulir ini. Terjadi kesalahan formld (seharusnya \"{expected}\", yang didapat \"{actual}\").",
       "400_15": "XLSForm tidak bisa diubah: {error}",
       "409_3": "Formulir sudah ada di Proyek ini dengan ID Formulir \"{xmlFormId}\"."
-    },
-    "warningsText": [
-      "XLSForm dapat digunakan, tetapi dengan peringatan kemungkinan masalah berikut (peringatan konversi):",
-      "Mohon perbaiki dan coba lagi.",
-      {
-        "create": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan buat formulir:",
-        "update": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan pembaruan draf:"
-      }
-    ]
+    }
   },
   "it": {
     "title": {
@@ -572,7 +548,8 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Se non ne hai già uno, ci sono {tools} per aiutarti a progettare il tuo formulario.",
         "tools": "strumenti a disposizione"
-      }
+      },
+      "Se disponi di allegati, potrai caricarli nella pagina successiva, dopo che il formulario è stato creato."
     ],
     "dropZone": {
       "full": "Trascina un file qui o {chooseOne} per caricarlo.",
@@ -589,15 +566,7 @@ $drop-zone-vpadding: 15px;
       "400_8": "La definizione del formulario che hai caricato non sembra essere per questo formulario. Ha il formId sbagliato (previsto \"{expected}\", ottenuto \"{actual}\").",
       "400_15": "Non è stato possibile convertire l'XLSForm : {error}",
       "409_3": "Esiste già un Formulario in questo progetto con il Form ID “{xmlFormId}”."
-    },
-    "warningsText": [
-      "Questo file XLSForm può essere utilizzato, ma presenta i seguenti possibili problemi (avvisi di conversione):",
-      "Si prega di correggere i problemi e riprovare.",
-      {
-        "create": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque il formulario:",
-        "update": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque la bozza del formulario:"
-      }
-    ]
+    }
   },
   "ja": {
     "title": {
@@ -629,15 +598,7 @@ $drop-zone-vpadding: 15px;
       "400_8": "アップロードされた定義フォームは、このフォームのものとは異なるようです。formIdが間違っています（\"{expected}\"であるべきですが、\"{actual}\"となっています）。",
       "400_15": "XLSFormを変換できませんでした：{error}",
       "409_3": "このプロジェクトには、フォームID\"{xmlFormId}\"のフォームがすでに存在しています。"
-    },
-    "warningsText": [
-      "このXLSFormファイルは利用できますが、次の問題が起こる可能性があります（変換時の警告）：",
-      "問題を修正して再度試して下さい。",
-      {
-        "create": "これらの問題が無視できると判断した場合は、以下のボタンをクリックしてフォームを作成して下さい。",
-        "update": "これら問題が無視できると判断した場合、ボタンをクリックして下書きを更新して下さい。"
-      }
-    ]
+    }
   },
   "sw": {
     "title": {
@@ -669,15 +630,7 @@ $drop-zone-vpadding: 15px;
       "400_8": "Ufafanuzi wa Fomu uliyopakia hauonekani kuwa wa Fomu hii. Ina formId isiyo sahihi (expected \"{expected}\", imepata \"{actual}\").",
       "400_15": "XLSForm haikuweza kubadilishwa: {error}",
       "409_3": "Tayari kuna Fomu katika Mradi huu yenye Kitambulisho cha Fomu ya “{xmlFormId}”."
-    },
-    "warningsText": [
-      "Faili hii ya XLSForm inaweza kutumika, lakini ina matatizo yafuatayo yanayowezekana (maonyo ya ubadilishaji).",
-      "Tafadhali sahihisha matatizo na ujaribu tena",
-      {
-        "create": "Ikiwa una uhakika kuwa matatizo haya yanaweza kupuuzwa, bofya kitufe ili kuunda Fomu hata hivyo:",
-        "update": "ikiwa una uhakika matatizo haya yanaweza kupuuzwa, bofya kitufe ili kusasisha Rasimu hata hivyo:"
-      }
-    ]
+    }
   }
 }
 </i18n>

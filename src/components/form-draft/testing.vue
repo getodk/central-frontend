@@ -221,7 +221,9 @@ export default {
     "collectProjectName": "[Brouillon] {name}",
     "datasetsPreview": {
       "body": [
-        "Ce formulaire peut ajouter des entités à un Dataset."
+        "Ce formulaire peut ajouter des entités à un Dataset.",
+        "Dans cette version préliminaire de Datasets, vous devez publier votre formulaire pour voir le Dataset. Dans une prochaine version de Central, vous pourrez tester la fonctionnalité des Datasets avec une ébauche de formualire..",
+        "Pour le moment, nous vous recommandons de publier vos formulaires relatifs au Datasets, et de ne pas approuver de soumissions (et donc de ne pas créer d'entité non désirée) tant que vous n'êtes pas certain que le Formulaire est prêt."
       ]
     }
   },
@@ -239,7 +241,14 @@ export default {
       "Puoi utilizzare il codice di configurazione a destra per configurare un dispositivo mobile per scaricare questa bozza. Puoi anche fare clic sul pulsante Nuovo sopra per creare un nuovo invio dal tuo browser web.",
       "Le bozze inviate vanno nella tabella di prova sottostante, dove puoi visualizzarle in anteprima e scaricarle. Quando pubblichi questa bozza di formulario, i suoi Invii di prova verranno rimossi in modo permanente."
     ],
-    "collectProjectName": "[Draft] {name}"
+    "collectProjectName": "[Draft] {name}",
+    "datasetsPreview": {
+      "body": [
+        "Questo modulo può aggiungere Entità a un set di dati.",
+        "In questa versione di anteprima dei set di dati, è necessario pubblicare il formulario per visualizzare l'aggiornamento del set di dati. In una versione futura di Central, sarai in grado di testare la funzionalità del set di dati in uno stato Bozza.",
+        "Per ora, ti consigliamo di pubblicare i formulari relativi al set di dati e di non approvare alcun invio (e quindi di non creare entità indesiderate) finché non sei sicuro che il formulario sia pronto."
+      ]
+    }
   },
   "ja": {
     "title": "下書きのテスト",

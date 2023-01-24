@@ -397,8 +397,9 @@ $popup-width: 300px;
     "title": "Téléverser des fichiers",
     "duringDragover": {
       "dropToUpload": "Déposer maintenant pour téléverser ce fichier en tant que {attachmentName}.",
+      "dragover": "Faites glisser sur le Formulaire le fichier avec lequel vous souhaiter remplacer la pièce jointe et déposez-la pour le l'envoyer.",
       "dropToPrepare": {
-        "full": "Déposez maintenant pour préparer le téléversement de {countOfFiles} vers ce formualire.",
+        "full": "Déposez maintenant pour préparer le téléversement de {countOfFiles} vers ce formulaire.",
         "countOfFiles": "{count} fichier | {count} fichiers | {count} fichiers"
       }
     },
@@ -455,6 +456,7 @@ $popup-width: 300px;
     "title": "Caricare files",
     "duringDragover": {
       "dropToUpload": "Rilascia ora per caricare questo file come {attachmentName}.",
+      "dragover": "Trascina sopra l'allegato del formulario che desideri sostituire con il file e rilascialo per caricarlo.",
       "dropToPrepare": {
         "full": "Rilascia ora per preparare {countOfFiles} per il caricamento in questo formulario.",
         "countOfFiles": "{count} file | {count} files | {count} files"

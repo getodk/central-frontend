@@ -27,7 +27,6 @@
   "systemHome": {
     "title": "Gestione del sistema",
     "tab": {
-      "backups": "Backups",
       "audits": "Registri di controllo del server",
       "analytics": "Report di utilizzo"
     }
@@ -59,6 +58,7 @@
       "user": "Azioni utente web",
       "project": "Azioni di progetto",
       "form": "Azioni del form",
+      "dataset": "Azioni del set di dati",
       "field_key": "Azioni utente applicazione",
       "public_link": "Azioni del link di accesso pubblico",
       "config": "Azioni di configurazione del server",
@@ -72,11 +72,12 @@
         "delete": "Cancellare"
       },
       "analytics": "Rapporto di utilizzo",
-      "backup": "Backup",
       "config": {
         "set": "Configura"
       },
       "dataset": {
+        "update": "Aggiorna",
+        "update_publish": "Pubblica",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -135,6 +136,7 @@
     "download": "Scaricare",
     "edit": "Modificare",
     "editProfile": "Modificare profilo",
+    "finish": "Termina",
     "logIn": "Accedi",
     "looksGood": "Sembra tutto in ordine, procedere",
     "more": "Di più",
@@ -199,9 +201,11 @@
     "appUser": "Utente dell'applicazione",
     "appUsers": "Utenti dell'applicazione",
     "config": "Configurazione del Server",
+    "dataset": "Set di dati",
     "datasets": "Set di dati",
     "form": "Formulario",
     "forms": "Formulari",
+    "formAttachments": "Allegati del formulario",
     "project": "Progetto",
     "projects": "Progetti",
     "publicLink": "Link con accesso pubblico",
@@ -237,13 +241,15 @@
     }
   },
   "submission": {
+    "missingAttachment": "Allegati mancanti",
     "action": {
       "edit": "Modifica ({count})"
     },
     "editDisabled": "Non puoi modificare invii criptati",
     "binaryLinkTitle": "Il file è stato inviato. Clicca per scaricare.",
     "encryptionMessage": "L'anteprima dei dati non è disponibile a causa della crittografia.",
-    "noSubmission": "(nessuno)"
+    "noSubmission": "(nessuno)",
+    "emptyTable": "Non ci sono ancora invii."
   },
   "common": {
     "activity": "Attività",
@@ -253,6 +259,7 @@
     "currentDraft": "La tua bozza attuale",
     "dangerZone": "Zona pericolo",
     "docs": "Documentazione",
+    "error": "Errore",
     "filter": "Filtro",
     "forum": "Forum",
     "loading": "Caricando...",
@@ -267,7 +274,10 @@
       "overview": "Panoramica"
     },
     "total": "Totale",
-    "lastSubmission": "(ultimo {dateTime})"
+    "punctuations": {
+      "comma": ","
+    },
+    "datasetsPreview": "Anteprima dei set di dati"
   },
   "mixin": {
     "request": {

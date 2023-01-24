@@ -126,14 +126,41 @@ export default {
     "body": [
       "Datové sady představují nový způsob vytváření a správy datových příloh v ODK. Umožňují používat data shromážděná v Podáních, která lze stáhnout a použít jako součást jiného formuláře."
     ],
+    "getStarted": {
+      "full": "Další informace o tom, jak začít, najdete {clickHere}.",
+      "clickHere": "klikněte zde"
+    },
     "datasetsWorkflow": "Pracovní postup s datovými sadami"
   },
   "fr": {
     "title": "Bienvenue dans l’aperçu des Datasets !",
+    "body": [
+      "Les Datasets sont un nouveau moyen de créer et gérer des données attachées dans ODK. Ils vous permettent d'utiliser les données collectées dans les Soumissions en les téléchargeant et en les utilisant dans un autre formulaire.",
+      "Les Datasets peuvent être joints {icon1} aux formulaires et leurs données peuvent être interrogées comme n'importe quel autre fichier de données CSV joint.",
+      "Lorsqu'une soumission concernant un Dataset est approuvée {icon2}, les données sélectionnées sont ajoutées {icon3} au Dataset, de sorte que la prochaine fois qu'un client téléchargera le formulaire, les nouvelles données seront incluses.",
+      "Dans une version future vous pourrez envoyer {icon4} un CSV directement dans un Dataset",
+      "Les Datasets sont configurés pendant la création du formulaire?"
+    ],
     "getStarted": {
       "full": "Pour plus d'information sur comment démarrer, {clickHere}.",
       "clickHere": "cliquez ici"
-    }
+    },
+    "datasetsWorkflow": "Le \"Workflow\" des Datasets"
+  },
+  "it": {
+    "title": "Benvenuto nell'anteprima dei set di dati!",
+    "body": [
+      "I set di dati sono un nuovo modo per creare e gestire gli allegati dati in ODK. Consentono di utilizzare i dati raccolti negli Invii per essere scaricati e utilizzati come parte di un altro Formulario.",
+      "I set di dati possono essere allegati {icon1} ai formulari e i relativi dati possono essere interrogati proprio come qualsiasi altro file di dati CSV allegato.",
+      "Quando viene approvato un Invio relativo a un Dataset {icon2}, i dati selezionati vengono aggiunti {icon3} al set di dati, in modo che la volta successiva che un cliente scaricherà il formulario, i nuovi dati verranno inclusi nel download dei dati.",
+      "In una versione futura, sarai in grado di caricare {icon4} direttamente un CSV a un set di dati.",
+      "I set di dati vengono configurati durante la progettazione del formulario."
+    ],
+    "getStarted": {
+      "full": "Per ulteriori informazioni su come iniziare,{clickHere}.",
+      "clickHere": "clicca qui"
+    },
+    "datasetsWorkflow": "Flusso di lavoro dei set di dati"
   }
 }
 </i18n>

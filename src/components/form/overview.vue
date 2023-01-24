@@ -195,7 +195,8 @@ export default {
   "fr": {
     "draft": {
       "none": {
-        "title": "Pas d'ébauche en cours"
+        "title": "Pas d'ébauche en cours",
+        "body": "Ce formulaire n'a pas actuellement d'ébauche en cours. Si vous souhaitez apporter des modifications au Formulaire ou à ses fichiers joints, commencez par créer une nouvelle Ébauche en utilisant le bouton ci-dessus."
       },
       "any": {
         "versionCaption": {
@@ -221,7 +222,8 @@ export default {
   "it": {
     "draft": {
       "none": {
-        "title": "Nessuna bozza corrente"
+        "title": "Nessuna bozza corrente",
+        "body": "Al momento non esiste una versione bozza di questo formulario. Se desideri apportare modifiche al formulario o ai suoi allegati, inizia creando una bozza utilizzando il pulsante in alto."
       },
       "any": {
         "versionCaption": {

@@ -27,7 +27,6 @@
   "systemHome": {
     "title": "Usimamizi wa mfumo",
     "tab": {
-      "backups": "Hifadhi rudufu",
       "audits": "Kumbukumbu za ukaguzi wa seva",
       "analytics": "Ripoti ya matumizi"
     }
@@ -71,7 +70,6 @@
         "delete": "kufuta"
       },
       "analytics": "Ripoti matumizi",
-      "backup": "Hifadhi nakala",
       "config": {
         "set": "weka"
       },
@@ -257,8 +255,7 @@
       "settings": "mipangilio",
       "overview": "muhtasari"
     },
-    "total": "jumla",
-    "lastSubmission": "(mwisho {dateTime})"
+    "total": "jumla"
   },
   "mixin": {
     "request": {

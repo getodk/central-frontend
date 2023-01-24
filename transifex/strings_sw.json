@@ -60,13 +60,9 @@
   "systemHome": {
     "title": {
       "string": "Usimamizi wa mfumo",
-      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      "developer_comment": "This is the title of the page for audit logs and other system-level functions."
     },
     "tab": {
-      "backups": {
-        "string": "Hifadhi rudufu",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
       "audits": {
         "string": "Kumbukumbu za ukaguzi wa seva",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -199,10 +195,6 @@
       },
       "analytics": {
         "string": "Ripoti matumizi",
-        "developer_comment": "This is shown in the log of actions performed on the server."
-      },
-      "backup": {
-        "string": "Hifadhi nakala",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "config": {
@@ -413,6 +405,14 @@
     "hidePreview": {
       "string": "Ficha hakiki",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "expand": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "collapse": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -478,6 +478,10 @@
       "string": "Imeundwa na",
       "developer_comment": "This is the text of a table column header."
     },
+    "updatedBy": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "displayName": {
       "string": "Onyesha jina",
       "developer_comment": "This is the text of a table column header."
@@ -513,6 +517,14 @@
     "type": {
       "string": "Aina",
       "developer_comment": "This is the text of a table column header."
+    },
+    "entities": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+    },
+    "lastEntity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
   "plural": {
@@ -781,9 +793,8 @@
     "total": {
       "string": "jumla"
     },
-    "lastSubmission": {
-      "string": "(mwisho {dateTime})",
-      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "totalSubmissions": {
+      "string": ""
     },
     "punctuations": {
       "comma": {
@@ -793,6 +804,10 @@
     "datasetsPreview": {
       "string": "",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "propertiesCount": {
+      "string": "{count, plural, one {} other {}}",
+      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
   "mixin": {
@@ -1020,9 +1035,6 @@
         "num_unique_collectors": {
           "string": "Idadi ya Wakusanyaji data wa kipekee"
         },
-        "backups_configured": {
-          "string": "Hifadhi rudufu zilizosanidiwa"
-        },
         "database_size": {
           "string": "Saizi ya hifadhidata ya mfumo"
         },
@@ -1213,110 +1225,6 @@
         }
       }
     },
-    "BackupDeprecation": {
-      "text": {
-        "string": ""
-      }
-    },
-    "BackupList": {
-      "auditsTitle": {
-        "string": "Hifadhi Nakala za Hivi Punde",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "alert": {
-        "terminate": {
-          "string": ""
-        }
-      }
-    },
-    "BackupStatus": {
-      "getHelp": {
-        "full": {
-          "string": "Ikiwa unatatizika, tafadhali jaribu {forum}.",
-          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
-        },
-        "forum": {
-          "string": "jamii forum",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
-        }
-      },
-      "notConfigured": {
-        "0": {
-          "string": "Hifadhi rudufu hazijasanidiwa."
-        },
-        "1": {
-          "string": ""
-        }
-      },
-      "neverRun": {
-        "0": {
-          "string": "Hifadhi rudufu iliyosanidiwa bado haijatekelezwa"
-        },
-        "1": {
-          "string": "Ikiwa umesanidi nakala rudufu ndani ya siku chache zilizopita, hii ni kawaida. Vinginevyo, kitu kimeenda vibaya."
-        },
-        "2": {
-          "string": ""
-        }
-      },
-      "somethingWentWrong": {
-        "0": {
-          "string": "Kuna kitu hakiko sawa"
-        },
-        "1": {
-          "full": {
-            "string": "Hifadhi rudufu ya hivi punde iliyokamilika kwa ufanisi ilikuwa {moreThanThreeDaysAgo}.",
-            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
-          },
-          "moreThanThreeDaysAgo": {
-            "string": "zaidi ya siku tatu zilizopita",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
-          }
-        },
-        "2": {
-          "string": ""
-        }
-      },
-      "success": {
-        "0": {
-          "string": "Hifadhi rudufu inafanya kazi.",
-          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
-        },
-        "1": {
-          "string": "Hifadhi rudufu ya mwisho ilikamilika {dateTime}.",
-          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
-        }
-      },
-      "action": {
-        "download": {
-          "string": "Pakua nakala rudufu sasa",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "terminate": {
-          "string": "Sitisha",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "alert": {
-        "download": {
-          "string": "Hifadhi rudufu inaendelea sasa, na itasimbwa kwa njia fiche na kupakuliwa kwenye kompyuta yako. Hii inaweza kuchukua muda. Mara tu upakuaji unapoanza, unaweza kuondoka kwenye ukurasa huu."
-        }
-      }
-    },
-    "BackupTerminate": {
-      "title": {
-        "string": "Sitisha Hifadhi Nakala za Kiotomatiki",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "Je, una uhakika kuwa ungependa kusitisha hifadhi rudufu zako otomatiki?"
-        },
-        "1": {
-          "string": ""
-        }
-      }
-    },
     "DatasetIntroduction": {
       "title": {
         "string": ""
@@ -1355,12 +1263,45 @@
         "string": ""
       }
     },
+    "DatasetOverview": {
+      "connectionsToForms": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "datasetProperties": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "DatasetOverviewConnectionToForms": {
+      "formsCreateEntities": {
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewDatasetProperties": {
+      "emptyTable": {
+        "string": ""
+      }
+    },
+    "DatasetOverviewLinkedForms": {
+      "formsConsumeData": {
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetShow": {
+      "back": {
+        "string": "",
+        "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
@@ -1373,10 +1314,6 @@
       "new": {
         "string": "",
         "developer_comment": "This is shown when a dataset is new"
-      },
-      "properties": {
-        "string": "{count, plural, one {} other {}}",
-        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
       },
       "addedByThisDraft": {
         "string": "",
@@ -2277,20 +2214,37 @@
           "string": "Tayari kuna Fomu katika Mradi huu yenye Kitambulisho cha Fomu ya “{xmlFormId}”."
         }
       },
+      "fields": {
+        "string": "",
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
+      },
       "warningsText": {
         "0": {
-          "string": "Faili hii ya XLSForm inaweza kutumika, lakini ina matatizo yafuatayo yanayowezekana (maonyo ya ubadilishaji).",
-          "developer_comment": "The word \"XLSForm\" should not be translated."
+          "string": ""
         },
         "1": {
-          "string": "Tafadhali sahihisha matatizo na ujaribu tena"
+          "string": ""
         },
         "2": {
+          "string": ""
+        },
+        "3": {
+          "deletedFormExists": {
+            "string": ""
+          },
+          "structureChanged": {
+            "string": ""
+          }
+        },
+        "4": {
+          "string": ""
+        },
+        "5": {
           "create": {
-            "string": "Ikiwa una uhakika kuwa matatizo haya yanaweza kupuuzwa, bofya kitufe ili kuunda Fomu hata hivyo:"
+            "string": ""
           },
           "update": {
-            "string": "ikiwa una uhakika matatizo haya yanaweza kupuuzwa, bofya kitufe ili kusasisha Rasimu hata hivyo:"
+            "string": ""
           }
         }
       }
@@ -2606,6 +2560,10 @@
       }
     },
     "NavbarHelpDropdown": {
+      "help": {
+        "string": "",
+        "developer_comment": "This text is used to label a help menu that lists links to useful resources."
+      },
       "version": {
         "string": "Toleo",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -3893,6 +3851,10 @@
           "string": "Jukumu la Tovuti nzima",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "cannotResetPassword": {
+        "string": "",
+        "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {
         "string": "Huenda usistaafu mwenyewe.",

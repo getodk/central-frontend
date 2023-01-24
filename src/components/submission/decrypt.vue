@@ -548,7 +548,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Tabella dati principale (no repeats)",
-        "allTables": "Tutte le tabelle di dati"
+        "allTables": "Tutte le tabelle di dati",
+        "withAttachments": "Tutti i dati e gli allegati"
       }
     },
     "alert": {

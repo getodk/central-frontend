@@ -121,7 +121,8 @@ Select {all} / {none} */
         "all": "Vše",
         "none": "Nic"
       }
-    }
+    },
+    "warning": "Výběr příliš mnoha sloupců může zpomalit počítač."
   },
   "de": {
     "placeholder": "{selected} von {total}",
@@ -187,7 +188,8 @@ Select {all} / {none} */
         "all": "Tutto",
         "none": "Nessuno/a"
       }
-    }
+    },
+    "warning": "La selezione di troppe colonne potrebbe rallentare il computer."
   },
   "ja": {
     "placeholder": "{total}列の内{selected}列",

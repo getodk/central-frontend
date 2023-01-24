@@ -498,7 +498,8 @@ export default {
             ],
             "Vous ne pourrez plus prévisualiser les données de soumission en ligne.",
             "Vous ne pourrez plus vous connecter aux données via OData.",
-            "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur."
+            "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur.",
+            "Les nouvelles Soumissions ne seront plus transformées en entités."
           ],
           [
             "En outre, ce qui suit est vrai dans cette version d'ODK Central :",
@@ -520,7 +521,10 @@ export default {
       {
         "introduction": [
           "Tout d'abord vous devrez choisir une phrase de passe. Elle sera requise pour déchiffrer vos données soumises. Pour respecter votre vie privée, le serveur ne retiendra pas cette phrase de passe : seules les personnes disposant de la phrase de passe pourront déchiffrer et lire vos données envoyées.",
-          {}
+          {
+            "full": "Si vous perdez la phrase de passe, il n'y a pas {no} de moyen de recouvrer vos données !",
+            "no": "non"
+          }
         ]
       }
     ],
@@ -594,7 +598,8 @@ export default {
             ],
             "Non sarai più in grado di visualizzare in anteprima i dati di invio online.",
             "Non sarai più in grado di connetterti ai dati tramite OData.",
-            "Non sarai più in grado di modificare gli Invii nel tuo browser web."
+            "Non sarai più in grado di modificare gli Invii nel tuo browser web.",
+            "I nuovi invii non verranno più elaborati in Entità."
           ],
           [
             "Inoltre, quanto segue è reale in questa versione di ODK Central:",
@@ -616,7 +621,10 @@ export default {
       {
         "introduction": [
           "Innanzitutto, dovrai scegliere una passphrase. Questa passphrase sarà necessaria per decifrare i tuoi Invii. Per la tua privacy, il server non ricorderà questa passphrase: solo le persone con la passphrase saranno in grado di decifrare e leggere i tuoi dati di invio.",
-          {}
+          {
+            "full": "If you lose the passphrase, there is {no} modo per recuperarlo oi tuoi dati!",
+            "no": "no"
+          }
         ]
       }
     ],

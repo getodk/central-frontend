@@ -451,6 +451,10 @@ Comment • {name} */
   "it": {
     "title": {
       "create": "Inviato da {name}",
+      "entity": {
+        "create": "Entità creata {label} in {dataset} set di dati",
+        "error": "Problema durante la creazione dell'Entità"
+      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} per {name}",

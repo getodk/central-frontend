@@ -245,7 +245,9 @@ export default {
       "text": "Nebyl nahrán",
       "title": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na tuto stránku"
     },
-    "uploadToOverride": "Nahrajte soubor, který chcete přepsat."
+    "linkedToDataset": "Propojeno s datovou sadou {datasetName}",
+    "uploadToOverride": "Nahrajte soubor, který chcete přepsat.",
+    "override": "Přepsat"
   },
   "de": {
     "type": {
@@ -287,6 +289,9 @@ export default {
     },
     "linkedToDataset": "Lié au Dataset {datasetName}",
     "uploadToOverride": "Envoyer un fichier pour écraser.",
+    "action": {
+      "linkDataset": "Lier le Dataset {datasetName}"
+    },
     "override": "Écraser"
   },
   "id": {
@@ -313,7 +318,13 @@ export default {
     "notUploaded": {
       "text": "Non ancora caricato",
       "title": "Per caricare file, trascina e rilascia uno o più file su questa pagina"
-    }
+    },
+    "linkedToDataset": "Collegato al set di dati {datasetName}",
+    "uploadToOverride": "Carica un file da sovrascrivere.",
+    "action": {
+      "linkDataset": "Collega set di dati {datasetName}"
+    },
+    "override": "Sovrascrivere"
   },
   "ja": {
     "type": {
