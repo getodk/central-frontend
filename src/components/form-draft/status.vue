@@ -136,8 +136,8 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
-    const { form, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
-    return { form, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff };
+    const { form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    return { form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff };
   },
   data() {
     return {
@@ -181,6 +181,7 @@ export default {
       this.$emit('fetch-form');
       this.formDraftDatasetDiff.reset();
       this.formDatasetDiff.reset();
+      this.publishedAttachments.reset();
       afterNextNavigation(this.$router, () => {
         // Re-request the project in case its `datasets` property has changed.
         this.$emit('fetch-project', true);

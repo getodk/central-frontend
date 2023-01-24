@@ -86,7 +86,7 @@ export const apiPaths = {
     return `/v1/test/${token}/projects/${projectId}/forms/${encodedFormId}/draft`;
   },
   publishFormDraft: formPath('/draft/publish'),
-  formAttachments: formPath('/attachments'),
+  publishedAttachments: formPath('/attachments'),
   formDraftAttachments: formPath('/draft/attachments'),
   formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);

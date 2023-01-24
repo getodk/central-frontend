@@ -21,7 +21,9 @@ export default () => {
   const publicLinks = createResource('publicLinks');
   const formDraftDatasetDiff = createResource('formDraftDatasetDiff');
   const formDatasetDiff = createResource('formDatasetDiff');
+  const publishedAttachments = createResource('publishedAttachments'); // Published Form attachments
+
   return {
-    form, formAttachments, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff
+    form, formAttachments, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff, publishedAttachments
   };
 };

@@ -337,16 +337,16 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .respondWithData(() => testData.extendedProjects.last());
+        .respondWithData(() => testData.extendedProjects.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted());
     };
 
     it('sends requests for the project and form', () =>
       publish().testRequests([
         null,
         { url: '/v1/projects/1/forms/f', extended: true },
-        { url: '/v1/projects/1/forms/f/attachments' },
-        { url: '/v1/projects/1', extended: true }
+        { url: '/v1/projects/1', extended: true },
+        { url: '/v1/projects/1/forms/f/attachments' }
       ]));
 
     it('shows a success alert', () =>
@@ -392,8 +392,8 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondWithData(() => testData.extendedProjects.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .complete()
         .route('/projects/1/forms/f/versions')
         .respondWithData(() => testData.extendedFormVersions.sorted())

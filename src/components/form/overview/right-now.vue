@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="form-overview-right-now" :class="{ 'open-form': form.state === 'open' }">
+  <page-section id="form-overview-right-now"
+    :class="{ 'open-form': form.state === 'open' }">
     <template #heading>
       <span>{{ $t('common.rightNow') }}</span>
     </template>
@@ -38,7 +39,8 @@ except according to the terms contained in the LICENSE file.
           <p>{{ $t(`stateCaption.${ form.state }`) }}</p>
         </template>
       </summary-item>
-      <dataset-summary v-if="form.dataExists && form.entityRelated" :project-id="form.projectId"
+      <dataset-summary v-if="form.dataExists && form.entityRelated"
+        :project-id="form.projectId"
         :xml-form-id="form.xmlFormId"/>
       <summary-item v-if="linkedDatasets.length > 0" id="form-overview-right-now-linked-datasets" icon="link">
         <template #heading>
@@ -59,7 +61,8 @@ except according to the terms contained in the LICENSE file.
           </table>
         </template>
       </summary-item>
-      <summary-item id="form-overview-right-now-submissions" :to="formPath('submissions')" icon="inbox">
+      <summary-item id="form-overview-right-now-submissions"
+        :to="formPath('submissions')" icon="inbox">
         <template #heading>
           {{ $n(form.submissions, 'default') }}
           <span class="icon-angle-right"></span>
@@ -100,8 +103,8 @@ export default {
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
-    const { form, formAttachments, formDatasetDiff } = useRequestData();
-    return { form, formAttachments, formDatasetDiff };
+    const { form, publishedAttachments, formDatasetDiff } = useRequestData();
+    return { form, publishedAttachments, formDatasetDiff };
   },
   computed: {
     stateIcon() {
@@ -115,7 +118,7 @@ export default {
       }
     },
     linkedDatasets() {
-      return this.formAttachments.dataExists ? this.formAttachments.filter(a => a.datasetExists).map(a => a.name.replace(/.csv$/i, '')) : [];
+      return this.publishedAttachments.dataExists ? this.publishedAttachments.filter(a => a.datasetExists).map(a => a.name.replace(/.csv$/i, '')) : [];
     }
   }
 };
@@ -169,7 +172,8 @@ export default {
       "full": "{submissions} has been saved for this Form. | {submissions} have been saved for this Form.",
       "submissions": "Submission | Submissions"
     },
-    "datasetsLinked": "Dataset attach data into this Form: | Datasets attach data into this Form:"
+    // The count of Dataset(s) is shown separately above this text.
+    "datasetsLinked": "Dataset attaches data into this Form: | Datasets attach data into this Form:"
   }
 }
 </i18n>

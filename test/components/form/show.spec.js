@@ -26,9 +26,9 @@ describe('FormShow', () => {
     return load('/projects/1/forms/a%20b').testRequests([
       { url: '/v1/projects/1', extended: true },
       { url: '/v1/projects/1/forms/a%20b', extended: true },
-      { url: '/v1/projects/1/forms/a%20b/attachments' },
       { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
-      { url: '/v1/projects/1/forms/a%20b/draft/attachments' }
+      { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
+      { url: '/v1/projects/1/forms/a%20b/attachments' }
     ]);
   });
 
@@ -77,10 +77,12 @@ describe('FormShow', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: false });
     testData.standardFormAttachments.createPast(1);
     return load('/projects/1/forms/f')
-      .beforeEachResponse(app => {
+      .beforeEachResponse((app, req) => {
         const loading = app.findAllComponents(Loading);
         loading.length.should.equal(2);
-        loading[0].props().state.should.eql(true);
+        if (req.url !== '/v1/projects/1/forms/f/attachments') { // skip form/f/attachments because it is requested from FormOverview
+          loading[0].props().state.should.eql(true);
+        }
       })
       .afterResponses(app => {
         const loading = app.findAllComponents(Loading);
@@ -178,6 +180,7 @@ describe('FormShow', () => {
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
         .respondWithSuccess()
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .complete()
         .testNoRequest(() => {
           clock.tick(3000);
@@ -209,6 +212,7 @@ describe('FormShow', () => {
         })
         .respondWithSuccess()
         .respondWithData(() => testData.standardFormDrafts.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .complete()
         .testNoRequest(() => {
           clock.tick(3000);
@@ -384,9 +388,8 @@ describe('FormShow', () => {
           app.getComponent(FormShow).vm.fetchForm();
           clock.tick(3000);
         })
-        // There should be only two response, not three.
-        .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted());
+        // There should be only one response, not two.
+        .respondWithData(() => testData.extendedForms.last());
     });
 
     it('sends two requests if form and draft both do not have an enketoId', () => {

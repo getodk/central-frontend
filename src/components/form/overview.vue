@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="form-overview">
     <div class="row">
       <div class="col-xs-6">
-        <form-overview-right-now v-if="form.dataExists"
+        <form-overview-right-now v-if="dataExists"
           @view-xml="showModal('viewXml')"/>
       </div>
       <div v-if="formDraft.dataExists" id="form-overview-draft" class="col-xs-6">
@@ -68,6 +68,8 @@ import SummaryItem from '../summary-item.vue';
 import modal from '../../mixins/modal';
 import { loadAsync } from '../../util/load-async';
 import { useRequestData } from '../../request-data';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 
 export default {
   name: 'FormOverview',
@@ -92,8 +94,8 @@ export default {
     }
   },
   setup() {
-    const { form, formDraft } = useRequestData();
-    return { form, formDraft };
+    const { form, publishedAttachments, formDraft, resourceStates } = useRequestData();
+    return { form, publishedAttachments, formDraft, ...resourceStates([form, publishedAttachments]) };
   },
   data() {
     return {
@@ -102,6 +104,17 @@ export default {
         state: false
       }
     };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.publishedAttachments.request({
+        url: apiPaths.publishedAttachments(this.projectId, this.xmlFormId),
+        resend: false
+      }).catch(noop);
+    }
   }
 };
 </script>

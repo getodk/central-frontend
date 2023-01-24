@@ -72,7 +72,6 @@ const responsesByComponent = {
   FormShow: componentResponses({
     project: true,
     form: () => testData.extendedForms.last(),
-    formAttachments: () => testData.standardFormAttachments.sorted(),
     formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
       ? testData.extendedFormDrafts.last()
       : mockResponse.problem(404.1)),
@@ -80,7 +79,9 @@ const responsesByComponent = {
       ? testData.standardFormAttachments.sorted()
       : mockResponse.problem(404.1))
   }),
-  FormOverview: [],
+  FormOverview: componentResponses({
+    publishedAttachments: () => testData.standardFormAttachments.sorted()
+  }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormSubmissions: componentResponses({
     keys: true,

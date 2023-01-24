@@ -5,22 +5,28 @@ import FormVersionString from '../../../../src/components/form-version/string.vu
 import FormVersionViewXml from '../../../../src/components/form-version/view-xml.vue';
 import SummaryItem from '../../../../src/components/summary-item.vue';
 import testData from '../../../data';
+import useForm from '../../../../src/request-data/form';
 
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
 import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
+import { testRequestData } from '../../../util/request-data';
 
 const mountComponent = () => {
   const form = testData.extendedForms.last();
-  const formAttachments = testData.standardFormAttachments.sorted();
+  const publishedAttachments = testData.standardFormAttachments.sorted();
   return mount(FormOverviewRightNow, {
     container: {
       router: mockRouter(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`),
-      requestData: { form, formAttachments }
+      requestData: testRequestData([useForm], {
+        form,
+        publishedAttachments
+      })
     }
   });
 };
+
 const findItem = (component, idSuffix) => {
   const id = `form-overview-right-now-${idSuffix}`;
   const items = component.findAllComponents(SummaryItem);
@@ -39,12 +45,14 @@ describe('FormOverviewRightNow', () => {
 
   it('toggles the "View XML" modal', () => {
     testData.extendedForms.createPast(1);
-    return load('/projects/1/forms/f', { root: false }).testModalToggles({
-      modal: FormVersionViewXml,
-      show: '#form-overview-right-now .form-version-def-dropdown a',
-      hide: '.btn-primary',
-      respond: (series) => series.respondWithData(() => '<x/>')
-    });
+    return load('/projects/1/forms/f', { root: false })
+      // .respondWithData(() => testData.standardFormAttachments.sorted())
+      .testModalToggles({
+        modal: FormVersionViewXml,
+        show: '#form-overview-right-now .form-version-def-dropdown a',
+        hide: '.btn-primary',
+        respond: (series) => series.respondWithData(() => '<x/>')
+      });
   });
 
   describe('form state', () => {
