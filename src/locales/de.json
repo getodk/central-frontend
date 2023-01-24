@@ -27,7 +27,6 @@
   "systemHome": {
     "title": "System-Management",
     "tab": {
-      "backups": "Sicherheitskopien",
       "audits": "Server Audit Logs",
       "analytics": "Nutzungsberichterstattung"
     }
@@ -72,7 +71,6 @@
         "delete": "Löschen"
       },
       "analytics": "Berichtsnutzung",
-      "backup": "Sicherheitskopie",
       "config": {
         "set": "Setzen"
       },
@@ -265,8 +263,7 @@
       "settings": "Einstellungen",
       "overview": "Übersicht"
     },
-    "total": "Total",
-    "lastSubmission": "letzte {dateTime}"
+    "total": "Total"
   },
   "mixin": {
     "request": {

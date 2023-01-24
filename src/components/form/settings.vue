@@ -162,7 +162,7 @@ export default {
       "title": "État du formulaire",
       "body": {
         "full": "Pour définir l'état de ce formulaire, veuillez consulter le {formAccessSettings} du projet.",
-        "formAccessSettings": "Paramètres d'accès aux formualires"
+        "formAccessSettings": "Paramètres d'accès aux formulaires"
       }
     },
     "action": {

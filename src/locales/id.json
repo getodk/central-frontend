@@ -27,7 +27,6 @@
   "systemHome": {
     "title": "Manajemen Sistem",
     "tab": {
-      "backups": "Data Cadangan",
       "audits": "Catatan Server Audit",
       "analytics": "Pelaporan Penggunaan"
     }
@@ -71,7 +70,6 @@
         "delete": "Hapus"
       },
       "analytics": "Laporkan Penggunaan",
-      "backup": "Pembuatan data cadangan",
       "config": {
         "set": "Set"
       },

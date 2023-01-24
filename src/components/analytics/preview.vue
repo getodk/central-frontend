@@ -267,7 +267,8 @@ export default {
     },
     "submissionStates": "États des soumissions",
     "datasets": {
-      "title": "Résumé des Datasets et des Entités"
+      "title": "Résumé des Datasets et des Entités",
+      "subtitle": "(Affiche le plus Dataset le plus actif parmi {count} Datasets) | (Affiche le plus Dataset le plus actif parmi {count} Datasets) | (Affiche le plus Dataset le plus actif parmi {count} Datasets)"
     },
     "other": "Autre"
   },
@@ -283,6 +284,10 @@ export default {
       "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti) | (Visualizzazione del progetto più attivo di {count} Progetti)"
     },
     "submissionStates": "Stato invio",
+    "datasets": {
+      "title": "Riepiloghi di set di dati e entità",
+      "subtitle": "(Mostra il set di dati più attivo {count} di set di dati) | (Mostra il set di dati più attivo {count} di set di dati) | (Mostra il set di dati più attivo {count} di set di dati)"
+    },
     "other": "Altro"
   },
   "ja": {

@@ -27,7 +27,6 @@
   "systemHome": {
     "title": "システム管理",
     "tab": {
-      "backups": "バックアップ",
       "audits": "サーバー監査ログ",
       "analytics": "利用状況報告"
     }
@@ -71,7 +70,6 @@
         "delete": "削除"
       },
       "analytics": "利用状況報告",
-      "backup": "バックアップ",
       "config": {
         "set": "設定"
       },
@@ -257,8 +255,7 @@
       "settings": "設定",
       "overview": "概要"
     },
-    "total": "全期間",
-    "lastSubmission": "（最終提出 {dateTime}）"
+    "total": "全期間"
   },
   "mixin": {
     "request": {

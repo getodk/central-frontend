@@ -129,7 +129,6 @@ export default {
       "num_unique_managers": "Number of unique Project Managers",
       "num_unique_viewers": "Počet unikátních diváků projektu",
       "num_unique_collectors": "Počet jedinečných sběračů dat",
-      "backups_configured": "Konfigurace záloh",
       "database_size": "Velikost systémové databáze",
       "uses_external_db": "Server používá externí databázi",
       "num_managers": "Počet projektových manažerů",
@@ -157,7 +156,13 @@ export default {
       "num_submissions_from_app_users": "Počet podání od uživatelů aplikace",
       "num_submissions_from_public_links": "Počet podání z veřejných odkazů",
       "num_submissions_from_web_users": "Počet podání od uživatelů webu",
-      "has_description": "Projekt má popis"
+      "has_description": "Projekt má popis",
+      "description_length": "Délka popisu projektu",
+      "num_properties": "Počet vlastností",
+      "num_creation_forms": "Počet formulářů, které aktualizují datovou sadu",
+      "num_followup_forms": "Počet formulářů, které používají datovou sadu",
+      "num_entities": "Počet subjektů v datovém souboru",
+      "num_failed_entities": "Počet chyb při vytváření subjektu"
     }
   },
   "de": {
@@ -171,7 +176,6 @@ export default {
       "num_unique_managers": "Anzahl eindeutiger Projekt-Manager",
       "num_unique_viewers": "Anzahl eindeutiger Projekt-Betrachter",
       "num_unique_collectors": "Anzahl eindeutiger Datensammler",
-      "backups_configured": "Sicherungskopien konfiguriert.",
       "database_size": "Systemdatenbankgröße",
       "uses_external_db": "Der Server verwendet eine externe Datenbank",
       "num_managers": "Anzahl Projekt-Manager",
@@ -213,7 +217,6 @@ export default {
       "num_unique_managers": "Número de Project Managers únicos",
       "num_unique_viewers": "Número de observadores del proyecto unicos",
       "num_unique_collectors": "Número de recopiladores de datos unicos",
-      "backups_configured": "Copias de seguridad configuradas",
       "database_size": "Tamaño de la base de datos del sistema",
       "uses_external_db": "El servidor utiliza una base de datos externa",
       "num_managers": "Número de jefes de proyecto",
@@ -255,7 +258,6 @@ export default {
       "num_unique_managers": "Nombre de gestionnaires de projets uniques",
       "num_unique_viewers": "Nombre de lecteurs de projets uniques",
       "num_unique_collectors": "Nombre de collecteurs de données uniques",
-      "backups_configured": "Sauvegardes configurées",
       "database_size": "Taille de la base de données du système",
       "uses_external_db": "Le serveur utilise une base de données externe",
       "num_managers": "Nombre de gestionnaires de projet",
@@ -318,7 +320,6 @@ export default {
       "num_unique_managers": "Numero di responsabili del progetto unici",
       "num_unique_viewers": "Numero di visualizzatori del progetto unici",
       "num_unique_collectors": "Numero di raccoglitori di dati unici",
-      "backups_configured": "Backups configurati.",
       "database_size": "System database size",
       "uses_external_db": "Il server utilizza una base di dati esterna",
       "num_managers": "Numero di responsabili del progetto",
@@ -346,7 +347,13 @@ export default {
       "num_submissions_from_app_users": "Numero di invii ricevuti da utenti applicazione",
       "num_submissions_from_public_links": "Numero di invii ricevuti da link pubblici",
       "num_submissions_from_web_users": "Numero di invii ricevuti da utenti web",
-      "has_description": "Il Progetto ha una descrizione"
+      "has_description": "Il Progetto ha una descrizione",
+      "description_length": "Lunghezza della descrizione del progetto",
+      "num_properties": "Numero di proprietà",
+      "num_creation_forms": "Numero di formulari che aggiornano il set di dati",
+      "num_followup_forms": "Numero di formulari che usano il set di dati",
+      "num_entities": "Numero di Entità nel set di dati",
+      "num_failed_entities": "Numero di errori nella creazione dell'entità"
     }
   },
   "ja": {
@@ -360,7 +367,6 @@ export default {
       "num_unique_managers": "固有のプロジェクトマネジャー数",
       "num_unique_viewers": "固有のプロジェクト閲覧者数",
       "num_unique_collectors": "固有のデータ収集者数",
-      "backups_configured": "設定されたバックアップ",
       "database_size": "システムのデータベースサイズ",
       "num_managers": "プロジェクト・マネージャー数",
       "num_viewers": "プロジェクト・閲覧者数",
@@ -397,7 +403,6 @@ export default {
       "num_unique_managers": "Idadi ya wasimamizi wa Miradi wa kipekee",
       "num_unique_viewers": "Idadi ya watazamaji wa kipekee wa Mradi",
       "num_unique_collectors": "Idadi ya Wakusanyaji data wa kipekee",
-      "backups_configured": "Hifadhi rudufu zilizosanidiwa",
       "database_size": "Saizi ya hifadhidata ya mfumo",
       "num_managers": "Idadi ya wasimamizi wa miradi",
       "num_viewers": "Idadi ya watazamaji wa mradi",

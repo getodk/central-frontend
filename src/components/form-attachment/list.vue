@@ -633,6 +633,10 @@ export default {
     "action": {
       "upload": "Caricare files"
     },
+    "heading": [
+      "In base al formulario che hai caricato, sono previsti i seguenti allegati al formulario. Puoi vedere quali sono stati forniti o mancano ancora.",
+      "Per caricare file, trascina e rilascia uno o più file sulla pagina."
+    ],
     "header": {
       "uploaded": "Caricati"
     },
@@ -642,7 +646,13 @@ export default {
     },
     "alert": {
       "readError": "Qualcosa è andato storto durante la lettura di \"{filename}\".",
-      "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo"
+      "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo",
+      "link": "Set di dati collegato correttamente."
+    },
+    "datasetsPreview": {
+      "body": [
+        "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi dei set di dati. Per impostazione predefinita, questi sono collegati ai set di dati. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti ai set di dati dopo aver verificato la logica del formulario."
+      ]
     }
   },
   "ja": {

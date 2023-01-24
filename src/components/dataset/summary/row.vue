@@ -147,12 +147,16 @@ export default {
 <i18n>
 {
   "cs": {
-    "new": "nový!"
+    "new": "nový!",
+    "addedByThisDraft": "Přidáno podle tohoto návrhu"
   },
   "fr": {
     "new": "nouveau !",
-    "properties": "{inform} des {count} propriétés | {inform} des {count} propriétés | {inform} des {count} propriétés",
     "addedByThisDraft": "Ajouté par cette ébauche"
+  },
+  "it": {
+    "new": "nuovo!",
+    "addedByThisDraft": "Aggiunto da questa bozza"
   }
 }
 </i18n>

@@ -180,6 +180,7 @@ export default {
     "formVersion": "Versión formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente de usuario",
+    "attachments": "Adjuntos",
     "present": "{count} file | {count} files | {count} files",
     "expected": "{count} expected | {count} esperado | {count} esperado",
     "attachmentSummary": "{present} / {expected}"
@@ -206,6 +207,7 @@ export default {
     "formVersion": "Versione formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente utente",
+    "attachments": "Allegati",
     "present": "{count} file | {count} files | {count} files",
     "expected": "{count} atteso | {count} attesi | {count} attesi",
     "attachmentSummary": "{present} / {expected}"

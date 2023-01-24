@@ -27,7 +27,6 @@
   "systemHome": {
     "title": "Řízení systému",
     "tab": {
-      "backups": "Zálohy",
       "audits": "Protokoly auditu serveru",
       "analytics": "Hlášení o používání"
     }
@@ -59,6 +58,7 @@
       "user": "Akce webového uživatele",
       "project": "Akce projektu",
       "form": "Akce formuláře",
+      "dataset": "Akce datové sady",
       "field_key": "Akce uživatelů aplikace",
       "public_link": "Akce s veřejným přístupem",
       "config": "Akce konfigurace serveru",
@@ -72,7 +72,6 @@
         "delete": "Smazat"
       },
       "analytics": "Zpráva o použití",
-      "backup": "Záloha",
       "config": {
         "set": "Nastavit"
       },
@@ -202,6 +201,7 @@
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
     "config": "Konfigurace serveru",
+    "dataset": "Datová sada",
     "datasets": "Datové sady",
     "form": "Formulář",
     "forms": "Formuláře",
@@ -241,13 +241,15 @@
     }
   },
   "submission": {
+    "missingAttachment": "Chybějící příloha",
     "action": {
       "edit": "Upravit ({count})"
     },
     "editDisabled": "Šifrované příspěvky nemůžete upravovat.",
     "binaryLinkTitle": "Soubor byl odeslán. Kliknutím stáhnete.",
     "encryptionMessage": "Náhled dat není k dispozici kvůli šifrování.",
-    "noSubmission": "(žádný)"
+    "noSubmission": "(žádný)",
+    "emptyTable": "Zatím nejsou žádné příspěvky."
   },
   "common": {
     "activity": "Aktivita",
@@ -257,6 +259,7 @@
     "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
     "docs": "Dokumentace",
+    "error": "Chyba",
     "filter": "Filtr",
     "forum": "Fórum",
     "loading": "Načítání...",
@@ -271,7 +274,6 @@
       "overview": "Přehled"
     },
     "total": "Celkem",
-    "lastSubmission": "(naposledy {dateTime})",
     "punctuations": {
       "comma": ","
     },

@@ -109,10 +109,14 @@ export default {
 <i18n>
 {
   "cs": {
+    "title": "Odkaz Datové sady",
     "introduction": [
       "Určitě chcete datovou sadu propojit?",
       "Nahraný soubor bude odstraněn. Později jej můžete vždy nahrát znovu."
-    ]
+    ],
+    "action": {
+      "link": "Odkaz"
+    }
   },
   "fr": {
     "title": "Lier le Dataset",
@@ -122,6 +126,16 @@ export default {
     ],
     "action": {
       "link": "Lien"
+    }
+  },
+  "it": {
+    "title": "Collega set di dati",
+    "introduction": [
+      "Sei sicuro di voler collegare il set di dati?",
+      "Il file che hai caricato verrà eliminato. Puoi sempre caricarlo di nuovo in un secondo momento."
+    ],
+    "action": {
+      "link": "Collegamento"
     }
   }
 }

@@ -143,7 +143,8 @@ export default {
     "introduction": [
       "Sei sicuro di voler eliminare il formulario {name} e tutti i suoi invii?",
       "Questa azione sposterà il formulario nel Cestino. Dopo 30 giorni nel Cestino, verrà eliminato definitivamente, ma prima di allora può essere ripristinato."
-    ]
+    ],
+    "noDeleteEntities": "Qualsiasi entità creata dagli invii di questo formulario non verrà eliminata. In una versione futura di Central, sarà possibile eliminare Entità."
   },
   "ja": {
     "title": "フォームの削除",

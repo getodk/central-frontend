@@ -129,7 +129,15 @@ Select {all} / {none} */
 {
   "cs": {
     "field": {
-      "submitter": "Odesláno od"
+      "submitter": "Odesláno od",
+      "search": "Hledat odesílatele..."
+    },
+    "placeholder": "{selected} z {total}",
+    "action": {
+      "select": {
+        "all": "Vše",
+        "none": "Žádný"
+      }
     },
     "unknown": "Neznámý odesílatel"
   },
@@ -143,13 +151,27 @@ Select {all} / {none} */
     "field": {
       "submitter": "Enviado por"
     },
+    "placeholder": "{selected} de {total}",
+    "action": {
+      "select": {
+        "all": "Todos",
+        "none": "Ninguno"
+      }
+    },
     "unknown": "Remitente desconocido"
   },
   "fr": {
     "field": {
-      "submitter": "Soumis par"
+      "submitter": "Soumis par",
+      "search": "Rechercher des expéditeurs"
     },
     "placeholder": "{selected} sur {total}",
+    "action": {
+      "select": {
+        "all": "Tous",
+        "none": "Aucun"
+      }
+    },
     "unknown": "Expéditeur inconnu"
   },
   "id": {
@@ -159,7 +181,15 @@ Select {all} / {none} */
   },
   "it": {
     "field": {
-      "submitter": "Inviato da"
+      "submitter": "Inviato da",
+      "search": "Cerca tra gli utenti..."
+    },
+    "placeholder": "{selected} di {total}",
+    "action": {
+      "select": {
+        "all": "Tutto",
+        "none": "Nessuno/a"
+      }
     },
     "unknown": "Utente invio sconosciuto"
   },

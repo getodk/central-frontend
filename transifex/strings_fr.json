@@ -60,13 +60,9 @@
   "systemHome": {
     "title": {
       "string": "Gestion du système",
-      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      "developer_comment": "This is the title of the page for audit logs and other system-level functions."
     },
     "tab": {
-      "backups": {
-        "string": "Sauvegardes",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
       "audits": {
         "string": "Journal d'audit",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -158,7 +154,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "dataset": {
-        "string": "",
+        "string": "Actions sur les Datasets",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
@@ -199,10 +195,6 @@
       },
       "analytics": {
         "string": "Rapport d'utilisation",
-        "developer_comment": "This is shown in the log of actions performed on the server."
-      },
-      "backup": {
-        "string": "Sauvegarder",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "config": {
@@ -413,6 +405,14 @@
     "hidePreview": {
       "string": "Cacher l'aperçu",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "expand": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "collapse": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -478,6 +478,10 @@
       "string": "Créé par",
       "developer_comment": "This is the text of a table column header."
     },
+    "updatedBy": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "displayName": {
       "string": "Nom affiché",
       "developer_comment": "This is the text of a table column header."
@@ -513,6 +517,14 @@
     "type": {
       "string": "Type",
       "developer_comment": "This is the text of a table column header."
+    },
+    "entities": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+    },
+    "lastEntity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
   "plural": {
@@ -706,7 +718,7 @@
   },
   "common": {
     "activity": {
-      "string": "Activitée",
+      "string": "Activité",
       "developer_comment": "This is a title shown above a section of the page."
     },
     "anybody": {
@@ -781,18 +793,21 @@
     "total": {
       "string": "Total"
     },
-    "lastSubmission": {
-      "string": "(dernière {dateTime})",
-      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "totalSubmissions": {
+      "string": "Nombre total de soumissions"
     },
     "punctuations": {
       "comma": {
-        "string": ""
+        "string": ","
       }
     },
     "datasetsPreview": {
       "string": "Aperçu des Dataset",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "propertiesCount": {
+      "string": "{count, plural, one {} many {} other {}}",
+      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
   "mixin": {
@@ -1020,9 +1035,6 @@
         "num_unique_collectors": {
           "string": "Nombre de collecteurs de données uniques"
         },
-        "backups_configured": {
-          "string": "Sauvegardes configurées"
-        },
         "database_size": {
           "string": "Taille de la base de données du système"
         },
@@ -1162,7 +1174,7 @@
           "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {} many {} other {}}"
+          "string": "{count, plural, one {(Affiche le plus Dataset le plus actif parmi {count} Datasets)} many {(Affiche le plus Dataset le plus actif parmi {count} Datasets)} other {(Affiche le plus Dataset le plus actif parmi {count} Datasets)}}"
         }
       },
       "other": {
@@ -1213,117 +1225,13 @@
         }
       }
     },
-    "BackupDeprecation": {
-      "text": {
-        "string": "Le 31 janvier 2023, les sauvegardes sur Google Drive cesseront de fonctionner"
-      }
-    },
-    "BackupList": {
-      "auditsTitle": {
-        "string": "Dernières Sauvegardes",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "alert": {
-        "terminate": {
-          "string": "Vos sauvegardes automatiques ont été interrompues."
-        }
-      }
-    },
-    "BackupStatus": {
-      "getHelp": {
-        "full": {
-          "string": "Si vous rencontrez des difficultés, merci de consulter le {forum}.",
-          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
-        },
-        "forum": {
-          "string": "forum de la communauté",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
-        }
-      },
-      "notConfigured": {
-        "0": {
-          "string": "Sauvegarde non configuré"
-        },
-        "1": {
-          "string": "Dans les versions précédentes d'ODK Central, il était possible de mettre en place des sauvegardes automatiques sur Google Drive. Cette fonctionnalité est dépréciée, mais il y a d'autres moyens de sauvegarder les données du serveur. Nous recommandons fortement à tous les utilisateurs de sauvegarder leurs données."
-        }
-      },
-      "neverRun": {
-        "0": {
-          "string": "La sauvegarde configurée n'a pas encore été lancée."
-        },
-        "1": {
-          "string": "Si vous avez configuré des sauvegardes au cours des deux derniers jours, c'est normal. Sinon, quelque-chose s'est mal passé."
-        },
-        "2": {
-          "string": "Dans ce cas, la solution la plus probable consiste à redémarrer le service."
-        }
-      },
-      "somethingWentWrong": {
-        "0": {
-          "string": "Quelque-chose ne va pas."
-        },
-        "1": {
-          "full": {
-            "string": "La dernière sauvegarde correctement terminée était {moreThanThreeDaysAgo}.",
-            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
-          },
-          "moreThanThreeDaysAgo": {
-            "string": "plus de trois jours auparavant.",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
-          }
-        },
-        "2": {
-          "string": "La solution la plus probable consiste à redémarrer le service."
-        }
-      },
-      "success": {
-        "0": {
-          "string": "La sauvegarde fonctionne.",
-          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
-        },
-        "1": {
-          "string": "La dernière sauvegarde correctement exécutée {dateTime}.",
-          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
-        }
-      },
-      "action": {
-        "download": {
-          "string": "Télécharger la sauvegarde maintenant",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "terminate": {
-          "string": "Terminer",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "alert": {
-        "download": {
-          "string": "La sauvegarde est en cours, elle sera chiffrée et téléchargée sur votre ordinateur. Cela peut prendre un peu de temps. Une fois démarré le téléchargement, vous pourrez quitter cette page."
-        }
-      }
-    },
-    "BackupTerminate": {
-      "title": {
-        "string": "Terminer les Sauvegardes Automatiques",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "Êtes-vous sûr de vouloir mettre fin à vos sauvegardes automatiques ?"
-        },
-        "1": {
-          "string": "Si vous interrompez vos sauvegardes automatiques, vous ne pourrez plus les redémarrer. Les sauvegardes automatiques est une fonctionnalité dépréciée, mais il y a d'autres moyens de sauvegarder les données du serveur. "
-        }
-      }
-    },
     "DatasetIntroduction": {
       "title": {
         "string": "Bienvenue dans l’aperçu des Datasets !"
       },
       "body": {
         "0": {
-          "string": ""
+          "string": "Les Datasets sont un nouveau moyen de créer et gérer des données attachées dans ODK. Ils vous permettent d'utiliser les données collectées dans les Soumissions en les téléchargeant et en les utilisant dans un autre formulaire."
         },
         "1": {
           "string": "Les Datasets peuvent être joints {icon1} aux formulaires et leurs données peuvent être interrogées comme n'importe quel autre fichier de données CSV joint.",
@@ -1352,7 +1260,34 @@
         }
       },
       "datasetsWorkflow": {
+        "string": "Le \"Workflow\" des Datasets"
+      }
+    },
+    "DatasetOverview": {
+      "connectionsToForms": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "datasetProperties": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "DatasetOverviewConnectionToForms": {
+      "formsCreateEntities": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewDatasetProperties": {
+      "emptyTable": {
         "string": ""
+      }
+    },
+    "DatasetOverviewLinkedForms": {
+      "formsConsumeData": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetRow": {
@@ -1361,6 +1296,12 @@
           "string": "Télécharger les données (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetShow": {
+      "back": {
+        "string": "",
+        "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
@@ -1373,10 +1314,6 @@
       "new": {
         "string": "nouveau !",
         "developer_comment": "This is shown when a dataset is new"
-      },
-      "properties": {
-        "string": "{count, plural, one {{inform} des {count} propriétés} many {{inform} des {count} propriétés} other {{inform} des {count} propriétés}}",
-        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
       },
       "addedByThisDraft": {
         "string": "Ajouté par cette ébauche",
@@ -1710,11 +1647,11 @@
           "developer_comment": "{attachmentName} is formatted in bold."
         },
         "dragover": {
-          "string": ""
+          "string": "Faites glisser sur le Formulaire le fichier avec lequel vous souhaiter remplacer la pièce jointe et déposez-la pour le l'envoyer."
         },
         "dropToPrepare": {
           "full": {
-            "string": "Déposez maintenant pour préparer le téléversement de {countOfFiles} vers ce formualire.",
+            "string": "Déposez maintenant pour préparer le téléversement de {countOfFiles} vers ce formulaire.",
             "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
           },
           "countOfFiles": {
@@ -1807,7 +1744,7 @@
       },
       "action": {
         "linkDataset": {
-          "string": "",
+          "string": "Lier le Dataset {datasetName}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2006,7 +1943,7 @@
       "warnings": {
         "attachments": {
           "full": {
-            "string": "",
+            "string": "Vous n'avez pas fourni tous les {formAttachments} requis par votre Formulaire. Vous pouvez ignorer ceci si vous le souhaitez, mais vous devrez créer une nouvelle Ébauche pour fournir ces fichiers plus tard.",
             "developer_comment": "This is a warning shown to the user.\n\n{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
           },
           "formAttachments": {
@@ -2027,7 +1964,7 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Vous êtes sur le point de faire de cette ébauche la publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers joints."
         },
         "1": {
           "string": "Les données existantes pour le formulaire finalisé ne seront pas affectées, mais toutes les données de test de cette ébauche seront supprimées."
@@ -2053,11 +1990,11 @@
       "dataset": {
         "introduction": {
           "full": {
-            "string": "",
+            "string": "{inAddition} publier cette Définition du formualire apportera les changements suivants au Projet :",
             "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
           },
           "inAddition": {
-            "string": "",
+            "string": "De plus,",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
           }
         },
@@ -2065,7 +2002,7 @@
           "string": "Un nouveau Dataset {datasetName} va être créé."
         },
         "newProperty": {
-          "string": ""
+          "string": "Dans le Dataset {datasetName}, une nouvelle propriété {propertyName} sera créée."
         }
       }
     },
@@ -2115,7 +2052,7 @@
           "string": "Succès ! La nouvelle définition du formulaire a été enregistrée comme ébauche."
         },
         "publish": {
-          "string": ""
+          "string": "Votre ébauche est maintenant publiée. Chaque terminal qui reçoit des Formulaires de ce Projet recevra désormais la nouvelle définition de ce formulaire et les fichiers joints associés."
         },
         "abandon": {
           "string": "La version d'ébauche de ce formulaire a été supprimée avec succès."
@@ -2148,10 +2085,10 @@
             "string": "Ce formulaire peut ajouter des entités à un Dataset."
           },
           "1": {
-            "string": ""
+            "string": "Dans cette version préliminaire de Datasets, vous devez publier votre formulaire pour voir le Dataset. Dans une prochaine version de Central, vous pourrez tester la fonctionnalité des Datasets avec une ébauche de formualire.."
           },
           "2": {
-            "string": ""
+            "string": "Pour le moment, nous vous recommandons de publier vos formulaires relatifs au Datasets, et de ne pas approuver de soumissions (et donc de ne pas créer d'entité non désirée) tant que vous n'êtes pas certain que le Formulaire est prêt."
           }
         }
       }
@@ -2237,7 +2174,7 @@
           }
         },
         "2": {
-          "string": ""
+          "string": "Si vous avez des fichiers joints pour ce Formulaire, vous pourrez les fournir sur la page suivante, après que le Formulaire aura été créé."
         }
       },
       "dropZone": {
@@ -2277,20 +2214,37 @@
           "string": "Un formulaire portant le Form ID {xmlFormId} existe déjà dans ce projet."
         }
       },
+      "fields": {
+        "string": "Champs :",
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
+      },
       "warningsText": {
         "0": {
-          "string": "Ce fichier XLSForm peut être utilisé, mais il présente les problèmes possibles suivants (avertissements de conversion) :",
-          "developer_comment": "The word \"XLSForm\" should not be translated."
+          "string": "Ce fichier peut être utilisé, mais a possiblement les problèmes suivants :"
         },
         "1": {
-          "string": "Veuillez corriger les problèmes et réessayer."
+          "string": "Avertissements sur la conception du formulaire :"
         },
         "2": {
+          "string": "Avertissements sur le déroulement des opérations :"
+        },
+        "3": {
+          "deletedFormExists": {
+            "string": "Il y a un formualire avec l'identifiant \"{value}\" dans la corbeille. Si vous envoyez ce Formulaire, vous ne serez pas en mesure restaurer l'autre ayant le même ID."
+          },
+          "structureChanged": {
+            "string": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut."
+          }
+        },
+        "4": {
+          "string": "Merci de corriger le problème et d'essayer à nouveau."
+        },
+        "5": {
           "create": {
-            "string": "Si vous êtes sûr que ces problèmes peuvent être ignorés, cliquez sur le bouton pour créer quand même le formulaire :"
+            "string": "Si vous êtes sûr que ces problèmes peuvent être ignorés, cliquez le bouton pour créer le formulaire malgré tout :"
           },
           "update": {
-            "string": "Si vous êtes sûr que ce problème peut-être ignoré, cliquez sur le bouton pour mettre à jour l'ébauche :"
+            "string": "Si vous êtes sûr que ces problèmes peuvent être ignorés, cliquez le bouton pour mettre à jour l'ébauche malgré tout :"
           }
         }
       }
@@ -2303,7 +2257,7 @@
             "developer_comment": "This is a title shown above a section of the page."
           },
           "body": {
-            "string": ""
+            "string": "Ce formulaire n'a pas actuellement d'ébauche en cours. Si vous souhaitez apporter des modifications au Formulaire ou à ses fichiers joints, commencez par créer une nouvelle Ébauche en utilisant le bouton ci-dessus."
           }
         },
         "any": {
@@ -2397,7 +2351,7 @@
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
-            "string": "Paramètres d'accès aux formualires",
+            "string": "Paramètres d'accès aux formulaires",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAccessSettings} is in the following text:\n\nTo set this Form’s state, please visit the Project {formAccessSettings}."
           }
         }
@@ -2572,7 +2526,7 @@
     "Multiselect": {
       "action": {
         "select": {
-          "string": "",
+          "string": "Sélectionner {all}/{none} ",
           "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
         }
       }
@@ -2606,6 +2560,10 @@
       }
     },
     "NavbarHelpDropdown": {
+      "help": {
+        "string": "Aide",
+        "developer_comment": "This text is used to label a help menu that lists links to useful resources."
+      },
       "version": {
         "string": "Version",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -2712,7 +2670,7 @@
                 "string": "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur."
               },
               "7": {
-                "string": ""
+                "string": "Les nouvelles Soumissions ne seront plus transformées en entités."
               }
             },
             "1": {
@@ -2755,7 +2713,7 @@
             },
             "1": {
               "full": {
-                "string": "",
+                "string": "Si vous perdez la phrase de passe, il n'y a pas {no} de moyen de recouvrer vos données !",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
@@ -3615,11 +3573,11 @@
       "action": {
         "select": {
           "all": {
-            "string": "",
+            "string": "Tous",
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
-            "string": "",
+            "string": "Aucun",
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
@@ -3632,7 +3590,7 @@
           "developer_comment": "This is the text of a form field that shows the names of submitters."
         },
         "search": {
-          "string": "",
+          "string": "Rechercher des expéditeurs",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -3643,11 +3601,11 @@
       "action": {
         "select": {
           "all": {
-            "string": "",
+            "string": "Tous",
             "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
-            "string": "",
+            "string": "Aucun",
             "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
@@ -3893,6 +3851,10 @@
           "string": "Rôle sur l'ensemble du site",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "cannotResetPassword": {
+        "string": "",
+        "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {
         "string": "Vous ne pouvez pas supprimer votre propre compte.",

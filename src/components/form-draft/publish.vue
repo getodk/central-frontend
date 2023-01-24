@@ -298,6 +298,13 @@ export default {
     },
     "problem": {
       "409_6": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
+    },
+    "dataset": {
+      "introduction": {
+        "full": "{inAddition} zveřejněním této definice formuláře dojde k následujícím změnám v tomto projektu:",
+        "inAddition": "Navíc,"
+      },
+      "newDataset": "Bude vytvořena nová datová sada {datasetName}."
     }
   },
   "de": {
@@ -333,11 +340,21 @@ export default {
   "fr": {
     "title": "Publier l'ébauche",
     "warnings": {
+      "attachments": {
+        "full": "Vous n'avez pas fourni tous les {formAttachments} requis par votre Formulaire. Vous pouvez ignorer ceci si vous le souhaitez, mais vous devrez créer une nouvelle Ébauche pour fournir ces fichiers plus tard.",
+        "formAttachments": "Fichiers joints de formulaire"
+      },
       "testing": {
         "full": "Vous n'avez pas encore {tested} en téleversant une soumission. Vous n'êtes pas obligé de faire cela, mais c'est fortement recommandé.",
         "tested": "testé ce formulaire"
       }
     },
+    "introduction": [
+      "Vous êtes sur le point de faire de cette ébauche la publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers joints.",
+      "Les données existantes pour le formulaire finalisé ne seront pas affectées, mais toutes les données de test de cette ébauche seront supprimées.",
+      "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous.",
+      "Voulez vous procéder ?"
+    ],
     "field": {
       "version": "Version"
     },
@@ -345,7 +362,12 @@ export default {
       "409_6": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé. Merci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
     },
     "dataset": {
-      "newDataset": "Un nouveau Dataset {datasetName} va être créé."
+      "introduction": {
+        "full": "{inAddition} publier cette Définition du formualire apportera les changements suivants au Projet :",
+        "inAddition": "De plus,"
+      },
+      "newDataset": "Un nouveau Dataset {datasetName} va être créé.",
+      "newProperty": "Dans le Dataset {datasetName}, une nouvelle propriété {propertyName} sera créée."
     }
   },
   "id": {
@@ -357,16 +379,34 @@ export default {
   "it": {
     "title": "Pubblica bozza",
     "warnings": {
+      "attachments": {
+        "full": "Non hai fornito tutti i {formAttachments} che il tuo formulario richiede. Puoi ignorarlo se lo desideri, ma dovrai creare una nuova versione bozza per caricare quei file allegati in un secondo momento.",
+        "formAttachments": "Allegati del formulario"
+      },
       "testing": {
         "full": "Non hai ancora {tested} caricando un invio di prova. Non devi farlo, ma è altamente raccomandato.",
         "tested": "testato questo Formulario"
       }
     },
+    "introduction": [
+      "Stai per rendere questa bozza la versione pubblicata del tuo formulario. Ciò finalizzerà tutte le modifiche apportate alla definizione del formulario e ai suoi allegati.",
+      "Gli invii di Formulari esistenti non saranno interessati, ma tutti gli invii di test in bozza verranno rimossi.",
+      "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te.",
+      "Vuoi procedere?"
+    ],
     "field": {
       "version": "Versione"
     },
     "problem": {
       "409_6": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
+    },
+    "dataset": {
+      "introduction": {
+        "full": "{inAddition} la pubblicazione di questa definizione del formulario apporterà le seguenti modifiche a questo progetto:",
+        "inAddition": "Inoltre,"
+      },
+      "newDataset": "Un nuovo set di dati {datasetName} sarà creato.",
+      "newProperty": "Nel set di dati {datasetName}, una nuova proprietà {propertyName} sarà creata."
     }
   },
   "ja": {

@@ -60,13 +60,9 @@
   "systemHome": {
     "title": {
       "string": "Manajemen Sistem",
-      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      "developer_comment": "This is the title of the page for audit logs and other system-level functions."
     },
     "tab": {
-      "backups": {
-        "string": "Data Cadangan",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
       "audits": {
         "string": "Catatan Server Audit",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -199,10 +195,6 @@
       },
       "analytics": {
         "string": "Laporkan Penggunaan",
-        "developer_comment": "This is shown in the log of actions performed on the server."
-      },
-      "backup": {
-        "string": "Pembuatan data cadangan",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
       "config": {
@@ -413,6 +405,14 @@
     "hidePreview": {
       "string": "Sembunyikan pratinjau",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "expand": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "collapse": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -478,6 +478,10 @@
       "string": "Dibuat oleh",
       "developer_comment": "This is the text of a table column header."
     },
+    "updatedBy": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "displayName": {
       "string": "Nama tampilan",
       "developer_comment": "This is the text of a table column header."
@@ -513,6 +517,14 @@
     "type": {
       "string": "Tipe",
       "developer_comment": "This is the text of a table column header."
+    },
+    "entities": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+    },
+    "lastEntity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
   "plural": {
@@ -781,9 +793,8 @@
     "total": {
       "string": "Total"
     },
-    "lastSubmission": {
-      "string": "",
-      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "totalSubmissions": {
+      "string": ""
     },
     "punctuations": {
       "comma": {
@@ -793,6 +804,10 @@
     "datasetsPreview": {
       "string": "",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "propertiesCount": {
+      "string": "{count, plural, other {}}",
+      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
   "mixin": {
@@ -1020,9 +1035,6 @@
         "num_unique_collectors": {
           "string": ""
         },
-        "backups_configured": {
-          "string": ""
-        },
         "database_size": {
           "string": "Ukuran database sistem"
         },
@@ -1213,110 +1225,6 @@
         }
       }
     },
-    "BackupDeprecation": {
-      "text": {
-        "string": ""
-      }
-    },
-    "BackupList": {
-      "auditsTitle": {
-        "string": "Data Cadangan Terakhir",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "alert": {
-        "terminate": {
-          "string": ""
-        }
-      }
-    },
-    "BackupStatus": {
-      "getHelp": {
-        "full": {
-          "string": "Apabila Anda memiliki kesulitan, silakan kunjungi {forum}.",
-          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
-        },
-        "forum": {
-          "string": "Forum komunitas",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
-        }
-      },
-      "notConfigured": {
-        "0": {
-          "string": "Data cadangan tidak terkonfigurasi."
-        },
-        "1": {
-          "string": ""
-        }
-      },
-      "neverRun": {
-        "0": {
-          "string": "Data candangan yang dikonfigurasi belum berjalan."
-        },
-        "1": {
-          "string": "Hal ini adalah normal ppabila Anda memiliki data cadangan yang telah dikonfigurasi dalam beberapa hari terakhir. Jika tidak, terjadi sebuah kesalahan."
-        },
-        "2": {
-          "string": ""
-        }
-      },
-      "somethingWentWrong": {
-        "0": {
-          "string": "Terjadi kesalahan!"
-        },
-        "1": {
-          "full": {
-            "string": "Data cadangan terakhir yang sukses dibuat adalah {moreThanThreeDaysAgo}.",
-            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
-          },
-          "moreThanThreeDaysAgo": {
-            "string": "lebih dari tiga hari yang lalu",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
-          }
-        },
-        "2": {
-          "string": ""
-        }
-      },
-      "success": {
-        "0": {
-          "string": "Data cadangan telah berfungsi.",
-          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
-        },
-        "1": {
-          "string": "Data cadangan terakhir telah sukses dibuat {dateTime}.",
-          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
-        }
-      },
-      "action": {
-        "download": {
-          "string": "Unduh cadangan sekarang",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "terminate": {
-          "string": "Putuskan",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "alert": {
-        "download": {
-          "string": "Pencadangan sedang berlangsung dan akan dienkripsi selanjutnya diunduh ke komputermu. Perlu waktu beberapa saat. Saat pengunduhan dimulai, kamu bisa meninggalkan laman ini."
-        }
-      }
-    },
-    "BackupTerminate": {
-      "title": {
-        "string": "Putuskan Data Cadangan Otomatis",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "Apakah Anda yakin ingin memutus data cadangan otomatis?"
-        },
-        "1": {
-          "string": ""
-        }
-      }
-    },
     "DatasetIntroduction": {
       "title": {
         "string": ""
@@ -1355,12 +1263,45 @@
         "string": ""
       }
     },
+    "DatasetOverview": {
+      "connectionsToForms": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "datasetProperties": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "DatasetOverviewConnectionToForms": {
+      "formsCreateEntities": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewDatasetProperties": {
+      "emptyTable": {
+        "string": ""
+      }
+    },
+    "DatasetOverviewLinkedForms": {
+      "formsConsumeData": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "DatasetShow": {
+      "back": {
+        "string": "",
+        "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
@@ -1373,10 +1314,6 @@
       "new": {
         "string": "",
         "developer_comment": "This is shown when a dataset is new"
-      },
-      "properties": {
-        "string": "{count, plural, other {}}",
-        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
       },
       "addedByThisDraft": {
         "string": "",
@@ -2277,20 +2214,37 @@
           "string": "Formulir sudah ada di Proyek ini dengan ID Formulir \"{xmlFormId}\"."
         }
       },
+      "fields": {
+        "string": "",
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
+      },
       "warningsText": {
         "0": {
-          "string": "XLSForm dapat digunakan, tetapi dengan peringatan kemungkinan masalah berikut (peringatan konversi):",
-          "developer_comment": "The word \"XLSForm\" should not be translated."
+          "string": ""
         },
         "1": {
-          "string": "Mohon perbaiki dan coba lagi."
+          "string": ""
         },
         "2": {
+          "string": ""
+        },
+        "3": {
+          "deletedFormExists": {
+            "string": ""
+          },
+          "structureChanged": {
+            "string": ""
+          }
+        },
+        "4": {
+          "string": ""
+        },
+        "5": {
           "create": {
-            "string": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan buat formulir:"
+            "string": ""
           },
           "update": {
-            "string": "Apabila Anda yakin masalah ini dapat diabaikan, klik tombol untuk melanjutkan pembaruan draf:"
+            "string": ""
           }
         }
       }
@@ -2606,6 +2560,10 @@
       }
     },
     "NavbarHelpDropdown": {
+      "help": {
+        "string": "",
+        "developer_comment": "This text is used to label a help menu that lists links to useful resources."
+      },
       "version": {
         "string": "Versi",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -3893,6 +3851,10 @@
           "string": "Peran Seluruh Situs",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "cannotResetPassword": {
+        "string": "",
+        "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {
         "string": "Anda tidak dapat memberhentikan diri sendiri.",

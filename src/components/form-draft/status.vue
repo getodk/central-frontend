@@ -353,6 +353,7 @@ export default {
     },
     "alert": {
       "upload": "Succès ! La nouvelle définition du formulaire a été enregistrée comme ébauche.",
+      "publish": "Votre ébauche est maintenant publiée. Chaque terminal qui reçoit des Formulaires de ce Projet recevra désormais la nouvelle définition de ce formulaire et les fichiers joints associés.",
       "abandon": "La version d'ébauche de ce formulaire a été supprimée avec succès.",
       "delete": "Le formulaire {name} a été supprimé."
     }
@@ -405,6 +406,7 @@ export default {
     },
     "alert": {
       "upload": "Successo! La nuova definizione del formulario è stata salvata come bozza.",
+      "publish": "La tua bozza è ora pubblicata. Tutti i dispositivi che utilizzano i formulari per questo progetto riceveranno ora la nuova definizione del formulario e i suoi allegati.",
       "abandon": "La versione bozza di questo formulario è stata eliminata con successo.",
       "delete": "Il Formulario “{name}” è stato cancellato."
     }

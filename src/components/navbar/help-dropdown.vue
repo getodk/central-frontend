@@ -64,6 +64,7 @@ export default {
     "version": "Versión"
   },
   "fr": {
+    "help": "Aide",
     "version": "Version"
   },
   "id": {

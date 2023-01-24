@@ -60,13 +60,9 @@
   "systemHome": {
     "title": {
       "string": "Gestione del sistema",
-      "developer_comment": "This is the title of the page for managing backups, audit logs, and other system-level functions."
+      "developer_comment": "This is the title of the page for audit logs and other system-level functions."
     },
     "tab": {
-      "backups": {
-        "string": "Backups",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
       "audits": {
         "string": "Registri di controllo del server",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -158,7 +154,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "dataset": {
-        "string": "",
+        "string": "Azioni del set di dati",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
@@ -201,10 +197,6 @@
         "string": "Rapporto di utilizzo",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
-      "backup": {
-        "string": "Backup",
-        "developer_comment": "This is shown in the log of actions performed on the server."
-      },
       "config": {
         "set": {
           "string": "Configura",
@@ -213,11 +205,11 @@
       },
       "dataset": {
         "update": {
-          "string": "",
+          "string": "Aggiorna",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         },
         "update_publish": {
-          "string": "",
+          "string": "Pubblica",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
         }
       },
@@ -339,7 +331,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "finish": {
-      "string": "",
+      "string": "Termina",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "logIn": {
@@ -413,6 +405,14 @@
     "hidePreview": {
       "string": "Nascondi anteprima",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "expand": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "collapse": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -478,6 +478,10 @@
       "string": "Creato da",
       "developer_comment": "This is the text of a table column header."
     },
+    "updatedBy": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "displayName": {
       "string": "Nome visualizzato",
       "developer_comment": "This is the text of a table column header."
@@ -513,6 +517,14 @@
     "type": {
       "string": "Tipo",
       "developer_comment": "This is the text of a table column header."
+    },
+    "entities": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+    },
+    "lastEntity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
   "plural": {
@@ -563,7 +575,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "dataset": {
-      "string": "",
+      "string": "Set di dati",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "datasets": {
@@ -579,7 +591,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formAttachments": {
-      "string": "",
+      "string": "Allegati del formulario",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "project": {
@@ -677,7 +689,7 @@
   },
   "submission": {
     "missingAttachment": {
-      "string": "",
+      "string": "Allegati mancanti",
       "developer_comment": "This is a possible state for a Submission. It means that the Submission is missing one or more expected Attachments."
     },
     "action": {
@@ -701,7 +713,7 @@
       "developer_comment": "This text is shown under the \"Latest Submission\" column of the tables for Projects and Forms. It is shown for a Project or Form with no Submissions."
     },
     "emptyTable": {
-      "string": ""
+      "string": "Non ci sono ancora invii."
     }
   },
   "common": {
@@ -734,7 +746,7 @@
       "developer_comment": "This is the text of a link that links to the documentation."
     },
     "error": {
-      "string": ""
+      "string": "Errore"
     },
     "filter": {
       "string": "Filtro",
@@ -781,18 +793,21 @@
     "total": {
       "string": "Totale"
     },
-    "lastSubmission": {
-      "string": "(ultimo {dateTime})",
-      "developer_comment": "This text shows when the last Submission was received. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+    "totalSubmissions": {
+      "string": ""
     },
     "punctuations": {
       "comma": {
-        "string": ""
+        "string": ","
       }
     },
     "datasetsPreview": {
-      "string": "",
+      "string": "Anteprima dei set di dati",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "propertiesCount": {
+      "string": "{count, plural, one {} many {} other {}}",
+      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
   "mixin": {
@@ -1020,9 +1035,6 @@
         "num_unique_collectors": {
           "string": "Numero di raccoglitori di dati unici"
         },
-        "backups_configured": {
-          "string": "Backups configurati."
-        },
         "database_size": {
           "string": "System database size"
         },
@@ -1108,22 +1120,22 @@
           "string": "Il Progetto ha una descrizione"
         },
         "description_length": {
-          "string": ""
+          "string": "Lunghezza della descrizione del progetto"
         },
         "num_properties": {
-          "string": ""
+          "string": "Numero di proprietà"
         },
         "num_creation_forms": {
-          "string": ""
+          "string": "Numero di formulari che aggiornano il set di dati"
         },
         "num_followup_forms": {
-          "string": ""
+          "string": "Numero di formulari che usano il set di dati"
         },
         "num_entities": {
-          "string": ""
+          "string": "Numero di Entità nel set di dati"
         },
         "num_failed_entities": {
-          "string": ""
+          "string": "Numero di errori nella creazione dell'entità"
         }
       }
     },
@@ -1158,11 +1170,11 @@
       },
       "datasets": {
         "title": {
-          "string": "",
+          "string": "Riepiloghi di set di dati e entità",
           "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {} many {} other {}}"
+          "string": "{count, plural, one {(Mostra il set di dati più attivo {count} di set di dati)} many {(Mostra il set di dati più attivo {count} di set di dati)} other {(Mostra il set di dati più attivo {count} di set di dati)\n}}"
         }
       },
       "other": {
@@ -1213,146 +1225,69 @@
         }
       }
     },
-    "BackupDeprecation": {
-      "text": {
-        "string": "Il 31 gennaio 2023 i backup su Google Drive smetteranno di funzionare."
-      }
-    },
-    "BackupList": {
-      "auditsTitle": {
-        "string": "Ultimo backup",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "alert": {
-        "terminate": {
-          "string": "I tuoi backup automatici sono stati interrotti."
-        }
-      }
-    },
-    "BackupStatus": {
-      "getHelp": {
-        "full": {
-          "string": "Se hai problemi, consulta il {forum}.",
-          "developer_comment": "{forum} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ncommunity forum"
-        },
-        "forum": {
-          "string": "forum comunitario",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {forum} is in the following text:\n\nIf you are having trouble, please try the {forum}."
-        }
-      },
-      "notConfigured": {
-        "0": {
-          "string": "I backup non sono configurati."
-        },
-        "1": {
-          "string": "Nelle versioni precedenti di ODK Central era possibile impostare backup automatici su Google Drive. Questa funzionalità è stata deprecata, ma esistono altri modi per eseguire il backup dei dati sul server. Consigliamo vivamente a tutti gli utenti di eseguire il backup dei propri dati."
-        }
-      },
-      "neverRun": {
-        "0": {
-          "string": "Il backup configurato non è ancora stato eseguito."
-        },
-        "1": {
-          "string": "Se hai configurato i backup negli ultimi due giorni, è normale. Altrimenti qualcosa è andato storto."
-        },
-        "2": {
-          "string": "In tal caso, la soluzione più probabile è riavviare il servizio."
-        }
-      },
-      "somethingWentWrong": {
-        "0": {
-          "string": "Qualcosa non funziona!"
-        },
-        "1": {
-          "full": {
-            "string": "L'ultimo backup completato con successo è stato {moreThanThreeDaysAgo}.",
-            "developer_comment": "{moreThanThreeDaysAgo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nmore than three days ago"
-          },
-          "moreThanThreeDaysAgo": {
-            "string": "più di tre giorni fa",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {moreThanThreeDaysAgo} is in the following text:\n\nThe latest backup that completed successfully was {moreThanThreeDaysAgo}."
-          }
-        },
-        "2": {
-          "string": "La soluzione più probabile è riavviare il servizio."
-        }
-      },
-      "success": {
-        "0": {
-          "string": "Il Backup sta funzionando.",
-          "developer_comment": "This text is displayed if the latest backup attempt was successful. It indicates that the backup process is working."
-        },
-        "1": {
-          "string": "L'ultimo backup è stato completato con successo {dateTime}.",
-          "developer_comment": "{dateTime} shows the date and time at which the last backup completed, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\". {dateTime} is formatted in bold."
-        }
-      },
-      "action": {
-        "download": {
-          "string": "Scarica il backup ora",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "terminate": {
-          "string": "Terminare",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "alert": {
-        "download": {
-          "string": "Il backup è ora in esecuzione e verrà crittografato e scaricato sul tuo computer. L'operazione potrebbe richiedere del tempo. Una volta avviato il download, puoi lasciare questa pagina. "
-        }
-      }
-    },
-    "BackupTerminate": {
-      "title": {
-        "string": "Termina i backup automatici ",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "Sei sicuro di voler terminare i tuoi backup automatici? "
-        },
-        "1": {
-          "string": "Se interrompi i backup automatici, non sarai in grado di riavviarli. I backup automatici sono una funzionalità deprecata, ma esistono altri modi per eseguire il backup dei dati sul server."
-        }
-      }
-    },
     "DatasetIntroduction": {
       "title": {
-        "string": ""
+        "string": "Benvenuto nell'anteprima dei set di dati!"
       },
       "body": {
         "0": {
-          "string": ""
+          "string": "I set di dati sono un nuovo modo per creare e gestire gli allegati dati in ODK. Consentono di utilizzare i dati raccolti negli Invii per essere scaricati e utilizzati come parte di un altro Formulario."
         },
         "1": {
-          "string": "",
+          "string": "I set di dati possono essere allegati {icon1} ai formulari e i relativi dati possono essere interrogati proprio come qualsiasi altro file di dati CSV allegato.",
           "developer_comment": "{icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow."
         },
         "2": {
-          "string": "",
+          "string": "Quando viene approvato un Invio relativo a un Dataset {icon2}, i dati selezionati vengono aggiunti {icon3} al set di dati, in modo che la volta successiva che un cliente scaricherà il formulario, i nuovi dati verranno inclusi nel download dei dati.",
           "developer_comment": "{icon2} and {icon3} are icons that display the numbers 2 and 3. They refer to the second and third steps in an image that depicts this workflow."
         },
         "3": {
-          "string": "",
+          "string": "In una versione futura, sarai in grado di caricare {icon4} direttamente un CSV a un set di dati.",
           "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow."
         },
         "4": {
-          "string": ""
+          "string": "I set di dati vengono configurati durante la progettazione del formulario."
         }
       },
       "getStarted": {
         "full": {
-          "string": "",
+          "string": "Per ulteriori informazioni su come iniziare,{clickHere}.",
           "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
         },
         "clickHere": {
-          "string": "",
+          "string": "clicca qui ",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
         }
       },
       "datasetsWorkflow": {
+        "string": "Flusso di lavoro dei set di dati"
+      }
+    },
+    "DatasetOverview": {
+      "connectionsToForms": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "datasetProperties": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "DatasetOverviewConnectionToForms": {
+      "formsCreateEntities": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewDatasetProperties": {
+      "emptyTable": {
         "string": ""
+      }
+    },
+    "DatasetOverviewLinkedForms": {
+      "formsConsumeData": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetRow": {
@@ -1363,23 +1298,25 @@
         }
       }
     },
+    "DatasetShow": {
+      "back": {
+        "string": "",
+        "developer_comment": "This is shown at the top of the page."
+      }
+    },
     "DatasetSummary": {
       "datasetUpdates": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Il set di dati è aggiornato da questo formulario:} many {I set di dati vengono aggiornati da questo formulario:} other {I set di dati vengono aggiornati da questo formulario:}}",
         "developer_comment": "Number of dataset(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
       "new": {
-        "string": "",
+        "string": "nuovo!",
         "developer_comment": "This is shown when a dataset is new"
       },
-      "properties": {
-        "string": "{count, plural, one {} many {} other {}}",
-        "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
-      },
       "addedByThisDraft": {
-        "string": "",
+        "string": "Aggiunto da questa bozza",
         "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
       }
     },
@@ -1610,20 +1547,20 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "",
+        "string": "Collega set di dati",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Sei sicuro di voler collegare il set di dati?"
         },
         "1": {
-          "string": ""
+          "string": "Il file che hai caricato verrà eliminato. Puoi sempre caricarlo di nuovo in un secondo momento."
         }
       },
       "action": {
         "link": {
-          "string": "",
+          "string": "Collegamento",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -1637,7 +1574,7 @@
       },
       "heading": {
         "0": {
-          "string": ""
+          "string": "In base al formulario che hai caricato, sono previsti i seguenti allegati al formulario. Puoi vedere quali sono stati forniti o mancano ancora."
         },
         "1": {
           "string": "Per caricare file, trascina e rilascia uno o più file sulla pagina."
@@ -1667,13 +1604,13 @@
           "string": "{count, plural, one {{count} file è stato caricato con successo} many {{count} files sono stati caricati con successo} other {{count} files sono stati caricati con successo}}"
         },
         "link": {
-          "string": ""
+          "string": "Set di dati collegato correttamente."
         }
       },
       "datasetsPreview": {
         "body": {
           "0": {
-            "string": ""
+            "string": "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi dei set di dati. Per impostazione predefinita, questi sono collegati ai set di dati. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti ai set di dati dopo aver verificato la logica del formulario."
           }
         }
       }
@@ -1710,7 +1647,7 @@
           "developer_comment": "{attachmentName} is formatted in bold."
         },
         "dragover": {
-          "string": ""
+          "string": "Trascina sopra l'allegato del formulario che desideri sostituire con il file e rilascialo per caricarlo."
         },
         "dropToPrepare": {
           "full": {
@@ -1799,20 +1736,20 @@
         }
       },
       "linkedToDataset": {
-        "string": "",
+        "string": "Collegato al set di dati {datasetName}",
         "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
       },
       "uploadToOverride": {
-        "string": ""
+        "string": "Carica un file da sovrascrivere."
       },
       "action": {
         "linkDataset": {
-          "string": "",
+          "string": "Collega set di dati {datasetName}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "override": {
-        "string": "",
+        "string": "Sovrascrivere",
         "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
       }
     },
@@ -1858,7 +1795,7 @@
         }
       },
       "noDeleteEntities": {
-        "string": ""
+        "string": "Qualsiasi entità creata dagli invii di questo formulario non verrà eliminata. In una versione futura di Central, sarà possibile eliminare Entità."
       }
     },
     "FormDraftAbandon": {
@@ -1875,15 +1812,15 @@
       "introduction": {
         "abandon": {
           "0": {
-            "string": ""
+            "string": "Stai per eliminare definitivamente la versione bozza di questo formulario. Ciò significa che la bozza di definizione del formulario, qualsiasi bozza di allegati che hai caricato e tutti gli invii di prova verranno rimossi."
           },
           "1": {
-            "string": ""
+            "string": "La definizione del formulario è stata pubblicata, i suoi allegati al formulario e gli invii non saranno interessati."
           }
         },
         "deleteForm": {
           "0": {
-            "string": ""
+            "string": "Stai per eliminare questa bozza di definizione del formulario, insieme a qualsiasi bozza di allegati che hai caricato e tutti gli invii di prova. Poiché non l'hai ancora pubblicato, l'intero formualrio verrà eliminato e spostato nel Cestino."
           }
         }
       },
@@ -1939,17 +1876,17 @@
         },
         "2": {
           "title": {
-            "string": "",
+            "string": "Carica gli allegati del formulario",
             "developer_comment": "This is the title of a checklist item."
           },
           "body": {
             "0": {
               "full": {
-                "string": "",
+                "string": "Il design del formulario fa riferimento ai file necessari per presentare il formulario. Puoi caricare copie nuove o aggiornate di questi per la distribuzione  nella scheda {formAttachments} .",
                 "developer_comment": "{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
               },
               "formAttachments": {
-                "string": "",
+                "string": "Allegati del formulario",
                 "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab."
               }
             }
@@ -2006,11 +1943,11 @@
       "warnings": {
         "attachments": {
           "full": {
-            "string": "",
+            "string": "Non hai fornito tutti i {formAttachments}  che il tuo formulario richiede. Puoi ignorarlo se lo desideri, ma dovrai creare una nuova versione bozza per caricare quei file allegati in un secondo momento.",
             "developer_comment": "This is a warning shown to the user.\n\n{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
           },
           "formAttachments": {
-            "string": "",
+            "string": "Allegati del formulario",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYou have not provided all the {formAttachments} that your Form requires. You can ignore this if you wish, but you will need to make a new Draft version to provide those Attachments later."
           }
         },
@@ -2027,7 +1964,7 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Stai per rendere questa bozza la versione pubblicata del tuo formulario. Ciò finalizzerà tutte le modifiche apportate alla definizione del formulario e ai suoi allegati."
         },
         "1": {
           "string": "Gli invii di Formulari esistenti non saranno interessati, ma tutti gli invii di test in bozza verranno rimossi."
@@ -2036,7 +1973,7 @@
           "string": "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te."
         },
         "3": {
-          "string": ""
+          "string": "Vuoi procedere?"
         }
       },
       "field": {
@@ -2053,19 +1990,19 @@
       "dataset": {
         "introduction": {
           "full": {
-            "string": "",
+            "string": "{inAddition} la pubblicazione di questa definizione del formulario apporterà le seguenti modifiche a questo progetto:",
             "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
           },
           "inAddition": {
-            "string": "",
+            "string": "Inoltre,",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
           }
         },
         "newDataset": {
-          "string": ""
+          "string": "Un nuovo set di dati {datasetName} sarà creato."
         },
         "newProperty": {
-          "string": ""
+          "string": "Nel set di dati {datasetName}, una nuova proprietà {propertyName} sarà creata."
         }
       }
     },
@@ -2115,7 +2052,7 @@
           "string": "Successo! La nuova definizione del formulario è stata salvata come bozza. "
         },
         "publish": {
-          "string": ""
+          "string": "La tua bozza è ora pubblicata. Tutti i dispositivi che utilizzano i formulari per questo progetto riceveranno ora la nuova definizione del formulario e i suoi allegati. "
         },
         "abandon": {
           "string": "La versione bozza di questo formulario è stata eliminata con successo. "
@@ -2145,13 +2082,13 @@
       "datasetsPreview": {
         "body": {
           "0": {
-            "string": ""
+            "string": "Questo modulo può aggiungere Entità a un set di dati."
           },
           "1": {
-            "string": ""
+            "string": "In questa versione di anteprima dei set di dati, è necessario pubblicare il formulario per visualizzare l'aggiornamento del set di dati. In una versione futura di Central, sarai in grado di testare la funzionalità del set di dati in uno stato Bozza."
           },
           "2": {
-            "string": ""
+            "string": "Per ora, ti consigliamo di pubblicare i formulari relativi al set di dati e di non approvare alcun invio (e quindi di non creare entità indesiderate) finché non sei sicuro che il formulario sia pronto."
           }
         }
       }
@@ -2237,7 +2174,7 @@
           }
         },
         "2": {
-          "string": ""
+          "string": "Se disponi di allegati, potrai caricarli nella pagina successiva, dopo che il formulario è stato creato. "
         }
       },
       "dropZone": {
@@ -2277,20 +2214,37 @@
           "string": "Esiste già un Formulario in questo progetto con il Form ID “{xmlFormId}”."
         }
       },
+      "fields": {
+        "string": "",
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
+      },
       "warningsText": {
         "0": {
-          "string": "Questo file XLSForm può essere utilizzato, ma presenta i seguenti possibili problemi (avvisi di conversione): ",
-          "developer_comment": "The word \"XLSForm\" should not be translated."
+          "string": ""
         },
         "1": {
-          "string": "Si prega di correggere i problemi e riprovare."
+          "string": ""
         },
         "2": {
+          "string": ""
+        },
+        "3": {
+          "deletedFormExists": {
+            "string": ""
+          },
+          "structureChanged": {
+            "string": ""
+          }
+        },
+        "4": {
+          "string": ""
+        },
+        "5": {
           "create": {
-            "string": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque il formulario: "
+            "string": ""
           },
           "update": {
-            "string": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque la bozza del formulario: "
+            "string": ""
           }
         }
       }
@@ -2303,7 +2257,7 @@
             "developer_comment": "This is a title shown above a section of the page."
           },
           "body": {
-            "string": ""
+            "string": "Al momento non esiste una versione bozza di questo formulario. Se desideri apportare modifiche al formulario o ai suoi allegati, inizia creando una bozza utilizzando il pulsante in alto. "
           }
         },
         "any": {
@@ -2572,7 +2526,7 @@
     "Multiselect": {
       "action": {
         "select": {
-          "string": "",
+          "string": "Seleziona {all} / {none}",
           "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
         }
       }
@@ -2606,6 +2560,10 @@
       }
     },
     "NavbarHelpDropdown": {
+      "help": {
+        "string": "",
+        "developer_comment": "This text is used to label a help menu that lists links to useful resources."
+      },
       "version": {
         "string": "Versione",
         "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
@@ -2712,7 +2670,7 @@
                 "string": "Non sarai più in grado di modificare gli Invii nel tuo browser web."
               },
               "7": {
-                "string": ""
+                "string": "I nuovi invii non verranno più elaborati in Entità."
               }
             },
             "1": {
@@ -2755,7 +2713,7 @@
             },
             "1": {
               "full": {
-                "string": "",
+                "string": "If you lose the passphrase, there is  {no} modo per recuperarlo oi tuoi dati!",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
@@ -3349,7 +3307,7 @@
         "string": "Agente utente"
       },
       "attachments": {
-        "string": "",
+        "string": "Allegati",
         "developer_comment": "This refers specifically to Submission Attachments."
       },
       "present": {
@@ -3443,7 +3401,7 @@
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "withAttachments": {
-            "string": "",
+            "string": "Tutti i dati e gli allegati",
             "developer_comment": "\"Attachments\" refers to Submission Attachments."
           }
         }
@@ -3504,10 +3462,10 @@
         },
         "entity": {
           "create": {
-            "string": ""
+            "string": "Entità creata {label} in {dataset} set di dati"
           },
           "error": {
-            "string": ""
+            "string": "Problema durante la creazione dell'Entità"
           }
         },
         "updateReviewState": {
@@ -3596,7 +3554,7 @@
         }
       },
       "warning": {
-        "string": ""
+        "string": "La selezione di troppe colonne potrebbe rallentare il computer."
       }
     },
     "SubmissionFilters": {
@@ -3609,17 +3567,17 @@
     },
     "SubmissionFiltersReviewState": {
       "placeholder": {
-        "string": "",
+        "string": "{selected} di {total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
       },
       "action": {
         "select": {
           "all": {
-            "string": "",
+            "string": "Tutto",
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
-            "string": "",
+            "string": "Nessuno/a",
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
@@ -3632,22 +3590,22 @@
           "developer_comment": "This is the text of a form field that shows the names of submitters."
         },
         "search": {
-          "string": "",
+          "string": "Cerca tra gli utenti...",
           "developer_comment": "This is the text of a form field."
         }
       },
       "placeholder": {
-        "string": "",
+        "string": "{selected} di {total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
       },
       "action": {
         "select": {
           "all": {
-            "string": "",
+            "string": "Tutto",
             "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
           },
           "none": {
-            "string": "",
+            "string": "Nessuno/a",
             "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
@@ -3893,6 +3851,10 @@
           "string": "Ruolo per tutto il sito",
           "developer_comment": "This is the text of a form field."
         }
+      },
+      "cannotResetPassword": {
+        "string": "",
+        "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {
         "string": "Non è possibile ritirare se stessi",
