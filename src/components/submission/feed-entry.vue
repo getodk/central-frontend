@@ -159,8 +159,13 @@ export default {
       return '';
     },
     entityProblem(entry) {
-      if ('problem' in entry.details && 'problemDetails' in entry.details.problem)
+      if ('problem' in entry.details &&
+        'problemDetails' in entry.details.problem &&
+        'reason' in entry.details.problem.problemDetails)
         return entry.details.problem.problemDetails.reason;
+      if ('problem' in entry.details &&
+        'errorMessage' in entry.details)
+        return entry.details.errorMessage;
       return '';
     }
   }
