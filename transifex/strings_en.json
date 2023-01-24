@@ -3852,6 +3852,10 @@
           "developer_comment": "This is the text of a form field."
         }
       },
+      "cannotResetPassword": {
+        "string": "You may not reset your own password on this page. To change your password, edit your profile.",
+        "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
+      },
       "cannotRetire": {
         "string": "You may not retire yourself.",
         "developer_comment": "An Administrator may retire other Web Users, but not their own account."

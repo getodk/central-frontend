@@ -13,12 +13,22 @@ describe('UserResetPassword', () => {
     mockLogin({ email: 'alice@getodk.org', displayName: 'Alice' });
   });
 
-  it('toggles the modal', () =>
-    load('/users', { root: false }).testModalToggles({
-      modal: UserResetPassword,
-      show: '.user-row .reset-password',
-      hide: '.btn-link'
-    }));
+  describe('reset password button', () => {
+    it('toggles the modal', () =>
+      load('/users', { root: false }).testModalToggles({
+        modal: UserResetPassword,
+        show: '.user-row .reset-password',
+        hide: '.btn-link'
+      }));
+
+    it('is disabled for the current user', async () => {
+      const component = await load('/users', { root: false });
+      const a = component.get('.user-row .reset-password');
+      a.element.parentNode.classList.contains('disabled').should.be.true();
+      a.should.have.ariaDescription(/^You may not reset your own password/);
+      await a.should.have.tooltip();
+    });
+  });
 
   it('sends the correct request', () =>
     mockHttp()
