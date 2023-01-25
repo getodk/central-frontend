@@ -232,9 +232,16 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d');
     });
 
-    it('odataSubmission', () => {
-      const path = apiPaths.odataSubmission(1, 'a b', "'c d'");
-      path.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')");
+    describe('odataSubmission', () => {
+      it('returns the correct path', () => {
+        const path = apiPaths.odataSubmission(1, 'a b', "'c d'");
+        path.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')");
+      });
+
+      it('returns a query string', () => {
+        const path = apiPaths.odataSubmission(1, 'a', 'b', { $select: '__id' });
+        path.should.equal("/v1/projects/1/forms/a.svc/Submissions('b')?%24select=__id");
+      });
     });
 
     it('editSubmission', () => {

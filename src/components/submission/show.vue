@@ -150,7 +150,8 @@ export default {
           url: apiPaths.odataSubmission(
             this.projectId,
             this.xmlFormId,
-            this.instanceId
+            this.instanceId,
+            { $select: '__id,__system,meta' }
           )
         }),
         this.submissionVersion.request({

@@ -5,7 +5,7 @@ import FormRow from '../../../src/components/form/row.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
-import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/file';
+import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/trigger';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';

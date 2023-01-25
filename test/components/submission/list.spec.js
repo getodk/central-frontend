@@ -1,20 +1,38 @@
-import sinon from 'sinon';
-
 import Spinner from '../../../src/components/spinner.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 
 import testData from '../../data';
+import { changeMultiselect } from '../../util/trigger';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mockResponse } from '../../util/axios';
+import { relativeUrl } from '../../util/request';
 
 // Create submissions along with the associated project and form.
 const createSubmissions = (count, factoryOptions = {}) => {
   testData.extendedForms.createPast(1, { submissions: count });
   testData.extendedSubmissions.createPast(count, factoryOptions);
+};
+const _scroll = (component, scrolledToBottom) => {
+  const method = component.vm.scrolledToBottom;
+  if (method == null) {
+    _scroll(component.getComponent(SubmissionList), scrolledToBottom);
+    return;
+  }
+  // eslint-disable-next-line no-param-reassign
+  component.vm.scrolledToBottom = () => scrolledToBottom;
+  document.dispatchEvent(new Event('scroll'));
+  // eslint-disable-next-line no-param-reassign
+  component.vm.scrolledToBottom = method;
+};
+// eslint-disable-next-line consistent-return
+const scroll = (componentOrBoolean) => {
+  if (componentOrBoolean === true || componentOrBoolean === false)
+    return (component) => _scroll(component, componentOrBoolean);
+  _scroll(componentOrBoolean, true);
 };
 
 describe('SubmissionList', () => {
@@ -191,10 +209,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 2
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 2);
               checkMessage(component, 'Loading 2 more of 10 remaining Submissions…');
@@ -205,9 +220,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 3
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 4);
               checkMessage(component, 'Loading 2 more of 8 remaining Submissions…');
@@ -218,9 +231,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 4 (last small chunk)
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 6);
               checkMessage(component, 'Loading 2 more of 6 remaining Submissions…');
@@ -231,9 +242,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 5
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 3, 8);
               checkMessage(component, 'Loading 3 more of 4 remaining Submissions…');
@@ -244,9 +253,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // Chunk 6
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 3, 11);
               checkMessage(component, 'Loading the last Submission…');
@@ -264,14 +271,7 @@ describe('SubmissionList', () => {
             keys: mockResponse.problem
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does nothing upon scroll if fields request results in error', () => {
@@ -280,14 +280,7 @@ describe('SubmissionList', () => {
             fields: mockResponse.problem
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does nothing upon scroll if submissions request results in error', () => {
@@ -296,14 +289,7 @@ describe('SubmissionList', () => {
             odata: mockResponse.problem
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does nothing after user scrolls somewhere other than bottom of page', () => {
@@ -312,14 +298,7 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .testNoRequest(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => false
-              );
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll(false));
         });
 
         it('clicking refresh button loads first chunk, even after scrolling', () => {
@@ -328,10 +307,7 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
             .request(component =>
@@ -343,9 +319,7 @@ describe('SubmissionList', () => {
             .afterResponse(component => {
               checkIds(component, 2);
             })
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((_, config) => {
               checkTopSkip(config, 2, 2);
             })
@@ -358,25 +332,18 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              // Sends a request.
-              document.dispatchEvent(new Event('scroll'));
-            })
-            .beforeAnyResponse(() => {
-              // This should not send a request. If it does, then the number of
-              // requests will exceed the number of responses, and the
-              // mockHttp() object will throw an error.
-              document.dispatchEvent(new Event('scroll'));
-            })
+            // Sends a request.
+            .request(scroll)
+            // This should not send a request. If it does, then the number of
+            // requests will exceed the number of responses, and the mockHttp()
+            // object will throw an error.
+            .beforeAnyResponse(scroll)
             .respondWithData(() => testData.submissionOData(2, 2))
             .complete()
             .request(component =>
               component.get('#submission-list-refresh-button').trigger('click'))
-            .beforeAnyResponse(() => {
-              // Should not send a request.
-              document.dispatchEvent(new Event('scroll'));
-            })
+            // Should not send a request.
+            .beforeAnyResponse(scroll)
             .respondWithData(() => testData.submissionOData(2, 0));
         });
 
@@ -386,10 +353,7 @@ describe('SubmissionList', () => {
             props: { top: () => 2 }
           })
             .complete()
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
       });
 
@@ -409,10 +373,7 @@ describe('SubmissionList', () => {
             .complete()
             // 4 submissions exist, but 4 more are about to be created. About to
             // request $top=2, $skip=2.
-            .request(component => {
-              sinon.replace(component.vm, 'scrolledToBottom', () => true);
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 2);
               checkMessage(component, 'Loading the last 2 Submissions…');
@@ -427,9 +388,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // 8 submissions exist. About to request $top=2, $skip=4.
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 4);
               checkMessage(component, 'Loading the last 2 Submissions…');
@@ -441,9 +400,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // 8 submissions exist. About to request $top=2, $skip=6.
-            .request(() => {
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .beforeEachResponse((component, config) => {
               checkTopSkip(config, 2, 6);
               checkMessage(component, 'Loading the last 2 Submissions…');
@@ -455,9 +412,7 @@ describe('SubmissionList', () => {
               checkMessage(component, null);
             })
             // 8 submissions exist. No request will be sent.
-            .testNoRequest(() => {
-              document.dispatchEvent(new Event('scroll'));
-            });
+            .testNoRequest(scroll);
         });
 
         it('does not update requestData.odata.originalCount', () => {
@@ -468,14 +423,7 @@ describe('SubmissionList', () => {
               requestData.localResources.odata.originalCount.should.equal(251);
               requestData.form.submissions.should.equal(251);
             })
-            .request(component => {
-              sinon.replace(
-                component.getComponent(SubmissionList).vm,
-                'scrolledToBottom',
-                () => true
-              );
-              document.dispatchEvent(new Event('scroll'));
-            })
+            .request(scroll)
             .respondWithData(() => {
               testData.extendedSubmissions.createPast(1);
               return testData.submissionOData(2, 250);
@@ -488,5 +436,73 @@ describe('SubmissionList', () => {
         });
       });
     });
+  });
+
+  describe('$select query parameter', () => {
+    // Create a form with 20 string fields. The first string field is in a
+    // group.
+    beforeEach(() => {
+      const { group, string } = testData.fields;
+      const fields = [group('/g'), string('/g/s1')];
+      for (let i = 2; i <= 20; i += 1) fields.push(string(`/s${i}`));
+      testData.extendedForms.createPast(1, { fields });
+    });
+
+    const $select = (url) => relativeUrl(url).searchParams.get('$select');
+
+    it('does not specify $select for the first chunk of submissions', () =>
+      loadSubmissionList().beforeEachResponse((_, { url }) => {
+        if (url.includes('.svc/Submissions')) should.not.exist($select(url));
+      }));
+
+    it('specifies $select for the second chunk', () => {
+      testData.extendedSubmissions.createPast(2);
+      return loadSubmissionList({
+        props: { top: () => 1 }
+      })
+        .complete()
+        .request(scroll)
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
+        })
+        .respondWithData(() => testData.submissionOData(1, 1));
+    });
+
+    it('specifies $select if the refresh button is clicked', () =>
+      loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.get('#submission-list-refresh-button').trigger('click'))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
+        })
+        .respondWithData(() => testData.submissionOData(1, 0)));
+
+    it('specifies $select if a filter is changed', () =>
+      load('/projects/1/forms/f/submissions', { attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-filters-review-state', [0]))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
+        })
+        .respondWithData(testData.submissionOData));
+
+    it('specifies correct $select parameter if different field is selected', () =>
+      loadSubmissionList({ attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-field-dropdown', [19]))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system,s20');
+        })
+        .respondWithData(testData.submissionOData));
+
+    it('specifies correct $select parameter if all fields are deselected', () =>
+      loadSubmissionList({ attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-field-dropdown', []))
+        .beforeEachResponse((_, { url }) => {
+          $select(url).should.equal('__id,__system');
+        })
+        .respondWithData(testData.submissionOData));
   });
 });

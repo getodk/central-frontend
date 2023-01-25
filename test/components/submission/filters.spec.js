@@ -7,6 +7,7 @@ import SubmissionFilters from '../../../src/components/submission/filters.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 
 import testData from '../../data';
+import { changeMultiselect } from '../../util/trigger';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
 import { mergeMountOptions } from '../../util/lifecycle';
@@ -28,16 +29,6 @@ const createFieldKeys = (count) => new Array(count).fill(undefined)
   .map((_, i) => testData.extendedFieldKeys
     .createPast(1, { displayName: `App User ${i}` })
     .last());
-const changeMultiselect = (selector, selectedIndexes) => async (component) => {
-  const multiselect = component.get(selector);
-  const toggle = multiselect.get('select');
-  await toggle.trigger('click');
-  await multiselect.get('.select-none').trigger('click');
-  const inputs = multiselect.findAll('input[type="checkbox"]');
-  for (const i of selectedIndexes)
-    await inputs[i].setValue(true);
-  return toggle.trigger('click');
-};
 
 describe('SubmissionFilters', () => {
   beforeEach(mockLogin);
@@ -229,7 +220,7 @@ describe('SubmissionFilters', () => {
           ]);
         })
         .beforeEachResponse((_, { url }) => {
-          const match = url.match(/&%24filter=__system%2FsubmissionDate\+ge\+([^+]+)\+and\+__system%2FsubmissionDate\+le\+([^+]+)(&|$)/);
+          const match = url.match(/&%24filter=__system%2FsubmissionDate\+ge\+([^+]+)\+and\+__system%2FsubmissionDate\+le\+([^&]+)(&|$)/);
           should.exist(match);
 
           const start = decodeURIComponent(match[1]);

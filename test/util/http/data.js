@@ -1,3 +1,5 @@
+import { pick } from 'ramda';
+
 import useForm from '../../../src/request-data/form';
 import useProject from '../../../src/request-data/project';
 import useDatasets from '../../../src/request-data/datasets';
@@ -104,7 +106,11 @@ const responsesByComponent = {
   }),
   SubmissionShow: componentResponses({
     project: true,
-    submission: testData.submissionOData,
+    submission: () => {
+      const odata = testData.submissionOData();
+      const value = odata.value.map(pick(['__id', '__system', 'meta']));
+      return { ...odata, value };
+    },
     submissionVersion: () => ({}),
     fields: true,
     audits: true,
