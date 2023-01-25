@@ -34,7 +34,7 @@ describe('DatasetRow', () => {
   });
 
   it('shows the newest entity timestamp', () => {
-    testData.extendedDatasets.createPast(1, { name: 'my_dataset', lastEntity: new Date().toISOString().replace(/T.*/, '') });
+    testData.extendedDatasets.createPast(1, { name: 'my_dataset', lastEntity: new Date().toISOString() });
     const row = mountComponent();
     row.get('time').text().should.be.containEql('today');
   });
