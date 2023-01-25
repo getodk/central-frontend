@@ -33,10 +33,10 @@ except according to the terms contained in the LICENSE file.
       </summary-item>
       <summary-item id="form-overview-right-now-state" :icon="stateIcon">
         <template #heading>
-          {{ $t(`formState.${form.state }`) }}
+          {{ $t(`formState.${form.state}`) }}
         </template>
         <template #body>
-          <p>{{ $t(`stateCaption.${ form.state }`) }}</p>
+          <p>{{ $t(`stateCaption.${form.state}`) }}</p>
         </template>
       </summary-item>
       <dataset-summary v-if="form.dataExists && form.entityRelated"
