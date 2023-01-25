@@ -176,6 +176,7 @@ export default {
 
   .duplicate-form-id {
     font-family: $font-family-monospace;
+    font-size: 12px;
     padding-left: 6px;
   }
 
