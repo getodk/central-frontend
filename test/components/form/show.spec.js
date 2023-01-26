@@ -27,7 +27,8 @@ describe('FormShow', () => {
       { url: '/v1/projects/1', extended: true },
       { url: '/v1/projects/1/forms/a%20b', extended: true },
       { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
-      { url: '/v1/projects/1/forms/a%20b/draft/attachments' }
+      { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
+      { url: '/v1/projects/1/forms/a%20b/attachments' }
     ]);
   });
 
@@ -76,14 +77,16 @@ describe('FormShow', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: false });
     testData.standardFormAttachments.createPast(1);
     return load('/projects/1/forms/f')
-      .beforeEachResponse(app => {
-        const loading = app.findAllComponents(Loading);
+      .beforeEachResponse((app, req) => {
+        const loading = app.findAllComponents('.loading:not(#form-overview .loading)'); // select all loading components except FormOverview's
         loading.length.should.equal(2);
-        loading[0].props().state.should.eql(true);
+        if (req.url !== '/v1/projects/1/forms/f/attachments') { // skip form/f/attachments because it is requested from FormOverview
+          loading[0].props().state.should.eql(true);
+        }
       })
       .afterResponses(app => {
         const loading = app.findAllComponents(Loading);
-        loading.length.should.equal(2);
+        loading.length.should.equal(3);
         loading[0].props().state.should.eql(false);
       });
   });
@@ -177,6 +180,7 @@ describe('FormShow', () => {
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
         .respondWithSuccess()
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .complete()
         .testNoRequest(() => {
           clock.tick(3000);
@@ -208,6 +212,7 @@ describe('FormShow', () => {
         })
         .respondWithSuccess()
         .respondWithData(() => testData.standardFormDrafts.last())
+        .respondWithData(() => testData.standardFormAttachments.sorted())
         .complete()
         .testNoRequest(() => {
           clock.tick(3000);

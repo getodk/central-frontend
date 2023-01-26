@@ -1,8 +1,10 @@
+import { RouterLinkStub } from '@vue/test-utils';
 import Row from '../../../src/components/dataset/summary/row.vue';
 import Property from '../../util/ds-property-enum';
 
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
+import { mockRouter } from '../../util/router';
 
 describe('Dataset summary row', () => {
   const theories = [
@@ -17,9 +19,13 @@ describe('Dataset summary row', () => {
       const dataset = testData.formDraftDatasetDiffs.createPast(1, options).last();
       const inFormProperties = dataset.properties.filter(p => p.inForm);
       const component = mount(Row, {
-        props: { dataset }
+        props: { dataset, projectId: 1 },
+        container: {
+          router: mockRouter('/')
+        }
       });
       component.get('.dataset-name').text().should.be.equal(dataset.name);
+      component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/datasets/${dataset.name}`);
       component.find('.dataset-new').exists().should.be.equal(data.isNew);
       component.get('.properties-count').text().should.be.equal(`${inFormProperties.length} of ${dataset.properties.length} ${dataset.properties.length === 1 ? 'property' : 'properties'}`);
 

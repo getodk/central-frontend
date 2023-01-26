@@ -27,8 +27,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </i18n-t>
           <div>
-            <form-version-standard-buttons :version="form"
-              @view-xml="$emit('view-xml')"/>
+            <form-version-standard-buttons :version="form" @view-xml="$emit('view-xml')"/>
           </div>
         </template>
       </summary-item>
@@ -41,8 +40,27 @@ except according to the terms contained in the LICENSE file.
         </template>
       </summary-item>
       <dataset-summary v-if="form.dataExists && form.entityRelated"
-          :project-id="form.projectId"
-          :xml-form-id="form.xmlFormId"/>
+        :project-id="form.projectId"
+        :xml-form-id="form.xmlFormId"/>
+      <summary-item v-if="linkedDatasets.length > 0" id="form-overview-right-now-linked-datasets" icon="link">
+        <template #heading>
+          {{ linkedDatasets.length }}
+        </template>
+        <template #body>
+          <p>{{ $tc('datasetsLinked', linkedDatasets.length) }}</p>
+          <table v-if="linkedDatasets.length > 0" class="table">
+            <tbody>
+              <tr v-for="(dataset) in linkedDatasets" :key="dataset">
+                <td>
+                  <router-link :to="datasetPath(form.projectId, dataset)" v-tooltip.text>
+                    {{ dataset }}
+                  </router-link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </template>
+      </summary-item>
       <summary-item id="form-overview-right-now-submissions"
         :to="formPath('submissions')" icon="inbox">
         <template #heading>
@@ -85,8 +103,8 @@ export default {
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
-    const { form, formDatasetDiff } = useRequestData();
-    return { form, formDatasetDiff };
+    const { form, publishedAttachments, formDatasetDiff } = useRequestData();
+    return { form, publishedAttachments, formDatasetDiff };
   },
   computed: {
     stateIcon() {
@@ -98,16 +116,41 @@ export default {
         default: // 'closed'
           return 'ban';
       }
+    },
+    linkedDatasets() {
+      return this.publishedAttachments.dataExists ? this.publishedAttachments.filter(a => a.datasetExists).map(a => a.name.replace(/.csv$/i, '')) : [];
     }
   }
 };
 </script>
 
 <style lang="scss">
-#form-overview-right-now.open-form {
-  .icon-file-o, .icon-inbox {
-    margin-left: 4px;
-    margin-right: 4px;
+#form-overview-right-now {
+
+  .open-form {
+    .icon-file-o,
+    .icon-inbox {
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+  }
+
+  #form-overview-right-now-linked-datasets {
+    p {
+      margin: 0;
+    }
+
+    td {
+      padding-left: 0px;
+    }
+
+    .table > tbody > tr:first-child > td {
+      border-top: none;
+    }
+    a {
+      font-size: 18px;
+      font-weight: bold;
+    }
   }
 }
 </style>
@@ -128,7 +171,9 @@ export default {
       // The count of Submissions is shown separately above this text.
       "full": "{submissions} has been saved for this Form. | {submissions} have been saved for this Form.",
       "submissions": "Submission | Submissions"
-    }
+    },
+    // The count of Dataset(s) is shown separately above this text.
+    "datasetsLinked": "Dataset attaches data into this Form: | Datasets attach data into this Form:"
   }
 }
 </i18n>

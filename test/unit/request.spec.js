@@ -167,6 +167,11 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
     });
 
+    it('publishedAttachments', () => {
+      const path = apiPaths.publishedAttachments(1, 'a b');
+      path.should.equal('/v1/projects/1/forms/a%20b/attachments');
+    });
+
     describe('submissions', () => {
       it('returns the correct path for a form', () => {
         const path = apiPaths.submissions(1, 'a b', false, '.csv.zip');

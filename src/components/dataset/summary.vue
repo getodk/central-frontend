@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <summary-item v-if="datasetDiff.dataExists && datasetDiff.length > 0" icon="link">
+  <summary-item v-if="datasetDiff.dataExists && datasetDiff.length > 0" icon="magic-wand">
     <template #heading>
       {{ datasetDiff.length }}
     </template>
@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <p>{{ $tc('datasetUpdates', datasetDiff.length) }}</p>
       <template v-for="(dataset, index) in datasetDiff" :key="dataset.name">
         <!-- TODO replace it with expandable-row -->
-        <dataset-summary-row :dataset="dataset"/>
+        <dataset-summary-row :dataset="dataset" :project-id="projectId"/>
         <hr v-if="index < datasetDiff.length - 1">
       </template>
     </template>

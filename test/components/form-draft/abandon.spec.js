@@ -126,7 +126,8 @@ describe('FormDraftAbandon', () => {
           await app.get('#form-draft-status-abandon-button').trigger('click');
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
-        .respondWithSuccess();
+        .respondWithSuccess()
+        .respondWithData(() => testData.standardFormAttachments.sorted());
     };
 
     it('shows a success alert', () =>

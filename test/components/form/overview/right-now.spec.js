@@ -1,23 +1,32 @@
+import { RouterLinkStub } from '@vue/test-utils';
+
 import FormOverviewRightNow from '../../../../src/components/form/overview/right-now.vue';
 import FormVersionString from '../../../../src/components/form-version/string.vue';
 import FormVersionViewXml from '../../../../src/components/form-version/view-xml.vue';
 import SummaryItem from '../../../../src/components/summary-item.vue';
-
 import testData from '../../../data';
+import useForm from '../../../../src/request-data/form';
+
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
 import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
+import { testRequestData } from '../../../util/request-data';
 
 const mountComponent = () => {
   const form = testData.extendedForms.last();
+  const publishedAttachments = testData.standardFormAttachments.sorted();
   return mount(FormOverviewRightNow, {
     container: {
       router: mockRouter(`/projects/1/forms/${encodeURIComponent(form.xmlFormId)}`),
-      requestData: { form }
+      requestData: testRequestData([useForm], {
+        form,
+        publishedAttachments
+      })
     }
   });
 };
+
 const findItem = (component, idSuffix) => {
   const id = `form-overview-right-now-${idSuffix}`;
   const items = component.findAllComponents(SummaryItem);
@@ -81,6 +90,31 @@ describe('FormOverviewRightNow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
       const item = findItem(mountComponent(), 'submissions');
       item.props().to.should.equal('/projects/1/forms/a%20b/submissions');
+    });
+  });
+
+  describe('linked datasets', () => {
+    it('shows the count', () => {
+      testData.standardFormAttachments.createPast(1, { name: 'trees.csv', datasetExists: true });
+      const item = findItem(mountComponent(), 'linked-datasets');
+      item.get('.summary-item-heading').text().should.equal('1');
+    });
+
+    it('is not displayed if there is no linked datasets', () => {
+      testData.standardFormAttachments.createPast(1, { name: 'trees.csv', datasetExists: false });
+      const item = findItem(mountComponent(), 'linked-datasets');
+      should.not.exist(item);
+    });
+
+    it('lists name of datasets', () => {
+      testData.standardFormAttachments.createPast(1, { name: 'trees.csv', datasetExists: true });
+      testData.standardFormAttachments.createPast(1, { name: 'people.csv', datasetExists: true });
+      const item = findItem(mountComponent(), 'linked-datasets');
+      const rows = item.findAll('tr');
+      rows[0].text().should.be.equal('people');
+      rows[0].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/datasets/people');
+      rows[1].text().should.be.equal('trees');
+      rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/datasets/trees');
     });
   });
 });

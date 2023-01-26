@@ -81,7 +81,9 @@ const responsesByComponent = {
       ? testData.standardFormAttachments.sorted()
       : mockResponse.problem(404.1))
   }),
-  FormOverview: [],
+  FormOverview: componentResponses({
+    publishedAttachments: () => testData.standardFormAttachments.sorted()
+  }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormSubmissions: componentResponses({
     keys: true,
