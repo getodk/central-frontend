@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
     <page-head v-show="dataExists">
       <template #title>
         {{ datasetName }}
-        <span class="icon-cube"></span>
+        <span class="icon-cube title-icon"></span>
       </template>
       <template #tabs>
         <li :class="tabClass('')" role="presentation">

@@ -96,6 +96,8 @@ export default {
 @import '../../../assets/scss/mixins';
 
 #connection-to-forms{
+  margin-bottom: 10px;
+
   .expandable-row {
     border-bottom: 1px solid #ddd;
   }

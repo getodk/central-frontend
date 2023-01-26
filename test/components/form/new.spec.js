@@ -577,6 +577,7 @@ describe('FormNew', () => {
       const xlsWarnings = clone(xlsFormWarning);
       delete xlsWarnings.details.warnings.workflowWarnings;
       xlsWarnings.details.warnings.xlsFormWarnings[0] += '. Learn more: https://xlsform.org/en/#image';
+      xlsWarnings.details.warnings.xlsFormWarnings[1] += '. Learn more: https://xlsform.org#multiple-language-support';
 
       return mockHttp()
         .mount(FormNew, mountOptions())
@@ -589,6 +590,10 @@ describe('FormNew', () => {
           items[0].element.childNodes[0].nodeValue.should.eql('warning 1. ');
           items[0].find('a').attributes('href').should.eql('https://xlsform.org/en/#image');
           items[0].find('a').text().should.eql('Learn more.');
+
+          items[1].element.childNodes[0].nodeValue.should.eql('warning 2. ');
+          items[1].find('a').attributes('href').should.eql('https://xlsform.org#multiple-language-support');
+          items[1].find('a').text().should.eql('Learn more.');
         });
     });
 

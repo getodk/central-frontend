@@ -70,17 +70,23 @@ export default {
 @import '../../../assets/scss/mixins';
 
 #dataset-properties {
-  td {
-    @include text-overflow-ellipsis;
+  &.table{
+    table-layout: fixed;
+
+    td {
+      // @include text-overflow-ellipsis;
+      word-wrap: break-word;
+    }
+
+    > tbody > tr:first-child > td {
+      border-top: none;
+    }
+
+    a {
+      font-size: 16px;
+    }
   }
 
-  &.table > tbody > tr:first-child > td {
-    border-top: none;
-  }
-
-  a {
-    font-size: 16px;
-  }
 }
 </style>
 

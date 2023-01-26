@@ -248,13 +248,13 @@ export default {
         });
     },
     removeLearnMore(value) {
-      return value.replace(/Learn more: (https?:\/\/xlsform\.org\/[^.]*)\.?/, '').trim();
+      return value.replace(/Learn more: (https?:\/\/xlsform\.org[^.]*)\.?/, '').trim();
     },
     hasLearnMoreLink(value) {
-      return value.match(/Learn more: (https?:\/\/xlsform\.org\/[^.]*)\.?/);
+      return value.match(/Learn more: (https?:\/\/xlsform\.org[^.]*)\.?/);
     },
     getLearnMoreLink(value) {
-      return value.match(/Learn more: (https?:\/\/xlsform\.org\/[^.]*)\.?/)[1];
+      return value.match(/Learn more: (https?:\/\/xlsform\.org[^.]*)\.?/)[1];
     }
   }
 };
