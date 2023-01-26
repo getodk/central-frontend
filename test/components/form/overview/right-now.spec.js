@@ -45,14 +45,12 @@ describe('FormOverviewRightNow', () => {
 
   it('toggles the "View XML" modal', () => {
     testData.extendedForms.createPast(1);
-    return load('/projects/1/forms/f', { root: false })
-      // .respondWithData(() => testData.standardFormAttachments.sorted())
-      .testModalToggles({
-        modal: FormVersionViewXml,
-        show: '#form-overview-right-now .form-version-def-dropdown a',
-        hide: '.btn-primary',
-        respond: (series) => series.respondWithData(() => '<x/>')
-      });
+    return load('/projects/1/forms/f', { root: false }).testModalToggles({
+      modal: FormVersionViewXml,
+      show: '#form-overview-right-now .form-version-def-dropdown a',
+      hide: '.btn-primary',
+      respond: (series) => series.respondWithData(() => '<x/>')
+    });
   });
 
   describe('form state', () => {

@@ -13,7 +13,7 @@ import { transformForms } from './util';
 import { useRequestData } from './index';
 
 export default () => {
-  const { form, formAttachments, formDraft, attachments, createResource } = useRequestData();
+  const { form, formDraft, attachments, createResource } = useRequestData();
   const formVersions = createResource('formVersions', () => ({
     transformResponse: transformForms
   }));
@@ -24,6 +24,6 @@ export default () => {
   const publishedAttachments = createResource('publishedAttachments'); // Published Form attachments
 
   return {
-    form, formAttachments, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff, publishedAttachments
+    form, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff, publishedAttachments
   };
 };

@@ -53,7 +53,7 @@ describe('FormSubmissions', () => {
           item.get('.summary-item-heading').text().should.equal('10');
         })
         .load('/projects/1/forms/f/submissions', {
-          project: false, form: false, formAttachments: false, formDraft: false, attachments: false
+          project: false, form: false, formDraft: false, attachments: false
         })
         .complete()
         .route('/projects/1/forms/f')

@@ -78,7 +78,7 @@ describe('FormShow', () => {
     testData.standardFormAttachments.createPast(1);
     return load('/projects/1/forms/f')
       .beforeEachResponse((app, req) => {
-        const loading = app.findAllComponents(Loading);
+        const loading = app.findAllComponents('.loading:not(#form-overview .loading)'); // select all loading components except FormOverview's
         loading.length.should.equal(2);
         if (req.url !== '/v1/projects/1/forms/f/attachments') { // skip form/f/attachments because it is requested from FormOverview
           loading[0].props().state.should.eql(true);
@@ -86,7 +86,7 @@ describe('FormShow', () => {
       })
       .afterResponses(app => {
         const loading = app.findAllComponents(Loading);
-        loading.length.should.equal(2);
+        loading.length.should.equal(3);
         loading[0].props().state.should.eql(false);
       });
   });

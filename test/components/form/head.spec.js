@@ -216,7 +216,6 @@ describe('FormHead', () => {
           .respondFor('/projects/1/forms/f/draft', {
             project: false,
             form: false,
-            formAttachments: false,
             formDraft: () =>
               testData.extendedFormDrafts.createNew({ draft: true })
           })

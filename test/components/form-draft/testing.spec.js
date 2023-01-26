@@ -64,7 +64,7 @@ describe('FormDraftTesting', () => {
           steps[1].props().stage.should.equal('current');
         })
         .load('/projects/1/forms/f/draft/testing', {
-          project: false, form: false, formAttachments: false, formDraft: false, attachments: false
+          project: false, form: false, formDraft: false, attachments: false
         })
         .complete()
         .route('/projects/1/forms/f/draft')

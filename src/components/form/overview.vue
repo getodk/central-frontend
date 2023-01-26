@@ -13,6 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="form-overview">
     <div class="row">
       <div class="col-xs-6">
+        <loading :state="initiallyLoading"/>
         <form-overview-right-now v-if="dataExists"
           @view-xml="showModal('viewXml')"/>
       </div>
@@ -64,6 +65,7 @@ import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import FormVersionString from '../form-version/string.vue';
 import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
+import Loading from '../loading.vue';
 
 import modal from '../../mixins/modal';
 import { loadAsync } from '../../util/load-async';
@@ -80,7 +82,8 @@ export default {
     FormVersionString,
     FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
     PageSection,
-    SummaryItem
+    SummaryItem,
+    Loading
   },
   mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   props: {
