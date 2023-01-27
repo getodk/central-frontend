@@ -60,7 +60,7 @@ export default {
   flex-wrap: wrap;
 
   &> div {
-    padding: 8px;
+    padding: 8px 0;
   }
 
   .title-cell {

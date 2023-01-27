@@ -73,6 +73,12 @@ export default {
 };
 </script>
 
+<style lang="scss">
+#dataset-overview-form-connections{
+  margin-bottom: 0;
+}
+</style>
+
 <i18n lang="json5">
 {
   "en": {

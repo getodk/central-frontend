@@ -57,15 +57,22 @@ export default {
 @import '../../../assets/scss/mixins';
 
 #linked-forms {
-  td {
-    @include text-overflow-ellipsis;
+  margin-bottom: 10px;
+
+  .table{
+    margin-bottom: 10px;
+
+    td {
+      @include text-overflow-ellipsis;
+    }
+    > tbody > tr:first-child > td {
+      border-top: none;
+    }
+    a {
+      font-size: 16px;
+    }
   }
-  .table > tbody > tr:first-child > td {
-    border-top: none;
-  }
-  a {
-    font-size: 16px;
-  }
+
 }
 </style>
 
