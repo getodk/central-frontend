@@ -74,8 +74,7 @@ export default {
     table-layout: fixed;
 
     td {
-      // @include text-overflow-ellipsis;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     > tbody > tr:first-child > td {

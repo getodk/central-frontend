@@ -120,7 +120,11 @@ class. */
   background-color: #888;
 }
 
-
+.title-icon{
+  padding-left: 6px;
+  font-size: 24px;
+  color: #666;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
@@ -813,10 +817,4 @@ becomes more complicated.
       }
     }
   }
-}
-
-.title-icon{
-  padding-left: 6px;
-  font-size: 24px;
-  color: #666;
 }
