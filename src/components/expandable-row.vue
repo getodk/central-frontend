@@ -20,12 +20,12 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <div class="button-cell">
-      <a href="javascript:void(0)" role="button" @click.prevent="toggleExpanded">
+      <button type="button" class="btn btn-link" @click="toggleExpanded">
         <span v-if="!expanded" class="sr-only">{{ $t('action.expand') }}</span>
         <span v-else class="sr-only">{{ $t('action.collapse') }}</span>
         <span v-if="!expanded" class="icon-caret-left"></span>
         <span v-else class="icon-caret-down"></span>
-      </a>
+      </button>
     </div>
     <div v-show="expanded" class="expanded-row">
         <slot name="details"></slot>
@@ -73,25 +73,15 @@ export default {
   }
 
   .button-cell {
-    font-size: 20px;
-    text-align: right;
-    line-height: normal;
+    align-self: center;
+    text-align: center;
     padding: 0px;
+    width: 30px;
 
-    a {
-      color: #888;
-      display: block;
-      width: 30px;
-      text-align: center;
-
-      span {
-        line-height: 38px;
-      }
+    button {
+      padding: 0;
 
       @include text-link;
-      &:focus {
-        background-color: transparent;
-      }
     }
   }
 

@@ -114,7 +114,7 @@ export default {
     }
   }
 
-  a {
+  a, .expandable-row button {
     font-size: 16px;
   }
 
