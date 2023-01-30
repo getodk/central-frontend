@@ -14,13 +14,14 @@ except according to the terms contained in the LICENSE file.
     <div class="title-cell">
       <slot name="title"></slot>
     </div>
-    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
-    <div role="button" class="caption-cell" @click.prevent="toggleExpanded">
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+    <div class="caption-cell" @click="toggleExpanded">
       <slot name="caption"></slot>
     </div>
 
-    <div class="button-cell">
-      <button type="button" class="btn btn-link" @click="toggleExpanded">
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+    <div class="button-cell" @click="toggleExpanded">
+      <button type="button" class="btn btn-link">
         <span v-if="!expanded" class="sr-only">{{ $t('action.expand') }}</span>
         <span v-else class="sr-only">{{ $t('action.collapse') }}</span>
         <span v-if="!expanded" class="icon-caret-left"></span>
@@ -66,6 +67,8 @@ export default {
   .title-cell {
     flex-grow: 1;
   }
+
+  .caption-cell, .button-cell { cursor: pointer; }
 
   .caption-cell {
     text-align: right;
