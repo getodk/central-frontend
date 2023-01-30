@@ -209,6 +209,7 @@ export default {
     "field": {
       "sitewideRole": "Rôle sur l'ensemble du site"
     },
+    "cannotResetPassword": "Vous ne devriez pas réinitialiser votre propre mot de passe sur cette page. Pour le changer, éditez votre profil.",
     "cannotRetire": "Vous ne pouvez pas supprimer votre propre compte.",
     "action": {
       "retire": "Supprimer l'utilisateur"

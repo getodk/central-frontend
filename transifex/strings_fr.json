@@ -407,11 +407,11 @@
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
     "expand": {
-      "string": "",
+      "string": "Déplier",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "collapse": {
-      "string": "",
+      "string": "Replier",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -479,7 +479,7 @@
       "developer_comment": "This is the text of a table column header."
     },
     "updatedBy": {
-      "string": "",
+      "string": "Mis à jour par",
       "developer_comment": "This is the text of a table column header."
     },
     "displayName": {
@@ -519,11 +519,11 @@
       "developer_comment": "This is the text of a table column header."
     },
     "entities": {
-      "string": "",
+      "string": "Nombre total d'entités",
       "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
     },
     "lastEntity": {
-      "string": "",
+      "string": "Dernière entité",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
@@ -806,7 +806,7 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "propertiesCount": {
-      "string": "{count, plural, one {} many {} other {}}",
+      "string": "{count, plural, one {{inform} entité sur {count}} many {{inform} entités sur {count}} other {{inform} entité(s) sur {count} }}",
       "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
@@ -1246,7 +1246,7 @@
           "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow."
         },
         "4": {
-          "string": "Les Datasets sont configurés pendant la création du formulaire?"
+          "string": "Les Datasets sont configurés lors de la création du Formulaire."
         }
       },
       "getStarted": {
@@ -1265,28 +1265,28 @@
     },
     "DatasetOverview": {
       "connectionsToForms": {
-        "string": "",
+        "string": "Connexions aux formulaires",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "datasetProperties": {
-        "string": "",
+        "string": "Propriétés du Dataset",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "DatasetOverviewConnectionToForms": {
       "formsCreateEntities": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Formulaire créant des Entités dans ce Dataset} many {Formulaires créant des Entités dans ce Dataset} other {Formulaires créant des Entités dans ce Dataset}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": ""
+        "string": "Il n'y a pas de propriété dans ce Dataset"
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Formulaire utilisant des données de ce Dataset} many {Formulaires utilisant des données de ce Dataset} other {Formulaires utilisant des données de ce Dataset}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
@@ -1300,13 +1300,13 @@
     },
     "DatasetShow": {
       "back": {
-        "string": "",
+        "string": "Retour aux Dataset du Projet",
         "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
       "datasetUpdates": {
-        "string": "{count, plural, one {Le Dataset est mis à jour par ce formulaire : } many {Les Datasets sont mis à jour par ce formulaire : } other {Les Datasets sont mis à jour par ce formulaire : }}",
+        "string": "{count, plural, one {Ce Dataset est mis à jour par ce formulaire : } many {Ces Datasets sont mis à jour par ce formulaire : } other {Ces Datasets sont mis à jour par ce formulaire : }}",
         "developer_comment": "Number of dataset(s) is shown separately above this text"
       }
     },
@@ -1355,7 +1355,7 @@
       "heading": {
         "0": {
           "full": {
-            "string": "Les utilisateurs mobiles sont utilisés pour faire la collecte de données depuis une application telle que {collect}. Ils représentent typiquement un rôle partagé tel que \"agent de vaccination\" mais peuvent aussi représenter des individus. Les utilisateurs mobiles dans ce projet peuvent seulement télécharger et utiliser les formulaires de ce projet. Quand vous créez un nouvel utilisateur mobile, il n'aura accès à aucun formulaire. Pour définir les formulaires auxquels chaque utilisateur mobile peut accéder, utilisez l'onglet {formAccess}.",
+            "string": "Les utilisateurs mobiles sont utilisés pour faire la collecte de données depuis une application telle que {collect}. Ils représentent typiquement un rôle générique tel que \"agent de vaccination\" mais peuvent aussi représenter des individus. Les utilisateurs mobiles dans ce projet peuvent seulement télécharger et utiliser les formulaires du projet. Quand vous créez un nouvel utilisateur mobile, il n'aura accès à aucun formulaire. Pour définir les formulaires auxquels chaque utilisateur mobile peut accéder, utilisez l'onglet {formAccess}.",
             "developer_comment": "{collect} is a link whose text is \"ODK Collect\".\n\n{formAccess} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access"
           },
           "formAccess": {
@@ -2305,6 +2305,10 @@
           "string": "{count, plural, one {Soumission} many {Soumissions} other {Soumissions}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
         }
+      },
+      "datasetsLinked": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "The count of Dataset(s) is shown separately above this text."
       }
     },
     "FormRestore": {
@@ -2744,7 +2748,7 @@
     "ProjectFormAccess": {
       "heading": {
         "0": {
-          "string": "Les utilisateurs mobiles peuvent seulement voir et remplir les formulaires auxquels ils ont été donné accès dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
+          "string": "Les utilisateurs mobiles peuvent seulement voir et remplir les formulaires auxquels un accès leur a été donné dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
         }
       },
       "emptyTable": {
@@ -2901,7 +2905,7 @@
         }
       },
       "note": {
-        "string": "Sels les Gestionnaires de projet peuvent voir cette suggestion.",
+        "string": "Seuls les Gestionnaires de Projet peuvent voir cette suggestion.",
         "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
       }
     },
@@ -3038,7 +3042,7 @@
         },
         "2": {
           "full": {
-            "string": "Les {projectViewers} ont accès aux données de tous les formulaires dans ce projet et peuvent les télécharger mais ne peuvent apporter aucunes modifications aux données ou paramètres.",
+            "string": "Les {projectViewers} ont accès aux données de tous les formulaires de ce projet et peuvent les télécharger mais ne peuvent apporter aucune modification aux données ou paramètres.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
@@ -3853,7 +3857,7 @@
         }
       },
       "cannotResetPassword": {
-        "string": "",
+        "string": "Vous ne devriez pas réinitialiser votre propre mot de passe sur cette page. Pour le changer, éditez votre profil.",
         "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {

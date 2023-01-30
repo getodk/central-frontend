@@ -403,7 +403,7 @@ export default {
         "projectManagers": "gestionnaires de projet"
       },
       {
-        "full": "Les {projectViewers} ont accès aux données de tous les formulaires dans ce projet et peuvent les télécharger mais ne peuvent apporter aucunes modifications aux données ou paramètres.",
+        "full": "Les {projectViewers} ont accès aux données de tous les formulaires de ce projet et peuvent les télécharger mais ne peuvent apporter aucune modification aux données ou paramètres.",
         "projectViewers": "lecteurs de projet"
       },
       {
