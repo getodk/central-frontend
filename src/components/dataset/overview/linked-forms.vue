@@ -64,6 +64,7 @@ export default {
 
     td {
       @include text-overflow-ellipsis;
+      padding: 8px 0;
     }
     > tbody > tr:first-child > td {
       border-top: none;
