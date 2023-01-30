@@ -407,11 +407,11 @@
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
     "expand": {
-      "string": "",
+      "string": "Rozbalit",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "collapse": {
-      "string": "",
+      "string": "Sbalit",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -479,7 +479,7 @@
       "developer_comment": "This is the text of a table column header."
     },
     "updatedBy": {
-      "string": "",
+      "string": "Aktualizováno od",
       "developer_comment": "This is the text of a table column header."
     },
     "displayName": {
@@ -519,7 +519,7 @@
       "developer_comment": "This is the text of a table column header."
     },
     "entities": {
-      "string": "",
+      "string": "Celkem subjektů",
       "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
     },
     "lastEntity": {
@@ -2305,6 +2305,10 @@
           "string": "{count, plural, one {Příspěvek} few {Příspěvky} many {Příspěvků} other {Příspěvků}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
         }
+      },
+      "datasetsLinked": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "The count of Dataset(s) is shown separately above this text."
       }
     },
     "FormRestore": {

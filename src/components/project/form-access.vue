@@ -283,7 +283,7 @@ export default {
   },
   "fr": {
     "heading": [
-      "Les utilisateurs mobiles peuvent seulement voir et remplir les formulaires auxquels ils ont été donné accès dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
+      "Les utilisateurs mobiles peuvent seulement voir et remplir les formulaires auxquels un accès leur a été donné dans le tableau ci-dessous. Les gestionnaires de projet et collecteurs de données peuvent utiliser leurs navigateurs pour remplir tous les formulaires de ce projet dans l'état \"ouvert\"."
     ],
     "emptyTable": "Il n'y a pas de formulaire à afficher.",
     "alert": {

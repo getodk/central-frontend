@@ -154,7 +154,9 @@
     "update": "Actualiser",
     "yesProceed": "Oui, procéder",
     "showPreview": "Aperçu",
-    "hidePreview": "Cacher l'aperçu"
+    "hidePreview": "Cacher l'aperçu",
+    "expand": "Déplier",
+    "collapse": "Replier"
   },
   "field": {
     "comment": "Ajouter un commentaire...",
@@ -174,6 +176,7 @@
     "actions": "Actions",
     "created": "Créé",
     "createdBy": "Créé par",
+    "updatedBy": "Mis à jour par",
     "displayName": "Nom affiché",
     "email": "Adresse de courriel",
     "instanceId": "ID de l'instance",
@@ -182,7 +185,9 @@
     "submitterName": "Soumis par",
     "submissionDate": "Soumis à",
     "time": "Heure",
-    "type": "Type"
+    "type": "Type",
+    "entities": "Nombre total d'entités",
+    "lastEntity": "Dernière entité"
   },
   "plural": {
     "appUser": "Utilisateur mobile | Utilisateurs mobiles | Utilisateurs mobiles",
@@ -278,7 +283,8 @@
     "punctuations": {
       "comma": ","
     },
-    "datasetsPreview": "Aperçu des Dataset"
+    "datasetsPreview": "Aperçu des Dataset",
+    "propertiesCount": "{inform} entité sur {count} | {inform} entités sur {count} | {inform} entité(s) sur {count}"
   },
   "mixin": {
     "request": {

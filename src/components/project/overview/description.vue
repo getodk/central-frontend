@@ -135,7 +135,7 @@ export default {
       "full": "Ajoutez des notes, des liens, des instructions ou autres ressources relatifs au Projet à cet espace dans {projectSettings}.",
       "projectSettings": "Paramètres du projet"
     },
-    "note": "Sels les Gestionnaires de projet peuvent voir cette suggestion."
+    "note": "Seuls les Gestionnaires de Projet peuvent voir cette suggestion."
   },
   "it": {
     "instructions": {

@@ -139,7 +139,7 @@ export default {
       "Les Datasets peuvent être joints {icon1} aux formulaires et leurs données peuvent être interrogées comme n'importe quel autre fichier de données CSV joint.",
       "Lorsqu'une soumission concernant un Dataset est approuvée {icon2}, les données sélectionnées sont ajoutées {icon3} au Dataset, de sorte que la prochaine fois qu'un client téléchargera le formulaire, les nouvelles données seront incluses.",
       "Dans une version future vous pourrez envoyer {icon4} un CSV directement dans un Dataset",
-      "Les Datasets sont configurés pendant la création du formulaire?"
+      "Les Datasets sont configurés lors de la création du Formulaire."
     ],
     "getStarted": {
       "full": "Pour plus d'information sur comment démarrer, {clickHere}.",

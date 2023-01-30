@@ -154,7 +154,9 @@
     "update": "Aktualizovat",
     "yesProceed": "Ano, pokračovat",
     "showPreview": "Náhled",
-    "hidePreview": "Skrýt náhled"
+    "hidePreview": "Skrýt náhled",
+    "expand": "Rozbalit",
+    "collapse": "Sbalit"
   },
   "field": {
     "comment": "Zanechat komentář…",
@@ -174,6 +176,7 @@
     "actions": "Akce",
     "created": "Vytvořeno",
     "createdBy": "Vytvořeno od",
+    "updatedBy": "Aktualizováno od",
     "displayName": "Zobrazit jméno",
     "email": "E-mailová adresa",
     "instanceId": "Instance ID",
@@ -182,7 +185,8 @@
     "submitterName": "Odesláno od",
     "submissionDate": "Odesláno v",
     "time": "Čas",
-    "type": "Typ"
+    "type": "Typ",
+    "entities": "Celkem subjektů"
   },
   "plural": {
     "appUser": "Uživatel aplikace | Uživatelé aplikace | Uživatelů aplikace | Uživatelé aplikace",

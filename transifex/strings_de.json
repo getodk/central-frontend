@@ -2305,6 +2305,10 @@
           "string": "{count, plural, one {Übermittlung} other {Übermittlungen}}",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
         }
+      },
+      "datasetsLinked": {
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "The count of Dataset(s) is shown separately above this text."
       }
     },
     "FormRestore": {
