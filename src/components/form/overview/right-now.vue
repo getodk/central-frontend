@@ -173,7 +173,7 @@ export default {
       "submissions": "Submission | Submissions"
     },
     // The count of Dataset(s) is shown separately above this text.
-    "datasetsLinked": "Dataset attaches data into this Form: | Datasets attach data into this Form:"
+    "datasetsLinked": "Dataset attached to this Form: | Datasets attached to this Form:"
   }
 }
 </i18n>

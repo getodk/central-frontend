@@ -2307,7 +2307,7 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, one {Dataset attaches data into this Form:} other {Datasets attach data into this Form:}}",
+        "string": "{count, plural, one {Dataset attached to this Form:} other {Datasets attached to this Form:}}",
         "developer_comment": "The count of Dataset(s) is shown separately above this text."
       }
     },
