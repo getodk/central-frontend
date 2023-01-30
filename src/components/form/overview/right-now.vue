@@ -239,7 +239,8 @@ export default {
     "submissions": {
       "full": "{submissions} a été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire.",
       "submissions": "Soumission | Soumissions | Soumissions"
-    }
+    },
+    "datasetsLinked": "Dataset attaché à ce formulaire | Datasets attachés à ce formulaire | Datasets attachés à ce formulaire"
   },
   "id": {
     "version": {
