@@ -21,6 +21,9 @@ except according to the terms contained in the LICENSE file.
             <slot name="title"></slot>
           </template>
         </span>
+        <div class="arrow">
+          <img src="../../../public/images/arrow.svg" alt="">
+        </div>
         <router-link id="page-back-back" :to="to">
           <slot name="back"></slot>
         </router-link>
@@ -67,7 +70,23 @@ export default {
       position: absolute;
       width: 0;
     }
+
+    &.arrow {
+      display: inline;
+      border-bottom: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      margin-top: -15px;
+      position: absolute;
+      height: 100%;
+
+      img {
+        margin-top: -3px;
+      }
+    }
   }
+
 }
 
 #page-back-title {
@@ -77,5 +96,8 @@ export default {
   a { @include text-link; }
 }
 
-#page-back-back { font-size: 12px; }
+#page-back-back {
+  font-size: 16px;
+  margin-left: 30px
+}
 </style>

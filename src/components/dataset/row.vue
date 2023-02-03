@@ -58,7 +58,10 @@ export default {
 @import '../../assets/scss/mixins';
 
 .dataset-row {
-  .name { @include text-overflow-ellipsis; }
+  .name {
+    @include text-overflow-ellipsis;
+    font-size: 18px;
+   }
   .entities {
     text-align: right;
     padding-right: 10%;

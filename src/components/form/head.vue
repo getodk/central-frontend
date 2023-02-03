@@ -13,19 +13,16 @@ except according to the terms contained in the LICENSE file.
   <div id="form-head">
     <page-back :to="projectPath()" link-title>
       <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('projectNav.action.back') }}</template>
+      <template #back>{{ $t('resource.forms') }}</template>
     </page-back>
     <div id="form-head-form-nav" class="row">
       <div class="col-xs-12">
         <div class="row">
           <!-- Using .col-xs-6 so that if the form name is long, it is not
           behind #form-head-draft-nav. -->
-          <div class="col-xs-6 form-title">
+          <div class="col-xs-6">
             <div v-if="form.dataExists" class="h1" v-tooltip.text>
               {{ form.nameOrId }}
-            </div>
-            <div class="icon-wrapper">
-              <span class="icon-file-o title-icon"></span>
             </div>
           </div>
         </div>
@@ -178,14 +175,6 @@ $tab-li-margin-top: 5px;
     // It might be simpler to move this margin to the .nav-tabs element so that
     // fewer elements have margin.
     margin-top: $tab-li-margin-top;
-  }
-
-  .form-title{
-    display: flex;
-
-    .icon-wrapper{
-      margin: 26px 0 -10px 0;
-    }
   }
 }
 

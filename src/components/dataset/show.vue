@@ -14,12 +14,11 @@ except according to the terms contained in the LICENSE file.
   <div id="dataset-show">
     <page-back v-show="dataExists" :to="projectPath('datasets')">
       <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('back') }}</template>
+      <template #back>{{ $t('resource.datasets') }}</template>
     </page-back>
     <page-head v-show="dataExists">
       <template #title>
         {{ datasetName }}
-        <span class="icon-cube title-icon"></span>
       </template>
       <template #tabs>
         <li :class="tabClass('')" role="presentation">
