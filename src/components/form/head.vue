@@ -222,6 +222,11 @@ $tab-li-margin-top: 5px;
 <i18n lang="json5">
 {
   "en": {
+    "projectNav": {
+      "action": {
+        "back": "Back to Project Overview"
+      }
+    },
     "formNav": {
       // Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc.
       "tabTitle": "These functions will become available once you publish your Draft Form"

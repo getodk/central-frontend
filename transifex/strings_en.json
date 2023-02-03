@@ -1298,6 +1298,12 @@
         }
       }
     },
+    "DatasetShow": {
+      "back": {
+        "string": "Back to Project Datasets",
+        "developer_comment": "This is shown at the top of the page."
+      }
+    },
     "DatasetSummary": {
       "datasetUpdates": {
         "string": "{count, plural, one {Dataset is updated by this Form:} other {Datasets are updated by this Form:}}",
@@ -2088,6 +2094,14 @@
       }
     },
     "FormHead": {
+      "projectNav": {
+        "action": {
+          "back": {
+            "string": "Back to Project Overview",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
       "formNav": {
         "tabTitle": {
           "string": "These functions will become available once you publish your Draft Form",
