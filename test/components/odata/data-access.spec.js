@@ -2,17 +2,12 @@ import ODataAccess from '../../../src/components/odata/data-access.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
-import { mount } from '../../util/lifecycle';
-import { testRequestData } from '../../util/request-data';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(ODataAccess, {
-  props: { formVersion: testData.extendedForms.last() },
-  container: {
-    requestData: testRequestData(['keys'], {
-      keys: testData.standardKeys.sorted()
-    })
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(ODataAccess, mergeMountOptions(options, {
+    props: { analyzeDisabled: false }
+  }));
 
 describe('ODataAccess', () => {
   describe('"Analyze via OData" button', () => {
@@ -23,9 +18,18 @@ describe('ODataAccess', () => {
       component.emitted().analyze.should.eql([[]]);
     });
 
-    // TODO: test
-    // 1. disable function prop works
-    // 2. disable message gets set
+    it('disables the button and sets message according to props', async () => {
+      testData.extendedForms.createPast(1);
+      const button = mountComponent({
+        props: {
+          analyzeDisabled: true,
+          analyzeDisabledMessage: 'This has been disabled.'
+        }
+      }).get('button');
+      button.attributes('aria-disabled').should.equal('true');
+      button.should.have.ariaDescription();
+      await button.should.have.tooltip('This has been disabled.');
+    });
 
     it('disables the button for an encrypted form without submissions', async () => {
       // The button should be disabled even if just the form, not the project,

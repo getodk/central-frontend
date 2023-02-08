@@ -4,14 +4,12 @@ import ODataAnalyze from '../../../src/components/odata/analyze.vue';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(ODataAnalyze, {
-  props: { state: true },
-  container: {
-    requestData: { form: testData.extendedForms.last() }
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(ODataAnalyze, mergeMountOptions(options, {
+    props: { state: true, odataUrl: '' }
+  }));
 const clickTab = (component, tabText) =>
   component.findAll('#odata-analyze .nav-tabs a')
     .find(a => a.text() === tabText)
@@ -63,7 +61,13 @@ describe('ODataAnalyze', () => {
     });
   });
 
-  it('shows the correct URL', async () => {
+  it('shows the correct odata URL set from prop', () => {
+    const component = mountComponent({ props: { odataUrl: '/path/to/odata.svc' } });
+    const text = component.getComponent(Selectable).text();
+    text.should.equal('/path/to/odata.svc');
+  });
+
+  it('shows the correct URL from form submission page', async () => {
     const component = await load('/projects/1/forms/f/submissions', {
       root: false
     });
