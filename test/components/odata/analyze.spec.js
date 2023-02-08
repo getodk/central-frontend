@@ -1,23 +1,23 @@
 import Selectable from '../../../src/components/selectable.vue';
-import SubmissionAnalyze from '../../../src/components/submission/analyze.vue';
+import ODataAnalyze from '../../../src/components/odata/analyze.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(SubmissionAnalyze, {
+const mountComponent = () => mount(ODataAnalyze, {
   props: { state: true },
   container: {
     requestData: { form: testData.extendedForms.last() }
   }
 });
 const clickTab = (component, tabText) =>
-  component.findAll('#submission-analyze .nav-tabs a')
+  component.findAll('#odata-analyze .nav-tabs a')
     .find(a => a.text() === tabText)
     .trigger('click');
 
-describe('SubmissionAnalyze', () => {
+describe('ODataAnalyze', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedForms.createPast(1);
@@ -25,8 +25,8 @@ describe('SubmissionAnalyze', () => {
 
   it('toggles the modal', () =>
     load('/projects/1/forms/f/submissions', { root: false }).testModalToggles({
-      modal: SubmissionAnalyze,
-      show: '#submission-data-access-analyze-button',
+      modal: ODataAnalyze,
+      show: '#odata-access-analyze-button',
       hide: '.btn-primary'
     }));
 
@@ -34,7 +34,7 @@ describe('SubmissionAnalyze', () => {
     const assertContent = (modal, tabText, helpSubstring) => {
       modal.get('.nav-tabs li.active a').text().should.equal(tabText);
 
-      const help = modal.get('#submission-analyze-tool-help');
+      const help = modal.get('#odata-analyze-tool-help');
       help.text().should.containEql(helpSubstring);
     };
 

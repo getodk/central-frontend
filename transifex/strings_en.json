@@ -2590,6 +2590,97 @@
         "string": "The page you requested could not be found."
       }
     },
+    "OdataAnalyze": {
+      "title": {
+        "string": "Using OData",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "OData is a new standard for transferring data between tools and services. Free and powerful analysis tools like Excel, {powerBi}, and {r} can fetch data over OData for analysis.",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
+        },
+        "1": {
+          "string": "There are many advantages to OData, but importantly it supports the full-fidelity transfer of complicated types like numbers and geographic data, and it enables the latest version of your data to synchronize easily with any tools using it."
+        },
+        "2": {
+          "string": "To begin using OData, select your tool and copy the link into it."
+        }
+      },
+      "tab": {
+        "microsoft": {
+          "string": "Excel/Power BI",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "other": {
+          "string": "Other",
+          "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
+        }
+      },
+      "help": {
+        "microsoft": {
+          "full": {
+            "string": "For help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
+          },
+          "pageForExcel": {
+            "string": "this page",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          },
+          "pageForPowerBi": {
+            "string": "this page",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+          }
+        },
+        "r": {
+          "0": {
+            "full": {
+              "string": "To access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API.",
+              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
+            },
+            "restful": {
+              "string": "RESTful",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
+            }
+          },
+          "1": {
+            "full": {
+              "string": "Just like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}.",
+              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+            },
+            "here": {
+              "string": "here",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
+            }
+          }
+        },
+        "other": {
+          "full": {
+            "string": "For a full description of our OData support, please see {article}.",
+            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
+          },
+          "article": {
+            "string": "this article",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
+          }
+        }
+      }
+    },
+    "OdataDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "API access",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "Analyze via OData",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabled": {
+        "string": "OData access is unavailable due to Form encryption"
+      }
+    },
     "ProjectArchive": {
       "title": {
         "string": "Archiving Project",
@@ -3221,82 +3312,6 @@
         }
       }
     },
-    "SubmissionAnalyze": {
-      "title": {
-        "string": "Using OData",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "OData is a new standard for transferring data between tools and services. Free and powerful analysis tools like Excel, {powerBi}, and {r} can fetch data over OData for analysis.",
-          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
-        },
-        "1": {
-          "string": "There are many advantages to OData, but importantly it supports the full-fidelity transfer of complicated types like numbers and geographic data, and it enables the latest version of your data to synchronize easily with any tools using it."
-        },
-        "2": {
-          "string": "To begin using OData, select your tool and copy the link into it."
-        }
-      },
-      "tab": {
-        "microsoft": {
-          "string": "Excel/Power BI",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "other": {
-          "string": "Other",
-          "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
-        }
-      },
-      "help": {
-        "microsoft": {
-          "full": {
-            "string": "For help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}.",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
-          },
-          "pageForExcel": {
-            "string": "this page",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
-          },
-          "pageForPowerBi": {
-            "string": "this page",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
-          }
-        },
-        "r": {
-          "0": {
-            "full": {
-              "string": "To access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API.",
-              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
-            },
-            "restful": {
-              "string": "RESTful",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
-            }
-          },
-          "1": {
-            "full": {
-              "string": "Just like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}.",
-              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-            },
-            "here": {
-              "string": "here",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
-            }
-          }
-        },
-        "other": {
-          "full": {
-            "string": "For a full description of our OData support, please see {article}.",
-            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
-          },
-          "article": {
-            "string": "this article",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
-          }
-        }
-      }
-    },
     "SubmissionBasicDetails": {
       "reviewState": {
         "string": "Review State"
@@ -3329,21 +3344,6 @@
     "SubmissionComment": {
       "editWithoutComment": {
         "string": "You have made edits to this data. Please describe the changes you made."
-      }
-    },
-    "SubmissionDataAccess": {
-      "action": {
-        "apiAccess": {
-          "string": "API access",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "Analyze via OData",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "analyzeDisabled": {
-        "string": "OData access is unavailable due to Form encryption"
       }
     },
     "SubmissionDecrypt": {

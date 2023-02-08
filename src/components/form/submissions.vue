@@ -18,14 +18,14 @@ except according to the terms contained in the LICENSE file.
         <enketo-fill v-if="rendersEnketoFill" :form-version="form">
           <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
         </enketo-fill>
-        <submission-data-access :form-version="form"
+        <o-data-access :form-version="form"
           @analyze="showModal('analyze')"/>
       </template>
       <template #body>
         <submission-list :project-id="projectId" :xml-form-id="xmlFormId"/>
       </template>
     </page-section>
-    <submission-analyze v-bind="analyze" @hide="hideModal('analyze')"/>
+    <o-data-analyze v-bind="analyze" @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -33,8 +33,8 @@ except according to the terms contained in the LICENSE file.
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
-import SubmissionAnalyze from '../submission/analyze.vue';
-import SubmissionDataAccess from '../submission/data-access.vue';
+import ODataAnalyze from '../odata/analyze.vue';
+import ODataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 
 import modal from '../../mixins/modal';
@@ -48,8 +48,8 @@ export default {
     EnketoFill,
     Loading,
     PageSection,
-    SubmissionAnalyze,
-    SubmissionDataAccess,
+    ODataAnalyze,
+    ODataAccess,
     SubmissionList
   },
   mixins: [modal()],

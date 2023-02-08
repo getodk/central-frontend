@@ -1,10 +1,10 @@
-import SubmissionDataAccess from '../../../src/components/submission/data-access.vue';
+import ODataAccess from '../../../src/components/odata/data-access.vue';
 
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => mount(SubmissionDataAccess, {
+const mountComponent = () => mount(ODataAccess, {
   props: { formVersion: testData.extendedForms.last() },
   container: {
     requestData: testRequestData(['keys'], {
@@ -13,7 +13,7 @@ const mountComponent = () => mount(SubmissionDataAccess, {
   }
 });
 
-describe('SubmissionDataAccess', () => {
+describe('ODataAccess', () => {
   describe('"Analyze via OData" button', () => {
     it('emits an analyze event', async () => {
       testData.extendedForms.createPast(1);
