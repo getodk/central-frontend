@@ -18,14 +18,16 @@ except according to the terms contained in the LICENSE file.
         <enketo-fill v-if="rendersEnketoFill" :form-version="form">
           <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
         </enketo-fill>
-        <o-data-access :form-version="form"
+        <o-data-access :analyze-disabled="analyzeDisabled"
+          :analyze-disabled-message="analyzeDisabledMessage"
           @analyze="showModal('analyze')"/>
       </template>
       <template #body>
         <submission-list :project-id="projectId" :xml-form-id="xmlFormId"/>
       </template>
     </page-section>
-    <o-data-analyze v-bind="analyze" @hide="hideModal('analyze')"/>
+    <o-data-analyze v-bind="analyze" :odata-url="odataUrl"
+      @hide="hideModal('analyze')"/>
   </div>
 </template>
 
@@ -79,6 +81,25 @@ export default {
     rendersEnketoFill() {
       return this.project.dataExists &&
         this.project.permits('submission.create') && this.form.dataExists;
+    },
+    analyzeDisabled() {
+      // Used to disable odata access button if criteria met:
+      // If an encrypted form has no submissions, then there will never be
+      // decrypted submissions available to OData (as long as the form remains
+      // encrypted).
+      if (this.form.dataExists && this.form.keyId != null &&
+        this.form.submissions === 0)
+        return true;
+      if (this.keys != null && this.keys.length !== 0) return true;
+      return false;
+    },
+    analyzeDisabledMessage() {
+      return this.$t('analyzeDisabled');
+    },
+    odataUrl() {
+      if (!this.form.dataExists) return '';
+      const path = apiPaths.odataSvc(this.form.projectId, this.form.xmlFormId);
+      return `${window.location.origin}${path}`;
     }
   },
   created() {
@@ -95,5 +116,13 @@ export default {
 </script>
 
 <style lang="scss">
-#submission-data-access { float: right; }
+#odata-access { float: right; }
 </style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "analyzeDisabled": "OData access is unavailable due to Form encryption"
+    }
+  }
+</i18n>

@@ -1,6 +1,7 @@
 import ODataAccess from '../../../src/components/odata/data-access.vue';
 
 import testData from '../../data';
+import { load } from '../../util/http';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
@@ -22,6 +23,10 @@ describe('ODataAccess', () => {
       component.emitted().analyze.should.eql([[]]);
     });
 
+    // TODO: test
+    // 1. disable function prop works
+    // 2. disable message gets set
+
     it('disables the button for an encrypted form without submissions', async () => {
       // The button should be disabled even if just the form, not the project,
       // has encryption enabled.
@@ -29,7 +34,12 @@ describe('ODataAccess', () => {
         key: testData.standardKeys.createPast(1, { managed: false }).last(),
         submissions: 0
       });
-      const button = mountComponent().get('button');
+
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+
+      const button = component.findComponent(ODataAccess).get('button');
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription();
       await button.should.have.tooltip();
@@ -44,7 +54,12 @@ describe('ODataAccess', () => {
       // The button should be disabled even if the key is not managed.
       testData.standardKeys.createPast(1, { managed: false });
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-      const button = mountComponent().get('button');
+
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+
+      const button = component.findComponent(ODataAccess).get('button');
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription();
       await button.should.have.tooltip();

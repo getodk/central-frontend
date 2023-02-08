@@ -2384,6 +2384,11 @@
         }
       }
     },
+    "FormSubmissions": {
+      "analyzeDisabled": {
+        "string": "OData access is unavailable due to Form encryption"
+      }
+    },
     "FormTable": {
       "header": {
         "closedForms": {
@@ -2676,9 +2681,6 @@
           "string": "Analyze via OData",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
-      },
-      "analyzeDisabled": {
-        "string": "OData access is unavailable due to Form encryption"
       }
     },
     "ProjectArchive": {

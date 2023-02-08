@@ -63,8 +63,11 @@ describe('ODataAnalyze', () => {
     });
   });
 
-  it('shows the correct URL', () => {
-    const text = mountComponent().getComponent(Selectable).text();
+  it('shows the correct URL', async () => {
+    const component = await load('/projects/1/forms/f/submissions', {
+      root: false
+    });
+    const text = component.getComponent(Selectable).text();
     text.should.equal(`${window.location.origin}/v1/projects/1/forms/f.svc`);
   });
 });

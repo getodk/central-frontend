@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     </a>
     <button id="odata-access-analyze-button" type="button"
       class="btn btn-default" :aria-disabled="analyzeDisabled"
-      v-tooltip.aria-describedby="analyzeDisabled ? $t('analyzeDisabled') : null"
+      v-tooltip.aria-describedby="analyzeDisabled ? analyzeDisabledMessage : null"
       @click="$emit('analyze')">
       <span class="icon-bar-chart"></span>{{ $t('action.analyze') }}&hellip;
     </button>
@@ -31,7 +31,8 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'ODataAccess',
   props: {
-    formVersion: Object
+    analyzeDisabled: Boolean,
+    analyzeDisabledMessage: String
   },
   emits: ['analyze'],
   setup() {
@@ -39,18 +40,6 @@ export default {
     // component is created.
     const { keys } = useRequestData();
     return { keys };
-  },
-  computed: {
-    analyzeDisabled() {
-      // If an encrypted form has no submissions, then there will never be
-      // decrypted submissions available to OData (as long as the form remains
-      // encrypted).
-      if (this.formVersion.dataExists && this.formVersion.keyId != null &&
-        this.formVersion.submissions === 0)
-        return true;
-      if (this.keys != null && this.keys.length !== 0) return true;
-      return false;
-    }
   }
 };
 </script>
@@ -65,8 +54,7 @@ export default {
     "action": {
       "apiAccess": "API access",
       "analyze": "Analyze via OData"
-    },
-    "analyzeDisabled": "OData access is unavailable due to Form encryption"
+    }
   }
 }
 </i18n>

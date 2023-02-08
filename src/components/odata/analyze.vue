@@ -93,31 +93,18 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Selectable from '../selectable.vue';
 
-import { apiPaths } from '../../util/request';
-import { useRequestData } from '../../request-data';
-
 export default {
   name: 'ODataAnalyze',
   components: { Modal, Selectable },
   props: {
-    state: Boolean
+    state: Boolean,
+    odataUrl: String
   },
   emits: ['hide'],
-  setup() {
-    const { form } = useRequestData();
-    return { form };
-  },
   data() {
     return {
       tool: 'microsoft'
     };
-  },
-  computed: {
-    odataUrl() {
-      if (!this.form.dataExists) return '';
-      const path = apiPaths.odataSvc(this.form.projectId, this.form.xmlFormId);
-      return `${window.location.origin}${path}`;
-    }
   },
   watch: {
     state(state) {
