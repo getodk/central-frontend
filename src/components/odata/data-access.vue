@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'ODataAccess',
+  name: 'OdataAccess',
   props: {
     analyzeDisabled: Boolean,
     analyzeDisabledMessage: String

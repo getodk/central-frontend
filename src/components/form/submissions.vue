@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <enketo-fill v-if="rendersEnketoFill" :form-version="form">
           <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
         </enketo-fill>
-        <o-data-access :analyze-disabled="analyzeDisabled"
+        <odata-access :analyze-disabled="analyzeDisabled"
           :analyze-disabled-message="analyzeDisabledMessage"
           @analyze="showModal('analyze')"/>
       </template>
@@ -36,7 +36,7 @@ import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import OdataAnalyze from '../submission/analyze.vue';
-import ODataAccess from '../odata/data-access.vue';
+import OdataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 
 import modal from '../../mixins/modal';
@@ -51,7 +51,7 @@ export default {
     Loading,
     PageSection,
     OdataAnalyze,
-    ODataAccess,
+    OdataAccess,
     SubmissionList
   },
   mixins: [modal()],
