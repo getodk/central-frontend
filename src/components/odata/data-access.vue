@@ -26,21 +26,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { useRequestData } from '../../request-data';
-
 export default {
   name: 'ODataAccess',
   props: {
     analyzeDisabled: Boolean,
     analyzeDisabledMessage: String
   },
-  emits: ['analyze'],
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { keys } = useRequestData();
-    return { keys };
-  }
+  emits: ['analyze']
 };
 </script>
 

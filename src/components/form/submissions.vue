@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
         <submission-list :project-id="projectId" :xml-form-id="xmlFormId"/>
       </template>
     </page-section>
-    <o-data-analyze v-bind="analyze" :odata-url="odataUrl"
+    <odata-analyze v-bind="analyze" :odata-url="odataUrl"
       @hide="hideModal('analyze')"/>
   </div>
 </template>
@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
-import ODataAnalyze from '../odata/analyze.vue';
+import OdataAnalyze from '../submission/analyze.vue';
 import ODataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 
@@ -50,7 +50,7 @@ export default {
     EnketoFill,
     Loading,
     PageSection,
-    ODataAnalyze,
+    OdataAnalyze,
     ODataAccess,
     SubmissionList
   },
@@ -98,7 +98,7 @@ export default {
     },
     odataUrl() {
       if (!this.form.dataExists) return '';
-      const path = apiPaths.odataSvc(this.form.projectId, this.form.xmlFormId);
+      const path = apiPaths.odataSvc(this.projectId, this.xmlFormId);
       return `${window.location.origin}${path}`;
     }
   },

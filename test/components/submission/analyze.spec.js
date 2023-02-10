@@ -1,5 +1,5 @@
 import Selectable from '../../../src/components/selectable.vue';
-import ODataAnalyze from '../../../src/components/odata/analyze.vue';
+import OdataAnalyze from '../../../src/components/submission/analyze.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -7,7 +7,7 @@ import { mockLogin } from '../../util/session';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
-  mount(ODataAnalyze, mergeMountOptions(options, {
+  mount(OdataAnalyze, mergeMountOptions(options, {
     props: { state: true, odataUrl: '' }
   }));
 const clickTab = (component, tabText) =>
@@ -15,7 +15,7 @@ const clickTab = (component, tabText) =>
     .find(a => a.text() === tabText)
     .trigger('click');
 
-describe('ODataAnalyze', () => {
+describe('OdataAnalyze (formerly SubmissionAnalyze)', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedForms.createPast(1);
@@ -23,7 +23,7 @@ describe('ODataAnalyze', () => {
 
   it('toggles the modal', () =>
     load('/projects/1/forms/f/submissions', { root: false }).testModalToggles({
-      modal: ODataAnalyze,
+      modal: OdataAnalyze,
       show: '#odata-access-analyze-button',
       hide: '.btn-primary'
     }));
