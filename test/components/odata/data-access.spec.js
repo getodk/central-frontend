@@ -1,25 +1,34 @@
-import SubmissionDataAccess from '../../../src/components/submission/data-access.vue';
+import OdataDataAccess from '../../../src/components/odata/data-access.vue';
 
 import testData from '../../data';
-import { mount } from '../../util/lifecycle';
-import { testRequestData } from '../../util/request-data';
+import { load } from '../../util/http';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(SubmissionDataAccess, {
-  props: { formVersion: testData.extendedForms.last() },
-  container: {
-    requestData: testRequestData(['keys'], {
-      keys: testData.standardKeys.sorted()
-    })
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(OdataDataAccess, mergeMountOptions(options, {
+    props: { analyzeDisabled: false }
+  }));
 
-describe('SubmissionDataAccess', () => {
+describe('OdataDataAccess', () => {
   describe('"Analyze via OData" button', () => {
     it('emits an analyze event', async () => {
       testData.extendedForms.createPast(1);
       const component = mountComponent();
       await component.get('button').trigger('click');
       component.emitted().analyze.should.eql([[]]);
+    });
+
+    it('disables the button and sets message according to props', async () => {
+      testData.extendedForms.createPast(1);
+      const button = mountComponent({
+        props: {
+          analyzeDisabled: true,
+          analyzeDisabledMessage: 'This has been disabled.'
+        }
+      }).get('button');
+      button.attributes('aria-disabled').should.equal('true');
+      button.should.have.ariaDescription();
+      await button.should.have.tooltip('This has been disabled.');
     });
 
     it('disables the button for an encrypted form without submissions', async () => {
@@ -29,7 +38,12 @@ describe('SubmissionDataAccess', () => {
         key: testData.standardKeys.createPast(1, { managed: false }).last(),
         submissions: 0
       });
-      const button = mountComponent().get('button');
+
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+
+      const button = component.findComponent(OdataDataAccess).get('button');
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription();
       await button.should.have.tooltip();
@@ -44,7 +58,12 @@ describe('SubmissionDataAccess', () => {
       // The button should be disabled even if the key is not managed.
       testData.standardKeys.createPast(1, { managed: false });
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-      const button = mountComponent().get('button');
+
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+
+      const button = component.findComponent(OdataDataAccess).get('button');
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription();
       await button.should.have.tooltip();

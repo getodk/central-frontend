@@ -1,23 +1,21 @@
 import Selectable from '../../../src/components/selectable.vue';
-import SubmissionAnalyze from '../../../src/components/submission/analyze.vue';
+import OdataAnalyze from '../../../src/components/submission/analyze.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
-const mountComponent = () => mount(SubmissionAnalyze, {
-  props: { state: true },
-  container: {
-    requestData: { form: testData.extendedForms.last() }
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(OdataAnalyze, mergeMountOptions(options, {
+    props: { state: true, odataUrl: '' }
+  }));
 const clickTab = (component, tabText) =>
-  component.findAll('#submission-analyze .nav-tabs a')
+  component.findAll('#odata-analyze .nav-tabs a')
     .find(a => a.text() === tabText)
     .trigger('click');
 
-describe('SubmissionAnalyze', () => {
+describe('OdataAnalyze (formerly SubmissionAnalyze)', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedForms.createPast(1);
@@ -25,8 +23,8 @@ describe('SubmissionAnalyze', () => {
 
   it('toggles the modal', () =>
     load('/projects/1/forms/f/submissions', { root: false }).testModalToggles({
-      modal: SubmissionAnalyze,
-      show: '#submission-data-access-analyze-button',
+      modal: OdataAnalyze,
+      show: '#odata-data-access-analyze-button',
       hide: '.btn-primary'
     }));
 
@@ -34,7 +32,7 @@ describe('SubmissionAnalyze', () => {
     const assertContent = (modal, tabText, helpSubstring) => {
       modal.get('.nav-tabs li.active a').text().should.equal(tabText);
 
-      const help = modal.get('#submission-analyze-tool-help');
+      const help = modal.get('#odata-analyze-tool-help');
       help.text().should.containEql(helpSubstring);
     };
 
@@ -63,8 +61,17 @@ describe('SubmissionAnalyze', () => {
     });
   });
 
-  it('shows the correct URL', () => {
-    const text = mountComponent().getComponent(Selectable).text();
+  it('shows the correct odata URL set from prop', () => {
+    const component = mountComponent({ props: { odataUrl: '/path/to/odata.svc' } });
+    const text = component.getComponent(Selectable).text();
+    text.should.equal('/path/to/odata.svc');
+  });
+
+  it('shows the correct URL from form submission page', async () => {
+    const component = await load('/projects/1/forms/f/submissions', {
+      root: false
+    });
+    const text = component.getComponent(Selectable).text();
     text.should.equal(`${window.location.origin}/v1/projects/1/forms/f.svc`);
   });
 });

@@ -2384,6 +2384,11 @@
         }
       }
     },
+    "FormSubmissions": {
+      "analyzeDisabled": {
+        "string": "OData access is unavailable due to Form encryption"
+      }
+    },
     "FormTable": {
       "header": {
         "closedForms": {
@@ -2588,6 +2593,18 @@
     "NotFound": {
       "body": {
         "string": "The page you requested could not be found."
+      }
+    },
+    "OdataDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "API access",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "Analyze via OData",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "ProjectArchive": {
@@ -3329,21 +3346,6 @@
     "SubmissionComment": {
       "editWithoutComment": {
         "string": "You have made edits to this data. Please describe the changes you made."
-      }
-    },
-    "SubmissionDataAccess": {
-      "action": {
-        "apiAccess": {
-          "string": "API access",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "Analyze via OData",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "analyzeDisabled": {
-        "string": "OData access is unavailable due to Form encryption"
       }
     },
     "SubmissionDecrypt": {

@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="submission-analyze" :state="state" hideable backdrop
+  <modal id="odata-analyze" :state="state" hideable backdrop
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <div id="submission-analyze-head">
+      <div id="odata-analyze-head">
         <div class="modal-introduction">
           <i18n-t tag="p" keypath="introduction[0]">
             <template #powerBi>
@@ -39,10 +39,10 @@ except according to the terms contained in the LICENSE file.
           </li>
         </ul>
       </div>
-      <div id="submission-analyze-odata-url" class="modal-introduction">
+      <div id="odata-analyze-odata-url" class="modal-introduction">
         <selectable>{{ odataUrl }}</selectable>
       </div>
-      <div id="submission-analyze-tool-help" class="modal-introduction">
+      <div id="odata-analyze-tool-help" class="modal-introduction">
         <i18n-t v-if="tool === 'microsoft'" tag="p" keypath="help.microsoft.full">
           <template #pageForExcel>
             <a href="https://support.office.com/en-us/article/connect-to-an-odata-feed-power-query-4441a94d-9392-488a-a6a9-739b6d2ad500" target="_blank" rel="noopener">{{ $t('help.microsoft.pageForExcel') }}</a>
@@ -78,7 +78,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </i18n-t>
       </div>
-      <div id="submission-analyze-actions-container">
+      <div id="odata-analyze-actions-container">
         <div class="modal-actions">
           <button type="button" class="btn btn-primary" @click="$emit('hide')">
             {{ $t('action.done') }}
@@ -93,31 +93,21 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Selectable from '../selectable.vue';
 
-import { apiPaths } from '../../util/request';
-import { useRequestData } from '../../request-data';
-
 export default {
+  // Ideally, this component would be named OdataAnalyze and be moved to ../odata,
+  // like with SubmissionDecrypt->SubmissionDownload,
+  // but that would cause messages to be moved in Transifex.
   name: 'SubmissionAnalyze',
   components: { Modal, Selectable },
   props: {
-    state: Boolean
+    state: Boolean,
+    odataUrl: String
   },
   emits: ['hide'],
-  setup() {
-    const { form } = useRequestData();
-    return { form };
-  },
   data() {
     return {
       tool: 'microsoft'
     };
-  },
-  computed: {
-    odataUrl() {
-      if (!this.form.dataExists) return '';
-      const path = apiPaths.odataSvc(this.form.projectId, this.form.xmlFormId);
-      return `${window.location.origin}${path}`;
-    }
   },
   watch: {
     state(state) {
@@ -138,7 +128,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#submission-analyze .modal-body {
+#odata-analyze .modal-body {
   padding-left: 0;
   padding-right: 0;
 
@@ -146,7 +136,7 @@ export default {
     margin-bottom: 10px;
   }
 
-  #submission-analyze-head {
+  #odata-analyze-head {
     border-bottom: 1px solid $color-subpanel-border-strong;
     padding-left: $padding-modal-body;
     padding-right: $padding-modal-body;
@@ -156,13 +146,13 @@ export default {
     }
   }
 
-  #submission-analyze-odata-url {
+  #odata-analyze-odata-url {
     background-color: $color-subpanel-background;
     margin-bottom: 10px;
     padding: 12px $padding-modal-body;
   }
 
-  #submission-analyze-tool-help {
+  #odata-analyze-tool-help {
     margin-top: 15px;
     padding-left: $padding-modal-body;
     padding-right: $padding-modal-body;
@@ -172,7 +162,7 @@ export default {
     }
   }
 
-  #submission-analyze-actions-container {
+  #odata-analyze-actions-container {
     padding-left: $padding-modal-body;
     padding-right: $padding-modal-body;
   }
