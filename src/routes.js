@@ -513,6 +513,18 @@ const routes = [
             project: () => project.permits('dataset.list')
           }
         }
+      }),
+      asyncRoute({
+        path: 'entities',
+        component: 'DatasetEntities',
+        props: true,
+        loading: 'tab',
+        meta: {
+          title: () => [i18n.t('resource.data'), dataset.name],
+          validateData: {
+            project: () => project.permits('entity.list')
+          }
+        }
       })
     ]
   }),
@@ -692,7 +704,9 @@ const routesByName = new Map();
     'FieldKeyList',
     'ProjectFormAccess',
     'DatasetList',
-    'ProjectSettings'
+    'ProjectSettings',
+    'DatasetEntities',
+    'DatasetOverview'
   ];
   const formRoutes = [
     'FormOverview',

@@ -67,6 +67,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-dataset-overview" */
     '../components/dataset/overview.vue'
   )))
+  .set('DatasetEntities', loader(() => import(
+    /* webpackChunkName: "component-dataset-overview" */
+    '../components/dataset/entities.vue'
+  )))
   .set('Download', loader(() => import(
     /* webpackChunkName: "component-download" */
     '../components/download.vue'

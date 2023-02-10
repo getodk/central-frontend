@@ -26,6 +26,12 @@ except according to the terms contained in the LICENSE file.
             {{ $t('common.tab.overview') }}
           </router-link>
         </li>
+        <li v-if="canRoute(tabPath('entities'))" :class="tabClass('entities')"
+          role="presentation">
+          <router-link :to="tabPath('entities')">
+            {{ $t('resource.data') }}
+          </router-link>
+        </li>
       </template>
     </page-head>
     <page-body>
