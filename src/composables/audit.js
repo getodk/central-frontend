@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 // useAudit() returns functions related to audit log entries.
 
-import { inject } from 'vue';
+import { memoizeForContainer } from '../util/composable';
 
 // Returns the i18n path to use to describe the specified audit action.
 const actionPath = (action) => {
@@ -24,13 +24,10 @@ const actionPath = (action) => {
   return `audit.action.${category}.${subactionKey}`;
 };
 
-export default () => {
-  const { i18n } = inject('container');
-  return {
-    // Returns a message describing an audit action.
-    actionMessage: (action) => {
-      const path = actionPath(action);
-      return i18n.te(path, i18n.fallbackLocale) ? i18n.t(path) : null;
-    }
-  };
-};
+export default memoizeForContainer(({ i18n }) => ({
+  // Returns a message describing an audit action.
+  actionMessage: (action) => {
+    const path = actionPath(action);
+    return i18n.te(path, i18n.fallbackLocale) ? i18n.t(path) : null;
+  }
+}));
