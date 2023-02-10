@@ -1,15 +1,15 @@
-import ODataAccess from '../../../src/components/odata/data-access.vue';
+import OdataDataAccess from '../../../src/components/odata/data-access.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
-  mount(ODataAccess, mergeMountOptions(options, {
+  mount(OdataDataAccess, mergeMountOptions(options, {
     props: { analyzeDisabled: false }
   }));
 
-describe('ODataAccess', () => {
+describe('OdataDataAccess', () => {
   describe('"Analyze via OData" button', () => {
     it('emits an analyze event', async () => {
       testData.extendedForms.createPast(1);
@@ -43,7 +43,7 @@ describe('ODataAccess', () => {
         root: false
       });
 
-      const button = component.findComponent(ODataAccess).get('button');
+      const button = component.findComponent(OdataDataAccess).get('button');
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription();
       await button.should.have.tooltip();
@@ -63,7 +63,7 @@ describe('ODataAccess', () => {
         root: false
       });
 
-      const button = component.findComponent(ODataAccess).get('button');
+      const button = component.findComponent(OdataDataAccess).get('button');
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription();
       await button.should.have.tooltip();

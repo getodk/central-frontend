@@ -24,7 +24,7 @@ describe('OdataAnalyze (formerly SubmissionAnalyze)', () => {
   it('toggles the modal', () =>
     load('/projects/1/forms/f/submissions', { root: false }).testModalToggles({
       modal: OdataAnalyze,
-      show: '#odata-access-analyze-button',
+      show: '#odata-data-access-analyze-button',
       hide: '.btn-primary'
     }));
 

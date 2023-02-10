@@ -10,13 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span id="odata-access">
+  <span id="odata-data-access">
     <a class="btn btn-default"
       href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
       target="_blank" rel="noopener">
       <span class="icon-plug"></span>{{ $t('action.apiAccess') }}
     </a>
-    <button id="odata-access-analyze-button" type="button"
+    <button id="odata-data-access-analyze-button" type="button"
       class="btn btn-default" :aria-disabled="analyzeDisabled"
       v-tooltip.aria-describedby="analyzeDisabled ? analyzeDisabledMessage : null"
       @click="$emit('analyze')">
@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'OdataAccess',
+  name: 'OdataDataAccess',
   props: {
     analyzeDisabled: Boolean,
     analyzeDisabledMessage: String
@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss">
-#odata-access-analyze-button { margin-left: 5px; }
+#odata-data-access-analyze-button { margin-left: 5px; }
 </style>
 
 <i18n lang="json5">
