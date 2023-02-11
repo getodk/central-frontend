@@ -32,11 +32,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 
 export default {
   name: 'NavbarLinks',
-  mixins: [routes()],
+  setup() {
+    const { canRoute } = useRoutes();
+    return { canRoute };
+  },
   computed: {
     projectsLinkIsActive() {
       return this.$route.path === '/' || this.routePathStartsWith('/projects');

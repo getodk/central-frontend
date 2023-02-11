@@ -112,21 +112,26 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageBack from '../page/back.vue';
 
-import routes from '../../mixins/routes';
 import tab from '../../mixins/tab';
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
   components: { PageBack },
-  mixins: [routes(), tab()],
+  mixins: [tab()],
   emits: ['create-draft'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { project, form, formDraft, attachments, resourceStates } = useRequestData();
     const { dataExists } = resourceStates([project, form, formDraft, attachments]);
-    return { project, form, formDraft, attachments, dataExists };
+
+    const { projectPath, formPath, canRoute } = useRoutes();
+    return {
+      project, form, formDraft, attachments, dataExists,
+      projectPath, formPath, canRoute
+    };
   },
   computed: {
     tabPathPrefix() {

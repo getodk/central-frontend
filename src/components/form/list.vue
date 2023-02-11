@@ -44,20 +44,21 @@ import PageSection from '../page/section.vue';
 import FormSort from './sort.vue';
 
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
 import sortFunctions from '../../util/sort';
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormList',
   components: { FormTable, FormNew, FormSort, Loading, PageSection },
-  mixins: [modal(), routes()],
+  mixins: [modal()],
   inject: ['alert'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { project, forms } = useRequestData();
-    return { project, forms };
+    const { formPath } = useRoutes();
+    return { project, forms, formPath };
   },
   data() {
     return {

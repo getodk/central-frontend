@@ -77,13 +77,12 @@ import ChecklistStep from '../checklist-step.vue';
 import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormDraftChecklist',
   components: { ChecklistStep, DocLink, SentenceSeparator },
-  mixins: [routes()],
   props: {
     // Indicates whether the current route path is .../draft.
     status: {
@@ -97,7 +96,9 @@ export default {
     const { form, attachments, resourceView, resourceStates } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
     const { dataExists } = resourceStates([form, formDraft, attachments]);
-    return { form, formDraft, attachments, dataExists };
+
+    const { formPath } = useRoutes();
+    return { form, formDraft, attachments, dataExists, formPath };
   }
 };
 </script>

@@ -29,12 +29,9 @@ import FormVersionDefDropdown from './def-dropdown.vue';
 import FormVersionString from './string.vue';
 import TimeAndUser from '../time-and-user.vue';
 
-import routes from '../../mixins/routes';
-
 export default {
   name: 'FormVersionRow',
   components: { FormVersionDefDropdown, FormVersionString, TimeAndUser },
-  mixins: [routes()],
   props: {
     version: {
       type: Object,

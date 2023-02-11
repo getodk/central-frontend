@@ -1,14 +1,14 @@
 import { RouterLinkStub } from '@vue/test-utils';
+
 import DatasetRow from '../../../src/components/dataset/row.vue';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(DatasetRow, {
   props: { dataset: testData.extendedDatasets.last() },
-  global: {
-    stubs: { RouterLink: RouterLinkStub }
-  }
+  container: { router: mockRouter('/projects/1/datasets') }
 });
 
 describe('DatasetRow', () => {

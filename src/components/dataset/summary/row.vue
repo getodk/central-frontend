@@ -46,12 +46,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SentenceSeparator from '../../sentence-separator.vue';
-import routes from '../../../mixins/routes';
+
+import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'DatasetSummaryRow',
   components: { SentenceSeparator },
-  mixins: [routes()],
   props: {
     dataset: {
       type: Object,
@@ -61,6 +61,10 @@ export default {
       type: Number,
       required: true
     }
+  },
+  setup() {
+    const { datasetPath } = useRoutes();
+    return { datasetPath };
   },
   data() {
     return {

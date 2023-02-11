@@ -32,14 +32,14 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SummaryItem from '../../summary-item.vue';
-import routes from '../../../mixins/routes';
+
+import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'LinkedForms',
   components: {
     SummaryItem
   },
-  mixins: [routes()],
   props: {
     linkedForms: {
       type: Array,
@@ -49,6 +49,10 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    const { publishedFormPath } = useRoutes();
+    return { publishedFormPath };
   }
 };
 </script>

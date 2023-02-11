@@ -38,14 +38,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import routes from '../../mixins/routes';
-
 import ProjectFormRow from './form-row.vue';
+
+import useRoutes from '../../composables/routes';
 
 export default {
   name: 'ProjectHomeBlock',
   components: { ProjectFormRow },
-  mixins: [routes()],
   props: {
     project: {
       type: Object,
@@ -59,6 +58,10 @@ export default {
       type: Number,
       default: 3
     }
+  },
+  setup() {
+    const { projectPath } = useRoutes();
+    return { projectPath };
   },
   data() {
     return {

@@ -71,7 +71,7 @@ import FieldKeyQrPanel from './qr-panel.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import request from '../../mixins/request';
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -80,7 +80,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FieldKeyNew',
   components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
-  mixins: [request(), routes()],
+  mixins: [request()],
   inject: ['alert'],
   props: {
     state: {
@@ -96,7 +96,8 @@ export default {
   setup() {
     // The modal assumes that this data will exist when the modal is shown.
     const { project, fieldKeys } = useRequestData();
-    return { project, fieldKeys };
+    const { projectPath } = useRoutes();
+    return { project, fieldKeys, projectPath };
   },
   data() {
     return {

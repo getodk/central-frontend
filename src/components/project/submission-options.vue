@@ -69,24 +69,23 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'ProjectSubmissionOptions'
+};
+</script>
+<script setup>
 import DocLink from '../doc-link.vue';
 import LinkIfCan from '../link-if-can.vue';
 import Modal from '../modal.vue';
 
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 
-export default {
-  name: 'ProjectSubmissionOptions',
-  components: { DocLink, LinkIfCan, Modal },
-  mixins: [routes()],
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide']
-};
+defineProps({
+  state: Boolean
+});
+defineEmits(['hide']);
+
+const { projectPath, formPath } = useRoutes();
 </script>
 
 <i18n lang="json5">

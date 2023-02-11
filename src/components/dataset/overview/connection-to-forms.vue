@@ -43,8 +43,9 @@ except according to the terms contained in the LICENSE file.
 <script>
 import SummaryItem from '../../summary-item.vue';
 import ExpandableRow from '../../expandable-row.vue';
-import routes from '../../../mixins/routes';
 import SentenceSeparator from '../../sentence-separator.vue';
+
+import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'ConnectionToForms',
@@ -53,7 +54,6 @@ export default {
     SummaryItem,
     ExpandableRow
   },
-  mixins: [routes()],
   props: {
     properties: {
       type: Array,
@@ -63,6 +63,10 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    const { publishedFormPath } = useRoutes();
+    return { publishedFormPath };
   },
   computed: {
     totalProperties() {

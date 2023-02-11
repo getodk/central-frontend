@@ -40,9 +40,9 @@ import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import routes from '../../mixins/routes';
-import tab from '../../mixins/tab';
 
+import tab from '../../mixins/tab';
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -55,7 +55,7 @@ export default {
     PageBody,
     PageHead
   },
-  mixins: [routes(), tab()],
+  mixins: [tab()],
   props: {
     projectId: {
       type: String,
@@ -67,10 +67,14 @@ export default {
     }
   },
   setup() {
-  // The component does not assume that this data will exist when the
-  // component is created.
+    // The component does not assume that this data will exist when the
+    // component is created.
     const { project, dataset, resourceStates } = useRequestData();
-    return { project, dataset, ...resourceStates([project, dataset]) };
+    const { projectPath, datasetPath } = useRoutes();
+    return {
+      project, dataset, ...resourceStates([project, dataset]),
+      projectPath, datasetPath
+    };
   },
   computed: {
     tabPathPrefix() {

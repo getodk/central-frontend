@@ -18,19 +18,17 @@ except according to the terms contained in the LICENSE file.
   </span>
 </template>
 
-<script>
-import routes from '../mixins/routes';
+<script setup>
+import useRoutes from '../composables/routes';
 
-export default {
-  name: 'LinkIfCan',
-  mixins: [routes()],
-  props: {
-    to: {
-      type: String,
-      required: true
-    }
+defineProps({
+  to: {
+    type: String,
+    required: true
   }
-};
+});
+
+const { canRoute } = useRoutes();
 </script>
 
 <style lang="scss">

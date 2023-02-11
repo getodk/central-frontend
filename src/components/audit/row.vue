@@ -51,8 +51,8 @@ import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
-import routes from '../../mixins/routes';
 import useAudit from '../../composables/audit';
+import useRoutes from '../../composables/routes';
 
 const typeByCategory = {
   user: 'resource.user',
@@ -97,7 +97,6 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 export default {
   name: 'AuditRow',
   components: { ActorLink, DateTime, Selectable },
-  mixins: [routes()],
   props: {
     audit: {
       type: Object,
@@ -106,7 +105,8 @@ export default {
   },
   setup() {
     const { actionMessage } = useAudit();
-    return { actionMessage };
+    const { projectPath, primaryFormPath, userPath } = useRoutes();
+    return { actionMessage, projectPath, primaryFormPath, userPath };
   },
   computed: {
     category() {

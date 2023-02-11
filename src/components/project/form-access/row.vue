@@ -50,12 +50,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import routes from '../../../mixins/routes';
+import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectFormAccessRow',
-  mixins: [routes()],
   props: {
     form: {
       type: Object,
@@ -73,7 +72,8 @@ export default {
   emits: ['update:state', 'update:fieldKeyAccess'],
   setup() {
     const { fieldKeys } = useRequestData();
-    return { fieldKeys };
+    const { primaryFormPath } = useRoutes();
+    return { fieldKeys, primaryFormPath };
   },
   computed: {
     htmlClass() {
