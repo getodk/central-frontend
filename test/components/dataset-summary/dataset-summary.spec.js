@@ -21,7 +21,7 @@ describe('Dataset summary', () => {
     it(`renders ${count} datasets for draft form`, () => {
       testData.formDraftDatasetDiffs.createPast(count, { isNew: true, properties: [Property.NewProperty] });
       const component = mount(DatasetSummary, {
-        props: { isDraft: true },
+        props: { isDraft: true, projectId: 1, xmlFormId: 'simple' },
         container: getContainer()
       });
       if (count === 0) {
@@ -37,7 +37,7 @@ describe('Dataset summary', () => {
     it(`renders ${count} datasets for published form`, () => {
       testData.formDatasetDiffs.createPast(count, { properties: [Property.DefaultProperty] });
       const component = mount(DatasetSummary, {
-        props: { isDraft: false },
+        props: { isDraft: false, projectId: 1, xmlFormId: 'simple' },
         container: getContainer()
       });
       if (count === 0) {
