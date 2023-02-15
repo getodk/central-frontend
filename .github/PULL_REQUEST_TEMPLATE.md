@@ -18,4 +18,4 @@ https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md
 #### Before submitting this PR, please make sure you have:
 
 - [ ] run `npm run test` and `npm run lint` and confirmed all checks still pass OR confirm CircleCI build passes
-- [ ] verified that any code or assets from external sources are properly credited in comments
+- [ ] verified that any code or assets from external sources are properly credited in comments or that everything is internally sourced
