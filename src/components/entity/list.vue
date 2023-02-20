@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-arrow-circle-down"></span>{{ $t('action.download') }}
       </a>
     </div>
-    <entity-table v-show="entities.dataExists && entities.value.length !== 0"
+    <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
         ref="table" :properties="dataset.properties"/>
   </div>
 </template>
@@ -28,6 +28,7 @@ except according to the terms contained in the LICENSE file.
 import Loading from '../loading.vue';
 import EntityTable from './table.vue';
 
+import useEntities from '../../request-data/entities';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -46,14 +47,22 @@ export default {
     datasetName: {
       type: String,
       required: true
+    },
+    top: {
+      type: Function,
+      default: (skip) => (skip < 1000 ? 25 : 1000)
     }
   },
   setup() {
-    const { dataset, entities } = useRequestData();
-    return { dataset, entities };
+    // The dataset request object is how we get access to the
+    // dataset properties for the columns.
+    const { dataset } = useRequestData();
+    const odataEntities = useEntities();
+    return { dataset, odataEntities };
   },
   data() {
     return {
+      refreshing: false
     };
   },
   computed: {
@@ -62,14 +71,29 @@ export default {
     }
   },
   created() {
-    this.fetchEntities();
+    this.fetchChunk(0, true);
   },
   methods: {
-    fetchEntities(resend) {
-      this.entities.request({
-        url: apiPaths.odataEntities(this.projectId, this.datasetName),
-        resend
-      }).catch(noop);
+    fetchChunk(skip, clear) {
+      this.refreshing = skip === 0 && !clear;
+      this.odataEntities.request({
+        url: apiPaths.odataEntities(
+          this.projectId,
+          this.datasetName,
+          {
+            $top: this.top(skip),
+            $skip: skip,
+            $count: true,
+            $wkt: true
+          }
+        ),
+        clear,
+        patch: skip === 0
+          ? null
+          : (response) => { this.odataEntities.addChunk(response.data); }
+      })
+        .finally(() => { this.refreshing = false; })
+        .catch(noop);
     }
   }
 };

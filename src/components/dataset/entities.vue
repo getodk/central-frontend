@@ -73,10 +73,3 @@ export default {
 <style lang="scss">
 #odata-data-access { float: right; }
 </style>
-
-<i18n lang="json5">
-{
-  "en": {
-  }
-}
-</i18n>

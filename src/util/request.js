@@ -44,9 +44,10 @@ const submissionPath = (suffix) =>
     return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}${suffix}${qs}`;
   };
 const datasetPath = (suffix) =>
-  (projectId, datasetName) => {
+  (projectId, datasetName, query = undefined) => {
     const encodedName = encodeURIComponent(datasetName);
-    return `/v1/projects/${projectId}/datasets/${encodedName}${suffix}`;
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/datasets/${encodedName}${suffix}${qs}`;
   };
 
 export const apiPaths = {

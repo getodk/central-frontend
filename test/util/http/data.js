@@ -25,6 +25,7 @@ const responseDefaults = {
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
   odata: testData.submissionOData,
+  odataEntities: [],
   keys: () => testData.standardKeys.sorted(),
   audits: () => testData.extendedAudits.sorted()
 };

@@ -64,7 +64,6 @@ export default ({ i18n }, createResource) => {
   }));
 
   createResource('dataset');
-  createResource('entities');
 
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));

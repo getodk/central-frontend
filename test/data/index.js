@@ -3,6 +3,7 @@ import * as Assignments from './assignments';
 import * as Audits from './audits';
 import * as Comments from './comments';
 import * as Configs from './configs';
+import * as Entities from './entities';
 import * as Datasets from './datasets';
 import * as FormDatasetDiffs from './form-dataset-diff';
 import * as FormDraftDatasetDiffs from './form-draft-dataset-diff';
@@ -27,6 +28,7 @@ const testData = Object.assign( // eslint-disable-line prefer-object-spread
   Audits,
   Comments,
   Configs,
+  Entities,
   Datasets,
   FormDatasetDiffs,
   FormDraftDatasetDiffs,

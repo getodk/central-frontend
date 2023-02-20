@@ -20,10 +20,10 @@ except according to the terms contained in the LICENSE file.
         </tr>
       </thead>
       <tbody>
-        <template v-if="entities.dataExists">
-          <entity-metadata-row v-for="(entity, index) in entities.value"
+        <template v-if="odataEntities.dataExists">
+          <entity-metadata-row v-for="(entity, index) in odataEntities.value"
             :key="entity.__name" :entity="entity"
-            :row-number="entities.value.length - index"
+            :row-number="odataEntities.value.length - index"
             :data-index="index"/>
         </template>
       </tbody>
@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
           </tr>
         </thead>
         <tbody>
-          <template v-if="entities.dataExists && properties != null">
-            <entity-data-row v-for="(entity, index) in entities.value"
+          <template v-if="odataEntities.dataExists && properties != null">
+            <entity-data-row v-for="(entity, index) in odataEntities.value"
               :key="entity.name" :entity="entity"
               :properties="properties" :data-index="index"/>
           </template>
@@ -57,8 +57,6 @@ import EntityMetadataRow from './metadata-row.vue';
 
 import { useRequestData } from '../../request-data';
 
-// We may render many rows, so this component makes use of event delegation and
-// other optimizations.
 
 export default {
   name: 'EntityTable',
@@ -70,54 +68,8 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, entities } = useRequestData();
-    return { project, entities };
-  },
-  data() {
-    return {
-      /*
-      Actions are shown for a row if the cursor is over the row or if one of the
-      actions is focused. However, it is possible for the cursor to be over one
-      row while an action is focused in a different row. In that case, we show
-      the actions for one of the two rows depending on the type of the most
-      recent event.
-
-      I tried other approaches before landing on this one. However, sequences of
-      events like the following were a challenge:
-
-        - Click the More button for a row.
-        - Next, press tab to focus the Review button in the next row.
-        - Actions are shown for the next row and are no longer shown beneath the
-          cursor. However, that will trigger a mouseover event, which depending
-          on the approach may cause actions to be shown beneath the cursor
-          again.
-      */
-      actionsTrigger: 'hover',
-      dataHover: null
-    };
-  },
-  computed: {
-    canUpdate() {
-      return this.project.dataExists && this.project.permits('entity.update');
-    }
-  },
-  watch: {
-    /*
-    We remove the data-hover class after the entitys are refreshed, with the
-    following cases in mind:
-
-      - There may be fewer entitys after the refresh than before. In that
-        case, it is possible that this.odata.value.length <= this.dataHover.
-      - A entity may be in a different row after the refresh. For example,
-        if the user hovers over the first row, and after the refresh, that
-        entity is in the second row, then the second row will incorrectly
-        have the data-hover class.
-
-    In some cases, it would be ideal not to remove the class or to add the class
-    to the row for a different entity. That logic is not in place right now.
-    */
-  },
-  methods: {
+    const { project, odataEntities } = useRequestData();
+    return { project, odataEntities };
   }
 };
 </script>
