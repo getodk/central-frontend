@@ -13,19 +13,35 @@ except according to the terms contained in the LICENSE file.
   <div id="entity-list">
     <loading :state="dataset.initiallyLoading"/>
     <div id="entity-list-actions">
-      <button id="entity-list-refresh-button" type="button" class="btn">filter/refresh</button>
+      <button id="entity-list-refresh-button" type="button"
+            class="btn btn-default" :aria-disabled="refreshing"
+            @click="fetchChunk(0, false)">
+            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+            <spinner :state="refreshing"/>
+          </button>
       <a id="entity-download-button" type="button" class="btn btn-primary" :href="href">
         <span class="icon-arrow-circle-down"></span>{{ $t('action.download') }}
       </a>
     </div>
     <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
         ref="table" :properties="dataset.properties"/>
+    <p v-show="odataEntities.dataExists && odataEntities.value.length === 0"
+      class="empty-table-message">
+      {{ $t('noEntities') }}
+    </p>
+    <div v-show="odataLoadingMessage != null" id="entity-list-message">
+      <div id="entity-list-spinner-container">
+        <spinner :state="odataLoadingMessage != null"/>
+      </div>
+      <div id="entity-list-message-text">{{ odataLoadingMessage }}</div>
+    </div>
   </div>
 </template>
 
 <script>
 
 import Loading from '../loading.vue';
+import Spinner from '../spinner.vue';
 import EntityTable from './table.vue';
 
 import useEntities from '../../request-data/entities';
@@ -37,6 +53,7 @@ export default {
   name: 'EntityList',
   components: {
     Loading,
+    Spinner,
     EntityTable
   },
   props: {
@@ -50,7 +67,7 @@ export default {
     },
     top: {
       type: Function,
-      default: (skip) => (skip < 1000 ? 25 : 1000)
+      default: (skip) => (skip < 1000 ? 250 : 1000)
     }
   },
   setup() {
@@ -68,6 +85,10 @@ export default {
   computed: {
     href() {
       return apiPaths.entities(this.projectId, this.datasetName);
+    },
+    odataLoadingMessage() {
+      if (!this.odataEntities.awaitingResponse || this.refreshing) return null;
+      return this.$t('loading');
     }
   },
   created() {
@@ -81,10 +102,11 @@ export default {
           this.projectId,
           this.datasetName,
           {
-            $top: this.top(skip),
-            $skip: skip,
-            $count: true,
-            $wkt: true
+            // Don't include top and skip to
+            // fetch all entity data
+            //$top: this.top(skip),
+            //$skip: skip,
+            $count: true
           }
         ),
         clear,
@@ -112,15 +134,8 @@ export default {
   align-items: baseline;
   display: flex;
   flex-wrap: wrap-reverse;
-
-  form > :first-child { margin-left: 0; }
-}
-#entity-field-dropdown {
-  margin-left: 15px;
-  margin-right: 5px;
 }
 #entity-list-refresh-button {
-  margin-left: 10px;
   margin-right: 5px;
 }
 #entity-download-button {
@@ -151,8 +166,11 @@ export default {
 </style>
 
 <i18n lang="json5">
-{
-  "en": {
+  {
+    "en": {
+      // This text is shown when loading Entities and the count is unknown.
+      "loading": "Loading Entities…",
+      "noEntities": "There are no Entities to show."
+    }
   }
-}
 </i18n>
