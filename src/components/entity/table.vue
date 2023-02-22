@@ -103,8 +103,8 @@ export default {
 {
   "en": {
     "header": {
-      "createdBy": "Created By",
-      "createdAt": "Created At",
+      "createdBy": "Created by",
+      "createdAt": "Created at",
       "label": "Label",
       "entityId": "Entity ID"
     }

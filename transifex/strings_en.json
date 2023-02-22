@@ -1365,11 +1365,11 @@
     "EntityTable": {
       "header": {
         "createdBy": {
-          "string": "Created By",
+          "string": "Created by",
           "developer_comment": "This is the text of a table column header."
         },
         "createdAt": {
-          "string": "Created At",
+          "string": "Created at",
           "developer_comment": "This is the text of a table column header."
         },
         "label": {
