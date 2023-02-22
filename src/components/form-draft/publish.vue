@@ -102,12 +102,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { any } from 'ramda';
+
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -115,7 +116,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormDraftPublish',
   components: { FormGroup, Modal, Spinner },
-  mixins: [request(), routes()],
+  mixins: [request()],
   inject: ['alert'],
   props: {
     state: {
@@ -129,7 +130,12 @@ export default {
     // component is created.
     const { formVersions, attachments, resourceView, formDraftDatasetDiff } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
-    return { formVersions, formDraft, attachments, formDraftDatasetDiff };
+
+    const { formPath } = useRoutes();
+    return {
+      formVersions, formDraft, attachments, formDraftDatasetDiff,
+      formPath
+    };
   },
   data() {
     return {

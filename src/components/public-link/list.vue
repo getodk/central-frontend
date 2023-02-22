@@ -62,7 +62,7 @@ import PublicLinkTable from './table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -78,7 +78,7 @@ export default {
     PublicLinkTable,
     SentenceSeparator
   },
-  mixins: [modal(), routes()],
+  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -92,7 +92,8 @@ export default {
   },
   setup() {
     const { publicLinks } = useRequestData();
-    return { publicLinks };
+    const { projectPath } = useRoutes();
+    return { publicLinks, projectPath };
   },
   data() {
     return {

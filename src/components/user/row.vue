@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
 import Spinner from '../spinner.vue';
 
 import request from '../../mixins/request';
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -78,7 +78,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'UserRow',
   components: { Spinner },
-  mixins: [request(), routes()],
+  mixins: [request()],
   props: {
     user: {
       type: Object,
@@ -90,7 +90,8 @@ export default {
   emits: ['assigned-role', 'reset-password', 'retire'],
   setup() {
     const { currentUser } = useRequestData();
-    return { currentUser };
+    const { userPath } = useRoutes();
+    return { currentUser, userPath };
   },
   data() {
     return {

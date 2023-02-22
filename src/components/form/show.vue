@@ -32,10 +32,10 @@ import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 
 import request from '../../mixins/request';
-import routes from '../../mixins/routes';
 import useCallWait from '../../composables/call-wait';
 import useForm from '../../request-data/form';
 import useDatasets from '../../request-data/datasets';
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -43,7 +43,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormShow',
   components: { FormHead, Loading, PageBody },
-  mixins: [request(), routes()],
+  mixins: [request()],
   props: {
     projectId: {
       type: String,
@@ -60,10 +60,12 @@ export default {
     useDatasets();
 
     const { callWait, cancelCall } = useCallWait();
+    const { formPath } = useRoutes();
     return {
       project, form, formDraft, attachments,
       ...resourceStates([project, form, formDraft, attachments]),
-      callWait, cancelCall
+      callWait, cancelCall,
+      formPath
     };
   },
   data() {

@@ -48,11 +48,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import routes from '../../../mixins/routes';
+import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'DatasetProperties',
-  mixins: [routes()],
   props: {
     properties: {
       type: Array,
@@ -62,6 +61,10 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    const { publishedFormPath } = useRoutes();
+    return { publishedFormPath };
   }
 };
 </script>

@@ -29,19 +29,23 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { apiPaths } from '../../util/request';
 import DateTime from '../date-time.vue';
-import routes from '../../mixins/routes';
+
+import useRoutes from '../../composables/routes';
+import { apiPaths } from '../../util/request';
 
 export default {
   name: 'DatasetRow',
   components: { DateTime },
-  mixins: [routes()],
   props: {
     dataset: {
       type: Object,
       required: true
     }
+  },
+  setup() {
+    const { datasetPath } = useRoutes();
+    return { datasetPath };
   },
   computed: {
     href() {

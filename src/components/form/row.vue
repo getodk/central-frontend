@@ -91,15 +91,14 @@ import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
 import LinkIfCan from '../link-if-can.vue';
 
-import routes from '../../mixins/routes';
 import useReviewState from '../../composables/review-state';
+import useRoutes from '../../composables/routes';
 import { formatDateTime } from '../../util/date-time';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormRow',
   components: { DateTime: DateTimeComponent, EnketoFill, EnketoPreview, LinkIfCan },
-  mixins: [routes()],
   props: {
     form: {
       type: Object,
@@ -112,8 +111,13 @@ export default {
   },
   setup() {
     const { project, duplicateFormNames } = useRequestData();
+    const { formPath, primaryFormPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
-    return { project, duplicateFormNames, reviewStateIcon };
+    return {
+      project, duplicateFormNames,
+      formPath, primaryFormPath,
+      reviewStateIcon
+    };
   },
   computed: {
     visibleReviewStates: () => ['received', 'hasIssues', 'edited'],

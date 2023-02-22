@@ -86,7 +86,7 @@ import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
 import DatasetSummary from '../../dataset/summary.vue';
 
-import routes from '../../../mixins/routes';
+import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
 
 export default {
@@ -98,13 +98,16 @@ export default {
     SummaryItem,
     DatasetSummary
   },
-  mixins: [routes()],
   emits: ['view-xml'],
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
     const { form, publishedAttachments, formDatasetDiff } = useRequestData();
-    return { form, publishedAttachments, formDatasetDiff };
+    const { formPath, datasetPath } = useRoutes();
+    return {
+      form, publishedAttachments, formDatasetDiff,
+      formPath, datasetPath
+    };
   },
   computed: {
     stateIcon() {

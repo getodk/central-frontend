@@ -54,7 +54,7 @@ import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
 import modal from '../mixins/modal';
-import routes from '../mixins/routes';
+import useRoutes from '../composables/routes';
 import { loadAsync } from '../util/load-async';
 import { useRequestData } from '../request-data';
 
@@ -67,13 +67,14 @@ export default {
     NavbarLinks,
     NavbarLocaleDropdown
   },
-  mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' }), routes()],
+  mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' })],
   inject: ['config'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { currentUser, analyticsConfig } = useRequestData();
-    return { currentUser, analyticsConfig };
+    const { canRoute } = useRoutes();
+    return { currentUser, analyticsConfig, canRoute };
   },
   data() {
     return {

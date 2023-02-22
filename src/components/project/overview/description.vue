@@ -25,12 +25,12 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import MarkdownView from '../../markdown/view.vue';
-import routes from '../../../mixins/routes';
+
+import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'ProjectOverviewDescription',
   components: { MarkdownView },
-  mixins: [routes()],
   props: {
     description: {
       type: String
@@ -44,6 +44,10 @@ export default {
     canUpdate: {
       type: Boolean
     }
+  },
+  setup() {
+    const { projectPath } = useRoutes();
+    return { projectPath };
   },
   computed: {
     emptyDescription() {

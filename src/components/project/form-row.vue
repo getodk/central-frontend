@@ -91,8 +91,8 @@ import { DateTime } from 'luxon';
 
 import DateTimeComponent from '../date-time.vue';
 
-import routes from '../../mixins/routes';
 import useReviewState from '../../composables/review-state';
+import useRoutes from '../../composables/routes';
 import { enketoBasePath } from '../../util/util';
 import { formatDateTime } from '../../util/date-time';
 import { useRequestData } from '../../request-data';
@@ -100,7 +100,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'ProjectFormRow',
   components: { DateTime: DateTimeComponent },
-  mixins: [routes()],
   props: {
     form: {
       type: Object,
@@ -114,8 +113,13 @@ export default {
   setup() {
     const { projects } = useRequestData();
     const { duplicateFormNamesPerProject } = projects.toRefs();
+    const { formPath, primaryFormPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
-    return { duplicateFormNamesPerProject, reviewStateIcon };
+    return {
+      duplicateFormNamesPerProject,
+      formPath, primaryFormPath,
+      reviewStateIcon
+    };
   },
   computed: {
     canLinkToFormOverview() {

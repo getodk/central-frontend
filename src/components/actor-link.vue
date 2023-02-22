@@ -14,25 +14,20 @@ except according to the terms contained in the LICENSE file.
   <span v-else class="actor-link" v-tooltip.text>{{ actor.displayName }}</span>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+
 import LinkIfCan from './link-if-can.vue';
 
-import routes from '../mixins/routes';
+import useRoutes from '../composables/routes';
 
-export default {
-  name: 'ActorLink',
-  components: { LinkIfCan },
-  mixins: [routes()],
-  props: {
-    actor: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    to() {
-      return this.userPath(this.actor.id);
-    }
+const props = defineProps({
+  actor: {
+    type: Object,
+    required: true
   }
-};
+});
+
+const { userPath } = useRoutes();
+const to = computed(() => userPath(props.actor.id));
 </script>

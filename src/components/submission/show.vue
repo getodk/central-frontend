@@ -50,8 +50,8 @@ import SubmissionBasicDetails from './basic-details.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
 import useFields from '../../request-data/fields';
+import useRoutes from '../../composables/routes';
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
 import { setDocumentTitle } from '../../util/reactivity';
@@ -68,7 +68,7 @@ export default {
     SubmissionBasicDetails,
     SubmissionUpdateReviewState
   },
-  mixins: [modal(), routes()],
+  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -94,9 +94,11 @@ export default {
       ? [`${t('title.details')}: ${submission.instanceNameOrId}`]
       : [t('title.details')]));
 
+    const { formPath } = useRoutes();
     return {
       project, submission, submissionVersion, audits, comments, diffs, fields,
-      ...resourceStates([project, submission])
+      ...resourceStates([project, submission]),
+      formPath
     };
   },
   data() {

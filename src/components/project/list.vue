@@ -73,8 +73,8 @@ import ProjectSort from './sort.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
 import sortFunctions from '../../util/sort';
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -88,11 +88,12 @@ export default {
     ProjectSort,
     SentenceSeparator
   },
-  mixins: [modal(), routes()],
+  mixins: [modal()],
   inject: ['alert'],
   setup() {
     const { currentUser, projects } = useRequestData();
-    return { currentUser, projects };
+    const { projectPath } = useRoutes();
+    return { currentUser, projects, projectPath };
   },
   data() {
     return {

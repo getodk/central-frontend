@@ -100,7 +100,7 @@ import SummaryItem from '../summary-item.vue';
 import DatasetSummary from '../dataset/summary.vue';
 
 import modal from '../../mixins/modal';
-import routes from '../../mixins/routes';
+import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
@@ -122,7 +122,7 @@ export default {
     SummaryItem,
     DatasetSummary
   },
-  mixins: [modal({ viewXml: 'FormVersionViewXml' }), routes()],
+  mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   inject: ['alert'],
   props: {
     projectId: {
@@ -137,7 +137,11 @@ export default {
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
     const { form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
-    return { form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff };
+    const { projectPath, formPath } = useRoutes();
+    return {
+      form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff,
+      projectPath, formPath
+    };
   },
   data() {
     return {

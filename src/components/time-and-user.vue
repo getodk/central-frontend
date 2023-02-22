@@ -25,23 +25,21 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
+<script setup>
 import DateTime from './date-time.vue';
 import LinkIfCan from './link-if-can.vue';
-import routes from '../mixins/routes';
 
-export default {
-  name: 'TimeAndUser',
-  components: { DateTime, LinkIfCan },
-  mixins: [routes()],
-  props: {
-    iso: {
-      type: String,
-      required: true
-    },
-    user: Object // eslint-disable-line vue/require-default-prop,
-  }
-};
+import useRoutes from '../composables/routes';
+
+defineProps({
+  iso: {
+    type: String,
+    required: true
+  },
+  user: Object
+});
+
+const { userPath } = useRoutes();
 </script>
 
 <style lang="scss">
