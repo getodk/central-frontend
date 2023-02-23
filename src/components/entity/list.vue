@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
             <spinner :state="refreshing"/>
           </button>
       <a id="entity-download-button" type="button" class="btn btn-primary" :href="href">
-        <span class="icon-arrow-circle-down"></span>{{ $t('action.download') }}
+        <span class="icon-arrow-circle-down"></span>{{ downloadText }}
       </a>
     </div>
     <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
@@ -75,6 +75,11 @@ export default {
   computed: {
     href() {
       return apiPaths.entities(this.projectId, this.datasetName);
+    },
+    downloadText() {
+      return !this.odataEntities.dataExists
+        ? this.$t('action.download')
+        : this.$tcn('action.download.unfiltered', this.odataEntities.count);
     }
   },
   created() {
@@ -126,6 +131,12 @@ export default {
 <i18n lang="json5">
   {
     "en": {
+      "action": {
+        "download": {
+          // This is the text of a button shown when the count of Entities is known.
+          "unfiltered": "Download {count} Entity | Download {count} Entities",
+        }
+      },
       // This text is shown when there are no Entities to show in a table.
       "noEntities": "There are no Entities to show."
     }

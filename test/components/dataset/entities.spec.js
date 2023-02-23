@@ -14,6 +14,6 @@ describe('DatasetEntities', () => {
       { root: false }
     );
     const text = component.get('#entity-download-button').text();
-    text.should.equal('Download');
+    text.should.equal('Download 10 Entities');
   });
 });

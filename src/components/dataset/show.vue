@@ -97,6 +97,7 @@ export default {
     fetchDataset(resend) {
       this.dataset.request({
         url: apiPaths.dataset(this.projectId, this.datasetName),
+        extended: true,
         resend
       }).catch(noop);
     },
