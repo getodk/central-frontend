@@ -5,26 +5,22 @@ import EntityTable from '../../../src/components/entity/table.vue';
 import useProject from '../../../src/request-data/project';
 import useEntities from '../../../src/request-data/entities';
 
-import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (props = undefined) => {
-  const container = createTestContainer({
+const mountComponent = (props = undefined) => mount(EntityTable, {
+  props: {
+    properties: testData.extendedDatasets.last().properties,
+    ...props
+  },
+  container: {
     requestData: testRequestData([useProject, useEntities], {
       project: testData.extendedProjects.last(),
       odataEntities: testData.entityOData()
     })
-  });
-  return mount(EntityTable, {
-    props: {
-      properties: testData.extendedDatasets.last().properties,
-      ...props
-    },
-    container
-  });
-};
+  }
+});
 
 const headers = (table) => table.findAll('th').map(th => th.text());
 

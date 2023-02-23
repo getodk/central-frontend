@@ -4,26 +4,24 @@ import EntityTable from '../../../src/components/entity/table.vue';
 import useProject from '../../../src/request-data/project';
 import useEntities from '../../../src/request-data/entities';
 
-import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (props = undefined) => {
-  const container = createTestContainer({
-    requestData: testRequestData([useProject, useEntities], {
-      project: testData.extendedProjects.last(),
-      odataEntities: testData.entityOData()
-    })
-  });
-  // Mounting EntityTable because SubmissionTable did the same thing for
-  // SubmissionDataRow.
+
+const mountComponent = () => {
+  // Mounting EntityTable in order to test tooltops on EntityDataRow
+  // because text-overflow-ellipsis is defined for td and th on table.
   const table = mount(EntityTable, {
     props: {
-      properties: testData.extendedDatasets.last().properties,
-      ...props
+      properties: testData.extendedDatasets.last().properties
     },
-    container
+    container: {
+      requestData: testRequestData([useProject, useEntities], {
+        project: testData.extendedProjects.last(),
+        odataEntities: testData.entityOData()
+      })
+    }
   });
   return table.getComponent(EntityDataRow);
 };
