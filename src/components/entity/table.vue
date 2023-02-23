@@ -34,8 +34,8 @@ except according to the terms contained in the LICENSE file.
             <th v-for="property of properties" :key="property.id">
               <span v-tooltip.text>{{ property.name }}</span>
             </th>
-            <th>{{ $t('header.label') }}</th>
-            <th>{{ $t('header.entityId') }}</th>
+            <th>{{ $t('entity.label') }}</th>
+            <th>{{ $t('entity.entityId') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -96,16 +96,3 @@ export default {
   }
 }
 </style>
-
-<i18n lang="json5">
-{
-  "en": {
-    "header": {
-      "createdBy": "Created by",
-      "createdAt": "Created at",
-      "label": "Label",
-      "entityId": "Entity ID"
-    }
-  }
-}
-</i18n>

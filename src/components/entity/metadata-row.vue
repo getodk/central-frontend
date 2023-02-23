@@ -42,6 +42,7 @@ export default {
 @import '../../assets/scss/mixins';
 
 .entity-metadata-row {
+  // TODO: move .row-number to app.css
   .row-number {
     color: #999;
     font-size: 11px;

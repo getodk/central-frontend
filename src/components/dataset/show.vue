@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
         <li v-if="canRoute(tabPath('entities'))" :class="tabClass('entities')"
           role="presentation">
           <router-link :to="tabPath('entities')">
-            {{ $t('resource.data') }}
+            {{ $t('common.data') }}
           </router-link>
         </li>
       </template>
