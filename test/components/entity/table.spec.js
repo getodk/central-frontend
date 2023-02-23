@@ -14,13 +14,7 @@ const mountComponent = (props = undefined) => {
   const container = createTestContainer({
     requestData: testRequestData([useProject, useEntities], {
       project: testData.extendedProjects.last(),
-      odataEntities: {
-        status: 200,
-        data: testData.entityOData(),
-        config: {
-          url: '/v1/projects/1/datasets/trees/Entities'
-        }
-      }
+      odataEntities: testData.entityOData()
     })
   });
   return mount(EntityTable, {

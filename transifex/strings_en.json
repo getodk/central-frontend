@@ -1354,12 +1354,9 @@
       }
     },
     "EntityList": {
-      "loading": {
-        "string": "Loading Entities…",
-        "developer_comment": "This text is shown when loading Entities and the count is unknown."
-      },
       "noEntities": {
-        "string": "There are no Entities to show."
+        "string": "There are no Entities to show.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
       }
     },
     "EntityTable": {

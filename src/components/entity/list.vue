@@ -11,11 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-list">
-    <loading :state="dataset.initiallyLoading"/>
     <div id="entity-list-actions">
       <button id="entity-list-refresh-button" type="button"
             class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(0, false)">
+            @click="fetchData(false)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
@@ -24,17 +23,12 @@ except according to the terms contained in the LICENSE file.
       </a>
     </div>
     <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
-        ref="table" :properties="dataset.properties"/>
+      :properties="dataset.properties"/>
     <p v-show="odataEntities.dataExists && odataEntities.value.length === 0"
       class="empty-table-message">
       {{ $t('noEntities') }}
     </p>
-    <div v-show="odataLoadingMessage != null" id="entity-list-message">
-      <div id="entity-list-spinner-container">
-        <spinner :state="odataLoadingMessage != null"/>
-      </div>
-      <div id="entity-list-message-text">{{ odataLoadingMessage }}</div>
-    </div>
+    <loading :state="odataEntities.initiallyLoading"/>
   </div>
 </template>
 
@@ -64,10 +58,6 @@ export default {
     datasetName: {
       type: String,
       required: true
-    },
-    top: {
-      type: Function,
-      default: (skip) => (skip < 1000 ? 250 : 1000)
     }
   },
   setup() {
@@ -85,34 +75,21 @@ export default {
   computed: {
     href() {
       return apiPaths.entities(this.projectId, this.datasetName);
-    },
-    odataLoadingMessage() {
-      if (!this.odataEntities.awaitingResponse || this.refreshing) return null;
-      return this.$t('loading');
     }
   },
   created() {
-    this.fetchChunk(0, true);
+    this.fetchData(true);
   },
   methods: {
-    fetchChunk(skip, clear) {
-      this.refreshing = skip === 0 && !clear;
+    fetchData(clear) {
+      this.refreshing = !clear;
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
           this.datasetName,
-          {
-            // Don't include top and skip to
-            // fetch all entity data
-            //$top: this.top(skip),
-            //$skip: skip,
-            $count: true
-          }
+          { $count: true }
         ),
-        clear,
-        patch: skip === 0
-          ? null
-          : (response) => { this.odataEntities.addChunk(response.data); }
+        clear
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
@@ -144,32 +121,12 @@ export default {
   margin-bottom: 10px;
   margin-left: auto;
 }
-
-#entity-list-message {
-  margin-left: 28px;
-  padding-bottom: 38px;
-  position: relative;
-
-  #entity-list-spinner-container {
-    margin-right: 8px;
-    position: absolute;
-    top: 8px;
-    width: 16px; // eventually probably better not to default spinner to center.
-  }
-
-  #entity-list-message-text {
-    color: #555;
-    font-size: 12px;
-    padding-left: 24px;
-  }
-}
 </style>
 
 <i18n lang="json5">
   {
     "en": {
-      // This text is shown when loading Entities and the count is unknown.
-      "loading": "Loading Entities…",
+      // This text is shown when there are no Entities to show in a table.
       "noEntities": "There are no Entities to show."
     }
   }

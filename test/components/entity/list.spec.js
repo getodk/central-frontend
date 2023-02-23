@@ -56,7 +56,7 @@ describe('EntityList', () => {
         .request(component =>
           component.get('#entity-list-refresh-button').trigger('click'))
         .beforeEachResponse(component => {
-          component.get('#entity-list-message').should.be.hidden();
+          component.get('.loading').should.be.hidden();
         })
         .respondWithData(testData.entityOData);
     });

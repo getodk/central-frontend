@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="entity-metadata-row">
-    <!-- ^^^ EntityTable assumes that this element does not have a class
-    binding. -->
-
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
@@ -37,10 +34,6 @@ export default {
       type: Number,
       required: true
     }
-  },
-  setup() {
-  },
-  computed: {
   }
 };
 </script>
@@ -49,13 +42,6 @@ export default {
 @import '../../assets/scss/mixins';
 
 .entity-metadata-row {
-  transition: background-color 0.6s 6s;
-
-  &.updated {
-    background-color: #faf1cd;
-    transition: none;
-  }
-
   .row-number {
     color: #999;
     font-size: 11px;

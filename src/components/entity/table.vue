@@ -22,9 +22,8 @@ except according to the terms contained in the LICENSE file.
       <tbody>
         <template v-if="odataEntities.dataExists">
           <entity-metadata-row v-for="(entity, index) in odataEntities.value"
-            :key="entity.__name" :entity="entity"
-            :row-number="odataEntities.value.length - index"
-            :data-index="index"/>
+            :key="entity.__id" :entity="entity"
+            :row-number="odataEntities.value.length - index"/>
         </template>
       </tbody>
     </table>
@@ -41,9 +40,9 @@ except according to the terms contained in the LICENSE file.
         </thead>
         <tbody>
           <template v-if="odataEntities.dataExists && properties != null">
-            <entity-data-row v-for="(entity, index) in odataEntities.value"
-              :key="entity.name" :entity="entity"
-              :properties="properties" :data-index="index"/>
+            <entity-data-row v-for="(entity) in odataEntities.value"
+              :key="entity.__id" :entity="entity"
+              :properties="properties"/>
           </template>
         </tbody>
       </table>
@@ -64,12 +63,11 @@ export default {
   props: {
     properties: Array
   },
-  emits: ['review'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, odataEntities } = useRequestData();
-    return { project, odataEntities };
+    const { odataEntities } = useRequestData();
+    return { odataEntities };
   }
 };
 </script>

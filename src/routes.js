@@ -522,7 +522,7 @@ const routes = [
         meta: {
           title: () => [i18n.t('resource.data'), dataset.name],
           validateData: {
-            project: () => project.permits('entity.list')
+            project: () => project.permits(['entity.list'])
           }
         }
       })
@@ -704,9 +704,7 @@ const routesByName = new Map();
     'FieldKeyList',
     'ProjectFormAccess',
     'DatasetList',
-    'ProjectSettings',
-    'DatasetEntities',
-    'DatasetOverview'
+    'ProjectSettings'
   ];
   const formRoutes = [
     'FormOverview',
@@ -718,12 +716,17 @@ const routesByName = new Map();
     'FormAttachmentList',
     'FormDraftTesting'
   ];
+  const datasetRoutes = [
+    'DatasetEntities',
+    'DatasetOverview'
+  ];
   preserveDataBetweenRoutes(projectRoutes, preserveBetweenTabs);
   preserveDataBetweenRoutes(formRoutes, preserveBetweenTabs);
+  preserveDataBetweenRoutes(datasetRoutes, preserveBetweenTabs);
 
   // Preserve requestData.project.
   preserveDataBetweenRoutes(
-    [...projectRoutes, ...formRoutes, 'SubmissionShow', 'DatasetOverview'],
+    [...projectRoutes, ...formRoutes, ...datasetRoutes, 'SubmissionShow'],
     (to, from) => (to.params.projectId === from.params.projectId
       ? [project]
       : false)
