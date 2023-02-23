@@ -25,7 +25,7 @@ const responseDefaults = {
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
   odata: testData.submissionOData,
-  odataEntities: [],
+  odataEntities: testData.entityOData,
   keys: () => testData.standardKeys.sorted(),
   audits: () => testData.extendedAudits.sorted()
 };
@@ -62,6 +62,9 @@ const responsesByComponent = {
     fieldKeys: true,
     roles: true,
     formSummaryAssignments: () => testData.standardFormSummaryAssignments.sorted()
+  }),
+  DatasetEntities: componentResponses({
+    odataEntities: true
   }),
   DatasetList: componentResponses({
     datasets: () => testData.extendedDatasets.sorted()

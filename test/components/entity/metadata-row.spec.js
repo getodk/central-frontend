@@ -25,7 +25,7 @@ describe('EntityMetadataRow', () => {
     td.text().should.equal('1000');
   });
 
-  it('shows the submitter name for a form', async () => {
+  it('shows the creator name for an entity', async () => {
     testData.extendedDatasets.createPast(1);
     const creator = testData.extendedUsers.first();
     testData.extendedEntities.createPast(1, { creator }).last();

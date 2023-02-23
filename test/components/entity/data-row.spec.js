@@ -75,4 +75,23 @@ describe('EntityDataRow', () => {
     const text = mountComponent().findAll('td').map(td => td.text());
     text.should.eql(['444', '555', 'foo', 'abcd1234']);
   });
+
+  it('renders tooltip span for a long value', async () => {
+    testData.extendedDatasets.createPast(1, {
+      name: 'trees',
+      properties: [
+        { name: 'p1' }
+      ]
+    });
+    testData.extendedEntities.createPast(1, {
+      label: 'foo',
+      entityId: 'abcd1234',
+      p1: 'foobar'
+    });
+    const td = mountComponent().get('td');
+    td.classes().length.should.equal(0);
+    const span = td.get('span');
+    span.text().should.equal('foobar');
+    await span.should.have.textTooltip();
+  });
 });
