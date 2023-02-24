@@ -3285,7 +3285,7 @@
           "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": "To connect to this form’s OData feed, select your tool and copy the link into it."
+          "string": "To connect to this Form’s OData feed, select your tool and copy the link into it."
         }
       },
       "tab": {
@@ -3314,10 +3314,12 @@
           }
         },
         "python": {
-          "string": "To connect to Central from Python, we recommend {pyODK}. pyODK is the official Python client for Central and it makes common data analysis and workflow automation tasks simple."
+          "string": "To connect to Central from Python, we recommend {pyODK}. pyODK is the official Python client for Central and it makes common data analysis and workflow automation tasks simple.",
+          "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
         },
         "r": {
-          "string": "To connect to Central from R, we recommend {ruODK}. ruODK is developed and supported by ODK community members."
+          "string": "To connect to Central from R, we recommend {ruODK}. ruODK is developed and supported by ODK community members.",
+          "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
         },
         "other": {
           "full": {
