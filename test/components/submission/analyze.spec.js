@@ -36,16 +36,22 @@ describe('OdataAnalyze (formerly SubmissionAnalyze)', () => {
       help.text().should.containEql(helpSubstring);
     };
 
-    it('defaults to the Excel/Power BI tab', () => {
+    it('defaults to the Power BI tab', () => {
       const modal = mountComponent();
-      assertContent(modal, 'Excel/Power BI', 'For help using OData with Excel,');
+      assertContent(modal, 'Power BI or Excel', 'For help using OData with Power BI,');
     });
 
-    it('renders the Excel/Power BI tab correctly', async () => {
+    it('renders the Power BI tab correctly', async () => {
       const modal = mountComponent();
       await clickTab(modal, 'R');
-      await clickTab(modal, 'Excel/Power BI');
-      assertContent(modal, 'Excel/Power BI', 'For help using OData with Excel,');
+      await clickTab(modal, 'Power BI or Excel');
+      assertContent(modal, 'Power BI or Excel', 'For help using OData with Power BI,');
+    });
+
+    it('renders the Python tab correctly', async () => {
+      const modal = mountComponent();
+      await clickTab(modal, 'Python');
+      assertContent(modal, 'Python', 'from Python,');
     });
 
     it('renders the R tab correctly', async () => {
