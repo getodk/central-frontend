@@ -304,6 +304,23 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
     });
 
+    it('odataEntitiesSvc', () => {
+      const path = apiPaths.odataEntitiesSvc(1, 'a b');
+      path.should.equal('/v1/projects/1/datasets/a%20b.svc');
+    });
+
+    describe('odataEntities', () => {
+      it('returns the correct path for a dataset', () => {
+        const path = apiPaths.odataEntities(1, 'a b');
+        path.should.equal('/v1/projects/1/datasets/a%20b.svc/Entities');
+      });
+
+      it('returns a query string', () => {
+        const path = apiPaths.odataEntities(1, 'a b', { $count: true });
+        path.should.equal('/v1/projects/1/datasets/a%20b.svc/Entities?%24count=true');
+      });
+    });
+
     it('fieldKeys', () => {
       apiPaths.fieldKeys(1).should.equal('/v1/projects/1/app-users');
     });

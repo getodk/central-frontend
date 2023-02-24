@@ -513,6 +513,18 @@ const routes = [
             project: () => project.permits('dataset.list')
           }
         }
+      }),
+      asyncRoute({
+        path: 'entities',
+        component: 'DatasetEntities',
+        props: true,
+        loading: 'tab',
+        meta: {
+          title: () => [i18n.t('common.data'), dataset.name],
+          validateData: {
+            project: () => project.permits(['entity.list'])
+          }
+        }
       })
     ]
   }),
@@ -704,12 +716,17 @@ const routesByName = new Map();
     'FormAttachmentList',
     'FormDraftTesting'
   ];
+  const datasetRoutes = [
+    'DatasetEntities',
+    'DatasetOverview'
+  ];
   preserveDataBetweenRoutes(projectRoutes, preserveBetweenTabs);
   preserveDataBetweenRoutes(formRoutes, preserveBetweenTabs);
+  preserveDataBetweenRoutes(datasetRoutes, preserveBetweenTabs);
 
   // Preserve requestData.project.
   preserveDataBetweenRoutes(
-    [...projectRoutes, ...formRoutes, 'SubmissionShow', 'DatasetOverview'],
+    [...projectRoutes, ...formRoutes, ...datasetRoutes, 'SubmissionShow'],
     (to, from) => (to.params.projectId === from.params.projectId
       ? [project]
       : false)

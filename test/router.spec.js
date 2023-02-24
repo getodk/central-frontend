@@ -126,6 +126,7 @@ describe('createCentralRouter()', () => {
       '/projects/1/form-access',
       '/projects/1/datasets',
       '/projects/1/datasets/trees',
+      '/projects/1/datasets/trees/entities',
       '/projects/1/settings',
       '/projects/1/forms/f',
       '/projects/1/forms/f/versions',
@@ -346,6 +347,20 @@ describe('createCentralRouter()', () => {
             .route('/projects/1/forms/f/public-links')
             .then(dataExists(['publicLinks'])));
       });
+    });
+
+    describe('navigating between dataset routes', () => {
+      beforeEach(() => {
+        testData.extendedDatasets.createPast(1, { name: 'trees' });
+      });
+
+      it('preserves project and dataset', () =>
+        load('/projects/1/datasets/trees')
+          .complete()
+          .load('/projects/1/datasets/trees/entities', { project: false, dataset: false })
+          .complete()
+          .load('/projects/1/datasets/trees', { project: false, dataset: false })
+          .afterResponses(dataExists(['project', 'dataset'])));
     });
 
     describe('navigating between project and form routes', () => {
@@ -617,7 +632,10 @@ describe('createCentralRouter()', () => {
         '/projects/1/forms/f/draft/attachments',
         '/projects/1/forms/f/draft/testing',
         // SubmissionShow
-        '/projects/1/forms/f/submissions/s'
+        '/projects/1/forms/f/submissions/s',
+        // DatasetShow
+        '/projects/1/datasets/trees',
+        '/projects/1/datasets/trees/entities'
       ]) {
         it(`redirects the user from ${path}`, () =>
           load('/projects/1', {}, { deletedForms: false })
@@ -987,6 +1005,12 @@ describe('createCentralRouter()', () => {
       await load('/projects/1/datasets/trees');
       document.title.should.equal('Trees | ODK Central');
     });
+
+    it('shows dataset name in title for /projects/1/datasets/:datasetName/entities', async () => {
+      await load('/projects/1/datasets/trees/entities');
+      document.title.should.equal('Data | Trees | ODK Central');
+    });
+
 
     it('shows project name in title for /projects/1/settings', async () => {
       await load('/projects/1/settings');

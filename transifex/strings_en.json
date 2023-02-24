@@ -478,6 +478,10 @@
       "string": "Created by",
       "developer_comment": "This is the text of a table column header."
     },
+    "createdAt": {
+      "string": "Created at",
+      "developer_comment": "This is the text of a table column header."
+    },
     "updatedBy": {
       "string": "Updated by",
       "developer_comment": "This is the text of a table column header."
@@ -580,6 +584,10 @@
     },
     "datasets": {
       "string": "Datasets",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Entities",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -716,6 +724,16 @@
       "string": "There are no Submissions yet."
     }
   },
+  "entity": {
+    "label": {
+      "string": "Label",
+      "developer_comment": "This is the label of an Entity."
+    },
+    "entityId": {
+      "string": "Entity ID",
+      "developer_comment": "This is the UUID or 'name' of an Entity."
+    }
+  },
   "common": {
     "activity": {
       "string": "Activity",
@@ -740,6 +758,10 @@
     "dangerZone": {
       "string": "Danger Zone",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "data": {
+      "string": "Data",
+      "developer_comment": "This is shown in the tab above a table of data."
     },
     "docs": {
       "string": "Docs",
@@ -1343,6 +1365,20 @@
         "notOpen": {
           "string": "In this version of ODK Central, preview is only available for Forms in the Open state."
         }
+      }
+    },
+    "EntityList": {
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, one {Download {count} Entity} other {Download {count} Entities}}",
+            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+          }
+        }
+      },
+      "noEntities": {
+        "string": "There are no Entities to show.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
       }
     },
     "FieldKeyList": {

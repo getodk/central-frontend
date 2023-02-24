@@ -12,7 +12,7 @@ describe('DatasetShow', () => {
     testData.extendedDatasets.createPast(1, { name: 'a b' });
     return load('/projects/1/datasets/a%20b').testRequests([
       { url: '/v1/projects/1', extended: true },
-      { url: '/v1/projects/1/datasets/a%20b' }
+      { url: '/v1/projects/1/datasets/a%20b', extended: true }
     ]);
   });
 

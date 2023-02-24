@@ -222,6 +222,7 @@
     // the resource and possibly also when they did so.
     "created": "Created",
     "createdBy": "Created by",
+    "createdAt": "Created at",
     "updatedBy": "Updated by",
     "displayName": "Display Name",
     "email": "Email Address",
@@ -265,6 +266,7 @@
     "config": "Server Configuration",
     "dataset": "Dataset",
     "datasets": "Datasets",
+    "entities": "Entities",
     "form": "Form",
     "forms": "Forms",
     "formAttachments": "Form Attachments",
@@ -321,6 +323,12 @@
     "noSubmission": "(none)",
     "emptyTable": "There are no Submissions yet."
   },
+  "entity": {
+    // This is the label of an Entity.
+    "label": "Label",
+    // This is the UUID or 'name' of an Entity.
+    "entityId": "Entity ID"
+  },
   "common": {
     // This is a title shown above a section of the page.
     "activity": "Activity",
@@ -336,6 +344,8 @@
     "currentDraft": "Your Current Draft",
     // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
+    // This is shown in the tab above a table of data.
+    "data": "Data",
     // This is the text of a link that links to the documentation.
     "docs": "Docs",
     "error": "Error",

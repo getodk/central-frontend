@@ -43,6 +43,13 @@ const submissionPath = (suffix) =>
     const qs = queryString(query);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}${suffix}${qs}`;
   };
+const datasetPath = (suffix) =>
+  (projectId, datasetName, query = undefined) => {
+    const encodedName = encodeURIComponent(datasetName);
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/datasets/${encodedName}${suffix}${qs}`;
+  };
+
 export const apiPaths = {
   // Backend generates session tokens that are URL-safe.
   session: (token) => `/v1/sessions/${token}`,
@@ -135,14 +142,10 @@ export const apiPaths = {
   },
   publicLinks: formPath('/public-links'),
   datasets: projectPath('/datasets'),
-  dataset: (projectId, datasetName) => {
-    const encodedName = encodeURIComponent(datasetName);
-    return `/v1/projects/${projectId}/datasets/${encodedName}`;
-  },
-  entities: (projectId, datasetName) => {
-    const encodedName = encodeURIComponent(datasetName);
-    return `/v1/projects/${projectId}/datasets/${encodedName}/entities.csv`;
-  },
+  dataset: datasetPath(''),
+  entities: datasetPath('/entities.csv'),
+  odataEntitiesSvc: datasetPath('.svc'),
+  odataEntities: datasetPath('.svc/Entities'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,

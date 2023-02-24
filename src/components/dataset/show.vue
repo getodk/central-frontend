@@ -26,6 +26,12 @@ except according to the terms contained in the LICENSE file.
             {{ $t('common.tab.overview') }}
           </router-link>
         </li>
+        <li v-if="canRoute(tabPath('entities'))" :class="tabClass('entities')"
+          role="presentation">
+          <router-link :to="tabPath('entities')">
+            {{ $t('common.data') }}
+          </router-link>
+        </li>
       </template>
     </page-head>
     <page-body>
@@ -95,6 +101,7 @@ export default {
     fetchDataset(resend) {
       this.dataset.request({
         url: apiPaths.dataset(this.projectId, this.datasetName),
+        extended: true,
         resend
       }).catch(noop);
     },

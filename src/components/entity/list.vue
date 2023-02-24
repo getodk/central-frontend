@@ -1,0 +1,144 @@
+<!--
+Copyright 2023 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <div id="entity-list">
+    <div id="entity-list-actions">
+      <button id="entity-list-refresh-button" type="button"
+            class="btn btn-default" :aria-disabled="refreshing"
+            @click="fetchData(false)">
+            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+            <spinner :state="refreshing"/>
+          </button>
+      <a id="entity-download-button" type="button" class="btn btn-primary" :href="href">
+        <span class="icon-arrow-circle-down"></span>{{ downloadText }}
+      </a>
+    </div>
+    <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
+      :properties="dataset.properties"/>
+    <p v-show="odataEntities.dataExists && odataEntities.value.length === 0"
+      class="empty-table-message">
+      {{ $t('noEntities') }}
+    </p>
+    <loading :state="odataEntities.initiallyLoading"/>
+  </div>
+</template>
+
+<script>
+
+import Loading from '../loading.vue';
+import Spinner from '../spinner.vue';
+import EntityTable from './table.vue';
+
+import useEntities from '../../request-data/entities';
+import { useRequestData } from '../../request-data';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
+
+export default {
+  name: 'EntityList',
+  components: {
+    Loading,
+    Spinner,
+    EntityTable
+  },
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    },
+    datasetName: {
+      type: String,
+      required: true
+    }
+  },
+  setup() {
+    // The dataset request object is how we get access to the
+    // dataset properties for the columns.
+    const { dataset } = useRequestData();
+    const odataEntities = useEntities();
+    return { dataset, odataEntities };
+  },
+  data() {
+    return {
+      refreshing: false
+    };
+  },
+  computed: {
+    href() {
+      return apiPaths.entities(this.projectId, this.datasetName);
+    },
+    downloadText() {
+      return !this.odataEntities.dataExists
+        ? this.$t('action.download')
+        : this.$tcn('action.download.unfiltered', this.odataEntities.count);
+    }
+  },
+  created() {
+    this.fetchData(true);
+  },
+  methods: {
+    fetchData(clear) {
+      this.refreshing = !clear;
+      this.odataEntities.request({
+        url: apiPaths.odataEntities(
+          this.projectId,
+          this.datasetName,
+          { $count: true }
+        ),
+        clear
+      })
+        .finally(() => { this.refreshing = false; })
+        .catch(noop);
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#entity-list {
+  // Make sure that there is enough space for the DateRangePicker when it is
+  // open.
+  min-height: 375px;
+}
+
+#entity-list-actions {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap-reverse;
+}
+#entity-list-refresh-button {
+  margin-right: 5px;
+}
+#entity-download-button {
+  // The bottom margin is for if the download button wraps above the other
+  // actions.
+  margin-bottom: 10px;
+  margin-left: auto;
+}
+</style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "action": {
+        "download": {
+          // This is the text of a button shown when the count of Entities is known.
+          "unfiltered": "Download {count} Entity | Download {count} Entities",
+        }
+      },
+      // This text is shown when there are no Entities to show in a table.
+      "noEntities": "There are no Entities to show."
+    }
+  }
+</i18n>
