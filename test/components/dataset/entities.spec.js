@@ -13,7 +13,9 @@ describe('DatasetEntities', () => {
       '/projects/1/datasets/trees/entities',
       { root: false }
     );
-    const text = component.get('#entity-download-button').text();
-    text.should.equal('Download 10 Entities');
+    const button = component.get('#entity-download-button');
+    button.text().should.equal('Download 10 Entities');
+    const { href } = button.attributes();
+    href.should.equal('/v1/projects/1/datasets/trees/entities.csv');
   });
 });

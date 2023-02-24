@@ -7,7 +7,7 @@ import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
 import { extendedDatasets } from './datasets';
 
-// Returns random OData for a submission. `partial` seeds the OData.
+// Returns random OData for an entity. `partial` seeds the OData.
 const odata = (entityId, properties, partial) => properties
   .reduce(
     (data, property) =>
@@ -62,17 +62,16 @@ export const extendedEntities = dataStore({
       })
     };
   },
-  sort: comparator((submission1, submission2) =>
-    isBefore(submission2.createdAt, submission1.createdAt))
+  sort: comparator((entity1, entity2) =>
+    isBefore(entity2.createdAt, entity1.createdAt))
 });
 
-export const standardSubmissions = view(
+export const standardEntities = view(
   extendedEntities,
   omit(['creator'])
 );
 
-// Converts submission response objects to OData. Returns all data even for
-// encrypted submissions.
+// Converts entity response objects to OData.
 export const entityOData = (top = 250, skip = 0) => ({
   '@odata.count': extendedEntities.size,
   value: extendedEntities.sorted().slice(skip, skip + top)
