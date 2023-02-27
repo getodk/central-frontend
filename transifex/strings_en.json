@@ -3314,7 +3314,7 @@
           }
         },
         "python": {
-          "string": "To connect to Central from Python, we recommend {pyODK}. pyODK is the official Python client for Central and it makes common data analysis and workflow automation tasks simple.",
+          "string": "To connect to Central from Python, we recommend {pyODK}. pyODK is the official Python client for Central. It simplifies data analysis and workflow automation.",
           "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
         },
         "r": {
