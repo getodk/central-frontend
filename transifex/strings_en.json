@@ -1633,9 +1633,6 @@
         }
       },
       "alert": {
-        "readError": {
-          "string": "Something went wrong while reading “{filename}”."
-        },
         "success": {
           "string": "{count, plural, one {{count} file has been successfully uploaded.} other {{count} files have been successfully uploaded.}}"
         },
