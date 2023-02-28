@@ -9,7 +9,7 @@
     "test": "NODE_ENV=test karma start"
   },
   "volta": {
-    "node": "16.17.0"
+    "node": "16.19.1"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
