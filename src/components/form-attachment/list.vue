@@ -462,7 +462,6 @@ export default {
       "someUploaded": "{message} Only {uploaded} of {total} files was successfully uploaded. | {message} Only {uploaded} of {total} files were successfully uploaded."
     },
     "alert": {
-      "readError": "Something went wrong while reading “{filename}”.",
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
       "link": "Dataset linked successfully."
     },
