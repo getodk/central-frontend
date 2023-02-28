@@ -1,12 +1,8 @@
-import pako from 'pako';
-
 import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
 import FormAttachmentLinkDataset from '../../../src/components/form-attachment/link-dataset.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
-
-import { noop } from '../../../src/util/util';
 
 import testData from '../../data';
 import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/trigger';
@@ -1038,53 +1034,6 @@ describe('FormAttachmentList', () => {
             return modal.get('.btn-primary').trigger('click');
           }));
     });
-  });
-
-  describe('gzipping', () => {
-    const cases = [
-      {
-        name: 'not_csv.txt',
-        contents: 'abcd',
-        gzip: false
-      },
-      {
-        name: 'small_csv.csv',
-        contents: 'a,b,c,d\na,b,c,d\n',
-        gzip: false
-      },
-      {
-        name: 'large_csv.csv',
-        contents: 'a,b,c,d\n'.repeat(2000),
-        gzip: true
-      }
-    ];
-
-    for (const { name, contents, gzip } of cases) {
-      it(`${gzip ? 'gzips' : 'does not gzip'} ${name}`, () => {
-        testData.extendedForms.createPast(1, { draft: true });
-        testData.standardFormAttachments.createPast(1, { name });
-        const file = new File([contents], name);
-        return load('/projects/1/forms/f/draft/attachments', { root: false })
-          .complete()
-          .request(component =>
-            dragAndDrop(component.get('.form-attachment-row'), [file]))
-          .beforeEachResponse((_, { headers, data }) => {
-            const encoding = gzip ? 'gzip' : 'identity';
-            headers['Content-Encoding'].should.equal(encoding);
-            if (!gzip) {
-              data.should.equal(file);
-            } else {
-              const inflated = pako.inflate(data, { to: 'string' });
-              inflated.should.equal(contents);
-            }
-          })
-          .respondWithSuccess()
-          .afterResponse({
-            pollWork: (component) => !component.vm.uploading,
-            callback: noop
-          });
-      });
-    }
   });
 
   describe('dataset linking', () => {

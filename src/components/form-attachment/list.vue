@@ -79,7 +79,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { any } from 'ramda';
-import pako from 'pako/lib/deflate';
 import { markRaw } from 'vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
@@ -281,52 +280,6 @@ export default {
       if (this.plannedUploads.length !== 0) this.plannedUploads = [];
       if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     },
-    /*
-    maybeGzip() takes a file and returns a Promise that, if fulfilled, resolves
-    to an object with two properties:
-
-      - data. Either the original File or a Uint8Array of the file's gzipped
-        contents. We only gzip the file if it is CSV and large enough that
-        gzipping it would have much of an effect.
-      - encoding. The value of the Content-Encoding header to specify for the
-        data: either 'identity' or 'gzip'.
-
-    When we gzip a CSV file, we read the entire file into memory. That should be
-    OK, because any CSV file is likely intended for a data collection client on
-    a relatively low-resource device: we expect that a CSV file will not exceed
-    a few dozen MBs.
-
-    Note that the development main.nginx.conf does not support request body
-    decompression. That means that in development, if this component gzips a CSV
-    file, Backend will store the gzipped contents rather than the file's
-    original contents.
-    */
-    maybeGzip(file) {
-      // We determine whether the file is CSV using its file extension rather
-      // than its MIME type. I think the MIME type for a CSV file should be
-      // text/csv, but apparently some clients use application/vnd.ms-excel
-      // instead.
-      const fileIsCsv = file.name.length >= 4 &&
-        file.name.slice(-4).toLowerCase() === '.csv';
-      if (!fileIsCsv || file.size < 16000)
-        return Promise.resolve({ data: file, encoding: 'identity' });
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        const initialRoute = this.$route;
-        reader.onload = () => {
-          resolve({ data: pako.gzip(reader.result), encoding: 'gzip' });
-        };
-        reader.onerror = () => {
-          if (this.$route === initialRoute) {
-            this.alert.danger(this.$t('alert.readError', {
-              filename: file.name
-            }));
-          }
-          reject(new Error());
-        };
-        reader.readAsText(file);
-      });
-    },
     // uploadFile() may mutate `updates`.
     uploadFile({ attachment, file }, updates) {
       // We decrement uploadStatus.remaining here rather than after the POST so
@@ -335,39 +288,35 @@ export default {
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
       this.uploadStatus.progress = null;
-      const initialRoute = this.$route;
-      return this.maybeGzip(file)
-        .then(({ data, encoding }) => {
-          if (this.$route !== initialRoute) throw new Error();
-          return this.request({
-            method: 'POST',
-            url: apiPaths.formDraftAttachment(
-              this.form.projectId,
-              this.form.xmlFormId,
-              attachment.name
-            ),
-            headers: {
-              'Content-Type': file.type,
-              'Content-Encoding': encoding
-            },
-            data,
-            onUploadProgress: (progressEvent) => {
-              this.uploadStatus.progress = markRaw(progressEvent);
-            },
-            problemToAlert: (problem) => {
-              const { total } = this.uploadStatus;
-              if (total === 1) return null;
-              const uploaded = total - this.uploadStatus.remaining;
-              if (uploaded === 0)
-                return this.$t('problem.noneUploaded', problem);
-              return this.$tc('problem.someUploaded', uploaded, {
-                message: problem.message,
-                uploaded: this.$n(uploaded, 'default'),
-                total: this.$n(total, 'default')
-              });
-            }
+
+      return this.request({
+        method: 'POST',
+        url: apiPaths.formDraftAttachment(
+          this.form.projectId,
+          this.form.xmlFormId,
+          attachment.name
+        ),
+        headers: {
+          'Content-Type': file.type,
+          'Content-Encoding': 'identity'
+        },
+        data: file,
+        onUploadProgress: (progressEvent) => {
+          this.uploadStatus.progress = markRaw(progressEvent);
+        },
+        problemToAlert: (problem) => {
+          const { total } = this.uploadStatus;
+          if (total === 1) return null;
+          const uploaded = total - this.uploadStatus.remaining;
+          if (uploaded === 0)
+            return this.$t('problem.noneUploaded', problem);
+          return this.$tc('problem.someUploaded', uploaded, {
+            message: problem.message,
+            uploaded: this.$n(uploaded, 'default'),
+            total: this.$n(total, 'default')
           });
-        })
+        }
+      })
         .then(() => {
           // This may differ a little from updatedAt on the server, but that
           // should be OK.
