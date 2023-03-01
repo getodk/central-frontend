@@ -1,8 +1,7 @@
 import FormGroup from '../../src/components/form-group.vue';
+import PasswordStrength from '../../src/components/password-strength.vue';
 
 import TestUtilSpan from '../util/components/span.vue';
-
-import { loadAsync } from '../../src/util/load-async';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
 
@@ -61,15 +60,6 @@ describe('FormGroup', () => {
     formGroup.get('input').attributes().autocomplete.should.equal('name');
   });
 
-  it.skip("shows password strength meter if autocomplete prop equals 'new-password'", async () => {
-    const formGroup = mountComponent({
-      props: { modelValue: 'foo', autocomplete: 'new-password' }
-    });
-    const Password = await loadAsync('Password')();
-    await formGroup.vm.$nextTick();
-    formGroup.getComponent(Password).props().value.should.equal('foo');
-  });
-
   it('passes attributes to the input', () => {
     const formGroup = mountComponent({
       attrs: { type: 'email' }
@@ -100,5 +90,39 @@ describe('FormGroup', () => {
     const formGroup = mountComponent({ attachTo: document.body });
     formGroup.vm.focus();
     formGroup.get('input').should.be.focused();
+  });
+
+  describe('password strength meter', () => {
+    it('renders a password strength meter if autocomplete is new-password', () => {
+      const formGroup = mountComponent({
+        props: { modelValue: 'supersecret', autocomplete: 'new-password' }
+      });
+      const passwordStrength = formGroup.getComponent(PasswordStrength);
+      passwordStrength.props().password.should.equal('supersecret');
+    });
+
+    it('does not render a password strength meter otherwise', () => {
+      const formGroup = mountComponent({
+        props: { autocomplete: 'off' }
+      });
+      formGroup.findComponent(PasswordStrength).exists().should.be.false();
+    });
+
+    it('hides the strength meter for a password confirmation input', () => {
+      const Form = {
+        template: `<form>
+          <form-group model-value="" type="password"
+            placeholder="New password" autocomplete="new-password"/>
+          <form-group model-value="" type="password"
+            placeholder="New password (confirm)" autocomplete="new-password"/>
+        </form>`,
+        components: { FormGroup }
+      };
+      const form = mount(Form, { attachTo: document.body });
+      const passwordStrength = form.findAllComponents(PasswordStrength);
+      passwordStrength.length.should.equal(2);
+      passwordStrength[0].should.be.visible(true);
+      passwordStrength[1].should.be.hidden(true);
+    });
   });
 });
