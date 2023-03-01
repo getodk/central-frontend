@@ -23,34 +23,33 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'FormGroup',
-  inheritAttrs: false,
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      required: true
-    },
-    required: Boolean,
-    hasError: Boolean,
-    autocomplete: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue'],
-  computed: {
-    star() {
-      return this.required ? ' *' : '';
-    }
-  },
-  methods: {
-    focus() {
-      this.$refs.input.focus();
-    }
-  }
+  inheritAttrs: false
 };
+</script>
+<script setup>
+import { computed, ref } from 'vue';
+
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  },
+  placeholder: {
+    type: String,
+    required: true
+  },
+  required: Boolean,
+  hasError: Boolean,
+  autocomplete: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['update:modelValue']);
+
+const star = computed(() => (props.required ? ' *' : ''));
+
+const input = ref(null);
+const focus = () => { input.value.focus(); };
+defineExpose({ focus });
 </script>
