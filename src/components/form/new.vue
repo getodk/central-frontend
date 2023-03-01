@@ -389,7 +389,22 @@ $drop-zone-vpadding: 15px;
       "400_8": "Zdá se, že definice formuláře, kterou jste nahráli, není pro tento formulář. Má nesprávnou formu (očekává se „{expected}“, a máte „{actual}“).",
       "400_15": "XLSForm nelze převést: {error}",
       "409_3": "Formulář již v tomto projektu existuje s ID formuláře „{xmlFormId}“."
-    }
+    },
+    "fields": "Pole:",
+    "warningsText": [
+      "Tento soubor lze použít, ale může mít následující problémy:",
+      "Upozornění k návrhu formuláře:",
+      "Upozornění na pracovní postup:",
+      {
+        "deletedFormExists": "V koši je formulář s ID \"{value}\". Pokud tento formulář nahrajete, nebude možné smazat jiný formulář se stejným ID.",
+        "structureChanged": "Následující pole byla odstraněna, přejmenována nebo jsou nyní v jiných skupinách či opakováních. Tato pole nebudou ve výchozím nastavení viditelná v tabulce Podání ani zahrnuta do exportů."
+      },
+      "Problémy opravte a zkuste to znovu.",
+      {
+        "create": "Pokud jste si jisti, že tyto problémy lze ignorovat, klikněte na tlačítko a formulář přesto vytvořte:",
+        "update": "Pokud jste si jisti, že tyto problémy lze ignorovat, klikněte na tlačítko pro aktualizaci návrhu:"
+      }
+    ]
   },
   "de": {
     "title": {
@@ -566,7 +581,21 @@ $drop-zone-vpadding: 15px;
       "400_8": "La definizione del formulario che hai caricato non sembra essere per questo formulario. Ha il formId sbagliato (previsto \"{expected}\", ottenuto \"{actual}\").",
       "400_15": "Non è stato possibile convertire l'XLSForm : {error}",
       "409_3": "Esiste già un Formulario in questo progetto con il Form ID “{xmlFormId}”."
-    }
+    },
+    "fields": "Campi:",
+    "warningsText": [
+      "Questo file può essere utilizzato, ma presenta i seguenti possibili problemi:",
+      "Avvertenze sulla progettazione del formulario:",
+      "Avvertenze sul flusso di lavoro:",
+      {
+        "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti."
+      },
+      "Correggi i problemi e riprova.",
+      {
+        "create": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque il formulario:",
+        "update": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque la bozza del formulario:"
+      }
+    ]
   },
   "ja": {
     "title": {

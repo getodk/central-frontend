@@ -154,7 +154,9 @@
     "update": "Aggiorna",
     "yesProceed": "Si, procedere",
     "showPreview": "Anteprima",
-    "hidePreview": "Nascondi anteprima"
+    "hidePreview": "Nascondi anteprima",
+    "expand": "Espandere",
+    "collapse": "Chiudere"
   },
   "field": {
     "comment": "Lascia un commento...",
@@ -174,6 +176,7 @@
     "actions": "Azioni",
     "created": "Creato",
     "createdBy": "Creato da",
+    "updatedBy": "Aggiornato da",
     "displayName": "Nome visualizzato",
     "email": "Indirizzo email",
     "instanceId": "ID della istanza",
@@ -182,7 +185,9 @@
     "submitterName": "Inviato da",
     "submissionDate": "Inviato alle",
     "time": "Tempo",
-    "type": "Tipo"
+    "type": "Tipo",
+    "entities": "Entità totali",
+    "lastEntity": "Ultima entità"
   },
   "plural": {
     "appUser": "Utente dell'applicazione | Utenti dell'applicazione | Utenti dell'applicazione",
@@ -274,6 +279,7 @@
       "overview": "Panoramica"
     },
     "total": "Totale",
+    "totalSubmissions": "Invii totali",
     "punctuations": {
       "comma": ","
     },

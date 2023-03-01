@@ -478,6 +478,10 @@
       "string": "Vytvořeno od",
       "developer_comment": "This is the text of a table column header."
     },
+    "createdAt": {
+      "string": "Vytvořeno v",
+      "developer_comment": "This is the text of a table column header."
+    },
     "updatedBy": {
       "string": "Aktualizováno od",
       "developer_comment": "This is the text of a table column header."
@@ -523,7 +527,7 @@
       "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
     },
     "lastEntity": {
-      "string": "",
+      "string": "Nejnovější entita",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
@@ -580,6 +584,10 @@
     },
     "datasets": {
       "string": "Datové sady",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Subjekty",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -716,6 +724,16 @@
       "string": "Zatím nejsou žádné příspěvky."
     }
   },
+  "entity": {
+    "label": {
+      "string": "Štítek",
+      "developer_comment": "This is the label of an Entity."
+    },
+    "entityId": {
+      "string": "ID subjektu",
+      "developer_comment": "This is the UUID or 'name' of an Entity."
+    }
+  },
   "common": {
     "activity": {
       "string": "Aktivita",
@@ -740,6 +758,10 @@
     "dangerZone": {
       "string": "Nebezpečná zóna",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "data": {
+      "string": "Data",
+      "developer_comment": "This is shown in the tab above a table of data."
     },
     "docs": {
       "string": "Dokumentace",
@@ -794,7 +816,7 @@
       "string": "Celkem"
     },
     "totalSubmissions": {
-      "string": ""
+      "string": "Celkem odeslání"
     },
     "punctuations": {
       "comma": {
@@ -1170,7 +1192,7 @@
       },
       "datasets": {
         "title": {
-          "string": "",
+          "string": "Souhrny datových sad a entit",
           "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
         },
         "subtitle": {
@@ -1234,7 +1256,7 @@
           "string": "Datové sady představují nový způsob vytváření a správy datových příloh v ODK. Umožňují používat data shromážděná v Podáních, která lze stáhnout a použít jako součást jiného formuláře."
         },
         "1": {
-          "string": "",
+          "string": "Datové soubory lze připojit {icon1} k formulářům a dotazovat se na jejich data stejně jako na jakýkoli jiný připojený datový soubor CSV.",
           "developer_comment": "{icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow."
         },
         "2": {
@@ -1265,11 +1287,11 @@
     },
     "DatasetOverview": {
       "connectionsToForms": {
-        "string": "",
+        "string": "Připojení k formulářům",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "datasetProperties": {
-        "string": "",
+        "string": "Vlastnosti datové sady",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
@@ -1281,7 +1303,7 @@
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": ""
+        "string": "V této datové sadě nejsou žádné vlastnosti."
       }
     },
     "DatasetOverviewLinkedForms": {
@@ -1300,7 +1322,7 @@
     },
     "DatasetShow": {
       "back": {
-        "string": "",
+        "string": "Zpět na datové sady projektu",
         "developer_comment": "This is shown at the top of the page."
       }
     },
@@ -1343,6 +1365,20 @@
         "notOpen": {
           "string": "V této verzi ODK Central je náhled k dispozici pouze pro formuláře v otevřeném stavu."
         }
+      }
+    },
+    "EntityList": {
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, one {} few {} many {} other {}}",
+            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+          }
+        }
+      },
+      "noEntities": {
+        "string": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
       }
     },
     "FieldKeyList": {
@@ -1597,9 +1633,6 @@
         }
       },
       "alert": {
-        "readError": {
-          "string": "Při čtení “{filename}” došlo k chybě."
-        },
         "success": {
           "string": "{count, plural, one {{count} soubor byl úspěšně nahrán.} few {{count} soubory byly úspěšně nahrány.} many {{count} souborů bylo úspěšně nahráno.} other {{count} souborů bylo úspěšně nahráno.}}"
         },
@@ -1744,7 +1777,7 @@
       },
       "action": {
         "linkDataset": {
-          "string": "",
+          "string": "Odkaz Datové sady {datasetName}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2002,7 +2035,7 @@
           "string": "Bude vytvořena nová datová sada {datasetName}."
         },
         "newProperty": {
-          "string": ""
+          "string": "V Datové sadě {datasetName}, bude vytvořena nová vlastnost {propertyName}."
         }
       }
     },
@@ -2215,36 +2248,36 @@
         }
       },
       "fields": {
-        "string": "",
+        "string": "Pole:",
         "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
       },
       "warningsText": {
         "0": {
-          "string": ""
+          "string": "Tento soubor lze použít, ale může mít následující problémy:"
         },
         "1": {
-          "string": ""
+          "string": "Upozornění k návrhu formuláře:"
         },
         "2": {
-          "string": ""
+          "string": "Upozornění na pracovní postup:"
         },
         "3": {
           "deletedFormExists": {
-            "string": ""
+            "string": "V koši je formulář s ID \"{value}\". Pokud tento formulář nahrajete, nebude možné smazat jiný formulář se stejným ID."
           },
           "structureChanged": {
-            "string": ""
+            "string": "Následující pole byla odstraněna, přejmenována nebo jsou nyní v jiných skupinách či opakováních. Tato pole nebudou ve výchozím nastavení viditelná v tabulce Podání ani zahrnuta do exportů."
           }
         },
         "4": {
-          "string": ""
+          "string": "Problémy opravte a zkuste to znovu."
         },
         "5": {
           "create": {
-            "string": ""
+            "string": "Pokud jste si jisti, že tyto problémy lze ignorovat, klikněte na tlačítko a formulář přesto vytvořte:"
           },
           "update": {
-            "string": ""
+            "string": "Pokud jste si jisti, že tyto problémy lze ignorovat, klikněte na tlačítko pro aktualizaci návrhu:"
           }
         }
       }
@@ -2382,6 +2415,11 @@
           "string": "Nejnovější",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
+      }
+    },
+    "FormSubmissions": {
+      "analyzeDisabled": {
+        "string": "Přístup k OData není dostupný kvůli šifrování formuláře"
       }
     },
     "FormTable": {
@@ -2565,7 +2603,7 @@
     },
     "NavbarHelpDropdown": {
       "help": {
-        "string": "",
+        "string": "Nápověda",
         "developer_comment": "This text is used to label a help menu that lists links to useful resources."
       },
       "version": {
@@ -2588,6 +2626,18 @@
     "NotFound": {
       "body": {
         "string": "Požadovanou stránku nelze najít."
+      }
+    },
+    "OdataDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "Přístup k API",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "Analýza přes OData",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "ProjectArchive": {
@@ -2717,7 +2767,7 @@
             },
             "1": {
               "full": {
-                "string": "",
+                "string": "Pokud ztratíte přístupovou frázi, neexistuje {no} způsob, jak ji nebo svá data obnovit!",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
@@ -3228,19 +3278,16 @@
       },
       "introduction": {
         "0": {
-          "string": "OData je nový standard pro přenos dat mezi nástroji a službami. Bezplatné a výkonné analytické nástroje, jako je Excel, {powerBi} a  {r} mohou načíst data přes OData k  analýze.",
-          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
+          "string": "",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": "Existuje mnoho výhod pro OData, ale důležité je, že podporuje plně věrný přenos komplikovaných typů, jako jsou čísla a geografická data, a umožňuje nejnovější verzi vašich dat snadno synchronizovat s jakýmikoli nástroji, které ji používají."
-        },
-        "2": {
-          "string": "Chcete-li začít používat OData, vyberte svůj nástroj a zkopírujte do něj odkaz."
+          "string": "Chcete-li se připojit ke kanálu OData tohoto formuláře, vyberte svůj nástroj a zkopírujte do něj odkaz."
         }
       },
       "tab": {
         "microsoft": {
-          "string": "Excel/Power BI",
+          "string": "Power BI nebo Excel",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
@@ -3251,39 +3298,25 @@
       "help": {
         "microsoft": {
           "full": {
-            "string": "Nápovědu k používání OData s Excelem najdete na {pageForExcel}. Nápověda k Power BI je na {pageForPowerBi}.",
+            "string": "Nápovědu k používání OData s aplikací Power BI naleznete v části  {pageForPowerBi}. Nápovědu k aplikaci Excel naleznete v části {pageForExcel}.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
           },
           "pageForExcel": {
             "string": "této straně",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
           },
           "pageForPowerBi": {
             "string": "této straně",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
           }
         },
+        "python": {
+          "string": "",
+          "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
+        },
         "r": {
-          "0": {
-            "full": {
-              "string": "Pro přístup k Centrálním datům z {r} , doporučujeme použít {ruODK}. Příklady použití rozhraní {oData} API i {restful} API naleznete u viněty ruODK.",
-              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
-            },
-            "restful": {
-              "string": "RESTful",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
-            }
-          },
-          "1": {
-            "full": {
-              "string": "Stejně jako ODK samotný je i ruODK vyvíjen a podporován členy komunity. Chcete-li ji vylepšit, můžete najít informace {here}.",
-              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-            },
-            "here": {
-              "string": "zde",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
-            }
-          }
+          "string": "Pro připojení k Central z R doporučujeme {ruODK}. ruODK je vyvíjen a podporován členy komunity ODK.",
+          "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
         },
         "other": {
           "full": {
@@ -3329,21 +3362,6 @@
     "SubmissionComment": {
       "editWithoutComment": {
         "string": "Provedli jste úpravy těchto údajů. Popište prosím provedené změny."
-      }
-    },
-    "SubmissionDataAccess": {
-      "action": {
-        "apiAccess": {
-          "string": "API přístup",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "Analyzujte pomocí OData",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "analyzeDisabled": {
-        "string": "Přístup OData není k dispozici kvůli šifrování formuláře"
       }
     },
     "SubmissionDecrypt": {
@@ -3466,7 +3484,7 @@
         },
         "entity": {
           "create": {
-            "string": ""
+            "string": "Vytvořená entita {label} v datové sadě {dataset}"
           },
           "error": {
             "string": "Problém s vytvořením entity"
@@ -3857,7 +3875,7 @@
         }
       },
       "cannotResetPassword": {
-        "string": "",
+        "string": "Na této stránce nelze resetovat vlastní heslo. Chcete-li změnit své heslo, upravte svůj profil.",
         "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {

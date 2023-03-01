@@ -328,6 +328,7 @@ Comment • {name} */
     "title": {
       "create": "Odesláno od {name}",
       "entity": {
+        "create": "Vytvořená entita {label} v datové sadě {dataset}",
         "error": "Problém s vytvořením entity"
       },
       "updateReviewState": {

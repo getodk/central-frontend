@@ -124,7 +124,11 @@ export default {
   "cs": {
     "title": "Vítejte v náhledu datových sad!",
     "body": [
-      "Datové sady představují nový způsob vytváření a správy datových příloh v ODK. Umožňují používat data shromážděná v Podáních, která lze stáhnout a použít jako součást jiného formuláře."
+      "Datové sady představují nový způsob vytváření a správy datových příloh v ODK. Umožňují používat data shromážděná v Podáních, která lze stáhnout a použít jako součást jiného formuláře.",
+      "Datové soubory lze připojit {icon1} k formulářům a dotazovat se na jejich data stejně jako na jakýkoli jiný připojený datový soubor CSV.",
+      "Po schválení {icon2} podání souvisejícího s datovou sadou se vybraná data přidají {icon3} do datové sady, takže při příštím stažení formuláře klientem budou nová data zahrnuta do stahování dat.",
+      "V některé z budoucích verzí bude možné nahrát {icon4} CSV přímo do datové sady.",
+      "Datové sady se konfigurují během návrhu formuláře."
     ],
     "getStarted": {
       "full": "Další informace o tom, jak začít, najdete {clickHere}.",

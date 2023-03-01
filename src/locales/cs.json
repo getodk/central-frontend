@@ -176,6 +176,7 @@
     "actions": "Akce",
     "created": "Vytvořeno",
     "createdBy": "Vytvořeno od",
+    "createdAt": "Vytvořeno v",
     "updatedBy": "Aktualizováno od",
     "displayName": "Zobrazit jméno",
     "email": "E-mailová adresa",
@@ -186,7 +187,8 @@
     "submissionDate": "Odesláno v",
     "time": "Čas",
     "type": "Typ",
-    "entities": "Celkem subjektů"
+    "entities": "Celkem subjektů",
+    "lastEntity": "Nejnovější entita"
   },
   "plural": {
     "appUser": "Uživatel aplikace | Uživatelé aplikace | Uživatelů aplikace | Uživatelé aplikace",
@@ -207,6 +209,7 @@
     "config": "Konfigurace serveru",
     "dataset": "Datová sada",
     "datasets": "Datové sady",
+    "entities": "Subjekty",
     "form": "Formulář",
     "forms": "Formuláře",
     "formAttachments": "Přílohy formuláře",
@@ -255,6 +258,10 @@
     "noSubmission": "(žádný)",
     "emptyTable": "Zatím nejsou žádné příspěvky."
   },
+  "entity": {
+    "label": "Štítek",
+    "entityId": "ID subjektu"
+  },
   "common": {
     "activity": "Aktivita",
     "anybody": "(Kdokoli)",
@@ -262,6 +269,7 @@
     "basicInfo": "Základní informace",
     "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
+    "data": "Data",
     "docs": "Dokumentace",
     "error": "Chyba",
     "filter": "Filtr",
@@ -278,6 +286,7 @@
       "overview": "Přehled"
     },
     "total": "Celkem",
+    "totalSubmissions": "Celkem odeslání",
     "punctuations": {
       "comma": ","
     },

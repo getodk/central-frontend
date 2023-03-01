@@ -180,6 +180,7 @@ export default {
     "field": {
       "sitewideRole": "Role úplného přístupu"
     },
+    "cannotResetPassword": "Na této stránce nelze resetovat vlastní heslo. Chcete-li změnit své heslo, upravte svůj profil.",
     "cannotRetire": "Nemůžete sám sebe uspat",
     "action": {
       "retire": "Uspat uživatele"
@@ -231,6 +232,7 @@ export default {
     "field": {
       "sitewideRole": "Ruolo per tutto il sito"
     },
+    "cannotResetPassword": "Non puoi reimpostare la tua password in questa pagina. Per cambiare la tua password, modifica il tuo profilo.",
     "cannotRetire": "Non è possibile ritirare se stessi",
     "action": {
       "retire": "Ritira utente"
