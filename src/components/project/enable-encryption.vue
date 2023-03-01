@@ -367,7 +367,10 @@ export default {
       {
         "introduction": [
           "Nejprve si musíte zvolit přístupové heslo. Toto heslo bude vyžadováno k dešifrování vašich příspěvků. Server si toto heslo nebude pamatovat z důvodu vašeho soukromí: pouze lidé s přístupovým slovem budou moci dešifrovat a přečíst vaše údaje o odeslání.",
-          {}
+          {
+            "full": "Pokud ztratíte přístupovou frázi, neexistuje {no} způsob, jak ji nebo svá data obnovit!",
+            "no": "žádný"
+          }
         ]
       }
     ],

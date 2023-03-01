@@ -493,7 +493,6 @@ export default {
       "someUploaded": "{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}. | {message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}."
     },
     "alert": {
-      "readError": "Při čtení “{filename}” došlo k chybě.",
       "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
       "link": "Datová sada byla úspěšně propojena."
     },
@@ -515,7 +514,6 @@ export default {
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
-      "readError": "Etwa hat beim Lesen der Datei \"{filename}\" nicht geklappt.",
       "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
     }
   },
@@ -531,7 +529,6 @@ export default {
       "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
     },
     "alert": {
-      "readError": "Algo salió mal mientras leía {filename}",
       "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente."
     }
   },
@@ -551,7 +548,6 @@ export default {
       "someUploaded": "{message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès. | {message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès. | {message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès."
     },
     "alert": {
-      "readError": "Quelque-chose s'est mal passé pendant la lecture de “{filename}”.",
       "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés.",
       "link": "Dataset lié avec succès"
     },
@@ -573,7 +569,6 @@ export default {
       "someUploaded": "{message} Hanya {uploaded} dari {total} dokumen berhasil diunggah."
     },
     "alert": {
-      "readError": "Terjadi kesalahan saat membaca \"{filename}\".",
       "success": "{count} dokumen berhasil diunggah."
     }
   },
@@ -593,7 +588,6 @@ export default {
       "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"
     },
     "alert": {
-      "readError": "Qualcosa è andato storto durante la lettura di \"{filename}\".",
       "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo",
       "link": "Set di dati collegato correttamente."
     },
@@ -615,7 +609,6 @@ export default {
       "someUploaded": "{message} {total}件のファイルの内、{uploaded}件のみがアップロードに成功しました。"
     },
     "alert": {
-      "readError": "ファイル\"{filename}\"を読み込み中に問題が発生しました。",
       "success": "{count}のファイルのアップロードに成功"
     }
   },
@@ -631,7 +624,6 @@ export default {
       "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
     },
     "alert": {
-      "readError": "Hitilafu fulani imetokea wakati wa kusoma \"{filename}\"",
       "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
     }
   }

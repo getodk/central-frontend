@@ -478,6 +478,10 @@
       "string": "Dibuat oleh",
       "developer_comment": "This is the text of a table column header."
     },
+    "createdAt": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "updatedBy": {
       "string": "",
       "developer_comment": "This is the text of a table column header."
@@ -579,6 +583,10 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "datasets": {
+      "string": "",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
       "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
@@ -716,6 +724,16 @@
       "string": ""
     }
   },
+  "entity": {
+    "label": {
+      "string": "",
+      "developer_comment": "This is the label of an Entity."
+    },
+    "entityId": {
+      "string": "",
+      "developer_comment": "This is the UUID or 'name' of an Entity."
+    }
+  },
   "common": {
     "activity": {
       "string": "Aktivitas",
@@ -740,6 +758,10 @@
     "dangerZone": {
       "string": "Zona Bahaya",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "data": {
+      "string": "",
+      "developer_comment": "This is shown in the tab above a table of data."
     },
     "docs": {
       "string": "",
@@ -1345,6 +1367,20 @@
         }
       }
     },
+    "EntityList": {
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, other {}}",
+            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+          }
+        }
+      },
+      "noEntities": {
+        "string": "",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      }
+    },
     "FieldKeyList": {
       "action": {
         "create": {
@@ -1597,9 +1633,6 @@
         }
       },
       "alert": {
-        "readError": {
-          "string": "Terjadi kesalahan saat membaca \"{filename}\"."
-        },
         "success": {
           "string": "{count, plural, other {{count} dokumen berhasil diunggah.}}"
         },
@@ -2384,6 +2417,11 @@
         }
       }
     },
+    "FormSubmissions": {
+      "analyzeDisabled": {
+        "string": ""
+      }
+    },
     "FormTable": {
       "header": {
         "closedForms": {
@@ -2588,6 +2626,18 @@
     "NotFound": {
       "body": {
         "string": "Laman yang Anda minta tidak ditemui."
+      }
+    },
+    "OdataDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "ProjectArchive": {
@@ -3228,19 +3278,16 @@
       },
       "introduction": {
         "0": {
-          "string": "OData adalah standar baru untuk mentransfer data antara perangkat dan servis. Perangkat analisis gratis dan unggul seperti Excel, {powerBi}, dan {r} dapat mengambil data lewat OData untuk analisis.",
-          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
+          "string": "",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": "Ada banyak keuntungan menggunakan OData. Yang paling penting adalah OData mendukung ketepatan sempurna pemindahan data kompleks seperti angka dan data geografis, dan memudahkan sinkronisasi data terakhir Anda dengan perangkat yang menggunakannya."
-        },
-        "2": {
-          "string": "Untuk memulai menggunakan OData, pilih perangkat Anda dan salin tautannya ke sana."
+          "string": ""
         }
       },
       "tab": {
         "microsoft": {
-          "string": "Excel/Power BI",
+          "string": "",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
@@ -3251,39 +3298,25 @@
       "help": {
         "microsoft": {
           "full": {
-            "string": "Untuk bantuan penggunaan OData dengan Excel, lihat {pageForExcel}. Untuk bantuan penggunaan Power BI, lihat {pageForPowerBi}.",
+            "string": "",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
           },
           "pageForExcel": {
             "string": "laman ini",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
           },
           "pageForPowerBi": {
             "string": "laman ini",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
           }
         },
+        "python": {
+          "string": "",
+          "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
+        },
         "r": {
-          "0": {
-            "full": {
-              "string": "Untuk mengakses data Central dari {r}, kami merekomendasikan Anda untuk menggunakan {ruODK}. Lihat skema ruODK untuk contoh penggunaan {oData} dan {restful} API.",
-              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
-            },
-            "restful": {
-              "string": "RESTful",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
-            }
-          },
-          "1": {
-            "full": {
-              "string": "Sama seperti ODK, ruODK dikembangkan dan didukung oleh anggota komunitas. Apabila Anda ingin membantu perkembangannya, Anda dapat menemukan informasi lebih lanjut {here}.",
-              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-            },
-            "here": {
-              "string": "di sini",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
-            }
-          }
+          "string": "",
+          "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
         },
         "other": {
           "full": {
@@ -3329,21 +3362,6 @@
     "SubmissionComment": {
       "editWithoutComment": {
         "string": "Anda telah mengubah redaksi pada data ini. Mohon jelaskan perubahan yang telah Anda buat"
-      }
-    },
-    "SubmissionDataAccess": {
-      "action": {
-        "apiAccess": {
-          "string": "Akses API",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "Analisa lewat OData",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "analyzeDisabled": {
-        "string": "Akses OData tidak tersedia karena enkripsi Formulir"
       }
     },
     "SubmissionDecrypt": {

@@ -224,6 +224,9 @@ export default {
       "subtitle": "(Zobrazuje {count} nejaktivnější projekt projektu) | (Zobrazuje {count} nejaktivnější projekty projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu)"
     },
     "submissionStates": "Stavy odeslání",
+    "datasets": {
+      "title": "Souhrny datových sad a entit"
+    },
     "other": "Jiné"
   },
   "de": {

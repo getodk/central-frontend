@@ -247,6 +247,9 @@ export default {
     },
     "linkedToDataset": "Propojeno s datovou sadou {datasetName}",
     "uploadToOverride": "Nahrajte soubor, který chcete přepsat.",
+    "action": {
+      "linkDataset": "Odkaz Datové sady {datasetName}"
+    },
     "override": "Přepsat"
   },
   "de": {

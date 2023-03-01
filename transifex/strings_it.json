@@ -407,11 +407,11 @@
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
     "expand": {
-      "string": "",
+      "string": "Espandere",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "collapse": {
-      "string": "",
+      "string": "Chiudere",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -478,8 +478,12 @@
       "string": "Creato da",
       "developer_comment": "This is the text of a table column header."
     },
-    "updatedBy": {
+    "createdAt": {
       "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "updatedBy": {
+      "string": "Aggiornato da",
       "developer_comment": "This is the text of a table column header."
     },
     "displayName": {
@@ -519,11 +523,11 @@
       "developer_comment": "This is the text of a table column header."
     },
     "entities": {
-      "string": "",
+      "string": "Entità totali",
       "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
     },
     "lastEntity": {
-      "string": "",
+      "string": "Ultima entità",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
@@ -580,6 +584,10 @@
     },
     "datasets": {
       "string": "Set di dati",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -716,6 +724,16 @@
       "string": "Non ci sono ancora invii."
     }
   },
+  "entity": {
+    "label": {
+      "string": "",
+      "developer_comment": "This is the label of an Entity."
+    },
+    "entityId": {
+      "string": "",
+      "developer_comment": "This is the UUID or 'name' of an Entity."
+    }
+  },
   "common": {
     "activity": {
       "string": "Attività",
@@ -740,6 +758,10 @@
     "dangerZone": {
       "string": "Zona pericolo",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "data": {
+      "string": "",
+      "developer_comment": "This is shown in the tab above a table of data."
     },
     "docs": {
       "string": "Documentazione",
@@ -794,7 +816,7 @@
       "string": "Totale"
     },
     "totalSubmissions": {
-      "string": ""
+      "string": "Invii totali"
     },
     "punctuations": {
       "comma": {
@@ -1265,11 +1287,11 @@
     },
     "DatasetOverview": {
       "connectionsToForms": {
-        "string": "",
+        "string": "Connessioni ai formulari",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "datasetProperties": {
-        "string": "",
+        "string": "Proprietà dei set di dati",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
@@ -1300,7 +1322,7 @@
     },
     "DatasetShow": {
       "back": {
-        "string": "",
+        "string": "Torna ai set di dati del progetto",
         "developer_comment": "This is shown at the top of the page."
       }
     },
@@ -1343,6 +1365,20 @@
         "notOpen": {
           "string": "In questa versione di ODK Central, l'anteprima è disponibile solo per i formulari nello stato aperto. "
         }
+      }
+    },
+    "EntityList": {
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, one {} many {} other {}}",
+            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+          }
+        }
+      },
+      "noEntities": {
+        "string": "",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
       }
     },
     "FieldKeyList": {
@@ -1597,9 +1633,6 @@
         }
       },
       "alert": {
-        "readError": {
-          "string": "Qualcosa è andato storto durante la lettura di \"{filename}\". "
-        },
         "success": {
           "string": "{count, plural, one {{count} file è stato caricato con successo} many {{count} files sono stati caricati con successo} other {{count} files sono stati caricati con successo}}"
         },
@@ -2215,36 +2248,36 @@
         }
       },
       "fields": {
-        "string": "",
+        "string": "Campi:",
         "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
       },
       "warningsText": {
         "0": {
-          "string": ""
+          "string": "Questo file può essere utilizzato, ma presenta i seguenti possibili problemi:"
         },
         "1": {
-          "string": ""
+          "string": "Avvertenze sulla progettazione del formulario:"
         },
         "2": {
-          "string": ""
+          "string": "Avvertenze sul flusso di lavoro:"
         },
         "3": {
           "deletedFormExists": {
             "string": ""
           },
           "structureChanged": {
-            "string": ""
+            "string": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti."
           }
         },
         "4": {
-          "string": ""
+          "string": "Correggi i problemi e riprova."
         },
         "5": {
           "create": {
-            "string": ""
+            "string": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque il formulario: "
           },
           "update": {
-            "string": ""
+            "string": "Se sei sicuro che questi problemi possano essere ignorati, fai cli sul pulsante per creare comunque la bozza del formulario: "
           }
         }
       }
@@ -2382,6 +2415,11 @@
           "string": "Il più nuovo",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
+      }
+    },
+    "FormSubmissions": {
+      "analyzeDisabled": {
+        "string": ""
       }
     },
     "FormTable": {
@@ -2565,7 +2603,7 @@
     },
     "NavbarHelpDropdown": {
       "help": {
-        "string": "",
+        "string": "Aiuto",
         "developer_comment": "This text is used to label a help menu that lists links to useful resources."
       },
       "version": {
@@ -2588,6 +2626,18 @@
     "NotFound": {
       "body": {
         "string": "La pagina richiesta non è stata trovata."
+      }
+    },
+    "OdataDataAccess": {
+      "action": {
+        "apiAccess": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "analyze": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "ProjectArchive": {
@@ -3228,19 +3278,16 @@
       },
       "introduction": {
         "0": {
-          "string": "OData è un nuovo standard per il trasferimento di dati tra strumenti e servizi. Strumenti di analisi gratuiti e potenti come Excel, {powerBi} e {r} possono recuperare i dati su OData per l'analisi. ",
-          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". {powerBi} and {r} are both links."
+          "string": "",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": "Ci sono molti vantaggi nell'utilizzo di OData, ma soprattutto OData supporta il trasferimento completo di dati complicati come numeri e dati geografici e consente all'ultima versione dei tuoi dati di sincronizzarsi facilmente con qualsiasi strumento che lo utilizza. "
-        },
-        "2": {
-          "string": "Per iniziare a utilizzare OData, seleziona il tuo strumento e copia il link al suo interno. "
+          "string": ""
         }
       },
       "tab": {
         "microsoft": {
-          "string": "Excel/Power BI",
+          "string": "",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
@@ -3251,39 +3298,25 @@
       "help": {
         "microsoft": {
           "full": {
-            "string": "Per informazioni sull'utilizzo di OData con Excel, vedere {pageForExcel}. Per assistenza con Power BI, vedere {pageForPowerBi}. ",
+            "string": "",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
           },
           "pageForExcel": {
             "string": "questa pagina",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
           },
           "pageForPowerBi": {
             "string": "questa pagina",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Excel, see {pageForExcel}. For help with Power BI, see {pageForPowerBi}."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
           }
         },
+        "python": {
+          "string": "",
+          "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
+        },
         "r": {
-          "0": {
-            "full": {
-              "string": "Per accedere ai dati di Central da {r}, ti consigliamo di utilizzare {ruODK}. Vedi le vignette di ruODK per esempi di utilizzo sia di {oData} che {restful} API. ",
-              "developer_comment": "The text of {r} is \"R\". The text of {ruODK} is \"ruODK\". The text of {oData} is \"OData\". All three are links.\n\n{restful} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nRESTful"
-            },
-            "restful": {
-              "string": "RESTful",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {restful} is in the following text:\n\nTo access Central data from {r}, we recommend you use {ruODK}. See ruODK’s vignettes for examples of using both the {oData} and the {restful} API."
-            }
-          },
-          "1": {
-            "full": {
-              "string": "Proprio come ODK stesso, ruODK è sviluppato e supportato dai membri della comunità. Se desideri contribuire a migliorarlo, puoi trovare informazioni {here}. ",
-              "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-            },
-            "here": {
-              "string": "qui",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nJust like ODK itself, ruODK is developed and supported by community members. If you wish to help improve it, you can find information {here}."
-            }
-          }
+          "string": "",
+          "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
         },
         "other": {
           "full": {
@@ -3329,21 +3362,6 @@
     "SubmissionComment": {
       "editWithoutComment": {
         "string": "Hai apportato modifiche a questi dati. Per favore descrivi le modifiche apportate. "
-      }
-    },
-    "SubmissionDataAccess": {
-      "action": {
-        "apiAccess": {
-          "string": "accesso attraverso API",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "Analizzare attraverso OData",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "analyzeDisabled": {
-        "string": "L'accesso OData non è disponibile a causa della crittografia del formulario "
       }
     },
     "SubmissionDecrypt": {
@@ -3857,7 +3875,7 @@
         }
       },
       "cannotResetPassword": {
-        "string": "",
+        "string": "Non puoi reimpostare la tua password in questa pagina. Per cambiare la tua password, modifica il tuo profilo.",
         "developer_comment": "An Administrator may reset the password for another Web User, but not for their own account."
       },
       "cannotRetire": {

@@ -55,6 +55,7 @@ export default {
 <i18n>
 {
   "cs": {
+    "help": "Nápověda",
     "version": "Verze"
   },
   "de": {
@@ -71,6 +72,7 @@ export default {
     "version": "Versi"
   },
   "it": {
+    "help": "Aiuto",
     "version": "Versione"
   },
   "ja": {

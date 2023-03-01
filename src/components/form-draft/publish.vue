@@ -310,7 +310,8 @@ export default {
         "full": "{inAddition} zveřejněním této definice formuláře dojde k následujícím změnám v tomto projektu:",
         "inAddition": "Navíc,"
       },
-      "newDataset": "Bude vytvořena nová datová sada {datasetName}."
+      "newDataset": "Bude vytvořena nová datová sada {datasetName}.",
+      "newProperty": "V Datové sadě {datasetName}, bude vytvořena nová vlastnost {propertyName}."
     }
   },
   "de": {
