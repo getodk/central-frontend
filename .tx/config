@@ -1,9 +1,10 @@
 [main]
 host = https://www.transifex.com
 
-[central.strings]
-file_filter = transifex/strings_<lang>.json
+[o:getodk:p:central:r:strings]
+file_filter  = transifex/strings_<lang>.json
+source_file  = transifex/strings_en.json
+source_lang  = en
+type         = STRUCTURED_JSON
 minimum_perc = 0
-source_file = transifex/strings_en.json
-source_lang = en
-type = STRUCTURED_JSON
+
