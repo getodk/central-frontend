@@ -10,12 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label class="form-group" :class="{ 'has-error': hasError }">
+  <label class="form-group" :class="htmlClass">
     <slot name="before"></slot>
     <input ref="input" v-bind="$attrs" class="form-control" :value="modelValue"
       :placeholder="`${placeholder}${star}`" :required="required"
       :autocomplete="autocomplete"
       @input="$emit('update:modelValue', $event.target.value)">
+    <password-strength v-if="autocomplete === 'new-password'"
+      :password="modelValue"/>
     <span class="form-label">{{ placeholder }}{{ star }}</span>
     <slot name="after"></slot>
   </label>
@@ -23,34 +25,48 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'FormGroup',
-  inheritAttrs: false,
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      required: true
-    },
-    required: Boolean,
-    hasError: Boolean,
-    autocomplete: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue'],
-  computed: {
-    star() {
-      return this.required ? ' *' : '';
-    }
-  },
-  methods: {
-    focus() {
-      this.$refs.input.focus();
-    }
-  }
+  inheritAttrs: false
 };
 </script>
+<script setup>
+import { computed, ref } from 'vue';
+
+import PasswordStrength from './password-strength.vue';
+
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  },
+  placeholder: {
+    type: String,
+    required: true
+  },
+  required: Boolean,
+  hasError: Boolean,
+  autocomplete: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['update:modelValue']);
+
+const htmlClass = computed(() => ({
+  'new-password': props.autocomplete === 'new-password',
+  'has-error': props.hasError
+}));
+const star = computed(() => (props.required ? ' *' : ''));
+
+const input = ref(null);
+const focus = () => { input.value.focus(); };
+defineExpose({ focus });
+</script>
+
+<style lang="scss">
+.form-group {
+  // Hide a password strength meter for password confirmation.
+  &.new-password ~ .form-group.new-password .password-strength {
+    display: none;
+  }
+}
+</style>
