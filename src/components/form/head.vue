@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-head">
-    <page-back :to="projectPath()" link-title>
+    <page-back :to="[projectPath(), projectPath()]">
       <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
       <template #back>{{ $t('resource.forms') }}</template>
     </page-back>
