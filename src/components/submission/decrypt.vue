@@ -63,7 +63,9 @@ except according to the terms contained in the LICENSE file.
             <form-group v-model="passphrase" type="password"
               :placeholder="$t('field.passphrase')" required
               autocomplete="off"/>
-            <p v-if="managedKey.hint != null" class="modal-introduction">
+            <p v-if="managedKey.hint != null"
+              id="submission-download-passphrase-hint"
+              class="modal-introduction">
               {{ $t('hint', managedKey) }}
             </p>
           </template>
@@ -322,6 +324,7 @@ export default {
   max-width: 305px;
 }
 #submission-download-passphrase-help { margin-top: 21px; }
+#submission-download-passphrase-hint { overflow-wrap: break-word; }
 #submission-download-container form :last-child { margin-bottom: 0; }
 #submission-download-divider {
   border-left: 1px solid $color-subpanel-border-strong;
