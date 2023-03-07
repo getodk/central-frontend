@@ -176,7 +176,7 @@ export default {
       // The text of {python} is "Python". The text of {excel} is "Excel".
       // {powerBi}, {r}, {excel} and {python} are all links.
       "OData is a standard for transferring data between tools and services. Free and powerful analysis tools like {powerBi}, {excel}, {python}, and {r} can fetch data via OData for analysis.",
-      "To connect to this Form’s OData feed, select your tool and copy the link into it."
+      "To connect to this OData feed, select your tool and copy the link into it."
     ],
     "tab": {
       "microsoft": "Power BI or Excel",
