@@ -33,11 +33,11 @@ describe('FormHead', () => {
       });
     });
 
-    it("renders the project's name as a link", () => {
+    it("renders the project's name as a link", async () => {
       testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f').then(component => {
-        component.getComponent(PageBack).props().to.should.equal('/projects/1');
-      });
+      const component = await load('/projects/1/forms/f');
+      const { to } = component.getComponent(PageBack).props();
+      to.should.eql(['/projects/1', '/projects/1']);
     });
 
     it("shows the form's name", async () => {

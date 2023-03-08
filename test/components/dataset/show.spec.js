@@ -45,7 +45,7 @@ describe('DatasetShow', () => {
   it('renders a back link', async () => {
     const component = await load('/projects/1/datasets/trees');
     const { to } = component.getComponent(PageBack).props();
-    to.should.equal('/projects/1/datasets');
+    to.should.eql(['/projects/1', '/projects/1/datasets']);
   });
 
   it('show correct project name', async () => {

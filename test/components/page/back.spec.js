@@ -13,37 +13,43 @@ const mountComponent = (options) => mount(PageBack, mergeMountOptions(options, {
 }));
 
 describe('PageBack', () => {
-  describe('linkTitle prop is true', () => {
+  describe('location specified for the title', () => {
     it('renders a link', () => {
       const component = mountComponent({
-        props: { to: '/users', linkTitle: true }
+        props: { to: ['/users', '/account/edit'] }
       });
-      const link = component.getComponent(RouterLinkStub);
-      should.exist(link.element.closest('#page-back-title'));
+      const link = component.get('#page-back-title').getComponent(RouterLinkStub);
       link.props().to.should.equal('/users');
     });
 
     it('uses the title slot', () => {
       const component = mountComponent({
-        props: { to: '/users', linkTitle: true },
+        props: { to: ['/users', '/account/edit'] },
         slots: { title: TestUtilSpan }
       });
-      const text = component.getComponent(RouterLinkStub).get('span').text();
+      const text = component.get('#page-back-title a span').text();
       text.should.equal('Some span text');
     });
   });
 
-  describe('linkTitle prop is false', () => {
-    it('does not render a link', () => {
+  describe('location is not specified for the title', () => {
+    it('does not render a link if the to prop is string', () => {
       const component = mountComponent({
-        props: { to: '/users', linkTitle: false }
+        props: { to: '/account/edit' }
       });
       component.find('#page-back-title a').exists().should.be.false();
     });
 
-    it('uses the title slot', () => {
+    it('does not render a link if first element of to prop is null', () => {
       const component = mountComponent({
-        props: { to: '/users', linkTitle: false },
+        props: { to: [null, '/account/edit'] }
+      });
+      component.find('#page-back-title a').exists().should.be.false();
+    });
+
+    it('still uses the title slot', () => {
+      const component = mountComponent({
+        props: { to: '/account/edit' },
         slots: { title: TestUtilSpan }
       });
       const text = component.get('#page-back-title span').text();
@@ -51,13 +57,26 @@ describe('PageBack', () => {
     });
   });
 
-  it('renders a link for the back slot', () => {
-    const component = mountComponent({
-      props: { to: '/users' }
+  describe('link for the back slot', () => {
+    it('renders a link if the to prop is string', () => {
+      const component = mountComponent({
+        props: { to: '/account/edit' }
+      });
+      const links = component.findAllComponents(RouterLinkStub);
+      links.length.should.equal(1);
+      links[0].attributes().id.should.equal('page-back-back');
+      links[0].props().to.should.equal('/account/edit');
     });
-    const link = component.getComponent(RouterLinkStub);
-    link.attributes().id.should.equal('page-back-back');
-    link.props().to.should.equal('/users');
+
+    it('renders a link if the to prop is an array', () => {
+      const component = mountComponent({
+        props: { to: ['/users', '/account/edit'] }
+      });
+      const links = component.findAllComponents(RouterLinkStub);
+      links.length.should.equal(2);
+      links[1].attributes().id.should.equal('page-back-back');
+      links[1].props().to.should.equal('/account/edit');
+    });
   });
 
   it('uses the back slot', () => {

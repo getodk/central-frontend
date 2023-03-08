@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="col-xs-12">
       <div>
         <span id="page-back-title">
-          <router-link v-if="linkTitle" :to="to">
+          <router-link v-if="toArray[0] != null" :to="toArray[0]">
             <slot name="title"></slot>
           </router-link>
           <template v-else>
@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         <div class="arrow">
           <img src="../../../public/images/arrow.svg" alt="">
         </div>
-        <router-link id="page-back-back" :to="to">
+        <router-link id="page-back-back" :to="toArray[1]">
           <slot name="back"></slot>
         </router-link>
       </div>
@@ -37,10 +37,14 @@ export default {
   name: 'PageBack',
   props: {
     to: {
-      type: String,
+      type: [String, Array],
       required: true
-    },
-    linkTitle: Boolean
+    }
+  },
+  computed: {
+    toArray() {
+      return Array.isArray(this.to) ? this.to : [null, this.to];
+    }
   }
 };
 </script>
