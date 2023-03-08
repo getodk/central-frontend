@@ -42,6 +42,7 @@ const score = computed(() => {
 
 <style lang="scss">
 @use 'sass:color';
+@use 'sass:math';
 @import '../assets/scss/mixins';
 
 .password-strength {
@@ -56,7 +57,7 @@ const score = computed(() => {
   // Use the borders of two pseduo-elements to create 4 blank spaces (gaps),
   // resulting in 5 bars.
   $between-bars: 5px;
-  $bar-width: calc(20% - #{4 * $between-bars / 5});
+  $bar-width: calc(20% - #{math.div(4 * $between-bars, 5)});
   &::before, &::after {
     background-color: transparent;
     border-color: #fff;
