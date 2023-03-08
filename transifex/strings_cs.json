@@ -3282,7 +3282,7 @@
           "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": "Chcete-li se připojit ke kanálu OData tohoto formuláře, vyberte svůj nástroj a zkopírujte do něj odkaz."
+          "string": ""
         }
       },
       "tab": {

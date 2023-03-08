@@ -132,6 +132,9 @@ export default {
 {
   "cs": {
     "analyzeDisabled": "Přístup k OData není dostupný kvůli šifrování formuláře"
+  },
+  "fr": {
+    "analyzeDisabled": "L'accès à OData n'est pas disponible en raison du chiffrement du formulaire"
   }
 }
 </i18n>

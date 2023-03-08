@@ -176,6 +176,7 @@
     "actions": "Actions",
     "created": "Créé",
     "createdBy": "Créé par",
+    "createdAt": "Créé le",
     "updatedBy": "Mis à jour par",
     "displayName": "Nom affiché",
     "email": "Adresse de courriel",
@@ -208,6 +209,7 @@
     "config": "Configuration du serveur",
     "dataset": "Dataset",
     "datasets": "Datasets",
+    "entities": "Entités",
     "form": "Formulaire",
     "forms": "Formulaires",
     "formAttachments": "Fichiers joints du formulaire",
@@ -256,6 +258,10 @@
     "noSubmission": "(aucun)",
     "emptyTable": "Il n'y a pas encore de Soumission"
   },
+  "entity": {
+    "label": "Étiquettes",
+    "entityId": "ID de l'entité"
+  },
   "common": {
     "activity": "Activité",
     "anybody": "(n'importe qui)",
@@ -263,6 +269,7 @@
     "basicInfo": "Information de base",
     "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
+    "data": "Données",
     "docs": "Documents",
     "error": "Erreur",
     "filter": "Filtrer",

@@ -59,6 +59,12 @@ export default {
       "apiAccess": "Přístup k API",
       "analyze": "Analýza přes OData"
     }
+  },
+  "fr": {
+    "action": {
+      "apiAccess": "Accès via l'API",
+      "analyze": "Analyser via OData"
+    }
   }
 }
 </i18n>
