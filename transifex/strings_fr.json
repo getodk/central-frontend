@@ -479,7 +479,7 @@
       "developer_comment": "This is the text of a table column header."
     },
     "createdAt": {
-      "string": "",
+      "string": "Créé le",
       "developer_comment": "This is the text of a table column header."
     },
     "updatedBy": {
@@ -587,7 +587,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
-      "string": "",
+      "string": "Entités",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -726,11 +726,11 @@
   },
   "entity": {
     "label": {
-      "string": "",
+      "string": "Étiquettes",
       "developer_comment": "This is the label of an Entity."
     },
     "entityId": {
-      "string": "",
+      "string": "ID de l'entité",
       "developer_comment": "This is the UUID or 'name' of an Entity."
     }
   },
@@ -760,7 +760,7 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "data": {
-      "string": "",
+      "string": "Données",
       "developer_comment": "This is shown in the tab above a table of data."
     },
     "docs": {
@@ -1371,13 +1371,13 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {Télécharger {count} entité} many {Télécharger {count} entités} other {Télécharger {count} entités}}",
             "developer_comment": "This is the text of a button shown when the count of Entities is known."
           }
         }
       },
       "noEntities": {
-        "string": "",
+        "string": "Pas d'entités à montrer.",
         "developer_comment": "This text is shown when there are no Entities to show in a table."
       }
     },
@@ -2419,7 +2419,7 @@
     },
     "FormSubmissions": {
       "analyzeDisabled": {
-        "string": ""
+        "string": "L'accès à OData n'est pas disponible en raison du chiffrement du formulaire"
       }
     },
     "FormTable": {
@@ -2631,11 +2631,11 @@
     "OdataDataAccess": {
       "action": {
         "apiAccess": {
-          "string": "",
+          "string": "Accès via l'API",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "analyze": {
-          "string": "",
+          "string": "Analyser via OData",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -3278,16 +3278,16 @@
       },
       "introduction": {
         "0": {
-          "string": "",
+          "string": "OData est une norme pour le transfert de données entre outils et services. Des outils d'analyse gratuits et puissants comme {powerBi}, {excel}, {python} et {r} peuvent récupérer des données par le biais d'OData pour les analyser.",
           "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": ""
+          "string": "Pour commencer à utiliser OData, sélectionnez votre outil et y copiez le lien."
         }
       },
       "tab": {
         "microsoft": {
-          "string": "",
+          "string": "Power BI ou Excel",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
@@ -3298,7 +3298,7 @@
       "help": {
         "microsoft": {
           "full": {
-            "string": "",
+            "string": "Pour obtenir de l'aide sur l'utilisation d'OData avec Power BI, voir {pageForPowerBi}. Pour de l'aide avec Excel, voir {pageForExcel}.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
           },
           "pageForExcel": {
@@ -3311,11 +3311,11 @@
           }
         },
         "python": {
-          "string": "",
+          "string": "Pour vous connecter à Central via Python, nous recommandons {pyODK}. pyODK est le client Python officiel pour Central. Il simplifie l'analyse de données et l'automatisation des processus.",
           "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
         },
         "r": {
-          "string": "",
+          "string": "Pour vous connecter à Central via R, nous recommandons {ruODK}. ruODK est développé et soutenu par des membres de la communauté ODK.",
           "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
         },
         "other": {

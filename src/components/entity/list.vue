@@ -148,6 +148,14 @@ export default {
 {
   "cs": {
     "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
+  },
+  "fr": {
+    "action": {
+      "download": {
+        "unfiltered": "Télécharger {count} entité | Télécharger {count} entités | Télécharger {count} entités"
+      }
+    },
+    "noEntities": "Pas d'entités à montrer."
   }
 }
 </i18n>

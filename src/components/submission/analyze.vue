@@ -250,10 +250,22 @@ export default {
   },
   "fr": {
     "title": "Utilisation d'OData",
+    "introduction": [
+      "OData est une norme pour le transfert de données entre outils et services. Des outils d'analyse gratuits et puissants comme {powerBi}, {excel}, {python} et {r} peuvent récupérer des données par le biais d'OData pour les analyser.",
+      "Pour commencer à utiliser OData, sélectionnez votre outil et y copiez le lien."
+    ],
     "tab": {
+      "microsoft": "Power BI ou Excel",
       "other": "Autre"
     },
     "help": {
+      "microsoft": {
+        "full": "Pour obtenir de l'aide sur l'utilisation d'OData avec Power BI, voir {pageForPowerBi}. Pour de l'aide avec Excel, voir {pageForExcel}.",
+        "pageForExcel": "cette page",
+        "pageForPowerBi": "cette page"
+      },
+      "python": "Pour vous connecter à Central via Python, nous recommandons {pyODK}. pyODK est le client Python officiel pour Central. Il simplifie l'analyse de données et l'automatisation des processus.",
+      "r": "Pour vous connecter à Central via R, nous recommandons {ruODK}. ruODK est développé et soutenu par des membres de la communauté ODK.",
       "other": {
         "full": "Pour une description complète de notre intégration OData, veuillez consulter {article}.",
         "article": "cet article"
