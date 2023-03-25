@@ -34,20 +34,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'SystemHome'
+};
+</script>
+<script setup>
+import { inject } from 'vue';
+
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
-import tab from '../../mixins/tab';
+import useTabs from '../../composables/tabs';
 
-export default {
-  name: 'SystemHome',
-  components: { PageBody, PageHead },
-  mixins: [tab()],
-  inject: ['config'],
-  computed: {
-    tabPathPrefix() {
-      return '/system';
-    }
-  }
-};
+const { tabPath, tabClass } = useTabs('/system');
+const config = inject('config');
 </script>
