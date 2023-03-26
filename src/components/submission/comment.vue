@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
 import MarkdownTextarea from '../markdown/textarea.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -38,7 +38,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'SubmissionComment',
   components: { Spinner, MarkdownTextarea },
-  mixins: [request()],
   props: {
     projectId: {
       type: String,
@@ -57,11 +56,11 @@ export default {
   emits: ['success'],
   setup() {
     const { currentUser } = useRequestData();
-    return { currentUser };
+    const { request, awaitingResponse } = useRequest();
+    return { currentUser, request, awaitingResponse };
   },
   data() {
     return {
-      awaitingResponse: false,
       body: ''
     };
   },

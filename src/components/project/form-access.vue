@@ -55,7 +55,7 @@ import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -70,7 +70,7 @@ export default {
     SentenceSeparator,
     Spinner
   },
-  mixins: [modal(), request()],
+  mixins: [modal()],
   inject: ['alert', 'unsavedChanges'],
   props: {
     projectId: {
@@ -81,14 +81,15 @@ export default {
   emits: ['fetch-forms', 'fetch-field-keys'],
   setup() {
     const { roles, project, forms, formSummaryAssignments, fieldKeys, resourceStates } = useRequestData();
+    const { request, awaitingResponse } = useRequest();
     return {
       roles, project, forms, fieldKeys, formSummaryAssignments,
-      ...resourceStates([roles, project, forms, fieldKeys, formSummaryAssignments])
+      ...resourceStates([roles, project, forms, fieldKeys, formSummaryAssignments]),
+      request, awaitingResponse
     };
   },
   data() {
     return {
-      awaitingResponse: false,
       changesByForm: null,
       changeCount: 0,
       statesModal: {
@@ -224,7 +225,11 @@ export default {
         this.changeCount += changedAfterUpdate ? 1 : -1;
     },
     save() {
-      this.put(apiPaths.project(this.projectId), this.projectToSave)
+      this.request({
+        method: 'PUT',
+        url: apiPaths.project(this.projectId),
+        data: this.projectToSave
+      })
         .then(() => {
           this.fetchData(true);
           this.alert.success(this.$t('alert.success'));

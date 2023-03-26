@@ -54,7 +54,7 @@ import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 import MarkdownTextarea from '../markdown/textarea.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import useReviewState from '../../composables/review-state';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -64,7 +64,6 @@ const selectableStates = ['approved', 'hasIssues', 'rejected'];
 export default {
   name: 'SubmissionUpdateReviewState',
   components: { Modal, Spinner, MarkdownTextarea },
-  mixins: [request()],
   props: {
     state: Boolean,
     projectId: {
@@ -79,12 +78,12 @@ export default {
   },
   emits: ['hide', 'success'],
   setup() {
+    const { request, awaitingResponse } = useRequest();
     const { reviewStateIcon } = useReviewState();
-    return { reviewStateIcon };
+    return { request, awaitingResponse, reviewStateIcon };
   },
   data() {
     return {
-      awaitingResponse: false,
       selectedState: 'approved',
       notes: ''
     };

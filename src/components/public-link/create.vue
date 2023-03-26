@@ -52,7 +52,7 @@ import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -60,7 +60,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'PublicLinkCreate',
   components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
-  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -71,11 +70,11 @@ export default {
   setup() {
     // The modal assumes that this data will exist when the modal is shown.
     const { form } = useRequestData();
-    return { form };
+    const { request, awaitingResponse } = useRequest();
+    return { form, request, awaitingResponse };
   },
   data() {
     return {
-      awaitingResponse: false,
       displayName: '',
       once: false
     };

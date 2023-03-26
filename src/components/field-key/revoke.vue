@@ -41,23 +41,21 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'FieldKeyRevoke',
   components: { Modal, Spinner },
-  mixins: [request()],
   props: {
     state: Boolean,
     fieldKey: Object
   },
   emits: ['hide', 'success'],
-  data() {
-    return {
-      awaitingResponse: false
-    };
+  setup() {
+    const { request, awaitingResponse } = useRequest();
+    return { request, awaitingResponse };
   },
   methods: {
     revoke() {

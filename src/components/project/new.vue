@@ -46,13 +46,12 @@ import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectNew',
   components: { DocLink, FormGroup, Modal, Spinner },
-  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -60,9 +59,12 @@ export default {
     }
   },
   emits: ['hide', 'success'],
+  setup() {
+    const { request, awaitingResponse } = useRequest();
+    return { request, awaitingResponse };
+  },
   data() {
     return {
-      awaitingResponse: false,
       name: ''
     };
   },
@@ -73,7 +75,11 @@ export default {
   },
   methods: {
     submit() {
-      this.post('/v1/projects', { name: this.name })
+      this.request({
+        method: 'POST',
+        url: '/v1/projects',
+        data: { name: this.name }
+      })
         .then(({ data }) => {
           this.$emit('success', data);
         })
