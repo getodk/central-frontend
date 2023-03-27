@@ -27,4 +27,4 @@ import './bootstrap';
 createApp(App)
   .use(createContainer())
   .directive('tooltip', vTooltip)
-  .mount('#app');
+  .mount('#app-container');

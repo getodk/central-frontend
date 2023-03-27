@@ -18,16 +18,37 @@ html {
 }
 
 body {
-  background-color: $color-page-background;
-  box-shadow: 0 -2px 0 #777 inset;
+  background-color: $color-subpanel-background;
   color: $color-text;
-  min-height: 100vh;
+
+  border-bottom: 2px solid #777;
+  // Add a top border, but keep it below #app.
+  &::before {
+    border-top: 2px solid #777;
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 
   // Always show the scrollbar in order to prevent content shifting to the left.
   overflow-y: scroll;
   &.modal-open { overflow-y: hidden; }
 
   &:lang(ja) { font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; }
+}
+
+#app {
+  background-color: $color-page-background;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.05);
+  margin-left: auto;
+  margin-right: auto;
+  // 2px for the border-bottom-width of body.
+  min-height: calc(100vh - 2px);
+
+  max-width: $max-width-app;
+  &.full-width { max-width: 100%; }
+  transition: max-width 0.5s ease-in-out;
 }
 
 h1, .h1 {

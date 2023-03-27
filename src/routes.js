@@ -393,7 +393,8 @@ const routes = [
             ]),
             form: () => form.publishedAt != null
           },
-          title: () => [i18n.t('resource.submissions'), form.nameOrId]
+          title: () => [i18n.t('resource.submissions'), form.nameOrId],
+          fullWidth: true
         }
       }),
       asyncRoute({
@@ -478,7 +479,8 @@ const routes = [
           title: () => [
             i18n.t('formHead.draftNav.tab.testing'),
             form.nameOrId
-          ]
+          ],
+          fullWidth: true
         }
       })
     ]
@@ -523,7 +525,8 @@ const routes = [
           title: () => [i18n.t('common.data'), dataset.name],
           validateData: {
             project: () => project.permits(['entity.list'])
-          }
+          },
+          fullWidth: true
         }
       })
     ]
@@ -649,6 +652,7 @@ const routesByName = new Map();
     requireLogin: true,
     requireAnonymity: false,
     preserveData: [],
+    fullWidth: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
       ? []
