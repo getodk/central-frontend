@@ -359,7 +359,7 @@ const routes = [
           validateData: {
             // Including form.update in order to exclude project viewers and
             // Data Collectors.
-            project: () => project.permits(['form.read', 'form.update']),
+            project: () => project.permits(['form.read', 'form.update', 'dataset.list']),
             form: () => form.publishedAt != null
           },
           title: () => [form.nameOrId]
@@ -440,7 +440,8 @@ const routes = [
             project: () => project.permits([
               'form.read',
               'form.update',
-              'form.delete'
+              'form.delete',
+              'dataset.list'
             ]),
             formDraft: () => formDraft.isDefined()
           },
@@ -454,7 +455,12 @@ const routes = [
         props: true,
         meta: {
           validateData: {
-            project: () => project.permits(['form.read', 'form.update']),
+            project: () => project.permits([
+              'form.read',
+              'form.update',
+              'dataset.list',
+              'entity.list'
+            ]),
             attachments: () => attachments.isDefined() &&
               attachments.get().size !== 0
           },
@@ -510,7 +516,7 @@ const routes = [
         meta: {
           title: () => [dataset.name],
           validateData: {
-            project: () => project.permits('dataset.list')
+            project: () => project.permits('dataset.read')
           }
         }
       }),
@@ -522,7 +528,7 @@ const routes = [
         meta: {
           title: () => [i18n.t('common.data'), dataset.name],
           validateData: {
-            project: () => project.permits(['entity.list'])
+            project: () => project.permits(['dataset.read', 'entity.list'])
           }
         }
       })
