@@ -112,14 +112,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import PageBack from '../page/back.vue';
 
-import tab from '../../mixins/tab';
 import useRoutes from '../../composables/routes';
+import useTabs from '../../composables/tabs';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
   components: { PageBack },
-  mixins: [tab()],
   emits: ['create-draft'],
   setup() {
     // The component does not assume that this data will exist when the
@@ -128,15 +127,13 @@ export default {
     const { dataExists } = resourceStates([project, form, formDraft, attachments]);
 
     const { projectPath, formPath, canRoute } = useRoutes();
+    const { tabPath, tabClass } = useTabs(formPath());
     return {
       project, form, formDraft, attachments, dataExists,
-      projectPath, formPath, canRoute
+      projectPath, formPath, canRoute, tabPath, tabClass
     };
   },
   computed: {
-    tabPathPrefix() {
-      return this.formPath();
-    },
     rendersFormTabs() {
       return this.project.dataExists && this.project.permits(['form.update']);
     },
