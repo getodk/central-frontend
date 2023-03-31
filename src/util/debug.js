@@ -9,11 +9,11 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { nextTick } from 'vue';
+import { nextTick, onBeforeMount, onBeforeUpdate, onMounted, onUpdated } from 'vue';
+import { sum } from 'ramda';
 
 // eslint-disable-next-line no-console
 const logTick = () => { console.log('tick'); };
-// eslint-disable-next-line import/prefer-default-export
 export const ticking = (count, callback = logTick) => {
   let i = 0;
   const ticker = () => {
@@ -22,4 +22,76 @@ export const ticking = (count, callback = logTick) => {
     if (i < count) nextTick(ticker);
   };
   nextTick(ticker);
+};
+
+class RenderTimer {
+  constructor() {
+    this.state = false;
+    this._once = false;
+    this.durations = [];
+  }
+
+  // Starts timing renders.
+  on() {
+    this.state = true;
+    this._once = false;
+  }
+
+  // Stops timing renders.
+  off() {
+    this.state = false;
+    this._once = false;
+  }
+
+  // Times the next render, then stops timing.
+  once() {
+    this.state = true;
+    this._once = true;
+  }
+
+  // Adds a duration from the composable.
+  _push(duration) {
+    if (this.state) {
+      this.durations.push(duration);
+      if (this._once) this.off();
+    }
+  }
+
+  // Returns summary statistics about the durations timed so far.
+  summarize() {
+    if (this.durations.length === 0) return {};
+    const stats = {
+      count: this.durations.length,
+      min: Math.min(...this.durations),
+      max: Math.max(...this.durations),
+      sum: sum(this.durations)
+    };
+    stats.avg = stats.sum / stats.count;
+    return stats;
+  }
+}
+
+// useRenderTimer() is a composable. It returns a timer object that can help
+// measure performance around rendering.
+export const useRenderTimer = () => {
+  const timer = new RenderTimer();
+
+  let timeBefore;
+  const setTime = () => { timeBefore = Date.now(); };
+  onBeforeMount(setTime);
+  onBeforeUpdate(setTime);
+
+  const hooks = [['mounted', onMounted], ['updated', onUpdated]];
+  for (const [name, f] of hooks) {
+    f(() => { // eslint-disable-line no-loop-func
+      const duration = Date.now() - timeBefore;
+      timer._push(duration);
+
+      const onOrOff = timer.state ? 'on' : 'off';
+      // eslint-disable-next-line no-console
+      console.log(`[useRenderTimer] ${name} (timer ${onOrOff})`, duration);
+    });
+  }
+
+  return timer;
 };
