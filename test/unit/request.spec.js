@@ -359,8 +359,12 @@ describe('util/request', () => {
     });
   });
 
+  // Right now, withHttpMethods() modifies the request() function that is passed
+  // to it. However, an earlier version returned a proxy of the function. These
+  // tests were written for that earlier version, so they do not assume that
+  // withHttpMethods() returns the same function that was passed to it.
   describe('withHttpMethods()', () => {
-    it('returns a proxy that calls the request() function', () => {
+    it('returns a result that calls the request() function', () => {
       const request = sinon.fake(() => 'foo');
       const result = withHttpMethods(request);
       result({ method: 'GET', url: '/v1/projects/1' }).should.equal('foo');
