@@ -107,7 +107,7 @@ import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
@@ -116,7 +116,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormDraftPublish',
   components: { FormGroup, Modal, Spinner },
-  mixins: [request()],
   inject: ['alert'],
   props: {
     state: {
@@ -131,15 +130,15 @@ export default {
     const { formVersions, attachments, resourceView, formDraftDatasetDiff } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
 
+    const { request, awaitingResponse } = useRequest();
     const { formPath } = useRoutes();
     return {
       formVersions, formDraft, attachments, formDraftDatasetDiff,
-      formPath
+      request, awaitingResponse, formPath
     };
   },
   data() {
     return {
-      awaitingResponse: false,
       versionString: '',
       // versionConflict is used in a scenario where a user tries to
       // publish a form that conflicts with a form/version combo probably

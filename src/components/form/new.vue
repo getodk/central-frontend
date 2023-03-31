@@ -114,14 +114,14 @@ import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import dropZone from '../../mixins/drop-zone';
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths, isProblem } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormNew',
   components: { DocLink, Modal, SentenceSeparator, Spinner },
-  mixins: [dropZone(), request()],
+  mixins: [dropZone()],
   inject: ['alert'],
   props: {
     state: {
@@ -135,12 +135,13 @@ export default {
     // component is created.
     const { project, resourceView } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
-    return { project, formDraft };
+
+    const { request, awaitingResponse } = useRequest();
+    return { project, formDraft, request, awaitingResponse };
   },
   data() {
     return {
       dragDepth: 0,
-      awaitingResponse: false,
       file: null,
       warnings: null,
       documentLinks: {

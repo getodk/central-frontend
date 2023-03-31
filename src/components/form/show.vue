@@ -31,10 +31,10 @@ import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 
-import request from '../../mixins/request';
 import useCallWait from '../../composables/call-wait';
 import useForm from '../../request-data/form';
 import useDatasets from '../../request-data/datasets';
+import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -43,7 +43,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormShow',
   components: { FormHead, Loading, PageBody },
-  mixins: [request()],
   props: {
     projectId: {
       type: String,
@@ -59,18 +58,13 @@ export default {
     const { form, formDraft, attachments } = useForm();
     useDatasets();
 
+    const { request, awaitingResponse } = useRequest();
     const { callWait, cancelCall } = useCallWait();
     const { formPath } = useRoutes();
     return {
       project, form, formDraft, attachments,
       ...resourceStates([project, form, formDraft, attachments]),
-      callWait, cancelCall,
-      formPath
-    };
-  },
-  data() {
-    return {
-      awaitingResponse: false
+      request, awaitingResponse, callWait, cancelCall, formPath
     };
   },
   created() {
@@ -172,7 +166,10 @@ export default {
       this.fetchDraft();
     },
     createDraft() {
-      this.post(apiPaths.formDraft(this.projectId, this.xmlFormId))
+      this.request({
+        method: 'POST',
+        url: apiPaths.formDraft(this.projectId, this.xmlFormId)
+      })
         .then(() => {
           this.fetchDraft();
           this.$router.push(this.formPath('draft'));

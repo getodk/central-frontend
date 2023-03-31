@@ -40,13 +40,12 @@ import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'UserNew',
   components: { FormGroup, Modal, Spinner },
-  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -54,9 +53,12 @@ export default {
     }
   },
   emits: ['hide', 'success'],
+  setup() {
+    const { request, awaitingResponse } = useRequest();
+    return { request, awaitingResponse };
+  },
   data() {
     return {
-      awaitingResponse: false,
       email: '',
       displayName: ''
     };
@@ -75,7 +77,7 @@ export default {
     submit() {
       const postData = { email: this.email };
       if (this.displayName !== '') postData.displayName = this.displayName;
-      this.post('/v1/users', postData)
+      this.request({ method: 'POST', url: '/v1/users', data: postData })
         .then(response => {
           this.$emit('success', response.data);
         })

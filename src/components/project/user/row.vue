@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Spinner from '../../spinner.vue';
 
-import request from '../../../mixins/request';
+import useRequest from '../../../composables/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { useRequestData } from '../../../request-data';
@@ -48,7 +48,6 @@ import { useRequestData } from '../../../request-data';
 export default {
   name: 'ProjectUserRow',
   components: { Spinner },
-  mixins: [request()],
   props: {
     assignment: {
       type: Object,
@@ -58,13 +57,13 @@ export default {
   emits: ['increment-count', 'decrement-count', 'change'],
   setup() {
     const { currentUser, roles, project } = useRequestData();
-    return { currentUser, roles, project };
+    // If two requests are sent, there may be a moment between them when
+    // awaitingResponse is `false`.
+    const { request, awaitingResponse } = useRequest();
+    return { currentUser, roles, project, request, awaitingResponse };
   },
   data() {
     return {
-      // If two requests are sent, there may be a moment between them when
-      // awaitingResponse is `false`.
-      awaitingResponse: false,
       selectedRoleId: this.assignment.roleId != null
         ? this.assignment.roleId.toString()
         : ''

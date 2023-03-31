@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
 import FormGroup from '../../form-group.vue';
 import Spinner from '../../spinner.vue';
 
-import request from '../../../mixins/request';
+import useRequest from '../../../composables/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { useRequestData } from '../../../request-data';
@@ -51,15 +51,14 @@ import { useRequestData } from '../../../request-data';
 export default {
   name: 'UserEditPassword',
   components: { FormGroup, Spinner },
-  mixins: [request()],
   inject: ['alert'],
   setup() {
     const { currentUser, user } = useRequestData();
-    return { currentUser, user };
+    const { request, awaitingResponse } = useRequest();
+    return { currentUser, user, request, awaitingResponse };
   },
   data() {
     return {
-      awaitingResponse: false,
       oldPassword: '',
       newPassword: '',
       tooShort: false,
@@ -89,7 +88,11 @@ export default {
     submit() {
       if (!this.validate()) return;
       const data = { old: this.oldPassword, new: this.newPassword };
-      this.put(apiPaths.password(this.user.id), data)
+      this.request({
+        method: 'PUT',
+        url: apiPaths.password(this.user.id),
+        data
+      })
         .then(() => {
           this.alert.success(this.$t('alert.success'));
 
