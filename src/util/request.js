@@ -11,6 +11,15 @@ except according to the terms contained in the LICENSE file.
 */
 import { odataLiteral } from './odata';
 
+// Returns `true` if `data` looks like a Backend Problem and `false` if not.
+export const isProblem = (data) => data != null && typeof data === 'object' &&
+  typeof data.code === 'number' && typeof data.message === 'string';
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// API PATHS
+
 export const queryString = (query) => {
   if (query == null) return '';
   const entries = Object.entries(query);
@@ -152,6 +161,11 @@ export const apiPaths = {
   audits: (query) => `/v1/audits${queryString(query)}`
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SENDING REQUESTS
+
 export const withAuth = (config, token) => {
   const { headers } = config;
   if ((headers == null || headers.Authorization == null) &&
@@ -163,10 +177,6 @@ export const withAuth = (config, token) => {
   }
   return config;
 };
-
-// Returns `true` if `data` looks like a Backend Problem and `false` if not.
-export const isProblem = (data) => data != null && typeof data === 'object' &&
-  typeof data.code === 'number' && typeof data.message === 'string';
 
 export const logAxiosError = (logger, error) => {
   if (error.response == null)
