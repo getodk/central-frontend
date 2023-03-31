@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import { computed, isRef, readonly, toRef } from 'vue';
 
-import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
+import { isProblem, logAxiosError, requestAlertMessage, withAuth, withHttpMethods } from '../util/request';
 import { noop } from '../util/util';
 import { setCurrentResource } from './util';
 import { unlessFailure } from '../util/router';
@@ -279,8 +279,20 @@ class Resource extends BaseResource {
 }
 
 const proxyHandler = {
-  get: (resource, prop) => {
-    if (prop in resource) return resource[prop];
+  get: (resource, prop, proxy) => {
+    // First check the resource for the property.
+    if (prop in resource) {
+      // We want to call withHttpMethods() on Resource.prototype.request().
+      // However, because the request() method references `this`, we must first
+      // bind it to the proxy. For example, if resource.request.post() is
+      // called, we need `this` to be the proxy in post().
+      if (prop === 'request')
+        return withHttpMethods(resource.request.bind(proxy));
+
+      return resource[prop];
+    }
+
+    // Fall back to getting the property from resource.data.
     const { data } = resource;
     if (data == null) return undefined;
     const value = data[prop];

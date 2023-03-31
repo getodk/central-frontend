@@ -77,7 +77,7 @@ running watchers and updating the DOM.
 
 import { inject, readonly, ref, watch } from 'vue';
 
-import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
+import { isProblem, logAxiosError, requestAlertMessage, withAuth, withHttpMethods } from '../util/request';
 
 const _request = (container, awaitingResponse) => (config) => {
   const { router, i18n, requestData, alert, http, logger } = container;
@@ -128,7 +128,7 @@ const _request = (container, awaitingResponse) => (config) => {
 export default () => {
   const container = inject('container');
   const awaitingResponse = ref(false);
-  const request = _request(container, awaitingResponse);
+  const request = withHttpMethods(_request(container, awaitingResponse));
 
   const { router } = container;
   // `router` may be `null` in testing.

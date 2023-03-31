@@ -166,6 +166,37 @@ export const apiPaths = {
 ////////////////////////////////////////////////////////////////////////////////
 // SENDING REQUESTS
 
+const methods = {
+  // The boolean indicates whether the method accepts a `data` argument.
+  get: false,
+  delete: false,
+  post: true,
+  put: true,
+  patch: true
+};
+const proxyHandler = {
+  get: (request, prop) => {
+    if (prop in request) return request[prop];
+
+    const acceptsData = methods[prop];
+    if (acceptsData == null) return undefined;
+
+    const upper = prop.toUpperCase();
+    return !acceptsData
+      ? (url, config = undefined) => request({ ...config, method: upper, url })
+      : (url, data = undefined, config = undefined) => {
+        const full = { ...config, method: upper, url };
+        if (data != null) full.data = data;
+        return request(full);
+      };
+  }
+};
+// Adds convenience methods for HTTP verbs to a request() function by wrapping
+// it in a proxy. `this` cannot be passed through to the convenience methods, so
+// if the request() function references `this`, you must bind `this` for it
+// first.
+export const withHttpMethods = (f) => new Proxy(f, proxyHandler);
+
 export const withAuth = (config, token) => {
   const { headers } = config;
   if ((headers == null || headers.Authorization == null) &&

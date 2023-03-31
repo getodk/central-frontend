@@ -95,6 +95,34 @@ describe('createResource()', () => {
           });
       });
     });
+
+    describe('convenience methods for HTTP verbs', () => {
+      it('sends the correct request', () => {
+        const container = createTestContainer();
+        const { project } = container.requestData;
+        return mockHttp(container)
+          .request(() => project.request.get('/v1/projects/1', {
+            // This option should be passed to request() even though it is a
+            // request() option, not an axios option.
+            extended: true
+          }))
+          .respondWithData(() => testData.extendedProjects.createNew())
+          .testRequests([
+            { method: 'GET', url: '/v1/projects/1', extended: true }
+          ]);
+      });
+
+      it('stores the response', () => {
+        const container = createTestContainer();
+        const { project } = container.requestData;
+        return mockHttp(container)
+          .request(() => project.request.get('/v1/projects/1'))
+          .respondWithData(() => testData.standardProjects.createNew())
+          .afterResponse(() => {
+            project.dataExists.should.be.true();
+          });
+      });
+    });
   });
 
   describe('cancelRequest()', () => {

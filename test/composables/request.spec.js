@@ -15,6 +15,21 @@ const TestUtilRequest = {
 };
 
 describe('useRequest()', () => {
+  it('sends the correct request', () =>
+    mockHttp()
+      .mount(TestUtilRequest)
+      .request(component =>
+        component.vm.request({ method: 'DELETE', url: '/v1/projects/1' }))
+      .respondWithSuccess()
+      .testRequests([{ method: 'DELETE', url: '/v1/projects/1' }]));
+
+  it('provides convenience methods for HTTP verbs', () =>
+    mockHttp()
+      .mount(TestUtilRequest)
+      .request(component => component.vm.request.delete('/v1/projects/1'))
+      .respondWithSuccess()
+      .testRequests([{ method: 'DELETE', url: '/v1/projects/1' }]));
+
   describe('awaitingResponse', () => {
     it('sets awaitingResponse to true during the request', () =>
       mockHttp()

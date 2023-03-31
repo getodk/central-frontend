@@ -1,5 +1,7 @@
+import sinon from 'sinon';
+
 import createCentralI18n from '../../src/i18n';
-import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth } from '../../src/util/request';
+import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth, withHttpMethods } from '../../src/util/request';
 
 import { mockAxiosError } from '../util/axios';
 import { mockLogger } from '../util/util';
@@ -354,6 +356,109 @@ describe('util/request', () => {
     it('audits?limit', () => {
       const path = apiPaths.audits({ action: 'nonverbose', limit: 10 });
       path.should.equal('/v1/audits?action=nonverbose&limit=10');
+    });
+  });
+
+  describe('withHttpMethods()', () => {
+    it('returns a proxy that calls the request() function', () => {
+      const request = sinon.fake(() => 'foo');
+      const result = withHttpMethods(request);
+      result({ method: 'GET', url: '/v1/projects/1' }).should.equal('foo');
+      request.args[0][0].should.eql({
+        method: 'GET',
+        url: '/v1/projects/1'
+      });
+    });
+
+    it('adds a convenience method for GET', () => {
+      const request = sinon.fake(() => 'foo');
+      const result = withHttpMethods(request);
+      result.get('/v1/projects/1').should.equal('foo');
+      request.args[0][0].should.eql({
+        method: 'GET',
+        url: '/v1/projects/1'
+      });
+    });
+
+    it('accepts a config argument for GET', () => {
+      const request = sinon.fake();
+      withHttpMethods(request).get('/v1/projects/1', {
+        headers: { 'X-Foo': 'bar' }
+      });
+      request.args[0][0].should.eql({
+        method: 'GET',
+        url: '/v1/projects/1',
+        headers: { 'X-Foo': 'bar' }
+      });
+    });
+
+    it('adds a convenience method for DELETE', () => {
+      const request = sinon.fake();
+      withHttpMethods(request).delete('/v1/projects/1');
+      request.args[0][0].should.eql({
+        method: 'DELETE',
+        url: '/v1/projects/1'
+      });
+    });
+
+    it('adds a convenience method for POST', () => {
+      const request = sinon.fake();
+      withHttpMethods(request).post('/v1/projects');
+      request.args[0][0].should.eql({
+        method: 'POST',
+        url: '/v1/projects'
+      });
+    });
+
+    it('accepts a data argument for POST', () => {
+      const request = sinon.fake();
+      withHttpMethods(request).post('/v1/projects', { foo: 'bar' });
+      request.args[0][0].should.eql({
+        method: 'POST',
+        url: '/v1/projects',
+        data: { foo: 'bar' }
+      });
+    });
+
+    it('accepts a config argument for POST', () => {
+      const request = sinon.fake();
+      withHttpMethods(request).post('/v1/projects', { foo: 'bar' }, {
+        headers: { 'X-Foo': 'baz' }
+      });
+      request.args[0][0].should.eql({
+        method: 'POST',
+        url: '/v1/projects',
+        data: { foo: 'bar' },
+        headers: { 'X-Foo': 'baz' }
+      });
+    });
+
+    it('adds a convenience method for PUT', () => {
+      const request = sinon.fake();
+      withHttpMethods(request).put('/v1/projects/1');
+      request.args[0][0].should.eql({
+        method: 'PUT',
+        url: '/v1/projects/1'
+      });
+    });
+
+    it('adds a convenience method for PATCH', () => {
+      const request = sinon.fake();
+      withHttpMethods(request).patch('/v1/projects/1');
+      request.args[0][0].should.eql({
+        method: 'PATCH',
+        url: '/v1/projects/1'
+      });
+    });
+
+    it('returns other properties on the request() function', () => {
+      const request = (x) => x;
+      request.length.should.equal(1);
+      withHttpMethods(request).length.should.equal(1);
+    });
+
+    it('returns undefined for a property that is not on the function', () => {
+      should(withHttpMethods(() => {}).foo).be.undefined();
     });
   });
 
