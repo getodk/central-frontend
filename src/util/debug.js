@@ -85,11 +85,12 @@ export const useRenderTimer = () => {
   for (const [name, f] of hooks) {
     f(() => { // eslint-disable-line no-loop-func
       const duration = Date.now() - timeBefore;
-      timer._push(duration);
 
       const onOrOff = timer.state ? 'on' : 'off';
       // eslint-disable-next-line no-console
       console.log(`[useRenderTimer] ${name} (timer ${onOrOff})`, duration);
+
+      timer._push(duration);
     });
   }
 
