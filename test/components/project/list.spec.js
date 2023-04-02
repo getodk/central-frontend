@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import ProjectList from '../../../src/components/project/list.vue';
 import ProjectHomeBlock from '../../../src/components/project/home-block.vue';
 import FormRow from '../../../src/components/project/form-row.vue';
@@ -132,6 +134,18 @@ describe('ProjectList', () => {
       blocks.map((block) => block.props().project.name).should.eql(['C', 'B', 'A']);
       const formRows = blocks[1].findAllComponents(FormRow);
       formRows.map((row) => row.props().form.name).should.eql(['Z', 'Y', 'X']);
+    });
+
+    it('does not render the list in chunks again after sorting', async () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      createProjectsWithForms(new Array(25).fill({}), new Array(25).fill([]));
+      const component = mountComponent();
+      component.findAllComponents(ProjectHomeBlock).length.should.equal(25);
+      clock.tick(25);
+      await component.vm.$nextTick();
+      component.findAllComponents(ProjectHomeBlock).length.should.equal(28);
+      await component.find('#project-sort select').setValue('alphabetical');
+      component.findAllComponents(ProjectHomeBlock).length.should.equal(28);
     });
 
     it('sorts archived projects by latest submission by default', () => {
