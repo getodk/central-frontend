@@ -10,61 +10,61 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="submission-feed-entry">
-    <div class="heading">
-      <date-time :iso="entry.loggedAt != null ? entry.loggedAt : entry.createdAt"/>
-      <div class="title">
-        <template v-if="entry.action === 'submission.create'">
-          <span class="icon-cloud-upload submission-feed-entry-icon"></span>
-          <i18n-t keypath="title.create">
-            <template #name><actor-link :actor="entry.actor"/></template>
-          </i18n-t>
-        </template>
-        <template v-else-if="updateOrEdit">
-          <i18n-t :keypath="`title.updateReviewState.${reviewState}.full`">
-            <template #reviewState>
-              <span class="review-state" :class="reviewState">
-                <span :class="updateOrEditIcon(reviewState)"></span>
-                <span>{{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}</span>
-              </span>
-            </template>
-            <template #name><actor-link :actor="entry.actor"/></template>
-          </i18n-t>
-        </template>
-        <template v-else-if="entry.action === 'entity.create'">
-          <span class="icon-magic-wand entity-icon submission-feed-entry-icon"></span>
-          <i18n-t keypath="title.entity.create">
-            <template #label><span class="submission-feed-entry-entity-data">{{ entityLabel(entry) }}</span></template>
-            <template #dataset><span class="submission-feed-entry-entity-data">{{ entityDataset(entry) }}</span></template>
-          </i18n-t>
-        </template>
-        <template v-else-if="entry.action === 'entity.create.error'">
-          <span class="icon-warning entity-icon submission-feed-entry-icon"></span>
-          <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
-          <span class="entity-error-message" v-tooltip.text>{{ entityProblem(entry) }}</span>
-        </template>
-        <template v-else>
-          <span class="icon-comment submission-feed-entry-icon"></span>
-          <i18n-t keypath="title.comment">
-            <template #name><actor-link :actor="entry.actor"/></template>
-          </i18n-t>
-        </template>
-      </div>
-    </div>
-    <markdown-view v-if="comment != null" class="body" :raw-markdown="comment"/>
-    <div v-if="entryDiffs != null">
-      <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
-        :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
-        :old-version-id="oldVersionId" :new-version-id="newVersionId"/>
-    </div>
-  </div>
+  <feed-entry :iso="entry.loggedAt ?? entry.createdAt"
+    class="submission-feed-entry">
+    <template #title>
+      <template v-if="entry.action === 'submission.create'">
+        <span class="icon-cloud-upload"></span>
+        <i18n-t keypath="title.create">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
+      <template v-else-if="updateOrEdit">
+        <i18n-t :keypath="`title.updateReviewState.${reviewState}.full`">
+          <template #reviewState>
+            <span class="review-state" :class="reviewState">
+              <span :class="reviewStateIcon(reviewState)"></span>
+              <span>{{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}</span>
+            </span>
+          </template>
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'entity.create'">
+        <span class="icon-magic-wand entity-icon"></span>
+        <i18n-t keypath="title.entity.create">
+          <template #label><span class="submission-feed-entry-entity-data">{{ entityLabel(entry) }}</span></template>
+          <template #dataset><span class="submission-feed-entry-entity-data">{{ entityDataset(entry) }}</span></template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'entity.create.error'">
+        <span class="icon-warning"></span>
+        <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
+        <span class="entity-error-message" v-tooltip.text>{{ entityProblem(entry) }}</span>
+      </template>
+      <template v-else>
+        <span class="icon-comment"></span>
+        <i18n-t keypath="title.comment">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
+    </template>
+    <template #body>
+      <markdown-view v-if="comment != null" :raw-markdown="comment"/>
+      <template v-else-if="entryDiffs != null">
+        <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
+          :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
+          :old-version-id="oldVersionId" :new-version-id="newVersionId"/>
+      </template>
+    </template>
+  </feed-entry>
 </template>
 
 <script>
 import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
-import DateTime from '../date-time.vue';
+import FeedEntry from '../feed-entry.vue';
 import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
 
@@ -73,7 +73,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, DateTime, MarkdownView, SubmissionDiffItem },
+  components: { ActorLink, FeedEntry, MarkdownView, SubmissionDiffItem },
   props: {
     projectId: {
       type: String,
@@ -145,9 +145,6 @@ export default {
     }
   },
   methods: {
-    updateOrEditIcon(state) {
-      return `${this.reviewStateIcon(state)} submission-feed-entry-icon`;
-    },
     entityLabel(entry) {
       if ('entity' in entry.details)
         return entry.details.entity.label;
@@ -173,49 +170,17 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
 @import '../../assets/scss/variables';
 
 .submission-feed-entry {
-  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
-
-  .heading, .body { padding: 10px 15px; }
-  .heading { background-color: #fff; }
-  .body { background-color: #f9f9f9; }
-
-  time {
-    float: right;
-    font-size: 13px;
-    color: #666;
-    line-height: 25px;
+  .submission-feed-entry-entity-data {
+    font-weight: normal;
   }
 
-  .title {
-    @include text-overflow-ellipsis;
-    font-size: 17px;
-    font-weight: bold;
-    letter-spacing: -0.02em;
-    width: 70%;
-
-    .submission-feed-entry-icon {
-      display: block;
-      float: left;
-      margin-right: 7px;
-      padding-top: 3px;
-      text-align: center;
-      width: 18px;
-    }
-
-    .submission-feed-entry-entity-data {
-      font-weight: normal;
-    }
-
-    .entity-error-message{
-      font-size: 12px;
-      margin-left: 10px;
-      font-weight: normal;
-    }
+  .entity-error-message{
+    font-size: 12px;
+    margin-left: 10px;
+    font-weight: normal;
   }
 
   .icon-cloud-upload, .icon-comment { color: #bbb; }
@@ -228,10 +193,6 @@ export default {
     &.approved { color: $color-success; }
     &.rejected { color: $color-danger; }
   }
-
-  .actor-link { font-weight: normal; }
-
-  .body > p:last-child { margin: 0 0 0px; }
 }
 </style>
 
