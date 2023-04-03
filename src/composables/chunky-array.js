@@ -42,7 +42,6 @@ export default (arrayRef, minChunkSize = 25) => {
       length.value = arrayRef.value.length;
       stopChunks();
     }
-    return length.value;
   };
   const proxyLength = () => {
     // If length.value has already been increased to arrayRef.value.length (or
