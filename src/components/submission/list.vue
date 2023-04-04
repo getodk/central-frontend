@@ -31,11 +31,9 @@ except according to the terms contained in the LICENSE file.
         <submission-download-button :form-version="formVersion"
           :filtered="odataFilter != null" @download="showModal('download')"/>
       </div>
-      <template v-if="!widening">
-        <submission-table v-show="odata.dataExists && odata.value.length !== 0"
-          ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
-          :draft="draft" :fields="selectedFields" @review="showReview"/>
-      </template>
+      <submission-table v-show="odata.dataExists && odata.value.length !== 0"
+        ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
+        :draft="draft" :fields="selectedFields" @review="showReview"/>
       <p v-show="odata.dataExists && odata.value.length === 0"
         class="empty-table-message">
         {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
@@ -59,7 +57,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { inject, shallowRef, watchEffect } from 'vue';
+import { shallowRef, watchEffect } from 'vue';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
@@ -126,11 +124,9 @@ export default {
     });
 
     const { reviewStates: allReviewStates } = useReviewState();
-    const { widening } = inject('fullWidth');
-
     return {
       form, keys, fields, formVersion, odata, submitters,
-      allReviewStates, widening
+      allReviewStates
     };
   },
   data() {

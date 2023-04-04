@@ -23,7 +23,7 @@ import { setDocumentTitle } from './util/reactivity';
 
 export default (container, history = createWebHashHistory()) => {
   const router = createRouter({ history, routes: createRoutes(container) });
-  const { requestData, alert, unsavedChanges, fullWidth } = container;
+  const { requestData, alert, unsavedChanges } = container;
 
 
 
@@ -178,15 +178,21 @@ router.afterEach(unlessFailure(() => {
 
 
 
-////////////////////////////////////////////////////////////////////////////////
-// OTHER NAVIGATION HOOKS
+  //////////////////////////////////////////////////////////////////////////////
+  // OTHER NAVIGATION HOOKS
 
-router.afterEach(unlessFailure(() => {
-  alert.blank();
-}));
+  router.afterEach(unlessFailure(() => {
+    alert.blank();
+  }));
 
   router.afterEach(unlessFailure(to => {
-    fullWidth.toggle(to.meta.fullWidth);
+    const app = document.querySelector('#app');
+    // `app` may be `null` in testing.
+    if (app == null) return;
+    if (to.meta.fullWidth)
+      app.classList.add('full-width');
+    else
+      app.classList.remove('full-width');
   }));
 
 

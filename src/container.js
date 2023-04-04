@@ -16,7 +16,6 @@ import { createPinia } from 'pinia';
 import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
-import createFullWidth from './full-width';
 import createUnsavedChanges from './unsaved-changes';
 import defaultConfig from './config';
 import { $tcn } from './util/i18n';
@@ -26,7 +25,6 @@ import { noop } from './util/util';
 const provide = [
   'alert',
   'unsavedChanges',
-  'fullWidth',
   'config',
   'http',
   'logger'
@@ -45,7 +43,6 @@ export default ({
   requestData = createRequestData,
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n.global),
-  fullWidth = createFullWidth(),
   config = defaultConfig,
   http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
@@ -56,7 +53,6 @@ export default ({
     i18n: i18n.global,
     alert,
     unsavedChanges,
-    fullWidth,
     config,
     http,
     logger
