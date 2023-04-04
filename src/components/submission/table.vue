@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
         @mousemove="setActionsTrigger('hover')"
         @focusin="setActionsTrigger('focus')" @click="review">
         <template v-if="odata.dataExists">
-          <submission-metadata-row v-for="(submission, index) in odata.value"
+          <submission-metadata-row v-for="(submission, index) in chunkyOData"
             :key="submission.__id" :project-id="projectId"
             :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
             :row-number="odata.originalCount - index" :can-update="canUpdate"
@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
         <tbody @mousemove="setActionsTrigger('hover')"
           @mouseover="toggleHoverClass" @mouseleave="removeHoverClass">
           <template v-if="odata.dataExists && fields != null">
-            <submission-data-row v-for="(submission, index) in odata.value"
+            <submission-data-row v-for="(submission, index) in chunkyOData"
               :key="submission.__id" :project-id="projectId"
               :xml-form-id="xmlFormId" :draft="draft" :submission="submission"
               :fields="fields" :data-index="index"/>
@@ -60,9 +60,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { computed } from 'vue';
+
 import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
 
+import useChunkyArray from '../../composables/chunky-array';
 import { useRequestData } from '../../request-data';
 
 // We may render many rows, so this component makes use of event delegation and
@@ -88,7 +91,8 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     const { project, odata } = useRequestData();
-    return { project, odata };
+    const chunkyOData = useChunkyArray(computed(() => odata.value));
+    return { project, odata, chunkyOData };
   },
   data() {
     return {
