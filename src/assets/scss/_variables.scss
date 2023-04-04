@@ -22,7 +22,14 @@ $screen-md-min: 992px;
 $screen-lg-min: 1200px;
 
 // App width
-$max-width-app: 1400px;
+/* 1280px is the ideal max-width so that elements aren't overly spread out
+across the page. However, if the page is just a little over 1280px wide, it'd
+also not be ideal to have just a small amount of margin on either side of the
+app. To try to balance those two considerations, the app will use the full width
+if the page width is 1500px or below. Beyond that, the app will drop down to the
+ideal 1280px, at which point there will be plenty of margin on either side of
+the app. */
+$max-width-app: calc(1500px - (220 * min(max(100% - 1500px, 0px), 1px)));
 
 // Text
 $color-text: #333;
