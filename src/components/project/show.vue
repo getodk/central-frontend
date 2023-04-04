@@ -68,17 +68,16 @@ import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
-import tab from '../../mixins/tab';
 import useDatasets from '../../request-data/datasets';
 import useProject from '../../request-data/project';
 import useRoutes from '../../composables/routes';
+import useTabs from '../../composables/tabs';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectShow',
   components: { Loading, PageBody, PageHead },
-  mixins: [tab()],
   props: {
     projectId: {
       type: String,
@@ -89,12 +88,11 @@ export default {
     const { project, forms, fieldKeys } = useProject();
     const datasets = useDatasets();
     const { projectPath, canRoute } = useRoutes();
-    return { project, forms, datasets, fieldKeys, projectPath, canRoute };
-  },
-  computed: {
-    tabPathPrefix() {
-      return this.projectPath();
-    }
+    const { tabPath, tabClass } = useTabs(projectPath());
+    return {
+      project, forms, datasets, fieldKeys,
+      tabPath, tabClass, projectPath, canRoute
+    };
   },
   created() {
     this.fetchProject(false);

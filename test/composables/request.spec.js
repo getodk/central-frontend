@@ -1,13 +1,20 @@
 import sinon from 'sinon';
 
-import TestUtilRequest from '../util/components/request.vue';
-
+import useRequest from '../../src/composables/request';
 import { noop } from '../../src/util/util';
 
 import { mockHttp } from '../util/http';
 import { mount } from '../util/lifecycle';
 
-describe('mixins/request', () => {
+const TestUtilRequest = {
+  template: '<div></div>',
+  setup() {
+    const { request, awaitingResponse } = useRequest();
+    return { request, awaitingResponse };
+  }
+};
+
+describe('useRequest()', () => {
   describe('awaitingResponse', () => {
     it('sets awaitingResponse to true during the request', () =>
       mockHttp()
@@ -123,22 +130,29 @@ describe('mixins/request', () => {
       mockHttp()
         .mount(TestUtilRequest)
         .testNoRequest(component =>
-          component.vm.post('/v1/projects/1/forms', largeFile('form.xml'))
-            .catch(noop)));
+          component.vm.request({
+            method: 'POST',
+            url: '/v1/projects/1/forms',
+            data: largeFile('form.xml')
+          }).catch(noop)));
 
     it('returns a rejected promise', () => {
       const component = mount(TestUtilRequest);
-      const result = component.vm.post(
-        '/v1/projects/1/forms',
-        largeFile('form.xml')
-      );
+      const result = component.vm.request({
+        method: 'POST',
+        url: '/v1/projects/1/forms',
+        data: largeFile('form.xml')
+      });
       return result.should.be.rejected();
     });
 
     it('shows a danger alert', () => {
       const component = mount(TestUtilRequest);
-      component.vm.post('/v1/projects/1/forms', largeFile('form.xml'))
-        .catch(noop);
+      component.vm.request({
+        method: 'POST',
+        url: '/v1/projects/1/forms',
+        data: largeFile('form.xml')
+      }).catch(noop);
       component.should.alert('danger', (message) => {
         message.should.containEql('form.xml');
       });

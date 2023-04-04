@@ -80,19 +80,21 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { any } from 'ramda';
 import { markRaw } from 'vue';
+
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
 import DocLink from '../doc-link.vue';
+import SentenceSeparator from '../sentence-separator.vue';
+
 import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
-import SentenceSeparator from '../sentence-separator.vue';
 
 export default {
   name: 'FormAttachmentList',
@@ -105,7 +107,7 @@ export default {
     DocLink,
     SentenceSeparator
   },
-  mixins: [dropZone(), modal(), request()],
+  mixins: [dropZone(), modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -116,7 +118,8 @@ export default {
   setup() {
     const { project, form, resourceView, datasets } = useRequestData();
     const attachments = resourceView('attachments', (data) => data.get());
-    return { project, form, attachments, datasets };
+    const { request } = useRequest();
+    return { project, form, attachments, datasets, request };
   },
   data() {
     return {

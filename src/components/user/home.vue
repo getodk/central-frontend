@@ -32,20 +32,17 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'UserHome'
+};
+</script>
+<script setup>
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import tab from '../../mixins/tab';
 
-export default {
-  name: 'UserHome',
-  components: { PageBody, PageHead },
-  mixins: [tab()],
-  computed: {
-    tabPathPrefix() {
-      return '/users';
-    }
-  }
-};
+import useTabs from '../../composables/tabs';
+
+const { tabPath, tabClass } = useTabs('/users');
 </script>
 
 <style lang="scss">

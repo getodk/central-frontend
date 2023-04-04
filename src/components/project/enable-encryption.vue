@@ -139,7 +139,7 @@ import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -147,7 +147,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'ProjectEnableEncryption',
   components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
-  mixins: [request()],
   inject: ['alert'],
   props: {
     state: {
@@ -158,11 +157,11 @@ export default {
   emits: ['hide', 'success'],
   setup() {
     const { project } = useRequestData();
-    return { project };
+    const { request, awaitingResponse } = useRequest();
+    return { project, request, awaitingResponse };
   },
   data() {
     return {
-      awaitingResponse: false,
       // The step in the wizard
       step: 0,
       passphrase: '',
@@ -194,7 +193,11 @@ export default {
 
       const data = { passphrase: this.passphrase };
       if (this.hint !== '') data.hint = this.hint;
-      this.post(apiPaths.projectKey(this.project.id), data)
+      this.request({
+        method: 'POST',
+        url: apiPaths.projectKey(this.project.id),
+        data
+      })
         .then(() => {
           this.alert.blank();
           this.step += 1;

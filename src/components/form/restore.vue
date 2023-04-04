@@ -40,27 +40,29 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import request from '../../mixins/request';
+
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'FormRestore',
   components: { Modal, Spinner },
-  mixins: [request()],
   props: {
     state: Boolean,
     form: Object
   },
   emits: ['hide', 'success'],
-  data() {
-    return {
-      awaitingResponse: false
-    };
+  setup() {
+    const { request, awaitingResponse } = useRequest();
+    return { request, awaitingResponse };
   },
   methods: {
     doRestore() {
-      this.post(apiPaths.restoreForm(this.form.projectId, this.form.id))
+      this.request({
+        method: 'POST',
+        url: apiPaths.restoreForm(this.form.projectId, this.form.id)
+      })
         .then(() => {
           this.$emit('success');
         })

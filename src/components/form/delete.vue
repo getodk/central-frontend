@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
-import request from '../../mixins/request';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -51,7 +51,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormDelete',
   components: { Modal, Spinner },
-  mixins: [request()],
   props: {
     state: {
       type: Boolean,
@@ -63,16 +62,15 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     const { form } = useRequestData();
-    return { form };
-  },
-  data() {
-    return {
-      awaitingResponse: false
-    };
+    const { request, awaitingResponse } = useRequest();
+    return { form, request, awaitingResponse };
   },
   methods: {
     del() {
-      this.delete(apiPaths.form(this.form.projectId, this.form.xmlFormId))
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.form(this.form.projectId, this.form.xmlFormId)
+      })
         .then(() => {
           // project.forms and project.lastSubmission may now be out-of-date. If
           // the user navigates to ProjectOverview, project.forms should be

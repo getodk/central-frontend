@@ -18,6 +18,7 @@ export default () => {
         'config.read',
         'config.set',
         'dataset.list',
+        'dataset.read',
         'entity.list',
         'field_key.create',
         'field_key.list',
@@ -60,6 +61,7 @@ export default () => {
         'assignment.list',
         'assignment.delete',
         'dataset.list',
+        'dataset.read',
         'entity.list',
         'field_key.create',
         'field_key.list',
@@ -84,6 +86,7 @@ export default () => {
       system: 'viewer',
       verbs: [
         'dataset.list',
+        'dataset.read',
         'entity.list',
         'form.list',
         'form.read',

@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <div v-if="projects.dataExists">
-          <project-home-block v-for="project of activeProjects" :key="project.id"
+          <project-home-block v-for="project of chunkyProjects" :key="project.id"
             :project="project" :sort-func="sortFunction"
             :max-forms="maxForms"/>
         </div>
@@ -62,6 +62,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { computed, ref, watchEffect } from 'vue';
 import { sum } from 'ramda';
 
 import DocLink from '../doc-link.vue';
@@ -74,6 +75,7 @@ import SentenceSeparator from '../sentence-separator.vue';
 
 import modal from '../../mixins/modal';
 import sortFunctions from '../../util/sort';
+import useChunkyArray from '../../composables/chunky-array';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
@@ -92,26 +94,35 @@ export default {
   inject: ['alert'],
   setup() {
     const { currentUser, projects } = useRequestData();
+
+    const sortMode = ref('latest');
+    const sortFunction = computed(() => sortFunctions[sortMode.value]);
+
+    const activeProjects = ref(null);
+    watchEffect(() => {
+      activeProjects.value = projects.dataExists
+        ? projects.filter((p) => !(p.archived))
+        : [];
+    });
+    watchEffect(() => { activeProjects.value.sort(sortFunction.value); });
+    const chunkyProjects = useChunkyArray(activeProjects);
+
     const { projectPath } = useRoutes();
-    return { currentUser, projects, projectPath };
+    return {
+      currentUser, projects,
+      sortMode, sortFunction,
+      activeProjects, chunkyProjects,
+      projectPath
+    };
   },
   data() {
     return {
       newProject: {
         state: false
-      },
-      sortMode: 'latest'
+      }
     };
   },
   computed: {
-    sortFunction() {
-      return sortFunctions[this.sortMode];
-    },
-    activeProjects() {
-      if (!this.projects.dataExists) return [];
-      const filteredProjects = this.projects.filter((p) => !(p.archived));
-      return filteredProjects.sort(this.sortFunction);
-    },
     archivedProjects() {
       if (!this.projects.dataExists) return [];
       const filteredProjects = this.projects.filter((p) => (p.archived));
