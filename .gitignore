@@ -30,3 +30,5 @@ npm-debug.log*
 
 /.nginx/*
 !/.nginx/.gitkeep
+
+/test/output.txt
