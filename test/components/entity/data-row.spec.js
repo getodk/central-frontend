@@ -32,7 +32,7 @@ describe('EntityDataRow', () => {
       name: 'trees',
       properties: [{ name: 'height' }]
     });
-    testData.extendedEntities.createPast(1, { height: null });
+    testData.extendedEntities.createPast(1, { data: {} });
 
     const td = mountComponent().get('td');
     td.text().should.equal('');
@@ -43,7 +43,7 @@ describe('EntityDataRow', () => {
       name: 'trees',
       properties: [{ name: 'height' }]
     });
-    testData.extendedEntities.createPast(1, { label: 'foo', entityId: 'abcd1234' });
+    testData.extendedEntities.createPast(1, { label: 'foo', uuid: 'abcd1234' });
     const td = mountComponent().findAll('td');
     td.length.should.equal(3);
     td[1].text().should.equal('foo');
@@ -60,9 +60,8 @@ describe('EntityDataRow', () => {
     });
     testData.extendedEntities.createPast(1, {
       label: 'foo',
-      entityId: 'abcd1234',
-      height: '444',
-      circumference: '555'
+      uuid: 'abcd1234',
+      data: { height: '444', circumference: '555' }
     });
     const text = mountComponent().findAll('td').map(td => td.text());
     text.should.eql(['444', '555', 'foo', 'abcd1234']);
@@ -77,8 +76,8 @@ describe('EntityDataRow', () => {
     });
     testData.extendedEntities.createPast(1, {
       label: 'foo',
-      entityId: 'abcd1234',
-      p1: 'foobar'
+      uuid: 'abcd1234',
+      data: { p1: 'foobar' }
     });
     const td = mountComponent().get('td');
     td.classes().length.should.equal(0);
