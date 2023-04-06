@@ -988,7 +988,7 @@ describe('createCentralRouter()', () => {
         datasets: 1
       });
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
-      testData.extendedDatasets.createPast(1, { name: 'Trees' });
+      testData.extendedDatasets.createPast(1);
     });
 
     // There is approximately 1 test per route
@@ -1031,12 +1031,12 @@ describe('createCentralRouter()', () => {
 
     it('shows dataset name in title for /projects/1/datasets/:datasetName', async () => {
       await load('/projects/1/datasets/trees');
-      document.title.should.equal('Trees | ODK Central');
+      document.title.should.equal('trees | ODK Central');
     });
 
     it('shows dataset name in title for /projects/1/datasets/:datasetName/entities', async () => {
       await load('/projects/1/datasets/trees/entities');
-      document.title.should.equal('Data | Trees | ODK Central');
+      document.title.should.equal('Data | trees | ODK Central');
     });
 
 
