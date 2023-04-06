@@ -596,6 +596,34 @@ describe('createCentralRouter()', () => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/draft/testing');
         });
       });
+
+      it('does not redirect user from submission detail page', async () => {
+        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
+        testData.extendedSubmissions.createPast(1, { instanceId: 's' });
+        const app = await load('/projects/1/forms/f/submissions/s');
+        app.vm.$route.path.should.equal('/projects/1/forms/f/submissions/s');
+      });
+
+      describe('dataset routes', () => {
+        beforeEach(() => {
+          testData.extendedProjects.createPast(1, {
+            role: 'viewer',
+            datasets: 1
+          });
+          testData.extendedDatasets.createPast(1);
+        });
+
+        it('does not redirect the user from the dataset overview', async () => {
+          const app = await load('/projects/1/datasets/trees');
+          app.vm.$route.path.should.equal('/projects/1/datasets/trees');
+        });
+
+        it('does not redirect the user from .../entities', async () => {
+          const app = await load('/projects/1/datasets/trees/entities');
+          const { path } = app.vm.$route;
+          path.should.equal('/projects/1/datasets/trees/entities');
+        });
+      });
     });
 
     describe('Data Collector', () => {
