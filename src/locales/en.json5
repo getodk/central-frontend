@@ -219,9 +219,13 @@
   "header": {
     "actions": "Actions",
     // This is the text of a table column header. The column shows who created
-    // the resource and possibly also when they did so.
+    // an App User and possibly also when they did so.
     "created": "Created",
+    // This is the text of a table column header. The column shows who created
+    // an Entity.
     "createdBy": "Created by",
+    // This is the text of a table column header. The column shows when an
+    // Entity was created.
     "createdAt": "Created at",
     "updatedBy": "Updated by",
     "displayName": "Display Name",
