@@ -535,6 +535,17 @@ const routes = [
     ]
   }),
   asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName/entities/:uuid',
+    component: 'EntityShow',
+    props: true,
+    loading: 'page',
+    meta: {
+      validateData: {
+        project: () => project.permits(['dataset.read', 'entity.read'])
+      }
+    }
+  }),
+  asyncRoute({
     path: '/users',
     component: 'UserHome',
     loading: 'page',
@@ -732,7 +743,7 @@ const routesByName = new Map();
 
   // Preserve requestData.project.
   preserveDataBetweenRoutes(
-    [...projectRoutes, ...formRoutes, ...datasetRoutes, 'SubmissionShow'],
+    [...projectRoutes, ...formRoutes, 'SubmissionShow', ...datasetRoutes, 'EntityShow'],
     (to, from) => (to.params.projectId === from.params.projectId
       ? [project]
       : false)

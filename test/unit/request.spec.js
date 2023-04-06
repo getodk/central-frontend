@@ -321,6 +321,21 @@ describe('util/request', () => {
       });
     });
 
+    it('entity', () => {
+      const path = apiPaths.entity(1, 'á', 'e');
+      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e');
+    });
+
+    it('entityAudits', () => {
+      const path = apiPaths.entityAudits(1, 'á', 'e');
+      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/audits');
+    });
+
+    it('entityDiffs', () => {
+      const path = apiPaths.entityDiffs(1, 'á', 'e');
+      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/diffs');
+    });
+
     it('fieldKeys', () => {
       apiPaths.fieldKeys(1).should.equal('/v1/projects/1/app-users');
     });

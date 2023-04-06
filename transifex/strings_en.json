@@ -1367,6 +1367,22 @@
         }
       }
     },
+    "EntityBasicDetails": {
+      "creatingSubmission": {
+        "string": "Creating Submission",
+        "developer_comment": "This is shown above the Submission that created the Entity."
+      }
+    },
+    "EntityData": {
+      "title": {
+        "string": "Entity Data",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "empty": {
+        "string": "(empty)",
+        "developer_comment": "This is shown when the value of an Entity property is empty."
+      }
+    },
     "EntityList": {
       "action": {
         "download": {
@@ -1379,6 +1395,18 @@
       "noEntities": {
         "string": "There are no Entities to show.",
         "developer_comment": "This text is shown when there are no Entities to show in a table."
+      }
+    },
+    "EntityShow": {
+      "back": {
+        "title": {
+          "string": "Entity Detail",
+          "developer_comment": "This is shown at the top of the page."
+        },
+        "back": {
+          "string": "Back to {datasetName} Table",
+          "developer_comment": "This is shown at the top of the page."
+        }
       }
     },
     "FieldKeyList": {

@@ -75,6 +75,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-download" */
     '../components/download.vue'
   )))
+  .set('EntityShow', loader(() => import(
+    /* webpackChunkName: "component-entity-show" */
+    '../components/entity/show.vue'
+  )))
   .set('FieldKeyList', loader(() => import(
     /* webpackChunkName: "component-field-key-list" */
     '../components/field-key/list.vue'
