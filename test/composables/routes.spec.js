@@ -110,4 +110,42 @@ describe('useRoutes()', () => {
       publishedFormPath(1, 'f').should.equal('/projects/1/forms/f/submissions');
     });
   });
+
+  describe('datasetPath()', () => {
+    it('returns a path if given three arguments', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { datasetPath } = withSetup(useRoutes, { container });
+      const path = datasetPath(1, 'trees', 'entities');
+      path.should.equal('/projects/1/datasets/trees/entities');
+    });
+
+    it('returns a path if given two arguments', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { datasetPath } = withSetup(useRoutes, { container });
+      datasetPath(1, 'trees').should.equal('/projects/1/datasets/trees');
+    });
+
+    it('infers projectId and datasetName if given one argument', () => {
+      const container = createTestContainer({
+        router: mockRouter('/projects/1/datasets/trees')
+      });
+      const { datasetPath } = withSetup(useRoutes, { container });
+      const path = datasetPath('entities');
+      path.should.equal('/projects/1/datasets/trees/entities');
+    });
+
+    it('infers projectId and datasetName if given no arguments', () => {
+      const container = createTestContainer({
+        router: mockRouter('/projects/1/datasets/trees/entities')
+      });
+      const { datasetPath } = withSetup(useRoutes, { container });
+      datasetPath().should.equal('/projects/1/datasets/trees');
+    });
+
+    it('encodes the dataset name', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { datasetPath } = withSetup(useRoutes, { container });
+      datasetPath(1, 'á').should.equal('/projects/1/datasets/%C3%A1');
+    });
+  });
 });

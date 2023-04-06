@@ -26,6 +26,11 @@ const _formPath = (projectId, xmlFormId, suffix = '') => {
   const slash = suffix !== '' ? '/' : '';
   return `/projects/${projectId}/forms/${encodedFormId}${slash}${suffix}`;
 };
+const _datasetPath = (projectId, datasetName, suffix = '') => {
+  const encodedName = encodeURIComponent(datasetName);
+  const slash = suffix !== '' ? '/' : '';
+  return `/projects/${projectId}/datasets/${encodedName}${slash}${suffix}`;
+};
 
 export default memoizeForContainer(({ router, requestData }) => {
   const route = useRoute();
@@ -91,8 +96,14 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
   };
 
-  const datasetPath = (projectId, datasetName) =>
-    `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`;
+  const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {
+    if (datasetName == null) {
+      const { params } = route;
+      return _datasetPath(params.projectId, params.datasetName, projectIdOrSuffix);
+    }
+    return _datasetPath(projectIdOrSuffix, datasetName, suffix);
+  };
+
   const userPath = (id) => `/users/${id}/edit`;
 
   return {
