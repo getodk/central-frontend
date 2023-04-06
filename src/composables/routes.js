@@ -96,6 +96,12 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
   };
 
+  const submissionPath = (projectId, xmlFormId, instanceId) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    return `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+  };
+
   const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {
     if (datasetName == null) {
       const { params } = route;
@@ -109,6 +115,7 @@ export default memoizeForContainer(({ router, requestData }) => {
   return {
     projectPath,
     formPath, publishedFormPath, primaryFormPath,
+    submissionPath,
     datasetPath,
     userPath,
     canRoute: canRouteToLocation

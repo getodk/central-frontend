@@ -111,6 +111,15 @@ describe('useRoutes()', () => {
     });
   });
 
+  describe('submissionPath()', () => {
+    it('returns a path if given IDs', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { submissionPath } = withSetup(useRoutes, { container });
+      const path = submissionPath(1, 'a b', 'c d');
+      path.should.equal('/projects/1/forms/a%20b/submissions/c%20d');
+    });
+  });
+
   describe('datasetPath()', () => {
     it('returns a path if given three arguments', () => {
       const container = createTestContainer({ router: mockRouter('/') });
