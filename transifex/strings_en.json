@@ -472,19 +472,19 @@
     },
     "created": {
       "string": "Created",
-      "developer_comment": "This is the text of a table column header. The column shows who created an App User and possibly also when they did so."
+      "developer_comment": "This is the text of a table column header. The column shows who created each App User and possibly also when they did so."
     },
     "createdBy": {
       "string": "Created by",
-      "developer_comment": "This is the text of a table column header. The column shows who created an Entity."
+      "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that created each Entity."
     },
     "createdAt": {
       "string": "Created at",
-      "developer_comment": "This is the text of a table column header. The column shows when an Entity was created."
+      "developer_comment": "This is the text of a table column header. The column shows when each Entity was created."
     },
     "updatedBy": {
       "string": "Updated by",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. For each Entity property, the column shows the Forms that can update the property."
     },
     "displayName": {
       "string": "Display Name",
@@ -508,7 +508,7 @@
     },
     "submitterName": {
       "string": "Submitted by",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that submitted each Submission."
     },
     "submissionDate": {
       "string": "Submitted at",
@@ -3611,7 +3611,7 @@
       "field": {
         "submissionDate": {
           "string": "Submitted at",
-          "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
+          "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
       }
     },
@@ -3637,7 +3637,7 @@
       "field": {
         "submitter": {
           "string": "Submitted by",
-          "developer_comment": "This is the text of a form field that shows the names of submitters."
+          "developer_comment": "This is the text of a form field that shows the names of users and Public Access Links that have submitted Submissions."
         },
         "search": {
           "string": "Search submitters…",

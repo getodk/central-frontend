@@ -219,20 +219,24 @@
   "header": {
     "actions": "Actions",
     // This is the text of a table column header. The column shows who created
-    // an App User and possibly also when they did so.
+    // each App User and possibly also when they did so.
     "created": "Created",
-    // This is the text of a table column header. The column shows who created
-    // an Entity.
+    // This is the text of a table column header. The column shows the user or
+    // Public Access Link that created each Entity.
     "createdBy": "Created by",
-    // This is the text of a table column header. The column shows when an
+    // This is the text of a table column header. The column shows when each
     // Entity was created.
     "createdAt": "Created at",
+    // This is the text of a table column header. For each Entity property, the
+    // column shows the Forms that can update the property.
     "updatedBy": "Updated by",
     "displayName": "Display Name",
     "email": "Email Address",
     "instanceId": "Instance ID",
     "lastSubmission": "Latest Submission",
     "name": "Name",
+    // This is the text of a table column header. The column shows the user or
+    // Public Access Link that submitted each Submission.
     "submitterName": "Submitted by",
     // This is the text of a table column header. The column indicates when each
     // Submission was submitted.

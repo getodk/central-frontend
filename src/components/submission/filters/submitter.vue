@@ -98,7 +98,8 @@ const placeholder = (counts) => t('placeholder', counts);
 {
   "en": {
     "field": {
-      // This is the text of a form field that shows the names of submitters.
+      // This is the text of a form field that shows the names of users and
+      // Public Access Links that have submitted Submissions.
       "submitter": "Submitted by",
       "search": "Search submitters…"
     },
