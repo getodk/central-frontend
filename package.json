@@ -6,7 +6,7 @@
     "dev": "nf start",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix --max-warnings 0 src/ bin/ test/ *.js",
-    "test": "NODE_ENV=test karma start"
+    "test": "./test/run.sh"
   },
   "volta": {
     "node": "16.19.1"
