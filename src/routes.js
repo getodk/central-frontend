@@ -535,7 +535,10 @@ const routes = [
     ]
   }),
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName/entities/:uuid',
+    // We don't validate that :uuid is a valid UUID (and it isn't in tests), but
+    // we do validate that it doesn't need to be URL-encoded (for example, in
+    // requests to Backend).
+    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName/entities/:uuid([0-9a-f-]+)',
     component: 'EntityShow',
     props: true,
     loading: 'page',

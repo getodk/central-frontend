@@ -15,6 +15,13 @@ describe('EntityShow', () => {
     component.findComponent(NotFound).exists().should.be.true();
   });
 
+  it('validates the uuid route param', async () => {
+    const component = await load('/projects/1/datasets/trees/entities/e f', {
+      root: false
+    });
+    component.findComponent(NotFound).exists().should.be.true();
+  });
+
   it('sends the correct initial requests', () => {
     testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
     testData.extendedEntities.createPast(1, { uuid: 'e' });
