@@ -63,7 +63,7 @@ describe('SubmissionFeedEntry', () => {
   describe('title', () => {
     it('renders correctly for a submission.create audit', () => {
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
-      const title = mountComponent().get('.title');
+      const title = mountComponent().get('.feed-entry-title');
       title.find('.icon-cloud-upload').exists().should.be.true();
       title.text().should.equal('Submitted by Alice');
     });
@@ -74,7 +74,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: null }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Received per Alice');
         const reviewState = title.get('.review-state');
         reviewState.attributes().class.should.equal('review-state');
@@ -87,7 +87,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'hasIssues' }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Has Issues per Alice');
         const reviewState = title.get('.review-state');
         reviewState.classes('hasIssues').should.be.true();
@@ -100,7 +100,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'edited' }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Edited by Alice');
         const reviewState = title.get('.review-state');
         reviewState.classes('edited').should.be.true();
@@ -113,7 +113,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'approved' }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Approved by Alice');
         const reviewState = title.get('.review-state');
         reviewState.classes('approved').should.be.true();
@@ -126,7 +126,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'submission.update',
           details: { reviewState: 'rejected' }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Rejected by Alice');
         const reviewState = title.get('.review-state');
         reviewState.classes('rejected').should.be.true();
@@ -139,7 +139,7 @@ describe('SubmissionFeedEntry', () => {
       testData.extendedAudits.createPast(1, {
         action: 'submission.update.version'
       });
-      const title = mountComponent().get('.title');
+      const title = mountComponent().get('.feed-entry-title');
       title.text().should.equal('Edited by Alice');
       const reviewState = title.get('.review-state');
       reviewState.classes('edited').should.be.true();
@@ -149,7 +149,7 @@ describe('SubmissionFeedEntry', () => {
 
     it('renders correctly for a comment', () => {
       testData.extendedComments.createPast(1);
-      const title = mountComponent().get('.title');
+      const title = mountComponent().get('.feed-entry-title');
       title.find('.icon-comment').exists().should.be.true();
       title.text().should.equal('Comment by Alice');
     });
@@ -160,7 +160,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'entity.create',
           details: { entity: { uuid: 'xyz', label: 'EntityName', dataset: 'DatasetName' } }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Created Entity EntityName in DatasetName Dataset');
       });
 
@@ -169,7 +169,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'entity.create',
           details: { entity: { uuid: 'xyz' } }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Created Entity  in  Dataset');
       });
     });
@@ -180,7 +180,7 @@ describe('SubmissionFeedEntry', () => {
           action: 'entity.create.error',
           details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
         title.get('.entity-error-message').text().should.equal('ID empty or missing.');
         await title.get('.entity-error-message').should.have.textTooltip();
@@ -194,7 +194,7 @@ describe('SubmissionFeedEntry', () => {
             errorMessage: 'A resource already exists with uuid value(s) abc.'
           }
         });
-        const title = mountComponent().get('.title');
+        const title = mountComponent().get('.feed-entry-title');
         title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
         title.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
         await title.get('.entity-error-message').should.have.textTooltip();
@@ -209,12 +209,12 @@ describe('SubmissionFeedEntry', () => {
         details: { reviewState: 'approved' },
         notes: 'Some notes'
       });
-      mountComponent().get('.body').text().should.equal('Some notes');
+      mountComponent().get('.feed-entry-body').text().should.equal('Some notes');
     });
 
     it("shows a comment's body", () => {
       testData.extendedComments.createPast(1, { body: 'Some comment' });
-      mountComponent().get('.body').text().should.equal('Some comment');
+      mountComponent().get('.feed-entry-body').text().should.equal('Some comment');
     });
 
     it("shows a comment's body rendered as markdown", () => {
