@@ -26,8 +26,8 @@ describe('EntityShow', () => {
     testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
     testData.extendedEntities.createPast(1, { uuid: 'e' });
     return load('/projects/1/datasets/%C3%A1/entities/e').testRequests([
-      { url: '/v1/projects/1', extended: true },
       { url: '/v1/projects/1/datasets/%C3%A1/entities/e', extended: true },
+      { url: '/v1/projects/1', extended: true },
       { url: '/v1/projects/1/datasets/%C3%A1', extended: true },
       { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits', extended: true },
       { url: '/v1/projects/1/datasets/%C3%A1/entities/e/diffs' }

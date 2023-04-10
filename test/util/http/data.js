@@ -76,8 +76,8 @@ const responsesByComponent = {
     odataEntities: true
   }),
   EntityShow: componentResponses({
-    project: true,
     entity: () => testData.extendedEntities.last(),
+    project: true,
     dataset: true,
     audits: true,
     diffs: () => ({})

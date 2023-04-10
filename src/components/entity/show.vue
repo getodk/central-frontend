@@ -19,8 +19,8 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
     </page-head>
     <page-body>
-      <loading :state="initiallyLoading"/>
-      <div v-show="dataExists" class="row">
+      <loading :state="entity.initiallyLoading"/>
+      <div v-show="entity.dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
           <entity-data/>
@@ -68,19 +68,18 @@ const props = defineProps({
   }
 });
 
-const { project, dataset, resourceStates } = useRequestData();
+const { project, dataset } = useRequestData();
 const { entity, audits, diffs } = useEntity();
-const { initiallyLoading, dataExists } = resourceStates([project, entity]);
 
 Promise.allSettled([
+  entity.request({
+    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid),
+    extended: true
+  }),
   project.request({
     url: apiPaths.project(props.projectId),
     extended: true,
     resend: false
-  }),
-  entity.request({
-    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid),
-    extended: true
   }),
   dataset.request({
     url: apiPaths.dataset(props.projectId, props.datasetName),
