@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { createApp } from 'vue';
+import { createApp, reactive } from 'vue';
 
 // The global styles must be imported before any component so that they precede
 // components' styles.
@@ -28,3 +28,5 @@ createApp(App)
   .use(createContainer())
   .directive('tooltip', vTooltip)
   .mount('#app');
+
+window.centralOptions = reactive({});

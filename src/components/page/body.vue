@@ -11,9 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="page-body" :class="htmlClass">
-    <div class="col-xs-12">
-      <slot></slot>
-    </div>
+    <slot></slot>
   </div>
 </template>
 
@@ -27,19 +25,24 @@ import { computed, inject } from 'vue';
 
 const { router } = inject('container');
 const htmlClass = computed(() => ({
-  row: true,
   // `router` may be `null` in testing.
-  'full-width': router != null && router.currentRoute.value.meta.fullWidth
+  bound: router == null || !router.currentRoute.value.meta.fullWidth,
+  centered: window.centralOptions?.left !== true
 }));
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #page-body {
+  @include clearfix;
   margin-top: $margin-top-page-body;
 
-  max-width: $max-width-page-body;
-  &.full-width { max-width: none; }
+  &.bound { max-width: $max-width-page-body; }
+
+  &.centered {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 </style>
