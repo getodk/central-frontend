@@ -13,12 +13,14 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div id="home-heading">{{ $t('heading[0]') }}</div>
     <home-summary/>
-    <div id="home-news-container">
-      <home-news/>
-      <home-config-section v-if="config.home.title != null"
-        :title="config.home.title" :body="config.home.body"/>
-    </div>
-    <project-list/>
+    <page-body>
+      <div id="home-news-container">
+        <home-news/>
+        <home-config-section v-if="config.home.title != null"
+          :title="config.home.title" :body="config.home.body"/>
+      </div>
+      <project-list/>
+    </page-body>
   </div>
 </template>
 
@@ -32,6 +34,7 @@ import { defineAsyncComponent, inject } from 'vue';
 
 import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';
+import PageBody from './page/body.vue';
 import ProjectList from './project/list.vue';
 
 import useProjects from '../request-data/projects';
