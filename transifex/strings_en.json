@@ -767,6 +767,10 @@
       "string": "Docs",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyValue": {
+      "string": "(empty)",
+      "developer_comment": "This is shown when the value of an Entity property is empty."
+    },
     "error": {
       "string": "Error"
     },
@@ -1377,10 +1381,6 @@
       "title": {
         "string": "Entity Data",
         "developer_comment": "This is a title shown above a section of the page."
-      },
-      "empty": {
-        "string": "(empty)",
-        "developer_comment": "This is shown when the value of an Entity property is empty."
       }
     },
     "EntityList": {

@@ -30,8 +30,7 @@ export default {
 };
 </script>
 <script setup>
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed, inject } from 'vue';
 
 import PageSection from '../page/section.vue';
 
@@ -42,10 +41,10 @@ import { useRequestData } from '../../request-data';
 const { dataset, entity } = useRequestData();
 
 const data = computed(() => entity.currentVersion.data);
-const { t } = useI18n();
+const { i18n } = inject('container');
 const propertyValue = (name) => {
   const value = data.value[name];
-  return value == null || value === '' ? t('empty') : value;
+  return value == null || value === '' ? i18n.t('common.emptyValue') : value;
 };
 </script>
 
@@ -63,9 +62,7 @@ const propertyValue = (name) => {
 {
   "en": {
     // This is a title shown above a section of the page.
-    "title": "Entity Data",
-    // This is shown when the value of an Entity property is empty.
-    "empty": "(empty)"
+    "title": "Entity Data"
   }
 }
 </i18n>

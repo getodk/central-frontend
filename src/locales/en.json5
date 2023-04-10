@@ -356,6 +356,8 @@
     "data": "Data",
     // This is the text of a link that links to the documentation.
     "docs": "Docs",
+    // This is shown when the value of an Entity property is empty.
+    "emptyValue": "(empty)",
     "error": "Error",
     // This text is shown next to options for filtering a table.
     "filter": "Filter",
