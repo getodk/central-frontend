@@ -3,7 +3,6 @@ import EntityData from '../../../src/components/entity/data.vue';
 import useEntity from '../../../src/request-data/entity';
 
 import testData from '../../data';
-import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
@@ -17,8 +16,6 @@ const mountComponent = () => mount(EntityData, {
 });
 
 describe('EntityData', () => {
-  beforeEach(mockLogin);
-
   it('does not render if there are no properties', () => {
     testData.extendedDatasets.createPast(1, { properties: [], entities: 1 });
     testData.extendedEntities.createPast(1);

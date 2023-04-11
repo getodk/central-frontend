@@ -20,10 +20,8 @@ export const extendedEntities = dataStore({
 
     uuid = faker.random.uuid(),
     label = faker.random.word(),
-    creator = extendedUsers.first(),
     ...options
   }) => {
-    if (extendedUsers.size === 0) throw new Error('user not found');
     if (extendedDatasets.size === 0) {
       const properties = options.data != null
         ? Object.keys(options.data).map(name => ({ name, forms: [] }))
@@ -32,6 +30,7 @@ export const extendedEntities = dataStore({
     }
     const dataset = options.dataset ?? extendedDatasets.first();
     const data = options.data ?? randomData(dataset.properties);
+    const creator = options.creator ?? extendedUsers.first();
     const createdAt = !inPast
       ? new Date().toISOString()
       : fakePastDate([

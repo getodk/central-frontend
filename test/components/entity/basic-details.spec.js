@@ -25,9 +25,9 @@ describe('EntityBasicDetails', () => {
     mockLogin({ displayName: 'Alice' });
   });
 
-  it('shows the entity ID', async () => {
-    testData.extendedEntities.createPast(1, { uuid: 'foo' });
-    mountComponent().get('dd').text().should.equal('foo');
+  it('shows the entity ID', () => {
+    testData.extendedEntities.createPast(1, { uuid: 'abc' });
+    mountComponent().get('dd').text().should.equal('abc');
   });
 
   it('shows the creation date', () => {

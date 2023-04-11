@@ -1405,7 +1405,7 @@
         },
         "back": {
           "string": "Back to {datasetName} Table",
-          "developer_comment": "This is shown at the top of the page."
+          "developer_comment": "This is shown at the top of the page. The user can click it to go back."
         }
       }
     },

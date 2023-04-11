@@ -52,8 +52,6 @@ const propertyValue = (name) => {
 @import '../../assets/scss/mixins';
 
 #entity-data {
-  // TODO. Add max-height to .page-section-body?
-
   dt, dd { @include text-overflow-ellipsis; }
 }
 </style>

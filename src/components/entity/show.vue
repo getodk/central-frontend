@@ -39,16 +39,16 @@ export default {
 };
 </script>
 <script setup>
-import Loading from '../loading.vue';
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
 import EntityData from './data.vue';
+import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
-import useRoutes from '../../composables/routes';
 import useEntity from '../../request-data/entity';
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { setDocumentTitle } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
@@ -102,9 +102,10 @@ const { datasetPath } = useRoutes();
 <i18n lang="json5">
 {
   "en": {
-    // This is shown at the top of the page.
     "back": {
+      // This is shown at the top of the page.
       "title": "Entity Detail",
+      // This is shown at the top of the page. The user can click it to go back.
       "back": "Back to {datasetName} Table"
     }
   }
