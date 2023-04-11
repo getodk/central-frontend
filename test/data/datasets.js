@@ -1,4 +1,3 @@
-import faker from 'faker';
 import { comparator } from 'ramda';
 
 import { dataStore } from './data-store';
@@ -12,7 +11,7 @@ export const extendedDatasets = dataStore({
     project = extendedProjects.size !== 0
       ? extendedProjects.first()
       : extendedProjects.createPast(1, { datasets: 1 }).last(),
-    name = faker.internet.userName(),
+    name = 'trees',
     entities = 0,
     lastEntity = null,
     properties = [],

@@ -43,7 +43,8 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-pencil"></span>
           </button>
         </template>
-        <router-link v-slot="{ href }" :to="submissionPath" custom>
+        <router-link v-slot="{ href }"
+          :to="submissionPath(projectId, xmlFormId, submission.__id)" custom>
           <a class="more-button btn btn-default" :href="href" target="_blank">
             <span>{{ $t('action.more') }}</span>
             <span class="icon-angle-right"></span>
@@ -58,6 +59,7 @@ except according to the terms contained in the LICENSE file.
 import DateTime from '../date-time.vue';
 
 import useReviewState from '../../composables/review-state';
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 
 export default {
@@ -85,7 +87,8 @@ export default {
   },
   setup() {
     const { reviewStateIcon } = useReviewState();
-    return { reviewStateIcon };
+    const { submissionPath } = useRoutes();
+    return { reviewStateIcon, submissionPath };
   },
   computed: {
     missingAttachment() {
@@ -114,11 +117,6 @@ export default {
       return this.$t('submission.action.edit', {
         count: this.$n(this.submission.__system.edits, 'default')
       });
-    },
-    submissionPath() {
-      const encodedFormId = encodeURIComponent(this.xmlFormId);
-      const encodedInstanceId = encodeURIComponent(this.submission.__id);
-      return `/projects/${this.projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
     }
   }
 };

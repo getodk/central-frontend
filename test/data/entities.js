@@ -1,42 +1,36 @@
 import faker from 'faker';
-import { comparator, hasPath, lensPath, omit, set } from 'ramda';
+import { comparator } from 'ramda';
 
-import { dataStore, view } from './data-store';
+import { dataStore } from './data-store';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
 import { extendedDatasets } from './datasets';
 
-// Returns random OData for an entity. `partial` seeds the OData.
-const odata = (entityId, properties, partial) => properties
-  .reduce(
-    (data, property) =>
-      (hasPath([property.name], data)
-        ? data
-        : set(
-          lensPath([property.name]),
-          faker.random.word(),
-          data
-        )),
-    partial
-  );
+const randomData = (properties) => {
+  const data = {};
+  for (const { name } of properties) data[name] = faker.random.word();
+  return data;
+};
 
-// eslint-disable-next-line import/prefer-default-export
 export const extendedEntities = dataStore({
   factory: ({
     inPast,
     lastCreatedAt,
 
-    dataset = extendedDatasets.size !== 0
-      ? extendedDatasets.first()
-      : extendedDatasets.createPast(1).last(),
-    entityId = faker.random.uuid(),
+    uuid = faker.random.uuid(),
     label = faker.random.word(),
-    creator = extendedUsers.first(),
-
-    ...partialOData
+    ...options
   }) => {
-    if (extendedUsers.size === 0) throw new Error('user not found');
+    if (extendedDatasets.size === 0) {
+      const properties = options.data != null
+        ? Object.keys(options.data).map(name => ({ name, forms: [] }))
+        : [];
+      extendedDatasets.createPast(1, { properties, entities: 1 });
+    }
+    const dataset = options.dataset ?? extendedDatasets.first();
+    const data = options.data ?? randomData(dataset.properties);
+    const creator = options.creator ?? extendedUsers.first();
     const createdAt = !inPast
       ? new Date().toISOString()
       : fakePastDate([
@@ -44,36 +38,30 @@ export const extendedEntities = dataStore({
         creator.createdAt
       ]);
     return {
-      entityId,
-      dataset,
+      uuid,
+      currentVersion: { label, data },
       creatorId: creator.id,
       creator: toActor(creator),
-      createdAt,
-      _odata: odata(entityId, dataset.properties, {
-        ...partialOData,
-        name: entityId,
-        label,
-        __id: entityId,
-        __system: {
-          createdAt,
-          creatorId: creator.id.toString(),
-          creatorName: creator.displayName
-        }
-      })
+      createdAt
     };
   },
   sort: comparator((entity1, entity2) =>
     isBefore(entity2.createdAt, entity1.createdAt))
 });
 
-export const standardEntities = view(
-  extendedEntities,
-  omit(['creator'])
-);
-
 // Converts entity response objects to OData.
 export const entityOData = (top = 250, skip = 0) => ({
   '@odata.count': extendedEntities.size,
   value: extendedEntities.sorted().slice(skip, skip + top)
-    .map(entity => entity._odata)
+    .map(entity => ({
+      ...entity.currentVersion.data,
+      name: entity.uuid,
+      label: entity.currentVersion.label,
+      __id: entity.uuid,
+      __system: {
+        createdAt: entity.createdAt,
+        creatorId: entity.creator.id.toString(),
+        creatorName: entity.creator.displayName
+      }
+    }))
 });

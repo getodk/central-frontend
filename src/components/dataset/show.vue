@@ -70,14 +70,13 @@ export default {
       required: true
     }
   },
-  setup(props) {
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { project, dataset, resourceStates } = useRequestData();
 
     const { projectPath, datasetPath } = useRoutes();
-    const tabPrefix = datasetPath(props.projectId, props.datasetName);
-    const { tabPath, tabClass } = useTabs(tabPrefix);
+    const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
       projectPath, datasetPath, tabPath, tabClass

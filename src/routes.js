@@ -535,6 +535,21 @@ const routes = [
     ]
   }),
   asyncRoute({
+    // We don't validate that :uuid is a valid UUID (and it isn't in tests), but
+    // we do validate that it doesn't need to be URL-encoded (for example, in
+    // requests to Backend).
+    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName/entities/:uuid([0-9a-f-]+)',
+    component: 'EntityShow',
+    props: true,
+    loading: 'page',
+    meta: {
+      validateData: {
+        project: () => project.permits(['dataset.read', 'entity.read'])
+      }
+    }
+  }),
+
+  asyncRoute({
     path: '/users',
     component: 'UserHome',
     loading: 'page',
@@ -732,7 +747,7 @@ const routesByName = new Map();
 
   // Preserve requestData.project.
   preserveDataBetweenRoutes(
-    [...projectRoutes, ...formRoutes, ...datasetRoutes, 'SubmissionShow'],
+    [...projectRoutes, ...formRoutes, 'SubmissionShow', ...datasetRoutes, 'EntityShow'],
     (to, from) => (to.params.projectId === from.params.projectId
       ? [project]
       : false)

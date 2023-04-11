@@ -12,6 +12,7 @@ const responseDefaults = {
   // Resources created in createResources()
   roles: () => testData.standardRoles.sorted(),
   project: () => testData.extendedProjects.last(),
+  dataset: () => testData.extendedDatasets.last(),
 
   // useProject()
   forms: () => testData.extendedForms.sorted(),
@@ -63,17 +64,9 @@ const responsesByComponent = {
     roles: true,
     formSummaryAssignments: () => testData.standardFormSummaryAssignments.sorted()
   }),
-  DatasetEntities: componentResponses({
-    odataEntities: true
-  }),
   DatasetList: componentResponses({
     datasets: () => testData.extendedDatasets.sorted()
   }),
-  DatasetShow: componentResponses({
-    project: true,
-    dataset: () => testData.extendedDatasets.last()
-  }),
-  DatasetOverview: [],
   ProjectSettings: [],
   FormShow: componentResponses({
     project: true,
@@ -114,13 +107,28 @@ const responsesByComponent = {
     project: true,
     submission: () => {
       const odata = testData.submissionOData();
-      const value = odata.value.map(pick(['__id', '__system', 'meta']));
-      return { ...odata, value };
+      const selected = odata.value.map(pick(['__id', '__system', 'meta']));
+      return { ...odata, value: selected };
     },
     submissionVersion: () => ({}),
     fields: true,
     audits: true,
     comments: () => testData.extendedComments.sorted(),
+    diffs: () => ({})
+  }),
+  DatasetShow: componentResponses({
+    project: true,
+    dataset: true
+  }),
+  DatasetOverview: [],
+  DatasetEntities: componentResponses({
+    odataEntities: true
+  }),
+  EntityShow: componentResponses({
+    entity: () => testData.extendedEntities.last(),
+    project: true,
+    dataset: true,
+    audits: true,
     diffs: () => ({})
   }),
 

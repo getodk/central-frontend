@@ -58,8 +58,8 @@ export default {
 {
   "en": {
     "field": {
-      // This is the text of a form field that allows the user to filter by a
-      // date range.
+      // This is the text of a form field that allows the user to filter
+      // Submissions by a date range.
       "submissionDate": "Submitted at"
     }
   }
