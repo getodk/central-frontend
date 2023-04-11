@@ -67,21 +67,6 @@ const responsesByComponent = {
   DatasetList: componentResponses({
     datasets: () => testData.extendedDatasets.sorted()
   }),
-  DatasetShow: componentResponses({
-    project: true,
-    dataset: true
-  }),
-  DatasetOverview: [],
-  DatasetEntities: componentResponses({
-    odataEntities: true
-  }),
-  EntityShow: componentResponses({
-    entity: () => testData.extendedEntities.last(),
-    project: true,
-    dataset: true,
-    audits: true,
-    diffs: () => ({})
-  }),
   ProjectSettings: [],
   FormShow: componentResponses({
     project: true,
@@ -129,6 +114,21 @@ const responsesByComponent = {
     fields: true,
     audits: true,
     comments: () => testData.extendedComments.sorted(),
+    diffs: () => ({})
+  }),
+  DatasetShow: componentResponses({
+    project: true,
+    dataset: true
+  }),
+  DatasetOverview: [],
+  DatasetEntities: componentResponses({
+    odataEntities: true
+  }),
+  EntityShow: componentResponses({
+    entity: () => testData.extendedEntities.last(),
+    project: true,
+    dataset: true,
+    audits: true,
     diffs: () => ({})
   }),
 

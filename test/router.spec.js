@@ -350,20 +350,6 @@ describe('createCentralRouter()', () => {
       });
     });
 
-    describe('navigating between dataset routes', () => {
-      beforeEach(() => {
-        testData.extendedDatasets.createPast(1, { name: 'trees' });
-      });
-
-      it('preserves project and dataset', () =>
-        load('/projects/1/datasets/trees')
-          .complete()
-          .load('/projects/1/datasets/trees/entities', { project: false, dataset: false })
-          .complete()
-          .load('/projects/1/datasets/trees', { project: false, dataset: false })
-          .afterResponses(dataExists(['project', 'dataset'])));
-    });
-
     describe('navigating between project and form routes', () => {
       beforeEach(() => {
         testData.extendedForms.createPast(1);
@@ -392,6 +378,20 @@ describe('createCentralRouter()', () => {
         .complete()
         .load('/projects/1/forms/f/submissions', { project: false })
         .afterResponses(dataExists(['project']));
+    });
+
+    describe('navigating between dataset routes', () => {
+      beforeEach(() => {
+        testData.extendedDatasets.createPast(1, { name: 'trees' });
+      });
+
+      it('preserves project and dataset', () =>
+        load('/projects/1/datasets/trees')
+          .complete()
+          .load('/projects/1/datasets/trees/entities', { project: false, dataset: false })
+          .complete()
+          .load('/projects/1/datasets/trees', { project: false, dataset: false })
+          .afterResponses(dataExists(['project', 'dataset'])));
     });
 
     it('preserves project while navigating from the dataset overview', () => {
@@ -1051,16 +1051,6 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Datasets | My Project Name | ODK Central');
     });
 
-    it('shows dataset name in title for /projects/1/datasets/:datasetName', async () => {
-      await load('/projects/1/datasets/trees');
-      document.title.should.equal('trees | ODK Central');
-    });
-
-    it('shows dataset name in title for /projects/1/datasets/:datasetName/entities', async () => {
-      await load('/projects/1/datasets/trees/entities');
-      document.title.should.equal('Data | trees | ODK Central');
-    });
-
     it('shows project name in title for /projects/1/settings', async () => {
       await load('/projects/1/settings');
       document.title.should.equal('Settings | My Project Name | ODK Central');
@@ -1132,6 +1122,17 @@ describe('createCentralRouter()', () => {
       testData.extendedSubmissions.createPast(1, { instanceId: 's' });
       await load('/projects/1/forms/f1/submissions/s');
       document.title.should.equal('Details: s | ODK Central');
+    });
+
+    // Dataset routes
+    it('shows dataset name in title for /projects/1/datasets/:datasetName', async () => {
+      await load('/projects/1/datasets/trees');
+      document.title.should.equal('trees | ODK Central');
+    });
+
+    it('shows dataset name in title for /projects/1/datasets/:datasetName/entities', async () => {
+      await load('/projects/1/datasets/trees/entities');
+      document.title.should.equal('Data | trees | ODK Central');
     });
 
     // Entity routes
