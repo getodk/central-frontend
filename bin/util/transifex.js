@@ -412,7 +412,7 @@ const _restructure = (
         // We do not currently support a linked locale message in an i18n custom
         // block that links to another message in the block, but we may very
         // well at some point.
-        logThenThrow(value, 'link to message that either does not exist or is in i18n custom block');
+        logThenThrow(value, 'link to message that either does not exist or is in an i18n custom block');
       }
       if (pathOfLinkedMessage(dest) != null) {
         // Supporting this case would add complexity to
@@ -424,7 +424,7 @@ const _restructure = (
         // deletePartialTranslation(), because then linking to an untranslated
         // message could result in a partial translation, which would then be
         // removed.
-        logThenThrow(value, 'linked locale message not allowed in component interpolation or array element');
+        logThenThrow(value, 'linked locale message not allowed in a component interpolation or array element');
       }
 
       continue; // eslint-disable-line no-continue
