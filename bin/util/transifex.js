@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { equals, last } = require('ramda');
+const { equals, last, path: getPath } = require('ramda');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { parse } = require('comment-json');
 
@@ -405,36 +405,29 @@ const _restructure = (
   for (const [k, v] of entries) {
     // If `v` is a linked locale message, validate it, then skip it so that it
     // does not appear in the Structured JSON.
-    if (v instanceof PluralForms) {
-      const path = pathOfLinkedMessage(v);
-      if (path != null) {
-        const messageLinkedTo = path.reduce(
-          (node, key) => {
-            if (node[key] == null) {
-              // We do not currently support a linked locale message in an i18n
-              // custom block that links to another message in the block, but we
-              // may very well at some point.
-              logThenThrow(value, 'link to message that either does not exist or is in i18n custom block');
-            }
-            return node[key];
-          },
-          root
-        );
-        if (pathOfLinkedMessage(messageLinkedTo) != null) {
-          // Supporting this case would add complexity to
-          // copyLinkedLocaleMessage().
-          logThenThrow(value, 'cannot link to a linked locale message');
-        }
-        if (value.full != null || Array.isArray(value)) {
-          // Supporting these cases would add complexity to
-          // deletePartialTranslation(), because then linking to an untranslated
-          // message could result in a partial translation, which would then be
-          // removed.
-          logThenThrow(value, 'linked locale message not allowed in component interpolation or array element');
-        }
-
-        continue; // eslint-disable-line no-continue
+    const linkedPath = v instanceof PluralForms ? pathOfLinkedMessage(v) : null;
+    if (linkedPath != null) {
+      const dest = getPath(linkedPath, root);
+      if (dest == null) {
+        // We do not currently support a linked locale message in an i18n custom
+        // block that links to another message in the block, but we may very
+        // well at some point.
+        logThenThrow(value, 'link to message that either does not exist or is in i18n custom block');
       }
+      if (pathOfLinkedMessage(dest) != null) {
+        // Supporting this case would add complexity to
+        // copyLinkedLocaleMessage().
+        logThenThrow(value, 'cannot link to a linked locale message');
+      }
+      if (value.full != null || Array.isArray(value)) {
+        // Supporting these cases would add complexity to
+        // deletePartialTranslation(), because then linking to an untranslated
+        // message could result in a partial translation, which would then be
+        // removed.
+        logThenThrow(value, 'linked locale message not allowed in component interpolation or array element');
+      }
+
+      continue; // eslint-disable-line no-continue
     }
 
     const comments = value[Symbol.for(`before:${k}`)];
