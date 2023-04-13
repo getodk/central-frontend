@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { equals } = require('ramda');
+const { equals, last } = require('ramda');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { parse } = require('comment-json');
 
@@ -205,7 +205,34 @@ const pathOfLinkedMessage = (pluralForms) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// JSON CONVERSION
+// TRANSIFEX COMMENTS
+
+// Combines the JSON5 comments before a message into a single comment for
+// Transifex.
+const joinComments = (comments) => {
+  const { type } = comments[0];
+  if (comments.some(comment => comment.type !== type))
+    logThenThrow(comments, 'cannot mix line comments and block comments');
+  if (type === 'BlockComment' && comments.length !== 1)
+    logThenThrow(comments, 'too many block comments');
+
+  // Split a block comment into lines.
+  const lines = type === 'BlockComment'
+    ? comments[0].value.split('\n')
+    : comments.map(({ value }) => value);
+
+  // Trim lines.
+  for (const [i, line] of lines.entries()) lines[i] = line.trim();
+  if (lines.every(line => line === ''))
+    logThenThrow(comments, 'comments are all empty');
+  while (lines[0] === '') lines.shift();
+  while (last(lines) === '') lines.pop();
+
+  return lines.reduce((acc, line) => {
+    const separator = line === '' || acc.endsWith('\n') ? '\n' : ' ';
+    return `${acc}${separator}${line}`;
+  });
+};
 
 /*
 Our convention for component interpolation is to group all the messages used in
@@ -332,6 +359,11 @@ const generateCommentsForFull = (messages) => {
   return comments;
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// JSON CONVERSION
+
 // Converts Vue I18n JSON to Structured JSON, returning an object.
 const _restructure = (
   value,
@@ -409,10 +441,8 @@ const _restructure = (
     structured[k] = _restructure(
       v,
       root,
-      comments != null
-        ? comments.map(comment => comment.value.trim()).join(' ')
-        : commentForPath,
-      commentsByKey[k] != null ? commentsByKey[k] : commentForKey,
+      comments != null ? joinComments(comments) : commentForPath,
+      commentsByKey[k] ?? commentForKey,
       commentsForFull != null ? commentsForFull[k] : null,
       commentsByKey
     );

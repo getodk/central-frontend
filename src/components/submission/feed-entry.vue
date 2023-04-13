@@ -200,13 +200,19 @@ export default {
 {
   "en": {
     "title": {
-      /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word "Submitted", so it is essential for "Submitted" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
+      /*
+      This text is shown in the list of actions performed on a Submission. There
+      is an icon before the text that corresponds to the word "Submitted", so it
+      is essential for "Submitted" to also come first in the translation. If
+      that is unnatural in your language, you can also split the text into two
+      parts. For example, instead of:
 
-Submitted by {name}
+      Submitted by {name}
 
-you could split it into:
+      you could split it into:
 
-Submitted • {name} */
+      Submitted • {name}
+      */
       "create": "Submitted by {name}",
       "entity": {
         "create": "Created Entity {label} in {dataset} Dataset",
@@ -214,68 +220,104 @@ Submitted • {name} */
       },
       "updateReviewState": {
         "null": {
-          /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
+          /*
+          This text is shown in the list of actions performed on a Submission.
+          There is an icon before the text that corresponds to the Review State,
+          so it is essential for the Review State to also come first in the
+          translation. If that is unnatural in your language, you can also split
+          the text into two parts. For example, instead of:
 
-{reviewState} per {name}
+          {reviewState} per {name}
 
-you could split it into:
+          you could split it into:
 
-{reviewState} • {name} */
+          {reviewState} • {name}
+          */
           "full": "{reviewState} per {name}",
           "reviewState": "Received"
         },
         "hasIssues": {
-          /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
+          /*
+          This text is shown in the list of actions performed on a Submission.
+          There is an icon before the text that corresponds to the Review State,
+          so it is essential for the Review State to also come first in the
+          translation. If that is unnatural in your language, you can also split
+          the text into two parts. For example, instead of:
 
-{reviewState} per {name}
+          {reviewState} per {name}
 
-you could split it into:
+          you could split it into:
 
-{reviewState} • {name} */
+          {reviewState} • {name}
+          */
           "full": "{reviewState} per {name}",
           "reviewState": "Has Issues"
         },
         "edited": {
-          /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
+          /*
+          This text is shown in the list of actions performed on a Submission.
+          There is an icon before the text that corresponds to the Review State,
+          so it is essential for the Review State to also come first in the
+          translation. If that is unnatural in your language, you can also split
+          the text into two parts. For example, instead of:
 
-{reviewState} by {name}
+          {reviewState} by {name}
 
-you could split it into:
+          you could split it into:
 
-{reviewState} • {name} */
+          {reviewState} • {name}
+          */
           "full": "{reviewState} by {name}",
           "reviewState": "Edited"
         },
         "approved": {
-          /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
+          /*
+          This text is shown in the list of actions performed on a Submission.
+          There is an icon before the text that corresponds to the Review State,
+          so it is essential for the Review State to also come first in the
+          translation. If that is unnatural in your language, you can also split
+          the text into two parts. For example, instead of:
 
-{reviewState} by {name}
+          {reviewState} by {name}
 
-you could split it into:
+          you could split it into:
 
-{reviewState} • {name} */
+          {reviewState} • {name}
+          */
           "full": "{reviewState} by {name}",
           "reviewState": "Approved"
         },
         "rejected": {
-          /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the Review State, so it is essential for the Review State to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
+          /*
+          This text is shown in the list of actions performed on a Submission.
+          There is an icon before the text that corresponds to the Review State,
+          so it is essential for the Review State to also come first in the
+          translation. If that is unnatural in your language, you can also split
+          the text into two parts. For example, instead of:
 
-{reviewState} by {name}
+          {reviewState} by {name}
 
-you could split it into:
+          you could split it into:
 
-{reviewState} • {name} */
+          {reviewState} • {name}
+          */
           "full": "{reviewState} by {name}",
           "reviewState": "Rejected"
         }
       },
-      /* This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word "Comment", so it is essential for "Comment" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:
+      /*
+      This text is shown in the list of actions performed on a Submission.
+      There is an icon before the text that corresponds to the word "Comment",
+      so it is essential for "Comment" to also come first in the translation. If
+      that is unnatural in your language, you can also split the text into two
+      parts. For example, instead of:
 
-Comment by {name}
+      Comment by {name}
 
-you could split it into:
+      you could split it into:
 
-Comment • {name} */
+      Comment • {name}
+      */
       "comment": "Comment by {name}"
     }
   }

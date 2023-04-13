@@ -110,13 +110,21 @@ const placeholder = (counts) => t('placeholder', counts);
     "placeholder": "{selected} of {total}",
     "action": {
       "select": {
-        /* This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:
+        /*
+        This is the text of a dropdown that allows the user to select one or
+        more submitters. It will be inserted where {all} is in the following
+        text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "all": "All",
-        /* This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:
+        /*
+        This is the text of a dropdown that allows the user to select one or
+        more submitters. It will be inserted where {none} is in the following
+        text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "none": "None"
       }
     },
