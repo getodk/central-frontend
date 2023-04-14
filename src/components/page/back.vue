@@ -21,9 +21,7 @@ except according to the terms contained in the LICENSE file.
             <slot name="title"></slot>
           </template>
         </span>
-        <div class="arrow">
-          <img src="../../../public/images/arrow.svg" alt="">
-        </div>
+        <span class="arrow"></span>
         <router-link id="page-back-back" :to="toArray[1]">
           <slot name="back"></slot>
         </router-link>
@@ -74,20 +72,31 @@ export default {
       position: absolute;
       width: 0;
     }
+  }
 
-    &.arrow {
-      display: inline;
-      border-bottom: none;
+  span.arrow {
+    display: inline-block;
+    width: 25px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-top: -15px;
+    position: absolute;
+    height: 100%;
+
+    &:before {
+      content: '';
+      border: 1px solid #999;
+      height: 32px;
+      width: 30px;
+      display: block;
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      margin-top: -15px;
-      position: absolute;
-      height: 100%;
-
-      img {
-        margin-top: -3px;
-      }
+      position: relative;
+      transform: scaleY(1.8) rotate(45deg);
+      right: 20px;
+      top: 13px;
+      box-shadow: 1px -1px 2px rgba(0,0,0,0.15), 0 0 8px rgba(0,0,0,0.1);
     }
   }
 
