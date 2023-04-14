@@ -11,6 +11,15 @@ except according to the terms contained in the LICENSE file.
 */
 import { odataLiteral } from './odata';
 
+// Returns `true` if `data` looks like a Backend Problem and `false` if not.
+export const isProblem = (data) => data != null && typeof data === 'object' &&
+  typeof data.code === 'number' && typeof data.message === 'string';
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// API PATHS
+
 export const queryString = (query) => {
   if (query == null) return '';
   const entries = Object.entries(query);
@@ -161,6 +170,34 @@ export const apiPaths = {
   audits: (query) => `/v1/audits${queryString(query)}`
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SENDING REQUESTS
+
+const httpMethods = {};
+for (const prop of ['get', 'delete']) {
+  const method = prop.toUpperCase();
+  // eslint-disable-next-line func-names
+  httpMethods[prop] = function(url, config = undefined) {
+    return this({ ...config, method, url });
+  };
+}
+for (const prop of ['post', 'put', 'patch']) {
+  const method = prop.toUpperCase();
+  // eslint-disable-next-line func-names
+  httpMethods[prop] = function(url, data = undefined, config = undefined) {
+    const full = { ...config, method, url };
+    if (data != null) full.data = data;
+    return this(full);
+  };
+}
+
+// Adds convenience methods for HTTP verbs to a request() function. `this`
+// cannot be passed through to the convenience methods, so if the request()
+// function references `this`, you must bind `this` for it first.
+export const withHttpMethods = (f) => Object.assign(f, httpMethods);
+
 export const withAuth = (config, token) => {
   const { headers } = config;
   if ((headers == null || headers.Authorization == null) &&
@@ -172,10 +209,6 @@ export const withAuth = (config, token) => {
   }
   return config;
 };
-
-// Returns `true` if `data` looks like a Backend Problem and `false` if not.
-export const isProblem = (data) => data != null && typeof data === 'object' &&
-  typeof data.code === 'number' && typeof data.message === 'string';
 
 export const logAxiosError = (logger, error) => {
   if (error.response == null)
