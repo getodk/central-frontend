@@ -79,13 +79,21 @@ const placeholder = (counts) => t('placeholder', counts);
     "placeholder": "{selected} of {total}",
     "action": {
       "select": {
-        /* This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:
+        /*
+        This text is shown in a dropdown that allows the user to select one or
+        more Review States. It will be inserted where {all} is in the following
+        text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "all": "All",
-        /* This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:
+        /*
+        This text is shown in a dropdown that allows the user to select one or
+        more Review States. It will be inserted where {none} is in the following
+        text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "none": "None"
       }
     }
