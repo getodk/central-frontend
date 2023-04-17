@@ -278,6 +278,23 @@ const parseComment = (messages, key) => {
   return result;
 };
 
+// Parses the comments at the top of en.json5.
+const keyComments = (messages) => {
+  const comments = messages[Symbol.for('before-all')];
+  if (comments == null) return {};
+  const byKey = {};
+  for (const { value } of comments) {
+    const trim = value.trim();
+    const match = trim.match(/^(\w+):/);
+    if (match == null) logThenThrow(trim, 'invalid comment for key');
+    const key = match[1];
+    const text = trim.replace(match[0], '').trimStart();
+    if (text === '') logThenThrow(trim, 'empty comment for key');
+    byKey[key] = text;
+  }
+  return byKey;
+};
+
 /*
 Our convention for component interpolation is to group all the messages used in
 the component interpolation in a flat object. The object will have a property
@@ -487,13 +504,7 @@ const _restructure = (
   return structured;
 };
 const restructure = (messages) => {
-  const commentsByKey = {};
-  for (const { value } of messages[Symbol.for('before-all')]) {
-    const match = value.trim().match(/^(\w+):[ \t]*(.+)$/);
-    // eslint-disable-next-line prefer-destructuring
-    if (match != null) commentsByKey[match[1]] = match[2];
-  }
-
+  const commentsByKey = keyComments(messages);
   return _restructure(messages, messages, null, null, null, commentsByKey);
 };
 
