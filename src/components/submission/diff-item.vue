@@ -315,7 +315,7 @@ export default {
       "added": "(añadido)",
       "deleted": "(borrado)"
     },
-    "empty": "(vacío)"
+    "empty": "vacío"
   },
   "fr": {
     "editCaption": {

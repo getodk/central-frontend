@@ -507,6 +507,16 @@ const emptyMessage = computed(() => (searchValue.value === ''
       "select": "Vyberte {all} / {none}"
     }
   },
+  "de": {
+    "action": {
+      "select": "{all} / {none} auswählen"
+    }
+  },
+  "es": {
+    "action": {
+      "select": "Seleccionar {all} / {none}"
+    }
+  },
   "fr": {
     "action": {
       "select": "Sélectionner {all}/{none}"

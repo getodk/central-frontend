@@ -203,7 +203,13 @@ export default {
       "num_submissions_from_app_users": "Anzahl ausgefüllter Formulare von App-Benutzern",
       "num_submissions_from_public_links": "Anzahl Einreichungen von Zugangslink",
       "num_submissions_from_web_users": "Anzahl Einreichungen von Web Benutzern",
-      "has_description": "Das Projekt hat eine Beschreibung"
+      "has_description": "Das Projekt hat eine Beschreibung",
+      "description_length": "Länge der Projektbeschreibung",
+      "num_properties": "Anzahl der Eigenschaften",
+      "num_creation_forms": "Anzahl der Formulare, die das Dataset aktualisieren",
+      "num_followup_forms": "Anzahl der Formulare, die das Dataset verwenden",
+      "num_entities": "Anzahl der Entitäten im Datensatz",
+      "num_failed_entities": "Anzahl der Fehler bei der Entitätserstellung"
     }
   },
   "es": {
@@ -244,7 +250,13 @@ export default {
       "num_submissions_from_app_users": "Número de envíos de Usuarios móviles",
       "num_submissions_from_public_links": "Número de envíos de enlaces públicos",
       "num_submissions_from_web_users": "Número de envíos de usuarios web",
-      "has_description": "El proyecto tiene una descripción"
+      "has_description": "El proyecto tiene una descripción",
+      "description_length": "Longitud de la descripción del proyecto",
+      "num_properties": "Número de Propiedades",
+      "num_creation_forms": "Número de formularios que actualizan el conjunto de datos",
+      "num_followup_forms": "Número de formularios que utilizan el conjunto de datos",
+      "num_entities": "Número de entidades en el conjunto de datos",
+      "num_failed_entities": "Número de errores de creación de entidad"
     }
   },
   "fr": {

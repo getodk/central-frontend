@@ -136,6 +136,36 @@ export default {
     },
     "datasetsWorkflow": "Pracovní postup s datovými sadami"
   },
+  "de": {
+    "title": "Willkommen bei der Dataset-Vorschau!",
+    "body": [
+      "Datensätze sind eine neue Möglichkeit, Datenanhänge in ODK zu erstellen und zu verwalten. Sie ermöglichen es Ihnen, Daten, die in Übermittlungen gesammelt wurden, herunterzuladen und als Teil eines anderen Formulars zu verwenden.",
+      "Datensätze können wie jede andere angehängte CSV-Datendatei an {icon1} Formulare angehängt und ihre Daten abgefragt werden.",
+      "Wenn eine Übermittlung in Bezug auf einen Datensatz genehmigt wird {icon2}, werden die ausgewählten Daten zum Datensatz hinzugefügt {icon3}, sodass beim nächsten Herunterladen des Formulars durch einen Kunden die neuen Daten in den Datendownload aufgenommen werden.",
+      "In einer zukünftigen Version können Sie {icon4} eine CSV-Datei direkt in einen Datensatz hochladen.",
+      "Datensätze werden während des Formularentwurfs konfiguriert."
+    ],
+    "getStarted": {
+      "full": "Weitere Informationen zum Einstieg finden Sie unter {clickHere}",
+      "clickHere": "klicken Sie hier"
+    },
+    "datasetsWorkflow": "Datensatz-Workflow"
+  },
+  "es": {
+    "title": "¡Bienvenido a la vista previa de conjuntos de datos!",
+    "body": [
+      "Los conjuntos de datos son una nueva forma de crear y administrar archivos adjuntos de datos en ODK. Le permiten usar los datos recopilados en Envíos para descargarlos y usarlos como parte de otro Formulario.",
+      "Los conjuntos de datos se pueden adjuntar a {icon1} formularios y sus datos se pueden consultar como cualquier otro archivo de datos CSV adjunto.",
+      "Cuando se aprueba un envío relacionado con un conjunto de datos {icon2}, los datos seleccionados se agregan {icon3} al conjunto de datos, de modo que la próxima vez que un cliente descargue el formulario, los nuevos datos se incluirán en la descarga de datos.",
+      "En una versión futura, podrá cargar {icon4} CSV a un conjunto de datos directamente.",
+      "Los conjuntos de datos se configuran durante el diseño del formulario."
+    ],
+    "getStarted": {
+      "full": "Para obtener más información sobre cómo empezar, {clickHere}.",
+      "clickHere": "haga clic aquí"
+    },
+    "datasetsWorkflow": "Flujo de trabajo de conjuntos de datos"
+  },
   "fr": {
     "title": "Bienvenue dans l’aperçu des Datasets !",
     "body": [

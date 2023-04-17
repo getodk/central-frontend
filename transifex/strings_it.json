@@ -472,19 +472,19 @@
     },
     "created": {
       "string": "Creato",
-      "developer_comment": "This is the text of a table column header. The column shows who created the resource and possibly also when they did so."
+      "developer_comment": "This is the text of a table column header. The column shows who created each App User and possibly also when they did so."
     },
     "createdBy": {
       "string": "Creato da",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that created each Entity."
     },
     "createdAt": {
-      "string": "",
-      "developer_comment": "This is the text of a table column header."
+      "string": "Creato il",
+      "developer_comment": "This is the text of a table column header. The column shows when each Entity was created."
     },
     "updatedBy": {
       "string": "Aggiornato da",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. For each Entity property, the column shows the Forms that can update the property."
     },
     "displayName": {
       "string": "Nome visualizzato",
@@ -508,7 +508,7 @@
     },
     "submitterName": {
       "string": "Inviato da",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that submitted each Submission."
     },
     "submissionDate": {
       "string": "Inviato alle",
@@ -587,7 +587,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
-      "string": "",
+      "string": "Entità",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -726,11 +726,11 @@
   },
   "entity": {
     "label": {
-      "string": "",
+      "string": "Label",
       "developer_comment": "This is the label of an Entity."
     },
     "entityId": {
-      "string": "",
+      "string": "ID dell'Entità",
       "developer_comment": "This is the UUID or 'name' of an Entity."
     }
   },
@@ -760,12 +760,16 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "data": {
-      "string": "",
+      "string": "Dati",
       "developer_comment": "This is shown in the tab above a table of data."
     },
     "docs": {
       "string": "Documentazione",
       "developer_comment": "This is the text of a link that links to the documentation."
+    },
+    "emptyValue": {
+      "string": "(vuoto)",
+      "developer_comment": "This is shown when the value of an Entity property is empty."
     },
     "error": {
       "string": "Errore"
@@ -828,7 +832,7 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "propertiesCount": {
-      "string": "{count, plural, one {} many {} other {}}",
+      "string": "{count, plural, one {{inform} di {count} propietà} many {{inform} di {count} proprietà} other {{inform} di {count} proprietà}}",
       "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
     }
   },
@@ -1297,18 +1301,18 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsCreateEntities": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Il formulario crea Entità nel set di dati} many {I formulari creano Entità in questo set di dati} other {Il formulario crea Entità nel set di dati}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": ""
+        "string": "Non ci sono Proprietà in questo set di dati."
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Il formulario consuma dati da questo set di dati} many {I formulari consumano dati da questo set di dati} other {I formulari consumano dati da questo set di dati}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
@@ -1367,18 +1371,42 @@
         }
       }
     },
+    "EntityBasicDetails": {
+      "creatingSubmission": {
+        "string": "Creando invio",
+        "developer_comment": "This is shown above the Submission that created the Entity."
+      }
+    },
+    "EntityData": {
+      "title": {
+        "string": "Dati Entità",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
     "EntityList": {
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {Scarica {count} entità} many {Scarica {count} entità} other {Scarica {count} entità}}",
             "developer_comment": "This is the text of a button shown when the count of Entities is known."
           }
         }
       },
       "noEntities": {
-        "string": "",
+        "string": "Non ci sono entità da mostrare.",
         "developer_comment": "This text is shown when there are no Entities to show in a table."
+      }
+    },
+    "EntityShow": {
+      "back": {
+        "title": {
+          "string": "Dettaglio Entità",
+          "developer_comment": "This is shown at the top of the page."
+        },
+        "back": {
+          "string": "Indietro alla Tabella {datasetName} ",
+          "developer_comment": "This is shown at the top of the page. The user can click it to go back."
+        }
       }
     },
     "FieldKeyList": {
@@ -2263,7 +2291,7 @@
         },
         "3": {
           "deletedFormExists": {
-            "string": ""
+            "string": "C'è un formulario con ID \"{value}\" nel Cestino. Se carichi questo formulario, non sarai in grado di annullare l'eliminazione dell'altro con l'ID corrispondente."
           },
           "structureChanged": {
             "string": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti."
@@ -2340,7 +2368,7 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Il Set di dati è collegato questo formulario:} many {Set di dati sono collegati questo formulario:} other {Set di dati sono collegati questo formulario:}}",
         "developer_comment": "The count of Dataset(s) is shown separately above this text."
       }
     },
@@ -2419,7 +2447,7 @@
     },
     "FormSubmissions": {
       "analyzeDisabled": {
-        "string": ""
+        "string": "L'accesso OData non è disponibile a causa della crittografia del formulario "
       }
     },
     "FormTable": {
@@ -2631,11 +2659,11 @@
     "OdataDataAccess": {
       "action": {
         "apiAccess": {
-          "string": "",
+          "string": "accesso attraverso API",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "analyze": {
-          "string": "",
+          "string": "Analizzare attraverso OData",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -3278,16 +3306,16 @@
       },
       "introduction": {
         "0": {
-          "string": "",
+          "string": "OData è uno standard per il trasferimento di dati tra strumenti e servizi. Strumenti di analisi potenti come {powerBi}, {excel}, {python}, e {r} possono recuperare i dati su OData per l'analisi. ",
           "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": ""
+          "string": "Per connettersi a questo feed OData, seleziona il tuo strumento e copia il link al suo interno. "
         }
       },
       "tab": {
         "microsoft": {
-          "string": "",
+          "string": "Power BI o Excel",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
@@ -3298,7 +3326,7 @@
       "help": {
         "microsoft": {
           "full": {
-            "string": "",
+            "string": "Per informazioni sull'utilizzo di OData con Power BI, vedere {pageForPowerBi}. Per assistenza con Excel, vedere {pageForExcel}. ",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
           },
           "pageForExcel": {
@@ -3311,11 +3339,11 @@
           }
         },
         "python": {
-          "string": "",
+          "string": "Per connettersi a Central da Python, consigliamo {pyODK}. pyODK è il client Python ufficiale per Central. Semplifica l'analisi dei dati e l'automazione del flusso di lavoro.",
           "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
         },
         "r": {
-          "string": "",
+          "string": "Per connetterti a Central da R, ti consigliamo {ruODK}. ruODK è sviluppato e supportato dai membri della comunità ODK.",
           "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
         },
         "other": {
@@ -3583,7 +3611,7 @@
       "field": {
         "submissionDate": {
           "string": "Inviato alle",
-          "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
+          "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
       }
     },
@@ -3609,7 +3637,7 @@
       "field": {
         "submitter": {
           "string": "Inviato da",
-          "developer_comment": "This is the text of a form field that shows the names of submitters."
+          "developer_comment": "This is the text of a form field that shows the names of users and Public Access Links that have submitted Submissions."
         },
         "search": {
           "string": "Cerca tra gli utenti...",

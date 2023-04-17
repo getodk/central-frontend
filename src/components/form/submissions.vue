@@ -133,8 +133,17 @@ export default {
   "cs": {
     "analyzeDisabled": "Přístup k OData není dostupný kvůli šifrování formuláře"
   },
+  "de": {
+    "analyzeDisabled": "OData-Zugriff ist wegen Formularverschlüsselung nicht verfügbar."
+  },
+  "es": {
+    "analyzeDisabled": "El acceso a OData no está disponible debido al cifrado de Formulario"
+  },
   "fr": {
     "analyzeDisabled": "L'accès à OData n'est pas disponible en raison du chiffrement du formulaire"
+  },
+  "it": {
+    "analyzeDisabled": "L'accesso OData non è disponibile a causa della crittografia del formulario"
   }
 }
 </i18n>

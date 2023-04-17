@@ -164,6 +164,14 @@ export default {
     "new": "nový!",
     "addedByThisDraft": "Přidáno podle tohoto návrhu"
   },
+  "de": {
+    "new": "Neu!",
+    "addedByThisDraft": "Hinzugefügt von diesem Entwurf"
+  },
+  "es": {
+    "new": "¡nuevo!",
+    "addedByThisDraft": "Añadido por este borrador"
+  },
   "fr": {
     "new": "nouveau !",
     "addedByThisDraft": "Ajouté par cette ébauche"

@@ -362,6 +362,10 @@ export default {
   "de": {
     "title": {
       "create": "Übermittelt von {name}",
+      "entity": {
+        "create": "Geschaffene Entität {label} in {dataset} Datensatz",
+        "error": "Problem beim Erstellen einer Entität"
+      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} • {name}",
@@ -390,6 +394,10 @@ export default {
   "es": {
     "title": {
       "create": "Enviado por {name}",
+      "entity": {
+        "create": "Entidad creada {label} en {dataset} Conjunto de datos",
+        "error": "Problema creando Entidad"
+      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} por {name}",

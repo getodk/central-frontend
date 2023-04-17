@@ -113,6 +113,26 @@ export default {
       "link": "Odkaz"
     }
   },
+  "de": {
+    "title": "Datensatz verknüpfen",
+    "introduction": [
+      "Möchten Sie den Datensatz wirklich verknüpfen?",
+      "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
+    ],
+    "action": {
+      "link": "Link"
+    }
+  },
+  "es": {
+    "title": "Vincular conjunto de datos",
+    "introduction": [
+      "¿Estás seguro de que quieres vincular el conjunto de datos?",
+      "El archivo que subiste será eliminado. Siempre puedes volver a subirlo más tarde."
+    ],
+    "action": {
+      "link": "Enlace"
+    }
+  },
   "fr": {
     "title": "Lier le Dataset",
     "introduction": [

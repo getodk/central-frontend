@@ -455,7 +455,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Hauptdatentabelle (keine repeats)",
-        "allTables": "Alle Datentabellen"
+        "allTables": "Alle Datentabellen",
+        "withAttachments": "Alle Daten und Anhänge"
       }
     },
     "alert": {
@@ -472,6 +473,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       "removeGroupNames": "Eliminar nombres de grupos",
       "deletedFields": "Incluir campos que no están en el Formulario publicado."
     },
+    "deletedFieldsHelp": "Utilice esta opción si necesita ver los campos a los que se hace referencia en versiones anteriores del formulario.",
     "noSelectMultiple": "Este formulario no tiene ningún campo de selección múltiple.",
     "encryptedForm": "Los formularios cifrados no se pueden procesar de esta manera.",
     "deletedFieldsDisabledForDraft": "Los borradores no se pueden procesar de esta manera.",
@@ -483,7 +485,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Tabla de datos principal (sin repeticiones)",
-        "allTables": "Todas las tablas de datos"
+        "allTables": "Todas las tablas de datos",
+        "withAttachments": "Todos los datos y archivos adjuntos"
       }
     },
     "alert": {

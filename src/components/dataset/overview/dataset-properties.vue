@@ -106,8 +106,17 @@ export default {
   "cs": {
     "emptyTable": "V této datové sadě nejsou žádné vlastnosti."
   },
+  "de": {
+    "emptyTable": "Es gibt keine Eigenschaften in diesem Datensatz."
+  },
+  "es": {
+    "emptyTable": "No hay propiedades en este conjunto de datos."
+  },
   "fr": {
     "emptyTable": "Il n'y a pas de propriété dans ce Dataset"
+  },
+  "it": {
+    "emptyTable": "Non ci sono Proprietà in questo set di dati."
   }
 }
 </i18n>

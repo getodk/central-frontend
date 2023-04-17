@@ -58,6 +58,7 @@
       "user": "Acciones de usuarios web",
       "project": "Acciones de proyectos",
       "form": "Acciones de formulario",
+      "dataset": "Acciones de conjuntos de datos",
       "field_key": "Acciones de usuarios móviles",
       "public_link": "Acciones de enlace de acceso público",
       "config": "Acciones de configuración del servidor",
@@ -135,6 +136,7 @@
     "download": "Descargar",
     "edit": "Editar",
     "editProfile": "Editar perfil",
+    "finish": "Finalizar",
     "logIn": "Ingresar",
     "looksGood": "Se ve bien, continuar",
     "more": "Más",
@@ -152,7 +154,9 @@
     "update": "Actualizar",
     "yesProceed": "Sí, continuar",
     "showPreview": "Vista previa",
-    "hidePreview": "Ocultar vista previa"
+    "hidePreview": "Ocultar vista previa",
+    "expand": "Expandir",
+    "collapse": "Contraer"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -172,6 +176,8 @@
     "actions": "Acciones",
     "created": "Creado",
     "createdBy": "Creado por",
+    "createdAt": "Creado el",
+    "updatedBy": "Actualizado por",
     "displayName": "Nombre para mostrar",
     "email": "Correo electrónico",
     "instanceId": "Instancia del ID",
@@ -180,7 +186,9 @@
     "submitterName": "Enviado por",
     "submissionDate": "Enviado a",
     "time": "Tiempo",
-    "type": "Tipo"
+    "type": "Tipo",
+    "entities": "Entidades totales",
+    "lastEntity": "Última entidad"
   },
   "plural": {
     "appUser": "Usuario móvil | Usuarios móviles | Usuarios móviles",
@@ -199,8 +207,12 @@
     "appUser": "Usuario móvil",
     "appUsers": "Usuarios móviles",
     "config": "Configuración del servidor",
+    "dataset": "Conjunto de datos",
+    "datasets": "Conjuntos de datos",
+    "entities": "Entidades",
     "form": "Formulario",
     "forms": "Formularios",
+    "formAttachments": "Adjuntos de formulario",
     "project": "Proyecto",
     "projects": "Proyectos",
     "publicLink": "Enlace de acceso público",
@@ -236,13 +248,19 @@
     }
   },
   "submission": {
+    "missingAttachment": "Archivo adjunto faltante",
     "action": {
       "edit": "Editar {count}"
     },
     "editDisabled": "No puede editar envíos encriptados.",
     "binaryLinkTitle": "Se envió el archivo. Haga clic para descargar.",
     "encryptionMessage": "La vista previa de datos no está disponible debido al cifrado.",
-    "noSubmission": "(ninguno)"
+    "noSubmission": "(ninguno)",
+    "emptyTable": "No hay envíos todavía."
+  },
+  "entity": {
+    "label": "Etiqueta",
+    "entityId": "ID de la entidad"
   },
   "common": {
     "activity": "Actividad",
@@ -251,7 +269,10 @@
     "basicInfo": "Información básica",
     "currentDraft": "Su borrador actual",
     "dangerZone": "Zona de peligro",
+    "data": "Datos",
     "docs": "Documentos",
+    "emptyValue": "(vacío)",
+    "error": "Error",
     "filter": "Filtrar",
     "forum": "Foro",
     "loading": "Cargando...",
@@ -266,9 +287,12 @@
       "overview": "Descripción general"
     },
     "total": "Total",
+    "totalSubmissions": "Envíos totales",
     "punctuations": {
       "comma": ","
-    }
+    },
+    "datasetsPreview": "Vista previa de conjuntos de datos",
+    "propertiesCount": "{inform} de {count} propiedad | {inform} de {count} propiedades | {inform} de {count} propiedades"
   },
   "mixin": {
     "request": {

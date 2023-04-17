@@ -185,7 +185,8 @@ export default {
   "de": {
     "draft": {
       "none": {
-        "title": "Kein aktueller Entwurf"
+        "title": "Kein aktueller Entwurf",
+        "body": "Es gibt aktuell keine Entwurfsversion dieses Formulars. Wenn Sie Änderungen am Formular oder den dazugehörigen Anhängen machen wollen, legen Sie mit der Schaltfläche oben erst einen Entwurf an."
       },
       "any": {
         "versionCaption": {
@@ -198,7 +199,8 @@ export default {
   "es": {
     "draft": {
       "none": {
-        "title": "Sin borrador actual"
+        "title": "Sin borrador actual",
+        "body": "Actualmente no existe una versión borrador de este formulario. Si desea realizar cambios en el formulario o sus archivos adjuntos, comience creando un borrador con el botón de arriba."
       },
       "any": {
         "versionCaption": {

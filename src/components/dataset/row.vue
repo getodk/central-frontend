@@ -91,6 +91,11 @@ export default {
       "download": "Stáhnout data (.csv)"
     }
   },
+  "de": {
+    "action": {
+      "download": "Daten herunterladen (.csv)"
+    }
+  },
   "es": {
     "action": {
       "download": "Descargar datos (.csv)"

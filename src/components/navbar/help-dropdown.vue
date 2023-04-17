@@ -59,9 +59,11 @@ export default {
     "version": "Verze"
   },
   "de": {
+    "help": "Hilfe",
     "version": "Version"
   },
   "es": {
+    "help": "Ayuda",
     "version": "Versión"
   },
   "fr": {

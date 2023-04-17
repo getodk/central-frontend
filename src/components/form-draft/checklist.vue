@@ -252,7 +252,15 @@ export default {
           }
         ]
       },
-      {},
+      {
+        "title": "Formularanhänge hochladen",
+        "body": [
+          {
+            "full": "Ihre Referenzdateien für den Formularentwurf werden für die Darstellung des Formulars benötigt. Sie können neue oder geänderte Formulare über den Reiter {formAttachments} hochladen.",
+            "formAttachments": "Formularanhänge"
+          }
+        ]
+      },
       {
         "title": "Teste das Formular indem du eine Einreichung erstellst.",
         "body": [
@@ -298,7 +306,15 @@ export default {
           }
         ]
       },
-      {},
+      {
+        "title": "Cargar archivos adjuntos de formulario",
+        "body": [
+          {
+            "full": "El diseño de su formulario hace referencia a los archivos necesarios para presentar su formulario. Puede cargar copias nuevas o actualizadas para su distribución en la pestaña {formAttachments}.",
+            "formAttachments": "Archivos adjuntos del formulario"
+          }
+        ]
+      },
       {
         "title": "Pruebe el formulario creando un envío",
         "body": [

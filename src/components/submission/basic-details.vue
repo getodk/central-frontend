@@ -171,6 +171,7 @@ export default {
     "formVersion": "Formular Version",
     "deviceId": "Geräte-ID",
     "userAgent": "User-Agent",
+    "attachments": "Anhänge",
     "present": "{count} Datei | {count} Dateien",
     "expected": "{count} erwartet | {count} erwartet",
     "attachmentSummary": "{present} / {expected}"

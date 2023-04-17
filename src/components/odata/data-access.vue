@@ -60,10 +60,28 @@ export default {
       "analyze": "Analýza přes OData"
     }
   },
+  "de": {
+    "action": {
+      "apiAccess": "API-Zugriff",
+      "analyze": "Mittels OData analysieren"
+    }
+  },
+  "es": {
+    "action": {
+      "apiAccess": "Acceso API",
+      "analyze": "Analizar a través de OData"
+    }
+  },
   "fr": {
     "action": {
       "apiAccess": "Accès via l'API",
       "analyze": "Analyser via OData"
+    }
+  },
+  "it": {
+    "action": {
+      "apiAccess": "accesso attraverso API",
+      "analyze": "Analizzare attraverso OData"
     }
   }
 }

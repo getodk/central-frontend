@@ -97,6 +97,14 @@ export default {
     "connectionsToForms": "Připojení k formulářům",
     "datasetProperties": "Vlastnosti datové sady"
   },
+  "de": {
+    "connectionsToForms": "Verbindungen zu Formularen",
+    "datasetProperties": "Dataset-Eigenschaften"
+  },
+  "es": {
+    "connectionsToForms": "Conexiones a formularios",
+    "datasetProperties": "Propiedades del conjunto de datos"
+  },
   "fr": {
     "connectionsToForms": "Connexions aux formulaires",
     "datasetProperties": "Propriétés du Dataset"

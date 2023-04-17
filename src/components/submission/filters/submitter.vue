@@ -152,13 +152,22 @@ const placeholder = (counts) => t('placeholder', counts);
   },
   "de": {
     "field": {
-      "submitter": "Übermittelt von"
+      "submitter": "Übermittelt von",
+      "search": "Einsender suchen…"
+    },
+    "placeholder": "{selected} von {total}",
+    "action": {
+      "select": {
+        "all": "Alle",
+        "none": "Keine"
+      }
     },
     "unknown": "Unbekannter Einsender"
   },
   "es": {
     "field": {
-      "submitter": "Enviado por"
+      "submitter": "Enviado por",
+      "search": "Buscar remitentes…"
     },
     "placeholder": "{selected} de {total}",
     "action": {

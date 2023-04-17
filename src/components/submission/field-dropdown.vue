@@ -143,7 +143,8 @@ const placeholder = (counts) => t('placeholder', counts);
         "all": "Alle",
         "none": "Keine"
       }
-    }
+    },
+    "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
     "placeholder": "{selected} de {total}",
@@ -156,7 +157,8 @@ const placeholder = (counts) => t('placeholder', counts);
         "all": "Todas",
         "none": "Ninguna"
       }
-    }
+    },
+    "warning": "Seleccionar demasiadas columnas puede ralentizar su computadora."
   },
   "fr": {
     "placeholder": "{selected} sur {total}",

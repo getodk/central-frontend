@@ -316,31 +316,67 @@ export default {
   "de": {
     "title": "Entwurf veröffentlichen",
     "warnings": {
+      "attachments": {
+        "full": "Sie haben die {formAttachments} für Ihr Formular benötigten Dateien nicht bereitgestellt. Sie können dies ignorieren, aber Sie müssen Entwurfsversionen zum späteren Hochladen bereitstellen.",
+        "formAttachments": "Formularanhänge"
+      },
       "testing": {
         "full": "Sie haben {tested} noch nicht eine Test-Datenübermittlung hochgeladen. Sie müssen das nicht tun, aber es wird dringend empfohlen.",
         "tested": "dieses Formular"
       }
     },
+    "introduction": [
+      "Sie sind dabei, diesen Entwurf in die veröffentlichte Version umzuwandeln. Damit werden alle Änderungen am Formular und den dazugehörenden Anhängen abgeschlossen.",
+      "Bestehende Übermittlungen sind nicht betroffen, aber alle Übermittlungen für den Testentwurf werden entfernt.",
+      "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen.",
+      "Möchten Sie fortfahren?"
+    ],
     "field": {
       "version": "Version"
     },
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
+    },
+    "dataset": {
+      "introduction": {
+        "full": "{inAddition} durch die Veröffentlichung dieser Formulardefinition werden die folgenden Änderungen an diesem Projekt vorgenommen:",
+        "inAddition": "Zusätzlich,"
+      },
+      "newDataset": "Ein neuer Datensatz {datasetName} wird erstellt.",
+      "newProperty": "Im Datensatz {datasetName} wird eine neue Eigenschaft {propertyName} erstellt."
     }
   },
   "es": {
     "title": "Publicar borrador",
     "warnings": {
+      "attachments": {
+        "full": "No ha proporcionado todos los {formAttachments} que requiere su formulario. Puede ignorar esto si lo desea, pero deberá crear una nueva versión de borrador para cargar esos archivos más tarde.",
+        "formAttachments": "Archivos adjuntos del formulario"
+      },
       "testing": {
         "full": "Aún no ha {tested} subido un envío de prueba. No tiene que hacer esto, pero es muy recomendable.",
         "tested": "probado este formulario"
       }
     },
+    "introduction": [
+      "Está a punto de hacer de este borrador la versión publicada de su formulario. Esto finalizará cualquier cambio que haya realizado en la definición del formulario y en los archivos adjuntos del formulario.",
+      "Los envíos de formulario existentes no se verán afectados, pero se eliminarán todos los envíos de prueba de borrador.",
+      "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted.",
+      "¿Le gustaría continuar?"
+    ],
     "field": {
       "version": "Versión"
     },
     "problem": {
       "409_6": "El nombre de la versión de este borrador entra en conflicto con una versión anterior de este formulario o un formulario eliminado. Utilice el campo a continuación para cambiarlo a algo nuevo o cargar una nueva definición de formulario."
+    },
+    "dataset": {
+      "introduction": {
+        "full": "{inAddition} publicar esta definición de Formulario hará los siguientes cambios a este Proyecto:",
+        "inAddition": "Además,"
+      },
+      "newDataset": "Se creará un nuevo conjunto de datos {datasetName}.",
+      "newProperty": "En el conjunto de datos {datasetName}, se creará una nueva propiedad {propertyName}."
     }
   },
   "fr": {
