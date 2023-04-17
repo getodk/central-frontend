@@ -1,9 +1,9 @@
 const fs = require('fs');
-const { equals, last, path: getPath } = require('ramda');
+const { equals, last, path: getPath, startsWith } = require('ramda');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { parse } = require('comment-json');
 
-const { logThenThrow } = require('./util');
+const { logThenThrow, sortProps } = require('./util');
 
 
 
@@ -207,9 +207,36 @@ const pathOfLinkedMessage = (pluralForms) => {
 ////////////////////////////////////////////////////////////////////////////////
 // TRANSIFEX COMMENTS
 
-// Combines the JSON5 comments before a message into a single comment for
-// Transifex.
-const joinComments = (comments) => {
+const commentTags = {
+  transifexPath: (text) => {
+    if (text === '') throw new Error('path required');
+    const path = text.split('.');
+    if (path.some(element => !/^\w+$/.test(element)))
+      throw new Error('invalid path');
+    return path;
+  }
+};
+const commentTag = (line) => {
+  const match = line.match(/^@(\S+)(\s|$)/);
+  if (match == null) logThenThrow(line, 'invalid comment tag');
+  const name = match[1];
+  const parser = commentTags[name];
+  if (parser == null) logThenThrow(line, 'unknown comment tag');
+  const text = line.replace(match[0], '').trimStart();
+  let value;
+  try {
+    value = parser(text);
+  } catch (error) {
+    logThenThrow(line, `@${name}: ${error.message}`);
+  }
+  return [name, value];
+};
+
+// Parses the JSON comments before a message or group of messages.
+const parseComment = (messages, key) => {
+  const comments = messages[Symbol.for(`before:${key}`)];
+  if (comments == null) return {};
+
   const { type } = comments[0];
   if (comments.some(comment => comment.type !== type))
     logThenThrow(comments, 'cannot mix line comments and block comments');
@@ -224,14 +251,31 @@ const joinComments = (comments) => {
   // Trim lines.
   for (const [i, line] of lines.entries()) lines[i] = line.trim();
   if (lines.every(line => line === ''))
-    logThenThrow(comments, 'comments are all empty');
+    logThenThrow({ messages, key }, 'comments are all empty');
   while (lines[0] === '') lines.shift();
   while (last(lines) === '') lines.pop();
 
-  return lines.reduce((acc, line) => {
-    const separator = line === '' || acc.endsWith('\n') ? '\n' : ' ';
-    return `${acc}${separator}${line}`;
-  });
+  // Parse tags at the top of the comment.
+  const result = {};
+  while (lines.length !== 0 && lines[0].startsWith('@')) {
+    const [name, value] = commentTag(lines.shift());
+    if (result[name] != null) logThenThrow(comments, `multiple @${name} tags`);
+    result[name] = value;
+    while (lines[0] === '') lines.shift();
+  }
+  for (const line of lines) {
+    if (/^@\w+(\s|$)/.test(line)) logThenThrow(line, 'unexpected comment tag');
+  }
+
+  // Combine all the lines of text into a single comment for Transifex.
+  if (lines.length !== 0) {
+    result.text = lines.reduce((acc, line) => {
+      const separator = line === '' || acc.endsWith('\n') ? '\n' : ' ';
+      return `${acc}${separator}${line}`;
+    });
+  }
+
+  return result;
 };
 
 /*
@@ -366,6 +410,7 @@ const generateCommentsForFull = (messages) => {
 
 // Converts Vue I18n JSON to Structured JSON, returning an object.
 const _restructure = (
+  // A simple object, an array, or a PluralForms instance
   value,
   root,
   commentForPath,
@@ -373,8 +418,6 @@ const _restructure = (
   commentForFull,
   commentsByKey
 ) => {
-  if (value == null) throw new Error('invalid value');
-
   if (value instanceof PluralForms) {
     const structured = { string: value.toTransifex() };
 
@@ -392,8 +435,6 @@ const _restructure = (
 
     return structured;
   }
-
-  if (typeof value !== 'object') throw new Error('invalid value');
 
   // `structured` will be a non-array object, even if `value` is an array:
   // Structured JSON does not seem to support arrays.
@@ -430,11 +471,10 @@ const _restructure = (
       continue; // eslint-disable-line no-continue
     }
 
-    const comments = value[Symbol.for(`before:${k}`)];
     structured[k] = _restructure(
       v,
       root,
-      comments != null ? joinComments(comments) : commentForPath,
+      parseComment(value, k).text ?? commentForPath,
       commentsByKey[k] ?? commentForKey,
       commentsForFull != null ? commentsForFull[k] : null,
       commentsByKey
@@ -497,17 +537,66 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
       if (end === -1) logThenThrow(filename, 'invalid single file component');
       // Trimming so that if there is an error, the line number is clear.
       const json = content.slice(begin, end).trim();
+      let componentMessages;
       try {
-        messages.component[componentName] = parse(json, reviver)[sourceLocale];
+        componentMessages = parse(json, reviver);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(`could not parse the Vue I18n JSON of ${componentName}`);
         throw e;
       }
+      messages.component[componentName] = componentMessages[sourceLocale];
+
+      // Move top-level comments on the component.
+      const comments = componentMessages[Symbol.for(`before:${sourceLocale}`)];
+      if (comments != null)
+        messages.component[Symbol.for(`before:${componentName}`)] = comments;
     }
   }
 
-  return messages;
+  // Walk `messages`, doing some basic validation and parsing @transifexPath
+  // tags.
+  const entries = [[[], messages]];
+  const transifexPaths = [];
+  while (entries.length !== 0) {
+    const [path, value] = entries.pop();
+    if (value == null || typeof value !== 'object')
+      logThenThrow({ path, value }, 'invalid value');
+    for (const [k, v] of Object.entries(value)) {
+      const p = [...path, k];
+      const { transifexPath } = parseComment(value, k);
+      if (transifexPath != null) transifexPaths.push([p, transifexPath]);
+      if (!(v instanceof PluralForms)) entries.push([p, v]);
+    }
+  }
+
+  // Process transifexPaths.
+  const transifexOnly = new Map();
+  for (const [vuePath, transifexPath] of transifexPaths) {
+    const value = getPath(transifexPath, messages);
+    const joined = transifexPath.join('.');
+    if (value == null) {
+      if (!transifexOnly.has(joined)) {
+        transifexOnly.set(joined, value);
+      } else if (!equals(value, transifexOnly.get(joined))) {
+        logThenThrow({ vuePath, transifexPath }, `@transifexPath ${joined} specified for multiple, conflicting values`);
+      }
+    } else if (!equals(value, getPath(vuePath, messages))) {
+      logThenThrow({ vuePath, transifexPath }, `@transifexPath ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
+    }
+  }
+  // Check that @transifexPath does not point to a value that itself specifies
+  // @transifexPath.
+  for (const [, transifexPath] of transifexPaths) {
+    for (const [vuePath] of transifexPaths) {
+      if (startsWith(vuePath, transifexPath)) {
+        const joined = transifexPath.join('.');
+        throw new Error(`@transifexPath ${joined} was specified, but ${joined} itself specifies @transifexPath`);
+      }
+    }
+  }
+
+  return { messages, transifexPaths };
 };
 
 
@@ -840,12 +929,7 @@ const writeTranslations = (
       );
 
       blockMessages[locale] = translationsForComponent;
-      // Position the new locale alphabetically.
-      for (const key of Object.keys(blockMessages).sort()) {
-        const value = blockMessages[key];
-        delete blockMessages[key];
-        blockMessages[key] = value;
-      }
+      sortProps(blockMessages);
 
       // Trim in case there are no translations and we remove the block.
       fs.writeFileSync(filename, content.slice(0, begin).trimEnd());
