@@ -130,9 +130,7 @@ import { apiPaths, isProblem } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 export default {
-  // Ideally, this component would be named SubmissionDownload, but that would
-  // cause messages to be moved in Transifex.
-  name: 'SubmissionDecrypt',
+  name: 'SubmissionDownload',
   components: { FormGroup, Modal },
   inject: ['alert', 'logger'],
   props: {
@@ -362,6 +360,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
 
 <i18n lang="json5">
 {
+  // @transifexPath component.SubmissionDecrypt
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Download Submissions",

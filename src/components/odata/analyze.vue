@@ -91,10 +91,7 @@ import Modal from '../modal.vue';
 import Selectable from '../selectable.vue';
 
 export default {
-  // Ideally, this component would be named OdataAnalyze and be moved to ../odata,
-  // like with SubmissionDecrypt->SubmissionDownload,
-  // but that would cause messages to be moved in Transifex.
-  name: 'SubmissionAnalyze',
+  name: 'OdataAnalyze',
   components: { Modal, Selectable },
   props: {
     state: Boolean,
@@ -168,6 +165,7 @@ export default {
 
 <i18n lang="json5">
 {
+  // @transifexPath component.SubmissionAnalyze
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Using OData",

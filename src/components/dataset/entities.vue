@@ -26,11 +26,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import OdataAnalyze from '../submission/analyze.vue';
+import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
 import EntityList from '../entity/list.vue';
 import PageSection from '../page/section.vue';
-
 
 import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';

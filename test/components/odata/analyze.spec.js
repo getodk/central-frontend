@@ -1,5 +1,5 @@
 import Selectable from '../../../src/components/selectable.vue';
-import OdataAnalyze from '../../../src/components/submission/analyze.vue';
+import OdataAnalyze from '../../../src/components/odata/analyze.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -15,7 +15,7 @@ const clickTab = (component, tabText) =>
     .find(a => a.text() === tabText)
     .trigger('click');
 
-describe('OdataAnalyze (formerly SubmissionAnalyze)', () => {
+describe('OdataAnalyze', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedForms.createPast(1);

@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 
-import SubmissionDownload from '../../../src/components/submission/decrypt.vue';
+import SubmissionDownload from '../../../src/components/submission/download.vue';
 
 import useFields from '../../../src/request-data/fields';
 import { noop } from '../../../src/util/util';
