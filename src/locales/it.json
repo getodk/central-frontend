@@ -176,6 +176,7 @@
     "actions": "Azioni",
     "created": "Creato",
     "createdBy": "Creato da",
+    "createdAt": "Creato il",
     "updatedBy": "Aggiornato da",
     "displayName": "Nome visualizzato",
     "email": "Indirizzo email",
@@ -208,6 +209,7 @@
     "config": "Configurazione del Server",
     "dataset": "Set di dati",
     "datasets": "Set di dati",
+    "entities": "Entità",
     "form": "Formulario",
     "forms": "Formulari",
     "formAttachments": "Allegati del formulario",
@@ -256,6 +258,10 @@
     "noSubmission": "(nessuno)",
     "emptyTable": "Non ci sono ancora invii."
   },
+  "entity": {
+    "label": "Label",
+    "entityId": "ID dell'Entità"
+  },
   "common": {
     "activity": "Attività",
     "anybody": "(Chiunque)",
@@ -263,7 +269,9 @@
     "basicInfo": "Informazioni di base",
     "currentDraft": "La tua bozza attuale",
     "dangerZone": "Zona pericolo",
+    "data": "Dati",
     "docs": "Documentazione",
+    "emptyValue": "(vuoto)",
     "error": "Errore",
     "filter": "Filtro",
     "forum": "Forum",
@@ -283,7 +291,8 @@
     "punctuations": {
       "comma": ","
     },
-    "datasetsPreview": "Anteprima dei set di dati"
+    "datasetsPreview": "Anteprima dei set di dati",
+    "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà"
   },
   "mixin": {
     "request": {

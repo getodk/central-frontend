@@ -241,6 +241,10 @@ export default {
       "subtitle": "(Zeigt das aktivste Projekt der {count} Projekt) | (Zeigt das aktivste Projekt der {count} Projekte)"
     },
     "submissionStates": "Einsendungenstatus",
+    "datasets": {
+      "title": "Datensatz- und Entitätszusammenfassungen",
+      "subtitle": "(Zeigt das aktivste Datensatz der {count} Datensatz) | (Zeigt das aktivste Datensatz der {count} Datensätze)"
+    },
     "other": "Anderes"
   },
   "es": {
@@ -255,6 +259,10 @@ export default {
       "subtitle": "(Mostrando el Proyecto más activo de {count} Proyecto) | (Mostrando el Proyecto más activo de {count} Proyectos) | (Mostrando el Proyecto más activo de {count} Proyectos)"
     },
     "submissionStates": "Estados de envío",
+    "datasets": {
+      "title": "Resúmenes de conjuntos de datos y entidades",
+      "subtitle": "(Mostrando el conjunto de datos más activo de {count} conjunto de datos) | (Mostrando el conjunto de datos más activo de {count} conjuntos de datos) | (Mostrando el conjunto de datos más activo de {count} conjuntos de datos)"
+    },
     "other": "Otro"
   },
   "fr": {

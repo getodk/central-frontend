@@ -509,6 +509,10 @@ export default {
     "action": {
       "upload": "Dateien hochladen"
     },
+    "heading": [
+      "Bei der Analyse des Formulars ergab sich, dass die folgenden Formularanhänge erwartet. Es wird angezeigt, welche Formularanhänge schon hochgeladen wurden und welche noch fehlen.",
+      "Um Dateien hochzuladen, verwenden Sie Drag-and-Drop auf die Seite."
+    ],
     "header": {
       "uploaded": "Hochgeladen"
     },
@@ -517,13 +521,23 @@ export default {
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
-      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
+      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
+      "link": "Datensatz erfolgreich verknüpft."
+    },
+    "datasetsPreview": {
+      "body": [
+        "Mindestens ein Formularanhang hat Dateinamen, die mit Datensatznamen übereinstimmen. Standardmässig sind diese mit Datensätzen verknüpft. Zu Testzwecken können Sie temporäre Daten als CSV-Dateien hochladen und dann eine Verknüpfung zu den Datensätzen herstellen, sobald Sie Ihre Formularlogik überprüft haben."
+      ]
     }
   },
   "es": {
     "action": {
       "upload": "Subir archivos"
     },
+    "heading": [
+      "Según el formulario que cargó, se esperan los siguientes archivos adjuntos del formulario. Puede ver cuáles se han proporcionado o cuáles aún faltan.",
+      "Para cargar archivos, arrastre y suelte uno o más archivos en la página."
+    ],
     "header": {
       "uploaded": "Subido"
     },
@@ -532,7 +546,13 @@ export default {
       "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
     },
     "alert": {
-      "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente."
+      "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente.",
+      "link": "Conjunto de datos vinculado con éxito."
+    },
+    "datasetsPreview": {
+      "body": [
+        "Uno o más adjuntos de formulario tienen nombres de archivo que coinciden con los nombres de los conjuntos de datos. De forma predeterminada, están vinculados a conjuntos de datos. Para realizar pruebas, es posible que desee cargar datos temporales como archivos .csv y luego vincularlos a los conjuntos de datos una vez que haya verificado la lógica de su formulario."
+      ]
     }
   },
   "fr": {

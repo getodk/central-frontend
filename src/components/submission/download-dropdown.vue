@@ -95,8 +95,10 @@ export default {
   "es": {
     "action": {
       "download": {
+        "unfiltered": "Descargar {count} envío | Descargar {count} envíos | Descargar {count} envíos",
         "filtered": {
-          "withoutCount": "Descargar envíos coincidentes."
+          "withoutCount": "Descargar envíos coincidentes.",
+          "withCount": "Descargar {count} envío coincidente | Descargar {count} envíos coincidentes | Descargar {count} envíos coincidentes"
         }
       }
     }

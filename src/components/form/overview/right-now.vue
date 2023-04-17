@@ -212,7 +212,8 @@ export default {
     "submissions": {
       "full": "{submissions} wurde für dieses Formular gespeichert. | {submissions} wurden für dieses Formular gespeichert.",
       "submissions": "Übermittlung | Übermittlungen"
-    }
+    },
+    "datasetsLinked": "An dieses Formular angehängter Datensatz: | Diesem Formular beigefügte Datensätze:"
   },
   "es": {
     "version": {
@@ -227,7 +228,8 @@ export default {
     "submissions": {
       "full": "{submissions} ha sido guardada para este formulario | {submissions} han sido guardadas para este formulario. | {submissions} han sido guardadas para este formulario.",
       "submissions": "Envío | Envíos | Envíos"
-    }
+    },
+    "datasetsLinked": "Conjunto de datos adjunto a este formulario: | Conjuntos de datos adjuntos a este formulario: | Conjuntos de datos adjuntos a este formulario:"
   },
   "fr": {
     "version": {
@@ -273,7 +275,8 @@ export default {
     "submissions": {
       "full": "{submissions} è stato salvato per questo formulario | {submissions} sono state salvate per questo formulario | {submissions} sono state salvate per questo formulario",
       "submissions": "Invio | Invii | Invii"
-    }
+    },
+    "datasetsLinked": "Il Set di dati è collegato questo formulario: | Set di dati sono collegati questo formulario: | Set di dati sono collegati questo formulario:"
   },
   "ja": {
     "version": {

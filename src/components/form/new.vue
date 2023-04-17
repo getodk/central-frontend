@@ -420,7 +420,8 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Wenn Sie noch kein Formular haben, gibt es {tools} mit denen Sie Ihr Formular entwickeln können.",
         "tools": "Werkzeuge"
-      }
+      },
+      "Wenn Sie Anhängen haben, können Sie diese auf der folgenden Seite hochladen, nachdem das Formular erstellt wurde."
     ],
     "dropZone": {
       "full": "Fügen Sie hier eine Datei mit Drag-and-Drop ein, oder {chooseOne} zum Hochladen.",
@@ -437,7 +438,22 @@ $drop-zone-vpadding: 15px;
       "400_8": "Die hochgeladene Formulardefinition scheint nicht für dieses Formular zu sein. Es hat die falsche formId (\"{expected}\" erwartet, \"{actual}\" erhalten).",
       "400_15": "Das XLSForm konnte nicht konvertiert werden: {error}",
       "409_3": "Es gibt bereits ein Formular in diesem Projekt mit der Formular ID \"{xmlFormId}\"."
-    }
+    },
+    "fields": "Felder:",
+    "warningsText": [
+      "Die Datei kann verwendet werden, aber sie hat die folgenden möglichen Probleme:",
+      "Warnungen zum Formulardesign:",
+      "Workflow-Warnungen:",
+      {
+        "deletedFormExists": "Im Papierkorb befindet sich ein Formular mit der ID \"{value}\". Wenn Sie dieses Formular hochladen, können Sie das andere mit der übereinstimmenden ID nicht wiederherstellen.",
+        "structureChanged": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten."
+      },
+      "Bitte beheben Sie die Probleme und versuchen es erneut.",
+      {
+        "create": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um das Formular trotzdem zu erzeugen:",
+        "update": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um den Entwurf trotzdem zu aktualisieren:"
+      }
+    ]
   },
   "es": {
     "title": {
@@ -452,7 +468,8 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Si aún no tiene uno, hay {tools} para ayudarlo a diseñar su formulario.",
         "tools": "herramientas disponibles"
-      }
+      },
+      "Si tiene archivos adjuntos de formulario, podrá cargarlos en la página siguiente, después de que se haya creado el formulario."
     ],
     "dropZone": {
       "full": "Suelta un archivo aquí o {chooseOne} para subir.",
@@ -469,7 +486,22 @@ $drop-zone-vpadding: 15px;
       "400_8": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\").",
       "400_15": "El XLSForm no se pudo convertir: {error}",
       "409_3": "Un formulario ya existe en este proyecto con el ID formulario de {xmlFormId}"
-    }
+    },
+    "fields": "Campos:",
+    "warningsText": [
+      "Este archivo se puede utilizar, pero tiene los siguientes problemas posibles:",
+      "Advertencias sobre el diseño del formulario:",
+      "Advertencias sobre el flujo de trabajo:",
+      {
+        "deletedFormExists": "Hay un formulario con ID \"{value}\" en la Papelera. Si carga este formulario, no podrá recuperar el otro con la identificación coincidente.",
+        "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada."
+      },
+      "Por favor, corrija los problemas e intente nuevamente.",
+      {
+        "create": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para crear el formulario de todos modos:",
+        "update": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para actualizar el borrador de todos modos:"
+      }
+    ]
   },
   "fr": {
     "title": {
@@ -589,6 +621,7 @@ $drop-zone-vpadding: 15px;
       "Avvertenze sulla progettazione del formulario:",
       "Avvertenze sul flusso di lavoro:",
       {
+        "deletedFormExists": "C'è un formulario con ID \"{value}\" nel Cestino. Se carichi questo formulario, non sarai in grado di annullare l'eliminazione dell'altro con l'ID corrispondente.",
         "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti."
       },
       "Correggi i problemi e riprova.",

@@ -202,7 +202,14 @@ export default {
       "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
       "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
     ],
-    "collectProjectName": "[Entwurf] {name}"
+    "collectProjectName": "[Entwurf] {name}",
+    "datasetsPreview": {
+      "body": [
+        "Dieses Formular kann Entitäten zu einem Datensatz hinzufügen.",
+        "In dieser Vorschauversion von Datasets müssen Sie Ihr Formular veröffentlichen, um das Dataset-Update anzuzeigen. In einer zukünftigen Version von Central können Sie die Dataset-Funktionalität in einem Entwurfsstatus testen.",
+        "Wir empfehlen vorerst, Ihre datensatzbezogenen Formulare zu veröffentlichen und keine Übermittlungen zu genehmigen (und daher keine unerwünschten Entitäten zu erstellen), bis Sie sicher sind, dass das Formular fertig ist."
+      ]
+    }
   },
   "es": {
     "title": "Prueba de borrador",
@@ -210,7 +217,14 @@ export default {
       "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
       "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
     ],
-    "collectProjectName": "borrador {name}"
+    "collectProjectName": "borrador {name}",
+    "datasetsPreview": {
+      "body": [
+        "Este formulario puede agregar entidades a un conjunto de datos.",
+        "En esta versión preliminar de conjuntos de datos, debe publicar su formulario para ver la actualización del conjunto de datos. En una versión futura de Central, podrá probar la funcionalidad del conjunto de datos en un estado Borrador.",
+        "Por ahora, recomendamos publicar sus formularios relacionados con conjuntos de datos y no aprobar ningún envío (y, por lo tanto, no crear entidades no deseadas) hasta que esté seguro de que el formulario está listo."
+      ]
+    }
   },
   "fr": {
     "title": "Test de l'ébauche",

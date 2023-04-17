@@ -190,6 +190,7 @@ export default {
     "field": {
       "sitewideRole": "Seitenweite Rolle"
     },
+    "cannotResetPassword": "Sie können Ihr eigenes Passwort auf dieser Seite nicht zurücksetzen. Um Ihr Passwort zu ändern, bearbeiten Sie Ihr Profil.",
     "cannotRetire": "Sie dürfen sich nicht selbst deaktivieren.",
     "action": {
       "retire": "User deaktivieren"
@@ -200,6 +201,7 @@ export default {
     "field": {
       "sitewideRole": "Rol de sitio"
     },
+    "cannotResetPassword": "No puede restablecer su propia contraseña en esta página. Para cambiar su contraseña, edite su perfil.",
     "cannotRetire": "No puede retirar su propio usuario",
     "action": {
       "retire": "Retirar usuario"

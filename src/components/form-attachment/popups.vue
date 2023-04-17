@@ -339,6 +339,7 @@ $popup-width: 300px;
     "title": "Dateien hochladen",
     "duringDragover": {
       "dropToUpload": "Jetzt loslassen, um die Datei als {attachmentName} hochzuladen.",
+      "dragover": "Verwenden Sie Drag-and-Drop, um den Formularanhang hochzuladen und der existierende Formularanhang zu ersetzen.",
       "dropToPrepare": {
         "full": "Lassen Sie die {countOfFiles} hier fallen, um sie hochzuladen.",
         "countOfFiles": "{count} Datei | {count} Dateien"
@@ -368,6 +369,7 @@ $popup-width: 300px;
     "title": "Subir archivos",
     "duringDragover": {
       "dropToUpload": "Suelta ahora para cargar este archivo como {attachmentName}",
+      "dragover": "Arrastre sobre el archivo adjunto del formulario que deseas reemplazar con el archivo y suéltalo para cargarlo.",
       "dropToPrepare": {
         "full": "Suelte ahora para preparar {countOfFiles} para subir a este formulario.",
         "countOfFiles": "{count} archivo | {count} archivos | {count} archivos"

@@ -113,7 +113,17 @@ const placeholder = (counts) => t('placeholder', counts);
       }
     }
   },
+  "de": {
+    "placeholder": "{selected} von {total}",
+    "action": {
+      "select": {
+        "all": "Alle",
+        "none": "Keine"
+      }
+    }
+  },
   "es": {
+    "placeholder": "{selected} de {total}",
     "action": {
       "select": {
         "all": "Todos",

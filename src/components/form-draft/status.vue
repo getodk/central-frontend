@@ -306,6 +306,7 @@ export default {
     },
     "alert": {
       "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung.",
+      "publish": "Ihr Entwurf ist jetzt veröffentlicht. Alle Geräte, die Formulare für dieses Projekt beziehen, erhalten ab jetzt die neuen Formularedefinitionen und Anhängen.",
       "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
       "delete": "Das Formular \"{name}\" wurde gelöscht."
     }
@@ -332,6 +333,7 @@ export default {
     },
     "alert": {
       "upload": "¡Éxito! La nueva definición del formulario se ha guardado como su borrador",
+      "publish": "Su borrador ya está publicado. Todos los dispositivos que obtengan formularios para este proyecto ahora recibirán la nueva definición del formulario y los archivos adjuntos del formulario.",
       "abandon": "La versión borrador de este formulario ha sido eliminado con éxito.",
       "delete": "El formulario {name} fue eliminado."
     }

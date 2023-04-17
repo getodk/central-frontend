@@ -472,19 +472,19 @@
     },
     "created": {
       "string": "Vytvořeno",
-      "developer_comment": "This is the text of a table column header. The column shows who created the resource and possibly also when they did so."
+      "developer_comment": "This is the text of a table column header. The column shows who created each App User and possibly also when they did so."
     },
     "createdBy": {
       "string": "Vytvořeno od",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that created each Entity."
     },
     "createdAt": {
       "string": "Vytvořeno v",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column shows when each Entity was created."
     },
     "updatedBy": {
       "string": "Aktualizováno od",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. For each Entity property, the column shows the Forms that can update the property."
     },
     "displayName": {
       "string": "Zobrazit jméno",
@@ -508,7 +508,7 @@
     },
     "submitterName": {
       "string": "Odesláno od",
-      "developer_comment": "This is the text of a table column header."
+      "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that submitted each Submission."
     },
     "submissionDate": {
       "string": "Odesláno v",
@@ -766,6 +766,10 @@
     "docs": {
       "string": "Dokumentace",
       "developer_comment": "This is the text of a link that links to the documentation."
+    },
+    "emptyValue": {
+      "string": "",
+      "developer_comment": "This is shown when the value of an Entity property is empty."
     },
     "error": {
       "string": "Chyba"
@@ -1367,6 +1371,18 @@
         }
       }
     },
+    "EntityBasicDetails": {
+      "creatingSubmission": {
+        "string": "",
+        "developer_comment": "This is shown above the Submission that created the Entity."
+      }
+    },
+    "EntityData": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
     "EntityList": {
       "action": {
         "download": {
@@ -1379,6 +1395,18 @@
       "noEntities": {
         "string": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
         "developer_comment": "This text is shown when there are no Entities to show in a table."
+      }
+    },
+    "EntityShow": {
+      "back": {
+        "title": {
+          "string": "",
+          "developer_comment": "This is shown at the top of the page."
+        },
+        "back": {
+          "string": "",
+          "developer_comment": "This is shown at the top of the page. The user can click it to go back."
+        }
       }
     },
     "FieldKeyList": {
@@ -3282,7 +3310,7 @@
           "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
         },
         "1": {
-          "string": ""
+          "string": "Chcete-li se připojit k tomuto kanálu OData, vyberte svůj nástroj a zkopírujte do něj odkaz."
         }
       },
       "tab": {
@@ -3583,7 +3611,7 @@
       "field": {
         "submissionDate": {
           "string": "Odesláno v",
-          "developer_comment": "This is the text of a form field that allows the user to filter by a date range."
+          "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
       }
     },
@@ -3609,7 +3637,7 @@
       "field": {
         "submitter": {
           "string": "Odesláno od",
-          "developer_comment": "This is the text of a form field that shows the names of submitters."
+          "developer_comment": "This is the text of a form field that shows the names of users and Public Access Links that have submitted Submissions."
         },
         "search": {
           "string": "Hledat odesílatele...",

@@ -123,6 +123,12 @@ export default {
   "cs": {
     "back": "Zpět na datové sady projektu"
   },
+  "de": {
+    "back": "Zurück zu den Projektdatensätzen"
+  },
+  "es": {
+    "back": "Volver a conjuntos de datos del proyecto"
+  },
   "fr": {
     "back": "Retour aux Dataset du Projet"
   },

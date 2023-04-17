@@ -226,10 +226,22 @@ export default {
   },
   "de": {
     "title": "OData verwenden",
+    "introduction": [
+      "OData ist ein Standard, um Daten zwischen Tools und Diensten zu übertragen. Mächtige Tools wie {powerBi}, {excel},{python}, und {r} können Daten für Analysen über OData holen.",
+      "Um eine Verbindung zu diesem OData-Feed herzustellen, wählen Sie Ihr Tool und kopieren Sie den Link."
+    ],
     "tab": {
+      "microsoft": "Power BI oder Excel",
       "other": "Anderes"
     },
     "help": {
+      "microsoft": {
+        "full": "Für Hilfe zur Verwendung von OData mit Power BI, lesen Sie {pageForPowerBi}. Für Hilfe zu Excel, lesen Sie {pageForExcel}.",
+        "pageForExcel": "diese Seite",
+        "pageForPowerBi": "diese Seite"
+      },
+      "python": "Um sich von Python aus mit Central zu verbinden, empfehlen wir {pyODK}. pyODK ist der offizielle Python-Client für Central. Es vereinfacht die Datenanalyse und Workflow-Automatisierung.",
+      "r": "Um sich von R aus mit Central zu verbinden, empfehlen wir {ruODK}. ruODK wird von Mitgliedern der ODK-Community entwickelt und unterstützt.",
       "other": {
         "full": "Für eine ausführliche Beschreibung unserer OData-Unterstützung, bitte lesen Sie {article}.",
         "article": "diesen Artikel"
@@ -238,10 +250,22 @@ export default {
   },
   "es": {
     "title": "Usando protocolo de datos abiertos \"OData\"",
+    "introduction": [
+      "El protocolo de datos abiertos \"OData\" es un nuevo protocolo que permite realizar transferencia de datos entre aplicaciones y servidores. Herramientas potentes como {powerBi}, {excel}, {python}. y {r} pueden obtener y analizar datos a través de OData.",
+      "Para conectarse a esta fuente de OData, seleccione su herramienta y copie el enlace en ella."
+    ],
     "tab": {
+      "microsoft": "Power BI o Excel",
       "other": "Otro"
     },
     "help": {
+      "microsoft": {
+        "full": "Para mayor información del uso de OData con Power BI, véase {pageForPowerBi}; con Excel veasé {pageForExcel}.",
+        "pageForExcel": "esta página",
+        "pageForPowerBi": "esta página"
+      },
+      "python": "Para conectarse a Central desde Python, recomendamos {pyODK}. pyODK es el cliente oficial de Python para Central. Simplifica el análisis de datos y la automatización del flujo de trabajo.",
+      "r": "Para conectarse a Central desde R, recomendamos {ruODK}. ruODK está desarrollado y respaldado por miembros de la comunidad ODK.",
       "other": {
         "full": "Para una descripción detallada del soporte realizado para OData, léa {article}.",
         "article": "este artículo"
@@ -250,10 +274,6 @@ export default {
   },
   "fr": {
     "title": "Utilisation d'OData",
-    "introduction": [
-      "OData est une norme pour le transfert de données entre outils et services. Des outils d'analyse gratuits et puissants comme {powerBi}, {excel}, {python} et {r} peuvent récupérer des données par le biais d'OData pour les analyser.",
-      "Pour commencer à utiliser OData, sélectionnez votre outil et y copiez le lien."
-    ],
     "tab": {
       "microsoft": "Power BI ou Excel",
       "other": "Autre"
@@ -286,10 +306,22 @@ export default {
   },
   "it": {
     "title": "Utilizzando OData",
+    "introduction": [
+      "OData è uno standard per il trasferimento di dati tra strumenti e servizi. Strumenti di analisi potenti come {powerBi}, {excel}, {python}, e {r} possono recuperare i dati su OData per l'analisi.",
+      "Per connettersi a questo feed OData, seleziona il tuo strumento e copia il link al suo interno."
+    ],
     "tab": {
+      "microsoft": "Power BI o Excel",
       "other": "Altro"
     },
     "help": {
+      "microsoft": {
+        "full": "Per informazioni sull'utilizzo di OData con Power BI, vedere {pageForPowerBi}. Per assistenza con Excel, vedere {pageForExcel}.",
+        "pageForExcel": "questa pagina",
+        "pageForPowerBi": "questa pagina"
+      },
+      "python": "Per connettersi a Central da Python, consigliamo {pyODK}. pyODK è il client Python ufficiale per Central. Semplifica l'analisi dei dati e l'automazione del flusso di lavoro.",
+      "r": "Per connetterti a Central da R, ti consigliamo {ruODK}. ruODK è sviluppato e supportato dai membri della comunità ODK.",
       "other": {
         "full": "Per una descrizione completa del nostro supporto OData, vedere {article}.",
         "article": "questo articolo"

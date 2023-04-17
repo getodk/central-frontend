@@ -141,6 +141,15 @@ export default {
       "abandon": "Entwurf verwerfen",
       "deleteForm": "Entwurf verwerfen und Formular löschen"
     },
+    "introduction": {
+      "abandon": [
+        "Sie sind dabei, die Entwurfsversion dieses Formulars zu löschen. Das bedeutet, dass das Formular, hochgeladene dazugehörige Formularanhänge und alle Test-Übermittlungen entfernt werden.",
+        "Ihre veröffentlichte Formulardefinition, ihre Formularanhänge und Übermittlungen sind davon nicht betroffen."
+      ],
+      "deleteForm": [
+        "Sie sind im Begriff, diese Definition des Formularentwurfes zusammen mit allen Entwürfen von Formularanhängen, die Sie hochgeladen haben, und allen Testübermittlungen zu löschen. Da Sie dieses Formular noch nicht veröffentlicht haben, wird dieses gesamte Formular gelöscht und in den Papierkorb verschoben."
+      ]
+    },
     "action": {
       "abandon": "Ja, Löschen"
     }
@@ -149,6 +158,15 @@ export default {
     "title": {
       "abandon": "Abandonar borrador",
       "deleteForm": "Abandonar borrador y borrar formulario"
+    },
+    "introduction": {
+      "abandon": [
+        "Está a punto de borrar permanentemente la versión borrador de este formulario. Esto significa que se eliminarán el borrador de la definición del formulario, cualquier archivo adjunto del borrador del formulario que haya cargado y todos los envíos de prueba.",
+        "Su definición de formulario publicado, sus adjuntos de formulario y envíos no se verán afectados."
+      ],
+      "deleteForm": [
+        "Está a punto de eliminar este borrador de definición de formulario, junto con cualquier borrador de archivos adjuntos de formulario que haya cargado y todos los envíos de prueba. Debido a que aún no lo ha publicado, este Formulario completo se eliminará y se moverá a la Papelera."
+      ]
     },
     "action": {
       "abandon": "Abandonar"

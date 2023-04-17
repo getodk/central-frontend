@@ -402,7 +402,8 @@ export default {
             ],
             "Sie werden zukünftig Übermittlungsdaten nicht mehr online als Vorschau sehen können.",
             "Sie werden sich zukünftig nicht mehr über OData mit Daten verbinden können.",
-            "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten."
+            "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten.",
+            "Neue Einreichungen werden nicht mehr zu Entitäten verarbeitet."
           ],
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
@@ -424,7 +425,10 @@ export default {
       {
         "introduction": [
           "Zuerst müssen Sie eine Passphrase auswählen. Diese wird dann benötigt, um Ihre Übermittlungen zu entschlüsseln. Zum Schutz Ihrer Daten wird diese Passphrase nicht gespeichert. Nur Benutzer, die diese Passphrase wissen, können Ihre Übermittlungen entschlüsseln.",
-          {}
+          {
+            "full": "Wenn Sie die Passphrase verlieren, gibt es {no} Möglichkeit, sie oder Ihre Daten wiederherzustellen!",
+            "no": "keine"
+          }
         ]
       }
     ],
@@ -453,7 +457,8 @@ export default {
             ],
             "Ya no podrá obtener una vista previa de los datos de la presentación en línea",
             "Ya no podrá conectarse a los datos a través de Odata.",
-            "Ya no podrá editar envíos en su navegador web."
+            "Ya no podrá editar envíos en su navegador web.",
+            "Los Envíos nuevos ya no se procesarán en Entidades."
           ],
           [
             "Además, lo siguiente es cierto en esta versión de ODK Central:",
@@ -475,7 +480,10 @@ export default {
       {
         "introduction": [
           "En primer lugar, necesitará seleccionar una frase de contraseña. Esta frase será requerida para descifrar sus envíos. Por su privacidad, el servidor no recordará esta frase: solo las personas con la frase de contraseña podrán descifrar y leer los datos de sus envíos.",
-          {}
+          {
+            "full": "Si pierde la frase de contraseña, {no} hay una manera de recuperarla o sus datos!",
+            "no": "no"
+          }
         ]
       }
     ],

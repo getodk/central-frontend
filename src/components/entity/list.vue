@@ -149,6 +149,22 @@ export default {
   "cs": {
     "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
   },
+  "de": {
+    "action": {
+      "download": {
+        "unfiltered": "{count} Entität herunterladen | {count} Entitäten herunterladen"
+      }
+    },
+    "noEntities": "Es gibt keine Entitäten zum Anzeigen."
+  },
+  "es": {
+    "action": {
+      "download": {
+        "unfiltered": "Descargar {count} Entidad | Descargar {count} Entidades | Descargar {count} Entidades"
+      }
+    },
+    "noEntities": "No hay Entidades para mostrar."
+  },
   "fr": {
     "action": {
       "download": {
@@ -156,6 +172,14 @@ export default {
       }
     },
     "noEntities": "Pas d'entités à montrer."
+  },
+  "it": {
+    "action": {
+      "download": {
+        "unfiltered": "Scarica {count} entità | Scarica {count} entità | Scarica {count} entità"
+      }
+    },
+    "noEntities": "Non ci sono entità da mostrare."
   }
 }
 </i18n>

@@ -263,7 +263,13 @@ export default {
     "notUploaded": {
       "text": "Noch nicht hochgeladen",
       "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
-    }
+    },
+    "linkedToDataset": "Mit Datensatz verknüpft {datasetName}",
+    "uploadToOverride": "Laden Sie eine zu überschreibende Datei hoch.",
+    "action": {
+      "linkDataset": "Datensatz verknüpfen {datasetName}"
+    },
+    "override": "Überschreiben"
   },
   "es": {
     "type": {
@@ -276,7 +282,13 @@ export default {
     "notUploaded": {
       "text": "Aún no cargado",
       "title": "Para cargar archivos, arrastre y suelte uno o más archivos en esta página."
-    }
+    },
+    "linkedToDataset": "Vinculado al conjunto de datos {datasetName}",
+    "uploadToOverride": "Cargue un archivo para anular.",
+    "action": {
+      "linkDataset": "Vincular conjunto de datos {datasetName}"
+    },
+    "override": "Invalidar"
   },
   "fr": {
     "type": {
