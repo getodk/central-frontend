@@ -23,7 +23,7 @@ for (const basename of fs.readdirSync('transifex')) {
   const json = fs.readFileSync(`transifex/${basename}`).toString();
   const translated = destructure(json, locale);
 
-  // Implement @transifexPath.
+  // Implement @transifexKey.
   for (const [sourcePath, transifexPath] of transifexPaths)
     setPath(sourcePath, path(transifexPath, translated), translated);
   for (const [, transifexPath] of transifexPaths) {

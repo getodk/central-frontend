@@ -208,7 +208,7 @@ const pathOfLinkedMessage = (pluralForms) => {
 // TRANSIFEX COMMENTS
 
 const commentTags = {
-  transifexPath: (text) => {
+  transifexKey: (text) => {
     if (text === '') throw new Error('path required');
     const path = text.split('.');
     if (path.some(element => !/^\w+$/.test(element)))
@@ -565,7 +565,7 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
     }
   }
 
-  // Walk `messages`, doing some basic validation and parsing @transifexPath
+  // Walk `messages`, doing some basic validation and parsing @transifexKey
   // tags.
   const entries = [[[], messages]];
   const transifexPaths = [];
@@ -575,8 +575,8 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
       logThenThrow({ path, value }, 'invalid value');
     for (const [k, v] of Object.entries(value)) {
       const p = [...path, k];
-      const { transifexPath } = parseComment(value, k);
-      if (transifexPath != null) transifexPaths.push([p, transifexPath]);
+      const { transifexKey } = parseComment(value, k);
+      if (transifexKey != null) transifexPaths.push([p, transifexKey]);
       if (!(v instanceof PluralForms)) entries.push([p, v]);
     }
   }
@@ -590,19 +590,19 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
       if (!transifexOnly.has(joined)) {
         transifexOnly.set(joined, value);
       } else if (!equals(value, transifexOnly.get(joined))) {
-        logThenThrow({ sourcePath, transifexPath }, `@transifexPath ${joined} specified for multiple, conflicting values`);
+        logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} specified for multiple, conflicting values`);
       }
     } else if (!equals(value, getPath(sourcePath, messages))) {
-      logThenThrow({ sourcePath, transifexPath }, `@transifexPath ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
+      logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
     }
   }
-  // Check that @transifexPath does not point to a value that itself specifies
-  // @transifexPath.
+  // Check that @transifexKey does not point to a value that itself specifies
+  // @transifexKey.
   for (const [, transifexPath] of transifexPaths) {
     for (const [sourcePath] of transifexPaths) {
       if (startsWith(sourcePath, transifexPath)) {
         const joined = transifexPath.join('.');
-        throw new Error(`@transifexPath ${joined} was specified, but ${joined} itself specifies @transifexPath`);
+        throw new Error(`@transifexKey ${joined} was specified, but ${joined} itself specifies @transifexKey`);
       }
     }
   }

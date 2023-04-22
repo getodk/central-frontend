@@ -14,7 +14,7 @@ const { messages, transifexPaths } = readSourceMessages(
 );
 const structured = restructure(messages);
 
-// Implement @transifexPath.
+// Implement @transifexKey.
 for (const [sourcePath, transifexPath] of transifexPaths) {
   if (!hasPath(transifexPath, structured))
     setPath(transifexPath, path(sourcePath, structured), structured);

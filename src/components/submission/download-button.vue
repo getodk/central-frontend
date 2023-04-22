@@ -51,7 +51,7 @@ export default {
 
 <i18n lang="json5">
 {
-  // @transifexPath component.SubmissionDownloadDropdown
+  // @transifexKey component.SubmissionDownloadDropdown
   "en": {
     "action": {
       "download": {

@@ -360,7 +360,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
 
 <i18n lang="json5">
 {
-  // @transifexPath component.SubmissionDecrypt
+  // @transifexKey component.SubmissionDecrypt
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Download Submissions",

@@ -165,7 +165,7 @@ export default {
 
 <i18n lang="json5">
 {
-  // @transifexPath component.SubmissionAnalyze
+  // @transifexKey component.SubmissionAnalyze
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Using OData",
