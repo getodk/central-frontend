@@ -1,9 +1,9 @@
 const fs = require('fs');
-const { equals, last, path: getPath, startsWith } = require('ramda');
+const { equals, hasPath, last, path: getPath, startsWith } = require('ramda');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { parse } = require('comment-json');
 
-const { logThenThrow, sortProps } = require('./util');
+const { deletePath, logThenThrow, setPath, sortProps } = require('./util');
 
 
 
@@ -523,6 +523,70 @@ const destructure = (json, locale) => JSON.parse(
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// @transifexKey
+
+const processTransifexPaths = (transifexPaths, sourceMessages) => {
+  const transifexOnly = new Map();
+  for (const [sourcePath, transifexPath] of transifexPaths) {
+    const value = getPath(transifexPath, sourceMessages);
+    const joined = transifexPath.join('.');
+    if (value == null) {
+      if (!transifexOnly.has(joined)) {
+        transifexOnly.set(joined, value);
+      } else if (!equals(value, transifexOnly.get(joined))) {
+        logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} specified for multiple, conflicting values`);
+      }
+    } else if (!equals(value, getPath(sourcePath, sourceMessages))) {
+      logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
+    }
+  }
+
+  // Check that @transifexKey does not point to a value that itself specifies
+  // @transifexKey.
+  for (const [, transifexPath] of transifexPaths) {
+    for (const [sourcePath] of transifexPaths) {
+      if (startsWith(sourcePath, transifexPath)) {
+        const joined = transifexPath.join('.');
+        throw new Error(`@transifexKey ${joined} was specified, but ${joined} itself specifies @transifexKey`);
+      }
+    }
+  }
+
+  // Check that @transifexKey is not specified for a value that is nested in an
+  // object that also specifies @transifexKey. (I'm not sure what the expected
+  // behavior would be in that case.)
+  for (const [sourcePath] of transifexPaths) {
+    for (const [otherPath] of transifexPaths) {
+      if (otherPath !== sourcePath && startsWith(otherPath, sourcePath))
+        throw new Error(`${sourcePath.join('.')} specifies @transifexKey, but it is in an object that also specifies @transifexKey`);
+    }
+  }
+};
+
+// `structured` is a Structured JSON object returned by restructure().
+// rekeySource() will mutate `structured`, applying the path changes specified
+// by transifexPaths.
+const rekeySource = (structured, transifexPaths) => {
+  for (const [sourcePath, transifexPath] of transifexPaths) {
+    if (!hasPath(transifexPath, structured))
+      setPath(transifexPath, getPath(sourcePath, structured), structured);
+    deletePath(sourcePath, structured);
+  }
+  // Re-alphabetize components by name in order to minimize the diff.
+  sortProps(structured.component);
+};
+
+const rekeyTranslations = (source, translated, transifexPaths) => {
+  for (const [sourcePath, transifexPath] of transifexPaths)
+    setPath(sourcePath, getPath(transifexPath, translated), translated);
+  for (const [, transifexPath] of transifexPaths) {
+    if (!hasPath(transifexPath, source)) deletePath(transifexPath, translated);
+  }
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // READ SOURCE MESSAGES
 
 // Returns the Vue I18n messages for the source locale after converting them to
@@ -581,41 +645,7 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
     }
   }
 
-  // Process transifexPaths.
-  const transifexOnly = new Map();
-  for (const [sourcePath, transifexPath] of transifexPaths) {
-    const value = getPath(transifexPath, messages);
-    const joined = transifexPath.join('.');
-    if (value == null) {
-      if (!transifexOnly.has(joined)) {
-        transifexOnly.set(joined, value);
-      } else if (!equals(value, transifexOnly.get(joined))) {
-        logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} specified for multiple, conflicting values`);
-      }
-    } else if (!equals(value, getPath(sourcePath, messages))) {
-      logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
-    }
-  }
-  // Check that @transifexKey does not point to a value that itself specifies
-  // @transifexKey.
-  for (const [, transifexPath] of transifexPaths) {
-    for (const [sourcePath] of transifexPaths) {
-      if (startsWith(sourcePath, transifexPath)) {
-        const joined = transifexPath.join('.');
-        throw new Error(`@transifexKey ${joined} was specified, but ${joined} itself specifies @transifexKey`);
-      }
-    }
-  }
-  // Check that @transifexKey is not specified for a value that is nested in an
-  // object that also specifies @transifexKey. (I'm not sure what the expected
-  // behavior would be in that case.)
-  for (const [sourcePath] of transifexPaths) {
-    for (const [otherPath] of transifexPaths) {
-      if (otherPath !== sourcePath && startsWith(otherPath, sourcePath))
-        throw new Error(`${sourcePath.join('.')} specifies @transifexKey, but it is in an object that also specifies @transifexKey`);
-    }
-  }
-
+  processTransifexPaths(transifexPaths, messages);
   return { messages, transifexPaths };
 };
 
@@ -978,8 +1008,8 @@ const writeTranslations = (
 
 module.exports = {
   sourceLocale,
-  restructure,
-  destructure,
+  restructure, destructure,
+  rekeySource, rekeyTranslations,
   readSourceMessages,
   writeTranslations
 };

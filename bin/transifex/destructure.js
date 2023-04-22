@@ -2,10 +2,9 @@
 // see CONTRIBUTING.md.
 
 const fs = require('fs');
-const { hasPath, path } = require('ramda');
 
-const { deletePath, logThenThrow, mapComponentsToFiles, setPath } = require('../util/util');
-const { destructure, readSourceMessages, writeTranslations } = require('../util/transifex');
+const { logThenThrow, mapComponentsToFiles } = require('../util/util');
+const { destructure, readSourceMessages, rekeyTranslations, writeTranslations } = require('../util/transifex');
 
 const filenamesByComponent = mapComponentsToFiles('src/components');
 const { messages: sourceMessages, transifexPaths } = readSourceMessages(
@@ -22,15 +21,7 @@ for (const basename of fs.readdirSync('transifex')) {
 
   const json = fs.readFileSync(`transifex/${basename}`).toString();
   const translated = destructure(json, locale);
-
-  // Implement @transifexKey.
-  for (const [sourcePath, transifexPath] of transifexPaths)
-    setPath(sourcePath, path(transifexPath, translated), translated);
-  for (const [, transifexPath] of transifexPaths) {
-    if (!hasPath(transifexPath, sourceMessages))
-      deletePath(transifexPath, translated);
-  }
-
+  rekeyTranslations(sourceMessages, translated, transifexPaths);
   writeTranslations(
     locale,
     sourceMessages,
