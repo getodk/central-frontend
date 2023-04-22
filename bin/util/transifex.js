@@ -528,16 +528,17 @@ const destructure = (json, locale) => JSON.parse(
 const processTransifexPaths = (transifexPaths, sourceMessages) => {
   const transifexOnly = new Map();
   for (const [sourcePath, transifexPath] of transifexPaths) {
-    const value = getPath(transifexPath, sourceMessages);
-    const joined = transifexPath.join('.');
-    if (value == null) {
-      if (!transifexOnly.has(joined)) {
-        transifexOnly.set(joined, value);
-      } else if (!equals(value, transifexOnly.get(joined))) {
-        logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} specified for multiple, conflicting values`);
+    const valueAtSourcePath = getPath(sourcePath, sourceMessages);
+    const valueAtTransifexPath = getPath(transifexPath, sourceMessages);
+    const transifexJoined = transifexPath.join('.');
+    if (valueAtTransifexPath == null) {
+      if (!transifexOnly.has(transifexJoined)) {
+        transifexOnly.set(transifexJoined, valueAtSourcePath);
+      } else if (!equals(valueAtSourcePath, transifexOnly.get(transifexJoined))) {
+        throw new Error(`@transifexKey ${transifexJoined} specified for multiple, conflicting values`);
       }
-    } else if (!equals(value, getPath(sourcePath, sourceMessages))) {
-      logThenThrow({ sourcePath, transifexPath }, `@transifexKey ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
+    } else if (!equals(valueAtTransifexPath, valueAtSourcePath)) {
+      throw new Error(`@transifexKey ${transifexJoined} was specified for a value that conflicts with the existing value at ${transifexJoined}`);
     }
   }
 
