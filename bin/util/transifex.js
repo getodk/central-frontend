@@ -233,7 +233,7 @@ const commentTag = (line) => {
 };
 
 // Parses the JSON comments before a message or group of messages.
-const parseComment = (messages, key) => {
+const parseComments = (messages, key) => {
   const comments = messages[Symbol.for(`before:${key}`)];
   if (comments == null) return {};
 
@@ -491,7 +491,7 @@ const _restructure = (
     structured[k] = _restructure(
       v,
       root,
-      parseComment(value, k).text ?? commentForPath,
+      parseComments(value, k).text ?? commentForPath,
       commentsByKey[k] ?? commentForKey,
       commentsForFull != null ? commentsForFull[k] : null,
       commentsByKey
@@ -575,7 +575,7 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
       logThenThrow({ path, value }, 'invalid value');
     for (const [k, v] of Object.entries(value)) {
       const p = [...path, k];
-      const { transifexKey } = parseComment(value, k);
+      const { transifexKey } = parseComments(value, k);
       if (transifexKey != null) transifexPaths.push([p, transifexKey]);
       if (!(v instanceof PluralForms)) entries.push([p, v]);
     }
@@ -604,6 +604,15 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
         const joined = transifexPath.join('.');
         throw new Error(`@transifexKey ${joined} was specified, but ${joined} itself specifies @transifexKey`);
       }
+    }
+  }
+  // Check that @transifexKey is not specified for a value that is nested in an
+  // object that also specifies @transifexKey. (I'm not sure what the expected
+  // behavior would be in that case.)
+  for (const [sourcePath] of transifexPaths) {
+    for (const [otherPath] of transifexPaths) {
+      if (otherPath !== sourcePath && startsWith(otherPath, sourcePath))
+        throw new Error(`${sourcePath.join('.')} specifies @transifexKey, but it is in an object that also specifies @transifexKey`);
     }
   }
 

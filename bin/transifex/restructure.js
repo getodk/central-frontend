@@ -20,7 +20,7 @@ for (const [sourcePath, transifexPath] of transifexPaths) {
     setPath(transifexPath, path(sourcePath, structured), structured);
   deletePath(sourcePath, structured);
 }
-// Re-alphabeticalize components by name in order to minimize the diff.
+// Re-alphabetize components by name in order to minimize the diff.
 sortProps(structured.component);
 
 fs.writeFileSync(
