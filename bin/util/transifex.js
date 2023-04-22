@@ -583,24 +583,24 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
 
   // Process transifexPaths.
   const transifexOnly = new Map();
-  for (const [vuePath, transifexPath] of transifexPaths) {
+  for (const [sourcePath, transifexPath] of transifexPaths) {
     const value = getPath(transifexPath, messages);
     const joined = transifexPath.join('.');
     if (value == null) {
       if (!transifexOnly.has(joined)) {
         transifexOnly.set(joined, value);
       } else if (!equals(value, transifexOnly.get(joined))) {
-        logThenThrow({ vuePath, transifexPath }, `@transifexPath ${joined} specified for multiple, conflicting values`);
+        logThenThrow({ sourcePath, transifexPath }, `@transifexPath ${joined} specified for multiple, conflicting values`);
       }
-    } else if (!equals(value, getPath(vuePath, messages))) {
-      logThenThrow({ vuePath, transifexPath }, `@transifexPath ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
+    } else if (!equals(value, getPath(sourcePath, messages))) {
+      logThenThrow({ sourcePath, transifexPath }, `@transifexPath ${joined} was specified for a value that conflicts with the existing value at ${joined}`);
     }
   }
   // Check that @transifexPath does not point to a value that itself specifies
   // @transifexPath.
   for (const [, transifexPath] of transifexPaths) {
-    for (const [vuePath] of transifexPaths) {
-      if (startsWith(vuePath, transifexPath)) {
+    for (const [sourcePath] of transifexPaths) {
+      if (startsWith(sourcePath, transifexPath)) {
         const joined = transifexPath.join('.');
         throw new Error(`@transifexPath ${joined} was specified, but ${joined} itself specifies @transifexPath`);
       }

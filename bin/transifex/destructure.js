@@ -24,8 +24,8 @@ for (const basename of fs.readdirSync('transifex')) {
   const translated = destructure(json, locale);
 
   // Implement @transifexPath.
-  for (const [vuePath, transifexPath] of transifexPaths)
-    setPath(vuePath, path(transifexPath, translated), translated);
+  for (const [sourcePath, transifexPath] of transifexPaths)
+    setPath(sourcePath, path(transifexPath, translated), translated);
   for (const [, transifexPath] of transifexPaths) {
     if (!hasPath(transifexPath, sourceMessages))
       deletePath(transifexPath, translated);

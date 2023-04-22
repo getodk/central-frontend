@@ -15,10 +15,10 @@ const { messages, transifexPaths } = readSourceMessages(
 const structured = restructure(messages);
 
 // Implement @transifexPath.
-for (const [vuePath, transifexPath] of transifexPaths) {
+for (const [sourcePath, transifexPath] of transifexPaths) {
   if (!hasPath(transifexPath, structured))
-    setPath(transifexPath, path(vuePath, structured), structured);
-  deletePath(vuePath, structured);
+    setPath(transifexPath, path(sourcePath, structured), structured);
+  deletePath(sourcePath, structured);
 }
 // Re-alphabeticalize components by name in order to minimize the diff.
 sortProps(structured.component);
