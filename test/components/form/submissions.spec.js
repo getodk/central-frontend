@@ -1,5 +1,5 @@
 import EnketoFill from '../../../src/components/enketo/fill.vue';
-import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
+import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';

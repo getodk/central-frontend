@@ -21,9 +21,7 @@ except according to the terms contained in the LICENSE file.
 import { useRequestData } from '../../request-data';
 
 export default {
-  // Ideally, this component would be named SubmissionDownloadButton, but that
-  // would cause messages to be moved in Transifex.
-  name: 'SubmissionDownloadDropdown',
+  name: 'SubmissionDownloadButton',
   props: {
     formVersion: Object,
     filtered: Boolean
@@ -53,6 +51,7 @@ export default {
 
 <i18n lang="json5">
 {
+  // @transifexKey component.SubmissionDownloadDropdown
   "en": {
     "action": {
       "download": {

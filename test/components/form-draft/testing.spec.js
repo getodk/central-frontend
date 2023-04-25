@@ -2,7 +2,7 @@ import ChecklistStep from '../../../src/components/checklist-step.vue';
 import CollectQr from '../../../src/components/collect-qr.vue';
 import EnketoFill from '../../../src/components/enketo/fill.vue';
 import FormDraftStatus from '../../../src/components/form-draft/status.vue';
-import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
+import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';

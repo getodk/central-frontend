@@ -1,4 +1,4 @@
-import SubmissionDownloadButton from '../../../src/components/submission/download-dropdown.vue';
+import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
 
 import createTestContainer from '../../util/container';
 import testData from '../../data';

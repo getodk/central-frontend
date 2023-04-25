@@ -61,8 +61,8 @@ import { shallowRef, watchEffect } from 'vue';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
-import SubmissionDownload from './decrypt.vue';
-import SubmissionDownloadButton from './download-dropdown.vue';
+import SubmissionDownload from './download.vue';
+import SubmissionDownloadButton from './download-button.vue';
 import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';

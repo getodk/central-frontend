@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
-import OdataAnalyze from '../submission/analyze.vue';
+import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 
