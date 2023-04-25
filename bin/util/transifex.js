@@ -525,6 +525,39 @@ const destructure = (json, locale) => JSON.parse(
 ////////////////////////////////////////////////////////////////////////////////
 // @transifexKey
 
+/*
+A @transifexKey tag can be used to specify that a message should appear at a
+different key in Transifex than the default. This is helpful for maintaining
+translations after a component is renamed or in general after a message is
+moved. If the Transifex key of a string changes, then Transifex considers it a
+new string that requires translation. @transifexKey can be used to prevent that
+case, preserving existing translations and their Transifex history.
+
+For messages in en.json5, the default Transifex key is the same as the Vue I18n
+key. For messages in components, the default Transifex key is the Vue I18n key
+prefixed by "component.[component name].", for example: component.Home.heading.0
+
+@transifexKey can be specified for a single message or for an object or array of
+messages.
+
+@transifexKey can also be used to copy translations from one component to
+another. In the destination component into which translations are to be copied,
+copy the relevant English message(s) from the source component. Above the
+messages, use @transifexKey to specify the Transifex key of the messages in the
+source component. destructure.js will know to add translations for the messages
+to both the source component and the destination component. The messages copied
+in the destination component cannot have comments.
+
+Different messages may specify the same @transifexKey. However, they must have
+the same text. Only one can specify a Transifex comment, and then only if there
+isn't an existing message at the Transifex key.
+
+Functions in this section are passed an argument named transifexPaths, which is
+returned by readSourceMessages(). transifexPaths holds all the information about
+the @transifexKey tags in use. It maps paths in the source messages to paths in
+Transifex. Each path is an array, a key split on '.'.
+*/
+
 // Validates transifexPaths. Also adds more information about each path pair,
 // mutating transifexPaths.
 const processTransifexPaths = (transifexPaths, sourceMessages) => {
