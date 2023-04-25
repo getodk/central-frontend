@@ -3,8 +3,8 @@
 
 const fs = require('fs');
 
-const { logThenThrow, mapComponentsToFiles } = require('../util/util');
 const { destructure, readSourceMessages, rekeyTranslations, writeTranslations } = require('../util/transifex');
+const { logThenThrow, mapComponentsToFiles } = require('../util/util');
 
 const filenamesByComponent = mapComponentsToFiles('src/components');
 const { messages: sourceMessages, transifexPaths } = readSourceMessages(

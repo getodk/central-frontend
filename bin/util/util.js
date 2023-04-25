@@ -39,7 +39,7 @@ const mapComponentsToFiles = (componentsDir) => {
 
 // Sets a nested property of an object, mutating the object.
 const setPath = (path, value, obj) => {
-  if (path.length === 0) return;
+  if (path.length === 0) throw new Error('empty path');
   let parent = obj;
   for (let i = 0; i < path.length - 1; i += 1) {
     if (parent[path[i]] == null) parent[path[i]] = {};
