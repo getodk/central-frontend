@@ -61,7 +61,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
         <i18n-t v-else-if="tool === 'python'" tag="p" keypath="help.python">
           <template #pyODK>
-            <a href="https://github.com/getodk/pyodk/" target="_blank" rel="noopener">pyODK</a>
+            <a href="https://docs.getodk.org/pyodk/" target="_blank" rel="noopener">pyODK</a>
           </template>
         </i18n-t>
         <i18n-t v-else-if="tool === 'r'" tag="p" keypath="help.r">
