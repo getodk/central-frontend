@@ -16,7 +16,16 @@ except according to the terms contained in the LICENSE file.
         <div class="panel-heading">
           <h1 class="panel-title">{{ $t('action.logIn') }}</h1>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" v-if="config.oidcEnabled">
+          <div class="panel-footer">
+            <a href="/v1/oidc/login">
+              <button class="btn btn-primary">
+                {{ $t('action.logIn') }} (TODO add spinner when clicked)
+              </button>
+            </a>
+          </div>
+        </div>
+        <div class="panel-body" v-if="!config.oidcEnabled">
           <form @submit.prevent="submit">
             <form-group ref="email" v-model.trim="email" type="email"
               :placeholder="$t('field.email')" required autocomplete="off"/>
@@ -54,7 +63,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
-  inject: ['container', 'alert'],
+  inject: ['container', 'alert', 'config'],
   beforeRouteLeave() {
     return !this.disabled;
   },

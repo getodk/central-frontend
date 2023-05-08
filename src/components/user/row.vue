@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.editProfile') }}
             </router-link>
           </li>
-          <li :class="{ disabled }">
+          <li :class="{ disabled }" v-if="!config.oidcEnabled">
             <a class="reset-password" href="#"
               v-tooltip.aria-describedby="disabled ? $t('cannotResetPassword') : null"
               @click.prevent="$emit('reset-password', user)">
@@ -87,6 +87,7 @@ export default {
     highlighted: Number
   },
   emits: ['assigned-role', 'reset-password', 'retire'],
+  inject: ['config'],
   setup() {
     const { currentUser } = useRequestData();
     const { request, awaitingResponse } = useRequest();

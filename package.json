@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nf start",
+    "dev": "rm -rf ./dist/; nf start",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix --max-warnings 0 src/ bin/ test/ *.js",
     "test": "./test/run.sh"

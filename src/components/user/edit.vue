@@ -20,7 +20,8 @@ except according to the terms contained in the LICENSE file.
         <div class="col-xs-7">
           <user-edit-basic-details v-if="user.dataExists"/>
         </div>
-        <div class="col-xs-5">
+        <pre>Config: {{config}}</pre>
+        <div class="col-xs-5" vi-if="!config.oidcEnabled"> <!-- REVIEW: this doesn't seem to work -->
           <user-edit-password/>
         </div>
       </div>
@@ -51,7 +52,8 @@ const props = defineProps({
   id: {
     type: String,
     required: true
-  }
+  },
+  inject: ['config'],
 });
 
 const user = useUser();

@@ -15,5 +15,6 @@ export default {
   home: {
     title: null,
     body: null
-  }
+  },
+  oidcEnabled: true, // TODO set false or remove before merge - this needs to be supplied by the server (probably)!
 };
