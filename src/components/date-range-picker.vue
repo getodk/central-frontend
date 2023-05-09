@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
     <flatpickr ref="flatpickr" v-model="flatpickrValue" :config="config"
       class="form-control" :class="{ required }"
-      :placeholder="`${placeholder}${star}`" autocomplete="off"
+      :placeholder="`${star}${placeholder}`" autocomplete="off"
       @on-close="close"/>
     <template v-if="!required">
       <button v-show="modelValue.length === 2" type="button" class="close"
@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         <span aria-hidden="true">&times;</span>
       </button>
     </template>
-    <span class="form-label">{{ placeholder }}{{ star }}</span>
+    <span class="form-label">{{ star }}{{ placeholder }}</span>
   </label>
 </template>
 
@@ -81,7 +81,7 @@ export default {
       return config;
     },
     star() {
-      return this.required ? '*' : '';
+      return this.required ? '* ' : '';
     }
   },
   watch: {

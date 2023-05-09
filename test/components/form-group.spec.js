@@ -33,7 +33,7 @@ describe('FormGroup', () => {
       });
       const { required, placeholder } = formGroup.get('input').attributes();
       should.exist(required);
-      placeholder.should.equal('My input *');
+      placeholder.should.equal('* My input');
     });
 
     it('renders correctly if the prop is false', () => {

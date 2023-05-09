@@ -53,14 +53,14 @@ describe('ProjectEnableEncryption', () => {
       attachTo: document.body
     }));
     await modal.get('.btn-primary').trigger('click');
-    modal.get('input[placeholder="Passphrase *"]').should.be.focused();
+    modal.get('input[placeholder="* Passphrase"]').should.be.focused();
   });
 
   it('shows a danger alert if the passphrase is too short', async () => {
     testData.extendedProjects.createPast(1);
     const modal = mount(ProjectEnableEncryption, mountOptions());
     await modal.get('.btn-primary').trigger('click');
-    await modal.get('input[placeholder="Passphrase *"]').setValue('x');
+    await modal.get('input[placeholder="* Passphrase"]').setValue('x');
     await modal.get('form').trigger('submit');
     modal.should.alert('danger', 'Please input a passphrase at least 10 characters long.');
   });
@@ -69,12 +69,12 @@ describe('ProjectEnableEncryption', () => {
     testData.extendedProjects.createPast(1);
     const modal = mount(ProjectEnableEncryption, mountOptions());
     await modal.get('.btn-primary').trigger('click');
-    await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
+    await modal.get('input[placeholder="* Passphrase"]').setValue('supersecret');
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
     modal.find('.info-item').exists().should.be.true();
     await modal.get('.btn-primary').trigger('click');
-    modal.get('input[placeholder="Passphrase *"]').element.value.should.equal('');
+    modal.get('input[placeholder="* Passphrase"]').element.value.should.equal('');
   });
 
   describe('request', () => {
@@ -87,7 +87,7 @@ describe('ProjectEnableEncryption', () => {
         .mount(ProjectEnableEncryption, mountOptions())
         .request(async (modal) => {
           await modal.get('.btn-primary').trigger('click');
-          await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
+          await modal.get('input[placeholder="* Passphrase"]').setValue('supersecret');
           return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { method, url, data }) => {
@@ -102,7 +102,7 @@ describe('ProjectEnableEncryption', () => {
         .mount(ProjectEnableEncryption, mountOptions())
         .request(async (modal) => {
           await modal.get('.btn-primary').trigger('click');
-          await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
+          await modal.get('input[placeholder="* Passphrase"]').setValue('supersecret');
           const hint = modal.get('input[placeholder="Passphrase hint (optional)"]');
           await hint.setValue('bar');
           return modal.get('form').trigger('submit');
@@ -122,7 +122,7 @@ describe('ProjectEnableEncryption', () => {
         button: 'button[type="submit"]',
         disabled: ['.btn-link'],
         request: async (modal) => {
-          await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
+          await modal.get('input[placeholder="* Passphrase"]').setValue('supersecret');
           return modal.get('form').trigger('submit');
         },
         modal: true
@@ -139,7 +139,7 @@ describe('ProjectEnableEncryption', () => {
         .mount(ProjectEnableEncryption, mountOptions())
         .request(async (modal) => {
           await modal.get('.btn-primary').trigger('click');
-          await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
+          await modal.get('input[placeholder="* Passphrase"]').setValue('supersecret');
           return modal.get('form').trigger('submit');
         })
         .respondWithSuccess()
@@ -152,7 +152,7 @@ describe('ProjectEnableEncryption', () => {
         .mount(ProjectEnableEncryption, mountOptions())
         .request(async (modal) => {
           await modal.get('.btn-primary').trigger('click');
-          const passphrase = modal.get('input[placeholder="Passphrase *"]');
+          const passphrase = modal.get('input[placeholder="* Passphrase"]');
           await passphrase.setValue('x');
           const form = modal.get('form');
           await form.trigger('submit');
@@ -171,7 +171,7 @@ describe('ProjectEnableEncryption', () => {
           await app.get('#project-settings-enable-encryption-button').trigger('click');
           const modal = app.getComponent(ProjectEnableEncryption);
           await modal.get('.btn-primary').trigger('click');
-          await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
+          await modal.get('input[placeholder="* Passphrase"]').setValue('supersecret');
           return modal.get('form').trigger('submit');
         })
         .respondWithData(() => {
