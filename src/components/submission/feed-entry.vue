@@ -33,8 +33,16 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'entity.create'">
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
-          <template #label><span class="submission-feed-entry-entity-data">{{ entityLabel(entry) }}</span></template>
-          <template #dataset><span class="submission-feed-entry-entity-data">{{ entityDataset(entry) }}</span></template>
+          <template #label>
+            <router-link :to="entityPath(projectId, entityDataset(entry), entityUuid(entry))" class="submission-feed-entry-entity-data">
+              {{ entityLabel(entry) }}
+            </router-link>
+          </template>
+          <template #dataset>
+            <router-link :to="datasetPath(projectId, entityDataset(entry))" class="submission-feed-entry-entity-data">
+              {{ entityDataset(entry) }}
+            </router-link>
+          </template>
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.create.error'">
@@ -69,6 +77,7 @@ import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
 
 import useReviewState from '../../composables/review-state';
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -95,7 +104,8 @@ export default {
   setup() {
     const { diffs } = useRequestData();
     const { reviewStateIcon } = useReviewState();
-    return { diffs, reviewStateIcon };
+    const { datasetPath, entityPath } = useRoutes();
+    return { diffs, reviewStateIcon, datasetPath, entityPath };
   },
   computed: {
     updateOrEdit() {
@@ -153,6 +163,11 @@ export default {
     entityDataset(entry) {
       if ('entity' in entry.details)
         return entry.details.entity.dataset;
+      return '';
+    },
+    entityUuid(entry) {
+      if ('entity' in entry.details)
+        return entry.details.entity.uuid;
       return '';
     },
     entityProblem(entry) {
@@ -215,7 +230,7 @@ export default {
       */
       "create": "Submitted by {name}",
       "entity": {
-        "create": "Created Entity {label} in {dataset} Dataset",
+        "create": "Created Entity {label} in Dataset {dataset}",
         "error": "Problem creating Entity",
       },
       "updateReviewState": {

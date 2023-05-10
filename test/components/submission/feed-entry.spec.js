@@ -1,3 +1,6 @@
+
+import { RouterLinkStub } from '@vue/test-utils';
+
 import ActorLink from '../../../src/components/actor-link.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import MarkdownView from '../../../src/components/markdown/view.vue';
@@ -161,7 +164,20 @@ describe('SubmissionFeedEntry', () => {
           details: { entity: { uuid: 'xyz', label: 'EntityName', dataset: 'DatasetName' } }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.text().should.equal('Created Entity EntityName in DatasetName Dataset');
+        title.text().should.equal('Created Entity EntityName in Dataset DatasetName');
+      });
+
+      it('renders links to entity and dataset', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.create',
+          details: { entity: { uuid: 'xyz', label: 'EntityName', dataset: 'DatasetName' } }
+        });
+        const links = mountComponent().findAllComponents(RouterLinkStub);
+        links.length.should.equal(2);
+        links.map(link => link.props().to).should.eql([
+          '/projects/1/datasets/DatasetName/entities/xyz',
+          '/projects/1/datasets/DatasetName'
+        ]);
       });
 
       it('renders okay and does not crash for action where entity details are missing', () => {
@@ -170,7 +186,7 @@ describe('SubmissionFeedEntry', () => {
           details: { entity: { uuid: 'xyz' } }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.text().should.equal('Created Entity  in  Dataset');
+        title.text().should.equal('Created Entity  in Dataset');
       });
     });
 

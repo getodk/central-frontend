@@ -110,6 +110,11 @@ export default memoizeForContainer(({ router, requestData }) => {
     return _datasetPath(projectIdOrSuffix, datasetName, suffix);
   };
 
+  const entityPath = (projectId, datasetName, entityUuid) => {
+    const encodedName = encodeURIComponent(datasetName);
+    return `/projects/${projectId}/datasets/${encodedName}/entities/${entityUuid}`;
+  };
+
   const userPath = (id) => `/users/${id}/edit`;
 
   return {
@@ -117,6 +122,7 @@ export default memoizeForContainer(({ router, requestData }) => {
     formPath, publishedFormPath, primaryFormPath,
     submissionPath,
     datasetPath,
+    entityPath,
     userPath,
     canRoute: canRouteToLocation
   };
