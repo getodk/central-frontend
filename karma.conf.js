@@ -31,7 +31,7 @@ module.exports = (config) => {
     ],
     proxies: {
       '/fonts/': '/base/public/fonts/',
-      '/img/entities-intro.ff844445.svg': '/base/public/images/entities-intro.svg',
+      '/img/entities-intro.66f7698d.svg': '/base/public/images/entities-intro.svg',
       '/blank.html': '/base/public/blank.html',
       '/test/files/': '/base/test/files/'
     },

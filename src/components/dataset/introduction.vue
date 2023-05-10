@@ -19,9 +19,9 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('body[0]') }}</p>
         <i18n-t tag="p" keypath="body[1]">
           <template #icon1><span class="step-number">(1)</span></template>
+          <template #icon2><span class="step-number">(2)</span></template>
         </i18n-t>
         <i18n-t tag="p" keypath="body[2]">
-          <template #icon2><span class="step-number">(2)</span></template>
           <template #icon3><span class="step-number">(3)</span></template>
         </i18n-t>
         <i18n-t tag="p" keypath="body[3]">
@@ -98,15 +98,15 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "title": "Welcome to the Datasets preview!",
+    "title": "Welcome to the Entities preview!",
     "body": [
-      "Datasets are a new way to create and manage data attachments in ODK. They allow you to use data gathered in Submissions to be downloaded and used as part of another Form.",
-      // {icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow.
-      "Datasets can be attached {icon1} to Forms and their data queried just like any other attached CSV data file.",
-      // {icon2} and {icon3} are icons that display the numbers 2 and 3. They refer to the second and third steps in an image that depicts this workflow.
-      "When a Submission related to a Dataset is approved {icon2}, the selected data is added {icon3} to the Dataset, so that the next time a client downloads the Form, the new data will be included in the data download.",
-      // {icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow.
-      "In a future version, you will be able to upload {icon4} a CSV to a Dataset directly.",
+      "Entities are a powerful new way to share information between Forms. A Dataset is a collection of Entities.",
+      // {icon1} and {icon2} are icons that display the numbers 1 and 2. They refer to the first and second step in an image that shows the relationship between Forms and Entities.
+      "A Form {icon1} can specify that its Submissions create Entities in a Dataset {icon2}. By default, Entities are created when a Submission is received. They can also be configured to require Submission approval.",
+      // {icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities.
+      "A Dataset is attached {icon3} to a Form just like a CSV. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
+      // {icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities.
+      "Datasets can be attached to many Forms, including to a Form that also creates Entities in that Dataset {icon4}.",
       "Datasets are configured during Form design."
     ],
     "getStarted": {
