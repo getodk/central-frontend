@@ -13,6 +13,10 @@ except according to the terms contained in the LICENSE file.
   <page-section>
     <template #heading>
       <span>{{ $t('common.activity') }}</span>
+      <button v-if="rendersUpdateButton" id="entity-activity-update-button"
+        type="button" class="btn btn-default" @click="$emit('update')">
+        <span class="icon-pencil"></span>{{ $t('action.edit') }}
+      </button>
     </template>
     <template #body>
       <loading :state="initiallyLoading"/>
@@ -29,13 +33,20 @@ export default {
 };
 </script>
 <script setup>
+import { computed } from 'vue';
+
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
 import { useRequestData } from '../../request-data';
 
+defineEmits(['update']);
+
 // The component does not assume that this data will exist when the component is
 // created.
-const { audits, diffs, resourceStates } = useRequestData();
+const { project, dataset, audits, diffs, resourceStates } = useRequestData();
 const { initiallyLoading, dataExists } = resourceStates([audits, diffs]);
+
+const rendersUpdateButton = computed(() => project.dataExists &&
+  project.permits('entity.update') && dataset.dataExists);
 </script>

@@ -30,7 +30,7 @@ describe('EntityShow', () => {
         { url: '/v1/projects/1/datasets/%C3%A1/entities/e', extended: true },
         { url: '/v1/projects/1', extended: true },
         { url: '/v1/projects/1/datasets/%C3%A1', extended: true },
-        { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits', extended: true },
+        { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits' },
         { url: '/v1/projects/1/datasets/%C3%A1/entities/e/diffs' }
       ]);
   });

@@ -189,7 +189,7 @@ export default {
     .modal-header {
       background-color: $color-accent-primary;
       color: #fff;
-      padding: 10px 15px 9px;
+      padding: 10px $padding-right-modal-header 9px $padding-left-modal-header;
 
       .close {
         color: #fff;
@@ -203,6 +203,7 @@ export default {
       }
 
       h4 {
+        @include text-overflow-ellipsis;
         font-size: 18px;
         font-weight: bold;
         letter-spacing: -0.02em;

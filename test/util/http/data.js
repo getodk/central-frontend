@@ -129,7 +129,7 @@ const responsesByComponent = {
     project: true,
     dataset: true,
     audits: true,
-    diffs: () => ({})
+    diffs: () => []
   }),
 
   UserHome: [],
