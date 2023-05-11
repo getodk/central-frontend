@@ -164,7 +164,7 @@ describe('SubmissionFeedEntry', () => {
           details: { entity: { uuid: 'xyz', label: 'EntityName', dataset: 'DatasetName' } }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.text().should.equal('Created Entity EntityName in Dataset DatasetName');
+        title.text().should.equal('Created Entity EntityName in DatasetName Dataset');
       });
 
       it('renders links to entity and dataset', () => {
@@ -186,7 +186,7 @@ describe('SubmissionFeedEntry', () => {
           details: { entity: { uuid: 'xyz' } }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.text().should.equal('Created Entity  in Dataset');
+        title.text().should.equal('Created Entity  in  Dataset');
       });
     });
 

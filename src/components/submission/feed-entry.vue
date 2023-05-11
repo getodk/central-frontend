@@ -34,12 +34,12 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link :to="entityPath(projectId, entityDataset(entry), entityUuid(entry))" class="submission-feed-entry-entity-data">
+            <router-link :to="entityPath(projectId, entityDataset(entry), entityUuid(entry))">
               {{ entityLabel(entry) }}
             </router-link>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entityDataset(entry))" class="submission-feed-entry-entity-data">
+            <router-link :to="datasetPath(projectId, entityDataset(entry))">
               {{ entityDataset(entry) }}
             </router-link>
           </template>
@@ -188,10 +188,6 @@ export default {
 @import '../../assets/scss/variables';
 
 .submission-feed-entry {
-  .submission-feed-entry-entity-data {
-    font-weight: normal;
-  }
-
   .entity-error-message{
     font-size: 12px;
     margin-left: 10px;
@@ -230,7 +226,7 @@ export default {
       */
       "create": "Submitted by {name}",
       "entity": {
-        "create": "Created Entity {label} in Dataset {dataset}",
+        "create": "Created Entity {label} in {dataset} Dataset",
         "error": "Problem creating Entity",
       },
       "updateReviewState": {
