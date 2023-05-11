@@ -157,4 +157,13 @@ describe('useRoutes()', () => {
       datasetPath(1, 'á').should.equal('/projects/1/datasets/%C3%A1');
     });
   });
+
+  describe('entityPath()', () => {
+    it('returns a path if given IDs', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { entityPath } = withSetup(useRoutes, { container });
+      const path = entityPath(1, 'a b', 'abcd1234');
+      path.should.equal('/projects/1/datasets/a%20b/entities/abcd1234');
+    });
+  });
 });
