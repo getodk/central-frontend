@@ -18,7 +18,7 @@ import { createResource, resourceView } from './resource';
 const createState = () =>
   shallowReactive({ data: null, awaitingResponse: false });
 const patchMock = (f) => { f(); };
-const defineResourceStore = process.env.NODE_ENV === 'development'
+const defineResourceStore = false // eslint-disable-line no-constant-condition
   ? (name) => defineStore(`requestData.${name}`, { state: createState })
   : () => {
     const store = createState();
