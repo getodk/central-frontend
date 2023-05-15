@@ -18,9 +18,19 @@ except according to the terms contained in the LICENSE file.
           <dt>{{ $t('entity.entityId') }}</dt>
           <dd>{{ entity.uuid }}</dd>
         </div>
-        <div>
+        <div v-if="instanceId != null">
           <dt>{{ $t('creatingSubmission') }}</dt>
-          <dd>TODO</dd>
+          <dd id="entity-basic-details-creating-submission">
+            <router-link v-if="submission != null"
+              :to="submissionPath(projectId, submission.xmlFormId, instanceId)">
+              {{ submission.currentVersion.instanceName ?? instanceId }}
+            </router-link>
+            <template v-else>
+              <span class="icon-trash" v-tooltip.sr-only></span>
+              <span>{{ instanceId }}</span>
+              <span class="sr-only">&nbsp;{{ $t('submissionDeleted') }}</span>
+            </template>
+          </dd>
         </div>
         <div>
           <dt>{{ $t('header.createdAt') }}</dt>
@@ -41,15 +51,40 @@ export default {
 };
 </script>
 <script setup>
+import { inject, ref, watchEffect } from 'vue';
+
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import PageSection from '../page/section.vue';
 
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
+
+const projectId = inject('projectId');
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { entity } = useRequestData();
+const { entity, audits } = useRequestData();
+
+// Using `ref` and watchEffect() for instanceId and `submission` rather than
+// `computed` so that they don't change whenever `audits` is refreshed.
+const instanceId = ref(undefined);
+const submission = ref(undefined);
+watchEffect(() => {
+  if (instanceId.value === undefined && audits.dataExists) {
+    const audit = audits.find(({ action }) => action === 'entity.create');
+    if (audit == null) {
+      instanceId.value = null;
+    } else {
+      const { submissionCreate } = audit.details;
+      if (submissionCreate != null) {
+        instanceId.value = submissionCreate.details.instanceId;
+        submission.value = audit.details.submission;
+      }
+    }
+  }
+});
+const { submissionPath } = useRoutes();
 </script>
 
 <style lang="scss">
@@ -59,6 +94,7 @@ const { entity } = useRequestData();
   margin-bottom: 35px;
 
   dd { @include text-overflow-ellipsis; }
+  .icon-trash { margin-right: $margin-right-icon; }
 }
 </style>
 
@@ -66,7 +102,8 @@ const { entity } = useRequestData();
 {
   "en": {
     // This is shown above the Submission that created the Entity.
-    "creatingSubmission": "Creating Submission"
+    "creatingSubmission": "Creating Submission",
+    "submissionDeleted": "This Submission has been deleted."
   }
 }
 </i18n>
