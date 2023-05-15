@@ -16,13 +16,6 @@ const createResource = () => {
 describe('useSubmission()', () => {
   describe('instanceNameOrId', () => {
     it('returns the instance name if it is string', () => {
-      testData.extendedForms.createPast(1, {
-        fields: [
-          testData.fields.string('/meta/instanceName'),
-          testData.fields.string('/s')
-        ],
-        submissions: 1
-      });
       testData.extendedSubmissions.createPast(1, {
         instanceId: 's',
         meta: { instanceName: 'My Submission' }
@@ -38,6 +31,7 @@ describe('useSubmission()', () => {
     it('returns the instance ID if /meta/instanceName is not a string', () => {
       testData.extendedForms.createPast(1, {
         fields: [
+          testData.fields.group('/meta'),
           testData.fields.int('/meta/instanceName'),
           testData.fields.string('/s')
         ],

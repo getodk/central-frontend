@@ -76,22 +76,11 @@ export const extendedSubmissions = dataStore({
 
     attachmentsExpected = 0,
     // `form` is deprecated. Use formVersion instead.
-    form = extendedForms.size !== 0
-      ? extendedForms.first()
-      // The lastSubmission property of the form will likely not match the
-      // submission.
-      : extendedForms
-        .createPast(1, {
-          submissions: 1,
-          fields: attachmentsExpected !== 0
-            ? [fields.binary('/b')]
-            : undefined
-        })
-        .last(),
-    formVersion = form,
+    form = undefined,
+    formVersion: formVersionOption = form,
     instanceId = faker.random.uuid(),
 
-    submitter = extendedUsers.first(),
+    submitter: submitterOption = undefined,
     attachmentsPresent = attachmentsExpected,
     status = null,
     reviewState = null,
@@ -100,14 +89,32 @@ export const extendedSubmissions = dataStore({
 
     ...partialOData
   }) => {
-    if (extendedUsers.size === 0) throw new Error('user not found');
+    const hasInstanceName = partialOData.meta != null &&
+      typeof partialOData.meta === 'object' &&
+      typeof partialOData.meta.instanceName === 'string';
+    if (formVersionOption == null && extendedForms.size === 0) {
+      const defaultFields = [];
+      if (hasInstanceName)
+        defaultFields.push(fields.group('/meta'), fields.string('/meta/instanceName'));
+      defaultFields.push(attachmentsExpected === 0
+        ? fields.string('/s')
+        : fields.binary('/b'));
+
+      // The lastSubmission property of the form will likely not match the
+      // submission.
+      extendedForms.createPast(1, { submissions: 1, fields: defaultFields });
+    }
+    const formVersion = formVersionOption ?? extendedForms.first();
+
+    if (submitterOption == null && extendedUsers.size === 0)
+      throw new Error('user not found');
+    const submitter = submitterOption ?? extendedUsers.first();
+
     const createdAt = !inPast
       ? new Date().toISOString()
       : fakePastDate([
         lastCreatedAt,
-        formVersion.publishedAt != null
-          ? formVersion.publishedAt
-          : formVersion.createdAt,
+        formVersion.publishedAt ?? formVersion.createdAt,
         submitter.createdAt
       ]);
     const odata = randomOData(instanceId, formVersion._fields, {
@@ -137,7 +144,7 @@ export const extendedSubmissions = dataStore({
       updatedAt: null,
       currentVersion: {
         instanceId,
-        instanceName: odata.meta?.instanceName,
+        instanceName: hasInstanceName ? odata.meta.instanceName : null,
         current: true,
         formVersion: formVersion.version,
         deviceId,
