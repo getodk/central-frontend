@@ -39,7 +39,7 @@ export const extendedEntities = dataStore({
       ]);
     return {
       uuid,
-      currentVersion: { label, data },
+      currentVersion: { label, data, current: true },
       creatorId: creator.id,
       creator: toActor(creator),
       createdAt,

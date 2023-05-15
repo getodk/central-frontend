@@ -99,12 +99,9 @@ const submit = () => {
     ? data.value
     : Object.assign(Object.create(null), data.value, { label: label.value });
   request.patch(url, { data: updates })
-    .then(({ data: updated }) => {
-      // entity.currentVersion will no longer have extended metadata, but we
-      // don't need it to.
-      entity.currentVersion = updated.currentVersion;
-      entity.updatedAt = updated.updatedAt;
-      emit('success', entity);
+    .then(response => {
+      // It is the responsibility of the parent component to patch the entity.
+      emit('success', response.data);
     })
     .catch(noop);
 };

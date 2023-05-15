@@ -40,7 +40,11 @@ const props = defineProps({
   minHeight: {
     type: Number,
     default: 0
-  }
+  },
+  // Used in testing to mock whether the user manually resized the textarea.
+  // Specifying `true` will cause a pair of mousedown and mouseup events to
+  // simulate a manual resize.
+  mockUserResized: Boolean
 });
 defineEmits(['update:modelValue']);
 
@@ -52,26 +56,34 @@ const el = ref(null);
 let userResized = false;
 const listenForUserResize = () => {
   if (userResized) return;
-  const initialHeight = el.value.getBoundingClientRect().height;
+  const mousedownHeight = el.value.getBoundingClientRect().height;
 
-  // Remove style.minHeight temporarily so that the user can resize the textarea
-  // to less than style.minHeight.
+  // Set style.minHeight to 0 so that the user can resize the textarea to less
+  // than style.minHeight.
   const { style } = el.value;
-  const { minHeight: minHeightStyle } = style;
+  const minHeightStyle = style.minHeight;
   style.minHeight = px(0);
-  // Set style.height in case style.height < style.minHeight. Unlike
-  // style.minHeight, style.height does not seem to restrict how the user can
-  // resize the textarea.
-  const initialHeightStyle = style.height;
-  style.height = px(initialHeight);
+  // Set style.height in case style.height < style.minHeight: otherwise the
+  // height of the textarea might decrease immediately. Unlike for
+  // style.minHeight, setting style.height does not seem to restrict how the
+  // user can resize the textarea.
+  const mousedownHeightStyle = style.height;
+  style.height = px(mousedownHeight);
 
   const mouseup = () => {
-    userResized = el.value.getBoundingClientRect().height !== initialHeight;
-    if (!userResized) {
-      style.height = initialHeightStyle;
+    document.removeEventListener('mouseup', mouseup);
+    // If the component has been unmounted, do nothing.
+    if (el.value == null) return;
+    const mouseupHeight = el.value.getBoundingClientRect().height;
+    userResized = mouseupHeight !== mousedownHeight || props.mockUserResized;
+    if (userResized) {
+      // Remove style.height, which is no longer needed. Leave style.minHeight
+      // at 0 to ensure that there is no change to the height.
+      style.height = '';
+    } else {
+      style.height = mousedownHeightStyle;
       style.minHeight = minHeightStyle;
     }
-    document.removeEventListener('mouseup', mouseup);
   };
   document.addEventListener('mouseup', mouseup);
 };
@@ -82,10 +94,12 @@ const listenForUserResize = () => {
 let heightOutdated = false;
 const setHeight = () => {
   const { style } = el.value;
-  // Remove any existing style.height before calculating scrollHeight so that
-  // height can be reclaimed if text has been deleted. (scrollHeight will never
-  // be less than style.height as long as the textarea is visible.)
-  style.height = '';
+  // Set style.height to 0 before calculating scrollHeight so that height can be
+  // reclaimed if text has been deleted: scrollHeight will never be less than
+  // style.height as long as the textarea is visible. (Note that we cannot
+  // simply remove style.height, because the height of the textarea would fall
+  // back to a height of 2 rows, the default number of rows.)
+  style.height = px(0);
   // height and min-height should be independent because props.minHeight can
   // change without props.modelValue changing, and we don't want to call
   // setHeight() whenever props.minHeight changes. That works because if height
@@ -101,6 +115,7 @@ const setHeight = () => {
     style.height = px(scrollHeight + box.borderTop + box.borderBottom);
     heightOutdated = false;
   } else {
+    style.height = '';
     heightOutdated = true;
   }
 };

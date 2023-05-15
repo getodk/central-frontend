@@ -4,11 +4,28 @@ import TextareaAutosize from '../../src/components/textarea-autosize.vue';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
 
-const mountComponent = (options = undefined) =>
-  mount(TextareaAutosize, mergeMountOptions(options, {
+const mountComponent = (options = undefined) => {
+  // Wrap the component in a .form-group so that its computed styles are
+  // correct. Taking this approach rather than mounting a parent component so
+  // that we can do things like call setProps() on the component.
+  const formGroup = document.createElement('div');
+  formGroup.classList.add('form-group');
+  document.body.append(formGroup);
+
+  const component = mount(TextareaAutosize, mergeMountOptions(options, {
     props: { modelValue: '' },
-    attachTo: document.body
+    attachTo: formGroup
   }));
+
+  const { unmount } = component;
+  component.unmount = () => {
+    component.unmount = unmount;
+    component.unmount();
+    formGroup.remove();
+  };
+
+  return component;
+};
 
 describe('TextareaAutosize', () => {
   describe('modelValue prop', () => {
@@ -16,7 +33,7 @@ describe('TextareaAutosize', () => {
       const component = mountComponent({
         props: { modelValue: 'foo' }
       });
-      component.get('textarea').element.value.should.equal('foo');
+      component.element.value.should.equal('foo');
     });
 
     it('emits an update:modelValue event after input', async () => {
@@ -28,7 +45,7 @@ describe('TextareaAutosize', () => {
     it('changes value of textarea after modelValue prop changes', async () => {
       const component = mountComponent();
       await component.setProps({ modelValue: 'foo' });
-      component.get('textarea').element.value.should.equal('foo');
+      component.element.value.should.equal('foo');
     });
   });
 
@@ -37,7 +54,7 @@ describe('TextareaAutosize', () => {
       const component = mountComponent({
         attrs: { required: true }
       });
-      component.get('textarea').element.required.should.be.true();
+      component.element.required.should.be.true();
     });
 
     it('sets the initial height to fit the modelValue prop', () => {
@@ -98,7 +115,7 @@ describe('TextareaAutosize', () => {
       const component = mountComponent({
         props: { minHeight: 123 }
       });
-      component.get('textarea').element.style.minHeight.should.equal('137px');
+      component.element.style.minHeight.should.equal('136px');
     });
 
     it('changes the min-height after the prop changes', async () => {
@@ -106,7 +123,122 @@ describe('TextareaAutosize', () => {
         props: { minHeight: 123 }
       });
       await component.setProps({ minHeight: 456 });
-      component.get('textarea').element.style.minHeight.should.equal('470px');
+      component.element.style.minHeight.should.equal('469px');
     });
+  });
+
+  describe('mousedown and mouseup without manual user resize', () => {
+    it('sets the min-height CSS property to 0 on mousedown', async () => {
+      const component = mountComponent({
+        props: { minHeight: 123 }
+      });
+      await component.trigger('mousedown');
+      component.element.style.minHeight.should.equal('0px');
+    });
+
+    it('keeps the height above the minHeight prop', async () => {
+      const component = mountComponent({
+        props: { minHeight: 1000 }
+      });
+      await component.trigger('mousedown');
+      component.element.style.height.should.equal('1013px');
+    });
+
+    it('restores the min-height property on mouseup', async () => {
+      const component = mountComponent({
+        props: { minHeight: 123 }
+      });
+      await component.trigger('mousedown');
+      await component.trigger('mouseup');
+      component.element.style.minHeight.should.equal('136px');
+    });
+
+    it('restores the height CSS property on mouseup', async () => {
+      const component = mountComponent({
+        props: { minHeight: 1000 }
+      });
+      await component.trigger('mousedown');
+      await component.trigger('mouseup');
+      const height = Number.parseFloat(component.element.style.height);
+      height.should.be.within(25, 50);
+    });
+  });
+
+  describe('user manually resizes textarea', () => {
+    const userResize = async () => {
+      const component = mountComponent({
+        props: { minHeight: 123, mockUserResized: true }
+      });
+      await component.trigger('mousedown');
+      await component.trigger('mouseup');
+      return component;
+    };
+
+    describe('height', () => {
+      it('removes the height CSS property', async () => {
+        const component = await userResize();
+        component.element.style.height.should.equal('');
+      });
+
+      it('ignores changes to the modelValue prop', async () => {
+        const component = await userResize();
+        await component.setProps({ modelValue: 'a'.repeat(5000) });
+        await component.vm.$nextTick();
+        component.element.style.height.should.equal('');
+      });
+
+      it('resets the height after resize() is called', async () => {
+        const component = await userResize();
+        await component.setProps({ modelValue: 'a'.repeat(5000) });
+        await component.vm.$nextTick();
+        const initialHeight = component.element.getBoundingClientRect().height;
+        component.vm.resize();
+        const newHeight = component.element.getBoundingClientRect().height;
+        newHeight.should.be.above(initialHeight);
+        component.element.style.height.should.equal(`${newHeight}px`);
+      });
+
+      it('stops ignoring changes after resize() is called', async () => {
+        const component = await userResize();
+        component.vm.resize();
+        const initialHeight = component.element.getBoundingClientRect().height;
+        await component.setProps({ modelValue: 'a'.repeat(5000) });
+        await component.vm.$nextTick();
+        const newHeight = component.element.getBoundingClientRect().height;
+        newHeight.should.be.above(initialHeight);
+      });
+    });
+
+    describe('minHeight prop', () => {
+      it('does not restore the min-height CSS property', async () => {
+        const component = await userResize();
+        component.element.style.minHeight.should.equal('0px');
+      });
+
+      it('ignores changes to the minHeight prop', async () => {
+        const component = await userResize();
+        await component.setProps({ minHeight: 456 });
+        component.element.style.minHeight.should.equal('0px');
+      });
+
+      it('resets min-height after resize() is called', async () => {
+        const component = await userResize();
+        component.vm.resize();
+        component.element.style.minHeight.should.equal('136px');
+      });
+
+      it('stops ignoring changes after resize() is called', async () => {
+        const component = await userResize();
+        component.vm.resize();
+        await component.setProps({ minHeight: 456 });
+        component.element.style.minHeight.should.equal('469px');
+      });
+    });
+  });
+
+  it('focuses the textarea after focus() is called', () => {
+    const component = mountComponent();
+    component.vm.focus();
+    component.should.be.focused();
   });
 });

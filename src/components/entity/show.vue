@@ -106,10 +106,16 @@ setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null])
 
 const update = reactive({ state: false });
 const { i18n, alert } = inject('container');
-const afterUpdate = () => {
+const afterUpdate = (updated) => {
   fetchActivityData();
   update.state = false;
   alert.success(i18n.t('alert.updateEntity'));
+  entity.patch(() => {
+    // entity.currentVersion will no longer have extended metadata, but we don't
+    // need it to.
+    entity.currentVersion = updated.currentVersion;
+    entity.updatedAt = updated.updatedAt;
+  });
 };
 
 const { datasetPath } = useRoutes();

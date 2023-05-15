@@ -72,6 +72,22 @@ describe('EntityUpdate', () => {
     modal.get('textarea').should.be.focused();
   });
 
+  it('resizes the textarea elements', async () => {
+    testData.extendedEntities.createPast(1, {
+      data: { height: '1' }
+    });
+    const modal = mountComponent({
+      props: { state: false },
+      attachTo: document.body
+    });
+    const textareas = modal.findAll('textarea');
+    textareas.map(({ element }) => element.style.height).should.eql(['', '']);
+    await modal.setProps({ state: true });
+    const heights = textareas.map(({ element }) => element.style.height);
+    heights[0].should.not.equal('');
+    heights[1].should.not.equal('');
+  });
+
   it('resets the form after the modal is hidden', async () => {
     testData.extendedEntities.createPast(1, {
       label: 'My Entity',
@@ -189,7 +205,7 @@ describe('EntityUpdate', () => {
       });
   });
 
-  it('updates the entity prop after a successful response', () => {
+  it('emits a success event after a successful response', () => {
     testData.extendedEntities.createPast(1, {
       label: 'My Entity',
       data: { height: '1' }
@@ -214,9 +230,8 @@ describe('EntityUpdate', () => {
         return testData.standardEntities.last();
       })
       .afterResponse(modal => {
-        const { currentVersion } = modal.props().entity;
-        currentVersion.label.should.equal('Updated Entity');
-        currentVersion.data.should.eql({ height: '2' });
+        const updated = testData.standardEntities.last();
+        modal.emitted('success').should.eql([[updated]]);
       });
   });
 });
