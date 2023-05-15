@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { DateTime } from 'luxon';
-import { comparator, hasPath, lensPath, omit, set } from 'ramda';
+import { clone, comparator, hasPath, lensPath, set } from 'ramda';
 
 import { dataStore, view } from './data-store';
 import { extendedForms } from './forms';
@@ -15,7 +15,7 @@ const fakeDateTime = () => {
 };
 
 // Returns a random OData value for a particular field of a submission.
-const odataValue = (field, instanceId) => {
+const randomODataValue = (field, instanceId) => {
   switch (field.type) {
     case 'int':
       return faker.random.number();
@@ -50,7 +50,7 @@ const odataValue = (field, instanceId) => {
 };
 
 // Returns random OData for a submission. `partial` seeds the OData.
-const odata = (instanceId, versionFields, partial) => versionFields
+const randomOData = (instanceId, versionFields, partial) => versionFields
   .reduce(
     (data, field) => {
       if (field.type === 'repeat') return data;
@@ -61,7 +61,7 @@ const odata = (instanceId, versionFields, partial) => versionFields
         ? data
         : set(
           lensPath(path),
-          field.type === 'structure' ? {} : odataValue(field, instanceId),
+          field.type === 'structure' ? {} : randomODataValue(field, instanceId),
           data
         );
     },
@@ -110,44 +110,59 @@ export const extendedSubmissions = dataStore({
           : formVersion.createdAt,
         submitter.createdAt
       ]);
+    const odata = randomOData(instanceId, formVersion._fields, {
+      ...partialOData,
+      __id: instanceId,
+      __system: {
+        submissionDate: createdAt,
+        updatedAt: null,
+        submitterId: submitter.id.toString(),
+        submitterName: submitter.displayName,
+        attachmentsPresent,
+        attachmentsExpected,
+        status,
+        reviewState,
+        deviceId,
+        edits,
+        formVersion: formVersion.version
+      }
+    });
     return {
       instanceId,
       deviceId,
-      formVersion: formVersion.version,
+      reviewState,
       submitterId: submitter.id,
       submitter: toActor(submitter),
       createdAt,
       updatedAt: null,
+      currentVersion: {
+        instanceId,
+        instanceName: odata.meta?.instanceName,
+        current: true,
+        formVersion: formVersion.version,
+        deviceId,
+        submitterId: submitter.id,
+        submitter: toActor(submitter),
+        createdAt
+      },
       // An actual submission JSON response does not have this property. We
       // include it here so that it is easy to match submission data and
       // metadata during testing.
-      _odata: odata(instanceId, formVersion._fields, {
-        ...partialOData,
-        __id: instanceId,
-        __system: {
-          submissionDate: createdAt,
-          updatedAt: null,
-          submitterId: submitter.id.toString(),
-          submitterName: submitter.displayName,
-          attachmentsPresent,
-          attachmentsExpected,
-          status,
-          reviewState,
-          deviceId,
-          edits,
-          formVersion: formVersion.version
-        }
-      })
+      _odata: odata
     };
   },
   sort: comparator((submission1, submission2) =>
     isBefore(submission2.createdAt, submission1.createdAt))
 });
 
-export const standardSubmissions = view(
-  extendedSubmissions,
-  omit(['submitter'])
-);
+export const standardSubmissions = view(extendedSubmissions, (extended) => {
+  const standard = clone(extended);
+  delete standard.submitter;
+  const { currentVersion } = standard;
+  delete currentVersion.submitter;
+  delete currentVersion.formVersion;
+  return standard;
+});
 
 // Converts submission response objects to OData. Returns all data even for
 // encrypted submissions.
