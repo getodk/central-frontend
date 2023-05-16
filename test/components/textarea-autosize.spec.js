@@ -234,6 +234,20 @@ describe('TextareaAutosize', () => {
         component.element.style.minHeight.should.equal('469px');
       });
     });
+
+    describe('user-resized class', () => {
+      it('adds the class', async () => {
+        const component = await userResize();
+        component.classes('user-resized').should.be.true();
+      });
+
+      it('removes the class after resize() is called', async () => {
+        const component = await userResize();
+        component.vm.resize();
+        await component.vm.$nextTick();
+        component.classes('user-resized').should.be.false();
+      });
+    });
   });
 
   it('focuses the textarea after focus() is called', () => {

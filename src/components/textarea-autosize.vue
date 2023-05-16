@@ -53,9 +53,9 @@ const el = ref(null);
 // Indicates whether the user has manually resized the textarea. In that case,
 // the textarea will no longer be automatically resized, unless the parent
 // component calls resize().
-let userResized = false;
+const userResized = ref(false);
 const listenForUserResize = () => {
-  if (userResized) return;
+  if (userResized.value) return;
   const mousedownHeight = el.value.getBoundingClientRect().height;
 
   // Set style.minHeight to 0 so that the user can resize the textarea to less
@@ -75,8 +75,8 @@ const listenForUserResize = () => {
     // If the component has been unmounted, do nothing.
     if (el.value == null) return;
     const mouseupHeight = el.value.getBoundingClientRect().height;
-    userResized = mouseupHeight !== mousedownHeight || props.mockUserResized;
-    if (userResized) {
+    userResized.value = mouseupHeight !== mousedownHeight || props.mockUserResized;
+    if (userResized.value) {
       // Remove style.height, which is no longer needed. Leave style.minHeight
       // at 0 to ensure that there is no change to the height.
       style.height = '';
@@ -120,7 +120,9 @@ const setHeight = () => {
   }
 };
 onMounted(setHeight);
-watch(() => props.modelValue, () => { if (!userResized) nextTick(setHeight); });
+watch(() => props.modelValue, () => {
+  if (!userResized.value) nextTick(setHeight);
+});
 
 const setMinHeight = () => {
   const box = styleBox(getComputedStyle(el.value));
@@ -128,13 +130,13 @@ const setMinHeight = () => {
     box.paddingTop + box.paddingBottom + box.borderTop + box.borderBottom);
 };
 onMounted(setMinHeight);
-watch(() => props.minHeight, () => { if (!userResized) setMinHeight(); });
+watch(() => props.minHeight, () => { if (!userResized.value) setMinHeight(); });
 
 const resize = () => {
-  if (heightOutdated || userResized) setHeight();
-  if (userResized) {
+  if (heightOutdated || userResized.value) setHeight();
+  if (userResized.value) {
     setMinHeight();
-    userResized = false;
+    userResized.value = false;
   }
 };
 const focus = () => el.value.focus();
