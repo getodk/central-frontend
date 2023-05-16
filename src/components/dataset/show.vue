@@ -31,6 +31,11 @@ except according to the terms contained in the LICENSE file.
             {{ $t('common.data') }}
           </router-link>
         </li>
+        <li :class="tabClass('settings')" role="presentation">
+          <router-link :to="tabPath('settings')">
+            {{ $t('common.tab.settings') }}
+          </router-link>
+        </li>
       </template>
     </page-head>
     <page-body>

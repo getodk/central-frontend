@@ -1330,11 +1330,72 @@
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
+    "DatasetPendingSubmissions": {
+      "title": {
+        "string": "Pending Submissions"
+      },
+      "changeSetting": {
+        "string": "Change setting"
+      },
+      "explanation": {
+        "full": {
+          "string": "You are setting Entity creation to occur when Submissions are first received by Central. Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} records we found that have neither been marked Approved or Rejected.",
+          "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
+        },
+        "records": {
+          "string": "{count, plural, one {{count} record} other {{count} records}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text:\n\nYou are setting Entity creation to occur when Submissions are first received by Central. Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} records we found that have neither been marked Approved or Rejected."
+        }
+      },
+      "dontConvert": {
+        "label": {
+          "string": "I understand and this is not a problem for me."
+        },
+        "description": {
+          "string": "Change the setting and do nothing with the pending Submissions."
+        }
+      },
+      "convert": {
+        "label": {
+          "string": "Convert all pending Submissions to Entities now."
+        },
+        "description": {
+          "string": "Change the setting and create Entities out of all {submissions} not yet marked Approved or Rejected right now. The review states will not be affected."
+        }
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "Download data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetSettings": {
+      "entityWorkflow": {
+        "string": "Entity Workflow"
+      },
+      "onReceipt": {
+        "label": {
+          "string": "Create Entities as soon as Submissions are received by Central"
+        },
+        "description": {
+          "string": "You will not have a chance to review or revise data before Entities are created."
+        },
+        "successMessage": {
+          "string": "Entities will be created as soon as Submissions are received by Central."
+        }
+      },
+      "onApproval": {
+        "label": {
+          "string": "Create Entities when Submissions are marked as Approved"
+        },
+        "description": {
+          "string": "Entity data will not update until a person reviews the data. Corrections can be made if necessary."
+        },
+        "successMessage": {
+          "string": "Entities will be created when Submissions are marked as Approved."
         }
       }
     },

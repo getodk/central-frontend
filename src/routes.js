@@ -531,6 +531,18 @@ const routes = [
             project: () => project.permits(['dataset.read', 'entity.list'])
           }
         }
+      }),
+      asyncRoute({
+        path: 'settings',
+        component: 'DatasetSettings',
+        props: true,
+        loading: 'tab',
+        meta: {
+          title: () => [i18n.t('common.tab.settings'), dataset.name],
+          validateData: {
+            project: () => project.permits(['dataset.read', 'entity.list'])
+          }
+        }
       })
     ]
   }),
@@ -739,7 +751,8 @@ const routesByName = new Map();
   ];
   const datasetRoutes = [
     'DatasetEntities',
-    'DatasetOverview'
+    'DatasetOverview',
+    'DatasetSettings'
   ];
   preserveDataBetweenRoutes(projectRoutes, preserveBetweenTabs);
   preserveDataBetweenRoutes(formRoutes, preserveBetweenTabs);
