@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <span class="panel-title h1">{{ $t('title') }}</span>
     </div>
     <div class="panel-body row">
-      <div class="col-md-3">
+      <div class="col-md-5">
         <p>{{ $t('body[0]') }}</p>
         <i18n-t tag="p" keypath="body[1]">
           <template #icon1><span class="step-number">(1)</span></template>
@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </p>
       </div>
-      <div class="col-md-9 image-wrapper">
+      <div class="col-md-7 image-wrapper">
         <img src="../../../public/images/entities-intro.svg" :alt="$t('datasetsWorkflow')">
       </div>
     </div>
