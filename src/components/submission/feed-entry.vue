@@ -157,6 +157,8 @@ export default {
   },
   methods: {
     entityLabel(entry) {
+      // This is probably always true in production, but it wasn't always the
+      // case during the development of v2022.3.
       if ('entity' in entry.details)
         return entry.details.entity.label;
       return '';
