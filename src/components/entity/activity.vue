@@ -10,14 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section>
+  <page-section id="entity-activity">
     <template #heading>
       <span>{{ $t('common.activity') }}</span>
     </template>
     <template #body>
       <loading :state="initiallyLoading"/>
       <template v-if="dataExists">
-        TODO
+        <entity-feed-entry v-for="(data, i) of feed" :key="feed.length - i"
+          v-bind="data"/>
       </template>
     </template>
   </page-section>
@@ -29,6 +30,9 @@ export default {
 };
 </script>
 <script setup>
+import { computed } from 'vue';
+
+import EntityFeedEntry from './feed-entry.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
@@ -36,6 +40,45 @@ import { useRequestData } from '../../request-data';
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { audits, diffs, resourceStates } = useRequestData();
-const { initiallyLoading, dataExists } = resourceStates([audits, diffs]);
+const { entity, audits, diffs, resourceStates } = useRequestData();
+const { initiallyLoading } = resourceStates([audits, diffs]);
+const { dataExists } = resourceStates([entity, audits, diffs]);
+
+const feed = computed(() => {
+  const result = [];
+  let diffIndex = 0;
+  let includesCreate = false;
+  for (const audit of audits) {
+    if (audit.action === 'entity.update.version') {
+      result.push({ entry: audit, diff: diffs[diffIndex] });
+      diffIndex += 1;
+    } else if (audit.action === 'entity.create') {
+      result.push({ entry: audit });
+      const { details } = audit;
+      if (details.approval != null) result.push({ entry: details.approval });
+      if (details.submissionCreate != null)
+        result.push({ entry: details.submissionCreate, submission: details.submission });
+      includesCreate = true;
+    } else {
+      result.push({ entry: audit });
+    }
+  }
+  // There won't be an entity.create event if the entity was created before
+  // v2023.3. In that case, we create an artifical event to show in the feed.
+  if (!includesCreate) {
+    const entry = {
+      action: 'entity.create',
+      actor: entity.creator,
+      loggedAt: entity.createdAt
+    };
+    result.push({ entry });
+  }
+  return result;
+});
 </script>
+
+<style lang="scss">
+#entity-activity {
+  margin-bottom: 35px;
+}
+</style>

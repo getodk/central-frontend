@@ -52,6 +52,8 @@ const propertyValue = (name) => {
 @import '../../assets/scss/mixins';
 
 #entity-data {
+  margin-bottom: 35px;
+
   dt, dd { @include text-overflow-ellipsis; }
 }
 </style>
