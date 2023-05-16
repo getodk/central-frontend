@@ -127,10 +127,8 @@ describe('EntityUpdate', () => {
         method: 'PATCH',
         url: '/v1/projects/1/datasets/%C3%A1/entities/e?force=true',
         data: {
-          data: Object.assign(Object.create(null), {
-            label: 'Updated Entity',
-            height: '2'
-          })
+          label: 'Updated Entity',
+          data: Object.assign(Object.create(null), { height: '2' })
         }
       }]);
   });
@@ -143,7 +141,7 @@ describe('EntityUpdate', () => {
       .mount(EntityUpdate, mountOptions())
       .request(modal => modal.get('form').trigger('submit'))
       .beforeEachResponse((_, { data }) => {
-        data.should.eql({ data: Object.create(null) });
+        data.should.eql({ label: undefined, data: Object.create(null) });
       })
       .respondWithProblem();
   });
@@ -165,6 +163,7 @@ describe('EntityUpdate', () => {
       })
       .beforeEachResponse((_, { data }) => {
         data.should.eql({
+          label: undefined,
           data: Object.assign(Object.create(null), { height: undefined })
         });
       })
@@ -187,6 +186,7 @@ describe('EntityUpdate', () => {
       })
       .beforeEachResponse((_, { data }) => {
         data.should.eql({
+          label: undefined,
           data: Object.assign(Object.create(null), { height: undefined })
         });
       })

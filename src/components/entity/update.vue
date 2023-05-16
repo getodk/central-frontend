@@ -80,11 +80,11 @@ const emit = defineEmits(['hide', 'success']);
 
 const { dataset } = useRequestData();
 
-const label = ref(null);
+const label = ref(undefined);
 const data = ref(Object.create(null));
 watch(() => props.state, (state) => {
   if (!state) {
-    label.value = null;
+    label.value = undefined;
     data.value = Object.create(null);
   }
 });
@@ -95,10 +95,7 @@ const submit = () => {
   const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, {
     force: true
   });
-  const updates = label.value == null
-    ? data.value
-    : Object.assign(Object.create(null), data.value, { label: label.value });
-  request.patch(url, { data: updates })
+  request.patch(url, { label: label.value, data: data.value })
     .then(response => {
       // It is the responsibility of the parent component to patch the entity.
       emit('success', response.data);
