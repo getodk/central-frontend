@@ -1334,17 +1334,21 @@
       "title": {
         "string": "Pending Submissions"
       },
-      "changeSetting": {
-        "string": "Change setting"
+      "action": {
+        "changeSetting": {
+          "string": "Change setting",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       },
       "explanation": {
-        "full": {
-          "string": "You are setting Entity creation to occur when Submissions are first received by Central. Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} records we found that have neither been marked Approved or Rejected.",
-          "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
+        "first": {
+          "string": "You are setting Entity creation to occur when Submissions are first received by Central."
+        },
+        "second": {
+          "string": "{count, plural, one {Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved or Rejected.} other {Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved or Rejected.}}"
         },
         "records": {
-          "string": "{count, plural, one {{count} record} other {{count} records}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text:\n\nYou are setting Entity creation to occur when Submissions are first received by Central. Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} records we found that have neither been marked Approved or Rejected."
+          "string": "{count, plural, one {{count} record} other {{count} records}}"
         }
       },
       "dontConvert": {
@@ -1352,7 +1356,7 @@
           "string": "I understand and this is not a problem for me."
         },
         "description": {
-          "string": "Change the setting and do nothing with the pending Submissions."
+          "string": "{count, plural, one {Change the setting and do nothing with the pending Submission.} other {Change the setting and do nothing with the pending Submissions.}}"
         }
       },
       "convert": {
@@ -1360,7 +1364,7 @@
           "string": "Convert all pending Submissions to Entities now."
         },
         "description": {
-          "string": "Change the setting and create Entities out of all {submissions} not yet marked Approved or Rejected right now. The review states will not be affected."
+          "string": "{count, plural, one {Change the setting and create Entity out of {count} Submission not yet marked Approved or Rejected. The Review States will not be affected.} other {Change the setting and create Entities out of all {count} Submissions not yet marked Approved or Rejected. The Review States will not be affected.}}"
         }
       }
     },
@@ -1374,7 +1378,8 @@
     },
     "DatasetSettings": {
       "entityWorkflow": {
-        "string": "Entity Workflow"
+        "string": "Entity Workflow",
+        "developer_comment": "This is a title shown above a section of the page."
       },
       "onReceipt": {
         "label": {

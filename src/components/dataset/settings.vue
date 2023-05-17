@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-settings">
-    <div v-if="!dataset.dataExists">
-      dataset is not there
-    </div>
     <div v-if="dataset.dataExists" class="panel panel-simple">
       <div class="panel-heading">
         <h1 class="panel-title">{{ $t('entityWorkflow') }}</h1>
@@ -22,8 +19,8 @@ except according to the terms contained in the LICENSE file.
         <form id="dataset-settings-form">
           <div class="radio">
             <label>
-              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="false" aria-describedby="dataset-setting-on-receipt"
-                @change="update()">
+              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="false"
+                aria-describedby="dataset-setting-on-receipt" :aria-disabled="dataset.awaitingResponse" @change="update()">
               <strong>{{ $t('onReceipt.label') }}</strong>
             </label>
             <p id="dataset-setting-on-receipt" class="help-block">
@@ -32,8 +29,8 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div class="radio">
             <label>
-              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="true" aria-describedby="dataset-setting-on-approval"
-                @change="update()">
+              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="true"
+                aria-describedby="dataset-setting-on-approval" :aria-disabled="dataset.awaitingResponse" @change="update()">
               <strong>{{ $t('onApproval.label') }}</strong>
             </label>
             <p id="dataset-setting-on-approval" class="help-block">
@@ -82,6 +79,8 @@ watch(() => dataset.dataExists, () => {
 });
 
 const update = (convert) => {
+  if (dataset.awaitingResponse) return;
+
   dataset.request({
     method: 'PATCH',
     url: apiPaths.dataset(project.id, dataset.name, { convert }),
@@ -117,6 +116,7 @@ const hideAndReset = () => {
 <i18n lang="json5">
 {
   "en": {
+    // This is a title shown above a section of the page.
     "entityWorkflow": "Entity Workflow",
     "onReceipt": {
       "label": "Create Entities as soon as Submissions are received by Central",

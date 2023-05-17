@@ -14,40 +14,41 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-        <i18n-t tag="p" keypath="explanation.full">
-          <template #records>
-            <strong>{{ $tc('explanation.records', pendingSubmissions) }}</strong>
-          </template>
-        </i18n-t>
+        <p>
+          {{ $t('explanation.first') }}
+          <i18n-t tag="span" keypath="explanation.second" :plural="pendingSubmissions">
+            <template #records>
+              <strong>{{ $tcn('explanation.records', pendingSubmissions) }}</strong>
+            </template>
+          </i18n-t>
+        </p>
         <form id="dataset-auto-convert-form">
           <div class="radio">
             <label>
               <input v-model="convert" name="convert" type="radio" :value="false"
-                aria-describedby="dataset-auto-convert-false" @change="update">
+                aria-describedby="dataset-auto-convert-false">
               <strong>{{ $t('dontConvert.label') }}</strong>
             </label>
             <p id="dataset-auto-convert-false" class="help-block">
-              {{ $t('dontConvert.description') }}
+              {{ $tcn('dontConvert.description', pendingSubmissions) }}
             </p>
           </div>
           <div class="radio">
             <label>
               <input v-model="convert" name="convert" type="radio" :value="true"
-                aria-describedby="dataset-auto-convert-true" @change="update">
+                aria-describedby="dataset-auto-convert-true">
               <strong>{{ $t('convert.label') }}</strong>
             </label>
-            <i18n-t id="dataset-auto-convert-true" tag="p" keypath="convert.description" class="help-block">
-              <template #submissions>
-                {{ $tc('count.submission', pendingSubmissions) }}
-              </template>
-            </i18n-t>
+            <p id="dataset-auto-convert-true" class="help-block">
+              {{ $tcn('convert.description', pendingSubmissions) }}
+            </p>
           </div>
         </form>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger" :disabled="convert === null"
-          aria-disabled="convert === null" @click="$emit('success', convert)">
-          {{ $t('changeSetting') }}
+        <button type="button" class="btn btn-danger" :aria-disabled="convert === null"
+          @click="$emit('success', convert)">
+          {{ $t('action.changeSetting') }}
         </button>
         <button type="button" class="btn btn-link" @click="$emit('hide')">
           {{ $t('action.cancel') }}
@@ -75,7 +76,7 @@ defineProps({
   },
   pendingSubmissions: {
     type: Number,
-    requied: true
+    required: true
   }
 });
 
@@ -84,33 +85,25 @@ defineEmits(['hide', 'success']);
 const convert = ref(null);
 </script>
 
-<style scoped lang="scss">
-@import '../../assets/scss/variables';
-button[disabled] {
-  cursor: not-allowed;
-
-  &:hover{
-    background-color: $color-danger
-  }
-}
-</style>
-
 <i18n lang="json5">
 {
   "en": {
     "title": "Pending Submissions",
-    "changeSetting": "Change setting",
+    "action": {
+      "changeSetting": "Change setting"
+    },
     "explanation": {
-      "full": "You are setting Entity creation to occur when Submissions are first received by Central. Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} records we found that have neither been marked Approved or Rejected.",
+      "first": "You are setting Entity creation to occur when Submissions are first received by Central.",
+      "second": "Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved or Rejected. | Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved or Rejected.",
       "records": "{count} record | {count} records"
     },
     "dontConvert": {
       "label": "I understand and this is not a problem for me.",
-      "description": "Change the setting and do nothing with the pending Submissions."
+      "description": "Change the setting and do nothing with the pending Submission. | Change the setting and do nothing with the pending Submissions."
     },
     "convert": {
       "label": "Convert all pending Submissions to Entities now.",
-      "description": "Change the setting and create Entities out of all {submissions} not yet marked Approved or Rejected right now. The review states will not be affected."
+      "description": "Change the setting and create Entity out of {count} Submission not yet marked Approved or Rejected. The Review States will not be affected. | Change the setting and create Entities out of all {count} Submissions not yet marked Approved or Rejected. The Review States will not be affected."
     }
   }
 }

@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
             {{ $t('common.data') }}
           </router-link>
         </li>
-        <li :class="tabClass('settings')" role="presentation">
+        <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')" role="presentation">
           <router-link :to="tabPath('settings')">
             {{ $t('common.tab.settings') }}
           </router-link>
@@ -80,11 +80,11 @@ export default {
     // component is created.
     const { project, dataset, resourceStates } = useRequestData();
 
-    const { projectPath, datasetPath } = useRoutes();
+    const { projectPath, datasetPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, datasetPath, tabPath, tabClass
+      projectPath, datasetPath, tabPath, tabClass, canRoute
     };
   },
   created() {
