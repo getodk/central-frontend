@@ -279,7 +279,7 @@ describe('SubmissionFeedEntry', () => {
       });
 
       // Two SubmissionDiffItem components should be present
-      component.findAll('.submission-diff-item.outer-item').length.should.equal(2);
+      component.findAll('.diff-item.outer-item').length.should.equal(2);
     });
 
     it('does not show changes to instanceID and deprecatedID', () => {
@@ -308,7 +308,7 @@ describe('SubmissionFeedEntry', () => {
         }
       });
 
-      const diffItems = component.findAll('.submission-diff-item.outer-item');
+      const diffItems = component.findAll('.diff-item.outer-item');
       diffItems.length.should.equal(1);
       diffItems[0].get('.data-new').text().should.equal('Benny');
     });
@@ -338,7 +338,7 @@ describe('SubmissionFeedEntry', () => {
         }
       });
 
-      const diffItem = component.findAll('.submission-diff-item.outer-item')[0];
+      const diffItem = component.findAll('.diff-item.outer-item')[0];
       diffItem.get('.data-old').text().should.equal('old_file.jpg');
       diffItem.get('.data-old > a').attributes('href').should.equal('/v1/projects/1/forms/a/submissions/s/versions/1111/attachments/old_file.jpg');
       diffItem.get('.data-new').text().should.equal('new_file.jpg');

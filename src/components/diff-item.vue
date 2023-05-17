@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="submission-diff-item" :class="nestedClass">
+  <div class="diff-item" :class="nestedClass">
     <div v-if="visiblePath.length > 0" class="full-path">
       <span v-for="(field, index) in visiblePath" :key="index">
         <template v-if="Array.isArray(field)">
@@ -31,19 +31,13 @@ except according to the terms contained in the LICENSE file.
           {{ fieldName }}
         </div>
         <div class="old-to-new">
-          <span v-if="entry.old" class="data-old" v-tooltip.text>
-            <template v-if="isBinary">
-              <a :href="binaryHref(entry.old, true)">{{ entry.old }}</a>
-            </template>
-            <template v-else>{{ entry.old }}</template>
+          <span v-if="old" class="data-old" v-tooltip.text>
+            <slot :path="path" :parent-path="parentPath" :value="old" :is-old="true">{{ old }}</slot>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
           <span class="icon-arrow-circle-right"></span>
-          <span v-if="entry.new" class="data-new" v-tooltip.text>
-            <template v-if="isBinary">
-              <a :href="binaryHref(entry.new, false)">{{ entry.new }}</a>
-            </template>
-            <template v-else>{{ entry.new }}</template>
+          <span v-if="newValue" class="data-new" v-tooltip.text>
+            <slot :path="path" :parent-path="parentPath" :value="newValue" :is-old="false">{{ newValue }}</slot>
           </span>
           <span v-else class="data-empty">{{ $t('empty') }}</span>
         </div>
@@ -53,9 +47,10 @@ except according to the terms contained in the LICENSE file.
           {{ $t(`editCaption.${typeOfChange}`) }}
         </div>
         <div>
-          <submission-diff-item v-for="(change, index) in nestedDiffs" :key="index" :entry="change" :parent-path="entry.path"
-            :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
-            :old-version-id="oldVersionId" :new-version-id="newVersionId"/>
+          <diff-item v-for="(change, index) in nestedDiffs" :key="index"
+            v-slot="slotProps" v-bind="change" :parent-path="path">
+            <slot v-bind="slotProps">{{ slotProps.value }}</slot>
+          </diff-item>
         </div>
       </template>
     </div>
@@ -63,48 +58,21 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { last } from 'ramda';
-
-import { apiPaths } from '../../util/request';
-import { useRequestData } from '../../request-data';
+import { always, last } from 'ramda';
 
 export default {
-  name: 'SubmissionDiffItem',
+  name: 'DiffItem',
   props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
-    instanceId: {
-      type: String,
-      required: true
-    },
-    oldVersionId: {
-      type: String,
-      required: false // only used for making binary file link
-    },
-    newVersionId: {
-      type: String,
-      required: false // only used for making binary file link
-    },
-    entry: {
-      type: Object,
+    path: {
+      type: Array,
       required: true
     },
     parentPath: {
       type: Array,
-      default() {
-        return [];
-      }
-    }
-  },
-  setup() {
-    const { fields } = useRequestData();
-    return { fields };
+      default: always([])
+    },
+    old: null,
+    new: null
   },
   computed: {
     isAtomicChange() {
@@ -112,9 +80,9 @@ export default {
       // or if it is of a whole subtree being added or removed.
       // If one side is null (addition or deletion) and the remaining
       // side is an object, then it is NOT an atomic change.
-      if (this.entry.old == null && typeof (this.entry.new) === 'object')
+      if (this.old == null && typeof (this.new) === 'object')
         return false;
-      if (this.entry.new == null && typeof (this.entry.old) === 'object')
+      if (this.new == null && typeof (this.old) === 'object')
         return false;
       return true;
     },
@@ -124,35 +92,29 @@ export default {
       // could be empty for a short path).
       // Otherwise, it will show the whole path of the changed subtree.
       if (!this.isAtomicChange)
-        return this.entry.path;
-      return this.entry.path.slice(0, this.entry.path.length - 1);
+        return this.path;
+      return this.path.slice(0, this.path.length - 1);
     },
     fieldName() {
-      return last(this.entry.path);
+      return last(this.path);
     },
     nestedClass() {
       return this.parentPath.length === 0 ? 'outer-item' : 'inner-item';
+    },
+    // Alias the `new` prop as newValue so that the prop can be accessed in the
+    // template.
+    newValue() {
+      return this.new;
     },
     typeOfChange() {
       // Check which value is null (old or new) to determine the
       // type of change or edit.
       // This is only used for non-atomic (nested) changes so
       // it will always be one or the other.
-      return (this.entry.old == null ? 'added' : 'deleted');
+      return (this.old == null ? 'added' : 'deleted');
     },
     nestedDiffs() {
-      return this.flattenDiff(this.entry.new || this.entry.old, this.typeOfChange);
-    },
-    isBinary() {
-      // Compares path as array by converting it to /field1/field2 string and checks
-      // if it is for a binary field.
-      // Filtering out where field[0] == undefined addresses issue with flattenDiff and repeat groups
-      const fullPath = this.parentPath.concat(this.entry.path.filter((field) => field[0] !== undefined));
-      const fullPathStr = fullPath.map((field) => (Array.isArray(field) ? field[0] : field)).join('/');
-      const basicPath = `/${fullPathStr}`;
-      if (this.fields.binaryPaths.has(basicPath))
-        return true;
-      return false;
+      return this.flattenDiff(this.new || this.old, this.typeOfChange);
     }
   },
   methods: {
@@ -177,25 +139,15 @@ export default {
         }
       }
       return changes;
-    },
-    binaryHref(value, useOldVersion) {
-      return apiPaths.submissionVersionAttachment(
-        this.projectId,
-        this.xmlFormId,
-        this.instanceId,
-        useOldVersion ? this.oldVersionId : this.newVersionId,
-        value
-      );
     }
   }
 };
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
+@import '../assets/scss/mixins';
 
-.submission-diff-item {
-
+.diff-item {
   &.outer-item {
     padding: 5px;
     border-bottom: 1px solid #ccc;
@@ -281,6 +233,7 @@ export default {
 
 <i18n lang="json5">
 {
+  // @transifexKey component.SubmissionDiffItem
   "en": {
     // The description of how a specific field in a form submission changed
     "editCaption": {
