@@ -3,6 +3,7 @@ import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (props = undefined) => {
@@ -12,7 +13,13 @@ const mountComponent = (props = undefined) => {
     ...props
   };
   return mount(EntityMetadataRow, {
-    props: mergedProps
+    global: {
+      provide: { projectId: '1', datasetName: 'trees' }
+    },
+    props: mergedProps,
+    container: {
+      router: mockRouter('/projects/1/datasets/trees/entities/e')
+    }
   });
 };
 

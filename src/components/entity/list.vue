@@ -50,6 +50,9 @@ export default {
     Spinner,
     EntityTable
   },
+  provide() {
+    return { projectId: this.projectId, datasetName: this.datasetName };
+  },
   props: {
     projectId: {
       type: String,
