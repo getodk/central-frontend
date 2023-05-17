@@ -71,8 +71,9 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
-      <template v-if="diff != null && diff.length !== 0">
-        <pre><code v-for="change of diff" :key="change.propertyName">{{ JSON.stringify(change) + '\n' }}</code></pre>
+      <template v-if="diff != null">
+        <diff-item v-for="change of diff" :key="change.propertyName"
+          :path="[change.propertyName]" :old="change.old" :new="change.new"/>
       </template>
     </template>
   </feed-entry>
@@ -88,6 +89,7 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ActorLink from '../actor-link.vue';
+import DiffItem from '../diff-item.vue';
 import FeedEntry from '../feed-entry.vue';
 
 import useReviewState from '../../composables/review-state';
