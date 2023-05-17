@@ -196,7 +196,7 @@ Assertion.addAsync('textTooltip', async function textTooltip() {
   }
 
   const text = element.textContent;
-  if (text.trim().length <= 5)
+  if (text.length <= 5)
     throw new Error('text of element must be more than 5 characters');
   element.textContent = 'a'.repeat(500);
   const containerOverflows = overflowContainer.clientWidth > window.innerWidth;

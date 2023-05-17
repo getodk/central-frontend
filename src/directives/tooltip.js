@@ -147,7 +147,7 @@ class Tooltip {
     shown: we just need to check tooltip.text().
     */
     if (type === 'text'
-      ? anchor.textContent.trim().length > 5
+      ? anchor.textContent.length > 5
       : type === 'sr-only' || tooltip.text() != null) {
       tooltip.addEventListeners();
       if (type === 'aria-describedby') tooltip.render();
