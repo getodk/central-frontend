@@ -20,9 +20,7 @@ except according to the terms contained in the LICENSE file.
           <dd v-if="data[name] == null || data[name] === ''" class="empty">
             {{ $t('common.emptyValue') }}
           </dd>
-          <dd v-else>
-            <span v-tooltip.text>{{ data[name] }}</span>
-          </dd>
+          <dd v-else v-tooltip.text>{{ data[name] }}</dd>
         </div>
       </dl>
     </template>
@@ -52,7 +50,16 @@ const data = computed(() => entity.currentVersion.data);
 @import '../../assets/scss/mixins';
 
 #entity-data {
-  dt, dd { @include text-overflow-ellipsis; }
+  dt { @include text-overflow-ellipsis; }
+
+  dd {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    white-space: break-spaces;
+  }
 
   .empty {
     color: #888;
