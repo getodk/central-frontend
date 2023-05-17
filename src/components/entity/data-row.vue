@@ -21,16 +21,18 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 export default {
-  name: 'EntityDataRow',
-  props: {
-    entity: {
-      type: Object,
-      required: true
-    },
-    properties: {
-      type: Array,
-      required: true
-    }
-  }
+  name: 'EntityDataRow'
 };
+</script>
+<script setup>
+defineProps({
+  entity: {
+    type: Object,
+    required: true
+  },
+  properties: {
+    type: Array,
+    required: true
+  }
+});
 </script>
