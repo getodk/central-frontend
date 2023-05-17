@@ -17,7 +17,12 @@ except according to the terms contained in the LICENSE file.
       <dl v-if="entity.dataExists">
         <div v-for="{ name } of dataset.properties" :key="name">
           <dt><span v-tooltip.text>{{ name }}</span></dt>
-          <dd><span v-tooltip.text>{{ propertyValue(name) }}</span></dd>
+          <dd v-if="data[name] == null || data[name] === ''" class="empty">
+            {{ $t('common.emptyValue') }}
+          </dd>
+          <dd v-else>
+            <span v-tooltip.text>{{ data[name] }}</span>
+          </dd>
         </div>
       </dl>
     </template>
@@ -30,7 +35,7 @@ export default {
 };
 </script>
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 
 import PageSection from '../page/section.vue';
 
@@ -41,11 +46,6 @@ import { useRequestData } from '../../request-data';
 const { dataset, entity } = useRequestData();
 
 const data = computed(() => entity.currentVersion.data);
-const { i18n } = inject('container');
-const propertyValue = (name) => {
-  const value = data.value[name];
-  return value == null || value === '' ? i18n.t('common.emptyValue') : value;
-};
 </script>
 
 <style lang="scss">
@@ -53,6 +53,11 @@ const propertyValue = (name) => {
 
 #entity-data {
   dt, dd { @include text-overflow-ellipsis; }
+
+  .empty {
+    color: #888;
+    font-style: italic;
+  }
 }
 </style>
 

@@ -42,19 +42,23 @@ describe('EntityData', () => {
     await dd.get('span').should.have.textTooltip();
   });
 
-  it('shows (empty) if the value of a property is an empty string', () => {
+  it('renders correctly if the value of a property is an empty string', () => {
     testData.extendedEntities.createPast(1, {
       data: { height: '' }
     });
-    mountComponent().get('dd span').text().should.equal('(empty)');
+    const dd = mountComponent().get('dd');
+    dd.text().should.equal('(empty)');
+    dd.classes('empty').should.be.true();
   });
 
-  it('shows (empty) if the value of a property does not exist', () => {
+  it('renders correctly if the value of a property does not exist', () => {
     testData.extendedDatasets.createPast(1, {
       properties: [{ name: 'height' }],
       entities: 1
     });
     testData.extendedEntities.createPast(1, { data: {} });
-    mountComponent().get('dd span').text().should.equal('(empty)');
+    const dd = mountComponent().get('dd');
+    dd.text().should.equal('(empty)');
+    dd.classes('empty').should.be.true();
   });
 });
