@@ -1264,7 +1264,7 @@
           "developer_comment": "{icon1} and {icon2} are icons that display the numbers 1 and 2. They refer to the first and second step in an image that shows the relationship between Forms and Entities."
         },
         "2": {
-          "string": "A Dataset is attached {icon3} to a Form just like a CSV. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
+          "string": "A Dataset is attached {icon3} to a Form. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
           "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
         },
         "3": {

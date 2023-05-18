@@ -104,7 +104,7 @@ export default {
       // {icon1} and {icon2} are icons that display the numbers 1 and 2. They refer to the first and second step in an image that shows the relationship between Forms and Entities.
       "A Form {icon1} can specify that its Submissions create Entities in a Dataset {icon2}. By default, Entities are created when a Submission is received. They can also be configured to require Submission approval.",
       // {icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities.
-      "A Dataset is attached {icon3} to a Form just like a CSV. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
+      "A Dataset is attached {icon3} to a Form. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
       // {icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities.
       "Datasets can be attached to many Forms, including to a Form that also creates Entities in that Dataset {icon4}.",
       "Datasets are configured during Form design."
