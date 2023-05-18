@@ -68,7 +68,9 @@ describe('EntityUpdateRow', () => {
     });
 
     it('emits an update:modelValue event after textarea input', async () => {
-      const row = mountComponent({ oldValue: 'foo' });
+      const row = mountComponent({
+        props: { oldValue: 'foo' }
+      });
       await row.get('textarea').setValue('bar');
       row.emitted('update:modelValue').should.eql([['bar']]);
     });
@@ -85,6 +87,7 @@ describe('EntityUpdateRow', () => {
         props: { oldValue: 'foo' }
       });
       await row.get('textarea').setValue('bar');
+      await row.setProps({ modelValue: 'bar' });
       await row.get('textarea').setValue('foo');
       row.emitted('update:modelValue').should.eql([['bar'], [undefined]]);
     });
@@ -92,8 +95,16 @@ describe('EntityUpdateRow', () => {
     it('emits undefined if current value is nullish and updated value is empty string', async () => {
       const row = mountComponent();
       await row.get('textarea').setValue('bar');
+      await row.setProps({ modelValue: 'bar' });
       await row.get('textarea').setValue('');
       row.emitted('update:modelValue').should.eql([['bar'], [undefined]]);
+    });
+
+    it('adds uncommitted-change class if modelValue prop exists', () => {
+      const row = mountComponent({
+        props: { oldValue: 'foo', modelValue: 'bar' }
+      });
+      row.get('textarea').classes('uncommitted-change').should.be.true();
     });
   });
 

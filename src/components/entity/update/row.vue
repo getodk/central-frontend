@@ -24,8 +24,8 @@ except according to the terms contained in the LICENSE file.
     <td class="new-value">
       <div class="form-group">
         <textarea-autosize :id="textareaId" ref="textarea"
-          :model-value="modelValue ?? oldValue ?? ''" :min-height="minHeight"
           :class="{ 'uncommitted-change': modelValue != null }"
+          :model-value="modelValue ?? oldValue ?? ''" :min-height="minHeight"
           :required="required" @update:model-value="update"/>
       </div>
     </td>
