@@ -25,7 +25,7 @@ describe('DatasetSettings', () => {
     testData.extendedDatasets.createPast(1);
     await load('/projects/1/datasets/trees/settings', { root: false })
       .complete()
-      .request(async (component) => component.get('input[value="true"]').trigger('change'))
+      .request(async (component) => component.get('input[value="true"]').setValue(true))
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('PATCH');
         url.should.equal('/v1/projects/1/datasets/trees');
@@ -38,7 +38,7 @@ describe('DatasetSettings', () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
     await load('/projects/1/datasets/trees/settings', { root: false })
       .complete()
-      .request(async (component) => component.get('input[value="false"]').trigger('change'))
+      .request(async (component) => component.get('input[value="false"]').setValue(true))
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('PATCH');
         url.should.equal('/v1/projects/1/datasets/trees');
@@ -83,7 +83,7 @@ describe('DatasetSettings', () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
     await load('/projects/1/datasets/trees/settings', { root: false })
       .complete()
-      .request(async (component) => component.get('input[value="false"]').trigger('change'))
+      .request(async (component) => component.get('input[value="false"]').setValue(true))
       .respondWithProblem({
         code: 400.29,
         message: 'There are 10 pending submissions',
@@ -93,7 +93,7 @@ describe('DatasetSettings', () => {
       .request(async (component) => {
         const modal = component.getComponent(DatasetPendingSubmissions);
         modal.text().should.match(/10 records/);
-        await modal.get('input[value="true"]').trigger('change');
+        await modal.get('input[value="true"]').setValue(true);
         return modal.get('.btn-danger').trigger('click');
       })
       .beforeEachResponse((_, { method, url, data }) => {
