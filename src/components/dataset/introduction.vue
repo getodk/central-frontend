@@ -19,16 +19,18 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('body[0]') }}</p>
         <i18n-t tag="p" keypath="body[1]">
           <template #icon1><span class="step-number">(1)</span></template>
-          <template #icon2><span class="step-number">(2)</span></template>
         </i18n-t>
         <i18n-t tag="p" keypath="body[2]">
-          <template #icon3><span class="step-number">(3)</span></template>
+          <template #icon2><span class="step-number">(2)</span></template>
         </i18n-t>
         <i18n-t tag="p" keypath="body[3]">
+          <template #icon3><span class="step-number">(3)</span></template>
+        </i18n-t>
+        <i18n-t tag="p" keypath="body[4]">
           <template #icon4><span class="step-number">(4)</span></template>
         </i18n-t>
         <p>
-          <span>{{ $t('body[4]') }}</span>
+          <span>{{ $t('body[5]') }}</span>
           <sentence-separator/>
           <i18n-t keypath="getStarted.full">
             <template #clickHere>
@@ -98,15 +100,17 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "title": "Welcome to the Entities preview!",
+    "title": "About Entities",
     "body": [
-      "Entities are a powerful new way to share information between Forms. A Dataset is a collection of Entities.",
-      // {icon1} and {icon2} are icons that display the numbers 1 and 2. They refer to the first and second step in an image that shows the relationship between Forms and Entities.
-      "A Form {icon1} can specify that its Submissions create Entities in a Dataset {icon2}. By default, Entities are created when a Submission is received. They can also be configured to require Submission approval.",
+      "Entities are a powerful way to share information between Forms. A Dataset is a collection of Entities.",
+      // {icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities.
+      "{icon1} Design a Form to create Entities",
+      // {icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities.
+      "{icon2} Submissions to the Form create Entities. By default, Entities are created when a Submission is received. They can also be configured to require Submission approval.",
       // {icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities.
-      "A Dataset is attached {icon3} to a Form. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
+      "{icon3} Attach the Dataset to a Form. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
       // {icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities.
-      "Datasets can be attached to many Forms, including to a Form that also creates Entities in that Dataset {icon4}.",
+      "{icon4} You can attach Datasets to many Forms, including to a Form that also creates Entities in that Dataset.",
       "Datasets are configured during Form design."
     ],
     "getStarted": {
