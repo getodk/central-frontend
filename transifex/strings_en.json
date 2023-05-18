@@ -837,10 +837,6 @@
         "string": ","
       }
     },
-    "datasetsPreview": {
-      "string": "Datasets Preview",
-      "developer_comment": "This is a title shown above a section of the page."
-    },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
       "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
