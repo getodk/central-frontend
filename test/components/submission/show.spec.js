@@ -26,13 +26,6 @@ describe('SubmissionShow', () => {
   });
 
   it('shows the instance name if the submission has one', async () => {
-    testData.extendedForms.createPast(1, {
-      fields: [
-        testData.fields.string('/meta/instanceName'),
-        testData.fields.string('/s')
-      ],
-      submissions: 1
-    });
     testData.extendedSubmissions.createPast(1, {
       instanceId: 's',
       meta: { instanceName: 'My Submission' }
