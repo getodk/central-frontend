@@ -164,6 +164,7 @@ export default {
     // This text will be shown in ODK Collect when testing a Draft Form. {name}
     // is the title of the Draft Form.
     "collectProjectName": "[Draft] {name}",
+    // @transifexKey component.FormDraftTesting.datasetsPreview
     "entitiesTesting": {
       "title": "This Form can create Entities",
       "body": [
