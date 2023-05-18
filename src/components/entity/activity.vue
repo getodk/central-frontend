@@ -40,38 +40,25 @@ import { useRequestData } from '../../request-data';
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { entity, audits, diffs, resourceStates } = useRequestData();
-const { initiallyLoading } = resourceStates([audits, diffs]);
-const { dataExists } = resourceStates([entity, audits, diffs]);
+const { audits, diffs, resourceStates } = useRequestData();
+const { initiallyLoading, dataExists } = resourceStates([audits, diffs]);
 
 const feed = computed(() => {
   const result = [];
-  let diffIndex = 0;
-  let includesCreate = false;
+  let diffIndex = diffs.length - 1;
   for (const audit of audits) {
     if (audit.action === 'entity.update.version') {
       result.push({ entry: audit, diff: diffs[diffIndex] });
-      diffIndex += 1;
+      diffIndex -= 1;
     } else if (audit.action === 'entity.create') {
       result.push({ entry: audit });
       const { details } = audit;
       if (details.approval != null) result.push({ entry: details.approval });
       if (details.submissionCreate != null)
         result.push({ entry: details.submissionCreate, submission: details.submission });
-      includesCreate = true;
     } else {
       result.push({ entry: audit });
     }
-  }
-  // There won't be an entity.create event if the entity was created before
-  // v2023.3. In that case, we create an artifical event to show in the feed.
-  if (!includesCreate) {
-    const entry = {
-      action: 'entity.create',
-      actor: entity.creator,
-      loggedAt: entity.createdAt
-    };
-    result.push({ entry });
   }
   return result;
 });

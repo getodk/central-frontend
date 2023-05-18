@@ -182,34 +182,6 @@ describe('EntityFeedEntry', () => {
       });
     });
 
-    describe('artificial entity.create event', () => {
-      const artificialAudit = () => {
-        const entity = testData.extendedEntities.last();
-        return {
-          action: 'entity.create',
-          actor: entity.creator,
-          loggedAt: entity.createdAt
-        };
-      };
-
-      it('shows the correct text', () => {
-        const component = mountComponent({
-          props: { entry: artificialAudit() }
-        });
-        const text = component.get('.feed-entry-title').text();
-        text.should.equal('Created Entity dogwood in trees Dataset');
-      });
-
-      it('links to the dataset', () => {
-        const component = mountComponent({
-          props: { entry: artificialAudit() }
-        });
-        const title = component.get('.feed-entry-title');
-        const { to } = title.getComponent(RouterLinkStub).props();
-        to.should.equal('/projects/1/datasets/trees');
-      });
-    });
-
     describe('entity was created using the API', () => {
       beforeEach(createEntity);
 
@@ -274,14 +246,17 @@ describe('EntityFeedEntry', () => {
         details: { instanceId: 's' }
       })
       .last();
-    testData.extendedAudits.createPast(1, { action: 'submission.update' });
+    const approval = testData.extendedAudits
+      .createPast(1, { action: 'submission.update' })
+      .last();
     testData.extendedEntities.createPast(1, { uuid: 'e' });
     testData.extendedAudits.createPast(1, {
       action: 'entity.create',
       details: {
         entity: { uuid: 'e' },
         submissionCreate,
-        submission: { ...submission, xmlFormId: 'f' }
+        submission: { ...submission, xmlFormId: 'f' },
+        approval
       }
     });
     const component = await load('/projects/1/datasets/trees/entities/e', {
@@ -296,6 +271,7 @@ describe('EntityFeedEntry', () => {
           bottom: marginBottom === '' ? 0 : Number.parseFloat(marginBottom)
         };
       });
+    margin.length.should.equal(3);
     margin[0].top.should.equal(0);
     (margin[0].bottom + margin[1].top).should.equal(1);
     (margin[1].bottom + margin[2].top).should.equal(1);

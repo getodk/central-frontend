@@ -45,9 +45,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-if="entry.action === 'entity.create'">
         <span class="icon-magic-wand"></span>
-        <!-- entry.actee == null for an artifical entity.create event for an
-        entity created before v2023.3. -->
-        <i18n-t v-if="entry.actee == null || entry.details.submissionCreate != null"
+        <i18n-t v-if="entry.details.submissionCreate != null"
           keypath="title.entity.create.submission">
           <template #label>
             <span class="entity-label">{{ entity.currentVersion.label }}</span>
