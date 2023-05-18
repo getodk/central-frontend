@@ -15,20 +15,22 @@ except according to the terms contained in the LICENSE file.
       <span class="panel-title h1">{{ $t('title') }}</span>
     </div>
     <div class="panel-body row">
-      <div class="col-md-3">
+      <div class="col-md-5">
         <p>{{ $t('body[0]') }}</p>
         <i18n-t tag="p" keypath="body[1]">
           <template #icon1><span class="step-number">(1)</span></template>
         </i18n-t>
         <i18n-t tag="p" keypath="body[2]">
           <template #icon2><span class="step-number">(2)</span></template>
-          <template #icon3><span class="step-number">(3)</span></template>
         </i18n-t>
         <i18n-t tag="p" keypath="body[3]">
+          <template #icon3><span class="step-number">(3)</span></template>
+        </i18n-t>
+        <i18n-t tag="p" keypath="body[4]">
           <template #icon4><span class="step-number">(4)</span></template>
         </i18n-t>
         <p>
-          <span>{{ $t('body[4]') }}</span>
+          <span>{{ $t('body[5]') }}</span>
           <sentence-separator/>
           <i18n-t keypath="getStarted.full">
             <template #clickHere>
@@ -37,7 +39,7 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </p>
       </div>
-      <div class="col-md-9 image-wrapper">
+      <div class="col-md-7 image-wrapper">
         <img src="../../../public/images/entities-intro.svg" :alt="$t('datasetsWorkflow')">
       </div>
     </div>
@@ -98,15 +100,17 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "title": "Welcome to the Datasets preview!",
+    "title": "About Entities",
     "body": [
-      "Datasets are a new way to create and manage data attachments in ODK. They allow you to use data gathered in Submissions to be downloaded and used as part of another Form.",
-      // {icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow.
-      "Datasets can be attached {icon1} to Forms and their data queried just like any other attached CSV data file.",
-      // {icon2} and {icon3} are icons that display the numbers 2 and 3. They refer to the second and third steps in an image that depicts this workflow.
-      "When a Submission related to a Dataset is approved {icon2}, the selected data is added {icon3} to the Dataset, so that the next time a client downloads the Form, the new data will be included in the data download.",
-      // {icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow.
-      "In a future version, you will be able to upload {icon4} a CSV to a Dataset directly.",
+      "Entities are a powerful way to share information between Forms. A Dataset is a collection of Entities.",
+      // {icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities.
+      "{icon1} Design a Form to create Entities",
+      // {icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities.
+      "{icon2} Submissions to the Form create Entities. By default, Entities are created when a Submission is received. They can also be configured to require Submission approval.",
+      // {icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities.
+      "{icon3} Attach the Dataset to a Form. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
+      // {icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities.
+      "{icon4} You can attach Datasets to many Forms, including to a Form that also creates Entities in that Dataset.",
       "Datasets are configured during Form design."
     ],
     "getStarted": {
