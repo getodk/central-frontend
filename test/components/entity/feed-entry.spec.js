@@ -1,6 +1,7 @@
 import { RouterLinkStub } from '@vue/test-utils';
 
 import ActorLink from '../../../src/components/actor-link.vue';
+import DiffItem from '../../../src/components/diff-item.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 import FeedEntry from '../../../src/components/feed-entry.vue';
 
@@ -30,7 +31,10 @@ const mountComponent = (options) =>
 describe('EntityFeedEntry', () => {
   beforeEach(() => {
     mockLogin({ displayName: 'Alice' });
-    testData.extendedEntities.createPast(1, { label: 'dogwood' });
+    testData.extendedEntities.createPast(1, {
+      label: 'dogwood',
+      data: { height: '1', circumference: '2' }
+    });
   });
 
   describe('submission.create audit event', () => {
@@ -223,6 +227,28 @@ describe('EntityFeedEntry', () => {
       const title = component.get('.feed-entry-title');
       const actorLink = title.getComponent(ActorLink);
       actorLink.props().actor.displayName.should.equal('Alice');
+    });
+
+    it('renders a DiffItem for each change', () => {
+      const diff = [
+        { new: '1', old: '10', propertyName: 'height' },
+        { new: '2', old: '20', propertyName: 'circumference' }
+      ];
+      const component = mountComponent({
+        props: { ...updateEntity(), diff }
+      });
+      component.findAllComponents(DiffItem).length.should.equal(2);
+    });
+
+    it('passes the correct props to the DiffItem', () => {
+      const diff = [{ new: '1', old: '10', propertyName: 'height' }];
+      const component = mountComponent({
+        props: { ...updateEntity(), diff }
+      });
+      const props = component.getComponent(DiffItem).props();
+      props.new.should.equal('1');
+      props.old.should.equal('10');
+      props.path.should.eql(['height']);
     });
   });
 
