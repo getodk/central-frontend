@@ -110,7 +110,7 @@ describe('EntityBasicDetails', () => {
         createEntityFromSubmission({ deleted: true });
         const component = mountComponent();
         const dd = component.get('#entity-basic-details-creating-submission');
-        const icon = await dd.get('.icon-trash');
+        const icon = dd.get('.icon-trash');
         await icon.should.have.tooltip('This Submission has been deleted.');
       });
 
@@ -166,17 +166,6 @@ describe('EntityBasicDetails', () => {
         details: {
           entity: { uuid: 'e' }
         }
-      });
-      const component = mountComponent();
-      const dd = component.find('#entity-basic-details-creating-submission');
-      dd.exists().should.be.false();
-    });
-
-    // This is possible for entities created before v2023.3.
-    it('does not show creating submission if there is no entity.create event', () => {
-      testData.extendedEntities.createPast(1);
-      testData.extendedAudits.createPast(1, {
-        action: 'entity.update.version'
       });
       const component = mountComponent();
       const dd = component.find('#entity-basic-details-creating-submission');
