@@ -50,6 +50,8 @@ const data = computed(() => entity.currentVersion.data);
 @import '../../assets/scss/mixins';
 
 #entity-data {
+  margin-bottom: 35px;
+
   dt { @include text-overflow-ellipsis; }
 
   dd {

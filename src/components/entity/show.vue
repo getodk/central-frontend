@@ -70,6 +70,7 @@ const props = defineProps({
   }
 });
 provide('projectId', props.projectId);
+provide('datasetName', props.datasetName);
 
 const { project, dataset } = useRequestData();
 const { entity, audits, diffs } = useEntity();

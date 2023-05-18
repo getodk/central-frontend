@@ -13,7 +13,9 @@ except according to the terms contained in the LICENSE file.
   <div class="feed-entry">
     <div class="feed-entry-heading">
       <date-time :iso="iso"/>
-      <div class="feed-entry-title"><slot name="title"></slot></div>
+      <div class="feed-entry-title" :class="{ truncate: !wrapTitle }">
+        <slot name="title"></slot>
+      </div>
     </div>
     <div class="feed-entry-body"><slot name="body"></slot></div>
   </div>
@@ -26,7 +28,8 @@ defineProps({
   iso: {
     type: String,
     required: true
-  }
+  },
+  wrapTitle: Boolean
 });
 </script>
 
@@ -52,18 +55,23 @@ defineProps({
 }
 
 .feed-entry-title {
-  @include text-overflow-ellipsis;
+  $padding-left: 25px;
   font-size: 17px;
   font-weight: bold;
   letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+  padding-left: $padding-left;
+  text-indent: -$padding-left;
   width: 70%;
 
+  &.truncate { @include text-overflow-ellipsis; }
+
+  // 18px (width) + 7px (margin-right) = $padding-left
   [class^="icon-"] {
-    display: block;
-    float: left;
+    display: inline-block;
     margin-right: 7px;
-    padding-top: 3px;
     text-align: center;
+    text-indent: 0;
     width: 18px;
   }
 
