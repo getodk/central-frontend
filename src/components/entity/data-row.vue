@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ entity[property.name] }}</span>
     </td>
     <td><span v-tooltip.text>{{ entity.label }}</span></td>
-    <td>{{ entity.name }}</td>
+    <td>{{ entity.__id }}</td>
   </tr>
 </template>
 
