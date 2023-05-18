@@ -124,7 +124,7 @@ describe('EntityBasicDetails', () => {
       });
     });
 
-    it.skip('does not remove creating submission while activity feed is being refreshed', () => {
+    it('does not remove creating submission while activity feed is being refreshed', () => {
       createEntityFromSubmission();
       return load('/projects/1/datasets/trees/entities/e', { root: false })
         .afterResponses(component => {
