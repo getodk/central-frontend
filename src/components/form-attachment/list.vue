@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       <div class="panel-heading">
         <span class="panel-title">
           <span class="icon-database"></span>
-          {{ $t('common.entitiesTesting') }}
+          {{ $t('entitiesTesting.title') }}
         </span>
       </div>
       <div class="panel-body">
@@ -469,6 +469,7 @@ export default {
       "link": "Dataset linked successfully."
     },
     "entitiesTesting": {
+      "title": "Testing Datasets",
       "body": [
         "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
       ]
