@@ -2209,16 +2209,16 @@
         "string": "[Draft] {name}",
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
-      "datasetsPreview": {
+      "entitiesTesting": {
+        "title": {
+          "string": "This Form can create Entities"
+        },
         "body": {
           "0": {
-            "string": "This Form can add Entities to a Dataset."
+            "string": "Entities are only created for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state."
           },
           "1": {
-            "string": "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a Draft state."
-          },
-          "2": {
-            "string": "For now, we recommend publishing your Dataset-related Forms, and not approving any submissions (and therefore not create any unwanted entities) until you are sure the Form is ready."
+            "string": "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
           }
         }
       }

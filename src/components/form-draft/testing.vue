@@ -25,18 +25,15 @@ except according to the terms contained in the LICENSE file.
               <div class="panel-heading">
                 <span class="panel-title">
                   <span class="icon-database"></span>
-                  {{ $t('common.datasetsPreview') }}
+                  {{ $t('entitiesTesting.title') }}
                 </span>
               </div>
               <div class="panel-body">
                 <p>
-                  {{ $t('datasetsPreview.body[0]') }}
+                  {{ $t('entitiesTesting.body[0]') }}
                 </p>
                 <p>
-                  {{ $t('datasetsPreview.body[1]') }}
-                </p>
-                <p>
-                  {{ $t('datasetsPreview.body[2]') }}
+                  {{ $t('entitiesTesting.body[1]') }}
                 </p>
               </div>
             </div>
@@ -167,11 +164,11 @@ export default {
     // This text will be shown in ODK Collect when testing a Draft Form. {name}
     // is the title of the Draft Form.
     "collectProjectName": "[Draft] {name}",
-    "datasetsPreview": {
+    "entitiesTesting": {
+      "title": "This Form can create Entities",
       "body": [
-        "This Form can add Entities to a Dataset.",
-        "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a Draft state.",
-        "For now, we recommend publishing your Dataset-related Forms, and not approving any submissions (and therefore not create any unwanted entities) until you are sure the Form is ready."
+        "Entities are only created for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state.",
+        "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
       ]
     }
   }
@@ -188,7 +185,7 @@ export default {
       "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
     ],
     "collectProjectName": "[Návrh] {name}",
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Tento formulář může přidávat entity do datové sady.",
         "V této předběžné verzi datových sad je nutné formulář publikovat, aby se aktualizace datové sady zobrazila. V některé z budoucích verzí aplikace Central budete moci testovat funkce Datasetu ve stavu návrhu.",
@@ -203,7 +200,7 @@ export default {
       "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
     ],
     "collectProjectName": "[Entwurf] {name}",
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Dieses Formular kann Entitäten zu einem Datensatz hinzufügen.",
         "In dieser Vorschauversion von Datasets müssen Sie Ihr Formular veröffentlichen, um das Dataset-Update anzuzeigen. In einer zukünftigen Version von Central können Sie die Dataset-Funktionalität in einem Entwurfsstatus testen.",
@@ -218,7 +215,7 @@ export default {
       "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
     ],
     "collectProjectName": "borrador {name}",
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Este formulario puede agregar entidades a un conjunto de datos.",
         "En esta versión preliminar de conjuntos de datos, debe publicar su formulario para ver la actualización del conjunto de datos. En una versión futura de Central, podrá probar la funcionalidad del conjunto de datos en un estado Borrador.",
@@ -233,7 +230,7 @@ export default {
       "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées."
     ],
     "collectProjectName": "[Brouillon] {name}",
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Ce formulaire peut ajouter des entités à un Dataset.",
         "Dans cette version préliminaire de Datasets, vous devez publier votre formulaire pour voir le Dataset. Dans une prochaine version de Central, vous pourrez tester la fonctionnalité des Datasets avec une ébauche de formualire..",
@@ -256,7 +253,7 @@ export default {
       "Le bozze inviate vanno nella tabella di prova sottostante, dove puoi visualizzarle in anteprima e scaricarle. Quando pubblichi questa bozza di formulario, i suoi Invii di prova verranno rimossi in modo permanente."
     ],
     "collectProjectName": "[Draft] {name}",
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Questo modulo può aggiungere Entità a un set di dati.",
         "In questa versione di anteprima dei set di dati, è necessario pubblicare il formulario per visualizzare l'aggiornamento del set di dati. In una versione futura di Central, sarai in grado di testare la funzionalità del set di dati in uno stato Bozza.",
