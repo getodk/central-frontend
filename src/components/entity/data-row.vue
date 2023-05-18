@@ -15,22 +15,24 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ entity[property.name] }}</span>
     </td>
     <td><span v-tooltip.text>{{ entity.label }}</span></td>
-    <td>{{ entity.name }}</td>
+    <td>{{ entity.__id }}</td>
   </tr>
 </template>
 
 <script>
 export default {
-  name: 'EntityDataRow',
-  props: {
-    entity: {
-      type: Object,
-      required: true
-    },
-    properties: {
-      type: Array,
-      required: true
-    }
-  }
+  name: 'EntityDataRow'
 };
+</script>
+<script setup>
+defineProps({
+  entity: {
+    type: Object,
+    required: true
+  },
+  properties: {
+    type: Array,
+    required: true
+  }
+});
 </script>

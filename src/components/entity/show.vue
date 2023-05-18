@@ -42,7 +42,7 @@ export default {
 };
 </script>
 <script setup>
-import { inject, reactive } from 'vue';
+import { inject, provide, reactive } from 'vue';
 
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
@@ -73,6 +73,8 @@ const props = defineProps({
     required: true
   }
 });
+provide('projectId', props.projectId);
+provide('datasetName', props.datasetName);
 
 const { project, dataset } = useRequestData();
 const { entity, audits, diffs } = useEntity();

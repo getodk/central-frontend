@@ -58,7 +58,6 @@ export const entityOData = (top = 250, skip = 0) => ({
   value: extendedEntities.sorted().slice(skip, skip + top)
     .map(entity => ({
       ...entity.currentVersion.data,
-      name: entity.uuid,
       label: entity.currentVersion.label,
       __id: entity.uuid,
       __system: {

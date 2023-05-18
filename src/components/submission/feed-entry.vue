@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <feed-entry :iso="entry.loggedAt ?? entry.createdAt"
+    :wrap-title="entry.action === 'entity.create'"
     class="submission-feed-entry">
     <template #title>
       <template v-if="entry.action === 'submission.create'">
@@ -156,6 +157,8 @@ export default {
   },
   methods: {
     entityLabel(entry) {
+      // This is probably always true in production, but it wasn't always the
+      // case during the development of v2022.3.
       if ('entity' in entry.details)
         return entry.details.entity.label;
       return '';

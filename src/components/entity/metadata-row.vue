@@ -11,7 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="entity-metadata-row">
-    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
+    <td class="row-number">
+      <router-link v-slot="{ href }"
+        :to="entityPath(projectId, datasetName, entity.__id)" custom>
+        <a :href="href" target="_blank">{{ $n(rowNumber, 'noGrouping') }}</a>
+      </router-link>
+    </td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
     </td>
@@ -20,22 +25,31 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'EntityMetadataRow'
+};
+</script>
+<script setup>
+import { inject } from 'vue';
+
 import DateTime from '../date-time.vue';
 
-export default {
-  name: 'EntityMetadataRow',
-  components: { DateTime },
-  props: {
-    entity: {
-      type: Object,
-      required: true
-    },
-    rowNumber: {
-      type: Number,
-      required: true
-    }
+import useRoutes from '../../composables/routes';
+
+defineProps({
+  entity: {
+    type: Object,
+    required: true
+  },
+  rowNumber: {
+    type: Number,
+    required: true
   }
-};
+});
+const projectId = inject('projectId');
+const datasetName = inject('datasetName');
+
+const { entityPath } = useRoutes();
 </script>
 
 <style lang="scss">

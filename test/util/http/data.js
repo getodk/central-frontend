@@ -128,7 +128,8 @@ const responsesByComponent = {
     entity: () => testData.extendedEntities.last(),
     project: true,
     dataset: true,
-    audits: true,
+    audits: () => testData.extendedAudits.sorted()
+      .filter(({ action }) => action.startsWith('entity.')),
     diffs: () => []
   }),
 

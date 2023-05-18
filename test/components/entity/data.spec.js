@@ -3,17 +3,18 @@ import EntityData from '../../../src/components/entity/data.vue';
 import useEntity from '../../../src/request-data/entity';
 
 import testData from '../../data';
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => mount(EntityData, {
-  container: {
-    requestData: testRequestData([useEntity], {
-      dataset: testData.extendedDatasets.last(),
-      entity: testData.extendedEntities.last()
-    })
-  }
-});
+const mountComponent = (options = undefined) =>
+  mount(EntityData, mergeMountOptions(options, {
+    container: {
+      requestData: testRequestData([useEntity], {
+        dataset: testData.extendedDatasets.last(),
+        entity: testData.extendedEntities.last()
+      })
+    }
+  }));
 
 describe('EntityData', () => {
   it('does not render if there are no properties', () => {
@@ -29,32 +30,57 @@ describe('EntityData', () => {
     mountComponent().findAll('dl > div').length.should.equal(2);
   });
 
-  it('renders a property correctly', async () => {
+  it('shows the property name', async () => {
     testData.extendedEntities.createPast(1, {
-      data: { height: '123456' }
+      data: { height: '1' }
     });
-    const component = mountComponent();
-    const dt = component.get('dt');
-    dt.text().should.equal('height');
-    await dt.get('span').should.have.textTooltip();
-    const dd = component.get('dd');
-    dd.text().should.equal('123456');
-    await dd.get('span').should.have.textTooltip();
+    const span = mountComponent().get('dt span');
+    span.text().should.equal('height');
+    await span.should.have.textTooltip();
   });
 
-  it('shows (empty) if the value of a property is an empty string', () => {
+  it('shows the property value', () => {
+    testData.extendedEntities.createPast(1, {
+      data: { height: '1' }
+    });
+    mountComponent().get('dd').text().should.equal('1');
+  });
+
+  describe('tooltip for the property value', () => {
+    it('shows a tooltip if the value does not fit within 3 lines', async () => {
+      testData.extendedEntities.createPast(1, {
+        data: { notes: 'The\ntree\nis\ntall.' }
+      });
+      const dd = mountComponent({ attachTo: document.body }).get('dd');
+      await dd.should.have.tooltip('The\ntree\nis\ntall.');
+    });
+
+    it('does not show a tooltip if the value fits within 3 lines', async () => {
+      testData.extendedEntities.createPast(1, {
+        data: { notes: 'Tall' }
+      });
+      const dd = mountComponent({ attachTo: document.body }).get('dd');
+      await dd.should.not.have.tooltip();
+    });
+  });
+
+  it('renders correctly if the value of a property is an empty string', () => {
     testData.extendedEntities.createPast(1, {
       data: { height: '' }
     });
-    mountComponent().get('dd span').text().should.equal('(empty)');
+    const dd = mountComponent().get('dd');
+    dd.text().should.equal('(empty)');
+    dd.classes('empty').should.be.true();
   });
 
-  it('shows (empty) if the value of a property does not exist', () => {
+  it('renders correctly if the value of a property does not exist', () => {
     testData.extendedDatasets.createPast(1, {
       properties: [{ name: 'height' }],
       entities: 1
     });
     testData.extendedEntities.createPast(1, { data: {} });
-    mountComponent().get('dd span').text().should.equal('(empty)');
+    const dd = mountComponent().get('dd');
+    dd.text().should.equal('(empty)');
+    dd.classes('empty').should.be.true();
   });
 });

@@ -1385,12 +1385,51 @@
       "creatingSubmission": {
         "string": "Creating Submission",
         "developer_comment": "This is shown above the Submission that created the Entity."
+      },
+      "submissionDeleted": {
+        "string": "This Submission has been deleted."
       }
     },
     "EntityData": {
       "title": {
         "string": "Entity Data",
         "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "EntityFeedEntry": {
+      "title": {
+        "submission": {
+          "create": {
+            "notDeleted": {
+              "string": "Submission {instanceName} uploaded by {submitter}",
+              "developer_comment": "This text is shown in a list of events. {submitter} is the name of a user, a team of users, or a Public Access Link."
+            },
+            "deleted": {
+              "full": {
+                "string": "{deletedSubmission} uploaded by {name}",
+                "developer_comment": "This text is shown in a list of events. {name} is the name of a user, a team of users, or a Public Access Link.\n\n{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+              },
+              "deletedSubmission": {
+                "string": "(deleted Submission {id})",
+                "developer_comment": "This text is shown in a list of events. {id} is the Submission instance ID.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\n{deletedSubmission} uploaded by {name}"
+              }
+            }
+          }
+        },
+        "entity": {
+          "create": {
+            "api": {
+              "string": "Entity {label} created by {name}",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
+            }
+          },
+          "update_version": {
+            "api": {
+              "string": "Data updated by {name}",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            }
+          }
+        }
       }
     },
     "EntityList": {
