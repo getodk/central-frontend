@@ -6,15 +6,20 @@ import useProject from '../../../src/request-data/project';
 import useEntities from '../../../src/request-data/entities';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (props = undefined) => mount(EntityTable, {
+  global: {
+    provide: { projectId: '1', datasetName: 'trees' }
+  },
   props: {
     properties: testData.extendedDatasets.last().properties,
     ...props
   },
   container: {
+    router: mockRouter('/projects/1/datasets/trees/entities/e'),
     requestData: testRequestData([useProject, useEntities], {
       project: testData.extendedProjects.last(),
       odataEntities: testData.entityOData()
