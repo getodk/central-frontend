@@ -145,15 +145,19 @@ Assertion.addAsync('tooltip', async function tooltip(text = undefined) {
   document.querySelectorAll('.tooltip.in').length.should.equal(0);
 });
 
-/* Asserts that an element shows the entirety of its text in a tooltip if and
-only if its text is truncated. The assertion works by replacing the text with a
-long string, checking that that shows a tooltip, then replacing the text with a
-short string and checking that that does not show a tooltip. If the element does
-not truncate its text (by setting text-overflow) and does not have an ancestor
-that truncates its text, the assertion will try to insert a new ancestor into
-the tree to truncate its text. In other words, the assertion does not test that
-the element has truncated text, only that if it has truncated text, it will show
-that text in a tooltip. */
+/*
+Asserts that an element shows the entirety of its text in a tooltip if and only
+if its text is truncated. The assertion works by replacing the text with a long
+string, checking that that shows a tooltip, then replacing the text with a short
+string and checking that that does not show a tooltip. Note that this assertion
+only tests horizontal truncation (text-overflow in CSS), not vertical truncation
+(-webkit-line-clamp).
+
+If the element does not truncate its text (by setting text-overflow) and does
+not have an ancestor that truncates its text, the assertion will try to insert a
+new ancestor to truncate its text. In other words, the assertion does not test
+that the element has truncated text, only that if it has truncated text, it will
+show that text in a tooltip. */
 Assertion.addAsync('textTooltip', async function textTooltip() {
   this.params = { operator: 'to show a tooltip if its text overflows' };
 
@@ -192,7 +196,7 @@ Assertion.addAsync('textTooltip', async function textTooltip() {
   }
 
   const text = element.textContent;
-  if (text.trim().length <= 5)
+  if (text.length <= 5)
     throw new Error('text of element must be more than 5 characters');
   element.textContent = 'a'.repeat(500);
   const containerOverflows = overflowContainer.clientWidth > window.innerWidth;
