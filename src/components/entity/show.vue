@@ -26,10 +26,13 @@ except according to the terms contained in the LICENSE file.
           <entity-data/>
         </div>
         <div class="col-xs-8">
-          <entity-activity/>
+          <entity-activity @update="update.state = true"/>
         </div>
       </div>
     </page-body>
+    <entity-update v-bind="update"
+      :entity="entity.dataExists ? entity.data : null"
+      @hide="update.state = false" @success="afterUpdate"/>
   </div>
 </template>
 
@@ -39,11 +42,12 @@ export default {
 };
 </script>
 <script setup>
-import { provide } from 'vue';
+import { inject, provide, reactive } from 'vue';
 
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
 import EntityData from './data.vue';
+import EntityUpdate from './update.vue';
 import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
@@ -88,17 +92,33 @@ Promise.allSettled([
   dataset.request({
     url: apiPaths.dataset(props.projectId, props.datasetName),
     extended: true
-  }),
+  })
+]);
+const fetchActivityData = () => Promise.allSettled([
   audits.request({
-    url: apiPaths.entityAudits(props.projectId, props.datasetName, props.uuid),
-    extended: true
+    url: apiPaths.entityAudits(props.projectId, props.datasetName, props.uuid)
   }),
   diffs.request({
     url: apiPaths.entityDiffs(props.projectId, props.datasetName, props.uuid)
   })
 ]);
+fetchActivityData();
 
 setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null]);
+
+const update = reactive({ state: false });
+const { i18n, alert } = inject('container');
+const afterUpdate = (updated) => {
+  fetchActivityData();
+  update.state = false;
+  alert.success(i18n.t('alert.updateEntity'));
+  entity.patch(() => {
+    // entity.currentVersion will no longer have extended metadata, but we don't
+    // need it to.
+    entity.currentVersion = updated.currentVersion;
+    entity.updatedAt = updated.updatedAt;
+  });
+};
 
 const { datasetPath } = useRoutes();
 </script>

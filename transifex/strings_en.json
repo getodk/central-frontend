@@ -610,6 +610,10 @@
       "string": "Projects",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "property": {
+      "string": "Property",
+      "developer_comment": "This is a data property of an Entity."
+    },
     "publicLink": {
       "string": "Public Access Link",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -646,6 +650,9 @@
   "alert": {
     "passwordTooShort": {
       "string": "Please input a password at least 10 characters long."
+    },
+    "updateEntity": {
+      "string": "The Entity has been updated!"
     },
     "updateReviewState": {
       "string": "Review State saved!"
@@ -729,9 +736,12 @@
       "string": "Label",
       "developer_comment": "This is the label of an Entity."
     },
+    "entityLabel": {
+      "string": "Entity Label"
+    },
     "entityId": {
       "string": "Entity ID",
-      "developer_comment": "This is the UUID or 'name' of an Entity."
+      "developer_comment": "This is the UUID of an Entity."
     }
   },
   "common": {
@@ -1445,6 +1455,22 @@
         "back": {
           "string": "Back to {datasetName} Table",
           "developer_comment": "This is shown at the top of the page. The user can click it to go back."
+        }
+      }
+    },
+    "EntityUpdate": {
+      "title": {
+        "string": "Update {label}",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "header": {
+        "currentValue": {
+          "string": "Current Value",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        },
+        "updatedValue": {
+          "string": "Updated Value",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },

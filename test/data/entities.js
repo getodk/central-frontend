@@ -1,7 +1,7 @@
 import faker from 'faker';
-import { comparator } from 'ramda';
+import { comparator, omit } from 'ramda';
 
-import { dataStore } from './data-store';
+import { dataStore, view } from './data-store';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
@@ -39,15 +39,18 @@ export const extendedEntities = dataStore({
       ]);
     return {
       uuid,
-      currentVersion: { label, data },
+      currentVersion: { label, data, current: true },
       creatorId: creator.id,
       creator: toActor(creator),
-      createdAt
+      createdAt,
+      updatedAt: null
     };
   },
   sort: comparator((entity1, entity2) =>
     isBefore(entity2.createdAt, entity1.createdAt))
 });
+
+export const standardEntities = view(extendedEntities, omit(['creator']));
 
 // Converts entity response objects to OData.
 export const entityOData = (top = 250, skip = 0) => ({
@@ -58,9 +61,10 @@ export const entityOData = (top = 250, skip = 0) => ({
       label: entity.currentVersion.label,
       __id: entity.uuid,
       __system: {
-        createdAt: entity.createdAt,
         creatorId: entity.creator.id.toString(),
-        creatorName: entity.creator.displayName
+        creatorName: entity.creator.displayName,
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt
       }
     }))
 });

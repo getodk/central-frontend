@@ -280,6 +280,8 @@
     "formAttachments": "Form Attachments",
     "project": "Project",
     "projects": "Projects",
+    // This is a data property of an Entity.
+    "property": "Property",
     "publicLink": "Public Access Link",
     "user": "User",
     "users": "Users",
@@ -291,6 +293,7 @@
   },
   "alert": {
     "passwordTooShort": "Please input a password at least 10 characters long.",
+    "updateEntity": "The Entity has been updated!",
     "updateReviewState": "Review State saved!",
     "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
   },
@@ -334,7 +337,8 @@
   "entity": {
     // This is the label of an Entity.
     "label": "Label",
-    // This is the UUID or 'name' of an Entity.
+    "entityLabel": "Entity Label",
+    // This is the UUID of an Entity.
     "entityId": "Entity ID"
   },
   "common": {

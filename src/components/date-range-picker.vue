@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
     <flatpickr ref="flatpickr" v-model="flatpickrValue" :config="config"
       class="form-control" :class="{ required }"
-      :placeholder="`${placeholder}${star}`" autocomplete="off"
+      :placeholder="requiredLabel(placeholder, required)" autocomplete="off"
       @on-close="close"/>
     <template v-if="!required">
       <button v-show="modelValue.length === 2" type="button" class="close"
@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         <span aria-hidden="true">&times;</span>
       </button>
     </template>
-    <span class="form-label">{{ placeholder }}{{ star }}</span>
+    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
   </label>
 </template>
 
@@ -41,6 +41,8 @@ import 'flatpickr/dist/l10n/fr';
 import 'flatpickr/dist/l10n/id';
 import 'flatpickr/dist/l10n/it';
 import 'flatpickr/dist/l10n/ja';
+
+import { requiredLabel } from '../util/dom';
 
 export default {
   name: 'DateRangePicker',
@@ -61,6 +63,9 @@ export default {
     }
   },
   emits: ['update:modelValue'],
+  setup() {
+    return { requiredLabel };
+  },
   data() {
     return {
       // We initialize this.flatpickrValue as an array of Date objects, but
@@ -79,9 +84,6 @@ export default {
       const l10n = flatpickr.l10ns[this.$i18n.locale];
       if (l10n != null) config.locale = l10n;
       return config;
-    },
-    star() {
-      return this.required ? '*' : '';
     }
   },
   watch: {

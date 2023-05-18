@@ -263,8 +263,8 @@ describe('DateRangePicker', () => {
         props: { placeholder: 'My date range', required: true }
       });
       const { placeholder } = component.get('input').attributes();
-      placeholder.should.equal('My date range*');
-      component.get('.form-label').text().should.equal('My date range*');
+      placeholder.should.equal('My date range *');
+      component.get('.form-label').text().should.equal('My date range *');
     });
   });
 

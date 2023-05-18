@@ -13,12 +13,12 @@ except according to the terms contained in the LICENSE file.
   <label class="form-group" :class="htmlClass">
     <slot name="before"></slot>
     <input ref="input" v-bind="$attrs" class="form-control" :value="modelValue"
-      :placeholder="`${placeholder}${star}`" :required="required"
+      :placeholder="requiredLabel(placeholder, required)" :required="required"
       :autocomplete="autocomplete"
       @input="$emit('update:modelValue', $event.target.value)">
     <password-strength v-if="autocomplete === 'new-password'"
       :password="modelValue"/>
-    <span class="form-label">{{ placeholder }}{{ star }}</span>
+    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
     <slot name="after"></slot>
   </label>
 </template>
@@ -32,6 +32,8 @@ export default {
 import { computed, ref } from 'vue';
 
 import PasswordStrength from './password-strength.vue';
+
+import { requiredLabel } from '../util/dom';
 
 const props = defineProps({
   modelValue: {
@@ -55,7 +57,6 @@ const htmlClass = computed(() => ({
   'new-password': props.autocomplete === 'new-password',
   'has-error': props.hasError
 }));
-const star = computed(() => (props.required ? ' *' : ''));
 
 const input = ref(null);
 const focus = () => { input.value.focus(); };

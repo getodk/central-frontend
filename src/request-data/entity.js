@@ -9,11 +9,15 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { reactive } from 'vue';
+
 import { useRequestData } from './index';
 
 export default () => {
   const { createResource } = useRequestData();
-  const entity = createResource('entity');
+  const entity = createResource('entity', () => ({
+    transformResponse: ({ data }) => reactive(data)
+  }));
   const audits = createResource('audits');
   const diffs = createResource('diffs');
   return { entity, audits, diffs };
