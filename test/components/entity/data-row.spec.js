@@ -5,6 +5,7 @@ import useProject from '../../../src/request-data/project';
 import useEntities from '../../../src/request-data/entities';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
@@ -13,10 +14,14 @@ const mountComponent = () => {
   // Mounting EntityTable in order to test tooltops on EntityDataRow
   // because text-overflow-ellipsis is defined for td and th on table.
   const table = mount(EntityTable, {
+    global: {
+      provide: { projectId: '1', datasetName: 'trees' }
+    },
     props: {
       properties: testData.extendedDatasets.last().properties
     },
     container: {
+      router: mockRouter('/projects/1/datasets/trees/entities/e'),
       requestData: testRequestData([useProject, useEntities], {
         project: testData.extendedProjects.last(),
         odataEntities: testData.entityOData()

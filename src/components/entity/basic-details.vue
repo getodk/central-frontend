@@ -71,17 +71,17 @@ const { entity, audits } = useRequestData();
 const instanceId = ref(undefined);
 const submission = ref(undefined);
 watchEffect(() => {
-  if (instanceId.value === undefined && audits.dataExists) {
-    const audit = audits.find(({ action }) => action === 'entity.create');
-    if (audit == null) {
-      instanceId.value = null;
-    } else {
-      const { submissionCreate } = audit.details;
-      if (submissionCreate != null) {
-        instanceId.value = submissionCreate.details.instanceId;
-        submission.value = audit.details.submission;
-      }
-    }
+  if (instanceId.value !== undefined || !audits.dataExists) return;
+  const audit = audits.find(({ action }) => action === 'entity.create');
+  // `audit` should always exist in production, but it doesn't always exist in
+  // testing.
+  if (audit == null) return;
+  const { submissionCreate } = audit.details;
+  if (submissionCreate != null) {
+    instanceId.value = submissionCreate.details.instanceId;
+    submission.value = audit.details.submission;
+  } else {
+    instanceId.value = null;
   }
 });
 const { submissionPath } = useRoutes();
