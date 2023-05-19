@@ -263,27 +263,12 @@ describe('EntityFeedEntry', () => {
   });
 
   it('lists submission events immediately below entity.create event', async () => {
-    const submission = testData.extendedSubmissions
-      .createPast(1, { instanceId: 's' })
-      .last();
-    const submissionCreate = testData.extendedAudits
-      .createPast(1, {
-        action: 'submission.create',
-        details: { instanceId: 's' }
-      })
-      .last();
-    const approval = testData.extendedAudits
-      .createPast(1, { action: 'submission.update' })
-      .last();
+    const sourceDetails = testData.extendedEntities
+      .createSourceSubmission('submission.update');
     testData.extendedEntities.createPast(1, { uuid: 'e' });
     testData.extendedAudits.createPast(1, {
       action: 'entity.create',
-      details: {
-        entity: { uuid: 'e' },
-        submissionCreate,
-        submission: { ...submission, xmlFormId: 'f' },
-        approval
-      }
+      details: sourceDetails
     });
     const component = await load('/projects/1/datasets/trees/entities/e', {
       root: false,

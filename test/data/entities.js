@@ -2,10 +2,13 @@ import faker from 'faker';
 import { comparator, omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
+import { extendedAudits } from './audits';
+import { extendedDatasets } from './datasets';
+import { extendedForms } from './forms';
+import { extendedSubmissions } from './submissions';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
-import { extendedDatasets } from './datasets';
 
 const randomData = (properties) => {
   const data = {};
@@ -68,3 +71,46 @@ export const entityOData = (top = 250, skip = 0) => ({
       }
     }))
 });
+
+// Creates a source submission along with submission audit log events.
+extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}) => {
+  const submission = extendedSubmissions
+    .createPast(1, submissionOptions)
+    .last();
+  const formVersion = submissionOptions.formVersion ?? extendedForms.first();
+  const submissionWithFormId = {
+    ...submission,
+    xmlFormId: formVersion.xmlFormId
+  };
+
+  const auditOptions = {
+    actor: submission.submitter,
+    actee: formVersion,
+    details: { instanceId: submission.instanceId }
+  };
+  const submissionCreate = extendedAudits
+    .createPast(1, {
+      action: 'submission.create',
+      loggedAt: submission.createdAt,
+      ...auditOptions
+    })
+    .last();
+  if (sourceAction === 'submission.update') {
+    extendedSubmissions.update(-1, { reviewState: 'approved' });
+    extendedAudits.createPast(1, {
+      action: 'submission.update',
+      ...auditOptions
+    });
+  } else if (sourceAction === 'submission.update.version') {
+    extendedSubmissions.update(-1, { reviewState: 'edited', edits: 1 });
+    extendedAudits.createPast(1, {
+      action: 'submission.update.version',
+      ...auditOptions
+    });
+  } else if (sourceAction !== 'submission.create') {
+    throw new Error('invalid action');
+  }
+  const sourceEvent = extendedAudits.last();
+
+  return { submission: submissionWithFormId, submissionCreate, sourceEvent };
+};

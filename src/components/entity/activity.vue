@@ -62,7 +62,8 @@ const feed = computed(() => {
     } else if (audit.action === 'entity.create') {
       result.push({ entry: audit });
       const { details } = audit;
-      if (details.approval != null) result.push({ entry: details.approval });
+      if (details.sourceEvent?.action === 'submission.update')
+        result.push({ entry: details.sourceEvent });
       if (details.submissionCreate != null)
         result.push({ entry: details.submissionCreate, submission: details.submission });
     } else {
