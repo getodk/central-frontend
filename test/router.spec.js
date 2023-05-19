@@ -126,6 +126,7 @@ describe('createCentralRouter()', () => {
       '/projects/1/form-access',
       '/projects/1/datasets',
       '/projects/1/datasets/trees',
+      '/projects/1/datasets/trees/settings',
       '/projects/1/datasets/trees/entities',
       '/projects/1/datasets/trees/entities/e',
       '/projects/1/settings',
@@ -632,6 +633,14 @@ describe('createCentralRouter()', () => {
           const { path } = app.vm.$route;
           path.should.equal('/projects/1/datasets/trees/entities');
         });
+
+        it('redirects the user from .../settings', async () => {
+          await load('/projects/1/datasets/trees/settings')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            });
+        });
       });
 
       it('does not redirect the user from the entity detail page', async () => {
@@ -684,6 +693,7 @@ describe('createCentralRouter()', () => {
         // DatasetShow
         '/projects/1/datasets/trees',
         '/projects/1/datasets/trees/entities',
+        '/projects/1/datasets/trees/settings',
         // EntityShow
         '/projects/1/datasets/trees/entities/e'
       ]) {
@@ -1133,6 +1143,11 @@ describe('createCentralRouter()', () => {
     it('shows dataset name in title for /projects/1/datasets/:datasetName/entities', async () => {
       await load('/projects/1/datasets/trees/entities');
       document.title.should.equal('Data | trees | ODK Central');
+    });
+
+    it('shows dataset name in title for /projects/1/datasets/:datasetName/settings', async () => {
+      await load('/projects/1/datasets/trees/settings');
+      document.title.should.equal('Settings | trees | ODK Central');
     });
 
     // Entity routes

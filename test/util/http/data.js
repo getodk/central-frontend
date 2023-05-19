@@ -124,6 +124,7 @@ const responsesByComponent = {
   DatasetEntities: componentResponses({
     odataEntities: true
   }),
+  DatasetSettings: [],
   EntityShow: componentResponses({
     entity: () => testData.extendedEntities.last(),
     project: true,

@@ -63,4 +63,29 @@ describe('DatasetShow', () => {
       app.get('#page-back-title').text().should.equal('My Project (archived)');
     });
   });
+
+
+  describe('tabs', () => {
+    it('shows all tabs to an administrator', async () => {
+      testData.extendedDatasets.createPast(1);
+      const app = await load('/projects/1/datasets/trees', { attachTo: document.body });
+      const li = app.findAll('#page-head-tabs li');
+      li.map(wrapper => wrapper.get('a').text()).should.eql(['Overview', 'Data', 'Settings']);
+      li[0].should.be.visible(true);
+    });
+
+    it('shows the correct tabs to project viewer', async () => {
+      testData.extendedUsers.reset();
+      testData.sessions.reset();
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer' });
+      testData.extendedDatasets.createPast(1);
+
+      const app = await load('/projects/1/datasets/trees', { attachTo: document.body });
+      const li = app.findAll('#page-head-tabs li');
+      const text = li.map(wrapper => wrapper.get('a').text());
+      text.should.eql(['Overview', 'Data']);
+      li[0].should.be.visible(true);
+    });
+  });
 });
