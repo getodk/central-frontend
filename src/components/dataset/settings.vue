@@ -17,20 +17,20 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="panel-body">
         <form id="dataset-settings-form">
-          <div class="radio">
+          <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
             <label>
               <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="false"
-                aria-describedby="dataset-setting-on-receipt" :aria-disabled="dataset.awaitingResponse" @change="update()">
+                aria-describedby="dataset-setting-on-receipt" :disabled="dataset.awaitingResponse" @change="update()">
               <strong>{{ $t('onReceipt.label') }}</strong>
             </label>
             <p id="dataset-setting-on-receipt" class="help-block">
               {{ $t('onReceipt.description') }}
             </p>
           </div>
-          <div class="radio">
+          <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
             <label>
               <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="true"
-                aria-describedby="dataset-setting-on-approval" :aria-disabled="dataset.awaitingResponse" @change="update()">
+                aria-describedby="dataset-setting-on-approval" :disabled="dataset.awaitingResponse" @change="update()">
               <strong>{{ $t('onApproval.label') }}</strong>
             </label>
             <p id="dataset-setting-on-approval" class="help-block">
@@ -58,7 +58,6 @@ import { useI18n } from 'vue-i18n';
 import DatasetPendingSubmissions from './pending-submissions.vue';
 
 import { apiPaths, isProblem } from '../../util/request';
-import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 const { t } = useI18n();
@@ -96,7 +95,9 @@ const update = (convert) => {
       }
     }
   })
-    .catch(noop);
+    .catch(() => {
+      approvalRequired.value = dataset.approvalRequired;
+    });
 };
 
 const hideAndUpdate = (convert) => {

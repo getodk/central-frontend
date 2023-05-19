@@ -79,6 +79,18 @@ describe('DatasetSettings', () => {
       });
   });
 
+  it('should revert approvalRequired flag there is an error', async () => {
+    testData.extendedDatasets.createPast(1, { approvalRequired: true });
+    await load('/projects/1/datasets/trees/settings', { root: false })
+      .complete()
+      .request(async (component) => component.get('input[value="false"]').setValue(true))
+      .respondWithProblem(500)
+      .then(async (component) => {
+        component.should.alert('danger');
+        component.get('input[value="true"]').element.checked.should.be.true();
+      });
+  });
+
   it('should send correct convert query param', async () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
     await load('/projects/1/datasets/trees/settings', { root: false })

@@ -15,10 +15,10 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p>
-          {{ $t('explanation.first') }}
-          <i18n-t tag="span" keypath="explanation.second" :plural="pendingSubmissions">
+          {{ $t('explanation.userAction') }}
+          <i18n-t tag="span" keypath="explanation.implication.full" :plural="pendingSubmissions">
             <template #records>
-              <strong>{{ $tcn('explanation.records', pendingSubmissions) }}</strong>
+              <strong>{{ $tcn('explanation.implication.records', pendingSubmissions) }}</strong>
             </template>
           </i18n-t>
         </p>
@@ -93,9 +93,11 @@ const convert = ref(null);
       "changeSetting": "Change setting"
     },
     "explanation": {
-      "first": "You are setting Entity creation to occur when Submissions are first received by Central.",
-      "second": "Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved or Rejected. | Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved or Rejected.",
-      "records": "{count} record | {count} records"
+      "userAction": "You are setting Entity creation to occur when Submissions are first received by Central.",
+      "implication": {
+        "full": "Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that has neither been marked Approved nor Rejected. | Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected.",
+        "records": "{count} record | {count} records"
+      }
     },
     "dontConvert": {
       "label": "I understand and this is not a problem for me.",
@@ -103,7 +105,7 @@ const convert = ref(null);
     },
     "convert": {
       "label": "Convert all pending Submissions to Entities now.",
-      "description": "Change the setting and create Entity out of {count} Submission not yet marked Approved or Rejected. The Review States will not be affected. | Change the setting and create Entities out of all {count} Submissions not yet marked Approved or Rejected. The Review States will not be affected."
+      "description": "Change the setting and create Entity out of {count} Submission not yet Approved or Rejected. The Review States will not be affected. | Change the setting and create Entities out of all {count} Submissions not yet Approved or Rejected. The Review States will not be affected."
     }
   }
 }
