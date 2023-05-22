@@ -115,7 +115,7 @@ describe('TextareaAutosize', () => {
       const component = mountComponent({
         props: { minHeight: 123 }
       });
-      component.element.style.minHeight.should.equal('136px');
+      component.element.style.minHeight.should.equal('123px');
     });
 
     it('changes the min-height after the prop changes', async () => {
@@ -123,7 +123,7 @@ describe('TextareaAutosize', () => {
         props: { minHeight: 123 }
       });
       await component.setProps({ minHeight: 456 });
-      component.element.style.minHeight.should.equal('469px');
+      component.element.style.minHeight.should.equal('456px');
     });
   });
 
@@ -141,7 +141,7 @@ describe('TextareaAutosize', () => {
         props: { minHeight: 1000 }
       });
       await component.trigger('mousedown');
-      component.element.style.height.should.equal('1013px');
+      component.element.style.height.should.equal('1000px');
     });
 
     it('restores the min-height property on mouseup', async () => {
@@ -150,7 +150,7 @@ describe('TextareaAutosize', () => {
       });
       await component.trigger('mousedown');
       await component.trigger('mouseup');
-      component.element.style.minHeight.should.equal('136px');
+      component.element.style.minHeight.should.equal('123px');
     });
 
     it('restores the height CSS property on mouseup', async () => {
@@ -175,16 +175,11 @@ describe('TextareaAutosize', () => {
     };
 
     describe('height', () => {
-      it('removes the height CSS property', async () => {
-        const component = await userResize();
-        component.element.style.height.should.equal('');
-      });
-
       it('ignores changes to the modelValue prop', async () => {
         const component = await userResize();
         await component.setProps({ modelValue: 'a'.repeat(5000) });
         await component.vm.$nextTick();
-        component.element.style.height.should.equal('');
+        component.element.style.height.should.equal('123px');
       });
 
       it('resets the height after resize() is called', async () => {
@@ -224,14 +219,14 @@ describe('TextareaAutosize', () => {
       it('resets min-height after resize() is called', async () => {
         const component = await userResize();
         component.vm.resize();
-        component.element.style.minHeight.should.equal('136px');
+        component.element.style.minHeight.should.equal('123px');
       });
 
       it('stops ignoring changes after resize() is called', async () => {
         const component = await userResize();
         component.vm.resize();
         await component.setProps({ minHeight: 456 });
-        component.element.style.minHeight.should.equal('469px');
+        component.element.style.minHeight.should.equal('456px');
       });
     });
 

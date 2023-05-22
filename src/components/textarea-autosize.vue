@@ -35,8 +35,6 @@ const props = defineProps({
     type: String,
     required: true
   },
-  // The min-height not including padding or borders (the min-height of the
-  // textarea's content box)
   minHeight: {
     type: Number,
     default: 0
@@ -76,11 +74,12 @@ const listenForUserResize = () => {
     if (el.value == null) return;
     const mouseupHeight = el.value.getBoundingClientRect().height;
     userResized.value = mouseupHeight !== mousedownHeight || props.mockUserResized;
-    if (userResized.value) {
-      // Remove style.height, which is no longer needed. Leave style.minHeight
-      // at 0 to ensure that there is no change to the height.
-      style.height = '';
-    } else {
+    // If userResized.value is `false`, then we restore style.height and
+    // style.minHeight. If userResized.value is `true`, then we leave
+    // style.minHeight at 0 to ensure that there is no change to the height. We
+    // also do not change style.height, as even clearing it after a user resize
+    // seems to change the height of the textarea.
+    if (!userResized.value) {
       style.height = mousedownHeightStyle;
       style.minHeight = minHeightStyle;
     }
@@ -124,11 +123,7 @@ watch(() => props.modelValue, () => {
   if (!userResized.value) nextTick(setHeight);
 });
 
-const setMinHeight = () => {
-  const box = styleBox(getComputedStyle(el.value));
-  el.value.style.minHeight = px(props.minHeight +
-    box.paddingTop + box.paddingBottom + box.borderTop + box.borderBottom);
-};
+const setMinHeight = () => { el.value.style.minHeight = px(props.minHeight); };
 onMounted(setMinHeight);
 watch(() => props.minHeight, () => { if (!userResized.value) setMinHeight(); });
 

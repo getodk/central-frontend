@@ -102,13 +102,21 @@ defineExpose({
   .label-cell {
     padding-left: $padding-left-modal-header;
     padding-right: 15px;
+    padding-top: #{$vpadding + $padding-top-form-control};
+  }
+  .old-value {
+    padding-top: $vpadding;
+
+    // Add $padding-top-form-control to the <div> rather than the <td> so that
+    // it is included in the minHeight prop passed to TextareaAutosize.
+    div {
+      padding-top: $padding-top-form-control;
+      padding-bottom: $padding-top-form-control;
+    }
   }
   .new-value {
     padding-right: $padding-left-modal-header;
     padding-top: $vpadding;
-  }
-  .label-cell, .old-value {
-    padding-top: #{$vpadding + $padding-top-form-control};
   }
 
   .label-cell { @include text-overflow-ellipsis; }
