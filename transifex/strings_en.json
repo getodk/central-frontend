@@ -837,10 +837,6 @@
         "string": ","
       }
     },
-    "datasetsPreview": {
-      "string": "Datasets Preview",
-      "developer_comment": "This is a title shown above a section of the page."
-    },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
       "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
@@ -1808,6 +1804,9 @@
         }
       },
       "datasetsPreview": {
+        "title": {
+          "string": "Testing Datasets"
+        },
         "body": {
           "0": {
             "string": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
@@ -2280,15 +2279,15 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
+        "title": {
+          "string": "This Form can create Entities"
+        },
         "body": {
           "0": {
-            "string": "This Form can add Entities to a Dataset."
+            "string": "Entities are only created for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state."
           },
           "1": {
-            "string": "In this preview release of Datasets, you must publish your Form to see the Dataset update. In a future release of Central, you will be able to test Dataset functionality in a Draft state."
-          },
-          "2": {
-            "string": "For now, we recommend publishing your Dataset-related Forms, and not approving any submissions (and therefore not create any unwanted entities) until you are sure the Form is ready."
+            "string": "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
           }
         }
       }

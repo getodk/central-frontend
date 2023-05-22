@@ -23,12 +23,12 @@ except according to the terms contained in the LICENSE file.
       <div class="panel-heading">
         <span class="panel-title">
           <span class="icon-database"></span>
-          {{ $t('common.datasetsPreview') }}
+          {{ $t('entitiesTesting.title') }}
         </span>
       </div>
       <div class="panel-body">
         <p>
-          <span>{{ $t('datasetsPreview.body[0]') }}</span>
+          <span>{{ $t('entitiesTesting.body[0]') }}</span>
           <sentence-separator/>
           <i18n-t keypath="moreInfo.clickHere.full">
             <template #clickHere>
@@ -468,7 +468,9 @@ export default {
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
       "link": "Dataset linked successfully."
     },
-    "datasetsPreview": {
+    // @transifexKey component.FormAttachmentList.datasetsPreview
+    "entitiesTesting": {
+      "title": "Testing Datasets",
       "body": [
         "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
       ]
@@ -499,7 +501,7 @@ export default {
       "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
       "link": "Datová sada byla úspěšně propojena."
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy datových sad. Ve výchozím nastavení jsou tyto soubory propojeny s datovými sadami. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit s Datasety, jakmile ověříte logiku formuláře."
       ]
@@ -524,7 +526,7 @@ export default {
       "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
       "link": "Datensatz erfolgreich verknüpft."
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Mindestens ein Formularanhang hat Dateinamen, die mit Datensatznamen übereinstimmen. Standardmässig sind diese mit Datensätzen verknüpft. Zu Testzwecken können Sie temporäre Daten als CSV-Dateien hochladen und dann eine Verknüpfung zu den Datensätzen herstellen, sobald Sie Ihre Formularlogik überprüft haben."
       ]
@@ -549,7 +551,7 @@ export default {
       "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente.",
       "link": "Conjunto de datos vinculado con éxito."
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Uno o más adjuntos de formulario tienen nombres de archivo que coinciden con los nombres de los conjuntos de datos. De forma predeterminada, están vinculados a conjuntos de datos. Para realizar pruebas, es posible que desee cargar datos temporales como archivos .csv y luego vincularlos a los conjuntos de datos una vez que haya verificado la lógica de su formulario."
       ]
@@ -574,7 +576,7 @@ export default {
       "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés.",
       "link": "Dataset lié avec succès"
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de Datasets. Par défaut, ils sont liés aux Datasets. Pour tester, vous pouvez envoyer des de fichiers .csv de données temporaires, puis les lier aux Datasets une fois que vous aurez vérifié la logique de votre formulaire."
       ]
@@ -614,7 +616,7 @@ export default {
       "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo",
       "link": "Set di dati collegato correttamente."
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
       "body": [
         "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi dei set di dati. Per impostazione predefinita, questi sono collegati ai set di dati. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti ai set di dati dopo aver verificato la logica del formulario."
       ]
