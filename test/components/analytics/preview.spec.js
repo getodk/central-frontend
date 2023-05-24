@@ -34,7 +34,8 @@ const analyticsPreview = {
           num_creation_forms: 1,
           num_followup_forms: 1,
           num_entities: { total: 10, recent: 5 },
-          num_failed_entities: { total: 2, recent: 1 }
+          num_failed_entities: { total: 2, recent: 1 },
+          num_updated_entities: { total: 15, recent: 8 }
         }
       ]
     }
@@ -132,7 +133,8 @@ describe('AnalyticsPreview', () => {
       num_creation_forms: 1,
       num_followup_forms: 1,
       num_entities: { total: 10, recent: 5 },
-      num_failed_entities: { total: 2, recent: 1 }
+      num_failed_entities: { total: 2, recent: 1 },
+      num_updated_entities: { total: 15, recent: 8 }
     };
     table.props().metrics.should.eql(subMetrics);
   });

@@ -1168,6 +1168,9 @@
         },
         "num_failed_entities": {
           "string": "Number of Entity creation errors"
+        },
+        "num_updated_entities": {
+          "string": "Number of Entity updates"
         }
       }
     },
