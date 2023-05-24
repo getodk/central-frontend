@@ -26,8 +26,7 @@ import { computed, inject } from 'vue';
 const { router } = inject('container');
 const htmlClass = computed(() => ({
   // `router` may be `null` in testing.
-  bound: router == null || !router.currentRoute.value.meta.fullWidth,
-  centered: window.centralOptions?.left !== true
+  'full-width': router != null && router.currentRoute.value.meta.fullWidth
 }));
 </script>
 
@@ -36,13 +35,11 @@ const htmlClass = computed(() => ({
 
 #page-body {
   @include clearfix;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: $margin-top-page-body;
+  max-width: $max-width-page-body;
 
-  &.bound { max-width: $max-width-page-body; }
-
-  &.centered {
-    margin-left: auto;
-    margin-right: auto;
-  }
+  &.full-width { max-width: none; }
 }
 </style>
