@@ -86,7 +86,9 @@ em:lang(ja) {
   left: -1000px;
 }
 .tooltip-inner {
+  border-radius: 2px;
   overflow-wrap: break-word;
+  padding-bottom: 2px;
   // Allow the text to have line breaks.
   white-space: pre-line;
 }

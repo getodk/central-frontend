@@ -265,7 +265,7 @@ class Tooltip {
     }
 
     this.position()
-      .then(() => { this.element.classList.add('in', 'fade'); })
+      .then(() => { this.element.classList.add('in'); })
       .catch(noop);
     this.shown = true;
   }
@@ -285,7 +285,7 @@ class Tooltip {
       this.remove();
     } else {
       const { classList, style } = this.element;
-      classList.remove('in', 'fade', ...placements);
+      classList.remove('in', ...placements);
       style.top = '';
       style.left = '';
       style.position = '';
