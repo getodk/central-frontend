@@ -35,6 +35,8 @@ export default {
   border-bottom: 1px solid $color-subpanel-border-strong;
 }
 
+#page-head-title { overflow-wrap: break-word; }
+
 #page-head-body {
   color: #555;
   font-size: 15px;
