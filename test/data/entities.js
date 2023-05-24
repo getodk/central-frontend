@@ -56,21 +56,35 @@ export const extendedEntities = dataStore({
 export const standardEntities = view(extendedEntities, omit(['creator']));
 
 // Converts entity response objects to OData.
-export const entityOData = (top = 250, skip = 0) => ({
-  '@odata.count': extendedEntities.size,
-  value: extendedEntities.sorted().slice(skip, skip + top)
-    .map(entity => ({
-      ...entity.currentVersion.data,
-      label: entity.currentVersion.label,
-      __id: entity.uuid,
-      __system: {
-        creatorId: entity.creator.id.toString(),
-        creatorName: entity.creator.displayName,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt
-      }
-    }))
-});
+export const entityOData = (top = 250, skip = 0) => {
+  if (extendedDatasets.size === 0) throw new Error('dataset not found');
+  // There needs to be exactly one dataset for us to be able to identify the
+  // correct one.
+  if (extendedDatasets.size > 1) throw new Error('too many datasets');
+  const { properties } = extendedDatasets.last();
+  return {
+    '@odata.count': extendedEntities.size,
+    value: extendedEntities.sorted().slice(skip, skip + top).map(entity => {
+      const result = {
+        label: entity.currentVersion.label,
+        __id: entity.uuid,
+        __system: {
+          creatorId: entity.creator.id.toString(),
+          creatorName: entity.creator.displayName,
+          createdAt: entity.createdAt,
+          updatedAt: entity.updatedAt
+        }
+      };
+
+      const { data } = entity.currentVersion;
+      // Iterate over all dataset properties, not just those in `data`.
+      for (const { name, odataName } of properties)
+        result[odataName] = name in data ? data[name] : null;
+
+      return result;
+    })
+  };
+};
 
 // Creates a source submission along with submission audit log events.
 extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}) => {

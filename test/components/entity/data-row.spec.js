@@ -55,7 +55,7 @@ describe('EntityDataRow', () => {
     td[2].text().should.equal('abcd1234');
   });
 
-  it('renders a cell for each field', () => {
+  it('renders a cell for each property', () => {
     testData.extendedDatasets.createPast(1, {
       name: 'trees',
       properties: [
@@ -89,5 +89,16 @@ describe('EntityDataRow', () => {
     const span = td.get('span');
     span.text().should.equal('foobar');
     await span.should.have.textTooltip();
+  });
+
+  it('uses the odataName of the property', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'circumference.cm', odataName: 'circumference_cm' }],
+      entities: 1
+    });
+    testData.extendedEntities.createPast(1, {
+      data: { 'circumference.cm': '555' }
+    });
+    mountComponent().get('td').text().should.equal('555');
   });
 });

@@ -3,6 +3,12 @@ import { comparator } from 'ramda';
 import { dataStore } from './data-store';
 import { extendedProjects } from './projects';
 
+const normalizeProperty = (property) => ({
+  odataName: property.name,
+  forms: [],
+  ...property
+});
+
 // eslint-disable-next-line import/prefer-default-export
 export const extendedDatasets = dataStore({
   factory: ({
@@ -23,7 +29,7 @@ export const extendedDatasets = dataStore({
     name,
     entities,
     lastEntity,
-    properties,
+    properties: properties.map(normalizeProperty),
     linkedForms,
     approvalRequired
   }),

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr>
     <td v-for="property of properties" :key="property.id">
-      <span v-tooltip.text>{{ entity[property.name] }}</span>
+      <span v-tooltip.text>{{ entity[property.odataName] }}</span>
     </td>
     <td><span v-tooltip.text>{{ entity.label }}</span></td>
     <td>{{ entity.__id }}</td>
