@@ -152,6 +152,13 @@ The following meta fields are supported for bottom-level routes:
       i18n.t('title.project.appUsers'),
       project.name // project.name may be `null`
     ]
+
+  Other
+  -----
+
+  - fullWidth (default: false). If fullWidth is `true`, and the route renders a
+    PageBody component, then the PageBody will use the full width of the page.
+    By default, PageBody has a max width.
 */
 
 /*
