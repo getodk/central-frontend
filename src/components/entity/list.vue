@@ -23,21 +23,24 @@ except according to the terms contained in the LICENSE file.
       </a>
     </div>
     <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
-      :properties="dataset.properties"/>
+      ref="table" :properties="dataset.properties" @update="showUpdate"/>
     <p v-show="odataEntities.dataExists && odataEntities.value.length === 0"
       class="empty-table-message">
       {{ $t('noEntities') }}
     </p>
     <loading :state="odataEntities.initiallyLoading"/>
+
+    <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
   </div>
 </template>
 
 <script>
-
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
 import EntityTable from './table.vue';
+import EntityUpdate from './update.vue';
 
+import modal from '../../mixins/modal';
 import useEntities from '../../request-data/entities';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
@@ -48,8 +51,11 @@ export default {
   components: {
     Loading,
     Spinner,
-    EntityTable
+    EntityTable,
+    EntityUpdate
   },
+  mixins: [modal()],
+  inject: ['alert'],
   provide() {
     return { projectId: this.projectId, datasetName: this.datasetName };
   },
@@ -72,7 +78,14 @@ export default {
   },
   data() {
     return {
-      refreshing: false
+      refreshing: false,
+      // The index of the entity being updated
+      updateIndex: null,
+      // Data to pass to the update modal
+      update: {
+        state: false,
+        entity: null
+      }
     };
   },
   computed: {
@@ -101,6 +114,47 @@ export default {
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+    },
+    showUpdate(index) {
+      if (this.refreshing) return;
+      this.updateIndex = index;
+      const odataEntity = this.odataEntities.value[index];
+      const data = Object.create(null);
+      for (const { name, odataName } of this.dataset.properties)
+        data[name] = odataEntity[odataName];
+      this.update.entity = {
+        uuid: odataEntity.__id,
+        currentVersion: { label: odataEntity.label, data }
+      };
+      this.showModal('update');
+    },
+    hideUpdate() {
+      this.hideModal('update');
+      this.update.entity = null;
+      this.updateIndex = null;
+    },
+    afterUpdate(updatedEntity) {
+      const index = this.updateIndex;
+      this.hideUpdate();
+      this.alert.success(this.$t('alert.updateEntity'));
+
+      // Update the OData using the REST response.
+      const oldOData = this.odataEntities.value[index];
+      const newOData = Object.assign(Object.create(null), {
+        __id: oldOData.__id,
+        label: updatedEntity.currentVersion.label,
+        __system: {
+          ...oldOData.__system,
+          updates: oldOData.__system.updates + 1,
+          updatedAt: updatedEntity.updatedAt
+        }
+      });
+      const { data: updatedData } = updatedEntity.currentVersion;
+      for (const { name, odataName } of this.dataset.properties)
+        newOData[odataName] = updatedData[name];
+      this.odataEntities.value[index] = newOData;
+
+      this.$refs.table.afterUpdate(index);
     }
   }
 };

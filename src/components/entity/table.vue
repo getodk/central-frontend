@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze :data="odataEntities.value" key-prop="__id"
+  <table-freeze ref="table" :data="odataEntities.value" key-prop="__id"
     :frozen-only="properties == null"
-    ids="entity-table-metadata entity-table-data" divider>
+    ids="entity-table-metadata entity-table-data" divider @action="update">
     <template #head-frozen>
       <th><!-- Row number --></th>
       <th>{{ $t('header.createdBy') }}</th>
@@ -31,7 +31,8 @@ except according to the terms contained in the LICENSE file.
 
     <template #data-frozen="{ data, index }">
       <entity-metadata-row :entity="data"
-        :row-number="odataEntities.value.length - index"/>
+        :row-number="odataEntities.value.length - index"
+        :can-update="canUpdate"/>
     </template>
     <template #data-scrolling="{ data }">
       <entity-data-row :entity="data" :properties="properties"/>
@@ -45,19 +46,31 @@ export default {
 };
 </script>
 <script setup>
+import { computed, ref } from 'vue';
+
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table-freeze.vue';
 
+import { rowsChanged } from '../../composables/row-changed';
 import { useRequestData } from '../../request-data';
 
 defineProps({
   properties: Array
 });
+const emit = defineEmits(['update']);
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { odataEntities } = useRequestData();
+const { project, odataEntities } = useRequestData();
+
+const canUpdate = computed(() => project.permits(['entity.update']));
+const update = ({ target, index }) => {
+  if (target.classList.contains('update-button')) emit('update', index);
+};
+const table = ref(null);
+const afterUpdate = (index) => { rowsChanged(table.value.getRowPair(index)); };
+defineExpose({ afterUpdate });
 </script>
 
 <style lang="scss">

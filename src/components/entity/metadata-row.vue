@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="entity-metadata-row">
+  <tr ref="el" class="entity-metadata-row">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
@@ -28,6 +28,11 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-angle-right"></span>
       </div>
       <div class="btn-group">
+        <button v-if="canUpdate" type="button"
+          class="update-button btn btn-default" :aria-label="updateLabel"
+          v-tooltip.aria-label>
+          <span class="icon-pencil"></span>
+        </button>
         <router-link v-slot="{ href }"
           :to="entityPath(projectId, datasetName, entity.__id)" custom>
           <a class="more-button btn btn-default" :href="href" target="_blank">
@@ -46,13 +51,14 @@ export default {
 };
 </script>
 <script setup>
-import { inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 
 import DateTime from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
+import { useRowChanged } from '../../composables/row-changed';
 
-defineProps({
+const props = defineProps({
   entity: {
     type: Object,
     required: true
@@ -60,10 +66,19 @@ defineProps({
   rowNumber: {
     type: Number,
     required: true
-  }
+  },
+  canUpdate: Boolean
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
+
+const el = ref(null);
+useRowChanged(el);
+
+const { i18n } = inject('container');
+const updateLabel = computed(() => i18n.t('submission.action.edit', {
+  count: i18n.n(props.entity.__system.updates, 'default')
+}));
 
 const { entityPath } = useRoutes();
 </script>

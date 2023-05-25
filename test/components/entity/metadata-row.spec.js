@@ -70,14 +70,13 @@ describe('EntityMetadataRow', () => {
 
   describe('update count', () => {
     it('shows the count if there has been an update', () => {
-      testData.extendedSubmissions.createPast(1)
-        .update(-1, { updates: 1000 });
-      mountComponent().get('.edits').text().should.equal('1,000');
+      testData.extendedEntities.createPast(1).update(-1, { updates: 1000 });
+      mountComponent().get('.updates').text().should.equal('1,000');
     });
 
     it('does not show the count if there has not been an update', () => {
-      testData.extendedSubmissions.createPast(1);
-      mountComponent().get('.edits').text().should.equal('');
+      testData.extendedEntities.createPast(1);
+      mountComponent().get('.updates').text().should.equal('');
     });
   });
 
