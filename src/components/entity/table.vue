@@ -10,85 +10,59 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <table id="entity-table-metadata" class="table table-frozen">
-      <thead>
-        <tr>
-          <th><!-- Row number --></th>
-          <th>{{ $t('header.createdBy') }}</th>
-          <th>{{ $t('header.createdAt') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-if="odataEntities.dataExists">
-          <entity-metadata-row v-for="(entity, index) in odataEntities.value"
-            :key="entity.__id" :entity="entity"
-            :row-number="odataEntities.value.length - index"/>
-        </template>
-      </tbody>
-    </table>
-    <div class="table-container">
-      <table id="entity-table-data" class="table">
-        <thead>
-          <tr v-if="properties != null">
-            <th v-for="property of properties" :key="property.id">
-              <span v-tooltip.text>{{ property.name }}</span>
-            </th>
-            <th>{{ $t('entity.label') }}</th>
-            <th>{{ $t('entity.entityId') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template v-if="odataEntities.dataExists && properties != null">
-            <entity-data-row v-for="(entity) in odataEntities.value"
-              :key="entity.__id" :entity="entity"
-              :properties="properties"/>
-          </template>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <table-freeze :data="odataEntities.value" key-prop="__id"
+    :frozen-only="properties == null"
+    ids="entity-table-metadata entity-table-data" divider>
+    <template #head-frozen>
+      <th><!-- Row number --></th>
+      <th>{{ $t('header.createdBy') }}</th>
+      <th>{{ $t('header.createdAt') }}</th>
+    </template>
+    <template #head-scrolling>
+      <template v-if="properties != null">
+        <th v-for="property of properties" :key="property.id">
+          <span v-tooltip.text>{{ property.name }}</span>
+        </th>
+      </template>
+      <th>{{ $t('entity.label') }}</th>
+      <th>{{ $t('entity.entityId') }}</th>
+    </template>
+
+    <template #data-frozen="{ data, index }">
+      <entity-metadata-row :entity="data"
+        :row-number="odataEntities.value.length - index"/>
+    </template>
+    <template #data-scrolling="{ data }">
+      <entity-data-row :entity="data" :properties="properties"/>
+    </template>
+  </table-freeze>
 </template>
 
 <script>
+export default {
+  name: 'EntityTable'
+};
+</script>
+<script setup>
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
+import TableFreeze from '../table-freeze.vue';
 
 import { useRequestData } from '../../request-data';
 
+defineProps({
+  properties: Array
+});
 
-export default {
-  name: 'EntityTable',
-  components: { EntityDataRow, EntityMetadataRow },
-  props: {
-    properties: Array
-  },
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { odataEntities } = useRequestData();
-    return { odataEntities };
-  }
-};
+// The component does not assume that this data will exist when the component is
+// created.
+const { odataEntities } = useRequestData();
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#entity-table-metadata {
-  box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
-  position: relative;
-  // Adding z-index so that the background color of the other table's thead does
-  // not overlay the box shadow.
-  z-index: 1;
-
-  th:last-child { border-right: $border-bottom-table-heading; }
-  td:last-child { border-right: $border-top-table-data; }
-}
-
 #entity-table-data {
-  width: auto;
-
   th, td {
     @include text-overflow-ellipsis;
     max-width: 250px;
