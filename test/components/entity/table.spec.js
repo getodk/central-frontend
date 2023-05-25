@@ -31,12 +31,12 @@ const headers = (table) => table.findAll('th').map(th => th.text());
 
 describe('EntityTable', () => {
   describe('metadata headers', () => {
-    it('renders the correct headers for a form', () => {
+    it('renders the correct headers', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedEntities.createPast(1);
       const component = mountComponent();
       const table = component.get('#entity-table-metadata');
-      headers(table).should.eql(['', 'Created by', 'Created at']);
+      headers(table).should.eql(['', 'Created by', 'Created at', 'Last Updated / Actions']);
     });
   });
 

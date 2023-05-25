@@ -23,6 +23,8 @@ export const extendedEntities = dataStore({
 
     uuid = faker.random.uuid(),
     label = faker.random.word(),
+    updates = 0,
+    updatedAt = null,
     ...options
   }) => {
     if (extendedDatasets.size === 0) {
@@ -43,10 +45,11 @@ export const extendedEntities = dataStore({
     return {
       uuid,
       currentVersion: { label, data, current: true },
+      updates,
       creatorId: creator.id,
       creator: toActor(creator),
       createdAt,
-      updatedAt: null
+      updatedAt
     };
   },
   sort: comparator((entity1, entity2) =>
@@ -69,6 +72,7 @@ export const entityOData = (top = 250, skip = 0) => {
         label: entity.currentVersion.label,
         __id: entity.uuid,
         __system: {
+          updates: entity.updates,
           creatorId: entity.creator.id.toString(),
           creatorName: entity.creator.displayName,
           createdAt: entity.createdAt,

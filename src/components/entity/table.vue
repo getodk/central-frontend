@@ -17,6 +17,7 @@ except according to the terms contained in the LICENSE file.
       <th><!-- Row number --></th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
+      <th>{{ $t('header.updatedAtAndActions') }}</th>
     </template>
     <template #head-scrolling>
       <template v-if="properties != null">
@@ -70,3 +71,16 @@ const { odataEntities } = useRequestData();
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      // This is the text of a column header of a table of Entities. The column
+      // shows when each Entity was last updated, as well as actions that can be
+      // taken on the Entity.
+      "updatedAtAndActions": "Last Updated / Actions"
+    }
+  }
+}
+</i18n>
