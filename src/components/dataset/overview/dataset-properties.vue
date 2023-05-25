@@ -117,6 +117,9 @@ export default {
   },
   "it": {
     "emptyTable": "Non ci sono Proprietà in questo set di dati."
+  },
+  "sw": {
+    "emptyTable": "Hakuna Sifa katika Seti hii ya Data"
   }
 }
 </i18n>

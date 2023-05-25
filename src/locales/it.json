@@ -215,6 +215,7 @@
     "formAttachments": "Allegati del formulario",
     "project": "Progetto",
     "projects": "Progetti",
+    "property": "Proprietà",
     "publicLink": "Link con accesso pubblico",
     "user": "Utente",
     "users": "Utenti",
@@ -226,6 +227,7 @@
   },
   "alert": {
     "passwordTooShort": "Si prega di inserire una password di almeno 10 caratteri.",
+    "updateEntity": "L'Entità è stata aggiornata!",
     "updateReviewState": "Stato revisione salvato!",
     "versionChange": "Il server è stato aggiornato. Aggiorna la pagina per evitare comportamenti imprevedibili."
   },
@@ -260,6 +262,7 @@
   },
   "entity": {
     "label": "Label",
+    "entityLabel": "Etichetta dell'entità",
     "entityId": "ID dell'Entità"
   },
   "common": {
@@ -291,7 +294,6 @@
     "punctuations": {
       "comma": ","
     },
-    "datasetsPreview": "Anteprima dei set di dati",
     "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà"
   },
   "mixin": {

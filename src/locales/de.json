@@ -291,7 +291,6 @@
     "punctuations": {
       "comma": ","
     },
-    "datasetsPreview": "Dataset-Vorschau",
     "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften"
   },
   "mixin": {

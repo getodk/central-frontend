@@ -610,6 +610,10 @@
       "string": "Progetti",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "property": {
+      "string": "Proprietà",
+      "developer_comment": "This is a data property of an Entity."
+    },
     "publicLink": {
       "string": "Link con accesso pubblico",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -646,6 +650,9 @@
   "alert": {
     "passwordTooShort": {
       "string": "Si prega di inserire una password di almeno 10 caratteri."
+    },
+    "updateEntity": {
+      "string": "L'Entità è stata aggiornata!"
     },
     "updateReviewState": {
       "string": "Stato revisione salvato!"
@@ -729,9 +736,12 @@
       "string": "Label",
       "developer_comment": "This is the label of an Entity."
     },
+    "entityLabel": {
+      "string": "Etichetta dell'entità"
+    },
     "entityId": {
       "string": "ID dell'Entità",
-      "developer_comment": "This is the UUID or 'name' of an Entity."
+      "developer_comment": "This is the UUID of an Entity."
     }
   },
   "common": {
@@ -826,10 +836,6 @@
       "comma": {
         "string": ","
       }
-    },
-    "datasetsPreview": {
-      "string": "Anteprima dei set di dati",
-      "developer_comment": "This is a title shown above a section of the page."
     },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} di {count} propietà} many {{inform} di {count} proprietà} other {{inform} di {count} proprietà}}",
@@ -1253,25 +1259,29 @@
     },
     "DatasetIntroduction": {
       "title": {
-        "string": "Benvenuto nell'anteprima dei set di dati!"
+        "string": "A proposito di Entità"
       },
       "body": {
         "0": {
-          "string": "I set di dati sono un nuovo modo per creare e gestire gli allegati dati in ODK. Consentono di utilizzare i dati raccolti negli Invii per essere scaricati e utilizzati come parte di un altro Formulario."
+          "string": "Le Entità sono un modo efficace per condividere le informazioni tra i formulari. Un Set di dati è una raccolta di Entità."
         },
         "1": {
-          "string": "I set di dati possono essere allegati {icon1} ai formulari e i relativi dati possono essere interrogati proprio come qualsiasi altro file di dati CSV allegato.",
-          "developer_comment": "{icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow."
+          "string": "{icon1} Progettare un Formulario per creare Entità",
+          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
         },
         "2": {
-          "string": "Quando viene approvato un Invio relativo a un Dataset {icon2}, i dati selezionati vengono aggiunti {icon3} al set di dati, in modo che la volta successiva che un cliente scaricherà il formulario, i nuovi dati verranno inclusi nel download dei dati.",
-          "developer_comment": "{icon2} and {icon3} are icons that display the numbers 2 and 3. They refer to the second and third steps in an image that depicts this workflow."
+          "string": "{icon2} Gli invii al formulario creano entità. Per impostazione predefinita, le Entità vengono create quando viene ricevuta un invio. Possono anche essere configurati in modo da richiedere l'approvazione dell'invio.",
+          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
         },
         "3": {
-          "string": "In una versione futura, sarai in grado di caricare {icon4} direttamente un CSV a un set di dati.",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow."
+          "string": "{icon3} Allega il set di dati a un formulario. Quando chi effettua la raccolta dati aggiornerà i formulari con un set di dati allegato, scaricheranno automaticamente tutte le entità create fino a quel momento.",
+          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
         },
         "4": {
+          "string": "{icon4} Puoi allegare set di dati a molti formulari, incluso un formulario che crea anche entità in quel set di dati.",
+          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
+        },
+        "5": {
           "string": "I set di dati vengono configurati durante la progettazione del formulario."
         }
       },
@@ -1316,11 +1326,81 @@
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
+    "DatasetPendingSubmissions": {
+      "title": {
+        "string": "Invii in sospeso"
+      },
+      "action": {
+        "changeSetting": {
+          "string": "Cambia le impostazioni",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "explanation": {
+        "userAction": {
+          "string": "Stai impostando la creazione dell'Entità in modo che avvenga quando gli invii vengono ricevuti per la prima volta da Central."
+        },
+        "implication": {
+          "full": {
+            "string": "{count, plural, one {Una volta entrato in vigore, le Entità non verranno più generate quando gli Invii sono contrassegnati come Approvati, incluso il {records} che abbiamo riscontrato che non è stato né contrassegnato come Approvato né Rifiutato.} many {Una volta entrato in vigore, le Entità non verranno più generate quando gli Invii sono contrassegnati come Approvati, inclusi i {records} che abbiamo riscontrato che non sono stati né contrassegnati come Approvati né Rifiutati.} other {Una volta entrato in vigore, le Entità non verranno più generate quando gli Invii sono contrassegnati come Approvati, inclusi i {records} che abbiamo riscontrato che non sono stati né contrassegnati come Approvati né Rifiutati.}}",
+            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
+          },
+          "records": {
+            "string": "{count, plural, one {{count} record} many {{count} records} other {{count} records}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nOnce this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected."
+          }
+        }
+      },
+      "dontConvert": {
+        "label": {
+          "string": "Capisco e questo non è un problema per me."
+        },
+        "description": {
+          "string": "{count, plural, one {Modificare l'impostazione e non fare nulla con l'invio in sospeso.} many {Modificare l'impostazione e non fare nulla con gli invii in sospeso.} other {Modificare l'impostazione e non fare nulla con gli invii in sospeso.}}"
+        }
+      },
+      "convert": {
+        "label": {
+          "string": "Converti ora tutti gli invii in sospeso in Entità."
+        },
+        "description": {
+          "string": "{count, plural, one {Modifica l'impostazione e crea entità per il {count} invio non ancora approvato o rifiutato. Gli Stati di revisione non saranno interessati.} many {Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati.} other {Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati.}}"
+        }
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "Scarica dati (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetSettings": {
+      "entityWorkflow": {
+        "string": "Flusso di lavoro dell'Entità",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "onReceipt": {
+        "label": {
+          "string": "Creare Entità non appena gli Invii vengono ricevuti da Central"
+        },
+        "description": {
+          "string": "Non avrai la possibilità di esaminare o rivedere i dati prima della creazione delle Entità."
+        },
+        "successMessage": {
+          "string": "Le entità verranno create non appena gli Invii saranno ricevute da Central."
+        }
+      },
+      "onApproval": {
+        "label": {
+          "string": "Crea Entità quando gli invii sono contrassegnati come approvati"
+        },
+        "description": {
+          "string": "I dati dell'entità non verranno aggiornati fino a quando una persona non li esamina. Se necessario, possono essere apportate correzioni."
+        },
+        "successMessage": {
+          "string": "Le entità verranno create non appena gli Invii saranno contrassegnati come approvati."
         }
       }
     },
@@ -1375,12 +1455,51 @@
       "creatingSubmission": {
         "string": "Creando invio",
         "developer_comment": "This is shown above the Submission that created the Entity."
+      },
+      "submissionDeleted": {
+        "string": "Questo invio è stato eliminato."
       }
     },
     "EntityData": {
       "title": {
         "string": "Dati Entità",
         "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "EntityFeedEntry": {
+      "title": {
+        "submission": {
+          "create": {
+            "notDeleted": {
+              "string": "Invio {instanceName} caricato da {submitter}",
+              "developer_comment": "This text is shown in a list of events. {submitter} is the name of a user, a team of users, or a Public Access Link."
+            },
+            "deleted": {
+              "full": {
+                "string": "{deletedSubmission} caricata da {name}",
+                "developer_comment": "This text is shown in a list of events. {name} is the name of a user, a team of users, or a Public Access Link.\n\n{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+              },
+              "deletedSubmission": {
+                "string": "(Invio cancellato {id})",
+                "developer_comment": "This text is shown in a list of events. {id} is the Submission instance ID.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\n{deletedSubmission} uploaded by {name}"
+              }
+            }
+          }
+        },
+        "entity": {
+          "create": {
+            "api": {
+              "string": "Entità {label} creata da {name}",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
+            }
+          },
+          "update_version": {
+            "api": {
+              "string": "Dati aggiornati da {name}",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            }
+          }
+        }
       }
     },
     "EntityList": {
@@ -1406,6 +1525,22 @@
         "back": {
           "string": "Indietro alla Tabella {datasetName} ",
           "developer_comment": "This is shown at the top of the page. The user can click it to go back."
+        }
+      }
+    },
+    "EntityUpdate": {
+      "title": {
+        "string": "Aggiorna {label}",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "header": {
+        "currentValue": {
+          "string": "Valore corrente",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        },
+        "updatedValue": {
+          "string": "Valore aggiornato",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },
@@ -1669,6 +1804,9 @@
         }
       },
       "datasetsPreview": {
+        "title": {
+          "string": "Testando i set di dati"
+        },
         "body": {
           "0": {
             "string": "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi dei set di dati. Per impostazione predefinita, questi sono collegati ai set di dati. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti ai set di dati dopo aver verificato la logica del formulario."
@@ -2141,15 +2279,15 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
+        "title": {
+          "string": "Questo Formulario può creare Entità"
+        },
         "body": {
           "0": {
-            "string": "Questo modulo può aggiungere Entità a un set di dati."
+            "string": "Le entità vengono create solo per i formulari pubblicati. In una versione futura di Central, sarai in grado di testare la funzionalità dell'entità in uno stato bozza."
           },
           "1": {
-            "string": "In questa versione di anteprima dei set di dati, è necessario pubblicare il formulario per visualizzare l'aggiornamento del set di dati. In una versione futura di Central, sarai in grado di testare la funzionalità del set di dati in uno stato Bozza."
-          },
-          "2": {
-            "string": "Per ora, ti consigliamo di pubblicare i formulari relativi al set di dati e di non approvare alcun invio (e quindi di non creare entità indesiderate) finché non sei sicuro che il formulario sia pronto."
+            "string": "Per ora, ti consigliamo di provare la definizione del formulario nello stato Bozza per verificarne la logica. Prima della pubblicazione, puoi verificare che aggiorni tutte le proprietà desiderate."
           }
         }
       }

@@ -123,6 +123,17 @@ export default {
         }
       }
     }
+  },
+  "sw": {
+    "action": {
+      "download": {
+        "unfiltered": "Pakua wasilisho {count} | Pakua Mawasilisho {count}",
+        "filtered": {
+          "withoutCount": "Pakua Mawasilisho yanayolingana",
+          "withCount": "Pakua wasilisho {count} inayolingana | Pakua Mawasilisho {count} yanayolingana"
+        }
+      }
+    }
   }
 }
 </i18n>

@@ -518,6 +518,7 @@ $popup-width: 300px;
     "title": "Pakia Faili",
     "duringDragover": {
       "dropToUpload": "Dondosha sasa ili upakie faili hii kama {attachmentName}.",
+      "dragover": "Buruta juu ya Kiambatisho cha Fomu unachotaka kubadilisha na faili na uangushe ili upakie",
       "dropToPrepare": {
         "full": "Dondosha sasa ili kuandaa {countOfFiles} kwa ajili ya kupakiwa kwenye Fomu hii.",
         "countOfFiles": "faili {count} | faili {count}"

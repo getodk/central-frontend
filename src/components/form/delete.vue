@@ -158,7 +158,8 @@ export default {
     "introduction": [
       "Je, una uhakika ungependa kufuta Fomu ya {name} na Mawasilisho yake yote?",
       "kitendo hiki kitahamisha Fomu hadi kwenye Tupio. Baada ya siku 30 kwenye Tupio, itasafishwa kabisa, lakini inaweza kufutwa kabla ya wakati huo."
-    ]
+    ],
+    "noDeleteEntities": "Huluki zozote zilizoundwa na Mawasilisho ya Fomu hii hazitafutwa. Katika toleo la baadaye la Kati, itawezekana kufuta Huluki."
   }
 }
 </i18n>

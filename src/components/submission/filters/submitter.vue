@@ -218,8 +218,17 @@ const placeholder = (counts) => t('placeholder', counts);
   },
   "sw": {
     "field": {
-      "submitter": "Iliyowasilishwa na"
-    }
+      "submitter": "Iliyowasilishwa na",
+      "search": "Tafuta wawasilishaji..."
+    },
+    "placeholder": "{selected} kati ya {total}",
+    "action": {
+      "select": {
+        "all": "Wote",
+        "none": "Hakuna"
+      }
+    },
+    "unknown": "Mwasilishaji asiyejulikana"
   }
 }
 </i18n>

@@ -147,6 +147,13 @@ export default {
       "projectSettings": "Impostazioni del progetto"
     },
     "note": "Solo i Project Manager possono vedere questo suggerimento."
+  },
+  "sw": {
+    "instructions": {
+      "full": "Ongeza madokezo ya Mradi, viungo, maagizo na nyenzo zingine kwenye nafasi hii katika {projectSettings}.",
+      "projectSettings": "Mipangilio ya Mradi"
+    },
+    "note": "Wasimamizi wa Miradi pekee ndio wanaoweza kuona pendekezo hili."
   }
 }
 </i18n>

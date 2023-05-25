@@ -110,6 +110,11 @@ export default {
     "action": {
       "download": "Scarica dati (.csv)"
     }
+  },
+  "sw": {
+    "action": {
+      "download": "Pakua data (.csv)"
+    }
   }
 }
 </i18n>

@@ -81,6 +81,7 @@ export default {
     "version": "バージョン"
   },
   "sw": {
+    "help": "msaada",
     "version": "Toleo"
   }
 }

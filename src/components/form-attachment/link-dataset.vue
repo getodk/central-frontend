@@ -152,6 +152,16 @@ export default {
     "action": {
       "link": "Collegamento"
     }
+  },
+  "sw": {
+    "title": "Kiungo Dataset",
+    "introduction": [
+      "Je, una uhakika unataka kuunganisha Seti ya Data?",
+      "Faili uliyopakia itafutwa. Unaweza kuipakia tena baadaye."
+    ],
+    "action": {
+      "link": "Kiungo"
+    }
   }
 }
 </i18n>

@@ -106,6 +106,11 @@ const config = inject('config');
     "heading": [
       "Benvenuto su Central"
     ]
+  },
+  "sw": {
+    "heading": [
+      "Karibu Central"
+    ]
   }
 }
 </i18n>

@@ -183,6 +183,14 @@ export default {
       }
     },
     "noEntities": "Non ci sono entità da mostrare."
+  },
+  "sw": {
+    "action": {
+      "download": {
+        "unfiltered": "Pakua shirika {count} | Pakua Mashirika {count}"
+      }
+    },
+    "noEntities": "Hakuna Fomu za kuonyesha."
   }
 }
 </i18n>

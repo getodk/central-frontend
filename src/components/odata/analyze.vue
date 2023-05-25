@@ -272,6 +272,10 @@ export default {
   },
   "fr": {
     "title": "Utilisation d'OData",
+    "introduction": [
+      "OData est un standard pour le transfert de données entre outils et services. De puissants outils d'analyse comme {powerBi}, {excel}, {python} et {r} peuvent récupérer des données par le biais d'OData pour analyse.",
+      "Pour commencer à utiliser OData, sélectionnez votre outil et y copiez le lien."
+    ],
     "tab": {
       "microsoft": "Power BI ou Excel",
       "other": "Autre"
@@ -340,10 +344,22 @@ export default {
   },
   "sw": {
     "title": "Kwa kutumia OData",
+    "introduction": [
+      "OData ni kiwango cha kuhamisha data kati ya zana na huduma. Zana za uchambuzi zenye nguvu kama vile {powerBi}, {excel}, {python} na {r} zinaweza kuleta data kupitia OData kwa uchambuzi.",
+      "Ili kuunganisha kwenye mpasho huu wa OData, chagua zana yako na unakili kiungo humo."
+    ],
     "tab": {
+      "microsoft": "Power BI au Excel",
       "other": "Nyingine"
     },
     "help": {
+      "microsoft": {
+        "full": "Kwa usaidizi wa kutumia OData na Power BI, angalia {pageForPowerBi}. Kwa usaidizi wa Excel, angalia {pageForExcel}.",
+        "pageForExcel": "ukurasa huu",
+        "pageForPowerBi": "ukurasa huu"
+      },
+      "python": "Ili kuunganisha kwa Central kutoka Python, tunapendekeza {pyODK}. pyODK ndiye mteja rasmi wa Python kwa Central. Inarahisisha uchanganuzi wa data na otomatiki wa mtiririko wa kazi.",
+      "r": "Ili kuunganisha kwa Central kutoka R, tunapendekeza {ruODK}. ruODK inatengenezwa na kuungwa mkono na wanajamii wa ODK",
       "other": {
         "full": "Kwa maelezo kamili ya usaidizi wetu wa OData, tafadhali angalia {article}.",
         "article": "Makala hii"

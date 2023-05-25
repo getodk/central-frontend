@@ -306,7 +306,8 @@ export default {
     "submissions": {
       "full": "{submissions} zimehifadhiwa kwa Fomu hii. | {submissions} zimehifadhiwa kwa Fomu hii.",
       "submissions": "Wasilisho | Mawasilisho"
-    }
+    },
+    "datasetsLinked": "Seti ya data iliyoambatishwa kwenye Fomu hii: | Seti za data zilizoambatishwa kwenye Fomu hii:"
   }
 }
 </i18n>

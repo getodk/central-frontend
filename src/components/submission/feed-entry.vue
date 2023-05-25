@@ -537,6 +537,10 @@ export default {
   "sw": {
     "title": {
       "create": "Imewasilishwa na {name}",
+      "entity": {
+        "create": "Imeunda huluki {label} katika {dataset} seti ya data",
+        "error": "Tatizo limetokea wakati wa kuunda Huluki"
+      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} kwa {name}",

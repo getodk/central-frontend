@@ -126,14 +126,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Vítejte v náhledu datových sad!",
-    "body": [
-      "Datové sady představují nový způsob vytváření a správy datových příloh v ODK. Umožňují používat data shromážděná v Podáních, která lze stáhnout a použít jako součást jiného formuláře.",
-      "Datové soubory lze připojit {icon1} k formulářům a dotazovat se na jejich data stejně jako na jakýkoli jiný připojený datový soubor CSV.",
-      "Po schválení {icon2} podání souvisejícího s datovou sadou se vybraná data přidají {icon3} do datové sady, takže při příštím stažení formuláře klientem budou nová data zahrnuta do stahování dat.",
-      "V některé z budoucích verzí bude možné nahrát {icon4} CSV přímo do datové sady.",
-      "Datové sady se konfigurují během návrhu formuláře."
-    ],
     "getStarted": {
       "full": "Další informace o tom, jak začít, najdete {clickHere}.",
       "clickHere": "klikněte zde"
@@ -141,14 +133,6 @@ export default {
     "datasetsWorkflow": "Pracovní postup s datovými sadami"
   },
   "de": {
-    "title": "Willkommen bei der Dataset-Vorschau!",
-    "body": [
-      "Datensätze sind eine neue Möglichkeit, Datenanhänge in ODK zu erstellen und zu verwalten. Sie ermöglichen es Ihnen, Daten, die in Übermittlungen gesammelt wurden, herunterzuladen und als Teil eines anderen Formulars zu verwenden.",
-      "Datensätze können wie jede andere angehängte CSV-Datendatei an {icon1} Formulare angehängt und ihre Daten abgefragt werden.",
-      "Wenn eine Übermittlung in Bezug auf einen Datensatz genehmigt wird {icon2}, werden die ausgewählten Daten zum Datensatz hinzugefügt {icon3}, sodass beim nächsten Herunterladen des Formulars durch einen Kunden die neuen Daten in den Datendownload aufgenommen werden.",
-      "In einer zukünftigen Version können Sie {icon4} eine CSV-Datei direkt in einen Datensatz hochladen.",
-      "Datensätze werden während des Formularentwurfs konfiguriert."
-    ],
     "getStarted": {
       "full": "Weitere Informationen zum Einstieg finden Sie unter {clickHere}",
       "clickHere": "klicken Sie hier"
@@ -156,14 +140,6 @@ export default {
     "datasetsWorkflow": "Datensatz-Workflow"
   },
   "es": {
-    "title": "¡Bienvenido a la vista previa de conjuntos de datos!",
-    "body": [
-      "Los conjuntos de datos son una nueva forma de crear y administrar archivos adjuntos de datos en ODK. Le permiten usar los datos recopilados en Envíos para descargarlos y usarlos como parte de otro Formulario.",
-      "Los conjuntos de datos se pueden adjuntar a {icon1} formularios y sus datos se pueden consultar como cualquier otro archivo de datos CSV adjunto.",
-      "Cuando se aprueba un envío relacionado con un conjunto de datos {icon2}, los datos seleccionados se agregan {icon3} al conjunto de datos, de modo que la próxima vez que un cliente descargue el formulario, los nuevos datos se incluirán en la descarga de datos.",
-      "En una versión futura, podrá cargar {icon4} CSV a un conjunto de datos directamente.",
-      "Los conjuntos de datos se configuran durante el diseño del formulario."
-    ],
     "getStarted": {
       "full": "Para obtener más información sobre cómo empezar, {clickHere}.",
       "clickHere": "haga clic aquí"
@@ -171,14 +147,6 @@ export default {
     "datasetsWorkflow": "Flujo de trabajo de conjuntos de datos"
   },
   "fr": {
-    "title": "Bienvenue dans l’aperçu des Datasets !",
-    "body": [
-      "Les Datasets sont un nouveau moyen de créer et gérer des données attachées dans ODK. Ils vous permettent d'utiliser les données collectées dans les Soumissions en les téléchargeant et en les utilisant dans un autre formulaire.",
-      "Les Datasets peuvent être joints {icon1} aux formulaires et leurs données peuvent être interrogées comme n'importe quel autre fichier de données CSV joint.",
-      "Lorsqu'une soumission concernant un Dataset est approuvée {icon2}, les données sélectionnées sont ajoutées {icon3} au Dataset, de sorte que la prochaine fois qu'un client téléchargera le formulaire, les nouvelles données seront incluses.",
-      "Dans une version future vous pourrez envoyer {icon4} un CSV directement dans un Dataset",
-      "Les Datasets sont configurés lors de la création du Formulaire."
-    ],
     "getStarted": {
       "full": "Pour plus d'information sur comment démarrer, {clickHere}.",
       "clickHere": "cliquez ici"
@@ -186,12 +154,13 @@ export default {
     "datasetsWorkflow": "Le \"Workflow\" des Datasets"
   },
   "it": {
-    "title": "Benvenuto nell'anteprima dei set di dati!",
+    "title": "A proposito di Entità",
     "body": [
-      "I set di dati sono un nuovo modo per creare e gestire gli allegati dati in ODK. Consentono di utilizzare i dati raccolti negli Invii per essere scaricati e utilizzati come parte di un altro Formulario.",
-      "I set di dati possono essere allegati {icon1} ai formulari e i relativi dati possono essere interrogati proprio come qualsiasi altro file di dati CSV allegato.",
-      "Quando viene approvato un Invio relativo a un Dataset {icon2}, i dati selezionati vengono aggiunti {icon3} al set di dati, in modo che la volta successiva che un cliente scaricherà il formulario, i nuovi dati verranno inclusi nel download dei dati.",
-      "In una versione futura, sarai in grado di caricare {icon4} direttamente un CSV a un set di dati.",
+      "Le Entità sono un modo efficace per condividere le informazioni tra i formulari. Un Set di dati è una raccolta di Entità.",
+      "{icon1} Progettare un Formulario per creare Entità",
+      "{icon2} Gli invii al formulario creano entità. Per impostazione predefinita, le Entità vengono create quando viene ricevuta un invio. Possono anche essere configurati in modo da richiedere l'approvazione dell'invio.",
+      "{icon3} Allega il set di dati a un formulario. Quando chi effettua la raccolta dati aggiornerà i formulari con un set di dati allegato, scaricheranno automaticamente tutte le entità create fino a quel momento.",
+      "{icon4} Puoi allegare set di dati a molti formulari, incluso un formulario che crea anche entità in quel set di dati.",
       "I set di dati vengono configurati durante la progettazione del formulario."
     ],
     "getStarted": {
@@ -199,6 +168,13 @@ export default {
       "clickHere": "clicca qui"
     },
     "datasetsWorkflow": "Flusso di lavoro dei set di dati"
+  },
+  "sw": {
+    "getStarted": {
+      "full": "Kwa maelezo zaidi kuhusu jinsi ya kuanza, {clickHere}.",
+      "clickHere": "Bonyeza hapa"
+    },
+    "datasetsWorkflow": "Mtiririko wa kazi wa seti za data"
   }
 }
 </i18n>

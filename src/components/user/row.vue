@@ -254,6 +254,7 @@ export default {
     "field": {
       "sitewideRole": "Jukumu la Tovuti nzima"
     },
+    "cannotResetPassword": "Huwezi kuweka upya nenosiri lako kwenye ukurasa huu. Ili kubadilisha nenosiri lako, hariri wasifu wako.",
     "cannotRetire": "Huenda usistaafu mwenyewe.",
     "action": {
       "retire": "Staafu mtumiaji"

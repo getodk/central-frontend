@@ -144,6 +144,9 @@ export default {
   },
   "it": {
     "analyzeDisabled": "L'accesso OData non è disponibile a causa della crittografia del formulario"
+  },
+  "sw": {
+    "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
   }
 }
 </i18n>

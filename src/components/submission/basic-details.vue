@@ -227,6 +227,7 @@ export default {
     "formVersion": "Toleo la fomu",
     "deviceId": "Kitambulisho cha Kifaa",
     "userAgent": "Wakala wa mtumiaji",
+    "attachments": "Viambatisho",
     "present": "faili {count} | faili {count}",
     "expected": "{count} inatarajiwa | {count} inatarajiwa",
     "attachmentSummary": "{present} / {expected}"

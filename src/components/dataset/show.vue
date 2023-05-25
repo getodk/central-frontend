@@ -139,6 +139,9 @@ export default {
   },
   "it": {
     "back": "Torna ai set di dati del progetto"
+  },
+  "sw": {
+    "back": "Rudi kwenye Hifadhidata za Mradi"
   }
 }
 </i18n>

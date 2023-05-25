@@ -365,7 +365,13 @@ export default {
     "notUploaded": {
       "text": "Bado haijapakiwa",
       "title": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
-    }
+    },
+    "linkedToDataset": "Imeunganishwa kwenye Seti ya Data {datasetName}",
+    "uploadToOverride": "Pakia faili ili kubatilisha",
+    "action": {
+      "linkDataset": "Unganisha Seti ya Data {datasetName}"
+    },
+    "override": "Batilisha"
   }
 }
 </i18n>

@@ -416,6 +416,7 @@ export default {
       "num_unique_viewers": "Idadi ya watazamaji wa kipekee wa Mradi",
       "num_unique_collectors": "Idadi ya Wakusanyaji data wa kipekee",
       "database_size": "Saizi ya hifadhidata ya mfumo",
+      "uses_external_db": "Seva hutumia hifadhidata ya nje",
       "num_managers": "Idadi ya wasimamizi wa miradi",
       "num_viewers": "Idadi ya watazamaji wa mradi",
       "num_data_collectors": "Idadi ya wakusanyaji data",
@@ -428,6 +429,9 @@ export default {
       "num_forms_with_encryption": "Idadi ya Fomu zilizo na usimbaji fiche",
       "num_forms_with_audits": "Idadi ya Fomu zilizo na ukaguzi",
       "num_reused_form_ids": "Idadi ya vitambulisho vya fomu vilivyotumika tena",
+      "num_open_forms": "Idadi ya Fomu zilizofunguliwa",
+      "num_closing_forms": "Idadi ya fomu za kufunga",
+      "num_closed_forms": "Idadi ya Fomu zilizofungwa",
       "num_submissions_received": "Idadi ya Mawasilisho - Yaliyopokelewa",
       "num_submissions_approved": "Idadi ya Mawasilisho - Yameidhinishwa",
       "num_submissions_has_issues": "Idadi ya Mawasilisho - Ina Masuala",
@@ -437,7 +441,14 @@ export default {
       "num_submissions_with_comments": "Idadi ya Mawasilisho yenye maoni",
       "num_submissions_from_app_users": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Programu",
       "num_submissions_from_public_links": "Idadi ya Mawasilisho kutoka kwa Viungo vya Umma",
-      "num_submissions_from_web_users": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Wavuti"
+      "num_submissions_from_web_users": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Wavuti",
+      "has_description": "Mradi una maelezo",
+      "description_length": "Urefu wa maelezo ya Mradi",
+      "num_properties": "Idadi ya Mali",
+      "num_creation_forms": "Idadi ya Fomu zinazosasisha Seti ya Data",
+      "num_followup_forms": "Idadi ya Fomu zinazotumia Hifadhidata",
+      "num_entities": "Idadi ya Huluki katika Seti ya Data",
+      "num_failed_entities": "Idadi ya hitilafu za kuunda Huluki"
     }
   }
 }

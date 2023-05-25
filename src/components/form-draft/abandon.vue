@@ -231,6 +231,15 @@ export default {
       "abandon": "acha rasimu",
       "deleteForm": "Achana na Rasimu na ufute Fomu"
     },
+    "introduction": {
+      "abandon": [
+        "Unakaribia kufuta kabisa Rasimu ya toleo la Fomu hii. Hii ina maana kwamba ufafanuzi wa Fomu ya rasimu, Viambatisho vya Fomu vya rasimu ambavyo umepakia, na Mawasilisho yote ya majaribio yataondolewa.",
+        "Ufafanuzi wako wa Fomu uliochapishwa, Viambatisho vyake vya Fomu, na Mawasilisho hayataathiriwa."
+      ],
+      "deleteForm": [
+        "Unakaribia kufuta ufafanuzi wa Fomu hii ya rasimu, pamoja na Viambatisho vyovyote vya rasimu ambavyo umepakia, na Mawasilisho yote ya majaribio. Kwa sababu bado hujaichapisha, Fomu hii yote itafutwa na kuhamishiwa kwenye tupio."
+      ]
+    },
     "action": {
       "abandon": "Achana"
     }

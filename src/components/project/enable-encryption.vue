@@ -715,7 +715,8 @@ export default {
             ],
             "Hutaweza tena kuhakiki data ya Wasilisho mtandaoni.",
             "Hutaweza tena kuunganisha kwa data kupitia OData.",
-            "Hutaweza tena kuhariri Mawasilisho katika kivinjari chako cha wavuti."
+            "Hutaweza tena kuhariri Mawasilisho katika kivinjari chako cha wavuti.",
+            "Mawasilisho Mapya hayatachakatwa tena kuwa Mashirika"
           ],
           [
             "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:",
@@ -737,9 +738,15 @@ export default {
       {
         "introduction": [
           "Kwanza, utahitaji kuchagua neno la siri. Kaulisiri hii itahitajika ili kusimbua Mawasilisho yako. Kwa faragha yako, seva haitakumbuka kaulisiri hii: watu walio na kaulisiri pekee wataweza kusimbua na kusoma data yako ya Wasilisho.",
-          {}
+          {
+            "full": "Ukipoteza kaulisiri {no} hakuna njia ya kuirejesha au data yako",
+            "no": "Hapana"
+          }
         ]
       }
+    ],
+    "success": [
+      "Usimbaji fiche umesanidiwa kwa Mradi huu. Kifaa chochote cha rununu kitalazimika kuleta au kuleta tena Fomu za hivi punde zaidi ili usimbaji fiche ufanyike."
     ],
     "field": {
       "hint": "Kidokezo cha kaulisiri (si lazima)"

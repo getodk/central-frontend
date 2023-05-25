@@ -186,6 +186,20 @@ if (currentUser.can('user.list'))
     "forum": {
       "body": "Puoi sempre ottenere aiuto dagli altri sul forum, dove puoi anche cercare domande precedenti."
     }
+  },
+  "sw": {
+    "projects": {
+      "body": "Central imepangwa katika Miradi, ambayo kila moja ina Fomu zake na data zinazohusiana."
+    },
+    "users": {
+      "body": "Watumiaji wanaweza kupewa Miradi ili kuisimamia, au kukusanya au kukagua data iliyowasilishwa."
+    },
+    "docs": {
+      "body": "Kuna mwongozo wa kuanza na hati za mtumiaji zinazopatikana kwenye tovuti ya Hati za ODK."
+    },
+    "forum": {
+      "body": "Unaweza kupata usaidizi kutoka kwa wengine kila wakati kwenye mijadala, ambapo unaweza pia kutafuta maswali yaliyotangulia."
+    }
   }
 }
 </i18n>

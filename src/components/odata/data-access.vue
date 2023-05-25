@@ -83,6 +83,12 @@ export default {
       "apiAccess": "accesso attraverso API",
       "analyze": "Analizzare attraverso OData"
     }
+  },
+  "sw": {
+    "action": {
+      "apiAccess": "Ufikiaji wa API",
+      "analyze": "Changanua kupitia OData"
+    }
   }
 }
 </i18n>

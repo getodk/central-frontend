@@ -466,6 +466,7 @@ export default {
     },
     "alert": {
       "upload": "Mafanikio! Ufafanuzi mpya wa Fomu umehifadhiwa kama Rasimu yako",
+      "publish": "Rasimu yako sasa imechapishwa. Kifaa chochote kinachorejesha Fomu za Mradi huu sasa kitapokea ufafanuzi mpya wa Fomu na Viambatisho vya Fomu.",
       "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi.",
       "delete": "Fomu \"{name}\" ilifutwa."
     }
