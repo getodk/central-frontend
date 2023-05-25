@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-
+@use 'sass:math';
 @import './mixins';
 
 html {
@@ -682,7 +682,12 @@ becomes more complicated.
 
 .panel-main {
   box-shadow: $box-shadow-panel-main;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 70px;
+  // A .panel-main element is a child of a .col-sm-6 element. .col-sm-6 has
+  // left + right padding of 30px.
+  max-width: #{math.div($max-width-page-body, 2) - 30px};
 
   .panel-body {
     padding-bottom: 25px;

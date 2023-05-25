@@ -15,6 +15,12 @@ $color-accent-primary: #bd006b;
 $color-accent-secondary: #8d0050;
 $color-page-background: #f7f7f7;
 
+// Media query breakpoints - copied from bootstrap
+$screen-xs-min: 480px;
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+
 // Text
 $color-text: #333;
 $font-family-monospace: Monaco, Menlo, Consolas, "Courier New", monospace;
@@ -93,12 +99,7 @@ $padding-right-modal-header: 15px;
 
 // PageBody
 $margin-top-page-body: 20px;
+$max-width-page-body: 1280px;
 
 // Popover
 $box-shadow-popover: 0 5px 10px rgba(0, 0, 0, 0.2);
-
-// Media query breakpoints - copied from bootstrap
-$screen-xs-min: 480px;
-$screen-sm-min: 768px;
-$screen-md-min: 992px;
-$screen-lg-min: 1200px;

@@ -152,6 +152,13 @@ The following meta fields are supported for bottom-level routes:
       i18n.t('title.project.appUsers'),
       project.name // project.name may be `null`
     ]
+
+  Other
+  -----
+
+  - fullWidth (default: false). If fullWidth is `true`, and the route renders a
+    PageBody component, then the PageBody will use the full width of the page.
+    By default, PageBody has a max width.
 */
 
 /*
@@ -310,7 +317,8 @@ const routes = [
               'assignment.delete'
             ])
           },
-          title: () => [i18n.t('projectShow.tab.formAccess'), project.name]
+          title: () => [i18n.t('projectShow.tab.formAccess'), project.name],
+          fullWidth: true
         }
       }),
       asyncRoute({
@@ -362,7 +370,8 @@ const routes = [
             project: () => project.permits(['form.read', 'form.update', 'dataset.list']),
             form: () => form.publishedAt != null
           },
-          title: () => [form.nameOrId]
+          title: () => [form.nameOrId],
+          fullWidth: true
         }
       }),
       asyncRoute({
@@ -393,7 +402,8 @@ const routes = [
             ]),
             form: () => form.publishedAt != null
           },
-          title: () => [i18n.t('resource.submissions'), form.nameOrId]
+          title: () => [i18n.t('resource.submissions'), form.nameOrId],
+          fullWidth: true
         }
       }),
       asyncRoute({
@@ -484,7 +494,8 @@ const routes = [
           title: () => [
             i18n.t('formHead.draftNav.tab.testing'),
             form.nameOrId
-          ]
+          ],
+          fullWidth: true
         }
       })
     ]
@@ -529,7 +540,8 @@ const routes = [
           title: () => [i18n.t('common.data'), dataset.name],
           validateData: {
             project: () => project.permits(['dataset.read', 'entity.list'])
-          }
+          },
+          fullWidth: true
         }
       }),
       asyncRoute({
@@ -622,7 +634,8 @@ const routes = [
           validateData: {
             currentUser: () => currentUser.can('audit.read')
           },
-          title: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')]
+          title: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')],
+          fullWidth: true
         }
       }),
       asyncRoute({
@@ -640,7 +653,8 @@ const routes = [
           title: () => [
             i18n.t('systemHome.tab.analytics'),
             i18n.t('systemHome.title')
-          ]
+          ],
+          fullWidth: true
         },
         beforeEnter: () => (config.showsAnalytics ? true : '/')
       })
@@ -682,6 +696,7 @@ const routesByName = new Map();
     requireLogin: true,
     requireAnonymity: false,
     preserveData: [],
+    fullWidth: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
       ? []
