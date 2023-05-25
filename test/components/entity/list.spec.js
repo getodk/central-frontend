@@ -103,7 +103,7 @@ describe('EntityList', () => {
       testData.extendedEntities.createPast(1, {
         uuid: 'abc',
         label: 'My Entity',
-        data: { height: '1', 'circumference.cm': 2 }
+        data: { height: '1', 'circumference.cm': '2' }
       });
       const component = await load('/projects/1/datasets/trees/entities', {
         root: false
@@ -115,7 +115,7 @@ describe('EntityList', () => {
           label: 'My Entity',
           data: Object.assign(Object.create(null), {
             height: '1',
-            'circumference.cm': 2
+            'circumference.cm': '2'
           })
         }
       });
@@ -149,12 +149,13 @@ describe('EntityList', () => {
         testData.extendedEntities.createPast(1, {
           uuid: 'e2',
           label: 'My Entity',
-          data: { height: '1', 'circumference.cm': 2 }
+          data: { height: '1', 'circumference.cm': '2' }
         });
         testData.extendedEntities.createPast(1, { uuid: 'e3' });
         return load('/projects/1/datasets/trees/entities', { root: false })
           .complete()
           .request(async (component) => {
+            await component.get('.entity-metadata-row:nth-child(2) .update-button').trigger('click');
             const form = component.get('#entity-update form');
             const textareas = form.findAll('textarea');
             textareas.length.should.equal(3);

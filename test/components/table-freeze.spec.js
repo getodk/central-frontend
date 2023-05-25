@@ -9,18 +9,18 @@ const mountComponent = (options) =>
       keyProp: 'id'
     },
     slots: {
-      headFrozen: '<th>id</th>',
-      headScrolling: '<th>name</th>',
-      dataFrozen: '<tr><td>{{ params.id }}</td></tr>',
-      dataScrolling: '<tr><td>{{ params.name }}</td></tr>'
+      'head-frozen': '<th>id</th>',
+      'head-scrolling': '<th>name</th>',
+      'data-frozen': '<tr><td>{{ params.id }}</td></tr>',
+      'data-scrolling': '<tr><td>{{ params.name }}</td></tr>'
     }
   }));
 
 describe('TableFreeze', () => {
   describe('visibility of actions', () => {
     const slots = {
-      headFrozen: '<th>Actions</th>',
-      dataFrozen: `<tr>
+      'head-frozen': '<th>Actions</th>',
+      'data-frozen': `<tr>
         <td>
           Hover or focus to see actions
           <div class="btn-group">
@@ -33,17 +33,17 @@ describe('TableFreeze', () => {
     it('shows actions if user hovers over a scrolling row', async () => {
       const component = mountComponent({ slots });
       await component.get('.table-freeze-scrolling td').trigger('mouseover');
-      const frozenRows = component.findAll('.table-freeze-frozen tr');
+      const frozenRows = component.findAll('.table-freeze-frozen tbody tr');
       frozenRows[0].classes('scrolling-hover').should.be.true();
       frozenRows[1].classes('scrolling-hover').should.be.false();
     });
 
     it('toggles actions if user hovers over a new scrolling row', async () => {
       const component = mountComponent({ slots });
-      const scrollingRows = component.findAll('.table-freeze-scrolling tr');
+      const scrollingRows = component.findAll('.table-freeze-scrolling tbody tr');
       await scrollingRows[0].trigger('mouseover');
       await scrollingRows[1].trigger('mouseover');
-      const frozenRows = component.findAll('.table-freeze-frozen tr');
+      const frozenRows = component.findAll('.table-freeze-frozen tbody tr');
       frozenRows[0].classes('scrolling-hover').should.be.false();
       frozenRows[1].classes('scrolling-hover').should.be.true();
     });
@@ -52,7 +52,7 @@ describe('TableFreeze', () => {
       const component = mountComponent({ slots });
       await component.get('.table-freeze-scrolling td').trigger('mouseover');
       await component.get('.table-freeze-scrolling tbody').trigger('mouseleave');
-      const frozenRow = component.get('.table-freeze-frozen tr');
+      const frozenRow = component.get('.table-freeze-frozen tbody tr');
       frozenRow.classes('scrolling-hover').should.be.false();
     });
 
