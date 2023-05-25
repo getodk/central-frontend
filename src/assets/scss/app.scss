@@ -825,3 +825,15 @@ becomes more complicated.
     }
   }
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// useRowChanged()
+
+[data-use-row-changed="false"] { transition: background-color 0.6s 6s; }
+
+[data-use-row-changed="true"] {
+  background-color: #faf1cd;
+  transition: none;
+}
