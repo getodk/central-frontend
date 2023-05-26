@@ -117,8 +117,15 @@ const { submissionPath } = useRoutes();
   "es": {
     "creatingSubmission": "Creando envío"
   },
+  "fr": {
+    "creatingSubmission": "Soumission à l'origine de l'entité"
+  },
   "it": {
-    "creatingSubmission": "Creando invio"
+    "creatingSubmission": "Creando invio",
+    "submissionDeleted": "Questo invio è stato eliminato."
+  },
+  "sw": {
+    "creatingSubmission": "Kuunda Uwasilishaji"
   }
 }
 </i18n>

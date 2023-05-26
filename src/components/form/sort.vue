@@ -97,6 +97,12 @@ export default {
       "alphabetical": "Alfabetico",
       "newest": "Il più nuovo"
     }
+  },
+  "sw": {
+    "sortOptions": {
+      "alphabetical": "Kialfabeti",
+      "newest": "Mpya zaidi"
+    }
   }
 }
 </i18n>

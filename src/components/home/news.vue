@@ -66,6 +66,9 @@ export default {
   },
   "it": {
     "title": "Novità"
+  },
+  "sw": {
+    "title": "Habari"
   }
 }
 </i18n>

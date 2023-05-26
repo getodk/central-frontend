@@ -325,7 +325,12 @@ export default {
       "title": "Muhtasari wa Mradi",
       "subtitle": "(Inaonyesha Mradi amilifu zaidi wa Mradi ya {count}) | (Inaonyesha Mradi amilifu zaidi wa Miradi ya {count})"
     },
-    "submissionStates": "Nchi za Uwasilishaji"
+    "submissionStates": "Nchi za Uwasilishaji",
+    "datasets": {
+      "title": "Seti ya Data na Muhtasari wa Huluki",
+      "subtitle": "(Inaonyesha Seti ya Data inayotumika zaidi ya Seti ya Data ya {count}) | (Inaonyesha Seti ya Data inayotumika zaidi ya Seti za Data za {count})"
+    },
+    "other": "Nyingine"
   }
 }
 </i18n>

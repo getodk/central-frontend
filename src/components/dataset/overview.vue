@@ -112,6 +112,10 @@ export default {
   "it": {
     "connectionsToForms": "Connessioni ai formulari",
     "datasetProperties": "Proprietà dei set di dati"
+  },
+  "sw": {
+    "connectionsToForms": "Viunganisho kwa Fomu",
+    "datasetProperties": "Sifa za Seti ya Data"
   }
 }
 </i18n>

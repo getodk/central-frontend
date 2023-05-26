@@ -185,7 +185,9 @@ const submit = () => {
   "sw": {
     "title": "Maelezo ya Msingi",
     "field": {
-      "name": "Jina la mradi"
+      "name": "Jina la mradi",
+      "description": "Maelezo ya mradi",
+      "note": "Ongeza vidokezo, viungo, maagizo na nyenzo zingine hapa."
     },
     "alert": {
       "success": "Mipangilio ya mradi imehifadhiwa!"

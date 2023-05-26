@@ -676,7 +676,8 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Ikiwa tayari huna, kuna {tools} za kukusaidia kuunda Fomu yako.",
         "tools": "zana zinazopatikana"
-      }
+      },
+      "Kwa sasa, tuwasilishe uchapishe Fomu zako na Seti ya Data, na usiidhinishe yoyotesho (na kwa hivyo usiunde pesa zisizohitajika) hadi uhakikishe kuwa Fomu iko tayari."
     ],
     "dropZone": {
       "full": "Dondosha faili hapa, au {chooseOne} ili upakie.",
@@ -693,7 +694,22 @@ $drop-zone-vpadding: 15px;
       "400_8": "Ufafanuzi wa Fomu uliyopakia hauonekani kuwa wa Fomu hii. Ina formId isiyo sahihi (expected \"{expected}\", imepata \"{actual}\").",
       "400_15": "XLSForm haikuweza kubadilishwa: {error}",
       "409_3": "Tayari kuna Fomu katika Mradi huu yenye Kitambulisho cha Fomu ya “{xmlFormId}”."
-    }
+    },
+    "fields": "Viwanja:",
+    "warningsText": [
+      "Faili hii inaweza kutumika, lakini ina matatizo yafuatayo:",
+      "Maonyo ya muundo wa fomu:",
+      "Maonyo ya mtiririko wa kazi:",
+      {
+        "deletedFormExists": "Kuna fomu yenye kitambulisho \"{value}\" kwenye Tupio. Ukipakia Fomu hii, hutaweza kutendua nyingine kwa kutumia kitambulisho kinacholingana",
+        "structureChanged": "Sehemu zifuatazo zimefutwa, zimepewa jina jipya au sasa ziko katika vikundi tofauti au marudio. Sehemu hizi hazitaonekana katika jedwali la Wasilisho au kujumuishwa katika uhamishaji kwa chaguo msingi"
+      },
+      "Tafadhali sahihisha matatizo na ujaribu tena.",
+      {
+        "create": "Ikiwa una uhakika kuwa matatizo haya yanaweza kupuuzwa, bofya kitufe ili kuunda Fomu hata hivyo:",
+        "update": "Ikiwa una uhakika matatizo haya yanaweza kupuuzwa, bofya kitufe ili kusasisha Rasimu hata hivyo:"
+      }
+    ]
   }
 }
 </i18n>

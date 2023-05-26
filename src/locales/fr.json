@@ -271,6 +271,7 @@
     "dangerZone": "Zone Dangereuse",
     "data": "Données",
     "docs": "Documents",
+    "emptyValue": "(vide)",
     "error": "Erreur",
     "filter": "Filtrer",
     "forum": "Forum",
@@ -290,7 +291,6 @@
     "punctuations": {
       "comma": ","
     },
-    "datasetsPreview": "Aperçu des Dataset",
     "propertiesCount": "{inform} entité sur {count} | {inform} entités sur {count} | {inform} entité(s) sur {count}"
   },
   "mixin": {

@@ -151,10 +151,22 @@ const { datasetPath } = useRoutes();
       "back": "Volver a la tabla {datasetName}"
     }
   },
+  "fr": {
+    "back": {
+      "title": "Détail de l'entité",
+      "back": "Retour à la table {datasetName}"
+    }
+  },
   "it": {
     "back": {
       "title": "Dettaglio Entità",
       "back": "Indietro alla Tabella {datasetName}"
+    }
+  },
+  "sw": {
+    "back": {
+      "title": "Data ya Huluki",
+      "back": "Rudi kwenye Jedwali la {datasetName}"
     }
   }
 }

@@ -148,6 +148,15 @@ const placeholder = (counts) => t('placeholder', counts);
         "none": "Nessuno/a"
       }
     }
+  },
+  "sw": {
+    "placeholder": "{selected} kati ya {total}",
+    "action": {
+      "select": {
+        "all": "Wote",
+        "none": "Hakuna"
+      }
+    }
   }
 }
 </i18n>

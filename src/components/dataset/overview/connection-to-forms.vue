@@ -152,6 +152,9 @@ export default {
   },
   "it": {
     "formsCreateEntities": "Il formulario crea Entità nel set di dati | I formulari creano Entità in questo set di dati | Il formulario crea Entità nel set di dati"
+  },
+  "sw": {
+    "formsCreateEntities": "Fomu huunda Huluki katika Seti hizi za Data | Fomu huunda Huluki katika Seti hii ya Data"
   }
 }
 </i18n>

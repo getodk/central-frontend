@@ -92,6 +92,9 @@ export default {
   },
   "it": {
     "datasetUpdates": "Il set di dati è aggiornato da questo formulario: | I set di dati vengono aggiornati da questo formulario: | I set di dati vengono aggiornati da questo formulario:"
+  },
+  "sw": {
+    "datasetUpdates": "Seti ya data inasasishwa na Fomu hii: | Seti za data zinasasishwa na Fomu hii:"
   }
 }
 </i18n>

@@ -287,8 +287,10 @@ export default {
   },
   "sw": {
     "action": {
-      "fill": "Jaza Fomu"
-    }
+      "fill": "Jaza Fomu",
+      "test": "jaribio"
+    },
+    "formClosingTip": "Fomu Hii Inafungwa na inakubali Mawasilisho yake ya mwisho. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho."
   }
 }
 </i18n>

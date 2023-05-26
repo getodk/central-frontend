@@ -41,7 +41,8 @@
   "formState": {
     "open": "Fungua",
     "closing": "Kufunga",
-    "closed": "imefungwa"
+    "closed": "imefungwa",
+    "unpublished": "Bado haijachapishwa"
   },
   "reviewState": {
     "received": "Imepokelewa",
@@ -57,6 +58,7 @@
       "user": "vitendo vya mtumiaji wa wavuti",
       "project": "hatua za mradi",
       "form": "Vitendo vya fomu",
+      "dataset": "Vitendo vya Seti ya Data",
       "field_key": "Vitendo vya mtumiaji wa programu",
       "public_link": "vitendo vya kiungo cha ufikiaji wa umma",
       "config": "vitendo vya usanidi wa seva",
@@ -74,6 +76,8 @@
         "set": "weka"
       },
       "dataset": {
+        "update": "Sasisha",
+        "update_publish": "Kuchapisha",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -132,6 +136,7 @@
     "download": "Pakua",
     "edit": "Hariri",
     "editProfile": "Hariri wasifu",
+    "finish": "Maliza",
     "logIn": "Ingia",
     "looksGood": "Inaonekana vizuri, endelea",
     "more": "Zaidi",
@@ -145,10 +150,13 @@
     "review": "hakiki",
     "save": "hifadhi",
     "saveSettings": "hifadhi mipangilio",
+    "sort": "Panga",
     "update": "sasisha",
     "yesProceed": "Ndio,endelea",
     "showPreview": "Hakiki",
-    "hidePreview": "Ficha hakiki"
+    "hidePreview": "Ficha hakiki",
+    "expand": "Panua",
+    "collapse": "Punguza"
   },
   "field": {
     "comment": "Acha Maoni",
@@ -168,6 +176,8 @@
     "actions": "Vitendo",
     "created": "Imeundwa",
     "createdBy": "Imeundwa na",
+    "createdAt": "Imeundwa saa",
+    "updatedBy": "Imesasishwa na",
     "displayName": "Onyesha jina",
     "email": "Barua pepe",
     "instanceId": "Kitambulisho cha Mfano",
@@ -176,13 +186,16 @@
     "submitterName": "iliyowasilishwa na",
     "submissionDate": "imewasilishwa kwa",
     "time": "Muda",
-    "type": "Aina"
+    "type": "Aina",
+    "entities": "Jumla ya Mashirika",
+    "lastEntity": "huluki karibuni"
   },
   "plural": {
     "appUser": "mtumiaji wa programu | Watumiaji wa programu",
     "form": "Fomu | Fomu",
     "project": "Mradi | Miradi",
     "submission": "Uwasilishaji | Mawasilisho",
+    "user": "Mtumiaji | Watumiaji",
     "webUser": "mtumiaji wa wavuti | watumiaji wa mtandao"
   },
   "count": {
@@ -194,8 +207,12 @@
     "appUser": "mtumiaji wa programu",
     "appUsers": "watumiaji wa programu",
     "config": "usanidi wa seva",
+    "dataset": "Seti ya data",
+    "datasets": "Seti za data",
+    "entities": "vyombo",
     "form": "Fomu",
     "forms": "fomu",
+    "formAttachments": "Viambatisho vya Fomu",
     "project": "Mradi",
     "projects": "miradi",
     "publicLink": "Kiungo cha ufikiaji wa umma",
@@ -209,7 +226,8 @@
   },
   "alert": {
     "passwordTooShort": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10.",
-    "updateReviewState": "Kagua Jimbo limehifadhiwa!"
+    "updateReviewState": "Kagua Jimbo limehifadhiwa!",
+    "versionChange": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka tabia isiyotabirika."
   },
   "moreInfo": {
     "clickHere": {
@@ -230,12 +248,19 @@
     }
   },
   "submission": {
+    "missingAttachment": "Kiambatisho kinakosekana",
     "action": {
       "edit": "Hariri ({count})"
     },
     "editDisabled": "Huwezi kuhariri mawasilisho yaliyosimbwa kwa njia fiche",
     "binaryLinkTitle": "Faili iliwasilishwa. Bofya ili kupakua.",
-    "encryptionMessage": "Onyesho la kukagua data halipatikani kwa sababu ya usimbaji fiche"
+    "encryptionMessage": "Onyesho la kukagua data halipatikani kwa sababu ya usimbaji fiche",
+    "noSubmission": "(hakuna)",
+    "emptyTable": "Bado hakuna Mawasilisho."
+  },
+  "entity": {
+    "label": "Label",
+    "entityId": "Kitambulisho cha huluki"
   },
   "common": {
     "activity": "shughuli",
@@ -244,7 +269,13 @@
     "basicInfo": "Taarifa za Msingi",
     "currentDraft": "Rasimu Yako ya Sasa",
     "dangerZone": "Eneo la Hatari",
+    "data": "Data",
+    "docs": "Hati",
+    "emptyValue": "(tupu)",
+    "error": "Hitilafu",
     "filter": "chujio",
+    "forum": "Jukwaa",
+    "loading": "Inapakia...",
     "no": "Hapana",
     "noResults": "Hakuna majibu",
     "rightNow": "Sasaivi",
@@ -255,7 +286,12 @@
       "settings": "mipangilio",
       "overview": "muhtasari"
     },
-    "total": "jumla"
+    "total": "jumla",
+    "totalSubmissions": "Jumla ya Mawasilisho",
+    "punctuations": {
+      "comma": ","
+    },
+    "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}"
   },
   "mixin": {
     "request": {

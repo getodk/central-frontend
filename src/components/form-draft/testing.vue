@@ -185,14 +185,7 @@ export default {
       "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče.",
       "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
     ],
-    "collectProjectName": "[Návrh] {name}",
-    "entitiesTesting": {
-      "body": [
-        "Tento formulář může přidávat entity do datové sady.",
-        "V této předběžné verzi datových sad je nutné formulář publikovat, aby se aktualizace datové sady zobrazila. V některé z budoucích verzí aplikace Central budete moci testovat funkce Datasetu ve stavu návrhu.",
-        "Prozatím doporučujeme zveřejňovat formuláře související s datovou sadou a neschvalovat žádná podání (a tedy nevytvářet žádné nežádoucí entity), dokud si nebudete jisti, že je formulář připraven."
-      ]
-    }
+    "collectProjectName": "[Návrh] {name}"
   },
   "de": {
     "title": "Entwurfs-Test",
@@ -200,14 +193,7 @@ export default {
       "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
       "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
     ],
-    "collectProjectName": "[Entwurf] {name}",
-    "entitiesTesting": {
-      "body": [
-        "Dieses Formular kann Entitäten zu einem Datensatz hinzufügen.",
-        "In dieser Vorschauversion von Datasets müssen Sie Ihr Formular veröffentlichen, um das Dataset-Update anzuzeigen. In einer zukünftigen Version von Central können Sie die Dataset-Funktionalität in einem Entwurfsstatus testen.",
-        "Wir empfehlen vorerst, Ihre datensatzbezogenen Formulare zu veröffentlichen und keine Übermittlungen zu genehmigen (und daher keine unerwünschten Entitäten zu erstellen), bis Sie sicher sind, dass das Formular fertig ist."
-      ]
-    }
+    "collectProjectName": "[Entwurf] {name}"
   },
   "es": {
     "title": "Prueba de borrador",
@@ -215,14 +201,7 @@ export default {
       "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
       "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
     ],
-    "collectProjectName": "borrador {name}",
-    "entitiesTesting": {
-      "body": [
-        "Este formulario puede agregar entidades a un conjunto de datos.",
-        "En esta versión preliminar de conjuntos de datos, debe publicar su formulario para ver la actualización del conjunto de datos. En una versión futura de Central, podrá probar la funcionalidad del conjunto de datos en un estado Borrador.",
-        "Por ahora, recomendamos publicar sus formularios relacionados con conjuntos de datos y no aprobar ningún envío (y, por lo tanto, no crear entidades no deseadas) hasta que esté seguro de que el formulario está listo."
-      ]
-    }
+    "collectProjectName": "borrador {name}"
   },
   "fr": {
     "title": "Test de l'ébauche",
@@ -230,14 +209,7 @@ export default {
       "Vous pouvez utiliser le code de configuration à droite pour configurer un appareil mobile afin de télécharger cette ébauche. Vous pouvez aussi cliquer le bouton Nouveau ci-dessus pour créer une nouvelle soumission depuis votre navigateur.",
       "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées."
     ],
-    "collectProjectName": "[Brouillon] {name}",
-    "entitiesTesting": {
-      "body": [
-        "Ce formulaire peut ajouter des entités à un Dataset.",
-        "Dans cette version préliminaire de Datasets, vous devez publier votre formulaire pour voir le Dataset. Dans une prochaine version de Central, vous pourrez tester la fonctionnalité des Datasets avec une ébauche de formualire..",
-        "Pour le moment, nous vous recommandons de publier vos formulaires relatifs au Datasets, et de ne pas approuver de soumissions (et donc de ne pas créer d'entité non désirée) tant que vous n'êtes pas certain que le Formulaire est prêt."
-      ]
-    }
+    "collectProjectName": "[Brouillon] {name}"
   },
   "id": {
     "title": "Pengujian Draf",
@@ -255,10 +227,10 @@ export default {
     ],
     "collectProjectName": "[Draft] {name}",
     "entitiesTesting": {
+      "title": "Questo Formulario può creare Entità",
       "body": [
-        "Questo modulo può aggiungere Entità a un set di dati.",
-        "In questa versione di anteprima dei set di dati, è necessario pubblicare il formulario per visualizzare l'aggiornamento del set di dati. In una versione futura di Central, sarai in grado di testare la funzionalità del set di dati in uno stato Bozza.",
-        "Per ora, ti consigliamo di pubblicare i formulari relativi al set di dati e di non approvare alcun invio (e quindi di non creare entità indesiderate) finché non sei sicuro che il formulario sia pronto."
+        "Le entità vengono create solo per i formulari pubblicati. In una versione futura di Central, sarai in grado di testare la funzionalità dell'entità in uno stato bozza.",
+        "Per ora, ti consigliamo di provare la definizione del formulario nello stato Bozza per verificarne la logica. Prima della pubblicazione, puoi verificare che aggiorni tutte le proprietà desiderate."
       ]
     }
   },

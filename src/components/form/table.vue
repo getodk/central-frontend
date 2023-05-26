@@ -176,6 +176,9 @@ export default {
   },
   "sw": {
     "header": {
+      "closedForms": "Fomu Zilizofungwa",
+      "reviewStates": "Kagua Majimbo",
+      "latest": "karibuni",
       "idAndVersion": "Kitambulisho na Toleo"
     }
   }

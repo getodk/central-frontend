@@ -289,8 +289,13 @@ export default {
     }
   },
   "sw": {
+    "archived": "Miradi Iliyohifadhiwa",
     "action": {
       "create": "Mpya"
+    },
+    "emptyTable": {
+      "canCreate": "Ili kuanza, tengeneza Mradi. Miradi hukusaidia kupanga data yako kwa kupanga Fomu na Watumiaji husika.",
+      "cannotCreate": "Hakuna Miradi ya kuonyesha. Ikiwa unatarajia kuona Miradi hapa, zungumza na mtu aliyekupa akaunti hii. Huenda wakahitaji kupeana Jukumu la Mradi kwa Miradi unayopaswa kuona."
     },
     "alert": {
       "create": "Mradi wako mpya umeundwa."

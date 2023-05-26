@@ -187,6 +187,12 @@ export default {
     "encryptionTip": "Questo progetto utilizza la crittografia gestita.",
     "showMore": "Mostra {count} del totale",
     "showFewer": "Mostra meno {count} del totale"
+  },
+  "sw": {
+    "encrypted": "Imesimbwa kwa njia fiche",
+    "encryptionTip": "Mradi huu unatumia usimbaji fiche unaodhibitiwa.",
+    "showMore": "Onyesha jumla ya {count}",
+    "showFewer": "Onyesha idadi ndogo ya jumla ya {count}"
   }
 }
 </i18n>

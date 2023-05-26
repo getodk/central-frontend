@@ -104,6 +104,9 @@ export default {
   },
   "it": {
     "formsConsumeData": "Il formulario consuma dati da questo set di dati | I formulari consumano dati da questo set di dati | I formulari consumano dati da questo set di dati"
+  },
+  "sw": {
+    "formsConsumeData": "Fomu hutumia data kutoka kwa Hifadhidata hii | Fomu hutumia data kutoka kwa Hifadhidata hii"
   }
 }
 </i18n>

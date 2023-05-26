@@ -594,8 +594,10 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "exportOptions": "Chaguzi za export",
     "field": {
       "splitSelectMultiples": "Gawanya chaguo za \"chagua nyingi\" kwenye safu wima",
-      "removeGroupNames": "Ondoa majina ya kikundi"
+      "removeGroupNames": "Ondoa majina ya kikundi",
+      "deletedFields": "Jumuisha sehemu zisizo katika Fomu iliyochapishwa"
     },
+    "deletedFieldsHelp": "Tumia chaguo hili ikiwa unahitaji kuona sehemu zilizorejelewa katika matoleo ya awali ya Fomu.",
     "noSelectMultiple": "Fomu hii haina sehemu nyingi zilizochaguliwa",
     "encryptedForm": "Fomu Zilizosimbwa kwa njia fiche haziwezi kuchakatwa kwa njia hii",
     "deletedFieldsDisabledForDraft": "Rasimu za Fomu haziwezi kuchakatwa kwa njia hii.",
@@ -607,12 +609,14 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "action": {
       "download": {
         "mainTable": "Jedwali kuu la data (hakuna marudio)",
-        "allTables": "Jedwali zote za data"
+        "allTables": "Jedwali zote za data",
+        "withAttachments": "Data na Viambatisho vyote"
       }
     },
     "alert": {
       "unavailable": "Upakuaji wa data bado haupatikani. Tafadhali jaribu tena baada ya muda mfupi",
-      "submit": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena."
+      "submit": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena.",
+      "parseError": "Hitilafu fulani imetokea wakati wa kuomba data yako."
     }
   }
 }

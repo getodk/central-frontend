@@ -610,6 +610,10 @@
       "string": "プロジェクト",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "property": {
+      "string": "",
+      "developer_comment": "This is a data property of an Entity."
+    },
     "publicLink": {
       "string": "一般公開リンク",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -646,6 +650,9 @@
   "alert": {
     "passwordTooShort": {
       "string": "10文字以上の長さのパスワードを入力してください。"
+    },
+    "updateEntity": {
+      "string": ""
     },
     "updateReviewState": {
       "string": "レビュー・ステータス保存完了！"
@@ -729,9 +736,12 @@
       "string": "",
       "developer_comment": "This is the label of an Entity."
     },
+    "entityLabel": {
+      "string": ""
+    },
     "entityId": {
       "string": "",
-      "developer_comment": "This is the UUID or 'name' of an Entity."
+      "developer_comment": "This is the UUID of an Entity."
     }
   },
   "common": {
@@ -826,10 +836,6 @@
       "comma": {
         "string": ""
       }
-    },
-    "datasetsPreview": {
-      "string": "",
-      "developer_comment": "This is a title shown above a section of the page."
     },
     "propertiesCount": {
       "string": "{count, plural, other {}}",
@@ -1261,17 +1267,21 @@
         },
         "1": {
           "string": "",
-          "developer_comment": "{icon1} is an icon that displays the number 1. It refers to the first step in an image that depicts this workflow."
+          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
         },
         "2": {
           "string": "",
-          "developer_comment": "{icon2} and {icon3} are icons that display the numbers 2 and 3. They refer to the second and third steps in an image that depicts this workflow."
+          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
         },
         "3": {
           "string": "",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that depicts this workflow."
+          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
         },
         "4": {
+          "string": "",
+          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
+        },
+        "5": {
           "string": ""
         }
       },
@@ -1316,11 +1326,81 @@
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
+    "DatasetPendingSubmissions": {
+      "title": {
+        "string": ""
+      },
+      "action": {
+        "changeSetting": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "explanation": {
+        "userAction": {
+          "string": ""
+        },
+        "implication": {
+          "full": {
+            "string": "{count, plural, other {}}",
+            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
+          },
+          "records": {
+            "string": "{count, plural, other {}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nOnce this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected."
+          }
+        }
+      },
+      "dontConvert": {
+        "label": {
+          "string": ""
+        },
+        "description": {
+          "string": "{count, plural, other {}}"
+        }
+      },
+      "convert": {
+        "label": {
+          "string": ""
+        },
+        "description": {
+          "string": "{count, plural, other {}}"
+        }
+      }
+    },
     "DatasetRow": {
       "action": {
         "download": {
           "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetSettings": {
+      "entityWorkflow": {
+        "string": "",
+        "developer_comment": "This is a title shown above a section of the page."
+      },
+      "onReceipt": {
+        "label": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        },
+        "successMessage": {
+          "string": ""
+        }
+      },
+      "onApproval": {
+        "label": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        },
+        "successMessage": {
+          "string": ""
         }
       }
     },
@@ -1375,12 +1455,51 @@
       "creatingSubmission": {
         "string": "",
         "developer_comment": "This is shown above the Submission that created the Entity."
+      },
+      "submissionDeleted": {
+        "string": ""
       }
     },
     "EntityData": {
       "title": {
         "string": "",
         "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "EntityFeedEntry": {
+      "title": {
+        "submission": {
+          "create": {
+            "notDeleted": {
+              "string": "",
+              "developer_comment": "This text is shown in a list of events. {submitter} is the name of a user, a team of users, or a Public Access Link."
+            },
+            "deleted": {
+              "full": {
+                "string": "",
+                "developer_comment": "This text is shown in a list of events. {name} is the name of a user, a team of users, or a Public Access Link.\n\n{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+              },
+              "deletedSubmission": {
+                "string": "",
+                "developer_comment": "This text is shown in a list of events. {id} is the Submission instance ID.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\n{deletedSubmission} uploaded by {name}"
+              }
+            }
+          }
+        },
+        "entity": {
+          "create": {
+            "api": {
+              "string": "",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
+            }
+          },
+          "update_version": {
+            "api": {
+              "string": "",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            }
+          }
+        }
       }
     },
     "EntityList": {
@@ -1406,6 +1525,22 @@
         "back": {
           "string": "",
           "developer_comment": "This is shown at the top of the page. The user can click it to go back."
+        }
+      }
+    },
+    "EntityUpdate": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "header": {
+        "currentValue": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        },
+        "updatedValue": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },
@@ -1669,6 +1804,9 @@
         }
       },
       "datasetsPreview": {
+        "title": {
+          "string": ""
+        },
         "body": {
           "0": {
             "string": ""
@@ -2141,14 +2279,14 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
+        "title": {
+          "string": ""
+        },
         "body": {
           "0": {
             "string": ""
           },
           "1": {
-            "string": ""
-          },
-          "2": {
             "string": ""
           }
         }

@@ -179,6 +179,10 @@ export default {
   "it": {
     "new": "nuovo!",
     "addedByThisDraft": "Aggiunto da questa bozza"
+  },
+  "sw": {
+    "new": "mpya!",
+    "addedByThisDraft": "Imeongezwa na Rasimu hii"
   }
 }
 </i18n>

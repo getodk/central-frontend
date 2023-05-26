@@ -559,7 +559,15 @@ export default {
           }
         ]
       },
-      {},
+      {
+        "title": "Pakia Viambatisho vya Fomu",
+        "body": [
+          {
+            "full": "Usanifu wa Fomu yako unarejelea faili ambazo zinahitajika ili kuwasilisha Fomu yako. Unaweza kupakia nakala mpya au zilizosasishwa za hizi kwa usambazaji chini ya kichupo cha {formAttachments}.",
+            "formAttachments": "Viambatisho vya fomu."
+          }
+        ]
+      },
       {
         "title": "Jaribu Fomu kwa kuunda Wasilisho",
         "body": [

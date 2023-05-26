@@ -617,6 +617,7 @@ export default {
       "link": "Set di dati collegato correttamente."
     },
     "entitiesTesting": {
+      "title": "Testando i set di dati",
       "body": [
         "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi dei set di dati. Per impostazione predefinita, questi sono collegati ai set di dati. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti ai set di dati dopo aver verificato la logica del formulario."
       ]
@@ -641,6 +642,10 @@ export default {
     "action": {
       "upload": "Pakia faili"
     },
+    "heading": [
+      "Kulingana na Fomu uliyopakia, Viambatisho vya Fomu vifuatavyo vinatarajiwa. Unaweza kuona ni zipi zimetolewa au bado hazipo.",
+      "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa"
+    ],
     "header": {
       "uploaded": "Imepakiwa"
     },
@@ -649,7 +654,13 @@ export default {
       "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
     },
     "alert": {
-      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
+      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa.",
+      "link": "Seti ya data imeunganishwa"
+    },
+    "entitiesTesting": {
+      "body": [
+        "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Seti ya Data. Kwa chaguo-msingi, hizo zimeunganishwa na Seti za Data. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe na Seti za Data pindi tu utakapothibitisha mantiki ya fomu yako."
+      ]
     }
   }
 }

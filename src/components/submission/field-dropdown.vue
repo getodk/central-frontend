@@ -225,7 +225,8 @@ const placeholder = (counts) => t('placeholder', counts);
         "all": "zote",
         "none": "hakuna"
       }
-    }
+    },
+    "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
   }
 }
 </i18n>

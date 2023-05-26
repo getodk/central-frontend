@@ -267,7 +267,8 @@ export default {
   "sw": {
     "draft": {
       "none": {
-        "title": "Hakuna Rasimu ya Sasa"
+        "title": "Hakuna Rasimu ya Sasa",
+        "body": "Kwa sasa hakuna Rasimu ya toleo la Fomu hii. Ikiwa ungependa kufanya mabadiliko kwenye Fomu au Viambatisho vyake, anza kwa kuunda Rasimu ukitumia kitufe kilicho hapo juu."
       },
       "any": {
         "versionCaption": {
