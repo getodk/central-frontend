@@ -49,7 +49,7 @@ describe('SubmissionTable', () => {
       const component = mountComponent({
         props: { draft: false }
       });
-      const table = component.get('#submission-table-metadata');
+      const table = component.get('.table-freeze-frozen');
       headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
     });
 
@@ -59,7 +59,7 @@ describe('SubmissionTable', () => {
       const component = mountComponent({
         props: { draft: true }
       });
-      const table = component.get('#submission-table-metadata');
+      const table = component.get('.table-freeze-frozen');
       headers(table).should.eql(['', 'Submitted at']);
     });
   });
@@ -71,7 +71,7 @@ describe('SubmissionTable', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1);
-      const table = mountComponent().get('#submission-table-data');
+      const table = mountComponent().get('.table-freeze-scrolling');
       headers(table).should.eql(['s1', 's2', 'Instance ID']);
     });
 
@@ -83,7 +83,7 @@ describe('SubmissionTable', () => {
       testData.extendedForms.createPast(1, { fields, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent();
-      const table = component.get('#submission-table-data');
+      const table = component.get('.table-freeze-scrolling');
       headers(table).should.eql(['g-s', 'Instance ID']);
     });
   });

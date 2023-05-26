@@ -10,10 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze ref="table" :data="chunkyOData" key-prop="__id"
-    :frozen-only="fields == null"
-    ids="submission-table-metadata submission-table-data" divider
-    @action="review">
+  <table-freeze id="submission-table" ref="table" :data="chunkyOData"
+    key-prop="__id" :frozen-only="fields == null" divider @action="review">
     <template #head-frozen>
       <th><!-- Row number --></th>
       <th v-if="!draft">{{ $t('header.submitterName') }}</th>
@@ -54,7 +52,7 @@ import SubmissionMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table-freeze.vue';
 
 import useChunkyArray from '../../composables/chunky-array';
-import { rowsChanged } from '../../composables/row-changed';
+import { markRowsChanged } from '../../composables/row-changed';
 import { useRequestData } from '../../request-data';
 
 defineProps({
@@ -83,14 +81,14 @@ const review = ({ target, data }) => {
   if (target.classList.contains('review-button')) emit('review', data);
 };
 const table = ref(null);
-const afterReview = (index) => { rowsChanged(table.value.getRowPair(index)); };
+const afterReview = (index) => { markRowsChanged(table.value.getRowPair(index)); };
 defineExpose({ afterReview });
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#submission-table-data {
+#submission-table .table-freeze-scrolling {
   th, td {
     @include text-overflow-ellipsis;
     max-width: 250px;

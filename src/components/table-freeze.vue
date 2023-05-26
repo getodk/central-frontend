@@ -11,8 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="table-freeze">
-    <table :id="idsSplit[0]" class="table table-freeze-frozen"
-      :class="{ divider }">
+    <table class="table table-freeze-frozen" :class="{ divider }">
       <thead>
         <tr>
           <slot name="head-frozen"></slot>
@@ -29,7 +28,7 @@ except according to the terms contained in the LICENSE file.
       </tbody>
     </table>
     <div v-if="!frozenOnly" class="table-freeze-scrolling-container">
-      <table :id="idsSplit[1]" class="table table-freeze-scrolling">
+      <table class="table table-freeze-scrolling">
         <thead>
           <tr>
             <slot name="head-scrolling"></slot>
@@ -49,7 +48,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, ref, shallowRef, watch } from 'vue';
+import { ref, shallowRef, watch } from 'vue';
 
 // We may render many rows, so this component makes use of event delegation and
 // other optimizations.
@@ -61,13 +60,9 @@ const props = defineProps({
     required: true
   },
   frozenOnly: Boolean,
-  ids: String,
   divider: Boolean
 });
 const emit = defineEmits(['action']);
-
-const idsSplit = computed(() =>
-  (props.ids != null ? props.ids.split(' ') : []));
 
 /*
 Actions are shown for a row if the cursor is over the row or if one of the

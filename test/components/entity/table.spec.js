@@ -35,7 +35,7 @@ describe('EntityTable', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedEntities.createPast(1);
       const component = mountComponent();
-      const table = component.get('#entity-table-metadata');
+      const table = component.get('.table-freeze-frozen');
       headers(table).should.eql(['', 'Created by', 'Created at', 'Last Updated / Actions']);
     });
   });
@@ -48,7 +48,7 @@ describe('EntityTable', () => {
       });
       testData.extendedEntities.createPast(1);
 
-      const table = mountComponent().get('#entity-table-data');
+      const table = mountComponent().get('.table-freeze-scrolling');
       headers(table).should.eql(['p1', 'p2', 'Label', 'Entity ID']);
     });
   });

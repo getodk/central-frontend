@@ -19,11 +19,13 @@ export const useRowChanged = (tr) => {
   });
 };
 
-export const rowsChanged = (trs) => {
+export const markRowsChanged = (trs) => {
   for (const tr of trs) tr.dataset.useRowChanged = 'true';
+  // Toggling data-use-row-changed from 'true' to 'false' will trigger a CSS
+  // transition: see app.scss. The CSS specifies the duration of the transition.
   setTimeout(() => {
     for (const tr of trs) tr.dataset.useRowChanged = 'false';
   });
 };
 
-export const rowChanged = (tr) => { rowsChanged([tr]); };
+export const markRowChanged = (tr) => { markRowsChanged([tr]); };

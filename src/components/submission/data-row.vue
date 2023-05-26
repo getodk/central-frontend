@@ -176,7 +176,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#submission-table-data {
+#submission-table {
   .int-field, .decimal-field { text-align: right; }
   .geopoint-field { max-width: 500px; }
 

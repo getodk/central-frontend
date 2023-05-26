@@ -1,4 +1,4 @@
-import { rowChanged, rowsChanged } from '../../src/composables/row-changed';
+import { markRowChanged, markRowsChanged } from '../../src/composables/row-changed';
 
 import RowChanged from '../util/components/row-changed.vue';
 
@@ -12,7 +12,7 @@ describe('useRowChanged()', () => {
     });
     const row = table.get('tr').element;
     row.dataset.useRowChanged.should.equal('false');
-    rowChanged(row);
+    markRowChanged(row);
     row.dataset.useRowChanged.should.equal('true');
     await wait();
     row.dataset.useRowChanged.should.equal('false');
@@ -23,7 +23,7 @@ describe('useRowChanged()', () => {
       props: { rowCount: 2 }
     });
     const rows = table.findAll('tr').map(wrapper => wrapper.element);
-    rowsChanged(rows);
+    markRowsChanged(rows);
     rows[0].dataset.useRowChanged.should.equal('true');
     rows[1].dataset.useRowChanged.should.equal('true');
     await wait();

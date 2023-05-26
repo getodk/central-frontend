@@ -10,9 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze ref="table" :data="odataEntities.value" key-prop="__id"
-    :frozen-only="properties == null"
-    ids="entity-table-metadata entity-table-data" divider @action="update">
+  <table-freeze id="entity-table" ref="table" :data="odataEntities.value"
+    key-prop="__id" :frozen-only="properties == null" divider @action="update">
     <template #head-frozen>
       <th><!-- Row number --></th>
       <th>{{ $t('header.createdBy') }}</th>
@@ -21,7 +20,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #head-scrolling>
       <template v-if="properties != null">
-        <th v-for="property of properties" :key="property.id">
+        <th v-for="property of properties" :key="property.name">
           <span v-tooltip.text>{{ property.name }}</span>
         </th>
       </template>
@@ -52,7 +51,7 @@ import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table-freeze.vue';
 
-import { rowsChanged } from '../../composables/row-changed';
+import { markRowsChanged } from '../../composables/row-changed';
 import { useRequestData } from '../../request-data';
 
 defineProps({
@@ -69,14 +68,14 @@ const update = ({ target, index }) => {
   if (target.classList.contains('update-button')) emit('update', index);
 };
 const table = ref(null);
-const afterUpdate = (index) => { rowsChanged(table.value.getRowPair(index)); };
+const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
 defineExpose({ afterUpdate });
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#entity-table-data {
+#entity-table .table-freeze-scrolling {
   th, td {
     @include text-overflow-ellipsis;
     max-width: 250px;

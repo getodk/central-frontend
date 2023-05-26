@@ -189,7 +189,7 @@ describe('EntityList', () => {
 
       it('updates the EntityDataRow', async () => {
         const component = await submit();
-        const tds = component.findAll('#entity-table-data tr:nth-child(2) td');
+        const tds = component.findAll('.entity-data-row:nth-child(2) td');
         tds.map(td => td.text()).should.eql(['3', '4', 'Updated Entity', 'e2']);
       });
 
