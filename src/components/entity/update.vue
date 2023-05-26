@@ -59,7 +59,7 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 
 import EntityUpdateRow from './update/row.vue';
 import Modal from '../modal.vue';
@@ -108,12 +108,18 @@ const { resize: resizeLabelCells } = useColumnGrow(labelCellHeader, 1.5);
 const labelRow = ref(null);
 const propertyRows = ref([]);
 const afterShown = () => {
-  resizeLabelCells();
-
-  labelRow.value.textarea.resize();
-  for (const row of propertyRows.value) row.textarea.resize();
-
   labelRow.value.textarea.focus();
+
+  // Resize elements. We wait a tick in case props.entity was changed at the
+  // same time as props.state. If a change to props.entity results in changes to
+  // the DOM, we need those changes to the DOM to be made before resizing
+  // elements based on content in the DOM.
+  nextTick(() => {
+    resizeLabelCells();
+
+    labelRow.value.textarea.resize();
+    for (const row of propertyRows.value) row.textarea.resize();
+  });
 };
 
 const noEntity = {

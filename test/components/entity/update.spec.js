@@ -83,6 +83,7 @@ describe('EntityUpdate', () => {
     const textareas = modal.findAll('textarea');
     textareas.map(({ element }) => element.style.height).should.eql(['', '']);
     await modal.setProps({ state: true });
+    await modal.vm.$nextTick();
     const heights = textareas.map(({ element }) => element.style.height);
     heights[0].should.not.equal('');
     heights[1].should.not.equal('');

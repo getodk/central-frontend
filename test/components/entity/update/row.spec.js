@@ -137,6 +137,7 @@ describe('EntityUpdateRow', () => {
       attachTo: document.body
     });
     await modal.vm.$nextTick();
+    await modal.vm.$nextTick();
     const minHeights = modal.findAllComponents(TextareaAutosize)
       .map(textarea => textarea.props().minHeight);
     should.exist(minHeights[0]);
