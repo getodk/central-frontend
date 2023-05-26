@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr ref="el" class="entity-metadata-row">
+  <tr class="entity-metadata-row">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
@@ -51,12 +51,11 @@ export default {
 };
 </script>
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, inject } from 'vue';
 
 import DateTime from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
-import { useRowChanged } from '../../composables/row-changed';
 
 const props = defineProps({
   entity: {
@@ -71,9 +70,6 @@ const props = defineProps({
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
-
-const el = ref(null);
-useRowChanged(el);
 
 const { i18n } = inject('container');
 const updateLabel = computed(() => i18n.t('submission.action.edit', {

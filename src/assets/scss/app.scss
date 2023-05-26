@@ -809,11 +809,7 @@ becomes more complicated.
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// useRowChanged()
+// markRowsChanged()
 
-[data-use-row-changed="false"] { transition: background-color 0.6s 6s; }
-
-[data-use-row-changed="true"] {
-  background-color: #faf1cd;
-  transition: none;
-}
+[data-mark-rows-changed="false"] { transition: background-color 0.6s 6s; }
+[data-mark-rows-changed="true"] { background-color: #faf1cd; }

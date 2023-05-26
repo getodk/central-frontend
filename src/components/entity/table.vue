@@ -51,7 +51,7 @@ import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table-freeze.vue';
 
-import { markRowsChanged } from '../../composables/row-changed';
+import { markRowsChanged } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 defineProps({

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr ref="el" class="submission-metadata-row">
+  <tr class="submission-metadata-row">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="!draft" class="submitter-name">
       <span v-tooltip.text>{{ submission.__system.submitterName }}</span>
@@ -57,14 +57,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { ref } from 'vue';
-
 import DateTime from '../date-time.vue';
 
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
-import { useRowChanged } from '../../composables/row-changed';
 
 export default {
   name: 'SubmissionMetadataRow',
@@ -92,10 +89,6 @@ export default {
   setup() {
     const { reviewStateIcon } = useReviewState();
     const { submissionPath } = useRoutes();
-
-    const el = ref(null);
-    useRowChanged(el);
-
     return { reviewStateIcon, submissionPath };
   },
   computed: {

@@ -1,4 +1,7 @@
-import { px, requiredLabel, styleBox } from '../../src/util/dom';
+import { markRowChanged, markRowsChanged, px, requiredLabel, styleBox } from '../../src/util/dom';
+
+import { mount } from '../util/lifecycle';
+import { wait } from '../util/util';
 
 describe('util/dom', () => {
   describe('px()', () => {
@@ -31,6 +34,41 @@ describe('util/dom', () => {
 
     it('does not append * if required is false', () => {
       requiredLabel('My Label', false).should.equal('My Label');
+    });
+  });
+
+  describe('markRowChanged(), markRowsChanged()', () => {
+    it('toggles data-use-row-changed for a single row', async () => {
+      const table = mount({
+        template: `<table>
+          <tbody>
+            <tr><td>foo</td></tr>
+          </tbody>
+        </table>`
+      });
+      const row = table.get('tr').element;
+      markRowChanged(row);
+      row.dataset.useRowChanged.should.equal('true');
+      await wait();
+      row.dataset.useRowChanged.should.equal('false');
+    });
+
+    it('toggles data-mark-rows-changed for multiple rows', async () => {
+      const table = mount({
+        template: `<table>
+          <tbody>
+            <tr><td>foo</td></tr>
+            <tr><td>bar</td></tr>
+          </tbody>
+        </table>`
+      });
+      const rows = table.findAll('tr').map(wrapper => wrapper.element);
+      markRowsChanged(rows);
+      rows[0].dataset.useRowChanged.should.equal('true');
+      rows[1].dataset.useRowChanged.should.equal('true');
+      await wait();
+      rows[0].dataset.useRowChanged.should.equal('false');
+      rows[1].dataset.useRowChanged.should.equal('false');
     });
   });
 });
