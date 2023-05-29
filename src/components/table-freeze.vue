@@ -112,7 +112,7 @@ following cases in mind:
 watch(() => props.data, removeHoverClass);
 
 const actionClick = (event) => {
-  const action = event.target.closest('.btn-group :is(button, a)');
+  const action = event.target.closest('.btn-group .btn');
   if (action != null) {
     const index = action.closest('tr').rowIndex - 1;
     emit('action', { target: action, data: props.data[index], index });

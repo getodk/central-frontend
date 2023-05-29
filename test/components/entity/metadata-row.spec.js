@@ -51,7 +51,7 @@ describe('EntityMetadataRow', () => {
     mountComponent().getComponent(DateTime).props().iso.should.equal(createdAt);
   });
 
-  describe('latest updated', () => {
+  describe('last updated date', () => {
     it('shows the date', () => {
       const { updatedAt } = testData.extendedEntities.createPast(1)
         .update(-1, { updates: 1 });
@@ -62,7 +62,7 @@ describe('EntityMetadataRow', () => {
       dateTimes[1].props().iso.should.equal(updatedAt);
     });
 
-    it('does not show anything if there has not been an update', () => {
+    it('does not show a date if there has not been an update', () => {
       testData.extendedEntities.createPast(1);
       mountComponent().get('.updated-at').text().should.equal('');
     });
@@ -78,6 +78,13 @@ describe('EntityMetadataRow', () => {
       testData.extendedEntities.createPast(1);
       mountComponent().get('.updates').text().should.equal('');
     });
+  });
+
+  it('renders the edit button correctly', async () => {
+    testData.extendedEntities.createPast(1).update(-1, { updates: 1000 });
+    const button = mountComponent({ canUpdate: true }).get('.update-button');
+    button.attributes('aria-label').should.equal('Edit (1,000)');
+    await button.should.have.tooltip('Edit (1,000)');
   });
 
   it('renders the More button correctly', async () => {

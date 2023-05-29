@@ -141,7 +141,10 @@ export default {
   }
 
   .state-and-actions { min-width: 205px; }
-  .col-content { display: flex; }
+  .col-content {
+    align-items: flex-start;
+    display: flex;
+  }
   .state {
     margin-right: 15px;
 
@@ -167,6 +170,7 @@ export default {
   .col-content .icon-angle-right {
     color: $color-accent-primary;
     font-size: 20px;
+    margin-top: -1px;
   }
 }
 </style>

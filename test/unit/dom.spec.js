@@ -38,7 +38,7 @@ describe('util/dom', () => {
   });
 
   describe('markRowChanged(), markRowsChanged()', () => {
-    it('toggles data-use-row-changed for a single row', async () => {
+    it('toggles data-mark-rows-changed for a single row', async () => {
       const table = mount({
         template: `<table>
           <tbody>
@@ -48,9 +48,9 @@ describe('util/dom', () => {
       });
       const row = table.get('tr').element;
       markRowChanged(row);
-      row.dataset.useRowChanged.should.equal('true');
+      row.dataset.markRowsChanged.should.equal('true');
       await wait();
-      row.dataset.useRowChanged.should.equal('false');
+      row.dataset.markRowsChanged.should.equal('false');
     });
 
     it('toggles data-mark-rows-changed for multiple rows', async () => {
@@ -62,13 +62,13 @@ describe('util/dom', () => {
           </tbody>
         </table>`
       });
-      const rows = table.findAll('tr').map(wrapper => wrapper.element);
+      const rows = table.findAll('tr').map(row => row.element);
       markRowsChanged(rows);
-      rows[0].dataset.useRowChanged.should.equal('true');
-      rows[1].dataset.useRowChanged.should.equal('true');
+      rows[0].dataset.markRowsChanged.should.equal('true');
+      rows[1].dataset.markRowsChanged.should.equal('true');
       await wait();
-      rows[0].dataset.useRowChanged.should.equal('false');
-      rows[1].dataset.useRowChanged.should.equal('false');
+      rows[0].dataset.markRowsChanged.should.equal('false');
+      rows[1].dataset.markRowsChanged.should.equal('false');
     });
   });
 });

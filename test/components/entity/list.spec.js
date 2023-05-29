@@ -121,7 +121,7 @@ describe('EntityList', () => {
       });
     });
 
-    it('does not show the modal during a refresh', () => {
+    it('does not show the modal during a refresh of the table', () => {
       testData.extendedEntities.createPast(1);
       return load('/projects/1/datasets/trees/entities', { root: false })
         .complete()
@@ -170,7 +170,7 @@ describe('EntityList', () => {
               currentVersion: {
                 ...currentVersion,
                 label: 'Updated Entity',
-                data: { height: '3', 'circumference.cm': 4 }
+                data: { height: '3', 'circumference.cm': '4' }
               }
             });
             return testData.standardEntities.get(1);

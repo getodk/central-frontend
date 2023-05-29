@@ -97,7 +97,10 @@ const { entityPath } = useRoutes();
     max-width: 250px;
   }
 
-  .col-content { display: flex; }
+  .col-content {
+    align-items: flex-start;
+    display: flex;
+  }
   .updated-at {
     margin-right: 21px;
 
@@ -113,6 +116,7 @@ const { entityPath } = useRoutes();
   .col-content .icon-angle-right {
     color: $color-accent-primary;
     font-size: 20px;
+    margin-top: -1px;
   }
 }
 </style>

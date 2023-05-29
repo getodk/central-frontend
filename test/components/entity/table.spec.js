@@ -6,6 +6,7 @@ import useProject from '../../../src/request-data/project';
 import useEntities from '../../../src/request-data/entities';
 
 import testData from '../../data';
+import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
@@ -19,7 +20,7 @@ const mountComponent = (props = undefined) => mount(EntityTable, {
     ...props
   },
   container: {
-    router: mockRouter('/projects/1/datasets/trees/entities/e'),
+    router: mockRouter('/projects/1/datasets/trees/entities'),
     requestData: testRequestData([useProject, useEntities], {
       project: testData.extendedProjects.last(),
       odataEntities: testData.entityOData()
@@ -68,5 +69,24 @@ describe('EntityTable', () => {
     const component = mountComponent();
     const rows = component.findAllComponents(EntityMetadataRow);
     rows.map(row => row.props().rowNumber).should.eql([3, 2, 1]);
+  });
+
+  describe('visibility of edit buttons', () => {
+    it('renders the button for a sitewide administrator', () => {
+      mockLogin();
+      testData.extendedEntities.createPast(1);
+      const row = mountComponent().getComponent(EntityMetadataRow);
+      row.props().canUpdate.should.be.true();
+      row.find('.update-button').exists().should.be.true();
+    });
+
+    it('does not render the button for a project viewer', () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedEntities.createPast(1);
+      const row = mountComponent().getComponent(EntityMetadataRow);
+      row.props().canUpdate.should.be.false();
+      row.find('.update-button').exists().should.be.false();
+    });
   });
 });
