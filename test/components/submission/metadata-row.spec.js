@@ -1,9 +1,7 @@
-import sinon from 'sinon';
 import { RouterLinkStub } from '@vue/test-utils';
 
 import DateTime from '../../../src/components/date-time.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
-import SubmissionTable from '../../../src/components/submission/table.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
 import testData from '../../data';
@@ -133,7 +131,7 @@ describe('SubmissionMetadataRow', () => {
 
     it('does not show the count if there has not been an edit', () => {
       testData.extendedSubmissions.createPast(1, { edits: 0 });
-      mountComponent().find('.edits').exists().should.be.false();
+      mountComponent().get('.edits').text().should.equal('');
     });
   });
 
@@ -189,18 +187,6 @@ describe('SubmissionMetadataRow', () => {
         // Check that other properties were copied correctly.
         submission.__id.should.equal('foo');
         submission.__system.submitterId.should.equal('1');
-      });
-
-      it('calls SubmissionTable.methods.afterReview()', () => {
-        const afterReview = sinon.fake();
-        return submit()
-          .beforeAnyResponse(component => {
-            const table = component.getComponent(SubmissionTable);
-            sinon.replace(table.vm, 'afterReview', afterReview);
-          })
-          .afterResponse(() => {
-            afterReview.called.should.be.true();
-          });
       });
     });
   });

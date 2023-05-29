@@ -11,16 +11,37 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="entity-metadata-row">
-    <td class="row-number">
-      <router-link v-slot="{ href }"
-        :to="entityPath(projectId, datasetName, entity.__id)" custom>
-        <a :href="href" target="_blank">{{ $n(rowNumber, 'noGrouping') }}</a>
-      </router-link>
-    </td>
+    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
     </td>
     <td><date-time :iso="entity.__system.createdAt"/></td>
+    <td>
+      <div class="col-content">
+        <date-time :iso="entity.__system.updatedAt" class="updated-at"/>
+        <span class="updates">
+          <template v-if="entity.__system.updates !== 0">
+            <span class="icon-pencil"></span>
+            <span>{{ $n(entity.__system.updates, 'default') }}</span>
+          </template>
+        </span>
+        <span class="icon-angle-right"></span>
+      </div>
+      <div class="btn-group">
+        <button v-if="canUpdate" type="button"
+          class="update-button btn btn-default" :aria-label="updateLabel"
+          v-tooltip.aria-label>
+          <span class="icon-pencil"></span>
+        </button>
+        <router-link v-slot="{ href }"
+          :to="entityPath(projectId, datasetName, entity.__id)" custom>
+          <a class="more-button btn btn-default" :href="href" target="_blank">
+            <span>{{ $t('action.more') }}</span>
+            <span class="icon-angle-right"></span>
+          </a>
+        </router-link>
+      </div>
+    </td>
   </tr>
 </template>
 
@@ -30,13 +51,13 @@ export default {
 };
 </script>
 <script setup>
-import { inject } from 'vue';
+import { computed, inject } from 'vue';
 
 import DateTime from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
 
-defineProps({
+const props = defineProps({
   entity: {
     type: Object,
     required: true
@@ -44,10 +65,16 @@ defineProps({
   rowNumber: {
     type: Number,
     required: true
-  }
+  },
+  canUpdate: Boolean
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
+
+const { i18n } = inject('container');
+const updateLabel = computed(() => i18n.t('submission.action.edit', {
+  count: i18n.n(props.entity.__system.updates, 'default')
+}));
 
 const { entityPath } = useRoutes();
 </script>
@@ -68,6 +95,28 @@ const { entityPath } = useRoutes();
   .creator-name {
     @include text-overflow-ellipsis;
     max-width: 250px;
+  }
+
+  .col-content {
+    align-items: flex-start;
+    display: flex;
+  }
+  .updated-at {
+    margin-right: 21px;
+
+    &:empty { width: 75px; }
+  }
+  .updates {
+    color: #777;
+    margin-left: auto;
+    width: 41px;
+
+    .icon-pencil { margin-right: 5px; }
+  }
+  .col-content .icon-angle-right {
+    color: $color-accent-primary;
+    font-size: 20px;
+    margin-top: -1px;
   }
 }
 </style>

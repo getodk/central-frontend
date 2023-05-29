@@ -1531,6 +1531,14 @@
         }
       }
     },
+    "EntityTable": {
+      "header": {
+        "updatedAtAndActions": {
+          "string": "Last Updated / Actions",
+          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
+        }
+      }
+    },
     "EntityUpdate": {
       "title": {
         "string": "Update {label}",

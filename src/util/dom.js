@@ -48,3 +48,13 @@ export const requiredLabel = (text, required) => {
   const star = required ? ' *' : '';
   return `${text}${star}`;
 };
+
+export const markRowsChanged = (trs) => {
+  for (const tr of trs) tr.dataset.markRowsChanged = 'true';
+  // Toggling data-mark-rows-changed from 'true' to 'false' will trigger a CSS
+  // transition: see app.scss. The CSS specifies the duration of the transition.
+  setTimeout(() => {
+    for (const tr of trs) tr.dataset.markRowsChanged = 'false';
+  });
+};
+export const markRowChanged = (tr) => { markRowsChanged([tr]); };

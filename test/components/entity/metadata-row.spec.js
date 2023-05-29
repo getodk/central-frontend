@@ -3,6 +3,8 @@ import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 
 import testData from '../../data';
+import { load } from '../../util/http';
+import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
@@ -18,7 +20,7 @@ const mountComponent = (props = undefined) => {
     },
     props: mergedProps,
     container: {
-      router: mockRouter('/projects/1/datasets/trees/entities/e')
+      router: mockRouter('/projects/1/datasets/trees/entities')
     }
   });
 };
@@ -47,5 +49,54 @@ describe('EntityMetadataRow', () => {
     testData.extendedDatasets.createPast(1);
     const { createdAt } = testData.extendedEntities.createPast(1).last();
     mountComponent().getComponent(DateTime).props().iso.should.equal(createdAt);
+  });
+
+  describe('last updated date', () => {
+    it('shows the date', () => {
+      const { updatedAt } = testData.extendedEntities.createPast(1)
+        .update(-1, { updates: 1 });
+      should.exist(updatedAt);
+      const dateTimes = mountComponent().findAllComponents(DateTime);
+      dateTimes.length.should.equal(2);
+      dateTimes[1].classes('updated-at').should.be.true();
+      dateTimes[1].props().iso.should.equal(updatedAt);
+    });
+
+    it('does not show a date if there has not been an update', () => {
+      testData.extendedEntities.createPast(1);
+      mountComponent().get('.updated-at').text().should.equal('');
+    });
+  });
+
+  describe('update count', () => {
+    it('shows the count if there has been an update', () => {
+      testData.extendedEntities.createPast(1).update(-1, { updates: 1000 });
+      mountComponent().get('.updates').text().should.equal('1,000');
+    });
+
+    it('does not show the count if there has not been an update', () => {
+      testData.extendedEntities.createPast(1);
+      mountComponent().get('.updates').text().should.equal('');
+    });
+  });
+
+  it('renders the edit button correctly', async () => {
+    testData.extendedEntities.createPast(1).update(-1, { updates: 1000 });
+    const button = mountComponent({ canUpdate: true }).get('.update-button');
+    button.attributes('aria-label').should.equal('Edit (1,000)');
+    await button.should.have.tooltip('Edit (1,000)');
+  });
+
+  it('renders the More button correctly', async () => {
+    mockLogin();
+    testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
+    testData.extendedEntities.createPast(1, { uuid: 'e' });
+    // Using load() rather than mountComponent() because RouterLinkStub doesn't
+    // use the <router-link> slot.
+    const app = await load('/projects/1/datasets/%C3%A1/entities');
+    const btn = app.get('.entity-metadata-row .more-button');
+    btn.element.tagName.should.equal('A');
+    btn.attributes('target').should.equal('_blank');
+    btn.attributes('href').should.equal('/projects/1/datasets/%C3%A1/entities/e');
   });
 });

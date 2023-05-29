@@ -574,26 +574,6 @@ select {
   }
 }
 
-.table-frozen {
-  float: left;
-  width: auto;
-}
-
-.table-container {
-  // Placing the margin here rather than on the table so that the horizontal
-  // scrollbar appears immediately below the table, above the margin.
-  margin-bottom: $margin-bottom-table;
-  overflow-x: auto;
-
-  .table {
-    margin-bottom: 0;
-  }
-}
-
-.table-actions {
-  margin-bottom: 20px;
-}
-
 .empty-table-message {
   color: #555;
   font-size: 15px;
@@ -825,3 +805,11 @@ becomes more complicated.
     }
   }
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// markRowsChanged()
+
+[data-mark-rows-changed="false"] { transition: background-color 0.6s 6s; }
+[data-mark-rows-changed="true"] { background-color: #faf1cd; }

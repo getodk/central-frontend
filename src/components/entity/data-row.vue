@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr>
-    <td v-for="property of properties" :key="property.id">
+  <tr class="entity-data-row">
+    <td v-for="property of properties" :key="property.name">
       <span v-tooltip.text>{{ entity[property.odataName] }}</span>
     </td>
     <td><span v-tooltip.text>{{ entity.label }}</span></td>
