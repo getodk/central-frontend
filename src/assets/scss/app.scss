@@ -521,17 +521,18 @@ select {
   }
 }
 
-// In Safari, the effect of this class is not visible on input and select
-// elements.
-.uncommitted-change {
-  // Adding `.form-group &` for specificity reasons, in order to override the
-  // styles on .form-group .form-control.
-  &, .form-group & {
-    &, &:focus {
-      box-shadow: 0 0 0 3px #ffef67;
-    }
-  }
+// In Safari, the effect of .uncommitted-change is not visible on input and
+// select elements.
+input.uncommitted-change,
+select.uncommitted-change,
+// Including .form-control.uncommitted-change in addition to
+// input.uncommitted-change for specificity reasons, in order to override the
+// styles on .form-group .form-control.
+.form-control.uncommitted-change,
+.btn.uncommitted-change {
+  &, &:focus { box-shadow: 0 0 0 3px #ffef67; }
 }
+tr.uncommitted-change { background-color: #ffef67; }
 
 
 

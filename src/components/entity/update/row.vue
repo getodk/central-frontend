@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="entity-update-row">
+  <tr class="entity-update-row"
+    :class="{ 'uncommitted-change': modelValue != null }">
     <td class="label-cell">
       <label :for="textareaId" v-tooltip.text>
         {{ requiredLabel(label, required) }}
@@ -24,7 +25,6 @@ except according to the terms contained in the LICENSE file.
     <td class="new-value">
       <div class="form-group">
         <textarea-autosize :id="textareaId" ref="textarea"
-          :class="{ 'uncommitted-change': modelValue != null }"
           :model-value="modelValue ?? oldValue ?? ''" :min-height="minHeight"
           :required="required" @update:model-value="update"/>
       </div>
