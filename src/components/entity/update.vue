@@ -22,7 +22,9 @@ except according to the terms contained in the LICENSE file.
                 <th ref="labelCellHeader" class="label-cell">
                   <span class="sr-only">{{ $t('resource.property') }}</span>
                 </th>
-                <th class="old-value">{{ $t('header.currentValue') }}</th>
+                <th ref="oldValueHeader" class="old-value">
+                  {{ $t('header.currentValue') }}
+                </th>
                 <th class="new-value">{{ $t('header.updatedValue') }}</th>
               </tr>
             </thead>
@@ -69,6 +71,7 @@ import useColumnGrow from '../../composables/column-grow';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { px, styleBox } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 const props = defineProps({
@@ -105,7 +108,21 @@ const submit = () => {
 
 const labelCellHeader = ref(null);
 const { resize: resizeLabelCells } = useColumnGrow(labelCellHeader, 1.5);
+const oldValueHeader = ref(null);
 const labelRow = ref(null);
+// Resizes th.old-value so that the width of the old value and the width of the
+// textarea value are the same. Before this resizing, th.old-value and
+// th.new-value have the same width. We need to decrease the width of
+// th.old-value to account for the padding and borders of the textarea.
+const resizeOldValue = () => {
+  // Remove any width that the function previously set.
+  oldValueHeader.value.style.width = '';
+  const { width } = oldValueHeader.value.getBoundingClientRect();
+  const textarea = styleBox(getComputedStyle(labelRow.value.textarea.el));
+  const paddingAndBorders = textarea.paddingLeft + textarea.paddingRight +
+    textarea.borderLeft + textarea.borderRight;
+  oldValueHeader.value.style.width = px(width - (paddingAndBorders / 2));
+};
 const propertyRows = ref([]);
 const afterShown = () => {
   labelRow.value.textarea.focus();
@@ -116,6 +133,7 @@ const afterShown = () => {
   // elements based on content in the DOM.
   nextTick(() => {
     resizeLabelCells();
+    resizeOldValue();
 
     labelRow.value.textarea.resize();
     for (const row of propertyRows.value) row.textarea.resize();
@@ -155,7 +173,6 @@ const currentVersion = computed(() =>
   table { table-layout: fixed; }
   thead {
     .label-cell { width: 16.66666667%; }
-    .old-value { width: 33.33333333%; }
   }
 
   tr:nth-child(2) td { border-top-color: #bbb; }

@@ -85,10 +85,7 @@ const resize = () => {
   textarea.value.resize();
   if (minHeightOutdated) setMinHeight();
 };
-const focus = () => textarea.value.focus();
-defineExpose({
-  textarea: { resize, focus }
-});
+defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
 </script>
 
 <style lang="scss">
