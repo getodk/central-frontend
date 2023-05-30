@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-link"></span>
         <i18n-t tag="span" keypath="linkedToDataset" class="dataset-label">
           <template #datasetName>
-            <a :href="datasetLink" target="_blank">{{ datasetName }}</a>
+            <a :href="href" target="_blank">{{ datasetName }}</a>
           </template>
         </i18n-t>
         <span v-show="targeted" class="label label-primary">
@@ -138,9 +138,6 @@ export default {
     },
     datasetName() {
       return this.attachment.name.replace(/.csv$/i, '');
-    },
-    datasetLink() {
-      return apiPaths.entities(this.form.projectId, this.datasetName);
     }
   }
 };
