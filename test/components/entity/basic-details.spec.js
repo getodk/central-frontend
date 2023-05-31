@@ -132,7 +132,7 @@ describe('EntityBasicDetails', () => {
           dd.text().should.equal('s');
         })
         .request(async (component) => {
-          await component.get('#entity-activity-update-button').trigger('click');
+          await component.get('#entity-data-update-button').trigger('click');
           const form = component.get('#entity-update form');
           await form.get('textarea').setValue('Updated Entity');
           return form.trigger('submit');
