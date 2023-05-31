@@ -135,7 +135,7 @@ const resize = () => {
   }
 };
 const focus = () => el.value.focus();
-defineExpose({ resize, focus });
+defineExpose({ el, resize, focus });
 </script>
 
 <style lang="scss">

@@ -141,10 +141,10 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
         'Overview',
+        'Datasets',
         'Project Roles',
         'App Users',
         'Form Access',
-        'Datasets',
         'Settings'
       ]);
       li[0].should.be.visible(true);

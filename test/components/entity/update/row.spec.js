@@ -104,7 +104,7 @@ describe('EntityUpdateRow', () => {
       const row = mountComponent({
         props: { oldValue: 'foo', modelValue: 'bar' }
       });
-      row.get('textarea').classes('uncommitted-change').should.be.true();
+      row.classes('uncommitted-change').should.be.true();
     });
   });
 

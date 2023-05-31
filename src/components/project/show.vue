@@ -21,6 +21,12 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">{{ $t('common.tab.overview') }}</router-link>
         </li>
+        <li v-if="canRoute(tabPath('datasets'))" :class="tabClass('datasets')"
+          role="presentation">
+          <router-link :to="tabPath('datasets')">
+            {{ $t('resource.datasets') }}
+          </router-link>
+        </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
           role="presentation">
           <router-link :to="tabPath('users')">
@@ -37,12 +43,6 @@ except according to the terms contained in the LICENSE file.
           :class="tabClass('form-access')" role="presentation">
           <router-link :to="tabPath('form-access')">
             {{ $t('projectShow.tab.formAccess') }}
-          </router-link>
-        </li>
-        <li v-if="canRoute(tabPath('datasets'))" :class="tabClass('datasets')"
-          role="presentation">
-          <router-link :to="tabPath('datasets')">
-            {{ $t('resource.datasets') }}
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
