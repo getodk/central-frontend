@@ -1168,6 +1168,9 @@
         },
         "num_failed_entities": {
           "string": "Número de errores de creación de entidad"
+        },
+        "num_entity_updates": {
+          "string": ""
         }
       }
     },
@@ -1525,6 +1528,14 @@
         "back": {
           "string": "Volver a la tabla {datasetName}",
           "developer_comment": "This is shown at the top of the page. The user can click it to go back."
+        }
+      }
+    },
+    "EntityTable": {
+      "header": {
+        "updatedAtAndActions": {
+          "string": "",
+          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
         }
       }
     },
