@@ -23,10 +23,10 @@ except according to the terms contained in the LICENSE file.
       <div v-show="entity.dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
-          <entity-data/>
+          <entity-data @update="update.state = true"/>
         </div>
         <div class="col-xs-8">
-          <entity-activity @update="update.state = true"/>
+          <entity-activity/>
         </div>
       </div>
     </page-body>

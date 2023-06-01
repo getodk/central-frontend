@@ -10,11 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section v-if="dataset.dataExists && dataset.properties.length !== 0"
-    id="entity-data">
-    <template #heading><span>{{ $t('title') }}</span></template>
+  <page-section id="entity-data">
+    <template #heading>
+      <span>{{ $t('title') }}</span>
+      <button v-if="rendersUpdateButton" id="entity-data-update-button"
+        type="button" class="btn btn-default" @click="$emit('update')">
+        <span class="icon-pencil"></span>{{ $t('action.edit') }}
+      </button>
+    </template>
     <template #body>
-      <dl v-if="entity.dataExists">
+      <loading :state="dataset.initiallyLoading"/>
+      <dl v-if="dataExists">
         <div v-for="{ name } of dataset.properties" :key="name">
           <dt><span v-tooltip.text>{{ name }}</span></dt>
           <dd v-if="data[name] == null || data[name] === ''" class="empty">
@@ -35,14 +41,20 @@ export default {
 <script setup>
 import { computed } from 'vue';
 
+import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
 import { useRequestData } from '../../request-data';
 
+defineEmits(['update']);
+
 // The component does not assume that this data will exist when the component is
 // created.
-const { dataset, entity } = useRequestData();
+const { project, dataset, entity, resourceStates } = useRequestData();
+const { dataExists } = resourceStates([dataset, entity]);
 
+const rendersUpdateButton = computed(() => project.dataExists &&
+  project.permits('entity.update') && dataset.dataExists);
 const data = computed(() => entity.currentVersion.data);
 </script>
 

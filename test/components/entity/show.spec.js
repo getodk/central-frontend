@@ -70,7 +70,7 @@ describe('EntityShow', () => {
       return load('/projects/1/datasets/%C3%A1/entities/e', { root: false })
         .complete()
         .request(async (component) => {
-          await component.get('#entity-activity-update-button').trigger('click');
+          await component.get('#entity-data-update-button').trigger('click');
           const form = component.get('#entity-update form');
           const textareas = form.findAll('textarea');
           textareas.length.should.equal(2);
