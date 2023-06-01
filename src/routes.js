@@ -662,10 +662,10 @@ const routes = [
   }),
 
   asyncRoute({
-    path: '/dl/:_(.+)',
+    path: '/dl/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/attachments/:attachmentName',
     component: 'Download',
+    props: true,
     loading: 'page',
-    key: () => '/dl',
     meta: {
       title: () => [i18n.t('title.download')]
     }

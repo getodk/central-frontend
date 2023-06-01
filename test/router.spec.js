@@ -146,7 +146,7 @@ describe('createCentralRouter()', () => {
       '/account/edit',
       '/system/audits',
       '/system/analytics',
-      '/dl/foo.txt'
+      '/dl/projects/1/forms/f/submissions/s/attachments/a'
     ];
     for (const path of paths) {
       it(`redirects an anonymous user navigating to ${path}`, () =>

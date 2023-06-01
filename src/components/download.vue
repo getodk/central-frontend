@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <page-body>
     <i18n-t tag="p" keypath="body">
       <template #filename>
-        <strong>{{ filename }}</strong>
+        <strong>{{ attachmentName }}</strong>
       </template>
     </i18n-t>
     <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
@@ -22,34 +22,46 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+export default {
+  name: 'Download'
+};
+</script>
+<script setup>
+import { computed, onMounted, ref } from 'vue';
+
 import PageBody from './page/body.vue';
 
-export default {
-  name: 'Download',
-  components: { PageBody },
-  computed: {
-    filename() {
-      const { path } = this.$route;
-      return path.slice(path.lastIndexOf('/') + 1);
-    },
-    href() {
-      return this.$route.fullPath.replace('/dl', '/v1');
-    }
+import { apiPaths } from '../util/request';
+
+const props = defineProps({
+  projectId: {
+    type: String,
+    required: true
   },
-  watch: {
-    $route() {
-      this.$nextTick(this.download);
-    }
+  xmlFormId: {
+    type: String,
+    required: true
   },
-  mounted() {
-    this.download();
+  instanceId: {
+    type: String,
+    required: true
   },
-  methods: {
-    download() {
-      this.$refs.link.click();
-    }
+  attachmentName: {
+    type: String,
+    required: true
   }
-};
+});
+
+const href = computed(() => apiPaths.submissionAttachment(
+  props.projectId,
+  props.xmlFormId,
+  false,
+  props.instanceId,
+  props.attachmentName
+));
+
+const link = ref(null);
+onMounted(() => { link.value.click(); });
 </script>
 
 <i18n lang="json5">
