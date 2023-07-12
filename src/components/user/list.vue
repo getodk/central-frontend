@@ -46,8 +46,8 @@ either is an Administrator or has no role. -->
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
-    <user-reset-password v-bind="resetPassword" @hide="hideResetPassword"
-      @success="afterResetPassword" v-if="!config.oidcEnabled"/> <!-- REVIEW this may not be necessary; could help performance? -->
+    <user-reset-password v-if="!config.oidcEnabled" v-bind="resetPassword" @hide="hideResetPassword"
+      @success="afterResetPassword"/> <!-- REVIEW this may not be necessary; could help performance? -->
     <user-retire v-bind="retire" @hide="hideRetire" @success="afterRetire"/>
   </div>
 </template>

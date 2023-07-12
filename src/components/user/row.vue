@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.editProfile') }}
             </router-link>
           </li>
-          <li :class="{ disabled }" v-if="!config.oidcEnabled">
+          <li v-if="!config.oidcEnabled" :class="{ disabled }">
             <a class="reset-password" href="#"
               v-tooltip.aria-describedby="disabled ? $t('cannotResetPassword') : null"
               @click.prevent="$emit('reset-password', user)">
