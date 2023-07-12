@@ -55,7 +55,6 @@ const props = defineProps({
   },
 });
 const config = inject('config');
-const hi = 3;
 
 const user = useUser();
 user.request({ url: apiPaths.user(props.id) }).catch(noop);
