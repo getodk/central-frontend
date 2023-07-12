@@ -238,14 +238,11 @@ export default {
       doc.body.appendChild(form);
 
       const passphraseInput = doc.createElement('input');
-      // This might not be necessary (not sure).
-      passphraseInput.setAttribute('type', 'password');
       passphraseInput.setAttribute('name', this.managedKey.id.toString());
       passphraseInput.setAttribute('autocomplete', 'off');
       form.appendChild(passphraseInput);
 
       const csrf = doc.createElement('input');
-      csrf.setAttribute('type', 'password');
       csrf.setAttribute('name', '__csrf');
       csrf.setAttribute('autocomplete', 'off');
       form.appendChild(csrf);
