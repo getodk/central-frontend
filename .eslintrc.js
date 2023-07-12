@@ -19,7 +19,7 @@ module.exports = {
   rules: {
     'arrow-parens': 'off',
     'class-methods-use-this': 'off',
-    'comma-dangle': ['error', 'never'],
+    'comma-dangle': ['error', 'only-multiline'],
     curly: 'off',
     'implicit-arrow-linebreak': 'off',
     'import/first': 'off',
