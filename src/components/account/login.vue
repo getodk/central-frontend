@@ -18,10 +18,8 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div v-if="config.oidcEnabled" class="panel-body">
           <div class="panel-footer">
-            <a href="/v1/oidc/login">
-              <button class="btn btn-primary">
-                {{ $t('action.logIn') }} (TODO add spinner when clicked)
-              </button>
+            <a href="/v1/oidc/login" class="btn btn-primary">
+              {{ $t('action.logIn') }} (TODO add spinner when clicked)
             </a>
           </div>
         </div>
