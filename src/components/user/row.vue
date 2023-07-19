@@ -78,6 +78,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'UserRow',
   components: { Spinner },
+  inject: ['config'],
   props: {
     user: {
       type: Object,
@@ -87,7 +88,6 @@ export default {
     highlighted: Number
   },
   emits: ['assigned-role', 'reset-password', 'retire'],
-  inject: ['config'],
   setup() {
     const { currentUser } = useRequestData();
     const { request, awaitingResponse } = useRequest();

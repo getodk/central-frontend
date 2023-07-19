@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div class="panel-body">
       <form @submit.prevent="submit">
-        <form-group :aria-disabled="config.oidcEnabled" v-model.trim="email" type="email"
+        <form-group v-model.trim="email" :aria-disabled="config.oidcEnabled" type="email"
           :placeholder="$t('field.email')" required autocomplete="off"/>
         <form-group v-model.trim="displayName" type="text"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>

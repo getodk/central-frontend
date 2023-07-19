@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div v-if="config.oidcEnabled" class="panel-body">
           <div class="panel-footer">
-            <a :href="`/v1/oidc/login?next=${this.$route.query.next || ''}`" class="btn btn-primary">
+            <a :href="`/v1/oidc/login?next=${$route.query.next || ''}`" class="btn btn-primary">
               {{ $t('action.logIn') }} (TODO add spinner when clicked)
             </a>
           </div>
