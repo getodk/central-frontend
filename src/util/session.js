@@ -205,21 +205,14 @@ export const useSessions = () => {
 
 export const restoreSession = (session) => {
   const sessionExpires = localStore.getItem('sessionExpires');
-  console.log('restoreSession()', session, sessionExpires);
-  console.log('restoreSession()', 'expired?', parseInt(sessionExpires, 10) <= Date.now());
-  // TODO unclear if these changes are required - test carefully in a new private browsing window.
-  // We may have to add a new 'route' or something to trigger the restoreSession() code after oidc
-  // login........
-
-//  // We send a request if sessionExpires == null, partly in case there was a
-//  // logout error.
-//  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
-//    return Promise.reject();
+  // We send a request if sessionExpires == null, partly in case there was a
+  // logout error.
+  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
+    return Promise.reject();
   // There is a chance that the user's session will be restored almost
   // immediately before the session expires, such that the session expires
   // before logOutBeforeSessionExpires() logs out the user. However, that case
   // is unlikely, and the worst case should be that the user sees 401 messages.
-  console.log('restoreSession()', 'requesting session restore...');
   return session.request({ url: '/v1/sessions/restore', alert: false })
     .catch(error => {
       // The user's session may be removed without the user logging out, for
