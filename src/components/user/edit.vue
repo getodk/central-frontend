@@ -52,7 +52,7 @@ const props = defineProps({
   id: {
     type: String,
     required: true
-  },
+  }
 });
 const config = inject('config');
 
