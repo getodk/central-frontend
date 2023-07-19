@@ -71,8 +71,7 @@ router.afterEach(unlessFailure(to => {
       // Implements the restoreSession meta field. A test can skip this request
       // by setting the session before the initial navigation.
       async (to) => {
-        // TODO work out what needs to happen here before merge
-        if (/*to.meta.restoreSession &&*/ !session.dataExists) {
+        if (to.meta.restoreSession && !session.dataExists) {
           await restoreSession(session);
           await logIn(container, false);
         }
