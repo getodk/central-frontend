@@ -1429,6 +1429,11 @@
         "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
       }
     },
+    "DatasetTable": {
+      "emptyTable": {
+        "string": "No Datasets have been created for this Project yet."
+      }
+    },
     "Download": {
       "body": {
         "string": "{filename} will begin downloading soon. Once the download begins, you can leave this page."

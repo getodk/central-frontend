@@ -141,7 +141,7 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
         'Overview',
-        'Datasets',
+        'Datasets New',
         'Project Roles',
         'App Users',
         'Form Access',
@@ -166,18 +166,8 @@ describe('ProjectShow', () => {
         });
         const li = app.findAll('#page-head-tabs li');
         const text = li.map(wrapper => wrapper.get('a').text());
-        text.should.eql(['Overview', 'Datasets']);
+        text.should.eql(['Overview', 'Datasets New']);
         li[0].should.be.visible(true);
-      });
-
-      it('does not show tabs if project does not have a dataset', async () => {
-        testData.extendedProjects.createPast(1, { role: 'viewer' });
-        const app = await load('/projects/1', { attachTo: document.body }, {
-          deletedForms: false
-        });
-        const li = app.findAll('#page-head-tabs li');
-        li.length.should.equal(1);
-        li[0].should.be.hidden(true);
       });
     });
 

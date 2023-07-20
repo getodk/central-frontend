@@ -20,4 +20,8 @@ describe('DatasetTable', () => {
     testData.extendedDatasets.createPast(2);
     mountComponent().findAllComponents(DatasetRow).length.should.equal(2);
   });
+
+  it('shows empty message when there is no dataset', () => {
+    mountComponent().find('p').text().should.be.eql('No Datasets have been created for this Project yet.');
+  });
 });
