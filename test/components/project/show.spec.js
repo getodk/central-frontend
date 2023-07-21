@@ -155,7 +155,7 @@ describe('ProjectShow', () => {
         mockLogin({ role: 'none' });
       });
 
-      it('shows the correct tabs if the project has a dataset', async () => {
+      it('shows the correct tabs', async () => {
         testData.extendedProjects.createPast(1, {
           datasets: 1,
           role: 'viewer'

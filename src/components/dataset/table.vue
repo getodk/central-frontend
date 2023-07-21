@@ -52,10 +52,10 @@ const { datasets } = useRequestData();
     text-align: right;
     padding-right: 10%;
   }
-}
-.empty-table-message {
-  margin-bottom: 20px;
-  margin-top: -20px;
+
+  &+ .empty-table-message {
+    margin-bottom: 20px;
+  }
 }
 </style>
 
