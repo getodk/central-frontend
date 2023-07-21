@@ -25,6 +25,7 @@ except according to the terms contained in the LICENSE file.
           role="presentation">
           <router-link :to="tabPath('datasets')">
             {{ $t('resource.datasets') }}
+            <span class="chip">{{ $t('common.new') }}</span>
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"

@@ -24,6 +24,9 @@ except according to the terms contained in the LICENSE file.
         :dataset="dataset"/>
     </tbody>
   </table>
+  <p v-if="datasets.dataExists && datasets.length === 0" class="empty-table-message">
+    {{ $t('emptyTable') }}
+  </p>
 </template>
 
 <script>
@@ -49,5 +52,17 @@ const { datasets } = useRequestData();
     text-align: right;
     padding-right: 10%;
   }
+
+  &+ .empty-table-message {
+    margin-bottom: 20px;
+  }
 }
 </style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "emptyTable": "No Datasets have been created for this Project yet."
+    }
+  }
+</i18n>

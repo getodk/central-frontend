@@ -328,8 +328,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: () => project.permits(['dataset.list', 'entity.list']) &&
-              project.datasets !== 0
+            project: () => project.permits(['dataset.list', 'entity.list'])
           },
           title: () => [i18n.t('resource.datasets'), project.name]
         }
