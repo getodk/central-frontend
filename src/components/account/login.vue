@@ -18,8 +18,9 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div v-if="config.oidcEnabled" class="panel-body">
           <div class="panel-footer">
-            <a :href="`/v1/oidc/login?next=${$route.query.next || ''}`" class="btn btn-primary">
-              {{ $t('action.logIn') }} (TODO add spinner when clicked)
+            <a :href="`/v1/oidc/login?next=${$route.query.next || ''}`"
+              class="btn btn-primary" :class="{ disabled }" @click="disabled=true">
+              {{ $t('action.logIn') }} <spinner :state="disabled"/>
             </a>
           </div>
         </div>
@@ -77,7 +78,7 @@ export default {
     };
   },
   mounted() {
-    this.$refs.email.focus();
+    if (!this.config.oidcEnabled) this.$refs.email.focus();
   },
   methods: {
     navigateToNext(
