@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <div v-if="config.oidcEnabled" class="panel-body">
           <div class="panel-footer">
             <a :href="`/v1/oidc/login?next=${$route.query.next || ''}`"
-              class="btn btn-primary" :class="{ disabled }" @click="disabled=true">
+              class="btn btn-primary" :class="{ disabled }" @click="disabled = true">
               {{ $t('action.logIn') }} <spinner :state="disabled"/>
             </a>
           </div>
