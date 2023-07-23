@@ -11,6 +11,23 @@ import createTestContainer from './container';
 ////////////////////////////////////////////////////////////////////////////////
 // MOUNT
 
+/* For some reason, it no longer seems possible to access global properties from
+the vm property of the Vue Test Utils wrapper. This may be an issue with our
+setup: we could see if it's still an issue once we move to Vite. In practice,
+the only global properties that we try to access in testing are $router and
+$route. We can access them by shadowing the global properties with computed
+properties from a mixin. */
+const shadowRouterProps = {
+  computed: {
+    $router() {
+      return this.$container.router;
+    },
+    $route() {
+      return this.$router.currentRoute.value;
+    }
+  }
+};
+
 /*
 TODO/vue3. Update these comments.
 
@@ -28,6 +45,8 @@ export const mount = (component, options = {}) => {
   g.plugins = g.plugins != null ? [container, ...g.plugins] : [container];
   g.directives = { tooltip: vTooltip, ...g.directives };
   g.mocks = { $container: container, ...g.mocks };
+  if (g.mixins != null) throw new Error('unexpected mixin');
+  g.mixins = [shadowRouterProps];
   return vtuMount(component, { ...mountOptions, global: g });
 };
 
