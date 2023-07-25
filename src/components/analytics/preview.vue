@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
           <span class="header">{{ $t('projects.title') }}</span>
           <span class="explanation">{{ $tcn('projects.subtitle', numProjects) }}</span>
         </div>
-        <div id="analytics-preview-project-tables">
+        <div v-if="firstProject" id="analytics-preview-project-tables">
           <div id="users-forms-column">
             <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
             <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
@@ -94,10 +94,10 @@ export default {
       return this.analyticsPreview.system;
     },
     firstProject() {
-      // eslint-disable-next-line arrow-body-style
-      return this.analyticsPreview.projects.reduce((a, b) => {
-        return (a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b;
-      });
+      if (this.analyticsPreview.projects.length === 0)
+        return null;
+      return this.analyticsPreview.projects.reduce((a, b) =>
+        ((a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b));
     },
     firstDataset() {
       const { id, ...ds } = flatten(this.analyticsPreview.projects.map(p => p.datasets)).reduce((a, b) => ((a.num_entities.recent > b.num_entities.recent) ? a : b), { num_entities: {} });
