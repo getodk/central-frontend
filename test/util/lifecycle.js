@@ -20,11 +20,11 @@ $route based on $router. */
 const shadowRouterProps = {
   created() {
     // eslint-disable-next-line no-self-assign
-    this.$router = this.$router;
+    if (this.$router != null) this.$router = this.$router;
   },
   computed: {
     $route() {
-      return this.$router.currentRoute.value;
+      return this.$router != null ? this.$router.currentRoute.value : undefined;
     }
   }
 };
