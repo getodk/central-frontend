@@ -15,13 +15,14 @@ import createTestContainer from './container';
 from the vm property of the Vue Test Utils wrapper: see
 https://github.com/vuejs/test-utils/issues/2140. In practice, the only global
 properties that we try to access in testing are $router and $route. We can
-provide access to them by shadowing the global properties with computed
-properties from a mixin. */
+provide access to them by copying $router to each component, then computing
+$route based on $router. */
 const shadowRouterProps = {
+  created() {
+    // eslint-disable-next-line no-self-assign
+    this.$router = this.$router;
+  },
   computed: {
-    $router() {
-      return this.$container.router;
-    },
     $route() {
       return this.$router.currentRoute.value;
     }
