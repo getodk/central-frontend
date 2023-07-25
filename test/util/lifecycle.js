@@ -11,11 +11,11 @@ import createTestContainer from './container';
 ////////////////////////////////////////////////////////////////////////////////
 // MOUNT
 
-/* For some reason, it no longer seems possible to access global properties from
-the vm property of the Vue Test Utils wrapper. This may be an issue with our
-setup: we could see if it's still an issue once we move to Vite. In practice,
-the only global properties that we try to access in testing are $router and
-$route. We can access them by shadowing the global properties with computed
+/* For many components, it is no longer possible to access global properties
+from the vm property of the Vue Test Utils wrapper: see
+https://github.com/vuejs/test-utils/issues/2140. In practice, the only global
+properties that we try to access in testing are $router and $route. We can
+provide access to them by shadowing the global properties with computed
 properties from a mixin. */
 const shadowRouterProps = {
   computed: {
