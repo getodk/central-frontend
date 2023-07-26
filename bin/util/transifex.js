@@ -83,9 +83,9 @@ class PluralForms {
       const badWhitespace = form.match(/^\s+|\s+$|\s\s+/);
       if (badWhitespace) {
         const badLength = badWhitespace[0].length;
-        console.error(`unexpected white space in translation string '${path}':`);
-        console.error(`  [${message}]`);
-        console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index+badLength, ' ').padEnd(message.length, ' ')}]`);
+        console.error(`unexpected white space in translation string '${path}':`); // eslint-disable-line no-console
+        console.error(`  [${message}]`); // eslint-disable-line no-console
+        console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index + badLength, ' ').padEnd(message.length, ' ')}]`); // eslint-disable-line no-console
         throw new Error(`unexpected whitespace in message '${path}' at index ${badWhitespace.index} ("${message}")`);
       }
     }
