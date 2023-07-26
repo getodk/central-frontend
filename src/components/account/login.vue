@@ -79,6 +79,9 @@ export default {
   },
   mounted() {
     if (!this.config.oidcEnabled) this.$refs.email.focus();
+
+    const { oidcError } = this.$route.query;
+    if (oidcError) this.alert.danger(this.$t(`oidc.error.${oidcError}`));
   },
   methods: {
     navigateToNext(
@@ -154,6 +157,12 @@ export default {
       "alreadyLoggedIn": "A user is already logged in. Please refresh the page to continue.",
       "changePassword": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
     },
+    "oidc": {
+      "error": {
+        "email-not-verified": "Your email address has not been verified by the authentication provider.",
+        "provider-misconfigured": "There was a problem with your authentication provider.  Please contact the site administrator.",
+      },
+    },
     "problem": {
       "401_2": "Incorrect email address and/or password."
     }
@@ -186,6 +195,12 @@ export default {
     "alert": {
       "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar.",
       "changePassword": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
+    },
+    "oidc": {
+      "error": {
+        "email-not-verified": "Tu email no ha estado verificado por el proveedor de autenticación.",
+        "provider-misconfigured": "Había un problema con el proveedor de autenticación. Contactar el administrador del sitio.",
+      },
     },
     "problem": {
       "401_2": "Dirección de correo electrónico y/o contraseña incorrecta."
