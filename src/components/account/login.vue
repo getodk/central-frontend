@@ -161,6 +161,7 @@ export default {
     },
     "oidc": {
       "error": {
+        "auth-ok-user-not-found": "Authentication was successful, but your user does not exist in ODK Central.",
         "email-not-verified": "Your email address has not been verified by the authentication provider.",
         "provider-misconfigured": "There was a problem with your authentication provider.  Please contact the site administrator.",
       },
@@ -200,6 +201,7 @@ export default {
     },
     "oidc": {
       "error": {
+        "auth-ok-user-not-found": "Autenticado, pero no tienes cuenta en ODK Central.",
         "email-not-verified": "Tu email no ha estado verificado por el proveedor de autenticación.",
         "provider-misconfigured": "Había un problema con el proveedor de autenticación. Contactar el administrador del sitio.",
       },
