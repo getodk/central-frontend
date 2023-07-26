@@ -78,10 +78,12 @@ export default {
     };
   },
   mounted() {
-    if (!this.config.oidcEnabled) this.$refs.email.focus();
-
-    const { oidcError } = this.$route.query;
-    if (oidcError) this.alert.danger(this.$t(`oidc.error.${oidcError}`));
+    if (this.config.oidcEnabled) {
+      const { oidcError } = this.$route.query;
+      if (oidcError) this.alert.danger(this.$t(`oidc.error.${oidcError}`));
+    } else {
+      this.$refs.email.focus();
+    }
   },
   methods: {
     navigateToNext(
