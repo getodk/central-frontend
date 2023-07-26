@@ -227,7 +227,8 @@ const routes = [
       requireLogin: false,
       requireAnonymity: true,
       title: () => [i18n.t('title.resetPassword')]
-    }
+    },
+    beforeEnter: () => (config.oidcEnabled ? '/' : true),
   }),
   asyncRoute({
     path: '/account/claim',
@@ -238,7 +239,8 @@ const routes = [
       requireLogin: false,
       requireAnonymity: true,
       title: () => [i18n.t('title.setPassword')]
-    }
+    },
+    beforeEnter: () => (config.oidcEnabled ? '/' : true),
   }),
 
   asyncRoute({
