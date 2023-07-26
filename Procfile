@@ -1,3 +1,2 @@
-#vue: vue-cli-service build --mode development --watch
-vue: PORT=5000 vue-cli-service serve # FIXME revert?
+vue: vue-cli-service build --mode development --watch
 nginx: nginx -c "$PWD/main.nginx.conf" -p "$PWD"
