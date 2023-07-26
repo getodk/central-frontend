@@ -161,7 +161,7 @@ export default {
     },
     "oidc": {
       "error": {
-        "auth-ok-user-not-found": "Authentication was successful, but your user does not exist in ODK Central.",
+        "auth-ok-user-not-found": "Authentication successful, but your user does not exist in ODK Central.",
         "email-not-verified": "Your email address has not been verified by the authentication provider.",
         "provider-misconfigured": "There was a problem with your authentication provider.  Please contact the site administrator.",
       },
