@@ -72,15 +72,22 @@ const parseVars = (pluralForm) => {
 class PluralForms {
   static empty(length) { return new PluralForms(new Array(length).fill('')); }
 
-  static fromVueI18n(message) {
+  static fromVueI18n(path, message) {
     const forms = message.split(' | ');
     if (forms.length > 2)
       logThenThrow(message, 'a pluralized message must have exactly two forms');
 
     for (const form of forms) {
       if (form.includes('|')) logThenThrow(message, 'unexpected |');
-      if (/(^\s|\s$|\s\s)/.test(form))
-        logThenThrow(message, 'unexpected white space');
+
+      const badWhitespace = form.match(/^\s+|\s+$|\s\s+/);
+      if (badWhitespace) {
+        const badLength = badWhitespace[0].length;
+        console.error(`unexpected white space in translation string '${path}':`);
+        console.error(`  [${message}]`);
+        console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index+badLength, ' ').padEnd(message.length, ' ')}]`);
+        throw new Error(`unexpected whitespace in message '${path}' at index ${badWhitespace.index} ("${message}")`);
+      }
     }
 
     return new PluralForms(forms);
@@ -663,8 +670,8 @@ const rekeyTranslations = (source, translated, transifexPaths) => {
 // Returns the Vue I18n messages for the source locale after converting them to
 // PluralForms objects.
 const readSourceMessages = (localesDir, filenamesByComponent) => {
-  const reviver = (_, value) =>
-    (typeof value === 'string' ? PluralForms.fromVueI18n(value) : value);
+  const reviver = (path, value) =>
+    (typeof value === 'string' ? PluralForms.fromVueI18n(path, value) : value);
 
   // Read the root messages.
   const messages = parse(
