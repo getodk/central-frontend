@@ -9,7 +9,7 @@
     "test": "./test/run.sh"
   },
   "volta": {
-    "node": "16.19.1"
+    "node": "18.17.0"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
@@ -62,7 +62,7 @@
     "vue-cli-plugin-i18n": "~2"
   },
   "engines": {
-    "node": "16",
-    "npm": "8"
+    "node": "18.17.0",
+    "npm": "9"
   }
 }
