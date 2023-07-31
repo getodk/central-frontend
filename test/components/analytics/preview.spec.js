@@ -71,6 +71,24 @@ describe('AnalyticsPreview', () => {
     table.props().metrics.should.eql(analyticsPreview.system);
   });
 
+  it('shows preview even when there are zero projects (fresh central install)', async () => {
+    const emptyProjects = {
+      system: { num_admins: { recent: 1, total: 1 } },
+      projects: []
+    };
+    const container = await mockHttp()
+      .mount(AnalyticsPreview)
+      .request(modal => modal.setProps({ state: true }))
+      .respondWithData(() => emptyProjects);
+    // Only the system preview table should be shown
+    const tables = container.findAllComponents(AnalyticsMetricsTable);
+    tables.length.should.equal(1);
+    tables[0].props().metrics.should.eql(emptyProjects.system);
+    // Text should indicate 0 projects
+    const text = container.get('#analytics-preview-project-summary .explanation').text();
+    text.should.equal('(Showing the most active Project of 0 Projects)');
+  });
+
   it('shows the project number and plurailization for a single project', async () => {
     const singleProject = {
       system: { num_admins: { recent: 1, total: 1 } },
