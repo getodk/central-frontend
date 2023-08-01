@@ -90,6 +90,7 @@ module.exports = {
     }],
     'vue/max-attributes-per-line': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/no-setup-props-destructure': 'off',
     'vue/no-template-target-blank': 'off',
     'vue/object-curly-newline': 'off',
     'vue/require-default-prop': 'off',
