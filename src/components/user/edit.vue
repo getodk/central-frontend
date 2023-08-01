@@ -28,11 +28,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'UserEdit'
-};
-</script>
 <script setup>
 import { useRoute } from 'vue-router';
 
@@ -47,6 +42,9 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { setDocumentTitle } from '../../util/reactivity';
 
+defineOptions({
+  name: 'UserEdit'
+});
 const props = defineProps({
   id: {
     type: String,

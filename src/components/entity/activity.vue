@@ -24,11 +24,6 @@ except according to the terms contained in the LICENSE file.
   </page-section>
 </template>
 
-<script>
-export default {
-  name: 'EntityActivity'
-};
-</script>
 <script setup>
 import { computed } from 'vue';
 
@@ -37,6 +32,10 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'EntityActivity'
+});
 
 // The component does not assume that this data will exist when the component is
 // created.

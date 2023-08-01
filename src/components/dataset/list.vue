@@ -24,11 +24,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DatasetList'
-};
-</script>
 <script setup>
 import DatasetIntroduction from './introduction.vue';
 import DatasetTable from './table.vue';
@@ -39,6 +34,9 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'DatasetList'
+});
 const props = defineProps({
   projectId: {
     type: String,

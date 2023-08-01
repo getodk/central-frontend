@@ -36,11 +36,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'EntityShow'
-};
-</script>
 <script setup>
 import { inject, provide, reactive } from 'vue';
 
@@ -59,6 +54,9 @@ import { apiPaths } from '../../util/request';
 import { setDocumentTitle } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'EntityShow'
+});
 const props = defineProps({
   projectId: {
     type: String,

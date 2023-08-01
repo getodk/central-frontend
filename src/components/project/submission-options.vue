@@ -68,11 +68,6 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
-export default {
-  name: 'ProjectSubmissionOptions'
-};
-</script>
 <script setup>
 import DocLink from '../doc-link.vue';
 import LinkIfCan from '../link-if-can.vue';
@@ -80,6 +75,9 @@ import Modal from '../modal.vue';
 
 import useRoutes from '../../composables/routes';
 
+defineOptions({
+  name: 'ProjectSubmissionOptions'
+});
 defineProps({
   state: Boolean
 });

@@ -58,17 +58,14 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
-export default {
-  name: 'DatasetPendingSubmissions'
-};
-</script>
-
 <script setup>
 import { ref } from 'vue';
 
 import Modal from '../modal.vue';
 
+defineOptions({
+  name: 'DatasetPendingSubmissions'
+});
 defineProps({
   state: {
     type: Boolean,
@@ -79,7 +76,6 @@ defineProps({
     required: true
   }
 });
-
 defineEmits(['hide', 'success']);
 
 const convert = ref(null);

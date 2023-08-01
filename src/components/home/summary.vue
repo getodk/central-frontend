@@ -43,17 +43,16 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomeSummary'
-};
-</script>
 <script setup>
 import HomeSummaryItem from './summary/item.vue';
 import Loading from '../loading.vue';
 
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'HomeSummary'
+});
 
 const { currentUser, projects, createResource } = useRequestData();
 const users = createResource('users');

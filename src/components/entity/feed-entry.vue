@@ -77,11 +77,6 @@ except according to the terms contained in the LICENSE file.
   </feed-entry>
 </template>
 
-<script>
-export default {
-  name: 'EntityFeedEntry'
-};
-</script>
 <script setup>
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -94,6 +89,9 @@ import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'EntityFeedEntry'
+});
 const props = defineProps({
   entry: {
     type: Object,
