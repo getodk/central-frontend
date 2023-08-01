@@ -808,14 +808,14 @@ becomes more complicated.
 }
 
 .chip {
-  border: 1px solid $color-accent-primary;
-  font-size: 12px;
+  font-size: 10px;
   top: -2px;
   position: relative;
-  color: $color-accent-primary;
-  padding: 2px 7px 2px;
-  margin-left: 10px;
-  border-radius: 8px;
+  color: white;
+  padding: 4px 7px;
+  margin-left: 2px;
+  background: $color-accent-primary;
+  border-radius: 5px;
 }
 
 
