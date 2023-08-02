@@ -62,12 +62,14 @@ except according to the terms contained in the LICENSE file.
             <div class="info-item">
               <span class="icon-circle-o"></span>
               <p>{{ $t('steps[0].introduction[1][1][0]') }}</p>
-              <p>{{ $t('steps[0].introduction[1][1][1]') }}</p>
             </div>
             <div class="info-item">
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[1][2][0]') }}</p>
-              <p>{{ $t('steps[0].introduction[1][2][1]') }}</p>
+            </div>
+            <div class="info-item">
+              <span class="icon-close"></span>
+              <p>{{ $t('steps[0].introduction[1][3]') }} </p>
             </div>
           </div>
           <i18n-t tag="p" keypath="steps[0].introduction[2].full">
@@ -298,7 +300,8 @@ export default {
             [
               "Encryption cannot be turned off once enabled.",
               "In a future version, you will be able to disable encryption, which will decrypt your data. This will be true even if you enable encryption now."
-            ]
+            ],
+            "Draft Submissions from all Forms will be deleted."
           ],
           {
             "full": "You can learn more about encryption {here}. If this sounds like something you want, press Next to proceed.",

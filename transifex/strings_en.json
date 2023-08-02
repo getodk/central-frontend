@@ -2931,6 +2931,9 @@
                 "1": {
                   "string": "In a future version, you will be able to disable encryption, which will decrypt your data. This will be true even if you enable encryption now."
                 }
+              },
+              "3": {
+                "string": "Draft Submissions from all Forms will be deleted."
               }
             },
             "2": {
