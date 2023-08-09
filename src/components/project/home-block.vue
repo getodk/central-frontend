@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         <span class="sr-only">{{ $t('encryptionTip') }}</span>
       </template>
     </div>
-    <table v-if="visibleForms.length > 0 || visibleDataset.length > 0" class="project-form-table table">
+    <table v-if="visibleForms.length > 0 || visibleDataset.length > 0" class="project-table table">
       <project-form-row v-for="(form, index) of visibleForms" :key="form.xmlFormId" :form="form" :project="project" :show-icon="index === 0"/>
       <tr v-if="showExpander" class="project-form-row transparent-bg">
         <td class="col-icon"></td>
@@ -182,10 +182,18 @@ export default {
     margin-left: 5px;
   }
 
-  .project-form-table {
+  .project-table {
 
     .transparent-bg{
       background: transparent !important;
+    }
+
+    tr:first-child .col-icon {
+      border-top-left-radius: 5px;
+    }
+
+    tr:last-child .col-icon {
+      border-bottom-left-radius: 5px;
     }
 
     tr:nth-child(3n + 2 of .project-form-row) {
@@ -195,45 +203,46 @@ export default {
     tr:nth-child(3n + 2 of .project-dataset-row) {
       background: #eee;
     }
-  }
-
-  .col-icon {
-    width: 35px;
-    background: #e3e4e4;
-    border-right-width: 2px;
-    border-right-style: solid;
-    padding: 5px 0px;
-    text-align: center;
-
-    span {
-      margin-left: 0;
-    }
-  }
-
-  .project-form-row .col-icon {
-    border-right-color: #009ccc;
-
-    span {
-      color: #009ccc;
-
-    }
-  }
-
-  .project-dataset-row .col-icon{
-    border-right-color: #b9005c;
-
-    span {
-      color: #b9005c;
-
-    }
-  }
-
-  .margin {
-    height: 5px;
 
     .col-icon {
-      border-right: none;
-      width: 33px;
+      width: 35px;
+      background: #e3e4e4;
+      border-right-width: 2px;
+      border-right-style: solid;
+      padding: 5px 0px;
+      text-align: center;
+
+      span {
+        margin-left: 0;
+      }
+
+    }
+
+    .project-form-row .col-icon {
+      border-right-color: #009ccc;
+
+      span {
+        color: #009ccc;
+
+      }
+    }
+
+    .project-dataset-row .col-icon{
+      border-right-color: #b9005c;
+
+      span {
+        color: #b9005c;
+
+      }
+    }
+
+    .margin {
+      height: 5px;
+
+      .col-icon {
+        border-right: none;
+        width: 33px;
+      }
     }
   }
 

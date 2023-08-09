@@ -36,7 +36,7 @@ describe('ProjectDatasetRow', () => {
 
   it('should show dataset icon', () => {
     testData.extendedDatasets.createPast(1, { name: 'people' });
-    mountComponent(true).find('.col-icon span.icon-cube').exists().should.be.true();
+    mountComponent(true).find('.col-icon span.icon-database').exists().should.be.true();
   });
 
   it('links to dataset page', () => {

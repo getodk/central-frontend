@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="project-dataset-row">
     <td class="col-icon">
-      <span v-if="showIcon" class="icon-cube"></span>
+      <span v-if="showIcon" class="icon-database"></span>
     </td>
     <td class="dataset-name">
       <router-link :to="datasetPath(project.id, dataset.name)" v-tooltip.text>{{ dataset.name }}</router-link>
