@@ -2914,23 +2914,21 @@
             },
             "1": {
               "0": {
-                "string": "In addition, the following are true in this version of ODK Central:"
+                "string": "In addition, the following are true in this version of ODK Central:",
+                "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
                 "0": {
                   "string": "Existing Submissions will remain unencrypted."
-                },
-                "1": {
-                  "string": "In a future version, you will have the option to encrypt existing data."
                 }
               },
               "2": {
                 "0": {
                   "string": "Encryption cannot be turned off once enabled."
-                },
-                "1": {
-                  "string": "In a future version, you will be able to disable encryption, which will decrypt your data. This will be true even if you enable encryption now."
                 }
+              },
+              "3": {
+                "string": "Test Submissions to existing Draft Forms will be permanently removed."
               }
             },
             "2": {

@@ -41,6 +41,14 @@ except according to the terms contained in the LICENSE file.
               </i18n-t>
             </div>
             <div class="info-item">
+              <span class="icon-circle-o"></span>
+              <p>{{ $t('steps[0].introduction[1][1][0]') }}</p>
+            </div>
+            <div class="info-item">
+              <span class="icon-circle-o"></span>
+              <p>{{ $t('steps[0].introduction[1][3]') }} </p>
+            </div>
+            <div class="info-item">
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[0][4]') }}</p>
             </div>
@@ -56,18 +64,9 @@ except according to the terms contained in the LICENSE file.
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[0][7]') }}</p>
             </div>
-          </div>
-          <div class="info-block">
-            <p>{{ $t('steps[0].introduction[1][0]') }}</p>
-            <div class="info-item">
-              <span class="icon-circle-o"></span>
-              <p>{{ $t('steps[0].introduction[1][1][0]') }}</p>
-              <p>{{ $t('steps[0].introduction[1][1][1]') }}</p>
-            </div>
             <div class="info-item">
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[1][2][0]') }}</p>
-              <p>{{ $t('steps[0].introduction[1][2][1]') }}</p>
             </div>
           </div>
           <i18n-t tag="p" keypath="steps[0].introduction[2].full">
@@ -290,15 +289,15 @@ export default {
             "New Submissions will no longer be processed into Entities."
           ],
           [
+            // don't translate this sentence, it is not used anywhere
             "In addition, the following are true in this version of ODK Central:",
             [
-              "Existing Submissions will remain unencrypted.",
-              "In a future version, you will have the option to encrypt existing data."
+              "Existing Submissions will remain unencrypted."
             ],
             [
-              "Encryption cannot be turned off once enabled.",
-              "In a future version, you will be able to disable encryption, which will decrypt your data. This will be true even if you enable encryption now."
-            ]
+              "Encryption cannot be turned off once enabled."
+            ],
+            "Test Submissions to existing Draft Forms will be permanently removed."
           ],
           {
             "full": "You can learn more about encryption {here}. If this sounds like something you want, press Next to proceed.",
