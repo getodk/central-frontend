@@ -234,6 +234,7 @@
     "email": "Email Address",
     "instanceId": "Instance ID",
     "lastSubmission": "Latest Submission",
+    "recentActivity": "Recent Activity",
     "name": "Name",
     "listName": "List Name",
     // This is the text of a table column header. The column shows the user or
@@ -340,7 +341,8 @@
     "entityLabel": "Entity Label",
     // This is the UUID of an Entity.
     "entityId": "Entity ID",
-    "noProperties": "This Form only sets the “label”."
+    "noProperties": "This Form only sets the “label”.",
+    "noEntity": "(none)"
   },
   "common": {
     // This is a title shown above a section of the page.
@@ -391,7 +393,8 @@
     // {inform} is the number of Entity Properties defined by the form.
     // {count} is the total number of Properties. The string will be pluralized based on {count}.
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
-    "new": "New!"
+    "new": "New!",
+    "totalEntities": "Total Entities"
   },
   "mixin": {
     "request": {

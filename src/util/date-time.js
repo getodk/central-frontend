@@ -67,3 +67,10 @@ export const formatDateTime = (dateTime, relative = undefined) => {
   const time = formatTime(dateTime, relative == null);
   return `${date} ${time}`;
 };
+
+export const maxDateTime = (a, b) => {
+  const dateA = (a && new Date(a)) || null;
+  const dateB = (b && new Date(b)) || null;
+
+  return dateA > dateB ? dateA : dateB;
+};

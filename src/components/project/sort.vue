@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <select :value="modelValue" class="form-control"
           @change="$emit('update:modelValue', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
-          <option value="latest">{{ $t('header.lastSubmission') }}</option>
+          <option value="latest">{{ $t('header.recentActivity') }}</option>
           <option value="newest">{{ $t('sortOptions.newest') }}</option>
         </select>
       </label>

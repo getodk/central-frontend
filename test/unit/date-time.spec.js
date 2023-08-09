@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import { formatDate, formatDateTime, formatTime } from '../../src/util/date-time';
+import { formatDate, formatDateTime, formatTime, maxDateTime } from '../../src/util/date-time';
 import { setLuxon } from '../util/date-time';
 
 const dt = (iso) => DateTime.fromISO(iso);
@@ -186,6 +186,21 @@ describe('util/date-time', () => {
 
     it('returns the correct string for an invalid DateTime', () => {
       formatDateTime(dt('invalid')).should.equal('Invalid DateTime');
+    });
+  });
+
+  describe('maxDateTime()', () => {
+    it('should return null if both values are null or undefined', () => {
+      // const formatted = formatDateTime(dt('2017-12-31T01:23:45Z'));
+      // formatted.should.equal('2017/12/31 01:23:45');
+      should(maxDateTime(null, undefined)).be.null();
+    });
+
+    it('should return max value', () => {
+      const a = '2017-12-31T01:23:45Z';
+      const b = '2019-12-31T01:23:45Z';
+      maxDateTime(a, b).should.be.eql(new Date(b));
+      maxDateTime(b, a).should.be.eql(new Date(b));
     });
   });
 });

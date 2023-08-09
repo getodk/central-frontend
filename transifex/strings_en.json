@@ -502,6 +502,10 @@
       "string": "Latest Submission",
       "developer_comment": "This is the text of a table column header."
     },
+    "recentActivity": {
+      "string": "Recent Activity",
+      "developer_comment": "This is the text of a table column header."
+    },
     "name": {
       "string": "Name",
       "developer_comment": "This is the text of a table column header."
@@ -745,6 +749,9 @@
     },
     "noProperties": {
       "string": "This Form only sets the “label”."
+    },
+    "noEntity": {
+      "string": "(none)"
     }
   },
   "common": {
@@ -846,6 +853,9 @@
     },
     "new": {
       "string": "New!"
+    },
+    "totalEntities": {
+      "string": "Total Entities"
     }
   },
   "mixin": {

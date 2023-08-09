@@ -66,6 +66,7 @@ const forms = dataStore({
       : extendedUsers.createPast(1).last(),
     fields = [testDataFields.string('/s')],
     entityRelated = false,
+    lastEntity = undefined,
 
     ...extraVersionOptions
   }) => {
@@ -103,7 +104,8 @@ const forms = dataStore({
       enketoId,
       submissions,
       lastSubmission,
-      reviewStates
+      reviewStates,
+      lastEntity
     });
     Object.assign(form, submissionStats(form));
     if (inPast)
@@ -145,7 +147,8 @@ formVersions = dataStore({
     lastSubmission = undefined,
     reviewStates = undefined,
     publishedBy = undefined,
-    draftToken = draft ? faker.random.alphaNumeric(64) : null
+    draftToken = draft ? faker.random.alphaNumeric(64) : null,
+    lastEntity = undefined
   }) => {
     if (form === undefined) throw new Error('form not found');
     const result = {
@@ -174,7 +177,8 @@ formVersions = dataStore({
     } else {
       Object.assign(result, {
         publishedAt: publishedAt != null ? publishedAt : result.createdAt,
-        publishedBy: publishedBy != null ? toActor(publishedBy) : form.createdBy
+        publishedBy: publishedBy != null ? toActor(publishedBy) : form.createdBy,
+        lastEntity
       });
     }
     return result;
@@ -236,7 +240,7 @@ export const extendedForms = view(
       ...pick([...basicFormProps, 'enketoId', 'createdBy', 'entityRelated'], form),
       ...pick([...basicVersionProps, 'excelContentType'], version),
       ...pick(
-        ['submissions', 'lastSubmission', 'reviewStates'],
+        ['submissions', 'lastSubmission', 'reviewStates', 'lastEntity'],
         version.publishedAt == null ? version : form
       )
     };

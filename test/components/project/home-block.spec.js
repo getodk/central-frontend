@@ -2,6 +2,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 
 import ProjectHomeBlock from '../../../src/components/project/home-block.vue';
 import FormRow from '../../../src/components/project/form-row.vue';
+import DatasetRow from '../../../src/components/project/dataset-row.vue';
 
 import useProjects from '../../../src/request-data/projects';
 
@@ -15,6 +16,7 @@ import { testRequestData } from '../../util/request-data';
 const mountComponent = () => {
   const projectData = { ...testData.extendedProjects.last() };
   projectData.formList = testData.extendedForms.sorted();
+  projectData.datasetList = testData.extendedDatasets.sorted();
   const container = createTestContainer({
     requestData: testRequestData([useProjects], { projects: [projectData] }),
     router: mockRouter('/')
@@ -130,5 +132,52 @@ describe('ProjectHomeBlock', () => {
     await expand.trigger('click');
     const rows = block.findAllComponents(FormRow);
     rows.map((row) => row.props().form.name).should.eql(['a', 'c', 'd', 'e']);
+  });
+
+  it('shows the correct number of forms and datasets if there are only a few', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedForms.createPast(3);
+    testData.extendedDatasets.createPast(3);
+    const block = mountComponent();
+    block.findAllComponents(FormRow).length.should.equal(3);
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    block.find('.expand-button').exists().should.be.false();
+    block.find('.margin').exists().should.be.true();
+  });
+
+  it('shows the correct number of datasets if there are a lot and some should be hidden', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(4);
+    const block = mountComponent();
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    const expand = block.find('.expand-button');
+    expand.exists().should.be.true();
+    expand.text().should.equal('Show 4 total');
+    expand.find('.icon-angle-down').exists().should.be.true();
+    block.find('.margin').exists().should.be.false();
+  });
+
+  it('expands the datasets to show more datasets', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(4);
+    const block = mountComponent();
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    const expand = block.find('.project-dataset-row .expand-button');
+    await expand.trigger('click');
+    block.findAllComponents(DatasetRow).length.should.equal(4);
+    expand.text().should.equal('Show fewer of 4 total');
+    expand.find('.icon-angle-up').exists().should.be.true();
+  });
+
+  it('sorts the datasets by a given sort function', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(1, { name: 'Bravo' });
+    testData.extendedDatasets.createPast(1, { name: 'Charlie' });
+    testData.extendedDatasets.createPast(1, { name: 'Alpha' });
+    const block = mountComponent();
+    const { datasetList } = block.props().project;
+    datasetList.map((dataset) => dataset.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
+    const rows = block.findAllComponents(DatasetRow);
+    rows.map((row) => row.props().dataset.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
   });
 });
