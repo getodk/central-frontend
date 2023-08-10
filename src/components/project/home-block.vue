@@ -104,9 +104,11 @@ export default {
         : sortedForms.slice(0, this.maxForms);
     },
     visibleDataset() {
+      const sortedDatasets = this.project.datasetList.sort(this.sortFunc);
+
       return this.datasetExpanded
-        ? this.project.datasetList
-        : this.project.datasetList.slice(0, this.maxForms);
+        ? sortedDatasets
+        : sortedDatasets.slice(0, this.maxDatasets);
     },
     showExpander() {
       return this.numForms > this.maxForms;
