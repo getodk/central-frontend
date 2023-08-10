@@ -77,13 +77,16 @@ export default {
       password: ''
     };
   },
-  mounted() {
-    if (this.config.oidcEnabled) {
-      const { oidcError } = this.$route.query;
-      if (oidcError) this.alert.danger(this.$t(`oidc.error.${oidcError}`));
-    } else {
-      this.$refs.email.focus();
+  created() {
+    const { oidcError } = this.$route.query;
+    if (this.config.oidcEnabled && typeof oidcError === 'string') {
+      const path = `oidc.error.${oidcError}`;
+      if (this.$te(path, this.$i18n.fallbackLocale))
+        this.alert.danger(this.$t(path));
     }
+  },
+  mounted() {
+    if (!this.config.oidcEnabled) this.$refs.email.focus();
   },
   methods: {
     navigateToNext(
