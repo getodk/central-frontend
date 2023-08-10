@@ -306,6 +306,10 @@
       "string": "Comment",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "continue": {
+      "string": "Continue",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "create": {
       "string": "Create",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -922,6 +926,9 @@
         }
       },
       "oidc": {
+        "body": {
+          "string": "Click Continue to proceed to the login page."
+        },
         "error": {
           "auth-ok-user-not-found": {
             "string": "Authentication successful, but your user does not exist in ODK Central."

@@ -17,10 +17,11 @@ except according to the terms contained in the LICENSE file.
           <h1 class="panel-title">{{ $t('action.logIn') }}</h1>
         </div>
         <div v-if="config.oidcEnabled" class="panel-body">
+          <p>{{ $t('oidc.body') }}</p>
           <div class="panel-footer">
             <a :href="`/v1/oidc/login?next=${$route.query.next || ''}`"
               class="btn btn-primary" :class="{ disabled }" @click="disabled = true">
-              {{ $t('action.logIn') }} <spinner :state="disabled"/>
+              {{ $t('action.continue') }} <spinner :state="disabled"/>
             </a>
           </div>
         </div>
@@ -163,6 +164,7 @@ export default {
       "changePassword": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
     },
     "oidc": {
+      "body": "Click Continue to proceed to the login page.",
       "error": {
         "auth-ok-user-not-found": "Authentication successful, but your user does not exist in ODK Central.",
         "email-not-verified": "Your email address has not been verified by the authentication provider.",
