@@ -199,13 +199,6 @@ export default {
       "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar.",
       "changePassword": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
     },
-    "oidc": {
-      "error": {
-        "auth-ok-user-not-found": "Autenticado, pero no tienes cuenta en ODK Central.",
-        "email-not-verified": "Tu email no ha estado verificado por el proveedor de autenticación.",
-        "provider-misconfigured": "Había un problema con el proveedor de autenticación. Contactar el administrador del sitio.",
-      },
-    },
     "problem": {
       "401_2": "Dirección de correo electrónico y/o contraseña incorrecta."
     }
