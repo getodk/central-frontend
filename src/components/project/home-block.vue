@@ -104,7 +104,8 @@ export default {
         : sortedForms.slice(0, this.maxForms);
     },
     visibleDataset() {
-      const sortedDatasets = this.project.datasetList.sort(this.sortFunc);
+      const sortedDatasets = this.project.datasetList;
+      sortedDatasets.sort(this.sortFunc);
 
       return this.datasetExpanded
         ? sortedDatasets

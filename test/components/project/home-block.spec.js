@@ -27,7 +27,7 @@ const mountComponent = () => {
       project: projects[0],
       // This is a placeholder sort function. The real one will be
       // passed through from project/list.vue
-      sortFunc: (a, b) => a.xmlFormId ? a.xmlFormId.localeCompare(b.xmlFormId) : a.name.localeCompare(b.name)
+      sortFunc: (a, b) => (a.xmlFormId ? a.xmlFormId.localeCompare(b.xmlFormId) : a.name.localeCompare(b.name))
       // maxForms prop defaults to 3 and that default is used in the following tests.
       // Tests that alter maxForms can be found in project/list.spec.js
     },

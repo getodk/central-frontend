@@ -225,13 +225,13 @@ describe('ProjectList', () => {
     it('renders correctly when there are many empty projects', () => {
       createProjects(
         [{ name: 'Project 01' }, { name: 'Project 02' }, { name: 'Project 03' },
-         { name: 'Project 04' }, { name: 'Project 05' }, { name: 'Project 06' },
-         { name: 'Project 07' }, { name: 'Project 08' }, { name: 'Project 09' },
-         { name: 'Project 10' }, { name: 'Project 11' }, { name: 'Project 12' },
-         { name: 'Project 13' }, { name: 'Project 14' }, { name: 'Project 15' },
-         { name: 'Project 16' }, { name: 'Project 17' }, { name: 'Project 18' }],
-        [          
-          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}], [{}], [],          
+          { name: 'Project 04' }, { name: 'Project 05' }, { name: 'Project 06' },
+          { name: 'Project 07' }, { name: 'Project 08' }, { name: 'Project 09' },
+          { name: 'Project 10' }, { name: 'Project 11' }, { name: 'Project 12' },
+          { name: 'Project 13' }, { name: 'Project 14' }, { name: 'Project 15' },
+          { name: 'Project 16' }, { name: 'Project 17' }, { name: 'Project 18' }],
+        [
+          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}], [{}], [],
           [], [], [],
           [], [], [],
           [], [], [],
@@ -388,14 +388,14 @@ describe('ProjectList', () => {
     it('renders correctly when there are many empty projects', () => {
       createProjects(
         [{ name: 'Project 01' }, { name: 'Project 02' }, { name: 'Project 03' },
-         { name: 'Project 04' }, { name: 'Project 05' }, { name: 'Project 06' },
-         { name: 'Project 07' }, { name: 'Project 08' }, { name: 'Project 09' },
-         { name: 'Project 10' }, { name: 'Project 11' }, { name: 'Project 12' },
-         { name: 'Project 13' }, { name: 'Project 14' }, { name: 'Project 15' },
-         { name: 'Project 16' }, { name: 'Project 17' }, { name: 'Project 18' }],
+          { name: 'Project 04' }, { name: 'Project 05' }, { name: 'Project 06' },
+          { name: 'Project 07' }, { name: 'Project 08' }, { name: 'Project 09' },
+          { name: 'Project 10' }, { name: 'Project 11' }, { name: 'Project 12' },
+          { name: 'Project 13' }, { name: 'Project 14' }, { name: 'Project 15' },
+          { name: 'Project 16' }, { name: 'Project 17' }, { name: 'Project 18' }],
         [],
-        [          
-          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],[{}], [],          
+        [
+          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}], [{}], [],
           [], [], [],
           [], [], [],
           [], [], [],
@@ -514,8 +514,6 @@ describe('ProjectList', () => {
       blocks[0].findAllComponents(DatasetRow).length.should.equal(3);
       blocks[1].findAllComponents(DatasetRow).length.should.equal(2);
     });
-
-    
   });
 
   describe('duplicate form names', () => {

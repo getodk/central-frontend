@@ -78,6 +78,7 @@ import sortFunctions from '../../util/sort';
 import useChunkyArray from '../../composables/chunky-array';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
+import { countUnderThreshold } from '../../util/util';
 
 export default {
   name: 'ProjectList',
@@ -134,7 +135,7 @@ export default {
     //   then show more items until total items shown is close to 15
     // - Don't show closed forms
     maxForms() {
-      let limit = 2;      
+      let limit = 2;
       let formsShown;
 
       const formCounts = this.projects.map((project) =>
@@ -143,9 +144,9 @@ export default {
 
       do {
         limit += 1;
-        formsShown = formCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
+        formsShown = countUnderThreshold(formCounts, limit); // formCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
       }
-      while(formsShown < 15 && formsShown < totalForms);
+      while (formsShown < 15 && formsShown < totalForms);
 
       return formsShown > 15 && limit > 3 ? limit - 1 : limit;
     },
@@ -158,9 +159,9 @@ export default {
 
       do {
         limit += 1;
-        dsShown = datasetCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
+        dsShown = countUnderThreshold(datasetCounts, limit); // datasetCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
       }
-      while(dsShown < 15 && dsShown < totalDatasets);
+      while (dsShown < 15 && dsShown < totalDatasets);
 
       return dsShown > 15 && limit > 3 ? limit - 1 : limit;
     }
