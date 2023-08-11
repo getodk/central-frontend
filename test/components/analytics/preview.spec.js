@@ -84,9 +84,8 @@ describe('AnalyticsPreview', () => {
     const tables = container.findAllComponents(AnalyticsMetricsTable);
     tables.length.should.equal(1);
     tables[0].props().metrics.should.eql(emptyProjects.system);
-    // Text should indicate 0 projects
-    const text = container.get('#analytics-preview-project-summary .explanation').text();
-    text.should.equal('(Showing the most active Project of 0 Projects)');
+    // Project summary should not exist
+    container.find('#analytics-preview-project-summary').exists().should.be.false();
   });
 
   it('shows the project number and plurailization for a single project', async () => {
