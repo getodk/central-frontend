@@ -95,27 +95,58 @@ describe('createCentralRouter()', () => {
     });
 
     describe('restoreSession is true for the first route', () => {
-      beforeEach(() => {
+      it('sends the correct requests', () => {
         testData.extendedUsers.createPast(1, { role: 'none' });
-      });
-
-      it('sends the correct requests', () =>
-        load('/account/edit', {}, false)
+        return load('/account/edit', {}, false)
           .restoreSession()
           .respondFor('/account/edit')
           .testRequests([
             { url: '/v1/sessions/restore' },
             { url: '/v1/users/current', extended: true },
             null
-          ]));
+          ]);
+      });
 
-      it('does not redirect the user from a location that requires login', () =>
-        load('/account/edit', {}, false)
+      it('does not redirect the user from a location that requires login', () => {
+        testData.extendedUsers.createPast(1, { role: 'none' });
+        return load('/account/edit', {}, false)
           .restoreSession()
           .respondFor('/account/edit')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/account/edit');
-          }));
+          });
+      });
+
+      describe('OIDC is enabled', () => {
+        const container = {
+          config: { oidcEnabled: true }
+        };
+
+        it('sets sessionExpires if it is not set in local storage', () => {
+          sinon.useFakeTimers();
+          testData.extendedUsers.createPast(1, { role: 'none' });
+          testData.sessions.createPast(1, { expiresAt: '1970-01-01T00:05:00Z' });
+          return load('/account/edit', { container }, false)
+            .restoreSession()
+            .respondFor('/account/edit')
+            .afterResponses(() => {
+              localStorage.getItem('sessionExpires').should.equal('300000');
+            });
+        });
+
+        it('sets sessionExpires if it is set to something different', () => {
+          sinon.useFakeTimers();
+          testData.extendedUsers.createPast(1, { role: 'none' });
+          testData.sessions.createPast(1, { expiresAt: '1970-01-01T00:05:00Z' });
+          localStorage.setItem('sessionExpires', '299999');
+          return load('/account/edit', { container }, false)
+            .restoreSession()
+            .respondFor('/account/edit')
+            .afterResponses(() => {
+              localStorage.getItem('sessionExpires').should.equal('300000');
+            });
+        });
+      });
     });
   });
 

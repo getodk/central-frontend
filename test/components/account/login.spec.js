@@ -24,14 +24,44 @@ describe('AccountLogin', () => {
     component.get('input[type="email"]').should.be.focused();
   });
 
-  it('shows an info alert if there is an existing session', async () => {
-    const component = mount(AccountLogin, {
-      container: { router: mockRouter('/account/login') }
+  describe('existing session', () => {
+    it('shows an info alert if OIDC is not enabled', async () => {
+      const component = await load('/login', { root: false });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      await submit(component);
+      component.should.alert('info', (message) => {
+        message.should.startWith('A user is already logged in.');
+      });
     });
-    localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
-    await submit(component);
-    component.should.alert('info', (message) => {
-      message.should.startWith('A user is already logged in.');
+
+    it('shows an info alert if OIDC is enabled', async () => {
+      const component = await load('/login', {
+        container: {
+          config: { oidcEnabled: true }
+        },
+        root: false
+      });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      await component.get('a[href^="/v1/oidc/login"]').trigger('click');
+      component.should.alert('info', (message) => {
+        message.should.startWith('A user is already logged in.');
+      });
+    });
+
+    it('does not redirect to OIDC login', async () => {
+      const component = await load('/login', {
+        container: {
+          config: { oidcEnabled: true }
+        },
+        root: false
+      });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      const a = component.get('a[href^="/v1/oidc/login"]');
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true
+      });
+      a.element.dispatchEvent(event).should.be.false();
     });
   });
 

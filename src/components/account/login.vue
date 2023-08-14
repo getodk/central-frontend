@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           <p>{{ $t('oidc.body') }}</p>
           <div class="panel-footer">
             <a :href="oidcLoginPath" class="btn btn-primary"
-              :class="{ disabled }" @click="disabled = true">
+              :class="{ disabled }" @click="loginByOIDC">
               {{ $t('action.continue') }} <spinner :state="disabled"/>
             </a>
           </div>
@@ -100,6 +100,21 @@ export default {
     if (!this.config.oidcEnabled) this.$refs.email.focus();
   },
   methods: {
+    verifyNewSession() {
+      const sessionExpires = localStore.getItem('sessionExpires');
+      const newSession = sessionExpires == null ||
+        Number.parseInt(sessionExpires, 10) < Date.now();
+      if (!newSession) this.alert.info(this.$t('alert.alreadyLoggedIn'));
+      return newSession;
+    },
+    loginByOIDC(event) {
+      if (!this.verifyNewSession()) {
+        event.preventDefault();
+        return;
+      }
+
+      this.disabled = true;
+    },
     navigateToNext(
       next,
       // Function that redirects within Frontend
@@ -122,12 +137,7 @@ export default {
       return internal(url.pathname + url.search + url.hash);
     },
     submit() {
-      const sessionExpires = localStore.getItem('sessionExpires');
-      if (sessionExpires != null && parseInt(sessionExpires, 10) > Date.now()) {
-        this.alert.info(this.$t('alert.alreadyLoggedIn'));
-        return;
-      }
-
+      if (!this.verifyNewSession()) return;
       this.disabled = true;
       this.session.request({
         method: 'POST',

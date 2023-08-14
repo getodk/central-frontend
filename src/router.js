@@ -23,7 +23,7 @@ import { setDocumentTitle } from './util/reactivity';
 
 export default (container, history = createWebHashHistory()) => {
   const router = createRouter({ history, routes: createRoutes(container) });
-  const { requestData, alert, unsavedChanges } = container;
+  const { requestData, alert, unsavedChanges, config } = container;
 
 
 
@@ -73,7 +73,11 @@ router.afterEach(unlessFailure(to => {
       async (to) => {
         if (to.meta.restoreSession && !session.dataExists) {
           await restoreSession(session);
-          await logIn(container, false);
+          // If this is the first time that the session has been restored since
+          // the most recent OIDC login, set sessionExpires in local storage.
+          const newSession = config.oidcEnabled &&
+            Date.parse(session.expiresAt).toString() !== localStore.getItem('sessionExpires');
+          await logIn(container, newSession);
         }
       }
     ];

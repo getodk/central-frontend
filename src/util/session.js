@@ -241,12 +241,18 @@ export const logIn = (container, newSession) => {
   const { requestData, config } = container;
   const { session, currentUser, analyticsConfig } = requestData;
   if (newSession) {
-    /* If two tabs submit the login form at the same time, then both will end up
+    /*
+    If two tabs submit the login form at the same time, then both will end up
     logged out: the first tab to log in will set sessionExpires; then the second
     tab will set sessionExpires, logging out the first tab; which will remove
     sessionExpires, logging out the second tab. That will be true even in the
     (very unlikely) case that the two sessions have the same expiration date,
-    because sessionExpires is removed before it is set. */
+    because sessionExpires is removed before it is set.
+
+    Similarly, if two tabs log in via OIDC at the same time, then both will end
+    up logged out. However, that won't be the case if the two sessions have the
+    same expiration date.
+    */
     localStore.removeItem('sessionExpires');
     localStore.setItem('sessionExpires', Date.parse(session.expiresAt).toString());
   }
