@@ -3941,6 +3941,9 @@
         "string": "Change Password",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "oidcBody": {
+        "string": "This Central server does not manage any login passwords."
+      },
       "action": {
         "change": {
           "string": "Change password",

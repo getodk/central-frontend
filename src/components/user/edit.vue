@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
         <div class="col-xs-7">
           <user-edit-basic-details v-if="user.dataExists"/>
         </div>
-        <div v-if="!config.oidcEnabled" class="col-xs-5">
+        <div class="col-xs-5">
           <user-edit-password/>
         </div>
       </div>
@@ -34,7 +34,6 @@ export default {
 };
 </script>
 <script setup>
-import { inject } from 'vue';
 import { useRoute } from 'vue-router';
 
 import Loading from '../loading.vue';
@@ -54,7 +53,6 @@ const props = defineProps({
     required: true
   }
 });
-const config = inject('config');
 
 const user = useUser();
 user.request({ url: apiPaths.user(props.id) }).catch(noop);
