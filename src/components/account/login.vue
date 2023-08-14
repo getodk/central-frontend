@@ -19,8 +19,8 @@ except according to the terms contained in the LICENSE file.
         <div v-if="config.oidcEnabled" class="panel-body">
           <p>{{ $t('oidc.body') }}</p>
           <div class="panel-footer">
-            <a :href="`/v1/oidc/login?next=${$route.query.next || ''}`"
-              class="btn btn-primary" :class="{ disabled }" @click="disabled = true">
+            <a :href="oidcLoginPath" class="btn btn-primary"
+              :class="{ disabled }" @click="disabled = true">
               {{ $t('action.continue') }} <spinner :state="disabled"/>
             </a>
           </div>
@@ -58,6 +58,7 @@ import Spinner from '../spinner.vue';
 import { enketoBasePath, noop } from '../../util/util';
 import { localStore } from '../../util/storage';
 import { logIn } from '../../util/session';
+import { queryString } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -77,6 +78,14 @@ export default {
       email: '',
       password: ''
     };
+  },
+  computed: {
+    oidcLoginPath() {
+      const { query } = this.$route;
+      const next = typeof query.next === 'string' ? query.next : undefined;
+      const qs = queryString({ next });
+      return `/v1/oidc/login${qs}`;
+    }
   },
   created() {
     const { oidcError } = this.$route.query;
