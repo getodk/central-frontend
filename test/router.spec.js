@@ -1,5 +1,7 @@
 import sinon from 'sinon';
 
+import NotFound from '../src/components/not-found.vue';
+
 import { noop } from '../src/util/util';
 
 import testData from './data';
@@ -1207,17 +1209,31 @@ describe('createCentralRouter()', () => {
   });
 
   describe('config', () => {
-    beforeEach(mockLogin);
+    describe('OIDC is enabled', () => {
+      const container = {
+        config: { oidcEnabled: true }
+      };
 
-    it('redirects user from /system/analytics if showsAnalytics is false', () => {
+      it('renders NotFound for /reset-password', async () => {
+        const app = await load('/reset-password', { container });
+        app.findComponent(NotFound).exists().should.be.true();
+      });
+
+      it('renders NotFound for /account/claim', async () => {
+        const app = await load(`/account/claim?token=${'a'.repeat(64)}`, {
+          container
+        });
+        app.findComponent(NotFound).exists().should.be.true();
+      });
+    });
+
+    it('renders NotFound for /system/analytics if showsAnalytics is false', async () => {
+      mockLogin();
       const container = {
         config: { showsAnalytics: false }
       };
-      return load('/system/analytics', { container }, false)
-        .respondFor('/')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        });
+      const app = await load('/system/analytics', { container }, false);
+      app.findComponent(NotFound).exists().should.be.true();
     });
   });
 });
