@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
             </a>
           </div>
         </div>
-        <div v-if="!config.oidcEnabled" class="panel-body">
+        <div v-else class="panel-body">
           <form @submit.prevent="submit">
             <form-group ref="email" v-model.trim="email" type="email"
               :placeholder="$t('field.email')" required autocomplete="off"/>
