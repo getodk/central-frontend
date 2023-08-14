@@ -89,7 +89,8 @@ export default {
   },
   created() {
     const { oidcError } = this.$route.query;
-    if (this.config.oidcEnabled && typeof oidcError === 'string') {
+    if (this.config.oidcEnabled && typeof oidcError === 'string' &&
+      /^[\w-]+$/.test(oidcError)) {
       const path = `oidc.error.${oidcError}`;
       if (this.$te(path, this.$i18n.fallbackLocale))
         this.alert.danger(this.$t(path));
