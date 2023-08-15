@@ -55,11 +55,6 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
-export default {
-  name: 'EntityUpdate'
-};
-</script>
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue';
 
@@ -74,6 +69,9 @@ import { noop } from '../../util/util';
 import { px, styleBox } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'EntityUpdate'
+});
 const props = defineProps({
   state: Boolean,
   entity: Object

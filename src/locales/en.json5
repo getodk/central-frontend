@@ -390,7 +390,8 @@
     },
     // {inform} is the number of dataset properties defined by the form.
     // {count} is the total number of properties. The string will be pluralized based on {count}.
-    "propertiesCount": "{inform} of {count} property | {inform} of {count} properties"
+    "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
+    "new": "New!"
   },
   "mixin": {
     "request": {

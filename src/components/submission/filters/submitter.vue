@@ -18,11 +18,6 @@ except according to the terms contained in the LICENSE file.
     @update:model-value="update"/>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionFiltersSubmitter'
-};
-</script>
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -31,6 +26,9 @@ import Multiselect from '../../multiselect.vue';
 
 import { useRequestData } from '../../../request-data';
 
+defineOptions({
+  name: 'SubmissionFiltersSubmitter'
+});
 const props = defineProps({
   modelValue: {
     type: Array,

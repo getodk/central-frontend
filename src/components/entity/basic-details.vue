@@ -45,11 +45,6 @@ except according to the terms contained in the LICENSE file.
   </page-section>
 </template>
 
-<script>
-export default {
-  name: 'EntityBasicDetails'
-};
-</script>
 <script setup>
 import { inject, ref, watchEffect } from 'vue';
 
@@ -59,6 +54,10 @@ import PageSection from '../page/section.vue';
 
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'EntityBasicDetails'
+});
 
 const projectId = inject('projectId');
 

@@ -15,13 +15,7 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('title') }}</template>
       <template #tabs>
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">{{ $t('tab.users') }}</router-link>
-        </li>
-        <li class="disabled" role="presentation">
-          <a href="#">
-            {{ $t('tab.roles') }}
-            <span class="coming-soon">{{ $t('comingSoon') }}</span>
-          </a>
+          <router-link :to="tabPath('')">{{ $t('resource.webUsers') }}</router-link>
         </li>
       </template>
     </page-head>
@@ -31,26 +25,22 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'UserHome'
-};
-</script>
 <script setup>
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
 import useTabs from '../../composables/tabs';
 
+defineOptions({
+  name: 'UserHome'
+});
+
 const { tabPath, tabClass } = useTabs('/users');
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
-#user-home .coming-soon {
-  color: $color-text;
-  font-size: 10px;
+#user-home {
+  #page-head-tabs li { display: block; }
 }
 </style>
 
@@ -58,14 +48,7 @@ const { tabPath, tabClass } = useTabs('/users');
 {
   "en": {
     // This is shown as the title at the top of the page.
-    "title": "User Settings",
-    "tab": {
-      "users": "Web Users",
-      "roles": "Role Settings"
-    },
-    // This is shown within a disabled navigation tab to indicate that the
-    // functionality is not yet implemented, but will be soon.
-    "comingSoon": "(coming soon)"
+    "title": "User Settings"
   }
 }
 </i18n>

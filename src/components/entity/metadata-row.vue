@@ -45,11 +45,6 @@ except according to the terms contained in the LICENSE file.
   </tr>
 </template>
 
-<script>
-export default {
-  name: 'EntityMetadataRow'
-};
-</script>
 <script setup>
 import { computed, inject } from 'vue';
 
@@ -57,6 +52,9 @@ import DateTime from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
 
+defineOptions({
+  name: 'EntityMetadataRow'
+});
 const props = defineProps({
   entity: {
     type: Object,

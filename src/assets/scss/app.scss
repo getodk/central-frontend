@@ -807,6 +807,17 @@ becomes more complicated.
   }
 }
 
+.chip {
+  font-size: 10px;
+  top: -2px;
+  position: relative;
+  color: white;
+  padding: 4px 7px;
+  margin-left: 2px;
+  background: $color-accent-primary;
+  border-radius: 5px;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////

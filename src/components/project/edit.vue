@@ -33,11 +33,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ProjectEdit'
-};
-</script>
 <script setup>
 import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -49,6 +44,10 @@ import MarkdownTextarea from '../markdown/textarea.vue';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'ProjectEdit'
+});
 
 // The component assumes that this data will exist when the component is
 // created.

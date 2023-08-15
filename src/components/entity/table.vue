@@ -39,11 +39,6 @@ except according to the terms contained in the LICENSE file.
   </table-freeze>
 </template>
 
-<script>
-export default {
-  name: 'EntityTable'
-};
-</script>
 <script setup>
 import { computed, ref } from 'vue';
 
@@ -54,6 +49,9 @@ import TableFreeze from '../table-freeze.vue';
 import { markRowsChanged } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'EntityTable'
+});
 defineProps({
   properties: Array
 });

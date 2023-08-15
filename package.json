@@ -9,7 +9,7 @@
     "test": "./test/run.sh"
   },
   "volta": {
-    "node": "16.19.1"
+    "node": "18.17.0"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
@@ -39,7 +39,7 @@
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "~3",
     "@vue/eslint-config-airbnb": "^7.0.0",
-    "@vue/test-utils": "~2",
+    "@vue/test-utils": "^2.4.1",
     "comment-json": "~4",
     "eslint": "^8.28.0",
     "eslint-plugin-import": "~2",
@@ -62,7 +62,7 @@
     "vue-cli-plugin-i18n": "~2"
   },
   "engines": {
-    "node": "16",
-    "npm": "8"
+    "node": "18.17.0",
+    "npm": "9"
   }
 }

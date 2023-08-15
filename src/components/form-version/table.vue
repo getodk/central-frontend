@@ -25,16 +25,14 @@ except according to the terms contained in the LICENSE file.
   </table>
 </template>
 
-<script>
-export default {
-  name: 'FormVersionTable'
-};
-</script>
 <script setup>
 import FormVersionRow from './row.vue';
 
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'FormVersionTable'
+});
 defineEmits(['view-xml']);
 
 // The component does not assume that this data will exist when the component is

@@ -13,15 +13,14 @@ except according to the terms contained in the LICENSE file.
   <user-edit :id="currentUser.id.toString()"/>
 </template>
 
-<script>
-export default {
-  name: 'AccountEdit'
-};
-</script>
 <script setup>
 import UserEdit from '../user/edit.vue';
 
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'AccountEdit'
+});
 
 const { currentUser } = useRequestData();
 </script>

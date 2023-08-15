@@ -741,46 +741,6 @@ describe('createCentralRouter()', () => {
       }
     });
 
-    describe('project without datasets', () => {
-      beforeEach(mockLogin);
-
-      it('redirects a user whose first navigation is to the route', () => {
-        testData.extendedProjects.createPast(1);
-        return load('/projects/1/datasets')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-
-      it('redirects a user navigating from a different project route', () => {
-        testData.extendedProjects.createPast(1);
-        return load('/projects/1')
-          .complete()
-          .route('/projects/1/datasets')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-
-      it('redirects a user navigating from a different project', () => {
-        // Creating the dataset will also create a project.
-        testData.extendedDatasets.createPast(1);
-        // Create a second project.
-        testData.extendedProjects.createPast(1);
-        return load('/projects/1/datasets', {}, {
-          project: () => testData.extendedProjects.first()
-        })
-          .complete()
-          .load('/projects/2/datasets', { datasets: () => [] })
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-    });
-
     describe('form without a published version', () => {
       beforeEach(() => {
         mockLogin();

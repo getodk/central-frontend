@@ -86,7 +86,13 @@ export default {
 </script>
 
 <style lang="scss">
-#form-list { margin-bottom: 35px; }
+#form-list {
+  margin-bottom: 35px;
+
+  .empty-table-message{
+    margin-top: 20px;
+  }
+}
 </style>
 
 <i18n lang="json5">

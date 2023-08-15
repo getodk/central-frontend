@@ -39,11 +39,6 @@ except according to the terms contained in the LICENSE file.
   </table-freeze>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionTable'
-};
-</script>
 <script setup>
 import { computed, ref } from 'vue';
 
@@ -55,6 +50,9 @@ import useChunkyArray from '../../composables/chunky-array';
 import { markRowsChanged } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'SubmissionTable'
+});
 defineProps({
   projectId: {
     type: String,

@@ -27,16 +27,14 @@ except according to the terms contained in the LICENSE file.
   </table>
 </template>
 
-<script>
-export default {
-  name: 'PublicLinkTable'
-};
-</script>
 <script setup>
 import PublicLinkRow from './row.vue';
 
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'PublicLinkTable'
+});
 defineProps({
   highlighted: Number
 });

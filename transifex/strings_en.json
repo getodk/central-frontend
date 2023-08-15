@@ -844,6 +844,9 @@
     "propertiesCount": {
       "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
       "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+    },
+    "new": {
+      "string": "New!"
     }
   },
   "mixin": {
@@ -1447,6 +1450,11 @@
       "addedByThisDraft": {
         "string": "Added by this Draft",
         "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
+      }
+    },
+    "DatasetTable": {
+      "emptyTable": {
+        "string": "No Datasets have been created for this Project yet."
       }
     },
     "Download": {
@@ -2926,23 +2934,21 @@
             },
             "1": {
               "0": {
-                "string": "In addition, the following are true in this version of ODK Central:"
+                "string": "In addition, the following are true in this version of ODK Central:",
+                "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
                 "0": {
                   "string": "Existing Submissions will remain unencrypted."
-                },
-                "1": {
-                  "string": "In a future version, you will have the option to encrypt existing data."
                 }
               },
               "2": {
                 "0": {
                   "string": "Encryption cannot be turned off once enabled."
-                },
-                "1": {
-                  "string": "In a future version, you will be able to disable encryption, which will decrypt your data. This will be true even if you enable encryption now."
                 }
+              },
+              "3": {
+                "string": "Test Submissions to existing Draft Forms will be permanently removed."
               }
             },
             "2": {
@@ -3966,20 +3972,6 @@
       "title": {
         "string": "User Settings",
         "developer_comment": "This is shown as the title at the top of the page."
-      },
-      "tab": {
-        "users": {
-          "string": "Web Users",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "roles": {
-          "string": "Role Settings",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        }
-      },
-      "comingSoon": {
-        "string": "(coming soon)",
-        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
       }
     },
     "UserList": {
