@@ -25,16 +25,15 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'UserHome'
-};
-</script>
 <script setup>
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
 import useTabs from '../../composables/tabs';
+
+defineOptions({
+  name: 'UserHome'
+});
 
 const { tabPath, tabClass } = useTabs('/users');
 </script>

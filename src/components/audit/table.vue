@@ -26,15 +26,14 @@ except according to the terms contained in the LICENSE file.
   </table>
 </template>
 
-<script>
-export default {
-  name: 'AuditTable'
-};
-</script>
 <script setup>
 import AuditRow from './row.vue';
 
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'AuditTable'
+});
 
 const { audits } = useRequestData();
 </script>

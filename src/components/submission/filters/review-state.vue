@@ -16,11 +16,6 @@ except according to the terms contained in the LICENSE file.
     :none="$t('action.select.none')" @update:model-value="update"/>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionFiltersReviewState'
-};
-</script>
 <script setup>
 import { inject, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -30,6 +25,9 @@ import Multiselect from '../../multiselect.vue';
 import useReviewState from '../../../composables/review-state';
 import { odataLiteral } from '../../../util/odata';
 
+defineOptions({
+  name: 'SubmissionFiltersReviewState'
+});
 const props = defineProps({
   modelValue: {
     type: Array,

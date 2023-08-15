@@ -23,11 +23,6 @@ except according to the terms contained in the LICENSE file.
   </label>
 </template>
 
-<script>
-export default {
-  inheritAttrs: false
-};
-</script>
 <script setup>
 import { computed, ref } from 'vue';
 
@@ -35,6 +30,9 @@ import PasswordStrength from './password-strength.vue';
 
 import { requiredLabel } from '../util/dom';
 
+defineOptions({
+  inheritAttrs: false
+});
 const props = defineProps({
   modelValue: {
     type: String,

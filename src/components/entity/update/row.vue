@@ -34,10 +34,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 let id = 0;
-
-export default {
-  name: 'EntityUpdateRow'
-};
 </script>
 <script setup>
 import { computed, ref, watch } from 'vue';
@@ -46,6 +42,9 @@ import TextareaAutosize from '../../textarea-autosize.vue';
 
 import { requiredLabel } from '../../../util/dom';
 
+defineOptions({
+  name: 'EntityUpdateRow'
+});
 const props = defineProps({
   modelValue: String,
   oldValue: String,

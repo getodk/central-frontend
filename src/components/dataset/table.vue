@@ -29,15 +29,14 @@ except according to the terms contained in the LICENSE file.
   </p>
 </template>
 
-<script>
-export default {
-  name: 'DatasetTable'
-};
-</script>
 <script setup>
 import DatasetRow from './row.vue';
 
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'DatasetTable'
+});
 
 // The component does not assume that this data will exist when the component is
 // created.

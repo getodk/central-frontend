@@ -45,12 +45,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DatasetSettings'
-};
-</script>
-
 <script setup>
 import { ref, watch, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -59,6 +53,10 @@ import DatasetPendingSubmissions from './pending-submissions.vue';
 
 import { apiPaths, isProblem } from '../../util/request';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'DatasetSettings'
+});
 
 const { t } = useI18n();
 
