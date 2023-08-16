@@ -25,6 +25,7 @@ export const extendedEntities = dataStore({
     label = faker.random.word(),
     updates = 0,
     updatedAt = null,
+    version = 1,
     ...options
   }) => {
     if (extendedDatasets.size === 0) {
@@ -44,7 +45,7 @@ export const extendedEntities = dataStore({
       ]);
     return {
       uuid,
-      currentVersion: { label, data, current: true },
+      currentVersion: { label, data, current: true, version },
       updates,
       creatorId: creator.id,
       creator: toActor(creator),
@@ -76,7 +77,8 @@ export const entityOData = (top = 250, skip = 0) => {
           creatorId: entity.creator.id.toString(),
           creatorName: entity.creator.displayName,
           createdAt: entity.createdAt,
-          updatedAt: entity.updatedAt
+          updatedAt: entity.updatedAt,
+          version: entity.currentVersion.version
         }
       };
 

@@ -57,6 +57,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import EntityUpdateRow from './update/row.vue';
 import Modal from '../modal.vue';
@@ -68,6 +69,8 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { px, styleBox } from '../../util/dom';
 import { useRequestData } from '../../request-data';
+
+const { t } = useI18n();
 
 defineOptions({
   name: 'EntityUpdate'
@@ -90,13 +93,24 @@ watch(() => props.state, (state) => {
   }
 });
 
+
+
 const { request, awaitingResponse } = useRequest();
 const submit = () => {
   const { entity } = props;
-  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, {
-    force: true
-  });
-  request.patch(url, { label: label.value, data: data.value })
+  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid);
+
+  request.patch(
+    url,
+    { label: label.value, data: data.value },
+    {
+      headers: { 'If-Match': `"${entity.currentVersion.version}"` },
+      problemToAlert: ({ code }) => {
+        if (code === 409.15) return t('problem.409_15');
+        return null;
+      }
+    }
+  )
     .then(response => {
       // It is the responsibility of the parent component to patch the entity.
       emit('success', response.data);
@@ -188,6 +202,9 @@ const currentVersion = computed(() =>
     "header": {
       "currentValue": "Current Value",
       "updatedValue": "Updated Value"
+    },
+    "problem": {
+      "409_15": "Data has been modified by another user. Please refresh to see the updated data."
     }
   }
 }

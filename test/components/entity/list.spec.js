@@ -113,6 +113,7 @@ describe('EntityList', () => {
         uuid: 'abc',
         currentVersion: {
           label: 'My Entity',
+          version: 1,
           data: Object.assign(Object.create(null), {
             height: '1',
             'circumference.cm': '2'

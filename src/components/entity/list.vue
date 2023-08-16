@@ -124,7 +124,7 @@ export default {
         data[name] = odataEntity[odataName];
       this.update.entity = {
         uuid: odataEntity.__id,
-        currentVersion: { label: odataEntity.label, data }
+        currentVersion: { label: odataEntity.label, version: odataEntity.__system.version, data }
       };
       this.showModal('update');
     },
