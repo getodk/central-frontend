@@ -93,6 +93,7 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+@import '../../assets/scss/_variables.scss';
 
 .project-home-block {
   margin-bottom: 15px;
@@ -102,6 +103,10 @@ export default {
     font-weight: bold;
     letter-spacing: -0.02em;
     margin-bottom: 5px;
+    background-color: $color-page-background;
+    box-shadow: 0 0 20px $color-page-background;
+    position: sticky;
+    top: 0;
   }
 
   .encrypted {
