@@ -102,6 +102,10 @@ export default {
     font-weight: bold;
     letter-spacing: -0.02em;
     margin-bottom: 5px;
+    background-color: #f7f7f7;
+    box-shadow: 0 0 20px #f7f7f7;
+    position: sticky;
+    top: 0;
   }
 
   .encrypted {
