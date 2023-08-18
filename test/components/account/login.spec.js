@@ -263,4 +263,72 @@ describe('AccountLogin', () => {
         });
     });
   });
+
+  describe('OIDC error', () => {
+    const container = {
+      config: { oidcEnabled: true }
+    };
+
+    it('shows an alert for auth-ok-user-not-found', async () => {
+      const component = await load('/login?oidcError=auth-ok-user-not-found', {
+        container,
+        root: false
+      });
+      component.should.alert('danger', (message) => {
+        message.should.startWith('There is no Central account associated with your email address.');
+      });
+    });
+
+    it('shows an alert for provider-misconfigured', async () => {
+      const component = await load('/login?oidcError=provider-misconfigured', {
+        container,
+        root: false
+      });
+      component.should.alert('danger', (message) => {
+        message.should.startWith('Central could not access the email address associated with your account.');
+      });
+    });
+
+    it('shows an alert for email-not-verified', async () => {
+      const component = await load('/login?oidcError=email-not-verified', {
+        container,
+        root: false
+      });
+      component.should.alert('danger', (message) => {
+        message.should.startWith('Your email address has not been verified by your login server.');
+      });
+    });
+
+    it('does not show an alert if there are two errors', async () => {
+      const component = await load('/login?oidcError=auth-ok-user-not-found&oidcError=provider-misconfigured', {
+        container,
+        root: false
+      });
+      component.should.not.alert();
+    });
+
+    it('does not show an alert if query parameter has no value', async () => {
+      const component = await load('/login?oidcError', {
+        container,
+        root: false
+      });
+      component.should.not.alert();
+    });
+
+    it('does not show an alert for an error whose name is invalid', async () => {
+      const component = await load('/login?oidcError=.', {
+        container,
+        root: false
+      });
+      component.should.not.alert();
+    });
+
+    it('does not show an alert for an unknown error', async () => {
+      const component = await load('/login?oidcError=unknown', {
+        container,
+        root: false
+      });
+      component.should.not.alert();
+    });
+  });
 });

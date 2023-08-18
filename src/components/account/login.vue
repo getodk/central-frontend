@@ -186,9 +186,9 @@ export default {
     "oidc": {
       "body": "Click Continue to proceed to the login page.",
       "error": {
-        "auth-ok-user-not-found": "Authentication successful, but your user does not exist in ODK Central.",
-        "email-not-verified": "Your email address has not been verified by the authentication provider.",
-        "provider-misconfigured": "There was a problem with your authentication provider. Please contact the site administrator.",
+        "auth-ok-user-not-found": "There is no Central account associated with your email address. Please ask your Central administrator to create an account for you to continue.",
+        "email-not-verified": "Your email address has not been verified by your login server. Please contact your server administrator.",
+        "provider-misconfigured": "Central could not access the email address associated with your account. This could be because your server administrator has configured something incorrectly, or has not set an email address for your account. It could also be the result of privacy options that you can choose during the login process. If so, please try again and ensure that your email is shared."
       },
     },
     "problem": {
