@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <slot name="before"></slot>
     <input ref="input" v-bind="$attrs" class="form-control" :value="modelValue"
       :placeholder="requiredLabel(placeholder, required)" :required="required"
-      :autocomplete="autocomplete"
+      v-tooltip.aria-describedby="tooltip" :autocomplete="autocomplete"
       @input="$emit('update:modelValue', $event.target.value)">
     <password-strength v-if="autocomplete === 'new-password'"
       :password="modelValue"/>
@@ -43,6 +43,7 @@ const props = defineProps({
     required: true
   },
   required: Boolean,
+  tooltip: String,
   hasError: Boolean,
   autocomplete: {
     type: String,

@@ -3930,6 +3930,9 @@
         "string": "Basic Details",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "emailDisabled": {
+        "string": "Your email address cannot be changed. It is used between Central and your login server to ensure your identity."
+      },
       "action": {
         "update": {
           "string": "Update details",
