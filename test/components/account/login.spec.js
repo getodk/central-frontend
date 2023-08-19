@@ -28,43 +28,6 @@ describe('AccountLogin', () => {
     component.get('input[type="email"]').should.be.focused();
   });
 
-  describe('existing session', () => {
-    it('shows an info alert if OIDC is not enabled', async () => {
-      const component = await load('/login', { root: false });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
-      await submit(component);
-      component.should.alert('info', (message) => {
-        message.should.startWith('A user is already logged in.');
-      });
-    });
-
-    it('shows an info alert if OIDC is enabled', async () => {
-      const component = await load('/login', {
-        container: oidcContainer,
-        root: false
-      });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
-      await component.get('a[href^="/v1/oidc/login"]').trigger('click');
-      component.should.alert('info', (message) => {
-        message.should.startWith('A user is already logged in.');
-      });
-    });
-
-    it('does not redirect to OIDC login', async () => {
-      const component = await load('/login', {
-        container: oidcContainer,
-        root: false
-      });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
-      const a = component.get('a[href^="/v1/oidc/login"]');
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true
-      });
-      a.element.dispatchEvent(event).should.be.false();
-    });
-  });
-
   it('sends the correct request', () =>
     mockHttp()
       .mount(AccountLogin, {
@@ -412,6 +375,43 @@ describe('AccountLogin', () => {
         root: false
       });
       component.should.not.alert();
+    });
+  });
+
+  describe('existing session', () => {
+    it('shows an info alert if OIDC is not enabled', async () => {
+      const component = await load('/login', { root: false });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      await submit(component);
+      component.should.alert('info', (message) => {
+        message.should.startWith('A user is already logged in.');
+      });
+    });
+
+    it('shows an info alert if OIDC is enabled', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      await component.get('a[href^="/v1/oidc/login"]').trigger('click');
+      component.should.alert('info', (message) => {
+        message.should.startWith('A user is already logged in.');
+      });
+    });
+
+    it('does not redirect to OIDC login', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      const a = component.get('a[href^="/v1/oidc/login"]');
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true
+      });
+      a.element.dispatchEvent(event).should.be.false();
     });
   });
 });
