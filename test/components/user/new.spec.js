@@ -18,6 +18,27 @@ describe('UserNew', () => {
       hide: '.btn-link'
     }));
 
+  describe('introductory text', () => {
+    it('shows the correct text if OIDC is not enabled', () => {
+      const modal = mount(UserNew, {
+        props: { state: true }
+      });
+      const text = modal.get('.modal-introduction').text();
+      text.should.containEql('the email address you provide will be sent instructions on how to set a password');
+    });
+
+    it('shows the correct text if OIDC is enabled', () => {
+      const modal = mount(UserNew, {
+        props: { state: true },
+        container: {
+          config: { oidcEnabled: true }
+        }
+      });
+      const text = modal.get('.modal-introduction').text();
+      text.should.startWith('Users on your login server must have a Central account to log in to Central.');
+    });
+  });
+
   it('focuses the email input', () => {
     const modal = mount(UserNew, {
       props: { state: true },
