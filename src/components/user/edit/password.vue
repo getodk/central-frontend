@@ -50,7 +50,7 @@ import { useRequestData } from '../../../request-data';
 export default {
   name: 'UserEditPassword',
   components: { FormGroup, Spinner },
-  inject: ['config', 'alert'],
+  inject: ['alert', 'config'],
   setup() {
     const { currentUser, user } = useRequestData();
     const { request, awaitingResponse } = useRequest();
