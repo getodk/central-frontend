@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { NavigationFailureType, isNavigationFailure } from 'vue-router';
 
 import AccountLogin from '../../../src/components/account/login.vue';
 
@@ -13,6 +14,9 @@ const submit = async (component) => {
   await form.get('input[type="email"]').setValue('test@email.com');
   await form.get('input[type="password"]').setValue('foo');
   return form.trigger('submit');
+};
+const oidcContainer = {
+  config: { oidcEnabled: true }
 };
 
 describe('AccountLogin', () => {
@@ -36,9 +40,7 @@ describe('AccountLogin', () => {
 
     it('shows an info alert if OIDC is enabled', async () => {
       const component = await load('/login', {
-        container: {
-          config: { oidcEnabled: true }
-        },
+        container: oidcContainer,
         root: false
       });
       localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
@@ -50,9 +52,7 @@ describe('AccountLogin', () => {
 
     it('does not redirect to OIDC login', async () => {
       const component = await load('/login', {
-        container: {
-          config: { oidcEnabled: true }
-        },
+        container: oidcContainer,
         root: false
       });
       localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
@@ -116,6 +116,23 @@ describe('AccountLogin', () => {
         requestData.session.dataExists.should.be.true();
         requestData.currentUser.dataExists.should.be.true();
       });
+  });
+
+  it('aborts navigation during login', () => {
+    testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+    return load('/login')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .beforeEachResponse(async (app, _, i) => {
+        if (i < 2) {
+          const result = await app.vm.$router.push('/not-found');
+          isNavigationFailure(result, NavigationFailureType.aborted).should.be.true();
+        }
+      })
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => testData.extendedUsers.first())
+      .respondFor('/', { users: false });
   });
 
   it('shows an info alert if the password is too short', () => {
@@ -264,14 +281,80 @@ describe('AccountLogin', () => {
     });
   });
 
-  describe('OIDC error', () => {
-    const container = {
-      config: { oidcEnabled: true }
-    };
+  describe('OIDC is enabled', () => {
+    it('renders a link to OIDC login', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      component.get('a').attributes('href').should.equal('/v1/oidc/login');
+    });
 
+    it('does not render the form', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      component.find('form').exists().should.be.false();
+    });
+
+    it('disables the link after it is clicked', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      const a = component.get('a');
+      a.element.addEventListener('click', (event) => {
+        event.preventDefault();
+      });
+      await a.trigger('click');
+      a.classes('disabled').should.be.true();
+    });
+
+    it('aborts navigation after the link is clicked', async () => {
+      const app = await load('/login', { container: oidcContainer })
+        .restoreSession(false);
+      const a = app.get('#account-login a');
+      a.element.addEventListener('click', (event) => {
+        event.preventDefault();
+      });
+      await a.trigger('click');
+      const result = await app.vm.$router.push('/not-found');
+      isNavigationFailure(result, NavigationFailureType.aborted).should.be.true();
+    });
+  });
+
+  describe('next query parameter if OIDC is enabled', () => {
+    it('appends ?next to the link', async () => {
+      const component = await load('/login?next=%2Fusers', {
+        container: oidcContainer,
+        root: false
+      });
+      const href = component.get('a').attributes('href');
+      href.should.equal('/v1/oidc/login?next=%2Fusers');
+    });
+
+    it('does not append ?next if it was specified twice', async () => {
+      const component = await load('/login?next=%2Fusers&next=%2Faccount%2Fedit', {
+        container: oidcContainer,
+        root: false
+      });
+      component.get('a').attributes('href').should.equal('/v1/oidc/login');
+    });
+
+    it('does not append ?next if it has no value', async () => {
+      const component = await load('/login?next', {
+        container: oidcContainer,
+        root: false
+      });
+      component.get('a').attributes('href').should.equal('/v1/oidc/login');
+    });
+  });
+
+  describe('OIDC error', () => {
     it('shows an alert for auth-ok-user-not-found', async () => {
       const component = await load('/login?oidcError=auth-ok-user-not-found', {
-        container,
+        container: oidcContainer,
         root: false
       });
       component.should.alert('danger', (message) => {
@@ -281,7 +364,7 @@ describe('AccountLogin', () => {
 
     it('shows an alert for provider-misconfigured', async () => {
       const component = await load('/login?oidcError=provider-misconfigured', {
-        container,
+        container: oidcContainer,
         root: false
       });
       component.should.alert('danger', (message) => {
@@ -291,7 +374,7 @@ describe('AccountLogin', () => {
 
     it('shows an alert for email-not-verified', async () => {
       const component = await load('/login?oidcError=email-not-verified', {
-        container,
+        container: oidcContainer,
         root: false
       });
       component.should.alert('danger', (message) => {
@@ -301,7 +384,7 @@ describe('AccountLogin', () => {
 
     it('does not show an alert if there are two errors', async () => {
       const component = await load('/login?oidcError=auth-ok-user-not-found&oidcError=provider-misconfigured', {
-        container,
+        container: oidcContainer,
         root: false
       });
       component.should.not.alert();
@@ -309,7 +392,7 @@ describe('AccountLogin', () => {
 
     it('does not show an alert if query parameter has no value', async () => {
       const component = await load('/login?oidcError', {
-        container,
+        container: oidcContainer,
         root: false
       });
       component.should.not.alert();
@@ -317,7 +400,7 @@ describe('AccountLogin', () => {
 
     it('does not show an alert for an error whose name is invalid', async () => {
       const component = await load('/login?oidcError=.', {
-        container,
+        container: oidcContainer,
         root: false
       });
       component.should.not.alert();
@@ -325,7 +408,7 @@ describe('AccountLogin', () => {
 
     it('does not show an alert for an unknown error', async () => {
       const component = await load('/login?oidcError=unknown', {
-        container,
+        container: oidcContainer,
         root: false
       });
       component.should.not.alert();

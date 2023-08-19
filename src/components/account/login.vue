@@ -82,7 +82,7 @@ export default {
   computed: {
     oidcLoginPath() {
       const { query } = this.$route;
-      const next = typeof query.next === 'string' ? query.next : undefined;
+      const next = typeof query.next === 'string' ? query.next : null;
       const qs = queryString({ next });
       return `/v1/oidc/login${qs}`;
     }
@@ -189,7 +189,7 @@ export default {
         "auth-ok-user-not-found": "There is no Central account associated with your email address. Please ask your Central administrator to create an account for you to continue.",
         "email-not-verified": "Your email address has not been verified by your login server. Please contact your server administrator.",
         "provider-misconfigured": "Central could not access the email address associated with your account. This could be because your server administrator has configured something incorrectly, or has not set an email address for your account. It could also be the result of privacy options that you can choose during the login process. If so, please try again and ensure that your email is shared."
-      },
+      }
     },
     "problem": {
       "401_2": "Incorrect email address and/or password."
