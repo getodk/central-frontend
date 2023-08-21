@@ -47,6 +47,21 @@ describe('AnalyticsMetricsTable', () => {
     td[0].text().should.equal('1,000');
   });
 
+  it('correctly renders a metric with null data', () => {
+    // default/unpopulated data from the server could be 0 or could be null
+    // e.g. calculating the max question count when there are no forms or projects
+    const component = mount(AnalyticsMetricsTable, {
+      props: {
+        title: 'System',
+        metrics: { num_questions_biggest_form: null }
+      }
+    });
+    const td = component.findAll('td.metric-value');
+    td.length.should.equal(1);
+    td[0].attributes().colspan.should.equal('2');
+    td[0].text().should.equal('');
+  });
+
   it('renders a row for each metric', () => {
     const component = mount(AnalyticsMetricsTable, {
       props: {

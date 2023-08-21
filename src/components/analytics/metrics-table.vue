@@ -21,7 +21,10 @@ except according to the terms contained in the LICENSE file.
     <tbody>
       <tr v-for="(value, name) in metrics" :key="name">
         <td>{{ $t(`fields.${name}`) }}</td>
-        <template v-if="value.recent != null">
+        <template v-if="value == null">
+          <td colspan="2" class="metric-value"></td>
+        </template>
+        <template v-else-if="value.recent != null">
           <td class="metric-value">{{ $n(value.recent) }}</td>
           <td class="metric-value">{{ $n(value.total) }}</td>
         </template>

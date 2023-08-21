@@ -21,24 +21,26 @@ except according to the terms contained in the LICENSE file.
       <loading :state="analyticsPreview.initiallyLoading"/>
       <template v-if="analyticsPreview.dataExists">
         <analytics-metrics-table :title="$t('common.system')" :metrics="systemSummary"/>
-        <div id="analytics-preview-project-summary">
-          <span class="header">{{ $t('projects.title') }}</span>
-          <span class="explanation">{{ $tcn('projects.subtitle', numProjects) }}</span>
-        </div>
-        <div id="analytics-preview-project-tables">
-          <div id="users-forms-column">
-            <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
-            <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
+        <template v-if="numProjects > 0">
+          <div id="analytics-preview-project-summary">
+            <span class="header">{{ $t('projects.title') }}</span>
+            <span class="explanation">{{ $tcn('projects.subtitle', numProjects) }}</span>
           </div>
-          <div id="submissions-column">
-            <analytics-metrics-table :title="$t('resource.submissions')"
-              :metrics="submissionSummary"/>
-            <analytics-metrics-table :title="$t('submissionStates')"
-              :metrics="submissionStateSummary"/>
-            <analytics-metrics-table :title="$t('other')"
-              :metrics="otherSummary"/>
+          <div id="analytics-preview-project-tables">
+            <div id="users-forms-column">
+              <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
+              <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
+            </div>
+            <div id="submissions-column">
+              <analytics-metrics-table :title="$t('resource.submissions')"
+                :metrics="submissionSummary"/>
+              <analytics-metrics-table :title="$t('submissionStates')"
+                :metrics="submissionStateSummary"/>
+              <analytics-metrics-table :title="$t('other')"
+                :metrics="otherSummary"/>
+            </div>
           </div>
-        </div>
+        </template>
         <template v-if="numDatasets > 0">
           <div id="analytics-preview-dataset-summary">
             <span class="header">{{ $t('datasets.title') }}</span>
@@ -94,10 +96,7 @@ export default {
       return this.analyticsPreview.system;
     },
     firstProject() {
-      // eslint-disable-next-line arrow-body-style
-      return this.analyticsPreview.projects.reduce((a, b) => {
-        return (a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b;
-      });
+      return this.analyticsPreview.projects.reduce((a, b) => ((a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b));
     },
     firstDataset() {
       const { id, ...ds } = flatten(this.analyticsPreview.projects.map(p => p.datasets)).reduce((a, b) => ((a.num_entities.recent > b.num_entities.recent) ? a : b), { num_entities: {} });
