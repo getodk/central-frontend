@@ -22,6 +22,6 @@ describe('DatasetTable', () => {
   });
 
   it('shows empty message when there is no dataset', () => {
-    mountComponent().find('p').text().should.be.eql('No Datasets have been created for this Project yet.');
+    mountComponent().find('p').text().should.be.eql('No Entities have been created for this Project yet.');
   });
 });

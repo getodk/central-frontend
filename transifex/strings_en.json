@@ -1407,7 +1407,7 @@
     },
     "DatasetTable": {
       "emptyTable": {
-        "string": "No Datasets have been created for this Project yet."
+        "string": "No Entities have been created for this Project yet."
       }
     },
     "Download": {

@@ -62,7 +62,7 @@ const { datasets } = useRequestData();
 <i18n lang="json5">
   {
     "en": {
-      "emptyTable": "No Datasets have been created for this Project yet."
+      "emptyTable": "No Entities have been created for this Project yet."
     }
   }
 </i18n>
