@@ -1165,13 +1165,13 @@
           "string": "Number of Properties"
         },
         "num_creation_forms": {
-          "string": "Number of Forms that update the Dataset"
+          "string": "Number of Forms that update the Entity list"
         },
         "num_followup_forms": {
-          "string": "Number of Forms that use the Dataset"
+          "string": "Number of Forms that use the Entity list"
         },
         "num_entities": {
-          "string": "Number of Entities in the Dataset"
+          "string": "Number of Entities in the Entity list"
         },
         "num_failed_entities": {
           "string": "Number of Entity creation errors"
@@ -1210,13 +1210,13 @@
         "string": "Submission States",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
-      "datasets": {
+      "entities": {
         "title": {
-          "string": "Dataset and Entity Summaries",
-          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
+          "string": "Entities Summaries",
+          "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Showing the most active Dataset of {count} Dataset)} other {(Showing the most active Dataset of {count} Datasets)}}"
+          "string": "{count, plural, one {(Showing the most active Entity list of {count} Entity list)} other {(Showing the most active Entity list of {count} Entity lists)}}"
         }
       },
       "other": {
