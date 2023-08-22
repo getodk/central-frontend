@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <table id="dataset-table" class="table">
     <thead>
       <tr>
-        <th>{{ $t('header.name') }}</th>
+        <th>{{ $t('header.listName') }}</th>
         <th class="entities">{{ $t('header.entities') }}</th>
         <th>{{ $t('header.lastEntity') }}</th>
         <th>{{ $t('header.actions') }}</th>

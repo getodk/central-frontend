@@ -506,6 +506,10 @@
       "string": "Name",
       "developer_comment": "This is the text of a table column header."
     },
+    "listName": {
+      "string": "List name",
+      "developer_comment": "This is the text of a table column header."
+    },
     "submitterName": {
       "string": "Submitted by",
       "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that submitted each Submission."

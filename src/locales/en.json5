@@ -235,6 +235,7 @@
     "instanceId": "Instance ID",
     "lastSubmission": "Latest Submission",
     "name": "Name",
+    "listName": "List name",
     // This is the text of a table column header. The column shows the user or
     // Public Access Link that submitted each Submission.
     "submitterName": "Submitted by",
