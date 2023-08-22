@@ -1263,46 +1263,15 @@
         }
       }
     },
-    "DatasetIntroduction": {
-      "title": {
-        "string": "About Entities"
-      },
-      "body": {
+    "DatasetList": {
+      "heading": {
         "0": {
-          "string": "Entities are a powerful way to share information between Forms. A Dataset is a collection of Entities."
+          "string": "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
+          "developer_comment": "A brief introduction to Entities shown above Entity lists for the current Project"
         },
         "1": {
-          "string": "{icon1} Design a Form to create Entities",
-          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "2": {
-          "string": "{icon2} Submissions to the Form create Entities. By default, Entities are created when a Submission is received. They can also be configured to require Submission approval.",
-          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "3": {
-          "string": "{icon3} Attach the Dataset to a Form. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
-          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
-        },
-        "4": {
-          "string": "{icon4} You can attach Datasets to many Forms, including to a Form that also creates Entities in that Dataset.",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
-        },
-        "5": {
-          "string": "Datasets are configured during Form design."
+          "string": "Entities are created through form design and can be attached to any Form."
         }
-      },
-      "getStarted": {
-        "full": {
-          "string": "For more information on how to get started, {clickHere}.",
-          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
-        },
-        "clickHere": {
-          "string": "click here",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
-        }
-      },
-      "datasetsWorkflow": {
-        "string": "Datasets workflow"
       }
     },
     "DatasetOverview": {
