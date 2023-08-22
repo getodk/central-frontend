@@ -141,7 +141,7 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
         'Overview',
-        'Datasets New!',
+        'Entities New!',
         'Project Roles',
         'App Users',
         'Form Access',
@@ -166,7 +166,7 @@ describe('ProjectShow', () => {
         });
         const li = app.findAll('#page-head-tabs li');
         const text = li.map(wrapper => wrapper.get('a').text());
-        text.should.eql(['Overview', 'Datasets New!']);
+        text.should.eql(['Overview', 'Entities New!']);
         li[0].should.be.visible(true);
       });
     });
