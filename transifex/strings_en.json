@@ -1283,8 +1283,8 @@
         "string": "Connections to Forms",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "datasetProperties": {
-        "string": "Dataset Properties",
+      "entityProperties": {
+        "string": "Entity Properties",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
