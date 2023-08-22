@@ -1797,11 +1797,11 @@
       },
       "datasetsPreview": {
         "title": {
-          "string": "Testing Datasets"
+          "string": "Testing Entities"
         },
         "body": {
           "0": {
-            "string": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
+            "string": "One or more Form Attachments have filenames that match Entity list names. By default, those are linked to Entity lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity lists once you have verified your form logic."
           }
         }
       }
@@ -1920,28 +1920,28 @@
       "notUploaded": {
         "text": {
           "string": "Not yet uploaded",
-          "developer_comment": "This is shown for a Media File that has not been uploaded."
+          "developer_comment": "This is shown for a Form Attachment that has not been uploaded."
         },
         "title": {
           "string": "To upload files, drag and drop one or more files onto this page"
         }
       },
       "linkedToDataset": {
-        "string": "Linked to Dataset {datasetName}",
-        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
+        "string": "Linked to Entity List {datasetName}",
+        "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
         "string": "Upload a file to override."
       },
       "action": {
         "linkDataset": {
-          "string": "Link Dataset {datasetName}",
+          "string": "Link Entity List {datasetName}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "override": {
         "string": "Override",
-        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
