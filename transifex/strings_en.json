@@ -3638,7 +3638,7 @@
         },
         "entity": {
           "create": {
-            "string": "Created Entity {label} in {dataset} Dataset"
+            "string": "Created Entity {label} in {dataset} Entity List"
           },
           "error": {
             "string": "Problem creating Entity"

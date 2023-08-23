@@ -172,7 +172,7 @@ const { reviewStateIcon } = useReviewState();
       "entity": {
         "create": {
           // @transifexKey component.SubmissionFeedEntry.title.entity.create
-          "submission": "Created Entity {label} in {dataset} Dataset",
+          "submission": "Created Entity {label} in {dataset} Entity List",
           // This text is shown in a list of events. {name} is the name of a Web
           // user.
           "api": "Entity {label} created by {name}"
