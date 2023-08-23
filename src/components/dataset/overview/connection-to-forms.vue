@@ -133,7 +133,7 @@ export default {
   {
     "en": {
       // Number of form(s) is shown separately above this text
-      "formsCreateEntities": "Form creates Entities in this Dataset | Forms create Entities in this Dataset"
+      "formsCreateEntities": "Form creates Entities in this Entity List | Forms create Entities in this Entity List"
     }
   }
   </i18n>

@@ -1286,7 +1286,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsCreateEntities": {
-        "string": "{count, plural, one {Form creates Entities in this Dataset} other {Forms create Entities in this Dataset}}",
+        "string": "{count, plural, one {Form creates Entities in this Entity List} other {Forms create Entities in this Entity List}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
@@ -1297,7 +1297,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Form consumes data from this Dataset} other {Forms consume data from this Dataset}}",
+        "string": "{count, plural, one {Form consumes Entities from this Entity List} other {Forms consume Entities from this Entity List}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
