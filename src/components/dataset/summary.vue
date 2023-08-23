@@ -72,8 +72,8 @@ export default {
 <i18n lang="json5">
   {
     "en": {
-      // Number of dataset(s) is shown separately above this text
-      "datasetUpdates":"Dataset is updated by this Form: | Datasets are updated by this Form:"
+      // Number of Entity List(s) is shown separately above this text
+      "datasetUpdates":"Entity List is updated by this Form: | Entity Lists are updated by this Form:"
     }
   }
   </i18n>
