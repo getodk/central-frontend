@@ -95,7 +95,7 @@ export default {
 <i18n lang="json5">
   {
     "en": {
-      "emptyTable": "There are no Properties in this Dataset."
+      "emptyTable": "The Entities in this Entity List do not have any user-defined Properties."
     }
   }
   </i18n>
