@@ -1018,7 +1018,7 @@ describe('createCentralRouter()', () => {
 
     it('shows project name in title for /projects/1/datasets', async () => {
       await load('/projects/1/datasets');
-      document.title.should.equal('Datasets | My Project Name | ODK Central');
+      document.title.should.equal('Entities | My Project Name | ODK Central');
     });
 
     it('shows project name in title for /projects/1/settings', async () => {

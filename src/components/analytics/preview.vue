@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
             <span class="header">{{ $t('entities.title') }}</span>
             <span class="explanation">{{ $tcn('entities.subtitle', numDatasets) }}</span>
           </div>
-          <analytics-metrics-table :title="$t('resource.datasets')"
+          <analytics-metrics-table :title="$t('resource.entities')"
             :metrics="firstDataset"/>
         </template>
       </template>
