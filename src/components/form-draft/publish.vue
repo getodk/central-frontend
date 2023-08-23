@@ -270,8 +270,8 @@ export default {
         "full": "{inAddition} publishing this Form definition will make the following changes to this Project:",
         "inAddition": "In addition,"
       },
-      "newDataset": "A new Dataset {datasetName} will be created.",
-      "newProperty": "In Dataset {datasetName}, a new property {propertyName} will be created."
+      "newDataset": "A new Entity List {datasetName} will be created.",
+      "newProperty": "In Entity List {datasetName}, a new property {propertyName} will be created."
     }
   }
 }

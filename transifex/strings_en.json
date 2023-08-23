@@ -2186,10 +2186,10 @@
           }
         },
         "newDataset": {
-          "string": "A new Dataset {datasetName} will be created."
+          "string": "A new Entity List {datasetName} will be created."
         },
         "newProperty": {
-          "string": "In Dataset {datasetName}, a new property {propertyName} will be created."
+          "string": "In Entity List {datasetName}, a new property {propertyName} will be created."
         }
       }
     },
