@@ -149,9 +149,9 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is shown when a dataset is new
+    // This is shown when an Entity List is new
     "new": "new!",
-    // This is shown when mouse hovers over plus icon of new Dataset Property
+    // This is shown when mouse hovers over plus icon of a new Entity Property
     "addedByThisDraft": "Added by this Draft"
   }
 }
