@@ -466,7 +466,7 @@ export default {
     },
     "alert": {
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
-      "link": "Dataset linked successfully."
+      "link": "Entity list linked successfully."
     },
     // @transifexKey component.FormAttachmentList.datasetsPreview
     "entitiesTesting": {

@@ -1734,12 +1734,12 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "Link Dataset",
+        "string": "Link Entity List",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Are you sure you want to link the Dataset?"
+          "string": "Are you sure you want to link the Entity List?"
         },
         "1": {
           "string": "The file you uploaded will be deleted. You can always upload it again later."
@@ -1788,7 +1788,7 @@
           "string": "{count, plural, one {{count} file has been successfully uploaded.} other {{count} files have been successfully uploaded.}}"
         },
         "link": {
-          "string": "Dataset linked successfully."
+          "string": "Entity list linked successfully."
         }
       },
       "datasetsPreview": {
