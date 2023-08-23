@@ -466,13 +466,13 @@ export default {
     },
     "alert": {
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
-      "link": "Entity list linked successfully."
+      "link": "Entity List linked successfully."
     },
     // @transifexKey component.FormAttachmentList.datasetsPreview
     "entitiesTesting": {
       "title": "Testing Entities",
       "body": [
-        "One or more Form Attachments have filenames that match Entity list names. By default, those are linked to Entity lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity lists once you have verified your form logic."
+        "One or more Form Attachments have filenames that match Entity List names. By default, those are linked to Entity Lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity Lists once you have verified your form logic."
       ]
     }
   }

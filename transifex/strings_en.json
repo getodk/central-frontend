@@ -1161,13 +1161,13 @@
           "string": "Number of Properties"
         },
         "num_creation_forms": {
-          "string": "Number of Forms that update the Entity list"
+          "string": "Number of Forms that update the Entity List"
         },
         "num_followup_forms": {
-          "string": "Number of Forms that use the Entity list"
+          "string": "Number of Forms that use the Entity List"
         },
         "num_entities": {
-          "string": "Number of Entities in the Entity list"
+          "string": "Number of Entities in the Entity List"
         },
         "num_failed_entities": {
           "string": "Number of Entity creation errors"
@@ -1212,7 +1212,7 @@
           "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Showing the most active Entity list of {count} Entity list)} other {(Showing the most active Entity list of {count} Entity lists)}}"
+          "string": "{count, plural, one {(Showing the most active Entity List of {count} Entity List)} other {(Showing the most active Entity List of {count} Entity Lists)}}"
         }
       },
       "other": {
@@ -1267,7 +1267,7 @@
       "heading": {
         "0": {
           "string": "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
-          "developer_comment": "A brief introduction to Entities shown above Entity lists for the current Project"
+          "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
           "string": "Entities are created through form design and can be attached to any Form."
@@ -1788,7 +1788,7 @@
           "string": "{count, plural, one {{count} file has been successfully uploaded.} other {{count} files have been successfully uploaded.}}"
         },
         "link": {
-          "string": "Entity list linked successfully."
+          "string": "Entity List linked successfully."
         }
       },
       "datasetsPreview": {
@@ -1797,7 +1797,7 @@
         },
         "body": {
           "0": {
-            "string": "One or more Form Attachments have filenames that match Entity list names. By default, those are linked to Entity lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity lists once you have verified your form logic."
+            "string": "One or more Form Attachments have filenames that match Entity List names. By default, those are linked to Entity Lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity Lists once you have verified your form logic."
           }
         }
       }

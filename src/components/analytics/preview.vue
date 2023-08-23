@@ -200,7 +200,7 @@ export default {
     "entities": {
       // This is the title shown above a series of metrics about Entities usage.
       "title": "Entities Summaries",
-      "subtitle": "(Showing the most active Entity list of {count} Entity list) | (Showing the most active Entity list of {count} Entity lists)"
+      "subtitle": "(Showing the most active Entity List of {count} Entity List) | (Showing the most active Entity List of {count} Entity Lists)"
     },
     // This is the title of a single table in the analytics metrics report
     // of other additional metrics that don't fit into other categories

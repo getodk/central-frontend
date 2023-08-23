@@ -106,9 +106,9 @@ export default {
       "has_description": "Project has a description",
       "description_length": "Length of the Project description",
       "num_properties": "Number of Properties",
-      "num_creation_forms": "Number of Forms that update the Entity list",
-      "num_followup_forms": "Number of Forms that use the Entity list",
-      "num_entities": "Number of Entities in the Entity list",
+      "num_creation_forms": "Number of Forms that update the Entity List",
+      "num_followup_forms": "Number of Forms that use the Entity List",
+      "num_entities": "Number of Entities in the Entity List",
       "num_failed_entities": "Number of Entity creation errors",
       "num_entity_updates": "Number of Entity updates"
     }

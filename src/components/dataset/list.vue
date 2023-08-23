@@ -67,7 +67,7 @@ datasets.request({
   {
     "en": {
       "heading": [
-        // A brief introduction to Entities shown above Entity lists for the current Project
+        // A brief introduction to Entities shown above Entity Lists for the current Project
         "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
         "Entities are created through form design and can be attached to any Form."
       ]
