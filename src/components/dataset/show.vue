@@ -117,7 +117,7 @@ export default {
 {
   "en": {
     // This is shown at the top of the page.
-    "back": "Back to Project Datasets"
+    "back": "Back to Project Entities"
   }
 }
 </i18n>

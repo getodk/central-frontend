@@ -1381,7 +1381,7 @@
     },
     "DatasetShow": {
       "back": {
-        "string": "Back to Project Datasets",
+        "string": "Back to Project Entities",
         "developer_comment": "This is shown at the top of the page."
       }
     },
