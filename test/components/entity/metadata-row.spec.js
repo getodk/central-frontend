@@ -20,7 +20,7 @@ const mountComponent = (props = undefined) => {
     },
     props: mergedProps,
     container: {
-      router: mockRouter('/projects/1/datasets/trees/entities')
+      router: mockRouter('/projects/1/entity-lists/trees/entities')
     }
   });
 };
@@ -93,10 +93,10 @@ describe('EntityMetadataRow', () => {
     testData.extendedEntities.createPast(1, { uuid: 'e' });
     // Using load() rather than mountComponent() because RouterLinkStub doesn't
     // use the <router-link> slot.
-    const app = await load('/projects/1/datasets/%C3%A1/entities');
+    const app = await load('/projects/1/entity-lists/%C3%A1/entities');
     const btn = app.get('.entity-metadata-row .more-button');
     btn.element.tagName.should.equal('A');
     btn.attributes('target').should.equal('_blank');
-    btn.attributes('href').should.equal('/projects/1/datasets/%C3%A1/entities/e');
+    btn.attributes('href').should.equal('/projects/1/entity-lists/%C3%A1/entities/e');
   });
 });

@@ -21,7 +21,7 @@ const mountComponent = (options) =>
     },
     props: { entry: testData.extendedAudits.last() },
     container: {
-      router: mockRouter('/projects/1/datasets/trees/entities/e'),
+      router: mockRouter('/projects/1/entity-lists/trees/entities/e'),
       requestData: testRequestData([useEntity], {
         entity: testData.extendedEntities.last()
       })
@@ -182,7 +182,7 @@ describe('EntityFeedEntry', () => {
       it('links to the dataset', () => {
         const title = mountComponent().get('.feed-entry-title');
         const { to } = title.getComponent(RouterLinkStub).props();
-        to.should.equal('/projects/1/datasets/trees');
+        to.should.equal('/projects/1/entity-lists/trees');
       });
     });
 
@@ -270,7 +270,7 @@ describe('EntityFeedEntry', () => {
       action: 'entity.create',
       details: sourceDetails
     });
-    const component = await load('/projects/1/datasets/trees/entities/e', {
+    const component = await load('/projects/1/entity-lists/trees/entities/e', {
       root: false,
       attachTo: document.body
     });

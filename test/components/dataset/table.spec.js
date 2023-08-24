@@ -11,7 +11,7 @@ const mountComponent = () => mount(DatasetTable, {
     requestData: testRequestData(['datasets'], {
       datasets: testData.extendedDatasets.sorted()
     }),
-    router: mockRouter('/projects/1/datasets')
+    router: mockRouter('/projects/1/entity-lists')
   }
 });
 

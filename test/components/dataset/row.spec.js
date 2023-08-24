@@ -8,7 +8,7 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(DatasetRow, {
   props: { dataset: testData.extendedDatasets.last() },
-  container: { router: mockRouter('/projects/1/datasets') }
+  container: { router: mockRouter('/projects/1/entity-lists') }
 });
 
 describe('DatasetRow', () => {
@@ -16,7 +16,7 @@ describe('DatasetRow', () => {
     testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
     const row = mountComponent();
     const link = row.getComponent(RouterLinkStub);
-    link.props().to.should.equal('/projects/1/datasets/my_dataset');
+    link.props().to.should.equal('/projects/1/entity-lists/my_dataset');
     link.text().should.equal('my_dataset');
     await link.should.have.textTooltip();
   });

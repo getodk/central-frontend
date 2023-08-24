@@ -7,7 +7,7 @@ describe('DatasetList', () => {
 
   it('sends the correct initial requests', () => {
     testData.extendedDatasets.createPast(1);
-    return load('/projects/1/datasets', {
+    return load('/projects/1/entity-lists', {
       root: false
     }).testRequests([
       { url: '/v1/projects/1/datasets', extended: true }

@@ -35,7 +35,7 @@ describe('ProjectShow', () => {
     it('reconciles project and datasets', async () => {
       testData.extendedProjects.createPast(1, { datasets: 1 });
       testData.extendedDatasets.createPast(2);
-      const app = await load('/projects/1/datasets');
+      const app = await load('/projects/1/entity-lists');
       app.vm.$container.requestData.project.datasets.should.equal(2);
     });
 
@@ -52,7 +52,7 @@ describe('ProjectShow', () => {
       });
 
       it('clears datasets after a request for forms', () =>
-        load('/projects/1/datasets')
+        load('/projects/1/entity-lists')
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
             datasets.dataExists.should.be.true();
@@ -62,7 +62,7 @@ describe('ProjectShow', () => {
             const { datasets } = app.vm.$container.requestData.localResources;
             datasets.dataExists.should.be.false();
           })
-          .load('/projects/1/datasets', { project: false })
+          .load('/projects/1/entity-lists', { project: false })
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
             datasets.dataExists.should.be.true();
@@ -71,7 +71,7 @@ describe('ProjectShow', () => {
       it('does not clear datasets if forms are not re-requested', () =>
         load('/projects/1')
           .complete()
-          .load('/projects/1/datasets', { project: false })
+          .load('/projects/1/entity-lists', { project: false })
           .complete()
           .route('/projects/1')
           .afterResponses(app => {

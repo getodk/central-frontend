@@ -19,7 +19,7 @@ const mountComponent = () => mount(EntityActivity, {
         .filter(({ action }) => action.startsWith('entity.')),
       diffs: []
     }),
-    router: mockRouter('/projects/1/datasets/trees/entities/e')
+    router: mockRouter('/projects/1/entity-lists/trees/entities/e')
   }
 });
 

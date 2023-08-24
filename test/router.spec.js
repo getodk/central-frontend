@@ -124,11 +124,11 @@ describe('createCentralRouter()', () => {
       '/projects/1/users',
       '/projects/1/app-users',
       '/projects/1/form-access',
-      '/projects/1/datasets',
-      '/projects/1/datasets/trees',
-      '/projects/1/datasets/trees/settings',
-      '/projects/1/datasets/trees/entities',
-      '/projects/1/datasets/trees/entities/e',
+      '/projects/1/entity-lists',
+      '/projects/1/entity-lists/trees',
+      '/projects/1/entity-lists/trees/settings',
+      '/projects/1/entity-lists/trees/entities',
+      '/projects/1/entity-lists/trees/entities/e',
       '/projects/1/settings',
       '/projects/1/forms/f',
       '/projects/1/forms/f/versions',
@@ -303,12 +303,12 @@ describe('createCentralRouter()', () => {
             .then(dataExists(['formSummaryAssignments'])));
       });
 
-      it('preserves data while navigating to/from .../datasets', () =>
-        load('/projects/1/datasets')
+      it('preserves data while navigating to/from .../entity-lists', () =>
+        load('/projects/1/entity-lists')
           .complete()
           .route('/projects/1/settings')
           .complete()
-          .route('/projects/1/datasets')
+          .route('/projects/1/entity-lists')
           .then(dataExists(['project', 'datasets'])));
 
       it('preserves data while navigating to/from .../settings', () =>
@@ -387,27 +387,27 @@ describe('createCentralRouter()', () => {
       });
 
       it('preserves project and dataset', () =>
-        load('/projects/1/datasets/trees')
+        load('/projects/1/entity-lists/trees')
           .complete()
-          .load('/projects/1/datasets/trees/entities', { project: false, dataset: false })
+          .load('/projects/1/entity-lists/trees/entities', { project: false, dataset: false })
           .complete()
-          .load('/projects/1/datasets/trees', { project: false, dataset: false })
+          .load('/projects/1/entity-lists/trees', { project: false, dataset: false })
           .afterResponses(dataExists(['project', 'dataset'])));
     });
 
     it('preserves project while navigating from the dataset overview', () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
-      return load('/projects/1/datasets/trees')
+      return load('/projects/1/entity-lists/trees')
         .complete()
-        .load('/projects/1/datasets', { project: false })
+        .load('/projects/1/entity-lists', { project: false })
         .afterResponses(dataExists(['project']));
     });
 
     it('preserves project while navigating from entity detail page', () => {
       testData.extendedEntities.createPast(1, { uuid: 'e' });
-      return load('/projects/1/datasets/trees/entities/e')
+      return load('/projects/1/entity-lists/trees/entities/e')
         .complete()
-        .load('/projects/1/datasets/trees/entities', { project: false })
+        .load('/projects/1/entity-lists/trees/entities', { project: false })
         .afterResponses(dataExists(['project']));
     });
   });
@@ -542,9 +542,9 @@ describe('createCentralRouter()', () => {
               app.vm.$route.path.should.equal('/');
             }));
 
-        it('does not redirect the user from .../datasets', async () => {
-          const app = await load('/projects/1/datasets');
-          app.vm.$route.path.should.equal('/projects/1/datasets');
+        it('does not redirect the user from .../entity-lists', async () => {
+          const app = await load('/projects/1/entity-lists');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists');
         });
       });
 
@@ -624,18 +624,18 @@ describe('createCentralRouter()', () => {
         });
 
         it('does not redirect the user from the dataset overview', async () => {
-          const app = await load('/projects/1/datasets/trees');
-          app.vm.$route.path.should.equal('/projects/1/datasets/trees');
+          const app = await load('/projects/1/entity-lists/trees');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists/trees');
         });
 
         it('does not redirect the user from .../entities', async () => {
-          const app = await load('/projects/1/datasets/trees/entities');
+          const app = await load('/projects/1/entity-lists/trees/entities');
           const { path } = app.vm.$route;
-          path.should.equal('/projects/1/datasets/trees/entities');
+          path.should.equal('/projects/1/entity-lists/trees/entities');
         });
 
         it('redirects the user from .../settings', async () => {
-          await load('/projects/1/datasets/trees/settings')
+          await load('/projects/1/entity-lists/trees/settings')
             .respondFor('/', { users: false })
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
@@ -649,9 +649,9 @@ describe('createCentralRouter()', () => {
           datasets: 1
         });
         testData.extendedEntities.createPast(1, { uuid: 'e' });
-        const app = await load('/projects/1/datasets/trees/entities/e');
+        const app = await load('/projects/1/entity-lists/trees/entities/e');
         const { path } = app.vm.$route;
-        path.should.equal('/projects/1/datasets/trees/entities/e');
+        path.should.equal('/projects/1/entity-lists/trees/entities/e');
       });
     });
 
@@ -676,8 +676,8 @@ describe('createCentralRouter()', () => {
         '/projects/1/users',
         '/projects/1/app-users',
         '/projects/1/form-access',
-        '/projects/1/datasets',
-        '/projects/1/datasets/trees',
+        '/projects/1/entity-lists',
+        '/projects/1/entity-lists/trees',
         '/projects/1/settings',
         // FormShow
         '/projects/1/forms/f',
@@ -691,11 +691,11 @@ describe('createCentralRouter()', () => {
         // SubmissionShow
         '/projects/1/forms/f/submissions/s',
         // DatasetShow
-        '/projects/1/datasets/trees',
-        '/projects/1/datasets/trees/entities',
-        '/projects/1/datasets/trees/settings',
+        '/projects/1/entity-lists/trees',
+        '/projects/1/entity-lists/trees/entities',
+        '/projects/1/entity-lists/trees/settings',
         // EntityShow
-        '/projects/1/datasets/trees/entities/e'
+        '/projects/1/entity-lists/trees/entities/e'
       ]) {
         it(`redirects the user from ${path}`, () =>
           load('/projects/1', {}, { deletedForms: false })
@@ -1016,8 +1016,8 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Form Access | My Project Name | ODK Central');
     });
 
-    it('shows project name in title for /projects/1/datasets', async () => {
-      await load('/projects/1/datasets');
+    it('shows project name in title for /projects/1/entity-lists', async () => {
+      await load('/projects/1/entity-lists');
       document.title.should.equal('Entities | My Project Name | ODK Central');
     });
 
@@ -1095,18 +1095,18 @@ describe('createCentralRouter()', () => {
     });
 
     // Dataset routes
-    it('shows dataset name in title for /projects/1/datasets/:datasetName', async () => {
-      await load('/projects/1/datasets/trees');
+    it('shows dataset name in title for /projects/1/entity-lists/:datasetName', async () => {
+      await load('/projects/1/entity-lists/trees');
       document.title.should.equal('trees | ODK Central');
     });
 
-    it('shows dataset name in title for /projects/1/datasets/:datasetName/entities', async () => {
-      await load('/projects/1/datasets/trees/entities');
+    it('shows dataset name in title for /projects/1/entity-lists/:datasetName/entities', async () => {
+      await load('/projects/1/entity-lists/trees/entities');
       document.title.should.equal('Data | trees | ODK Central');
     });
 
-    it('shows dataset name in title for /projects/1/datasets/:datasetName/settings', async () => {
-      await load('/projects/1/datasets/trees/settings');
+    it('shows dataset name in title for /projects/1/entity-lists/:datasetName/settings', async () => {
+      await load('/projects/1/entity-lists/trees/settings');
       document.title.should.equal('Settings | trees | ODK Central');
     });
 
@@ -1116,7 +1116,7 @@ describe('createCentralRouter()', () => {
         uuid: 'e',
         label: 'My Entity'
       });
-      await load('/projects/1/datasets/trees/entities/e');
+      await load('/projects/1/entity-lists/trees/entities/e');
       document.title.should.equal('My Entity | ODK Central');
     });
 
