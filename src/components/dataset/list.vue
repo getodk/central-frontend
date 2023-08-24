@@ -23,12 +23,8 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </p>
     </div>
-    <page-section>
-      <template #body>
-        <dataset-table/>
-        <loading :state="datasets.initiallyLoading"/>
-      </template>
-    </page-section>
+    <dataset-table/>
+    <loading :state="datasets.initiallyLoading"/>
   </div>
 </template>
 
@@ -41,7 +37,6 @@ export default {
 import DatasetTable from './table.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import { apiPaths } from '../../util/request';
