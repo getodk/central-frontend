@@ -1297,7 +1297,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Form consumes Entities from this Entity List} other {Forms consume Entities from this Entity List}}",
+        "string": "{count, plural, one {Form uses this Entity List} other {Forms use this Entity List}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },

@@ -85,7 +85,7 @@ export default {
 {
   "en": {
     // Number of form(s) is shown separately above this text
-    "formsConsumeData": "Form consumes Entities from this Entity List | Forms consume Entities from this Entity List",
+    "formsConsumeData": "Form uses this Entity List | Forms use this Entity List",
   }
 }
 </i18n>
