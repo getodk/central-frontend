@@ -1292,7 +1292,7 @@
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "The Entities in this Entity List do not have any user-defined Properties."
+        "string": "The Entities in this Entity List do not have any user-defined properties."
       }
     },
     "DatasetOverviewLinkedForms": {

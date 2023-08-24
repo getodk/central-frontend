@@ -96,6 +96,6 @@ describe('Dataset Properties', () => {
       name: 'trees', properties: []
     });
     const component = mountComponent();
-    component.text().should.be.eql('The Entities in this Entity List do not have any user-defined Properties.');
+    component.text().should.be.eql('The Entities in this Entity List do not have any user-defined properties.');
   });
 });
