@@ -154,7 +154,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "dataset": {
-        "string": "Dataset Actions",
+        "string": "Entity List Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
@@ -206,11 +206,11 @@
       "dataset": {
         "update": {
           "string": "Update",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "update_publish": {
           "string": "Publish",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "field_key": {
@@ -506,6 +506,10 @@
       "string": "Name",
       "developer_comment": "This is the text of a table column header."
     },
+    "listName": {
+      "string": "List Name",
+      "developer_comment": "This is the text of a table column header."
+    },
     "submitterName": {
       "string": "Submitted by",
       "developer_comment": "This is the text of a table column header. The column shows the user or Public Access Link that submitted each Submission."
@@ -524,7 +528,7 @@
     },
     "entities": {
       "string": "Total Entities",
-      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the Entity List"
     },
     "lastEntity": {
       "string": "Latest Entity",
@@ -578,12 +582,8 @@
       "string": "Server Configuration",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "dataset": {
-      "string": "Dataset",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "datasets": {
-      "string": "Datasets",
+    "entityList": {
+      "string": "Entity List",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
@@ -839,7 +839,7 @@
     },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
-      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
     },
     "new": {
       "string": "New!"
@@ -1161,13 +1161,13 @@
           "string": "Number of Properties"
         },
         "num_creation_forms": {
-          "string": "Number of Forms that update the Dataset"
+          "string": "Number of Forms that update the Entity List"
         },
         "num_followup_forms": {
-          "string": "Number of Forms that use the Dataset"
+          "string": "Number of Forms that use the Entity List"
         },
         "num_entities": {
-          "string": "Number of Entities in the Dataset"
+          "string": "Number of Entities in the Entity List"
         },
         "num_failed_entities": {
           "string": "Number of Entity creation errors"
@@ -1206,13 +1206,13 @@
         "string": "Submission States",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
-      "datasets": {
+      "entities": {
         "title": {
-          "string": "Dataset and Entity Summaries",
-          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
+          "string": "Entities Summaries",
+          "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Showing the most active Dataset of {count} Dataset)} other {(Showing the most active Dataset of {count} Datasets)}}"
+          "string": "{count, plural, one {(Showing the most active Entity List of {count} Entity List)} other {(Showing the most active Entity List of {count} Entity Lists)}}"
         }
       },
       "other": {
@@ -1263,46 +1263,15 @@
         }
       }
     },
-    "DatasetIntroduction": {
-      "title": {
-        "string": "About Entities"
-      },
-      "body": {
+    "DatasetList": {
+      "heading": {
         "0": {
-          "string": "Entities are a powerful way to share information between Forms. A Dataset is a collection of Entities."
+          "string": "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
+          "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
-          "string": "{icon1} Design a Form to create Entities",
-          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "2": {
-          "string": "{icon2} Submissions to the Form create Entities. By default, Entities are created when a Submission is received. They can also be configured to require Submission approval.",
-          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "3": {
-          "string": "{icon3} Attach the Dataset to a Form. When data collectors update Forms with an attached Dataset, they will automatically download all Entities created so far.",
-          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
-        },
-        "4": {
-          "string": "{icon4} You can attach Datasets to many Forms, including to a Form that also creates Entities in that Dataset.",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
-        },
-        "5": {
-          "string": "Datasets are configured during Form design."
+          "string": "Entities are created through form design and can be attached to any Form."
         }
-      },
-      "getStarted": {
-        "full": {
-          "string": "For more information on how to get started, {clickHere}.",
-          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
-        },
-        "clickHere": {
-          "string": "click here",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
-        }
-      },
-      "datasetsWorkflow": {
-        "string": "Datasets workflow"
       }
     },
     "DatasetOverview": {
@@ -1310,25 +1279,25 @@
         "string": "Connections to Forms",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "datasetProperties": {
-        "string": "Dataset Properties",
+      "entityProperties": {
+        "string": "Entity Properties",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "DatasetOverviewConnectionToForms": {
       "formsCreateEntities": {
-        "string": "{count, plural, one {Form creates Entities in this Dataset} other {Forms create Entities in this Dataset}}",
+        "string": "{count, plural, one {Form creates Entities in this Entity List} other {Forms create Entities in this Entity List}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "There are no Properties in this Dataset."
+        "string": "The Entities in this Entity List do not have any user-defined properties."
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Form consumes data from this Dataset} other {Forms consume data from this Dataset}}",
+        "string": "{count, plural, one {Form uses this Entity List} other {Forms use this Entity List}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
@@ -1412,29 +1381,29 @@
     },
     "DatasetShow": {
       "back": {
-        "string": "Back to Project Datasets",
+        "string": "Back to Project Entities",
         "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
       "datasetUpdates": {
-        "string": "{count, plural, one {Dataset is updated by this Form:} other {Datasets are updated by this Form:}}",
-        "developer_comment": "Number of dataset(s) is shown separately above this text"
+        "string": "{count, plural, one {Entity List is updated by this Form:} other {Entity Lists are updated by this Form:}}",
+        "developer_comment": "Number of Entity List(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
       "new": {
         "string": "new!",
-        "developer_comment": "This is shown when a dataset is new"
+        "developer_comment": "This is shown when an Entity List is new"
       },
       "addedByThisDraft": {
         "string": "Added by this Draft",
-        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
+        "developer_comment": "This is shown when mouse hovers over plus icon of a new Entity Property"
       }
     },
     "DatasetTable": {
       "emptyTable": {
-        "string": "No Datasets have been created for this Project yet."
+        "string": "No Entities have been created for this Project yet."
       }
     },
     "Download": {
@@ -1765,12 +1734,12 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "Link Dataset",
+        "string": "Link Entity List",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Are you sure you want to link the Dataset?"
+          "string": "Are you sure you want to link the Entity List?"
         },
         "1": {
           "string": "The file you uploaded will be deleted. You can always upload it again later."
@@ -1819,16 +1788,16 @@
           "string": "{count, plural, one {{count} file has been successfully uploaded.} other {{count} files have been successfully uploaded.}}"
         },
         "link": {
-          "string": "Dataset linked successfully."
+          "string": "Entity List linked successfully."
         }
       },
       "datasetsPreview": {
         "title": {
-          "string": "Testing Datasets"
+          "string": "Testing Entities"
         },
         "body": {
           "0": {
-            "string": "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
+            "string": "One or more Form Attachments have filenames that match Entity List names. By default, those are linked to Entity Lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity Lists once you have verified your form logic."
           }
         }
       }
@@ -1947,28 +1916,28 @@
       "notUploaded": {
         "text": {
           "string": "Not yet uploaded",
-          "developer_comment": "This is shown for a Media File that has not been uploaded."
+          "developer_comment": "This is shown for a Form Attachment that has not been uploaded."
         },
         "title": {
           "string": "To upload files, drag and drop one or more files onto this page"
         }
       },
       "linkedToDataset": {
-        "string": "Linked to Dataset {datasetName}",
-        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
+        "string": "Linked to Entity List {datasetName}",
+        "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
         "string": "Upload a file to override."
       },
       "action": {
         "linkDataset": {
-          "string": "Link Dataset {datasetName}",
+          "string": "Link Entity List {datasetName}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "override": {
         "string": "Override",
-        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
@@ -2217,10 +2186,10 @@
           }
         },
         "newDataset": {
-          "string": "A new Dataset {datasetName} will be created."
+          "string": "A new Entity List {datasetName} will be created."
         },
         "newProperty": {
-          "string": "In Dataset {datasetName}, a new property {propertyName} will be created."
+          "string": "In Entity List {datasetName}, a new property {propertyName} will be created."
         }
       }
     },
@@ -3667,7 +3636,7 @@
         },
         "entity": {
           "create": {
-            "string": "Created Entity {label} in {dataset} Dataset"
+            "string": "Created Entity {label} in {dataset} Entity List"
           },
           "error": {
             "string": "Problem creating Entity"

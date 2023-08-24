@@ -88,9 +88,9 @@ export default {
 {
   "en": {
     // This is the title at the top of a pop-up.
-    "title": "Link Dataset",
+    "title": "Link Entity List",
     "introduction": [
-      "Are you sure you want to link the Dataset?",
+      "Are you sure you want to link the Entity List?",
       "The file you uploaded will be deleted. You can always upload it again later."
     ],
     "action": {

@@ -176,7 +176,7 @@ describe('EntityFeedEntry', () => {
 
       it('shows the correct text', () => {
         const text = mountComponent().get('.feed-entry-title').text();
-        text.should.equal('Created Entity dogwood in trees Dataset');
+        text.should.equal('Created Entity dogwood in trees Entity List');
       });
 
       it('links to the dataset', () => {

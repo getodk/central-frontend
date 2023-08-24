@@ -43,10 +43,10 @@ except according to the terms contained in the LICENSE file.
         </template>
         <template v-if="numDatasets > 0">
           <div id="analytics-preview-dataset-summary">
-            <span class="header">{{ $t('datasets.title') }}</span>
-            <span class="explanation">{{ $tcn('datasets.subtitle', numDatasets) }}</span>
+            <span class="header">{{ $t('entities.title') }}</span>
+            <span class="explanation">{{ $tcn('entities.subtitle', numDatasets) }}</span>
           </div>
-          <analytics-metrics-table :title="$t('resource.datasets')"
+          <analytics-metrics-table :title="$t('resource.entities')"
             :metrics="firstDataset"/>
         </template>
       </template>
@@ -196,10 +196,10 @@ export default {
     // This is the title of a single table in the analytics metrics report
     // of metrics about submission state (approved, rejected, etc)
     "submissionStates": "Submission States",
-    "datasets": {
-      // This is the title shown above a series of metrics about Datasets and Entities usage.
-      "title": "Dataset and Entity Summaries",
-      "subtitle": "(Showing the most active Dataset of {count} Dataset) | (Showing the most active Dataset of {count} Datasets)"
+    "entities": {
+      // This is the title shown above a series of metrics about Entities usage.
+      "title": "Entities Summaries",
+      "subtitle": "(Showing the most active Entity List of {count} Entity List) | (Showing the most active Entity List of {count} Entity Lists)"
     },
     // This is the title of a single table in the analytics metrics report
     // of other additional metrics that don't fit into other categories

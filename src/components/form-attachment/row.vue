@@ -210,17 +210,17 @@ export default {
     // if the selected files were uploaded.
     "replace": "Replace",
     "notUploaded": {
-      // This is shown for a Media File that has not been uploaded.
+      // This is shown for a Form Attachment that has not been uploaded.
       "text": "Not yet uploaded",
       "title": "To upload files, drag and drop one or more files onto this page"
     },
-    // This is shown for a Form Attachment that is linked to a Dataset
-    "linkedToDataset": "Linked to Dataset {datasetName}",
+    // This is shown for a Form Attachment that is linked to an Entity List
+    "linkedToDataset": "Linked to Entity List {datasetName}",
     "uploadToOverride": "Upload a file to override.",
     "action": {
-      "linkDataset": "Link Dataset {datasetName}"
+      "linkDataset": "Link Entity List {datasetName}"
     },
-    // This is a label that is shown next to a Form Attachment that is linked to a Dataset,
+    // This is a label that is shown next to a Form Attachment that is linked to an Entity List,
     // which would be overriden if the selected files were uploaded.
     "override": "Override"
   }

@@ -229,7 +229,7 @@ export default {
       */
       "create": "Submitted by {name}",
       "entity": {
-        "create": "Created Entity {label} in {dataset} Dataset",
+        "create": "Created Entity {label} in {dataset} Entity List",
         "error": "Problem creating Entity",
       },
       "updateReviewState": {

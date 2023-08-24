@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
   <div id="dataset-show">
     <page-back v-show="dataExists" :to="[projectPath(), projectPath('datasets')]">
       <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.datasets') }}</template>
+      <template #back>{{ $t('resource.entities') }}</template>
     </page-back>
     <page-head v-show="dataExists">
       <template #title>
@@ -117,7 +117,7 @@ export default {
 {
   "en": {
     // This is shown at the top of the page.
-    "back": "Back to Project Datasets"
+    "back": "Back to Project Entities"
   }
 }
 </i18n>

@@ -330,7 +330,7 @@ const routes = [
           validateData: {
             project: () => project.permits(['dataset.list', 'entity.list'])
           },
-          title: () => [i18n.t('resource.datasets'), project.name]
+          title: () => [i18n.t('resource.entities'), project.name]
         }
       }),
       asyncRoute({

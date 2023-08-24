@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
     </page-section>
     <page-section id="dataset-overview-properties">
       <template #heading>
-        <span>{{ $t('datasetProperties') }}</span>
+        <span>{{ $t('entityProperties') }}</span>
       </template>
       <template #body>
         <dataset-properties :properties="dataset.properties" :project-id="projectId"/>
@@ -85,7 +85,7 @@ export default {
     // This is a title shown above a section of the page.
     "connectionsToForms": "Connections to Forms",
     // This is a title shown above a section of the page.
-    "datasetProperties" : "Dataset Properties"
+    "entityProperties" : "Entity Properties"
   }
 }
 </i18n>

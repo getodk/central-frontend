@@ -77,7 +77,7 @@
       "user": "Web User Actions",
       "project": "Project Actions",
       "form": "Form Actions",
-      "dataset": "Dataset Actions",
+      "dataset": "Entity List Actions",
       "field_key": "App User Actions",
       "public_link": "Public Access Link Actions",
       "config": "Server Configuration Actions",
@@ -100,7 +100,7 @@
         "set": "Set"
       },
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Dataset.
+      // type of action that can be taken on an Entity List.
       "dataset": {
         "create": "@:audit.action.default.create",
         "update": "Update",
@@ -235,6 +235,7 @@
     "instanceId": "Instance ID",
     "lastSubmission": "Latest Submission",
     "name": "Name",
+    "listName": "List Name",
     // This is the text of a table column header. The column shows the user or
     // Public Access Link that submitted each Submission.
     "submitterName": "Submitted by",
@@ -246,7 +247,7 @@
     "time": "Time",
     "type": "Type",
     // This is the text of a table column header. The column shows the number of entities
-    // for the dataset
+    // for the Entity List
     "entities": "Total Entities",
     // This is the text of a table column header. The column shows the date and time of the 
     // newest entity
@@ -272,8 +273,7 @@
     "appUser": "App User",
     "appUsers": "App Users",
     "config": "Server Configuration",
-    "dataset": "Dataset",
-    "datasets": "Datasets",
+    "entityList": "Entity List",
     "entities": "Entities",
     "form": "Form",
     "forms": "Forms",
@@ -387,8 +387,8 @@
     "punctuations": {
       "comma": ","
     },
-    // {inform} is the number of dataset properties defined by the form.
-    // {count} is the total number of properties. The string will be pluralized based on {count}.
+    // {inform} is the number of Entity Properties defined by the form.
+    // {count} is the total number of Properties. The string will be pluralized based on {count}.
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
     "new": "New!"
   },

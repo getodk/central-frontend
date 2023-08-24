@@ -11,24 +11,28 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-list">
-    <page-section>
-      <template #heading>
-        <h1>{{ $t('resource.datasets') }}</h1>
-      </template>
-      <template #body>
-        <dataset-table/>
-        <loading :state="datasets.initiallyLoading"/>
-        <dataset-introduction/>
-      </template>
-    </page-section>
+    <div class="page-body-heading">
+      <p>{{ $t('heading[0]') }}</p>
+      <p>
+        <span>{{ $t('heading[1]') }}</span>
+        <sentence-separator/>
+        <i18n-t keypath="moreInfo.clickHere.full">
+          <template #clickHere>
+            <doc-link to="central-entities">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+          </template>
+        </i18n-t>
+      </p>
+    </div>
+    <dataset-table/>
+    <loading :state="datasets.initiallyLoading"/>
   </div>
 </template>
 
 <script setup>
-import DatasetIntroduction from './introduction.vue';
 import DatasetTable from './table.vue';
+import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
+import SentenceSeparator from '../sentence-separator.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -51,3 +55,15 @@ datasets.request({
   resend: false
 }).catch(noop);
 </script>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "heading": [
+        // A brief introduction to Entities shown above Entity Lists for the current Project
+        "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
+        "Entities are created through form design and can be attached to any Form."
+      ]
+    }
+  }
+</i18n>
