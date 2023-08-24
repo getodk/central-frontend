@@ -14,14 +14,14 @@ except according to the terms contained in the LICENSE file.
     <div class="page-body-heading">
       <p>{{ $t('heading[0]') }}</p>
       <p>
-          <span>{{ $t('heading[1]') }}</span>
-          <sentence-separator/>
-          <i18n-t keypath="moreInfo.clickHere.full">
-            <template #clickHere>
-              <doc-link to="central-entities">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-            </template>
-          </i18n-t>
-        </p>
+        <span>{{ $t('heading[1]') }}</span>
+        <sentence-separator/>
+        <i18n-t keypath="moreInfo.clickHere.full">
+          <template #clickHere>
+            <doc-link to="central-entities">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+          </template>
+        </i18n-t>
+      </p>
     </div>
     <page-section>
       <template #body>
