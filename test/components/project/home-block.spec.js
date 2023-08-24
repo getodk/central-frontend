@@ -150,7 +150,8 @@ describe('ProjectHomeBlock', () => {
     testData.extendedDatasets.createPast(4);
     const block = mountComponent();
     block.findAllComponents(DatasetRow).length.should.equal(3);
-    const expand = block.find('.expand-button');
+    block.find('.project-form-row .expand-button').exists().should.be.false();
+    const expand = block.find('.project-dataset-row .expand-button');
     expand.exists().should.be.true();
     expand.text().should.equal('Show 4 total');
     expand.find('.icon-angle-down').exists().should.be.true();
@@ -179,5 +180,25 @@ describe('ProjectHomeBlock', () => {
     datasetList.map((dataset) => dataset.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
     const rows = block.findAllComponents(DatasetRow);
     rows.map((row) => row.props().dataset.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
+  });
+
+  it('shows the correct number of forms and datasets if there are a lot and some should be hidden', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedForms.createPast(5);
+    testData.extendedDatasets.createPast(4);
+
+    const block = mountComponent();
+
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    const formExpand = block.find('.project-form-row .expand-button');
+    formExpand.exists().should.be.true();
+    formExpand.text().should.equal('Show 5 total');
+    formExpand.find('.icon-angle-down').exists().should.be.true();
+
+    block.findAllComponents(FormRow).length.should.equal(3);
+    const dsExpand = block.find('.project-dataset-row .expand-button');
+    dsExpand.exists().should.be.true();
+    dsExpand.text().should.equal('Show 4 total');
+    dsExpand.find('.icon-angle-down').exists().should.be.true();
   });
 });

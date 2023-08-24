@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
         <td class="col-icon"></td>
         <td colspan="6" class="expand-button-container">
           <a href="#" role="button" class="expand-button" @click.prevent="toggleExpanded">
-            <template v-if="!expanded">
+            <template v-if="!formExpanded">
               {{ $tcn('showMore', numForms) }}<span class="icon-angle-down"></span>
             </template>
             <template v-else>
@@ -91,7 +91,7 @@ export default {
   },
   data() {
     return {
-      expanded: false,
+      formExpanded: false,
       datasetExpanded: false
     };
   },
@@ -99,7 +99,7 @@ export default {
     visibleForms() {
       const sortedForms = this.project.formList.filter((f) => f.state !== 'closed');
       sortedForms.sort(this.sortFunc);
-      return this.expanded
+      return this.formExpanded
         ? sortedForms
         : sortedForms.slice(0, this.maxForms);
     },
@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     toggleExpanded() {
-      this.expanded = !this.expanded;
+      this.formExpanded = !this.formExpanded;
     },
     toggleDatasetExpanded() {
       this.datasetExpanded = !this.datasetExpanded;

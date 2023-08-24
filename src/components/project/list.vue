@@ -78,7 +78,7 @@ import sortFunctions from '../../util/sort';
 import useChunkyArray from '../../composables/chunky-array';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
-import { countUnderThreshold } from '../../util/util';
+import { sumUnderThreshold } from '../../util/util';
 
 export default {
   name: 'ProjectList',
@@ -144,7 +144,7 @@ export default {
 
       do {
         limit += 1;
-        formsShown = countUnderThreshold(formCounts, limit); // formCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
+        formsShown = sumUnderThreshold(formCounts, limit); // formCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
       }
       while (formsShown < 15 && formsShown < totalForms);
 
@@ -159,7 +159,7 @@ export default {
 
       do {
         limit += 1;
-        dsShown = countUnderThreshold(datasetCounts, limit); // datasetCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
+        dsShown = sumUnderThreshold(datasetCounts, limit); // datasetCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
       }
       while (dsShown < 15 && dsShown < totalDatasets);
 

@@ -112,6 +112,8 @@ export default {
       type: Object,
       required: true
     },
+    // Whether to show the Form icon or not
+    // We show it only for the first row
     showIcon: {
       type: Boolean,
       required: true

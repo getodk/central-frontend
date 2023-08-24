@@ -191,8 +191,6 @@ describe('util/date-time', () => {
 
   describe('maxDateTime()', () => {
     it('should return null if both values are null or undefined', () => {
-      // const formatted = formatDateTime(dt('2017-12-31T01:23:45Z'));
-      // formatted.should.equal('2017/12/31 01:23:45');
       should(maxDateTime(null, undefined)).be.null();
     });
 

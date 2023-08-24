@@ -68,6 +68,7 @@ export const formatDateTime = (dateTime, relative = undefined) => {
   return `${date} ${time}`;
 };
 
+// Expects iso strings
 export const maxDateTime = (a, b) => {
   const dateA = (a && new Date(a)) || null;
   const dateB = (b && new Date(b)) || null;

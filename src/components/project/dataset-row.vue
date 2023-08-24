@@ -1,5 +1,5 @@
 <!--
-Copyright 2022 ODK Central Developers
+Copyright 2023 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
