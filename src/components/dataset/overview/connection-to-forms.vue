@@ -59,6 +59,10 @@ export default {
       type: Array,
       required: true
     },
+    sourceForms: {
+      type: Array,
+      required: true
+    },
     projectId: {
       type: String,
       required: true
@@ -73,18 +77,10 @@ export default {
       return this.properties.length;
     },
     propertiesByForm() {
-      const formMap = new Map();
+      const formMap = new Map(this.sourceForms.map(f => ([f.xmlFormId, { ...f, projectId: this.projectId, properties: [] }])));
 
       for (const p of this.properties) {
         for (const f of p.forms) {
-          if (!formMap.has(f.xmlFormId)) {
-            formMap.set(f.xmlFormId, {
-              name: f.name,
-              xmlFormId: f.xmlFormId,
-              projectId: this.projectId,
-              properties: []
-            });
-          }
           const form = formMap.get(f.xmlFormId);
           form.properties.push(p.name);
         }

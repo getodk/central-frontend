@@ -40,6 +40,7 @@ except according to the terms contained in the LICENSE file.
         <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
         <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma') }}<sentence-separator/></template>
       </span>
+      <span v-if="inFormProperties.length === 0">no property to show</span>
     </div>
   </div>
 </template>
