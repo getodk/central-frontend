@@ -33,6 +33,7 @@ except according to the terms contained in the LICENSE file.
                 $t('common.punctuations.comma')
               }}<sentence-separator/></template>
             </span>
+            <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
           </template>
         </expandable-row>
       </div>
@@ -121,6 +122,10 @@ export default {
   .property-list {
     hyphens: auto;
     overflow-wrap: break-word;
+  }
+
+  .no-properties {
+    font-style: italic;
   }
 }
 </style>

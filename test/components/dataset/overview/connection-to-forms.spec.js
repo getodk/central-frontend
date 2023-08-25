@@ -76,11 +76,11 @@ describe('Connection to Forms', () => {
 
     rows[2].get('.title-cell').text().should.be.eql('Form with no properties');
     rows[2].get('.caption-cell').text().should.be.eql('0 of 3 properties');
-    rows[2].get('.expanded-row').text().should.be.eql('');
+    rows[2].get('.expanded-row').text().should.be.eql('This Form only sets the “label”.');
     rows[2].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/form_with_no_prop');
   });
 
-  it('does not break if there is no properties', () => {
+  it('does not break if there is no forms', () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     const component = mountComponent();
     component.get('.summary-item-heading').text().should.be.equal('0');
