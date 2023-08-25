@@ -13,7 +13,7 @@ import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => {
+const mountComponent = (showIcon = false) => {
   const projectData = { ...testData.extendedProjects.last() };
   projectData.formList = testData.extendedForms.sorted();
   const container = createTestContainer({
@@ -22,7 +22,7 @@ const mountComponent = () => {
   });
   const project = container.requestData.localResources.projects[0];
   return mount(ProjectFormRow, {
-    props: { form: project.formList[0], project },
+    props: { form: project.formList[0], project, showIcon },
     container
   });
 };
@@ -318,6 +318,20 @@ describe('ProjectFormRow', () => {
         nonLink.find('a').exists().should.be.false();
         nonLink.text().should.equal('6');
       });
+    });
+  });
+
+  describe('show icon', () => {
+    beforeEach(mockLogin);
+
+    it('should show form icon', () => {
+      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
+      mountComponent(true).find('.col-icon span.icon-file').exists().should.be.true();
+    });
+
+    it('should not show form icon', () => {
+      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
+      mountComponent().find('.col-icon span.icon-file').exists().should.be.false();
     });
   });
 });

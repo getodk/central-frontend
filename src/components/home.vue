@@ -44,7 +44,7 @@ import { noop } from '../util/util';
 const HomeConfigSection = defineAsyncComponent(loadAsync('HomeConfigSection'));
 
 const projects = useProjects();
-projects.request({ url: '/v1/projects?forms=true' }).catch(noop);
+projects.request({ url: '/v1/projects?forms=true&datasets=true' }).catch(noop);
 
 const config = inject('config');
 </script>

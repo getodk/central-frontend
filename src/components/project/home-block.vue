@@ -21,30 +21,52 @@ except according to the terms contained in the LICENSE file.
         <span class="sr-only">{{ $t('encryptionTip') }}</span>
       </template>
     </div>
-    <table v-if="visibleForms.length > 0" class="project-form-table table">
-      <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :project="project"/>
+    <table v-if="visibleForms.length > 0 || visibleDataset.length > 0" class="project-table table">
+      <project-form-row v-for="(form, index) of visibleForms" :key="form.xmlFormId" :form="form" :project="project" :show-icon="index === 0"/>
+      <tr v-if="showExpander" class="project-form-row transparent-bg">
+        <td class="col-icon"></td>
+        <td colspan="6" class="expand-button-container">
+          <a href="#" role="button" class="expand-button" @click.prevent="toggleExpanded">
+            <template v-if="!formExpanded">
+              {{ $tcn('showMore', numForms) }}<span class="icon-angle-down"></span>
+            </template>
+            <template v-else>
+              {{ $tcn('showFewer', numForms) }}<span class="icon-angle-up"></span>
+            </template>
+          </a>
+        </td>
+      </tr>
+
+      <tr v-if="visibleForms.length > 0 && visibleDataset.length > 0" class="margin">
+        <td class="col-icon"></td>
+      </tr>
+      <project-dataset-row v-for="(dataset, index) of visibleDataset" :key="dataset.name" :dataset="dataset" :project="project" :show-icon="index === 0"/>
+      <tr v-if="showDatasetExpander" class="project-dataset-row transparent-bg">
+        <td class="col-icon"></td>
+        <td colspan="6" class="expand-button-container">
+          <a href="#" role="button" class="expand-button" @click.prevent="toggleDatasetExpanded">
+            <template v-if="!datasetExpanded">
+              {{ $tcn('showMore', numDatasets) }}<span class="icon-angle-down"></span>
+            </template>
+            <template v-else>
+              {{ $tcn('showFewer', numDatasets) }}<span class="icon-angle-up"></span>
+            </template>
+          </a>
+        </td>
+      </tr>
     </table>
-    <div v-if="showExpander" class="expand-button-container">
-      <a href="#" role="button" class="expand-button" @click.prevent="toggleExpanded">
-        <template v-if="!expanded">
-          {{ $tcn('showMore', numForms) }}<span class="icon-angle-down"></span>
-        </template>
-        <template v-else>
-          {{ $tcn('showFewer', numForms) }}<span class="icon-angle-up"></span>
-        </template>
-      </a>
-    </div>
   </div>
 </template>
 
 <script>
 import ProjectFormRow from './form-row.vue';
+import ProjectDatasetRow from './dataset-row.vue';
 
 import useRoutes from '../../composables/routes';
 
 export default {
   name: 'ProjectHomeBlock',
-  components: { ProjectFormRow },
+  components: { ProjectFormRow, ProjectDatasetRow },
   props: {
     project: {
       type: Object,
@@ -57,6 +79,10 @@ export default {
     maxForms: {
       type: Number,
       default: 3
+    },
+    maxDatasets: {
+      type: Number,
+      default: 3
     }
   },
   setup() {
@@ -65,27 +91,45 @@ export default {
   },
   data() {
     return {
-      expanded: false
+      formExpanded: false,
+      datasetExpanded: false
     };
   },
   computed: {
     visibleForms() {
       const sortedForms = this.project.formList.filter((f) => f.state !== 'closed');
       sortedForms.sort(this.sortFunc);
-      return this.expanded
+      return this.formExpanded
         ? sortedForms
         : sortedForms.slice(0, this.maxForms);
+    },
+    visibleDataset() {
+      const sortedDatasets = this.project.datasetList;
+      sortedDatasets.sort(this.sortFunc);
+
+      return this.datasetExpanded
+        ? sortedDatasets
+        : sortedDatasets.slice(0, this.maxDatasets);
     },
     showExpander() {
       return this.numForms > this.maxForms;
     },
     numForms() {
       return this.project.formList.filter((f) => f.state !== 'closed').length;
+    },
+    showDatasetExpander() {
+      return this.numDatasets > this.maxDatasets;
+    },
+    numDatasets() {
+      return this.project.datasetList.length;
     }
   },
   methods: {
     toggleExpanded() {
-      this.expanded = !this.expanded;
+      this.formExpanded = !this.formExpanded;
+    },
+    toggleDatasetExpanded() {
+      this.datasetExpanded = !this.datasetExpanded;
     }
   }
 };
@@ -125,7 +169,7 @@ export default {
   }
 
   .expand-button-container {
-    margin-left: 15px;
+    padding-left: 6px;
     font-size: 14px;
     color: #888;
   }
@@ -136,11 +180,77 @@ export default {
     }
   }
 
+
   .icon-angle-down, .icon-angle-up {
     margin-left: 5px;
   }
 
-  .project-form-table tr:nth-child(3n + 2) {background: #eee;}
+  .project-table {
+
+    .transparent-bg{
+      background: transparent !important;
+    }
+
+    tr:first-child .col-icon {
+      border-top-left-radius: 5px;
+    }
+
+    tr:last-child .col-icon {
+      border-bottom-left-radius: 5px;
+    }
+
+    tr:nth-child(3n + 2 of .project-form-row) {
+      background: #eee;
+    }
+
+    tr:nth-child(3n + 2 of .project-dataset-row) {
+      background: #eee;
+    }
+
+    .col-icon {
+      width: 35px;
+      background: #e3e4e4;
+      border-right-width: 2px;
+      border-right-style: solid;
+      padding: 5px 0px;
+      text-align: center;
+
+      span {
+        margin-left: 0;
+      }
+
+    }
+
+    .project-form-row .col-icon {
+      border-right-color: #009ccc;
+
+      span {
+        color: #009ccc;
+
+      }
+    }
+
+    .project-dataset-row .col-icon{
+      border-right-color: #b9005c;
+
+      span {
+        color: #b9005c;
+
+      }
+    }
+
+    .margin {
+      height: 5px;
+
+      .col-icon {
+        border-right: none;
+        width: 33px;
+      }
+    }
+  }
+
+
+
 }
 </style>
 

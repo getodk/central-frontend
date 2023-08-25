@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         <div v-if="projects.dataExists">
           <project-home-block v-for="project of chunkyProjects" :key="project.id"
             :project="project" :sort-func="sortFunction"
-            :max-forms="maxForms"/>
+            :max-forms="maxForms" :max-datasets="maxDatasets"/>
         </div>
         <loading :state="projects.initiallyLoading"/>
         <p v-if="projects.dataExists && activeProjects.length === 0"
@@ -78,6 +78,7 @@ import sortFunctions from '../../util/sort';
 import useChunkyArray from '../../composables/chunky-array';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
+import { sumUnderThreshold } from '../../util/util';
 
 export default {
   name: 'ProjectList',
@@ -128,39 +129,41 @@ export default {
       const filteredProjects = this.projects.filter((p) => (p.archived));
       return filteredProjects.sort(this.sortFunction);
     },
+    // Requirement:
+    // - Show atleast 3 items (forms/datasets) per project (if there are)
+    // - if showing only 3 items per project doesn't show 15 items in total across all projects
+    //   then show more items until total items shown is close to 15
+    // - Don't show closed forms
     maxForms() {
-      let limit = 3;
-
-      // if there are many projects, don't bother with computing form limit
-      if (this.projects.length >= 15)
-        return limit;
+      let limit = 2;
+      let formsShown;
 
       const formCounts = this.projects.map((project) =>
         project.formList.filter((f) => f.state !== 'closed').length);
       const totalForms = sum(formCounts);
 
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
+      do {
         limit += 1;
-        const shownForms = formCounts.reduce(
-          // eslint-disable-next-line no-loop-func
-          (acc, count) => acc + Math.min(count, limit),
-          0
-        );
-
-        // If we have exceeded the number of forms
-        // to show, back up to previous limit.
-        if (shownForms > 15)
-          return limit - 1;
-
-        // If we are showing all the forms that are
-        // possible to show, return current limit.
-        if (shownForms === totalForms)
-          return limit;
-
-        // If we are showing less than that,
-        // go through loop again (try increasing limit).
+        formsShown = sumUnderThreshold(formCounts, limit); // formCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
       }
+      while (formsShown < 15 && formsShown < totalForms);
+
+      return formsShown > 15 && limit > 3 ? limit - 1 : limit;
+    },
+    maxDatasets() {
+      let limit = 2;
+      let dsShown;
+
+      const datasetCounts = this.projects.map(p => p.datasetList.length);
+      const totalDatasets = sum(datasetCounts);
+
+      do {
+        limit += 1;
+        dsShown = sumUnderThreshold(datasetCounts, limit); // datasetCounts.reduce((acc, i) => acc + Math.min(i, limit), 0);
+      }
+      while (dsShown < 15 && dsShown < totalDatasets);
+
+      return dsShown > 15 && limit > 3 ? limit - 1 : limit;
     }
   },
   methods: {

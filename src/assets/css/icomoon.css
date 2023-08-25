@@ -232,8 +232,11 @@
   content: "\f0d9";
 }
 .icon-caret-down:before {
-  content: "\e900";
+  content: "\e901";
 }
 .icon-cube:before {
-  content: "\e901";
+  content: "\e902";
+}
+.icon-file:before {
+  content: "\e900";
 }

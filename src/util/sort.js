@@ -10,6 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+import { maxDateTime } from './date-time';
+
 export default {
   alphabetical: (a, b) => {
     // sort uses `name` field for both projects and forms
@@ -19,8 +21,8 @@ export default {
     return nameA.localeCompare(nameB);
   },
   latest: (a, b) => {
-    const dateA = a.lastSubmission;
-    const dateB = b.lastSubmission;
+    const dateA = maxDateTime(a.lastSubmission, a.lastEntity);
+    const dateB = maxDateTime(b.lastSubmission, b.lastEntity);
     // break tie alphabetically if both lastSub dates are null
     if (dateA == null && dateB == null) {
       const nameA = a.name != null ? a.name : a.nameOrId;
@@ -32,7 +34,7 @@ export default {
       return 1;
     if (dateB == null)
       return -1;
-    return new Date(dateB) - new Date(dateA);
+    return dateB - dateA;
   },
   newest: (a, b) => {
     const dateA = a.createdAt;
