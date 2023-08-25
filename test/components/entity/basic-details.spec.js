@@ -24,7 +24,7 @@ const mountComponent = () => {
         entity,
         audits: testData.extendedAudits.sorted()
       }),
-      router: mockRouter(`/projects/1/datasets/trees/entities/${entity.uuid}`)
+      router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`)
     }
   });
 };
@@ -126,7 +126,7 @@ describe('EntityBasicDetails', () => {
 
     it('does not remove creating submission while activity feed is being refreshed', () => {
       createEntityFromSubmission();
-      return load('/projects/1/datasets/trees/entities/e', { root: false })
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
         .afterResponses(component => {
           const dd = component.get('#entity-basic-details-creating-submission');
           dd.text().should.equal('s');

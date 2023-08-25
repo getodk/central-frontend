@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <div id="dataset-show">
-    <page-back v-show="dataExists" :to="[projectPath(), projectPath('datasets')]">
+    <page-back v-show="dataExists" :to="[projectPath(), projectPath('entity-lists')]">
       <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
       <template #back>{{ $t('resource.entities') }}</template>
     </page-back>

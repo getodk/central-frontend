@@ -125,36 +125,36 @@ describe('useRoutes()', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { datasetPath } = withSetup(useRoutes, { container });
       const path = datasetPath(1, 'trees', 'entities');
-      path.should.equal('/projects/1/datasets/trees/entities');
+      path.should.equal('/projects/1/entity-lists/trees/entities');
     });
 
     it('returns a path if given two arguments', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { datasetPath } = withSetup(useRoutes, { container });
-      datasetPath(1, 'trees').should.equal('/projects/1/datasets/trees');
+      datasetPath(1, 'trees').should.equal('/projects/1/entity-lists/trees');
     });
 
     it('infers projectId and datasetName if given one argument', () => {
       const container = createTestContainer({
-        router: mockRouter('/projects/1/datasets/trees')
+        router: mockRouter('/projects/1/entity-lists/trees')
       });
       const { datasetPath } = withSetup(useRoutes, { container });
       const path = datasetPath('entities');
-      path.should.equal('/projects/1/datasets/trees/entities');
+      path.should.equal('/projects/1/entity-lists/trees/entities');
     });
 
     it('infers projectId and datasetName if given no arguments', () => {
       const container = createTestContainer({
-        router: mockRouter('/projects/1/datasets/trees/entities')
+        router: mockRouter('/projects/1/entity-lists/trees/entities')
       });
       const { datasetPath } = withSetup(useRoutes, { container });
-      datasetPath().should.equal('/projects/1/datasets/trees');
+      datasetPath().should.equal('/projects/1/entity-lists/trees');
     });
 
     it('encodes the dataset name', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { datasetPath } = withSetup(useRoutes, { container });
-      datasetPath(1, 'á').should.equal('/projects/1/datasets/%C3%A1');
+      datasetPath(1, 'á').should.equal('/projects/1/entity-lists/%C3%A1');
     });
   });
 
@@ -163,7 +163,7 @@ describe('useRoutes()', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { entityPath } = withSetup(useRoutes, { container });
       const path = entityPath(1, 'a b', 'abcd1234');
-      path.should.equal('/projects/1/datasets/a%20b/entities/abcd1234');
+      path.should.equal('/projects/1/entity-lists/a%20b/entities/abcd1234');
     });
   });
 });

@@ -322,7 +322,7 @@ const routes = [
         }
       }),
       asyncRoute({
-        path: 'datasets',
+        path: 'entity-lists',
         component: 'DatasetList',
         props: true,
         loading: 'tab',
@@ -511,12 +511,12 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName',
+    path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName',
     component: 'DatasetShow',
     props: true,
     loading: 'page',
     key: ({ projectId, datasetName }) =>
-      `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`,
+      `/projects/${projectId}/entity-lists/${encodeURIComponent(datasetName)}`,
     children: [
       asyncRoute({
         path: '',
@@ -561,7 +561,7 @@ const routes = [
     // We don't validate that :uuid is a valid UUID (and it isn't in tests), but
     // we do validate that it doesn't need to be URL-encoded (for example, in
     // requests to Backend).
-    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName/entities/:uuid([0-9a-f-]+)',
+    path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName/entities/:uuid([0-9a-f-]+)',
     component: 'EntityShow',
     props: true,
     loading: 'page',

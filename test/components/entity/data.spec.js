@@ -40,7 +40,7 @@ describe('EntityData', () => {
     it('toggles the modal', () => {
       mockLogin();
       testData.extendedEntities.createPast(1, { uuid: 'e' });
-      return load('/projects/1/datasets/trees/entities/e', { root: false })
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
         .testModalToggles({
           modal: EntityUpdate,
           show: '#entity-data-update-button',

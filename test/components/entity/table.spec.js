@@ -20,7 +20,7 @@ const mountComponent = (props = undefined) => mount(EntityTable, {
     ...props
   },
   container: {
-    router: mockRouter('/projects/1/datasets/trees/entities'),
+    router: mockRouter('/projects/1/entity-lists/trees/entities'),
     requestData: testRequestData([useProject, useEntities], {
       project: testData.extendedProjects.last(),
       odataEntities: testData.entityOData()

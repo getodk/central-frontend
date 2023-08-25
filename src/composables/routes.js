@@ -29,7 +29,7 @@ const _formPath = (projectId, xmlFormId, suffix = '') => {
 const _datasetPath = (projectId, datasetName, suffix = '') => {
   const encodedName = encodeURIComponent(datasetName);
   const slash = suffix !== '' ? '/' : '';
-  return `/projects/${projectId}/datasets/${encodedName}${slash}${suffix}`;
+  return `/projects/${projectId}/entity-lists/${encodedName}${slash}${suffix}`;
 };
 
 export default memoizeForContainer(({ router, requestData }) => {
@@ -112,7 +112,7 @@ export default memoizeForContainer(({ router, requestData }) => {
 
   const entityPath = (projectId, datasetName, entityUuid) => {
     const encodedName = encodeURIComponent(datasetName);
-    return `/projects/${projectId}/datasets/${encodedName}/entities/${entityUuid}`;
+    return `/projects/${projectId}/entity-lists/${encodedName}/entities/${entityUuid}`;
   };
 
   const userPath = (id) => `/users/${id}/edit`;

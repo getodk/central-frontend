@@ -14,7 +14,7 @@ describe('EntityList', () => {
   it('sends the correct requests for a dataset', () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     return load(
-      '/projects/1/datasets/trees/entities',
+      '/projects/1/entity-lists/trees/entities',
       { root: false }
     ).testRequests([
       { url: '/v1/projects/1/datasets/trees.svc/Entities?%24count=true' }
@@ -24,7 +24,7 @@ describe('EntityList', () => {
   it('shows a message if there are no submissions', async () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     const component = await load(
-      '/projects/1/datasets/trees/entities',
+      '/projects/1/entity-lists/trees/entities',
       { root: false }
     );
     component.getComponent(EntityList).get('.empty-table-message').should.be.visible();
@@ -38,7 +38,7 @@ describe('EntityList', () => {
         component.findAllComponents(EntityMetadataRow).length.should.equal(count);
         component.findAllComponents(EntityDataRow).length.should.equal(count);
       };
-      return load('/projects/1/datasets/trees/entities', { root: false })
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
         .afterResponses(assertRowCount(1))
         .request(component =>
           component.get('#entity-list-refresh-button').trigger('click'))
@@ -53,7 +53,7 @@ describe('EntityList', () => {
     it('does not show a loading message', () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
-      return load('/projects/1/datasets/trees/entities', { root: false })
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
           component.get('#entity-list-refresh-button').trigger('click'))
@@ -67,7 +67,7 @@ describe('EntityList', () => {
   describe('update', () => {
     it('toggles the Modal', () => {
       testData.extendedEntities.createPast(1);
-      return load('/projects/1/datasets/trees/entities', { root: false })
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
         .testModalToggles({
           modal: EntityUpdate,
           show: '.entity-metadata-row .update-button',
@@ -79,7 +79,7 @@ describe('EntityList', () => {
       testData.extendedEntities
         .createPast(1, { uuid: 'e1' })
         .createPast(1, { uuid: 'e2' });
-      const component = await load('/projects/1/datasets/trees/entities', {
+      const component = await load('/projects/1/entity-lists/trees/entities', {
         root: false
       });
       const modal = component.getComponent(EntityUpdate);
@@ -105,7 +105,7 @@ describe('EntityList', () => {
         label: 'My Entity',
         data: { height: '1', 'circumference.cm': '2' }
       });
-      const component = await load('/projects/1/datasets/trees/entities', {
+      const component = await load('/projects/1/entity-lists/trees/entities', {
         root: false
       });
       await component.get('.entity-metadata-row .update-button').trigger('click');
@@ -123,7 +123,7 @@ describe('EntityList', () => {
 
     it('does not show the modal during a refresh of the table', () => {
       testData.extendedEntities.createPast(1);
-      return load('/projects/1/datasets/trees/entities', { root: false })
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
           component.get('#entity-list-refresh-button').trigger('click'))
@@ -152,7 +152,7 @@ describe('EntityList', () => {
           data: { height: '1', 'circumference.cm': '2' }
         });
         testData.extendedEntities.createPast(1, { uuid: 'e3' });
-        return load('/projects/1/datasets/trees/entities', { root: false })
+        return load('/projects/1/entity-lists/trees/entities', { root: false })
           .complete()
           .request(async (component) => {
             await component.get('.entity-metadata-row:nth-child(2) .update-button').trigger('click');

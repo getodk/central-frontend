@@ -21,7 +21,7 @@ const mountComponent = () => {
       properties: testData.extendedDatasets.last().properties
     },
     container: {
-      router: mockRouter('/projects/1/datasets/trees/entities/e'),
+      router: mockRouter('/projects/1/entity-lists/trees/entities/e'),
       requestData: testRequestData([useProject, useEntities], {
         project: testData.extendedProjects.last(),
         odataEntities: testData.entityOData()

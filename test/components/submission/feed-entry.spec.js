@@ -175,8 +175,8 @@ describe('SubmissionFeedEntry', () => {
         const links = mountComponent().findAllComponents(RouterLinkStub);
         links.length.should.equal(2);
         links.map(link => link.props().to).should.eql([
-          '/projects/1/datasets/DatasetName/entities/xyz',
-          '/projects/1/datasets/DatasetName'
+          '/projects/1/entity-lists/DatasetName/entities/xyz',
+          '/projects/1/entity-lists/DatasetName'
         ]);
       });
 

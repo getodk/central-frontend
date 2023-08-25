@@ -409,9 +409,9 @@ describe('FormDraftPublish', () => {
           testData.extendedDatasets.createPast(1);
         })
         .complete()
-        .load('/projects/1/datasets', { project: false })
+        .load('/projects/1/entity-lists', { project: false })
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/datasets');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists');
         }));
   });
 
