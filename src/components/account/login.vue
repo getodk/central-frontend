@@ -97,7 +97,14 @@ export default {
     }
   },
   mounted() {
-    if (!this.config.oidcEnabled) this.$refs.email.focus();
+    if (this.config.oidcEnabled)
+      window.addEventListener('pageshow', this.reenableIfPersisted);
+    else
+      this.$refs.email.focus();
+  },
+  beforeUnmount() {
+    if (this.config.oidcEnabled)
+      window.removeEventListener('pageshow', this.reenableIfPersisted);
   },
   methods: {
     verifyNewSession() {
@@ -114,6 +121,17 @@ export default {
       }
 
       this.disabled = true;
+    },
+    /* Pressing the back button on the IdP login page may restore Frontend from
+    the back/forward cache. In that case, this.disabled would still be `true` --
+    a confusing state for the user to return to. Instead, if the user comes back
+    from the IdP, we set this.disabled to `false`, re-enabling the component.
+    This method may be called in other cases as well, for example, if the user
+    presses back on the Frontend login page, then presses forward to return to
+    Frontend. It should be OK to set this.disabled to `false` in any such case:
+    there's no real issue if the link ends up getting clicked multiple times. */
+    reenableIfPersisted(event) {
+      if (event.persisted) this.disabled = false;
     },
     navigateToNext(
       next,
