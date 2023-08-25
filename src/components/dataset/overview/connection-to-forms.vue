@@ -33,6 +33,7 @@ except according to the terms contained in the LICENSE file.
                 $t('common.punctuations.comma')
               }}<sentence-separator/></template>
             </span>
+            <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
           </template>
         </expandable-row>
       </div>
@@ -59,6 +60,10 @@ export default {
       type: Array,
       required: true
     },
+    sourceForms: {
+      type: Array,
+      required: true
+    },
     projectId: {
       type: String,
       required: true
@@ -73,18 +78,10 @@ export default {
       return this.properties.length;
     },
     propertiesByForm() {
-      const formMap = new Map();
+      const formMap = new Map(this.sourceForms.map(f => ([f.xmlFormId, { ...f, projectId: this.projectId, properties: [] }])));
 
       for (const p of this.properties) {
         for (const f of p.forms) {
-          if (!formMap.has(f.xmlFormId)) {
-            formMap.set(f.xmlFormId, {
-              name: f.name,
-              xmlFormId: f.xmlFormId,
-              projectId: this.projectId,
-              properties: []
-            });
-          }
           const form = formMap.get(f.xmlFormId);
           form.properties.push(p.name);
         }
@@ -125,6 +122,10 @@ export default {
   .property-list {
     hyphens: auto;
     overflow-wrap: break-word;
+  }
+
+  .no-properties {
+    font-style: italic;
   }
 }
 </style>

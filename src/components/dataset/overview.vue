@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <template #body>
         <div class="row">
           <div class="col-md-6 creation-forms">
-            <connection-to-forms :properties="dataset.properties" :project-id="projectId"/>
+            <connection-to-forms :properties="dataset.properties" :source-forms="dataset.sourceForms" :project-id="projectId"/>
           </div>
           <div class="col-md-6 linked-forms">
             <linked-forms :linked-forms="dataset.linkedForms" :project-id="projectId"/>

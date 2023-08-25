@@ -19,6 +19,7 @@ import { mockRouter } from '../../../util/router';
 const mountComponent = () => mount(ConnectionToForm, {
   props: {
     properties: testData.extendedDatasets.last().properties,
+    sourceForms: testData.extendedDatasets.last().sourceForms,
     projectId: testData.extendedProjects.first().id.toString()
   },
   container: {
@@ -51,10 +52,15 @@ describe('Connection to Forms', () => {
             { name: 'Tree Registration Adv', xmlFormId: 'tree_registration_adv' }
           ]
         }
+      ],
+      sourceForms: [
+        { name: 'Tree Registration', xmlFormId: 'tree_registration' },
+        { name: 'Tree Registration Adv', xmlFormId: 'tree_registration_adv' },
+        { name: 'Form with no properties', xmlFormId: 'form_with_no_prop' }
       ]
     });
     const component = mountComponent();
-    component.get('.summary-item-heading').text().should.be.equal('2');
+    component.get('.summary-item-heading').text().should.be.equal('3');
 
     const rows = component.findAllComponents(ExpandableRow);
 
@@ -67,9 +73,14 @@ describe('Connection to Forms', () => {
     rows[1].get('.caption-cell').text().should.be.eql('3 of 3 properties');
     rows[1].get('.expanded-row').text().should.be.eql('height, circumference, type');
     rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration_adv');
+
+    rows[2].get('.title-cell').text().should.be.eql('Form with no properties');
+    rows[2].get('.caption-cell').text().should.be.eql('0 of 3 properties');
+    rows[2].get('.expanded-row').text().should.be.eql('This Form only sets the “label”.');
+    rows[2].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/form_with_no_prop');
   });
 
-  it('does not break if there is no properties', () => {
+  it('does not break if there is no forms', () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     const component = mountComponent();
     component.get('.summary-item-heading').text().should.be.equal('0');

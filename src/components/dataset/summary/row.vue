@@ -40,6 +40,7 @@ except according to the terms contained in the LICENSE file.
         <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
         <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma') }}<sentence-separator/></template>
       </span>
+      <span v-if="inFormProperties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
     </div>
   </div>
 </template>
@@ -141,6 +142,10 @@ export default {
     .property-list {
       hyphens: auto;
       overflow-wrap: break-word;
+
+      .no-properties {
+        font-style: italic;
+      }
     }
 }
 
@@ -151,7 +156,7 @@ export default {
   "en": {
     // This is shown when an Entity List is new
     "new": "new!",
-    // This is shown when mouse hovers over plus icon of a new Entity Property
+    // This is shown when mouse hovers over plus icon of new Entity Property
     "addedByThisDraft": "Added by this Draft"
   }
 }

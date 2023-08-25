@@ -339,7 +339,8 @@
     "label": "Label",
     "entityLabel": "Entity Label",
     // This is the UUID of an Entity.
-    "entityId": "Entity ID"
+    "entityId": "Entity ID",
+    "noProperties": "This Form only sets the “label”."
   },
   "common": {
     // This is a title shown above a section of the page.

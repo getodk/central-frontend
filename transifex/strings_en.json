@@ -742,6 +742,9 @@
     "entityId": {
       "string": "Entity ID",
       "developer_comment": "This is the UUID of an Entity."
+    },
+    "noProperties": {
+      "string": "This Form only sets the “label”."
     }
   },
   "common": {
@@ -1398,7 +1401,7 @@
       },
       "addedByThisDraft": {
         "string": "Added by this Draft",
-        "developer_comment": "This is shown when mouse hovers over plus icon of a new Entity Property"
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Entity Property"
       }
     },
     "DatasetTable": {

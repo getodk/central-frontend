@@ -44,4 +44,25 @@ describe('Dataset summary row', () => {
       });
     });
   });
+
+  it('should show help text when there is no properties', async () => {
+    const dataset = testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [] }).last();
+    const component = mount(Row, {
+      props: { dataset, projectId: 1 },
+      container: {
+        router: mockRouter('/')
+      }
+    });
+    component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/entity-lists/${dataset.name}`);
+    component.get('.properties-count').text().should.be.equal('0 of 0 properties');
+
+    // check help text is hidden (.property-list is the parent)
+    component.get('.property-list').should.be.hidden();
+    // let expand help text
+    await component.get('.expand-button').trigger('click');
+    // check help text is visible
+    component.get('.property-list').should.be.visible();
+    // verify text
+    component.find('.no-properties').text().should.be.equal('This Form only sets the “label”.');
+  });
 });
