@@ -56,7 +56,7 @@ describe('Connection to Forms', () => {
       sourceForms: [
         { name: 'Tree Registration', xmlFormId: 'tree_registration' },
         { name: 'Tree Registration Adv', xmlFormId: 'tree_registration_adv' },
-        { name: 'Form with no properties', xmlFormId: 'form_with_no_prop'}
+        { name: 'Form with no properties', xmlFormId: 'form_with_no_prop' }
       ]
     });
     const component = mountComponent();
