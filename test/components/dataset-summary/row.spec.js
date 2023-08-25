@@ -53,7 +53,7 @@ describe('Dataset summary row', () => {
         router: mockRouter('/')
       }
     });
-    component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/datasets/${dataset.name}`);
+    component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/entity-lists/${dataset.name}`);
     component.get('.properties-count').text().should.be.equal('0 of 0 properties');
 
     // check help text is hidden (.property-list is the parent)
