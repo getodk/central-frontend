@@ -113,7 +113,11 @@ export default {
       "num_followup_forms": "Number of Forms that use the Entity List",
       "num_entities": "Number of Entities in the Entity List",
       "num_failed_entities": "Number of Entity creation errors",
-      "num_entity_updates": "Number of Entity updates"
+      "num_entity_updates": "Number of Entity updates",
+      "sso_enabled": "SSO enabled on Server",
+      "num_client_audit_attachments": "Number of Client Audit Attachments",
+      "num_client_audit_attachments_unprocessed": "Number of Unprocessed, Unencryped Client Audits",
+      "num_client_audit_attachments_processed": "Number of Processed Client Audits",
     }
   }
 }
