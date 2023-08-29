@@ -67,6 +67,21 @@ describe('util/session', () => {
           should.not.exist(localStorage.getItem('sessionExpires'));
         });
     });
+
+    it('only removes sessionExpires if it was set before the request', () => {
+      localStorage.removeItem('sessionExpires');
+      const container = createTestContainer();
+      const { session } = container.requestData;
+      return mockHttp(container)
+        .request(() => restoreSession(session).catch(noop))
+        .beforeAnyResponse(() => {
+          localStorage.setItem('sessionExpires', (Date.now() + 600000).toString());
+        })
+        .respondWithProblem(404.1)
+        .afterResponse(() => {
+          should.exist(localStorage.getItem('sessionExpires'));
+        });
+    });
   });
 
   describe('login', () => {

@@ -203,25 +203,37 @@ export const useSessions = () => {
   });
 };
 
-export const restoreSession = (session) =>
+export const restoreSession = (session) => {
+  const sessionExpires = localStore.getItem('sessionExpires');
   // There is a chance that the user's session will be restored almost
   // immediately before the session expires, such that the session expires
   // before logOutBeforeSessionExpires() logs out the user. However, that case
   // is unlikely, and the worst case should be that the user sees 401 messages.
-  session.request({ url: '/v1/sessions/restore', alert: false })
+  return session.request({ url: '/v1/sessions/restore', alert: false })
     .catch(error => {
-      // The user's session may be removed without the user logging out, for
-      // example, if a backup is restored. In that case, the request will result
-      // in a 404. sessionExpires may need to be removed from local storage in
-      // order for the user to log in again.
-      const { response } = error;
-      if (response != null && isProblem(response.data) &&
-        response.data.code === 404.1) {
-        removeSessionFromStorage();
+      /*
+      The user's session may be removed without the user logging out, for
+      example, if a backup is restored. In that case, the request will result in
+      a 404. We remove sessionExpires from local storage so that AccountLogin
+      doesn't prevent the user from logging in.
+
+      There's an unlikely possibility that another tab logged in during this
+      request, setting sessionExpires. In that case, we don't remove
+      sessionExpires here: otherwise there would be a cookie, but no item in
+      local storage. This tab will proceed to AccountLogin, which will alert the
+      user if sessionExpires is set.
+      */
+      if (sessionExpires != null) {
+        const { response } = error;
+        if (response != null && isProblem(response.data) &&
+          response.data.code === 404.1) {
+          removeSessionFromStorage();
+        }
       }
 
       throw error;
     });
+};
 
 /* requestData.session must be set before logIn() is called, meaning that
 logIn() will be preceded by either the request to restore the session or a
