@@ -74,7 +74,9 @@ router.afterEach(unlessFailure(to => {
         if (to.meta.restoreSession && !session.dataExists) {
           await restoreSession(session);
           // If this is the first time that the session has been restored since
-          // the most recent OIDC login, set sessionExpires in local storage.
+          // the most recent OIDC login, set sessionExpires in local storage. If
+          // sessionExpires is already set (for example, if the previous session
+          // expired), then it will be overwritten.
           const newSession = config.oidcEnabled &&
             Date.parse(session.expiresAt).toString() !== localStore.getItem('sessionExpires');
           await logIn(container, newSession);

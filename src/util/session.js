@@ -203,33 +203,25 @@ export const useSessions = () => {
   });
 };
 
-export const restoreSession = (session) => {
-  const sessionExpires = localStore.getItem('sessionExpires');
-  // We send a request if sessionExpires == null, partly in case there was a
-  // logout error.
-  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
-    return Promise.reject();
+export const restoreSession = (session) =>
   // There is a chance that the user's session will be restored almost
   // immediately before the session expires, such that the session expires
   // before logOutBeforeSessionExpires() logs out the user. However, that case
   // is unlikely, and the worst case should be that the user sees 401 messages.
-  return session.request({ url: '/v1/sessions/restore', alert: false })
+  session.request({ url: '/v1/sessions/restore', alert: false })
     .catch(error => {
       // The user's session may be removed without the user logging out, for
       // example, if a backup is restored. In that case, the request will result
       // in a 404. sessionExpires may need to be removed from local storage in
       // order for the user to log in again.
-      if (sessionExpires != null) {
-        const { response } = error;
-        if (response != null && isProblem(response.data) &&
-          response.data.code === 404.1) {
-          removeSessionFromStorage();
-        }
+      const { response } = error;
+      if (response != null && isProblem(response.data) &&
+        response.data.code === 404.1) {
+        removeSessionFromStorage();
       }
 
       throw error;
     });
-};
 
 /* requestData.session must be set before logIn() is called, meaning that
 logIn() will be preceded by either the request to restore the session or a

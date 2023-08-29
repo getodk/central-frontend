@@ -13,88 +13,59 @@ import { withSetup } from '../util/lifecycle';
 
 describe('util/session', () => {
   describe('session restore', () => {
-    describe('session is not expired', () => {
-      beforeEach(() => {
-        const millis = Date.now() + 300000;
-        testData.sessions.createPast(1, {
-          expiresAt: new Date(millis).toISOString()
-        });
-        localStorage.setItem('sessionExpires', millis.toString());
+    beforeEach(() => {
+      const millis = Date.now() + 300000;
+      testData.sessions.createPast(1, {
+        expiresAt: new Date(millis).toISOString()
       });
-
-      it('sends the correct request', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .request(() => restoreSession(session))
-          .beforeEachResponse((_, { method, url }) => {
-            method.should.equal('GET');
-            url.should.equal('/v1/sessions/restore');
-          })
-          .respondWithData(() => testData.sessions.last());
-      });
-
-      it('saves the session', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .request(() => restoreSession(session))
-          .respondWithData(() => testData.sessions.last())
-          .afterResponse(() => {
-            session.dataExists.should.be.true();
-          });
-      });
-
-      it('does not set sessionExpires in local storage', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        const setItem = sinon.fake();
-        sinon.replace(Storage.prototype, 'setItem', setItem);
-        return mockHttp(container)
-          .request(() => restoreSession(session))
-          .respondWithData(() => testData.sessions.last())
-          .afterResponse(() => {
-            setItem.called.should.be.false();
-          });
-      });
-
-      it('removes sessionExpires from local storage after a 404', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .request(() => restoreSession(session).catch(noop))
-          .respondWithProblem(404.1)
-          .afterResponse(() => {
-            should.not.exist(localStorage.getItem('sessionExpires'));
-          });
-      });
+      localStorage.setItem('sessionExpires', millis.toString());
     });
 
-    describe('session is expired', () => {
-      beforeEach(() => {
-        localStorage.setItem('sessionExpires', '0');
-      });
-
-      it('does not send a request', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .testNoRequest(() => restoreSession(session).catch(noop));
-      });
-
-      it('returns a rejected promise', () => {
-        const { requestData } = createTestContainer();
-        return restoreSession(requestData.session).should.be.rejected();
-      });
-    });
-
-    it('sends a request if sessionExpires is not in local storage', () => {
-      testData.sessions.createPast(1);
+    it('sends the correct request', () => {
       const container = createTestContainer();
       const { session } = container.requestData;
       return mockHttp(container)
         .request(() => restoreSession(session))
+        .beforeEachResponse((_, { method, url }) => {
+          method.should.equal('GET');
+          url.should.equal('/v1/sessions/restore');
+        })
         .respondWithData(() => testData.sessions.last());
+    });
+
+    it('saves the session', () => {
+      const container = createTestContainer();
+      const { session } = container.requestData;
+      return mockHttp(container)
+        .request(() => restoreSession(session))
+        .respondWithData(() => testData.sessions.last())
+        .afterResponse(() => {
+          session.dataExists.should.be.true();
+        });
+    });
+
+    it('does not set sessionExpires in local storage', () => {
+      const container = createTestContainer();
+      const { session } = container.requestData;
+      const setItem = sinon.fake();
+      sinon.replace(Storage.prototype, 'setItem', setItem);
+      return mockHttp(container)
+        .request(() => restoreSession(session))
+        .respondWithData(() => testData.sessions.last())
+        .afterResponse(() => {
+          setItem.called.should.be.false();
+        });
+    });
+
+    it('removes sessionExpires from local storage after a 404', () => {
+      const container = createTestContainer();
+      const { session } = container.requestData;
+      return mockHttp(container)
+        .request(() => restoreSession(session).catch(noop))
+        .respondWithProblem(404.1)
+        .afterResponse(() => {
+          should.not.exist(localStorage.getItem('sessionExpires'));
+        });
     });
   });
 
