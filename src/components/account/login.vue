@@ -88,13 +88,7 @@ export default {
     }
   },
   created() {
-    const { oidcError } = this.$route.query;
-    if (this.config.oidcEnabled && typeof oidcError === 'string' &&
-      /^[\w-]+$/.test(oidcError)) {
-      const path = `oidc.error.${oidcError}`;
-      if (this.$te(path, this.$i18n.fallbackLocale))
-        this.alert.danger(this.$t(path));
-    }
+    this.handleOIDCError();
   },
   mounted() {
     if (this.config.oidcEnabled)
@@ -121,6 +115,15 @@ export default {
       }
 
       this.disabled = true;
+    },
+    handleOIDCError() {
+      const { oidcError } = this.$route.query;
+      if (this.config.oidcEnabled && typeof oidcError === 'string' &&
+        /^[\w-]+$/.test(oidcError)) {
+        const path = `oidc.error.${oidcError}`;
+        if (this.$te(path, this.$i18n.fallbackLocale))
+          this.alert.danger(this.$t(path));
+      }
     },
     /* Pressing the back button on the IdP login page may restore Frontend from
     the back/forward cache. In that case, this.disabled would still be `true` --
