@@ -115,9 +115,8 @@ describe('SubmissionList', () => {
     });
 
     describe('load by chunk', () => {
-      const checkTopSkip = ({ url }, top, skip) => {
+      const checkTop = ({ url }, top) => {
         url.should.match(new RegExp(`[?&]%24top=${top}(&|$)`));
-        url.should.match(new RegExp(`[?&]%24skip=${skip}(&|$)`));
       };
       const checkIds = (component, count, offset = 0) => {
         const rows = component.findAllComponents(SubmissionDataRow);
@@ -169,7 +168,7 @@ describe('SubmissionList', () => {
           .beforeEachResponse((component, config) => {
             if (config.url.includes('.svc/Submissions')) {
               checkMessage(component, 'Loading the first 2 of 3 Submissions…');
-              checkTopSkip(config, 2, 0);
+              checkTop(config, 2);
             }
           })
           .afterResponses(component => {
@@ -186,7 +185,7 @@ describe('SubmissionList', () => {
           .request(component =>
             component.get('#submission-list-refresh-button').trigger('click'))
           .beforeEachResponse((_, config) => {
-            checkTopSkip(config, 2, 0);
+            checkTop(config, 2, 0);
           })
           .respondWithData(() => testData.submissionOData(2, 0))
           .afterResponse(component => {
@@ -199,7 +198,7 @@ describe('SubmissionList', () => {
           createSubmissions(12);
           // Chunk 1
           return loadSubmissionList({
-            props: { top: (skip) => (skip < 8 ? 2 : 3) }
+            props: { top: (loaded) => (loaded < 8 ? 2 : 3) }
           })
             .beforeEachResponse((component, { url }) => {
               if (url.includes('.svc/Submissions'))
@@ -211,7 +210,7 @@ describe('SubmissionList', () => {
             // Chunk 2
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 2);
+              checkTop(config, 2);
               checkMessage(component, 'Loading 2 more of 10 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 2))
@@ -222,7 +221,7 @@ describe('SubmissionList', () => {
             // Chunk 3
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 4);
+              checkTop(config, 2, 4);
               checkMessage(component, 'Loading 2 more of 8 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 4))
@@ -233,7 +232,7 @@ describe('SubmissionList', () => {
             // Chunk 4 (last small chunk)
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 6);
+              checkTop(config, 2, 6);
               checkMessage(component, 'Loading 2 more of 6 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 6))
@@ -244,7 +243,7 @@ describe('SubmissionList', () => {
             // Chunk 5
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 3, 8);
+              checkTop(config, 3, 8);
               checkMessage(component, 'Loading 3 more of 4 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(3, 8))
@@ -255,7 +254,7 @@ describe('SubmissionList', () => {
             // Chunk 6
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 3, 11);
+              checkTop(config, 3, 11);
               checkMessage(component, 'Loading the last Submission…');
             })
             .respondWithData(() => testData.submissionOData(3, 11))
@@ -313,7 +312,7 @@ describe('SubmissionList', () => {
             .request(component =>
               component.get('#submission-list-refresh-button').trigger('click'))
             .beforeEachResponse((_, config) => {
-              checkTopSkip(config, 2, 0);
+              checkTop(config, 2, 0);
             })
             .respondWithData(() => testData.submissionOData(2, 0))
             .afterResponse(component => {
@@ -321,7 +320,7 @@ describe('SubmissionList', () => {
             })
             .request(scroll)
             .beforeEachResponse((_, config) => {
-              checkTopSkip(config, 2, 2);
+              checkTop(config, 2, 2);
             })
             .respondWithData(() => testData.submissionOData(2, 2));
         });
@@ -366,7 +365,7 @@ describe('SubmissionList', () => {
           })
             .beforeEachResponse((component, config) => {
               if (config.url.includes('.svc/Submissions')) {
-                checkTopSkip(config, 2, 0);
+                checkTop(config, 2, 0);
                 checkMessage(component, 'Loading the first 2 of 4 Submissions…');
               }
             })
@@ -375,7 +374,7 @@ describe('SubmissionList', () => {
             // request $top=2, $skip=2.
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 2);
+              checkTop(config, 2, 2);
               checkMessage(component, 'Loading the last 2 Submissions…');
             })
             .respondWithData(() => {
@@ -390,7 +389,7 @@ describe('SubmissionList', () => {
             // 8 submissions exist. About to request $top=2, $skip=4.
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 4);
+              checkTop(config, 2, 4);
               checkMessage(component, 'Loading the last 2 Submissions…');
             })
             // Returns the 2 submissions that are already shown in the table.
@@ -402,7 +401,7 @@ describe('SubmissionList', () => {
             // 8 submissions exist. About to request $top=2, $skip=6.
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 6);
+              checkTop(config, 2, 6);
               checkMessage(component, 'Loading the last 2 Submissions…');
             })
             // Returns the last 2 submissions.

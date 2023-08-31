@@ -67,6 +67,7 @@ export const entityOData = (top = 250, skip = 0) => {
   const { properties } = extendedDatasets.last();
   return {
     '@odata.count': extendedEntities.size,
+    '@odata.nextLink': top > 0 && (top + skip < extendedEntities.size) ? `https://test/Entities?$top=${top}&$skipToken=thetoken` : undefined,
     value: extendedEntities.sorted().slice(skip, skip + top).map(entity => {
       const result = {
         label: entity.currentVersion.label,

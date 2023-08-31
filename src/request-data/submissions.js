@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { last } from 'ramda';
 import { reactive, shallowReactive } from 'vue';
 
 import { computeIfExists } from './util';
@@ -19,15 +18,15 @@ export default () => {
   const { createResource } = useRequestData();
   const odata = createResource('odata', () => ({
     transformResponse: ({ data, config }) => {
-      const instanceIds = new Set();
+      // const instanceIds = new Set();
       for (const submission of data.value) {
         submission.__system = reactive(submission.__system);
-        instanceIds.add(submission.__id);
+        // instanceIds.add(submission.__id);
       }
       const { searchParams } = new URL(config.url, window.location.origin);
       return shallowReactive({
         value: shallowReactive(data.value),
-        instanceIds,
+        // instanceIds,
         count: data['@odata.count'],
         // The count of submissions at the time of the initial fetch or last
         // refresh
@@ -38,26 +37,33 @@ export default () => {
         // example, if a submission has been created since the initial fetch or
         // last refresh, it won't added to odata.value, but it will need to be
         // skipped.
-        skip: data.value.length,
-        filtered: searchParams.has('$filter')
+        // skip: data.value.length,
+        filtered: searchParams.has('$filter'),
+        nextLink: data['@odata.nextLink']
       });
     },
+    removeData() {
+      odata.value.splice(0, odata.value.length);
+    },
     addChunk(chunk) {
-      const lastSubmissionDate = last(odata.value).__system.submissionDate;
+      // const lastSubmissionDate = last(odata.value).__system.submissionDate;
       for (const submission of chunk.value) {
+        odata.value.push(submission);
+
         // If one or more submissions have been created since the initial fetch
         // or last refresh, then the latest chunk of submissions may include a
         // newly created submission or a submission that is already shown in the
         // table.
-        if (submission.__system.submissionDate <= lastSubmissionDate &&
-          !odata.instanceIds.has(submission.__id)) {
-          odata.value.push(submission);
-          odata.instanceIds.add(submission.__id);
-        }
+        // if (submission.__system.submissionDate <= lastSubmissionDate &&
+        //   !odata.instanceIds.has(submission.__id)) {
+        //   odata.value.push(submission);
+        //   odata.instanceIds.add(submission.__id);
+        // }
       }
 
       odata.count = chunk['@odata.count'];
       odata.skip += chunk.value.length;
+      odata.nextLink = chunk['@odata.nextLink'];
     }
   }));
   const submitters = createResource('submitters', () => ({

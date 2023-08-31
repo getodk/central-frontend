@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
 
     <template #data-frozen="{ data, index }">
       <entity-metadata-row :entity="data"
-        :row-number="odataEntities.value.length - index"
+        :row-number="odataEntities.count - index"
         :can-update="canUpdate"/>
     </template>
     <template #data-scrolling="{ data }">

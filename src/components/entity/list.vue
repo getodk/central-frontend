@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div id="entity-list-actions">
       <button id="entity-list-refresh-button" type="button"
             class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchData(false)">
+            @click="fetchChunk(true, true)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
@@ -28,14 +28,21 @@ except according to the terms contained in the LICENSE file.
       class="empty-table-message">
       {{ $t('noEntities') }}
     </p>
-    <loading :state="odataEntities.initiallyLoading"/>
+    <div v-show="odataLoadingMessage != null" id="entity-list-message">
+      <div id="entity-list-spinner-container">
+        <spinner :state="odataLoadingMessage != null"/>
+      </div>
+      <div id="entity-list-message-text">{{ odataLoadingMessage }}</div>
+    </div>
+    <!-- <loading :state="odataEntities.initiallyLoading"/> -->
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
   </div>
 </template>
 
 <script>
-import Loading from '../loading.vue';
+import { watchEffect } from 'vue';
+
 import Spinner from '../spinner.vue';
 import EntityTable from './table.vue';
 import EntityUpdate from './update.vue';
@@ -49,7 +56,6 @@ import { noop } from '../../util/util';
 export default {
   name: 'EntityList',
   components: {
-    Loading,
     Spinner,
     EntityTable,
     EntityUpdate
@@ -67,6 +73,11 @@ export default {
     datasetName: {
       type: String,
       required: true
+    },
+    // Returns the value of the $top query parameter.
+    top: {
+      type: Function,
+      default: (loaded) => (loaded < 1000 ? 10 : 1000)
     }
   },
   setup() {
@@ -74,6 +85,13 @@ export default {
     // dataset properties for the columns.
     const { dataset } = useRequestData();
     const odataEntities = useEntities();
+    // We do not reconcile `odataEntities` with either dataset.lastEntity or
+    // project.lastEntity.
+    watchEffect(() => {
+      if (dataset.dataExists && odataEntities.dataExists && dataset.entities !== odataEntities.count)
+        dataset.entities = odataEntities.count;
+    });
+
     return { dataset, odataEntities };
   },
   data() {
@@ -96,24 +114,70 @@ export default {
       return !this.odataEntities.dataExists
         ? this.$t('action.download')
         : this.$tcn('action.download.unfiltered', this.odataEntities.count);
+    },
+    odataLoadingMessage() {
+      if (!this.odataEntities.awaitingResponse || this.refreshing) return null;
+      if (!this.odataEntities.dataExists) {
+        if (!this.dataset.dataExists || this.dataset.entities === 0)
+          return this.$t('loading.withoutCount');
+        const top = this.top(0);
+        if (this.dataset.entities <= top)
+          return this.$tcn('loading.all', this.dataset.entities);
+        return this.$tcn('loading.first', this.dataset.entities, {
+          top: this.$n(top, 'default')
+        });
+      }
+
+      const remaining = this.odataEntities.originalCount - this.odataEntities.value.length;
+      const top = this.top(this.odataEntities.value.length);
+      if (remaining > top) {
+        return this.$tcn('loading.middle', remaining, {
+          top: this.$n(top, 'default')
+        });
+      }
+      return remaining > 1
+        ? this.$tcn('loading.last.multiple', remaining)
+        : this.$t('loading.last.one');
     }
   },
   created() {
-    this.fetchData(true);
+    this.fetchData();
+  },
+  mounted() {
+    document.addEventListener('scroll', this.afterScroll);
+  },
+  beforeUnmount() {
+    document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
-    fetchData(clear) {
-      this.refreshing = !clear;
+    fetchChunk(clear, refresh = false) {
+      const loaded = this.odataEntities.dataExists ? this.odataEntities.value.length : 0;
+
+      this.refreshing = refresh;
+
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
           this.datasetName,
-          { $count: true }
+          {
+            $top: this.top(loaded),
+            $count: true,
+            $skiptoken: this.odataEntities.dataExists && !clear ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null
+          }
         ),
-        clear
+        clear: clear && !refresh,
+        patch: loaded === 0 || (clear && !refresh)
+          ? null
+          : (response) => {
+            if (clear && refresh) this.odataEntities.removeData();
+            this.odataEntities.addChunk(response.data);
+          }
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+    },
+    fetchData() {
+      this.fetchChunk(true);
     },
     showUpdate(index) {
       if (this.refreshing) return;
@@ -155,6 +219,17 @@ export default {
       this.odataEntities.value[index] = newOData;
 
       this.$refs.table.afterUpdate(index);
+    },
+    scrolledToBottom() {
+      // Using pageYOffset rather than scrollY in order to support IE.
+      return window.pageYOffset + window.innerHeight >=
+        document.body.offsetHeight - 5;
+    },
+    afterScroll() {
+      if (this.dataset.dataExists && this.odataEntities.dataExists &&
+        this.odataEntities.nextLink &&
+        !this.odataEntities.awaitingResponse && this.scrolledToBottom())
+        this.fetchChunk(false);
     }
   }
 };
@@ -195,7 +270,22 @@ export default {
         }
       },
       // This text is shown when there are no Entities to show in a table.
-      "noEntities": "There are no Entities to show."
+      "noEntities": "There are no Entities to show.",
+      "loading": {
+        // This text is shown when the number of Entities loading is unknown.
+        "withoutCount": "Loading Entities…",
+        "all": "Loading {count} Entity… | Loading {count} Entities…",
+        // {top} is a number that is either 250 or 1000. {count} may be any number
+        // that is at least 250. The string will be pluralized based on {count}.
+        "first": "Loading the first {top} of {count} Entity… | Loading the first {top} of {count} Entities…",
+        // {top} is a number that is either 250 or 1000. {count} may be any number
+        // that is at least 250. The string will be pluralized based on {count}.
+        "middle": "Loading {top} more of {count} remaining Entity… | Loading {top} more of {count} remaining Entities…",
+        "last": {
+          "multiple": "Loading the last {count} Entity… | Loading the last {count} Entities…",
+          "one": "Loading the last Entity…"
+        }
+      },
     }
   }
 </i18n>

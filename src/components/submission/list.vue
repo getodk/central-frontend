@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
             v-model="selectedFields"/>
           <button id="submission-list-refresh-button" type="button"
             class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(0, false)">
+            @click="fetchChunk(true, true)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
@@ -31,6 +31,8 @@ except according to the terms contained in the LICENSE file.
         <submission-download-button :form-version="formVersion"
           :filtered="odataFilter != null" @download="showModal('download')"/>
       </div>
+      <!-- odata.dataExists = {{ odata.dataExists }} <br/>
+      odata.value.length = {{odata.dataExists && odata.value.length }} -->
       <submission-table v-show="odata.dataExists && odata.value.length !== 0"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :fields="selectedFields" @review="showReview"/>
@@ -105,7 +107,7 @@ export default {
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
-      default: (skip) => (skip < 1000 ? 250 : 1000)
+      default: (loaded) => (loaded < 1000 ? 10 : 1000)
     }
   },
   setup(props) {
@@ -244,7 +246,7 @@ export default {
         ? 'loading'
         : 'loading.filtered';
       const remaining = this.odata.originalCount - this.odata.value.length;
-      const top = this.top(this.odata.skip);
+      const top = this.top(this.odata.value.length);
       if (remaining > top) {
         return this.$tcn(`${pathPrefix}.middle`, remaining, {
           top: this.$n(top, 'default')
@@ -257,10 +259,10 @@ export default {
   },
   watch: {
     odataFilter() {
-      this.fetchChunk(0, true);
+      this.fetchChunk(true);
     },
     selectedFields(_, oldFields) {
-      if (oldFields != null) this.fetchChunk(0, true);
+      if (oldFields != null) this.fetchChunk(true);
     }
   },
   created() {
@@ -273,26 +275,32 @@ export default {
     document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
-    fetchChunk(skip, clear) {
-      this.refreshing = skip === 0 && !clear;
+    fetchChunk(clear, refresh = false) {
+      const loaded = this.odata.dataExists ? this.odata.value.length : 0;
+
+      this.refreshing = refresh;
+
       this.odata.request({
         url: apiPaths.odataSubmissions(
           this.projectId,
           this.xmlFormId,
           this.draft,
           {
-            $top: this.top(skip),
-            $skip: skip,
+            $top: this.top(loaded),
             $count: true,
             $wkt: true,
             $filter: this.odataFilter,
-            $select: this.odataSelect
+            $select: this.odataSelect,
+            $skiptoken: this.odata.dataExists && !clear ? new URL(this.odata.nextLink).searchParams.get('$skiptoken') : null
           }
         ),
-        clear,
-        patch: skip === 0
+        clear: clear && !refresh,
+        patch: loaded === 0 || (clear && !refresh)
           ? null
-          : (response) => { this.odata.addChunk(response.data); }
+          : (response) => {
+            if (clear && refresh) this.odata.removeData();
+            this.odata.addChunk(response.data);
+          }
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
@@ -310,7 +318,7 @@ export default {
             : this.fields.selectable.slice(0, 10);
         })
         .catch(noop);
-      this.fetchChunk(0, true);
+      this.fetchChunk(true);
       if (!this.draft) {
         this.submitters.request({
           url: apiPaths.submitters(this.projectId, this.xmlFormId, this.draft)
@@ -326,9 +334,9 @@ export default {
     afterScroll() {
       if (this.formVersion.dataExists && this.keys.dataExists &&
         this.fields.dataExists && this.odata.dataExists &&
-        this.odata.value.length < this.odata.originalCount &&
+        this.odata.nextLink &&
         !this.odata.awaitingResponse && this.scrolledToBottom())
-        this.fetchChunk(this.odata.skip, false);
+        this.fetchChunk(false);
     },
     replaceFilters({
       submitterIds = this.submitterIds,

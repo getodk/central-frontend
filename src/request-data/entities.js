@@ -16,11 +16,22 @@ import { useRequestData } from './index';
 export default () => {
   const { createResource } = useRequestData();
   const entityOData = createResource('odataEntities', () => ({
-    transformResponse: ({ data }) =>
-      shallowReactive({
-        value: shallowReactive(data.value),
-        count: data['@odata.count']
-      })
+    transformResponse: ({ data }) => shallowReactive({
+      value: shallowReactive(data.value),
+      originalCount: data['@odata.count'],
+      count: data['@odata.count'],
+      nextLink: data['@odata.nextLink']
+    }),
+    removeData() {
+      entityOData.value.splice(0, entityOData.value.length);
+    },
+    addChunk(chunk) {
+      for (const e of chunk.value) {
+        entityOData.value.push(e);
+      }
+      entityOData.count = chunk['@odata.count'];
+      entityOData.nextLink = chunk['@odata.nextLink'];
+    }
   }));
   return entityOData;
 };
