@@ -325,8 +325,8 @@ describe('AccountLogin', () => {
       });
     });
 
-    it('shows an alert for provider-misconfigured', async () => {
-      const component = await load('/login?oidcError=provider-misconfigured', {
+    it('shows an alert for email-claim-not-provided', async () => {
+      const component = await load('/login?oidcError=email-claim-not-provided', {
         container: oidcContainer,
         root: false
       });
@@ -346,7 +346,7 @@ describe('AccountLogin', () => {
     });
 
     it('does not show an alert if there are two errors', async () => {
-      const component = await load('/login?oidcError=auth-ok-user-not-found&oidcError=provider-misconfigured', {
+      const component = await load('/login?oidcError=auth-ok-user-not-found&oidcError=email-claim-not-provided', {
         container: oidcContainer,
         root: false
       });
