@@ -116,10 +116,16 @@ export default {
 
       this.disabled = true;
     },
-    handleOIDCError() {
-      const { oidcError } = this.$route.query;
-      if (this.config.oidcEnabled && typeof oidcError === 'string' &&
-        /^[\w-]+$/.test(oidcError)) {
+    async handleOIDCError() {
+      if (!this.config.oidcEnabled) return;
+
+      const { oidcError, ...queryWithoutError } = this.$route.query;
+      if (oidcError === undefined) return;
+      // Remove the query parameter so that if the user refreshes the page, the
+      // alert that we are about to show is not shown again.
+      await this.$router.replace({ path: '/login', query: queryWithoutError });
+
+      if (typeof oidcError === 'string' && /^[\w-]+$/.test(oidcError)) {
         const path = `oidc.error.${oidcError}`;
         if (this.$te(path, this.$i18n.fallbackLocale))
           this.alert.danger(this.$t(path));

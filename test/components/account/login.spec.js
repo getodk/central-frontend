@@ -316,65 +316,65 @@ describe('AccountLogin', () => {
 
   describe('OIDC error', () => {
     it('shows an alert for auth-ok-user-not-found', async () => {
-      const component = await load('/login?oidcError=auth-ok-user-not-found', {
-        container: oidcContainer,
-        root: false
-      });
-      component.should.alert('danger', (message) => {
+      const app = await load('/login?oidcError=auth-ok-user-not-found', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.alert('danger', (message) => {
         message.should.startWith('There is no Central account associated with your email address.');
       });
     });
 
     it('shows an alert for email-claim-not-provided', async () => {
-      const component = await load('/login?oidcError=email-claim-not-provided', {
-        container: oidcContainer,
-        root: false
-      });
-      component.should.alert('danger', (message) => {
+      const app = await load('/login?oidcError=email-claim-not-provided', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.alert('danger', (message) => {
         message.should.startWith('Central could not access the email address associated with your account.');
       });
     });
 
     it('shows an alert for email-not-verified', async () => {
-      const component = await load('/login?oidcError=email-not-verified', {
-        container: oidcContainer,
-        root: false
-      });
-      component.should.alert('danger', (message) => {
+      const app = await load('/login?oidcError=email-not-verified', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.alert('danger', (message) => {
         message.should.startWith('Your email address has not been verified by your login server.');
       });
     });
 
     it('does not show an alert if there are two errors', async () => {
-      const component = await load('/login?oidcError=auth-ok-user-not-found&oidcError=email-claim-not-provided', {
-        container: oidcContainer,
-        root: false
-      });
-      component.should.not.alert();
+      const app = await load('/login?oidcError=auth-ok-user-not-found&oidcError=email-claim-not-provided', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.not.alert();
     });
 
     it('does not show an alert if query parameter has no value', async () => {
-      const component = await load('/login?oidcError', {
-        container: oidcContainer,
-        root: false
-      });
-      component.should.not.alert();
+      const app = await load('/login?oidcError', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.not.alert();
     });
 
     it('does not show an alert for an error whose name is invalid', async () => {
-      const component = await load('/login?oidcError=.', {
-        container: oidcContainer,
-        root: false
-      });
-      component.should.not.alert();
+      const app = await load('/login?oidcError=.', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.not.alert();
     });
 
     it('does not show an alert for an unknown error', async () => {
-      const component = await load('/login?oidcError=unknown', {
-        container: oidcContainer,
-        root: false
-      });
-      component.should.not.alert();
+      const app = await load('/login?oidcError=unknown', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.not.alert();
+    });
+
+    it('removes the query parameter from the path', async () => {
+      const app = await load('/login?oidcError=auth-ok-user-not-found&next=%2Fusers', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.vm.$route.query.should.eql({ next: '/users' });
     });
   });
 
