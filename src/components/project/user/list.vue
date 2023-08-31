@@ -252,7 +252,7 @@ export default {
       },
       {
         // This text is shown in a list of Roles.
-        "full": "{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data",
+        "full": "{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data",
         "projectViewers": "Project Viewers"
       },
       {

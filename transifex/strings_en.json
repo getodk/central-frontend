@@ -3257,12 +3257,12 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data",
+            "string": "{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
             "string": "Project Viewers",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data"
           }
         },
         "3": {
