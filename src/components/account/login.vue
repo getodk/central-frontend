@@ -216,7 +216,7 @@ export default {
         "auth-ok-user-not-found": "There is no Central account associated with your email address. Please ask your Central administrator to create an account for you to continue.",
         "email-not-verified": "Your email address has not been verified by your login server. Please contact your server administrator.",
         "email-claim-not-provided": "Central could not access the email address associated with your account. This could be because your server administrator has configured something incorrectly, or has not set an email address for your account. It could also be the result of privacy options that you can choose during the login process. If so, please try again and ensure that your email is shared.",
-        "internal-server-error": "There was an unhandled error on the server. Please try again later."
+        "internal-server-error": "Something went wrong during login. Please contact your server administrator."
       }
     },
     "problem": {

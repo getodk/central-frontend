@@ -342,6 +342,15 @@ describe('AccountLogin', () => {
       });
     });
 
+    it('shows an alert for internal-server-error', async () => {
+      const app = await load('/login?oidcError=internal-server-error', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.should.alert('danger', (message) => {
+        message.should.startWith('Something went wrong during login.');
+      });
+    });
+
     it('does not show an alert if there are two errors', async () => {
       const app = await load('/login?oidcError=auth-ok-user-not-found&oidcError=email-claim-not-provided', {
         container: oidcContainer

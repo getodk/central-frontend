@@ -941,6 +941,9 @@
           },
           "email-claim-not-provided": {
             "string": "Central could not access the email address associated with your account. This could be because your server administrator has configured something incorrectly, or has not set an email address for your account. It could also be the result of privacy options that you can choose during the login process. If so, please try again and ensure that your email is shared."
+          },
+          "internal-server-error": {
+            "string": "Something went wrong during login. Please contact your server administrator."
           }
         }
       },
