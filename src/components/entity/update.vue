@@ -188,6 +188,8 @@ const currentVersion = computed(() =>
   }
 
   tr:nth-child(2) td { border-top-color: #bbb; }
+
+  .alert { margin: 15px; }
 }
 </style>
 
