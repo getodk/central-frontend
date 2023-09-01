@@ -35,9 +35,12 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link :to="entityPath(projectId, entityDataset(entry), entityUuid(entry))">
+            <router-link v-if="entityLabel(entry) != null" :to="entityPath(projectId, entityDataset(entry), entityUuid(entry))">
               {{ entityLabel(entry) }}
             </router-link>
+            <template v-else>
+              <span class="entity-label">{{ entityUuid(entry) }}</span>
+            </template>
           </template>
           <template #dataset>
             <router-link :to="datasetPath(projectId, entityDataset(entry))">
@@ -157,11 +160,9 @@ export default {
   },
   methods: {
     entityLabel(entry) {
-      // This is probably always true in production, but it wasn't always the
-      // case during the development of v2022.3.
-      if ('entity' in entry.details)
-        return entry.details.entity.label;
-      return '';
+      if ('entity' in entry.details && 'currentVersion' in entry.details.entity)
+        return entry.details.entity.currentVersion.label;
+      return null;
     },
     entityDataset(entry) {
       if ('entity' in entry.details)
@@ -207,6 +208,7 @@ export default {
     &.approved { color: $color-success; }
     &.rejected { color: $color-danger; }
   }
+  .entity-label { font-weight: normal; }
 }
 </style>
 
