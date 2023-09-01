@@ -21,6 +21,16 @@ describe('UserResetPassword', () => {
         hide: '.btn-link'
       }));
 
+    it('is not rendered if OIDC is enabled', async () => {
+      const component = await load('/users', {
+        container: {
+          config: { oidcEnabled: true },
+        },
+        root: false
+      });
+      component.find('.user-row .reset-password').exists().should.be.false();
+    });
+
     it('is disabled for the current user', async () => {
       const component = await load('/users', { root: false });
       const a = component.get('.user-row .reset-password');

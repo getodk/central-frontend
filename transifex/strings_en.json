@@ -306,6 +306,10 @@
       "string": "Comment",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "continue": {
+      "string": "Continue",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "create": {
       "string": "Create",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -935,6 +939,25 @@
         },
         "changePassword": {
           "string": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
+        }
+      },
+      "oidc": {
+        "body": {
+          "string": "Click Continue to proceed to the login page."
+        },
+        "error": {
+          "auth-ok-user-not-found": {
+            "string": "There is no Central account associated with your email address. Please ask your Central administrator to create an account for you to continue."
+          },
+          "email-not-verified": {
+            "string": "Your email address has not been verified by your login server. Please contact your server administrator."
+          },
+          "email-claim-not-provided": {
+            "string": "Central could not access the email address associated with your account. This could be because your server administrator has configured something incorrectly, or has not set an email address for your account. It could also be the result of privacy options that you can choose during the login process. If so, please try again and ensure that your email is shared."
+          },
+          "internal-server-error": {
+            "string": "Something went wrong during login. Please contact your server administrator."
+          }
         }
       },
       "problem": {
@@ -3897,6 +3920,9 @@
         "string": "Basic Details",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "emailDisabled": {
+        "string": "Your email address cannot be changed. It is used between Central and your login server to ensure your identity."
+      },
       "action": {
         "update": {
           "string": "Update details",
@@ -3913,6 +3939,9 @@
       "title": {
         "string": "Change Password",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "oidcBody": {
+        "string": "This Central server does not manage any login passwords."
       },
       "action": {
         "change": {
@@ -3980,6 +4009,11 @@
       "introduction": {
         "0": {
           "string": "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+        }
+      },
+      "oidcIntroduction": {
+        "0": {
+          "string": "Users on your login server must have a Central account to log in to Central. Once you create this account, the user on your login server with the email address you provide will be able to log in to Central."
         }
       }
     },

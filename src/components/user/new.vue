@@ -14,7 +14,9 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')" @shown="focusEmailInput">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
+      <p class="modal-introduction">
+        {{ !config.oidcEnabled ? $t('introduction[0]') : $t('oidcIntroduction[0]') }}
+      </p>
       <form @submit.prevent="submit">
         <form-group ref="email" v-model.trim="email" type="email"
           :placeholder="$t('field.email')" required autocomplete="off"/>
@@ -46,6 +48,7 @@ import { noop } from '../../util/util';
 export default {
   name: 'UserNew',
   components: { FormGroup, Modal, Spinner },
+  inject: ['config'],
   props: {
     state: {
       type: Boolean,
@@ -94,6 +97,9 @@ export default {
     "title": "Create Web User",
     "introduction": [
       "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
+    ],
+    "oidcIntroduction": [
+      "Users on your login server must have a Central account to log in to Central. Once you create this account, the user on your login server with the email address you provide will be able to log in to Central."
     ]
   }
 }

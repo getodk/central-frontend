@@ -46,6 +46,15 @@ describe('FormGroup', () => {
     });
   });
 
+  it('uses the tooltip prop', async () => {
+    const formGroup = mountComponent({
+      props: { tooltip: 'Some description' }
+    });
+    const input = formGroup.get('input');
+    input.should.have.ariaDescription('Some description');
+    await input.should.have.tooltip('Some description');
+  });
+
   it('has the correct class if hasError is true', () => {
     const formGroup = mountComponent({
       props: { hasError: true }

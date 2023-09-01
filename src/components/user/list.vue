@@ -46,7 +46,7 @@ either is an Administrator or has no role. -->
 
     <user-new v-bind="newUser" @hide="hideModal('newUser')"
       @success="afterCreate"/>
-    <user-reset-password v-bind="resetPassword" @hide="hideResetPassword"
+    <user-reset-password v-if="!config.oidcEnabled" v-bind="resetPassword" @hide="hideResetPassword"
       @success="afterResetPassword"/>
     <user-retire v-bind="retire" @hide="hideRetire" @success="afterRetire"/>
   </div>
@@ -74,7 +74,7 @@ export default {
     UserRow
   },
   mixins: [modal()],
-  inject: ['alert'],
+  inject: ['alert', 'config'],
   setup() {
     const { createResource, resourceStates } = useRequestData();
     const users = createResource('users');

@@ -16,7 +16,16 @@ except according to the terms contained in the LICENSE file.
         <div class="panel-heading">
           <h1 class="panel-title">{{ $t('action.logIn') }}</h1>
         </div>
-        <div class="panel-body">
+        <div v-if="config.oidcEnabled" class="panel-body">
+          <p>{{ $t('oidc.body') }}</p>
+          <div class="panel-footer">
+            <a :href="oidcLoginPath" class="btn btn-primary"
+              :class="{ disabled }" @click="loginByOIDC">
+              {{ $t('action.continue') }} <spinner :state="disabled"/>
+            </a>
+          </div>
+        </div>
+        <div v-else class="panel-body">
           <form @submit.prevent="submit">
             <form-group ref="email" v-model.trim="email" type="email"
               :placeholder="$t('field.email')" required autocomplete="off"/>
@@ -49,12 +58,13 @@ import Spinner from '../spinner.vue';
 import { enketoBasePath, noop } from '../../util/util';
 import { localStore } from '../../util/storage';
 import { logIn } from '../../util/session';
+import { queryString } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
-  inject: ['container', 'alert'],
+  inject: ['container', 'alert', 'config'],
   beforeRouteLeave() {
     return !this.disabled;
   },
@@ -69,10 +79,69 @@ export default {
       password: ''
     };
   },
+  computed: {
+    oidcLoginPath() {
+      const { query } = this.$route;
+      const next = typeof query.next === 'string' ? query.next : null;
+      const qs = queryString({ next });
+      return `/v1/oidc/login${qs}`;
+    }
+  },
+  created() {
+    this.handleOIDCError();
+  },
   mounted() {
-    this.$refs.email.focus();
+    if (this.config.oidcEnabled)
+      window.addEventListener('pageshow', this.reenableIfPersisted);
+    else
+      this.$refs.email.focus();
+  },
+  beforeUnmount() {
+    if (this.config.oidcEnabled)
+      window.removeEventListener('pageshow', this.reenableIfPersisted);
   },
   methods: {
+    verifyNewSession() {
+      const sessionExpires = localStore.getItem('sessionExpires');
+      const newSession = sessionExpires == null ||
+        Number.parseInt(sessionExpires, 10) < Date.now();
+      if (!newSession) this.alert.info(this.$t('alert.alreadyLoggedIn'));
+      return newSession;
+    },
+    loginByOIDC(event) {
+      if (!this.verifyNewSession()) {
+        event.preventDefault();
+        return;
+      }
+
+      this.disabled = true;
+    },
+    async handleOIDCError() {
+      if (!this.config.oidcEnabled) return;
+
+      const { oidcError, ...queryWithoutError } = this.$route.query;
+      if (oidcError === undefined) return;
+      // Remove the query parameter so that if the user refreshes the page, the
+      // alert that we are about to show is not shown again.
+      await this.$router.replace({ path: '/login', query: queryWithoutError });
+
+      if (typeof oidcError === 'string' && /^[\w-]+$/.test(oidcError)) {
+        const path = `oidc.error.${oidcError}`;
+        if (this.$te(path, this.$i18n.fallbackLocale))
+          this.alert.danger(this.$t(path));
+      }
+    },
+    /* Pressing the back button on the IdP login page may restore Frontend from
+    the back/forward cache. In that case, this.disabled would still be `true` --
+    a confusing state for the user to return to. Instead, if the user comes back
+    from the IdP, we set this.disabled to `false`, re-enabling the component.
+    This method may be called in other cases as well, for example, if the user
+    presses back on the Frontend login page, then presses forward to return to
+    Frontend. It should be OK to set this.disabled to `false` in any such case:
+    there's no real issue if the link ends up getting clicked multiple times. */
+    reenableIfPersisted(event) {
+      if (event.persisted) this.disabled = false;
+    },
     navigateToNext(
       next,
       // Function that redirects within Frontend
@@ -95,12 +164,7 @@ export default {
       return internal(url.pathname + url.search + url.hash);
     },
     submit() {
-      const sessionExpires = localStore.getItem('sessionExpires');
-      if (sessionExpires != null && parseInt(sessionExpires, 10) > Date.now()) {
-        this.alert.info(this.$t('alert.alreadyLoggedIn'));
-        return;
-      }
-
+      if (!this.verifyNewSession()) return;
       this.disabled = true;
       this.session.request({
         method: 'POST',
@@ -145,6 +209,15 @@ export default {
     "alert": {
       "alreadyLoggedIn": "A user is already logged in. Please refresh the page to continue.",
       "changePassword": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
+    },
+    "oidc": {
+      "body": "Click Continue to proceed to the login page.",
+      "error": {
+        "auth-ok-user-not-found": "There is no Central account associated with your email address. Please ask your Central administrator to create an account for you to continue.",
+        "email-not-verified": "Your email address has not been verified by your login server. Please contact your server administrator.",
+        "email-claim-not-provided": "Central could not access the email address associated with your account. This could be because your server administrator has configured something incorrectly, or has not set an email address for your account. It could also be the result of privacy options that you can choose during the login process. If so, please try again and ensure that your email is shared.",
+        "internal-server-error": "Something went wrong during login. Please contact your server administrator."
+      }
     },
     "problem": {
       "401_2": "Incorrect email address and/or password."

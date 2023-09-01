@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.editProfile') }}
             </router-link>
           </li>
-          <li :class="{ disabled }">
+          <li v-if="!config.oidcEnabled" :class="{ disabled }">
             <a class="reset-password" href="#"
               v-tooltip.aria-describedby="disabled ? $t('cannotResetPassword') : null"
               @click.prevent="$emit('reset-password', user)">
@@ -78,6 +78,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'UserRow',
   components: { Spinner },
+  inject: ['config'],
   props: {
     user: {
       type: Object,

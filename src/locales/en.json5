@@ -168,6 +168,7 @@
     "clear": "Clear",
     "close": "Close",
     "comment": "Comment",
+    "continue": "Continue",
     "create": "Create",
     // This is the text of a button that is used to fill out a new Submission.
     // It is shown next to a heading whose text is "Submissions".

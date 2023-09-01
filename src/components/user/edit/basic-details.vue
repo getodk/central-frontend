@@ -17,7 +17,10 @@ except according to the terms contained in the LICENSE file.
     <div class="panel-body">
       <form @submit.prevent="submit">
         <form-group v-model.trim="email" type="email"
-          :placeholder="$t('field.email')" required autocomplete="off"/>
+          :placeholder="$t('field.email')" required
+          :aria-disabled="emailDisabled"
+          :tooltip="emailDisabled ? $t('emailDisabled') : null"
+          autocomplete="off"/>
         <form-group v-model.trim="displayName" type="text"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
         <button type="submit" class="btn btn-primary"
@@ -30,7 +33,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { inject, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import FormGroup from '../../form-group.vue';
@@ -46,11 +49,15 @@ defineOptions({
 
 // The component assumes that this data will exist when the component is
 // created.
-const { user } = useRequestData();
+const { currentUser, user } = useRequestData();
 const { awaitingResponse } = user.toRefs();
 
 const email = ref(user.email);
 const displayName = ref(user.displayName);
+
+const config = inject('config');
+const emailDisabled = computed(() =>
+  config.oidcEnabled && !currentUser.can('user.update'));
 
 const { t } = useI18n();
 const alert = inject('alert');
@@ -75,6 +82,7 @@ const submit = () => {
   "en": {
     // This is a title shown above a section of the page.
     "title": "Basic Details",
+    "emailDisabled": "Your email address cannot be changed. It is used between Central and your login server to ensure your identity.",
     "action": {
       "update": "Update details"
     },

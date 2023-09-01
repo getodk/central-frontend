@@ -4,11 +4,11 @@ import useUser from '../../../../src/request-data/user';
 
 import testData from '../../../data';
 import { load, mockHttp } from '../../../util/http';
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
 import { mockLogin } from '../../../util/session';
-import { mount } from '../../../util/lifecycle';
 import { testRequestData } from '../../../util/request-data';
 
-const mountOptions = () => ({
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
   container: {
     requestData: testRequestData([useUser], {
       user: testData.standardUsers.first()
@@ -17,22 +17,21 @@ const mountOptions = () => ({
 });
 
 describe('UserEditBasicDetails', () => {
-  beforeEach(() => {
-    mockLogin({ displayName: 'Old Name', email: 'old@email.com' });
-  });
-
   it('sets the value of the email input to the current email', () => {
+    mockLogin({ email: 'old@email.com' });
     const component = mount(UserEditBasicDetails, mountOptions());
     const { value } = component.get('input[type="email"]').element;
     value.should.equal('old@email.com');
   });
 
   it('sets value of display name input to current display name', () => {
+    mockLogin({ displayName: 'Old Name' });
     const component = mount(UserEditBasicDetails, mountOptions());
     component.get('input[type="text"]').element.value.should.equal('Old Name');
   });
 
   it('resets the form if the route changes', () => {
+    mockLogin({ displayName: 'Old Name', email: 'old@email.com' });
     testData.extendedUsers.createPast(1, {
       email: 'another@email.com',
       displayName: 'Another Name'
@@ -54,8 +53,22 @@ describe('UserEditBasicDetails', () => {
       });
   });
 
-  it('sends the correct request', () =>
-    mockHttp()
+  it('disables email input for a user without a sitewide role if OIDC is enabled', async () => {
+    mockLogin({ role: 'none' });
+    const component = mount(UserEditBasicDetails, mountOptions({
+      container: {
+        config: { oidcEnabled: true }
+      }
+    }));
+    const input = component.get('input[type="email"]');
+    input.attributes('aria-disabled').should.equal('true');
+    input.should.have.ariaDescription(/^Your email address cannot be changed/);
+    await input.should.have.tooltip(/^Your email address cannot be changed/);
+  });
+
+  it('sends the correct request', () => {
+    mockLogin({ displayName: 'Old Name', email: 'old@email.com' });
+    return mockHttp()
       .mount(UserEditBasicDetails, mountOptions())
       .request(async (component) => {
         await component.get('input[type="email"]').setValue('new@email.com');
@@ -67,10 +80,12 @@ describe('UserEditBasicDetails', () => {
         method: 'PATCH',
         url: '/v1/users/1',
         data: { email: 'new@email.com', displayName: 'New Name' }
-      }]));
+      }]);
+  });
 
-  it('implements some standard button things', () =>
-    mockHttp()
+  it('implements some standard button things', () => {
+    mockLogin({ email: 'old@email.com' });
+    return mockHttp()
       .mount(UserEditBasicDetails, mountOptions())
       .testStandardButton({
         button: 'button',
@@ -78,9 +93,14 @@ describe('UserEditBasicDetails', () => {
           await component.get('input[type="email"]').setValue('new@email.com');
           return component.get('form').trigger('submit');
         }
-      }));
+      });
+  });
 
   describe('after a successful response', () => {
+    beforeEach(() => {
+      mockLogin({ displayName: 'Old Name' });
+    });
+
     const submit = () => load('/account/edit')
       .complete()
       .request(async (app) => {

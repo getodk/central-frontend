@@ -57,7 +57,18 @@ describe('UserEditPassword', () => {
       });
   });
 
-  it("does not render form if it is not current user's own account", async () => {
+  it('renders correctly if OIDC is enabled', () => {
+    const component = mount(UserEditPassword, {
+      container: {
+        config: { oidcEnabled: true }
+      }
+    });
+    component.find('form').exists().should.be.false();
+    const text = component.get('p').text();
+    text.should.equal('This Central server does not manage any login passwords.');
+  });
+
+  it("renders correctly if it is not the current user's own account", () => {
     const user = testData.standardUsers.createPast(1).last();
     const component = mount(UserEditPassword, mountOptions({
       container: {
@@ -65,6 +76,8 @@ describe('UserEditPassword', () => {
       }
     }));
     component.find('form').exists().should.be.false();
+    const text = component.get('p').text();
+    text.should.equal('Only the owner of the account may directly set their own password.');
   });
 
   describe('new passwords do not match', () => {

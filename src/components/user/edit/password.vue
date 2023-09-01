@@ -15,7 +15,8 @@ except according to the terms contained in the LICENSE file.
       <h1 class="panel-title">{{ $t('title') }}</h1>
     </div>
     <div class="panel-body">
-      <form v-if="user.dataExists && user.id === currentUser.id"
+      <p v-if="config.oidcEnabled">{{ $t('oidcBody') }}</p>
+      <form v-else-if="user.dataExists && user.id === currentUser.id"
         @submit.prevent="submit">
         <input :value="currentUser.email" autocomplete="username">
         <form-group id="user-edit-password-old-password" v-model="oldPassword"
@@ -32,9 +33,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
         </button>
       </form>
-      <template v-else>
-        {{ $t('cannotChange') }}
-      </template>
+      <p v-else>{{ $t('cannotChange') }}</p>
     </div>
   </div>
 </template>
@@ -51,7 +50,7 @@ import { useRequestData } from '../../../request-data';
 export default {
   name: 'UserEditPassword',
   components: { FormGroup, Spinner },
-  inject: ['alert'],
+  inject: ['alert', 'config'],
   setup() {
     const { currentUser, user } = useRequestData();
     const { request, awaitingResponse } = useRequest();
@@ -114,6 +113,7 @@ export default {
   "en": {
     // This is a title shown above a section of the page.
     "title": "Change Password",
+    "oidcBody": "This Central server does not manage any login passwords.",
     "action": {
       "change": "Change password"
     },
