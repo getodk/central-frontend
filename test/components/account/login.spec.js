@@ -315,69 +315,35 @@ describe('AccountLogin', () => {
   });
 
   describe('OIDC error', () => {
-    it('shows an alert for auth-ok-user-not-found', async () => {
-      const app = await load('/login?oidcError=auth-ok-user-not-found', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.alert('danger', (message) => {
-        message.should.startWith('There is no Central account associated with your email address.');
+    const alerts = [
+      ['oidcError=auth-ok-user-not-found', 'There is no Central account associated with your email address.'],
+      ['oidcError=email-claim-not-provided', 'Central could not access the email address associated with your account.'],
+      ['oidcError=email-not-verified', 'Your email address has not been verified by your login server.'],
+      ['oidcError=internal-server-error', 'Something went wrong during login.']
+    ];
+    for (const [query, expectedMessage] of alerts) {
+      it(`shows an alert for ?${query}`, async () => {
+        const app = await load(`/login?${query}`, { container: oidcContainer })
+          .restoreSession(false);
+        app.should.alert('danger', (actualMessage) => {
+          actualMessage.should.startWith(expectedMessage);
+        });
       });
-    });
+    }
 
-    it('shows an alert for email-claim-not-provided', async () => {
-      const app = await load('/login?oidcError=email-claim-not-provided', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.alert('danger', (message) => {
-        message.should.startWith('Central could not access the email address associated with your account.');
+    const noAlerts = [
+      'oidcError=auth-ok-user-not-found&oidcError=email-claim-not-provided',
+      'oidcError',
+      'oidcError=.',
+      'oidcError=unknown'
+    ];
+    for (const query of noAlerts) {
+      it(`does not show an alert for ?${query}`, async () => {
+        const app = await load(`/login?${query}`, { container: oidcContainer })
+          .restoreSession(false);
+        app.should.not.alert();
       });
-    });
-
-    it('shows an alert for email-not-verified', async () => {
-      const app = await load('/login?oidcError=email-not-verified', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.alert('danger', (message) => {
-        message.should.startWith('Your email address has not been verified by your login server.');
-      });
-    });
-
-    it('shows an alert for internal-server-error', async () => {
-      const app = await load('/login?oidcError=internal-server-error', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.alert('danger', (message) => {
-        message.should.startWith('Something went wrong during login.');
-      });
-    });
-
-    it('does not show an alert if there are two errors', async () => {
-      const app = await load('/login?oidcError=auth-ok-user-not-found&oidcError=email-claim-not-provided', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.not.alert();
-    });
-
-    it('does not show an alert if query parameter has no value', async () => {
-      const app = await load('/login?oidcError', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.not.alert();
-    });
-
-    it('does not show an alert for an error whose name is invalid', async () => {
-      const app = await load('/login?oidcError=.', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.not.alert();
-    });
-
-    it('does not show an alert for an unknown error', async () => {
-      const app = await load('/login?oidcError=unknown', {
-        container: oidcContainer
-      }).restoreSession(false);
-      app.should.not.alert();
-    });
+    }
 
     it('removes the query parameter from the path', async () => {
       const app = await load('/login?oidcError=auth-ok-user-not-found&next=%2Fusers', {
