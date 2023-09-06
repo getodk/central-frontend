@@ -35,16 +35,16 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link v-if="entityLabel(entry) != null" :to="entityPath(projectId, entityDataset(entry), entityUuid(entry))">
-              {{ entityLabel(entry) }}
+            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details?.entity?.dataset, entry.details?.entity?.uuid)">
+              {{ entry.details?.entity?.currentVersion?.label }}
             </router-link>
             <template v-else>
-              <span class="entity-label">{{ entityUuid(entry) }}</span>
+              <span class="entity-label">{{ entry.details?.entity?.uuid }}</span>
             </template>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entityDataset(entry))">
-              {{ entityDataset(entry) }}
+            <router-link :to="datasetPath(projectId, entry.details?.entity?.dataset)">
+              {{ entry.details?.entity?.dataset }}
             </router-link>
           </template>
         </i18n-t>
@@ -159,21 +159,6 @@ export default {
     }
   },
   methods: {
-    entityLabel(entry) {
-      if ('entity' in entry.details && 'currentVersion' in entry.details.entity)
-        return entry.details.entity.currentVersion.label;
-      return null;
-    },
-    entityDataset(entry) {
-      if ('entity' in entry.details)
-        return entry.details.entity.dataset;
-      return '';
-    },
-    entityUuid(entry) {
-      if ('entity' in entry.details)
-        return entry.details.entity.uuid;
-      return '';
-    },
     entityProblem(entry) {
       if ('problem' in entry.details &&
         'problemDetails' in entry.details.problem &&
