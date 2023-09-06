@@ -1497,31 +1497,6 @@
       "noEntities": {
         "string": "There are no Entities to show.",
         "developer_comment": "This text is shown when there are no Entities to show in a table."
-      },
-      "loading": {
-        "withoutCount": {
-          "string": "Loading Entities…",
-          "developer_comment": "This text is shown when the number of Entities loading is unknown."
-        },
-        "all": {
-          "string": "{count, plural, one {Loading {count} Entity…} other {Loading {count} Entities…}}"
-        },
-        "first": {
-          "string": "{count, plural, one {Loading the first {top} of {count} Entity…} other {Loading the first {top} of {count} Entities…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "middle": {
-          "string": "{count, plural, one {Loading {top} more of {count} remaining Entity…} other {Loading {top} more of {count} remaining Entities…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "last": {
-          "multiple": {
-            "string": "{count, plural, one {Loading the last {count} Entity…} other {Loading the last {count} Entities…}}"
-          },
-          "one": {
-            "string": "Loading the last Entity…"
-          }
-        }
       }
     },
     "EntityShow": {
@@ -2822,6 +2797,33 @@
         }
       }
     },
+    "OdataLoadingMessage": {
+      "entity": {
+        "withoutCount": {
+          "string": "Loading Entities…",
+          "developer_comment": "This text is shown when the number of Entities loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {Loading {count} Entity…} other {Loading {count} Entities…}}"
+        },
+        "first": {
+          "string": "{count, plural, one {Loading the first {top} of {count} Entity…} other {Loading the first {top} of {count} Entities…}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, one {Loading {top} more of {count} remaining Entity…} other {Loading {top} more of {count} remaining Entities…}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {Loading the last {count} Entity…} other {Loading the last {count} Entities…}}"
+          },
+          "one": {
+            "string": "Loading the last Entity…"
+          }
+        }
+      }
+    },
     "ProjectArchive": {
       "title": {
         "string": "Archiving Project",
@@ -3817,6 +3819,9 @@
       }
     },
     "SubmissionList": {
+      "noMatching": {
+        "string": "There are no matching Submissions."
+      },
       "loading": {
         "withoutCount": {
           "string": "Loading Submissions…",
@@ -3859,9 +3864,6 @@
             }
           }
         }
-      },
-      "noMatching": {
-        "string": "There are no matching Submissions."
       }
     },
     "SubmissionShow": {

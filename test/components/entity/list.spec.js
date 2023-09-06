@@ -86,7 +86,7 @@ describe('EntityList', () => {
         .request(component =>
           component.get('#entity-list-refresh-button').trigger('click'))
         .beforeEachResponse(component => {
-          component.get('#entity-list-message').should.be.hidden();
+          component.get('#odata-loading-message').should.be.hidden();
         })
         .respondWithData(testData.entityOData);
     });
@@ -246,12 +246,12 @@ describe('EntityList', () => {
       }
     };
     const checkMessage = (component, text) => {
-      const message = component.get('#entity-list-message');
+      const message = component.get('#odata-loading-message');
       if (text == null) {
         message.should.be.hidden();
       } else {
         message.should.not.be.hidden();
-        message.get('#entity-list-message-text').text().should.equal(text);
+        message.get('#odata-loading-message-text').text().should.equal(text);
 
         const spinner = component.findAllComponents(Spinner).find(wrapper =>
           message.element.contains(wrapper.element));
@@ -308,7 +308,7 @@ describe('EntityList', () => {
     });
 
     describe('scrolling', () => {
-      it('scrolling to the bottom loads the next chunk of submissions', () => {
+      it('scrolling to the bottom loads the next chunk of entity', () => {
         createEntities(12);
         // Chunk 1
         return loadEntityList({
@@ -378,7 +378,7 @@ describe('EntityList', () => {
           });
       });
 
-      it('does nothing upon scroll if submissions request results in error', () => {
+      it('does nothing upon scroll if entity request results in error', () => {
         createEntities(251);
         return load('/projects/1/entity-lists/trees/entities', { root: false }, {
           odataEntities: mockResponse.problem

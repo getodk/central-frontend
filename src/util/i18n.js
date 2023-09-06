@@ -43,3 +43,8 @@ export const loadLocale = ({ i18n, logger }, locale) => {
 export function $tcn(path, count, values = undefined) {
   return this.$tc(path, count, { count: this.$n(count, 'default'), ...values });
 }
+
+// same as above but for composition API
+export function tcn(path, count, values) {
+  return this.t(path, { count: this.n(count, 'default'), ...values }, count);
+}

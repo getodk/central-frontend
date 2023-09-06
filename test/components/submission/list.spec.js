@@ -108,7 +108,7 @@ describe('SubmissionList', () => {
           .request(component =>
             component.get('#submission-list-refresh-button').trigger('click'))
           .beforeEachResponse(component => {
-            component.get('#submission-list-message').should.be.hidden();
+            component.get('#odata-loading-message').should.be.hidden();
           })
           .respondWithData(testData.submissionOData);
       });
@@ -129,12 +129,12 @@ describe('SubmissionList', () => {
         }
       };
       const checkMessage = (component, text) => {
-        const message = component.get('#submission-list-message');
+        const message = component.get('#odata-loading-message');
         if (text == null) {
           message.should.be.hidden();
         } else {
           message.should.not.be.hidden();
-          message.get('#submission-list-message-text').text().should.equal(text);
+          message.get('#odata-loading-message-text').text().should.equal(text);
 
           const spinner = component.findAllComponents(Spinner).find(wrapper =>
             message.element.contains(wrapper.element));

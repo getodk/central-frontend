@@ -22,9 +22,6 @@ export default () => {
       count: data['@odata.count'],
       nextLink: data['@odata.nextLink']
     }),
-    removeData() {
-      entityOData.value.splice(0, entityOData.value.length);
-    },
     addChunk(chunk) {
       for (const e of chunk.value) {
         entityOData.value.push(e);

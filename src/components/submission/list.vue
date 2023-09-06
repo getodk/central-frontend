@@ -31,8 +31,6 @@ except according to the terms contained in the LICENSE file.
         <submission-download-button :form-version="formVersion"
           :filtered="odataFilter != null" @download="showModal('download')"/>
       </div>
-      <!-- odata.dataExists = {{ odata.dataExists }} <br/>
-      odata.value.length = {{odata.dataExists && odata.value.length }} -->
       <submission-table v-show="odata.dataExists && odata.value.length !== 0"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :fields="selectedFields" @review="showReview"/>
@@ -40,12 +38,12 @@ except according to the terms contained in the LICENSE file.
         class="empty-table-message">
         {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
       </p>
-      <div v-show="odataLoadingMessage != null" id="submission-list-message">
-        <div id="submission-list-spinner-container">
-          <spinner :state="odataLoadingMessage != null"/>
-        </div>
-        <div id="submission-list-message-text">{{ odataLoadingMessage }}</div>
-      </div>
+      <odata-loading-message type="submission"
+        :top="top(odata.dataExists ? odata.value.length : 0)"
+        :odata="odata"
+        :filter="!!odataFilter"
+        :refreshing="refreshing"
+        :total-count="formVersion.dataExists ? formVersion.submissions : 0"/>
     </div>
 
     <submission-download :state="download.state" :form-version="formVersion"
@@ -63,6 +61,7 @@ import { shallowRef, watchEffect } from 'vue';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
+import OdataLoadingMessage from '../odata-loading-message.vue';
 import SubmissionDownload from './download.vue';
 import SubmissionDownloadButton from './download-button.vue';
 import SubmissionFieldDropdown from './field-dropdown.vue';
@@ -90,7 +89,8 @@ export default {
     SubmissionFieldDropdown,
     SubmissionFilters,
     SubmissionTable,
-    SubmissionUpdateReviewState
+    SubmissionUpdateReviewState,
+    OdataLoadingMessage
   },
   mixins: [modal()],
   inject: ['alert'],
@@ -227,35 +227,6 @@ export default {
       paths.unshift('__id', '__system');
       return paths.join(',');
     },
-    odataLoadingMessage() {
-      if (!this.odata.awaitingResponse || this.refreshing) return null;
-      if (!this.odata.dataExists) {
-        if (this.odataFilter != null)
-          return this.$t('loading.filtered.withoutCount');
-        if (!this.formVersion.dataExists || this.formVersion.submissions === 0)
-          return this.$t('loading.withoutCount');
-        const top = this.top(0);
-        if (this.formVersion.submissions <= top)
-          return this.$tcn('loading.all', this.formVersion.submissions);
-        return this.$tcn('loading.first', this.formVersion.submissions, {
-          top: this.$n(top, 'default')
-        });
-      }
-
-      const pathPrefix = this.odataFilter == null
-        ? 'loading'
-        : 'loading.filtered';
-      const remaining = this.odata.originalCount - this.odata.value.length;
-      const top = this.top(this.odata.value.length);
-      if (remaining > top) {
-        return this.$tcn(`${pathPrefix}.middle`, remaining, {
-          top: this.$n(top, 'default')
-        });
-      }
-      return remaining > 1
-        ? this.$tcn(`${pathPrefix}.last.multiple`, remaining)
-        : this.$t(`${pathPrefix}.last.one`);
-    }
   },
   watch: {
     odataFilter() {
@@ -291,16 +262,16 @@ export default {
             $wkt: true,
             $filter: this.odataFilter,
             $select: this.odataSelect,
-            $skiptoken: this.odata.dataExists && !clear ? new URL(this.odata.nextLink).searchParams.get('$skiptoken') : null
+            $skiptoken: loaded > 0 && !clear ? new URL(this.odata.nextLink).searchParams.get('$skiptoken') : null
           }
         ),
         clear: clear && !refresh,
-        patch: loaded === 0 || (clear && !refresh)
-          ? null
-          : (response) => {
+        patch: (loaded > 0 && !clear) || (loaded > 0 && refresh)
+          ? (response) => {
             if (clear && refresh) this.odata.removeData();
             this.odata.addChunk(response.data);
           }
+          : null
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
@@ -433,33 +404,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "loading": {
-      // This text is shown when the number of Submissions loading is unknown.
-      "withoutCount": "Loading Submissions…",
-      "all": "Loading {count} Submission… | Loading {count} Submissions…",
-      // {top} is a number that is either 250 or 1000. {count} may be any number
-      // that is at least 250. The string will be pluralized based on {count}.
-      "first": "Loading the first {top} of {count} Submission… | Loading the first {top} of {count} Submissions…",
-      // {top} is a number that is either 250 or 1000. {count} may be any number
-      // that is at least 250. The string will be pluralized based on {count}.
-      "middle": "Loading {top} more of {count} remaining Submission… | Loading {top} more of {count} remaining Submissions…",
-      "last": {
-        "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",
-        "one": "Loading the last Submission…"
-      },
-      "filtered": {
-        // This text is shown when the number of Submissions loading is unknown.
-        "withoutCount": "Loading matching Submissions…",
-        // {top} is a number that is either 250 or 1000. {count} may be any
-        // number that is at least 250. The string will be pluralized based on
-        // {count}.
-        "middle": "Loading {top} more of {count} remaining matching Submission… | Loading {top} more of {count} remaining matching Submissions…",
-        "last": {
-          "multiple": "Loading the last {count} matching Submission… | Loading the last {count} matching Submissions…",
-          "one": "Loading the last matching Submission…"
-        }
-      }
-    },
     "noMatching": "There are no matching Submissions."
   }
 }

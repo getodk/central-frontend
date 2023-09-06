@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div id="entity-list-actions">
       <button id="entity-list-refresh-button" type="button"
             class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(true, true)">
+            @click="fetchChunk(true)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
@@ -28,14 +28,11 @@ except according to the terms contained in the LICENSE file.
       class="empty-table-message">
       {{ $t('noEntities') }}
     </p>
-    <div v-show="odataLoadingMessage != null" id="entity-list-message">
-      <div id="entity-list-spinner-container">
-        <spinner :state="odataLoadingMessage != null"/>
-      </div>
-      <div id="entity-list-message-text">{{ odataLoadingMessage }}</div>
-    </div>
-    <!-- <loading :state="odataEntities.initiallyLoading"/> -->
-
+    <odata-loading-message type="entity"
+      :top="top(odataEntities.dataExists ? odataEntities.value.length : 0)"
+      :odata="odataEntities"
+      :refreshing="refreshing"
+      :total-count="dataset.dataExists ? dataset.entities : 0"/>
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
   </div>
 </template>
@@ -46,6 +43,7 @@ import { watchEffect } from 'vue';
 import Spinner from '../spinner.vue';
 import EntityTable from './table.vue';
 import EntityUpdate from './update.vue';
+import OdataLoadingMessage from '../odata-loading-message.vue';
 
 import modal from '../../mixins/modal';
 import useEntities from '../../request-data/entities';
@@ -58,7 +56,8 @@ export default {
   components: {
     Spinner,
     EntityTable,
-    EntityUpdate
+    EntityUpdate,
+    OdataLoadingMessage
   },
   mixins: [modal()],
   inject: ['alert'],
@@ -114,30 +113,6 @@ export default {
       return !this.odataEntities.dataExists
         ? this.$t('action.download')
         : this.$tcn('action.download.unfiltered', this.odataEntities.count);
-    },
-    odataLoadingMessage() {
-      if (!this.odataEntities.awaitingResponse || this.refreshing) return null;
-      if (!this.odataEntities.dataExists) {
-        if (!this.dataset.dataExists || this.dataset.entities === 0)
-          return this.$t('loading.withoutCount');
-        const top = this.top(0);
-        if (this.dataset.entities <= top)
-          return this.$tcn('loading.all', this.dataset.entities);
-        return this.$tcn('loading.first', this.dataset.entities, {
-          top: this.$n(top, 'default')
-        });
-      }
-
-      const remaining = this.odataEntities.originalCount - this.odataEntities.value.length;
-      const top = this.top(this.odataEntities.value.length);
-      if (remaining > top) {
-        return this.$tcn('loading.middle', remaining, {
-          top: this.$n(top, 'default')
-        });
-      }
-      return remaining > 1
-        ? this.$tcn('loading.last.multiple', remaining)
-        : this.$t('loading.last.one');
     }
   },
   created() {
@@ -150,8 +125,14 @@ export default {
     document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
-    fetchChunk(clear, refresh = false) {
+    // refresh: whether refresh button is pressed
+    fetchChunk(refresh = false) {
+      // number of rows already loaded
       const loaded = this.odataEntities.dataExists ? this.odataEntities.value.length : 0;
+
+      // we don't want to clear store (pinia) when refresh button is pressed
+      // otherwise UI table will get empty during the request
+      const clearStore = loaded === 0 && !refresh;
 
       this.refreshing = refresh;
 
@@ -160,24 +141,21 @@ export default {
           this.projectId,
           this.datasetName,
           {
-            $top: this.top(loaded),
+            $top: this.top(refresh ? 0 : loaded),
             $count: true,
-            $skiptoken: this.odataEntities.dataExists && !clear ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null
+            $skiptoken: loaded > 0 && !refresh ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null
           }
         ),
-        clear: clear && !refresh,
-        patch: loaded === 0 || (clear && !refresh)
-          ? null
-          : (response) => {
-            if (clear && refresh) this.odataEntities.removeData();
-            this.odataEntities.addChunk(response.data);
-          }
+        clear: clearStore,
+        patch: loaded > 0 && !refresh
+          ? (response) => this.odataEntities.addChunk(response.data)
+          : null
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
     },
     fetchData() {
-      this.fetchChunk(true);
+      this.fetchChunk();
     },
     showUpdate(index) {
       if (this.refreshing) return;
@@ -229,7 +207,7 @@ export default {
       if (this.dataset.dataExists && this.odataEntities.dataExists &&
         this.odataEntities.nextLink &&
         !this.odataEntities.awaitingResponse && this.scrolledToBottom())
-        this.fetchChunk(false);
+        this.fetchChunk();
     }
   }
 };
@@ -270,22 +248,7 @@ export default {
         }
       },
       // This text is shown when there are no Entities to show in a table.
-      "noEntities": "There are no Entities to show.",
-      "loading": {
-        // This text is shown when the number of Entities loading is unknown.
-        "withoutCount": "Loading Entities…",
-        "all": "Loading {count} Entity… | Loading {count} Entities…",
-        // {top} is a number that is either 250 or 1000. {count} may be any number
-        // that is at least 250. The string will be pluralized based on {count}.
-        "first": "Loading the first {top} of {count} Entity… | Loading the first {top} of {count} Entities…",
-        // {top} is a number that is either 250 or 1000. {count} may be any number
-        // that is at least 250. The string will be pluralized based on {count}.
-        "middle": "Loading {top} more of {count} remaining Entity… | Loading {top} more of {count} remaining Entities…",
-        "last": {
-          "multiple": "Loading the last {count} Entity… | Loading the last {count} Entities…",
-          "one": "Loading the last Entity…"
-        }
-      },
+      "noEntities": "There are no Entities to show."
     }
   }
 </i18n>
