@@ -77,16 +77,19 @@ class PluralForms {
     if (forms.length > 2)
       logThenThrow(message, 'a pluralized message must have exactly two forms');
 
-    for (const form of forms) {
+    for (let i=0; i<forms.length; ++i) {
+      const form = forms[i];
+
       if (form.includes('|')) logThenThrow(message, 'unexpected |');
 
       const badWhitespace = form.match(/^\s+|\s+$|\s\s+/);
       if (badWhitespace) {
         const badLength = badWhitespace[0].length;
-        console.error(`unexpected white space in translation string '${key}':`); // eslint-disable-line no-console
-        console.error(`  [${message}]`); // eslint-disable-line no-console
-        console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index + badLength, ' ').padEnd(message.length, ' ')}]`); // eslint-disable-line no-console
-        throw new Error(`unexpected whitespace in message '${key}' at index ${badWhitespace.index} ("${message}")`);
+        const badPath = forms.length === 1 ? key : `${key}[${i}]`;
+        console.error(`unexpected white space in translation string '${badPath}':`); // eslint-disable-line no-console
+        console.error(`  [${form}]`); // eslint-disable-line no-console
+        console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index + badLength, ' ').padEnd(form.length, ' ')}]`); // eslint-disable-line no-console
+        throw new Error(`unexpected whitespace in message '${badPath}' at index ${badWhitespace.index} ("${message}")`);
       }
     }
 
