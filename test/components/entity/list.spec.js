@@ -45,7 +45,7 @@ describe('EntityList', () => {
       '/projects/1/entity-lists/trees/entities',
       { root: false }
     ).testRequests([
-      { url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=10&%24count=true' }
+      { url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true' }
     ]);
   });
 
