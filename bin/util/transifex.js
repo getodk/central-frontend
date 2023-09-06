@@ -72,7 +72,7 @@ const parseVars = (pluralForm) => {
 class PluralForms {
   static empty(length) { return new PluralForms(new Array(length).fill('')); }
 
-  static fromVueI18n(path, message) {
+  static fromVueI18n(key, message) {
     const forms = message.split(' | ');
     if (forms.length > 2)
       logThenThrow(message, 'a pluralized message must have exactly two forms');
@@ -83,10 +83,10 @@ class PluralForms {
       const badWhitespace = form.match(/^\s+|\s+$|\s\s+/);
       if (badWhitespace) {
         const badLength = badWhitespace[0].length;
-        console.error(`unexpected white space in translation string '${path}':`); // eslint-disable-line no-console
+        console.error(`unexpected white space in translation string '${key}':`); // eslint-disable-line no-console
         console.error(`  [${message}]`); // eslint-disable-line no-console
         console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index + badLength, ' ').padEnd(message.length, ' ')}]`); // eslint-disable-line no-console
-        throw new Error(`unexpected whitespace in message '${path}' at index ${badWhitespace.index} ("${message}")`);
+        throw new Error(`unexpected whitespace in message '${key}' at index ${badWhitespace.index} ("${message}")`);
       }
     }
 
@@ -670,8 +670,8 @@ const rekeyTranslations = (source, translated, transifexPaths) => {
 // Returns the Vue I18n messages for the source locale after converting them to
 // PluralForms objects.
 const readSourceMessages = (localesDir, filenamesByComponent) => {
-  const reviver = (path, value) =>
-    (typeof value === 'string' ? PluralForms.fromVueI18n(path, value) : value);
+  const reviver = (key, value) =>
+    (typeof value === 'string' ? PluralForms.fromVueI18n(key, value) : value);
 
   // Read the root messages.
   const messages = parse(
