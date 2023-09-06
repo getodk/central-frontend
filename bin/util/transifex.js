@@ -77,7 +77,7 @@ class PluralForms {
     if (forms.length > 2)
       logThenThrow(message, 'a pluralized message must have exactly two forms');
 
-    for (let i = 0; i < forms.length; i = i + 1) {
+    for (let i = 0; i < forms.length; i += 1) {
       const form = forms[i];
 
       if (form.includes('|')) logThenThrow(message, 'unexpected |');
