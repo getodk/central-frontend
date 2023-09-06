@@ -161,7 +161,13 @@ describe('SubmissionFeedEntry', () => {
       it('renders correctly for newly created entity with ideally formatted details', () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.create',
-          details: { entity: { uuid: 'xyz', label: 'EntityName', dataset: 'DatasetName' } }
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              currentVersion: { label: 'EntityName' }
+            }
+          }
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Created Entity EntityName in DatasetName Entity List');
@@ -170,7 +176,13 @@ describe('SubmissionFeedEntry', () => {
       it('renders links to entity and dataset', () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.create',
-          details: { entity: { uuid: 'xyz', label: 'EntityName', dataset: 'DatasetName' } }
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              currentVersion: { label: 'EntityName' }
+            }
+          }
         });
         const links = mountComponent().findAllComponents(RouterLinkStub);
         links.length.should.equal(2);
@@ -180,10 +192,24 @@ describe('SubmissionFeedEntry', () => {
         ]);
       });
 
+      it('does not render link if entity deleted (no currentVersion.label)', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.create',
+          details: { entity: { uuid: 'xyz', dataset: 'DatasetName' } }
+        });
+        const component = mountComponent();
+        component.get('.feed-entry-title').text().should.equal('Created Entity xyz in DatasetName Entity List');
+        const links = component.findAllComponents(RouterLinkStub);
+        links.length.should.equal(1);
+        links.map(link => link.props().to).should.eql([
+          '/projects/1/entity-lists/DatasetName'
+        ]);
+      });
+
       it('renders okay and does not crash for action where entity details are missing', () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.create',
-          details: { entity: { uuid: 'xyz' } }
+          details: { entity: { } }
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Created Entity  in  Entity List');
