@@ -10,11 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <span class="collect-qr" v-html="imgHtml"></span>
 </template>
-<!-- eslint-enable vue/no-v-html -->
 
 <script>
 import qrcode from 'qrcode-generator';

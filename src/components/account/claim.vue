@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import FormGroup from '../form-group.vue';
+import FormGroup from '../form-group.vue'
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
