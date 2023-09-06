@@ -76,7 +76,7 @@ export default {
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
-      default: (loaded) => (loaded < 1000 ? 10 : 1000)
+      default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
   setup() {
