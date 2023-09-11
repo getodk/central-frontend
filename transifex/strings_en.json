@@ -1194,11 +1194,20 @@
         "num_client_audit_attachments": {
           "string": "Number of Client Audit Attachments"
         },
-        "num_client_audit_attachments_unprocessed": {
-          "string": "Number of Unprocessed, Unencryped Client Audits"
+        "num_client_audit_attachments_failures": {
+          "string": "Number of Client Audit processing failures"
         },
-        "num_client_audit_attachments_processed": {
-          "string": "Number of Processed Client Audits"
+        "num_client_audit_rows": {
+          "string": "Number of Client Audit rows"
+        },
+        "num_audits_failed": {
+          "string": "Number of Audit Log Events that failed at least once"
+        },
+        "num_audits_failed5": {
+          "string": "Number of Audit Log Events that failed completely"
+        },
+        "num_audits_unprocessed": {
+          "string": "Number of outdated unprocessed Audit Log Events"
         }
       }
     },
