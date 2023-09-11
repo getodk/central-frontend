@@ -267,7 +267,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: () => project.permits('form.list')
+            project: () => project.permits('form.list') || project.permits('open_form.list')
           },
           title: () => [project.name]
         }

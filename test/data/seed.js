@@ -109,7 +109,7 @@ export default () => {
       name: 'Data Collector',
       system: 'formfill',
       verbs: [
-        'form.list',
+        'open_form.list',
         'form.read',
         'submission.create'
       ]
