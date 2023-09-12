@@ -12,11 +12,10 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Spinner from './spinner.vue';
-import { tcn as _tcn } from '../util/i18n';
+import { useI18nUtils } from '../util/i18n';
 
-const { t, n } = useI18n();
-
-const tcn = (...arg) => _tcn.apply({ t, n }, arg);
+const { t } = useI18n();
+const { tn } = useI18nUtils();
 
 defineOptions({
   name: 'OdataLoadingMessage'
@@ -62,11 +61,10 @@ const message = computed(() => {
       return t(`${props.type}.withoutCount`);
 
     if (props.totalCount <= props.top)
-      return tcn(`${props.type}.all`, props.totalCount);
+      return tn(`${props.type}.all`, props.totalCount);
 
-    // console.log( t('submission.first', { count: 'asdf', top: 10 }, 11 ) );
-    return tcn(`${props.type}.first`, props.totalCount, {
-      top: n(props.top, 'default')
+    return tn(`${props.type}.first`, props.totalCount, {
+      top: props.top
     });
   }
 
@@ -75,12 +73,12 @@ const message = computed(() => {
     : `${props.type}`;
   const remaining = props.odata.originalCount - props.odata.value.length;
   if (remaining > props.top) {
-    return tcn(`${pathPrefix}.middle`, remaining, {
-      top: n(props.top, 'default')
+    return tn(`${pathPrefix}.middle`, remaining, {
+      top: props.top
     });
   }
   return remaining > 1
-    ? tcn(`${pathPrefix}.last.multiple`, remaining)
+    ? tn(`${pathPrefix}.last.multiple`, remaining)
     : t(`${pathPrefix}.last.one`);
 });
 

@@ -9,6 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { useI18n } from 'vue-i18n';
 import { locales } from '../i18n';
 
 const setLocale = (i18n, locale) => {
@@ -44,7 +45,12 @@ export function $tcn(path, count, values = undefined) {
   return this.$tc(path, count, { count: this.$n(count, 'default'), ...values });
 }
 
-// same as above but for composition API
-export function tcn(path, count, values) {
-  return this.t(path, { count: this.n(count, 'default'), ...values }, count);
-}
+export const useI18nUtils = () => {
+  const { t, n } = useI18n();
+  const tn = (path, count, values) => {
+    const list = { count: n(count, 'default') };
+    Object.entries(values || {}).forEach(([k, v]) => { list[k] = typeof v === 'number' ? n(v, 'default') : v; });
+    return t(path, list, count);
+  };
+  return { tn };
+};
