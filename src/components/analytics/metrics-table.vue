@@ -114,13 +114,13 @@ export default {
       "num_entities": "Number of Entities in the Entity List",
       "num_failed_entities": "Number of Entity creation errors",
       "num_entity_updates": "Number of Entity updates",
-      "sso_enabled": "SSO enabled on Server",
+      "sso_enabled": "SSO enabled on server",
       "num_client_audit_attachments": "Number of Client Audit Attachments",
       "num_client_audit_attachments_failures": "Number of Client Audit processing failures",
       "num_client_audit_rows": "Number of Client Audit rows",
       "num_audits_failed": "Number of Audit Log Events that failed at least once",
       "num_audits_failed5": "Number of Audit Log Events that failed completely",
-      "num_audits_unprocessed": "Number of outdated unprocessed Audit Log Events",
+      "num_audits_unprocessed": "Number of Audit Log Events whose processing has been delayed",
     }
   }
 }

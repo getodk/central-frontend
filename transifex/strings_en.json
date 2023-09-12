@@ -1189,7 +1189,7 @@
           "string": "Number of Entity updates"
         },
         "sso_enabled": {
-          "string": "SSO enabled on Server"
+          "string": "SSO enabled on server"
         },
         "num_client_audit_attachments": {
           "string": "Number of Client Audit Attachments"
@@ -1207,7 +1207,7 @@
           "string": "Number of Audit Log Events that failed completely"
         },
         "num_audits_unprocessed": {
-          "string": "Number of outdated unprocessed Audit Log Events"
+          "string": "Number of Audit Log Events whose processing has been delayed"
         }
       }
     },
