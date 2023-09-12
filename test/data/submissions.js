@@ -176,5 +176,6 @@ export const standardSubmissions = view(extendedSubmissions, (extended) => {
 export const submissionOData = (top = 250, skip = 0) => ({
   '@odata.count': extendedSubmissions.size,
   value: extendedSubmissions.sorted().slice(skip, skip + top)
-    .map(submission => submission._odata)
+    .map(submission => submission._odata),
+  '@odata.nextLink': top > 0 && (top + skip < extendedSubmissions.size) ? `https://test/Submissions?$top=${top}&$skipToken=thetoken` : undefined
 });

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div id="entity-list-actions">
       <button id="entity-list-refresh-button" type="button"
             class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchData(false)">
+            @click="fetchChunk(true)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
@@ -28,17 +28,22 @@ except according to the terms contained in the LICENSE file.
       class="empty-table-message">
       {{ $t('noEntities') }}
     </p>
-    <loading :state="odataEntities.initiallyLoading"/>
-
+    <odata-loading-message type="entity"
+      :top="top(odataEntities.dataExists ? odataEntities.value.length : 0)"
+      :odata="odataEntities"
+      :refreshing="refreshing"
+      :total-count="dataset.dataExists ? dataset.entities : 0"/>
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
   </div>
 </template>
 
 <script>
-import Loading from '../loading.vue';
+import { watchEffect } from 'vue';
+
 import Spinner from '../spinner.vue';
 import EntityTable from './table.vue';
 import EntityUpdate from './update.vue';
+import OdataLoadingMessage from '../odata-loading-message.vue';
 
 import modal from '../../mixins/modal';
 import useEntities from '../../request-data/entities';
@@ -49,10 +54,10 @@ import { noop } from '../../util/util';
 export default {
   name: 'EntityList',
   components: {
-    Loading,
     Spinner,
     EntityTable,
-    EntityUpdate
+    EntityUpdate,
+    OdataLoadingMessage
   },
   mixins: [modal()],
   inject: ['alert'],
@@ -67,6 +72,11 @@ export default {
     datasetName: {
       type: String,
       required: true
+    },
+    // Returns the value of the $top query parameter.
+    top: {
+      type: Function,
+      default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
   setup() {
@@ -74,6 +84,13 @@ export default {
     // dataset properties for the columns.
     const { dataset } = useRequestData();
     const odataEntities = useEntities();
+    // We do not reconcile `odataEntities` with either dataset.lastEntity or
+    // project.lastEntity.
+    watchEffect(() => {
+      if (dataset.dataExists && odataEntities.dataExists && dataset.entities !== odataEntities.count)
+        dataset.entities = odataEntities.count;
+    });
+
     return { dataset, odataEntities };
   },
   data() {
@@ -99,21 +116,46 @@ export default {
     }
   },
   created() {
-    this.fetchData(true);
+    this.fetchData();
+  },
+  mounted() {
+    document.addEventListener('scroll', this.afterScroll);
+  },
+  beforeUnmount() {
+    document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
-    fetchData(clear) {
-      this.refreshing = !clear;
+    // refresh: whether refresh button is pressed
+    fetchChunk(refresh = false) {
+      // number of rows already loaded
+      const loaded = this.odataEntities.dataExists ? this.odataEntities.value.length : 0;
+
+      // we don't want to clear store (pinia) when refresh button is pressed
+      // otherwise UI table will get empty during the request
+      const clearStore = loaded === 0 && !refresh;
+
+      this.refreshing = refresh;
+
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
           this.datasetName,
-          { $count: true }
+          {
+            $top: this.top(refresh ? 0 : loaded),
+            $count: true,
+            $skiptoken: loaded > 0 && !refresh ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null
+          }
         ),
-        clear
+        clear: clearStore,
+        patch: loaded > 0 && !refresh
+          ? (response) => this.odataEntities.addChunk(response.data)
+          : null
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+    },
+    fetchData() {
+      this.fetchChunk();
     },
     showUpdate(index) {
       if (this.refreshing) return;
@@ -156,6 +198,17 @@ export default {
       this.odataEntities.value[index] = newOData;
 
       this.$refs.table.afterUpdate(index);
+    },
+    scrolledToBottom() {
+      // Using pageYOffset rather than scrollY in order to support IE.
+      return window.pageYOffset + window.innerHeight >=
+        document.body.offsetHeight - 5;
+    },
+    afterScroll() {
+      if (this.dataset.dataExists && this.odataEntities.dataExists &&
+        this.odataEntities.nextLink &&
+        !this.odataEntities.awaitingResponse && this.scrolledToBottom())
+        this.fetchChunk();
     }
   }
 };

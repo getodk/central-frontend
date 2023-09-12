@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
             v-model="selectedFields"/>
           <button id="submission-list-refresh-button" type="button"
             class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(0, false)">
+            @click="fetchChunk(true, true)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
@@ -38,12 +38,12 @@ except according to the terms contained in the LICENSE file.
         class="empty-table-message">
         {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
       </p>
-      <div v-show="odataLoadingMessage != null" id="submission-list-message">
-        <div id="submission-list-spinner-container">
-          <spinner :state="odataLoadingMessage != null"/>
-        </div>
-        <div id="submission-list-message-text">{{ odataLoadingMessage }}</div>
-      </div>
+      <odata-loading-message type="submission"
+        :top="top(odata.dataExists ? odata.value.length : 0)"
+        :odata="odata"
+        :filter="!!odataFilter"
+        :refreshing="refreshing"
+        :total-count="formVersion.dataExists ? formVersion.submissions : 0"/>
     </div>
 
     <submission-download :state="download.state" :form-version="formVersion"
@@ -61,6 +61,7 @@ import { shallowRef, watchEffect } from 'vue';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
+import OdataLoadingMessage from '../odata-loading-message.vue';
 import SubmissionDownload from './download.vue';
 import SubmissionDownloadButton from './download-button.vue';
 import SubmissionFieldDropdown from './field-dropdown.vue';
@@ -88,7 +89,8 @@ export default {
     SubmissionFieldDropdown,
     SubmissionFilters,
     SubmissionTable,
-    SubmissionUpdateReviewState
+    SubmissionUpdateReviewState,
+    OdataLoadingMessage
   },
   mixins: [modal()],
   inject: ['alert'],
@@ -105,7 +107,7 @@ export default {
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
-      default: (skip) => (skip < 1000 ? 250 : 1000)
+      default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
   setup(props) {
@@ -225,42 +227,13 @@ export default {
       paths.unshift('__id', '__system');
       return paths.join(',');
     },
-    odataLoadingMessage() {
-      if (!this.odata.awaitingResponse || this.refreshing) return null;
-      if (!this.odata.dataExists) {
-        if (this.odataFilter != null)
-          return this.$t('loading.filtered.withoutCount');
-        if (!this.formVersion.dataExists || this.formVersion.submissions === 0)
-          return this.$t('loading.withoutCount');
-        const top = this.top(0);
-        if (this.formVersion.submissions <= top)
-          return this.$tcn('loading.all', this.formVersion.submissions);
-        return this.$tcn('loading.first', this.formVersion.submissions, {
-          top: this.$n(top, 'default')
-        });
-      }
-
-      const pathPrefix = this.odataFilter == null
-        ? 'loading'
-        : 'loading.filtered';
-      const remaining = this.odata.originalCount - this.odata.value.length;
-      const top = this.top(this.odata.skip);
-      if (remaining > top) {
-        return this.$tcn(`${pathPrefix}.middle`, remaining, {
-          top: this.$n(top, 'default')
-        });
-      }
-      return remaining > 1
-        ? this.$tcn(`${pathPrefix}.last.multiple`, remaining)
-        : this.$t(`${pathPrefix}.last.one`);
-    }
   },
   watch: {
     odataFilter() {
-      this.fetchChunk(0, true);
+      this.fetchChunk(true);
     },
     selectedFields(_, oldFields) {
-      if (oldFields != null) this.fetchChunk(0, true);
+      if (oldFields != null) this.fetchChunk(true);
     }
   },
   created() {
@@ -273,26 +246,32 @@ export default {
     document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
-    fetchChunk(skip, clear) {
-      this.refreshing = skip === 0 && !clear;
+    fetchChunk(clear, refresh = false) {
+      const loaded = this.odata.dataExists ? this.odata.value.length : 0;
+
+      this.refreshing = refresh;
+
       this.odata.request({
         url: apiPaths.odataSubmissions(
           this.projectId,
           this.xmlFormId,
           this.draft,
           {
-            $top: this.top(skip),
-            $skip: skip,
+            $top: this.top(loaded),
             $count: true,
             $wkt: true,
             $filter: this.odataFilter,
-            $select: this.odataSelect
+            $select: this.odataSelect,
+            $skiptoken: loaded > 0 && !clear ? new URL(this.odata.nextLink).searchParams.get('$skiptoken') : null
           }
         ),
-        clear,
-        patch: skip === 0
-          ? null
-          : (response) => { this.odata.addChunk(response.data); }
+        clear: clear && !refresh,
+        patch: (loaded > 0 && !clear) || (loaded > 0 && refresh)
+          ? (response) => {
+            if (clear && refresh) this.odata.removeData();
+            this.odata.addChunk(response.data);
+          }
+          : null
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
@@ -310,7 +289,7 @@ export default {
             : this.fields.selectable.slice(0, 10);
         })
         .catch(noop);
-      this.fetchChunk(0, true);
+      this.fetchChunk(true);
       if (!this.draft) {
         this.submitters.request({
           url: apiPaths.submitters(this.projectId, this.xmlFormId, this.draft)
@@ -326,9 +305,9 @@ export default {
     afterScroll() {
       if (this.formVersion.dataExists && this.keys.dataExists &&
         this.fields.dataExists && this.odata.dataExists &&
-        this.odata.value.length < this.odata.originalCount &&
+        this.odata.nextLink &&
         !this.odata.awaitingResponse && this.scrolledToBottom())
-        this.fetchChunk(this.odata.skip, false);
+        this.fetchChunk(false);
     },
     replaceFilters({
       submitterIds = this.submitterIds,
@@ -425,33 +404,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "loading": {
-      // This text is shown when the number of Submissions loading is unknown.
-      "withoutCount": "Loading Submissions…",
-      "all": "Loading {count} Submission… | Loading {count} Submissions…",
-      // {top} is a number that is either 250 or 1000. {count} may be any number
-      // that is at least 250. The string will be pluralized based on {count}.
-      "first": "Loading the first {top} of {count} Submission… | Loading the first {top} of {count} Submissions…",
-      // {top} is a number that is either 250 or 1000. {count} may be any number
-      // that is at least 250. The string will be pluralized based on {count}.
-      "middle": "Loading {top} more of {count} remaining Submission… | Loading {top} more of {count} remaining Submissions…",
-      "last": {
-        "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",
-        "one": "Loading the last Submission…"
-      },
-      "filtered": {
-        // This text is shown when the number of Submissions loading is unknown.
-        "withoutCount": "Loading matching Submissions…",
-        // {top} is a number that is either 250 or 1000. {count} may be any
-        // number that is at least 250. The string will be pluralized based on
-        // {count}.
-        "middle": "Loading {top} more of {count} remaining matching Submission… | Loading {top} more of {count} remaining matching Submissions…",
-        "last": {
-          "multiple": "Loading the last {count} matching Submission… | Loading the last {count} matching Submissions…",
-          "one": "Loading the last matching Submission…"
-        }
-      }
-    },
     "noMatching": "There are no matching Submissions."
   }
 }

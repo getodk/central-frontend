@@ -380,7 +380,7 @@ describe('SubmissionFilters', () => {
         .complete()
         .request(changeMultiselect('#submission-filters-review-state', [0]))
         .beforeEachResponse(component => {
-          const text = component.get('#submission-list-message-text').text();
+          const text = component.get('#odata-loading-message-text').text();
           text.trim().should.equal('Loading matching Submissions…');
         })
         .respondWithData(() => testData.submissionOData(2, 0));
@@ -398,7 +398,7 @@ describe('SubmissionFilters', () => {
           document.dispatchEvent(new Event('scroll'));
         })
         .beforeEachResponse(component => {
-          const text = component.get('#submission-list-message-text').text();
+          const text = component.get('#odata-loading-message-text').text();
           text.trim().should.equal('Loading 2 more of 3 remaining matching Submissions…');
         })
         .respondWithData(() => testData.submissionOData(2, 2));
@@ -417,7 +417,7 @@ describe('SubmissionFilters', () => {
             document.dispatchEvent(new Event('scroll'));
           })
           .beforeEachResponse(component => {
-            const text = component.get('#submission-list-message-text').text();
+            const text = component.get('#odata-loading-message-text').text();
             text.trim().should.equal('Loading the last matching Submission…');
           })
           .respondWithData(() => testData.submissionOData(2, 2));
@@ -435,7 +435,7 @@ describe('SubmissionFilters', () => {
             document.dispatchEvent(new Event('scroll'));
           })
           .beforeEachResponse(component => {
-            const text = component.get('#submission-list-message-text').text();
+            const text = component.get('#odata-loading-message-text').text();
             text.trim().should.equal('Loading the last 2 matching Submissions…');
           })
           .respondWithData(() => testData.submissionOData(2, 2));

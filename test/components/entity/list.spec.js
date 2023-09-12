@@ -3,10 +3,38 @@ import EntityDataRow from '../../../src/components/entity/data-row.vue';
 import EntityList from '../../../src/components/entity/list.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
+import Spinner from '../../../src/components/spinner.vue';
 
 import testData from '../../data';
+import { mockResponse } from '../../util/axios';
+import { loadEntityList } from '../../util/entity';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+
+// Create entities along with the associated project and dataset.
+const createEntities = (count, factoryOptions = {}) => {
+  testData.extendedProjects.createPast(1);
+  testData.extendedDatasets.createPast(1, { entities: count });
+  testData.extendedEntities.createPast(count, factoryOptions);
+};
+const _scroll = (component, scrolledToBottom) => {
+  const method = component.vm.scrolledToBottom;
+  if (method == null) {
+    _scroll(component.getComponent(EntityList), scrolledToBottom);
+    return;
+  }
+  // eslint-disable-next-line no-param-reassign
+  component.vm.scrolledToBottom = () => scrolledToBottom;
+  document.dispatchEvent(new Event('scroll'));
+  // eslint-disable-next-line no-param-reassign
+  component.vm.scrolledToBottom = method;
+};
+// eslint-disable-next-line consistent-return
+const scroll = (componentOrBoolean) => {
+  if (componentOrBoolean === true || componentOrBoolean === false)
+    return (component) => _scroll(component, componentOrBoolean);
+  _scroll(componentOrBoolean, true);
+};
 
 describe('EntityList', () => {
   beforeEach(mockLogin);
@@ -17,11 +45,11 @@ describe('EntityList', () => {
       '/projects/1/entity-lists/trees/entities',
       { root: false }
     ).testRequests([
-      { url: '/v1/projects/1/datasets/trees.svc/Entities?%24count=true' }
+      { url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true' }
     ]);
   });
 
-  it('shows a message if there are no submissions', async () => {
+  it('shows a message if there are no entities', async () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     const component = await load(
       '/projects/1/entity-lists/trees/entities',
@@ -58,7 +86,7 @@ describe('EntityList', () => {
         .request(component =>
           component.get('#entity-list-refresh-button').trigger('click'))
         .beforeEachResponse(component => {
-          component.get('.loading').should.be.hidden();
+          component.get('#odata-loading-message').should.be.hidden();
         })
         .respondWithData(testData.entityOData);
     });
@@ -200,6 +228,249 @@ describe('EntityList', () => {
         should.exist(td.getComponent(DateTime).props().iso);
         td.get('.updates').text().should.equal('1');
         td.get('.update-button').attributes('aria-label').should.equal('Edit (1)');
+      });
+    });
+  });
+
+  describe('infinite loading', () => {
+    const checkTop = ({ url }, top) => {
+      url.should.match(new RegExp(`[?&]%24top=${top}(&|$)`));
+    };
+    const checkIds = (component, count, offset = 0) => {
+      const rows = component.findAllComponents(EntityDataRow);
+      rows.length.should.equal(count);
+      const entities = testData.extendedEntities.sorted();
+      entities.length.should.be.aboveOrEqual(count + offset);
+      for (let i = 0; i < rows.length; i += 1) {
+        const text = rows[i].get('td:last-child').text();
+        text.should.equal(entities[i + offset].uuid);
+      }
+    };
+    const checkMessage = (component, text) => {
+      const message = component.get('#odata-loading-message');
+      if (text == null) {
+        message.should.be.hidden();
+      } else {
+        message.should.not.be.hidden();
+        message.get('#odata-loading-message-text').text().should.equal(text);
+
+        const spinner = component.findAllComponents(Spinner).find(wrapper =>
+          message.element.contains(wrapper.element));
+        spinner.props().state.should.be.true();
+      }
+    };
+
+    it('loads a single entity', () => {
+      createEntities(1);
+      return loadEntityList()
+        .beforeEachResponse((component, { url }) => {
+          if (url.includes('.svc/Entities'))
+            checkMessage(component, 'Loading 1 Entity…');
+        });
+    });
+
+    it('loads all entities if there are few of them', () => {
+      createEntities(2);
+      return loadEntityList()
+        .beforeEachResponse((component, { url }) => {
+          if (url.includes('.svc/Entities'))
+            checkMessage(component, 'Loading 2 Entities…');
+        });
+    });
+
+    it('initially loads only the first chunk if there are many entities', () => {
+      createEntities(3);
+      return loadEntityList({
+        props: { top: () => 2 }
+      })
+        .beforeEachResponse((component, config) => {
+          if (config.url.includes('.svc/Entities')) {
+            checkMessage(component, 'Loading the first 2 of 3 Entities…');
+            checkTop(config, 2);
+          }
+        });
+    });
+
+    it('clicking refresh button loads only first chunk of entities', () => {
+      createEntities(3);
+      return loadEntityList({
+        props: { top: () => 2 }
+      })
+        .complete()
+        .request(component =>
+          component.get('#entity-list-refresh-button').trigger('click'))
+        .beforeEachResponse((_, config) => {
+          checkTop(config, 2);
+        })
+        .respondWithData(() => testData.entityOData(2, 0))
+        .afterResponse(component => {
+          checkIds(component, 2);
+        });
+    });
+
+    describe('scrolling', () => {
+      it('scrolling to the bottom loads the next chunk of entity', () => {
+        createEntities(12);
+        // Chunk 1
+        return loadEntityList({
+          props: { top: (loaded) => (loaded < 8 ? 2 : 3) }
+        })
+          .beforeEachResponse((component, { url }) => {
+            if (url.includes('.svc/Entities'))
+              checkMessage(component, 'Loading the first 2 of 12 Entities…');
+          })
+          .afterResponses(component => {
+            checkMessage(component, null);
+          })
+          // Chunk 2
+          .request(scroll)
+          .beforeEachResponse((component, config) => {
+            checkTop(config, 2);
+            checkMessage(component, 'Loading 2 more of 10 remaining Entities…');
+          })
+          .respondWithData(() => testData.entityOData(2, 2))
+          .afterResponse(component => {
+            checkIds(component, 4);
+            checkMessage(component, null);
+          })
+          // Chunk 3
+          .request(scroll)
+          .beforeEachResponse((component, config) => {
+            checkTop(config, 2);
+            checkMessage(component, 'Loading 2 more of 8 remaining Entities…');
+          })
+          .respondWithData(() => testData.entityOData(2, 4))
+          .afterResponse(component => {
+            checkIds(component, 6);
+            checkMessage(component, null);
+          })
+          // Chunk 4 (last small chunk)
+          .request(scroll)
+          .beforeEachResponse((component, config) => {
+            checkTop(config, 2, 6);
+            checkMessage(component, 'Loading 2 more of 6 remaining Entities…');
+          })
+          .respondWithData(() => testData.entityOData(2, 6))
+          .afterResponse(component => {
+            checkIds(component, 8);
+            checkMessage(component, null);
+          })
+          // Chunk 5
+          .request(scroll)
+          .beforeEachResponse((component, config) => {
+            checkTop(config, 3, 8);
+            checkMessage(component, 'Loading 3 more of 4 remaining Entities…');
+          })
+          .respondWithData(() => testData.entityOData(3, 8))
+          .afterResponse(component => {
+            checkIds(component, 11);
+            checkMessage(component, null);
+          })
+          // Chunk 6
+          .request(scroll)
+          .beforeEachResponse((component, config) => {
+            checkTop(config, 3, 11);
+            checkMessage(component, 'Loading the last Entity…');
+          })
+          .respondWithData(() => testData.entityOData(3, 11))
+          .afterResponse(component => {
+            checkIds(component, 12);
+            checkMessage(component, null);
+          });
+      });
+
+      it('does nothing upon scroll if entity request results in error', () => {
+        createEntities(251);
+        return load('/projects/1/entity-lists/trees/entities', { root: false }, {
+          odataEntities: mockResponse.problem
+        })
+          .complete()
+          .testNoRequest(scroll);
+      });
+
+      it('does nothing after user scrolls somewhere other than bottom of page', () => {
+        createEntities(5);
+        return loadEntityList({
+          props: { top: () => 2 }
+        })
+          .complete()
+          .testNoRequest(scroll(false));
+      });
+
+      it('clicking refresh button loads first chunk, even after scrolling', () => {
+        createEntities(5);
+        return loadEntityList({
+          props: { top: () => 2 }
+        })
+          .complete()
+          .request(scroll)
+          .respondWithData(() => testData.entityOData(2, 2))
+          .complete()
+          .request(component =>
+            component.get('#entity-list-refresh-button').trigger('click'))
+          .beforeEachResponse((_, config) => {
+            checkTop(config, 2, 0);
+          })
+          .respondWithData(() => testData.entityOData(2, 0))
+          .afterResponse(component => {
+            checkIds(component, 2);
+          })
+          .request(scroll)
+          .beforeEachResponse((_, config) => {
+            checkTop(config, 2, 2);
+          })
+          .respondWithData(() => testData.entityOData(2, 2));
+      });
+
+      it('scrolling to the bottom has no effect if awaiting response', () => {
+        createEntities(5);
+        return loadEntityList({
+          props: { top: () => 2 }
+        })
+          .complete()
+          // Sends a request.
+          .request(scroll)
+          // This should not send a request. If it does, then the number of
+          // requests will exceed the number of responses, and the mockHttp()
+          // object will throw an error.
+          .beforeAnyResponse(scroll)
+          .respondWithData(() => testData.entityOData(2, 2))
+          .complete()
+          .request(component =>
+            component.get('#entity-list-refresh-button').trigger('click'))
+          // Should not send a request.
+          .beforeAnyResponse(scroll)
+          .respondWithData(() => testData.entityOData(2, 0));
+      });
+
+      it('scrolling has no effect after all entities have been loaded', () => {
+        createEntities(2);
+        return loadEntityList({
+          props: { top: () => 2 }
+        })
+          .complete()
+          .testNoRequest(scroll);
+      });
+    });
+
+    describe('count update', () => {
+      it('does not update requestData.odataEntities.originalCount', () => {
+        createEntities(251);
+        return load('/projects/1/entity-lists/trees/entities', { root: false })
+          .afterResponses(component => {
+            const { requestData } = component.vm.$container;
+            requestData.localResources.odataEntities.originalCount.should.equal(251);
+            requestData.dataset.entities.should.equal(251);
+          })
+          .request(scroll)
+          .respondWithData(() => {
+            testData.extendedEntities.createPast(1);
+            return testData.entityOData(2, 250);
+          })
+          .afterResponse(component => {
+            const { requestData } = component.vm.$container;
+            requestData.localResources.odataEntities.originalCount.should.equal(251);
+          });
       });
     });
   });
