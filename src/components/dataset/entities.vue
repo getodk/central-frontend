@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-    <div>
+  <div>
     <page-section>
       <template #heading>
         <span>{{ $t('resource.entities') }}</span>
