@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="odata-analyze" :state="state" hideable backdrop
+  <modal v-if="!config.oidcEnabled" id="odata-analyze" :state="state" hideable backdrop
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -93,6 +93,7 @@ import Selectable from '../selectable.vue';
 export default {
   name: 'OdataAnalyze',
   components: { Modal, Selectable },
+  inject: ['config'],
   props: {
     state: Boolean,
     odataUrl: String
