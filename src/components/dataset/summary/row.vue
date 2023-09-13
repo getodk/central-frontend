@@ -14,9 +14,12 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6 dataset-name-wrap">
         <div class="dataset-name text-overflow-ellipsis" v-tooltip.text>
-          <router-link :to="datasetPath(projectId, dataset.name)" v-tooltip.text>
+          <router-link v-if="!dataset.isNew" :to="datasetPath(projectId, dataset.name)" v-tooltip.text>
             {{ dataset.name }}
           </router-link>
+          <template v-else>
+            {{ dataset.name }}
+          </template>
         </div>
         <div v-if="dataset.isNew" class="dataset-new">
           <span class="icon-plus-circle"></span>

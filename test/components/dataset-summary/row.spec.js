@@ -25,7 +25,10 @@ describe('Dataset summary row', () => {
         }
       });
       component.get('.dataset-name').text().should.be.equal(dataset.name);
-      component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/entity-lists/${dataset.name}`);
+      if (data.isNew)
+        component.find('.dataset-name a').exists().should.be.false();
+      else
+        component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/entity-lists/${dataset.name}`);
       component.find('.dataset-new').exists().should.be.equal(data.isNew);
       component.get('.properties-count').text().should.be.equal(`${inFormProperties.length} of ${dataset.properties.length} ${dataset.properties.length === 1 ? 'property' : 'properties'}`);
 
@@ -46,7 +49,7 @@ describe('Dataset summary row', () => {
   });
 
   it('should show help text when there is no properties', async () => {
-    const dataset = testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [] }).last();
+    const dataset = testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [] }).last();
     const component = mount(Row, {
       props: { dataset, projectId: 1 },
       container: {
