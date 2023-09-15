@@ -3140,12 +3140,20 @@
         "string": "This Project uses managed encryption."
       },
       "showMore": {
-        "string": "Show {count} total",
+        "string": "Show {count} total Forms",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
+      "showMoreDatasets": {
+        "string": "Show {count} total Entity lists",
+        "developer_comment": "This clickable text is shown below a table of datasets where only a few out of the total number (\"count\") of datasets is shown."
+      },
       "showFewer": {
-        "string": "Show fewer of {count} total",
+        "string": "Show fewer of {count} total Forms",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
+      },
+      "showFewerDatasets": {
+        "string": "Show fewer of {count} total Entity lists",
+        "developer_comment": "This clickable text is shown below an expanded table of datasets that can be collapsed to hide some datasets. \"Count\" refers to the number of datasets."
       }
     },
     "ProjectList": {

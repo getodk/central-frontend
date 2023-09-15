@@ -46,10 +46,10 @@ except according to the terms contained in the LICENSE file.
         <td colspan="6" class="expand-button-container">
           <a href="#" role="button" class="expand-button" @click.prevent="toggleDatasetExpanded">
             <template v-if="!datasetExpanded">
-              {{ $tcn('showMore', numDatasets) }}<span class="icon-angle-down"></span>
+              {{ $tcn('showMoreDatasets', numDatasets) }}<span class="icon-angle-down"></span>
             </template>
             <template v-else>
-              {{ $tcn('showFewer', numDatasets) }}<span class="icon-angle-up"></span>
+              {{ $tcn('showFewerDatasets', numDatasets) }}<span class="icon-angle-up"></span>
             </template>
           </a>
         </td>
@@ -262,10 +262,15 @@ export default {
     "encrypted": "Encrypted",
     "encryptionTip": "This Project uses managed encryption.",
     // This clickable text is shown below a table of forms where only a few out of the total number ("count") of forms is shown.
-    "showMore": "Show {count} total",
+    "showMore": "Show {count} total Forms",
+    // This clickable text is shown below a table of datasets where only a few out of the total number ("count") of datasets is shown.
+    "showMoreDatasets": "Show {count} total Entity lists",
     // This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms.
     // "Count" refers to the number of forms.
-    "showFewer": "Show fewer of {count} total"
+    "showFewer": "Show fewer of {count} total Forms",
+    // This clickable text is shown below an expanded table of datasets that can be collapsed to hide some datasets.
+    // "Count" refers to the number of datasets.
+    "showFewerDatasets": "Show fewer of {count} total Entity lists"
   }
 }
 </i18n>
