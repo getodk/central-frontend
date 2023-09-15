@@ -308,9 +308,7 @@ export default {
       "introduction": {
         "full": "{inAddition} zveřejněním této definice formuláře dojde k následujícím změnám v tomto projektu:",
         "inAddition": "Navíc,"
-      },
-      "newDataset": "Bude vytvořena nová datová sada {datasetName}.",
-      "newProperty": "V Datové sadě {datasetName}, bude vytvořena nová vlastnost {propertyName}."
+      }
     }
   },
   "de": {
@@ -341,9 +339,7 @@ export default {
       "introduction": {
         "full": "{inAddition} durch die Veröffentlichung dieser Formulardefinition werden die folgenden Änderungen an diesem Projekt vorgenommen:",
         "inAddition": "Zusätzlich,"
-      },
-      "newDataset": "Ein neuer Datensatz {datasetName} wird erstellt.",
-      "newProperty": "Im Datensatz {datasetName} wird eine neue Eigenschaft {propertyName} erstellt."
+      }
     }
   },
   "es": {
@@ -374,9 +370,7 @@ export default {
       "introduction": {
         "full": "{inAddition} publicar esta definición de Formulario hará los siguientes cambios a este Proyecto:",
         "inAddition": "Además,"
-      },
-      "newDataset": "Se creará un nuevo conjunto de datos {datasetName}.",
-      "newProperty": "En el conjunto de datos {datasetName}, se creará una nueva propiedad {propertyName}."
+      }
     }
   },
   "fr": {
@@ -408,8 +402,8 @@ export default {
         "full": "{inAddition} publier cette Définition du formualire apportera les changements suivants au Projet :",
         "inAddition": "De plus,"
       },
-      "newDataset": "Un nouveau Dataset {datasetName} va être créé.",
-      "newProperty": "Dans le Dataset {datasetName}, une nouvelle propriété {propertyName} sera créée."
+      "newDataset": "Une nouvelle liste d'entités {datasetName} va être créée.",
+      "newProperty": "Dans la liste d'entités {datasetName}, une nouvelle propriété {propertyName} sera créée."
     }
   },
   "id": {
@@ -447,8 +441,8 @@ export default {
         "full": "{inAddition} la pubblicazione di questa definizione del formulario apporterà le seguenti modifiche a questo progetto:",
         "inAddition": "Inoltre,"
       },
-      "newDataset": "Un nuovo set di dati {datasetName} sarà creato.",
-      "newProperty": "Nel set di dati {datasetName}, una nuova proprietà {propertyName} sarà creata."
+      "newDataset": "Una nuova Lista Entità {datasetName} sarà creata.",
+      "newProperty": "Nella Lista Entità{datasetName}, una nuova proprietà {propertyName} sarà creata."
     }
   },
   "ja": {
@@ -494,9 +488,7 @@ export default {
       "introduction": {
         "full": "{inAddition} kuchapisha ufafanuzi huu wa Fomu kutafanya mabadiliko yafuatayo kwenye Mradi huu:",
         "inAddition": "Zaidi ya hayo,"
-      },
-      "newDataset": "Seti mpya ya Data {datasetName} itaundwa",
-      "newProperty": "Katika Seti ya Data {datasetName}, sifa mpya ya {propertyName} itaundwa"
+      }
     }
   }
 }

@@ -188,6 +188,9 @@ export default {
     },
     "message": "Le formulaire et les données associées sont supprimés après 30 jours passés dans la corbeille"
   },
+  "id": {
+    "title": "Sampah"
+  },
   "it": {
     "title": "Cestino",
     "trashCount": "({count})",

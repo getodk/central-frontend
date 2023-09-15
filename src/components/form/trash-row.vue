@@ -222,6 +222,9 @@ export default {
       "conflict": "Le formulaire ne peut être supprimé car il existe un formulaire actif avec le même ID."
     }
   },
+  "id": {
+    "deletedDate": "Terhapus {dateTime}"
+  },
   "it": {
     "action": {
       "restore": "Ripristina"

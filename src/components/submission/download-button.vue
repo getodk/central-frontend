@@ -113,6 +113,17 @@ export default {
       }
     }
   },
+  "id": {
+    "action": {
+      "download": {
+        "unfiltered": "Unduh {count} Kiriman",
+        "filtered": {
+          "withoutCount": "Unduh Kiriman yang cocok",
+          "withCount": "Unduh {count} Kiriman yang cocok"
+        }
+      }
+    }
+  },
   "it": {
     "action": {
       "download": {

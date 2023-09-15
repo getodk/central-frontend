@@ -71,6 +71,7 @@ export default {
     "version": "Version"
   },
   "id": {
+    "help": "Bantuan",
     "version": "Versi"
   },
   "it": {

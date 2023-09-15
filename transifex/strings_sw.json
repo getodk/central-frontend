@@ -154,7 +154,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "dataset": {
-        "string": "Vitendo vya Seti ya Data",
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
@@ -206,11 +206,11 @@
       "dataset": {
         "update": {
           "string": "Sasisha",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "update_publish": {
           "string": "Kuchapisha",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "field_key": {
@@ -304,6 +304,10 @@
     },
     "comment": {
       "string": "Maoni",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "continue": {
+      "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "create": {
@@ -502,8 +506,16 @@
       "string": "uwasilishaji wa hivi karibuni",
       "developer_comment": "This is the text of a table column header."
     },
+    "recentActivity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "name": {
       "string": "Jina",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "listName": {
+      "string": "",
       "developer_comment": "This is the text of a table column header."
     },
     "submitterName": {
@@ -524,7 +536,7 @@
     },
     "entities": {
       "string": "Jumla ya Mashirika",
-      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the Entity List"
     },
     "lastEntity": {
       "string": "huluki karibuni",
@@ -578,12 +590,8 @@
       "string": "usanidi wa seva",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "dataset": {
-      "string": "Seti ya data",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "datasets": {
-      "string": "Seti za data",
+    "entityList": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
@@ -742,6 +750,12 @@
     "entityId": {
       "string": "Kitambulisho cha huluki",
       "developer_comment": "This is the UUID of an Entity."
+    },
+    "noProperties": {
+      "string": ""
+    },
+    "noEntity": {
+      "string": ""
     }
   },
   "common": {
@@ -839,7 +853,13 @@
     },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} ya sifa za {count}} other {{inform} ya sifa za {count}}}",
-      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
+    },
+    "new": {
+      "string": ""
+    },
+    "totalEntities": {
+      "string": ""
     }
   },
   "mixin": {
@@ -919,6 +939,25 @@
         },
         "changePassword": {
           "string": "Nenosiri lako ni fupi kuliko vibambo 10. Ili kulinda akaunti yako, tafadhali badilisha nenosiri lako ili kuifanya iwe ndefu."
+        }
+      },
+      "oidc": {
+        "body": {
+          "string": ""
+        },
+        "error": {
+          "auth-ok-user-not-found": {
+            "string": ""
+          },
+          "email-not-verified": {
+            "string": ""
+          },
+          "email-claim-not-provided": {
+            "string": ""
+          },
+          "internal-server-error": {
+            "string": ""
+          }
         }
       },
       "problem": {
@@ -1158,18 +1197,39 @@
           "string": "Idadi ya Mali"
         },
         "num_creation_forms": {
-          "string": "Idadi ya Fomu zinazosasisha Seti ya Data"
+          "string": ""
         },
         "num_followup_forms": {
-          "string": "Idadi ya Fomu zinazotumia Hifadhidata"
+          "string": ""
         },
         "num_entities": {
-          "string": "Idadi ya Huluki katika Seti ya Data"
+          "string": ""
         },
         "num_failed_entities": {
           "string": "Idadi ya hitilafu za kuunda Huluki"
         },
         "num_entity_updates": {
+          "string": ""
+        },
+        "sso_enabled": {
+          "string": ""
+        },
+        "num_client_audit_attachments": {
+          "string": ""
+        },
+        "num_client_audit_attachments_failures": {
+          "string": ""
+        },
+        "num_client_audit_rows": {
+          "string": ""
+        },
+        "num_audits_failed": {
+          "string": ""
+        },
+        "num_audits_failed5": {
+          "string": ""
+        },
+        "num_audits_unprocessed": {
           "string": ""
         }
       }
@@ -1203,13 +1263,13 @@
         "string": "Nchi za Uwasilishaji",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
-      "datasets": {
+      "entities": {
         "title": {
-          "string": "Seti ya Data na Muhtasari wa Huluki",
-          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
+          "string": "",
+          "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Inaonyesha Seti ya Data inayotumika zaidi ya Seti ya Data ya {count})} other {(Inaonyesha Seti ya Data inayotumika zaidi ya Seti za Data za {count})}}"
+          "string": "{count, plural, one {} other {}}"
         }
       },
       "other": {
@@ -1260,46 +1320,15 @@
         }
       }
     },
-    "DatasetIntroduction": {
-      "title": {
-        "string": ""
-      },
-      "body": {
+    "DatasetList": {
+      "heading": {
         "0": {
-          "string": ""
+          "string": "",
+          "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
-          "string": "",
-          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "2": {
-          "string": "",
-          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "3": {
-          "string": "",
-          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
-        },
-        "4": {
-          "string": "",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
-        },
-        "5": {
           "string": ""
         }
-      },
-      "getStarted": {
-        "full": {
-          "string": "Kwa maelezo zaidi kuhusu jinsi ya kuanza, {clickHere}.",
-          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
-        },
-        "clickHere": {
-          "string": "Bonyeza hapa",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
-        }
-      },
-      "datasetsWorkflow": {
-        "string": "Mtiririko wa kazi wa seti za data"
       }
     },
     "DatasetOverview": {
@@ -1307,25 +1336,25 @@
         "string": "Viunganisho kwa Fomu",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "datasetProperties": {
-        "string": "Sifa za Seti ya Data",
+      "entityProperties": {
+        "string": "",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "DatasetOverviewConnectionToForms": {
       "formsCreateEntities": {
-        "string": "{count, plural, one {Fomu huunda Huluki katika Seti hizi za Data} other {Fomu huunda Huluki katika Seti hii ya Data}}",
+        "string": "{count, plural, one {} other {}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "Hakuna Sifa katika Seti hii ya Data"
+        "string": ""
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Fomu hutumia data kutoka kwa Hifadhidata hii} other {Fomu hutumia data kutoka kwa Hifadhidata hii}}",
+        "string": "{count, plural, one {} other {}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
@@ -1409,24 +1438,29 @@
     },
     "DatasetShow": {
       "back": {
-        "string": "Rudi kwenye Hifadhidata za Mradi",
+        "string": "",
         "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
       "datasetUpdates": {
-        "string": "{count, plural, one {Seti ya data inasasishwa na Fomu hii:} other {Seti za data zinasasishwa na Fomu hii:}}",
-        "developer_comment": "Number of dataset(s) is shown separately above this text"
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "Number of Entity List(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
       "new": {
         "string": "mpya!",
-        "developer_comment": "This is shown when a dataset is new"
+        "developer_comment": "This is shown when an Entity List is new"
       },
       "addedByThisDraft": {
         "string": "Imeongezwa na Rasimu hii",
-        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Entity Property"
+      }
+    },
+    "DatasetTable": {
+      "emptyTable": {
+        "string": ""
       }
     },
     "Download": {
@@ -1552,6 +1586,11 @@
         "updatedValue": {
           "string": "",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        }
+      },
+      "problem": {
+        "409_15": {
+          "string": ""
         }
       }
     },
@@ -1757,12 +1796,12 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "Kiungo Dataset",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Je, una uhakika unataka kuunganisha Seti ya Data?"
+          "string": ""
         },
         "1": {
           "string": "Faili uliyopakia itafutwa. Unaweza kuipakia tena baadaye."
@@ -1811,7 +1850,7 @@
           "string": "{count, plural, one {faili {count} imepakiwa.} other {faili {count} zimepakiwa.}}"
         },
         "link": {
-          "string": "Seti ya data imeunganishwa"
+          "string": ""
         }
       },
       "datasetsPreview": {
@@ -1820,7 +1859,7 @@
         },
         "body": {
           "0": {
-            "string": "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Seti ya Data. Kwa chaguo-msingi, hizo zimeunganishwa na Seti za Data. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe na Seti za Data pindi tu utakapothibitisha mantiki ya fomu yako."
+            "string": ""
           }
         }
       }
@@ -1939,28 +1978,28 @@
       "notUploaded": {
         "text": {
           "string": "Bado haijapakiwa",
-          "developer_comment": "This is shown for a Media File that has not been uploaded."
+          "developer_comment": "This is shown for a Form Attachment that has not been uploaded."
         },
         "title": {
           "string": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
         }
       },
       "linkedToDataset": {
-        "string": "Imeunganishwa kwenye Seti ya Data {datasetName}",
-        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
+        "string": "",
+        "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
         "string": "Pakia faili ili kubatilisha"
       },
       "action": {
         "linkDataset": {
-          "string": "Unganisha Seti ya Data {datasetName}",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "override": {
         "string": "Batilisha",
-        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
@@ -2209,10 +2248,10 @@
           }
         },
         "newDataset": {
-          "string": "Seti mpya ya Data {datasetName} itaundwa"
+          "string": ""
         },
         "newProperty": {
-          "string": "Katika Seti ya Data {datasetName}, sifa mpya ya {propertyName} itaundwa"
+          "string": ""
         }
       }
     },
@@ -2817,6 +2856,33 @@
         }
       }
     },
+    "OdataLoadingMessage": {
+      "entity": {
+        "withoutCount": {
+          "string": "",
+          "developer_comment": "This text is shown when the number of Entities loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {} other {}}"
+        },
+        "first": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {} other {}}"
+          },
+          "one": {
+            "string": ""
+          }
+        }
+      }
+    },
     "ProjectArchive": {
       "title": {
         "string": "Mradi wa Kuhifadhi kumbukumbu",
@@ -2906,23 +2972,21 @@
             },
             "1": {
               "0": {
-                "string": "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:"
+                "string": "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:",
+                "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
                 "0": {
                   "string": "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa."
-                },
-                "1": {
-                  "string": "katika toleo la baadaye, utakuwa na chaguo la kusimba data iliyopo"
                 }
               },
               "2": {
                 "0": {
                   "string": "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa"
-                },
-                "1": {
-                  "string": "Katika toleo la baadaye, utaweza kuzima usimbaji fiche, ambao utaondoa usimbaji fiche wa data yako. Hii itakuwa kweli hata ukiwezesha usimbaji fiche sasa."
                 }
+              },
+              "3": {
+                "string": ""
               }
             },
             "2": {
@@ -3269,12 +3333,12 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data",
+            "string": "",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
             "string": "Watazamaji wa Mradi",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data"
           }
         },
         "3": {
@@ -3661,7 +3725,7 @@
         },
         "entity": {
           "create": {
-            "string": "Imeunda huluki {label} katika {dataset} seti ya data"
+            "string": ""
           },
           "error": {
             "string": "Tatizo limetokea wakati wa kuunda Huluki"
@@ -3814,6 +3878,9 @@
       }
     },
     "SubmissionList": {
+      "noMatching": {
+        "string": "Hakuna Mawasilisho yanayolingana."
+      },
       "loading": {
         "withoutCount": {
           "string": "Inapakia Mawasilisho...",
@@ -3856,9 +3923,6 @@
             }
           }
         }
-      },
-      "noMatching": {
-        "string": "Hakuna Mawasilisho yanayolingana."
       }
     },
     "SubmissionShow": {
@@ -3904,6 +3968,9 @@
         "string": "Maelezo ya Msingi",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "emailDisabled": {
+        "string": ""
+      },
       "action": {
         "update": {
           "string": "Sasisha maelezo",
@@ -3920,6 +3987,9 @@
       "title": {
         "string": "Badilisha neno la siri",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "oidcBody": {
+        "string": ""
       },
       "action": {
         "change": {
@@ -3943,20 +4013,6 @@
       "title": {
         "string": "Mipangilio ya Mtumiaji",
         "developer_comment": "This is shown as the title at the top of the page."
-      },
-      "tab": {
-        "users": {
-          "string": "Watumiaji wa Mtandao",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "roles": {
-          "string": "Mipangilio ya Wajibu",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        }
-      },
-      "comingSoon": {
-        "string": "(inakuja hivi karibuni)",
-        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
       }
     },
     "UserList": {
@@ -4001,6 +4057,11 @@
       "introduction": {
         "0": {
           "string": "Ukishafungua akaunti hii, barua pepe utakayotoa itatumiwa maelekezo ya jinsi ya kuweka nenosiri na kuendelea."
+        }
+      },
+      "oidcIntroduction": {
+        "0": {
+          "string": ""
         }
       }
     },

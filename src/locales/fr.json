@@ -58,7 +58,7 @@
       "user": "Actions d'utilisateur web",
       "project": "Actions de projet",
       "form": "Actions de formulaire",
-      "dataset": "Actions sur les Datasets",
+      "dataset": "Actions de listes d'entités",
       "field_key": "Actions d'utilisateurs mobiles",
       "public_link": "Actions de liens d'accès public",
       "config": "Actions de configuration du serveur",
@@ -130,6 +130,7 @@
     "clear": "Effacer",
     "close": "Fermer",
     "comment": "Ajouter commentaire",
+    "continue": "Continuer",
     "create": "Créer",
     "createSubmission": "Nouveau",
     "done": "Fait",
@@ -182,7 +183,9 @@
     "email": "Adresse de courriel",
     "instanceId": "ID de l'instance",
     "lastSubmission": "Dernière soumission",
+    "recentActivity": "Activité récente",
     "name": "Nom",
+    "listName": "Nom de la liste",
     "submitterName": "Soumis par",
     "submissionDate": "Soumis à",
     "time": "Heure",
@@ -207,14 +210,14 @@
     "appUser": "Utilisateur mobile",
     "appUsers": "Utilisateurs mobiles",
     "config": "Configuration du serveur",
-    "dataset": "Dataset",
-    "datasets": "Datasets",
+    "entityList": "Liste d'entités",
     "entities": "Entités",
     "form": "Formulaire",
     "forms": "Formulaires",
     "formAttachments": "Fichiers joints du formulaire",
     "project": "Projet",
     "projects": "Projets",
+    "property": "Propriété",
     "publicLink": "Lien d'accès public",
     "user": "Utilisateur",
     "users": "Utilisateurs",
@@ -226,6 +229,7 @@
   },
   "alert": {
     "passwordTooShort": "Merci de renseigner un mot de passe d'au moins 10 caractères.",
+    "updateEntity": "L'entité a été mise à jour !",
     "updateReviewState": "État sauvegardé!",
     "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu."
   },
@@ -255,12 +259,15 @@
     "editDisabled": "Vous ne pouvez pas éditer les soumissions chiffrées",
     "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger.",
     "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement.",
-    "noSubmission": "(aucun)",
+    "noSubmission": "(aucune)",
     "emptyTable": "Il n'y a pas encore de Soumission"
   },
   "entity": {
     "label": "Étiquettes",
-    "entityId": "ID de l'entité"
+    "entityLabel": "Étiquette de l'entité",
+    "entityId": "ID de l'entité",
+    "noProperties": "Ce formulaire définit seulement l'étiquette.",
+    "noEntity": "(aucune)"
   },
   "common": {
     "activity": "Activité",
@@ -291,7 +298,9 @@
     "punctuations": {
       "comma": ","
     },
-    "propertiesCount": "{inform} entité sur {count} | {inform} entités sur {count} | {inform} entité(s) sur {count}"
+    "propertiesCount": "{inform} de {count} propriété | {inform} de {count} propriétés | {inform} de {count} propriété(s)",
+    "new": "Nouveau !",
+    "totalEntities": "Nombre d'entités"
   },
   "mixin": {
     "request": {

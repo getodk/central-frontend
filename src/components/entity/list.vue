@@ -284,6 +284,13 @@ export default {
     },
     "noEntities": "Pas d'entités à montrer."
   },
+  "id": {
+    "action": {
+      "download": {
+        "unfiltered": "Unduh {count} Entitas"
+      }
+    }
+  },
   "it": {
     "action": {
       "download": {

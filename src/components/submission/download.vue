@@ -525,10 +525,17 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     }
   },
   "id": {
+    "exportOptions": "Opsi Ekspor",
     "introduction": [
       "Untuk mengunduh data ini, Anda harus menyediakan frasa sandi. Frasa sandi hanya akan digunakan untuk mendekripsi data anda untuk diunduh, dan akan terhapus dari server setelahnya."
     ],
     "hint": "Petunjuk: {hint}",
+    "noRepeat": "Formulir ini tidak memiliki pengulangan.",
+    "action": {
+      "download": {
+        "mainTable": "Tabel data utama (tanpa pengulangan)"
+      }
+    },
     "alert": {
       "submit": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
     }

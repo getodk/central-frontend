@@ -326,6 +326,28 @@ export default {
     }
   },
   "id": {
+    "enabled": {
+      "null": [
+        "Ingatkan kami nanti.",
+        "Administrator akan terus melihat pesan di bagian atas layar."
+      ],
+      "true": [
+        {},
+        "Metrik apa yang dikirim?"
+      ],
+      "false": [
+        "Kami tidak tertarik untuk berbagi informasi apapun.",
+        "Anda tidak akan melihat pengingat tentang ini lagi."
+      ]
+    },
+    "contact": [
+      "Saya bersedia menyertakan informasi kontak saya dengan laporan tersebut.",
+      "Kami dapat menghubungi anda untuk mempelajari lebih lanjut tentang penggunaan Central oleh anda."
+    ],
+    "field": {
+      "workEmail": "Alamat email kantor",
+      "organization": "Nama Organisasi"
+    },
     "alert": {
       "success": "Pengaturan disimpan!"
     }

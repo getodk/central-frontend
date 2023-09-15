@@ -298,6 +298,7 @@ export default {
   "id": {
     "title": "Menggunakan OData",
     "tab": {
+      "microsoft": "Power BI atau Excel",
       "other": "Lainnya"
     },
     "help": {

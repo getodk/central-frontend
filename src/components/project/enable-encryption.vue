@@ -352,12 +352,10 @@ export default {
           [
             "Kromě toho platí pro tuto verzi ODK Central následující:",
             [
-              "Stávající příspěvky zůstanou nezašifrované.",
-              "V budoucí verzi budete mít možnost šifrovat stávající data."
+              "Stávající příspěvky zůstanou nezašifrované."
             ],
             [
-              "Po aktivaci nelze šifrování vypnout.",
-              "V budoucí verzi budete moci zakázat šifrování, které dešifruje vaše data. To bude platit, i když nyní povolíte šifrování."
+              "Po aktivaci nelze šifrování vypnout."
             ]
           ],
           {
@@ -407,13 +405,12 @@ export default {
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
             [
-              "Existierende Übermittlungen bleiben unverschlüsselt.",
-              "In einer zukünftigen Version werden Sie die Option haben existierende Daten zu verschlüsseln."
+              "Existierende Übermittlungen bleiben unverschlüsselt."
             ],
             [
-              "Verschlüsselung kann nicht deaktiviert werden, nachdem es einmal aktiviert wurde.",
-              "In einer zukünftigen Version werden Sie Verschlüsselung deaktivieren können, was ihre Daten entschlüsseln wird. Dies trifft auch zu, wenn Sie Verschlüsselung jetzt aktivieren."
-            ]
+              "Verschlüsselung kann nicht deaktiviert werden, nachdem es einmal aktiviert wurde."
+            ],
+            "Testeinsendungen zu bestehenden Formularentwürfen werden dauerhaft entfernt."
           ],
           {
             "full": "Sie können {here} mehr über Verschlüsselung erfahren. Wenn sich das wollen, klicken Sie auf Weiter, um fortzufahren.",
@@ -462,13 +459,12 @@ export default {
           [
             "Además, lo siguiente es cierto en esta versión de ODK Central:",
             [
-              "Los envíos existentes permanecerán sin cifrar.",
-              "En una futura versión, tendrá la opción de cifrar los datos existentes."
+              "Los envíos existentes permanecerán sin cifrar."
             ],
             [
-              "El cifrado no podrá ser desactivado una vez activado.",
-              "En una versión futura, usted podrá desactivar el cifrado, que permitirá descifrar sus datos. Esto será efectivo incluso si habilita el cifrado ahora."
-            ]
+              "El cifrado no podrá ser desactivado una vez activado."
+            ],
+            "Los envíos de prueba a los borradores de formularios existentes se eliminarán de forma permanente."
           ],
           {
             "full": "Puede obtener más información sobre el cifrado {here}. Si esto suena como algo que desea hacer, presione siguiente para continuar.",
@@ -517,13 +513,12 @@ export default {
           [
             "En outre, ce qui suit est vrai dans cette version d'ODK Central :",
             [
-              "Les soumissions existantes resteront non chiffrées.",
-              "Dans une prochaine version, vous aurez la possibilité de chiffrer les données existantes."
+              "Les soumissions existantes resteront non chiffrées."
             ],
             [
-              "Le chiffrement ne peut pas être désactivé une fois qu'il est activé.",
-              "Dans une prochaine version, vous pourrez désactiver le chiffrement, ce qui permettra de déchiffrer vos données. Ce sera le cas même si vous activez le chiffrement maintenant."
-            ]
+              "Le chiffrement ne peut pas être désactivé une fois qu'il est activé."
+            ],
+            "Les soumissions de test des ébauches de formulaires existantes seront définitivement supprimées."
           ],
           {
             "full": "Vous pouvez en apprendre plus sur le chiffrement en cliquant {here}. Si il vous semble être utile, cliquez sur Suivant pour procéder.",
@@ -571,12 +566,10 @@ export default {
           [
             "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:",
             [
-              "Kiriman data yang sudah ada akan tetap tidak terenkripsi.",
-              "Pada versi yang akan datang, Anda akan memiliki pilihan untuk mengenkripsi data yang sudah ada."
+              "Kiriman data yang sudah ada akan tetap tidak terenkripsi."
             ],
             [
-              "Enkripsi tidak dapat dimatikan setelah diizinkan.",
-              "Pada versi yang akan datang, Anda akan bisa menonaktifkan enkripsi, yang mana akan mendekripsi data Anda. Ini akan terjadi bahkan apabila Anda mengizinkan enkripsi sekarang."
+              "Enkripsi tidak dapat dimatikan setelah diizinkan."
             ]
           ],
           {
@@ -617,13 +610,12 @@ export default {
           [
             "Inoltre, quanto segue è reale in questa versione di ODK Central:",
             [
-              "Gli invii esistenti rimarranno non crittografati.",
-              "In una versione futura, avrai la possibilità di crittografare i dati esistenti."
+              "Gli invii esistenti rimarranno non crittografati."
             ],
             [
-              "La crittografia non può essere disattivata una volta abilitata.",
-              "In una versione futura, sarai in grado di disabilitare la crittografia, che decrittograferà i tuoi dati. Questo sarà possibile anche se abiliti la crittografia ora."
-            ]
+              "La crittografia non può essere disattivata una volta abilitata."
+            ],
+            "Gli invii di prova ai moduli bozza esistenti verranno rimossi definitivamente."
           ],
           {
             "full": "Puoi imparare di più sulla crittografia {here}. Se questo è quello che desideri, premi Avanti per procedere.",
@@ -671,12 +663,10 @@ export default {
           [
             "また、このバージョンのODK Centralでは以下のようになっています。",
             [
-              "既存の提出されたフォームは暗号化されずに残ります。",
-              "今後のバージョンでは、既存のデータを暗号化するオプションが追加される予定です。"
+              "既存の提出されたフォームは暗号化されずに残ります。"
             ],
             [
-              "一度有効にされた暗号化を無効にすることはできません。",
-              "今後のバージョンでは、暗号化を無効にするとデータが復号化されます。これは現時点で暗号化を有効にしていても同様です。"
+              "一度有効にされた暗号化を無効にすることはできません。"
             ]
           ],
           {
@@ -720,12 +710,10 @@ export default {
           [
             "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:",
             [
-              "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa.",
-              "katika toleo la baadaye, utakuwa na chaguo la kusimba data iliyopo"
+              "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa."
             ],
             [
-              "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa",
-              "Katika toleo la baadaye, utaweza kuzima usimbaji fiche, ambao utaondoa usimbaji fiche wa data yako. Hii itakuwa kweli hata ukiwezesha usimbaji fiche sasa."
+              "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa"
             ]
           ],
           {

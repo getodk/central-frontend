@@ -206,11 +206,11 @@
       "dataset": {
         "update": {
           "string": "",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "update_publish": {
           "string": "",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "field_key": {
@@ -304,6 +304,10 @@
     },
     "comment": {
       "string": "コメント",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "continue": {
+      "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "create": {
@@ -502,8 +506,16 @@
       "string": "最新のフォーム提出日時",
       "developer_comment": "This is the text of a table column header."
     },
+    "recentActivity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "name": {
       "string": "名前",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "listName": {
+      "string": "",
       "developer_comment": "This is the text of a table column header."
     },
     "submitterName": {
@@ -524,7 +536,7 @@
     },
     "entities": {
       "string": "",
-      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the Entity List"
     },
     "lastEntity": {
       "string": "",
@@ -578,11 +590,7 @@
       "string": "サーバー設定",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "dataset": {
-      "string": "",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "datasets": {
+    "entityList": {
       "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
@@ -742,6 +750,12 @@
     "entityId": {
       "string": "",
       "developer_comment": "This is the UUID of an Entity."
+    },
+    "noProperties": {
+      "string": ""
+    },
+    "noEntity": {
+      "string": ""
     }
   },
   "common": {
@@ -839,7 +853,13 @@
     },
     "propertiesCount": {
       "string": "{count, plural, other {}}",
-      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
+    },
+    "new": {
+      "string": ""
+    },
+    "totalEntities": {
+      "string": ""
     }
   },
   "mixin": {
@@ -919,6 +939,25 @@
         },
         "changePassword": {
           "string": "あなたのパスワードは10文字以下です。アカウントを守るため、パスワードを長いものに変更してください。"
+        }
+      },
+      "oidc": {
+        "body": {
+          "string": ""
+        },
+        "error": {
+          "auth-ok-user-not-found": {
+            "string": ""
+          },
+          "email-not-verified": {
+            "string": ""
+          },
+          "email-claim-not-provided": {
+            "string": ""
+          },
+          "internal-server-error": {
+            "string": ""
+          }
         }
       },
       "problem": {
@@ -1171,6 +1210,27 @@
         },
         "num_entity_updates": {
           "string": ""
+        },
+        "sso_enabled": {
+          "string": ""
+        },
+        "num_client_audit_attachments": {
+          "string": ""
+        },
+        "num_client_audit_attachments_failures": {
+          "string": ""
+        },
+        "num_client_audit_rows": {
+          "string": ""
+        },
+        "num_audits_failed": {
+          "string": ""
+        },
+        "num_audits_failed5": {
+          "string": ""
+        },
+        "num_audits_unprocessed": {
+          "string": ""
         }
       }
     },
@@ -1203,10 +1263,10 @@
         "string": "提出済フォームの状態",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
-      "datasets": {
+      "entities": {
         "title": {
           "string": "",
-          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
+          "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
           "string": "{count, plural, other {}}"
@@ -1260,46 +1320,15 @@
         }
       }
     },
-    "DatasetIntroduction": {
-      "title": {
-        "string": ""
-      },
-      "body": {
+    "DatasetList": {
+      "heading": {
         "0": {
-          "string": ""
+          "string": "",
+          "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
-          "string": "",
-          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "2": {
-          "string": "",
-          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "3": {
-          "string": "",
-          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
-        },
-        "4": {
-          "string": "",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
-        },
-        "5": {
           "string": ""
         }
-      },
-      "getStarted": {
-        "full": {
-          "string": "",
-          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
-        },
-        "clickHere": {
-          "string": "",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
-        }
-      },
-      "datasetsWorkflow": {
-        "string": ""
       }
     },
     "DatasetOverview": {
@@ -1307,7 +1336,7 @@
         "string": "",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "datasetProperties": {
+      "entityProperties": {
         "string": "",
         "developer_comment": "This is a title shown above a section of the page."
       }
@@ -1416,17 +1445,22 @@
     "DatasetSummary": {
       "datasetUpdates": {
         "string": "{count, plural, other {}}",
-        "developer_comment": "Number of dataset(s) is shown separately above this text"
+        "developer_comment": "Number of Entity List(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
       "new": {
         "string": "",
-        "developer_comment": "This is shown when a dataset is new"
+        "developer_comment": "This is shown when an Entity List is new"
       },
       "addedByThisDraft": {
         "string": "",
-        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Entity Property"
+      }
+    },
+    "DatasetTable": {
+      "emptyTable": {
+        "string": ""
       }
     },
     "Download": {
@@ -1552,6 +1586,11 @@
         "updatedValue": {
           "string": "",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        }
+      },
+      "problem": {
+        "409_15": {
+          "string": ""
         }
       }
     },
@@ -1939,7 +1978,7 @@
       "notUploaded": {
         "text": {
           "string": "アップロード未完了",
-          "developer_comment": "This is shown for a Media File that has not been uploaded."
+          "developer_comment": "This is shown for a Form Attachment that has not been uploaded."
         },
         "title": {
           "string": "１つ以上のファイルをドラッグ＆ドロップしてアップロードする。"
@@ -1947,7 +1986,7 @@
       },
       "linkedToDataset": {
         "string": "",
-        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
+        "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
         "string": ""
@@ -1960,7 +1999,7 @@
       },
       "override": {
         "string": "",
-        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
@@ -2817,6 +2856,33 @@
         }
       }
     },
+    "OdataLoadingMessage": {
+      "entity": {
+        "withoutCount": {
+          "string": "",
+          "developer_comment": "This text is shown when the number of Entities loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, other {}}"
+        },
+        "first": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, other {}}"
+          },
+          "one": {
+            "string": ""
+          }
+        }
+      }
+    },
     "ProjectArchive": {
       "title": {
         "string": "プロジェクトのアーカイブ",
@@ -2906,23 +2972,21 @@
             },
             "1": {
               "0": {
-                "string": "また、このバージョンのODK Centralでは以下のようになっています。"
+                "string": "また、このバージョンのODK Centralでは以下のようになっています。",
+                "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
                 "0": {
                   "string": "既存の提出されたフォームは暗号化されずに残ります。"
-                },
-                "1": {
-                  "string": "今後のバージョンでは、既存のデータを暗号化するオプションが追加される予定です。"
                 }
               },
               "2": {
                 "0": {
                   "string": "一度有効にされた暗号化を無効にすることはできません。"
-                },
-                "1": {
-                  "string": "今後のバージョンでは、暗号化を無効にするとデータが復号化されます。これは現時点で暗号化を有効にしていても同様です。"
                 }
+              },
+              "3": {
+                "string": ""
               }
             },
             "2": {
@@ -3269,12 +3333,12 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers}は、このプロジェクトの全てのフォームにアクセスし、ダウンロードできますが、設定やデータの変更はできません。",
+            "string": "",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
             "string": "プロジェクト・閲覧者",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data"
           }
         },
         "3": {
@@ -3814,6 +3878,9 @@
       }
     },
     "SubmissionList": {
+      "noMatching": {
+        "string": "照合できる提出済フォームはありません。"
+      },
       "loading": {
         "withoutCount": {
           "string": "提出済フォームの読み込み中...",
@@ -3856,9 +3923,6 @@
             }
           }
         }
-      },
-      "noMatching": {
-        "string": "照合できる提出済フォームはありません。"
       }
     },
     "SubmissionShow": {
@@ -3904,6 +3968,9 @@
         "string": "基本詳細",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "emailDisabled": {
+        "string": ""
+      },
       "action": {
         "update": {
           "string": "詳細の更新",
@@ -3920,6 +3987,9 @@
       "title": {
         "string": "パスワードの変更",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "oidcBody": {
+        "string": ""
       },
       "action": {
         "change": {
@@ -3943,20 +4013,6 @@
       "title": {
         "string": "ユーザー管理",
         "developer_comment": "This is shown as the title at the top of the page."
-      },
-      "tab": {
-        "users": {
-          "string": "Webユーザー",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "roles": {
-          "string": "役割設定",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        }
-      },
-      "comingSoon": {
-        "string": "（近日公開）",
-        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
       }
     },
     "UserList": {
@@ -4001,6 +4057,11 @@
       "introduction": {
         "0": {
           "string": "このアカウントを作成すると、登録したメールアドレスにパスワード設定方法と今後の手順を記載したメールが送信されます。"
+        }
+      },
+      "oidcIntroduction": {
+        "0": {
+          "string": ""
         }
       }
     },

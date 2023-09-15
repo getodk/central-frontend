@@ -125,6 +125,7 @@ const submit = () => {
   },
   "fr": {
     "title": "Détails de base",
+    "emailDisabled": "Votre adresse de courriel ne peut être changée. Elle est utilisée entre Central et votre serveur de connexion pour vérifier votre identité.",
     "action": {
       "update": "Mettre à jour les détails"
     },
@@ -143,6 +144,7 @@ const submit = () => {
   },
   "it": {
     "title": "Dettagli di base",
+    "emailDisabled": "L'indirizzo e-mail non può essere modificato. Viene utilizzato tra Central e il server di login per garantire l'identità dell'utente.",
     "action": {
       "update": "Aggiornare dettagli"
     },

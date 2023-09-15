@@ -58,7 +58,6 @@
       "user": "Webnutzer-Aktionen",
       "project": "Projekt-Aktionen",
       "form": "Formular-Aktionen",
-      "dataset": "Dataset-Aktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
       "config": "Server-Konfigurationsaktionen",
@@ -183,6 +182,7 @@
     "instanceId": "Instanz-ID",
     "lastSubmission": "Letzte Übermittlung",
     "name": "Name",
+    "listName": "Name der Liste",
     "submitterName": "Übermittelt von",
     "submissionDate": "Übermittelt um",
     "time": "Zeit",
@@ -207,14 +207,13 @@
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
     "config": "Server-Konfiguration",
-    "dataset": "Datensatz",
-    "datasets": "Datensätze",
     "entities": "Entitäten",
     "form": "Formular",
     "forms": "Formulare",
     "formAttachments": "Formularanhänge",
     "project": "Projekt",
     "projects": "Projekte",
+    "property": "Eigenschaft",
     "publicLink": "Öffentlicher Zugangslink",
     "user": "Benutzer",
     "users": "Benutzer",
@@ -226,6 +225,7 @@
   },
   "alert": {
     "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
+    "updateEntity": "Das Objekt wurde aktualisiert!",
     "updateReviewState": "Überprüfungsstatus gespeichert!",
     "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden."
   },
@@ -260,7 +260,9 @@
   },
   "entity": {
     "label": "Etikett",
-    "entityId": "Entitäts-ID"
+    "entityLabel": "Objektbezeichnung",
+    "entityId": "Entitäts-ID",
+    "noEntity": "(keine)"
   },
   "common": {
     "activity": "Aktivität",
@@ -291,7 +293,8 @@
     "punctuations": {
       "comma": ","
     },
-    "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften"
+    "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
+    "new": "Neu!"
   },
   "mixin": {
     "request": {

@@ -130,6 +130,9 @@ export default {
     "title": "Créer un utilisateur web",
     "introduction": [
       "Une fois que vous aurez créé ce compte, l'adresse de courriel que vous aurez fournie recevra des instructions sur la manière de définir un mot de passe et de procéder."
+    ],
+    "oidcIntroduction": [
+      "Les utilisateurs de votre serveur de connexion doivent avoir un compte Central pour se connecter à Central. Une fois ce compte créé, l'utilisateur de votre serveur de connexion ayant cette adresse de courriel pourra se connecter à Central."
     ]
   },
   "id": {
@@ -142,6 +145,9 @@ export default {
     "title": "Crea un Utente Web",
     "introduction": [
       "Una volta creato questo account, all'indirizzo email fornito verranno inviate le istruzioni su come impostare una password e procedere."
+    ],
+    "oidcIntroduction": [
+      "Gli utenti del server di accesso devono avere un account Central per accedere a Central. Una volta creato questo account, l'utente del server di accesso con l'indirizzo e-mail fornito potrà accedere a Central."
     ]
   },
   "ja": {

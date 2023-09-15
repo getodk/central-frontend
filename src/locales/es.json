@@ -58,7 +58,7 @@
       "user": "Acciones de usuarios web",
       "project": "Acciones de proyectos",
       "form": "Acciones de formulario",
-      "dataset": "Acciones de conjuntos de datos",
+      "dataset": "Acciones de la lista de entidades",
       "field_key": "Acciones de usuarios móviles",
       "public_link": "Acciones de enlace de acceso público",
       "config": "Acciones de configuración del servidor",
@@ -182,7 +182,9 @@
     "email": "Correo electrónico",
     "instanceId": "Instancia del ID",
     "lastSubmission": "Último envío",
+    "recentActivity": "Actividad reciente",
     "name": "Nombre",
+    "listName": "Nombre de la lista",
     "submitterName": "Enviado por",
     "submissionDate": "Enviado a",
     "time": "Tiempo",
@@ -207,14 +209,14 @@
     "appUser": "Usuario móvil",
     "appUsers": "Usuarios móviles",
     "config": "Configuración del servidor",
-    "dataset": "Conjunto de datos",
-    "datasets": "Conjuntos de datos",
+    "entityList": "Lista de entidades",
     "entities": "Entidades",
     "form": "Formulario",
     "forms": "Formularios",
     "formAttachments": "Adjuntos de formulario",
     "project": "Proyecto",
     "projects": "Proyectos",
+    "property": "Propiedad",
     "publicLink": "Enlace de acceso público",
     "user": "Usuario",
     "users": "Usuarios",
@@ -226,6 +228,7 @@
   },
   "alert": {
     "passwordTooShort": "Introduzca una contraseña de al menos 10 caracteres.",
+    "updateEntity": "¡La Entidad ha sido actualizada!",
     "updateReviewState": "Estado de revisión guardado!",
     "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles."
   },
@@ -260,7 +263,10 @@
   },
   "entity": {
     "label": "Etiqueta",
-    "entityId": "ID de la entidad"
+    "entityLabel": "Etiqueta de la entidad",
+    "entityId": "ID de la entidad",
+    "noProperties": "Este formulario sólo define la \"etiqueta\".",
+    "noEntity": "(ninguno)"
   },
   "common": {
     "activity": "Actividad",
@@ -291,7 +297,9 @@
     "punctuations": {
       "comma": ","
     },
-    "propertiesCount": "{inform} de {count} propiedad | {inform} de {count} propiedades | {inform} de {count} propiedades"
+    "propertiesCount": "{inform} de {count} propiedad | {inform} de {count} propiedades | {inform} de {count} propiedades",
+    "new": "Nuevo!",
+    "totalEntities": "Entidades totales"
   },
   "mixin": {
     "request": {

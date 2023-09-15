@@ -192,6 +192,13 @@ const { reviewStateIcon } = useReviewState();
   "cs": {
     "title": {
       "submission": {
+        "create": {
+          "notDeleted": "Podání {instanceName} nahrané {submitter}",
+          "deleted": {
+            "full": "{deletedSubmission} nahráno od {name}",
+            "deletedSubmission": "(smazané podání {id})"
+          }
+        },
         "approval": {
           "full": "{reviewState} u {name}",
           "reviewState": "Schváleno"
@@ -199,7 +206,10 @@ const { reviewStateIcon } = useReviewState();
       },
       "entity": {
         "create": {
-          "submission": "Vytvořená entita {label} v datové sadě {dataset}"
+          "api": "Entita {label} vytvořena od {name}"
+        },
+        "update_version": {
+          "api": "Data aktualizovaná od {name}"
         }
       }
     }
@@ -207,6 +217,13 @@ const { reviewStateIcon } = useReviewState();
   "de": {
     "title": {
       "submission": {
+        "create": {
+          "notDeleted": "Übermittlung {instanceName}hochgeladen von{submitter}",
+          "deleted": {
+            "full": "{deletedSubmission} hochgeladen von{name}",
+            "deletedSubmission": "(Gelöschte Übermittlungen {id})"
+          }
+        },
         "approval": {
           "full": "{reviewState} • {name}",
           "reviewState": "Bestätigt"
@@ -214,7 +231,10 @@ const { reviewStateIcon } = useReviewState();
       },
       "entity": {
         "create": {
-          "submission": "Geschaffene Entität {label} in {dataset} Datensatz"
+          "api": "Entität {label} erstellt von {name}"
+        },
+        "update_version": {
+          "api": "Daten aktualisiert von{name}"
         }
       }
     }
@@ -222,6 +242,13 @@ const { reviewStateIcon } = useReviewState();
   "es": {
     "title": {
       "submission": {
+        "create": {
+          "notDeleted": "Envío {instanceName}subido por{submitter}",
+          "deleted": {
+            "full": "{deletedSubmission}subido por{name}",
+            "deletedSubmission": "(envío eliminado{id})"
+          }
+        },
         "approval": {
           "full": "{reviewState} por {name}",
           "reviewState": "Aprobado"
@@ -229,7 +256,10 @@ const { reviewStateIcon } = useReviewState();
       },
       "entity": {
         "create": {
-          "submission": "Entidad creada {label} en {dataset} Conjunto de datos"
+          "api": "Entidad {label}creada por{name}"
+        },
+        "update_version": {
+          "api": "Datos actualizados por {name}"
         }
       }
     }
@@ -237,6 +267,13 @@ const { reviewStateIcon } = useReviewState();
   "fr": {
     "title": {
       "submission": {
+        "create": {
+          "notDeleted": "Soumission {instanceName} téléversée par {submitter}",
+          "deleted": {
+            "full": "{deletedSubmission} téléversée par {name}",
+            "deletedSubmission": "(Soumission {id}supprimée)"
+          }
+        },
         "approval": {
           "full": "{reviewState} par {name}",
           "reviewState": "Approuvée"
@@ -244,7 +281,29 @@ const { reviewStateIcon } = useReviewState();
       },
       "entity": {
         "create": {
-          "submission": "Création de l'Entité {label} dans le Dataset {dataset}"
+          "api": "Entité {label}créée par {name}",
+          "submission": "Création de l'entité {label} dans la liste {dataset}"
+        },
+        "update_version": {
+          "api": "Donnée mise à jour par {name}"
+        }
+      }
+    }
+  },
+  "id": {
+    "title": {
+      "submission": {
+        "approval": {
+          "full": "{reviewState} oleh {name}",
+          "reviewState": "Disetujui"
+        }
+      },
+      "entity": {
+        "create": {
+          "api": "Entitas {label} dibuat oleh {name}"
+        },
+        "update_version": {
+          "api": "Data diperbarui oleh {name}"
         }
       }
     }
@@ -267,7 +326,7 @@ const { reviewStateIcon } = useReviewState();
       "entity": {
         "create": {
           "api": "Entità {label} creata da {name}",
-          "submission": "Entità creata {label} in {dataset} set di dati"
+          "submission": "Entità creata {label} in {dataset} Lista Entità"
         },
         "update_version": {
           "api": "Dati aggiornati da {name}"
@@ -291,11 +350,6 @@ const { reviewStateIcon } = useReviewState();
         "approval": {
           "full": "{reviewState} kwa {name}",
           "reviewState": "Imeidhinishwa"
-        }
-      },
-      "entity": {
-        "create": {
-          "submission": "Imeunda huluki {label} katika {dataset} seti ya data"
         }
       }
     }

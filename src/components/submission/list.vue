@@ -413,171 +413,27 @@ export default {
 <i18n>
 {
   "cs": {
-    "loading": {
-      "withoutCount": "Načítání příspěvků…",
-      "all": "Načítání {count} příspěvku ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ...",
-      "first": "Načítání prvního {top} z {count} příspěvku… | Načítání prvního {top} ze {count} příspěvků… | Načítání prvního {top} z {count} příspěvků… | Načítání prvního {top} z {count} příspěvků…",
-      "middle": "Načítání {top} z dalšího {count} zbývajícího příspěvku… | Načítání {top} z dalších {count} zbývajících příspěvků… | Načítání {top} z dalších {count} zbývajících příspěvků… | Načítání {top} z dalších {count} zbývajících příspěvků…",
-      "last": {
-        "multiple": "Načítání posledního {count} příspěvku… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků…",
-        "one": "Načítání posledního příspěvku…"
-      },
-      "filtered": {
-        "withoutCount": "Načítání odpovídajících příspěvků…",
-        "middle": "Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…",
-        "last": {
-          "multiple": "Načítání posledního {count} odpovídajícího příspěvku… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků…",
-          "one": "Načítání posledního odpovídajícího příspěvku…"
-        }
-      }
-    },
     "noMatching": "Neexistují žádné odpovídající příspěvky."
   },
   "de": {
-    "loading": {
-      "withoutCount": "Übermittlungen laden...",
-      "all": "{count} Übermittlung laden... | {count} Übermittlungen laden...",
-      "first": "Lade die ersten {top} von {count} Übermittlung... | Lade die ersten {top} von {count} Übermittlungen...",
-      "middle": "Lade weitere {top} von {count} übrigen Übermittlung... | Lade weitere {top} von {count} übrigen Übermittlungen...",
-      "last": {
-        "multiple": "Die letzte {count} Übermittlung laden... | Die letzten {count} Übermittlungen laden...",
-        "one": "Letzte Übermittlung laden..."
-      },
-      "filtered": {
-        "withoutCount": "Lade passende Übermittlungen...",
-        "middle": "Lade weitere {top} von {count} übrigen passenden Übermittlung... | Lade weitere {top} von {count} übrigen passenden Übermittlungen...",
-        "last": {
-          "multiple": "Lade die letzte {count} passenden Übermittlung... | Lade die letzten {count} passenden Übermittlungen...",
-          "one": "Lade die letzten passenden Übermittlungen..."
-        }
-      }
-    },
     "noMatching": "Es gibt keine passenden Übermittlungen."
   },
   "es": {
-    "loading": {
-      "withoutCount": "Cargando los envíos...",
-      "all": "Cargando {count} envío... | Cargando {count} envíos... | Cargando {count} envíos...",
-      "first": "Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios...",
-      "middle": "Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes...",
-      "last": {
-        "multiple": "Cargando el último {count} envío... | Cargando los últimos {count} envíos... | Cargando los últimos {count} envíos...",
-        "one": "Cargando el último envío..."
-      },
-      "filtered": {
-        "withoutCount": "Cargando envíos coincidentes…",
-        "middle": "Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes...",
-        "last": {
-          "multiple": "Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes…",
-          "one": "Cargando el último envío coincidente…"
-        }
-      }
-    },
     "noMatching": "No hay envíos coincidentes."
   },
   "fr": {
-    "loading": {
-      "withoutCount": "Chargement des soumissions...",
-      "all": "Chargement de {count} soumission... | Chargement de {count} soumissions... | Chargement de {count} soumissions...",
-      "first": "Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions...",
-      "middle": "Chargement de {top} autres de {count} soumission restante... | Chargement de {top} autres des {count} soumissions restantes... | Chargement de {top} autres des {count} soumissions restantes...",
-      "last": {
-        "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions... | Chargement des {count} dernières soumissions...",
-        "one": "Chargement la dernière soumission..."
-      },
-      "filtered": {
-        "withoutCount": "Chargement des soumissions correspondantes...",
-        "middle": "Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes...",
-        "last": {
-          "multiple": "Chargement d'{count} dernière soumission correspondante... | Chargement des {count} dernières soumissions correspondantes... | Chargement des {count} dernières soumissions correspondantes...",
-          "one": "Chargement de la dernière soumission correspondante..."
-        }
-      }
-    },
     "noMatching": "Il n'y a pas de soumission correspondante."
   },
   "id": {
-    "loading": {
-      "withoutCount": "Memuat kiriman data...",
-      "all": "Memuat {count} kiriman data...",
-      "first": "Memuat yang pertama {top} dari {count} Pengiriman…",
-      "middle": "Memuat {top} dari {count} sisa Pengiriman…",
-      "last": {
-        "multiple": "Memuat {count} kiriman data terakhir...",
-        "one": "Memuat kiriman data terakhir..."
-      },
-      "filtered": {
-        "withoutCount": "Memuat Pengiriman yang cocok...",
-        "middle": "Memuat {top} dari {count} sisa Pengiriman yang cocok…",
-        "last": {
-          "multiple": "Memuat sisa {count} Pengiriman yang cocok…",
-          "one": "Memuat Pengiriman terakhir yang cocok"
-        }
-      }
-    },
     "noMatching": "Tidak ada Pengiriman yang cocok."
   },
   "it": {
-    "loading": {
-      "withoutCount": "Caricando invii...",
-      "all": "Cricando {count} invio... | Cricando {count} invii... | Caricando {count} invii...",
-      "first": "Loading the first {top} of {count} Submission… | Caricando il primo {top} di {count} Invio… | Caricando il primo {top} di {count} Invio…",
-      "middle": "Caricamento di {top} in più di {count} invio rimanente... | Caricamento di {top} in più di {count} invii rimanenti... | Caricamento di {top} in più di {count} invii rimanenti...",
-      "last": {
-        "multiple": "Caricando l'ultimo {count} invio… | Caricando gli ultimi {count} invii… | Caricando gli ultimi {count} invii…",
-        "one": "Caricamento dell'ultimo invio in corso..."
-      },
-      "filtered": {
-        "withoutCount": "Caricando invii corrispondenti...",
-        "middle": "Caricamento di {top} in più di {count} invio corrispondente rimanente... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti...",
-        "last": {
-          "multiple": "Caricando l'ultimo {count} invio corrispondente… | Caricando gli ultimi {count} invii corrispondenti… | Caricando gli ultimi {count} invii corrispondenti…",
-          "one": "Caricando gli ultimi invii corrispondenti..."
-        }
-      }
-    },
     "noMatching": "Non sono presenti invii corrispondenti."
   },
   "ja": {
-    "loading": {
-      "withoutCount": "提出済フォームの読み込み中...",
-      "all": "{count}の提出済フォームを読み込み中...",
-      "first": "{count}件の提出済フォームの内、最初の{top}を読み込み中...",
-      "middle": "残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...",
-      "last": {
-        "multiple": "最後の{count}件の提出済フォームを読み込み中...",
-        "one": "最後の提出済フォームを読み込み中..."
-      },
-      "filtered": {
-        "withoutCount": "照合できる提出済フォームの読み込み中...",
-        "middle": "一致する残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...",
-        "last": {
-          "multiple": "一致する最後の{count}件の提出済フォームを読み込み中...",
-          "one": "最後の照合できる提出済フォームを読み込み中..."
-        }
-      }
-    },
     "noMatching": "照合できる提出済フォームはありません。"
   },
   "sw": {
-    "loading": {
-      "withoutCount": "Inapakia Mawasilisho...",
-      "all": "Inapakia Mawasilisho {count}... | Inapakia Mawasilisho {count}...",
-      "first": "Inapakia {top} ya kwanza kati ya Mawasilisho {count}... | Inapakia {top} ya kwanza kati ya Mawasilisho {count}...",
-      "middle": "Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia... | Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia...",
-      "last": {
-        "multiple": "Inapakia Mawasilisho {count} ya mwisho... | Inapakia Mawasilisho {count} ya mwisho...",
-        "one": "Inapakia Wasilisho la mwisho..."
-      },
-      "filtered": {
-        "withoutCount": "Inapakia Mawasilisho yanayolingana...",
-        "middle": "Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana... | Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana...",
-        "last": {
-          "multiple": "Inapakia Mawasilisho {count} ya mwisho yanayolingana... | Inapakia Mawasilisho {count} ya mwisho yanayolingana...",
-          "one": "Inapakia Wasilisho linalolingana la mwisho..."
-        }
-      }
-    },
     "noMatching": "Hakuna Mawasilisho yanayolingana."
   }
 }

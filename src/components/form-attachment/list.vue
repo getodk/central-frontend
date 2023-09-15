@@ -498,13 +498,7 @@ export default {
       "someUploaded": "{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}. | {message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}."
     },
     "alert": {
-      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
-      "link": "Datová sada byla úspěšně propojena."
-    },
-    "entitiesTesting": {
-      "body": [
-        "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy datových sad. Ve výchozím nastavení jsou tyto soubory propojeny s datovými sadami. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit s Datasety, jakmile ověříte logiku formuláře."
-      ]
+      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno."
     }
   },
   "de": {
@@ -523,13 +517,7 @@ export default {
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
-      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
-      "link": "Datensatz erfolgreich verknüpft."
-    },
-    "entitiesTesting": {
-      "body": [
-        "Mindestens ein Formularanhang hat Dateinamen, die mit Datensatznamen übereinstimmen. Standardmässig sind diese mit Datensätzen verknüpft. Zu Testzwecken können Sie temporäre Daten als CSV-Dateien hochladen und dann eine Verknüpfung zu den Datensätzen herstellen, sobald Sie Ihre Formularlogik überprüft haben."
-      ]
+      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
     }
   },
   "es": {
@@ -549,12 +537,10 @@ export default {
     },
     "alert": {
       "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente.",
-      "link": "Conjunto de datos vinculado con éxito."
+      "link": "Lista de entidades enlazada correctamente."
     },
     "entitiesTesting": {
-      "body": [
-        "Uno o más adjuntos de formulario tienen nombres de archivo que coinciden con los nombres de los conjuntos de datos. De forma predeterminada, están vinculados a conjuntos de datos. Para realizar pruebas, es posible que desee cargar datos temporales como archivos .csv y luego vincularlos a los conjuntos de datos una vez que haya verificado la lógica de su formulario."
-      ]
+      "title": "Comprobación de las entidades"
     }
   },
   "fr": {
@@ -574,11 +560,12 @@ export default {
     },
     "alert": {
       "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés.",
-      "link": "Dataset lié avec succès"
+      "link": "Liste d'entités liée avec succès."
     },
     "entitiesTesting": {
+      "title": "Tester les entités",
       "body": [
-        "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de Datasets. Par défaut, ils sont liés aux Datasets. Pour tester, vous pouvez envoyer des de fichiers .csv de données temporaires, puis les lier aux Datasets une fois que vous aurez vérifié la logique de votre formulaire."
+        "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de listes d'entités. Par défaut, ils sont liés aux listes d'entités. Pour tester, vous pouvez joindre des fichiers .csv de données temporaires. Vous pourrez ensuite rétablir les liens aux listes d'entités une fois que vous aurez vérifié la logique de votre formulaire."
       ]
     }
   },
@@ -614,12 +601,12 @@ export default {
     },
     "alert": {
       "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo",
-      "link": "Set di dati collegato correttamente."
+      "link": "Lista Entità collegata correttamente."
     },
     "entitiesTesting": {
-      "title": "Testando i set di dati",
+      "title": "Testando le Entità",
       "body": [
-        "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi dei set di dati. Per impostazione predefinita, questi sono collegati ai set di dati. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti ai set di dati dopo aver verificato la logica del formulario."
+        "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi della Lista Entità. Per impostazione predefinita, questi sono collegati alle Liste Entità. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti alle Liste Entità dopo aver verificato la logica del formulario."
       ]
     }
   },
@@ -654,13 +641,7 @@ export default {
       "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
     },
     "alert": {
-      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa.",
-      "link": "Seti ya data imeunganishwa"
-    },
-    "entitiesTesting": {
-      "body": [
-        "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Seti ya Data. Kwa chaguo-msingi, hizo zimeunganishwa na Seti za Data. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe na Seti za Data pindi tu utakapothibitisha mantiki ya fomu yako."
-      ]
+      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
     }
   }
 }

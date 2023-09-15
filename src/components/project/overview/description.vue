@@ -141,6 +141,9 @@ export default {
     },
     "note": "Seuls les Gestionnaires de Projet peuvent voir cette suggestion."
   },
+  "id": {
+    "note": "Hanya Manajer Proyek yang dapat melihat saran ini."
+  },
   "it": {
     "instructions": {
       "full": "Aggiungi note di progetto, collegamenti, istruzioni e altre risorse a questo spazio in {projectSettings}.",

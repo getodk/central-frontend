@@ -64,6 +64,9 @@ export default {
   "fr": {
     "title": "Nouvelles"
   },
+  "id": {
+    "title": "Berita"
+  },
   "it": {
     "title": "Novità"
   },

@@ -158,6 +158,7 @@ export default {
   },
   "id": {
     "header": {
+      "latest": "Terbaru",
       "idAndVersion": "ID dan Versi"
     }
   },

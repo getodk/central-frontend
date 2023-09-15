@@ -92,6 +92,12 @@ export default {
       "newest": "Plus récent"
     }
   },
+  "id": {
+    "sortOptions": {
+      "alphabetical": "Urutan Abjad",
+      "newest": "Terbaru"
+    }
+  },
   "it": {
     "sortOptions": {
       "alphabetical": "Alfabetico",
