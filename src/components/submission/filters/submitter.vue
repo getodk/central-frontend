@@ -193,6 +193,13 @@ const placeholder = (counts) => t('placeholder', counts);
   "id": {
     "field": {
       "submitter": "Terkirim oleh"
+    },
+    "placeholder": "{selected} dari {total}",
+    "action": {
+      "select": {
+        "all": "Semua",
+        "none": "Tidak Ada"
+      }
     }
   },
   "it": {

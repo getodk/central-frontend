@@ -223,8 +223,8 @@ export default {
       "subtitle": "(Zobrazuje {count} nejaktivnější projekt projektu) | (Zobrazuje {count} nejaktivnější projekty projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu)"
     },
     "submissionStates": "Stavy odeslání",
-    "datasets": {
-      "title": "Souhrny datových sad a entit"
+    "entities": {
+      "title": "Souhrny subjektů"
     },
     "other": "Jiné"
   },
@@ -240,10 +240,6 @@ export default {
       "subtitle": "(Zeigt das aktivste Projekt der {count} Projekt) | (Zeigt das aktivste Projekt der {count} Projekte)"
     },
     "submissionStates": "Einsendungenstatus",
-    "datasets": {
-      "title": "Datensatz- und Entitätszusammenfassungen",
-      "subtitle": "(Zeigt das aktivste Datensatz der {count} Datensatz) | (Zeigt das aktivste Datensatz der {count} Datensätze)"
-    },
     "other": "Anderes"
   },
   "es": {
@@ -258,9 +254,8 @@ export default {
       "subtitle": "(Mostrando el Proyecto más activo de {count} Proyecto) | (Mostrando el Proyecto más activo de {count} Proyectos) | (Mostrando el Proyecto más activo de {count} Proyectos)"
     },
     "submissionStates": "Estados de envío",
-    "datasets": {
-      "title": "Resúmenes de conjuntos de datos y entidades",
-      "subtitle": "(Mostrando el conjunto de datos más activo de {count} conjunto de datos) | (Mostrando el conjunto de datos más activo de {count} conjuntos de datos) | (Mostrando el conjunto de datos más activo de {count} conjuntos de datos)"
+    "entities": {
+      "title": "Resúmenes de entidades"
     },
     "other": "Otro"
   },
@@ -276,9 +271,9 @@ export default {
       "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
     },
     "submissionStates": "États des soumissions",
-    "datasets": {
-      "title": "Résumé des Datasets et des Entités",
-      "subtitle": "(Affiche le plus Dataset le plus actif parmi {count} Datasets) | (Affiche le plus Dataset le plus actif parmi {count} Datasets) | (Affiche le plus Dataset le plus actif parmi {count} Datasets)"
+    "entities": {
+      "title": "Résumés des entités",
+      "subtitle": "(Montre la liste d'entités la plus active de {count} liste d'entités) | (Montre la liste d'entités la plus active de {count} listes d'entités) | (Montre la liste d'entités la plus active de {count} listes d'entités)"
     },
     "other": "Autre"
   },
@@ -294,9 +289,9 @@ export default {
       "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti) | (Visualizzazione del progetto più attivo di {count} Progetti)"
     },
     "submissionStates": "Stato invio",
-    "datasets": {
-      "title": "Riepiloghi di set di dati e entità",
-      "subtitle": "(Mostra il set di dati più attivo {count} di set di dati) | (Mostra il set di dati più attivo {count} di set di dati) | (Mostra il set di dati più attivo {count} di set di dati)"
+    "entities": {
+      "title": "Riassunti delle entità",
+      "subtitle": "(Visualizzazione della Lista Entità più attiva di {count} Lista Entità) | (Visualizzazione delle Liste Entità più attive di {count} Liste Entità) | (Visualizzazione della Lista Entità più attiva di {count} Liste Entità)"
     },
     "other": "Altro"
   },
@@ -325,10 +320,6 @@ export default {
       "subtitle": "(Inaonyesha Mradi amilifu zaidi wa Mradi ya {count}) | (Inaonyesha Mradi amilifu zaidi wa Miradi ya {count})"
     },
     "submissionStates": "Nchi za Uwasilishaji",
-    "datasets": {
-      "title": "Seti ya Data na Muhtasari wa Huluki",
-      "subtitle": "(Inaonyesha Seti ya Data inayotumika zaidi ya Seti ya Data ya {count}) | (Inaonyesha Seti ya Data inayotumika zaidi ya Seti za Data za {count})"
-    },
     "other": "Nyingine"
   }
 }

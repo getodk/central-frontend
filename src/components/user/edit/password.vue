@@ -164,6 +164,7 @@ export default {
   },
   "fr": {
     "title": "Changer le mot de passe",
+    "oidcBody": "Ce serveur Central ne gère aucun mot de passe de connexion.",
     "action": {
       "change": "Changer le mot de passe"
     },
@@ -186,6 +187,7 @@ export default {
   },
   "it": {
     "title": "Cambiare la password",
+    "oidcBody": "Questo Central server non gestisce alcuna password di accesso.",
     "action": {
       "change": "Cambiare la password"
     },

@@ -57,68 +57,28 @@ const { tabPath, tabClass } = useTabs('/users');
 <i18n>
 {
   "cs": {
-    "title": "Uživatelské nastavení",
-    "tab": {
-      "users": "Uživatelé webu",
-      "roles": "Nastavení role"
-    },
-    "comingSoon": "(již brzy)"
+    "title": "Uživatelské nastavení"
   },
   "de": {
-    "title": "Benutzer-Einstellungen",
-    "tab": {
-      "users": "Web-Benutzer",
-      "roles": "Rollen-Einstellungen"
-    },
-    "comingSoon": "(bald verfügbar)"
+    "title": "Benutzer-Einstellungen"
   },
   "es": {
-    "title": "Configuraciones del usuario",
-    "tab": {
-      "users": "Usuarios Web",
-      "roles": "Administración de Roles"
-    },
-    "comingSoon": "(próximamente)"
+    "title": "Configuraciones del usuario"
   },
   "fr": {
-    "title": "Paramètres d'utilisateur",
-    "tab": {
-      "users": "Utilisateur web",
-      "roles": "Paramètres de rôle"
-    },
-    "comingSoon": "(bientôt disponible)"
+    "title": "Paramètres d'utilisateur"
   },
   "id": {
-    "title": "Pengaturan Pengguna",
-    "tab": {
-      "users": "Pengguna Web",
-      "roles": "Pengaturan Peran"
-    },
-    "comingSoon": "(akan datang)"
+    "title": "Pengaturan Pengguna"
   },
   "it": {
-    "title": "Impostazioni dell'utente",
-    "tab": {
-      "users": "Utenti web",
-      "roles": "Impostazioni del Ruolo"
-    },
-    "comingSoon": "(prossimamente)"
+    "title": "Impostazioni dell'utente"
   },
   "ja": {
-    "title": "ユーザー管理",
-    "tab": {
-      "users": "Webユーザー",
-      "roles": "役割設定"
-    },
-    "comingSoon": "（近日公開）"
+    "title": "ユーザー管理"
   },
   "sw": {
-    "title": "Mipangilio ya Mtumiaji",
-    "tab": {
-      "users": "Watumiaji wa Mtandao",
-      "roles": "Mipangilio ya Wajibu"
-    },
-    "comingSoon": "(inakuja hivi karibuni)"
+    "title": "Mipangilio ya Mtumiaji"
   }
 }
 </i18n>

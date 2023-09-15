@@ -234,6 +234,15 @@ export default {
       "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku.",
       "changePassword": "Vaše heslo je kratší než 10 znaků. Chcete-li svůj účet chránit, změňte si heslo tak, aby bylo delší."
     },
+    "oidc": {
+      "body": "Kliknutím na tlačítko Pokračovat přejdete na přihlašovací stránku.",
+      "error": {
+        "auth-ok-user-not-found": "K vaší e-mailové adrese není přiřazen žádný centrální účet. Požádejte prosím správce Central, aby vám vytvořil účet, abyste mohli pokračovat.",
+        "email-not-verified": "Vaše e-mailová adresa nebyla ověřena přihlašovacím serverem. Obraťte se prosím na správce serveru.",
+        "email-claim-not-provided": "Central nemohl získat přístup k e-mailové adrese přidružené k vašemu účtu. Může to být způsobeno tím, že správce serveru něco špatně nakonfiguroval nebo že e-mailovou adresu pro váš účet nenastavil. Může to být také důsledek možností ochrany osobních údajů, které můžete zvolit během přihlašovacího procesu. V takovém případě to zkuste znovu a ujistěte se, že je váš e-mail sdílený.",
+        "internal-server-error": "Při přihlašování se něco pokazilo. Kontaktujte prosím správce serveru."
+      }
+    },
     "problem": {
       "401_2": "Nesprávná e-mailová adresa nebo heslo."
     }
@@ -261,6 +270,15 @@ export default {
       "alreadyLoggedIn": "Un utilisateur est déjà connecté. Merci de rafraîchir la page pour continuer.",
       "changePassword": "Votre mot de passe fait moins de 10 caractères. Pour protéger votre compte, merci de choisir un mot de passe plus long."
     },
+    "oidc": {
+      "body": "Cliquez sur Continuer pour accéder à la page de connexion.",
+      "error": {
+        "auth-ok-user-not-found": "Il n'y a pas de compte Central associé à votre adresse de courriel. Veuillez demander à votre administrateur de Central de vous créer un compte pour continuer.",
+        "email-not-verified": "Votre adresse de courriel n'a pas été vérifiée par votre serveur de connexion. Veuillez contacter l'administrateur de votre serveur.",
+        "email-claim-not-provided": "Central n'a pas pu accéder à l'adresse de courriel associée à votre compte. Cela peut être dû au fait que l'administrateur de votre serveur a configuré quelque chose de manière incorrecte ou n'a pas défini d'adresse de courriel pour votre compte. Cela peut également être dû aux options de confidentialité que vous pouvez choisir durant la procédure de connexion. Si c'est le cas, veuillez réessayer et vous assurer que votre adresse de courriel est partagée.",
+        "internal-server-error": "Un problème s'est produit lors de la connexion. Veuillez contacter l'administrateur de votre serveur."
+      }
+    },
     "problem": {
       "401_2": "Adresse de courriel et/ou mot de passe invalides."
     }
@@ -277,6 +295,15 @@ export default {
     "alert": {
       "alreadyLoggedIn": "Un utente ha già effettuato l'accesso. Aggiorna la pagina per continuare.",
       "changePassword": "La tua password è lunga meno di 10 caratteri. Per proteggere il tuo account, cambia la password per renderla più lunga."
+    },
+    "oidc": {
+      "body": "Fare clic su Continua per passare alla pagina di Login.",
+      "error": {
+        "auth-ok-user-not-found": "Al suo indirizzo e-mail non è associato alcun account su Central. Chiedete all'amministratore di Central di creare un account per continuare.",
+        "email-not-verified": "Il vostro indirizzo e-mail non è stato verificato dal server di accesso. Contattare l'amministratore del server.",
+        "email-claim-not-provided": "Central non è riuscito ad accedere all'indirizzo e-mail associato al vostro account. Ciò potrebbe essere dovuto al fatto che l'amministratore del server ha configurato qualcosa di errato o non ha impostato un indirizzo e-mail per l'account. Potrebbe anche essere il risultato delle opzioni di privacy che si possono scegliere durante il processo di login. In tal caso, riprovare e assicurarsi che il proprio indirizzo e-mail sia condiviso.",
+        "internal-server-error": "Qualcosa è andato storto durante l'accesso. Contattare l'amministratore del server."
+      }
     },
     "problem": {
       "401_2": "Indirizzo e-mail e/o password errati."

@@ -138,6 +138,15 @@ const placeholder = (counts) => t('placeholder', counts);
       }
     }
   },
+  "id": {
+    "placeholder": "{selected} dari {total}",
+    "action": {
+      "select": {
+        "all": "Semua",
+        "none": "Tidak Ada"
+      }
+    }
+  },
   "it": {
     "placeholder": "{selected} di {total}",
     "action": {

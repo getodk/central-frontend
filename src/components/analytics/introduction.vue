@@ -139,6 +139,12 @@ export default {
       "improveCentral": "Améliorer Central"
     }
   },
+  "id": {
+    "title": "Bantu Tingkatkan Central!",
+    "action": {
+      "improveCentral": "Tingkatkan Central"
+    }
+  },
   "it": {
     "title": "Aiuta a migliorare Central",
     "introduction": [

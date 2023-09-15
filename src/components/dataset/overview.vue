@@ -94,28 +94,26 @@ export default {
 <i18n>
 {
   "cs": {
-    "connectionsToForms": "Připojení k formulářům",
-    "datasetProperties": "Vlastnosti datové sady"
+    "connectionsToForms": "Připojení k formulářům"
   },
   "de": {
     "connectionsToForms": "Verbindungen zu Formularen",
-    "datasetProperties": "Dataset-Eigenschaften"
+    "entityProperties": "Entitätseigenschaften"
   },
   "es": {
     "connectionsToForms": "Conexiones a formularios",
-    "datasetProperties": "Propiedades del conjunto de datos"
+    "entityProperties": "Propiedades de la entidad"
   },
   "fr": {
     "connectionsToForms": "Connexions aux formulaires",
-    "datasetProperties": "Propriétés du Dataset"
+    "entityProperties": "Propriétés"
   },
   "it": {
     "connectionsToForms": "Connessioni ai formulari",
-    "datasetProperties": "Proprietà dei set di dati"
+    "entityProperties": "Proprietà della Entità"
   },
   "sw": {
-    "connectionsToForms": "Viunganisho kwa Fomu",
-    "datasetProperties": "Sifa za Seti ya Data"
+    "connectionsToForms": "Viunganisho kwa Fomu"
   }
 }
 </i18n>

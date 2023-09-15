@@ -263,6 +263,7 @@ export default {
     }
   },
   "id": {
+    "archived": "Proyek Terarsip",
     "action": {
       "create": "Baru"
     },

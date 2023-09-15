@@ -294,10 +294,7 @@ export default {
         "full": "{projectManagers} mohou provádět jakékoli administrativní úkoly související s tímto projektem a mohou vyplnit formuláře ve webovém prohlížeči",
         "projectManagers": "Projektoví manažeři"
       },
-      {
-        "full": "{projectViewers} mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
-        "projectViewers": "Prohlížeči Projektu"
-      },
+      {},
       {
         "full": "{dataCollectors} mohou vyplnit formuláře ve webovém prohlížeči, ale nemohou zobrazit ani změnit data nebo nastavení",
         "dataCollectors": "Sběrači dat"
@@ -330,10 +327,7 @@ export default {
         "full": "{projectManagers} können jede administrative Aufgabe im Zusammenhang mit diesem Projekt ausführen und können Formulare in einem Webbrowser ausfüllen.",
         "projectManagers": "Projekt-Manager"
       },
-      {
-        "full": "{projectViewers} können auf alle Formulardaten in diesem Projekt zugreifen und sie herunterladen, aber können keine Änderungen an Einstellungen oder Daten durchführen.",
-        "projectViewers": "Projekt-Viewer"
-      },
+      {},
       {
         "full": "{dataCollectors} können Formulare in einem Webbrowser ausfüllen, aber können keine Daten oder Einstellungen anzeigen oder ändern.",
         "dataCollectors": "Datensammler"
@@ -366,10 +360,7 @@ export default {
         "full": "{projectManagers} pueden realizar cualquier tarea administrativa relacionada con este proyecto y puede llenar formularios desde un navegador web",
         "projectManagers": "Administradores de proyecto"
       },
-      {
-        "full": "{projectViewers} puede acceder y descargar todos los datos del Formulario en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
-        "projectViewers": "Visores de proyecto"
-      },
+      {},
       {
         "full": "{dataCollectors} pueden llenar formularios desde un navegador web, pero no pueden ver o cambiar datos o configuraciones",
         "dataCollectors": "Recolectores de datos"
@@ -403,7 +394,7 @@ export default {
         "projectManagers": "gestionnaires de projet"
       },
       {
-        "full": "Les {projectViewers} ont accès aux données de tous les formulaires de ce projet et peuvent les télécharger mais ne peuvent apporter aucune modification aux données ou paramètres.",
+        "full": "{projectViewers} peut/peuvent accéder et télécharger tous les Formulaires et entités dans ce Projet, mais ne peut/peuvent apporter aucun changement aux paramètres ou aux données.",
         "projectViewers": "lecteurs de projet"
       },
       {
@@ -438,10 +429,7 @@ export default {
         "full": "{projectManagers} bisa melakukan pekerjaan administratif apapun sehubungan dengan Proyek ini dan bisa mengisi formulir lewat web browser.",
         "projectManagers": "Manajer Proyek"
       },
-      {
-        "full": "{projectViewers} dapat mengakses dan mengunduh semua data formulir di Proyek ini, tetapi tidak bisa membuat perubahan terhadap pengaturan maupun data",
-        "projectViewers": "Pemerhati Proyek"
-      },
+      {},
       {
         "full": "{dataCollectors} dapat mengisi formulir di web browser, tetapi tidak bisa melihat atau mengubah data atau pengaturan.",
         "dataCollectors": "Pengumpul Data"
@@ -475,7 +463,7 @@ export default {
         "projectManagers": "Responsabili del progetto"
       },
       {
-        "full": "{projectViewers} possono accedere e scaricare tutti i dati del formulario di questo progetto, ma non possono apportare modifiche alle impostazioni o ai dati",
+        "full": "{projectViewers} possono accedere e scaricare tutti i dati del formulario e delle Entità di questo progetto, ma non possono apportare modifiche alle impostazioni o ai dati",
         "projectViewers": "Visualizzatori del progetto"
       },
       {
@@ -510,10 +498,7 @@ export default {
         "full": "{projectManagers}は、このプロジェクトに関連するあらゆる管理作業を行うことができ、Webブラウザでフォームを入力できます。",
         "projectManagers": "プロジェクト・マネージャー"
       },
-      {
-        "full": "{projectViewers}は、このプロジェクトの全てのフォームにアクセスし、ダウンロードできますが、設定やデータの変更はできません。",
-        "projectViewers": "プロジェクト・閲覧者"
-      },
+      {},
       {
         "full": "{dataCollectors}は、Webブラウザでフォームを入力できますが、データや設定を閲覧・変更はできません。",
         "dataCollectors": "データ収集者"
@@ -546,10 +531,7 @@ export default {
         "full": "{projectManagers} inaweza kutekeleza kazi yoyote ya usimamizi inayohusiana na Mradi huu na inaweza kujaza Fomu katika kivinjari cha wavuti.",
         "projectManagers": "Wasimamizi wa Mradi"
       },
-      {
-        "full": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data",
-        "projectViewers": "Watazamaji wa Mradi"
-      },
+      {},
       {
         "full": "{dataCollectors} inaweza kujaza Fomu katika kivinjari, lakini haiwezi kuona au kubadilisha data au mipangilio",
         "dataCollectors": "Wakusanyaji Data"

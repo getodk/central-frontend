@@ -198,7 +198,9 @@ export default {
   },
   "id": {
     "reviewState": "Status ulasan",
+    "formVersion": "Versi formulir",
     "deviceId": "ID Perangkat",
+    "attachments": "Lampiran",
     "present": "{count} berkas",
     "expected": "{count} diharapkan",
     "attachmentSummary": "{present} / {expected}"

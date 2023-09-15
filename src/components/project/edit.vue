@@ -155,7 +155,8 @@ const submit = () => {
   "id": {
     "title": "Rincian Dasar",
     "field": {
-      "name": "Nama Proyek"
+      "name": "Nama Proyek",
+      "description": "Deskripsi Proyek"
     },
     "alert": {
       "success": "Pengaturan proyek tersimpan!"

@@ -154,7 +154,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "dataset": {
-        "string": "Dataset-Aktionen",
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
@@ -206,11 +206,11 @@
       "dataset": {
         "update": {
           "string": "Aktualisieren",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "update_publish": {
           "string": "Veröffentlichen",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "field_key": {
@@ -304,6 +304,10 @@
     },
     "comment": {
       "string": "Kommentieren",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "continue": {
+      "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "create": {
@@ -502,8 +506,16 @@
       "string": "Letzte Übermittlung",
       "developer_comment": "This is the text of a table column header."
     },
+    "recentActivity": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header."
+    },
     "name": {
       "string": "Name",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "listName": {
+      "string": "Name der Liste",
       "developer_comment": "This is the text of a table column header."
     },
     "submitterName": {
@@ -524,7 +536,7 @@
     },
     "entities": {
       "string": "Entitäten insgesamt",
-      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the Entity List"
     },
     "lastEntity": {
       "string": "Neueste Entität",
@@ -578,12 +590,8 @@
       "string": "Server-Konfiguration",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "dataset": {
-      "string": "Datensatz",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "datasets": {
-      "string": "Datensätze",
+    "entityList": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
@@ -611,7 +619,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "property": {
-      "string": "",
+      "string": "Eigenschaft",
       "developer_comment": "This is a data property of an Entity."
     },
     "publicLink": {
@@ -652,7 +660,7 @@
       "string": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein."
     },
     "updateEntity": {
-      "string": ""
+      "string": "Das Objekt wurde aktualisiert!"
     },
     "updateReviewState": {
       "string": "Überprüfungsstatus gespeichert!"
@@ -737,11 +745,17 @@
       "developer_comment": "This is the label of an Entity."
     },
     "entityLabel": {
-      "string": ""
+      "string": "Objektbezeichnung"
     },
     "entityId": {
       "string": "Entitäts-ID",
       "developer_comment": "This is the UUID of an Entity."
+    },
+    "noProperties": {
+      "string": ""
+    },
+    "noEntity": {
+      "string": "(keine)"
     }
   },
   "common": {
@@ -839,7 +853,13 @@
     },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} von {count} Eigenschaft} other {{inform} von {count} Eigenschaften}}",
-      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
+    },
+    "new": {
+      "string": "Neu!"
+    },
+    "totalEntities": {
+      "string": ""
     }
   },
   "mixin": {
@@ -919,6 +939,25 @@
         },
         "changePassword": {
           "string": "Ihr Passwort ist kürzer als 10 Zeichen. Um Ihr Konto zu schützen, verlängerns Sie bitte Ihr Passwort."
+        }
+      },
+      "oidc": {
+        "body": {
+          "string": ""
+        },
+        "error": {
+          "auth-ok-user-not-found": {
+            "string": ""
+          },
+          "email-not-verified": {
+            "string": ""
+          },
+          "email-claim-not-provided": {
+            "string": ""
+          },
+          "internal-server-error": {
+            "string": ""
+          }
         }
       },
       "problem": {
@@ -1158,18 +1197,39 @@
           "string": "Anzahl der Eigenschaften"
         },
         "num_creation_forms": {
-          "string": "Anzahl der Formulare, die das Dataset aktualisieren"
+          "string": ""
         },
         "num_followup_forms": {
-          "string": "Anzahl der Formulare, die das Dataset verwenden"
+          "string": ""
         },
         "num_entities": {
-          "string": "Anzahl der Entitäten im Datensatz"
+          "string": ""
         },
         "num_failed_entities": {
           "string": "Anzahl der Fehler bei der Entitätserstellung"
         },
         "num_entity_updates": {
+          "string": "Anzahl der Objekterneuerungen"
+        },
+        "sso_enabled": {
+          "string": ""
+        },
+        "num_client_audit_attachments": {
+          "string": ""
+        },
+        "num_client_audit_attachments_failures": {
+          "string": ""
+        },
+        "num_client_audit_rows": {
+          "string": ""
+        },
+        "num_audits_failed": {
+          "string": ""
+        },
+        "num_audits_failed5": {
+          "string": ""
+        },
+        "num_audits_unprocessed": {
           "string": ""
         }
       }
@@ -1203,13 +1263,13 @@
         "string": "Einsendungenstatus",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
-      "datasets": {
+      "entities": {
         "title": {
-          "string": "Datensatz- und Entitätszusammenfassungen",
-          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
+          "string": "",
+          "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Zeigt das aktivste Datensatz der  {count} Datensatz)} other { (Zeigt das aktivste Datensatz der {count} Datensätze)}}"
+          "string": "{count, plural, one {} other {}}"
         }
       },
       "other": {
@@ -1260,46 +1320,15 @@
         }
       }
     },
-    "DatasetIntroduction": {
-      "title": {
-        "string": ""
-      },
-      "body": {
+    "DatasetList": {
+      "heading": {
         "0": {
-          "string": ""
+          "string": "",
+          "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
-          "string": "",
-          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "2": {
-          "string": "",
-          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "3": {
-          "string": "",
-          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
-        },
-        "4": {
-          "string": "",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
-        },
-        "5": {
           "string": ""
         }
-      },
-      "getStarted": {
-        "full": {
-          "string": "Weitere Informationen zum Einstieg finden Sie unter {clickHere}",
-          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
-        },
-        "clickHere": {
-          "string": "klicken Sie hier",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
-        }
-      },
-      "datasetsWorkflow": {
-        "string": "Datensatz-Workflow"
       }
     },
     "DatasetOverview": {
@@ -1307,35 +1336,35 @@
         "string": "Verbindungen zu Formularen",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "datasetProperties": {
-        "string": "Dataset-Eigenschaften",
+      "entityProperties": {
+        "string": "Entitätseigenschaften",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "DatasetOverviewConnectionToForms": {
       "formsCreateEntities": {
-        "string": "{count, plural, one {Form erstellt Entitäten in diesem Dataset} other {Formulare erstellen Entitäten in diesem Datensatz}}",
+        "string": "{count, plural, one {} other {}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "Es gibt keine Eigenschaften in diesem Datensatz."
+        "string": ""
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Formular verbraucht Daten aus diesem Datensatz} other {Formulare verbrauchen Daten aus diesem Datensatz}}",
+        "string": "{count, plural, one {} other {}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
     "DatasetPendingSubmissions": {
       "title": {
-        "string": ""
+        "string": "Ausstehende Übermittlungen"
       },
       "action": {
         "changeSetting": {
-          "string": "",
+          "string": "Einstellung ändern",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -1349,14 +1378,14 @@
             "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
           },
           "records": {
-            "string": "{count, plural, one {} other {}}",
+            "string": "{count, plural, one {{count} Datensatz} other {{count} Datensätze}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nOnce this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected."
           }
         }
       },
       "dontConvert": {
         "label": {
-          "string": ""
+          "string": "Ich verstehe und das ist für mich kein Problem."
         },
         "description": {
           "string": "{count, plural, one {} other {}}"
@@ -1364,7 +1393,7 @@
       },
       "convert": {
         "label": {
-          "string": ""
+          "string": "Konvertieren Sie jetzt alle ausstehenden Einsendungen in Entitäten."
         },
         "description": {
           "string": "{count, plural, one {} other {}}"
@@ -1381,52 +1410,57 @@
     },
     "DatasetSettings": {
       "entityWorkflow": {
-        "string": "",
+        "string": "Entitätsworkflow",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "onReceipt": {
         "label": {
-          "string": ""
+          "string": "Entitäten anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind"
         },
         "description": {
           "string": ""
         },
         "successMessage": {
-          "string": ""
+          "string": "Die Entitäten werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
         }
       },
       "onApproval": {
         "label": {
-          "string": ""
+          "string": "Entitäten erstellen, wenn Einsendungen als genehmigt markiert sind"
         },
         "description": {
           "string": ""
         },
         "successMessage": {
-          "string": ""
+          "string": "Die Entitäten werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
         }
       }
     },
     "DatasetShow": {
       "back": {
-        "string": "Zurück zu den Projektdatensätzen",
+        "string": "Zurück zu den Projekteinheiten",
         "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
       "datasetUpdates": {
-        "string": "{count, plural, one {Datensatz wird durch dieses Formular aktualisiert:} other {Datensätze werden durch dieses Formular aktualisiert:}}",
-        "developer_comment": "Number of dataset(s) is shown separately above this text"
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "Number of Entity List(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
       "new": {
         "string": "Neu!",
-        "developer_comment": "This is shown when a dataset is new"
+        "developer_comment": "This is shown when an Entity List is new"
       },
       "addedByThisDraft": {
         "string": "Hinzugefügt von diesem Entwurf",
-        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Entity Property"
+      }
+    },
+    "DatasetTable": {
+      "emptyTable": {
+        "string": ""
       }
     },
     "Download": {
@@ -1460,7 +1494,7 @@
         "developer_comment": "This is shown above the Submission that created the Entity."
       },
       "submissionDeleted": {
-        "string": ""
+        "string": "Diese Übermittlungen wurde gelöscht."
       }
     },
     "EntityData": {
@@ -1474,16 +1508,16 @@
         "submission": {
           "create": {
             "notDeleted": {
-              "string": "",
+              "string": "Übermittlung {instanceName}hochgeladen von{submitter}",
               "developer_comment": "This text is shown in a list of events. {submitter} is the name of a user, a team of users, or a Public Access Link."
             },
             "deleted": {
               "full": {
-                "string": "",
+                "string": "{deletedSubmission} hochgeladen von{name}",
                 "developer_comment": "This text is shown in a list of events. {name} is the name of a user, a team of users, or a Public Access Link.\n\n{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
               },
               "deletedSubmission": {
-                "string": "",
+                "string": "(Gelöschte Übermittlungen {id})",
                 "developer_comment": "This text is shown in a list of events. {id} is the Submission instance ID.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\n{deletedSubmission} uploaded by {name}"
               }
             }
@@ -1492,13 +1526,13 @@
         "entity": {
           "create": {
             "api": {
-              "string": "",
+              "string": "Entität {label} erstellt von {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
             }
           },
           "update_version": {
             "api": {
-              "string": "",
+              "string": "Daten aktualisiert von{name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             }
           }
@@ -1534,24 +1568,29 @@
     "EntityTable": {
       "header": {
         "updatedAtAndActions": {
-          "string": "",
+          "string": "Letzte Aktualisierung / Aktionen",
           "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
         }
       }
     },
     "EntityUpdate": {
       "title": {
-        "string": "",
+        "string": "Aktualisieren {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "header": {
         "currentValue": {
-          "string": "",
+          "string": "Aktueller Wert",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         },
         "updatedValue": {
-          "string": "",
+          "string": "Aktualisierter Wert",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        }
+      },
+      "problem": {
+        "409_15": {
+          "string": ""
         }
       }
     },
@@ -1757,12 +1796,12 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "Datensatz verknüpfen",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Möchten Sie den Datensatz wirklich verknüpfen?"
+          "string": ""
         },
         "1": {
           "string": "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
@@ -1811,7 +1850,7 @@
           "string": "{count, plural, one {{count} Datei wurde erfolgreich hochgeladen.} other {{count} Dateien wurden erfolgreich hochgeladen.}}"
         },
         "link": {
-          "string": "Datensatz erfolgreich verknüpft."
+          "string": ""
         }
       },
       "datasetsPreview": {
@@ -1820,7 +1859,7 @@
         },
         "body": {
           "0": {
-            "string": "Mindestens ein Formularanhang hat Dateinamen, die mit Datensatznamen übereinstimmen. Standardmässig sind diese mit Datensätzen verknüpft. Zu Testzwecken können Sie temporäre Daten als CSV-Dateien hochladen und dann eine Verknüpfung zu den Datensätzen herstellen, sobald Sie Ihre Formularlogik überprüft haben."
+            "string": ""
           }
         }
       }
@@ -1939,28 +1978,28 @@
       "notUploaded": {
         "text": {
           "string": "Noch nicht hochgeladen",
-          "developer_comment": "This is shown for a Media File that has not been uploaded."
+          "developer_comment": "This is shown for a Form Attachment that has not been uploaded."
         },
         "title": {
           "string": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
         }
       },
       "linkedToDataset": {
-        "string": "Mit Datensatz verknüpft {datasetName}",
-        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
+        "string": "",
+        "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
         "string": "Laden Sie eine zu überschreibende Datei hoch."
       },
       "action": {
         "linkDataset": {
-          "string": "Datensatz verknüpfen {datasetName}",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "override": {
         "string": "Überschreiben",
-        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
@@ -2209,10 +2248,10 @@
           }
         },
         "newDataset": {
-          "string": "Ein neuer Datensatz {datasetName} wird erstellt."
+          "string": ""
         },
         "newProperty": {
-          "string": "Im Datensatz {datasetName} wird eine neue Eigenschaft {propertyName} erstellt."
+          "string": ""
         }
       }
     },
@@ -2291,7 +2330,7 @@
       },
       "datasetsPreview": {
         "title": {
-          "string": ""
+          "string": "Dieses Formular kann Entitäten erstellen"
         },
         "body": {
           "0": {
@@ -2817,6 +2856,33 @@
         }
       }
     },
+    "OdataLoadingMessage": {
+      "entity": {
+        "withoutCount": {
+          "string": "",
+          "developer_comment": "This text is shown when the number of Entities loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {} other {}}"
+        },
+        "first": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {} other {}}"
+          },
+          "one": {
+            "string": ""
+          }
+        }
+      }
+    },
     "ProjectArchive": {
       "title": {
         "string": "Projekt wird archiviert",
@@ -2906,23 +2972,21 @@
             },
             "1": {
               "0": {
-                "string": "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:"
+                "string": "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
+                "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
                 "0": {
                   "string": "Existierende Übermittlungen bleiben unverschlüsselt."
-                },
-                "1": {
-                  "string": "In einer zukünftigen Version werden Sie die Option haben existierende Daten zu verschlüsseln."
                 }
               },
               "2": {
                 "0": {
                   "string": "Verschlüsselung kann nicht deaktiviert werden, nachdem es einmal aktiviert wurde."
-                },
-                "1": {
-                  "string": "In einer zukünftigen Version werden Sie Verschlüsselung deaktivieren können, was ihre Daten entschlüsseln wird. Dies trifft auch zu, wenn Sie Verschlüsselung jetzt aktivieren."
                 }
+              },
+              "3": {
+                "string": "Testeinsendungen zu bestehenden Formularentwürfen werden dauerhaft entfernt."
               }
             },
             "2": {
@@ -3269,12 +3333,12 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers} können auf alle Formulardaten in diesem Projekt zugreifen und sie herunterladen, aber können keine Änderungen an Einstellungen oder Daten durchführen.",
+            "string": "",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
             "string": "Projekt-Viewer",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data"
           }
         },
         "3": {
@@ -3661,7 +3725,7 @@
         },
         "entity": {
           "create": {
-            "string": "Geschaffene Entität {label} in {dataset} Datensatz"
+            "string": ""
           },
           "error": {
             "string": "Problem beim Erstellen einer Entität"
@@ -3814,6 +3878,9 @@
       }
     },
     "SubmissionList": {
+      "noMatching": {
+        "string": "Es gibt keine passenden Übermittlungen."
+      },
       "loading": {
         "withoutCount": {
           "string": "Übermittlungen laden...",
@@ -3856,9 +3923,6 @@
             }
           }
         }
-      },
-      "noMatching": {
-        "string": "Es gibt keine passenden Übermittlungen."
       }
     },
     "SubmissionShow": {
@@ -3904,6 +3968,9 @@
         "string": "Basisinformationen",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "emailDisabled": {
+        "string": ""
+      },
       "action": {
         "update": {
           "string": "Details aktualisieren",
@@ -3920,6 +3987,9 @@
       "title": {
         "string": "Passwort ändern",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "oidcBody": {
+        "string": ""
       },
       "action": {
         "change": {
@@ -3943,20 +4013,6 @@
       "title": {
         "string": "Benutzer-Einstellungen",
         "developer_comment": "This is shown as the title at the top of the page."
-      },
-      "tab": {
-        "users": {
-          "string": "Web-Benutzer",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "roles": {
-          "string": "Rollen-Einstellungen",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        }
-      },
-      "comingSoon": {
-        "string": "(bald verfügbar)",
-        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
       }
     },
     "UserList": {
@@ -4001,6 +4057,11 @@
       "introduction": {
         "0": {
           "string": "Sobald Sie dieses Benutzerkonto angelegt haben, senden wir eine Email mit weiteren Schritten zur Passworterstellung an die angegebene E-Mail-Adresse."
+        }
+      },
+      "oidcIntroduction": {
+        "0": {
+          "string": ""
         }
       }
     },

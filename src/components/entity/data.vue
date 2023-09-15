@@ -101,6 +101,9 @@ const data = computed(() => entity.currentVersion.data);
   "fr": {
     "title": "Données de l'entité"
   },
+  "id": {
+    "title": "Data Entitas"
+  },
   "it": {
     "title": "Dati Entità"
   },

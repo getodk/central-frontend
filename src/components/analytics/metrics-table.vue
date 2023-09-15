@@ -170,10 +170,11 @@ export default {
       "has_description": "Projekt má popis",
       "description_length": "Délka popisu projektu",
       "num_properties": "Počet vlastností",
-      "num_creation_forms": "Počet formulářů, které aktualizují datovou sadu",
-      "num_followup_forms": "Počet formulářů, které používají datovou sadu",
-      "num_entities": "Počet subjektů v datovém souboru",
-      "num_failed_entities": "Počet chyb při vytváření subjektu"
+      "num_creation_forms": "Počet formulářů, které aktualizují seznam subjektů",
+      "num_followup_forms": "Počet formulářů, které používají seznam subjektů",
+      "num_entities": "Počet subjektů v seznamu subjektů",
+      "num_failed_entities": "Počet chyb při vytváření subjektu",
+      "num_entity_updates": "Počet aktualizací entity"
     }
   },
   "de": {
@@ -217,10 +218,8 @@ export default {
       "has_description": "Das Projekt hat eine Beschreibung",
       "description_length": "Länge der Projektbeschreibung",
       "num_properties": "Anzahl der Eigenschaften",
-      "num_creation_forms": "Anzahl der Formulare, die das Dataset aktualisieren",
-      "num_followup_forms": "Anzahl der Formulare, die das Dataset verwenden",
-      "num_entities": "Anzahl der Entitäten im Datensatz",
-      "num_failed_entities": "Anzahl der Fehler bei der Entitätserstellung"
+      "num_failed_entities": "Anzahl der Fehler bei der Entitätserstellung",
+      "num_entity_updates": "Anzahl der Objekterneuerungen"
     }
   },
   "es": {
@@ -264,10 +263,11 @@ export default {
       "has_description": "El proyecto tiene una descripción",
       "description_length": "Longitud de la descripción del proyecto",
       "num_properties": "Número de Propiedades",
-      "num_creation_forms": "Número de formularios que actualizan el conjunto de datos",
-      "num_followup_forms": "Número de formularios que utilizan el conjunto de datos",
-      "num_entities": "Número de entidades en el conjunto de datos",
-      "num_failed_entities": "Número de errores de creación de entidad"
+      "num_creation_forms": "Número de formularios que actualizan la lista de entidades",
+      "num_followup_forms": "Número de formularios que utilizan la lista de entidades",
+      "num_entities": "Número de entidades en la lista de entidades",
+      "num_failed_entities": "Número de errores de creación de entidad",
+      "num_entity_updates": "Número de actualizaciones de la entidad"
     }
   },
   "fr": {
@@ -276,7 +276,7 @@ export default {
       "num_admins": "Nombre d'administrateurs",
       "num_projects_encryption": "Nombre de projets avec le chiffrement activé",
       "num_questions_biggest_form": "Nombre de question dans le plus gros formulaire",
-      "num_audit_log_entries": "Nombre d'entrées dans le log d'audit",
+      "num_audit_log_entries": "Nombre d'entrées dans le journal d'audit",
       "num_archived_projects": "Nombre de projets archivés",
       "num_unique_managers": "Nombre de gestionnaires de projets uniques",
       "num_unique_viewers": "Nombre de lecteurs de projets uniques",
@@ -311,15 +311,31 @@ export default {
       "has_description": "Le projet a une description",
       "description_length": "Longueur de la description du Projet",
       "num_properties": "Nombre de propriétés",
-      "num_creation_forms": "Nombre de formulaires qui mettent à jour le Dataset",
-      "num_followup_forms": "Nombre de formulaires qui utilisent le Dataset",
-      "num_entities": "Nombre d'Entités du Dataset",
-      "num_failed_entities": "Nombre d'erreurs de création d'Entité"
+      "num_creation_forms": "Nombre de formulaires qui mettent à jour la liste d'entités",
+      "num_followup_forms": "Nombre de formulaires qui utilisent la liste d'entités",
+      "num_entities": "Nombre d'entités dans la liste",
+      "num_failed_entities": "Nombre d'erreurs de création d'Entité",
+      "num_entity_updates": "Nombre de mises à jour de l'entité",
+      "sso_enabled": "Authentification unique (SSO) activée",
+      "num_client_audit_attachments": "Nombre d'audit de client joints",
+      "num_client_audit_attachments_failures": "Nombre d'échecs de traitement d'audit de client",
+      "num_client_audit_rows": "Nombre de rangées d'audit de client",
+      "num_audits_failed": "Nombre d'événements du journal d'audit qui ont échoué au moins une fois",
+      "num_audits_failed5": "Nombre d'événements du journal d'audit qui ont entièrement échoué",
+      "num_audits_unprocessed": "Nombre d'événements du journal d'audit qui ont été traités à retardement"
     }
   },
   "id": {
+    "recent": "dalam 45 hari terakhir",
     "fields": {
+      "num_admins": "Jumlah Administrator",
+      "num_unique_viewers": "Jumlah Pemerhati Proyek unik",
+      "num_unique_collectors": "Jumlah Pengumpul Data unik",
       "database_size": "Ukuran database sistem",
+      "uses_external_db": "Server menggunakan database eksternal",
+      "num_managers": "Jumlah Manajer Proyek",
+      "num_viewers": "Jumlah Pemerhati Proyek",
+      "num_data_collectors": "Jumlah Pengumpul Data",
       "num_app_users": "Jumlah Pengguna Aplikasi",
       "num_forms": "Jumlah Formulir",
       "num_forms_with_repeats": "Jumlah Formulir dengan ulangan",
@@ -329,7 +345,8 @@ export default {
       "num_submissions_edited": "Jumlah Kiriman - Diubah",
       "num_submissions_with_edits": "Jumlah Kiriman yang diubah",
       "num_submissions_from_app_users": "Jumlah Kiriman dari Pengguna Aplikasi",
-      "num_submissions_from_web_users": "Jumlah Kiriman dari Pengguna Web"
+      "num_submissions_from_web_users": "Jumlah Kiriman dari Pengguna Web",
+      "num_failed_entities": "Jumlah error pembuatan entitas"
     }
   },
   "it": {
@@ -373,10 +390,11 @@ export default {
       "has_description": "Il Progetto ha una descrizione",
       "description_length": "Lunghezza della descrizione del progetto",
       "num_properties": "Numero di proprietà",
-      "num_creation_forms": "Numero di formulari che aggiornano il set di dati",
-      "num_followup_forms": "Numero di formulari che usano il set di dati",
-      "num_entities": "Numero di Entità nel set di dati",
-      "num_failed_entities": "Numero di errori nella creazione dell'entità"
+      "num_creation_forms": "Numero di formulari che aggiornano la Lista di Entità",
+      "num_followup_forms": "Numero di formulari che usano Lista di Entità",
+      "num_entities": "Numero di Entità nella lista di Entità",
+      "num_failed_entities": "Numero di errori nella creazione dell'entità",
+      "num_entity_updates": "Numero di aggiornamenti dell'entità"
     }
   },
   "ja": {
@@ -456,9 +474,6 @@ export default {
       "has_description": "Mradi una maelezo",
       "description_length": "Urefu wa maelezo ya Mradi",
       "num_properties": "Idadi ya Mali",
-      "num_creation_forms": "Idadi ya Fomu zinazosasisha Seti ya Data",
-      "num_followup_forms": "Idadi ya Fomu zinazotumia Hifadhidata",
-      "num_entities": "Idadi ya Huluki katika Seti ya Data",
       "num_failed_entities": "Idadi ya hitilafu za kuunda Huluki"
     }
   }

@@ -102,6 +102,11 @@ const config = inject('config');
       "Bienvenue sur Central"
     ]
   },
+  "id": {
+    "heading": [
+      "Selamat datang di Central."
+    ]
+  },
   "it": {
     "heading": [
       "Benvenuto su Central"

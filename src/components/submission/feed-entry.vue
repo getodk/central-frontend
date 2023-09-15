@@ -332,7 +332,6 @@ export default {
     "title": {
       "create": "Odesláno od {name}",
       "entity": {
-        "create": "Vytvořená entita {label} v datové sadě {dataset}",
         "error": "Problém s vytvořením entity"
       },
       "updateReviewState": {
@@ -364,7 +363,6 @@ export default {
     "title": {
       "create": "Übermittelt von {name}",
       "entity": {
-        "create": "Geschaffene Entität {label} in {dataset} Datensatz",
         "error": "Problem beim Erstellen einer Entität"
       },
       "updateReviewState": {
@@ -396,7 +394,6 @@ export default {
     "title": {
       "create": "Enviado por {name}",
       "entity": {
-        "create": "Entidad creada {label} en {dataset} Conjunto de datos",
         "error": "Problema creando Entidad"
       },
       "updateReviewState": {
@@ -428,7 +425,7 @@ export default {
     "title": {
       "create": "Soumis par {name}",
       "entity": {
-        "create": "Création de l'Entité {label} dans le Dataset {dataset}",
+        "create": "Création de l'entité {label} dans la liste {dataset}",
         "error": "Problème lors de la création de l'entité"
       },
       "updateReviewState": {
@@ -458,14 +455,40 @@ export default {
   },
   "id": {
     "title": {
-      "create": "Terkirim oleh {name}"
+      "create": "Terkirim oleh {name}",
+      "entity": {
+        "error": "Masalah saat membuat Entitas"
+      },
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Diterima"
+        },
+        "hasIssues": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Memiliki masalah"
+        },
+        "edited": {
+          "full": "{reviewState} oleh {name}",
+          "reviewState": "Diubah"
+        },
+        "approved": {
+          "full": "{reviewState} oleh {name}",
+          "reviewState": "Disetujui"
+        },
+        "rejected": {
+          "full": "{reviewState} oleh {name}",
+          "reviewState": "Ditolak"
+        }
+      },
+      "comment": "Komentar oleh {name}"
     }
   },
   "it": {
     "title": {
       "create": "Inviato da {name}",
       "entity": {
-        "create": "Entità creata {label} in {dataset} set di dati",
+        "create": "Entità creata {label} in {dataset} Lista Entità",
         "error": "Problema durante la creazione dell'Entità"
       },
       "updateReviewState": {
@@ -525,7 +548,6 @@ export default {
     "title": {
       "create": "Imewasilishwa na {name}",
       "entity": {
-        "create": "Imeunda huluki {label} katika {dataset} seti ya data",
         "error": "Tatizo limetokea wakati wa kuunda Huluki"
       },
       "updateReviewState": {

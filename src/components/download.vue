@@ -87,6 +87,9 @@ onMounted(() => { link.value.click(); });
   "fr": {
     "body": "Le téléchargement du fichier {filename} va bientôt commencer. Une fois qu'il aura démarré, vous pourrez quitter la page."
   },
+  "id": {
+    "body": "{filename} akan segera mulai mengunduh. Setelah unduhan dimulai, anda dapat meninggalkan halaman ini."
+  },
   "it": {
     "body": "A breve inizierà il download di {filename}. Una volta avviato il download, puoi lasciare questa pagina."
   },

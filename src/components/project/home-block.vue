@@ -297,6 +297,10 @@ export default {
     "showMore": "Montrer {count} total",
     "showFewer": "Réduire {count} total"
   },
+  "id": {
+    "encrypted": "Terenkripsi",
+    "encryptionTip": "Proyek ini menggunakan enkripsi terkelola."
+  },
   "it": {
     "encrypted": "Crittografato",
     "encryptionTip": "Questo progetto utilizza la crittografia gestita.",

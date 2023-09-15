@@ -184,6 +184,9 @@ export default {
     "new": "nouveau !",
     "addedByThisDraft": "Ajouté par cette ébauche"
   },
+  "id": {
+    "new": "baru!"
+  },
   "it": {
     "new": "nuovo!",
     "addedByThisDraft": "Aggiunto da questa bozza"

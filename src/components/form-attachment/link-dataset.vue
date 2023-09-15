@@ -104,29 +104,19 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Odkaz Datové sady",
-    "introduction": [
-      "Určitě chcete datovou sadu propojit?",
-      "Nahraný soubor bude odstraněn. Později jej můžete vždy nahrát znovu."
-    ],
     "action": {
       "link": "Odkaz"
     }
   },
   "de": {
-    "title": "Datensatz verknüpfen",
-    "introduction": [
-      "Möchten Sie den Datensatz wirklich verknüpfen?",
-      "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
-    ],
     "action": {
       "link": "Link"
     }
   },
   "es": {
-    "title": "Vincular conjunto de datos",
+    "title": "Enlazar lista de entidades",
     "introduction": [
-      "¿Estás seguro de que quieres vincular el conjunto de datos?",
+      "¿Está seguro de que desea enlazar la lista de entidades?",
       "El archivo que subiste será eliminado. Siempre puedes volver a subirlo más tarde."
     ],
     "action": {
@@ -134,9 +124,9 @@ export default {
     }
   },
   "fr": {
-    "title": "Lier le Dataset",
+    "title": "Lier la liste d'entités",
     "introduction": [
-      "Êtes vous sûr de vouloir lier le Dataset ?",
+      "Êtes-vous sûr de vouloir lier la liste d'entités?",
       "Le fichier que vous avez envoyé va être supprimé. Vous pouvez toujours l'envoyer à nouveau."
     ],
     "action": {
@@ -144,9 +134,9 @@ export default {
     }
   },
   "it": {
-    "title": "Collega set di dati",
+    "title": "Collega la Lista Entità",
     "introduction": [
-      "Sei sicuro di voler collegare il set di dati?",
+      "Sei sicuro di voler collegare la Lista Entità?",
       "Il file che hai caricato verrà eliminato. Puoi sempre caricarlo di nuovo in un secondo momento."
     ],
     "action": {
@@ -154,11 +144,6 @@ export default {
     }
   },
   "sw": {
-    "title": "Kiungo Dataset",
-    "introduction": [
-      "Je, una uhakika unataka kuunganisha Seti ya Data?",
-      "Faili uliyopakia itafutwa. Unaweza kuipakia tena baadaye."
-    ],
     "action": {
       "link": "Kiungo"
     }
