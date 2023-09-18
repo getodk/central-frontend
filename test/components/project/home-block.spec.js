@@ -72,7 +72,7 @@ describe('ProjectHomeBlock', () => {
     block.findAllComponents(FormRow).length.should.equal(3);
     const expand = block.find('.expand-button');
     expand.exists().should.be.true();
-    expand.text().should.equal('Show 4 total');
+    expand.text().should.equal('Show 4 total Forms');
     expand.find('.icon-angle-down').exists().should.be.true();
   });
 
@@ -84,7 +84,7 @@ describe('ProjectHomeBlock', () => {
     const expand = block.find('.expand-button');
     await expand.trigger('click');
     block.findAllComponents(FormRow).length.should.equal(4);
-    expand.text().should.equal('Show fewer of 4 total');
+    expand.text().should.equal('Show fewer of 4 total Forms');
     expand.find('.icon-angle-up').exists().should.be.true();
   });
 
@@ -128,7 +128,7 @@ describe('ProjectHomeBlock', () => {
     const block = mountComponent();
     const expand = block.find('.expand-button');
     expand.exists().should.be.true();
-    expand.text().should.equal('Show 4 total');
+    expand.text().should.equal('Show 4 total Forms');
     await expand.trigger('click');
     const rows = block.findAllComponents(FormRow);
     rows.map((row) => row.props().form.name).should.eql(['a', 'c', 'd', 'e']);
@@ -153,7 +153,7 @@ describe('ProjectHomeBlock', () => {
     block.find('.project-form-row .expand-button').exists().should.be.false();
     const expand = block.find('.project-dataset-row .expand-button');
     expand.exists().should.be.true();
-    expand.text().should.equal('Show 4 total');
+    expand.text().should.equal('Show 4 total Entity Lists');
     expand.find('.icon-angle-down').exists().should.be.true();
     block.find('.margin').exists().should.be.false();
   });
@@ -166,7 +166,7 @@ describe('ProjectHomeBlock', () => {
     const expand = block.find('.project-dataset-row .expand-button');
     await expand.trigger('click');
     block.findAllComponents(DatasetRow).length.should.equal(4);
-    expand.text().should.equal('Show fewer of 4 total');
+    expand.text().should.equal('Show fewer of 4 total Entity Lists');
     expand.find('.icon-angle-up').exists().should.be.true();
   });
 
@@ -192,13 +192,13 @@ describe('ProjectHomeBlock', () => {
     block.findAllComponents(DatasetRow).length.should.equal(3);
     const formExpand = block.find('.project-form-row .expand-button');
     formExpand.exists().should.be.true();
-    formExpand.text().should.equal('Show 5 total');
+    formExpand.text().should.equal('Show 5 total Forms');
     formExpand.find('.icon-angle-down').exists().should.be.true();
 
     block.findAllComponents(FormRow).length.should.equal(3);
     const dsExpand = block.find('.project-dataset-row .expand-button');
     dsExpand.exists().should.be.true();
-    dsExpand.text().should.equal('Show 4 total');
+    dsExpand.text().should.equal('Show 4 total Entity Lists');
     dsExpand.find('.icon-angle-down').exists().should.be.true();
   });
 });
