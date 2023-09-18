@@ -153,7 +153,7 @@ describe('ProjectHomeBlock', () => {
     block.find('.project-form-row .expand-button').exists().should.be.false();
     const expand = block.find('.project-dataset-row .expand-button');
     expand.exists().should.be.true();
-    expand.text().should.equal('Show 4 total Entity lists');
+    expand.text().should.equal('Show 4 total Entity Lists');
     expand.find('.icon-angle-down').exists().should.be.true();
     block.find('.margin').exists().should.be.false();
   });
@@ -166,7 +166,7 @@ describe('ProjectHomeBlock', () => {
     const expand = block.find('.project-dataset-row .expand-button');
     await expand.trigger('click');
     block.findAllComponents(DatasetRow).length.should.equal(4);
-    expand.text().should.equal('Show fewer of 4 total Entity lists');
+    expand.text().should.equal('Show fewer of 4 total Entity Lists');
     expand.find('.icon-angle-up').exists().should.be.true();
   });
 
@@ -198,7 +198,7 @@ describe('ProjectHomeBlock', () => {
     block.findAllComponents(FormRow).length.should.equal(3);
     const dsExpand = block.find('.project-dataset-row .expand-button');
     dsExpand.exists().should.be.true();
-    dsExpand.text().should.equal('Show 4 total Entity lists');
+    dsExpand.text().should.equal('Show 4 total Entity Lists');
     dsExpand.find('.icon-angle-down').exists().should.be.true();
   });
 });

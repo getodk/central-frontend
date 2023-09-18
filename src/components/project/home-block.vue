@@ -262,15 +262,15 @@ export default {
     "encrypted": "Encrypted",
     "encryptionTip": "This Project uses managed encryption.",
     // This clickable text is shown below a table of forms where only a few out of the total number ("count") of forms is shown.
-    "showMore": "Show {count} total Forms",
-    // This clickable text is shown below a table of datasets where only a few out of the total number ("count") of datasets is shown.
-    "showMoreDatasets": "Show {count} total Entity lists",
+    "showMore": "Show {count} total Form | Show {count} total Forms",
+    // This clickable text is shown below a table of entity lists where only a few out of the total number ("count") of entity lists is shown.
+    "showMoreDatasets": "Show {count} total Entity List | Show {count} total Entity Lists",
     // This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms.
     // "Count" refers to the number of forms.
-    "showFewer": "Show fewer of {count} total Forms",
-    // This clickable text is shown below an expanded table of datasets that can be collapsed to hide some datasets.
-    // "Count" refers to the number of datasets.
-    "showFewerDatasets": "Show fewer of {count} total Entity lists"
+    "showFewer": "Show fewer of {count} total Form | Show fewer of {count} total Forms",
+    // This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list.
+    // "Count" refers to the number of entity lists.
+    "showFewerDatasets": "Show fewer of {count} total Entity List | Show fewer of {count} total Entity Lists"
   }
 }
 </i18n>
