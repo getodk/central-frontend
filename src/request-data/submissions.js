@@ -32,9 +32,6 @@ export default () => {
         nextLink: data['@odata.nextLink']
       });
     },
-    removeData() {
-      odata.value.splice(0, odata.value.length);
-    },
     addChunk(chunk) {
       for (const submission of chunk.value) {
         odata.value.push(submission);

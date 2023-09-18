@@ -266,11 +266,8 @@ export default {
           }
         ),
         clear: clear && !refresh,
-        patch: (loaded > 0 && !clear) || (loaded > 0 && refresh)
-          ? (response) => {
-            if (clear && refresh) this.odata.removeData();
-            this.odata.addChunk(response.data);
-          }
+        patch: loaded > 0 && !clear && !refresh
+          ? (response) => this.odata.addChunk(response.data)
           : null
       })
         .finally(() => { this.refreshing = false; })
