@@ -35,7 +35,7 @@ const upload = async (component, file = xlsForm()) => {
   return component.get('#form-new-upload-button').trigger('click');
 };
 
-describe('FormNew', () => {
+describe.only('FormNew', () => {
   describe('new form modal', () => {
     beforeEach(() => {
       mockLogin();
@@ -488,6 +488,26 @@ describe('FormNew', () => {
           modal.should.alert(
             'danger',
             'The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “expected_id”, got “uploaded_id”).'
+          );
+        });
+    });
+
+    it('shows a message for an invalid entity property', () => {
+      testData.extendedForms.createPast(1, {
+        xmlFormId: 'expected_id',
+        draft: true
+      });
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 400.25,
+          message: 'Some message'
+        })
+        .afterResponse(modal => {
+          modal.should.alert(
+            'danger',
+            'The Form definition could not be processed because the Entity definition includes an invalid property name.'
           );
         });
     });

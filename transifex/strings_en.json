@@ -2461,6 +2461,9 @@
         },
         "409_3": {
           "string": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
+        },
+        "400_25": {
+          "string": "The Form definition could not be processed because the Entity List definition includes an invalid property name."
         }
       },
       "fields": {

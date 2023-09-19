@@ -230,6 +230,8 @@ export default {
               actual: details.value
             });
           }
+          if (code === 400.25)
+            return this.$t('problem.400_25');
           return null;
         }
       })
@@ -334,7 +336,8 @@ $drop-zone-vpadding: 15px;
       "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",
       // The word "XLSForm" should not be translated.
       "400_15": "The XLSForm could not be converted: {error}",
-      "409_3": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
+      "409_3": "A Form already exists in this Project with the Form ID of “{xmlFormId}”.",
+      "400_25": "The Form definition could not be processed because the Entity List definition includes an invalid property name."
     },
     // Sub-heading for a warning details, followed by the list of fields
     "fields": "Fields:",
