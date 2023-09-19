@@ -112,6 +112,24 @@ describe('SubmissionList', () => {
           })
           .respondWithData(testData.submissionOData);
       });
+
+      it('should show correct row number after refresh', () => {
+        testData.extendedSubmissions.createPast(1);
+        return loadSubmissionList()
+          .complete()
+          .request(component =>
+            component.get('#submission-list-refresh-button').trigger('click'))
+          .beforeEachResponse(component => {
+            testData.extendedSubmissions.createPast(1);
+            component.get('#odata-loading-message').should.be.hidden();
+          })
+          .respondWithData(testData.submissionOData)
+          .afterResponse(component => {
+            component.findAllComponents(SubmissionMetadataRow).forEach((r, i) => {
+              r.props().rowNumber.should.be.equal(2 - i);
+            });
+          });
+      });
     });
 
     describe('load by chunk', () => {
