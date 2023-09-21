@@ -263,7 +263,7 @@
     "emptyTable": "Il n'y a pas encore de Soumission"
   },
   "entity": {
-    "label": "Étiquettes",
+    "label": "Étiquette",
     "entityLabel": "Étiquette de l'entité",
     "entityId": "ID de l'entité",
     "noProperties": "Ce formulaire définit seulement l'étiquette.",
