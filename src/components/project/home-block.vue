@@ -280,27 +280,19 @@ export default {
 {
   "cs": {
     "encrypted": "Šifrováno",
-    "encryptionTip": "Tento projekt používá řízené šifrování.",
-    "showMore": "Zobrazit celkem {count}",
-    "showFewer": "Zobrazit méně naž {count} z celkového počtu"
+    "encryptionTip": "Tento projekt používá řízené šifrování."
   },
   "de": {
     "encrypted": "Verschlüsselt",
-    "encryptionTip": "Dieses Projekt verwendet verwaltete Verschlüsselung.",
-    "showMore": "Zeige {count} von insgesamt",
-    "showFewer": "Zeige weniger {count} von insgesamt"
+    "encryptionTip": "Dieses Projekt verwendet verwaltete Verschlüsselung."
   },
   "es": {
     "encrypted": "Cifrado",
-    "encryptionTip": "Este proyecto utiliza cifrado administrado.",
-    "showMore": "Mostrar {count} total",
-    "showFewer": "Mostrar menos de {count} total"
+    "encryptionTip": "Este proyecto utiliza cifrado administrado."
   },
   "fr": {
     "encrypted": "Chiffré",
-    "encryptionTip": "Ce projet utilise un chiffrement des données.",
-    "showMore": "Montrer {count} total",
-    "showFewer": "Réduire {count} total"
+    "encryptionTip": "Ce projet utilise un chiffrement des données."
   },
   "id": {
     "encrypted": "Terenkripsi",
@@ -308,15 +300,11 @@ export default {
   },
   "it": {
     "encrypted": "Crittografato",
-    "encryptionTip": "Questo progetto utilizza la crittografia gestita.",
-    "showMore": "Mostra {count} del totale",
-    "showFewer": "Mostra meno {count} del totale"
+    "encryptionTip": "Questo progetto utilizza la crittografia gestita."
   },
   "sw": {
     "encrypted": "Imesimbwa kwa njia fiche",
-    "encryptionTip": "Mradi huu unatumia usimbaji fiche unaodhibitiwa.",
-    "showMore": "Onyesha jumla ya {count}",
-    "showFewer": "Onyesha idadi ndogo ya jumla ya {count}"
+    "encryptionTip": "Mradi huu unatumia usimbaji fiche unaodhibitiwa."
   }
 }
 </i18n>

@@ -3140,12 +3140,20 @@
         "string": "Questo progetto utilizza la crittografia gestita."
       },
       "showMore": {
-        "string": "Mostra {count} del totale",
+        "string": "{count, plural, one {} many {} other {}}",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
+      "showMoreDatasets": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This clickable text is shown below a table of entity lists where only a few out of the total number (\"count\") of entity lists is shown."
+      },
       "showFewer": {
-        "string": "Mostra meno {count} del totale",
+        "string": "{count, plural, one {} many {} other {}}",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
+      },
+      "showFewerDatasets": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
       }
     },
     "ProjectList": {

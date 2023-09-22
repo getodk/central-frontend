@@ -115,7 +115,7 @@ defineExpose({ afterUpdate });
   },
   "fr": {
     "header": {
-      "updatedAtAndActions": "Dernières Mises à jour / Actions"
+      "updatedAtAndActions": "Dernières mises à jour / Actions"
     }
   },
   "it": {
