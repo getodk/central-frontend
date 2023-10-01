@@ -12,6 +12,20 @@ except according to the terms contained in the LICENSE file.
 import { nextTick, onBeforeMount, onBeforeUpdate, onMounted, onUpdated } from 'vue';
 import { sum } from 'ramda';
 
+export const logWatchError = (callback) => (newValue, oldValue) => {
+  try {
+    callback(newValue, oldValue);
+  } catch (error) {
+    /* eslint-disable no-console */
+    console.error('a watcher threw an error');
+    console.error(error);
+    console.error('new value', newValue);
+    console.error('old value', oldValue);
+    /* eslint-enable no-console */
+    throw error;
+  }
+};
+
 // eslint-disable-next-line no-console
 const logTick = () => { console.log('tick'); };
 export const ticking = (count, callback = logTick) => {
@@ -23,6 +37,11 @@ export const ticking = (count, callback = logTick) => {
   };
   nextTick(ticker);
 };
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// useRenderTimer()
 
 class RenderTimer {
   constructor() {
