@@ -12,6 +12,8 @@ except according to the terms contained in the LICENSE file.
 import { nextTick, onBeforeMount, onBeforeUpdate, onMounted, onUpdated } from 'vue';
 import { sum } from 'ramda';
 
+// Wraps a watcher callback, returning a function that will log if the callback
+// throws an error.
 export const logWatchError = (callback) => (newValue, oldValue) => {
   try {
     callback(newValue, oldValue);
