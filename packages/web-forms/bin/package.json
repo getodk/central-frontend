@@ -1,0 +1,9 @@
+{
+  "name": "odk-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "globby": "^13.2.2"
+  }
+}
