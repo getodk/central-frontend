@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-check
 
 import path from 'node:path';
