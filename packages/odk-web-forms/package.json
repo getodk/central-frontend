@@ -28,12 +28,15 @@
     "yarn": "1.22.19"
   },
   "scripts": {
-    "build": "echo '@odk/web-forms: build'",
-    "build:ci": "echo '@odk/web-forms: build:ci'",
-    "dev": "echo '@odk/web-forms: dev'",
-    "test": "yarn test:mocha && yarn test:e2e",
+    "build": "npm-run-all -nl build:*",
+    "build:clean": "rimraf dist/",
+    "build:js": "vite build",
+    "build:types": "tsc --project ./tsconfig.json",
+    "dev": "vite",
+    "test": "npm-run-all -nl test:*",
     "test:e2e": "playwright test",
-    "test:mocha": "mocha --exit --timeout 30000 ./test/**/*.test.js"
+    "test:mocha": "mocha --exit --timeout 30000 ./test/**/*.test.js",
+    "test:types": "tsc --project ./tsconfig.test-types.json"
   },
   "devDependencies": {
     "@playwright/test": "^1.38.1",
