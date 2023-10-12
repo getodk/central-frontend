@@ -1,9 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": ["grammar.ts"],
+  "include": ["grammar.ts", "test/**/*.test.ts"],
   "compilerOptions": {
-    "declarationDir": "./dist",
-    "jsx": "preserve",
-    "outDir": "./dist"
+    "esModuleInterop": true,
+    "module": "ESNext"
   }
 }

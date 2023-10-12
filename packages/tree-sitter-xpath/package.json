@@ -31,6 +31,7 @@
     "install": "true # Prevent invoking `node-gyp rebuild` on `yarn install`",
     "test": "npm-run-all -nl test:*",
     "test:grammar": "tree-sitter test",
+    "test:web": "playwright test",
     "test:types": "tsc --project ./tsconfig.test-types.json"
   },
   "devDependencies": {
