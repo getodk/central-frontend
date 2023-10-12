@@ -4,8 +4,5 @@
     "emitDeclarationOnly": false,
     "noEmit": true
   },
-  "include": [
-    "grammar.ts",
-    "types/tree-sitter-xpath-parser.d.ts"
-  ]
+  "include": ["grammar.ts", "types/tree-sitter-xpath-parser.d.ts"]
 }

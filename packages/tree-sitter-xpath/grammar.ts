@@ -9,19 +9,12 @@
 const binaryExpression = <
 	ExpressionType extends `${string}_expr`,
 	OperatorName extends `${string}_operator`,
-	OperandName extends `${string}_expr`
+	OperandName extends `${string}_expr`,
 >(
 	baseType: SymbolRule<ExpressionType>,
 	operator: RuleOrLiteral | SymbolRule<OperatorName>,
 	operand: SymbolRule<OperandName>
-): Rule => choice(
-	seq(
-		baseType,
-		operator,
-		operand
-	),
-	operand,
-);
+): Rule => choice(seq(baseType, operator, operand), operand);
 
 /*
  * ----------------------------------------------------------------------------
@@ -29,7 +22,8 @@ const binaryExpression = <
  * ----------------------------------------------------------------------------
  */
 
-const UNQUALIFIED_NAME_START_CHAR = /[_a-zA-Z\u{C0}-\u{D6}\u{D8}-\u{F6}\u{F8}-\u{2FF}\u{370}-\u{37D}\u{37F}-\u{1FFF}\u{200C}-\u{200D}\u{2070}-\u{218F}\u{2C00}-\u{2FEF}\u{3001}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFFD}\u{10000}-\u{EFFFF}]/u;
+const UNQUALIFIED_NAME_START_CHAR =
+	/[_a-zA-Z\u{C0}-\u{D6}\u{D8}-\u{F6}\u{F8}-\u{2FF}\u{370}-\u{37D}\u{37F}-\u{1FFF}\u{200C}-\u{200D}\u{2070}-\u{218F}\u{2C00}-\u{2FEF}\u{3001}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFFD}\u{10000}-\u{EFFFF}]/u;
 
 const NAME_CHAR_ADDITIONS = /[-.\u{B7}0-9\u{0300}-\u{036F}\u{203F}-\u{2040}]/u;
 
@@ -37,23 +31,11 @@ const NAME_CHAR_ADDITIONS = /[-.\u{B7}0-9\u{0300}-\u{036F}\u{203F}-\u{2040}]/u;
 // matches the full pattern without error.
 const NC_NAME = new RegExp(
 	[
-		/** @type {RegExp} */ (
-			/** @type {any} */ (
-				UNQUALIFIED_NAME_START_CHAR
-			)
-		).source,
+		UNQUALIFIED_NAME_START_CHAR.source,
 		'(?:',
-		/** @type {RegExp} */ (
-			/** @type {any} */ (
-				UNQUALIFIED_NAME_START_CHAR
-			)
-		).source,
+		UNQUALIFIED_NAME_START_CHAR.source,
 		'|',
-		/** @type {RegExp} */ (
-			/** @type {any} */ (
-				NAME_CHAR_ADDITIONS
-			)
-		).source,
+		NAME_CHAR_ADDITIONS.source,
 		')*',
 	].join(''),
 	'u'
@@ -76,12 +58,7 @@ const NC_NAME = new RegExp(
 const xpathGrammar = grammar({
 	name: 'xpath',
 
-	inline: ($) => [
-		$._axis_specifier,
-		$._local_part,
-		$._prefix,
-		$._axis_name,
-	],
+	inline: ($) => [$._axis_specifier, $._local_part, $._prefix, $._axis_name],
 
 	word: ($) => $._nc_name,
 
@@ -94,42 +71,35 @@ const xpathGrammar = grammar({
 
 		/* 2 Location Paths */
 
-		_location_path: ($) => choice(
-			$.relative_location_path,
-			$.absolute_location_path
-		),
+		_location_path: ($) => choice($.relative_location_path, $.absolute_location_path),
 
-		absolute_location_path: ($) => choice(
-			seq($.absolute_root_location_path, optional($._relative_location_path)),
-			$.abbreviated_absolute_location_path
-		),
+		absolute_location_path: ($) =>
+			choice(
+				seq($.absolute_root_location_path, optional($._relative_location_path)),
+				$.abbreviated_absolute_location_path
+			),
 
 		absolute_root_location_path: ($) => $._slash,
 
 		relative_location_path: ($) => $._relative_location_path,
 
-		_relative_location_path: ($) => choice(
-			$.step,
-			seq($._relative_location_path, $._slash, $.step),
-			$._abbreviated_relative_location_path
-		),
+		_relative_location_path: ($) =>
+			choice(
+				$.step,
+				seq($._relative_location_path, $._slash, $.step),
+				$._abbreviated_relative_location_path
+			),
 
 		/* 2.1 Location Steps */
 
-		step: ($) => choice(
-			// NodeTest, which may have an [abbreviated] axis specifier prefix
-			seq(
-				choice(
-					$.axis_test,
-					$.abbreviated_axis_test,
-					$.node_test
-				),
-				repeat($.predicate)
-			),
+		step: ($) =>
+			choice(
+				// NodeTest, which may have an [abbreviated] axis specifier prefix
+				seq(choice($.axis_test, $.abbreviated_axis_test, $.node_test), repeat($.predicate)),
 
-			// . or ..
-			$.abbreviated_step
-		),
+				// . or ..
+				$.abbreviated_step
+			),
 
 		axis_test: ($) => seq($._axis_specifier, $._node_test),
 		abbreviated_axis_test: ($) => seq($._abbreviated_axis_specifier, $._node_test),
@@ -141,90 +111,81 @@ const xpathGrammar = grammar({
 		 * an empty string. Instead, we've defined its equivalent optionality
 		 * directly in `step`.
 		 */
-		_axis_specifier: ($) => choice(
-			seq($.axis_name, /::/),
-		),
+		_axis_specifier: ($) => choice(seq($.axis_name, /::/)),
 
 		/* 2.2 Axes */
 
 		axis_name: ($) => $._axis_name,
-		_axis_name: () => choice(
-			/ancestor/,
-			/ancestor-or-self/,
-			/attribute/,
-			/child/,
-			/descendant/,
-			/descendant-or-self/,
-			/following/,
-			/following-sibling/,
-			/namespace/,
-			/parent/,
-			/preceding/,
-			/preceding-sibling/,
-			/self/,
-		),
+		_axis_name: () =>
+			choice(
+				/ancestor/,
+				/ancestor-or-self/,
+				/attribute/,
+				/child/,
+				/descendant/,
+				/descendant-or-self/,
+				/following/,
+				/following-sibling/,
+				/namespace/,
+				/parent/,
+				/preceding/,
+				/preceding-sibling/,
+				/self/
+			),
 
 		/* 2.3 Node Tests */
 
 		node_test: ($) => $._node_test,
-		_node_test: ($) => choice(
-			$._name_test,
+		_node_test: ($) =>
+			choice(
+				$._name_test,
 
-			// This is implicit in the spec's grammar notation, but reflects parts of
-			// the details on disambiguation (and helps tree-sitter with same).
-			$._axis_name,
+				// This is implicit in the spec's grammar notation, but reflects parts of
+				// the details on disambiguation (and helps tree-sitter with same).
+				$._axis_name,
 
-			$.node_type_test,
-			$.processing_instruction_name_test,
-		),
+				$.node_type_test,
+				$.processing_instruction_name_test
+			),
 
 		// Spec explicitly calls this case out, though not by name
-		processing_instruction_name_test: ($) => seq(
-			/processing-instruction\s*\(/,
-			$.string_literal,
-			/\)/
-		),
+		processing_instruction_name_test: ($) =>
+			seq(/processing-instruction\s*\(/, $.string_literal, /\)/),
 
 		/* 2.4 Predicates */
 
-		predicate: ($) => seq(
-			/\[/,
-			$._predicate_expr,
-			/\]/
-		),
+		predicate: ($) => seq(/\[/, $._predicate_expr, /\]/),
 
 		_predicate_expr: ($) => $.expr,
 
 		/* 2.5 Abbreviated Syntax */
 
-		abbreviated_absolute_location_path: ($) => seq(
-			// TODO: name this (and other uses)?
-			token('//'),
-			$._relative_location_path
-		),
-
-		_abbreviated_relative_location_path: ($) => seq(
-			$._relative_location_path,
-			token('//'),
-			$.step
-		),
-
-		abbreviated_step: ($) => choice(
-			alias(
-				'.',
-				// @ts-expect-error - This is what tree-sitter expects for named aliases
-				// which do not correspond to an explicit rule. TODO: maybe they can be
-				// explicit rules?
-				$.self
+		abbreviated_absolute_location_path: ($) =>
+			seq(
+				// TODO: name this (and other uses)?
+				token('//'),
+				$._relative_location_path
 			),
-			alias(
-				'..',
-				// @ts-expect-error - This is what tree-sitter expects for named aliases
-				// which do not correspond to an explicit rule. TODO: maybe they can be
-				// explicit rules?
-				$.parent
-			)
-		),
+
+		_abbreviated_relative_location_path: ($) => seq($._relative_location_path, token('//'), $.step),
+
+		abbreviated_step: ($) =>
+			choice(
+				alias(
+					'.',
+					// @ts-expect-error - This is what tree-sitter expects for named aliases
+					// which do not correspond to an explicit rule. TODO: maybe they can be
+					// explicit rules?
+					$.self
+				),
+				alias(
+					'..',
+					// @ts-expect-error - This is what tree-sitter expects for named aliases
+					// which do not correspond to an explicit rule. TODO: maybe they can be
+					// explicit rules?
+					$.parent
+				)
+			),
 
 		/**
 		 * Should be `optional('@')`, but tree-sitter objects (probably rightly) that it
@@ -239,188 +200,90 @@ const xpathGrammar = grammar({
 		expr: ($) => $._expr,
 		_expr: ($) => $._or_expr,
 
-		_primary_expr: ($) => choice(
-			$.variable_reference,
-			seq(/\(/, $.expr, /\)/),
-			$.string_literal,
-			$.number,
-			$.function_call
-		),
+		_primary_expr: ($) =>
+			choice(
+				$.variable_reference,
+				seq(/\(/, $.expr, /\)/),
+				$.string_literal,
+				$.number,
+				$.function_call
+			),
 
 		/* 3.2 Function Calls */
 
-		function_call: ($) => seq(
-			field('name', $.function_name),
+		function_call: ($) =>
 			seq(
-				/\(/,
-				field('arguments',
-					optional(seq(
-						$.argument,
-						repeat(seq(/,/, $.argument))
-					))
-				),
-				/\)/
-			)
-		),
+				field('name', $.function_name),
+				seq(/\(/, field('arguments', optional(seq($.argument, repeat(seq(/,/, $.argument))))), /\)/)
+			),
 
 		function_name: ($) => $._q_name,
 		argument: ($) => $.expr,
 
 		/* 3.3 Node-sets */
 
-		union_expr: ($) => prec(1, binaryExpression(
-			$._union_expr,
-			/\|/,
-			$._path_expr
-		)),
+		union_expr: ($) => prec(1, binaryExpression($._union_expr, /\|/, $._path_expr)),
 
-		_union_expr: ($) => prec(2, choice(
-			$.union_expr,
-			$._path_expr
-		)),
+		_union_expr: ($) => prec(2, choice($.union_expr, $._path_expr)),
 
-		_path_expr: ($) => choice(
-			$._location_path,
-			$.filter_path_expr
-		),
+		_path_expr: ($) => choice($._location_path, $.filter_path_expr),
 
 		_slash: () => token('/'),
 
 		filter_path_expr: ($) => $._filter_path_expr,
 
-		_filter_path_expr: ($) => seq(
-			$.filter_expr,
-			optional(seq(
-				choice($._slash, token('//')),
-				$._relative_location_path
-			))
-		),
+		_filter_path_expr: ($) =>
+			seq($.filter_expr, optional(seq(choice($._slash, token('//')), $._relative_location_path))),
 
 		filter_expr: ($) => $._filter_expr,
 
-		_filter_expr: ($) => choice(
-			$._primary_expr,
-			seq($._filter_expr, $.predicate)
-		),
+		_filter_expr: ($) => choice($._primary_expr, seq($._filter_expr, $.predicate)),
 
 		/* 3.4 Booleans */
 
-		or_expr: ($) => prec(1, binaryExpression(
-			$._or_expr,
-			/or/,
-			$._and_expr
-		)),
+		or_expr: ($) => prec(1, binaryExpression($._or_expr, /or/, $._and_expr)),
 
-		_or_expr: ($) => prec(2, choice(
-			$.or_expr,
-			$._and_expr
-		)),
+		_or_expr: ($) => prec(2, choice($.or_expr, $._and_expr)),
 
-		and_expr: ($) => prec(1, binaryExpression(
-			$._and_expr,
-			/and/,
-			$._equality_expr
-		)),
+		and_expr: ($) => prec(1, binaryExpression($._and_expr, /and/, $._equality_expr)),
 
-		_and_expr: ($) => prec(2, choice(
-			$.and_expr,
-			$._equality_expr
-		)),
+		_and_expr: ($) => prec(2, choice($.and_expr, $._equality_expr)),
 
-		ne_expr: ($) => prec(1, binaryExpression(
-			$._equality_expr,
-			/!=/,
-			$._relational_expr
-		)),
-		eq_expr: ($) => prec(1, binaryExpression(
-			$._equality_expr,
-			/=/,
-			$._relational_expr
-		)),
+		ne_expr: ($) => prec(1, binaryExpression($._equality_expr, /!=/, $._relational_expr)),
+		eq_expr: ($) => prec(1, binaryExpression($._equality_expr, /=/, $._relational_expr)),
 
-		_equality_expr: ($) => prec(2, choice(
-			$.ne_expr,
-			$.eq_expr,
-			$._relational_expr
-		)),
+		_equality_expr: ($) => prec(2, choice($.ne_expr, $.eq_expr, $._relational_expr)),
 
-		lte_expr: ($) => prec(1, binaryExpression(
-			$._relational_expr,
-			/<=/,
-			$._additive_expr
-		)),
-		lt_expr: ($) => prec(1, binaryExpression(
-			$._relational_expr,
-			/</,
-			$._additive_expr
-		)),
-		gte_expr: ($) => prec(1, binaryExpression(
-			$._relational_expr,
-			/>=/,
-			$._additive_expr
-		)),
-		gt_expr: ($) => prec(1, binaryExpression(
-			$._relational_expr,
-			/>/,
-			$._additive_expr
-		)),
+		lte_expr: ($) => prec(1, binaryExpression($._relational_expr, /<=/, $._additive_expr)),
+		lt_expr: ($) => prec(1, binaryExpression($._relational_expr, /</, $._additive_expr)),
+		gte_expr: ($) => prec(1, binaryExpression($._relational_expr, />=/, $._additive_expr)),
+		gt_expr: ($) => prec(1, binaryExpression($._relational_expr, />/, $._additive_expr)),
 
-		_relational_expr: ($) => prec(2, choice(
-			$.lte_expr,
-			$.lt_expr,
-			$.gte_expr,
-			$.gt_expr,
-			$._additive_expr
-		)),
+		_relational_expr: ($) =>
+			prec(2, choice($.lte_expr, $.lt_expr, $.gte_expr, $.gt_expr, $._additive_expr)),
 
 		/* 3.5 Numbers */
 
-		addition_expr: ($) => prec(1, binaryExpression(
-			$._additive_expr,
-			/\+/,
-			$._multiplicative_expr
-		)),
-		subtraction_expr: ($) => prec(1, binaryExpression(
-			$._additive_expr,
-			/-/,
-			$._multiplicative_expr
-		)),
+		addition_expr: ($) => prec(1, binaryExpression($._additive_expr, /\+/, $._multiplicative_expr)),
+		subtraction_expr: ($) =>
+			prec(1, binaryExpression($._additive_expr, /-/, $._multiplicative_expr)),
 
-		_additive_expr: ($) => prec(2, choice(
-			$.addition_expr,
-			$.subtraction_expr,
-			$._multiplicative_expr
-		)),
+		_additive_expr: ($) =>
+			prec(2, choice($.addition_expr, $.subtraction_expr, $._multiplicative_expr)),
 
-		multiplication_expr: ($) => prec(1, binaryExpression(
-			$._multiplicative_expr,
-			$._multiply_operator,
-			$._unary_expr
-		)),
-		division_expr: ($) => prec(1, binaryExpression(
-			$._multiplicative_expr,
-			$._divide_operator,
-			$._unary_expr
-		)),
-		modulo_expr: ($) => prec(1, binaryExpression(
-			$._multiplicative_expr,
-			$._modulo_operator,
-			$._unary_expr
-		)),
+		multiplication_expr: ($) =>
+			prec(1, binaryExpression($._multiplicative_expr, $._multiply_operator, $._unary_expr)),
+		division_expr: ($) =>
+			prec(1, binaryExpression($._multiplicative_expr, $._divide_operator, $._unary_expr)),
+		modulo_expr: ($) =>
+			prec(1, binaryExpression($._multiplicative_expr, $._modulo_operator, $._unary_expr)),
 
-		_multiplicative_expr: ($) => prec(2, choice(
-			$.multiplication_expr,
-			$.division_expr,
-			$.modulo_expr,
-			$._unary_expr
-		)),
+		_multiplicative_expr: ($) =>
+			prec(2, choice($.multiplication_expr, $.division_expr, $.modulo_expr, $._unary_expr)),
 
 		unary_expr: ($) => seq(/-/, $._union_expr),
 
-		_unary_expr: ($) => choice(
-			prec.right($.unary_expr),
-			$._union_expr
-		),
+		_unary_expr: ($) => choice(prec.right($.unary_expr), $._union_expr),
 
 		/* 3.6 Strings - no spec grammar */
 
@@ -428,10 +291,7 @@ const xpathGrammar = grammar({
 
 		string_literal: ($) => $._literal,
 		/** *String* literal */
-		_literal: () => choice(
-			/"[^"]*"/,
-			/'[^']*'/
-		),
+		_literal: () => choice(/"[^"]*"/, /'[^']*'/),
 
 		number: () => choice(/\d+(\.\d*)?/, /\.\d+/),
 
@@ -443,16 +303,10 @@ const xpathGrammar = grammar({
 		// TODO: This is broken. Unclear if it matters for ODK use cases, but the
 		// grammar is incomplete for the general purpose without addressing it.
 		variable_reference: ($) => seq($._variable_reference, $.variable_reference),
-		_variable_reference: ($) => seq(
-			/\$/,
-			$._q_name
-		),
+		_variable_reference: ($) => seq(/\$/, $._q_name),
 
-		_name_test: ($) => choice(
-			$.unprefixed_wildcard_name_test,
-			$.prefixed_wildcard_name_test,
-			$._q_name
-		),
+		_name_test: ($) =>
+			choice($.unprefixed_wildcard_name_test, $.prefixed_wildcard_name_test, $._q_name),
 
 		unprefixed_wildcard_name_test: ($) => $._wildcard_name_test,
 		prefixed_wildcard_name_test: ($) => seq($.prefix, /:/, $._wildcard_name_test),
@@ -460,16 +314,9 @@ const xpathGrammar = grammar({
 
 		/* --- definitions from Namespaces in XML 1.0 spec --- */
 
-		_q_name: ($) => choice(
-			$.prefixed_name,
-			$.unprefixed_name
-		),
+		_q_name: ($) => choice($.prefixed_name, $.unprefixed_name),
 
-		prefixed_name: ($) => seq(
-			$.prefix,
-			/:/,
-			$.local_part
-		),
+		prefixed_name: ($) => seq($.prefix, /:/, $.local_part),
 		unprefixed_name: ($) => $._local_part,
 		prefix: ($) => $._prefix,
 		_prefix: ($) => $._nc_name,
@@ -486,14 +333,15 @@ const xpathGrammar = grammar({
 		_divide_operator: () => prec(1, /div/),
 		_modulo_operator: () => prec(1, /mod/),
 
-		node_type_test: () => seq(
-			choice(
-				token(seq('comment', /\s*\(\s*\)/)),
-				token(seq('node', /\s*\(\s*\)/)),
-				token(seq('processing-instruction', /\s*\(\s*\)/)),
-				token(seq('text', /\s*\(\s*\)/))
-			)
-		),
+		node_type_test: () =>
+			seq(
+				choice(
+					token(seq('comment', /\s*\(\s*\)/)),
+					token(seq('node', /\s*\(\s*\)/)),
+					token(seq('processing-instruction', /\s*\(\s*\)/)),
+					token(seq('text', /\s*\(\s*\)/))
+				)
+			),
 	},
 });
 
