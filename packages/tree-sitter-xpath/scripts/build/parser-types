@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 mkdir -p ./types
-node ../../node_modules/@asgerf/dts-tree-sitter . > ./types/tree-sitter-xpath-parser.d.ts
 
-echo -e "declare module 'tree-sitter-xpath/parser' {\n$(cat ./types/tree-sitter-xpath-parser.d.ts)\n}" > ./types/tree-sitter-xpath-parser.d.ts
+echo "declare module 'tree-sitter-xpath/parser' {" > ./types/tree-sitter-xpath-parser.d.ts
+node ../../node_modules/@asgerf/dts-tree-sitter . >> ./types/tree-sitter-xpath-parser.d.ts
+echo "}" >> ./types/tree-sitter-xpath-parser.d.ts

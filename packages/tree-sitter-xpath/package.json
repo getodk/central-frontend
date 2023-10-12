@@ -49,5 +49,6 @@
   "resolutions": {
     "**/tree-sitter": "^0.20.5",
     "@asgerf/dts-tree-sitter/tree-sitter": "^0.20.5"
-  }
+  },
+  "main": "bindings/node"
 }
