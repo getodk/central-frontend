@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": ["grammar.ts"],
+  "compilerOptions": {
+    "declarationDir": "./dist",
+    "jsx": "preserve",
+    "outDir": "./dist"
+  }
+}

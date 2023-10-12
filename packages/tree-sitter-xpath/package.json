@@ -1,0 +1,52 @@
+{
+  "name": "tree-sitter-xpath",
+  "version": "1.0.0-alpha.0",
+  "description": "XPath grammar for tree-sitter",
+  "type": "commonjs",
+  "author": "getodk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eyelidlessness/odk-web-forms",
+    "directory": "packages/tree-sitter-xpath"
+  },
+  "bugs": "https://github.com/eyelidlessness/odk-web-forms/issues",
+  "homepage": "https://getodk.org/",
+  "files": [
+    "README.md",
+    "grammar.js",
+    "index.d.ts",
+    "tree-sitter-xpath.wasm"
+  ],
+  "engines": {
+    "node": ">=18 <21",
+    "yarn": "1.22.19"
+  },
+  "scripts": {
+    "build": "yarn build:clean && yarn build:js && yarn build:node && yarn build:parser-types && yarn build:wasm",
+    "build:clean": "./scripts/build/clean",
+    "build:node": "tree-sitter generate && node-gyp rebuild",
+    "build:js": "vite build",
+    "build:parser-types": "./scripts/build/parser-types",
+    "build:wasm": "tree-sitter build-wasm",
+    "install": "true # Prevent invoking `node-gyp rebuild` on `yarn install`",
+    "test": "npm-run-all -nl test:*",
+    "test:grammar": "tree-sitter test",
+    "test:types": "tsc --project ./tsconfig.test-types.json"
+  },
+  "devDependencies": {
+    "@asgerf/dts-tree-sitter": "^0.1.0",
+    "nan": "^2.17.0",
+    "node-gyp": "^9.4.0",
+    "tree-sitter": "^0.20.5",
+    "tree-sitter-cli": "^0.20.8",
+    "vite": "^4.4.11",
+    "web-tree-sitter": "^0.20.8"
+  },
+  "peerDependencies": {
+    "web-tree-sitter": "^0.20.8"
+  },
+  "resolutions": {
+    "**/tree-sitter": "^0.20.5",
+    "@asgerf/dts-tree-sitter/tree-sitter": "^0.20.5"
+  }
+}
