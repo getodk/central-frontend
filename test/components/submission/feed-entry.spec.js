@@ -216,28 +216,28 @@ describe('SubmissionFeedEntry', () => {
       });
     });
 
-    describe('entity.create.error audit', () => {
+    describe('entity.error audit', () => {
       it('renders entity creation error message and help text', async () => {
         testData.extendedAudits.createPast(1, {
-          action: 'entity.create.error',
+          action: 'entity.error',
           details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
+        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
         title.get('.entity-error-message').text().should.equal('ID empty or missing.');
         await title.get('.entity-error-message').should.have.textTooltip();
       });
 
       it('renders entity creation error message when it is included as an errorMessage', async () => {
         testData.extendedAudits.createPast(1, {
-          action: 'entity.create.error',
+          action: 'entity.error',
           details: {
             problem: { problemCode: 409.3, problemDetails: { foo: 'blah' } },
             errorMessage: 'A resource already exists with uuid value(s) abc.'
           }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
+        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
         title.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
         await title.get('.entity-error-message').should.have.textTooltip();
       });

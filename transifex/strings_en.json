@@ -3735,8 +3735,11 @@
           "create": {
             "string": "Created Entity {label} in {dataset} Entity List"
           },
+          "update": {
+            "string": "Updated Entity {label} in {dataset} Entity List"
+          },
           "error": {
-            "string": "Problem creating Entity"
+            "string": "Problem processing Entity"
           }
         },
         "updateReviewState": {
