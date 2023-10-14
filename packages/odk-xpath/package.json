@@ -1,0 +1,57 @@
+{
+  "name": "@odk/xpath",
+  "version": "1.0.0-alpha.0",
+  "description": "ODK XPath",
+  "type": "module",
+  "author": "getodk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eyelidlessness/odk-web-forms",
+    "directory": "packages/odk-xpath"
+  },
+  "bugs": "https://github.com/eyelidlessness/odk-web-forms/issues",
+  "homepage": "https://getodk.org/",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "index.d.ts",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18 <21",
+    "yarn": "1.22.19"
+  },
+  "scripts": {
+    "build": "npm-run-all -nl build:*",
+    "build:clean": "rimraf dist/",
+    "build:js": "vite build",
+    "build:types": "tsc --project ./tsconfig.json",
+    "dev": "vite",
+    "test": "npm-run-all -nl test:*",
+    "test:e2e": "playwright test",
+    "test:vitest": "vitest",
+    "test:types": "tsc --project ./tsconfig.test-types.json"
+  },
+  "dependencies": {
+    "@js-temporal/polyfill": "^0.4.4",
+    "crypto-js": "^4.1.1",
+    "itertools-ts": "^1.23.0",
+    "tree-sitter-xpath": "1.0.0-alpha.0"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.1.2",
+    "@playwright/test": "^1.38.1",
+    "@types/mocha": "^10.0.1",
+    "@vitest/browser": "^0.34.6",
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "vite": "^4.4.11",
+    "vitest": "^0.34.6"
+  }
+}

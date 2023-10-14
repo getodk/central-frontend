@@ -1,0 +1,122 @@
+import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
+import { UpsertableMap } from '../lib/collections/UpsertableMap.ts';
+
+// Native/common standards
+export const XHTML_NAMESPACE_URI = 'http://www.w3.org/1999/xhtml';
+export const HTML_NAMESPACE_URI = XHTML_NAMESPACE_URI;
+export const XML_NAMESPACE_URI = 'http://www.w3.org/XML/1998/namespace';
+export const XMLNS_NAMESPACE_URI = 'http://www.w3.org/2000/xmlns/';
+export const FN_NAMESPACE_URI = 'http://www.w3.org/2005/xpath-functions';
+
+// XForms/ODK
+export const JAVAROSA_NAMESPACE_URI = 'http://openrosa.org/javarosa';
+export const ODK_NAMESPACE_URI = 'http://www.opendatakit.org/xforms';
+export const OPENROSA_XFORMS_NAMESPACE_URI = 'http://openrosa.org/xforms';
+export const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
+
+// Default prefixes
+export const HTML_PREFIX = 'h';
+export const XML_PREFIX = 'xml';
+export const XMLNS_PREFIX = 'xmlns';
+export const FN_PREFIX = 'fn';
+
+export const JAVAROSA_PREFIX = 'jr';
+export const ODK_PREFIX = 'odk';
+export const OPENROSA_XFORMS_PREFIX = 'orx';
+export const XFORMS_PREFIX = 'xf';
+
+export interface StaticNamespaces<
+	DefaultPrefix extends string,
+	DefaultURI extends string,
+	Mapping extends Record<string, string>
+> {
+	get<Key extends string | null>(key: Key):
+		Key extends null
+			? DefaultURI
+		: Key extends DefaultPrefix
+			? DefaultURI
+		: Key extends keyof Mapping
+			? Mapping[Key]
+			: undefined;
+
+	has(key: null): true;
+	has(key: DefaultPrefix | keyof Mapping): true;
+	has(key: keyof Mapping): true;
+	has(key: string): false;
+}
+
+export class StaticNamespaces<
+	DefaultPrefix extends string,
+	DefaultURI extends string,
+	const Mapping extends Record<string, string>
+> extends Map<string | null, string> implements ReadonlyMap<string | null, string> {
+	constructor(
+		protected defaultPrefix: DefaultPrefix,
+		protected defaultURI: DefaultURI,
+		namespaces: Mapping
+	) {
+		super([
+			...Object.entries(namespaces),
+			[null, defaultURI],
+			[defaultPrefix, defaultURI],
+		]);
+	}
+}
+
+export const staticNamespaces = new StaticNamespaces(
+	'xf',
+	XFORMS_NAMESPACE_URI,
+	{
+    [FN_PREFIX]: FN_NAMESPACE_URI,
+		[HTML_PREFIX]: XHTML_NAMESPACE_URI,
+		html: XHTML_NAMESPACE_URI,
+		xhtml: XHTML_NAMESPACE_URI,
+		[JAVAROSA_PREFIX]: JAVAROSA_NAMESPACE_URI,
+		javarosa: JAVAROSA_NAMESPACE_URI,
+		[ODK_PREFIX]: ODK_NAMESPACE_URI,
+		[OPENROSA_XFORMS_PREFIX]: OPENROSA_XFORMS_NAMESPACE_URI,
+		'openrosa-xforms': OPENROSA_XFORMS_NAMESPACE_URI,
+		[XFORMS_PREFIX]: XFORMS_NAMESPACE_URI,
+		[XML_PREFIX]: XML_NAMESPACE_URI,
+		[XMLNS_PREFIX]: XMLNS_NAMESPACE_URI,
+	}
+);
+
+
+const namespaceURIs = new UpsertableMap<Node, UpsertableMap<string | null, string | null>>();
+
+export class NamespaceResolver implements XPathNamespaceResolverObject {
+	constructor(protected referenceNode?: Node | null) {
+		// constructor(protected referenceNode?: Node | null) {
+		if (referenceNode == null) {
+			this.lookupNamespaceURI = this.lookupStaticNamespaceURI;
+		}
+	}
+
+	protected lookupNodeNamespaceURI = (node: Node, prefix: string | null) => {
+		return node.lookupNamespaceURI(prefix);
+	}
+
+	protected lookupStaticNamespaceURI = (prefix: string | null) => {
+		return staticNamespaces.get(prefix) ?? null;
+	}
+
+	/**
+	 * Note: while it is likely consistent with the **spec** to resolve a `null`
+	 * prefix, it's not typical in a browser environment for the resolver to be
+	 * consulted for an unprefixed name test in an XPath expression.
+	 *
+	 * We _may_ elect to deviate from that typical behavior, as it is the much
+	 * more **obvious** behavior.
+	 */
+	lookupNamespaceURI(prefix: string | null) {
+		return namespaceURIs.upsert(this.referenceNode!, () => new UpsertableMap())
+			.upsert(prefix, () => {
+				return (
+					this.referenceNode!.lookupNamespaceURI(prefix) ??
+					staticNamespaces.get(prefix) ??
+					null
+				);
+			});
+	}
+}

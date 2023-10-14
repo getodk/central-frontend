@@ -1,5 +1,5 @@
 declare module '@eslint/eslintrc' {
-	import { type Linter } from 'eslint';
+	import type { Linter } from 'eslint';
 
 	interface FlatCompatOptions {
 		readonly baseDirectory: string;
