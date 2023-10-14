@@ -31,12 +31,12 @@
     "build": "npm-run-all -nl build:*",
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
-    "build:types": "tsc --project ./tsconfig.json",
+    "_build:types": "tsc --project ./tsconfig.json",
     "dev": "vite",
     "test": "npm-run-all -nl test:*",
     "test:e2e": "playwright test",
     "test:vitest": "vitest",
-    "test:types": "tsc --project ./tsconfig.test-types.json"
+    "_test:types": "tsc --project ./tsconfig.test-types.json"
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
