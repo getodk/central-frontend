@@ -115,6 +115,7 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  defaultToAll: Boolean,
 
   // `true` if the options are loading and `false` if not.
   loading: Boolean,
@@ -222,7 +223,16 @@ let emittedValue = null;
 const emitIfChanged = () => {
   if (changes.size === 0) return;
   changes.clear();
-  emittedValue = [...selected];
+
+  const needsDefault = props.defaultToAll && selected.size === 0;
+  if (needsDefault && props.modelValue.length === props.options.length) {
+    needsSync = true;
+    return;
+  }
+
+  emittedValue = needsDefault
+    ? props.options.map(({ value }) => value)
+    : [...selected];
   emit('update:modelValue', emittedValue);
 };
 
