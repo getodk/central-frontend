@@ -17,21 +17,32 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { apiPaths } from '../../util/request';
 import { useI18nUtils } from '../../util/i18n';
 import { useRequestData } from '../../request-data';
 
+const props = defineProps({
+  odataFilter: String
+});
+
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 
-const href = apiPaths.entities(projectId, datasetName);
+const href = computed(() =>
+  apiPaths.entities(projectId, datasetName, { $filter: props.odataFilter }));
 
-const { dataset } = useRequestData();
+const { dataset, odataEntities } = useRequestData();
+const { t } = useI18n();
 const { tn } = useI18nUtils();
-const text = computed(() => (dataset.dataExists
-  ? tn('action.download.unfiltered', dataset.entities)
-  : ''));
+const text = computed(() => (props.odataFilter == null
+  ? (dataset.dataExists
+    ? tn('action.download.unfiltered', dataset.entities)
+    : '') // The button is not visible in this case.
+  : (odataEntities.dataExists
+    ? tn('action.download.filtered.withCount', odataEntities.count)
+    : t('action.download.filtered.withoutCount'))));
 </script>
 
 <i18n lang="json5">
@@ -40,7 +51,13 @@ const text = computed(() => (dataset.dataExists
     "action": {
       // @transifexKey component.EntityList.action.download
       "download": {
-        "unfiltered": "Download {count} Entity | Download {count} Entities"
+        "unfiltered": "Download {count} Entity | Download {count} Entities",
+        "filtered": {
+          "withCount": "Download {count} matching Entity | Download {count} matching Entities",
+          // This is the text of a button. This text is shown when the number of
+          // matching Entities is unknown.
+          "withoutCount": "Download matching Entities"
+        }
       }
     }
   }

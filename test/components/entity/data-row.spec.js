@@ -24,7 +24,11 @@ const mountComponent = () => {
       router: mockRouter('/projects/1/entity-lists/trees/entities/e'),
       requestData: testRequestData([useProject, useEntities], {
         project: testData.extendedProjects.last(),
-        odataEntities: testData.entityOData()
+        odataEntities: {
+          status: 200,
+          data: testData.entityOData(),
+          config: { url: '/v1/projects/1/entity-lists/trees.svc/Entities' }
+        }
       })
     }
   });

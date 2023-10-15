@@ -16,6 +16,9 @@ describe('OdataLoadingMessage', () => {
     ['Loading 10 more of 90 remaining matching Submissions…', { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 100, originalCount: 100, dataLength: 10 }],
     ['Loading the last 5 matching Submissions…',              { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 15, originalCount: 15, dataLength: 10 }],
     ['Loading the last matching Submission…',                 { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 11, originalCount: 11, dataLength: 10 }],
+
+    ['Loading Entities…',                                     { dataExists: false, awaitingResponse: true, type: 'entity', top: 0, refreshing: false, filter: false, totalCount: 0 }],
+    ['Loading matching Entities…',                            { dataExists: false, awaitingResponse: true, type: 'entity', top: 0, refreshing: false, filter: true, totalCount: 0 }]
   ];
   /* eslint-enable no-multi-spaces */
 
@@ -28,7 +31,7 @@ describe('OdataLoadingMessage', () => {
           refreshing: data.refreshing,
           filter: data.filter,
           totalCount: data.totalCount,
-          type: 'submission'
+          type: data.type ?? 'submission'
         }
       });
       component.text().should.be.eql(expectedMessage);

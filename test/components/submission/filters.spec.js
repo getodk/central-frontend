@@ -361,7 +361,7 @@ describe('SubmissionFilters', () => {
       });
   });
 
-  it('does not update form.submissions', () => {
+  it('does not update form.submissions after filtering', () => {
     testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
     testData.extendedForms.createPast(1, { submissions: 2 });
     const submitter = testData.extendedFieldKeys.createPast(1).last();

@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
             v-model="selectedFields"/>
           <button id="submission-list-refresh-button" type="button"
             class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(true, true)">
+            @click="fetchChunk(false, true)">
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
@@ -250,7 +250,11 @@ export default {
     document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
+    // `clear` indicates whether this.odata should be cleared before sending the
+    // request. `refresh` indicates whether the request is a background refresh.
     fetchChunk(clear, refresh = false) {
+      // Are we fetching the first chunk of submissions or the next chunk?
+      const first = clear || refresh;
       const loaded = this.odata.dataExists ? this.odata.value.length : 0;
 
       this.refreshing = refresh;
@@ -261,16 +265,16 @@ export default {
           this.xmlFormId,
           this.draft,
           {
-            $top: this.top(loaded),
+            $top: this.top(first ? 0 : loaded),
             $count: true,
             $wkt: true,
             $filter: this.odataFilter,
             $select: this.odataSelect,
-            $skiptoken: loaded > 0 && !clear ? new URL(this.odata.nextLink).searchParams.get('$skiptoken') : null
+            $skiptoken: !first ? new URL(this.odata.nextLink).searchParams.get('$skiptoken') : null
           }
         ),
-        clear: clear && !refresh,
-        patch: loaded > 0 && !clear && !refresh
+        clear,
+        patch: !first
           ? (response) => this.odata.addChunk(response.data)
           : null
       })
@@ -349,6 +353,9 @@ export default {
   display: flex;
   flex-wrap: wrap-reverse;
 
+  // If there are filters, then there is already no left margin. But if there
+  // aren't filters (in the case of a form draft), then we need to remove the
+  // left margin.
   form > :first-child { margin-left: 0; }
 }
 #submission-field-dropdown {
