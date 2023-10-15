@@ -37,6 +37,25 @@ describe('SubmissionFilters', () => {
     setLuxon({ defaultZoneName: 'UTC' });
   });
 
+  it('selects all submitters by default', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
+    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
+    return loadComponent()
+      .beforeEachResponse((component, { url }) => {
+        if (url.includes('/submitters')) {
+          const filters = component.getComponent(SubmissionFilters).props();
+          // filters.submitterId is initialized as [], but it is set again after
+          // the response from .../submitters.
+          filters.submitterId.should.eql([]);
+        }
+      })
+      .afterResponses(component => {
+        const filters = component.getComponent(SubmissionFilters).props();
+        filters.submitterId.should.eql([fieldKey.id]);
+      });
+  });
+
   describe('initial filters', () => {
     beforeEach(() => {
       testData.extendedForms.createPast(1);

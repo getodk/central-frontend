@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watchEffect } from 'vue';
+import { shallowRef, watch, watchEffect } from 'vue';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
@@ -71,6 +71,7 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 
 import modal from '../../mixins/modal';
 import useFields from '../../request-data/fields';
+import useQueryRef from '../../composables/query-ref';
 import useReviewState from '../../composables/review-state';
 import useSubmissions from '../../request-data/submissions';
 import { apiPaths } from '../../util/request';
@@ -125,11 +126,54 @@ export default {
         formVersion.submissions = odata.count;
     });
 
+    const submitterIds = useQueryRef({
+      fromQuery: (query) => {
+        const stringIds = arrayQuery(query.submitterId, {
+          validator: (value) => /^[1-9]\d*$/.test(value)
+        });
+        return stringIds.length !== 0
+          ? stringIds.map(id => Number.parseInt(id, 10))
+          : (submitters.dataExists ? [...submitters.ids] : []);
+      },
+      toQuery: (value) => ({
+        submitterId: (value.length === submitters.length
+          ? []
+          : value.map(id => id.toString()))
+      })
+    });
+    watch(() => submitters.dataExists, () => {
+      if (submitterIds.value.length === 0 && submitters.length !== 0)
+        submitterIds.value = [...submitters.ids];
+    });
+    const submissionDateRange = useQueryRef({
+      fromQuery: (query) => {
+        if (typeof query.start === 'string' && typeof query.end === 'string') {
+          const start = DateTime.fromISO(query.start);
+          const end = DateTime.fromISO(query.end);
+          if (start.isValid && end.isValid && start <= end)
+            return [start.startOf('day'), end.startOf('day')];
+        }
+        return [];
+      },
+      toQuery: (value) => (value.length !== 0
+        ? { start: value[0].toISODate(), end: value[1].toISODate() }
+        : { start: null, end: null })
+    });
     const { reviewStates: allReviewStates } = useReviewState();
+    const reviewStates = useQueryRef({
+      fromQuery: (query) => arrayQuery(query.reviewState, {
+        validator: (value) => allReviewStates.some(reviewState =>
+          value === odataLiteral(reviewState)),
+        default: () => allReviewStates.map(odataLiteral)
+      }),
+      toQuery: (value) => ({
+        reviewState: value.length === allReviewStates.length ? [] : value
+      })
+    });
 
     return {
       form, keys, fields, formVersion, odata, submitters,
-      allReviewStates
+      submitterIds, submissionDateRange, reviewStates, allReviewStates
     };
   },
   data() {
@@ -151,46 +195,6 @@ export default {
     };
   },
   computed: {
-    submitterIds: {
-      get() {
-        const stringIds = arrayQuery(this.$route.query.submitterId, {
-          validator: (value) => /^[1-9]\d*$/.test(value)
-        });
-        return stringIds.length !== 0
-          ? stringIds.map(id => Number.parseInt(id, 10))
-          : (this.submitters.dataExists ? [...this.submitters.ids] : []);
-      },
-      set(submitterIds) {
-        this.replaceFilters({ submitterIds });
-      }
-    },
-    submissionDateRange: {
-      get() {
-        const { query } = this.$route;
-        if (typeof query.start === 'string' && typeof query.end === 'string') {
-          const start = DateTime.fromISO(query.start);
-          const end = DateTime.fromISO(query.end);
-          if (start.isValid && end.isValid && start <= end)
-            return [start.startOf('day'), end.startOf('day')];
-        }
-        return [];
-      },
-      set(submissionDateRange) {
-        this.replaceFilters({ submissionDateRange });
-      }
-    },
-    reviewStates: {
-      get() {
-        return arrayQuery(this.$route.query.reviewState, {
-          validator: (value) => this.allReviewStates.some(reviewState =>
-            value === odataLiteral(reviewState)),
-          default: () => this.allReviewStates.map(odataLiteral)
-        });
-      },
-      set(reviewStates) {
-        this.replaceFilters({ reviewStates });
-      }
-    },
     filtersOnSubmitterId() {
       if (this.submitterIds.length === 0) return false;
       const selectedAll = this.submitters.dataExists &&
@@ -305,22 +309,6 @@ export default {
         this.odata.nextLink &&
         !this.odata.awaitingResponse && this.scrolledToBottom())
         this.fetchChunk(false);
-    },
-    replaceFilters({
-      submitterIds = this.submitterIds,
-      submissionDateRange = this.submissionDateRange,
-      reviewStates = this.reviewStates
-    }) {
-      const query = {};
-      if (submitterIds.length !== this.submitters.length)
-        query.submitterId = submitterIds.map(id => id.toString());
-      if (submissionDateRange.length !== 0) {
-        query.start = submissionDateRange[0].toISODate();
-        query.end = submissionDateRange[1].toISODate();
-      }
-      if (reviewStates.length !== this.allReviewStates.length)
-        query.reviewState = reviewStates;
-      this.$router.replace({ path: this.$route.path, query });
     },
     showReview(submission) {
       this.review.submission = submission;
