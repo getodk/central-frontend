@@ -1,9 +1,8 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "include": ["./src", "./test/**/*.js", "./test/**/*.ts"],
+  "extends": "../../tsconfig.json",
+  "include": ["src", "test/**/*.ts", "vendor", "vite.config.ts"],
   "compilerOptions": {
     "declarationDir": "./dist",
-    "jsx": "preserve",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "outDir": "./dist"
   }

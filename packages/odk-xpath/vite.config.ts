@@ -1,81 +1,92 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
-import { readFile } from 'node:fs/promises';
-// import { defineConfig } from 'vite';
 
-const wasmURL = async (path: string) => {
-	const file = await readFile(path);
-	const base64 = Buffer.from(file).toString('base64');
+import { resolve as resolvePath } from 'node:path';
+import { defineConfig } from 'vite';
+import type { CollectionValues } from './src/lib/collections/types';
 
-	return `data:application/wasm;base64,${base64}`;
+const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
+
+type SupportedBrowser = CollectionValues<typeof supportedBrowsers>;
+
+const isSupportedBrowser = (browserName: string): browserName is SupportedBrowser =>
+	supportedBrowsers.has(browserName as SupportedBrowser);
+
+const BROWSER_NAME = (() => {
+	const envBrowserName = process.env.BROWSER_NAME;
+
+	if (envBrowserName == null) {
+		return null;
+	}
+
+	if (isSupportedBrowser(envBrowserName)) {
+		return envBrowserName;
+	}
+
+	throw new Error(`Unsupported browser: ${envBrowserName}`);
+})();
+
+const BROWSER_ENABLED = BROWSER_NAME != null;
+
+const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
+
+const TEST_INCLUDE =
+	BROWSER_NAME === 'webkit' && 0 > 1
+		? ['src/**/*.test.ts', 'test/**/*.{spec,test}.ts']
+		: ['src/**/*.test.ts', 'test/index.ts'];
+
+const cwd = process.cwd();
+const nodeModulesDir = resolvePath(cwd, '../../node_modules');
+
+const WASM_PATHS = {
+	ABSOLUTE: {
+		TREE_SITTER: resolvePath(nodeModulesDir, 'web-tree-sitter/tree-sitter.wasm'),
+		TREE_SITTER_XPATH: resolvePath(nodeModulesDir, 'tree-sitter-xpath/tree-sitter-xpath.wasm'),
+	},
 };
 
-import { defineConfig } from 'vite';
+const RUNTIME_TARGET = BROWSER_ENABLED ? 'WEB' : 'NODE';
 
-const BROWSER_ENABLED = true;
-
-export default defineConfig(async () => {
-	const treeSitterWasmURL = await wasmURL('../../node_modules/web-tree-sitter/tree-sitter.wasm');
-	const treeSitterXPathWasmURL = await wasmURL('../../node_modules/tree-sitter-xpath/tree-sitter-xpath.wasm');
-
-	return {
-		assetsInclude: [
-			'assets/**/*',
-		],
-		build: {
+export default defineConfig({
+	build: {
+		target: 'esnext',
+		minify: false,
+		sourcemap: true,
+	},
+	define: {
+		// TODO: Many integration tests concerned with datetimes currently expect a
+		// fixed time zone, for hard-coded values. The time zone was also chosen
+		// specifically because it does not (er, did not then, nor does presently at
+		// time of writing) observe daylight saving time or any other periodic
+		// change in its UTC offset.
+		//
+		// The hard-coded values make tests difficult to reason about. The lack of
+		// testing around DST is a significant gap in test coverage.
+		TZ: JSON.stringify(process.env.TZ ?? 'America/Phoenix'),
+		RUNTIME_TARGET: JSON.stringify(RUNTIME_TARGET),
+		WASM_PATHS: JSON.stringify(WASM_PATHS),
+	},
+	esbuild: {
+		sourcemap: true,
+		target: 'esnext',
+	},
+	optimizeDeps: {
+		esbuildOptions: {
 			target: 'esnext',
-			sourcemap: true,
 		},
-		define: {
-			TZ: JSON.stringify(process.env.TZ ?? 'America/Phoenix'),
-			TREE_SITTER_WASM_URL: JSON.stringify(treeSitterWasmURL),
-			TREE_SITTER_XPATH_WASM_URL: JSON.stringify(treeSitterXPathWasmURL),
+		needsInterop: ['web-tree-sitter'],
+		force: true,
+	},
+	test: {
+		browser: {
+			enabled: BROWSER_ENABLED,
+			name: BROWSER_NAME!,
+			provider: 'playwright',
+			headless: true,
 		},
-		esbuild: {
-			sourcemap: true,
-			supported: {
-				using: true,
-			},
-			target: 'esnext',
-		},
-		optimizeDeps: {
-			esbuildOptions: {
-				supported: {
-					using: true,
-				},
-				target: 'esnext',
-			},
-			needsInterop: ['lodash'],
 
-			force: true,
-		},
-		resolve: {
-			alias: {
-				'/tree-sitter-xpath.wasm': '/node_modules/tree-sitter-xpath/tree-sitter-xpath.wasm',
-			},
-			conditions: ['development', 'browser'],
-		},
-		server: {
-			port: 3000,
-		},
-		test: {
-			browser: {
-				enabled: BROWSER_ENABLED,
-				name: 'chromium',
-				// name: 'firefox',
-				// name: 'webkit',
-				provider: 'playwright',
-				headless: true,
-			},
-
-			globals: true,
-			deps: { registerNodeLoader: !BROWSER_ENABLED },
-
-			include: [
-				'src/**/*.test.ts',
-				'test/**/*.spec.ts',
-				'test/integration/**/*.test.ts',
-			],
-		},
-	};
+		environment: TEST_ENVIRONMENT,
+		globals: false,
+		include: TEST_INCLUDE,
+	},
 });

@@ -1,8 +1,10 @@
-import { expect } from 'chai';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { xml } from '../test-factories.ts';
 import { NamespaceResolver, staticNamespaces } from './NamespaceResolver.ts';
 
 describe('NamespaceResolver', () => {
+	let resolver: NamespaceResolver;
+
 	const ROOT_NAMESPACE_DEFAULT = 'https://root.namespace/';
 	const ROOT_NAMESPACE_A = 'https://root.namespace/a';
 	const ROOT_NAMESPACE_B = 'https://root.namespace/b';
@@ -25,7 +27,9 @@ describe('NamespaceResolver', () => {
 	`;
 	const UNPREFIXED_ELEMENT = TEST_DOCUMENT.documentElement.firstElementChild;
 
-	const resolver = new NamespaceResolver(TEST_DOCUMENT);
+	beforeEach(() => {
+		resolver = new NamespaceResolver(TEST_DOCUMENT);
+	});
 
 	it('resolves the default namespace of the document', () => {
 		expect(resolver.lookupNamespaceURI(null)).to.equal(ROOT_NAMESPACE_DEFAULT);
@@ -60,7 +64,9 @@ describe('NamespaceResolver', () => {
 	});
 
 	describe('nested element context', () => {
-		const resolver = new NamespaceResolver(UNPREFIXED_ELEMENT);
+		beforeEach(() => {
+			resolver = new NamespaceResolver(UNPREFIXED_ELEMENT);
+		});
 
 		const nestedCases = [
 			{ prefix: null, expected: NESTED_NAMESPACE_DEFAULT },

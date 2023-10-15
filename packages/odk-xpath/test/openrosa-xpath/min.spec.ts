@@ -1,41 +1,39 @@
+import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import {
-  createTestContext,
-  createTextContentTestContext,
-} from '../helpers.ts';
+import { createTestContext, createTextContentTestContext } from '../helpers.ts';
 
 describe('#min()', () => {
-  let testContext: TestContext;
+	let testContext: TestContext;
 
-  beforeEach(() => {
-    testContext = createTestContext();
-  });
+	beforeEach(() => {
+		testContext = createTestContext();
+	});
 
-  [
-    { expression: 'min(1, 2, 3)', expected: 1 },
-    { expression: 'min(1, 2, 0)', expected: 0 },
-    { expression: 'min(0, 2, 3)', expected: 0 },
-    { expression: 'min(-1, 2, 3)', expected: -1 },
-    { expression: 'min("")', expected: NaN },
-    { expression: 'min(//nonexisting)', expected: NaN },
-  ].forEach(({ expression, expected }) => {
-    it(`evaluates ${expression} to ${expected}`, () => {
-      testContext.assertNumberValue(expression, expected);
-    });
-  });
+	[
+		{ expression: 'min(1, 2, 3)', expected: 1 },
+		{ expression: 'min(1, 2, 0)', expected: 0 },
+		{ expression: 'min(0, 2, 3)', expected: 0 },
+		{ expression: 'min(-1, 2, 3)', expected: -1 },
+		{ expression: 'min("")', expected: NaN },
+		{ expression: 'min(//nonexisting)', expected: NaN },
+	].forEach(({ expression, expected }) => {
+		it(`evaluates ${expression} to ${expected}`, () => {
+			testContext.assertNumberValue(expression, expected);
+		});
+	});
 
-  it('should return NaN if no numerical nodes are matched', () => {
-    testContext.assertNumberValue('min(/simple)', NaN);
-  });
+	it('should return NaN if no numerical nodes are matched', () => {
+		testContext.assertNumberValue('min(/simple)', NaN);
+	});
 
-  it('should return value of a single node if only one matches', () => {
-    testContext = createTextContentTestContext('3');
+	it('should return value of a single node if only one matches', () => {
+		testContext = createTextContentTestContext('3');
 
-    testContext.assertNumberValue('min(/simple/xpath/to/node)', 3);
-  });
+		testContext.assertNumberValue('min(/simple/xpath/to/node)', 3);
+	});
 
-  it('should return NaN if any node evaluates to NaN', () => {
-    testContext = createTestContext(`
+	it('should return NaN if any node evaluates to NaN', () => {
+		testContext = createTestContext(`
       <root>
         <item>3</item>
         <item>17</item>
@@ -43,33 +41,33 @@ describe('#min()', () => {
         <item>cheese</item>
       </root>`);
 
-    testContext.assertNumberValue('min(/root/item)', NaN);
-  });
+		testContext.assertNumberValue('min(/root/item)', NaN);
+	});
 
-  it('should return the min value in a node set', () => {
-    testContext = createTestContext(`
+	it('should return the min value in a node set', () => {
+		testContext = createTestContext(`
       <root>
         <item>3</item>
         <item>-17</item>
         <item>32</item>
       </root>`);
 
-    testContext.assertNumberValue('min(/root/item)', -17);
-  });
+		testContext.assertNumberValue('min(/root/item)', -17);
+	});
 
-  it('should return the min value in a node set of negative numbers', () => {
-    testContext = createTestContext(`
+	it('should return the min value in a node set of negative numbers', () => {
+		testContext = createTestContext(`
         <root>
           <item>-3</item>
           <item>-17</item>
           <item>-32</item>
         </root>`);
 
-      testContext.assertNumberValue('min(/root/item)', -32);
-  });
+		testContext.assertNumberValue('min(/root/item)', -32);
+	});
 
-  it('min(self::*) & min(*)', () => {
-    testContext = createTestContext(`
+	it('min(self::*) & min(*)', () => {
+		testContext = createTestContext(`
       <div id="FunctionNumberCase">
         <div id="FunctionNumberCaseNumber">123</div>
         <div id="FunctionNumberCaseNotNumber">  a a  </div>
@@ -84,21 +82,21 @@ describe('#min()', () => {
           <div>a</div>
         </div>
       </div>`);
-    let contextNode = testContext.document.getElementById('FunctionNumberCaseNumber');
+		let contextNode = testContext.document.getElementById('FunctionNumberCaseNumber');
 
-    testContext.assertNumberValue('min(self::*)', 123, {
-      contextNode,
-    });
+		testContext.assertNumberValue('min(self::*)', 123, {
+			contextNode,
+		});
 
-    contextNode = testContext.document.getElementById('FunctionNumberCaseNumberMultiple');
+		contextNode = testContext.document.getElementById('FunctionNumberCaseNumberMultiple');
 
-    testContext.assertNumberValue('min(*)', -10, {
-      contextNode,
-    });
-  });
+		testContext.assertNumberValue('min(*)', -10, {
+			contextNode,
+		});
+	});
 
-  it('min()', () => {
-    testContext = createTestContext(`
+	it('min()', () => {
+		testContext = createTestContext(`
       <div>
         <div id="FunctionMinCase">
           <div>5</div>
@@ -139,28 +137,28 @@ describe('#min()', () => {
 
       </div>`);
 
-    let contextNode = testContext.document.getElementById('FunctionMaxMinCaseEmpty');
+		let contextNode = testContext.document.getElementById('FunctionMaxMinCaseEmpty');
 
-    testContext.assertNumberValue('min(self::*)', NaN, {
-      contextNode,
-    });
+		testContext.assertNumberValue('min(self::*)', NaN, {
+			contextNode,
+		});
 
-    contextNode = testContext.document.getElementById('FunctionMaxMinWithEmpty');
+		contextNode = testContext.document.getElementById('FunctionMaxMinWithEmpty');
 
-    testContext.assertNumberValue('min(*)', NaN, {
-      contextNode,
-    });
+		testContext.assertNumberValue('min(*)', NaN, {
+			contextNode,
+		});
 
-    contextNode = testContext.document.getElementById('FunctionMinCase');
+		contextNode = testContext.document.getElementById('FunctionMinCase');
 
-    testContext.assertNumberValue('min(*)', 0, {
-      contextNode,
-    });
+		testContext.assertNumberValue('min(*)', 0, {
+			contextNode,
+		});
 
-    contextNode = testContext.document.getElementById('FunctionNumberCaseNotNumberMultiple');
+		contextNode = testContext.document.getElementById('FunctionNumberCaseNotNumberMultiple');
 
-    testContext.assertNumberValue('min(node())', NaN, {
-      contextNode,
-    });
-  });
+		testContext.assertNumberValue('min(node())', NaN, {
+			contextNode,
+		});
+	});
 });

@@ -1,17 +1,13 @@
-import { expect } from 'chai';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import {
-  createTestContext,
-  getNonNamespaceAttributes,
-  namespaceResolver,
-} from '../helpers.ts';
+import { createTestContext, getNonNamespaceAttributes, namespaceResolver } from '../helpers.ts';
 
 describe('XPath expression evaluation', () => {
-  let testContext: TestContext;
-  let document: XMLDocument;
+	let testContext: TestContext;
+	let document: XMLDocument;
 
-  beforeEach(() => {
-    testContext = createTestContext(`
+	beforeEach(() => {
+		testContext = createTestContext(`
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
         <head>
@@ -30,56 +26,92 @@ describe('XPath expression evaluation', () => {
           </div>
         </body>
       </html>`);
-    document = testContext.document;
-  });
+		document = testContext.document;
+	});
 
-  it('works with different types of context parameters', () => {
-    [
-      { expression: ".", contextNode: document, nodeType: 9 }, // Document
-      { expression: ".", contextNode: document.documentElement, nodeType: 1 }, // Element
-      { expression: ".", contextNode: document.getElementById('testContextNodeParameter')!, nodeType: 1 }, // Element
-      { expression: ".", contextNode: getNonNamespaceAttributes(document.getElementById('testContextNodeParameter')!)[0]!, nodeType: 2 }, // Attribute
-      { expression: ".", contextNode: document.getElementById('testContextNodeParameterText')!.firstChild!, nodeType: 3 }, // Text
-      { expression: ".", contextNode: document.getElementById('testContextNodeParameterCData')!.firstChild!, nodeType: 4 }, // CDATASection
-      { expression: ".", contextNode: document.getElementById('testContextNodeParameterProcessingInstruction')!.firstChild!, nodeType: 7 }, // ProcessingInstruction
-      { expression: ".", contextNode: document.getElementById('testContextNodeParameterComment')!.firstChild!, nodeType: 8 }, // Comment
-    ].forEach(({ expression, contextNode, nodeType }) => {
-      expect(contextNode.nodeType, nodeType as any);
+	it('works with different types of context parameters', () => {
+		[
+			{ expression: '.', contextNode: document, nodeType: 9 }, // Document
+			{ expression: '.', contextNode: document.documentElement, nodeType: 1 }, // Element
+			{
+				expression: '.',
+				contextNode: document.getElementById('testContextNodeParameter')!,
+				nodeType: 1,
+			}, // Element
+			{
+				expression: '.',
+				contextNode: getNonNamespaceAttributes(
+					document.getElementById('testContextNodeParameter')!
+				)[0]!,
+				nodeType: 2,
+			}, // Attribute
+			{
+				expression: '.',
+				contextNode: document.getElementById('testContextNodeParameterText')!.firstChild!,
+				nodeType: 3,
+			}, // Text
+			{
+				expression: '.',
+				contextNode: document.getElementById('testContextNodeParameterCData')!.firstChild!,
+				nodeType: 4,
+			}, // CDATASection
+			{
+				expression: '.',
+				contextNode: document.getElementById('testContextNodeParameterProcessingInstruction')!
+					.firstChild!,
+				nodeType: 7,
+			}, // ProcessingInstruction
+			{
+				expression: '.',
+				contextNode: document.getElementById('testContextNodeParameterComment')!.firstChild!,
+				nodeType: 8,
+			}, // Comment
+		].forEach(({ expression, contextNode, nodeType }) => {
+			expect(contextNode.nodeType).to.equal(nodeType);
 
-      const result = testContext.evaluate(expression, contextNode, XPathResult.ANY_UNORDERED_NODE_TYPE);
+			const result = testContext.evaluate(
+				expression,
+				contextNode,
+				XPathResult.ANY_UNORDERED_NODE_TYPE
+			);
 
-      expect(result.singleNodeValue).to.equal(contextNode);
-    });
-  });
+			expect(result.singleNodeValue).to.equal(contextNode);
+		});
+	});
 
-  it('works with different context parameter namespaces', () => {
-    // get a namespace node
-    const contextNode = document.getElementById('testContextNodeParameterNamespace')!;
+	it('works with different context parameter namespaces', () => {
+		// get a namespace node
+		const contextNode = document.getElementById('testContextNodeParameterNamespace')!;
 
-    //TODO let result = xEval("namespace::node()", node, XPathResult.ANY_UNORDERED_NODE_TYPE);
-    let result = testContext.evaluate(".", contextNode, XPathResult.ANY_UNORDERED_NODE_TYPE);
+		//TODO let result = xEval("namespace::node()", node, XPathResult.ANY_UNORDERED_NODE_TYPE);
+		let result = testContext.evaluate('.', contextNode, XPathResult.ANY_UNORDERED_NODE_TYPE);
 
-    const item = result.singleNodeValue;
+		const item = result.singleNodeValue;
 
-    expect(item).not.to.be.null;
+		expect(item).not.to.be.null;
 
-    //TODO chrome/firefox do not support namespace:node()
-    // assert.equal(item.nodeType, 13);
+		//TODO chrome/firefox do not support namespace:node()
+		// assert.equal(item.nodeType, 13);
 
-    // use namespacenode as a context node
-    result = testContext.evaluate(".", item!, XPathResult.ANY_UNORDERED_NODE_TYPE);
+		// use namespacenode as a context node
+		result = testContext.evaluate('.', item, XPathResult.ANY_UNORDERED_NODE_TYPE);
 
-    expect(result.singleNodeValue).to.equal(item);
-  });
+		expect(result.singleNodeValue).to.equal(item);
+	});
 
-  it.fails('fails if the context is document fragment', () => {
-    testContext.evaluate(".", document.createDocumentFragment(), XPathResult.ANY_UNORDERED_NODE_TYPE, null);
-  });
+	it.fails('fails if the context is document fragment', () => {
+		testContext.evaluate(
+			'.',
+			document.createDocumentFragment(),
+			XPathResult.ANY_UNORDERED_NODE_TYPE,
+			null
+		);
+	});
 });
 
 describe('XPath expression evaluation3', () => {
-  it('works with expected return type', () => {
-    const testContext = createTestContext(`<model>
+	it('works with expected return type', () => {
+		const testContext = createTestContext(`<model>
         <instance>
           <nested_repeats id="nested_repeats">
             <formhub><uuid/></formhub>
@@ -90,47 +122,48 @@ describe('XPath expression evaluation3', () => {
         </instance>
       </model>`);
 
-    let expression = `/model/instance[1]/nested_repeats/kids/has_kids='1'`;
-    let result = testContext.evaluate(expression, null, XPathResult.BOOLEAN_TYPE);
+		let expression = `/model/instance[1]/nested_repeats/kids/has_kids='1'`;
+		let result = testContext.evaluate(expression, null, XPathResult.BOOLEAN_TYPE);
 
-    expect(result.resultType).to.equal(3);
-    expect(result.booleanValue).to.equal(true);
+		expect(result.resultType).to.equal(3);
+		expect(result.booleanValue).to.equal(true);
 
-    expression = `/model/instance[1]/nested_repeats/kids/has_kids='2'`;
-    result = testContext.evaluate(expression, null, 3);
+		expression = `/model/instance[1]/nested_repeats/kids/has_kids='2'`;
+		result = testContext.evaluate(expression, null, 3);
 
-    expect(result.resultType).to.equal(3);
-    expect(result.booleanValue).to.equal(false);
-  });
+		expect(result.resultType).to.equal(3);
+		expect(result.booleanValue).to.equal(false);
+	});
 });
 
 describe('XPath expression evaluation4', () => {
-  let testContext: TestContext;
+	let testContext: TestContext;
 
-  beforeEach(() => {
-    testContext = createTestContext(`<thedata id="thedata">
+	beforeEach(() => {
+		testContext = createTestContext(`<thedata id="thedata">
       <nodeA/>
       <nodeB>b</nodeB>
       </thedata>`);
-  });
+	});
 
-  [
-    { expression: '/thedata/nodeA', expected: true },
-    { expression: '/thedata/nodeB', expected: true },
-    { expression: '/thedata/nodeC', expected: false },
-  ].forEach(({ expression, expected }) => {
-    it('returns correct result type', () => {
-      const res = testContext.evaluate(expression, null, XPathResult.BOOLEAN_TYPE);
+	[
+		{ expression: '/thedata/nodeA', expected: true },
+		{ expression: '/thedata/nodeB', expected: true },
+		{ expression: '/thedata/nodeC', expected: false },
+	].forEach(({ expression, expected }) => {
+		it('returns correct result type', () => {
+			const res = testContext.evaluate(expression, null, XPathResult.BOOLEAN_TYPE);
 
-      expect(res.resultType).to.equal(3);
-      expect(res.booleanValue).to.equal(expected);
-    });
-  });
+			expect(res.resultType).to.equal(3);
+			expect(res.booleanValue).to.equal(expected);
+		});
+	});
 });
 
 describe('XPath expression evaluation5', () => {
-  it('returns correct result type', () => {
-    const testContext = createTestContext(`
+	it('returns correct result type', () => {
+		const testContext = createTestContext(
+			`
       <html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml"
         xmlns:jr="http://openrosa.org/javarosa"
         xmlns:orx="http://openrosa.org/xforms/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -148,13 +181,15 @@ describe('XPath expression evaluation5', () => {
             </meta>
           </data>
         </instance>
-      </model></html>`, { namespaceResolver });
+      </model></html>`,
+			{ namespaceResolver }
+		);
 
-    const expression = '/model/instance[1]/*//*[@template] | /model/instance[1]/*//*[@jr:template]';
+		const expression = '/model/instance[1]/*//*[@template] | /model/instance[1]/*//*[@jr:template]';
 
-    const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+		const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
 
-    expect(result.resultType).to.equal(7);
-    expect(result.snapshotLength).to.equal(0);
-  });
+		expect(result.resultType).to.equal(7);
+		expect(result.snapshotLength).to.equal(0);
+	});
 });

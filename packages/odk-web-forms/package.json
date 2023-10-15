@@ -35,12 +35,9 @@
     "dev": "vite",
     "test": "npm-run-all -nl test:*",
     "test:e2e": "playwright test",
-    "test:mocha": "mocha --exit --timeout 30000 ./test/**/*.test.js",
-    "test:types": "tsc --project ./tsconfig.test-types.json"
+    "test:types": "tsc --project ./tsconfig.json"
   },
   "devDependencies": {
-    "@playwright/test": "^1.38.1",
-    "@types/mocha": "^10.0.1",
-    "mocha": "^10.2.0"
+    "@playwright/test": "^1.38.1"
   }
 }

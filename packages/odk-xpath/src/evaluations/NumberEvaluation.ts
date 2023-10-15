@@ -1,18 +1,18 @@
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
 export class NumberEvaluation extends ValueEvaluation<'NUMBER'> {
-  readonly type = 'NUMBER';
-  readonly nodes = null;
+	readonly type = 'NUMBER';
+	readonly nodes = null;
 
-  protected readonly booleanValue: boolean;
-  protected readonly numberValue: number;
-  protected readonly stringValue: string;
+	protected readonly booleanValue: boolean;
+	protected readonly numberValue: number;
+	protected readonly stringValue: string;
 
-  constructor(readonly value: number) {
-    super();
+	constructor(readonly value: number) {
+		super();
 
-    this.booleanValue = value !== 0 && !Number.isNaN(value);
-    this.numberValue = value;
-    this.stringValue = String(value);
-  }
+		this.booleanValue = value !== 0 && !Number.isNaN(value);
+		this.numberValue = value;
+		this.stringValue = String(value);
+	}
 }

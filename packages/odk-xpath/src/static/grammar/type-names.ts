@@ -1,9 +1,5 @@
-/// <reference types="tree-sitter-xpath/types/tree-sitter-xpath-parser" />
-
-import type {
-	SyntaxType,
-	UnnamedType,
-} from 'tree-sitter-xpath/parser';
+import type { SyntaxType, UnnamedType } from 'tree-sitter-xpath';
+import { assertType, type Exact } from '../../type-safety';
 
 /*
  * ============================================================================
@@ -37,15 +33,9 @@ export type ExprType = `${SyntaxType.Expr}`;
  * ----------------------------------------------------------------------------
  */
 
-type NonOperationExprType =
-  | FilterExprType
-  | FilterPathExprType
-  ;
+type NonOperationExprType = FilterExprType | FilterPathExprType;
 
-type OperationExprType = Exclude<
-  Extract<SyntaxType, `${string}_expr`>,
-  NonOperationExprType
->;
+type OperationExprType = Exclude<Extract<SyntaxType, `${string}_expr`>, NonOperationExprType>;
 
 export type UnaryExprType = `${SyntaxType.UnaryExpr}`;
 
@@ -69,20 +59,19 @@ export type BinaryExprType =
 	| AndExprType
 	| DivisionExprType
 	| EqExprType
-	| GtExprType
 	| GteExprType
-	| LtExprType
+	| GtExprType
 	| LteExprType
+	| LtExprType
 	| ModuloExprType
 	| MultiplicationExprType
 	| NeExprType
 	| OrExprType
 	| SubtractionExprType
-	| UnionExprType
-	;
+	| UnionExprType;
 
-// assertType?.<Exact<AnyBinaryExprType, BinaryExprType>>();
-// assertType?.<Exact<OperationExprType, UnaryExprType | BinaryExprType>>();
+assertType?.<Exact<AnyBinaryExprType, BinaryExprType>>();
+assertType?.<Exact<OperationExprType, BinaryExprType | UnaryExprType>>();
 
 /*
  * ----------------------------------------------------------------------------
@@ -182,96 +171,79 @@ export type ErrorType = `${SyntaxType.ERROR}`;
 
 // These are manually identified by examining the grammar (for now...?)
 type AnyApparentExprType =
-	| OrExprType
+	| AdditionExprType
 	| AndExprType
+	| DivisionExprType
 	| EqExprType
-	| NeExprType
-	| LteExprType
-	| LtExprType
+	| FilterPathExprType
+	| FunctionCallType
 	| GteExprType
 	| GtExprType
-	| AdditionExprType
-	| SubtractionExprType
-	| MultiplicationExprType
-	| DivisionExprType
-	| ModuloExprType
-	| UnaryExprType
-	| UnionExprType
-	| FilterPathExprType
 	| LiteralType
+	| LteExprType
+	| LtExprType
+	| ModuloExprType
+	| MultiplicationExprType
+	| NeExprType
 	| NumberType
-	| FunctionCallType
-	;
+	| OrExprType
+	| SubtractionExprType
+	| UnaryExprType
+	| UnionExprType;
 
-export type AnyExprType =
-	| AnyApparentExprType
-	;
+export type AnyExprType = AnyApparentExprType;
 
 export type AnyOperationExprType = OperationExprType;
 
 export type AnyBinaryExprType = BinaryExprType;
 
-export type AnyUnaryExprType =
-	| UnaryExprType
-	;
+export type AnyUnaryExprType = UnaryExprType;
 
 export type AnyLocationPathType =
-  | FilterExprType
-  | FilterPathExprType
-	| AbsoluteLocationPathType
-	| AbsoluteRootLocationPathType
-	| RelativeLocationPathType
 	| AbbreviatedAbsoluteLocationPathType
 	| AbbreviatedAxisTestType
 	| AbbreviatedStepType
+	| AbsoluteLocationPathType
+	| AbsoluteRootLocationPathType
 	| AxisNameType
 	| AxisTestType
+	| FilterExprType
+	| FilterPathExprType
 	| NodeTestType
 	| NodeTypeTestType
-  | ProcessingInstructionNameTestType
-	| StepType
 	| ParentType
-	| SelfType
 	| PredicateType
+	| ProcessingInstructionNameTestType
+	| RelativeLocationPathType
 	| RelativeStepSyntaxLiteral
-	;
+	| SelfType
+	| StepType;
 
-export type AnyFunctionType =
-	| FunctionCallType
-	| FunctionNameType
-	| ArgumentType
-	;
+export type AnyFunctionType = ArgumentType | FunctionCallType | FunctionNameType;
 
 export type AnyNameType =
-	| PrefixedNameType
-	| PrefixType
 	| LocalPartType
+	| PrefixedNameType
 	| PrefixedWildcardNameTestType
+	| PrefixType
 	| UnprefixedNameType
-	| UnprefixedWildcardNameTestType
-	;
+	| UnprefixedWildcardNameTestType;
 
-export type AnyLiteralType =
-	| NumberType
-	| LiteralType
-	;
+export type AnyLiteralType = LiteralType | NumberType;
 
-export type AnyContextuallyScopedType =
-	| VariableReferenceType
-	;
+export type AnyContextuallyScopedType = VariableReferenceType;
 
 export type AnySyntaxType =
-	| XPathType
-	| ExprType
-	| AnyExprType
-	| AnyUnaryExprType
 	| AnyBinaryExprType
-	| AnyLocationPathType
-	| AnyFunctionType
-	| AnyNameType
-	| AnyLiteralType
 	| AnyContextuallyScopedType
-	;
+	| AnyExprType
+	| AnyFunctionType
+	| AnyLiteralType
+	| AnyLocationPathType
+	| AnyNameType
+	| AnyUnaryExprType
+	| ExprType
+	| XPathType;
 
 /*
  * ============================================================================
@@ -279,4 +251,4 @@ export type AnySyntaxType =
  * ============================================================================
  */
 
-// assertType?.<Exact<SyntaxType | UnnamedType, AnySyntaxType | ErrorType>>();
+assertType?.<Exact<SyntaxType | UnnamedType, AnySyntaxType | ErrorType>>();

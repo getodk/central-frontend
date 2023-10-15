@@ -1,32 +1,33 @@
+import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
 import { createTestContext } from '../helpers.ts';
 
 describe('#selected-at()', () => {
-  let testContext: TestContext;
+	let testContext: TestContext;
 
-  beforeEach(() => {
-    testContext = createTestContext();
-  });
+	beforeEach(() => {
+		testContext = createTestContext();
+	});
 
-  [
-    { from: 'zero one two three', index: 1, expected: 'one' },
-    { from: 'zero one two three', index: 4, expected: '' },
-    { from: 'zero one two three', index: -1, expected: '' },
-    { from: '', index: 0, expected: '' },
-  ].forEach(({ from, index, expected }) => {
-    it(`should select ${expected} from "${from}" at index ${index}`, () => {
-      testContext.assertStringValue(`selected-at('${from}', '${index}')`, expected);
-    });
-  });
+	[
+		{ from: 'zero one two three', index: 1, expected: 'one' },
+		{ from: 'zero one two three', index: 4, expected: '' },
+		{ from: 'zero one two three', index: -1, expected: '' },
+		{ from: '', index: 0, expected: '' },
+	].forEach(({ from, index, expected }) => {
+		it(`should select ${expected} from "${from}" at index ${index}`, () => {
+			testContext.assertStringValue(`selected-at('${from}', '${index}')`, expected);
+		});
+	});
 
-  it('simple', () => {
-    testContext.assertStringValue('selected-at("apple baby crimson", 2)', 'crimson');
-    testContext.assertStringValue('selected-at("apple baby crimson", -1)', '');
-    testContext.assertStringValue('selected-at("", 1)', '');
-  });
+	it('simple', () => {
+		testContext.assertStringValue('selected-at("apple baby crimson", 2)', 'crimson');
+		testContext.assertStringValue('selected-at("apple baby crimson", -1)', '');
+		testContext.assertStringValue('selected-at("", 1)', '');
+	});
 
-  it('with nodes', () => {
-    testContext = createTestContext(`
+	it('with nodes', () => {
+		testContext = createTestContext(`
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
         <head>
@@ -42,33 +43,33 @@ describe('#selected-at()', () => {
           </div>
         </body>
       </html>`);
-    const { document } = testContext;
+		const { document } = testContext;
 
-    let contextNode = document.getElementById('FunctionSelectedCaseEmpty');
+		let contextNode = document.getElementById('FunctionSelectedCaseEmpty');
 
-    testContext.assertStringValue('selected-at(self::node(), 0)',  '', {
-      contextNode,
-    });
+		testContext.assertStringValue('selected-at(self::node(), 0)', '', {
+			contextNode,
+		});
 
-    contextNode = document.getElementById('FunctionSelectedCaseSingle');
+		contextNode = document.getElementById('FunctionSelectedCaseSingle');
 
-    testContext.assertStringValue('selected-at(self::node(), 0)', 'ab', {
-      contextNode,
-    });
+		testContext.assertStringValue('selected-at(self::node(), 0)', 'ab', {
+			contextNode,
+		});
 
-    contextNode = document.getElementById('FunctionSelectedCaseSingle');
+		contextNode = document.getElementById('FunctionSelectedCaseSingle');
 
-    testContext.assertStringValue('selected-at(self::node(), 1)', '', {
-      contextNode,
-    });
+		testContext.assertStringValue('selected-at(self::node(), 1)', '', {
+			contextNode,
+		});
 
-    contextNode = document.getElementById('FunctionSelectedCaseMultiple');
+		contextNode = document.getElementById('FunctionSelectedCaseMultiple');
 
-    testContext.assertStringValue('selected-at(self::node(), 2)', 'ef', {
-      contextNode,
-    });
-    testContext.assertStringValue('selected-at(self::node(), -1)', '', {
-      contextNode,
-    });
-  });
+		testContext.assertStringValue('selected-at(self::node(), 2)', 'ef', {
+			contextNode,
+		});
+		testContext.assertStringValue('selected-at(self::node(), -1)', '', {
+			contextNode,
+		});
+	});
 });

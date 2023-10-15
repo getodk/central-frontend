@@ -12,63 +12,66 @@ type NamespaceURI = string | null;
 type LocalName = string;
 
 interface QualifiedName {
-  readonly namespaceURI: NamespaceURI;
-  readonly localName: LocalName;
+	readonly namespaceURI: NamespaceURI;
+	readonly localName: LocalName;
 }
 
 export interface LibraryFunction extends AnyFunctionImplementation {
-  readonly qualifiedName: QualifiedName;
+	readonly qualifiedName: QualifiedName;
 }
 
 type FunctionLibraryEntry = readonly [
-  localName: LocalName,
-  implementation: AnyFunctionImplementation,
+	localName: LocalName,
+	implementation: AnyFunctionImplementation,
 ];
 
 export class FunctionLibrary {
-  protected readonly implementations: Map<LocalName, LibraryFunction>;
+	protected readonly implementations: Map<LocalName, LibraryFunction>;
 
-  constructor(
-    readonly namespaceURI: string,
-    entries: readonly FunctionLibraryEntry[]
-  ) {
-    const implementations = new Map<LocalName, LibraryFunction>;
+	constructor(
+		readonly namespaceURI: string,
+		entries: readonly FunctionLibraryEntry[]
+	) {
+		const implementations = new Map<LocalName, LibraryFunction>();
 
-    entries.forEach(([entryLocalName, implementation]) => {
-      const localName = implementation.localName ?? entryLocalName;
+		entries.forEach(([entryLocalName, implementation]) => {
+			const localName = implementation.localName ?? entryLocalName;
 
-      const qualifiedName: QualifiedName = {
-        namespaceURI,
-        localName,
-      };
+			const qualifiedName: QualifiedName = {
+				namespaceURI,
+				localName,
+			};
 
-      implementations.set(localName, Object.assign(implementation, {
-        qualifiedName,
-      }));
-    });
+			implementations.set(
+				localName,
+				Object.assign(implementation, {
+					qualifiedName,
+				})
+			);
+		});
 
-    this.implementations = implementations;
-  }
+		this.implementations = implementations;
+	}
 
-  has(localName: LocalName): boolean {
-    return this.implementations.has(localName);
-  }
+	has(localName: LocalName): boolean {
+		return this.implementations.has(localName);
+	}
 
-  call(
-    localName: LocalName,
-    context: LocationPathEvaluation,
-    args: readonly Expression[]
-  ): Evaluation {
-    const implementation = this.implementations.get(localName);
+	call(
+		localName: LocalName,
+		context: LocationPathEvaluation,
+		args: readonly Expression[]
+	): Evaluation {
+		const implementation = this.implementations.get(localName);
 
-    if (implementation == null) {
-      throw new UnknownFunctionError(localName);
-    }
+		if (implementation == null) {
+			throw new UnknownFunctionError(localName);
+		}
 
-    const fn: FunctionImplementation<any> = implementation;
+		const fn: FunctionImplementation<number> = implementation;
 
-    fn.validateArguments(args);
+		fn.validateArguments(args);
 
-    return implementation.call(context, args);
-  }
+		return implementation.call(context, args);
+	}
 }

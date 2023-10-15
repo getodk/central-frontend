@@ -1,8 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "include": ["grammar.ts", "test/**/*.test.ts"],
   "compilerOptions": {
     "esModuleInterop": true,
-    "module": "ESNext"
+    "module": "ESNext",
+    "emitDeclarationOnly": false,
+    "noEmit": true
   }
 }

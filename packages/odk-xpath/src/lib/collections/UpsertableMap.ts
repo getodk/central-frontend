@@ -29,24 +29,18 @@ const fromSentinelValue = <V>(value: V) => {
 
 export class UpsertableMap<K, V> extends Map<K, V> {
 	constructor(entries?: Iterable<readonly [K, V]> | null) {
-		super(
-			Array.from(entries ?? [])
-				.map(([key, value]) => [key, value ?? toSentinelValue(value)])
-		);
+		super(Array.from(entries ?? []).map(([key, value]) => [key, value ?? toSentinelValue(value)]));
 	}
 
-	get(key: K): V | undefined {
+	override get(key: K): V | undefined {
 		return fromSentinelValue(super.get(key));
 	}
 
-	set(key: K, value: V): this {
+	override set(key: K, value: V): this {
 		return super.set(key, value ?? toSentinelValue(value));
 	}
 
-  upsert(
-		key: K,
-		produce: (key: K) => V
-	): V {
+	upsert(key: K, produce: (key: K) => V): V {
 		const current = super.get(key);
 
 		if (current == null) {
@@ -58,5 +52,5 @@ export class UpsertableMap<K, V> extends Map<K, V> {
 		}
 
 		return current;
-  }
+	}
 }

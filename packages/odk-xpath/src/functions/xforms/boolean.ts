@@ -1,118 +1,114 @@
-import {
-  multi,
-  single,
-} from 'itertools-ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
+import { chunkwise } from 'itertools-ts/lib/single';
+import { zipLongest } from 'itertools-ts/lib/multi';
 
 export const booleanFromString = new BooleanFunction(
-  [{ arityType: 'required', typeHint: 'string' }],
-  (context, [expression]): boolean => {
-    const value = expression!.evaluate(context).toString();
+	[{ arityType: 'required', typeHint: 'string' }],
+	(context, [expression]): boolean => {
+		const value = expression!.evaluate(context).toString();
 
-    return value === '1' || value === 'true';
-  },
-  { localName: 'boolean-from-string' }
+		return value === '1' || value === 'true';
+	},
+	{ localName: 'boolean-from-string' }
 );
 
 export const unweightedChecklist = new BooleanFunction(
-  [
-    { arityType: 'required', typeHint: 'number' },
-    { arityType: 'required', typeHint: 'number' },
-    { arityType: 'variadic' },
-  ],
-  (context, [minExpression, maxExpression, ...expressions]): boolean => {
-    const min = minExpression!.evaluate(context).toNumber();
+	[
+		{ arityType: 'required', typeHint: 'number' },
+		{ arityType: 'required', typeHint: 'number' },
+		{ arityType: 'variadic' },
+	],
+	(context, [minExpression, maxExpression, ...expressions]): boolean => {
+		const min = minExpression!.evaluate(context).toNumber();
 
-    let max = maxExpression!.evaluate(context).toNumber();
+		let max = maxExpression!.evaluate(context).toNumber();
 
-    if (max === -1) {
-      if (min < 1) {
-        return true;
-      }
+		if (max === -1) {
+			if (min < 1) {
+				return true;
+			}
 
-      max = Infinity;
-    }
+			max = Infinity;
+		}
 
-    let satisfied = 0;
+		let satisfied = 0;
 
-    for (const expression of expressions) {
-      const results = expression.evaluate(context).values();
+		for (const expression of expressions) {
+			const results = expression.evaluate(context).values();
 
-      for (const result of results) {
-        if (result.toBoolean()) {
-          satisfied += 1;
+			for (const result of results) {
+				if (result.toBoolean()) {
+					satisfied += 1;
 
-          if (satisfied > max) {
-            return false;
-          }
-        }
-      }
-    }
+					if (satisfied > max) {
+						return false;
+					}
+				}
+			}
+		}
 
-    return satisfied >= min;
-  },
-  { localName: 'checklist' }
+		return satisfied >= min;
+	},
+	{ localName: 'checklist' }
 );
 
 export const weightedChecklist = new BooleanFunction(
-  [
-    { arityType: 'required', typeHint: 'number' },
-    { arityType: 'required', typeHint: 'number' },
-    { arityType: 'variadic' },
-  ],
-  (context, [minExpression, maxExpression, ...expressions]): boolean => {
-    const min = minExpression!.evaluate(context).toNumber();
+	[
+		{ arityType: 'required', typeHint: 'number' },
+		{ arityType: 'required', typeHint: 'number' },
+		{ arityType: 'variadic' },
+	],
+	(context, [minExpression, maxExpression, ...expressions]): boolean => {
+		const min = minExpression!.evaluate(context).toNumber();
 
-    let max = maxExpression!.evaluate(context).toNumber();
+		let max = maxExpression!.evaluate(context).toNumber();
 
-    if (max === -1) {
-      if (min < 1) {
-        return true;
-      }
+		if (max === -1) {
+			if (min < 1) {
+				return true;
+			}
 
-      max = Infinity;
-    }
+			max = Infinity;
+		}
 
-    let satisfied = 0;
+		let satisfied = 0;
 
-    for (const [expression, weightExpression] of single.chunkwise(expressions, 2)) {
-      const results = expression!.evaluate(context).values();
-      const weights = weightExpression!.evaluate(context).values();
+		for (const [expression, weightExpression] of chunkwise(expressions, 2)) {
+			const results = expression!.evaluate(context).values();
+			const weights = weightExpression!.evaluate(context).values();
 
-      for (const [result, weight] of multi.zipLongest(results, weights)) {
-        if (weight == null) {
-          break;
-        }
+			for (const [result, weight] of zipLongest(results, weights)) {
+				if (weight == null) {
+					break;
+				}
 
-        if (result?.toBoolean() ?? false) {
-          satisfied += weight.toNumber();
+				if (result?.toBoolean() ?? false) {
+					satisfied += weight.toNumber();
 
-          if (satisfied > max) {
-            return false;
-          }
-        }
-      }
-    }
+					if (satisfied > max) {
+						return false;
+					}
+				}
+			}
+		}
 
-    return satisfied >= min;
-  },
-  { localName: 'weighted-checklist' }
+		return satisfied >= min;
+	},
+	{ localName: 'weighted-checklist' }
 );
 
 export const xfIf = new FunctionImplementation(
-  [
-    { arityType: 'required', typeHint: 'boolean' },
-    { arityType: 'required' },
-    { arityType: 'required' },
-  ],
-  (context, [conditionExpression, whenTrueExpression, whenFalseExpression]) => {
-    const condition = conditionExpression!.evaluate(context).toBoolean();
-    const expression = condition
-      ? whenTrueExpression!
-      : whenFalseExpression!;
+	[
+		{ arityType: 'required', typeHint: 'boolean' },
+		{ arityType: 'required' },
+		{ arityType: 'required' },
+	],
+	(context, [conditionExpression, whenTrueExpression, whenFalseExpression]) => {
+		const condition = conditionExpression!.evaluate(context).toBoolean();
+		const expression = condition ? whenTrueExpression! : whenFalseExpression!;
 
-    return expression.evaluate(context);
-  },
-  { localName: 'if' }
+		return expression.evaluate(context);
+	},
+	{ localName: 'if' }
 );

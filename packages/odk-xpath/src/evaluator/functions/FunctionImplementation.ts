@@ -11,53 +11,50 @@ import type { Expression } from '../expression/Expression.ts';
 import { UnreachableError } from '../../lib/error/UnreachableError.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
+import type { IterableReadonlyTuple } from '../../lib/collections/types';
 
 export class UnknownFunctionError extends Error {
-  constructor(functionName: string) {
-    super(`Unknown function ${functionName}`);
-  }
+	constructor(functionName: string) {
+		super(`Unknown function ${functionName}`);
+	}
 }
 
 export class InvalidArgumentError extends Error {
-  constructor(argumentIndex: number, parameter: Parameter | null) {
-    if (parameter == null) {
-      super(`Argument ${argumentIndex} not allowed`);
-    } else {
-      const { typeHint } = parameter;
+	constructor(argumentIndex: number, parameter: Parameter | null) {
+		if (parameter == null) {
+			super(`Argument ${argumentIndex} not allowed`);
+		} else {
+			const { typeHint } = parameter;
 
-      const causeMessage = typeHint == null
-        ? `Expected argument at index ${argumentIndex}`
-        : `Expected argument compatible with type ${typeHint} at index ${argumentIndex}`;
+			const causeMessage =
+				typeHint == null
+					? `Expected argument at index ${argumentIndex}`
+					: `Expected argument compatible with type ${typeHint} at index ${argumentIndex}`;
 
-      super(`Invalid argument at index: ${argumentIndex}`, {
-        cause: new Error(causeMessage),
-      });
-    }
-  }
+			super(`Invalid argument at index: ${argumentIndex}`, {
+				cause: new Error(causeMessage),
+			});
+		}
+	}
 }
 
-export type ParameterArityType =
-  | 'required'
-  | 'optional'
-  | 'variadic'
-  ;
+export type ParameterArityType = 'optional' | 'required' | 'variadic';
 
 export type ParameterTypeHint =
-  // | 'lazy' // TODO: it might be good to *explicitly* mark certain parameters
-              // as lazy? This would allow call-site optimizations that would
-              // be more challenging or fussy to implement in the individual
-              // `FunctionImplementation`.
-  | 'any' // TODO: naming? Could be 'unknown' or 'result' or...?
-  | 'boolean'
-  // | 'date'
-  | 'node'
-  | 'number'
-  | 'string'
-  ;
+	// | 'lazy' // TODO: it might be good to *explicitly* mark certain parameters
+	// as lazy? This would allow call-site optimizations that would
+	// be more challenging or fussy to implement in the individual
+	// `FunctionImplementation`.
+	| 'any' // TODO: naming? Could be 'unknown' or 'result' or...?
+	| 'boolean'
+	// | 'date'
+	| 'node'
+	| 'number'
+	| 'string';
 
 export interface Parameter {
-  readonly arityType: ParameterArityType;
-  readonly typeHint?: ParameterTypeHint;
+	readonly arityType: ParameterArityType;
+	readonly typeHint?: ParameterTypeHint;
 }
 
 // interface RequiredParameter extends Parameter {
@@ -75,106 +72,102 @@ export interface Parameter {
 // TODO: this is the parameter signature, what about return? (partly addressed by `TypedFunction`)
 // TODO: is it possible to enforce order? I.e.:
 // [...RequiredParameter, ...OptionalParameter, ...([] | [VariadicParameter])]
-export type FunctionSignature<Length extends number> = IterableReadonlyTuple<
-  Parameter,
-  Length
->;
+export type FunctionSignature<Length extends number> = IterableReadonlyTuple<Parameter, Length>;
 
-export type ValidArguments<
-  Arguments extends readonly Expression[],
-  IsValid extends boolean
-> = [true] extends [IsValid]
-  ? Arguments
-  : never;
+export type ValidArguments<Arguments extends readonly Expression[], IsValid extends boolean> = [
+	true,
+] extends [IsValid]
+	? Arguments
+	: never;
 
 export interface FunctionImplementationOptions {
-  readonly localName?: string | undefined;
+	readonly localName?: string | undefined;
 }
 
 interface FunctionArity {
-  readonly min: number;
-  readonly max: number;
+	readonly min: number;
+	readonly max: number;
 }
 
 export type FunctionCallable = <Arguments extends readonly Expression[]>(
-  context: LocationPathEvaluation,
-  args: Arguments
+	context: LocationPathEvaluation,
+	args: Arguments
 ) => Evaluation;
 
 export class FunctionImplementation<Length extends number> {
-  readonly arity: FunctionArity;
-  readonly localName: string | null;
+	readonly arity: FunctionArity;
+	readonly localName: string | null;
 
-  constructor(
-    readonly signature: FunctionSignature<Length>,
-    readonly call: FunctionCallable,
-    options: FunctionImplementationOptions = {}
-  ) {
-    // TODO: *validate signature order!*
-    const arity = [...signature].reduce((acc, parameter) => {
-      const { arityType } = (parameter as Parameter);
+	constructor(
+		readonly signature: FunctionSignature<Length>,
+		readonly call: FunctionCallable,
+		options: FunctionImplementationOptions = {}
+	) {
+		// TODO: *validate signature order!*
+		const arity = [...signature].reduce(
+			(acc, parameter) => {
+				const { arityType } = parameter as Parameter;
 
-      switch (arityType) {
-        case 'required':
-          return {
-            min: acc.min + 1,
-            max: acc.max + 1,
-          };
+				switch (arityType) {
+					case 'required':
+						return {
+							min: acc.min + 1,
+							max: acc.max + 1,
+						};
 
-        case 'optional':
-          return {
-            min: acc.min,
-            max: acc.max + 1,
-          };
+					case 'optional':
+						return {
+							min: acc.min,
+							max: acc.max + 1,
+						};
 
-        case 'variadic':
-          return {
-            min: acc.min,
-            max: Infinity,
-          };
+					case 'variadic':
+						return {
+							min: acc.min,
+							max: Infinity,
+						};
 
-        default:
-          throw new UnreachableError(arityType);
-      }
-    }, {
-      min: 0,
-      max: 0,
-    });
+					default:
+						throw new UnreachableError(arityType);
+				}
+			},
+			{
+				min: 0,
+				max: 0,
+			}
+		);
 
-    this.arity = arity;
+		this.arity = arity;
 
-    this.localName = options.localName ?? null;
-  }
+		this.localName = options.localName ?? null;
+	}
 
-  validateArguments<Arguments extends readonly Expression[]>(
-    args: Arguments
-  ): asserts args is ValidArguments<Arguments, true> {
-    const { arity, signature } = this;
-    const { min, max } = arity;
-    const { length: argumentCount } = args;
+	validateArguments<Arguments extends readonly Expression[]>(
+		args: Arguments
+	): asserts args is ValidArguments<Arguments, true> {
+		const { arity, signature } = this;
+		const { min, max } = arity;
+		const { length: argumentCount } = args;
 
-    if (argumentCount < min) {
-      throw new InvalidArgumentError(min, null);
-    }
+		if (argumentCount < min) {
+			throw new InvalidArgumentError(min, null);
+		}
 
-    if (argumentCount > max) {
-      throw new InvalidArgumentError(max, null);
-    }
+		if (argumentCount > max) {
+			throw new InvalidArgumentError(max, null);
+		}
 
-    for (const [index, parameter] of signature.entries()) {
-      // TODO: `typeHint` checking...
-      if (parameter.arityType !== 'required') {
-        break;
-      }
+		for (const [index, parameter] of signature.entries()) {
+			// TODO: `typeHint` checking...
+			if (parameter.arityType !== 'required') {
+				break;
+			}
 
-      if (args[index] == null) {
-        throw new InvalidArgumentError(
-          index,
-          parameter
-        );
-      }
-    }
-  }
+			if (args[index] == null) {
+				throw new InvalidArgumentError(index, parameter);
+			}
+		}
+	}
 }
 
-export interface AnyFunctionImplementation extends FunctionImplementation<any> {}
+export interface AnyFunctionImplementation extends FunctionImplementation<number> {}

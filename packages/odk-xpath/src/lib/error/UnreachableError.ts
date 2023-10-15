@@ -4,13 +4,13 @@
  * union members.
  */
 export class UnreachableError extends Error {
-  constructor(unrechable: never, additionalDetail?: string) {
-    let message = `Unreachable value: ${JSON.stringify(unrechable)}`;
+	constructor(unrechable: never, additionalDetail?: string) {
+		let message = `Unreachable value: ${JSON.stringify(unrechable)}`;
 
-    if (additionalDetail != null) {
-      message = `${message} (${additionalDetail})`;
-    }
+		if (additionalDetail != null) {
+			message = `${message} (${additionalDetail})`;
+		}
 
-    super(message);
-  }
+		super(message);
+	}
 }

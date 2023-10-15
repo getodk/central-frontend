@@ -1,44 +1,36 @@
 import type { Temporal } from '@js-temporal/polyfill';
-import { tee as itertoolsTee } from 'itertools-ts/lib/transform';
 import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Context } from '../context/Context.ts';
 import type {
-  EvaluationContext,
-  EvaluationContextTreeWalkers,
+	EvaluationContext,
+	EvaluationContextTreeWalkers,
 } from '../context/EvaluationContext.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
-import type { LocationPathExpressionEvaluator } from '../evaluator/expression/Expression.ts';
-import type { FunctionLibrary } from '../evaluator/functions/FunctionLibrary.ts';
-import type { AnyStep } from '../evaluator/step/Step.ts';
-import {
-	isAttributeNode,
-	isElementNode,
-	isNamespaceAttribute,
-} from '../lib/dom/predicates.ts';
 import type {
-  ContextDocument,
-  ContextNode,
-  ContextParentNode,
+	FilterPathExpression,
+	LocationPathExpression,
+	LocationPathExpressionEvaluator,
+} from '../evaluator/expression/Expression.ts';
+import type { FunctionLibrary } from '../evaluator/functions/FunctionLibrary.ts';
+import type { NodeSetFunction } from '../evaluator/functions/NodeSetFunction.ts';
+import type { AnyStep } from '../evaluator/step/Step.ts';
+import { isAttributeNode, isElementNode, isNamespaceAttribute } from '../lib/dom/predicates.ts';
+import type {
+	ContextDocument,
+	ContextNode,
+	ContextParentNode,
+	MaybeAttrNode,
+	MaybeElementNode,
+	MaybeNamedNode,
+	MaybeProcessingInstructionNode,
 } from '../lib/dom/types.ts';
 import { UnreachableError } from '../lib/error/UnreachableError.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
-import { distinct, filter, map } from '../lib/iterators/common.ts';
+import { distinct, filter, map, tee } from '../lib/iterators/common.ts';
 import type { Evaluation } from './Evaluation.ts';
 import { NodeEvaluation } from './NodeEvaluation.ts';
 
-type LocationPathParentContext =
-  | EvaluationContext
-  | LocationPathEvaluation
-  ;
-
-type TeeResult<T> = [
-  IterableIterator<T>,
-  IterableIterator<T>,
-];
-
-const tee = <T>(input: Iterable<T> | Iterator<T>): TeeResult<T> => {
-  return itertoolsTee(input, 2) as [unknown, unknown] as TeeResult<T>;
-};
+type LocationPathParentContext = EvaluationContext | LocationPathEvaluation;
 
 const mapNodeEvaluations = map((node: Node) => new NodeEvaluation(node));
 
@@ -46,693 +38,696 @@ type EvaluationComparator = (lhs: Evaluation, rhs: Evaluation) => boolean;
 
 const filterNamespace = filter(isNamespaceAttribute);
 
-const filterNonNamespace = filter((attr: Attr) => (
-  !isNamespaceAttribute(attr)
-));
+const filterNonNamespace = filter((attr: Attr) => !isNamespaceAttribute(attr));
 
-const filterNonAttribute = filter((node: Node) => (
-  !isAttributeNode(node)
-));
+const filterNonAttribute = filter((node: Node) => !isAttributeNode(node));
 
 export enum AxisName {
-  ANCESTOR = 'ancestor',
-  ANCESTOR_OR_SELF = 'ancestor-or-self',
-  ATTRIBUTE = 'attribute',
-  CHILD = 'child',
-  DESCENDANT = 'descendant',
-  DESCENDANT_OR_SELF = 'descendant-or-self',
-  FOLLOWING = 'following',
-  FOLLOWING_SIBLING = 'following-sibling',
-  NAMESPACE = 'namespace',
-  PARENT = 'parent',
-  PRECEDING = 'preceding',
-  PRECEDING_SIBLING = 'preceding-sibling',
-  SELF = 'self',
+	ANCESTOR = 'ancestor',
+	ANCESTOR_OR_SELF = 'ancestor-or-self',
+	ATTRIBUTE = 'attribute',
+	CHILD = 'child',
+	DESCENDANT = 'descendant',
+	DESCENDANT_OR_SELF = 'descendant-or-self',
+	FOLLOWING = 'following',
+	FOLLOWING_SIBLING = 'following-sibling',
+	NAMESPACE = 'namespace',
+	PARENT = 'parent',
+	PRECEDING = 'preceding',
+	PRECEDING_SIBLING = 'preceding-sibling',
+	SELF = 'self',
 }
 
 type AxisMethod = {
-  [Name in AxisName]:
-    Name extends `${infer Prefix}-or-self`
-      ? `${Prefix}OrSelf`
-    : Name extends `${infer Prefix}-sibling`
-      ? `${Prefix}Sibling`
-      : `${Name}`;
+	[Name in AxisName]: Name extends `${infer Prefix}-or-self`
+		? `${Prefix}OrSelf`
+		: Name extends `${infer Prefix}-sibling`
+		? `${Prefix}Sibling`
+		: `${Name}`;
 }[AxisName];
 
 interface LocationStep extends Readonly<Record<AxisName, AxisMethod>> {}
 
 const axisNameToMethod: LocationStep = {
-  [AxisName.ANCESTOR]: 'ancestor',
-  [AxisName.ANCESTOR_OR_SELF]: 'ancestorOrSelf',
-  [AxisName.ATTRIBUTE]: 'attribute',
-  [AxisName.CHILD]: 'child',
-  [AxisName.DESCENDANT]: 'descendant',
-  [AxisName.DESCENDANT_OR_SELF]: 'descendantOrSelf',
-  [AxisName.FOLLOWING]: 'following',
-  [AxisName.FOLLOWING_SIBLING]: 'followingSibling',
-  [AxisName.NAMESPACE]: 'namespace',
-  [AxisName.PARENT]: 'parent',
-  [AxisName.PRECEDING]: 'preceding',
-  [AxisName.PRECEDING_SIBLING]: 'precedingSibling',
-  [AxisName.SELF]: 'self',
+	[AxisName.ANCESTOR]: 'ancestor',
+	[AxisName.ANCESTOR_OR_SELF]: 'ancestorOrSelf',
+	[AxisName.ATTRIBUTE]: 'attribute',
+	[AxisName.CHILD]: 'child',
+	[AxisName.DESCENDANT]: 'descendant',
+	[AxisName.DESCENDANT_OR_SELF]: 'descendantOrSelf',
+	[AxisName.FOLLOWING]: 'following',
+	[AxisName.FOLLOWING_SIBLING]: 'followingSibling',
+	[AxisName.NAMESPACE]: 'namespace',
+	[AxisName.PARENT]: 'parent',
+	[AxisName.PRECEDING]: 'preceding',
+	[AxisName.PRECEDING_SIBLING]: 'precedingSibling',
+	[AxisName.SELF]: 'self',
 };
 
 interface LocationPathEvaluationOptions {
-  readonly contextPosition?: number;
+	readonly contextPosition?: number;
 
-  contextSize?(): number;
+	contextSize?: () => number;
 }
 
-export class LocationPathEvaluation implements
-  Evaluation<'NODE'>,
-  Context,
-  Iterable<LocationPathEvaluation> {
+type ArbitraryNodesTemporaryCallee =
+	| FilterPathExpression
+	| LocationPathExpression
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	| NodeSetFunction<any>;
+
+export class LocationPathEvaluation
+	implements Evaluation<'NODE'>, Context, Iterable<LocationPathEvaluation>
+{
+	// --- Evaluation ---
+	readonly type = 'NODE';
+
+	protected readonly nodeEvaluations: Reiterable<NodeEvaluation>;
+
+	// --- Context ---
+	readonly evaluator: Evaluator;
+
+	readonly contextDocument: ContextDocument;
+	readonly rootNode: ContextParentNode;
+
+	nodes: Iterable<ContextNode>;
+
+	get contextNodes(): IterableIterator<ContextNode> {
+		const [nodes, contextNodes] = tee(this.nodes);
+
+		this.nodes = nodes;
+
+		return contextNodes;
+	}
+
+	protected computedContextSize: number | null = null;
+
+	protected readonly optionsContextSize?: () => number;
+	protected readonly initializedContextPosition: number;
+
+	readonly functionLibrary: FunctionLibrary;
+	readonly namespaceResolver: XPathNamespaceResolverObject;
+
+	readonly treeWalkers: EvaluationContextTreeWalkers;
+
+	readonly timeZone: Temporal.TimeZoneProtocol;
+
+	/**
+	 * TODO: this is a temporary accommodation for these cases which are presently
+	 * not especially well designed:
+	 *
+	 * - Functions returning node-sets (i.e. {@link NodeSetFunction} instances).
+	 *   It may make sense to invert control, invoking them from here?
+	 *
+	 * - Nodes filtered by predicate in {@link LocationPathExpression}. Such
+	 *   filtering almost certainly should be performed here, in {@link step}.
+	 */
+	static fromArbitraryNodes(
+		currentContext: LocationPathParentContext,
+		nodes: Iterable<ContextNode>,
+		_temporaryCallee: ArbitraryNodesTemporaryCallee
+	): LocationPathEvaluation {
+		return new this(currentContext, nodes);
+	}
+
+	static fromCurrentContext(evaluationContext: EvaluationContext): LocationPathEvaluation {
+		let options: LocationPathEvaluationOptions | undefined;
+
+		if (evaluationContext instanceof LocationPathEvaluation) {
+			options = {
+				get contextPosition() {
+					return evaluationContext.contextPosition();
+				},
+				contextSize() {
+					return evaluationContext.contextSize();
+				},
+			};
+		}
+
+		return new this(evaluationContext, evaluationContext.contextNodes, options);
+	}
+
+	static fromRoot(parentContext: LocationPathParentContext): LocationPathEvaluation {
+		return new this(parentContext, [parentContext.rootNode]);
+	}
+
+	protected constructor(
+		readonly parentContext: LocationPathParentContext,
+		contextNodes: Iterable<ContextNode>,
+		options: LocationPathEvaluationOptions = {}
+	) {
+		const {
+			evaluator,
+			contextDocument,
+			functionLibrary,
+			namespaceResolver,
+			rootNode,
+			timeZone,
+			treeWalkers,
+		} = parentContext;
+
+		this.evaluator = evaluator;
+		this.contextDocument = contextDocument;
+		this.functionLibrary = functionLibrary;
+		this.namespaceResolver = namespaceResolver;
+		this.rootNode = rootNode;
+		this.timeZone = timeZone;
+		this.treeWalkers = treeWalkers;
 
-  // --- Evaluation ---
-  readonly type = 'NODE';
+		const [nodes] = tee(distinct(contextNodes));
 
-  protected readonly nodeEvaluations: Reiterable<NodeEvaluation>;
+		this.nodes = nodes;
 
-  // --- Context ---
-  readonly evaluator: Evaluator;
+		this.nodeEvaluations = Reiterable.from(mapNodeEvaluations(contextNodes));
 
-  readonly contextDocument: ContextDocument;
-  readonly rootNode: ContextParentNode;
+		if (options.contextSize != null) {
+			this.optionsContextSize = options.contextSize;
+		} else if (Array.isArray(contextNodes)) {
+			this.computedContextSize = contextNodes.length;
+		}
 
-  nodes: Iterable<ContextNode>;
-
-  get contextNodes(): IterableIterator<ContextNode> {
-    const [nodes, contextNodes] = tee(this.nodes);
+		this.initializedContextPosition = options.contextPosition ?? 1;
+	}
 
-    this.nodes = nodes;
+	[Symbol.iterator]() {
+		const nodes = this.contextNodes;
 
-    return contextNodes;
-  }
-
-  protected computedContextSize: number | null = null;
-
-  protected readonly optionsContextSize?: () => number;
-  protected readonly initializedContextPosition: number;
-
-  readonly functionLibrary: FunctionLibrary;
-  readonly namespaceResolver: XPathNamespaceResolverObject;
-
-  readonly treeWalkers: EvaluationContextTreeWalkers;
-
-  readonly timeZone: Temporal.TimeZoneProtocol;
-
-  static fromCurrentContext(evaluationContext: EvaluationContext) {
-    let options: LocationPathEvaluationOptions | undefined;
+		let contextPosition = this.contextPosition();
 
-    if (evaluationContext instanceof LocationPathEvaluation) {
-      options = {
-        get contextPosition() {
-          return evaluationContext.contextPosition();
-        },
-        contextSize() {
-          return evaluationContext.contextSize();
-        },
-      };
-    }
+		return {
+			next: (): IteratorResult<LocationPathEvaluation> => {
+				const next = nodes.next();
 
-    return new this(evaluationContext, evaluationContext.contextNodes, options);
-  }
+				if (next.done) {
+					return next;
+				}
 
-  static fromRoot(parentContext: LocationPathParentContext) {
-    return new this(parentContext, [parentContext.rootNode]);
-  }
+				const value = new LocationPathEvaluation(this, [next.value], {
+					contextPosition,
+					contextSize: () => {
+						return this.contextSize();
+					},
+				});
 
-  protected constructor(
-    readonly parentContext: LocationPathParentContext,
-    contextNodes: Iterable<ContextNode>,
-    options: LocationPathEvaluationOptions = {}
-  ) {
-    const {
-      evaluator,
-      contextDocument,
-      functionLibrary,
-      namespaceResolver,
-      rootNode,
-      timeZone,
-      treeWalkers,
-    } = parentContext;
+				contextPosition += 1;
 
-    this.evaluator = evaluator;
-    this.contextDocument = contextDocument;
-    this.functionLibrary = functionLibrary;
-    this.namespaceResolver = namespaceResolver;
-    this.rootNode = rootNode;
-    this.timeZone = timeZone;
-    this.treeWalkers = treeWalkers;
+				return {
+					done: false,
+					value,
+				};
+			},
+		};
+	}
 
-    const [nodes] = tee(distinct(contextNodes));
+	values(): Iterable<NodeEvaluation> {
+		return this.nodeEvaluations;
+	}
 
-    this.nodes = nodes;
+	contextPosition(): number {
+		return this.initializedContextPosition;
+	}
 
-    this.nodeEvaluations = Reiterable.from(
-      mapNodeEvaluations(contextNodes)
-    );
+	contextSize(): number {
+		const { optionsContextSize } = this;
 
-    if (options.contextSize != null) {
-      this.optionsContextSize = options.contextSize;
-    } else if (Array.isArray(contextNodes)) {
-      this.computedContextSize = contextNodes.length;
-    }
+		if (optionsContextSize != null) {
+			return optionsContextSize();
+		}
 
-    this.initializedContextPosition = options.contextPosition ?? 1;
-  }
+		let { computedContextSize } = this;
 
-  [Symbol.iterator]() {
-    const nodes = this.contextNodes;
+		if (computedContextSize == null) {
+			const { contextNodes } = this;
 
-    let contextPosition = this.contextPosition();
+			computedContextSize = [...contextNodes].length;
+			this.computedContextSize = computedContextSize;
+		}
 
-    return {
-      next: (): IteratorResult<LocationPathEvaluation> => {
-        const next = nodes.next();
+		return computedContextSize;
+	}
 
-        if (next.done) {
-          return next;
-        }
+	currentContext(): LocationPathEvaluation {
+		return LocationPathEvaluation.fromCurrentContext(this);
+	}
 
-        const value = new LocationPathEvaluation(this, [next.value], {
-          contextPosition,
-          contextSize: () => {
-            return this.contextSize();
-          }
-        });
+	rootContext(): LocationPathEvaluation {
+		return LocationPathEvaluation.fromRoot(this);
+	}
 
-        contextPosition += 1;
+	protected _first?: NodeEvaluation | null;
 
-        return {
-          done: false,
-          value,
-        };
-      },
-    };
-  }
+	first(): NodeEvaluation | null {
+		let result = this._first;
 
-  values(): Iterable<NodeEvaluation> {
-    return this.nodeEvaluations;
-  }
+		if (typeof result !== 'undefined') {
+			return result;
+		}
 
-  contextPosition(): number {
-    return this.initializedContextPosition;
-  };
+		result = this.nodeEvaluations.first() ?? null;
+		this._first = result;
 
-  contextSize(): number {
-    const { optionsContextSize } = this;
+		return result;
+	}
 
-    if (optionsContextSize != null) {
-      return optionsContextSize();
-    }
+	protected _isEmpty: boolean | null = null;
 
-    let { computedContextSize } = this;
+	protected isEmpty(): boolean {
+		let result = this._isEmpty;
 
-    if (computedContextSize == null) {
-      const { contextNodes } = this;
+		if (result != null) {
+			return result;
+		}
 
-      computedContextSize = [...contextNodes].length;
-      this.computedContextSize = computedContextSize;
-    }
+		result = this.first() == null;
+		this._isEmpty = result;
 
-    return computedContextSize;
-  }
+		return result;
+	}
 
-  currentContext(): LocationPathEvaluation {
-    return LocationPathEvaluation.fromCurrentContext(this);
-  }
+	some(predicate: (evaluation: NodeEvaluation) => boolean): boolean {
+		return this.nodeEvaluations.some(predicate);
+	}
 
-  rootContext(): LocationPathEvaluation {
-    return LocationPathEvaluation.fromRoot(this);
-  }
+	toBoolean(): boolean {
+		return !this.isEmpty();
+	}
 
-  protected _first?: NodeEvaluation | null;
+	toNumber(): number {
+		return this.first()?.toNumber() ?? NaN;
+	}
 
-  first(): NodeEvaluation | null {
-    let result = this._first;
+	toString(): string {
+		return this.first()?.toString() ?? '';
+	}
 
-    if (typeof result !== 'undefined') {
-      return result;
-    }
+	protected compare(comparator: EvaluationComparator, operand: Evaluation) {
+		if (operand instanceof LocationPathEvaluation) {
+			return this.some((lhs) => operand.some((rhs) => comparator(lhs, rhs)));
+		}
 
-    result = this.nodeEvaluations.first() ?? null;
-    this._first = result;
+		return this.some((lhs) => comparator(lhs, operand));
+	}
 
-    return result;
-  }
+	eq(operand: Evaluation): boolean {
+		if (operand.type === 'BOOLEAN') {
+			return this.toBoolean() === operand.toBoolean();
+		}
 
-  protected _isEmpty: boolean | null = null;
+		return this.compare((lhs, rhs) => lhs.eq(rhs), operand);
+	}
 
-  protected isEmpty(): boolean {
-    let result = this._isEmpty;
+	ne(operand: Evaluation): boolean {
+		if (operand.type === 'BOOLEAN') {
+			return this.toBoolean() !== operand.toBoolean();
+		}
 
-    if (result != null) {
-      return result;
-    }
+		return this.compare((lhs, rhs) => lhs.ne(rhs), operand);
+	}
 
-    result = this.first() == null;
-    this._isEmpty = result;
+	lt(operand: Evaluation): boolean {
+		return this.compare((lhs, rhs) => lhs.lt(rhs), operand);
+	}
 
-    return result;
+	lte(operand: Evaluation): boolean {
+		return this.compare((lhs, rhs) => lhs.lte(rhs), operand);
+	}
 
-  }
+	gt(operand: Evaluation): boolean {
+		return this.compare((lhs, rhs) => lhs.gt(rhs), operand);
+	}
 
-  some(predicate: (evaluation: NodeEvaluation) => boolean): boolean {
-    return this.nodeEvaluations.some(predicate);
-  }
+	gte(operand: Evaluation): boolean {
+		return this.compare((lhs, rhs) => lhs.gte(rhs), operand);
+	}
 
-  toBoolean(): boolean {
-    return !this.isEmpty();
-  }
+	protected getTreeWalker(step: AnyStep): TreeWalker {
+		const { treeWalkers } = this;
 
-  toNumber(): number {
-    return this.first()?.toNumber() ?? NaN;
-  }
+		switch (step.nodeType) {
+			case '__NAMED__':
+				return treeWalkers.ELEMENT;
 
-  toString(): string {
-    return this.first()?.toString() ?? '';
-  }
+			case 'comment':
+				return treeWalkers.COMMENT;
 
-  protected compare(comparator: EvaluationComparator, operand: Evaluation) {
-    if (operand instanceof LocationPathEvaluation) {
-      return this.some((lhs) => operand.some((rhs) => comparator(lhs, rhs)));
-    }
+			case 'node':
+				return treeWalkers.ANY;
 
-    return this.some((lhs) => comparator(lhs, operand));
-  }
+			case 'processing-instruction':
+				return treeWalkers.PROCESSING_INSTRUCTION;
 
-  eq(operand: Evaluation): boolean {
-    if (operand.type === 'BOOLEAN') {
-      return this.toBoolean() === operand.toBoolean();
-    }
+			case 'text':
+				return treeWalkers.TEXT;
 
-    return this.compare((lhs, rhs) => lhs.eq(rhs), operand);
-  }
+			default:
+				throw new UnreachableError(step);
+		}
+	}
 
-  ne(operand: Evaluation): boolean {
-    if (operand.type === 'BOOLEAN') {
-      return this.toBoolean() !== operand.toBoolean();
-    }
+	protected *ancestor(step: AnyStep): Iterable<Node> {
+		const { rootNode } = this;
 
-    return this.compare((lhs, rhs) => lhs.ne(rhs), operand);
-  }
+		const parents = this.parent(step);
 
-  lt(operand: Evaluation): boolean {
-    return this.compare((lhs, rhs) => lhs.lt(rhs), operand);
-  }
+		for (const parent of parents) {
+			if (parent !== rootNode) {
+				const parentContext = new LocationPathEvaluation(this, [parent as ContextNode]);
 
-  lte(operand: Evaluation): boolean {
-    return this.compare((lhs, rhs) => lhs.lte(rhs), operand);
-  }
+				yield* parentContext.ancestor(step);
+			}
 
-  gt(operand: Evaluation): boolean {
-    return this.compare((lhs, rhs) => lhs.gt(rhs), operand);
-  }
+			yield parent;
+		}
+	}
 
-  gte(operand: Evaluation): boolean {
-    return this.compare((lhs, rhs) => lhs.gte(rhs), operand);
-  }
+	protected *ancestorOrSelf(step: AnyStep): Iterable<Node> {
+		const isNamedStep = step.stepType !== 'NodeTypeTest';
 
-  protected getTreeWalker(step: AnyStep): TreeWalker {
-    const { treeWalkers } = this;
+		for (const self of this) {
+			yield* self.ancestor(step);
 
-    switch (step.nodeType) {
-      case '__NAMED__':
-        return treeWalkers.ELEMENT;
+			for (const node of self.contextNodes) {
+				if (!isNamedStep || isElementNode(node)) {
+					yield node;
+				}
+			}
+		}
+	}
 
-      case 'comment':
-        return treeWalkers.COMMENT;
+	protected *attribute() {
+		for (const node of this.contextNodes) {
+			yield* filterNonNamespace((node as MaybeElementNode).attributes ?? []);
+		}
+	}
 
-      case 'node':
-        return treeWalkers.ANY;
+	protected *child(step: AnyStep) {
+		const treeWalker = this.getTreeWalker(step);
 
-      case 'processing-instruction':
-        return treeWalkers.PROCESSING_INSTRUCTION;
+		for (const node of this.contextNodes) {
+			let currentNode: Node = node;
 
-      case 'text':
-        return treeWalkers.TEXT;
+			treeWalker.currentNode = currentNode;
+			treeWalker.firstChild();
 
-      default:
-        throw new UnreachableError(step);
-    }
-  }
+			do {
+				currentNode = treeWalker.currentNode;
 
-  protected *ancestor(step: AnyStep): Iterable<Node> {
-    const { rootNode } = this;
+				// `TreeWalker` "child" and "sibling" are lies. They will both happily
+				// enter descendants of those childrens to match their initial filter.
+				//
+				// TODO: as such, this check is *necessary*, but probably so expensive
+				// it may negate the benefits of using `TreeWalker` versus other
+				// traversal/filtering techniques. That said, it would be worth
+				// exploring the use of a `Set<ChildNode>` for this check to see if it
+				// negates the presumed performance impact.
+				if (currentNode.parentNode === node) {
+					yield currentNode;
+					treeWalker.currentNode = currentNode;
+				}
+			} while (treeWalker.nextSibling() != null);
+		}
+	}
 
-    const parents = this.parent(step);
+	protected *descendant(step: AnyStep) {
+		const treeWalker = this.getTreeWalker(step);
 
-    for (const parent of parents) {
-      if (parent !== rootNode) {
-        const parentContext = new LocationPathEvaluation(this, [parent as ContextNode])
+		for (const node of this.contextNodes) {
+			treeWalker.currentNode = node;
 
-        yield* parentContext.ancestor(step);
-      }
+			if (treeWalker.firstChild() == null) {
+				continue;
+			}
 
-      yield parent;
-    }
-  }
+			do {
+				const { currentNode } = treeWalker;
 
-  protected *ancestorOrSelf(step: AnyStep): Iterable<Node> {
-    const isNamedStep = step.stepType !== 'NodeTypeTest';
+				// Might be more efficient to "clone" the `TreeWalker` with each node
+				// as its root, than repeatedly performing this check...
+				if (!node.contains(currentNode)) {
+					break;
+				}
 
-    for (const self of this) {
-      yield* self.ancestor(step);
+				yield currentNode;
+				treeWalker.currentNode = currentNode;
+			} while (treeWalker.nextNode() != null);
+		}
+	}
 
-      for (const node of self.contextNodes) {
-        if (!isNamedStep || isElementNode(node)) {
-          yield node;
-        }
-      }
-    }
-  }
+	protected *descendantOrSelf(step: AnyStep) {
+		for (const self of this) {
+			yield* self.contextNodes;
 
-  protected *attribute() {
-    for (const node of this.contextNodes) {
-      yield* filterNonNamespace((node as MaybeElementNode).attributes ?? []);
-    }
-  }
+			yield* self.descendant(step);
+		}
+	}
 
-  protected *child(step: AnyStep) {
-    const treeWalker = this.getTreeWalker(step);
+	protected *following(step: AnyStep) {
+		const contextNodes = map((node: Node) => (node as MaybeAttrNode).ownerElement ?? node)(
+			this.contextNodes
+		);
 
-    for (const node of this.contextNodes) {
-      let currentNode: Node = node;
+		const treeWalker = this.getTreeWalker(step);
+		const visited = new WeakSet<Node>();
 
-      treeWalker.currentNode = currentNode;
-      treeWalker.firstChild();
+		for (const node of contextNodes) {
+			const { nextSibling } = node;
 
-      do {
-        currentNode = treeWalker.currentNode;
+			if (nextSibling == null) {
+				continue;
+			}
 
-        // `TreeWalker` "child" and "sibling" are lies. They will both happily
-        // enter descendants of those childrens to match their initial filter.
-        //
-        // TODO: as such, this check is *necessary*, but probably so expensive
-        // it may negate the benefits of using `TreeWalker` versus other
-        // traversal/filtering techniques. That said, it would be worth
-        // exploring the use of a `Set<ChildNode>` for this check to see if it
-        // negates the presumed performance impact.
-        if (currentNode.parentNode === node) {
-          yield currentNode;
-          treeWalker.currentNode = currentNode;
-        }
-      } while (treeWalker.nextSibling() != null);
-    }
-  }
+			treeWalker.currentNode = nextSibling;
 
-  protected *descendant(step: AnyStep) {
-    const treeWalker = this.getTreeWalker(step);
+			do {
+				const { currentNode } = treeWalker;
 
-    for (const node of this.contextNodes) {
-      treeWalker.currentNode = node;
+				if (visited.has(currentNode)) {
+					continue;
+				}
 
-      if (treeWalker.firstChild() == null) {
-        continue;
-      }
+				visited.add(currentNode);
 
-      do {
-        const { currentNode } = treeWalker;
+				yield currentNode;
+				treeWalker.currentNode = currentNode;
+			} while (treeWalker.nextNode() != null);
+		}
+	}
 
-        // Might be more efficient to "clone" the `TreeWalker` with each node
-        // as its root, than repeatedly performing this check...
-        if (!node.contains(currentNode)) {
-          break;
-        }
+	protected *followingSibling(step: AnyStep) {
+		const visited = new WeakSet<Node>();
+		const treeWalker = this.getTreeWalker(step);
 
-        yield currentNode;
-        treeWalker.currentNode = currentNode;
-      } while(treeWalker.nextNode() != null);
-    }
-  }
+		for (const node of this.contextNodes) {
+			const { nextSibling } = node;
 
-  protected *descendantOrSelf(step: AnyStep) {
-    for (const self of this) {
-      yield* self.contextNodes;
+			if (nextSibling == null) {
+				continue;
+			}
 
-      yield* self.descendant(step);
-    }
-  }
+			const { parentNode } = node;
 
-  protected *following(step: AnyStep) {
-    const contextNodes = map((node: Node) => (node as MaybeAttrNode).ownerElement ?? node)(this.contextNodes);
+			treeWalker.currentNode = nextSibling;
 
-    const treeWalker = this.getTreeWalker(step);
-    const visited = new WeakSet<Node>();
+			do {
+				const { currentNode } = treeWalker;
 
-    for (const node of contextNodes) {
-      const { nextSibling } = node;
+				if (visited.has(currentNode) || currentNode.parentNode !== parentNode) {
+					continue;
+				}
 
-      if (nextSibling == null) {
-        continue;
-      }
+				visited.add(currentNode);
 
-      treeWalker.currentNode = nextSibling;
+				yield currentNode;
+				treeWalker.currentNode = currentNode;
+			} while (treeWalker.nextSibling() != null);
+		}
+	}
 
-      do {
-        const { currentNode } = treeWalker;
+	protected *namespace() {
+		for (const node of this.contextNodes) {
+			yield* filterNamespace((node as MaybeElementNode).attributes ?? []);
+		}
+	}
 
-        if (visited.has(currentNode)) {
-          continue;
-        }
+	protected *parent(step: AnyStep) {
+		const { contextNodes, rootNode } = this;
+		const treeWalker = this.getTreeWalker(step);
 
-        visited.add(currentNode);
+		for (const node of contextNodes) {
+			const contextNode = (node as MaybeAttrNode).ownerElement ?? node;
 
-        yield currentNode;
-        treeWalker.currentNode = currentNode;
-      } while (treeWalker.nextNode() != null);
-    }
-  }
+			if (contextNode === rootNode) {
+				continue;
+			}
 
-  protected *followingSibling(step: AnyStep) {
-    const visited = new WeakSet<Node>();
-    const treeWalker = this.getTreeWalker(step);
+			if (contextNode !== node) {
+				yield contextNode;
 
-    for (const node of this.contextNodes) {
-      const { nextSibling } = node;
+				continue;
+			}
 
-      if (nextSibling == null) {
-        continue;
-      }
+			treeWalker.currentNode = contextNode;
 
-      const { parentNode } = node;
+			const parentNode = treeWalker.parentNode();
 
-      treeWalker.currentNode = nextSibling;
+			if (parentNode != null) {
+				yield parentNode;
+				treeWalker.currentNode = parentNode;
+			}
+		}
+	}
 
-      do {
-        const { currentNode } = treeWalker;
+	protected *preceding(step: AnyStep) {
+		const { rootNode } = this;
+		const { nodeType = null } = step;
+		const treeWalker = this.getTreeWalker(step);
 
-        if (visited.has(currentNode) || currentNode.parentNode !== parentNode) {
-          continue;
-        }
+		treeWalker.currentNode = rootNode;
 
-        visited.add(currentNode);
+		// The idea is that it applies the `TreeWalker`'s filter to select the
+		// pertinent `currentNode` when `rootNode` otherwise wouldn't have matched.
+		// It probably also performs poorly!
+		if (nodeType != null && nodeType !== 'node') {
+			treeWalker.nextNode();
+			treeWalker.previousNode();
+		}
 
-        yield currentNode;
-        treeWalker.currentNode = currentNode;
-      } while (treeWalker.nextSibling() != null);
-    }
-  }
+		for (const node of this.contextNodes) {
+			const contextNode = (node as MaybeAttrNode).ownerElement ?? node;
 
-  protected *namespace() {
-    for (const node of this.contextNodes) {
-      yield* filterNamespace((node as MaybeElementNode).attributes ?? []);
-    }
-  }
+			do {
+				const { currentNode } = treeWalker;
 
-  protected *parent(step: AnyStep) {
-    const { contextNodes, rootNode } = this;
-    const treeWalker = this.getTreeWalker(step);
+				if (currentNode.contains(contextNode)) {
+					continue;
+				}
 
-    for (const node of contextNodes) {
-      const contextNode = (node as MaybeAttrNode).ownerElement ?? node;
+				if (
+					currentNode === contextNode ||
+					(contextNode.compareDocumentPosition(currentNode) & Node.DOCUMENT_POSITION_PRECEDING) ===
+						0
+				) {
+					break;
+				}
 
-      if (contextNode === rootNode) {
-        continue;
-      }
+				yield currentNode;
+				treeWalker.currentNode = currentNode;
+			} while (treeWalker.nextNode() != null);
+		}
+	}
 
-      if (contextNode !== node) {
-        yield contextNode;
+	protected *precedingSibling(step: AnyStep) {
+		const { nodeType = null } = step;
+		const treeWalker = this.getTreeWalker(step);
 
-        continue;
-      }
+		let parentNode: Node | null = null;
 
-      treeWalker.currentNode = contextNode;
+		for (const node of filterNonAttribute(this.contextNodes)) {
+			const currentParentNode = node.parentNode;
 
-      const parentNode = treeWalker.parentNode();
+			if (currentParentNode == null) {
+				continue;
+			}
 
-      if (parentNode != null) {
-        yield parentNode;
-        treeWalker.currentNode = parentNode;
-      }
-    }
-  }
+			if (currentParentNode !== parentNode) {
+				parentNode = currentParentNode;
 
-  protected *preceding(step: AnyStep) {
-    const { rootNode } = this;
-    const { nodeType = null } = step;
-    const treeWalker = this.getTreeWalker(step);
+				// Safe, otherwise we wouldn't have a parent node!
+				treeWalker.currentNode = parentNode.firstChild!;
 
-    treeWalker.currentNode = rootNode;
+				// See commentary on same logic under `preceding`
+				if (nodeType != null && nodeType !== 'node') {
+					treeWalker.nextSibling();
+					treeWalker.previousSibling();
+				}
+			}
 
-    // The idea is that it applies the `TreeWalker`'s filter to select the
-    // pertinent `currentNode` when `rootNode` otherwise wouldn't have matched.
-    // It probably also performs poorly!
-    if (nodeType != null && nodeType !== 'node') {
-      treeWalker.nextNode();
-      treeWalker.previousNode();
-    }
+			do {
+				const { currentNode } = treeWalker;
 
-    for (const node of this.contextNodes) {
-      const contextNode = (node as MaybeAttrNode).ownerElement ?? node;
+				if (currentNode === node) {
+					break;
+				}
 
-      do {
-        const { currentNode } = treeWalker;
+				yield currentNode;
+				treeWalker.currentNode = currentNode;
+			} while (treeWalker.nextSibling() != null);
+		}
+	}
 
-        if (currentNode.contains(contextNode)) {
-          continue;
-        }
+	protected *self() {
+		yield* this.contextNodes;
+	}
 
-        if (
-          currentNode === contextNode ||
-          (
-            contextNode.compareDocumentPosition(currentNode) & Node.DOCUMENT_POSITION_PRECEDING
-          ) === 0
-        ) {
-          break;
-        }
+	step(step: AnyStep): LocationPathEvaluation {
+		const { axisType } = step;
+		const axisMethod = axisNameToMethod[axisType];
 
-        yield currentNode;
-        treeWalker.currentNode = currentNode;
-      } while (treeWalker.nextNode() != null);
-    }
-  }
+		let nodes = this[axisMethod](step);
 
-  protected *precedingSibling(step: AnyStep) {
-    const { nodeType = null } = step;
-    const treeWalker = this.getTreeWalker(step);
+		const { namespaceResolver } = this;
 
-    let parentNode: Node | null = null;
+		switch (step.stepType) {
+			case 'NodeTypeTest':
+				break;
 
-    for (const node of filterNonAttribute(this.contextNodes)) {
-      const currentParentNode = node.parentNode;
+			case 'NodeNameTest': {
+				const { nodeName } = step;
+				const namespaceURI = namespaceResolver.lookupNamespaceURI(null);
 
-      if (currentParentNode == null) {
-        continue;
-      }
+				nodes = filter((node: MaybeNamedNode) => {
+					return node.nodeName === nodeName && node.namespaceURI === namespaceURI;
+				})(nodes);
 
-      if (currentParentNode !== parentNode) {
-        parentNode = currentParentNode;
+				break;
+			}
 
-        // Safe, otherwise we wouldn't have a parent node!
-        treeWalker.currentNode = parentNode.firstChild!;
+			case 'ProcessingInstructionNameTest': {
+				const { processingInstructionName } = step;
 
-        // See commentary on same logic under `preceding`
-        if (nodeType != null && nodeType !== 'node') {
-          treeWalker.nextSibling();
-          treeWalker.previousSibling();
-        }
-      }
+				nodes = filter((node: Node | ProcessingInstruction) => {
+					return (node as MaybeProcessingInstructionNode).nodeName === processingInstructionName;
+				})(nodes);
 
-      do {
-        const { currentNode } = treeWalker;
+				break;
+			}
 
-        if (currentNode === node) {
-          break;
-        }
+			case 'QualifiedNameTest': {
+				const { prefix, localName } = step;
+				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
-        yield currentNode;
-        treeWalker.currentNode = currentNode;
-      } while (treeWalker.nextSibling() != null);
-    }
-  }
+				nodes = filter(
+					(node: MaybeNamedNode) =>
+						node.localName === localName && node.namespaceURI === namespaceURI
+				)(nodes);
 
-  protected *self() {
-    yield* this.contextNodes;
-  }
+				break;
+			}
 
-  step(step: AnyStep): LocationPathEvaluation {
-    const { axisType } = step;
-    const axisMethod = axisNameToMethod[axisType];
+			case 'QualifiedWildcardTest': {
+				const { prefix } = step;
+				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
-    let nodes = this[axisMethod](step);
+				nodes = filter((node: MaybeNamedNode) => node.namespaceURI === namespaceURI)(nodes);
 
-    const { namespaceResolver } = this;
+				break;
+			}
 
-    switch (step.stepType) {
-      case 'NodeTypeTest':
-        break;
+			case 'UnqualifiedWildcardTest':
+				break;
 
-      case 'NodeNameTest':{
-        const { nodeName } = step;
-        const namespaceURI = namespaceResolver.lookupNamespaceURI(null);
+			default:
+				throw new UnreachableError(step);
+		}
 
-        nodes = filter((node: MaybeNamedNode) => {
-          return (
-            node.nodeName === nodeName &&
-            node.namespaceURI === namespaceURI
-          );
-        })(nodes);
+		return new LocationPathEvaluation(this, nodes as Iterable<ContextNode>);
+	}
 
-        break;
-      }
+	evaluateLocationPathExpression(
+		expression: LocationPathExpressionEvaluator
+	): LocationPathEvaluation {
+		const nodes = expression.evaluateNodes(this);
 
-      case 'ProcessingInstructionNameTest': {
-        const { processingInstructionName } = step;
-
-        nodes = filter((node: Node | ProcessingInstruction) => {
-          return (
-            (node as MaybeProcessingInstructionNode).nodeName === processingInstructionName
-          );
-        })(nodes);
-
-        break;
-      }
-
-      case 'QualifiedNameTest': {
-        const {
-          prefix,
-          localName,
-        } = step;
-        const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
-
-        nodes = filter((node: MaybeNamedNode) => (
-          node.localName === localName &&
-          node.namespaceURI === namespaceURI
-        ))(nodes);
-
-        break;
-      }
-
-      case 'QualifiedWildcardTest': {
-        const {
-          prefix,
-        } = step;
-        const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
-
-        nodes = filter((node: MaybeNamedNode) => (
-          node.namespaceURI === namespaceURI
-        ))(nodes);
-
-        break;
-      }
-
-      case 'UnqualifiedWildcardTest':
-        break;
-
-      default:
-        throw new UnreachableError(step);
-    }
-
-    return new LocationPathEvaluation(this, nodes as Iterable<ContextNode>);
-  }
-
-  evaluateLocationPathExpression(
-    expression: LocationPathExpressionEvaluator
-  ): LocationPathEvaluation {
-    const nodes = expression.evaluateNodes(this);
-
-    return new LocationPathEvaluation(this, nodes as Iterable<ContextNode>);
-  }
+		return new LocationPathEvaluation(this, nodes as Iterable<ContextNode>);
+	}
 }

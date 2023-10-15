@@ -1,7 +1,28 @@
-#!/usr/bin/env sh
+#!/usr/bin/env node
+// @ts-check
 
-mkdir -p ./types
+const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
 
-echo "declare module 'tree-sitter-xpath/parser' {" > ./types/tree-sitter-xpath-parser.d.ts
-node ../../node_modules/@asgerf/dts-tree-sitter . >> ./types/tree-sitter-xpath-parser.d.ts
-echo "}" >> ./types/tree-sitter-xpath-parser.d.ts
+const cwd = process.cwd();
+const baseTypeGeneratorPath = path.resolve(
+	__dirname,
+	'../../../../node_modules/@asgerf/dts-tree-sitter/build/src/index.js'
+);
+
+const baseGeneratedTypes = spawnSync('node', [baseTypeGeneratorPath, cwd]).stdout.toString('utf-8');
+
+const correctedTypes = baseGeneratedTypes.replaceAll(
+	/((?<=\n)[ \t]*constructor\([^)]*\));[ ]*\n/g,
+	'$1: this;'
+);
+
+const wrappedTypes = ["declare module 'tree-sitter-xpath/parser' {", correctedTypes, '}', ''].join(
+	'\n'
+);
+
+fs.mkdirSync('./types', {
+	recursive: true,
+});
+fs.writeFileSync('./types/tree-sitter-xpath-parser.d.ts', wrappedTypes);

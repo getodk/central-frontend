@@ -1,15 +1,16 @@
+import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
 import { createTestContext } from '../helpers.ts';
 
 describe('#position()', () => {
-  let testContext: TestContext;
+	let testContext: TestContext;
 
-  beforeEach(() => {
-    testContext = createTestContext();
-  });
+	beforeEach(() => {
+		testContext = createTestContext();
+	});
 
-  it('position(node) with an argument', () => {
-    testContext = createTestContext(`
+	it('position(node) with an argument', () => {
+		testContext = createTestContext(`
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
         <head>
@@ -39,18 +40,18 @@ describe('#position()', () => {
         </body>
       </html>`);
 
-    let contextNode = testContext.document.getElementById('FunctionNumberCaseNumberMultiple');
+		const contextNode = testContext.document.getElementById('FunctionNumberCaseNumberMultiple');
 
-    testContext.assertNumberValue('position(..)', 6, {
-      contextNode,
-    });
-    testContext.assertNumberValue('position(.)', 3, {
-      contextNode,
-    });
-  });
+		testContext.assertNumberValue('position(..)', 6, {
+			contextNode,
+		});
+		testContext.assertNumberValue('position(.)', 3, {
+			contextNode,
+		});
+	});
 
-  it('position(node) with p node', () => {
-    testContext = createTestContext(`
+	it('position(node) with p node', () => {
+		testContext = createTestContext(`
       <div id="testFunctionNodeset">
         <div id="testFunctionNodeset2">
           <p>1</p>
@@ -74,11 +75,11 @@ describe('#position()', () => {
         </div>
       </div>`);
 
-    const contextNode = testContext.document.getElementById('testFunctionNodeset3NodeP');
+		const contextNode = testContext.document.getElementById('testFunctionNodeset3NodeP');
 
-    testContext.assertNumberValue('position(../..)', 2, {
-      contextNode,
-    });
-  });
-  //   throw new Error('nodeset provided to position() contained multiple nodes');
+		testContext.assertNumberValue('position(../..)', 2, {
+			contextNode,
+		});
+	});
+	//   throw new Error('nodeset provided to position() contained multiple nodes');
 });

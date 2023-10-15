@@ -1,26 +1,22 @@
 import type { EvaluationType } from './EvaluationType.ts';
 
-export interface Evaluation<
-  Type extends EvaluationType = EvaluationType
-> extends Iterable<Evaluation<Type>> {
-  readonly type: Type;
+export interface Evaluation<Type extends EvaluationType = EvaluationType>
+	extends Iterable<Evaluation<Type>> {
+	readonly type: Type;
 
-  first(): Evaluation<Type> | null;
-  values(): Iterable<Evaluation<Type>>;
+	first(): Evaluation<Type> | null;
+	values(): Iterable<Evaluation<Type>>;
 
-  eq(operand: Evaluation): boolean;
-  ne(operand: Evaluation): boolean;
-  lt(operand: Evaluation): boolean;
-  lte(operand: Evaluation): boolean;
-  gt(operand: Evaluation): boolean;
-  gte(operand: Evaluation): boolean;
+	eq(operand: Evaluation): boolean;
+	ne(operand: Evaluation): boolean;
+	lt(operand: Evaluation): boolean;
+	lte(operand: Evaluation): boolean;
+	gt(operand: Evaluation): boolean;
+	gte(operand: Evaluation): boolean;
 
-  toBoolean(): boolean;
-  toNumber(): number;
-  toString(): string;
+	toBoolean(): boolean;
+	toNumber(): number;
+	toString(): string;
 
-  readonly nodes:
-    Type extends 'NODE'
-      ? Iterable<Node>
-      : null;
+	readonly nodes: Type extends 'NODE' ? Iterable<Node> : null;
 }

@@ -24,61 +24,55 @@ const parser = new ExpressionParser();
 // }
 
 interface EvaluatorOptions {
-  readonly functionLibrary?: FunctionLibrary;
-  readonly timeZoneId?: string | undefined;
+	readonly functionLibrary?: FunctionLibrary;
+	readonly timeZoneId?: string | undefined;
 }
 
 export class Evaluator implements XPathEvaluator {
-  readonly functionLibrary: FunctionLibrary;
-  readonly resultTypes: ResultTypes = ResultTypes;
-  readonly timeZone: Temporal.TimeZoneProtocol;
+	readonly functionLibrary: FunctionLibrary;
+	readonly resultTypes: ResultTypes = ResultTypes;
+	readonly timeZone: Temporal.TimeZoneProtocol;
 
-  constructor(options: EvaluatorOptions = {}) {
-    this.functionLibrary = options.functionLibrary ?? fn;
+	constructor(options: EvaluatorOptions = {}) {
+		this.functionLibrary = options.functionLibrary ?? fn;
 
-    const timeZoneId = options.timeZoneId ?? Temporal.Now.timeZoneId();
+		const timeZoneId = options.timeZoneId ?? Temporal.Now.timeZoneId();
 
-    this.timeZone = Temporal.TimeZone.from(timeZoneId);
-  }
+		this.timeZone = Temporal.TimeZone.from(timeZoneId);
+	}
 
-  evaluate(
-    expression: string,
-    contextNode: Node,
-    namespaceResolver: XPathNSResolver | null,
-    resultType: XPathResultType | null
-  ) {
-    const tree = parser.parse(expression);
+	evaluate(
+		expression: string,
+		contextNode: Node,
+		namespaceResolver: XPathNSResolver | null,
+		resultType: XPathResultType | null
+	) {
+		const tree = parser.parse(expression);
 
-    let contextOptions: Partial<EvaluationContextOptions> = {};
+		let contextOptions: Partial<EvaluationContextOptions> = {};
 
-    if (typeof namespaceResolver === 'function') {
-      contextOptions = {
-        namespaceResolver: {
-          lookupNamespaceURI: namespaceResolver,
-        },
-      };
-    } else if (namespaceResolver != null) {
-      contextOptions = {
-        namespaceResolver,
-      }
-    }
+		if (typeof namespaceResolver === 'function') {
+			contextOptions = {
+				namespaceResolver: {
+					lookupNamespaceURI: namespaceResolver,
+				},
+			};
+		} else if (namespaceResolver != null) {
+			contextOptions = {
+				namespaceResolver,
+			};
+		}
 
-    const expr = createExpression(tree.rootNode);
-    const context = new EvaluationContext(
-      this,
-      contextNode as ContextNode,
-      contextOptions
-    );
-    const results = expr.evaluate(context);
+		const expr = createExpression(tree.rootNode);
+		const context = new EvaluationContext(this, contextNode as ContextNode, contextOptions);
+		const results = expr.evaluate(context);
 
-    return toXPathResult(resultType ?? XPathResult.ANY_TYPE, results);
-  }
+		return toXPathResult(resultType ?? XPathResult.ANY_TYPE, results);
+	}
 
-  readonly customXPathFunction = {
-    add(name: string, _definition: CustomFunctionDefinition): void {
-      throw new Error(
-        `Failed to add function "${name}": custom functions not implemented`
-      );
-    }
-  };
+	readonly customXPathFunction = {
+		add(name: string, _definition: CustomFunctionDefinition): void {
+			throw new Error(`Failed to add function "${name}": custom functions not implemented`);
+		},
+	};
 }

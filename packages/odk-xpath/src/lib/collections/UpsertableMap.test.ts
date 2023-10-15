@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { UpsertableMap } from './UpsertableMap.ts';
 
 describe('UpsertableMap', () => {
@@ -17,9 +17,7 @@ describe('UpsertableMap', () => {
 	beforeEach(() => {
 		initialKey = new Key('initial key');
 		initialValue = new Value('initial value');
-		testMap = new UpsertableMap([
-			[initialKey, initialValue],
-		]);
+		testMap = new UpsertableMap([[initialKey, initialValue]]);
 	});
 
 	afterEach(() => {

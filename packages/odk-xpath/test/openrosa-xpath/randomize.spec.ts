@@ -1,32 +1,28 @@
-import { expect } from 'chai';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import {
-  createTestContext,
-  namespaceResolver,
-} from '../helpers.ts';
+import { createTestContext, namespaceResolver } from '../helpers.ts';
 
 describe('randomize()', () => {
-  let testContext: TestContext;
+	let testContext: TestContext;
 
-  beforeEach(() => {
-    testContext = createTestContext();
-  });
+	beforeEach(() => {
+		testContext = createTestContext();
+	});
 
-  describe('called on a non-nodeset', () => {
-    [
-      { expression: 'randomize(1, 2)' },
-    ].forEach(({ expression }) => {
-      it.fails(`should evaluate '${expression}' as ___TODO___`, () => {
-        testContext.evaluate(expression);
-      });
-    });
-  });
+	describe('called on a non-nodeset', () => {
+		[{ expression: 'randomize(1, 2)' }].forEach(({ expression }) => {
+			it.fails(`should evaluate '${expression}' as ___TODO___`, () => {
+				testContext.evaluate(expression);
+			});
+		});
+	});
 
-  const SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
+	const SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
 
-  describe('shuffles nodesets', () => {
-    beforeEach(() => {
-      testContext = createTestContext(`
+	describe('shuffles nodesets', () => {
+		beforeEach(() => {
+			testContext = createTestContext(
+				`
         <!DOCTYPE html>
         <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
           <head>
@@ -49,55 +45,61 @@ describe('randomize()', () => {
               <p>4</p>
             </div>
           </body>
-        </html>`, { namespaceResolver });
-    });
+        </html>`,
+				{ namespaceResolver }
+			);
+		});
 
-    it('without a seed', () => {
-      const expression = `randomize(${SELECTOR})`;
+		it(
+			'without a seed',
+			() => {
+				const expression = `randomize(${SELECTOR})`;
 
-      testContext.assertBooleanValue(expression, true);
+				testContext.assertBooleanValue(expression, true);
 
-      const nodes = testContext.evaluateUnorderedNodeSet(expression);
-      const text = nodes.map(({ textContent }) => textContent ?? '').join('');
+				const nodes = testContext.evaluateUnorderedNodeSet(expression);
+				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
 
-      expect(nodes.length).to.equal(6);
-      expect(text.length).to.equal(6);
-      expect(text).not.to.equal('ABCDEF');
-    }, { retry: 5 });
+				expect(nodes.length).to.equal(6);
+				expect(text.length).to.equal(6);
+				expect(text).not.to.equal('ABCDEF');
+			},
+			{ retry: 5 }
+		);
 
-    [
-      { seed: 42, expected: 'AFCBDE' },
-      { seed: '42', expected: 'AFCBDE' },
-      { seed: -42, expected: 'EDAFBC' },
-      { seed: 1, expected: 'BFEACD' },
-      { seed: 11111111, expected: 'ACDBFE' },
-      { seed: 'int(1)', expected: 'BFEACD' },
-      { seed: 'floor(1.1)', expected: 'BFEACD' },
-      { seed: '//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', expected: 'BFEACD' },
-    ].forEach(({ seed, expected }) => {
-      it(`with a seed: ${seed}`, () => {
-        const expression = `randomize(${SELECTOR}, ${seed})`;
+		[
+			{ seed: 42, expected: 'AFCBDE' },
+			{ seed: '42', expected: 'AFCBDE' },
+			{ seed: -42, expected: 'EDAFBC' },
+			{ seed: 1, expected: 'BFEACD' },
+			{ seed: 11111111, expected: 'ACDBFE' },
+			{ seed: 'int(1)', expected: 'BFEACD' },
+			{ seed: 'floor(1.1)', expected: 'BFEACD' },
+			{ seed: '//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', expected: 'BFEACD' },
+		].forEach(({ seed, expected }) => {
+			it(`with a seed: ${seed}`, () => {
+				const expression = `randomize(${SELECTOR}, ${seed})`;
 
-        const nodes = testContext.evaluateUnorderedNodeSet(expression);
-        const text = nodes.map(({ textContent }) => textContent ?? '').join('');
+				const nodes = testContext.evaluateUnorderedNodeSet(expression);
+				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
 
-        expect(text).to.equal(expected);
-      });
-    });
-  });
+				expect(text).to.equal(expected);
+			});
+		});
+	});
 
-  [
-    { expression: 'randomize()' },
-    { expression: `randomize(${SELECTOR}, 'a')` },
-    { expression: `randomize(${SELECTOR}, 1, 2)` },
-  ].forEach(({ expression }) => {
-    it.fails(`${expression} with invalid args, throws an error`, () => {
-      testContext.evaluate(expression);
-    });
-  });
+	[
+		{ expression: 'randomize()' },
+		{ expression: `randomize(${SELECTOR}, 'a')` },
+		{ expression: `randomize(${SELECTOR}, 1, 2)` },
+	].forEach(({ expression }) => {
+		it.fails(`${expression} with invalid args, throws an error`, () => {
+			testContext.evaluate(expression);
+		});
+	});
 
-  it('randomizes nodes', () => {
-    testContext = createTestContext(`
+	it('randomizes nodes', () => {
+		testContext = createTestContext(`
       <model>
           <instance>
               <rank id="rank">
@@ -141,10 +143,10 @@ describe('randomize()', () => {
           </instance>
         </model>`);
 
-    const expression = 'randomize(/model/instance[@id="crop_list"]/root/item)';
-    const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+		const expression = 'randomize(/model/instance[@id="crop_list"]/root/item)';
+		const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
 
-    expect(result.resultType).to.equal(XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
-    expect(result.snapshotLength).to.equal(6);
-  });
+		expect(result.resultType).to.equal(XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+		expect(result.snapshotLength).to.equal(6);
+	});
 });

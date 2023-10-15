@@ -28,16 +28,17 @@ export const XFORMS_PREFIX = 'xf';
 export interface StaticNamespaces<
 	DefaultPrefix extends string,
 	DefaultURI extends string,
-	Mapping extends Record<string, string>
+	Mapping extends Record<string, string>,
 > {
-	get<Key extends string | null>(key: Key):
-		Key extends null
-			? DefaultURI
+	get<Key extends string | null>(
+		key: Key
+	): Key extends null
+		? DefaultURI
 		: Key extends DefaultPrefix
-			? DefaultURI
+		? DefaultURI
 		: Key extends keyof Mapping
-			? Mapping[Key]
-			: undefined;
+		? Mapping[Key]
+		: undefined;
 
 	has(key: null): true;
 	has(key: DefaultPrefix | keyof Mapping): true;
@@ -45,43 +46,38 @@ export interface StaticNamespaces<
 	has(key: string): false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging -- it's not unsafe lol, it's defining the types
 export class StaticNamespaces<
-	DefaultPrefix extends string,
-	DefaultURI extends string,
-	const Mapping extends Record<string, string>
-> extends Map<string | null, string> implements ReadonlyMap<string | null, string> {
+		DefaultPrefix extends string,
+		DefaultURI extends string,
+		const Mapping extends Record<string, string>,
+	>
+	extends Map<string | null, string>
+	implements ReadonlyMap<string | null, string>
+{
 	constructor(
 		protected defaultPrefix: DefaultPrefix,
 		protected defaultURI: DefaultURI,
 		namespaces: Mapping
 	) {
-		super([
-			...Object.entries(namespaces),
-			[null, defaultURI],
-			[defaultPrefix, defaultURI],
-		]);
+		super([...Object.entries(namespaces), [null, defaultURI], [defaultPrefix, defaultURI]]);
 	}
 }
 
-export const staticNamespaces = new StaticNamespaces(
-	'xf',
-	XFORMS_NAMESPACE_URI,
-	{
-    [FN_PREFIX]: FN_NAMESPACE_URI,
-		[HTML_PREFIX]: XHTML_NAMESPACE_URI,
-		html: XHTML_NAMESPACE_URI,
-		xhtml: XHTML_NAMESPACE_URI,
-		[JAVAROSA_PREFIX]: JAVAROSA_NAMESPACE_URI,
-		javarosa: JAVAROSA_NAMESPACE_URI,
-		[ODK_PREFIX]: ODK_NAMESPACE_URI,
-		[OPENROSA_XFORMS_PREFIX]: OPENROSA_XFORMS_NAMESPACE_URI,
-		'openrosa-xforms': OPENROSA_XFORMS_NAMESPACE_URI,
-		[XFORMS_PREFIX]: XFORMS_NAMESPACE_URI,
-		[XML_PREFIX]: XML_NAMESPACE_URI,
-		[XMLNS_PREFIX]: XMLNS_NAMESPACE_URI,
-	}
-);
-
+export const staticNamespaces = new StaticNamespaces('xf', XFORMS_NAMESPACE_URI, {
+	[FN_PREFIX]: FN_NAMESPACE_URI,
+	[HTML_PREFIX]: XHTML_NAMESPACE_URI,
+	html: XHTML_NAMESPACE_URI,
+	xhtml: XHTML_NAMESPACE_URI,
+	[JAVAROSA_PREFIX]: JAVAROSA_NAMESPACE_URI,
+	javarosa: JAVAROSA_NAMESPACE_URI,
+	[ODK_PREFIX]: ODK_NAMESPACE_URI,
+	[OPENROSA_XFORMS_PREFIX]: OPENROSA_XFORMS_NAMESPACE_URI,
+	'openrosa-xforms': OPENROSA_XFORMS_NAMESPACE_URI,
+	[XFORMS_PREFIX]: XFORMS_NAMESPACE_URI,
+	[XML_PREFIX]: XML_NAMESPACE_URI,
+	[XMLNS_PREFIX]: XMLNS_NAMESPACE_URI,
+});
 
 const namespaceURIs = new UpsertableMap<Node, UpsertableMap<string | null, string | null>>();
 
@@ -95,11 +91,11 @@ export class NamespaceResolver implements XPathNamespaceResolverObject {
 
 	protected lookupNodeNamespaceURI = (node: Node, prefix: string | null) => {
 		return node.lookupNamespaceURI(prefix);
-	}
+	};
 
 	protected lookupStaticNamespaceURI = (prefix: string | null) => {
 		return staticNamespaces.get(prefix) ?? null;
-	}
+	};
 
 	/**
 	 * Note: while it is likely consistent with the **spec** to resolve a `null`
@@ -110,12 +106,11 @@ export class NamespaceResolver implements XPathNamespaceResolverObject {
 	 * more **obvious** behavior.
 	 */
 	lookupNamespaceURI(prefix: string | null) {
-		return namespaceURIs.upsert(this.referenceNode!, () => new UpsertableMap())
+		return namespaceURIs
+			.upsert(this.referenceNode!, () => new UpsertableMap())
 			.upsert(prefix, () => {
 				return (
-					this.referenceNode!.lookupNamespaceURI(prefix) ??
-					staticNamespaces.get(prefix) ??
-					null
+					this.referenceNode!.lookupNamespaceURI(prefix) ?? staticNamespaces.get(prefix) ?? null
 				);
 			});
 	}

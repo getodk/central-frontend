@@ -11,62 +11,48 @@ const trueFn = new BooleanFunction([], (): boolean => true);
 export { trueFn as true };
 
 export const boolean = new BooleanFunction(
-  [{ arityType: 'required' }],
-  (context, [expression]): boolean => {
-    return expression!.evaluate(context).toBoolean();
-  }
+	[{ arityType: 'required' }],
+	(context, [expression]): boolean => {
+		return expression!.evaluate(context).toBoolean();
+	}
 );
 
 export const lang = new BooleanFunction(
-  [{ arityType: 'required' }],
-  (context, [expression]): boolean => {
-    const language = expression!.evaluate(context).toString().toLowerCase();
+	[{ arityType: 'required' }],
+	(context, [expression]): boolean => {
+		const language = expression!.evaluate(context).toString().toLowerCase();
 
-    if (language === '') {
-      return false;
-    }
+		if (language === '') {
+			return false;
+		}
 
-    // TODO: what happens with multiple? Probably use `some`?
-    const [contextNode] = context.contextNodes;
+		// TODO: what happens with multiple? Probably use `some`?
+		const [contextNode] = context.contextNodes;
 
-    if (contextNode == null) {
-      return false;
-    }
+		if (contextNode == null) {
+			return false;
+		}
 
-    let contextElement = isElementNode(contextNode)
-      ? contextNode
-      : contextNode.parentElement;
+		let contextElement = isElementNode(contextNode) ? contextNode : contextNode.parentElement;
 
-    if (contextElement == null) {
-      return false;
-    }
+		if (contextElement == null) {
+			return false;
+		}
 
-    let lang: string | null = contextElement.getAttributeNS(
-      XML_NAMESPACE_URI,
-      'lang'
-    );
+		let langValue: string | null = contextElement.getAttributeNS(XML_NAMESPACE_URI, 'lang');
 
-    do {
-      lang = contextElement?.getAttributeNS(
-        XML_NAMESPACE_URI,
-        'lang'
-      )?.toLowerCase() ?? null;
-      contextElement = contextElement.parentElement;
-    } while (lang == null && contextElement != null);
+		do {
+			langValue = contextElement?.getAttributeNS(XML_NAMESPACE_URI, 'lang')?.toLowerCase() ?? null;
+			contextElement = contextElement.parentElement;
+		} while (langValue == null && contextElement != null);
 
-    return (
-      lang != null &&
-      (
-        lang === language ||
-        lang.startsWith(`${language}-`)
-      )
-    );
-  }
-)
+		return langValue != null && (langValue === language || langValue.startsWith(`${language}-`));
+	}
+);
 
 export const not = new BooleanFunction(
-  [{ arityType: 'required' }],
-  (context, [expression]): boolean => {
-    return !expression!.evaluate(context).toBoolean();
-  }
+	[{ arityType: 'required' }],
+	(context, [expression]): boolean => {
+		return !expression!.evaluate(context).toBoolean();
+	}
 );
