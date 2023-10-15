@@ -25,6 +25,10 @@ const actionPath = (action) => {
 };
 
 export default memoizeForContainer(({ i18n }) => ({
+  categoryMessage: (category) => {
+    const path = `audit.category.${category}`;
+    return i18n.te(path, i18n.fallbackLocale) ? i18n.t(path) : null;
+  },
   // Returns a message describing an audit action.
   actionMessage: (action) => {
     const path = actionPath(action);

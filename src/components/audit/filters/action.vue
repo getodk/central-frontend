@@ -35,8 +35,8 @@ export default {
   },
   emits: ['update:modelValue'],
   setup() {
-    const { actionMessage } = useAudit();
-    return { actionMessage };
+    const { categoryMessage, actionMessage } = useAudit();
+    return { categoryMessage, actionMessage };
   },
   computed: {
     options() {
@@ -87,7 +87,7 @@ export default {
   methods: {
     categoryOption(category) {
       return {
-        text: this.$t(`audit.category.${category}`),
+        text: this.categoryMessage(category),
         value: category,
         htmlClass: 'audit-filters-action-category'
       };

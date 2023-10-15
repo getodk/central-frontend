@@ -12,8 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <p class="page-body-heading">{{ $t('heading[0]') }}</p>
-    <audit-filters v-model:action="filters.action"
-      v-model:dateRange="filters.dateRange"/>
+    <audit-filters v-model:action="action" v-model:dateRange="dateRange"/>
     <audit-table/>
     <loading :state="audits.initiallyLoading"/>
     <p v-show="audits.dataExists && audits.length === 0"
@@ -23,55 +22,66 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
+<script setup>
 import { DateTime } from 'luxon';
+import { watch } from 'vue';
 
 import AuditFilters from './filters.vue';
 import AuditTable from './table.vue';
 import Loading from '../loading.vue';
 
+import useAudit from '../../composables/audit';
+import useQueryRef from '../../composables/query-ref';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'AuditList',
-  components: { AuditFilters, AuditTable, Loading },
-  setup() {
-    const { createResource } = useRequestData();
-    const audits = createResource('audits');
-    return { audits };
-  },
-  data() {
-    const today = DateTime.local().startOf('day');
-    return {
-      filters: {
-        action: 'nonverbose',
-        dateRange: [today, today]
-      }
-    };
-  },
-  watch: {
-    'filters.action': 'fetchData',
-    'filters.dateRange': 'fetchData'
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      const { action, dateRange } = this.filters;
-      this.audits.request({
-        url: apiPaths.audits({
-          action,
-          start: dateRange[0].toISO(),
-          end: dateRange[1].endOf('day').toISO()
-        }),
-        extended: true
-      }).catch(noop);
+defineOptions({
+  name: 'AuditList'
+});
+
+const { createResource } = useRequestData();
+const audits = createResource('audits');
+
+const { categoryMessage, actionMessage } = useAudit();
+const action = useQueryRef({
+  fromQuery: (query) => (typeof query.action === 'string' &&
+    (categoryMessage(query.action) != null || actionMessage(query.action) != null)
+    ? query.action
+    : 'nonverbose'),
+  toQuery: (value) => ({ action: value === 'nonverbose' ? null : value })
+});
+const dateRange = useQueryRef({
+  fromQuery: (query) => {
+    if (typeof query.start === 'string' && typeof query.end === 'string') {
+      const start = DateTime.fromISO(query.start);
+      const end = DateTime.fromISO(query.end);
+      if (start.isValid && end.isValid && start <= end)
+        return [start.startOf('day'), end.startOf('day')];
     }
+    const today = DateTime.local().startOf('day');
+    return [today, today];
+  },
+  toQuery: (value) => {
+    if (value.length === 0) return value;
+    const today = DateTime.local().startOf('day');
+    if (value[0].toMillis() === today.toMillis() &&
+      value[1].toMillis() === today.toMillis())
+      return { start: null, end: null };
+    return { start: value[0].toISODate(), end: value[1].toISODate() };
   }
-};
+});
+
+const fetchData = () => audits.request({
+  url: apiPaths.audits({
+    action: action.value,
+    start: dateRange.value[0].toISO(),
+    end: dateRange.value[1].endOf('day').toISO()
+  }),
+  extended: true
+}).catch(noop);
+fetchData();
+watch([action, dateRange], fetchData);
 </script>
 
 <i18n lang="json5">
