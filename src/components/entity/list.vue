@@ -18,9 +18,7 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-refresh"></span>{{ $t('action.refresh') }}
             <spinner :state="refreshing"/>
           </button>
-      <a id="entity-download-button" type="button" class="btn btn-primary" :href="href">
-        <span class="icon-arrow-circle-down"></span>{{ downloadText }}
-      </a>
+      <entity-download-button/>
     </div>
     <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
       ref="table" :properties="dataset.properties" @update="showUpdate"/>
@@ -40,10 +38,11 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { watchEffect } from 'vue';
 
-import Spinner from '../spinner.vue';
+import EntityDownloadButton from './download-button.vue';
 import EntityTable from './table.vue';
 import EntityUpdate from './update.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
+import Spinner from '../spinner.vue';
 
 import modal from '../../mixins/modal';
 import useEntities from '../../request-data/entities';
@@ -54,10 +53,11 @@ import { noop } from '../../util/util';
 export default {
   name: 'EntityList',
   components: {
-    Spinner,
+    EntityDownloadButton,
     EntityTable,
     EntityUpdate,
-    OdataLoadingMessage
+    OdataLoadingMessage,
+    Spinner
   },
   mixins: [modal()],
   inject: ['alert'],
@@ -104,16 +104,6 @@ export default {
         entity: null
       }
     };
-  },
-  computed: {
-    href() {
-      return apiPaths.entities(this.projectId, this.datasetName);
-    },
-    downloadText() {
-      return !this.odataEntities.dataExists
-        ? this.$t('action.download')
-        : this.$tcn('action.download.unfiltered', this.odataEntities.count);
-    }
   },
   created() {
     this.fetchData();
@@ -242,12 +232,6 @@ export default {
 <i18n lang="json5">
   {
     "en": {
-      "action": {
-        "download": {
-          // This is the text of a button shown when the count of Entities is known.
-          "unfiltered": "Download {count} Entity | Download {count} Entities",
-        }
-      },
       // This text is shown when there are no Entities to show in a table.
       "noEntities": "There are no Entities to show."
     }

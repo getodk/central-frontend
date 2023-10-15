@@ -1540,17 +1540,17 @@
       }
     },
     "EntityList": {
+      "noEntities": {
+        "string": "There are no Entities to show.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      },
       "action": {
         "download": {
           "unfiltered": {
             "string": "{count, plural, one {Download {count} Entity} other {Download {count} Entities}}",
-            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+            "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
-      },
-      "noEntities": {
-        "string": "There are no Entities to show.",
-        "developer_comment": "This text is shown when there are no Entities to show in a table."
       }
     },
     "EntityShow": {
