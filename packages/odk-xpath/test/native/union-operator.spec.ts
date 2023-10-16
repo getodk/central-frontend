@@ -203,10 +203,9 @@ describe('Union operator', () => {
 	});
 
 	it('combines a namespace and attribute on the same element', () => {
-		testContext.assertNodeSet(
-			"id('nss25')/namespace::* | id('nss25')/attribute::*",
-			[...testContext.document.getElementById('nss25')!.attributes]
-		);
+		testContext.assertNodeSet("id('nss25')/namespace::* | id('nss25')/attribute::*", [
+			...testContext.document.getElementById('nss25')!.attributes,
+		]);
 	});
 
 	it('combines two namespaces on the same element', () => {
