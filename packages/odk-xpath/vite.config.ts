@@ -4,6 +4,7 @@
 import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
+import GithubActionsReporter from 'vitest-github-actions-reporter';
 import type { CollectionValues } from './src/lib/collections/types';
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
@@ -98,5 +99,6 @@ export default defineConfig({
 		environment: TEST_ENVIRONMENT,
 		globals: false,
 		include: TEST_INCLUDE,
+		reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',
 	},
 });
