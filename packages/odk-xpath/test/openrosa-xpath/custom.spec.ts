@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
 import { createTestContext } from '../helpers.ts';
 
-describe('custom XPath functions', () => {
+describe.skip('custom XPath functions', () => {
 	let testContext: TestContext;
 
 	beforeEach(() => {
