@@ -22,5 +22,5 @@ export interface Context {
 	// TODO: namespaced function libraries? Could accommodate custom functions
 	readonly functionLibrary: FunctionLibrary;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
-	readonly timeZone: Temporal.TimeZoneProtocol;
+	readonly timeZone: Temporal.TimeZone;
 }

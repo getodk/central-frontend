@@ -4,6 +4,8 @@ import type { EvaluationType, EvaluationTypes } from './EvaluationType.ts';
 import { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 
 export abstract class ValueEvaluation<Type extends EvaluationType> implements Evaluation<Type> {
+	abstract readonly context: LocationPathEvaluation;
+
 	abstract readonly type: Type;
 	abstract readonly value: EvaluationTypes[Type];
 	abstract readonly nodes: Type extends 'NODE' ? Iterable<Node> : null;

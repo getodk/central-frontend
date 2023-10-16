@@ -1,3 +1,4 @@
+import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
 export class BooleanEvaluation extends ValueEvaluation<'BOOLEAN'> {
@@ -8,7 +9,7 @@ export class BooleanEvaluation extends ValueEvaluation<'BOOLEAN'> {
 	protected readonly numberValue: number;
 	protected readonly stringValue: string;
 
-	constructor(readonly value: boolean) {
+	constructor(readonly context: LocationPathEvaluation, readonly value: boolean) {
 		super();
 
 		this.booleanValue = value;

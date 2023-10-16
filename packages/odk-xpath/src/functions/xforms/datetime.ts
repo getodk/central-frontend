@@ -3,17 +3,16 @@ import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
-import { DateTimeContext } from '../../lib/datetime/DateTimeContext.ts';
 import { DAY_MILLISECONDS } from '../../lib/datetime/constants.ts';
+import { now } from '../../lib/datetime/functions.ts';
 import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { StringEvaluation } from '../../evaluations/StringEvaluation.ts';
+import { dateTimeFromNumber, dateTimeFromString } from '../../lib/datetime/coercion.ts';
+import { isValidTimeString } from '../../lib/datetime/predicates.ts';
 
 export const today = new FunctionImplementation([], (context) => {
-	const dateTimeContext = new DateTimeContext(context);
-	const now = dateTimeContext.now();
-
-	const todayDateTime = now.with({
+	const todayDateTime = now(context.timeZone).with({
 		hour: 0,
 		minute: 0,
 		second: 0,
@@ -22,18 +21,19 @@ export const today = new FunctionImplementation([], (context) => {
 		nanosecond: 0,
 	});
 
-	return new DateTimeLikeEvaluation(dateTimeContext, todayDateTime);
+	return new DateTimeLikeEvaluation(context, todayDateTime);
 });
 
-export const now = new FunctionImplementation([], (context) => {
-	const dateTimeContext = new DateTimeContext(context);
-
-	return new DateTimeLikeEvaluation(dateTimeContext, dateTimeContext.now());
+export const xfNow = new FunctionImplementation([], (context) => {
+	return new DateTimeLikeEvaluation(context, now(context.timeZone));
+}, {
+	localName: 'now',
 });
 
 type DateTimeFormatFunction = (dateTime: Temporal.ZonedDateTime) => string;
 type DateFormatterRecord = Record<`%${string}`, DateTimeFormatFunction>;
 
+// TODO: localization
 const shortMonths = [
 	,
 	'Jan',
@@ -50,8 +50,10 @@ const shortMonths = [
 	'Dec',
 ];
 
+// TODO: localization
 const shortDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+// TODO: Can use `Intl`?
 const dateFormatters = {
 	/**
 	 * 4-digit year
@@ -112,6 +114,7 @@ const dateFormatters = {
 
 type DateFormatters = typeof dateFormatters;
 
+// TODO: Can use `Intl`?
 const timeFormatters = {
 	/**
 	 * 0-padded hour (24-hr time)
@@ -177,17 +180,14 @@ export const formatDate = new StringFunction(
 	],
 	(context, [expression, formatExpression]) => {
 		const format = formatExpression!.evaluate(context).toString();
-		const dateTimeContext = new DateTimeContext(context);
 		const value = expression!.evaluate(context).toString();
-		// TODO: in general, don't use try/catch, or isolate from other logic if
-		// necessary to use (try/catch tends to have major JIT performance impact).
-		try {
-			const dateTime = dateTimeContext.getDateTime(value);
+		const dateTime = dateTimeFromString(context.timeZone, value);
 
-			return dateFormatter(format, dateTime);
-		} catch {
+		if (dateTime == null) {
 			return '';
 		}
+
+		return dateFormatter(format, dateTime);
 	},
 	{
 		localName: 'format-date',
@@ -203,16 +203,15 @@ export const formatDateTime = new StringFunction(
 	],
 	(context, [expression, formatExpression]) => {
 		const format = formatExpression!.evaluate(context).toString();
-		const dateTimeContext = new DateTimeContext(context);
 		const value = expression!.evaluate(context).toString();
-		// TODO (try/catch)
-		try {
-			const dateTime = dateTimeContext.getDateTime(value);
 
-			return dateTimeFormatter(format, dateTime);
-		} catch {
+		const dateTime = dateTimeFromString(context.timeZone, value);
+
+		if (dateTime == null) {
 			return '';
 		}
+
+		return dateTimeFormatter(format, dateTime);
 	},
 	{
 		localName: 'format-date-time',
@@ -222,19 +221,26 @@ export const formatDateTime = new StringFunction(
 const evaluateDateTime = (
 	context: EvaluationContext,
 	evaluation: Evaluation
-): Temporal.ZonedDateTime => {
-	const dateTimeContext = new DateTimeContext(context);
+): Temporal.ZonedDateTime | null => {
+	const { timeZone } = context;
 
 	switch (evaluation.type) {
 		case 'NUMBER': {
 			const days = evaluation.toNumber();
+
+			if (Number.isNaN(days)) {
+				return null;
+			}
+
 			const milliseconds = days * DAY_MILLISECONDS;
 
-			return dateTimeContext.getDateTime(milliseconds);
+			return dateTimeFromNumber(timeZone, milliseconds);
 		}
 
 		case 'STRING': {
-			return dateTimeContext.getDateTime(evaluation.toString());
+			const stringValue = evaluation.toString();
+
+			return dateTimeFromString(timeZone, stringValue);
 		}
 
 		default:
@@ -251,22 +257,21 @@ export const date = new FunctionImplementation(
 		{ arityType: 'required' },
 	],
 	(context, [expression]) => {
-		const dateTimeContext = new DateTimeContext(context);
 		const results = expression!.evaluate(context);
 
 		switch (results.type) {
 			case 'BOOLEAN':
-				return new StringEvaluation('');
+				return new StringEvaluation(context, '');
 
 			case 'STRING':
 				const string = results.toString();
 
 				if (string === '') {
-					return new StringEvaluation(string);
+					return new StringEvaluation(context, string);
 				}
 
 				if (!DATE_OR_DATE_TIME_PATTERN.test(string)) {
-					return new StringEvaluation('');
+					return new DateTimeLikeEvaluation(context, null);
 				}
 
 				break;
@@ -280,7 +285,7 @@ export const date = new FunctionImplementation(
 
 		const dateTime = evaluateDateTime(context, results);
 
-		return new DateTimeLikeEvaluation(dateTimeContext, dateTime);
+		return new DateTimeLikeEvaluation(context, dateTime);
 	}
 );
 
@@ -289,6 +294,10 @@ export const decimalDateTime = new NumberFunction(
 	(context, [expression]) => {
 		const results = expression!.evaluate(context);
 		const dateTime = evaluateDateTime(context, results);
+
+		if (dateTime == null) {
+			return NaN;
+		}
 
 		return dateTime.epochMilliseconds / DAY_MILLISECONDS;
 	},
@@ -302,23 +311,16 @@ export const decimalTime = new NumberFunction(
 	(context, [expression]) => {
 		const string = expression!.evaluate(context).toString();
 
-		if (true) {
-			try {
-				Temporal.PlainTime.from(string);
-			} catch {
-				return NaN;
-			}
+		if (!isValidTimeString(string)) {
+			return NaN;
 		}
 
 		if (/\d{2}:\d{2}(\:\d{2})?(\.\d+)?(Z|[-+]\d{2}:\d{2})?$/.test(string)) {
-			const dateTimeContext = new DateTimeContext(context);
 			const dateTimeString = `1970-01-01T${string}`;
 
-			let dateTime: Temporal.ZonedDateTime;
+			const dateTime = dateTimeFromString(context.timeZone, dateTimeString);
 
-			try {
-				dateTime = dateTimeContext.getDateTime(dateTimeString);
-			} catch {
+			if (dateTime == null) {
 				return NaN;
 			}
 

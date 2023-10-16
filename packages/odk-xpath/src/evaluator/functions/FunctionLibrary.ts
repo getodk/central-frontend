@@ -1,8 +1,8 @@
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-import type { Expression } from '../expression/Expression.ts';
 import type {
 	AnyFunctionImplementation,
+	EvaluableArgument,
 	FunctionImplementation,
 } from './FunctionImplementation.ts';
 import { UnknownFunctionError } from './FunctionImplementation.ts';
@@ -60,7 +60,7 @@ export class FunctionLibrary {
 	call(
 		localName: LocalName,
 		context: LocationPathEvaluation,
-		args: readonly Expression[]
+		args: readonly EvaluableArgument[]
 	): Evaluation {
 		const implementation = this.implementations.get(localName);
 
@@ -73,5 +73,11 @@ export class FunctionLibrary {
 		fn.validateArguments(args);
 
 		return implementation.call(context, args);
+	}
+
+	getImplementation(localName: LocalName): FunctionImplementation<number> | null {
+		const implementation = this.implementations.get(localName);
+
+		return implementation ?? null;
 	}
 }

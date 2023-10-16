@@ -7,11 +7,12 @@
 // - Type hints -> anything?
 // - TS types for arity -> expression nullishness?
 
-import type { Expression } from '../expression/Expression.ts';
 import { UnreachableError } from '../../lib/error/UnreachableError.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { IterableReadonlyTuple } from '../../lib/collections/types';
+import type { Context } from '../../context/Context.ts';
+import type { EvaluationType } from '../../evaluations/EvaluationType.ts';
 
 export class UnknownFunctionError extends Error {
 	constructor(functionName: string) {
@@ -74,7 +75,11 @@ export interface Parameter {
 // [...RequiredParameter, ...OptionalParameter, ...([] | [VariadicParameter])]
 export type FunctionSignature<Length extends number> = IterableReadonlyTuple<Parameter, Length>;
 
-export type ValidArguments<Arguments extends readonly Expression[], IsValid extends boolean> = [
+export interface EvaluableArgument {
+	evaluate(context: Context): Evaluation<EvaluationType>;
+}
+
+export type ValidArguments<Arguments extends readonly EvaluableArgument[], IsValid extends boolean> = [
 	true,
 ] extends [IsValid]
 	? Arguments
@@ -89,7 +94,7 @@ interface FunctionArity {
 	readonly max: number;
 }
 
-export type FunctionCallable = <Arguments extends readonly Expression[]>(
+export type FunctionCallable = <Arguments extends readonly EvaluableArgument[]>(
 	context: LocationPathEvaluation,
 	args: Arguments
 ) => Evaluation;
@@ -142,7 +147,7 @@ export class FunctionImplementation<Length extends number> {
 		this.localName = options.localName ?? null;
 	}
 
-	validateArguments<Arguments extends readonly Expression[]>(
+	validateArguments<Arguments extends readonly EvaluableArgument[]>(
 		args: Arguments
 	): asserts args is ValidArguments<Arguments, true> {
 		const { arity, signature } = this;

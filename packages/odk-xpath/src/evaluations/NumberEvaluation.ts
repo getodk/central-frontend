@@ -1,3 +1,4 @@
+import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
 export class NumberEvaluation extends ValueEvaluation<'NUMBER'> {
@@ -8,7 +9,7 @@ export class NumberEvaluation extends ValueEvaluation<'NUMBER'> {
 	protected readonly numberValue: number;
 	protected readonly stringValue: string;
 
-	constructor(readonly value: number) {
+	constructor(readonly context: LocationPathEvaluation, readonly value: number) {
 		super();
 
 		this.booleanValue = value !== 0 && !Number.isNaN(value);

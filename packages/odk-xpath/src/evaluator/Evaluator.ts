@@ -9,6 +9,7 @@ import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
 import { EvaluationContext } from '../context/EvaluationContext.ts';
 import { fn } from '../functions/index.ts';
 import type { ContextNode } from '../lib/dom/types.ts';
+import type { ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { ExpressionParser } from '../static/grammar/ExpressionParser.ts';
 import { createExpression } from './expression/Expression.ts';
 import { FunctionLibrary } from './functions/FunctionLibrary.ts';
@@ -24,21 +25,21 @@ const parser = new ExpressionParser();
 // }
 
 interface EvaluatorOptions {
+	readonly parseOptions?: ParseOptions;
 	readonly functionLibrary?: FunctionLibrary;
 	readonly timeZoneId?: string | undefined;
 }
 
 export class Evaluator implements XPathEvaluator {
 	readonly functionLibrary: FunctionLibrary;
+	readonly parseOptions: ParseOptions;
 	readonly resultTypes: ResultTypes = ResultTypes;
-	readonly timeZone: Temporal.TimeZoneProtocol;
+	readonly timeZone: Temporal.TimeZone;
 
 	constructor(options: EvaluatorOptions = {}) {
 		this.functionLibrary = options.functionLibrary ?? fn;
-
-		const timeZoneId = options.timeZoneId ?? Temporal.Now.timeZoneId();
-
-		this.timeZone = Temporal.TimeZone.from(timeZoneId);
+		this.parseOptions = options.parseOptions ?? {};
+		this.timeZone = new Temporal.TimeZone(options.timeZoneId ?? Temporal.Now.timeZoneId());
 	}
 
 	evaluate(
@@ -47,7 +48,7 @@ export class Evaluator implements XPathEvaluator {
 		namespaceResolver: XPathNSResolver | null,
 		resultType: XPathResultType | null
 	) {
-		const tree = parser.parse(expression);
+		const tree = parser.parse(expression, this.parseOptions);
 
 		let contextOptions: Partial<EvaluationContextOptions> = {};
 

@@ -1,4 +1,6 @@
 import { trimXPathWhitespace } from '../lib/strings/xpath-whitespace.ts';
+import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
+import { StringEvaluation } from './StringEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
 interface NodeEvaluationComputedValues {
@@ -30,7 +32,7 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 		return this.computeValues().isEmpty;
 	}
 
-	constructor(readonly value: Node) {
+	constructor(readonly context: LocationPathEvaluation, readonly value: Node) {
 		super();
 		this.nodes = [value];
 	}
@@ -39,14 +41,29 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 		let { computedValues } = this;
 
 		if (computedValues == null) {
-			const { value: node } = this;
+			const { context, value: node } = this;
 			const stringValue = node.textContent ?? '';
 			const isEmpty = trimXPathWhitespace(stringValue) === '';
 			const booleanValue = !isEmpty;
+			const numberFunction = context.functionLibrary.getImplementation('number');
+
+			let numberValue: number;
 
 			// Note: without this `isEmpty` check, `Number('')` would produce 0.
 			// Which is wrong! Thanks, Netscape!
-			const numberValue = isEmpty ? NaN : Number(stringValue);
+			if (isEmpty) {
+				numberValue = NaN;
+			} else if (numberFunction == null) {
+				numberValue = Number(stringValue);
+			} else {
+				const stringEvaluation = new StringEvaluation(context, stringValue);
+
+				numberValue = numberFunction.call(context, [
+					{
+						evaluate: () => stringEvaluation,
+					}
+				]).toNumber();
+			}
 
 			computedValues = {
 				booleanValue,

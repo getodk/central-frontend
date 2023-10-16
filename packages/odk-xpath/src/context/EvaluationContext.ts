@@ -36,7 +36,7 @@ export interface EvaluationContextOptions {
 	readonly rootNode: ContextParentNode;
 	readonly functionLibrary: FunctionLibrary;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
-	readonly timeZone: Temporal.TimeZoneProtocol;
+	readonly timeZone: Temporal.TimeZone;
 	readonly treeWalkers: EvaluationContextTreeWalkers;
 }
 
@@ -53,7 +53,7 @@ export class EvaluationContext implements Context {
 	readonly functionLibrary: FunctionLibrary;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
 
-	readonly timeZone: Temporal.TimeZoneProtocol;
+	readonly timeZone: Temporal.TimeZone;
 
 	readonly treeWalkers: EvaluationContextTreeWalkers;
 

@@ -1,8 +1,8 @@
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
-import type { Expression } from '../../evaluator/expression/Expression.ts';
+import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 
-export const evaluateInt = (context: EvaluationContext, expression: Expression) =>
+export const evaluateInt = (context: EvaluationContext, expression: EvaluableArgument) =>
 	parseInt(expression.evaluate(context).toString(), 10);
 
 type MathAliasMethodName =
@@ -62,7 +62,7 @@ interface ToNumberArgumentsOptions {
 
 const toNumberArguments = (
 	context: EvaluationContext,
-	expressions: readonly Expression[],
+	expressions: readonly EvaluableArgument[],
 	options: ToNumberArgumentsOptions
 ): number[] => {
 	const numbers: number[] = [];

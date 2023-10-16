@@ -163,13 +163,17 @@ const XPath = await loadXPathLanguage();
 
 parser.setLanguage(XPath);
 
+export interface ParseOptions {
+	readonly attemptErrorRecovery?: boolean;
+}
+
 export class ExpressionParser {
 	// TODO: this cache can grow indefinitely. If the parser instance continues
 	// to be used as a singleton (see `Evaluator.ts`), it would make sense to
 	// have some sort of cache invalidation considerations.
 	protected readonly cache = new UpsertableMap<string, SyntaxTree>();
 
-	parse(expression: string): SyntaxTree {
+	parse(expression: string, options: ParseOptions = {}): SyntaxTree {
 		return this.cache.upsert(expression, () => {
 			const parsed = parser.parse(expression);
 
@@ -182,6 +186,10 @@ export class ExpressionParser {
 			// might be more appropriate to handle it in parse error recovery than
 			// with non-standard special cases in the grammar itself.
 			if (rootNode.hasError()) {
+				if (options.attemptErrorRecovery) {
+					// TODO
+				}
+
 				throw new Error(`Expression has syntax error: ${expression}`);
 			}
 

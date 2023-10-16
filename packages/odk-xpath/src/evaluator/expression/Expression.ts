@@ -55,50 +55,31 @@ interface ExpressionEvaluator {
 abstract class NumberExpressionEvaluator<ConstValue extends number | null = null>
 	implements ExpressionEvaluator
 {
-	protected readonly constEvaluation: NumberEvaluation | null;
-
-	constructor(protected readonly constValue: ConstValue) {
-		this.constEvaluation = constValue == null ? null : new NumberEvaluation(constValue);
-	}
+	constructor(protected readonly constValue: ConstValue) {}
 
 	abstract readonly syntaxNode: ExpressionNode;
 	abstract evaluateNumber(context: EvaluationContext): number;
 
 	evaluate(context: EvaluationContext): NumberEvaluation {
-		const { constEvaluation } = this;
-
-		if (constEvaluation != null) {
-			return constEvaluation;
-		}
 
 		const numberValue = this.evaluateNumber(context);
 
-		return new NumberEvaluation(numberValue);
+		return new NumberEvaluation(context.currentContext(), numberValue);
 	}
 }
 
 abstract class StringExpressionEvaluator<ConstValue extends string | null = null>
 	implements ExpressionEvaluator
 {
-	protected readonly constEvaluation: StringEvaluation | null;
-
-	constructor(protected readonly constValue: ConstValue) {
-		this.constEvaluation = constValue == null ? null : new StringEvaluation(constValue);
-	}
+	constructor(protected readonly constValue: ConstValue) {}
 
 	abstract readonly syntaxNode: ExpressionNode;
 	abstract evaluateString(context: EvaluationContext): string;
 
 	evaluate(context: EvaluationContext): StringEvaluation {
-		const { constEvaluation } = this;
-
-		if (constEvaluation != null) {
-			return constEvaluation;
-		}
-
 		const stringValue = this.evaluateString(context);
 
-		return new StringEvaluation(stringValue);
+		return new StringEvaluation(context.currentContext(), stringValue);
 	}
 }
 
@@ -212,7 +193,7 @@ class BooleanBinaryExpression<Node extends BooleanBinaryExprNode> extends Binary
 		const lhsResult = lhs.evaluate(context);
 		const rhsResult = rhs.evaluate(context);
 
-		return new BooleanEvaluation(lhsResult[operator](rhsResult));
+		return new BooleanEvaluation(context.currentContext(), lhsResult[operator](rhsResult));
 	}
 
 	evaluate(context: EvaluationContext): BooleanEvaluation {
@@ -250,16 +231,6 @@ type NumericOperation<Node extends NumericBinaryExprNode> = Node extends Additio
 	? 'subtraction'
 	: never;
 
-let NaNResult: NumberEvaluation | null = null;
-
-const getNaNResult = (): NumberEvaluation => {
-	if (NaNResult == null) {
-		NaNResult = new NumberEvaluation(NaN);
-	}
-
-	return NaNResult;
-};
-
 class NumericBinaryExpression<Node extends NumericBinaryExprNode> extends BinaryExpression<
 	Node,
 	NumberEvaluation
@@ -276,13 +247,13 @@ class NumericBinaryExpression<Node extends NumericBinaryExprNode> extends Binary
 		const lhsNumberValue = this.lhs.evaluate(context).toNumber();
 
 		if (Number.isNaN(lhsNumberValue)) {
-			return getNaNResult();
+			return new NumberEvaluation(context.currentContext(), NaN);
 		}
 
 		const rhsNumberValue = this.rhs.evaluate(context).toNumber();
 
 		if (Number.isNaN(rhsNumberValue)) {
-			return getNaNResult();
+			return new NumberEvaluation(context.currentContext(), NaN);
 		}
 
 		const { operation } = this;
@@ -314,7 +285,7 @@ class NumericBinaryExpression<Node extends NumericBinaryExprNode> extends Binary
 				throw new UnreachableError(operation);
 		}
 
-		return new NumberEvaluation(numberValue);
+		return new NumberEvaluation(context.currentContext(), numberValue);
 	}
 }
 

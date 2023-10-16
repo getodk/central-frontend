@@ -32,7 +32,14 @@ import { NodeEvaluation } from './NodeEvaluation.ts';
 
 type LocationPathParentContext = EvaluationContext | LocationPathEvaluation;
 
-const mapNodeEvaluations = map((node: Node) => new NodeEvaluation(node));
+function* toNodeEvaluations(
+	context: LocationPathEvaluation,
+	nodes: Iterable<ContextNode>
+): Iterable<NodeEvaluation> {
+	for (const node of nodes) {
+		yield new NodeEvaluation(context, node);
+	}
+}
 
 type EvaluationComparator = (lhs: Evaluation, rhs: Evaluation) => boolean;
 
@@ -106,7 +113,7 @@ export class LocationPathEvaluation
 
 	// --- Context ---
 	readonly evaluator: Evaluator;
-
+	readonly context: LocationPathEvaluation = this;
 	readonly contextDocument: ContextDocument;
 	readonly rootNode: ContextParentNode;
 
@@ -130,7 +137,7 @@ export class LocationPathEvaluation
 
 	readonly treeWalkers: EvaluationContextTreeWalkers;
 
-	readonly timeZone: Temporal.TimeZoneProtocol;
+	readonly timeZone: Temporal.TimeZone;
 
 	/**
 	 * TODO: this is a temporary accommodation for these cases which are presently
@@ -198,7 +205,7 @@ export class LocationPathEvaluation
 
 		this.nodes = nodes;
 
-		this.nodeEvaluations = Reiterable.from(mapNodeEvaluations(contextNodes));
+		this.nodeEvaluations = Reiterable.from(toNodeEvaluations(this, contextNodes));
 
 		if (options.contextSize != null) {
 			this.optionsContextSize = options.contextSize;

@@ -1,3 +1,4 @@
+import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
 export class StringEvaluation extends ValueEvaluation<'STRING'> {
@@ -9,6 +10,7 @@ export class StringEvaluation extends ValueEvaluation<'STRING'> {
 	protected readonly stringValue: string;
 
 	constructor(
+		readonly context: LocationPathEvaluation,
 		readonly value: string,
 		readonly isEmpty: boolean = value === ''
 	) {
@@ -17,5 +19,21 @@ export class StringEvaluation extends ValueEvaluation<'STRING'> {
 		this.booleanValue = !isEmpty;
 		this.numberValue = isEmpty ? NaN : Number(value);
 		this.stringValue = value;
+
+		const numberFunction = context.functionLibrary.getImplementation('number');
+
+		if (isEmpty) {
+			this.numberValue = NaN;
+		} else {
+			this.numberValue = Number(value);
+
+			if (numberFunction != null) {
+				this.numberValue = numberFunction.call(context, [
+					{
+						evaluate: () => this,
+					}
+				]).toNumber();
+			}
+		}
 	}
 }

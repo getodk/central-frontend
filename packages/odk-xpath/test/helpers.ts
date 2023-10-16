@@ -52,6 +52,9 @@ export class TestContext {
 		const xml = sourceXML ?? '<root/>';
 
 		const evaluator = new Evaluator({
+			parseOptions: {
+				attemptErrorRecovery: true,
+			},
 			timeZoneId: TZ,
 		});
 

@@ -1,4 +1,9 @@
+import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
+import type { Evaluation } from '../../evaluations/Evaluation.ts';
+import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
+import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
+import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
 import { mathAlias, math2Alias, mathNAlias } from '../_shared/number.ts';
 
 export const abs = mathAlias('abs');
@@ -31,6 +36,33 @@ export const log = mathAlias('log');
 export const log10 = mathAlias('log10');
 export const max = mathNAlias('max');
 export const min = mathNAlias('min');
+
+export const number = new FunctionImplementation(
+	[{ arityType: 'optional' }],
+	(context, [expression]): Evaluation<'NUMBER'> => {
+		const results = expression?.evaluate(context) ?? context;
+		const numberValue = results.toNumber();
+		const { type } = results;
+
+		if (type === 'NODE' || type === 'STRING') {
+			const stringValue = results.toString();
+			const dateTime = dateTimeFromString(context.timeZone, stringValue);
+
+			if (dateTime != null) {
+				return new DateTimeLikeEvaluation(context, dateTime, {
+					booleanValue: true,
+					stringValue,
+				});
+			}
+		}
+
+		if (type === 'NUMBER') {
+			return results as Evaluation<'NUMBER'>;
+		}
+
+		return new NumberEvaluation(context, numberValue);
+	}
+);
 
 const { PI } = Math;
 
