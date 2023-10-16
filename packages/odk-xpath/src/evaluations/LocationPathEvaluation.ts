@@ -103,6 +103,40 @@ type ArbitraryNodesTemporaryCallee =
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	| NodeSetFunction<any>;
 
+// TODO: naming, general design/approach. This class has multiple, overlapping
+// purposes:
+//
+// 1. Initial and intermediate context during a given evaluation of a given
+//    location path. Intermediate in the sense that evaluating a location path
+//    with multiple steps will produce instances for each step. Context in the
+//    sense described by XPath, and the interface named `Context`.
+//
+// 2. An evaluation value, i.e. "node-set" in the XForms spec and a candidate
+//    for concretion as an XPath result (also per spec) at a given expression's
+//    terminus. In fact, an earlier iteration used the name `NodeSet` for this
+//    reason. The current name took its place because of its responsibility for
+//    providing context to location paths generally, and because it is
+//    inherently also an evaluation which can be used to produce a result
+//    (again, in the sense defined by the XPath spec).
+//
+// 3. As an internal implementation detail, an iterable instance over its
+//    individual contextualized node values (contextualized in the sense that a
+//    given node value has a position and a context size).
+//
+// It's tempting to break this up into any one or two of these responsibilities.
+// This is exactly how it was implemented in earlier prototyping. But the
+// implementation kept "wanting" to be a singular *thing*. In the course of
+// evaluating location path steps, it most makes sense for this to be a context.
+// In the course of evaluating sub-expressions (function arguments, predicates),
+// it most makes sense for this to be an evaluation. Any breaking up from that
+// perspective ultimately produces two "things" which convert between one
+// another... because they really are different views on the same data.
+//
+// It's also tempting to keep the shared responsibilities in a single "thing",
+// but to break those responsibilities up into sub-structures. That would be
+// satisfying, but it would come with a bunch of coupling between those
+// sub-structures to satisfy the various interfaces expecting some or all of
+// this behavior/structure.
 export class LocationPathEvaluation
 	implements Evaluation<'NODE'>, Context, Iterable<LocationPathEvaluation>
 {
