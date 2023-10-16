@@ -1,7 +1,5 @@
-// import * as Parser from 'web-tree-sitter';
 import type { Language, ParserInstance } from '../../../vendor/web-tree-sitter.ts';
 import { Parser } from '../../../vendor/web-tree-sitter.ts';
-// TODO: ?raw (?)
 import treeSitterWASM from 'web-tree-sitter/tree-sitter.wasm?url';
 import treeSitterXPathWASM from 'tree-sitter-xpath/tree-sitter-xpath.wasm?url';
 import { UpsertableMap } from '../../lib/collections/UpsertableMap.ts';
