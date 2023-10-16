@@ -1,17 +1,17 @@
 import { Temporal } from '@js-temporal/polyfill';
+import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
+import { EvaluationContext } from '../context/EvaluationContext.ts';
+import { fn } from '../functions/index.ts';
+import type { ContextNode } from '../lib/dom/types.ts';
 import type {
 	CustomFunctionDefinition,
 	XPathEvaluator,
 	XPathNSResolver,
 	XPathResultType,
 } from '../shared/index.ts';
-import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
-import { EvaluationContext } from '../context/EvaluationContext.ts';
-import { fn } from '../functions/index.ts';
-import type { ContextNode } from '../lib/dom/types.ts';
 import type { ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { ExpressionParser } from '../static/grammar/ExpressionParser.ts';
-import { createExpression } from './expression/Expression.ts';
+import { createExpression } from './expression/factory.ts';
 import { FunctionLibrary } from './functions/FunctionLibrary.ts';
 import { ResultTypes } from './result/ResultType.ts';
 import { toXPathResult } from './result/index.ts';

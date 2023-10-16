@@ -1,16 +1,13 @@
 import type { Temporal } from '@js-temporal/polyfill';
-import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Context } from '../context/Context.ts';
 import type {
 	EvaluationContext,
 	EvaluationContextTreeWalkers,
 } from '../context/EvaluationContext.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
-import type {
-	FilterPathExpression,
-	LocationPathExpression,
-	LocationPathExpressionEvaluator,
-} from '../evaluator/expression/Expression.ts';
+import type { FilterPathExpressionEvaluator } from '../evaluator/expression/FilterPathExpressionEvaluator.ts';
+import type { LocationPathEvaluator } from '../evaluator/expression/LocationPathEvaluator.ts';
+import type { LocationPathExpressionEvaluator } from '../evaluator/expression/LocationPathExpressionEvaluator.ts';
 import type { FunctionLibrary } from '../evaluator/functions/FunctionLibrary.ts';
 import type { NodeSetFunction } from '../evaluator/functions/NodeSetFunction.ts';
 import type { AnyStep } from '../evaluator/step/Step.ts';
@@ -27,6 +24,7 @@ import type {
 import { UnreachableError } from '../lib/error/UnreachableError.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
 import { distinct, filter, map, tee } from '../lib/iterators/common.ts';
+import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Evaluation } from './Evaluation.ts';
 import { NodeEvaluation } from './NodeEvaluation.ts';
 
@@ -98,8 +96,8 @@ interface LocationPathEvaluationOptions {
 }
 
 type ArbitraryNodesTemporaryCallee =
-	| FilterPathExpression
-	| LocationPathExpression
+	| FilterPathExpressionEvaluator
+	| LocationPathEvaluator
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	| NodeSetFunction<any>;
 
