@@ -62,7 +62,7 @@ export default defineConfig({
 		//
 		// The hard-coded values make tests difficult to reason about. The lack of
 		// testing around DST is a significant gap in test coverage.
-		TZ: JSON.stringify(process.env.TZ ?? 'America/Phoenix'),
+		TZ: JSON.stringify(process.env.TEST_TZ ?? 'America/Phoenix'),
 		RUNTIME_TARGET: JSON.stringify(RUNTIME_TARGET),
 		WASM_PATHS: JSON.stringify(WASM_PATHS),
 	},
