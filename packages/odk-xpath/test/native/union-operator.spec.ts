@@ -203,11 +203,9 @@ describe('Union operator', () => {
 	});
 
 	it('combines a namespace and attribute on the same element', () => {
-		const result = testContext.evaluateNodeSet("id('nss25')/namespace::*");
-
 		testContext.assertNodeSet(
 			"id('nss25')/namespace::* | id('nss25')/attribute::*",
-			result.concat(getNonNamespaceAttributes(document.getElementById('nss25')!))
+			[...testContext.document.getElementById('nss25')!.attributes]
 		);
 	});
 
