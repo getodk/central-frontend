@@ -4,9 +4,7 @@ export const currentLocalDateTimeString = (timeZone: Temporal.TimeZone): string 
 	return localDateTimeString(now(timeZone));
 };
 
-export const localDateTimeString = (
-	dateTime: Temporal.ZonedDateTime
-): string => {
+export const localDateTimeString = (dateTime: Temporal.ZonedDateTime): string => {
 	const resultDateTime = dateTime
 		.toPlainDateTime()
 		.toString()
@@ -16,14 +14,11 @@ export const localDateTimeString = (
 	return `${resultDateTime}${dateTime.offset}`;
 };
 
-export const localDateTimeOrDateString = (
-	dateTime: Temporal.ZonedDateTime
-): string => {
+export const localDateTimeOrDateString = (dateTime: Temporal.ZonedDateTime): string => {
 	const dateTimeString = localDateTimeString(dateTime);
 
 	return dateTimeString.replace(/T00:00:00(\.0+)?(Z|[-+]\d{2}:\d{2})?/, '');
 };
 
-export const now = (
-	timeZone: Temporal.TimeZone
-): Temporal.ZonedDateTime => Temporal.Now.zonedDateTimeISO(timeZone);
+export const now = (timeZone: Temporal.TimeZone): Temporal.ZonedDateTime =>
+	Temporal.Now.zonedDateTimeISO(timeZone);

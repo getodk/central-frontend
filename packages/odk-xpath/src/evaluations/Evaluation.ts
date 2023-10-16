@@ -3,7 +3,6 @@ import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 
 export interface Evaluation<Type extends EvaluationType = EvaluationType>
 	extends Iterable<Evaluation<Type>> {
-
 	readonly context: LocationPathEvaluation;
 	readonly type: Type;
 

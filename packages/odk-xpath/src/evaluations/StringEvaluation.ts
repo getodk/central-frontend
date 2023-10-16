@@ -28,11 +28,13 @@ export class StringEvaluation extends ValueEvaluation<'STRING'> {
 			this.numberValue = Number(value);
 
 			if (numberFunction != null) {
-				this.numberValue = numberFunction.call(context, [
-					{
-						evaluate: () => this,
-					}
-				]).toNumber();
+				this.numberValue = numberFunction
+					.call(context, [
+						{
+							evaluate: () => this,
+						},
+					])
+					.toNumber();
 			}
 		}
 	}

@@ -9,7 +9,10 @@ export class BooleanEvaluation extends ValueEvaluation<'BOOLEAN'> {
 	protected readonly numberValue: number;
 	protected readonly stringValue: string;
 
-	constructor(readonly context: LocationPathEvaluation, readonly value: boolean) {
+	constructor(
+		readonly context: LocationPathEvaluation,
+		readonly value: boolean
+	) {
 		super();
 
 		this.booleanValue = value;

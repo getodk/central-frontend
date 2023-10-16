@@ -32,11 +32,7 @@ export class DateTimeLikeEvaluation extends ValueEvaluation<'NUMBER'> {
 	) {
 		super();
 
-		const {
-			booleanValue,
-			numberValue,
-			stringValue,
-		} = precomputedValues;
+		const { booleanValue, numberValue, stringValue } = precomputedValues;
 
 		if (dateTime == null) {
 			this.value = NaN;
@@ -54,8 +50,8 @@ export class DateTimeLikeEvaluation extends ValueEvaluation<'NUMBER'> {
 
 		this.value = epochMilliseconds;
 
-		this.booleanValue = booleanValue ?? (epochMilliseconds !== 0);
-		this.numberValue = numberValue ?? (epochMilliseconds / DAY_MILLISECONDS);
+		this.booleanValue = booleanValue ?? epochMilliseconds !== 0;
+		this.numberValue = numberValue ?? epochMilliseconds / DAY_MILLISECONDS;
 
 		const dateTimeString = localDateTimeOrDateString(dateTime);
 

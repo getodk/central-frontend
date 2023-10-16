@@ -61,7 +61,6 @@ abstract class NumberExpressionEvaluator<ConstValue extends number | null = null
 	abstract evaluateNumber(context: EvaluationContext): number;
 
 	evaluate(context: EvaluationContext): NumberEvaluation {
-
 		const numberValue = this.evaluateNumber(context);
 
 		return new NumberEvaluation(context.currentContext(), numberValue);

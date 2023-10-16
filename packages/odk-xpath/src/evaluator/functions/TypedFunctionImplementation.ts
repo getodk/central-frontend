@@ -1,6 +1,10 @@
 import type { Evaluation } from '../../evaluations/Evaluation';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-import type { EvaluableArgument, FunctionImplementationOptions, FunctionSignature } from './FunctionImplementation.ts';
+import type {
+	EvaluableArgument,
+	FunctionImplementationOptions,
+	FunctionSignature,
+} from './FunctionImplementation.ts';
 import { FunctionImplementation } from './FunctionImplementation.ts';
 
 export type TypedFunctionCallable<Type> = <Arguments extends readonly EvaluableArgument[]>(

@@ -24,11 +24,15 @@ export const today = new FunctionImplementation([], (context) => {
 	return new DateTimeLikeEvaluation(context, todayDateTime);
 });
 
-export const xfNow = new FunctionImplementation([], (context) => {
-	return new DateTimeLikeEvaluation(context, now(context.timeZone));
-}, {
-	localName: 'now',
-});
+export const xfNow = new FunctionImplementation(
+	[],
+	(context) => {
+		return new DateTimeLikeEvaluation(context, now(context.timeZone));
+	},
+	{
+		localName: 'now',
+	}
+);
 
 type DateTimeFormatFunction = (dateTime: Temporal.ZonedDateTime) => string;
 type DateFormatterRecord = Record<`%${string}`, DateTimeFormatFunction>;

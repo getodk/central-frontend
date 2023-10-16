@@ -9,7 +9,10 @@ export class NumberEvaluation extends ValueEvaluation<'NUMBER'> {
 	protected readonly numberValue: number;
 	protected readonly stringValue: string;
 
-	constructor(readonly context: LocationPathEvaluation, readonly value: number) {
+	constructor(
+		readonly context: LocationPathEvaluation,
+		readonly value: number
+	) {
 		super();
 
 		this.booleanValue = value !== 0 && !Number.isNaN(value);

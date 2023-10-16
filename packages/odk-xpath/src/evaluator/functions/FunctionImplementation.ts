@@ -79,11 +79,10 @@ export interface EvaluableArgument {
 	evaluate(context: Context): Evaluation<EvaluationType>;
 }
 
-export type ValidArguments<Arguments extends readonly EvaluableArgument[], IsValid extends boolean> = [
-	true,
-] extends [IsValid]
-	? Arguments
-	: never;
+export type ValidArguments<
+	Arguments extends readonly EvaluableArgument[],
+	IsValid extends boolean,
+> = [true] extends [IsValid] ? Arguments : never;
 
 export interface FunctionImplementationOptions {
 	readonly localName?: string | undefined;

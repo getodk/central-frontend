@@ -1,7 +1,7 @@
 import { pairwise } from 'itertools-ts/lib/single';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
-import type { Expression } from '../../evaluator/expression/Expression.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
+import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 
 interface Point {
 	readonly latitude: number;
@@ -34,7 +34,7 @@ const INVALID_POINT: Point = {
 
 const isInvalidPoint = (point: Point) => point === INVALID_POINT;
 
-const evaluatePoints = (context: EvaluationContext, expression: Expression): Point[] => {
+const evaluatePoints = (context: EvaluationContext, expression: EvaluableArgument): Point[] => {
 	const results = expression.evaluate(context);
 
 	const stringResults = [...results].map((result) => result.toString());
@@ -78,7 +78,7 @@ const INVALID_LINE: Line = {
 	end: INVALID_POINT,
 };
 
-const evaluateLines = (context: EvaluationContext, expression: Expression): Line[] => {
+const evaluateLines = (context: EvaluationContext, expression: EvaluableArgument): Line[] => {
 	const points = evaluatePoints(context, expression);
 
 	if (points.length < 2) {

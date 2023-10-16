@@ -1,9 +1,9 @@
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
-import type { Expression } from '../../evaluator/expression/Expression.ts';
+import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 
 export const toStrings = (
 	context: EvaluationContext,
-	expressions: readonly Expression[]
+	expressions: readonly EvaluableArgument[]
 ): readonly string[] => {
 	return expressions.flatMap((arg) => {
 		const result = arg.evaluate(context);

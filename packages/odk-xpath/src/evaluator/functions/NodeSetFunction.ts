@@ -1,6 +1,10 @@
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { ContextNode } from '../../lib/dom/types.ts';
-import type { EvaluableArgument, FunctionImplementationOptions, FunctionSignature } from './FunctionImplementation.ts';
+import type {
+	EvaluableArgument,
+	FunctionImplementationOptions,
+	FunctionSignature,
+} from './FunctionImplementation.ts';
 import { FunctionImplementation } from './FunctionImplementation.ts';
 
 export type NodeSetFunctionCallable = <Arguments extends readonly EvaluableArgument[]>(

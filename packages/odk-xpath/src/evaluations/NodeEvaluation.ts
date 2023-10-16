@@ -32,7 +32,10 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 		return this.computeValues().isEmpty;
 	}
 
-	constructor(readonly context: LocationPathEvaluation, readonly value: Node) {
+	constructor(
+		readonly context: LocationPathEvaluation,
+		readonly value: Node
+	) {
 		super();
 		this.nodes = [value];
 	}
@@ -58,11 +61,13 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 			} else {
 				const stringEvaluation = new StringEvaluation(context, stringValue);
 
-				numberValue = numberFunction.call(context, [
-					{
-						evaluate: () => stringEvaluation,
-					}
-				]).toNumber();
+				numberValue = numberFunction
+					.call(context, [
+						{
+							evaluate: () => stringEvaluation,
+						},
+					])
+					.toNumber();
 			}
 
 			computedValues = {
