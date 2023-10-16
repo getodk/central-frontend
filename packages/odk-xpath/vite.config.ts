@@ -3,6 +3,7 @@
 
 import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vite';
+import babel from 'vite-plugin-babel';
 import type { CollectionValues } from './src/lib/collections/types';
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
@@ -62,7 +63,7 @@ export default defineConfig({
 		//
 		// The hard-coded values make tests difficult to reason about. The lack of
 		// testing around DST is a significant gap in test coverage.
-		TZ: JSON.stringify(process.env.TEST_TZ ?? 'America/Phoenix'),
+		TZ: JSON.stringify(process.env.TZ ?? 'America/Phoenix'),
 		RUNTIME_TARGET: JSON.stringify(RUNTIME_TARGET),
 		WASM_PATHS: JSON.stringify(WASM_PATHS),
 	},
@@ -77,6 +78,15 @@ export default defineConfig({
 		needsInterop: ['web-tree-sitter'],
 		force: true,
 	},
+	plugins: [
+		babel({
+			babelConfig: {
+				babelrc: false,
+				configFile: false,
+				plugins: ['transform-jsbi-to-bigint'],
+			},
+		}),
+	],
 	test: {
 		browser: {
 			enabled: BROWSER_ENABLED,
