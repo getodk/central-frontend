@@ -35,21 +35,39 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details?.entity?.dataset, entry.details?.entity?.uuid)">
-              {{ entry.details?.entity?.currentVersion?.label }}
+            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
+              {{ entry.details.entity.currentVersion.label }}
             </router-link>
             <template v-else>
-              <span class="entity-label">{{ entry.details?.entity?.uuid }}</span>
+              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
             </template>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details?.entity?.dataset)">
-              {{ entry.details?.entity?.dataset }}
+            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
+              {{ entry.details.entity.dataset }}
             </router-link>
           </template>
         </i18n-t>
       </template>
-      <template v-else-if="entry.action === 'entity.create.error'">
+      <template v-else-if="entry.action === 'entity.update.version'">
+        <span class="icon-magic-wand entity-icon"></span>
+        <i18n-t keypath="title.entity.update">
+          <template #label>
+            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
+              {{ entry.details.entity.currentVersion.label }}
+            </router-link>
+            <template v-else>
+              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
+            </template>
+          </template>
+          <template #dataset>
+            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
+              {{ entry.details.entity.dataset }}
+            </router-link>
+          </template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'entity.error'">
         <span class="icon-warning"></span>
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
         <span class="entity-error-message" v-tooltip.text>{{ entityProblem(entry) }}</span>
@@ -217,7 +235,8 @@ export default {
       "create": "Submitted by {name}",
       "entity": {
         "create": "Created Entity {label} in {dataset} Entity List",
-        "error": "Problem creating Entity",
+        "update": "Updated Entity {label} in {dataset} Entity List",
+        "error": "Problem processing Entity",
       },
       "updateReviewState": {
         "null": {

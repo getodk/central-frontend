@@ -207,6 +207,14 @@ describe('SubmissionFeedEntry', () => {
       });
 
       it('renders okay and does not crash for action where entity details are missing', () => {
+        // This test exists because of a difference between 2022.3 and 2023.1 where the entity label
+        // was added to the audit log and used in rendering, but may not have been present in entities
+        // created in the earlier version.
+        // However, in 2023.4, we removed the label from the audit log again and dynamically compute
+        // entity.currentVersion (including currentVersion.label) for undeleted entities.
+        // Within the audit details, entity.uuid and entity.dataset have been consistently available
+        // for all entities across all versions, though this is a test that the component doesn't break
+        // catastrophically even if those are missing.
         testData.extendedAudits.createPast(1, {
           action: 'entity.create',
           details: { entity: { } }
@@ -216,28 +224,78 @@ describe('SubmissionFeedEntry', () => {
       });
     });
 
-    describe('entity.create.error audit', () => {
+    describe('entity.update.version audit', () => {
+      it('renders correctly for updated entity with ideally formatted details', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.update.version',
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              currentVersion: { label: 'EntityName' }
+            }
+          }
+        });
+        const title = mountComponent().get('.feed-entry-title');
+        title.text().should.equal('Updated Entity EntityName in DatasetName Entity List');
+      });
+
+      it('renders links to entity and dataset', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.update.version',
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              currentVersion: { label: 'EntityName' }
+            }
+          }
+        });
+        const links = mountComponent().findAllComponents(RouterLinkStub);
+        links.length.should.equal(2);
+        links.map(link => link.props().to).should.eql([
+          '/projects/1/entity-lists/DatasetName/entities/xyz',
+          '/projects/1/entity-lists/DatasetName'
+        ]);
+      });
+
+      it('does not render link if entity deleted (no currentVersion.label)', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.update.version',
+          details: { entity: { uuid: 'xyz', dataset: 'DatasetName' } }
+        });
+        const component = mountComponent();
+        component.get('.feed-entry-title').text().should.equal('Updated Entity xyz in DatasetName Entity List');
+        const links = component.findAllComponents(RouterLinkStub);
+        links.length.should.equal(1);
+        links.map(link => link.props().to).should.eql([
+          '/projects/1/entity-lists/DatasetName'
+        ]);
+      });
+    });
+
+    describe('entity.error audit', () => {
       it('renders entity creation error message and help text', async () => {
         testData.extendedAudits.createPast(1, {
-          action: 'entity.create.error',
+          action: 'entity.error',
           details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
+        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
         title.get('.entity-error-message').text().should.equal('ID empty or missing.');
         await title.get('.entity-error-message').should.have.textTooltip();
       });
 
       it('renders entity creation error message when it is included as an errorMessage', async () => {
         testData.extendedAudits.createPast(1, {
-          action: 'entity.create.error',
+          action: 'entity.error',
           details: {
             problem: { problemCode: 409.3, problemDetails: { foo: 'blah' } },
             errorMessage: 'A resource already exists with uuid value(s) abc.'
           }
         });
         const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem creating Entity');
+        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
         title.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
         await title.get('.entity-error-message').should.have.textTooltip();
       });
