@@ -1,0 +1,46 @@
+{
+  "name": "@odk/web-forms",
+  "version": "1.0.0-alpha.0",
+  "description": "ODK Web forms",
+  "type": "module",
+  "author": "getodk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eyelidlessness/odk-web-forms",
+    "directory": "packages/odk-web-forms"
+  },
+  "bugs": "https://github.com/eyelidlessness/odk-web-forms/issues",
+  "homepage": "https://getodk.org/",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "index.d.ts",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18 <21",
+    "yarn": "1.22.19"
+  },
+  "scripts": {
+    "build": "npm-run-all -nl build:*",
+    "build:clean": "rimraf dist/",
+    "build:js": "vite build",
+    "build:types": "tsc --project ./tsconfig.json",
+    "dev": "vite",
+    "test": "npm-run-all -nl test:*",
+    "test:e2e": "playwright test",
+    "test:mocha": "mocha --exit --timeout 30000 ./test/**/*.test.js",
+    "test:types": "tsc --project ./tsconfig.test-types.json"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.38.1",
+    "@types/mocha": "^10.0.1",
+    "mocha": "^10.2.0"
+  }
+}
