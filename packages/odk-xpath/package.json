@@ -11,16 +11,15 @@
   },
   "bugs": "https://github.com/eyelidlessness/odk-web-forms/issues",
   "homepage": "https://getodk.org/",
-  "types": "./index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
   "files": [
     "dist",
-    "index.d.ts",
     "README.md"
   ],
   "engines": {
@@ -31,7 +30,6 @@
     "build": "npm-run-all -nl build:*",
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
-    "build:types": "tsc --project ./tsconfig.json",
     "dev": "vite",
     "//": "echo '--continue-on-error is temporary, intent to show all test environments running in CI'",
     "test": "npm-run-all --continue-on-error --print-name --print-label test-node:* test-browser:*",
@@ -43,7 +41,7 @@
     "test-watch:chromium": "BROWSER_NAME=chromium vitest",
     "test-watch:firefox": "BROWSER_NAME=firefox vitest",
     "test-watch:webkit": "BROWSER_NAME=webkit vitest",
-    "test:types": "tsc --project ./tsconfig.json --noEmit"
+    "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
@@ -60,6 +58,9 @@
     "jsdom": "^22.1.0",
     "vite": "^4.4.11",
     "vite-plugin-babel": "^1.1.3",
+    "vite-plugin-dts": "^3.6.0",
+    "vite-plugin-no-bundle": "^3.0.0",
+    "vite-plugin-top-level-await": "^1.3.1",
     "vitest": "^0.34.6",
     "vitest-github-actions-reporter": "^0.10.0"
   }

@@ -1,8 +1,8 @@
-import type { Language, ParserInstance } from '../../../vendor/web-tree-sitter.ts';
-import { Parser } from '../../../vendor/web-tree-sitter.ts';
-import treeSitterWASM from 'web-tree-sitter/tree-sitter.wasm?url';
 import treeSitterXPathWASM from 'tree-sitter-xpath/tree-sitter-xpath.wasm?url';
+import treeSitterWASM from 'web-tree-sitter/tree-sitter.wasm?url';
 import { UpsertableMap } from '../../lib/collections/UpsertableMap.ts';
+import type { Language, ParserInstance } from '../../vendor/web-tree-sitter.ts';
+import { Parser } from '../../vendor/web-tree-sitter.ts';
 import type {
 	SyntaxLanguageTypeName,
 	SyntaxLanguage as TreeSitterLanguage,

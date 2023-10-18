@@ -4,6 +4,9 @@
 import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
+import dts from 'vite-plugin-dts';
+import noBundle from 'vite-plugin-no-bundle';
+import topLevelAwait from 'vite-plugin-top-level-await';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
 import type { CollectionValues } from './src/lib/collections/types';
 
@@ -49,11 +52,18 @@ const WASM_PATHS = {
 
 const RUNTIME_TARGET = BROWSER_ENABLED ? 'WEB' : 'NODE';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
 	build: {
 		target: 'esnext',
 		minify: false,
 		sourcemap: true,
+		emptyOutDir: false,
+		outDir: './dist',
+		manifest: true,
+		lib: {
+			entry: './src/index.ts',
+			formats: ['es'],
+		},
 	},
 	define: {
 		// TODO: Many integration tests concerned with datetimes currently expect a
@@ -76,10 +86,11 @@ export default defineConfig({
 		esbuildOptions: {
 			target: 'esnext',
 		},
-		needsInterop: ['web-tree-sitter'],
 		force: true,
 	},
 	plugins: [
+		command === 'build' ? noBundle() : null,
+		topLevelAwait(),
 		babel({
 			babelConfig: {
 				babelrc: false,
@@ -87,7 +98,10 @@ export default defineConfig({
 				plugins: ['transform-jsbi-to-bigint'],
 			},
 		}),
-	],
+		dts({
+			exclude: ['test'],
+		}),
+	].filter((plugin) => plugin != null),
 	test: {
 		browser: {
 			enabled: BROWSER_ENABLED,
@@ -101,4 +115,4 @@ export default defineConfig({
 		include: TEST_INCLUDE,
 		reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',
 	},
-});
+}));
