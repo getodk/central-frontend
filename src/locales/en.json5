@@ -343,7 +343,9 @@
     // This is the UUID of an Entity.
     "entityId": "Entity ID",
     "noProperties": "This Form only sets the “label”.",
-    "noEntity": "(none)"
+    "noEntity": "(none)",
+    // {count} is the total number of Entities with conflicts. The string will be pluralized based on {count}.
+    "conflictsCount": "{count} conflict | {count} conflicts"
   },
   "common": {
     // This is a title shown above a section of the page.

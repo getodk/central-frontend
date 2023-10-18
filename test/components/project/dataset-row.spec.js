@@ -57,7 +57,7 @@ describe('ProjectDatasetRow', () => {
     await dateTime.should.not.have.tooltip();
   });
 
-  it('shows the correct icon', () => {
+  it('shows the correct icon for timestamp', () => {
     setLuxon({ defaultZoneName: 'UTC' });
     const lastEntity = '2023-01-01T00:00:00Z';
     testData.extendedDatasets.createPast(1, { name: 'people', lastEntity, entities: 0 });
@@ -85,7 +85,7 @@ describe('ProjectDatasetRow', () => {
     mountComponent().find('.total-entities').text().should.equal('1,234');
   });
 
-  it('shows the correct icon', async () => {
+  it('shows the correct icon for entity count', async () => {
     testData.extendedDatasets.createPast(1, { name: 'people', entities: 4 });
     const cell = mountComponent().find('.total-entities');
     cell.find('.icon-asterisk').exists().should.be.true();
@@ -96,5 +96,22 @@ describe('ProjectDatasetRow', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', entities: 4 });
     const link = mountComponent().getComponent('.total-entities a');
     link.props().to.should.equal('/projects/1/entity-lists/people/entities');
+  });
+
+  it('shows the correct conflict count', () => {
+    testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 3 });
+    const cell = mountComponent().get('.conflicts-count');
+    cell.text().should.equal('3 conflicts');
+    cell.classes('warning').should.be.true();
+
+    const link = cell.getComponent('a');
+    link.props().to.should.equal('/projects/1/entity-lists/people/entities?conflict=true');
+  });
+
+  it('should not show warning box when there are 0 conflicts', () => {
+    testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 0 });
+    const cell = mountComponent().get('.conflicts-count');
+    cell.text().should.equal('0');
+    cell.classes('warning').should.be.false();
   });
 });

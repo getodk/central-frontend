@@ -756,6 +756,10 @@
     },
     "noEntity": {
       "string": "(none)"
+    },
+    "conflictsCount": {
+      "string": "{count, plural, one {{count} conflict} other {{count} conflicts}}",
+      "developer_comment": "{count} is the total number of Entities with conflicts. The string will be pluralized based on {count}."
     }
   },
   "common": {
@@ -3154,6 +3158,9 @@
       "showFewerDatasets": {
         "string": "{count, plural, one {Show fewer of {count} total Entity List} other {Show fewer of {count} total Entity Lists}}",
         "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
+      },
+      "hidden": {
+        "string": "hidden"
       }
     },
     "ProjectList": {

@@ -201,4 +201,35 @@ describe('ProjectHomeBlock', () => {
     dsExpand.text().should.equal('Show 4 total Entity Lists');
     dsExpand.find('.icon-angle-down').exists().should.be.true();
   });
+
+  it('sums conflicts for hidden datasets', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(6, { conflicts: 2 });
+    const block = mountComponent();
+    const expandingRow = block.findAll('.project-dataset-row')[3];
+
+    // there is a caption text 'hidden'
+    expandingRow.find('.conflict-caption').text().should.equal('hidden');
+
+    // conflicts are summed up for the hidden rows
+    const hiddenConflictCell = expandingRow.find('.conflicts-count a');
+    hiddenConflictCell.text().should.equal('6 conflicts');
+
+    // conflict badge expands the rows
+    await hiddenConflictCell.trigger('click');
+    const expand = expandingRow.find('.expand-button');
+    expand.text().should.equal('Show fewer of 6 total Entity Lists');
+  });
+
+  it('shows nothing when there is no conflict', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(4);
+    const block = mountComponent();
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+
+    // nothing is show in conflict column when there's no conflict
+    const expandingRow = block.findAll('.project-dataset-row')[3];
+    expandingRow.find('.conflicts-count').exists().should.be.false();
+    expandingRow.find('.conflict-caption').exists().should.be.false();
+  });
 });
