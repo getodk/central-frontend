@@ -81,3 +81,4 @@ import './openrosa-xpath/true.spec.ts';
 import './openrosa-xpath/uuid.spec.ts';
 import './openrosa-xpath/weighted-checklist.spec.ts';
 import './predicates.spec.ts';
+import './xforms-specific/root-node-context.spec.ts';

@@ -1,5 +1,6 @@
-import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import { UpsertableMap } from '../lib/collections/UpsertableMap.ts';
+import type { ContextParentNode } from '../lib/dom/types.ts';
+import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 
 // Native/common standards
 export const XHTML_NAMESPACE_URI = 'http://www.w3.org/1999/xhtml';
@@ -79,14 +80,19 @@ export const staticNamespaces = new StaticNamespaces('xf', XFORMS_NAMESPACE_URI,
 	[XMLNS_PREFIX]: XMLNS_NAMESPACE_URI,
 });
 
-const namespaceURIs = new UpsertableMap<Node, UpsertableMap<string | null, string | null>>();
+const namespaceURIs = new UpsertableMap<
+	XPathNamespaceResolverObject,
+	UpsertableMap<string | null, string | null>
+>();
 
 export class NamespaceResolver implements XPathNamespaceResolverObject {
-	constructor(protected referenceNode?: Node | null) {
-		// constructor(protected referenceNode?: Node | null) {
-		if (referenceNode == null) {
-			this.lookupNamespaceURI = this.lookupStaticNamespaceURI;
-		}
+	protected readonly contextResolver: XPathNamespaceResolverObject;
+
+	constructor(
+		protected readonly rootNode: ContextParentNode,
+		protected readonly referenceNode?: XPathNamespaceResolverObject | null
+	) {
+		this.contextResolver = referenceNode ?? rootNode;
 	}
 
 	protected lookupNodeNamespaceURI = (node: Node, prefix: string | null) => {
@@ -107,10 +113,10 @@ export class NamespaceResolver implements XPathNamespaceResolverObject {
 	 */
 	lookupNamespaceURI(prefix: string | null) {
 		return namespaceURIs
-			.upsert(this.referenceNode!, () => new UpsertableMap())
+			.upsert(this.contextResolver, () => new UpsertableMap())
 			.upsert(prefix, () => {
 				return (
-					this.referenceNode!.lookupNamespaceURI(prefix) ?? staticNamespaces.get(prefix) ?? null
+					this.contextResolver.lookupNamespaceURI(prefix) ?? staticNamespaces.get(prefix) ?? null
 				);
 			});
 	}

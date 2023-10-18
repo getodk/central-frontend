@@ -2,11 +2,12 @@ import { Temporal } from '@js-temporal/polyfill';
 import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
 import { EvaluationContext } from '../context/EvaluationContext.ts';
 import { fn } from '../functions/index.ts';
-import type { ContextNode } from '../lib/dom/types.ts';
+import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
 import type {
 	CustomFunctionDefinition,
 	XPathEvaluator,
 	XPathNSResolver,
+	XPathNamespaceResolverObject,
 	XPathResultType,
 } from '../shared/index.ts';
 import type { ParseOptions } from '../static/grammar/ExpressionParser.ts';
@@ -25,21 +26,43 @@ const parser = new ExpressionParser();
 // }
 
 interface EvaluatorOptions {
-	readonly parseOptions?: ParseOptions;
 	readonly functionLibrary?: FunctionLibrary;
+	readonly parseOptions?: ParseOptions;
+	readonly rootNode?: AnyParentNode | null | undefined;
 	readonly timeZoneId?: string | undefined;
 }
+
+type MaybeNullishEntry<T> = readonly [key: string, value: T | null | undefined];
+type NonNullishEntry<T> = readonly [key: string, value: T];
+
+const isNonNullEntry = <T>(entry: MaybeNullishEntry<T>): entry is NonNullishEntry<T> =>
+	entry[1] != null;
+
+type PartialOmitNullish<T> = {
+	[K in keyof T]?: Exclude<T[K], null | undefined>;
+};
+
+const partialOmitNullish = <T extends Record<PropertyKey, unknown>>(
+	object: T
+): PartialOmitNullish<T> =>
+	Object.fromEntries(Object.entries(object).filter(isNonNullEntry)) as PartialOmitNullish<T>;
 
 export class Evaluator implements XPathEvaluator {
 	readonly functionLibrary: FunctionLibrary;
 	readonly parseOptions: ParseOptions;
 	readonly resultTypes: ResultTypes = ResultTypes;
+	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
 	readonly timeZone: Temporal.TimeZone;
 
 	constructor(options: EvaluatorOptions = {}) {
-		this.functionLibrary = options.functionLibrary ?? fn;
-		this.parseOptions = options.parseOptions ?? {};
-		this.timeZone = new Temporal.TimeZone(options.timeZoneId ?? Temporal.Now.timeZoneId());
+		const { functionLibrary = fn, parseOptions = {}, rootNode, timeZoneId } = options;
+
+		this.functionLibrary = functionLibrary;
+		this.parseOptions = parseOptions;
+		this.sharedContextOptions = partialOmitNullish({
+			rootNode,
+		});
+		this.timeZone = new Temporal.TimeZone(timeZoneId ?? Temporal.Now.timeZoneId());
 	}
 
 	evaluate(
@@ -50,19 +73,17 @@ export class Evaluator implements XPathEvaluator {
 	) {
 		const tree = parser.parse(expression, this.parseOptions);
 
-		let contextOptions: Partial<EvaluationContextOptions> = {};
+		const evaluationContextNamespaceResolver: XPathNamespaceResolverObject | null =
+			typeof namespaceResolver === 'function'
+				? {
+						lookupNamespaceURI: namespaceResolver,
+				  }
+				: namespaceResolver;
 
-		if (typeof namespaceResolver === 'function') {
-			contextOptions = {
-				namespaceResolver: {
-					lookupNamespaceURI: namespaceResolver,
-				},
-			};
-		} else if (namespaceResolver != null) {
-			contextOptions = {
-				namespaceResolver,
-			};
-		}
+		const contextOptions = partialOmitNullish({
+			...this.sharedContextOptions,
+			namespaceResolver: evaluationContextNamespaceResolver,
+		});
 
 		const expr = createExpression(tree.rootNode);
 		const context = new EvaluationContext(this, contextNode as ContextNode, contextOptions);

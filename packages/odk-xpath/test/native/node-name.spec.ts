@@ -93,9 +93,17 @@ describe('node name for', () => {
 		});
 	});
 
-	it('child with specific (namespaced) name', () => {
-		testContext.assertNodeSet('child::html', []);
-		testContext.assertNodeSet('child::xhtml:html', [document.documentElement]);
+	[
+		{ expression: 'child::html', expectedSelectors: [] },
+		{ expression: 'child::xhtml:html', expectedSelectors: [':root'] },
+	].forEach(({ expression, expectedSelectors }) => {
+		it(`child with specific (namespaced) name (expression: ${expression}`, () => {
+			const expected = expectedSelectors.flatMap((selector) =>
+				Array.from(document.querySelectorAll(selector))
+			);
+
+			testContext.assertNodeSet(expression, expected);
+		});
 	});
 
 	it('ancestor with specific name and namespace', () => {

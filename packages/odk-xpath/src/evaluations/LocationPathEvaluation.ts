@@ -47,6 +47,8 @@ const filterNonNamespace = filter((attr: Attr) => !isNamespaceAttribute(attr));
 
 const filterNonAttribute = filter((node: Node) => !isAttributeNode(node));
 
+const identity = <T>(value: T) => value;
+
 export enum AxisName {
 	ANCESTOR = 'ancestor',
 	ANCESTOR_OR_SELF = 'ancestor-or-self',
@@ -423,14 +425,14 @@ export class LocationPathEvaluation
 		}
 	}
 
-	protected *ancestor(step: AnyStep): Iterable<Node> {
+	protected *ancestor(step: AnyStep): Iterable<ContextNode> {
 		const { rootNode } = this;
 
 		const parents = this.parent(step);
 
 		for (const parent of parents) {
 			if (parent !== rootNode) {
-				const parentContext = new LocationPathEvaluation(this, [parent as ContextNode]);
+				const parentContext = new LocationPathEvaluation(this, [parent]);
 
 				yield* parentContext.ancestor(step);
 			}
@@ -439,7 +441,7 @@ export class LocationPathEvaluation
 		}
 	}
 
-	protected *ancestorOrSelf(step: AnyStep): Iterable<Node> {
+	protected *ancestorOrSelf(step: AnyStep): Iterable<ContextNode> {
 		const isNamedStep = step.stepType !== 'NodeTypeTest';
 
 		for (const self of this) {
@@ -453,13 +455,13 @@ export class LocationPathEvaluation
 		}
 	}
 
-	protected *attribute() {
+	protected *attribute(): Iterable<ContextNode> {
 		for (const node of this.contextNodes) {
 			yield* filterNonNamespace((node as MaybeElementNode).attributes ?? []);
 		}
 	}
 
-	protected *child(step: AnyStep) {
+	protected *child(step: AnyStep): Iterable<ContextNode> {
 		const treeWalker = this.getTreeWalker(step);
 
 		for (const node of this.contextNodes) {
@@ -480,14 +482,14 @@ export class LocationPathEvaluation
 				// exploring the use of a `Set<ChildNode>` for this check to see if it
 				// negates the presumed performance impact.
 				if (currentNode.parentNode === node) {
-					yield currentNode;
+					yield currentNode as ContextNode;
 					treeWalker.currentNode = currentNode;
 				}
 			} while (treeWalker.nextSibling() != null);
 		}
 	}
 
-	protected *descendant(step: AnyStep) {
+	protected *descendant(step: AnyStep): Iterable<ContextNode> {
 		const treeWalker = this.getTreeWalker(step);
 
 		for (const node of this.contextNodes) {
@@ -506,13 +508,13 @@ export class LocationPathEvaluation
 					break;
 				}
 
-				yield currentNode;
+				yield currentNode as ContextNode;
 				treeWalker.currentNode = currentNode;
 			} while (treeWalker.nextNode() != null);
 		}
 	}
 
-	protected *descendantOrSelf(step: AnyStep) {
+	protected *descendantOrSelf(step: AnyStep): Iterable<ContextNode> {
 		for (const self of this) {
 			yield* self.contextNodes;
 
@@ -520,7 +522,7 @@ export class LocationPathEvaluation
 		}
 	}
 
-	protected *following(step: AnyStep) {
+	protected *following(step: AnyStep): Iterable<ContextNode> {
 		const contextNodes = map((node: Node) => (node as MaybeAttrNode).ownerElement ?? node)(
 			this.contextNodes
 		);
@@ -546,13 +548,13 @@ export class LocationPathEvaluation
 
 				visited.add(currentNode);
 
-				yield currentNode;
+				yield currentNode as ContextNode;
 				treeWalker.currentNode = currentNode;
 			} while (treeWalker.nextNode() != null);
 		}
 	}
 
-	protected *followingSibling(step: AnyStep) {
+	protected *followingSibling(step: AnyStep): Iterable<ContextNode> {
 		const visited = new WeakSet<Node>();
 		const treeWalker = this.getTreeWalker(step);
 
@@ -576,19 +578,19 @@ export class LocationPathEvaluation
 
 				visited.add(currentNode);
 
-				yield currentNode;
+				yield currentNode as ContextNode;
 				treeWalker.currentNode = currentNode;
 			} while (treeWalker.nextSibling() != null);
 		}
 	}
 
-	protected *namespace() {
+	protected *namespace(): Iterable<ContextNode> {
 		for (const node of this.contextNodes) {
 			yield* filterNamespace((node as MaybeElementNode).attributes ?? []);
 		}
 	}
 
-	protected *parent(step: AnyStep) {
+	protected *parent(step: AnyStep): Iterable<ContextNode> {
 		const { contextNodes, rootNode } = this;
 		const treeWalker = this.getTreeWalker(step);
 
@@ -610,13 +612,13 @@ export class LocationPathEvaluation
 			const parentNode = treeWalker.parentNode();
 
 			if (parentNode != null) {
-				yield parentNode;
+				yield parentNode as ContextNode;
 				treeWalker.currentNode = parentNode;
 			}
 		}
 	}
 
-	protected *preceding(step: AnyStep) {
+	protected *preceding(step: AnyStep): Iterable<ContextNode> {
 		const { rootNode } = this;
 		const { nodeType = null } = step;
 		const treeWalker = this.getTreeWalker(step);
@@ -649,13 +651,13 @@ export class LocationPathEvaluation
 					break;
 				}
 
-				yield currentNode;
+				yield currentNode as ContextNode;
 				treeWalker.currentNode = currentNode;
 			} while (treeWalker.nextNode() != null);
 		}
 	}
 
-	protected *precedingSibling(step: AnyStep) {
+	protected *precedingSibling(step: AnyStep): Iterable<ContextNode> {
 		const { nodeType = null } = step;
 		const treeWalker = this.getTreeWalker(step);
 
@@ -688,21 +690,18 @@ export class LocationPathEvaluation
 					break;
 				}
 
-				yield currentNode;
+				yield currentNode as ContextNode;
 				treeWalker.currentNode = currentNode;
 			} while (treeWalker.nextSibling() != null);
 		}
 	}
 
-	protected *self() {
+	protected *self(): Iterable<ContextNode> {
 		yield* this.contextNodes;
 	}
 
 	step(step: AnyStep): LocationPathEvaluation {
-		const { axisType } = step;
-		const axisMethod = axisNameToMethod[axisType];
-
-		let nodes = this[axisMethod](step);
+		let nodesFilter: (nodes: Iterable<ContextNode>) => Iterable<ContextNode> = identity;
 
 		const { namespaceResolver } = this;
 
@@ -712,11 +711,16 @@ export class LocationPathEvaluation
 
 			case 'NodeNameTest': {
 				const { nodeName } = step;
-				const namespaceURI = namespaceResolver.lookupNamespaceURI(null);
+				const nullNamespaceURI = namespaceResolver.lookupNamespaceURI(null);
 
-				nodes = filter((node: MaybeNamedNode) => {
-					return node.nodeName === nodeName && node.namespaceURI === namespaceURI;
-				})(nodes);
+				nodesFilter = filter((node: ContextNode) => {
+					const { namespaceURI } = node as MaybeNamedNode;
+
+					return (
+						(node as MaybeNamedNode).localName === nodeName &&
+						(namespaceURI == null || namespaceURI === nullNamespaceURI)
+					);
+				});
 
 				break;
 			}
@@ -724,9 +728,9 @@ export class LocationPathEvaluation
 			case 'ProcessingInstructionNameTest': {
 				const { processingInstructionName } = step;
 
-				nodes = filter((node: Node | ProcessingInstruction) => {
+				nodesFilter = filter((node: ContextNode) => {
 					return (node as MaybeProcessingInstructionNode).nodeName === processingInstructionName;
-				})(nodes);
+				});
 
 				break;
 			}
@@ -735,10 +739,11 @@ export class LocationPathEvaluation
 				const { prefix, localName } = step;
 				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
-				nodes = filter(
-					(node: MaybeNamedNode) =>
-						node.localName === localName && node.namespaceURI === namespaceURI
-				)(nodes);
+				nodesFilter = filter(
+					(node: ContextNode) =>
+						(node as MaybeNamedNode).localName === localName &&
+						(node as MaybeNamedNode).namespaceURI === namespaceURI
+				);
 
 				break;
 			}
@@ -747,7 +752,9 @@ export class LocationPathEvaluation
 				const { prefix } = step;
 				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
-				nodes = filter((node: MaybeNamedNode) => node.namespaceURI === namespaceURI)(nodes);
+				nodesFilter = filter(
+					(node: ContextNode) => (node as MaybeNamedNode).namespaceURI === namespaceURI
+				);
 
 				break;
 			}
@@ -759,7 +766,12 @@ export class LocationPathEvaluation
 				throw new UnreachableError(step);
 		}
 
-		return new LocationPathEvaluation(this, nodes as Iterable<ContextNode>);
+		const { axisType } = step;
+		const axisMethod = axisNameToMethod[axisType];
+
+		const nodes: Iterable<ContextNode> = nodesFilter(this[axisMethod](step));
+
+		return new LocationPathEvaluation(this, nodes);
 	}
 
 	evaluateLocationPathExpression(

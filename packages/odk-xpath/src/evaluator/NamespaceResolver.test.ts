@@ -65,7 +65,7 @@ describe('NamespaceResolver', () => {
 
 	describe('nested element context', () => {
 		beforeEach(() => {
-			resolver = new NamespaceResolver(UNPREFIXED_ELEMENT);
+			resolver = new NamespaceResolver(TEST_DOCUMENT, UNPREFIXED_ELEMENT);
 		});
 
 		const nestedCases = [

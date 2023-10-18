@@ -35,7 +35,7 @@ export type ContextNode = AnyContextNode & Node;
 export type MaybeDocumentOrElementNode = MaybeElementNode & Partial<ContextDocument>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyParentNode = Extract<AnyContextNode, { readonly children: any }>;
+export type AnyParentNode = Extract<AnyContextNode, { readonly children: any }>;
 
 export type ContextParentNode = AnyParentNode & Node;
 

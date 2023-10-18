@@ -1,13 +1,13 @@
 import { Temporal } from '@js-temporal/polyfill';
-import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
+import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
 import { NamespaceResolver } from '../evaluator/NamespaceResolver.ts';
 import type { FunctionLibrary } from '../evaluator/functions/FunctionLibrary.ts';
 import type { FilteredTreeWalker, FilteredTreeWalkers } from '../lib/dom/traversal.ts';
 import { getDocument, getRootNode, getTreeWalker } from '../lib/dom/traversal.ts';
 import type { ContextDocument, ContextNode, ContextParentNode } from '../lib/dom/types.ts';
+import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Context } from './Context.ts';
-import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation.ts';
 
 class EvaluationContextTreeWalkers implements FilteredTreeWalkers {
 	readonly ANY: FilteredTreeWalker<'ANY'>;
@@ -66,7 +66,7 @@ export class EvaluationContext implements Context {
 			rootNode = getRootNode(contextNode),
 			document = getDocument(rootNode),
 			functionLibrary = evaluator.functionLibrary,
-			namespaceResolver = new NamespaceResolver(contextNode),
+			namespaceResolver = new NamespaceResolver(document, contextNode),
 			treeWalkers = new EvaluationContextTreeWalkers(document, rootNode),
 			timeZone = evaluator.timeZone,
 		} = options;
