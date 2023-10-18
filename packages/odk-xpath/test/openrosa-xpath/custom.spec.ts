@@ -1,9 +1,20 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import type { AnyXPathEvaluator } from '../../src/shared/interface.ts';
 import type { TestContext } from '../helpers.ts';
 import { createTestContext } from '../helpers.ts';
 
 describe.skip('custom XPath functions', () => {
-	let testContext: TestContext;
+	interface CustomFunctionEvaluator extends AnyXPathEvaluator {
+		readonly customXPathFunction?: {
+			add(...args: unknown[]): unknown;
+		};
+	}
+
+	interface CustomFunctionEvaluatorTestContext extends TestContext {
+		readonly evaluator: CustomFunctionEvaluator;
+	}
+
+	let testContext: CustomFunctionEvaluatorTestContext;
 
 	beforeEach(() => {
 		testContext = createTestContext();
@@ -11,7 +22,7 @@ describe.skip('custom XPath functions', () => {
 
 	it('should not allow unexpected arg types', () => {
 		expect(() => {
-			testContext.evaluator.customXPathFunction.add('f', {
+			testContext.evaluator.customXPathFunction?.add('f', {
 				fn: () => {
 					// This function body doesn't matter
 				},
@@ -23,7 +34,7 @@ describe.skip('custom XPath functions', () => {
 
 	it('should not allow unexpected return types', () => {
 		expect(() => {
-			testContext.evaluator.customXPathFunction.add('f', {
+			testContext.evaluator.customXPathFunction?.add('f', {
 				fn: () => {
 					// This function body doesn't matter
 				},
@@ -43,23 +54,23 @@ describe.skip('custom XPath functions', () => {
 
 	it('should not allow overriding existing functions', () => {
 		expect(() => {
-			testContext.evaluator.customXPathFunction.add('cos', customNoopFunction);
+			testContext.evaluator.customXPathFunction?.add('cos', customNoopFunction);
 		}).to.throw(`There is already a function with the name: 'cos'`);
 	});
 
 	it('should not allow overriding existing custom functions', () => {
 		// given
-		testContext.evaluator.customXPathFunction.add('f', customNoopFunction);
+		testContext.evaluator.customXPathFunction?.add('f', customNoopFunction);
 
 		expect(() => {
-			testContext.evaluator.customXPathFunction.add('f', customNoopFunction);
+			testContext.evaluator.customXPathFunction?.add('f', customNoopFunction);
 		}).to.throw(`There is already a function with the name: 'f'`);
 	});
 
 	describe('pad2()', () => {
 		beforeEach(() => {
-			testContext.evaluator.customXPathFunction.add('pad2', {
-				fn: (a) => (a as string).padStart(2, '0'),
+			testContext.evaluator.customXPathFunction?.add('pad2', {
+				fn: (a: unknown) => (a as string).padStart(2, '0'),
 				args: [{ t: 'string' }],
 				ret: 'string',
 			});

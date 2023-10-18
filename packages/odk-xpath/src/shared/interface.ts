@@ -34,29 +34,11 @@ export interface XPathResult extends XPathResultStatic {
 	snapshotItem(index: number): Node | null;
 }
 
-export type XPathEvaluate<This extends XPathEvaluator> = (
-	this: This,
-	expression: string,
-	contextNode: Node,
-	namespaceResolver: XPathNSResolver | null,
-	resultType: XPathResultType | null
-) => XPathResult;
-
-// TODO:
-// - args `t`
-// - ret
-// - fn bound to args, ret?
-export interface CustomFunctionDefinition {
-	readonly fn: (...args: readonly unknown[]) => unknown;
-	readonly args: ReadonlyArray<{ t: unknown }>;
-	readonly ret: string;
-}
-
-// TODO rename, this obviously goes beyond the DOM interface
-export interface XPathEvaluator {
-	readonly evaluate: XPathEvaluate<this>;
-
-	readonly customXPathFunction: {
-		add(name: string, definition: CustomFunctionDefinition): void;
-	};
+export interface AnyXPathEvaluator {
+	evaluate(
+		expression: string,
+		contextNode: Node,
+		namespaceResolver: XPathNSResolver | null,
+		resultType: XPathResultType | null
+	): XPathResult;
 }

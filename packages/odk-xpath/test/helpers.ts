@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import { Evaluator } from '../src/index.ts';
-import type { CustomFunctionDefinition, XPathResultType } from '../src/shared/interface.ts';
+import type { AnyXPathEvaluator, XPathResultType } from '../src/shared/interface.ts';
 
 declare global {
 	// eslint-disable-next-line no-var
@@ -37,12 +37,11 @@ interface EvaluationAssertionOptions {
 
 interface TestContextOptions {
 	readonly namespaceResolver?: Nullish<XPathNSResolver>;
-	readonly customFunctions?: ReadonlyMap<string, CustomFunctionDefinition>;
 }
 
 export class TestContext {
 	readonly document: XMLDocument;
-	readonly evaluator: Evaluator;
+	readonly evaluator: AnyXPathEvaluator;
 	readonly namespaceResolver: XPathNSResolver;
 
 	constructor(
@@ -61,14 +60,6 @@ export class TestContext {
 		this.document = domParser.parseFromString(xml, 'text/xml');
 		this.evaluator = evaluator;
 		this.namespaceResolver = options.namespaceResolver ?? namespaceResolver;
-
-		const { customFunctions } = options;
-
-		if (customFunctions != null) {
-			for (const [name, definition] of customFunctions) {
-				evaluator.customXPathFunction.add(name, definition);
-			}
-		}
 	}
 
 	evaluate(

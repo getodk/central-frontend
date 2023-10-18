@@ -4,8 +4,7 @@ import { EvaluationContext } from '../context/EvaluationContext.ts';
 import { fn } from '../functions/index.ts';
 import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
 import type {
-	CustomFunctionDefinition,
-	XPathEvaluator,
+	AnyXPathEvaluator,
 	XPathNSResolver,
 	XPathNamespaceResolverObject,
 	XPathResultType,
@@ -47,7 +46,7 @@ const partialOmitNullish = <T extends Record<PropertyKey, unknown>>(
 ): PartialOmitNullish<T> =>
 	Object.fromEntries(Object.entries(object).filter(isNonNullEntry)) as PartialOmitNullish<T>;
 
-export class Evaluator implements XPathEvaluator {
+export class Evaluator implements AnyXPathEvaluator {
 	readonly functionLibrary: FunctionLibrary;
 	readonly parseOptions: ParseOptions;
 	readonly resultTypes: ResultTypes = ResultTypes;
@@ -91,10 +90,4 @@ export class Evaluator implements XPathEvaluator {
 
 		return toXPathResult(resultType ?? XPathResult.ANY_TYPE, results);
 	}
-
-	readonly customXPathFunction = {
-		add(name: string, _definition: CustomFunctionDefinition): void {
-			throw new Error(`Failed to add function "${name}": custom functions not implemented`);
-		},
-	};
 }
