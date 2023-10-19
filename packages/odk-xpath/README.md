@@ -5,8 +5,10 @@ An XPath evaluator, with intent to support:
 - Full XPath 1.0 syntax and behavior
 - Context-based extensibility of behavior beyond the XPath 1.0 function library
 - [ODK XForms](https://getodk.github.io/xforms-spec/) XPath extensions
-- Non-browser environments (provided a subset of standard DOM APIs)[^1]
-- Minor accommodations for certain [Enketo](https://github.com/enketo/openrosa-xpath-evaluator) function aliases[^2]
+- Non-browser environments (provided a subset of standard DOM APIs)
+- Minor accommodations for certain [Enketo](https://github.com/enketo/enketo/tree/main/packages/openrosa-xpath-evaluator) function aliases:
+  - `date-time` is an alias of `date`, which is assumed to be additive
+  - `format-date` function is an alias of `format-date-time`, which differs from the ODK XForms spec
 
 ## Install
 
@@ -51,7 +53,17 @@ const result: XPathResult = evaluator.evaluate(
 
 Likewise, `result` is API-compatible with the standard DOM [`XPathResult`](https://developer.mozilla.org/en-US/docs/Web/API/XPathResult).
 
-**Note on APIs:** we do not currently provide typical convience API extensions for e.g. common iteration tasks (although we may eventually). It is likely that the standard iterator API result types will perform better than their snapshot counterparts.[^3]
+**Note on APIs:** we do not currently provide typical convience API extensions for e.g. common iteration tasks (although we may eventually). It is likely that the standard iterator API result types will perform better than their snapshot counterparts. It is also likely that unordered results may perform better than ordered, now or after future optimizations. Of course, caution should be used with unordered results in general.
+
+## Supported/tested environments
+
+- Browsers (latest versions)
+  - Chrome/Chromium-based browsers (tested only in Chromium)
+  - Firefox
+  - Safari/WebKit (tested WebKit directly)
+- Non-browser runtimes with a DOM compatibility environement.
+  - Node (current/LTS; tested with [jsdom](https://github.com/jsdom/jsdom)). Node compatibility **does not** require any native extensions. DOM compatibility **does not** require any underlying XPath evaluation functionality (though it does currently rely on global constants like `XPathResult`).
+  - Other runtimes and DOM compatibility libraries are not currently tested, support is unknown.
 
 ## Known issues and incompatibilities
 
@@ -72,8 +84,4 @@ We intend to support the full ODK XForms function library, but support is curren
 
 ### Non-browser environments
 
-The DOM standard is very complex, and compatibility libraries sometimes differ in terms of standards compliance and compatibility with the major browser implementations. It is likely, perhaps inevitable, that there will be edge cases and minor compatiblity issues when using such a library. At time of writing, no such issues are known in our tested environments[^1], but a couple of minor issues have already been found and fixed during the initial test setup.
-
-[^1]: Currently tested in Node, with [jsdom](https://github.com/jsdom/jsdom). There may be issues with other runtimes and/or DOM compatibility APIs. Node compatibility **does not** require any native extensions. DOM compatibility **does not** require any underlying XPath evaluation functionality (though it does currently rely on global constants like `XPathResult`).
-[^2]: The provided `date-time` function is an alias of `date`, which is assumed to be additive. The provided `format-date` function is an alias of `format-date-time`, which differs from the ODK XForms spec.
-[^3]: It is also likely that unordered results may perform better than ordered, now or after future optimizations. Of course, caution should be used with unordered results in general.
+The DOM standard is very complex, and compatibility libraries sometimes differ in terms of standards compliance and compatibility with the major browser implementations. It is likely, perhaps inevitable, that there will be edge cases and minor compatiblity issues when using such a library. At time of writing, no such issues are known in our tested environments, but a couple of minor issues have already been found and fixed during the initial test setup.
