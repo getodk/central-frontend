@@ -1,14 +1,14 @@
 import { Temporal } from '@js-temporal/polyfill';
-import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
-import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
-import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
-import { DAY_MILLISECONDS } from '../../lib/datetime/constants.ts';
-import { now } from '../../lib/datetime/functions.ts';
 import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { StringEvaluation } from '../../evaluations/StringEvaluation.ts';
+import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
+import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
+import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { dateTimeFromNumber, dateTimeFromString } from '../../lib/datetime/coercion.ts';
+import { DAY_MILLISECONDS } from '../../lib/datetime/constants.ts';
+import { now } from '../../lib/datetime/functions.ts';
 import { isValidTimeString } from '../../lib/datetime/predicates.ts';
 
 export const today = new FunctionImplementation([], (context) => {
@@ -252,6 +252,8 @@ const evaluateDateTime = (
 	}
 };
 
+const UNPADDED_MONTH_DAY_PATTERN = /^(\d{4})-([1-9]|\d{2})-([1-9]|\d{2})(T.*)?$/;
+
 const DATE_OR_DATE_TIME_PATTERN =
 	/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[-+]\d{2}:\d{2})?)?/;
 
@@ -275,7 +277,18 @@ export const date = new FunctionImplementation(
 				}
 
 				if (!DATE_OR_DATE_TIME_PATTERN.test(string)) {
-					return new DateTimeLikeEvaluation(context, null);
+					const unpaddedMatches = string.match(UNPADDED_MONTH_DAY_PATTERN);
+
+					if (unpaddedMatches == null) {
+						return new DateTimeLikeEvaluation(context, null);
+					}
+
+					const [, year, month, day, rest = ''] = unpaddedMatches;
+
+					const paddedString = `${year}-${month!.padStart(2, '0')}-${day!.padStart(2, '0')}${rest}`;
+					const dateTime = dateTimeFromString(context.timeZone, paddedString);
+
+					return new DateTimeLikeEvaluation(context, dateTime);
 				}
 
 				break;
