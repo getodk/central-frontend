@@ -1,9 +1,11 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src"],
+  "include": ["src", "test/**/*.ts", "test/**/*.tsx", "vite/**/*.ts", "vite-env.d.ts"],
   "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
     "declarationDir": "./dist",
     "jsx": "preserve",
+    "jsxImportSource": "solid-js",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "outDir": "./dist"
   }

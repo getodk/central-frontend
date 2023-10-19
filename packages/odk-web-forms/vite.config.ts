@@ -1,14 +1,18 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
+// TODO: share Vite config where makes sense
+
+import suidPlugin from '@suid/vite-plugin';
+import { createRequire } from 'node:module';
 import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vite';
-import babel from 'vite-plugin-babel';
 import dts from 'vite-plugin-dts';
-import noBundle from 'vite-plugin-no-bundle';
+import solidPlugin from 'vite-plugin-solid';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
 import type { CollectionValues } from './src/lib/collections/types';
+import { solidVitestNoNodeLoader } from './vite/solid-vitest-no-node-loader';
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
@@ -48,18 +52,15 @@ const WASM_PATHS = {
 const RUNTIME_TARGET = BROWSER_ENABLED ? 'WEB' : 'NODE';
 
 /**
- * TODO: Many integration tests concerned with datetimes currently expect a
- * fixed time zone, for hard-coded values. The time zone was also chosen
- * specifically because it does not (er, did not then, nor does presently at
- * time of writing) observe daylight saving time or any other periodic
- * change in its UTC offset.
- *
- * The hard-coded values make tests difficult to reason about. The lack of
- * testing around DST is a significant gap in test coverage.
+ * @see notes on the same variable in the config for @odk/xpath
  */
 const TEST_TIME_ZONE = 'America/Phoenix';
 
-export default defineConfig(({ command, mode }) => {
+const require = createRequire(import.meta.url);
+
+const VITEST_SETUP = require.resolve('./vite/vitest-setup.ts');
+
+export default defineConfig(({ mode }) => {
 	let timeZoneId: string | null = process.env.TZ ?? null;
 
 	if (mode === 'test') {
@@ -74,10 +75,6 @@ export default defineConfig(({ command, mode }) => {
 			emptyOutDir: false,
 			outDir: './dist',
 			manifest: true,
-			lib: {
-				entry: './src/index.ts',
-				formats: ['es'],
-			},
 		},
 		define: {
 			TZ: JSON.stringify(timeZoneId),
@@ -95,38 +92,69 @@ export default defineConfig(({ command, mode }) => {
 			force: true,
 		},
 		plugins: [
-			// Don't bundle library builds
-			command === 'build' ? noBundle() : null,
+			// SUID = Solid MUI component library
+			suidPlugin(),
 
-			// This is necessary for loading web-tree-sitter and tree-sitter-xpath with the current interface
-			topLevelAwait(),
-
-			// Transform the BigInt polyfill (used by the Temporal polyfill) to use native
-			// APIs. We can safely assume BigInt is available for our target platforms.
-			babel({
-				babelConfig: {
+			// Solid's JSX transform (dom-expressions), optimizes DOM access in components
+			solidPlugin({
+				babel: {
 					babelrc: false,
 					configFile: false,
+
+					// Transform the BigInt polyfill (used by the Temporal polyfill) to use native
+					// APIs. We can safely assume BigInt is available for our target platforms.
 					plugins: ['transform-jsbi-to-bigint'],
 				},
 			}),
 
-			// Generate type definitions. This is somehow more reliable than directly calling tsc
+			// See JSDoc notes on plugin
+			solidVitestNoNodeLoader,
+
+			// TODO: do we want this here? It makes sense for a library like @odk/xpath,
+			// but it's unclear if it will make sense for the web forms package.
+			// command === 'build' ? noBundle() : null,
+
+			// Necessary for @odk/xpath initialization, additional detail in its config
+			topLevelAwait(),
+
+			// Generate type definitions. This turned out to be more reliable in
+			// @odk/xpath. TODO: revisit in case it makes sense to use tsc directly in
+			// this package
 			dts({
 				exclude: ['test'],
 			}),
-		].filter((plugin) => plugin != null),
-		test: {
-			browser: {
-				enabled: BROWSER_ENABLED,
-				name: BROWSER_NAME!,
-				provider: 'playwright',
-				headless: true,
-			},
+		],
 
+		resolve: {
+			conditions: ['browser', 'development'],
+		},
+
+		server: {
+			port: 8675,
+		},
+
+		test: {
+			deps: {
+				optimizer: {
+					web: {
+						// Prevent loading multiple instances of Solid
+						exclude: ['solid-js'],
+					},
+				},
+				moduleDirectories: ['node_modules', '../../node_modules'],
+			},
 			environment: TEST_ENVIRONMENT,
 			globals: false,
-			include: ['src/**/*.test.ts', 'test/index.ts'],
+			setupFiles: [VITEST_SETUP],
+			transformMode: { web: [/\.[jt]sx?$/] },
+
+			// isolate: false,
+			// singleThread: true,
+			// threads: false,
+			// maxConcurrency: 1,
+			// maxThreads: 0,
+
+			exclude: ['e2e/**/*'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',
 		},
 	};

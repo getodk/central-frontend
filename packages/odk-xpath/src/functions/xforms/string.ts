@@ -1,3 +1,4 @@
+// TODO: make digest optional, and the `crypto-js` package along with it
 import { MD5, SHA1, SHA256, SHA384, SHA512 } from 'crypto-js';
 import * as base64 from 'crypto-js/enc-base64';
 import * as hex from 'crypto-js/enc-hex';
