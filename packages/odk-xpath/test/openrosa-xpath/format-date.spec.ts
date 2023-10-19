@@ -9,8 +9,6 @@ describe('#format-date()', () => {
 		testContext = createTestContext();
 	});
 
-	const date = new Date();
-
 	[
 		{
 			expression: 'format-date(.,  "%Y/%n | %y/%m | %b" )',
@@ -27,13 +25,6 @@ describe('#format-date()', () => {
 			expression: 'format-date(., "%M | %S | %3")',
 			id: 'FunctionDateCase2',
 			expected: '00 | 00 | 000',
-		},
-		{
-			expression: `format-date('${date.toString()}', '%e | %a' )`,
-			id: null,
-			expected: `${date.getDate()} | ${
-				['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()]
-			}`,
 		},
 		{ expression: 'format-date("not a date", "%M")', id: null, expected: '' },
 	].forEach(({ expression, id, expected }) => {
@@ -53,7 +44,6 @@ describe('#format-date()', () => {
 				contextNode,
 			});
 			// do the same tests for the alias format-date-time()
-			expression = expression;
 			testContext.assertStringValue(
 				expression.replace('format-date', 'format-date-time'),
 				expected,
@@ -62,7 +52,20 @@ describe('#format-date()', () => {
 		});
 	});
 
-	// Karma config is setting timezone to America/Phoenix
+	// Enketo supports this case. Per PR feedback, it is not expected to be
+	// supported. "Or very useful, frankly!"
+	it.fails('evaluates a localized/colloquial timestamp, as produced by the JS runtime', () => {
+		const date = new Date();
+		const expression = `format-date('${date.toString()}', '%e | %a' )`;
+		const expected = `${date.getDate()} | ${
+			['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()]
+		}`;
+
+		testContext.assertStringValue(expression, expected);
+		testContext.assertStringValue(expression.replace('format-date', 'format-date-time'), expected);
+	});
+
+	// Config is setting timezone to America/Phoenix
 	[
 		{ expression: 'format-date("2017-05-26T00:00:01-07:00", "%a %b")', expected: 'Fri May' },
 		{ expression: 'format-date("2017-05-26T23:59:59-07:00", "%a %b")', expected: 'Fri May' },

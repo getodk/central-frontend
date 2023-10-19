@@ -256,7 +256,7 @@ describe('#date()', () => {
 			{ expression: "date('2012-01-01') < now()", expected: true },
 			{ expression: "date('2100-01-02') > now()", expected: true },
 			// { expression: "now() > today()", expected: true },
-			{ expression: '"2018-06-25" = "2018-06-25T00:00:00.000-07:00"', expected: true },
+			{ expression: '"2018-06-25" = "2018-06-25T00:00:00.000-07:00"', expected: false },
 			{ expression: '"2018-06-25" < "2018-06-25T00:00:00.000-07:00"', expected: false },
 			{ expression: '"2018-06-25" < "2018-06-25T00:00:00.001-07:00"', expected: true },
 		].forEach(({ expression, expected }) => {
@@ -267,6 +267,15 @@ describe('#date()', () => {
 				expression = expression.replace('date(', 'date-time(');
 				testContext.assertBooleanValue(expression, expected);
 			});
+		});
+
+		// Enketo supports bare strings as as date[time]s in this comparison, but per PR
+		// feedback this is actually expected to evaluate to false.
+		it.fails('evaluates string literals as date[time] values', () => {
+			const expression = '"2018-06-25" = "2018-06-25T00:00:00.000-07:00"';
+			const expected = true;
+
+			testContext.assertBooleanValue(expression, expected);
 		});
 	});
 
