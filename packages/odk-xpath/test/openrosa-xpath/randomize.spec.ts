@@ -1,0 +1,152 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+import type { TestContext } from '../helpers.ts';
+import { createTestContext, namespaceResolver } from '../helpers.ts';
+
+describe('randomize()', () => {
+	let testContext: TestContext;
+
+	beforeEach(() => {
+		testContext = createTestContext();
+	});
+
+	describe('called on a non-nodeset', () => {
+		[{ expression: 'randomize(1, 2)' }].forEach(({ expression }) => {
+			it.fails(`should evaluate '${expression}' as ___TODO___`, () => {
+				testContext.evaluate(expression);
+			});
+		});
+	});
+
+	const SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
+
+	describe('shuffles nodesets', () => {
+		beforeEach(() => {
+			testContext = createTestContext(
+				`
+        <!DOCTYPE html>
+        <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>xpath-test</title>
+          </head>
+          <body class="yui3-skin-sam" id="body">
+            <div id="FunctionRandomize">
+              <div>A</div>
+              <div>B</div>
+              <div>C</div>
+              <div>D</div>
+              <div>E</div>
+              <div>F</div>
+            </div>
+            <div id="testFunctionNodeset2">
+              <p>1</p>
+              <p>2</p>
+              <p>3</p>
+              <p>4</p>
+            </div>
+          </body>
+        </html>`,
+				{ namespaceResolver }
+			);
+		});
+
+		it(
+			'without a seed',
+			() => {
+				const expression = `randomize(${SELECTOR})`;
+
+				testContext.assertBooleanValue(expression, true);
+
+				const nodes = testContext.evaluateUnorderedNodeSet(expression);
+				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
+
+				expect(nodes.length).to.equal(6);
+				expect(text.length).to.equal(6);
+				expect(text).not.to.equal('ABCDEF');
+			},
+			{ retry: 5 }
+		);
+
+		[
+			{ seed: 42, expected: 'AFCBDE' },
+			{ seed: '42', expected: 'AFCBDE' },
+			{ seed: -42, expected: 'EDAFBC' },
+			{ seed: 1, expected: 'BFEACD' },
+			{ seed: 11111111, expected: 'ACDBFE' },
+			{ seed: 'int(1)', expected: 'BFEACD' },
+			{ seed: 'floor(1.1)', expected: 'BFEACD' },
+			{ seed: '//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', expected: 'BFEACD' },
+		].forEach(({ seed, expected }) => {
+			it(`with a seed: ${seed}`, () => {
+				const expression = `randomize(${SELECTOR}, ${seed})`;
+
+				const nodes = testContext.evaluateUnorderedNodeSet(expression);
+				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
+
+				expect(text).to.equal(expected);
+			});
+		});
+	});
+
+	[
+		{ expression: 'randomize()' },
+		{ expression: `randomize(${SELECTOR}, 'a')` },
+		{ expression: `randomize(${SELECTOR}, 1, 2)` },
+	].forEach(({ expression }) => {
+		it.fails(`${expression} with invalid args, throws an error`, () => {
+			testContext.evaluate(expression);
+		});
+	});
+
+	it('randomizes nodes', () => {
+		testContext = createTestContext(`
+      <model>
+          <instance>
+              <rank id="rank">
+                  <s1/>
+                  <r1/>
+                  <r2/>
+                  <r3>foddertree beans cacao coffee foddergrass banana</r3>
+                  <r4/>
+                  <meta>
+                      <instanceID/>
+                  </meta>
+              </rank>
+          </instance>
+          <instance id="crop_list">
+              <root>
+                  <item>
+                      <label>Banana</label>
+                      <name>banana</name>
+                  </item>
+                  <item>
+                      <label>Beans</label>
+                      <name>beans</name>
+                  </item>
+                  <item>
+                      <label>Cacao</label>
+                      <name>cacao</name>
+                  </item>
+                  <item>
+                      <label>Coffee</label>
+                      <name>coffee</name>
+                  </item>
+                  <item>
+                      <label>Fodder Grass</label>
+                      <name>foddergrass</name>
+                  </item>
+                  <item>
+                      <label>Fodder Tree</label>
+                      <name>foddertree</name>
+                  </item>
+              </root>
+          </instance>
+        </model>`);
+
+		const expression = 'randomize(/model/instance[@id="crop_list"]/root/item)';
+		const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+
+		expect(result.resultType).to.equal(XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+		expect(result.snapshotLength).to.equal(6);
+	});
+});

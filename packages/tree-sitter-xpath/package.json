@@ -15,6 +15,7 @@
     "README.md",
     "grammar.js",
     "index.d.ts",
+    "types/tree-sitter-xpath-parser.d.ts",
     "tree-sitter-xpath.wasm"
   ],
   "engines": {
@@ -32,7 +33,7 @@
     "test": "npm-run-all -nl test:*",
     "test:grammar": "tree-sitter test",
     "test:web": "playwright test",
-    "test:types": "tsc --project ./tsconfig.test-types.json"
+    "test:types": "tsc --project ./tsconfig.json"
   },
   "devDependencies": {
     "@asgerf/dts-tree-sitter": "^0.1.0",

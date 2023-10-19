@@ -11,10 +11,7 @@ const it = test;
 // difference affecting the nested expression detection logic, where I believe
 // the browser implementation doesn't require checking `SyntaxNode` ids).
 describe('Parsing subexpressions', () => {
-	const typedAncestors = (
-		types: Set<string>,
-		node: Parser.SyntaxNode
-	): Parser.SyntaxNode[] => {
+	const typedAncestors = (types: Set<string>, node: Parser.SyntaxNode): Parser.SyntaxNode[] => {
 		const ancestors: Parser.SyntaxNode[] = [];
 
 		let current: Parser.SyntaxNode | null = node;
