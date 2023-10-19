@@ -41,5 +41,9 @@ module.exports = {
       runtimeOnly: process.env.NODE_ENV !== 'test',
       fullInstall: false
     }
+  },
+  devServer: {
+    hot: false,
+    liveReload: true
   }
 };
