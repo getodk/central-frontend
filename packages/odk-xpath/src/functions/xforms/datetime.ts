@@ -332,7 +332,7 @@ export const decimalTime = new NumberFunction(
 			return NaN;
 		}
 
-		if (/\d{2}:\d{2}(\:\d{2})?(\.\d+)?(Z|[-+]\d{2}:\d{2})?$/.test(string)) {
+		if (/^\d{2}:\d{2}(\:[0-5]\d)?(\.\d+)?(Z|[-+]\d{2}:\d{2})?$/.test(string)) {
 			const dateTimeString = `1970-01-01T${string}`;
 
 			const dateTime = dateTimeFromString(context.timeZone, dateTimeString);
