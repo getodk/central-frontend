@@ -6,7 +6,6 @@ import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
 import dts from 'vite-plugin-dts';
 import noBundle from 'vite-plugin-no-bundle';
-import topLevelAwait from 'vite-plugin-top-level-await';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
 import type { CollectionValues } from './src/lib/collections/types';
 
@@ -66,6 +65,18 @@ export default defineConfig(({ command, mode }) => {
 		timeZoneId = timeZoneId ?? TEST_TIME_ZONE;
 	}
 
+	let define: Record<string, string> = {
+		TZ: JSON.stringify(timeZoneId),
+	};
+
+	if (mode === 'test') {
+		define = {
+			...define,
+			RUNTIME_TARGET: JSON.stringify(RUNTIME_TARGET),
+			WASM_PATHS: JSON.stringify(WASM_PATHS),
+		};
+	}
+
 	return {
 		build: {
 			target: 'esnext',
@@ -77,13 +88,10 @@ export default defineConfig(({ command, mode }) => {
 			lib: {
 				entry: './src/index.ts',
 				formats: ['es'],
+				// fileName: 'index',
 			},
 		},
-		define: {
-			TZ: JSON.stringify(timeZoneId),
-			RUNTIME_TARGET: JSON.stringify(RUNTIME_TARGET),
-			WASM_PATHS: JSON.stringify(WASM_PATHS),
-		},
+		define,
 		esbuild: {
 			sourcemap: true,
 			target: 'esnext',
@@ -97,9 +105,6 @@ export default defineConfig(({ command, mode }) => {
 		plugins: [
 			// Don't bundle library builds
 			command === 'build' ? noBundle() : null,
-
-			// This is necessary for loading web-tree-sitter and tree-sitter-xpath with the current interface
-			topLevelAwait(),
 
 			// Transform the BigInt polyfill (used by the Temporal polyfill) to use native
 			// APIs. We can safely assume BigInt is available for our target platforms.
