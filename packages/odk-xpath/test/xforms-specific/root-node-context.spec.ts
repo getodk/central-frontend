@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Evaluator } from '../../src/index.ts';
 import { UnreachableError } from '../../src/lib/error/UnreachableError.ts';
 import { xml } from '../../src/test-factories.ts';
+import { xpathParser } from '../parser.ts';
 
 describe("Specifying an Evaluator's root node", () => {
 	const DEPTH_3_TEXT = 'text node in element at depth 3, in the first nested root';
@@ -65,7 +66,7 @@ describe("Specifying an Evaluator's root node", () => {
 				const rootNode =
 					rootNodeSelector == null ? null : testDocument.querySelector(rootNodeSelector)!;
 
-				const evaluator = new Evaluator({
+				const evaluator = new Evaluator(xpathParser, {
 					rootNode,
 				});
 
@@ -143,7 +144,7 @@ describe("Specifying an Evaluator's root node", () => {
 			({ expression, rootNodeSelector, expectedNodeSelector }) => {
 				const rootNode =
 					rootNodeSelector == null ? null : testDocument.querySelector(rootNodeSelector);
-				const evaluator = new Evaluator({
+				const evaluator = new Evaluator(xpathParser, {
 					rootNode,
 				});
 				const { singleNodeValue: actual } = evaluator.evaluate(
@@ -211,7 +212,7 @@ describe("Specifying an Evaluator's root node", () => {
 			({ bind }) => {
 				const modelElement = xformDocument.querySelector(':root > head > model')!;
 				const primaryInstanceElement = modelElement.querySelector(':scope > instance')!;
-				const evaluator = new Evaluator({
+				const evaluator = new Evaluator(xpathParser, {
 					rootNode: primaryInstanceElement,
 				});
 

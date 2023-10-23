@@ -5,16 +5,16 @@
 
 import suidPlugin from '@suid/vite-plugin';
 import { createRequire } from 'node:module';
-import { resolve as resolvePath } from 'node:path';
 import unpluginFonts from 'unplugin-fonts/vite';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import solidPlugin from 'vite-plugin-solid';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
 import type { CollectionValues } from './src/lib/collections/types';
-import { solidVitestNoNodeLoader } from './vite/solid-vitest-no-node-loader';
+import { solidVitestNoNodeLoader } from './tools/vite/solid-vitest-no-node-loader';
 
 export default defineConfig(({ mode }) => {
+	const isTest = mode === 'test';
 	const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
 	type SupportedBrowser = CollectionValues<typeof supportedBrowsers>;
@@ -23,6 +23,10 @@ export default defineConfig(({ mode }) => {
 		supportedBrowsers.has(browserName as SupportedBrowser);
 
 	const BROWSER_NAME = (() => {
+		if (!isTest) {
+			return false;
+		}
+
 		const envBrowserName = process.env.BROWSER_NAME;
 
 		if (envBrowserName == null) {
@@ -40,20 +44,6 @@ export default defineConfig(({ mode }) => {
 
 	const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
-	const cwd = process.cwd();
-	const nodeModulesDir = resolvePath(cwd, '../../node_modules');
-
-	const WASM_PATHS = {
-		ABSOLUTE: {
-			TREE_SITTER: resolvePath(nodeModulesDir, 'web-tree-sitter/tree-sitter.wasm'),
-			TREE_SITTER_XPATH: resolvePath(nodeModulesDir, 'tree-sitter-xpath/tree-sitter-xpath.wasm'),
-		},
-	};
-
-	const IS_TEST = mode === 'test';
-
-	const RUNTIME_TARGET = !IS_TEST || BROWSER_ENABLED ? 'WEB' : 'NODE';
-
 	/**
 	 * @see notes on the same variable in the config for @odk/xpath
 	 */
@@ -61,7 +51,7 @@ export default defineConfig(({ mode }) => {
 
 	const require = createRequire(import.meta.url);
 
-	const VITEST_SETUP = require.resolve('./vite/vitest-setup.ts');
+	const VITEST_SETUP = require.resolve('./tools/vite/vitest-setup.ts');
 
 	let timeZoneId: string | null = process.env.TZ ?? null;
 
@@ -70,7 +60,12 @@ export default defineConfig(({ mode }) => {
 	}
 
 	return {
-		assetsInclude: ['assets/**/*', 'fixtures/**/*.xml'],
+		assetsInclude: [
+			'assets/**/*',
+			'fixtures/**/*.xml',
+			'../../node_modules/web-tree-sitter/tree-sitter.wasm',
+			'../../node_modules/tree-sitter-xpath/tree-sitter-xpath.wasm',
+		],
 		build: {
 			target: 'esnext',
 			minify: false,
@@ -81,8 +76,6 @@ export default defineConfig(({ mode }) => {
 		},
 		define: {
 			TZ: JSON.stringify(timeZoneId),
-			RUNTIME_TARGET: JSON.stringify(RUNTIME_TARGET),
-			WASM_PATHS: JSON.stringify(WASM_PATHS),
 		},
 		esbuild: {
 			sourcemap: true,
@@ -92,6 +85,14 @@ export default defineConfig(({ mode }) => {
 			esbuildOptions: {
 				target: 'esnext',
 			},
+			include: BROWSER_ENABLED
+				? [
+						'@testing-library/dom',
+						'@testing-library/jest-dom',
+						'@testing-library/jest-dom/matchers',
+				  ]
+				: [],
+			entries: isTest ? ['./index.html', './tools/vite/vitest-setup.ts'] : ['./index.html'],
 			force: true,
 		},
 		plugins: [
@@ -130,22 +131,17 @@ export default defineConfig(({ mode }) => {
 			// See JSDoc notes on plugin
 			solidVitestNoNodeLoader,
 
-			// TODO: do we want this here? It makes sense for a library like @odk/xpath,
-			// but it's unclear if it will make sense for the web forms package.
-			// command === 'build' ? noBundle() : null,
-
 			// Generate type definitions. This turned out to be more reliable in
 			// @odk/xpath. TODO: revisit in case it makes sense to use tsc directly in
 			// this package
 			dts({
-				exclude: ['test', 'vite', 'vite-env.d.ts'],
+				exclude: ['test', 'tools', 'vite-env.d.ts'],
 			}),
 		],
 
 		resolve: {
 			alias: {
-				'/tree-sitter.wasm': WASM_PATHS.ABSOLUTE.TREE_SITTER,
-				'/tree-sitter-xpath.wasm': WASM_PATHS.ABSOLUTE.TREE_SITTER_XPATH,
+				'@solidjs/testing-library': require.resolve('./tools/@solidjs/testing-library/index.ts'),
 			},
 
 			conditions: ['browser', 'development'],
@@ -156,10 +152,20 @@ export default defineConfig(({ mode }) => {
 		},
 
 		test: {
+			browser: {
+				enabled: BROWSER_ENABLED,
+				name: BROWSER_NAME!,
+				provider: 'playwright',
+				headless: false,
+			},
+
 			deps: {
 				optimizer: {
 					web: {
-						// Prevent loading multiple instances of Solid
+						// Prevent loading multiple instances of Solid. This deviates from
+						// most of the recommendations provided by Solid and related tooling,
+						// as Vitest's interfaces have since changed. But it does seem to be
+						// the appropriate solution (at least for our usage).
 						exclude: ['solid-js'],
 					},
 				},
@@ -169,12 +175,6 @@ export default defineConfig(({ mode }) => {
 			globals: false,
 			setupFiles: [VITEST_SETUP],
 			transformMode: { web: [/\.[jt]sx?$/] },
-
-			// isolate: false,
-			// singleThread: true,
-			// threads: false,
-			// maxConcurrency: 1,
-			// maxThreads: 0,
 
 			exclude: ['e2e/**/*'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',

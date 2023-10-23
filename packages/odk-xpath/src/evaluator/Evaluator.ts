@@ -11,18 +11,11 @@ import type {
 } from '../shared/index.ts';
 import type { ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { ExpressionParser } from '../static/grammar/ExpressionParser.ts';
+import type { TreeSitterXPathParser } from '../static/grammar/TreeSitterXPathParser.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibrary } from './functions/FunctionLibrary.ts';
 import { ResultTypes } from './result/ResultType.ts';
 import { toXPathResult } from './result/index.ts';
-
-// TODO: see notes on cache in `ExpressionParser.ts`, update or remove those
-// if this usage changes in a way that addresses concerns expressed there.
-const parser = new ExpressionParser();
-
-// export interface Evaluator {
-//   readonly constructor: typeof Evaluator;
-// }
 
 interface EvaluatorOptions {
 	readonly functionLibrary?: FunctionLibrary;
@@ -47,17 +40,22 @@ const partialOmitNullish = <T extends Record<PropertyKey, unknown>>(
 	Object.fromEntries(Object.entries(object).filter(isNonNullEntry)) as PartialOmitNullish<T>;
 
 export class Evaluator implements AnyXPathEvaluator {
+	// TODO: see notes on cache in `ExpressionParser.ts`, update or remove those
+	// if this usage changes in a way that addresses concerns expressed there.
+	protected readonly parser: ExpressionParser;
+
 	readonly functionLibrary: FunctionLibrary;
 	readonly parseOptions: ParseOptions;
 	readonly resultTypes: ResultTypes = ResultTypes;
 	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
 	readonly timeZone: Temporal.TimeZone;
 
-	constructor(options: EvaluatorOptions = {}) {
+	constructor(xpathParser: TreeSitterXPathParser, options: EvaluatorOptions = {}) {
 		const { functionLibrary = fn, parseOptions = {}, rootNode, timeZoneId } = options;
 
 		this.functionLibrary = functionLibrary;
 		this.parseOptions = parseOptions;
+		this.parser = new ExpressionParser(xpathParser);
 		this.sharedContextOptions = partialOmitNullish({
 			rootNode,
 		});
@@ -70,7 +68,7 @@ export class Evaluator implements AnyXPathEvaluator {
 		namespaceResolver: XPathNSResolver | null,
 		resultType: XPathResultType | null
 	) {
-		const tree = parser.parse(expression, this.parseOptions);
+		const tree = this.parser.parse(expression, this.parseOptions);
 
 		const evaluationContextNamespaceResolver: XPathNamespaceResolverObject | null =
 			typeof namespaceResolver === 'function'

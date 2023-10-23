@@ -1,4 +1,7 @@
-import type { Plugin } from 'vite';
+/// <reference types="vitest" />
+
+import type { PluginOption, UserConfig } from 'vite';
+import type { UserConfig as VitestConfig } from 'vitest/config';
 
 /**
  * Prevents Vitest usage of
@@ -8,18 +11,19 @@ import type { Plugin } from 'vite';
  * `registerNodeLoader` in test mode. As such, this plugin should be loaded
  * *after* that one.
  */
-export const solidVitestNoNodeLoader: Plugin = {
+export const solidVitestNoNodeLoader: PluginOption = {
 	name: 'solid-vitest-no-node-loader',
-	config(config) {
+	config(config): UserConfig {
+		const baseConfig = config as UserConfig & VitestConfig;
 		return {
-			...config,
+			...baseConfig,
 			test: {
-				...config.test,
+				...baseConfig.test,
 				deps: {
-					...config.test?.deps,
+					...baseConfig.test?.deps,
 					registerNodeLoader: false,
 				},
-			},
-		};
+			} as VitestConfig['test'],
+		} as UserConfig;
 	},
 };

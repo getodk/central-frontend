@@ -22,6 +22,21 @@ npm install @odk/xpath
 
 The `@odk/xpath` package depends on the `web-tree-sitter` and `tree-sitter-xpath` libraries. Both provide WASM resources which must be accessible to initialize parsing in this libary. We intend to make setting it all up as easy as possible, and document it thoroughly. That effort is a work in progress, pending our own experience using this library internally. We'll update this space as that effort progresses.
 
+A solution which is working so far, both in the @odk/xpath test suite and downstream within the odk-web-forms monorepo:
+
+```ts
+import xpathLanguage from 'tree-sitter-xpath/tree-sitter-xpath.wasm?url';
+import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
+import { TreeSitterXPathParser } from '@odk/xpath/static/grammar/TreeSitterXPathParser.ts';
+
+export const xpathParser = await TreeSitterXPathParser.init({
+  webTreeSitter,
+  xpathLanguage,
+});
+```
+
+Note that this depends on Vite's [`?url` import suffix](https://vitejs.dev/guide/assets.html#explicit-url-imports). The same general approach should apply for other tooling/bundlers or even without a build step, so long as `webTreeSitter` and `xpathLanguage` successfully resolve to their respective WASM resources.
+
 ## Example usage
 
 To use `@odk/xpath` at runtime, you first create an `Evaluator` instance. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).

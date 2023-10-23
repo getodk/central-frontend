@@ -1,4 +1,12 @@
 import { Evaluator } from '@odk/xpath';
+import { TreeSitterXPathParser } from '@odk/xpath/static/grammar/TreeSitterXPathParser.js';
+import xpathLanguage from 'tree-sitter-xpath/tree-sitter-xpath.wasm?url';
+import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
+
+const xpathParser = await TreeSitterXPathParser.init({
+	webTreeSitter,
+	xpathLanguage,
+});
 
 interface XFormXPathEvaluatorEvaluateOptions {
 	/**
@@ -9,7 +17,7 @@ interface XFormXPathEvaluatorEvaluateOptions {
 
 export class XFormXPathEvaluator extends Evaluator {
 	constructor(protected readonly xformDocument: XMLDocument) {
-		super();
+		super(xpathParser);
 	}
 
 	evaluateString(expression: string, options: XFormXPathEvaluatorEvaluateOptions = {}): string {
