@@ -1,3 +1,5 @@
+/// <reference types="@testing-library/jest-dom" />
+
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vitest';
 
