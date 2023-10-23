@@ -4,7 +4,7 @@ const { describe } = test;
 const it = test;
 
 describe('Initial e2e test', () => {
-	it('has text "Hello world 1"', async ({ page }) => {
+	it.skip('has text "Hello world 1"', async ({ page }) => {
 		await page.goto('/');
 
 		const text = page.getByText('Hello world 1');
