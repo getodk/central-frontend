@@ -12,10 +12,10 @@ An XPath evaluator, with intent to support:
 
 ## Install
 
-Install with `npm` (or the equivalent command for your preferred package manager):
+Install this package and its required peer dependencies with `npm` (or the equivalent command for your preferred package manager):
 
 ```sh
-npm install @odk/xpath
+npm install @odk/xpath web-tree-sitter tree-sitter-xpath
 ```
 
 ### A note on tree-sitter, usage with or without a bundler
@@ -72,12 +72,12 @@ Likewise, `result` is API-compatible with the standard DOM [`XPathResult`](https
 
 ## Supported/tested environments
 
-- Browsers (latest versions)
+- Browsers (latest versions):
   - Chrome/Chromium-based browsers (tested only in Chromium)
   - Firefox
-  - Safari/WebKit (tested WebKit directly)
-- Non-browser runtimes with a DOM compatibility environement.
-  - Node (current/LTS; tested with [jsdom](https://github.com/jsdom/jsdom)). Node compatibility **does not** require any native extensions. DOM compatibility **does not** require any underlying XPath evaluation functionality (though it does currently rely on global constants like `XPathResult`).
+  - Safari/WebKit (tested in WebKit directly)
+- Non-browser runtimes with a DOM compatibility environement:
+  - Node (current/LTS; tested with [jsdom](https://github.com/jsdom/jsdom)). Node DOM compatibility **does not** require any native extensions for. DOM compatibility **does not** require any underlying XPath evaluation functionality (though it does currently rely on global constants like `XPathResult`).
   - Other runtimes and DOM compatibility libraries are not currently tested, support is unknown.
 
 ## Known issues and incompatibilities
