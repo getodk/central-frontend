@@ -142,9 +142,8 @@ describe('EntityBasicDetails', () => {
           dd.text().should.equal('s');
         })
         .respondWithData(() => {
-          const { currentVersion } = testData.extendedEntities.last();
-          testData.extendedEntities.update(-1, {
-            currentVersion: { ...currentVersion, label: 'Updated Entity' }
+          testData.extendedEntityVersions.createNew({
+            label: 'Updated Entity'
           });
           testData.extendedAudits.createPast(1, {
             action: 'entity.update.version'
