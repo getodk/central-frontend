@@ -1,5 +1,5 @@
-import { Box } from '@suid/material';
 import { Match, Switch } from 'solid-js';
+import { Box } from 'suid/material';
 import type { XFormViewControl, XFormViewControlType } from '../../lib/xform/types.ts';
 import { XFormInputControl, xFormInputControlProps } from './controls/XFormInputControl.tsx';
 import { XFormUnknownControl } from './debugging/XFormUnknownControl.tsx';

@@ -1,5 +1,5 @@
-import { Box } from '@suid/material';
 import { For } from 'solid-js/web';
+import { Box } from 'suid/material';
 import type { XFormDefinition } from '../../lib/xform/types.ts';
 import { XFormControl } from './XFormControl.tsx';
 import { XFormControlStack } from './XFormControlStack.tsx';

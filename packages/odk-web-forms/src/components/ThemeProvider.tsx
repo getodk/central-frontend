@@ -1,8 +1,8 @@
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 
-import { createTheme, ThemeProvider as SUIDThemeProvider } from '@suid/material';
 import type { JSX } from 'solid-js';
+import { createTheme, ThemeProvider as SUIDThemeProvider } from 'suid/material';
 
 const REM = 16;
 

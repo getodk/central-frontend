@@ -1,4 +1,4 @@
-import { Button, styled } from '@suid/material';
+import { Button, styled } from 'suid/material';
 
 export const DefaultSubmitButton = styled(Button)(({ theme }) => ({
 	background: theme.palette.primary.main,

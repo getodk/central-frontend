@@ -1,4 +1,4 @@
-import { Paper, styled } from '@suid/material';
+import { Paper, styled } from 'suid/material';
 
 export const PageMain = styled(Paper)(({ theme }) => ({
 	borderRadius: theme.shape.borderRadius * 4,

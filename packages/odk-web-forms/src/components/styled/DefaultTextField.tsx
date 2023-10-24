@@ -1,4 +1,4 @@
-import { TextField, styled } from '@suid/material';
+import { TextField, styled } from 'suid/material';
 
 export const DefaultTextField = styled(TextField)(({ theme }) => ({
 	...theme.typography.body2,

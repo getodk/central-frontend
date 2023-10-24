@@ -1,8 +1,7 @@
-import { AlertTitle } from '@suid/material';
 import type { AlertColor } from '@suid/material/Alert';
-import Alert from '@suid/material/Alert';
 import type { JSX } from 'solid-js';
 import { Show } from 'solid-js';
+import { Alert, AlertTitle } from 'suid/material';
 
 interface XFormAlertProps {
 	readonly title?: JSX.Element;

@@ -1,5 +1,5 @@
-import { GlobalStyles, Stack, useTheme } from '@suid/material';
 import type { JSX } from 'solid-js';
+import { GlobalStyles, Stack, useTheme } from 'suid/material';
 import { PageContainer } from '../styled/PageContainer.tsx';
 import { PageFooter } from './PageFooter.tsx';
 import { PageHeader } from './PageHeader.tsx';

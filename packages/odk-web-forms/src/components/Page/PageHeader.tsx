@@ -1,4 +1,4 @@
-import { Stack } from '@suid/material';
+import { Stack } from 'suid/material';
 import { FormLanguageMenu } from '../FormLanguageMenu.tsx';
 
 export const PageHeader = () => {

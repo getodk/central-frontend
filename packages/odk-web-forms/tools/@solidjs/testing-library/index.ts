@@ -12,6 +12,8 @@
  * - Use non-global `afterEach` for cleanup
  */
 
+/// <reference types="@testing-library/jest-dom" />
+
 import { getQueriesForElement, prettyDOM } from '@testing-library/dom';
 import type { Accessor, Owner } from 'solid-js';
 import {

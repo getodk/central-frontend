@@ -1,5 +1,5 @@
-import { Divider, Stack } from '@suid/material';
 import { Show, Suspense, createResource } from 'solid-js';
+import { Divider, Stack } from 'suid/material';
 import { LocalizationProvider } from './components/LocalizationProvider.tsx';
 import { Page } from './components/Page/Page.tsx';
 import { ThemeProvider } from './components/ThemeProvider.tsx';

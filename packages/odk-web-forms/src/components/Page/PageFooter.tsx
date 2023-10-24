@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, styled } from '@suid/material';
+import { Box, Stack, Typography, styled } from 'suid/material';
 import odkLogo from '../../../assets/odk-logo.png';
 import { FormSubmitButton } from '../styled/FormSubmitButton';
 

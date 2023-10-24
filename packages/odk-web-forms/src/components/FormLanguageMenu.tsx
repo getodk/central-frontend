@@ -1,6 +1,10 @@
 // TODO: lots of this should get broken out
 
-import { Check, ExpandMore, Language } from '@suid/icons-material';
+import { createSignal, useContext } from 'solid-js';
+import { For, Show } from 'solid-js/web';
+import Check from 'suid/icons-material/Check';
+import ExpandMore from 'suid/icons-material/ExpandMore';
+import Language from 'suid/icons-material/Language';
 import {
 	ListItemIcon,
 	ListItemText,
@@ -9,9 +13,7 @@ import {
 	Stack,
 	Typography,
 	styled,
-} from '@suid/material';
-import { createSignal, useContext } from 'solid-js';
-import { For, Show } from 'solid-js/web';
+} from 'suid/material';
 import { localizationContext } from './LocalizationProvider.tsx';
 import { PageMenuButton } from './styled/PageMenuButton.tsx';
 

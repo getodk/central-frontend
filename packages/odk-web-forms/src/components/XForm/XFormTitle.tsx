@@ -1,4 +1,4 @@
-import { Typography } from '@suid/material';
+import { Typography } from 'suid/material';
 
 interface XFormTitleProps {
 	readonly children: string;

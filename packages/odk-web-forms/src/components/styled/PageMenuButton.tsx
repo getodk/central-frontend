@@ -1,4 +1,4 @@
-import { Button, styled } from '@suid/material';
+import { Button, styled } from 'suid/material';
 
 export const PageMenuButton = styled(Button)(({ theme }) => ({
 	color: theme.palette.text.primary,
