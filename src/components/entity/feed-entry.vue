@@ -63,7 +63,24 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else-if="entry.action === 'entity.update.version'">
         <span class="icon-pencil"></span>
-        <i18n-t keypath="title.entity.update_version.api">
+        <template v-if="entry.details.submissionCreate != null">
+          <i18n-t v-if="submission != null"
+            keypath="title.entity.update_version.submission.notDeleted">
+            <template #instanceName>
+              <router-link :to="creatingSubmissionPath">
+                {{ submission.currentVersion.instanceName ?? submission.instanceId }}
+              </router-link>
+            </template>
+          </i18n-t>
+          <i18n-t v-else keypath="title.entity.update_version.submission.deleted.full">
+            <template #deletedSubmission>
+              <span class="deleted-submission">
+                {{ deletedSubmissionEntityEvent }}
+              </span>
+            </template>
+          </i18n-t>
+        </template>
+        <i18n-t v-else keypath="title.entity.update_version.api">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
@@ -110,7 +127,7 @@ const { entity } = useRequestData();
 // Allow titles that contain more than one string to wrap.
 const wrapTitle = computed(() => {
   const { action } = props.entry;
-  return action === 'submission.create' || action === 'entity.create';
+  return action === 'submission.create' || action === 'entity.create' || action === 'entity.update.version';
 });
 
 const { submissionPath, datasetPath } = useRoutes();
@@ -120,8 +137,19 @@ const creatingSubmissionPath = computed(() => submissionPath(
   props.submission.instanceId
 ));
 const { t } = useI18n();
+
+// This function pulls out the submission instance ID when the event
+// is about a submission (creation, approval) and the ID is directly
+// in the event details.
 const deletedSubmission = computed(() => {
   const id = props.entry.details.instanceId;
+  return t('title.submission.create.deleted.deletedSubmission', { id });
+});
+
+// This function pulls out the submission instance ID in events about
+// entities, where the instance ID is found deep inside the submissionCreate event.
+const deletedSubmissionEntityEvent = computed(() => {
+  const id = props.entry.details.submissionCreate.details.instanceId;
   return t('title.submission.create.deleted.deletedSubmission', { id });
 });
 const { reviewStateIcon } = useReviewState();
@@ -176,6 +204,13 @@ const { reviewStateIcon } = useReviewState();
           "api": "Entity {label} created by {name}"
         },
         "update_version": {
+          "submission": {
+            "notDeleted": "Data updated by Submission {instanceName}",
+            "deleted": {
+              "full": "Data updated by {deletedSubmission}",
+              "deletedSubmission": "(deleted Submission {id})",
+            }
+          },
           // This text is shown in a list of events. {name} is the name of a Web
           // User.
           "api": "Data updated by {name}"

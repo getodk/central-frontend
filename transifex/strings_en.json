@@ -1531,6 +1531,21 @@
             }
           },
           "update_version": {
+            "submission": {
+              "notDeleted": {
+                "string": "Data updated by Submission {instanceName}"
+              },
+              "deleted": {
+                "full": {
+                  "string": "Data updated by {deletedSubmission}",
+                  "developer_comment": "{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+                },
+                "deletedSubmission": {
+                  "string": "(deleted Submission {id})",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\nData updated by {deletedSubmission}"
+                }
+              }
+            },
             "api": {
               "string": "Data updated by {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."

@@ -47,7 +47,9 @@ const feed = computed(() => {
   let diffIndex = diffs.length - 1;
   for (const audit of audits) {
     if (audit.action === 'entity.update.version') {
-      result.push({ entry: audit, diff: diffs[diffIndex] });
+      // create event with all details of submission responsible for updating entity
+      const submission = audit.details.submissionCreate ? audit.details.submission : null;
+      result.push({ entry: audit, diff: diffs[diffIndex], submission });
       diffIndex -= 1;
     } else if (audit.action === 'entity.create') {
       result.push({ entry: audit });

@@ -202,10 +202,10 @@ describe('EntityFeedEntry', () => {
     });
   });
 
-  describe('entity.update.version audit event', () => {
+  describe('entity.update.version (via API) audit event', () => {
     const updateEntity = () => {
       const audit = testData.extendedAudits
-        .createPast(1, { action: 'entity.update.version' })
+        .createPast(1, { action: 'entity.update.version', details: {} })
         .last();
       return { entry: audit, diff: [] };
     };
@@ -252,9 +252,92 @@ describe('EntityFeedEntry', () => {
     });
   });
 
+  describe('entity.update.version (via submission) audit event', () => {
+    const updateEntityFromSubmission = ({ deleted = false, ...options } = {}) => {
+      const details = {
+        entity: { uuid: 'e' }
+      };
+
+      details.submissionCreate = testData.extendedAudits
+        .createPast(1, {
+          action: 'submission.create',
+          details: { instanceId: 'x' }
+        })
+        .last();
+
+      const submission = testData.extendedSubmissions
+        .createPast(1, { instanceId: 's', ...options })
+        .last();
+
+      const audit = testData.extendedAudits
+        .createPast(1, {
+          action: 'entity.update.version',
+          details
+        })
+        .last();
+
+      return {
+        entry: audit,
+        diffs: [],
+        submission: deleted ? null : { ...submission, xmlFormId: 'f' }
+      };
+    };
+
+
+    it('shows the correct icon', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const icon = component.find('.feed-entry-title .icon-pencil');
+      icon.exists().should.be.true();
+    });
+
+    it('shows the correct text with submission instance ID', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const text = component.get('.feed-entry-title').text();
+      text.should.equal('Data updated by Submission s');
+    });
+
+    it('shows the correct text with submission instance name', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission({ meta: { instanceName: 'Some Name' } }) });
+      const text = component.get('.feed-entry-title').text();
+      text.should.equal('Data updated by Submission Some Name');
+    });
+
+    it('links to the submission', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const title = component.get('.feed-entry-title');
+      const { to } = title.getComponent(RouterLinkStub).props();
+      to.should.equal('/projects/1/forms/f/submissions/s');
+    });
+
+    it('shows the correct text with deleted submission instance id', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission({ deleted: true }) });
+      const text = component.get('.feed-entry-title').text();
+      text.should.equal('Data updated by (deleted Submission x)');
+    });
+
+    it('does not link to the deleted submission', () => {
+      const component = mountComponent({
+        props: updateEntityFromSubmission({ deleted: true })
+      });
+      const links = component.findAllComponents(RouterLinkStub);
+      links.length.should.equal(0);
+    });
+
+    it('renders a DiffItem for each change', () => {
+      const diff = [
+        { new: '1', old: '10', propertyName: 'height' },
+        { new: '2', old: '20', propertyName: 'circumference' }
+      ];
+      const component = mountComponent({
+        props: { ...updateEntityFromSubmission(), diff }
+      });
+      component.findAllComponents(DiffItem).length.should.equal(2);
+    });
+  });
+
   it('shows when an audit log event was logged', () => {
     const audit = testData.extendedAudits
-      .createPast(1, { action: 'entity.update.version' })
+      .createPast(1, { action: 'entity.update.version', details: {} })
       .last();
     const component = mountComponent({
       props: { entry: audit, diff: [] }
