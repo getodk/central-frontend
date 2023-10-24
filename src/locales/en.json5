@@ -397,7 +397,8 @@
     // {count} is the total number of Properties. The string will be pluralized based on {count}.
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
     "new": "New!",
-    "totalEntities": "Total Entities"
+    "totalEntities": "Total Entities",
+    "conflicts": "Conflicts"
   },
   "mixin": {
     "request": {

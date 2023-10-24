@@ -17,10 +17,12 @@ except according to the terms contained in the LICENSE file.
     <td colspan="2" class="dataset-name">
       <router-link :to="datasetPath(project.id, dataset.name)" v-tooltip.text>{{ dataset.name }}</router-link>
     </td>
-    <td colspan="2" class="conflicts-count" :class="{ warning: dataset.conflicts > 0 }">
-      <router-link :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')" v-tooltip.text>
-        {{ dataset.conflicts > 0 ? tn('entity.conflictsCount', dataset.conflicts) : $n(0) }}<span class="icon-warning"></span>
-      </router-link>
+    <td colspan="2" class="conflicts-count">
+      <span v-tooltip.no-aria="dataset.conflicts > 0 ? null : $t('common.conflicts')">
+        <router-link :class="{ 'btn btn-danger': dataset.conflicts > 0 }" :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')">
+          {{ dataset.conflicts > 0 ? $tcn('entity.conflictsCount', dataset.conflicts) : $n(0) }}<span class="icon-warning"></span>
+        </router-link>
+      </span>
     </td>
     <td class="last-entity">
       <span v-tooltip.no-aria="lastEntityTooltip">
@@ -53,7 +55,6 @@ import DateTimeComponent from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
 import { formatDateTime } from '../../util/date-time';
-import { useI18nUtils } from '../../util/i18n';
 
 const props = defineProps({
   dataset: {
@@ -73,7 +74,6 @@ const props = defineProps({
 const { datasetPath } = useRoutes();
 
 const { t } = useI18n();
-const { tn } = useI18nUtils();
 
 const lastEntityTooltip = computed(() => {
   const { lastEntity } = props.dataset;

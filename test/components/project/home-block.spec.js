@@ -221,6 +221,24 @@ describe('ProjectHomeBlock', () => {
     expand.text().should.equal('Show fewer of 6 total Entity Lists');
   });
 
+  it('sums conflicts for hidden datasets with sort function', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(1, { conflicts: 2, name: 'Alpha', lastEntity: '2023-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 3, name: 'Bravo', lastEntity: '2020-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 2, name: 'Charlie', lastEntity: '2020-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 5, name: 'Delta', lastEntity: '2023-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 3, name: 'Echo', lastEntity: '2023-01-01' });
+    const block = mountComponent();
+    const expandingRow = block.findAll('.project-dataset-row')[3];
+
+    // conflicts are summed up for the hidden rows
+    const hiddenConflictCell = expandingRow.find('.conflicts-count a');
+    hiddenConflictCell.text().should.equal('8 conflicts'); // sum of Delta & Echo
+
+    await block.setProps({ sortFunc: (a, b) => b.lastEntity.localeCompare(a.lastEntity) });
+    hiddenConflictCell.text().should.equal('5 conflicts'); // sum of Bravo & Charlie
+  });
+
   it('shows nothing when there is no conflict', async () => {
     testData.extendedProjects.createPast(1);
     testData.extendedDatasets.createPast(4);

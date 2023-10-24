@@ -102,7 +102,7 @@ describe('ProjectDatasetRow', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 3 });
     const cell = mountComponent().get('.conflicts-count');
     cell.text().should.equal('3 conflicts');
-    cell.classes('warning').should.be.true();
+    cell.find('.btn-danger').exists().should.be.true();
 
     const link = cell.getComponent('a');
     link.props().to.should.equal('/projects/1/entity-lists/people/entities?conflict=true');
@@ -112,6 +112,6 @@ describe('ProjectDatasetRow', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 0 });
     const cell = mountComponent().get('.conflicts-count');
     cell.text().should.equal('0');
-    cell.classes('warning').should.be.false();
+    cell.find('.btn-danger').exists().should.be.false();
   });
 });
