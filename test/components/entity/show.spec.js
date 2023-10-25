@@ -88,7 +88,8 @@ describe('EntityShow', () => {
             }
           });
           testData.extendedAudits.createPast(1, {
-            action: 'entity.update.version'
+            action: 'entity.update.version',
+            details: {}
           });
           return testData.standardEntities.last();
         })
