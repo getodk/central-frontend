@@ -79,13 +79,9 @@ describe('EntityShow', () => {
           return form.trigger('submit');
         })
         .respondWithData(() => {
-          const { currentVersion } = testData.extendedEntities.last();
-          testData.extendedEntities.update(-1, {
-            currentVersion: {
-              ...currentVersion,
-              label: 'Updated Entity',
-              data: { height: '2' }
-            }
+          testData.extendedEntityVersions.createNew({
+            label: 'Updated Entity',
+            data: { height: '2' }
           });
           testData.extendedAudits.createPast(1, {
             action: 'entity.update.version',
