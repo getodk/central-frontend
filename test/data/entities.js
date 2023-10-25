@@ -57,12 +57,6 @@ const entityVersions = dataStore({
     if (baseVersionOption != null && baseVersion == null)
       throw new Error('base version not found');
 
-    const conflict = baseVersion === lastVersion
-      ? null
-      : (conflictingProperties != null && conflictingProperties.length !== 0
-        ? 'hard'
-        : 'soft');
-
     const createdAt = lastVersion == null
       ? entity.createdAt
       : (!inPast
@@ -79,13 +73,17 @@ const entityVersions = dataStore({
       current: true,
       label: label ?? lastVersion.label,
       data: { ...lastVersion?.data, ...data },
-      conflict,
-      conflictingProperties: conflict == null
+      conflict: baseVersion === lastVersion
+        ? null
+        : (conflictingProperties != null && conflictingProperties.length !== 0
+          ? 'hard'
+          : 'soft'),
+      conflictingProperties: baseVersion === lastVersion
         ? null
         : conflictingProperties ?? [],
       baseDiff: diffVersions(dataReceived, baseVersion),
       serverDiff: diffVersions(dataReceived, lastVersion),
-      resolved: conflict == null,
+      resolved: false,
       creatorId: creator.id,
       creator: toActor(creator),
       createdAt
@@ -166,8 +164,8 @@ const combineEntityWithVersions = (entity) => {
 
   const conflicts = currentVersion.version === 1
     ? []
-    : entityVersions.sorted()
-      .filter(version => version.entity === entity && !version.resolved);
+    : entityVersions.sorted().filter(version =>
+      version.entity === entity && version.conflict != null && !version.resolved);
   const conflict = conflicts.length === 0
     ? null
     : (conflicts.some(version => version.conflict === 'hard') ? 'hard' : 'soft');
@@ -272,9 +270,10 @@ extendedEntities.resolve = (index) => {
   if (entity == null) throw new Error('entity not found');
 
   for (const version of entityVersions.sorted()) {
-    if (version.entity === entity) version.resolved = true;
+    if (version.entity === entity && version.conflict != null)
+      version.resolved = true;
   }
 
   // Update updatedAt.
-  entities.update(-1);
+  entities.update(index);
 };
