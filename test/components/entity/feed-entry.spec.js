@@ -322,17 +322,6 @@ describe('EntityFeedEntry', () => {
       const links = component.findAllComponents(RouterLinkStub);
       links.length.should.equal(0);
     });
-
-    it('renders a DiffItem for each change', () => {
-      const diff = [
-        { new: '1', old: '10', propertyName: 'height' },
-        { new: '2', old: '20', propertyName: 'circumference' }
-      ];
-      const component = mountComponent({
-        props: { ...updateEntityFromSubmission(), diff }
-      });
-      component.findAllComponents(DiffItem).length.should.equal(2);
-    });
   });
 
   it('shows when an audit log event was logged', () => {

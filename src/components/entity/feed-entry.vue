@@ -150,7 +150,7 @@ const deletedSubmission = computed(() => {
 // entities, where the instance ID is found deep inside the submissionCreate event.
 const deletedSubmissionEntityEvent = computed(() => {
   const id = props.entry.details.submissionCreate.details.instanceId;
-  return t('title.submission.create.deleted.deletedSubmission', { id });
+  return t('title.entity.update_version.submission.deleted.deletedSubmission', { id });
 });
 const { reviewStateIcon } = useReviewState();
 </script>
