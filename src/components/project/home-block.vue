@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
       <project-dataset-row v-for="(dataset, index) of visibleDataset" :key="dataset.name" :dataset="dataset" :project="project" :show-icon="index === 0"/>
       <tr v-if="showDatasetExpander" class="project-dataset-row transparent-bg">
         <td class="col-icon"></td>
-        <td colspan="6" class="expand-button-container">
+        <td colspan="2" class="expand-button-container">
           <a href="#" role="button" class="expand-button" @click.prevent="toggleDatasetExpanded">
             <template v-if="!datasetExpanded">
               {{ $tcn('showMoreDatasets', numDatasets) }}<span class="icon-angle-down"></span>
@@ -52,6 +52,16 @@ except according to the terms contained in the LICENSE file.
               {{ $tcn('showFewerDatasets', numDatasets) }}<span class="icon-angle-up"></span>
             </template>
           </a>
+        </td>
+        <td v-if="hiddenConflicts > 0" colspan="2" class="conflicts-count">
+          <a href="#" role="button" class="btn btn-danger" @click.prevent="toggleDatasetExpanded">
+            {{ $tcn('entity.conflictsCount', hiddenConflicts) }}<span class="icon-warning"></span>
+          </a>
+        </td>
+        <td v-if="hiddenConflicts > 0" colspan="2" class="conflict-caption">
+          <span>
+            {{ $t('hidden') }}
+          </span>
         </td>
       </tr>
     </table>
@@ -103,13 +113,16 @@ export default {
         ? sortedForms
         : sortedForms.slice(0, this.maxForms);
     },
+    sortedDatasets() {
+      return [...this.project.datasetList].sort(this.sortFunc);
+    },
     visibleDataset() {
-      const sortedDatasets = this.project.datasetList;
-      sortedDatasets.sort(this.sortFunc);
-
       return this.datasetExpanded
-        ? sortedDatasets
-        : sortedDatasets.slice(0, this.maxDatasets);
+        ? this.sortedDatasets
+        : this.sortedDatasets.slice(0, this.maxDatasets);
+    },
+    hiddenConflicts() {
+      return this.datasetExpanded ? 0 : this.sortedDatasets.slice(this.maxDatasets).reduce((n, { conflicts }) => n + conflicts, 0);
     },
     showExpander() {
       return this.numForms > this.maxForms;
@@ -230,12 +243,39 @@ export default {
       }
     }
 
-    .project-dataset-row .col-icon{
-      border-right-color: #b9005c;
+    .project-dataset-row {
+      .conflicts-count {
+        text-align: right;
+        padding: 0 $padding-right-table-data;
 
-      span {
-        color: #b9005c;
+        [class*='icon'] {
+          margin-right:0;
+        }
 
+        .btn-danger {
+            color: white;
+            margin-right: -9px;
+            font-size: 16px;
+            padding: 2px $hpadding-btn;
+
+            [class*='icon'] {
+              color: white;
+            }
+          }
+      }
+
+      .col-icon{
+        border-right-color: #b9005c;
+
+        span {
+          color: #b9005c;
+        }
+      }
+
+      .conflict-caption {
+        font-size: 14px;
+        color: #888;
+        padding: 6px 10px;
       }
     }
 
@@ -270,7 +310,9 @@ export default {
     "showFewer": "Show fewer of {count} total Form | Show fewer of {count} total Forms",
     // This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list.
     // "Count" refers to the number of entity lists.
-    "showFewerDatasets": "Show fewer of {count} total Entity List | Show fewer of {count} total Entity Lists"
+    "showFewerDatasets": "Show fewer of {count} total Entity List | Show fewer of {count} total Entity Lists",
+    // Static text shown besides hidden Entity Lists with number of conflicts on the Homepage
+    "hidden": "hidden"
   }
 }
 </i18n>

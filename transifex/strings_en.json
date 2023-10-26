@@ -756,6 +756,9 @@
     },
     "noEntity": {
       "string": "(none)"
+    },
+    "conflictsCount": {
+      "string": "{count, plural, one {{count} conflict} other {{count} conflicts}}"
     }
   },
   "common": {
@@ -860,6 +863,9 @@
     },
     "totalEntities": {
       "string": "Total Entities"
+    },
+    "conflicts": {
+      "string": "Conflicts"
     }
   },
   "mixin": {
@@ -3169,6 +3175,10 @@
       "showFewerDatasets": {
         "string": "{count, plural, one {Show fewer of {count} total Entity List} other {Show fewer of {count} total Entity Lists}}",
         "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
+      },
+      "hidden": {
+        "string": "hidden",
+        "developer_comment": "Static text shown besides hidden Entity Lists with number of conflicts on the Homepage"
       }
     },
     "ProjectList": {
