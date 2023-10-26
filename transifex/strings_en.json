@@ -719,6 +719,10 @@
       "edit": {
         "string": "Edit ({count})",
         "developer_comment": "{count} is the number of previous edits."
+      },
+      "reviewParallelUpdates": {
+        "string": "Review parallel updates",
+        "developer_comment": "This is the text for an action, for example, the text of a button."
       }
     },
     "editDisabled": {
