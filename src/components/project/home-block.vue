@@ -256,7 +256,7 @@ export default {
             color: white;
             margin-right: -9px;
             font-size: 16px;
-            padding: 2px 10px;
+            padding: 2px $hpadding-btn;
 
             [class*='icon'] {
               color: white;

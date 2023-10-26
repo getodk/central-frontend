@@ -344,7 +344,6 @@
     "entityId": "Entity ID",
     "noProperties": "This Form only sets the “label”.",
     "noEntity": "(none)",
-    // {count} is the total number of Entities with conflicts. The string will be pluralized based on {count}.
     "conflictsCount": "{count} conflict | {count} conflicts"
   },
   "common": {

@@ -758,8 +758,7 @@
       "string": "(none)"
     },
     "conflictsCount": {
-      "string": "{count, plural, one {{count} conflict} other {{count} conflicts}}",
-      "developer_comment": "{count} is the total number of Entities with conflicts. The string will be pluralized based on {count}."
+      "string": "{count, plural, one {{count} conflict} other {{count} conflicts}}"
     }
   },
   "common": {
