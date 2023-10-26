@@ -19,6 +19,6 @@ export default () => {
     transformResponse: ({ data }) => reactive(data)
   }));
   const audits = createResource('audits');
-  const diffs = createResource('diffs');
-  return { entity, audits, diffs };
+  const entityVersions = createResource('entityVersions');
+  return { entity, audits, entityVersions };
 };

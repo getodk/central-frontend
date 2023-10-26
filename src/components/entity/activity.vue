@@ -39,16 +39,18 @@ defineOptions({
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { audits, diffs, resourceStates } = useRequestData();
-const { initiallyLoading, dataExists } = resourceStates([audits, diffs]);
+const { audits, entityVersions, resourceStates } = useRequestData();
+const { initiallyLoading, dataExists } = resourceStates([audits, entityVersions]);
 
 const feed = computed(() => {
   const result = [];
-  let diffIndex = diffs.length - 1;
+  let versionIndex = entityVersions.length - 1;
   for (const audit of audits) {
     if (audit.action === 'entity.update.version') {
-      result.push({ entry: audit, diff: diffs[diffIndex], submission: audit.details.submission });
-      diffIndex -= 1;
+      const { submission } = audit.details;
+      const entityVersion = entityVersions[versionIndex];
+      versionIndex -= 1;
+      result.push({ entry: audit, submission, entityVersion });
     } else if (audit.action === 'entity.create') {
       result.push({ entry: audit });
       const { details } = audit;

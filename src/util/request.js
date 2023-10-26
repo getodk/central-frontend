@@ -163,7 +163,7 @@ export const apiPaths = {
   odataEntities: datasetPath('.svc/Entities'),
   entity: entityPath(''),
   entityAudits: entityPath('/audits'),
-  entityDiffs: entityPath('/diffs'),
+  entityVersions: entityPath('/versions'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
