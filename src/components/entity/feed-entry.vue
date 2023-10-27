@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
-      <template v-if="entry.action === 'submission.update'">
+      <template v-else-if="entry.action === 'submission.update'">
         <i18n-t keypath="title.submission.approval.full">
           <template #reviewState>
             <span class="approval">
@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
-      <template v-if="entry.action === 'entity.create'">
+      <template v-else-if="entry.action === 'entity.create'">
         <span class="icon-magic-wand"></span>
         <i18n-t v-if="entry.details.submissionCreate != null"
           keypath="title.entity.create.submission">
