@@ -16,11 +16,16 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
     </td>
     <td><date-time :iso="entity.__system.createdAt"/></td>
-    <td>
+    <td class="action-cell">
       <div class="col-content">
         <date-time :iso="entity.__system.updatedAt" class="updated-at"/>
         <span class="updates">
-          <template v-if="entity.__system.updates !== 0">
+          <template v-if="entity.__system.conflict">
+            <span class="wrap-circle">
+              <span class="icon-warning"></span>
+            </span>
+          </template>
+          <template v-else-if="entity.__system.updates !== 0">
             <span class="icon-pencil"></span>
             <span>{{ $n(entity.__system.updates, 'default') }}</span>
           </template>
@@ -32,6 +37,11 @@ except according to the terms contained in the LICENSE file.
           class="update-button btn btn-default" :aria-label="updateLabel"
           v-tooltip.aria-label>
           <span class="icon-pencil"></span>
+        </button>
+        <button v-if="entity.__system.conflict" type="button"
+          class="resolve-button btn btn-danger" :aria-label="$t('reviewParallelUpdates')"
+          v-tooltip.aria-label>
+          <span class="icon-random"></span>
         </button>
         <router-link v-slot="{ href }"
           :to="entityPath(projectId, datasetName, entity.__id)" custom>
@@ -98,6 +108,7 @@ const { entityPath } = useRoutes();
   .col-content {
     align-items: flex-start;
     display: flex;
+    margin-top: 3px;
   }
   .updated-at {
     margin-right: 21px;
@@ -114,7 +125,30 @@ const { entityPath } = useRoutes();
   .col-content .icon-angle-right {
     color: $color-accent-primary;
     font-size: 20px;
+  }
+
+  .wrap-circle{
+    width: 25px;
+    display: inline-block;
+    background: $color-danger;
+    height: 25px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    padding-top: 2px;
     margin-top: -1px;
+  }
+  .action-cell{
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 }
 </style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "reviewParallelUpdates": "Review parallel updates"
+    }
+  }
+</i18n>
