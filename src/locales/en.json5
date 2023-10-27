@@ -325,8 +325,7 @@
     "missingAttachment": "Missing Attachment",
     "action": {
       // {count} is the number of previous edits.
-      "edit": "Edit ({count})",
-      "reviewParallelUpdates": "Review parallel updates"
+      "edit": "Edit ({count})"
     },
     // This is shown when the Edit button is disabled.
     "editDisabled": "You cannot edit encrypted Submissions.",

@@ -20,14 +20,14 @@ except according to the terms contained in the LICENSE file.
       <div class="col-content">
         <date-time :iso="entity.__system.updatedAt" class="updated-at"/>
         <span class="updates">
-          <template v-if="entity.__system.updates !== 0 && !entity.__system.conflict">
-            <span class="icon-pencil"></span>
-            <span>{{ $n(entity.__system.updates, 'default') }}</span>
-          </template>
           <template v-if="entity.__system.conflict">
             <span class="wrap-circle">
               <span class="icon-warning"></span>
             </span>
+          </template>
+          <template v-else-if="entity.__system.updates !== 0">
+            <span class="icon-pencil"></span>
+            <span>{{ $n(entity.__system.updates, 'default') }}</span>
           </template>
         </span>
         <span class="icon-angle-right"></span>
@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-pencil"></span>
         </button>
         <button v-if="entity.__system.conflict" type="button"
-          class="resolve-button btn btn-default" :aria-label="$t('submission.action.reviewParallelUpdates')"
+          class="resolve-button btn btn-danger" :aria-label="$t('reviewParallelUpdates')"
           v-tooltip.aria-label>
           <span class="icon-random"></span>
         </button>
@@ -142,12 +142,13 @@ const { entityPath } = useRoutes();
     padding-top: 4px;
     padding-bottom: 4px;
   }
-  .resolve-button {
-    background: $color-danger;
-
-    [class*='icon'] {
-      color: white;
-    }
-  }
 }
 </style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "reviewParallelUpdates": "Review parallel updates"
+    }
+  }
+</i18n>

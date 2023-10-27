@@ -83,7 +83,8 @@ describe('EntityMetadataRow', () => {
 
   describe('conflict icon', () => {
     it('shows conflict icon if there is a conflict', () => {
-      testData.extendedEntities.createPast(1, { conflict: 'soft' });
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       mountComponent().find('.wrap-circle').exists().should.be.true();
     });
 

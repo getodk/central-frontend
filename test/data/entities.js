@@ -109,8 +109,7 @@ entities = dataStore({
     version = 1,
     label = faker.random.word(),
     data = undefined,
-    creator: creatorOption = undefined,
-    conflict = null
+    creator: creatorOption = undefined
   }) => {
     if (extendedDatasets.size === 0) {
       const properties = data != null
@@ -132,8 +131,7 @@ entities = dataStore({
       creatorId: creator.id,
       creator: toActor(creator),
       createdAt,
-      updatedAt: null,
-      conflict
+      updatedAt: null
     };
 
     const createVersion = inPast
@@ -180,7 +178,7 @@ const combineEntityWithVersions = (entity) => {
       ['version', 'label', 'data', 'current'],
       currentVersion
     ),
-    conflict: conflict || entity.conflict,
+    conflict,
     updates: currentVersion.version - 1
   };
 };
