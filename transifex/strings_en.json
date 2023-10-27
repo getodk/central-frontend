@@ -1626,6 +1626,42 @@
         "string": "Review parallel updates"
       }
     },
+    "EntityResolve": {
+      "title": {
+        "string": "Parallel updates to \"{label}\"",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "instructions": {
+        "0": {
+          "string": "Updates were made to \"{label}\" in parallel. This means changes may be in conflict with each other, as they were authored against older data than they were eventually applied to by Central."
+        },
+        "1": {
+          "string": "Review the updates, make any edits you need to, and if you are sure this Entity data is correct press \"{markAsResolved}\" to clear this warning message."
+        }
+      },
+      "action": {
+        "seeMoreDetails": {
+          "string": "See more details",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "editEntity": {
+          "string": "Edit Entity",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "markAsResolved": {
+          "string": "Mark as resolved",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "successMessage": {
+        "string": "The conflict warning has been cleared from the Entity."
+      },
+      "problem": {
+        "409_15": {
+          "string": "Data has been modified by another user. Please refresh to see the updated data."
+        }
+      }
+    },
     "EntityShow": {
       "back": {
         "title": {

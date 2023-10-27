@@ -55,7 +55,7 @@ defineOptions({
 defineProps({
   properties: Array
 });
-const emit = defineEmits(['update']);
+const emit = defineEmits(['update', 'resolve']);
 
 // The component does not assume that this data will exist when the component is
 // created.
@@ -64,6 +64,7 @@ const { project, odataEntities } = useRequestData();
 const canUpdate = computed(() => project.permits(['entity.update']));
 const update = ({ target, index }) => {
   if (target.classList.contains('update-button')) emit('update', index);
+  else if (target.classList.contains('resolve-button')) emit('resolve', index);
 };
 const table = ref(null);
 const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
