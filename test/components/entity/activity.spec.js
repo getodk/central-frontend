@@ -17,7 +17,7 @@ const mountComponent = () => mount(EntityActivity, {
       entity: testData.extendedEntities.last(),
       audits: testData.extendedAudits.sorted()
         .filter(({ action }) => action.startsWith('entity.')),
-      diffs: []
+      entityVersions: testData.extendedEntityVersions.sorted()
     }),
     router: mockRouter('/projects/1/entity-lists/trees/entities/e')
   }

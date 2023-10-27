@@ -32,7 +32,7 @@ describe('EntityShow', () => {
         { url: '/v1/projects/1', extended: true },
         { url: '/v1/projects/1/datasets/%C3%A1', extended: true },
         { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits' },
-        { url: '/v1/projects/1/datasets/%C3%A1/entities/e/diffs' }
+        { url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions', extended: true }
       ]);
   });
 
@@ -97,7 +97,7 @@ describe('EntityShow', () => {
       submit().testRequests([
         null,
         { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits' },
-        { url: '/v1/projects/1/datasets/%C3%A1/entities/e/diffs' }
+        { url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions', extended: true }
       ]));
 
     it('hides the modal', async () => {
