@@ -103,6 +103,8 @@ export default defineConfig(({ command, mode }) => {
 			entries,
 
 			force: true,
+
+			include: BROWSER_ENABLED ? ['loupe'] : [],
 		},
 		plugins: [
 			// Transform the BigInt polyfill (used by the Temporal polyfill) to use native
