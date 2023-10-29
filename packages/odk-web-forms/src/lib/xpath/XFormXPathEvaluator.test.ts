@@ -1,4 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import {
+	bind,
+	body,
+	head,
+	html,
+	input,
+	label,
+	mainInstance,
+	model,
+	t,
+	title,
+} from '../../test/fixtures/xform-dsl/index.ts';
 import { XFormXPathEvaluator } from './XFormXPathEvaluator';
 
 describe('XFormXPathEvaluator (convenience wrapper)', () => {
@@ -10,45 +22,34 @@ describe('XFormXPathEvaluator (convenience wrapper)', () => {
 
 	beforeEach(() => {
 		const parser = new DOMParser();
+		const xform = html(
+			head(
+				title(FORM_TITLE),
+				model(
+					mainInstance(
+						t(
+							`root id="${PRIMARY_INSTANCE_ROOT_ID}"`,
+							t('first-question'),
+							t('second-question'),
+							t('third-question'),
+							t('meta', t('instanceID'))
+						),
+						bind('/root/first-question').type('string'),
+						bind('/root/second-question').type('string'),
+						bind('/root/third-question').type('string'),
+						bind('/root/meta/instanceID').type('string')
+					)
+				)
+			),
+			body(
+				input('/root/first-question', label('First question')),
+				input('/root/second-question'),
+				t('unknown-control ref="/root/third-question"')
+			)
+		);
 
 		// TODO: test DSL, like JavaRosa
-		xformDocument = parser.parseFromString(
-			/* xml */ `
-			<?xml version="1.0"?>
-			<h:html xmlns="http://www.w3.org/2002/xforms"
-				xmlns:ev="http://www.w3.org/2001/xml-events"
-				xmlns:h="http://www.w3.org/1999/xhtml"
-				xmlns:jr="http://openrosa.org/javarosa"
-				xmlns:orx="http://openrosa.org/xforms/"
-				xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-				<h:head>
-					<h:title>${FORM_TITLE}</h:title>
-					<model>
-						<instance>
-							<root id="${PRIMARY_INSTANCE_ROOT_ID}">
-								<first-question/>
-								<second-question/>
-								<meta>
-									<instanceID/>
-								</meta>
-							</root>
-						</instance>
-						<bind nodeset="/root/first-question" type="string"/>
-						<bind nodeset="/root/second-question" type="string"/>
-						<bind nodeset="/root/meta/instanceID" type="string"/>
-					</model>
-				</h:head>
-				<h:body>
-					<input ref="/root/first-question">
-						<label>First question</label>
-					</input>
-					<input ref="/root/second-question"></input>
-					<unknown-control ref="/root/second-question"></unknown-control>
-				</h:body>
-			</h:html>
-		`.trim(),
-			'text/xml'
-		);
+		xformDocument = parser.parseFromString(xform.asXml(), 'text/xml');
 
 		evaluator = new XFormXPathEvaluator(xformDocument);
 	});
