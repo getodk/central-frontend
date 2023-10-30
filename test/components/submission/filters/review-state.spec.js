@@ -36,7 +36,7 @@ describe('SubmissionFiltersReviewState', () => {
     component.getComponent(Multiselect).props().modelValue.should.eql(['null']);
   });
 
-  it('passes up an update:modelValue event from the Multiselect', async () => {
+  it('emits an update:modelValue event if selection is changed', async () => {
     const component = mountComponent({
       props: { modelValue: ['null', "'approved'"] },
       attachTo: document.body
@@ -45,7 +45,6 @@ describe('SubmissionFiltersReviewState', () => {
     await toggle(multiselect);
     await multiselect.get('input[type="checkbox"]').setValue(false);
     await toggle(multiselect);
-    multiselect.emitted('update:modelValue').should.eql([[["'approved'"]]]);
     component.emitted('update:modelValue').should.eql([[["'approved'"]]]);
   });
 

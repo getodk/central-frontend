@@ -20,16 +20,16 @@ useQueryRef() expects to be passed two functions:
   - fromQuery(). Converts query parameters to the value of the ref. Often, a ref
     only uses one query parameter, but a ref may use more than one.
   - toQuery(). Converts the value of the ref to query parameters. Make sure that
-    the function always return values for the query parameters with which the
+    the function always returns values for the query parameters with which the
     ref is synced, even if one or more are `null`. That's needed in order to
     remove a query parameter.
 
 useQueryRef() only tracks changes to the value of the ref and to query
-parameters. If fromQuery() and toQuery() use reactive data, nothing will be
-triggered if the data changes.
+parameters. If fromQuery() or toQuery() uses other reactive data, nothing will
+be triggered if that data changes.
 */
 
-import { computed, ref, watch } from 'vue';
+import { computed, shallowRef, watch } from 'vue';
 import { equals } from 'ramda';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -38,8 +38,8 @@ export default ({ fromQuery, toQuery }) => {
   const route = useRoute();
 
   // Set the value of the ref by calling fromQuery(). We will track the specific
-  // query parameters that fromQuery() uses in `params`.
-  const result = ref(null);
+  // query parameters that fromQuery() uses (in `params`).
+  const result = shallowRef(null);
   const params = new Set();
   const queryProxy = new Proxy({}, {
     get: (_, name) => {
@@ -55,8 +55,9 @@ export default ({ fromQuery, toQuery }) => {
 
   /*
   Watch for changes to the tracked query parameters. If a query parameter
-  changes, then the value of the ref will be set again. An exception is if the
-  change was caused by setting the value: see below.
+  changes, then the value of the ref will be set again. (An important exception
+  is if the change to the query parameter was caused by setting the value: see
+  below.)
 
   In general, the strategy here is to call setValueFromQuery() as infrequently
   as possible. If the value of the ref isn't a primitive, then setting it to a
@@ -92,6 +93,10 @@ export default ({ fromQuery, toQuery }) => {
       else
         delete newQuery[name];
     }
+    // It is uncommon for a change to the value of a ref not to change query
+    // parameters. However, there are valid cases like that, for example,
+    // involving loading data.
+    if (equals(newQuery, route.query)) return;
 
     ignoreNextRouteChange = true;
     router.replace({ path: route.path, query: newQuery });

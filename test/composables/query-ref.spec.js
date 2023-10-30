@@ -44,11 +44,12 @@ describe('useQueryRef()', () => {
     result.value.should.equal('c,d');
   });
 
-  describe('change to another query parameter', () => {
+  describe('change to an irrelevant query parameter', () => {
     it('does not change the value of the ref', async () => {
+      // `z` is the irrelevant query parameter that the ref doesn't use.
       const app = await load('/?x=a&z=b');
       const fromQuery = ({ x }) => ({ someProp: x });
-      const toQuery = ({ someProp }) => someProp;
+      const toQuery = ({ someProp }) => ({ x: someProp });
       const result = withSetup(() => useQueryRef({ fromQuery, toQuery }), {
         container: app.vm.$container
       });
@@ -61,7 +62,7 @@ describe('useQueryRef()', () => {
     it('does not change value of ref even if fromQuery() uses an array parameter', async () => {
       const app = await load('/?x=a&x=b&z=c');
       const fromQuery = ({ x }) => ({ first: x[0], second: x[1] });
-      const toQuery = ({ first, second }) => [first, second];
+      const toQuery = ({ first, second }) => ({ x: [first, second] });
       const result = withSetup(() => useQueryRef({ fromQuery, toQuery }), {
         container: app.vm.$container
       });
@@ -73,7 +74,7 @@ describe('useQueryRef()', () => {
   });
 
   describe('setting the value of the ref', () => {
-    it('persists the change', async () => {
+    it('persists the new value', async () => {
       const app = await load('/?x=a');
       const result = withSetup(() => useQueryRef(options.exclamation), {
         container: app.vm.$container
@@ -148,18 +149,47 @@ describe('useQueryRef()', () => {
       await wait();
       fake.callCount.should.equal(0);
     });
+
+    it('does not navigate if value of ref changes, but query parameters do not', async () => {
+      const app = await load('/?x=a');
+      const fromQuery = ({ x }) => x;
+      const toQuery = (value) => ({ x: value === 'b' ? 'a' : value });
+      const result = withSetup(() => useQueryRef({ fromQuery, toQuery }), {
+        container: app.vm.$container
+      });
+      const fake = sinon.fake();
+      app.vm.$router.beforeEach(fake);
+      result.value = 'b';
+      await wait();
+      fake.callCount.should.equal(0);
+    });
   });
 
-  it('does not navigate again after change to query parameter changes value of ref', async () => {
-    const app = await load('/?x=a');
-    withSetup(() => useQueryRef(options.exclamation), {
-      container: app.vm.$container
+  describe('avoiding infinite loops', () => {
+    it('does not navigate again after change to query parameter changes value of ref', async () => {
+      const app = await load('/?x=a');
+      withSetup(() => useQueryRef(options.exclamation), {
+        container: app.vm.$container
+      });
+      const fake = sinon.fake();
+      app.vm.$router.beforeEach(fake);
+      await app.vm.$router.push('/?x=b');
+      // If there is a second navigation, it will take a moment to complete.
+      await wait();
+      fake.callCount.should.equal(1);
     });
-    const fake = sinon.fake();
-    app.vm.$router.beforeEach(fake);
-    await app.vm.$router.push('/?x=b');
-    // If there is a second navigation, it will take a moment to complete.
-    await wait();
-    fake.callCount.should.equal(1);
+
+    it('does not set value again after change to value of ref changes query parameter', async () => {
+      const app = await load('/?x=a');
+      const fromQuery = ({ x }) => ({ someProp: x });
+      const toQuery = ({ someProp }) => ({ x: someProp });
+      const result = withSetup(() => useQueryRef({ fromQuery, toQuery }), {
+        container: app.vm.$container
+      });
+      const newValue = { someProp: 'b' };
+      result.value = newValue;
+      await wait();
+      result.value.should.equal(newValue);
+    });
   });
 });

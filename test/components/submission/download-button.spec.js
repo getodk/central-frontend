@@ -23,8 +23,7 @@ describe('SubmissionDownloadButton', () => {
   describe('text', () => {
     it('shows the correct text if the submissions are not filtered', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
-      const text = mountComponent().text();
-      text.should.equal('Download 2 Submissions…');
+      mountComponent().text().should.equal('Download 2 Submissions…');
     });
 
     describe('submissions are filtered', () => {
@@ -36,14 +35,16 @@ describe('SubmissionDownloadButton', () => {
         component.text().should.equal('Download matching Submissions…');
       });
 
-      it('shows correct text after first chunk of submissions has loaded', async () => {
+      it('shows correct text after first chunk of submissions has loaded', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
         const component = mountComponent({
-          props: { filtered: true }
+          props: { filtered: true },
+          container: {
+            requestData: {
+              odata: { count: 1 }
+            }
+          }
         });
-        const { odata } = component.vm.$container.requestData.localResources;
-        odata.data = { count: 1 };
-        await component.vm.$nextTick();
         component.text().should.equal('Download 1 matching Submission…');
       });
     });

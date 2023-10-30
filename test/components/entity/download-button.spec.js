@@ -1,5 +1,3 @@
-import { nextTick } from 'vue';
-
 import EntityDownloadButton from '../../../src/components/entity/download-button.vue';
 
 import testData from '../../data';
@@ -7,17 +5,15 @@ import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { relativeUrl } from '../../util/request';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (options = undefined) =>
-  mount(EntityDownloadButton, mergeMountOptions(options, {
+const mountComponent = (options = undefined) => {
+  const dataset = testData.extendedDatasets.last();
+  return mount(EntityDownloadButton, mergeMountOptions(options, {
     global: {
-      provide: { projectId: '1', datasetName: 'trees' }
+      provide: { projectId: '1', datasetName: dataset.name }
     },
-    container: {
-      requestData: testRequestData(['odataEntities'], {
-        dataset: testData.extendedDatasets.last()
-      })
-    }
+    container: { requestData: testRequestData(['odataEntities'], { dataset }) }
   }));
+};
 
 describe('EntityDownloadButton', () => {
   describe('text', () => {
@@ -35,14 +31,16 @@ describe('EntityDownloadButton', () => {
         component.text().should.equal('Download matching Entities');
       });
 
-      it('shows correct text after first chunk of entities has loaded', async () => {
+      it('shows correct text after first chunk of entities has loaded', () => {
         testData.extendedDatasets.createPast(1, { entities: 2000 });
         const component = mountComponent({
-          props: { odataFilter: '__system/conflict ne null' }
+          props: { odataFilter: '__system/conflict ne null' },
+          container: {
+            requestData: {
+              odataEntities: { count: 1000 }
+            }
+          }
         });
-        const { odataEntities } = component.vm.$container.requestData.localResources;
-        odataEntities.data = { count: 1000 };
-        await nextTick();
         component.text().should.equal('Download 1,000 matching Entities');
       });
     });
@@ -50,18 +48,18 @@ describe('EntityDownloadButton', () => {
 
   describe('href attribute', () => {
     it('sets the correct attribute', () => {
-      testData.extendedDatasets.createPast(1);
+      testData.extendedDatasets.createPast(1, { name: 'á' });
       const { href } = mountComponent().attributes();
-      href.should.equal('/v1/projects/1/datasets/trees/entities.csv');
+      href.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
     });
 
     it('sets the correct attribute if entities are filtered', () => {
-      testData.extendedDatasets.createPast(1);
+      testData.extendedDatasets.createPast(1, { name: 'á' });
       const component = mountComponent({
         props: { odataFilter: '__system/conflict ne null' }
       });
       const { href } = component.attributes();
-      href.should.startWith('/v1/projects/1/datasets/trees/entities.csv?');
+      href.should.startWith('/v1/projects/1/datasets/%C3%A1/entities.csv?');
       const { searchParams } = relativeUrl(href);
       searchParams.get('$filter').should.equal('__system/conflict ne null');
     });

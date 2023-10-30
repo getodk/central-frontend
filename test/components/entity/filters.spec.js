@@ -1,4 +1,5 @@
 import EntityFiltersConflict from '../../../src/components/entity/filters/conflict.vue';
+import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 
 import testData from '../../data';
 import { changeMultiselect } from '../../util/trigger';
@@ -16,14 +17,14 @@ describe('EntityFilters', () => {
 
     describe('initial request', () => {
       it('does not filter by default', () =>
-        load('/projects/1/entity-lists/trees/entities')
+        load('/projects/1/entity-lists/trees/entities', { root: false })
           .beforeEachResponse((_, { url }) => {
             if (!url.includes('.svc')) return;
             relativeUrl(url).searchParams.has('$filter').should.be.false();
           }));
 
       it('sends the correct request for ?conflict=true', () =>
-        load('/projects/1/entity-lists/trees/entities?conflict=true')
+        load('/projects/1/entity-lists/trees/entities?conflict=true', { root: false })
           .beforeEachResponse((_, { url }) => {
             if (!url.includes('.svc')) return;
             const filter = relativeUrl(url).searchParams.get('$filter');
@@ -31,7 +32,7 @@ describe('EntityFilters', () => {
           }));
 
       it('sends the correct request for ?conflict=false', () =>
-        load('/projects/1/entity-lists/trees/entities?conflict=false')
+        load('/projects/1/entity-lists/trees/entities?conflict=false', { root: false })
           .beforeEachResponse((_, { url }) => {
             if (!url.includes('.svc')) return;
             const filter = relativeUrl(url).searchParams.get('$filter');
@@ -41,20 +42,26 @@ describe('EntityFilters', () => {
 
     describe('initial filter selection', () => {
       it('selects all options by default', async () => {
-        const app = await load('/projects/1/entity-lists/trees/entities');
-        const { modelValue } = app.getComponent(EntityFiltersConflict).props();
+        const component = await load('/projects/1/entity-lists/trees/entities', {
+          root: false
+        });
+        const { modelValue } = component.getComponent(EntityFiltersConflict).props();
         modelValue.should.eql([true, false]);
       });
 
       it('selects the correct option for ?conflict=true', async () => {
-        const app = await load('/projects/1/entity-lists/trees/entities?conflict=true');
-        const { modelValue } = app.getComponent(EntityFiltersConflict).props();
+        const component = await load('/projects/1/entity-lists/trees/entities?conflict=true', {
+          root: false
+        });
+        const { modelValue } = component.getComponent(EntityFiltersConflict).props();
         modelValue.should.eql([true]);
       });
 
       it('selects the correct option for ?conflict=false', async () => {
-        const app = await load('/projects/1/entity-lists/trees/entities?conflict=false');
-        const { modelValue } = app.getComponent(EntityFiltersConflict).props();
+        const component = await load('/projects/1/entity-lists/trees/entities?conflict=false', {
+          root: false
+        });
+        const { modelValue } = component.getComponent(EntityFiltersConflict).props();
         modelValue.should.eql([false]);
       });
     });
@@ -63,11 +70,12 @@ describe('EntityFilters', () => {
       const cases = [
         'conflict=foo',
         'conflict',
+        'conflict=true&conflict=true',
         'conflict=true&conflict=false'
       ];
       for (const query of cases) {
         it(`falls back to the default for ?${query}`, () =>
-          load(`/projects/1/entity-lists/trees/entities?${query}`)
+          load(`/projects/1/entity-lists/trees/entities?${query}`, { root: false })
             .beforeEachResponse((_, { url }) => {
               if (!url.includes('.svc')) return;
               relativeUrl(url).searchParams.has('$filter').should.be.false();
@@ -87,6 +95,25 @@ describe('EntityFilters', () => {
             filter.should.equal('__system/conflict ne null');
           })
           .respondWithData(testData.entityOData));
+
+      it('re-renders the table', () => {
+        testData.extendedEntities.createPast(1);
+        return load('/projects/1/entity-lists/trees/entities', {
+          attachTo: document.body
+        })
+          .afterResponses(app => {
+            app.findComponent(EntityMetadataRow).exists().should.be.true();
+          })
+          .request(changeMultiselect('#entity-filters-conflict', [1]))
+          .beforeEachResponse((app, { url }) => {
+            app.findComponent(EntityMetadataRow).exists().should.be.false();
+            relativeUrl(url).searchParams.has('$skiptoken').should.be.false();
+          })
+          .respondWithData(testData.entityOData)
+          .afterResponse(app => {
+            app.findComponent(EntityMetadataRow).exists().should.be.true();
+          });
+      });
 
       it('updates the query parameter', () =>
         load('/projects/1/entity-lists/trees/entities', {
@@ -136,16 +163,20 @@ describe('EntityFilters', () => {
 
   it('shows correct message if there are no entities after filtering', async () => {
     testData.extendedDatasets.createPast(1);
-    const app = await load('/projects/1/entity-lists/trees/entities?conflict=true');
-    const text = app.get('#entity-list .empty-table-message').text();
+    const component = await load('/projects/1/entity-lists/trees/entities?conflict=true', {
+      root: false
+    });
+    const text = component.get('.empty-table-message').text();
     text.should.equal('There are no matching Entities.');
   });
 
   it('does not update dataset.entities after filtering', () => {
     testData.extendedDatasets.createPast(1, { entities: 2 });
-    testData.extendedEntities
-      .createPast(1, { conflict: true })
-      .createPast(1, { conflict: false });
+    // Create an entity without a conflict.
+    testData.extendedEntities.createPast(1);
+    // Create an entity with a soft conflict.
+    testData.extendedEntities.createPast(1);
+    testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
     return load('/projects/1/entity-lists/trees/entities', {
       attachTo: document.body
     })

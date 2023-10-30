@@ -99,7 +99,8 @@ export default {
         dataset.entities = odataEntities.count;
     });
 
-    // Array of conflict statuses (`true` or `false`)
+    // Array of conflict statuses, where a conflict status is represented as a
+    // boolean
     const conflict = useQueryRef({
       fromQuery: (query) => (query.conflict === 'true'
         ? [true]
@@ -132,7 +133,7 @@ export default {
   },
   watch: {
     odataFilter() {
-      return this.fetchChunk(true);
+      this.fetchChunk(true);
     }
   },
   created() {
@@ -149,19 +150,15 @@ export default {
     // sending the request. `refresh` indicates whether the request is a
     // background refresh (whether the refresh button was pressed).
     fetchChunk(clear, refresh = false) {
+      this.refreshing = refresh;
       // Are we fetching the first chunk of entities or the next chunk?
       const first = clear || refresh;
-      // number of rows already loaded
-      const loaded = this.odataEntities.dataExists ? this.odataEntities.value.length : 0;
-
-      this.refreshing = refresh;
-
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
           this.datasetName,
           {
-            $top: this.top(first ? 0 : loaded),
+            $top: this.top(first ? 0 : this.odataEntities.value.length),
             $count: true,
             $filter: this.odataFilter,
             $skiptoken: !first ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null

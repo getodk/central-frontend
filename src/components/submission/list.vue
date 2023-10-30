@@ -121,8 +121,7 @@ export default {
     // We do not reconcile `odata` with either form.lastSubmission or
     // project.lastSubmission.
     watchEffect(() => {
-      if (formVersion.dataExists && odata.dataExists &&
-        formVersion.submissions !== odata.count && !odata.filtered)
+      if (formVersion.dataExists && odata.dataExists && !odata.filtered)
         formVersion.submissions = odata.count;
     });
 
@@ -136,9 +135,9 @@ export default {
           : (submitters.dataExists ? [...submitters.ids] : []);
       },
       toQuery: (value) => ({
-        submitterId: (value.length === submitters.length
+        submitterId: value.length === submitters.length
           ? []
-          : value.map(id => id.toString()))
+          : value.map(id => id.toString())
       })
     });
     watch(() => submitters.dataExists, () => {
@@ -253,19 +252,16 @@ export default {
     // `clear` indicates whether this.odata should be cleared before sending the
     // request. `refresh` indicates whether the request is a background refresh.
     fetchChunk(clear, refresh = false) {
+      this.refreshing = refresh;
       // Are we fetching the first chunk of submissions or the next chunk?
       const first = clear || refresh;
-      const loaded = this.odata.dataExists ? this.odata.value.length : 0;
-
-      this.refreshing = refresh;
-
       this.odata.request({
         url: apiPaths.odataSubmissions(
           this.projectId,
           this.xmlFormId,
           this.draft,
           {
-            $top: this.top(first ? 0 : loaded),
+            $top: this.top(first ? 0 : this.odata.value.length),
             $count: true,
             $wkt: true,
             $filter: this.odataFilter,

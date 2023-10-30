@@ -45,7 +45,7 @@ describe('SubmissionFilters', () => {
       .beforeEachResponse((component, { url }) => {
         if (url.includes('/submitters')) {
           const filters = component.getComponent(SubmissionFilters).props();
-          // filters.submitterId is initialized as [], but it is set again after
+          // filters.submitterId is initialized as [], but it is changed after
           // the response from .../submitters.
           filters.submitterId.should.eql([]);
         }
@@ -197,8 +197,9 @@ describe('SubmissionFilters', () => {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
         })
         .request(changeMultiselect('#submission-filters-submitter', [0]))
-        .beforeEachResponse(component => {
+        .beforeEachResponse((component, { url }) => {
           component.findComponent(SubmissionMetadataRow).exists().should.be.false();
+          relativeUrl(url).searchParams.has('$skiptoken').should.be.false();
         })
         .respondWithData(() => ({
           ...testData.submissionOData(1),

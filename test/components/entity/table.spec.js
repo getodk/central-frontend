@@ -26,7 +26,7 @@ const mountComponent = (props = undefined) => mount(EntityTable, {
       odataEntities: {
         status: 200,
         data: testData.entityOData(),
-        config: { url: '/v1/projects/1/entity-lists/trees.svc/Entities' }
+        config: { url: '/v1/projects/1/datasets/trees.svc/Entities' }
       }
     })
   }

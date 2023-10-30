@@ -63,7 +63,6 @@ const dateRange = useQueryRef({
     return [today, today];
   },
   toQuery: (value) => {
-    if (value.length === 0) return value;
     const today = DateTime.local().startOf('day');
     if (value[0].toMillis() === today.toMillis() &&
       value[1].toMillis() === today.toMillis())

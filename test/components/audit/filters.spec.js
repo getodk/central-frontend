@@ -142,13 +142,13 @@ describe('AuditFilters', () => {
       load('/system/audits?start=2023-01-01&end=2023-01-31')
         .beforeEachResponse(app => {
           const { modelValue } = app.getComponent(DateRangePicker).props();
-          modelValue[0].toISO().should.startWith('2023-01-01T00:00:00');
-          modelValue[1].toISO().should.startWith('2023-01-31T00:00:00');
+          modelValue[0].toISO().should.startWith('2023-01-01T00:00:00.000');
+          modelValue[1].toISO().should.startWith('2023-01-31T00:00:00.000');
         }));
 
     it('defaults to the current date', () =>
       load('/system/audits')
-        .beforeEachResponse((component, { url }) => {
+        .beforeEachResponse((_, { url }) => {
           const params = relativeUrl(url).searchParams;
           params.get('start').should.startWith('2023-02-01T00:00:00.000');
           params.get('end').should.startWith('2023-02-01T23:59:59.999');
@@ -216,7 +216,7 @@ describe('AuditFilters', () => {
           }));
     });
 
-    describe('after the query parameter is changed', () => {
+    describe('after a query parameter is changed', () => {
       it('sends a request', () =>
         load('/system/audits')
           .complete()
@@ -235,8 +235,8 @@ describe('AuditFilters', () => {
           .respondWithData(() => testData.extendedAudits.sorted())
           .afterResponse(app => {
             const { modelValue } = app.getComponent(DateRangePicker).props();
-            modelValue[0].toISO().should.startWith('2023-01-01T00:00:00');
-            modelValue[1].toISO().should.startWith('2023-01-31T00:00:00');
+            modelValue[0].toISO().should.startWith('2023-01-01T00:00:00.000');
+            modelValue[1].toISO().should.startWith('2023-01-31T00:00:00.000');
           }));
     });
   });
