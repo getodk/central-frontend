@@ -23,7 +23,11 @@ const mountComponent = (props = undefined) => mount(EntityTable, {
     router: mockRouter('/projects/1/entity-lists/trees/entities'),
     requestData: testRequestData([useProject, useEntities], {
       project: testData.extendedProjects.last(),
-      odataEntities: testData.entityOData()
+      odataEntities: {
+        status: 200,
+        data: testData.entityOData(),
+        config: { url: '/v1/projects/1/datasets/trees.svc/Entities' }
+      }
     })
   }
 });

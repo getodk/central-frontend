@@ -23,30 +23,29 @@ describe('SubmissionDownloadButton', () => {
   describe('text', () => {
     it('shows the correct text if the submissions are not filtered', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
-      const text = mountComponent().get('button').text();
-      text.should.equal('Download 2 Submissions…');
+      mountComponent().text().should.equal('Download 2 Submissions…');
     });
 
     describe('submissions are filtered', () => {
       it('shows correct text while first chunk of submissions is loading', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
-        const dropdown = mountComponent({
+        const component = mountComponent({
           props: { filtered: true }
         });
-        const text = dropdown.get('button').text();
-        text.should.equal('Download matching Submissions…');
+        component.text().should.equal('Download matching Submissions…');
       });
 
-      it('shows correct text after first chunk of submissions has loaded', async () => {
+      it('shows correct text after first chunk of submissions has loaded', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
-        const dropdown = mountComponent({
-          props: { filtered: true }
+        const component = mountComponent({
+          props: { filtered: true },
+          container: {
+            requestData: {
+              odata: { count: 1 }
+            }
+          }
         });
-        const { odata } = dropdown.vm.$container.requestData.localResources;
-        odata.data = { count: 1 };
-        await dropdown.vm.$nextTick();
-        const text = dropdown.get('button').text();
-        text.should.equal('Download 1 matching Submission…');
+        component.text().should.equal('Download 1 matching Submission…');
       });
     });
   });

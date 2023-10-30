@@ -16,10 +16,11 @@ import { useRequestData } from './index';
 export default () => {
   const { createResource } = useRequestData();
   const entityOData = createResource('odataEntities', () => ({
-    transformResponse: ({ data }) => shallowReactive({
+    transformResponse: ({ data, config }) => shallowReactive({
       value: shallowReactive(data.value),
       originalCount: data['@odata.count'],
       count: data['@odata.count'],
+      filtered: new URL(config.url, window.location.origin).searchParams.has('$filter'),
       nextLink: data['@odata.nextLink']
     }),
     addChunk(chunk) {

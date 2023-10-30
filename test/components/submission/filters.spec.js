@@ -37,6 +37,25 @@ describe('SubmissionFilters', () => {
     setLuxon({ defaultZoneName: 'UTC' });
   });
 
+  it('selects all submitters by default', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
+    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
+    return loadComponent()
+      .beforeEachResponse((component, { url }) => {
+        if (url.includes('/submitters')) {
+          const filters = component.getComponent(SubmissionFilters).props();
+          // filters.submitterId is initialized as [], but it is changed after
+          // the response from .../submitters.
+          filters.submitterId.should.eql([]);
+        }
+      })
+      .afterResponses(component => {
+        const filters = component.getComponent(SubmissionFilters).props();
+        filters.submitterId.should.eql([fieldKey.id]);
+      });
+  });
+
   describe('initial filters', () => {
     beforeEach(() => {
       testData.extendedForms.createPast(1);
@@ -178,8 +197,9 @@ describe('SubmissionFilters', () => {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
         })
         .request(changeMultiselect('#submission-filters-submitter', [0]))
-        .beforeEachResponse(component => {
+        .beforeEachResponse((component, { url }) => {
           component.findComponent(SubmissionMetadataRow).exists().should.be.false();
+          relativeUrl(url).searchParams.has('$skiptoken').should.be.false();
         })
         .respondWithData(() => ({
           ...testData.submissionOData(1),
@@ -342,7 +362,7 @@ describe('SubmissionFilters', () => {
       });
   });
 
-  it('does not update form.submissions', () => {
+  it('does not update form.submissions after filtering', () => {
     testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
     testData.extendedForms.createPast(1, { submissions: 2 });
     const submitter = testData.extendedFieldKeys.createPast(1).last();

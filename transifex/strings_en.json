@@ -1560,18 +1560,65 @@
         }
       }
     },
+    "EntityFiltersConflict": {
+      "conflict": {
+        "true": {
+          "string": "Possible conflict",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        },
+        "false": {
+          "string": "No conflict",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        }
+      },
+      "field": {
+        "conflict": {
+          "string": "Conflict status",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "string": "{selected} of {total}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
+      },
+      "action": {
+        "select": {
+          "all": {
+            "string": "All",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+          },
+          "none": {
+            "string": "None",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+          }
+        }
+      }
+    },
     "EntityList": {
+      "noEntities": {
+        "string": "There are no Entities to show.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      },
+      "noMatching": {
+        "string": "There are no matching Entities."
+      },
       "action": {
         "download": {
           "unfiltered": {
             "string": "{count, plural, one {Download {count} Entity} other {Download {count} Entities}}",
-            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withCount": {
+              "string": "{count, plural, one {Download {count} matching Entity} other {Download {count} matching Entities}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            },
+            "withoutCount": {
+              "string": "Download matching Entities",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
+            }
           }
         }
-      },
-      "noEntities": {
-        "string": "There are no Entities to show.",
-        "developer_comment": "This text is shown when there are no Entities to show in a table."
       }
     },
     "EntityMetadataRow": {
@@ -2905,6 +2952,24 @@
           },
           "one": {
             "string": "Loading the last Entity…"
+          }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "Loading matching Entities…",
+            "developer_comment": "This text is shown when the number of Entities loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {Loading {top} more of {count} remaining matching Entity…} other {Loading {top} more of {count} remaining matching Entities…}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {Loading the last {count} matching Entity…} other {Loading the last {count} matching Entities…}}"
+            },
+            "one": {
+              "string": "Loading the last matching Entity…"
+            }
           }
         }
       }

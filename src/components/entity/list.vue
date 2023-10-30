@@ -12,25 +12,27 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="entity-list">
     <div id="entity-list-actions">
-      <button id="entity-list-refresh-button" type="button"
-            class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(true)">
-            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-            <spinner :state="refreshing"/>
-          </button>
-      <a id="entity-download-button" type="button" class="btn btn-primary" :href="href">
-        <span class="icon-arrow-circle-down"></span>{{ downloadText }}
-      </a>
+      <form class="form-inline" @submit.prevent>
+        <entity-filters v-model:conflict="conflict"/>
+        <button id="entity-list-refresh-button" type="button"
+          class="btn btn-default" :aria-disabled="refreshing"
+          @click="fetchChunk(false, true)">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
+      </form>
+      <entity-download-button :odata-filter="odataFilter"/>
     </div>
     <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
       ref="table" :properties="dataset.properties" @update="showUpdate"/>
     <p v-show="odataEntities.dataExists && odataEntities.value.length === 0"
       class="empty-table-message">
-      {{ $t('noEntities') }}
+      {{ odataFilter == null ? $t('noEntities') : $t('noMatching') }}
     </p>
     <odata-loading-message type="entity"
       :top="top(odataEntities.dataExists ? odataEntities.value.length : 0)"
       :odata="odataEntities"
+      :filter="odataFilter != null"
       :refreshing="refreshing"
       :total-count="dataset.dataExists ? dataset.entities : 0"/>
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
@@ -40,13 +42,16 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { watchEffect } from 'vue';
 
-import Spinner from '../spinner.vue';
+import EntityDownloadButton from './download-button.vue';
+import EntityFilters from './filters.vue';
 import EntityTable from './table.vue';
 import EntityUpdate from './update.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
+import Spinner from '../spinner.vue';
 
 import modal from '../../mixins/modal';
 import useEntities from '../../request-data/entities';
+import useQueryRef from '../../composables/query-ref';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -54,10 +59,12 @@ import { noop } from '../../util/util';
 export default {
   name: 'EntityList',
   components: {
-    Spinner,
+    EntityDownloadButton,
+    EntityFilters,
     EntityTable,
     EntityUpdate,
-    OdataLoadingMessage
+    OdataLoadingMessage,
+    Spinner
   },
   mixins: [modal()],
   inject: ['alert'],
@@ -87,11 +94,23 @@ export default {
     // We do not reconcile `odataEntities` with either dataset.lastEntity or
     // project.lastEntity.
     watchEffect(() => {
-      if (dataset.dataExists && odataEntities.dataExists && dataset.entities !== odataEntities.count)
+      if (dataset.dataExists && odataEntities.dataExists &&
+        !odataEntities.filtered)
         dataset.entities = odataEntities.count;
     });
 
-    return { dataset, odataEntities };
+    // Array of conflict statuses, where a conflict status is represented as a
+    // boolean
+    const conflict = useQueryRef({
+      fromQuery: (query) => (query.conflict === 'true'
+        ? [true]
+        : (query.conflict === 'false' ? [false] : [true, false])),
+      toQuery: (value) => ({
+        conflict: value.length === 2 ? null : value[0].toString()
+      })
+    });
+
+    return { dataset, odataEntities, conflict };
   },
   data() {
     return {
@@ -106,13 +125,15 @@ export default {
     };
   },
   computed: {
-    href() {
-      return apiPaths.entities(this.projectId, this.datasetName);
-    },
-    downloadText() {
-      return !this.odataEntities.dataExists
-        ? this.$t('action.download')
-        : this.$tcn('action.download.unfiltered', this.odataEntities.count);
+    odataFilter() {
+      return this.conflict.length === 2
+        ? null
+        : (this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
+    }
+  },
+  watch: {
+    odataFilter() {
+      this.fetchChunk(true);
     }
   },
   created() {
@@ -125,29 +146,26 @@ export default {
     document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
-    // refresh: whether refresh button is pressed
-    fetchChunk(refresh = false) {
-      // number of rows already loaded
-      const loaded = this.odataEntities.dataExists ? this.odataEntities.value.length : 0;
-
-      // we don't want to clear store (pinia) when refresh button is pressed
-      // otherwise UI table will get empty during the request
-      const clearStore = loaded === 0 && !refresh;
-
+    // `clear` indicates whether this.odataEntities should be cleared before
+    // sending the request. `refresh` indicates whether the request is a
+    // background refresh (whether the refresh button was pressed).
+    fetchChunk(clear, refresh = false) {
       this.refreshing = refresh;
-
+      // Are we fetching the first chunk of entities or the next chunk?
+      const first = clear || refresh;
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
           this.datasetName,
           {
-            $top: this.top(refresh ? 0 : loaded),
+            $top: this.top(first ? 0 : this.odataEntities.value.length),
             $count: true,
-            $skiptoken: loaded > 0 && !refresh ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null
+            $filter: this.odataFilter,
+            $skiptoken: !first ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null
           }
         ),
-        clear: clearStore,
-        patch: loaded > 0 && !refresh
+        clear,
+        patch: !first
           ? (response) => this.odataEntities.addChunk(response.data)
           : null
       })
@@ -155,7 +173,7 @@ export default {
         .catch(noop);
     },
     fetchData() {
-      this.fetchChunk();
+      this.fetchChunk(true);
     },
     showUpdate(index) {
       if (this.refreshing) return;
@@ -208,7 +226,7 @@ export default {
       if (this.dataset.dataExists && this.odataEntities.dataExists &&
         this.odataEntities.nextLink &&
         !this.odataEntities.awaitingResponse && this.scrolledToBottom())
-        this.fetchChunk();
+        this.fetchChunk(false);
     }
   }
 };
@@ -229,6 +247,7 @@ export default {
   flex-wrap: wrap-reverse;
 }
 #entity-list-refresh-button {
+  margin-left: 10px;
   margin-right: 5px;
 }
 #entity-download-button {
@@ -242,14 +261,9 @@ export default {
 <i18n lang="json5">
   {
     "en": {
-      "action": {
-        "download": {
-          // This is the text of a button shown when the count of Entities is known.
-          "unfiltered": "Download {count} Entity | Download {count} Entities",
-        }
-      },
       // This text is shown when there are no Entities to show in a table.
-      "noEntities": "There are no Entities to show."
+      "noEntities": "There are no Entities to show.",
+      "noMatching": "There are no matching Entities."
     }
   }
 </i18n>

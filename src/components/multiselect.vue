@@ -115,6 +115,11 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  // By default, the user can uncheck all options. However, if defaultToAll is
+  // `true`, then at least one option must be selected. If all options are
+  // unchecked, then the selection falls back to all options. That can be useful
+  // in cases where selecting none is guaranteed to lead to an empty result.
+  defaultToAll: Boolean,
 
   // `true` if the options are loading and `false` if not.
   loading: Boolean,
@@ -222,7 +227,19 @@ let emittedValue = null;
 const emitIfChanged = () => {
   if (changes.size === 0) return;
   changes.clear();
-  emittedValue = [...selected];
+
+  // If props.defaultToAll is `true`, and no options are selected, then the
+  // selection falls back to all options. If props.modelValue is already all
+  // options, then we just toggle needsSync and return.
+  const needsDefault = props.defaultToAll && selected.size === 0;
+  if (needsDefault && props.modelValue.length === props.options.length) {
+    needsSync = true;
+    return;
+  }
+
+  emittedValue = needsDefault
+    ? props.options.map(({ value }) => value)
+    : [...selected];
   emit('update:modelValue', emittedValue);
 };
 
