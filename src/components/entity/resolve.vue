@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse" large
-    backdrop @shown="afterShown" @hide="$emit('hide')">
+    backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title', props.entity) }}</template>
     <template #body>
       <div v-if="!success">
@@ -21,22 +21,22 @@ except according to the terms contained in the LICENSE file.
         <!-- placeholder for summary table -->
 
         <router-link class="btn btn-default more-details" :to="entityPath(dataset.projectId, dataset.name, props.entity?.__id)"
-          target="_blank">
+        :aria-disabled="awaitingResponse" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
-        <button type="button" class="btn btn-default">
+        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse">
           <span class="icon-pencil"></span>{{ $t('action.editEntity') }}
         </button>
         <button type="button" class="btn btn-default mark-as-resolved" :aria-disabled="awaitingResponse" @click="markAsResolve">
           <span class="icon-check"></span>{{ $t('action.markAsResolved') }} <spinner :state="awaitingResponse"/>
         </button>
-</div>
+      </div>
       <div v-else class="success-msg">
         <span class="icon-check-circle success"></span> {{ $t('successMessage') }}
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary" @click="$emit('hide')">
+        <button type="button" class="btn btn-primary" :aria-disabled="awaitingResponse" @click="$emit('hide')">
           {{ $t('action.close') }}
         </button>
       </div>
@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import useRoutes from '../../composables/routes';
@@ -76,10 +76,6 @@ const { entityPath } = useRoutes();
 
 const success = ref(false);
 
-const afterShown = () => {
-  success.value = false;
-};
-
 const markAsResolve = () => {
   const { entity } = props;
   const url = apiPaths.entity(dataset.projectId, dataset.name, entity.__id, { resolve: true });
@@ -102,6 +98,10 @@ const markAsResolve = () => {
     })
     .catch(noop);
 };
+
+watch(() => props.state, (state) => {
+  if (!state) success.value = false;
+});
 </script>
 
 <style lang="scss">
@@ -125,10 +125,10 @@ const markAsResolve = () => {
   "en": {
     // This is the title at the top of a pop-up. {label} is the label of an
     // Entity.
-    "title": "Parallel updates to \"{label}\"",
+    "title": "Parallel updates to “{label}”",
     "instructions": [
-      "Updates were made to \"{label}\" in parallel. This means changes may be in conflict with each other, as they were authored against older data than they were eventually applied to by Central.",
-      "Review the updates, make any edits you need to, and if you are sure this Entity data is correct press \"{markAsResolved}\" to clear this warning message."
+      "Updates were made to “{label}” in parallel. This means changes may be in conflict with each other, as they were authored against older data than they were eventually applied to by Central.",
+      "Review the updates, make any edits you need to, and if you are sure this Entity data is correct press “Mark as resolved” to clear this warning message."
     ],
     "action": {
       "seeMoreDetails": "See more details",
@@ -137,6 +137,7 @@ const markAsResolve = () => {
     },
     "successMessage": "The conflict warning has been cleared from the Entity.",
     "problem": {
+      // @transifexKey component.EntityUpdate.problem.409_15
       "409_15": "Data has been modified by another user. Please refresh to see the updated data."
     }
   }

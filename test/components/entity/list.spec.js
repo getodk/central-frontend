@@ -296,6 +296,7 @@ describe('EntityList', () => {
         .respondWithSuccess();
 
       component.find('.wrap-circle').exists().should.be.false();
+      component.find('.resolve-button').exists().should.be.false();
     });
   });
 

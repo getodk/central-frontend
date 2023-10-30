@@ -19,7 +19,7 @@ describe('EntityResolve', () => {
   it('shows the entity label in the title', () => {
     testData.extendedEntities.createPast(1, { label: 'My Entity' });
     const text = mountComponent().get('.modal-title').text();
-    text.should.equal('Parallel updates to "My Entity"');
+    text.should.equal('Parallel updates to “My Entity”');
   });
 
   it('redirects to Entity details page', () => {
@@ -34,7 +34,10 @@ describe('EntityResolve', () => {
     return mockHttp()
       .mount(EntityResolve, mountOptions())
       .request(modal => modal.get('.mark-as-resolved').trigger('click'))
-      .respondWithSuccess()
+      .respondWithData(() => {
+        testData.extendedEntities.resolve(-1);
+        return testData.standardEntities.last();
+      })
       .testRequests([{
         method: 'PATCH',
         url: '/v1/projects/1/datasets/people/entities/the_id?resolve=true',
@@ -42,8 +45,13 @@ describe('EntityResolve', () => {
           'If-Match': '"1"'
         }
       }])
-      .afterResponse(modal => {
+      .afterResponse(async modal => {
         modal.get('.success-msg').text().should.eql('The conflict warning has been cleared from the Entity.');
+
+        await modal.setProps({ state: false });
+        await modal.setProps({ state: true });
+
+        modal.find('.success-msg').exists().should.be.false();
       });
   });
 
@@ -52,7 +60,9 @@ describe('EntityResolve', () => {
     return mockHttp()
       .mount(EntityResolve, mountOptions())
       .testStandardButton({
-        button: '.mark-as-resolved'
+        button: '.mark-as-resolved',
+        disabled: ['.more-details', '.edit-entity', '.modal-actions .btn-primary'],
+        modal: true
       });
   });
 
