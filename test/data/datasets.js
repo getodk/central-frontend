@@ -23,7 +23,8 @@ export const extendedDatasets = dataStore({
     properties = [],
     linkedForms = [],
     approvalRequired = false,
-    sourceForms = []
+    sourceForms = [],
+    conflicts = 0
   }) => ({
     id,
     projectId: project.id,
@@ -33,7 +34,8 @@ export const extendedDatasets = dataStore({
     properties: properties.map(normalizeProperty),
     linkedForms,
     approvalRequired,
-    sourceForms
+    sourceForms,
+    conflicts
   }),
   sort: comparator((dataset1, dataset2) => dataset1.name < dataset2.name)
 });

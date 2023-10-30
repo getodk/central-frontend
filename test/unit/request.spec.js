@@ -333,9 +333,9 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/audits');
     });
 
-    it('entityDiffs', () => {
-      const path = apiPaths.entityDiffs(1, 'á', 'e');
-      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/diffs');
+    it('entityVersions', () => {
+      const path = apiPaths.entityVersions(1, 'á', 'e');
+      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/versions');
     });
 
     it('fieldKeys', () => {

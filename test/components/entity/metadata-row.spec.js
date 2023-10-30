@@ -53,8 +53,9 @@ describe('EntityMetadataRow', () => {
 
   describe('last updated date', () => {
     it('shows the date', () => {
-      const { updatedAt } = testData.extendedEntities.createPast(1)
-        .update(-1, { updates: 1 });
+      const { updatedAt } = testData.extendedEntities
+        .createPast(1, { version: 2 })
+        .last();
       should.exist(updatedAt);
       const dateTimes = mountComponent().findAllComponents(DateTime);
       dateTimes.length.should.equal(2);
@@ -70,7 +71,7 @@ describe('EntityMetadataRow', () => {
 
   describe('update count', () => {
     it('shows the count if there has been an update', () => {
-      testData.extendedEntities.createPast(1).update(-1, { updates: 1000 });
+      testData.extendedEntities.createPast(1, { version: 1001 });
       mountComponent().get('.updates').text().should.equal('1,000');
     });
 
@@ -80,8 +81,21 @@ describe('EntityMetadataRow', () => {
     });
   });
 
+  describe('conflict icon', () => {
+    it('shows conflict icon if there is a conflict', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      mountComponent().find('.wrap-circle').exists().should.be.true();
+    });
+
+    it('does not show the count if there has not been an update', () => {
+      testData.extendedEntities.createPast(1);
+      mountComponent().find('.wrap-circle').exists().should.be.false();
+    });
+  });
+
   it('renders the edit button correctly', async () => {
-    testData.extendedEntities.createPast(1).update(-1, { updates: 1000 });
+    testData.extendedEntities.createPast(1, { version: 1001 });
     const button = mountComponent({ canUpdate: true }).get('.update-button');
     button.attributes('aria-label').should.equal('Edit (1,000)');
     await button.should.have.tooltip('Edit (1,000)');

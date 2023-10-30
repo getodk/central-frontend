@@ -75,7 +75,7 @@ provide('projectId', props.projectId);
 provide('datasetName', props.datasetName);
 
 const { project, dataset } = useRequestData();
-const { entity, audits, diffs } = useEntity();
+const { entity, audits, entityVersions } = useEntity();
 
 Promise.allSettled([
   entity.request({
@@ -96,8 +96,9 @@ const fetchActivityData = () => Promise.allSettled([
   audits.request({
     url: apiPaths.entityAudits(props.projectId, props.datasetName, props.uuid)
   }),
-  diffs.request({
-    url: apiPaths.entityDiffs(props.projectId, props.datasetName, props.uuid)
+  entityVersions.request({
+    url: apiPaths.entityVersions(props.projectId, props.datasetName, props.uuid),
+    extended: true
   })
 ]);
 fetchActivityData();

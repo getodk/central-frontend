@@ -756,6 +756,9 @@
     },
     "noEntity": {
       "string": "(none)"
+    },
+    "conflictsCount": {
+      "string": "{count, plural, one {{count} conflict} other {{count} conflicts}}"
     }
   },
   "common": {
@@ -860,6 +863,9 @@
     },
     "totalEntities": {
       "string": "Total Entities"
+    },
+    "conflicts": {
+      "string": "Conflicts"
     }
   },
   "mixin": {
@@ -1531,6 +1537,21 @@
             }
           },
           "update_version": {
+            "submission": {
+              "notDeleted": {
+                "string": "Data updated by Submission {instanceName}"
+              },
+              "deleted": {
+                "full": {
+                  "string": "Data updated by {deletedSubmission}",
+                  "developer_comment": "{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+                },
+                "deletedSubmission": {
+                  "string": "(deleted Submission {id})",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\nData updated by {deletedSubmission}"
+                }
+              }
+            },
             "api": {
               "string": "Data updated by {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
@@ -1598,6 +1619,11 @@
             }
           }
         }
+      }
+    },
+    "EntityMetadataRow": {
+      "reviewParallelUpdates": {
+        "string": "Review parallel updates"
       }
     },
     "EntityShow": {
@@ -3219,6 +3245,10 @@
       "showFewerDatasets": {
         "string": "{count, plural, one {Show fewer of {count} total Entity List} other {Show fewer of {count} total Entity Lists}}",
         "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
+      },
+      "hidden": {
+        "string": "hidden",
+        "developer_comment": "Static text shown besides hidden Entity Lists with number of conflicts on the Homepage"
       }
     },
     "ProjectList": {
@@ -3800,8 +3830,11 @@
           "create": {
             "string": "Created Entity {label} in {dataset} Entity List"
           },
+          "update": {
+            "string": "Updated Entity {label} in {dataset} Entity List"
+          },
           "error": {
-            "string": "Problem creating Entity"
+            "string": "Problem processing Entity"
           }
         },
         "updateReviewState": {

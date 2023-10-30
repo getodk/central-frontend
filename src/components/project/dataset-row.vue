@@ -14,10 +14,16 @@ except according to the terms contained in the LICENSE file.
     <td class="col-icon">
       <span v-if="showIcon" class="icon-database"></span>
     </td>
-    <td class="dataset-name">
+    <td colspan="2" class="dataset-name">
       <router-link :to="datasetPath(project.id, dataset.name)" v-tooltip.text>{{ dataset.name }}</router-link>
     </td>
-    <td colspan="3"></td>
+    <td colspan="2" class="conflicts-count">
+      <span v-tooltip.no-aria="dataset.conflicts > 0 ? null : $t('common.conflicts')">
+        <router-link :class="{ 'btn btn-danger': dataset.conflicts > 0 }" :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')">
+          {{ dataset.conflicts > 0 ? $tcn('entity.conflictsCount', dataset.conflicts) : $n(0) }}<span class="icon-warning"></span>
+        </router-link>
+      </span>
+    </td>
     <td class="last-entity">
       <span v-tooltip.no-aria="lastEntityTooltip">
         <template v-if="dataset.lastEntity != null">

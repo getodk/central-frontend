@@ -194,13 +194,10 @@ describe('EntityList', () => {
             return form.trigger('submit');
           })
           .respondWithData(() => {
-            const { currentVersion } = testData.extendedEntities.get(1);
-            testData.extendedEntities.update(1, {
-              currentVersion: {
-                ...currentVersion,
-                label: 'Updated Entity',
-                data: { height: '3', 'circumference.cm': '4' }
-              }
+            testData.extendedEntityVersions.createNew({
+              uuid: 'e2',
+              label: 'Updated Entity',
+              data: { height: '3', 'circumference.cm': '4' }
             });
             return testData.standardEntities.get(1);
           });

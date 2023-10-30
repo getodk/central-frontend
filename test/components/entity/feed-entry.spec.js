@@ -1,7 +1,7 @@
 import { RouterLinkStub } from '@vue/test-utils';
 
 import ActorLink from '../../../src/components/actor-link.vue';
-import DiffItem from '../../../src/components/diff-item.vue';
+import EntityDiff from '../../../src/components/entity/diff.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 import FeedEntry from '../../../src/components/feed-entry.vue';
 
@@ -19,11 +19,17 @@ const mountComponent = (options) =>
     global: {
       provide: { projectId: '1', datasetName: 'trees' }
     },
-    props: { entry: testData.extendedAudits.last() },
+    props: {
+      entry: testData.extendedAudits.last(),
+      entityVersion: testData.extendedEntityVersions.size > 1
+        ? testData.extendedEntityVersions.last()
+        : null
+    },
     container: {
       router: mockRouter('/projects/1/entity-lists/trees/entities/e'),
       requestData: testRequestData([useEntity], {
-        entity: testData.extendedEntities.last()
+        entity: testData.extendedEntities.last(),
+        entityVersions: testData.extendedEntityVersions.sorted()
       })
     }
   }));
@@ -202,63 +208,123 @@ describe('EntityFeedEntry', () => {
     });
   });
 
-  describe('entity.update.version audit event', () => {
-    const updateEntity = () => {
-      const audit = testData.extendedAudits
-        .createPast(1, { action: 'entity.update.version' })
-        .last();
-      return { entry: audit, diff: [] };
-    };
+  describe('entity.update.version (via API) audit event', () => {
+    beforeEach(() => {
+      testData.extendedEntityVersions.createPast(1);
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.update.version',
+        details: {}
+      });
+    });
 
     it('shows the correct icon', () => {
-      const component = mountComponent({ props: updateEntity() });
+      const component = mountComponent();
       const icon = component.find('.feed-entry-title .icon-pencil');
       icon.exists().should.be.true();
     });
 
     it('shows the correct text', () => {
-      const component = mountComponent({ props: updateEntity() });
+      const component = mountComponent();
       const text = component.get('.feed-entry-title').text();
       text.should.equal('Data updated by Alice');
     });
 
     it('links to the user', () => {
-      const component = mountComponent({ props: updateEntity() });
+      const component = mountComponent();
       const title = component.get('.feed-entry-title');
       const actorLink = title.getComponent(ActorLink);
       actorLink.props().actor.displayName.should.equal('Alice');
     });
+  });
 
-    it('renders a DiffItem for each change', () => {
-      const diff = [
-        { new: '1', old: '10', propertyName: 'height' },
-        { new: '2', old: '20', propertyName: 'circumference' }
-      ];
-      const component = mountComponent({
-        props: { ...updateEntity(), diff }
-      });
-      component.findAllComponents(DiffItem).length.should.equal(2);
+  describe('entity.update.version (via submission) audit event', () => {
+    const updateEntityFromSubmission = ({ deleted = false, ...options } = {}) => {
+      const details = {
+        entity: { uuid: 'e' }
+      };
+
+      details.submissionCreate = testData.extendedAudits
+        .createPast(1, {
+          action: 'submission.create',
+          details: { instanceId: 'x' }
+        })
+        .last();
+
+      const submission = testData.extendedSubmissions
+        .createPast(1, { instanceId: 's', ...options })
+        .last();
+
+      testData.extendedEntityVersions.createPast(1);
+      const audit = testData.extendedAudits
+        .createPast(1, {
+          action: 'entity.update.version',
+          details
+        })
+        .last();
+
+      return {
+        entry: audit,
+        submission: deleted ? null : { ...submission, xmlFormId: 'f' }
+      };
+    };
+
+
+    it('shows the correct icon', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const icon = component.find('.feed-entry-title .icon-pencil');
+      icon.exists().should.be.true();
     });
 
-    it('passes the correct props to the DiffItem', () => {
-      const diff = [{ new: '1', old: '10', propertyName: 'height' }];
+    it('shows the correct text with submission instance ID', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const text = component.get('.feed-entry-title').text();
+      text.should.equal('Data updated by Submission s');
+    });
+
+    it('shows the correct text with submission instance name', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission({ meta: { instanceName: 'Some Name' } }) });
+      const text = component.get('.feed-entry-title').text();
+      text.should.equal('Data updated by Submission Some Name');
+    });
+
+    it('links to the submission', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const title = component.get('.feed-entry-title');
+      const { to } = title.getComponent(RouterLinkStub).props();
+      to.should.equal('/projects/1/forms/f/submissions/s');
+    });
+
+    it('shows the correct text with deleted submission instance id', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission({ deleted: true }) });
+      const text = component.get('.feed-entry-title').text();
+      text.should.equal('Data updated by (deleted Submission x)');
+    });
+
+    it('does not link to the deleted submission', () => {
       const component = mountComponent({
-        props: { ...updateEntity(), diff }
+        props: updateEntityFromSubmission({ deleted: true })
       });
-      const props = component.getComponent(DiffItem).props();
-      props.new.should.equal('1');
-      props.old.should.equal('10');
-      props.path.should.eql(['height']);
+      const links = component.findAllComponents(RouterLinkStub);
+      links.length.should.equal(0);
     });
   });
 
-  it('shows when an audit log event was logged', () => {
-    const audit = testData.extendedAudits
-      .createPast(1, { action: 'entity.update.version' })
-      .last();
-    const component = mountComponent({
-      props: { entry: audit, diff: [] }
+  it('renders a diff for an entity.update.version event', () => {
+    testData.extendedEntityVersions.createPast(1);
+    testData.extendedAudits.createPast(1, {
+      action: 'entity.update.version',
+      details: {}
     });
+    const diff = mountComponent().getComponent(EntityDiff);
+    diff.props().entityVersion.version.should.equal(2);
+  });
+
+  it('shows when an audit log event was logged', () => {
+    testData.extendedEntityVersions.createPast(1);
+    const audit = testData.extendedAudits
+      .createPast(1, { action: 'entity.update.version', details: {} })
+      .last();
+    const component = mountComponent();
     component.getComponent(FeedEntry).props().iso.should.equal(audit.loggedAt);
   });
 
