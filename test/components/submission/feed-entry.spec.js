@@ -299,6 +299,32 @@ describe('SubmissionFeedEntry', () => {
         title.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
         await title.get('.entity-error-message').should.have.textTooltip();
       });
+
+      it('renders error message when there is a problem without a reason and an error message', async () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.error',
+          details: {
+            problem: null,
+            errorMessage: 'Mystery Error'
+          }
+        });
+        const title = mountComponent().get('.feed-entry-title');
+        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        title.get('.entity-error-message').text().should.equal('Mystery Error');
+        await title.get('.entity-error-message').should.have.textTooltip();
+      });
+
+      it('renders problem but no specific error message if audit details are malformed', async () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.error',
+          details: {
+            foo: 'bar'
+          }
+        });
+        const title = mountComponent().get('.feed-entry-title');
+        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        title.get('.entity-error-message').text().should.equal('');
+      });
     });
   });
 
