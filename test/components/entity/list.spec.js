@@ -327,12 +327,14 @@ describe('EntityList', () => {
           await form.trigger('submit');
         })
           .respondWithData(() => {
-            testData.extendedEntityVersions.createPast(1, { baseVersion: 3 });
+            testData.extendedEntityVersions.createPast(1, { baseVersion: 3, label: 'Updated Entity' });
             return testData.standardEntities.last();
           });
 
         resolveModal.props().state.should.be.true();
         updateModal.props().state.should.be.false();
+
+        resolveModal.get('.modal-title').text().should.equal('Parallel updates to “Updated Entity”');
       });
 
       it('should come back to resolve modal after cancel', async () => {
