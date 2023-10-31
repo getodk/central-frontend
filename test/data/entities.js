@@ -36,20 +36,31 @@ const entityVersions = dataStore({
     conflictingProperties = undefined,
     creator = extendedUsers.first(),
 
-    // Internal option for the `entities` store
+    // Internal option for the `entities` store. This is an entity that is in
+    // the process of being created.
     _entity = undefined
   }) => {
     if (entities.size === 0 && _entity == null)
       throw new Error('there is no entity for which to create a new version');
-    const entity = _entity ?? (uuid != null
-      ? entities.sorted().find(e => e.uuid === uuid)
-      : entities.last());
-    if (entity == null) throw new Error('entity not found');
+    const entityIndex = _entity != null
+      ? null
+      : (uuid != null
+        ? entities.findIndex(entity => entity.uuid === uuid)
+        : entities.size - 1);
+    if (entityIndex === -1) throw new Error('entity not found');
+    const entity = _entity ?? entities.get(entityIndex);
 
-    const versions = entityVersions.sorted()
-      .filter(version => version.entity === entity);
+    const versions = [];
+    let lastVersionIndex;
+    for (const [i, version] of entityVersions.entries()) {
+      if (version.uuid === entity.uuid) {
+        versions.push(version);
+        lastVersionIndex = i;
+      }
+    }
     const lastVersion = last(versions);
-    if (lastVersion != null) lastVersion.current = false;
+    if (lastVersion != null)
+      entityVersions.update(lastVersionIndex, { current: false });
 
     const baseVersion = baseVersionOption == null || baseVersionOption === lastVersion?.version
       ? lastVersion
@@ -62,12 +73,17 @@ const entityVersions = dataStore({
       : (!inPast
         ? new Date().toISOString()
         : fakePastDate([lastCreatedAt, creator.createdAt]));
-    if (lastVersion != null) entity.updatedAt = createdAt;
+    if (lastVersion != null) {
+      if (_entity != null)
+        entity.updatedAt = createdAt;
+      else
+        entities.update(entityIndex, { updatedAt: createdAt });
+    }
 
     const dataReceived = { ...data };
     if (label != null) dataReceived.label = label;
     return {
-      entity,
+      uuid: entity.uuid,
       version: versions.length + 1,
       baseVersion: baseVersion == null ? null : baseVersion.version,
       current: true,
@@ -91,7 +107,7 @@ const entityVersions = dataStore({
   }
 });
 
-export const extendedEntityVersions = view(entityVersions, omit(['entity']));
+export const extendedEntityVersions = view(entityVersions, omit(['uuid']));
 
 const randomData = (properties) => {
   const data = {};
@@ -152,20 +168,14 @@ entities = dataStore({
     isBefore(entity2.createdAt, entity1.createdAt))
 });
 
-const findCurrentVersion = (entity) => {
-  for (let i = entityVersions.size - 1; i >= 0; i -= 1) {
-    const version = entityVersions.get(i);
-    if (version.entity === entity) return version;
-  }
-  throw new Error('current version not found');
-};
 const combineEntityWithVersions = (entity) => {
-  const currentVersion = findCurrentVersion(entity);
+  const currentVersion = entityVersions.findLast(version =>
+    version.uuid === entity.uuid);
 
   const conflicts = currentVersion.version === 1
     ? []
-    : entityVersions.sorted().filter(version =>
-      version.entity === entity && version.conflict != null && !version.resolved);
+    : entityVersions.filter(version =>
+      version.uuid === entity.uuid && version.conflict != null && !version.resolved);
   const conflict = conflicts.length === 0
     ? null
     : (conflicts.some(version => version.conflict === 'hard') ? 'hard' : 'soft');
@@ -269,9 +279,9 @@ extendedEntities.resolve = (index) => {
   const entity = entities.get(index);
   if (entity == null) throw new Error('entity not found');
 
-  for (const version of entityVersions.sorted()) {
-    if (version.entity === entity && version.conflict != null)
-      version.resolved = true;
+  for (const [i, version] of entityVersions.entries()) {
+    if (version.uuid === entity.uuid && version.conflict != null)
+      entityVersions.update(i, { resolved: true });
   }
 
   // Following should be replaced with entity.update(index) once entityVersions is linked via UUID

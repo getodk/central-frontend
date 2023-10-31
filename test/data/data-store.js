@@ -27,6 +27,68 @@ class Collection {
 
   first() { return this.get(0); }
   last() { return this.get(-1); }
+
+  // Returns an iterator that iterates over the objects of the collection in
+  // creation order.
+  [Symbol.iterator]() {
+    let i = 0;
+    return {
+      next: () => {
+        if (i >= this.size) return { done: true };
+        const result = { value: this.get(i), done: false };
+        i += 1;
+        return result;
+      }
+    };
+  }
+
+  entries() {
+    let i = 0;
+    return {
+      next: () => {
+        if (i >= this.size) return { done: true };
+        const result = { value: [i, this.get(i)], done: false };
+        i += 1;
+        return result;
+      },
+      [Symbol.iterator]() { return this; }
+    };
+  }
+
+  filter(f) {
+    const result = [];
+    for (const [i, obj] of this.entries()) {
+      if (f(obj, i)) result.push(obj);
+    }
+    return result;
+  }
+
+  findIndex(f) {
+    for (const [i, obj] of this.entries()) {
+      if (f(obj, i)) return i;
+    }
+    return -1;
+  }
+
+  findLastIndex(f) {
+    for (let i = this.size - 1; i >= 0; i -= 1) {
+      if (f(this.get(i), i)) return i;
+    }
+    return -1;
+  }
+
+  indexOf(obj) { return this.findIndex(o => o === obj); }
+  lastIndexOf(obj) { return this.findLastIndex(o => o === obj); }
+
+  find(f) {
+    const index = this.findIndex(f);
+    return index !== -1 ? this.get(index) : null;
+  }
+
+  findLast(f) {
+    const index = this.findLastIndex(f);
+    return index !== -1 ? this.get(index) : null;
+  }
 }
 
 // Implements the methods of Collection.
@@ -129,7 +191,8 @@ class Store extends Collection {
     }
     const object = this._objects[normalizedIndex];
     const updated = { ...object, ...props };
-    if ('updatedAt' in object) updated.updatedAt = new Date().toISOString();
+    if ('updatedAt' in object && !('updatedAt' in props))
+      updated.updatedAt = new Date().toISOString();
     this._objects[normalizedIndex] = updated;
     return updated;
   }
