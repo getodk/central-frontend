@@ -281,7 +281,6 @@ describe('EntityList', () => {
         });
     });
 
-
     it('removes the conflict icon after conflict resolution', async () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
@@ -297,6 +296,55 @@ describe('EntityList', () => {
 
       component.find('.wrap-circle').exists().should.be.false();
       component.find('.resolve-button').exists().should.be.false();
+    });
+
+    describe('Edit Entity from Resolve Modal', () => {
+      const openUpdateFromResolve = async () => {
+        testData.extendedEntities.createPast(1);
+        testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+        const mockHttp = load('/projects/1/entity-lists/trees/entities', { root: false }).complete();
+        const component = await mockHttp;
+        const resolveModal = component.getComponent(EntityResolve);
+        const updateModal = component.getComponent(EntityUpdate);
+
+        await component.find('.entity-metadata-row .resolve-button').trigger('click');
+        resolveModal.props().state.should.be.true();
+
+        await resolveModal.find('.edit-entity').trigger('click');
+        resolveModal.props().state.should.be.false();
+        updateModal.props().state.should.be.true();
+
+        return { mockHttp, resolveModal, updateModal };
+      };
+
+      it('should come back to resolve modal after update', async () => {
+        const { mockHttp, resolveModal, updateModal } = await openUpdateFromResolve();
+
+        await mockHttp.request(async () => {
+          const form = updateModal.get('form');
+          const textareas = form.findAll('textarea');
+          await textareas[0].setValue('Updated Entity');
+          await form.trigger('submit');
+        })
+          .respondWithData(() => {
+            testData.extendedEntityVersions.createPast(1, { baseVersion: 3, label: 'Updated Entity' });
+            return testData.standardEntities.last();
+          });
+
+        resolveModal.props().state.should.be.true();
+        updateModal.props().state.should.be.false();
+
+        resolveModal.get('.modal-title').text().should.equal('Parallel updates to “Updated Entity”');
+      });
+
+      it('should come back to resolve modal after cancel', async () => {
+        const { resolveModal, updateModal } = await openUpdateFromResolve();
+
+        await updateModal.get('.close').trigger('click');
+
+        resolveModal.props().state.should.be.true();
+        updateModal.props().state.should.be.false();
+      });
     });
   });
 

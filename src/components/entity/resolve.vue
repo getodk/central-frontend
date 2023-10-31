@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         :aria-disabled="awaitingResponse" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
-        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse">
+        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="$emit('hide', true)">
           <span class="icon-pencil"></span>{{ $t('action.editEntity') }}
         </button>
         <button type="button" class="btn btn-default mark-as-resolved" :aria-disabled="awaitingResponse" @click="markAsResolve">

@@ -202,6 +202,9 @@ export default {
       this.hideModal('update');
       this.update.entity = null;
       this.updateIndex = null;
+      if (this.resolveIndex != null) {
+        this.showResolve(this.resolveIndex);
+      }
     },
     afterUpdate(updatedEntity) {
       const index = this.updateIndex;
@@ -226,6 +229,10 @@ export default {
       this.odataEntities.value[index] = newOData;
 
       this.$refs.table.afterUpdate(index);
+
+      if (this.resolveIndex != null) {
+        this.showResolve(this.resolveIndex);
+      }
     },
     showResolve(index) {
       if (this.refreshing) return;
@@ -234,10 +241,14 @@ export default {
       this.resolve.entity = odataEntity;
       this.showModal('resolve');
     },
-    hideResolve() {
+    hideResolve(showEdit) {
       this.hideModal('resolve');
-      this.resolve.entity = null;
-      this.resolveIndex = null;
+      if (showEdit) {
+        this.showUpdate(this.resolveIndex);
+      } else {
+        this.resolve.entity = null;
+        this.resolveIndex = null;
+      }
     },
     afterResolve(updatedEntity) {
       const index = this.resolveIndex;
