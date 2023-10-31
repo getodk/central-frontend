@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
       <entity-download-button :odata-filter="odataFilter"/>
     </div>
     <entity-table v-show="odataEntities.dataExists && odataEntities.value.length !== 0"
-      ref="table" :properties="dataset.properties" @update="showUpdate"/>
+      ref="table" :properties="dataset.properties" @update="showUpdate" @resolve="showResolve"/>
     <p v-show="odataEntities.dataExists && odataEntities.value.length === 0"
       class="empty-table-message">
       {{ odataFilter == null ? $t('noEntities') : $t('noMatching') }}
@@ -36,6 +36,7 @@ except according to the terms contained in the LICENSE file.
       :refreshing="refreshing"
       :total-count="dataset.dataExists ? dataset.entities : 0"/>
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
+    <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
   </div>
 </template>
 
@@ -46,6 +47,7 @@ import EntityDownloadButton from './download-button.vue';
 import EntityFilters from './filters.vue';
 import EntityTable from './table.vue';
 import EntityUpdate from './update.vue';
+import EntityResolve from './resolve.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Spinner from '../spinner.vue';
 
@@ -64,7 +66,8 @@ export default {
     EntityTable,
     EntityUpdate,
     OdataLoadingMessage,
-    Spinner
+    Spinner,
+    EntityResolve
   },
   mixins: [modal()],
   inject: ['alert'],
@@ -119,6 +122,13 @@ export default {
       updateIndex: null,
       // Data to pass to the update modal
       update: {
+        state: false,
+        entity: null
+      },
+      // The index of the entity being resolved
+      resolveIndex: null,
+      // Data to pass to the resolve modal
+      resolve: {
         state: false,
         entity: null
       }
@@ -215,6 +225,26 @@ export default {
         newOData[odataName] = updatedData[name];
       this.odataEntities.value[index] = newOData;
 
+      this.$refs.table.afterUpdate(index);
+    },
+    showResolve(index) {
+      if (this.refreshing) return;
+      this.resolveIndex = index;
+      const odataEntity = this.odataEntities.value[index];
+      this.resolve.entity = odataEntity;
+      this.showModal('resolve');
+    },
+    hideResolve() {
+      this.hideModal('resolve');
+      this.resolve.entity = null;
+      this.resolveIndex = null;
+    },
+    afterResolve(updatedEntity) {
+      const index = this.resolveIndex;
+      const newOData = Object.assign(Object.create(null), this.odataEntities.value[index]);
+      newOData.__system.conflict = null;
+      newOData.__system.updateAt = updatedEntity.updatedAt;
+      this.odataEntities.value[index] = newOData;
       this.$refs.table.afterUpdate(index);
     },
     scrolledToBottom() {

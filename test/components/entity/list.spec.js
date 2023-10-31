@@ -3,6 +3,7 @@ import EntityDataRow from '../../../src/components/entity/data-row.vue';
 import EntityList from '../../../src/components/entity/list.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
+import EntityResolve from '../../../src/components/entity/resolve.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
 import testData from '../../data';
@@ -226,6 +227,76 @@ describe('EntityList', () => {
         td.get('.updates').text().should.equal('1');
         td.get('.update-button').attributes('aria-label').should.equal('Edit (1)');
       });
+    });
+  });
+
+  describe('resolve', () => {
+    it('toggles the Modal', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .testModalToggles({
+          modal: EntityResolve,
+          show: '.entity-metadata-row .resolve-button',
+          hide: ['.btn-primary']
+        });
+    });
+
+    it('passes the correct entity to the modal', async () => {
+      testData.extendedEntities
+        .createPast(1, { uuid: 'e1' })
+        .createPast(1, { uuid: 'e2' });
+      testData.extendedEntityVersions
+        .createPast(2, { uuid: 'e1', baseVersion: 1 })
+        .createPast(2, { uuid: 'e2', baseVersion: 1 });
+      const component = await load('/projects/1/entity-lists/trees/entities', {
+        root: false
+      });
+      const modal = component.getComponent(EntityResolve);
+      should.not.exist(modal.props().entity);
+      const buttons = component.findAll('.entity-metadata-row .resolve-button');
+      buttons.length.should.equal(2);
+      await buttons[0].trigger('click');
+      modal.props().entity.__id.should.equal('e2');
+      await modal.get('.btn-primary').trigger('click');
+      await buttons[1].trigger('click');
+      modal.props().entity.__id.should.equal('e1');
+    });
+
+    it('does not show the modal during a refresh of the table', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .complete()
+        .request(component =>
+          component.get('#entity-list-refresh-button').trigger('click'))
+        .beforeEachResponse(async (component) => {
+          await component.get('.entity-metadata-row .resolve-button').trigger('click');
+          component.getComponent(EntityResolve).props().state.should.be.false();
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponse(component => {
+          component.getComponent(EntityResolve).props().state.should.be.false();
+        });
+    });
+
+
+    it('removes the conflict icon after conflict resolution', async () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+
+      const component = await load('/projects/1/entity-lists/trees/entities', { root: false })
+        .complete()
+        .request(async (c) => {
+          c.get('.wrap-circle').exists().should.be.true();
+          await c.get('.entity-metadata-row .resolve-button').trigger('click');
+          return c.get('#entity-resolve .mark-as-resolved').trigger('click');
+        })
+        .respondWithSuccess();
+
+      component.find('.wrap-circle').exists().should.be.false();
+      component.find('.resolve-button').exists().should.be.false();
     });
   });
 
