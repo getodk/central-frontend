@@ -284,6 +284,6 @@ extendedEntities.resolve = (index) => {
       entityVersions.update(i, { resolved: true });
   }
 
-  // Following should be replaced with entity.update(index) once entityVersions is linked via UUID
-  entity.updatedAt = new Date().toISOString();
+  // Update updatedAt.
+  entities.update(index);
 };

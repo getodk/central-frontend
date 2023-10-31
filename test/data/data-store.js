@@ -191,7 +191,7 @@ class Store extends Collection {
     }
     const object = this._objects[normalizedIndex];
     const updated = { ...object, ...props };
-    if ('updatedAt' in object && !('updatedAt' in props))
+    if ('updatedAt' in object && !(props != null && 'updatedAt' in props))
       updated.updatedAt = new Date().toISOString();
     this._objects[normalizedIndex] = updated;
     return updated;
