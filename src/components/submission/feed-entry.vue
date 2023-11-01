@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'entity.error'">
         <span class="icon-warning"></span>
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
-        <span class="entity-error-message" v-tooltip.text>{{ entityProblem(entry) }}</span>
+        <span class="entity-error-message" v-tooltip.text>{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</span>
       </template>
       <template v-else>
         <span class="icon-comment"></span>
@@ -174,18 +174,6 @@ export default {
       const deprecatedIdDiff = this.allDiffs.find((entry) => last(entry.path) === 'deprecatedID');
       if (deprecatedIdDiff == null) return null;
       return deprecatedIdDiff.new;
-    }
-  },
-  methods: {
-    entityProblem(entry) {
-      if ('problem' in entry.details &&
-        'problemDetails' in entry.details.problem &&
-        'reason' in entry.details.problem.problemDetails)
-        return entry.details.problem.problemDetails.reason;
-      if ('problem' in entry.details &&
-        'errorMessage' in entry.details)
-        return entry.details.errorMessage;
-      return '';
     }
   }
 };
