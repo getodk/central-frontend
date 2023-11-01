@@ -1,5 +1,5 @@
 import { styled } from 'suid/material';
-import type { XFormDefinition } from '../../lib/xform/types.ts';
+import type { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
 
 const Details = styled('details')({
 	position: 'relative',

@@ -3,14 +3,11 @@
 import { BodyXFormsElement } from './BodyXFormsElement.ts';
 import { EmptyXFormsElement } from './EmptyXFormsElement.ts';
 import { HeadXFormsElement } from './HeadXFormsElement.ts';
+import { HtmlXFormsElement, type NamespaceTuples } from './HtmlXFormsElement.ts';
 import { StringLiteralXFormsElement } from './StringLiteralXFormsElement.ts';
 import { TagXFormsElement } from './TagXFormsElement.ts';
 import type { XFormsElement } from './XFormsElement.ts';
 import { emptyMap } from './collections.ts';
-
-type NamespaceTuple = readonly [nodeName: string, namespaceURI: string];
-
-type NamespaceTuples = readonly NamespaceTuple[];
 
 type AttributeTuple = readonly [nodeName: string, value: string];
 
@@ -87,35 +84,12 @@ export const html = (
 	...args:
 		| [HeadXFormsElement, BodyXFormsElement]
 		| [NamespaceTuples, HeadXFormsElement, BodyXFormsElement]
-): XFormsElement => {
-	let additionalNamespaces: NamespaceTuples;
-	let head: HeadXFormsElement;
-	let body: BodyXFormsElement;
+): HtmlXFormsElement => {
+	const head = args.length === 3 ? args[1] : args[0];
+	const body = args.length === 3 ? args[2] : args[1];
+	const additionalNamespaces = args.length === 3 ? args[0] : [];
 
-	if (args.length === 3) {
-		additionalNamespaces = args[0];
-		head = args[1];
-		body = args[2];
-	} else {
-		additionalNamespaces = [];
-		head = args[0];
-		body = args[1];
-	}
-
-	const namespaces: NamespaceTuples = [
-		['xmlns', 'http://www.w3.org/2002/xforms'],
-		['xmlns:h', 'http://www.w3.org/1999/xhtml'],
-		['xmlns:jr', 'http://openrosa.org/javarosa'],
-		['xmlns:odk', 'http://www.opendatakit.org/xforms'],
-		['xmlns:orx', 'http://openrosa.org/xforms'],
-		...additionalNamespaces,
-	];
-
-	const name = `h:html ${namespaces
-		.map(([nodeName, namespaceURI]) => `${nodeName}="${namespaceURI}"`)
-		.join(' ')}`;
-
-	return t(name, head, body);
+	return new HtmlXFormsElement(head, body, additionalNamespaces);
 };
 
 export const head = (...children: XFormsElement[]): HeadXFormsElement => {

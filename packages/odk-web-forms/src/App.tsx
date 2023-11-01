@@ -6,7 +6,7 @@ import { ThemeProvider } from './components/ThemeProvider.tsx';
 import { XFormDetails } from './components/XForm/XFormDetails.tsx';
 import { XFormView } from './components/XForm/XFormView.tsx';
 import type { Localization } from './lib/i18n-l10n/types.ts';
-import { parseXForm } from './lib/xform/parse.ts';
+import { XFormDefinition } from './lib/xform/XFormDefinition.ts';
 
 // TODO: this is just to populate the menu for now
 const localizations: readonly Localization[] = [
@@ -24,7 +24,7 @@ export const App = () => {
 	const [xformDefinition] = createResource(async () => {
 		const { default: xml } = await import('../fixtures/xforms/minimal.xform.xml?raw');
 
-		return parseXForm(xml);
+		return XFormDefinition.fromSourceXML(xml);
 	});
 
 	return (

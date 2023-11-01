@@ -8,12 +8,18 @@ const xpathParser = await TreeSitterXPathParser.init({
 	xpathLanguage,
 });
 
-interface XFormXPathEvaluatorEvaluateOptions {
+interface XFormXPathEvaluatorEvaluateOptions<AssertExists extends boolean = false> {
+	readonly assertExists?: AssertExists;
+
 	/**
 	 * @default xformDocument
 	 */
 	readonly contextNode?: Node;
 }
+
+type EvaluatedNode<AssertExists extends boolean, T extends Node> = AssertExists extends true
+	? T
+	: T | null;
 
 export class XFormXPathEvaluator extends Evaluator {
 	constructor(protected readonly xformDocument: XMLDocument) {
@@ -29,17 +35,44 @@ export class XFormXPathEvaluator extends Evaluator {
 		).stringValue;
 	}
 
-	evaluateNode<T extends Node>(
+	evaluateNode<T extends Node, AssertExists extends boolean = false>(
 		expression: string,
-		options: XFormXPathEvaluatorEvaluateOptions = {}
-	): T | null {
+		options: XFormXPathEvaluatorEvaluateOptions<AssertExists> = {}
+	): EvaluatedNode<AssertExists, T> {
 		// TODO: unsafe cast
-		return this.evaluate(
+		const node = this.evaluate(
 			expression,
 			options.contextNode ?? this.xformDocument,
 			null,
 			XPathResult.FIRST_ORDERED_NODE_TYPE
 		).singleNodeValue as T | null;
+
+		if (!options.assertExists) {
+			return node as EvaluatedNode<AssertExists, T>;
+		}
+
+		if (node == null) {
+			throw new Error(`Failed to evaluate node for expression ${expression}`);
+		}
+
+		return node as EvaluatedNode<AssertExists, T>;
+	}
+
+	evaluateElement<AssertExists extends boolean = false>(
+		expression: string,
+		options: XFormXPathEvaluatorEvaluateOptions<AssertExists> = {}
+	) {
+		return this.evaluateNode<Element, AssertExists>(expression, options);
+	}
+
+	evaluateNonNullElement(
+		expression: string,
+		options: Omit<XFormXPathEvaluatorEvaluateOptions<true>, 'assertExists'> = {}
+	): Element {
+		return this.evaluateElement<true>(expression, {
+			...options,
+			assertExists: true,
+		});
 	}
 
 	evaluateNodes<T extends Node>(

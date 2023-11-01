@@ -1,7 +1,6 @@
 import { render } from '@solidjs/testing-library';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { parseXForm } from '../../lib/xform/parse.ts';
-import type { XFormDefinition } from '../../lib/xform/types.ts';
+import { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
 import {
 	bind,
 	body,
@@ -46,7 +45,7 @@ describe('XFormView', () => {
 	let xformDefinition: XFormDefinition;
 
 	beforeEach(() => {
-		xformDefinition = parseXForm(xform.asXml());
+		xformDefinition = new XFormDefinition(xform.asXMLDocument());
 	});
 
 	it('renders the form title', () => {
