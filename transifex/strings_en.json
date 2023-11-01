@@ -1533,7 +1533,7 @@
           "create": {
             "api": {
               "string": "Entity {label} created by {name}",
-              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             }
           },
           "update_version": {
@@ -1556,6 +1556,10 @@
               "string": "Data updated by {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             }
+          },
+          "update_resolve": {
+            "string": "Conflict warning resolved by {name}",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
       }
