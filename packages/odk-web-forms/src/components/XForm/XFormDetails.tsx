@@ -23,8 +23,14 @@ export interface XFormDetailsProps {
 }
 
 export const XFormDetails = (props: XFormDetailsProps) => (
-	<Details>
-		<Summary>XForm (XML)</Summary>
-		<Pre>{props.definition.xformDocument.documentElement.outerHTML}</Pre>
-	</Details>
+	<>
+		<Details>
+			<Summary>XFormDefinition</Summary>
+			<Pre>{JSON.stringify(props.definition, null, 2)}</Pre>
+		</Details>
+		<Details>
+			<Summary>XForm (XML)</Summary>
+			<Pre>{props.definition.xformDocument.documentElement.outerHTML}</Pre>
+		</Details>
+	</>
 );

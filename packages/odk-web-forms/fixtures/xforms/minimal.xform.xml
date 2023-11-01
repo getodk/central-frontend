@@ -18,7 +18,7 @@
         </root>
       </instance>
       <bind nodeset="/root/first-question" type="string"/>
-      <bind nodeset="/root/second-question" type="string"/>
+      <bind nodeset="/root/second-question"/>
       <bind nodeset="/root/meta/instanceID" type="string"/>
     </model>
   </h:head>

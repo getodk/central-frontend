@@ -27,12 +27,12 @@ describe('XFormView', () => {
 						t('second-question'),
 						t('third-question'),
 						t('meta', t('instanceID'))
-					),
-					bind('/root/first-question').type('string'),
-					bind('/root/second-question').type('string'),
-					bind('/root/third-question').type('string'),
-					bind('/root/meta/instanceID').type('string')
-				)
+					)
+				),
+				bind('/root/first-question').type('string'),
+				bind('/root/second-question').type('string'),
+				bind('/root/third-question').type('string'),
+				bind('/root/meta/instanceID').type('string')
 			)
 		),
 		body(

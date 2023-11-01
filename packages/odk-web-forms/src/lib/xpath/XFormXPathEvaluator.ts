@@ -12,7 +12,7 @@ interface XFormXPathEvaluatorEvaluateOptions<AssertExists extends boolean = fals
 	readonly assertExists?: AssertExists;
 
 	/**
-	 * @default xformDocument
+	 * @default rootNode
 	 */
 	readonly contextNode?: Node;
 }
@@ -22,14 +22,14 @@ type EvaluatedNode<AssertExists extends boolean, T extends Node> = AssertExists 
 	: T | null;
 
 export class XFormXPathEvaluator extends Evaluator {
-	constructor(protected readonly xformDocument: XMLDocument) {
+	constructor(protected readonly rootNode: Element | XMLDocument) {
 		super(xpathParser);
 	}
 
 	evaluateString(expression: string, options: XFormXPathEvaluatorEvaluateOptions = {}): string {
 		return this.evaluate(
 			expression,
-			options.contextNode ?? this.xformDocument,
+			options.contextNode ?? this.rootNode,
 			null,
 			XPathResult.STRING_TYPE
 		).stringValue;
@@ -42,7 +42,7 @@ export class XFormXPathEvaluator extends Evaluator {
 		// TODO: unsafe cast
 		const node = this.evaluate(
 			expression,
-			options.contextNode ?? this.xformDocument,
+			options.contextNode ?? this.rootNode,
 			null,
 			XPathResult.FIRST_ORDERED_NODE_TYPE
 		).singleNodeValue as T | null;
@@ -81,7 +81,7 @@ export class XFormXPathEvaluator extends Evaluator {
 	): T[] {
 		const snapshotResult = this.evaluate(
 			expression,
-			options.contextNode ?? this.xformDocument,
+			options.contextNode ?? this.rootNode,
 			null,
 			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
 		);

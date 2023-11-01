@@ -1,10 +1,14 @@
 import { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
+import {
+	XFormModelDefinition,
+	type XFormModelDefinitionCommonElements,
+} from './XFormModelDefinition.ts';
 import { XFormViewDefinition } from './XFormViewDefinition.ts';
 
 /**
  * @private
  */
-class XFormsDefinitionCommonElements {
+class XFormsDefinitionCommonElements implements XFormModelDefinitionCommonElements {
 	readonly html: Element;
 
 	readonly head: Element;
@@ -55,17 +59,18 @@ export class XFormDefinition {
 		return new this(xformDocument);
 	}
 
-	protected readonly evaluator: XFormXPathEvaluator;
+	readonly rootEvaluator: XFormXPathEvaluator;
 
 	readonly id: string;
 	readonly title: string;
 
 	readonly commonElements: XFormsDefinitionCommonElements;
 
+	readonly model: XFormModelDefinition;
 	readonly view: XFormViewDefinition;
 
 	constructor(readonly xformDocument: XMLDocument) {
-		const evaluator = (this.evaluator = new XFormXPathEvaluator(xformDocument));
+		const evaluator = (this.rootEvaluator = new XFormXPathEvaluator(xformDocument));
 		const commonElements = (this.commonElements = new XFormsDefinitionCommonElements(evaluator));
 
 		const id = commonElements.primaryInstanceRoot.getAttribute('id');
@@ -77,6 +82,13 @@ export class XFormDefinition {
 		this.id = id;
 		this.title = commonElements.title.textContent;
 
+		this.model = new XFormModelDefinition(this, commonElements);
 		this.view = new XFormViewDefinition(this, evaluator);
+	}
+
+	toJSON() {
+		const { rootEvaluator, ...rest } = this;
+
+		return rest;
 	}
 }

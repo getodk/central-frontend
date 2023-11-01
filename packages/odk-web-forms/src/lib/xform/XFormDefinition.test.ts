@@ -12,6 +12,7 @@ import {
 	title,
 } from '../../test/fixtures/xform-dsl';
 import { XFormDefinition } from './XFormDefinition.ts';
+import { XFormModelDefinition } from './XFormModelDefinition.ts';
 import { XFormViewDefinition } from './XFormViewDefinition.ts';
 
 describe('XFormDefinition', () => {
@@ -32,12 +33,12 @@ describe('XFormDefinition', () => {
 							t('second-question'),
 							t('third-question'),
 							t('meta', t('instanceID'))
-						),
-						bind('/root/first-question').type('string'),
-						bind('/root/second-question').type('string'),
-						bind('/root/third-question').type('string'),
-						bind('/root/meta/instanceID').type('string')
-					)
+						)
+					),
+					bind('/root/first-question').type('string'),
+					bind('/root/second-question').type('string'),
+					bind('/root/third-question').type('string'),
+					bind('/root/meta/instanceID').type('string')
 				)
 			),
 			body(
@@ -56,6 +57,10 @@ describe('XFormDefinition', () => {
 
 	it('defines the form id from the primary instance root', () => {
 		expect(xformDefinition.id).toBe(PRIMARY_INSTANCE_ROOT_ID);
+	});
+
+	it("gets the form's model definition", () => {
+		expect(xformDefinition.model).toBeInstanceOf(XFormModelDefinition);
 	});
 
 	it("gets the form's view definition", () => {
