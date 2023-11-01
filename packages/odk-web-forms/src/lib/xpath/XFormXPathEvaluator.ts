@@ -1,12 +1,5 @@
 import { Evaluator } from '@odk/xpath';
-import { TreeSitterXPathParser } from '@odk/xpath/static/grammar/TreeSitterXPathParser.js';
-import xpathLanguage from 'tree-sitter-xpath/tree-sitter-xpath.wasm?url';
-import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
-
-const xpathParser = await TreeSitterXPathParser.init({
-	webTreeSitter,
-	xpathLanguage,
-});
+import { xpathParser } from './parser.ts';
 
 interface XFormXPathEvaluatorEvaluateOptions<AssertExists extends boolean = false> {
 	readonly assertExists?: AssertExists;
