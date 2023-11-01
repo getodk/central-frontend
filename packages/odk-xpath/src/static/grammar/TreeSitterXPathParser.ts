@@ -116,7 +116,7 @@ const resolveWebAssemblyResource = async <T extends ResourceType>(
 	return URL.createObjectURL(blob) as ResolvedResourceType<T>;
 };
 
-interface WebAssemblyResourceSpecifiers {
+export interface WebAssemblyResourceSpecifiers {
 	readonly webTreeSitter?: string | undefined;
 
 	/**

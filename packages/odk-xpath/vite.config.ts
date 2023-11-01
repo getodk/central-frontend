@@ -56,7 +56,11 @@ export default defineConfig(({ command, mode }) => {
 
 	// `TreeSitterXPathParser.ts` is built as a separate entry so it can be
 	// initialized first, independently of the otherwise synchronous evaluator.
-	const entries = ['./src/index.ts', './src/static/grammar/TreeSitterXPathParser.ts'];
+	const entries = [
+		'./src/index.ts',
+		'./src/static/grammar/ExpressionParser.ts',
+		'./src/static/grammar/TreeSitterXPathParser.ts',
+	];
 
 	// Mapping entry names with path-based keys gives a more predictable output which
 	// we control at the filesystem level, so the exports in package.json are stable
