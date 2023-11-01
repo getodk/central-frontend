@@ -84,6 +84,12 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
+      <template v-else-if="entry.action === 'entity.update.resolve'">
+        <span class="icon-random"></span>
+        <i18n-t keypath="title.entity.update_resolve">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
     </template>
     <template #body>
       <entity-diff v-if="entityVersion != null" :entity-version="entityVersion"/>
@@ -161,6 +167,10 @@ const { reviewStateIcon } = useReviewState();
   .icon-cloud-upload { color: #bbb; }
   .icon-magic-wand { color: $color-action-foreground; }
   .icon-pencil { color: #666; }
+  .icon-random {
+    color: #bbb;
+    vertical-align: -2px;
+  }
 
   .deleted-submission, .entity-label { font-weight: normal; }
   .deleted-submission { color: $color-danger; }
@@ -197,7 +207,7 @@ const { reviewStateIcon } = useReviewState();
           // @transifexKey component.SubmissionFeedEntry.title.entity.create
           "submission": "Created Entity {label} in {dataset} Entity List",
           // This text is shown in a list of events. {name} is the name of a Web
-          // user.
+          // User.
           "api": "Entity {label} created by {name}"
         },
         "update_version": {
@@ -211,7 +221,10 @@ const { reviewStateIcon } = useReviewState();
           // This text is shown in a list of events. {name} is the name of a Web
           // User.
           "api": "Data updated by {name}"
-        }
+        },
+        // This text is shown in a list of events. {name} is the name of a Web
+        // User.
+        "update_resolve": "Conflict warning resolved by {name}"
       }
     }
   }

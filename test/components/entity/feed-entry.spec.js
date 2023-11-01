@@ -319,6 +319,31 @@ describe('EntityFeedEntry', () => {
     diff.props().entityVersion.version.should.equal(2);
   });
 
+  describe('entity.update.resolve audit event', () => {
+    beforeEach(() => {
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.update.resolve'
+      });
+    });
+
+    it('shows the correct icon', () => {
+      const component = mountComponent();
+      const icon = component.find('.feed-entry-title .icon-random');
+      icon.exists().should.be.true();
+    });
+
+    it('shows the correct text', () => {
+      const text = mountComponent().get('.feed-entry-title').text();
+      text.should.equal('Conflict warning resolved by Alice');
+    });
+
+    it('links to the user', () => {
+      const title = mountComponent().get('.feed-entry-title');
+      const actorLink = title.getComponent(ActorLink);
+      actorLink.props().actor.displayName.should.equal('Alice');
+    });
+  });
+
   it('shows when an audit log event was logged', () => {
     testData.extendedEntityVersions.createPast(1);
     const audit = testData.extendedAudits
