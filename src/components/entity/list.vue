@@ -244,7 +244,7 @@ export default {
     hideResolve(showEdit) {
       this.hideModal('resolve');
       if (showEdit) {
-        this.showUpdate(this.resolveIndex);
+        this.$nextTick(() => this.showUpdate(this.resolveIndex));
       } else {
         this.resolve.entity = null;
         this.resolveIndex = null;
