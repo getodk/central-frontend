@@ -61,6 +61,8 @@ const isAnyLocationPathExprNode = (node: AnySyntaxNode): node is LocationPathSub
 	return false;
 };
 
+// TODO: this does not currently even attempt to find sub-expressions nested
+// within sub-expressions.
 const findLocationPathExprNodes = (
 	node: AnySyntaxNode
 ): readonly LocationPathSubExpressionNode[] => {
@@ -73,9 +75,53 @@ const findLocationPathExprNodes = (
 	});
 };
 
-export const getNodesetSubExpressions = (expression: string): readonly string[] => {
+// TODO: this is a very small subset of resolution that needs to be supported,
+// and it's a hamfisted hack. **This is temporary** to unblock progress on
+// computations, but a longer term solution will need to address:
+//
+// - non-abbreviation axes (parent, child, self) according to XForms spec
+// - non-leading axes
+// - context expressions which are more complex than a series of explicit
+//   element name test steps (this may be fine for binds!)
+const resolveRelativeSubExpression = (contextExpression: string, expression: string) => {
+	const [, axisAbbreviation, relativeExpression = ''] = expression.match(/^(\.{1,2})(\/.*$)?/) ?? [
+		,
+		'',
+		expression,
+	];
+
+	switch (axisAbbreviation) {
+		case '':
+			return expression;
+
+		case '.':
+			return `${contextExpression}${relativeExpression}`;
+
+		case '..':
+			return `${contextExpression.replace(/\/[^/]+$/, '')}${relativeExpression}`;
+	}
+
+	throw new Error(`Unexpected relative expression: ${expression}`);
+};
+
+interface GetNodesetDependenciesOptions {
+	readonly contextExpression?: string;
+}
+
+export const getNodesetDependencies = (
+	expression: string,
+	options: GetNodesetDependenciesOptions = {}
+): readonly string[] => {
 	const { rootNode } = xpathParser.parse(expression);
 	const subExpressionNodes = findLocationPathExprNodes(rootNode);
+	const { contextExpression } = options;
+	const subExpressions = subExpressionNodes.map((syntaxNode) => syntaxNode.text);
 
-	return subExpressionNodes.map((node) => node.text);
+	if (contextExpression == null) {
+		return subExpressions;
+	}
+
+	return subExpressions.map((subExpression) =>
+		resolveRelativeSubExpression(contextExpression, subExpression)
+	);
 };

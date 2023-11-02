@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getNodesetSubExpressions } from './expression-dependencies';
+import { getNodesetDependencies } from './expression-dependencies';
 
 describe('XPath expression dependencies', () => {
 	it.each([
@@ -14,11 +14,42 @@ describe('XPath expression dependencies', () => {
 			expected: ['current()/context-child'],
 		},
 	])(
-		'gets absolute nodeset sub-expressions $subExpressions from expression $expression',
+		'gets absolute nodeset sub-expression dependencies $expected from expression $expression',
 		({ expression, expected }) => {
-			const subExpressions = getNodesetSubExpressions(expression);
+			const dependencies = getNodesetDependencies(expression);
 
-			expect(subExpressions).toEqual(expected);
+			expect(dependencies).toEqual(expected);
+		}
+	);
+
+	it.each([
+		{
+			expression: '..',
+			options: {
+				contextExpression: '/root/a/b',
+			},
+			expected: ['/root/a'],
+		},
+		{
+			expression: './c',
+			options: {
+				contextExpression: '/root/a/b',
+			},
+			expected: ['/root/a/b/c'],
+		},
+		{
+			expression: '/root/unrelated/c',
+			options: {
+				contextExpression: '/root/a/b',
+			},
+			expected: ['/root/unrelated/c'],
+		},
+	])(
+		'resolves absolute dependencies $expected, relative to a context expression option $options.contextExpression',
+		({ expression, options, expected }) => {
+			const dependencies = getNodesetDependencies(expression, options);
+
+			expect(dependencies).toEqual(expected);
 		}
 	);
 });
