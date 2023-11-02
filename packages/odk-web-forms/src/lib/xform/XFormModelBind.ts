@@ -13,27 +13,11 @@ type BindExpressionType =
 	| 'saveIncomplete';
 
 class BindExpression {
-	static from(bind: XFormModelBind, type: BindExpressionType): BindExpression | null {
-		const expression = bind.bindElement.getAttribute(type);
-
-		if (expression == null) {
-			return null;
-		}
-
-		return new this(bind, expression);
-	}
-
+	readonly expression: string | null;
 	readonly dependencyExpressions: readonly string[] = [];
 
-	protected constructor(
-		readonly bind: XFormModelBind,
-		readonly expression: string
-	) {}
-
-	toJSON() {
-		const { bind, ...rest } = this;
-
-		return rest;
+	constructor(bind: XFormModelBind, type: BindExpressionType) {
+		this.expression = bind.bindElement.getAttribute(type);
 	}
 
 	toString() {
@@ -44,18 +28,33 @@ class BindExpression {
 class DependentBindExpression extends BindExpression {
 	override readonly dependencyExpressions: readonly string[];
 
-	protected constructor(bind: XFormModelBind, expression: string) {
-		super(bind, expression);
+	constructor(bind: XFormModelBind, type: BindExpressionType) {
+		super(bind, type);
 
-		this.dependencyExpressions = getNodesetDependencies(expression, {
-			contextExpression: bind.nodeset,
-		});
+		const { expression } = this;
+		const dependencyExpressions: string[] = [];
+
+		if (expression != null) {
+			dependencyExpressions.push(
+				...getNodesetDependencies(expression, {
+					contextExpression: bind.nodeset,
+				})
+			);
+		}
+
+		const { parentNodeset } = bind;
+
+		if (type === 'relevant' && parentNodeset != null) {
+			dependencyExpressions.push(parentNodeset);
+		}
+
+		this.dependencyExpressions = dependencyExpressions;
 	}
 }
 
 export type BindNodeset = string;
 
-export interface BindElement extends Element {
+export interface BindElement {
 	getAttribute(name: 'nodeset'): BindNodeset;
 	getAttribute(name: string): string | null;
 }
@@ -63,11 +62,17 @@ export interface BindElement extends Element {
 export class XFormModelBind {
 	readonly bindType: string | null;
 	readonly dataType: XFormDataType;
+	readonly parentNodeset: string | null;
 
-	readonly calculate: DependentBindExpression | null;
-	readonly readonly: DependentBindExpression | null;
-	readonly relevant: DependentBindExpression | null;
-	readonly required: DependentBindExpression | null;
+	// TODO
+	// readonly parentBind: XFormModelBind | null;
+
+	readonly calculate: DependentBindExpression;
+	readonly readonly: DependentBindExpression;
+	readonly relevant: DependentBindExpression;
+	readonly required: DependentBindExpression;
+
+	readonly nodesetDependencies: readonly string[];
 
 	// According to https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/dag.md
 	// this is not stored in the DAG.
@@ -100,13 +105,25 @@ export class XFormModelBind {
 
 		this.dataType = bindDataType(bindType);
 
-		this.calculate = DependentBindExpression.from(this, 'calculate');
-		this.readonly = DependentBindExpression.from(this, 'readonly');
-		this.relevant = DependentBindExpression.from(this, 'relevant');
-		this.required = DependentBindExpression.from(this, 'required');
+		const parentNodeset = nodeset.replace(/\/[^/]+$/, '');
 
-		this.constraint = BindExpression.from(this, 'constraint');
-		this.saveIncomplete = BindExpression.from(this, 'saveIncomplete');
+		this.parentNodeset = parentNodeset.length > 1 ? parentNodeset : null;
+
+		const calculate = (this.calculate = new DependentBindExpression(this, 'calculate'));
+		const readonly = (this.readonly = new DependentBindExpression(this, 'readonly'));
+		const relevant = (this.relevant = new DependentBindExpression(this, 'relevant'));
+		const required = (this.required = new DependentBindExpression(this, 'required'));
+
+		this.nodesetDependencies = Array.from(
+			new Set(
+				[calculate, readonly, relevant, required].flatMap(
+					({ dependencyExpressions }) => dependencyExpressions
+				)
+			)
+		);
+
+		this.constraint = new BindExpression(this, 'constraint');
+		this.saveIncomplete = new BindExpression(this, 'saveIncomplete');
 		// this.requiredMsg = bindElement.getAttributeNS(...)
 		// this.constraintMsg = bindElement.getAttributeNS(...)
 		// this.preload = bindElement.getAttributeNS(...)
