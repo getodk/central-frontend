@@ -157,7 +157,7 @@ export default defineConfig(({ mode }) => {
 				enabled: BROWSER_ENABLED,
 				name: BROWSER_NAME!,
 				provider: 'playwright',
-				headless: false,
+				headless: true,
 			},
 
 			deps: {
