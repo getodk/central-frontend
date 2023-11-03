@@ -1,5 +1,6 @@
-import type { Signal } from 'solid-js';
+import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
+import type { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator';
 
 // TODO: the assumption here is that an XForm may only bind elements and attributes.
 // Is that assumption correct?
@@ -66,4 +67,17 @@ export const createModelNodeSignal = (node: ModelNode): Signal<string> => {
 	};
 
 	return [getter, setter];
+};
+
+// TODO: it already feels like state bindings (er whatever entry members
+// end up being) are the appropriate parameter for this and probably other
+// reactive model state interfaces
+export const createCalculate = (
+	evaluator: XFormXPathEvaluator,
+	node: ModelNode,
+	expression: string
+): Accessor<string> => {
+	const [, setModelValue] = createModelNodeSignal(node);
+
+	return () => setModelValue(() => evaluator.evaluateString(expression));
 };

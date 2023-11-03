@@ -1,5 +1,6 @@
 import { styled } from 'suid/material';
 import type { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
+import type { XFormEntry } from '../../lib/xform/XFormEntry.ts';
 
 const Details = styled('details')({
 	position: 'relative',
@@ -20,10 +21,15 @@ const Pre = styled('pre')({
 
 export interface XFormDetailsProps {
 	readonly definition: XFormDefinition;
+	readonly entry: XFormEntry;
 }
 
 export const XFormDetails = (props: XFormDetailsProps) => (
 	<>
+		<Details>
+			<Summary>Submission state (XML)</Summary>
+			<Pre>{props.entry.serializedSubmission()}</Pre>
+		</Details>
 		<Details>
 			<Summary>XFormDefinition</Summary>
 			<Pre>{JSON.stringify(props.definition, null, 2)}</Pre>

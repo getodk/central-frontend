@@ -10,7 +10,7 @@ import { DefaultTextFormControl } from '../styled/DefaultTextFormControl.tsx';
 export interface TextWidgetProps {
 	readonly label: XFormViewLabel | null;
 	readonly ref: string | null;
-	readonly bindState: XFormEntryBinding | null;
+	readonly binding: XFormEntryBinding | null;
 }
 
 export const TextWidget = (props: TextWidgetProps) => {
@@ -25,7 +25,13 @@ export const TextWidget = (props: TextWidgetProps) => {
 					</DefaultLabelParagraph>
 				)}
 			</Show>
-			<DefaultTextField id={id} value={props.bindState?.getValue()} />
+			<DefaultTextField
+				id={id}
+				value={props.binding?.getValue()}
+				onChange={(event) => {
+					props.binding?.setValue(event.target.value);
+				}}
+			/>
 		</DefaultTextFormControl>
 	);
 };

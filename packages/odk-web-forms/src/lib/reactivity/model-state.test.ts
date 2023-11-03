@@ -1,24 +1,49 @@
 import { createRoot } from 'solid-js';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { createModelNodeSignal } from './model-state';
+import {
+	bind,
+	body,
+	head,
+	html,
+	mainInstance,
+	model,
+	t,
+	title,
+} from '../../test/fixtures/xform-dsl/index.ts';
+import { XFormDefinition } from '../xform/XFormDefinition.ts';
+import { XFormEntry } from '../xform/XFormEntry.ts';
+import type { XFormEntryBinding } from '../xform/XFormEntryBinding.ts';
+import { createCalculate, createModelNodeSignal } from './model-state.ts';
 
 describe('Model state reactivity', () => {
-	const sourceXML = /* xml */ `
-		<?xml version="1.0"?>
-		<root xmlns="" xmlns:foo="https://example.com/foo">
-			<outer>
-				<inner-a />
-				<inner-b>initial element b value</inner-b>
-				<inner-c c-attr-1="" c-attr-2="initial attribute c (2) value" />
-				<foo:inner-d d-attr-3="">initial element d value</foo:inner-d>
-			</outer>
-		</root>
-	`.trim();
+	const xform = html(
+		head(
+			title('Model state reactivity'),
+			model(
+				mainInstance(
+					t(
+						'root id="minimal"',
+						t('inner-a'),
+						t('inner-a-x2'),
+						t('inner-b', 'initial element b value'),
+						t('inner-c c-attr-1="" c-attr-2="initial-attribute-c-2-value"'),
+						t('inner-d d-attr-3=""', 'initial element d value')
+					)
+				),
+				bind('/root/inner-a').type('string'),
+				bind('/root/inner-a-x2').calculate('/root/inner-a * 2'),
+				bind('/root/inner-b').type('string'),
+				bind('/root/inner-c').type('string'),
+				bind('/root/inner-d').type('string')
+			)
+		),
+		body()
+	);
 
-	const domParser = new DOMParser();
-
-	let simpleDocument: XMLDocument;
-	let outerElement: Element;
+	let xformDefinition: XFormDefinition;
+	let xformEntry: XFormEntry;
+	let xformDocument: XMLDocument;
+	let rootElement: Element;
 	let innerElementA: Element;
 	let innerElementB: Element;
 	let innerElementC: Element;
@@ -28,12 +53,14 @@ describe('Model state reactivity', () => {
 	let dAttr3: Attr;
 
 	beforeEach(() => {
-		simpleDocument = domParser.parseFromString(sourceXML, 'text/xml');
-		outerElement = simpleDocument.querySelector('outer')!;
-		innerElementA = outerElement.querySelector('inner-a')!;
-		innerElementB = outerElement.querySelector('inner-b')!;
-		innerElementC = outerElement.querySelector('inner-c')!;
-		innerElementD = outerElement.querySelector('inner-d')!;
+		xformDefinition = new XFormDefinition(xform.asXml());
+		xformEntry = new XFormEntry(xformDefinition);
+		xformDocument = xformEntry.instanceDOM.xformDocument;
+		rootElement = xformDocument.querySelector('root')!;
+		innerElementA = rootElement.querySelector('inner-a')!;
+		innerElementB = rootElement.querySelector('inner-b')!;
+		innerElementC = rootElement.querySelector('inner-c')!;
+		innerElementD = rootElement.querySelector('inner-d')! ?? rootElement.querySelector('inner-d')!;
 		cAttr1 = innerElementC.getAttributeNode('c-attr-1')!;
 		cAttr2 = innerElementC.getAttributeNode('c-attr-2')!;
 		dAttr3 = innerElementD.getAttributeNode('d-attr-3')!;
@@ -44,7 +71,7 @@ describe('Model state reactivity', () => {
 			{
 				nodeDescription: '<outer> (container element, not a value getter)',
 				get node() {
-					return outerElement;
+					return rootElement;
 				},
 				expected: '',
 			},
@@ -88,10 +115,10 @@ describe('Model state reactivity', () => {
 				get node() {
 					return cAttr2;
 				},
-				expected: 'initial attribute c (2) value',
+				expected: 'initial-attribute-c-2-value',
 			},
 			{
-				nodeDescription: '@d-attr-3 (attribute on element with namespace/prefix and initial value)',
+				nodeDescription: '@d-attr-3 (attribute on element with initial value)',
 				get node() {
 					return dAttr3;
 				},
@@ -125,7 +152,7 @@ describe('Model state reactivity', () => {
 
 			get element(): Element {
 				const { initialValue, tagName } = this;
-				const element = simpleDocument.querySelector(tagName)!;
+				const element = xformDocument.querySelector(tagName)!;
 
 				if (initialValue != null) {
 					element.textContent = initialValue;
@@ -161,7 +188,7 @@ describe('Model state reactivity', () => {
 			new ElementSetterCase('inner-a', 'inner a with an initial value'),
 			new ElementSetterCase('inner-b', 'another initial value'),
 			new ElementSetterCase('inner-c', 'and again'),
-			new ElementSetterCase('inner-d', 'this element has a namespace'),
+			new ElementSetterCase('inner-d', 'this element has an attribute'),
 		])(
 			'sets an element value based on its previous value - $description',
 			({ element, initialValue }) => {
@@ -201,7 +228,7 @@ describe('Model state reactivity', () => {
 
 			get attribute(): Attr {
 				const { attributeName, initialValue, tagName } = this;
-				const element = simpleDocument.querySelector(tagName)!;
+				const element = xformDocument.querySelector(tagName)!;
 				const attribute = element.getAttributeNode(attributeName)!;
 
 				if (initialValue != null) {
@@ -236,7 +263,7 @@ describe('Model state reactivity', () => {
 		it.each([
 			new AttributeSetterCase('inner-c', 'c-attr-1', 'initial c-attr-1 value'),
 			new AttributeSetterCase('inner-c', 'c-attr-2', 'another initial attribute value'),
-			new AttributeSetterCase('inner-d', 'd-attr-3', 'attribute on namespaced node'),
+			new AttributeSetterCase('inner-d', 'd-attr-3', 'attribute on element with text value'),
 		])(
 			'sets an attribute value based on its previous value - $description',
 			({ attribute, initialValue }) => {
@@ -258,11 +285,11 @@ describe('Model state reactivity', () => {
 		);
 
 		it('does not set the DOM or runtime state of a parent element', () => {
-			const initialOuterElement = outerElement.cloneNode(true);
+			const initialOuterElement = rootElement.cloneNode(true);
 			const initialChildNodes = Array.from(initialOuterElement.childNodes);
 
 			const results = createRoot(() => {
-				const [modelValue, setModelValue] = createModelNodeSignal(outerElement);
+				const [modelValue, setModelValue] = createModelNodeSignal(rootElement);
 				const setterValue = setModelValue((currentValue) => {
 					expect(currentValue).toBe('');
 
@@ -276,17 +303,64 @@ describe('Model state reactivity', () => {
 				};
 			});
 
-			expect(outerElement.isEqualNode(initialOuterElement)).toBe(true);
-			expect(outerElement.childNodes.length).toBe(initialChildNodes.length);
+			expect(rootElement.isEqualNode(initialOuterElement)).toBe(true);
+			expect(rootElement.childNodes.length).toBe(initialChildNodes.length);
 			expect(
 				initialChildNodes.every((initialChildNode, index) => {
-					const childNode = outerElement.childNodes[index]!;
+					const childNode = rootElement.childNodes[index]!;
 
 					return initialChildNode.isEqualNode(childNode);
 				})
 			).toBe(true);
 			expect(results.getterValue).toBe('');
 			expect(results.setterValue).toBe('');
+		});
+	});
+
+	describe('calculate', () => {
+		let innerABinding: XFormEntryBinding;
+		let innerAElement: Element;
+		let innerAX2Binding: XFormEntryBinding;
+		let innerAX2Element: Element;
+		let innerAX2CalculateExpression: string;
+
+		// Chosen at random, assigned to `innerAElement.textContent`
+		let aValue: number;
+		let aDoubled: number;
+
+		beforeEach(() => {
+			innerABinding = xformEntry.get('/root/inner-a')!;
+			innerAElement = innerABinding.getElement();
+			innerAX2Binding = xformEntry.get('/root/inner-a-x2')!;
+			innerAX2Element = innerAX2Binding.getElement();
+			innerAX2CalculateExpression = innerAX2Binding.bind.calculate.expression!;
+
+			aValue = Math.floor(Math.random() * 100);
+			aDoubled = aValue * 2;
+
+			innerAElement.textContent = String(aValue);
+		});
+
+		it('gets a calculated value', () => {
+			const calculate = createCalculate(
+				xformEntry.instanceDOM.primaryInstanceEvaluator,
+				innerAX2Element,
+				innerAX2CalculateExpression!
+			);
+
+			expect(calculate()).toBe(String(aDoubled));
+		});
+
+		it('assigns a calculated value to the DOM node', () => {
+			const calculate = createCalculate(
+				xformEntry.instanceDOM.primaryInstanceEvaluator,
+				innerAX2Element,
+				innerAX2CalculateExpression!
+			);
+
+			calculate();
+
+			expect(innerAX2Element.textContent).toBe(String(aDoubled));
 		});
 	});
 });
