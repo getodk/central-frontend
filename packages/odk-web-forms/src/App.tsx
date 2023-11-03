@@ -21,10 +21,19 @@ const localizations: readonly Localization[] = [
 ];
 
 export const App = () => {
-	const [xformDefinition] = createResource(async () => {
-		const { default: xml } = await import('../fixtures/xforms/basic-calculate.xform.xml?raw');
+	// A resource (Solid's mechanism for data fetching and triggering Suspense) is a
+	// likely way we'll fetch forms, so using it here to anticipate that rather than
+	// importing the fixture directly.
+	//
+	// TODO: more fixtures are likely incoming rather soon, it'll make sense to have
+	// an app entry to correspond to that, and allow selection of particular fixtures,
+	// perhaps arbitrary forms as well.
+	const [fixtureSourceXML] = createResource(async () => {
+		const { default: fixtureSource } = await import(
+			'../fixtures/xforms/basic-calculate.xform.xml?raw'
+		);
 
-		return XFormDefinition.fromSourceXML(xml);
+		return fixtureSource;
 	});
 
 	return (
@@ -32,14 +41,18 @@ export const App = () => {
 			<LocalizationProvider localizations={localizations}>
 				<Page>
 					<Suspense fallback={<p>Loading…</p>}>
-						<Show when={xformDefinition()} keyed={true}>
-							{(definition) => (
-								<Stack spacing={7}>
-									<XFormView definition={definition} />
-									<Divider />
-									<XFormDetails definition={definition} />
-								</Stack>
-							)}
+						<Show when={fixtureSourceXML()} keyed={true}>
+							{(sourceXML) => {
+								const definition = new XFormDefinition(sourceXML);
+
+								return (
+									<Stack spacing={7}>
+										<XFormView definition={definition} />
+										<Divider />
+										<XFormDetails definition={definition} />
+									</Stack>
+								);
+							}}
 						</Show>
 					</Suspense>
 				</Page>
