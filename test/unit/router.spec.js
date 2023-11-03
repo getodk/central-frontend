@@ -1,12 +1,13 @@
 import sinon from 'sinon';
 
-import { afterNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
+import { afterNextNavigation, arrayQuery, createScrollBehavior, forceReplace, routeProps } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 import { testRouter } from '../util/router';
+import { wait } from '../util/util';
 
 describe('util/router', () => {
   describe('arrayQuery()', () => {
@@ -160,6 +161,156 @@ describe('util/router', () => {
         await forceReplace(container, '/');
         unsavedChanges.count.should.equal(0);
       });
+    });
+  });
+
+  // We try to test this function using mostly integration tests. Where that's
+  // more difficult, we use unit tests.
+  describe('createScrollBehavior()', () => {
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {}
+      });
+      for (let version = 2; version <= 50; version += 1) {
+        testData.extendedEntityVersions.createPast(1);
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.update.version',
+          details: {}
+        });
+      }
+    });
+
+    // Waits enough time for scrolling to occur.
+    const waitForScroll = (clock) => {
+      clock.tick(250);
+      // I'm not sure why wait() is needed in addition to clock.tick(). Maybe
+      // scrolling is run as a task rather than a microtask?
+      return wait();
+    };
+    const pxTo = (wrapper) =>
+      Math.floor(wrapper.element.getBoundingClientRect().y);
+
+    it('does not scroll if there is no route hash', async () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      await load('/projects/1/entity-lists/trees/entities/e', {
+        attachTo: document.body
+      });
+      window.scrollY.should.equal(0);
+      // Even after waiting, the page should not scroll.
+      await waitForScroll(clock);
+      window.scrollY.should.equal(0);
+    });
+
+    it('immediately scrolls to a target that exists in the DOM', async () => {
+      sinon.useFakeTimers(Date.now());
+      const app = await load('/projects/1/entity-lists/trees/entities/e', {
+        attachTo: document.body
+      });
+
+      // Scroll to v40.
+      await app.vm.$router.push('/projects/1/entity-lists/trees/entities/e#v40');
+      // We don't wait 250 milliseconds, but we do seem to need to give tasks
+      // the chance to run.
+      await wait();
+      const yForV40 = window.scrollY;
+      yForV40.should.be.above(0);
+      pxTo(app.get('[data-scroll-id="v40"]')).should.equal(10);
+
+      // Scroll to v20 even farther below.
+      await app.vm.$router.push('/projects/1/entity-lists/trees/entities/e#v20');
+      await wait();
+      window.scrollY.should.be.above(yForV40);
+      pxTo(app.get('[data-scroll-id="v20"]')).should.equal(10);
+    });
+
+    it('waits for the scroll target to appear in the DOM', async () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      await load('/projects/1/entity-lists/trees/entities/e#v40', {
+        attachTo: document.body
+      });
+      // The first attempt to scroll happened around when requests were sent,
+      // before the page was fully rendered. As a result, there was no initial
+      // scrolling: we need to wait for the second attempt to scroll.
+      window.scrollY.should.equal(0);
+      await waitForScroll(clock);
+      window.scrollY.should.be.above(0);
+    });
+
+    it('does not scroll twice', async () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      await load('/projects/1/entity-lists/trees/entities/e#v40', {
+        attachTo: document.body
+      });
+      await waitForScroll(clock);
+      window.scrollY.should.be.above(0);
+      window.scrollTo(0, 0);
+      window.scrollY.should.equal(0);
+      await waitForScroll(clock);
+      window.scrollY.should.equal(0);
+    });
+
+    it('stops waiting after some amount of time', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      return load('/projects/1/entity-lists/trees/entities/e#v40', {
+        attachTo: document.body
+      })
+        .beforeAnyResponse(() => {
+          clock.tick(240000);
+        })
+        .respondWithData(() => 'v2023.5') // version.txt
+        .afterResponses(async () => {
+          await waitForScroll(clock);
+          window.scrollY.should.equal(0);
+        });
+    });
+
+    describe('new navigation is confirmed before target appears', () => {
+      it('does not scroll to the previous target', () => {
+        const clock = sinon.useFakeTimers(Date.now());
+        return load('/projects/1/entity-lists/trees/entities/e#v40', {
+          attachTo: document.body
+        })
+          .beforeAnyResponse(app =>
+            // Navigate to a route without a hash.
+            app.vm.$router.push('/projects/1/entity-lists/trees/entities/e'))
+          .afterResponses(async () => {
+            await waitForScroll(clock);
+            window.scrollY.should.equal(0);
+          });
+      });
+
+      it('scrolls to the new target', () => {
+        const clock = sinon.useFakeTimers(Date.now());
+        return load('/projects/1/entity-lists/trees/entities/e#v40', {
+          attachTo: document.body
+        })
+          .beforeAnyResponse(app =>
+            app.vm.$router.push('/projects/1/entity-lists/trees/entities/e#v20'))
+          .afterResponses(async (app) => {
+            await waitForScroll(clock);
+            window.scrollY.should.be.above(0);
+            pxTo(app.get('[data-scroll-id="v20"]')).should.equal(10);
+          });
+      });
+    });
+
+    describe('invalid hash', () => {
+      const cases = [
+        '',
+        '#',
+        // This would break the CSS selector in createScrollBehavior().
+        '#"'
+      ];
+      for (const hash of cases) {
+        it(`does not scroll if the hash is [${hash}]`, () => {
+          const to = { path: '/users', hash };
+          const from = { path: '/' };
+          should.not.exist(createScrollBehavior()(to, from, null));
+        });
+      }
     });
   });
 });

@@ -90,7 +90,7 @@ describe('EntityShow', () => {
           return testData.standardEntities.last();
         })
         .respondWithData(() => testData.extendedAudits.sorted())
-        .respondWithData(() => []);
+        .respondWithData(() => testData.extendedEntityVersions.sorted());
     };
 
     it('sends the correct requests for activity data', () =>

@@ -79,6 +79,49 @@ export const forceReplace = ({ router, unsavedChanges }, location) => {
   return router.replace(location);
 };
 
+// Returns a scrollBehavior function to pass to createRouter().
+export const createScrollBehavior = (animation = 'smooth') => {
+  // Function to cancel a previous attempt to scroll
+  let cancel;
+  const scrollTo = (scrollId) => {
+    const el = document.querySelector(`[data-scroll-id="${scrollId}"]`);
+    return el != null ? { el, top: 10, behavior: animation } : null;
+  };
+  return (to, from, savedPosition) => {
+    if (cancel != null) cancel();
+    if (to.hash === '') return to.path === from.path ? savedPosition : null;
+    const scrollId = to.hash.replace('#', '');
+    // Certain characters would lead to an invalid CSS selector above, so we
+    // limit the set of accepted characters.
+    if (!/^[\w-]+$/.test(scrollId)) return null;
+    // Try to scroll right away. If the element doesn't exist, then we need to
+    // wait for it. In that case, we will attempt to scroll on an interval,
+    // giving up after 3 minutes or so.
+    return scrollTo(scrollId) ?? new Promise(resolve => {
+      let tries = 0;
+      const intervalId = setInterval(
+        () => {
+          const result = scrollTo(scrollId);
+          if (result != null) {
+            clearInterval(intervalId);
+            cancel = null;
+            resolve(result);
+          } else {
+            tries += 1;
+            if (tries === 720) cancel();
+          }
+        },
+        250
+      );
+      cancel = () => {
+        clearInterval(intervalId);
+        cancel = null;
+        resolve(null);
+      };
+    });
+  };
+};
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +130,8 @@ export const forceReplace = ({ router, unsavedChanges }, location) => {
 // Returns the resources that would be preserved after navigating from the
 // `from` route to the `to` route.
 export const preservedData = (to, from, requestData) => {
-  if (from === START_LOCATION) return requestData.resources;
+  if (from === START_LOCATION || to.path === from.path)
+    return requestData.resources;
   const results = [];
   for (const f of to.meta.preserveData) {
     const result = f(to, from);
