@@ -1,5 +1,6 @@
 import { createUniqueId } from 'solid-js';
 import { Show } from 'solid-js/web';
+import type { XFormBindState } from '../../lib/xform/XFormBindState.ts';
 import type { XFormViewLabel } from '../../lib/xform/XFormViewLabel.ts';
 import { DefaultLabel } from '../styled/DefaultLabel.tsx';
 import { DefaultLabelParagraph } from '../styled/DefaultLabelParagraph.tsx';
@@ -9,6 +10,7 @@ import { DefaultTextFormControl } from '../styled/DefaultTextFormControl.tsx';
 export interface TextWidgetProps {
 	readonly label: XFormViewLabel | null;
 	readonly ref: string | null;
+	readonly bindState: XFormBindState | null;
 }
 
 export const TextWidget = (props: TextWidgetProps) => {
@@ -23,7 +25,7 @@ export const TextWidget = (props: TextWidgetProps) => {
 					</DefaultLabelParagraph>
 				)}
 			</Show>
-			<DefaultTextField id={id} />
+			<DefaultTextField id={id} value={props.bindState?.getValue()} />
 		</DefaultTextFormControl>
 	);
 };

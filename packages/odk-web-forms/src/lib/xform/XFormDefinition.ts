@@ -1,4 +1,5 @@
 import { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
+import { XFormBindStateMap } from './XFormBindStateMap.ts';
 import {
 	XFormModelDefinition,
 	type XFormModelDefinitionCommonElements,
@@ -69,6 +70,8 @@ export class XFormDefinition {
 	readonly model: XFormModelDefinition;
 	readonly view: XFormViewDefinition;
 
+	readonly states: XFormBindStateMap;
+
 	constructor(readonly xformDocument: XMLDocument) {
 		const evaluator = (this.rootEvaluator = new XFormXPathEvaluator(xformDocument));
 		const commonElements = (this.commonElements = new XFormsDefinitionCommonElements(evaluator));
@@ -80,9 +83,10 @@ export class XFormDefinition {
 		}
 
 		this.id = id;
-		this.title = commonElements.title.textContent;
+		this.title = commonElements.title.textContent ?? '';
 
 		this.model = new XFormModelDefinition(this, commonElements);
+		this.states = new XFormBindStateMap(this);
 		this.view = new XFormViewDefinition(this, evaluator);
 	}
 

@@ -16,7 +16,9 @@ type EvaluatedNode<AssertExists extends boolean, T extends Node> = AssertExists 
 
 export class XFormXPathEvaluator extends Evaluator {
 	constructor(protected readonly rootNode: Element | XMLDocument) {
-		super(xpathParser);
+		super(xpathParser, {
+			rootNode,
+		});
 	}
 
 	evaluateString(expression: string, options: XFormXPathEvaluatorEvaluateOptions = {}): string {

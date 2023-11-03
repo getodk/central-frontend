@@ -1,8 +1,8 @@
-import type { XFormViewControlType } from '../../../lib/xform/types.ts';
+import type { XFormViewChildType } from '../../../lib/xform/XFormViewChild.ts';
 import type { XFormControlProps } from '../XFormControl.tsx';
 import { XFormAlert } from './XFormAlert.tsx';
 
-interface XFormUnlabeledControlProps extends XFormControlProps<XFormViewControlType> {}
+interface XFormUnlabeledControlProps extends XFormControlProps<XFormViewChildType> {}
 
 export const XFormUnlabeledControl = (props: XFormUnlabeledControlProps) => {
 	return (

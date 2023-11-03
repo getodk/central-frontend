@@ -10,16 +10,15 @@ export interface XFormModelDefinitionCommonElements {
 }
 
 export class XFormModelDefinition {
-	protected readonly primaryInstanceEvaluator: XFormXPathEvaluator;
-
 	readonly binds: ReadonlyXFormModelBindMap;
+	readonly primaryInstanceEvaluator: XFormXPathEvaluator;
 
 	constructor(
 		protected readonly form: XFormDefinition,
 		protected readonly commonElements: XFormModelDefinitionCommonElements
 	) {
-		this.binds = XFormModelBindMap.fromModel(form, this, commonElements.model);
 		this.primaryInstanceEvaluator = new XFormXPathEvaluator(commonElements.primaryInstance);
+		this.binds = XFormModelBindMap.fromModel(form, this, commonElements.model);
 	}
 
 	toJSON() {

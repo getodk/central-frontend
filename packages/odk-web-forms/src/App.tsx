@@ -22,7 +22,7 @@ const localizations: readonly Localization[] = [
 
 export const App = () => {
 	const [xformDefinition] = createResource(async () => {
-		const { default: xml } = await import('../fixtures/xforms/minimal.xform.xml?raw');
+		const { default: xml } = await import('../fixtures/xforms/basic-calculate.xform.xml?raw');
 
 		return XFormDefinition.fromSourceXML(xml);
 	});

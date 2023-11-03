@@ -26,7 +26,11 @@ export const XFormInputControl = (props: XFormInputControlProps) => {
 			<Show when={props.viewControl.label == null}>
 				<XFormUnlabeledControl viewControl={props.viewControl} />
 			</Show>
-			<TextWidget label={props.viewControl.label} ref={props.viewControl.ref} />
+			<TextWidget
+				label={props.viewControl.label}
+				ref={props.viewControl.ref}
+				bindState={props.viewControl.bindState}
+			/>
 		</>
 	);
 };
