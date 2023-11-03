@@ -48,7 +48,7 @@ describe('XFormDefinition', () => {
 			)
 		);
 
-		xformDefinition = new XFormDefinition(xform.asXMLDocument());
+		xformDefinition = new XFormDefinition(xform.asXml());
 	});
 
 	it('defines the form title', () => {

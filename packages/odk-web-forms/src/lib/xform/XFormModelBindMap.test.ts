@@ -50,7 +50,7 @@ describe('XFormModelBindMap', () => {
 			),
 			body()
 		);
-		const form = new XFormDefinition(xform.asXMLDocument());
+		const form = new XFormDefinition(xform.asXml());
 
 		binds = form.model.binds;
 	});

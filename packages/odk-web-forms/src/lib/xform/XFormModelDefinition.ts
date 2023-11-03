@@ -1,4 +1,3 @@
-import { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
 import type { ReadonlyXFormModelBindMap } from './XFormModelBindMap.ts';
 import { XFormModelBindMap } from './XFormModelBindMap.ts';
@@ -11,18 +10,13 @@ export interface XFormModelDefinitionCommonElements {
 
 export class XFormModelDefinition {
 	readonly binds: ReadonlyXFormModelBindMap;
-	readonly primaryInstanceEvaluator: XFormXPathEvaluator;
 
-	constructor(
-		protected readonly form: XFormDefinition,
-		protected readonly commonElements: XFormModelDefinitionCommonElements
-	) {
-		this.primaryInstanceEvaluator = new XFormXPathEvaluator(commonElements.primaryInstance);
-		this.binds = XFormModelBindMap.fromModel(form, this, commonElements.model);
+	constructor(readonly form: XFormDefinition) {
+		this.binds = XFormModelBindMap.fromModel(this);
 	}
 
 	toJSON() {
-		const { form, primaryInstanceEvaluator, ...rest } = this;
+		const { form, ...rest } = this;
 
 		return rest;
 	}

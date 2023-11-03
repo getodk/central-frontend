@@ -1,5 +1,4 @@
 import type { CollectionValues } from '../collections/types.ts';
-import type { XFormBindState } from './XFormBindState.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
 import { XFormViewLabel } from './XFormViewLabel.ts';
 
@@ -75,16 +74,15 @@ export class XFormViewChild {
 	// TODO: `<group>` and `<repeat>`
 	// readonly children: readonly XFormViewChild[];
 
-	readonly bindState: XFormBindState | null;
-
 	protected constructor(
 		protected readonly form: XFormDefinition,
 		element: Element
 	) {
 		const type = (this.type = viewChildType(element));
-		const ref = (this.ref = viewChildRef(type, element));
+
+		this.ref = viewChildRef(type, element);
 		this.label = XFormViewLabel.fromViewChild(this, element);
-		this.bindState = ref == null ? null : form.states.get(ref) ?? null;
+
 		// this.children = [];
 	}
 

@@ -1,93 +1,40 @@
 import { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
-import { XFormBindStateMap } from './XFormBindStateMap.ts';
-import {
-	XFormModelDefinition,
-	type XFormModelDefinitionCommonElements,
-} from './XFormModelDefinition.ts';
+import { XFormDOM } from './XFormDOM.ts';
+import { XFormModelDefinition } from './XFormModelDefinition.ts';
 import { XFormViewDefinition } from './XFormViewDefinition.ts';
 
-/**
- * @private
- */
-class XFormsDefinitionCommonElements implements XFormModelDefinitionCommonElements {
-	readonly html: Element;
-
-	readonly head: Element;
-	readonly title: Element;
-
-	readonly model: Element;
-	readonly primaryInstance: Element;
-	readonly primaryInstanceRoot: Element;
-
-	readonly body: Element;
-
-	constructor(evaluator: XFormXPathEvaluator) {
-		const html = (this.html = evaluator.evaluateNonNullElement('/h:html'));
-		const head = (this.head = evaluator.evaluateNonNullElement('./h:head', {
-			contextNode: html,
-		}));
-
-		this.title = evaluator.evaluateNonNullElement('./h:title', {
-			contextNode: head,
-		});
-
-		const model = (this.model = evaluator.evaluateNonNullElement('./xf:model', {
-			contextNode: head,
-		}));
-		const primaryInstance = (this.primaryInstance = evaluator.evaluateNonNullElement(
-			'./xf:instance[1]',
-			{
-				contextNode: model,
-			}
-		));
-
-		this.primaryInstanceRoot = evaluator.evaluateNonNullElement('./*', {
-			contextNode: primaryInstance,
-		});
-
-		this.body = evaluator.evaluateNonNullElement('./h:body', {
-			contextNode: html,
-		});
-	}
-}
-
-const domParser = new DOMParser();
-
 export class XFormDefinition {
-	static fromSourceXML(sourceXML: string) {
-		const xformDocument: XMLDocument = domParser.parseFromString(sourceXML, 'text/xml');
-
-		return new this(xformDocument);
-	}
-
+	readonly xformDOM: XFormDOM;
+	readonly xformDocument: XMLDocument;
 	readonly rootEvaluator: XFormXPathEvaluator;
 
 	readonly id: string;
 	readonly title: string;
 
-	readonly commonElements: XFormsDefinitionCommonElements;
-
 	readonly model: XFormModelDefinition;
 	readonly view: XFormViewDefinition;
 
-	readonly states: XFormBindStateMap;
+	constructor(readonly sourceXML: string) {
+		const xformDOM = new XFormDOM(sourceXML);
 
-	constructor(readonly xformDocument: XMLDocument) {
-		const evaluator = (this.rootEvaluator = new XFormXPathEvaluator(xformDocument));
-		const commonElements = (this.commonElements = new XFormsDefinitionCommonElements(evaluator));
+		this.xformDOM = xformDOM;
 
-		const id = commonElements.primaryInstanceRoot.getAttribute('id');
+		const { primaryInstanceRoot, title, xformDocument } = xformDOM;
+
+		const rootEvaluator = (this.rootEvaluator = new XFormXPathEvaluator(xformDocument));
+
+		const id = primaryInstanceRoot.getAttribute('id');
 
 		if (id == null) {
 			throw new Error('Primary instance root has no id');
 		}
 
+		this.xformDocument = xformDocument;
 		this.id = id;
-		this.title = commonElements.title.textContent ?? '';
+		this.title = title.textContent ?? '';
 
-		this.model = new XFormModelDefinition(this, commonElements);
-		this.states = new XFormBindStateMap(this);
-		this.view = new XFormViewDefinition(this, evaluator);
+		this.model = new XFormModelDefinition(this);
+		this.view = new XFormViewDefinition(this, rootEvaluator);
 	}
 
 	toJSON() {

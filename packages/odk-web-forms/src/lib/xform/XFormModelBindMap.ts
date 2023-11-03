@@ -24,25 +24,20 @@ export class XFormModelBindMap
 	implements ReadonlyXFormModelBindMap
 {
 	// This is probably overkill, just produces a type that's readonly at call site.
-	static fromModel(
-		form: XFormDefinition,
-		model: XFormModelDefinition,
-		modelElement: Element
-	): ReadonlyXFormModelBindMap {
-		return new this(form, model, modelElement);
+	static fromModel(model: XFormModelDefinition): ReadonlyXFormModelBindMap {
+		return new this(model.form, model);
 	}
 
 	protected constructor(
 		protected readonly form: XFormDefinition,
-		protected readonly model: XFormModelDefinition,
-		modelElement: Element
+		protected readonly model: XFormModelDefinition
 	) {
 		super();
 
 		const bindElements = form.rootEvaluator.evaluateNodes<BindElement & Element>(
 			'./xf:bind[@nodeset]',
 			{
-				contextNode: modelElement,
+				contextNode: form.xformDOM.model,
 			}
 		);
 

@@ -43,7 +43,7 @@ describe('XFormModelDefinition', () => {
 			)
 		);
 
-		const xformDefinition = new XFormDefinition(xform.asXMLDocument());
+		const xformDefinition = new XFormDefinition(xform.asXml());
 
 		xformModelDefinition = xformDefinition.model;
 	});

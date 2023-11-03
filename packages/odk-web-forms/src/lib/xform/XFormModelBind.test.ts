@@ -45,7 +45,7 @@ describe('XFormModelBind', () => {
 			body()
 		);
 
-		const xformDefinition = new XFormDefinition(xform.asXMLDocument());
+		const xformDefinition = new XFormDefinition(xform.asXml());
 		const bindDefinition = xformDefinition.model.binds.get('/root/first-question');
 
 		expect(bindDefinition!.dataType).to.equal(expected);
@@ -90,7 +90,7 @@ describe('XFormModelBind', () => {
 			body()
 		);
 
-		const xformDefinition = new XFormDefinition(xform.asXMLDocument());
+		const xformDefinition = new XFormDefinition(xform.asXml());
 		const bindDefinition = xformDefinition.model.binds.get('/root/first-question');
 
 		expect(bindDefinition![computation]?.toString() ?? null).to.equal(expression);

@@ -1,6 +1,7 @@
 import { render } from '@solidjs/testing-library';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
+import { XFormEntry } from '../../lib/xform/XFormEntry.ts';
 import {
 	bind,
 	body,
@@ -42,20 +43,21 @@ describe('XFormView', () => {
 		)
 	);
 
-	let xformDefinition: XFormDefinition;
+	let xformEntry: XFormEntry;
 
 	beforeEach(() => {
-		xformDefinition = new XFormDefinition(xform.asXMLDocument());
+		const xformDefinition = new XFormDefinition(xform.asXml());
+		xformEntry = new XFormEntry(xformDefinition);
 	});
 
 	it('renders the form title', () => {
-		const rendered = render(() => <XFormView definition={xformDefinition} />);
+		const rendered = render(() => <XFormView entry={xformEntry} />);
 
 		expect(rendered.getByText('Minimal XForm')).toBeInTheDocument();
 	});
 
 	it('renders the first question', () => {
-		const rendered = render(() => <XFormView definition={xformDefinition} />);
+		const rendered = render(() => <XFormView entry={xformEntry} />);
 
 		expect(rendered.getByText('First question')).toBeInTheDocument();
 	});

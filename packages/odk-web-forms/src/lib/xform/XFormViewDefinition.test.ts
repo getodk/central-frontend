@@ -44,7 +44,7 @@ describe('XFormViewDefinition', () => {
 			)
 		);
 
-		const xformDefinition = new XFormDefinition(xform.asXMLDocument());
+		const xformDefinition = new XFormDefinition(xform.asXml());
 
 		xformViewDefinition = xformDefinition.view;
 	});
