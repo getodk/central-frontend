@@ -38,7 +38,7 @@ export const XFormInputControl = (props: XFormInputControlProps) => {
 			return null;
 		}
 
-		return props.entry.get(ref) ?? null;
+		return props.entry.getViewBinding(props.viewControl);
 	});
 
 	return (

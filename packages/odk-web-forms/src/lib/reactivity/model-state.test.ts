@@ -329,9 +329,9 @@ describe('Model state reactivity', () => {
 		let aDoubled: number;
 
 		beforeEach(() => {
-			innerABinding = xformEntry.get('/root/inner-a')!;
+			innerABinding = xformEntry.getBinding('/root/inner-a')!;
 			innerAElement = innerABinding.getElement();
-			innerAX2Binding = xformEntry.get('/root/inner-a-x2')!;
+			innerAX2Binding = xformEntry.getBinding('/root/inner-a-x2')!;
 			innerAX2Element = innerAX2Binding.getElement();
 			innerAX2CalculateExpression = innerAX2Binding.bind.calculate.expression!;
 
