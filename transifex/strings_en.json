@@ -1503,6 +1503,44 @@
         "string": "This Submission has been deleted."
       }
     },
+    "EntityConflictSummary": {
+      "title": {
+        "string": "Data updates in parallel"
+      },
+      "subtitle": {
+        "0": {
+          "string": "One or more updates have been made based on data that may have been out of date."
+        },
+        "1": {
+          "string": "Please review this summary of the parallel updates."
+        }
+      },
+      "footer": {
+        "0": {
+          "string": "If any values need to be adjusted, you can edit the Entity data directly."
+        },
+        "1": {
+          "string": "If everything looks okay, click “Mark as resolved” to dismiss this warning."
+        }
+      },
+      "markAsResolved": {
+        "string": "Mark as resolved"
+      },
+      "confirmation": {
+        "title": {
+          "string": "Is this Entity okay?"
+        },
+        "body": {
+          "string": "After you have reviewed the possibly conflicting updates and made any updates you need to, you can click on Confirm below to clear the parallel update warning."
+        },
+        "confirm": {
+          "string": "Confirm"
+        }
+      },
+      "conflictResolved": {
+        "string": "Conflict warning resolved."
+      }
+    },
     "EntityData": {
       "title": {
         "string": "Entity Data",

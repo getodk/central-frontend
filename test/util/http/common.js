@@ -94,7 +94,7 @@ export function testModalToggles({
 ////////////////////////////////////////////////////////////////////////////////
 // STANDARD BUTTON THINGS
 
-const assertStandardButton = (
+export const assertStandardButton = (
   component,
   buttonSelector,
   disabledSelectors,

@@ -720,6 +720,26 @@ becomes more complicated.
   }
 }
 
+.panel-hazard {
+  border-color: $color-danger;
+
+  &> .panel-heading {
+    color: white;
+    background-color: $color-danger;
+    border-color: $color-danger;
+  }
+  &> .panel-body {
+    border: 1px solid $color-danger;
+
+    &> .panel-footer {
+      margin: 0 -15px -15px -15px;
+      background-color: #585858;
+      color: white;
+    }
+  }
+  
+}
+
 .panel-dialog {
   border: 2px solid $color-accent-primary;
   border-radius: 5px;
