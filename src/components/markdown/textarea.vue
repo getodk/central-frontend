@@ -84,7 +84,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 .markdown-textarea {
   border: 1px solid transparent;
@@ -120,9 +120,15 @@ export default {
   }
 
   .markdown-textarea-actions {
+    @include clearfix;
+    animation-duration: 0.4s;
+    animation-iteration-count: 1;
+    animation-name: expand;
+    animation-timing-function: $ease-extreme-out;
     display: flex;
     align-content: stretch;
     align-items: center;
+    margin-top: 5px;
   }
 
   .markdown-textarea-actions > .btn {
@@ -143,6 +149,10 @@ export default {
   }
 }
 
+@keyframes expand {
+  0% { margin-bottom: -12px; }
+  100% { margin-bottom: 0; }
+}
 </style>
 
 <i18n lang="json5">
