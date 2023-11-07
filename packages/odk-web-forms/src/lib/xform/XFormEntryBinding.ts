@@ -1,7 +1,6 @@
-import type { Accessor, Setter, Signal } from 'solid-js';
-import { createCalculate, createModelNodeSignal } from '../reactivity/model-state.ts';
-import type { XFormDOM } from './XFormDOM.ts';
+import { createBindingState, type BindingState } from '../reactivity/model-state.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
+import type { XFormDOM } from './XFormDOM.ts';
 import type { XFormEntry } from './XFormEntry.ts';
 import type { XFormModelBind } from './XFormModelBind.ts';
 
@@ -14,14 +13,18 @@ export class XFormEntryBinding {
 	// TODO: non-element bindings (i.e. Attr, ...?)
 	protected readonly modelNode: Element;
 
-	protected readonly state: Signal<string> | null = null;
-	protected readonly getter: Accessor<string>;
-	protected readonly setter: Setter<string> | null = null;
+	readonly nodeset: string;
+
+	// TODO: ideally this would not be public. Perhaps it can be again if state
+	// becomes part of this class?
+	readonly state: BindingState;
+
+	readonly parent: XFormEntryBinding | null;
 
 	constructor(
-		protected readonly form: XFormDefinition,
+		readonly form: XFormDefinition,
 		protected readonly instanceDOM: XFormDOM,
-		_states: XFormEntry,
+		protected readonly entry: XFormEntry,
 		readonly bind: XFormModelBind
 	) {
 		const { xformDocument, model, primaryInstance, primaryInstanceRoot, primaryInstanceEvaluator } =
@@ -32,34 +35,65 @@ export class XFormEntryBinding {
 		this.primaryInstance = primaryInstance;
 		this.primaryInstanceRoot = primaryInstanceRoot;
 
-		const modelNode = primaryInstanceEvaluator.evaluateNonNullElement(bind.nodeset);
+		const { nodeset, parentNodeset } = bind;
+		const modelNode = primaryInstanceEvaluator.evaluateNonNullElement(nodeset);
 
+		this.nodeset = nodeset;
 		this.modelNode = modelNode;
 
-		const { expression: calculateExpression } = bind.calculate;
-
-		if (calculateExpression == null) {
-			const state = createModelNodeSignal(modelNode);
-			const [getter, setter] = state;
-
-			this.state = state;
-			this.getter = getter;
-			this.setter = setter;
+		if (parentNodeset == null) {
+			this.parent = null;
 		} else {
-			this.getter = createCalculate(primaryInstanceEvaluator, modelNode, calculateExpression);
+			const parent = entry.getBinding(parentNodeset);
+
+			if (parent == null) {
+				console.error('No binding for parent nodeset', parentNodeset);
+			}
+
+			this.parent = parent;
 		}
+
+		this.state = createBindingState(entry, this);
 	}
 
 	getElement(): Element {
 		return this.modelNode;
 	}
 
-	getValue(): string {
-		return this.getter();
+	getValue = (): string => {
+		return this.state.getValue();
+	};
+
+	isReadonly(): boolean {
+		return this.state.isReadonly();
+	}
+
+	isRelevant(): boolean {
+		const { parent } = this;
+
+		if (parent != null && !parent.isRelevant()) {
+			console.log('skip self relevant check, parent is non-relevant');
+			console.log('self:', this.bind.nodeset);
+			console.log('parent:', parent.bind.nodeset);
+			return false;
+		}
+
+		const result = this.state.isRelevant();
+
+		if (!result) {
+			console.log('self non-relevant', this.bind.nodeset);
+		}
+
+		return result;
+	}
+
+	isRequired(): boolean {
+		return this.state.isRequired();
 	}
 
 	setValue(value: string): void {
-		this.setter?.(value);
+		this.state.setValue(value);
+		// this.setter?.(value);
 	}
 
 	toJSON() {

@@ -1,3 +1,4 @@
+import type { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
 import { getNodesetDependencies } from '../xpath/expression-dependencies.ts';
 import type { XFormDataType } from './XFormDataType.ts';
 import { bindDataType } from './XFormDataType.ts';
@@ -12,12 +13,72 @@ type BindExpressionType =
 	| 'required'
 	| 'saveIncomplete';
 
-class BindExpression {
+interface BindExpressionEvaluationTypes {
+	readonly BOOLEAN: boolean;
+	readonly STRING: string;
+}
+
+export type BindExpressionEvaluationType = keyof BindExpressionEvaluationTypes;
+
+export type BindExpressionEvaluation<Type extends BindExpressionEvaluationType> =
+	BindExpressionEvaluationTypes[Type];
+
+export interface BindExpression<Type extends BindExpressionEvaluationType> {
+	readonly expression: string | null;
+	readonly expressionType: BindExpressionType;
+	readonly dependencyExpressions: readonly string[];
+	readonly evaluationType: Type;
+
+	evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): BindExpressionEvaluation<Type>;
+}
+
+abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
+	implements BindExpression<Type>
+{
 	readonly expression: string | null;
 	readonly dependencyExpressions: readonly string[] = [];
 
-	constructor(bind: XFormModelBind, type: BindExpressionType) {
-		this.expression = bind.bindElement.getAttribute(type);
+	constructor(
+		protected readonly bind: XFormModelBind,
+		readonly expressionType: BindExpressionType,
+		readonly evaluationType: Type
+	) {
+		this.expression = bind.bindElement.getAttribute(expressionType);
+	}
+
+	protected evaluateBoolean(evaluator: XFormXPathEvaluator, contextNode: Node): boolean {
+		const { expression } = this;
+
+		if (expression == null) {
+			throw new Error('todo');
+		}
+
+		return evaluator.evaluateBoolean(expression, {
+			contextNode,
+		});
+	}
+
+	protected evaluateString(evaluator: XFormXPathEvaluator, contextNode: Node): string {
+		const { expression } = this;
+
+		if (expression == null) {
+			throw new Error('todo');
+		}
+
+		return evaluator.evaluateString(expression, {
+			contextNode,
+		});
+	}
+
+	abstract evaluate(
+		evaluator: XFormXPathEvaluator,
+		contextNode: Node
+	): BindExpressionEvaluation<Type>;
+
+	toJSON() {
+		const { bind, ...rest } = this;
+
+		return rest;
 	}
 
 	toString() {
@@ -25,11 +86,23 @@ class BindExpression {
 	}
 }
 
-class DependentBindExpression extends BindExpression {
+class StaticBooleanBindExpression extends StaticBindExpression<'BOOLEAN'> {
+	constructor(bind: XFormModelBind, expressionType: BindExpressionType) {
+		super(bind, expressionType, 'BOOLEAN');
+	}
+
+	override evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): boolean {
+		return this.evaluateBoolean(evaluator, contextNode);
+	}
+}
+
+abstract class DependentBindExpression<
+	Type extends BindExpressionEvaluationType,
+> extends StaticBindExpression<Type> {
 	override readonly dependencyExpressions: readonly string[];
 
-	constructor(bind: XFormModelBind, type: BindExpressionType) {
-		super(bind, type);
+	constructor(bind: XFormModelBind, expressionType: BindExpressionType, evaluationType: Type) {
+		super(bind, expressionType, evaluationType);
 
 		const { expression } = this;
 		const dependencyExpressions: string[] = [];
@@ -44,11 +117,31 @@ class DependentBindExpression extends BindExpression {
 
 		const { parentNodeset } = bind;
 
-		if (type === 'relevant' && parentNodeset != null) {
+		if (expressionType === 'relevant' && parentNodeset != null) {
 			dependencyExpressions.push(parentNodeset);
 		}
 
 		this.dependencyExpressions = dependencyExpressions;
+	}
+}
+
+class DependentBooleanBindExpression extends DependentBindExpression<'BOOLEAN'> {
+	constructor(bind: XFormModelBind, expressionType: BindExpressionType) {
+		super(bind, expressionType, 'BOOLEAN');
+	}
+
+	override evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): boolean {
+		return this.evaluateBoolean(evaluator, contextNode);
+	}
+}
+
+class DependentStringBindExpression extends DependentBindExpression<'STRING'> {
+	constructor(bind: XFormModelBind, expressionType: BindExpressionType) {
+		super(bind, expressionType, 'STRING');
+	}
+
+	override evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): string {
+		return this.evaluateString(evaluator, contextNode);
 	}
 }
 
@@ -64,13 +157,10 @@ export class XFormModelBind {
 	readonly dataType: XFormDataType;
 	readonly parentNodeset: string | null;
 
-	// TODO
-	// readonly parentBind: XFormModelBind | null;
-
-	readonly calculate: DependentBindExpression;
-	readonly readonly: DependentBindExpression;
-	readonly relevant: DependentBindExpression;
-	readonly required: DependentBindExpression;
+	readonly calculate: DependentStringBindExpression;
+	readonly readonly: DependentBooleanBindExpression;
+	readonly relevant: DependentBooleanBindExpression;
+	readonly required: DependentBooleanBindExpression;
 
 	readonly nodesetDependencies: readonly string[];
 
@@ -82,11 +172,11 @@ export class XFormModelBind {
 	// deferring final constraint validation until submission time or some other
 	// event which triggers a more thorough recomputation, but I don't believe that
 	// is strictly necessary (nor necessarily a significant performance concern).
-	readonly constraint: BindExpression | null;
+	readonly constraint: StaticBooleanBindExpression;
 
 	// TODO: it is unclear whether this will need to be supported.
 	// https://github.com/getodk/collect/issues/3758 mentions deprecation.
-	readonly saveIncomplete: BindExpression | null;
+	readonly saveIncomplete: StaticBooleanBindExpression;
 
 	// TODO: these are deferred just to put off sharing namespace stuff
 	// readonly requiredMsg: string | null;
@@ -95,8 +185,28 @@ export class XFormModelBind {
 	// readonly preloadParams: string | null;
 	// readonly 'max-pixels': string | null;
 
+	protected _parentBind: XFormModelBind | null | undefined;
+
+	get parentBind(): XFormModelBind | null {
+		let bind = this._parentBind;
+
+		if (typeof bind === 'undefined') {
+			const { parentNodeset } = this;
+
+			if (parentNodeset == null) {
+				bind = null;
+			} else {
+				bind = this.form.model.binds.get(parentNodeset) ?? null;
+			}
+
+			this._parentBind = bind;
+		}
+
+		return bind;
+	}
+
 	constructor(
-		protected readonly form: XFormDefinition,
+		readonly form: XFormDefinition,
 		protected readonly model: XFormModelDefinition,
 		readonly nodeset: string,
 		readonly bindElement: BindElement
@@ -109,10 +219,15 @@ export class XFormModelBind {
 
 		this.parentNodeset = parentNodeset.length > 1 ? parentNodeset : null;
 
-		const calculate = (this.calculate = new DependentBindExpression(this, 'calculate'));
-		const readonly = (this.readonly = new DependentBindExpression(this, 'readonly'));
-		const relevant = (this.relevant = new DependentBindExpression(this, 'relevant'));
-		const required = (this.required = new DependentBindExpression(this, 'required'));
+		const calculate = new DependentStringBindExpression(this, 'calculate');
+		const readonly = new DependentBooleanBindExpression(this, 'readonly');
+		const relevant = new DependentBooleanBindExpression(this, 'relevant');
+		const required = new DependentBooleanBindExpression(this, 'required');
+
+		this.calculate = calculate;
+		this.readonly = readonly;
+		this.relevant = relevant;
+		this.required = required;
 
 		this.nodesetDependencies = Array.from(
 			new Set(
@@ -122,8 +237,8 @@ export class XFormModelBind {
 			)
 		);
 
-		this.constraint = new BindExpression(this, 'constraint');
-		this.saveIncomplete = new BindExpression(this, 'saveIncomplete');
+		this.constraint = new StaticBooleanBindExpression(this, 'constraint');
+		this.saveIncomplete = new StaticBooleanBindExpression(this, 'saveIncomplete');
 		// this.requiredMsg = bindElement.getAttributeNS(...)
 		// this.constraintMsg = bindElement.getAttributeNS(...)
 		// this.preload = bindElement.getAttributeNS(...)

@@ -1,9 +1,7 @@
-import { createUniqueId } from 'solid-js';
-import { Show } from 'solid-js/web';
+import { createMemo, createUniqueId } from 'solid-js';
 import type { XFormEntryBinding } from '../../lib/xform/XFormEntryBinding.ts';
 import type { XFormViewLabel } from '../../lib/xform/XFormViewLabel.ts';
-import { DefaultLabel } from '../styled/DefaultLabel.tsx';
-import { DefaultLabelParagraph } from '../styled/DefaultLabelParagraph.tsx';
+import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 import { DefaultTextField } from '../styled/DefaultTextField.tsx';
 import { DefaultTextFormControl } from '../styled/DefaultTextFormControl.tsx';
 
@@ -15,21 +13,24 @@ export interface TextWidgetProps {
 
 export const TextWidget = (props: TextWidgetProps) => {
 	const id = createUniqueId();
+	const isDisabled = createMemo(() => {
+		return props.binding?.isReadonly() === true || props.binding?.isRelevant() === false;
+	});
 
 	return (
 		<DefaultTextFormControl fullWidth>
-			<Show when={props.label} keyed={true}>
-				{(label) => (
-					<DefaultLabelParagraph>
-						<DefaultLabel for={id}>{label.labelText}</DefaultLabel>
-					</DefaultLabelParagraph>
-				)}
-			</Show>
+			<XFormControlLabel binding={props.binding} id={id} label={props.label} />
 			<DefaultTextField
 				id={id}
 				value={props.binding?.getValue()}
 				onChange={(event) => {
 					props.binding?.setValue(event.target.value);
+				}}
+				disabled={isDisabled()}
+				inputProps={{
+					disabled: isDisabled(),
+					readonly: isDisabled(),
+					required: props.binding?.isRequired() ?? false,
 				}}
 			/>
 		</DefaultTextFormControl>

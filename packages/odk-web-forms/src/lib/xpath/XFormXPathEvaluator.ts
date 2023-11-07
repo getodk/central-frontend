@@ -21,6 +21,15 @@ export class XFormXPathEvaluator extends Evaluator {
 		});
 	}
 
+	evaluateBoolean(expression: string, options: XFormXPathEvaluatorEvaluateOptions = {}): boolean {
+		return this.evaluate(
+			expression,
+			options.contextNode ?? this.rootNode,
+			null,
+			XPathResult.BOOLEAN_TYPE
+		).booleanValue;
+	}
+
 	evaluateString(expression: string, options: XFormXPathEvaluatorEvaluateOptions = {}): string {
 		return this.evaluate(
 			expression,

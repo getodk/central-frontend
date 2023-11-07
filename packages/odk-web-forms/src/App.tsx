@@ -1,5 +1,6 @@
-import { Show, Suspense, createResource } from 'solid-js';
+import { Show, Suspense, createEffect, createResource, createSignal, on } from 'solid-js';
 import { Divider, Stack } from 'suid/material';
+import { DemoFixturesList, type SelectedDemoFixture } from './components/Demo/DemoFixturesList.tsx';
 import { LocalizationProvider } from './components/LocalizationProvider.tsx';
 import { Page } from './components/Page/Page.tsx';
 import { ThemeProvider } from './components/ThemeProvider.tsx';
@@ -22,6 +23,7 @@ const localizations: readonly Localization[] = [
 ];
 
 export const App = () => {
+	const [fixture, setFixture] = createSignal<SelectedDemoFixture | null>(null);
 	// A resource (Solid's mechanism for data fetching and triggering Suspense) is a
 	// likely way we'll fetch forms, so using it here to anticipate that rather than
 	// importing the fixture directly.
@@ -29,18 +31,21 @@ export const App = () => {
 	// TODO: more fixtures are likely incoming rather soon, it'll make sense to have
 	// an app entry to correspond to that, and allow selection of particular fixtures,
 	// perhaps arbitrary forms as well.
-	const [fixtureSourceXML] = createResource(async () => {
-		const { default: fixtureSource } = await import(
-			'../fixtures/xforms/basic-calculate.xform.xml?raw'
-		);
-
-		return fixtureSource;
+	const [fixtureSourceXML, { refetch }] = createResource(async () => {
+		return await Promise.resolve(fixture()?.xml);
 	});
+
+	createEffect(
+		on(fixture, async () => {
+			await refetch();
+		})
+	);
 
 	return (
 		<ThemeProvider>
 			<LocalizationProvider localizations={localizations}>
 				<Page>
+					<DemoFixturesList setDemoFixture={setFixture} />
 					<Suspense fallback={<p>Loading…</p>}>
 						<Show when={fixtureSourceXML()} keyed={true}>
 							{(sourceXML) => {
@@ -48,10 +53,13 @@ export const App = () => {
 								const entry = new XFormEntry(definition);
 
 								return (
-									<Stack spacing={7}>
-										<XFormView entry={entry} />
+									<Stack spacing={4}>
 										<Divider />
-										<XFormDetails definition={definition} entry={entry} />
+										<Stack spacing={7}>
+											<XFormView entry={entry} />
+											<Divider />
+											<XFormDetails definition={definition} entry={entry} />
+										</Stack>
 									</Stack>
 								);
 							}}

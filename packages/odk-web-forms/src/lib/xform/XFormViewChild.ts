@@ -72,18 +72,21 @@ export class XFormViewChild {
 	readonly ref: string | null;
 	readonly label: XFormViewLabel | null;
 	// TODO: `<group>` and `<repeat>`
-	// readonly children: readonly XFormViewChild[];
+	readonly children: readonly XFormViewChild[];
 
 	protected constructor(
 		protected readonly form: XFormDefinition,
 		element: Element
 	) {
-		const type = (this.type = viewChildType(element));
+		const type = viewChildType(element);
 
+		this.type = type;
 		this.ref = viewChildRef(type, element);
 		this.label = XFormViewLabel.fromViewChild(this, element);
 
-		// this.children = [];
+		this.children = [];
+		// TODO:
+		// this.children = XFormViewChild.children(form, element);
 	}
 
 	toJSON() {
