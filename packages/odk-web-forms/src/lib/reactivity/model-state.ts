@@ -3,10 +3,10 @@ import {
 	createComputed,
 	createEffect,
 	createMemo,
-	createRenderEffect,
 	createResource,
 	createSignal,
 	on,
+	untrack,
 } from 'solid-js';
 import { UpsertableMap } from '../collections/UpsertableMap.ts';
 import type { XFormEntry } from '../xform/XFormEntry.ts';
@@ -16,6 +16,7 @@ import type {
 	BindExpressionEvaluation,
 	BindExpressionEvaluationType,
 } from '../xform/XFormModelBind.ts';
+import { createLatest } from './primitives/createLatest.ts';
 
 // TODO: the assumption here is that an XForm may only bind elements and attributes.
 // Is that assumption correct?
@@ -86,44 +87,58 @@ const createModelState = (
 
 		const [wasRelevant, setWasRelevant] = createSignal(isRelevant());
 
-		const [state, setState] = createSignal(getDOMValue(), {
-			// This ensures that downstream reactive dependencies are updated when the
-			// signal's relevance changes, even though its **runtime value** has not
-			// necessarily changed.
-			equals: (previous, current) => {
-				return previous === current && isRelevant() === wasRelevant();
-			},
-		});
+		// This ensures that downstream reactive dependencies are updated when the
+		// signal's relevance changes, even though its **runtime value** has not
+		// necessarily changed.
+		const equals = (previous: string, current: string) => {
+			return previous === current && isRelevant() === wasRelevant();
+		};
 
-		// TODO: This works *almost* as expected. There is currently a bug where:
-		//
-		// 1. Node is relevant
-		// 2. Calculation is performed, and its result assigned
-		// 3. State is updated directly (i.e. presumably by user input)
-		// 4. Node becomes non-relevant
-		// 5. Node becomes relevant once again
-		// 6. Calculation is perfomed/assigned once again
-		//
-		// My understanding is that step 6 should instead restore the state from
-		// step 3.
-		if (calculate != null) {
-			createRenderEffect(() => {
-				if (isRelevant()) {
-					setState(calculate());
+		const [baseState, setState] = createSignal(getDOMValue(), { equals });
+
+		let state: Accessor<string>;
+
+		if (calculate == null) {
+			state = baseState;
+		} else {
+			// As the name states, calculations are only performed when a question is
+			// relevant. Returns the current state otherwise.
+			//
+			// On its own, this wouldn't warrant a comment. But there's an important
+			// subtlety in the use of `untrack` to check relevance, which ensures the
+			// expected behavior in the following scenario:
+			//
+			// 1. Question is relevant
+			// 2. Question is calculated
+			// 3. User manually enters question state
+			// 4. Question becomes non-relevant
+			// 5. Question relevance is restored
+			//
+			// With `untrack`, the manually entered state is restored. Without it,
+			// the calculation will be rerun and its result will override the user's
+			// manually entered state.
+			const calculateWhenRelevant = () => {
+				if (untrack(isRelevant)) {
+					return calculate();
 				}
-			});
+
+				return baseState();
+			};
+
+			state = createLatest([baseState, calculateWhenRelevant]);
+			setState(baseState());
 		}
 
 		createComputed(() => {
 			const isCurrentlyRelevant = isRelevant();
+			const currentState = isCurrentlyRelevant ? state() : baseState();
 
-			if (isCurrentlyRelevant !== wasRelevant()) {
-				setState(state());
-			}
-
-			setDOMValue(isCurrentlyRelevant ? state() : '');
+			setState(currentState);
+			setDOMValue(isCurrentlyRelevant ? currentState : '');
 			setWasRelevant(isCurrentlyRelevant);
-		});
+
+			return isCurrentlyRelevant;
+		}, isRelevant());
 
 		return [state, setState];
 	});

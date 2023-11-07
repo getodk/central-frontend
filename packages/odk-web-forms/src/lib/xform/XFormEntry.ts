@@ -70,14 +70,12 @@ export class XFormEntry {
 		// `createEffect` has begun over-computing as more of the underlying
 		// reactivity is built out.
 		createEffect(
-			on(
-				bindingStateAccessors,
-				() => {
+			on(bindingStateAccessors, () => {
+				queueMicrotask(() => {
 					console.log('Recomputing full submission state');
 					setSerializedSubmission(serializeSubmission());
-				},
-				{ defer: true }
-			)
+				});
+			})
 		);
 
 		this.serializedSubmission = serializedSubmission;

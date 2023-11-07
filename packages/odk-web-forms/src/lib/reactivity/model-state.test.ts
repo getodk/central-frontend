@@ -314,7 +314,7 @@ describe('Model state reactive computations', () => {
 			}
 		);
 
-		it.skip('restores an arbitrary value without recalculating when becoming relevant again', () => {
+		it('restores an arbitrary value without recalculating when becoming relevant again', () => {
 			const first = entry.getBinding('/root/first-question')!;
 			const second = entry.getBinding('/root/second-question')!;
 			const third = entry.getBinding('/root/third-question')!;
