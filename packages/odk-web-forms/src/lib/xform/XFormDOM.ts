@@ -2,6 +2,8 @@ import { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
 
 const domParser = new DOMParser();
 
+const openingTag = (element: Element) => element.outerHTML.replace(/>(.|\n)*/, '>');
+
 export class XFormDOM {
 	// XPath
 	readonly rootEvaluator: XFormXPathEvaluator;
@@ -53,5 +55,31 @@ export class XFormDOM {
 	// TODO: anticipating this will be an entry point for edits as well
 	createInstance(): XFormDOM {
 		return new XFormDOM(this.sourceXML);
+	}
+
+	toJSON() {
+		const {
+			rootEvaluator,
+			primaryInstanceEvaluator,
+			html,
+			head,
+			title,
+			model,
+			primaryInstance,
+			primaryInstanceRoot,
+			xformDocument,
+			...rest
+		} = this;
+
+		return {
+			...rest,
+			xformDocument: '#document',
+			html: openingTag(html),
+			head: openingTag(head),
+			title: openingTag(title),
+			model: openingTag(model),
+			primaryInstance: openingTag(primaryInstance),
+			primaryInstanceRoot: openingTag(primaryInstanceRoot),
+		};
 	}
 }

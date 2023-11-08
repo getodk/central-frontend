@@ -93,7 +93,6 @@ export class XFormEntryBinding {
 
 	setValue(value: string): void {
 		this.state.setValue(value);
-		// this.setter?.(value);
 	}
 
 	toJSON() {

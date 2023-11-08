@@ -9,7 +9,7 @@ import {
 	t,
 	title,
 } from '../../test/fixtures/xform-dsl';
-import { XFormDefinition } from './XFormDefinition';
+import { XFormDefinition } from './XFormDefinition.ts';
 
 describe('XFormModelBind', () => {
 	it.each([
