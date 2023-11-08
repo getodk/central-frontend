@@ -1,6 +1,7 @@
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import PageBack from '../../../src/components/page/back.vue';
+import Confirmation from '../../../src/components/confirmation.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -121,5 +122,39 @@ describe('EntityShow', () => {
     });
 
     it('updates the number of entries in the feed');
+  });
+
+  describe('Conflict summary', () => {
+    it('shows conflict summary', async () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedEntityVersions.createPast(2, { uuid: 'e', baseVersion: 1 });
+
+      const component = await load('/projects/1/entity-lists/trees/entities/e', {
+        root: false
+      });
+      component.find('#entity-conflict-summary').exists().should.be.true();
+    });
+
+    it('hides conflict summary after resolve', async () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedEntityVersions.createPast(2, { uuid: 'e', baseVersion: 1 });
+
+      const component = await load('/projects/1/entity-lists/trees/entities/e', {
+        root: false
+      })
+        .complete()
+        .request(async (c) => {
+          await c.get('#entity-conflict-summary .btn-default').trigger('click');
+          await c.getComponent(Confirmation).get('.btn-danger').trigger('click');
+        })
+        .respondWithData(() => {
+          testData.extendedEntities.resolve(-1);
+          return testData.standardEntities.last();
+        })
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .respondWithData(() => testData.extendedEntityVersions.sorted());
+
+      component.find('#conflict-summary').exists().should.be.false();
+    });
   });
 });

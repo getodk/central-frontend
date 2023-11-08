@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
           <entity-data @update="update.state = true"/>
         </div>
         <div class="col-xs-8">
+          <entity-conflict-summary v-if="entity.data?.conflict" :entity="entity" @resolve="afterResolve"/>
           <entity-activity/>
         </div>
       </div>
@@ -47,6 +48,7 @@ import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import EntityConflictSummary from './conflict-summary.vue';
 
 import useEntity from '../../request-data/entity';
 import useRoutes from '../../composables/routes';
@@ -119,6 +121,13 @@ const afterUpdate = (updated) => {
   });
 };
 
+const afterResolve = (updated) => {
+  fetchActivityData();
+  entity.patch(() => {
+    entity.updatedAt = updated.updatedAt;
+    entity.conflict = updated.conflict;
+  });
+};
 const { datasetPath } = useRoutes();
 </script>
 

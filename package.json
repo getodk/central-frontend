@@ -7,6 +7,7 @@
     "dev:oidc": "VUE_APP_OIDC_ENABLED=true npm run dev",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix --max-warnings 0 src/ bin/ test/ *.js",
+    "lint:fix": "vue-cli-service lint --fix --max-warnings 0 src/ bin/ test/ *.js",
     "test": "./test/run.sh"
   },
   "volta": {
