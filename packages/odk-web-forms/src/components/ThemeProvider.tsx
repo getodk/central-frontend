@@ -17,7 +17,11 @@ declare module '@suid/material/styles/createTheme' {
 }
 
 declare module '@suid/material/styles/createPalette' {
+	type PaletteShades = Record<number | `${number}%`, string>;
+
 	interface PaletteOptions {
+		primaryShades?: PaletteShades;
+
 		required?: string;
 	}
 }
@@ -42,6 +46,9 @@ export const odkTheme = createTheme({
 		primary: {
 			main: '#009ecc',
 			contrastText: '#fff',
+		},
+		primaryShades: {
+			'15%': '#D8ECF5',
 		},
 		required: '#D42C2C',
 	}),
@@ -76,7 +83,6 @@ export const odkTheme = createTheme({
 		},
 		debug: {
 			'&::before': {
-				content: '"[Not relevant]"',
 				display: 'block',
 				position: 'absolute',
 			},
