@@ -14,7 +14,7 @@ const mountOptions = (options = undefined) => mergeMountOptions(options, {
 const mountComponent = (options = undefined) =>
   mount(ConflictSummary, mountOptions(options));
 
-describe('EntityUpdate', () => {
+describe('EntityConflictSummary', () => {
   it('show the confirmation modal', async () => {
     testData.extendedEntities.createPast(1);
     const component = await mountComponent();
@@ -78,6 +78,23 @@ describe('EntityUpdate', () => {
       const component = await resolve();
 
       component.getComponent(Confirmation).props().state.should.be.false();
+    });
+
+    it('shows conflict error', () => {
+      testData.extendedEntities.createPast(1);
+      return mockHttp()
+        .mount(ConflictSummary, mountOptions())
+        .request(async (component) => {
+          await component.get('.btn-default').trigger('click');
+          const modal = component.getComponent(Confirmation);
+          await modal.get('.btn-danger').trigger('click');
+        })
+        .respondWithProblem(409.15)
+        .afterResponse(component => {
+          component.should.alert('danger', (message) => {
+            message.should.eql('Data has been modified by another user. Please refresh to see the updated data.');
+          });
+        });
     });
   });
 });

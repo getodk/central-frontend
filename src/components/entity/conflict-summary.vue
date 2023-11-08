@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <div id="conflict-summary" class="panel panel-hazard">
+  <div id="entity-conflict-summary" class="panel panel-hazard">
     <div class="panel-heading">
       <span class="icon-exclamation-circle"></span>
       <div>
@@ -33,8 +33,8 @@ except according to the terms contained in the LICENSE file.
           <br>
           {{ $t('footer[1]') }}
         </p>
-        <button type="button" class="btn btn-default" @click="showConfirmation" @success="markAsResolved">
-          <span class="icon-random"></span> {{ $t('markAsResolved') }}
+        <button type="button" class="btn btn-default" @click="showConfirmation">
+          <span class="icon-random"></span>{{ $t('markAsResolved') }}
         </button>
       </div>
     </div>
@@ -68,7 +68,7 @@ const { dataset } = useRequestData();
 const { alert } = inject('container');
 
 defineOptions({
-  name: 'ConflictSummary'
+  name: 'EntityConflictSummary'
 });
 
 const props = defineProps({
@@ -187,6 +187,7 @@ const markAsResolved = () => {
         "If any values need to be adjusted, you can edit the Entity data directly.",
         "If everything looks okay, click “Mark as resolved” to dismiss this warning."
       ],
+      // @transifexKey component.EntityResolve.action.markAsResolved
       "markAsResolved": "Mark as resolved",
       "confirmation":{
         "title": "Is this Entity okay?",

@@ -37,7 +37,7 @@ describe('Confirmation', () => {
     text.should.equal('Custom Yes Text');
   });
 
-  it('shows default text for no button', () => {
+  it('shows passed text for no button', () => {
     const text = mountComponent({ props: { noText: 'Custom No Text' } }).get('.btn-link').text();
     text.should.equal('Custom No Text');
   });

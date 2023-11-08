@@ -1,6 +1,7 @@
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import PageBack from '../../../src/components/page/back.vue';
+import Confirmation from '../../../src/components/confirmation.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -131,7 +132,7 @@ describe('EntityShow', () => {
       const component = await load('/projects/1/entity-lists/trees/entities/e', {
         root: false
       });
-      component.find('#conflict-summary').exists().should.be.true();
+      component.find('#entity-conflict-summary').exists().should.be.true();
     });
 
     it('hides conflict summary after resolve', async () => {
@@ -143,15 +144,15 @@ describe('EntityShow', () => {
       })
         .complete()
         .request(async (c) => {
-          await c.get('#conflict-summary .btn-default').trigger('click');
-          await c.get('.modal-actions .btn-danger').trigger('click');
+          await c.get('#entity-conflict-summary .btn-default').trigger('click');
+          await c.getComponent(Confirmation).get('.btn-danger').trigger('click');
         })
         .respondWithData(() => {
           testData.extendedEntities.resolve(-1);
           return testData.standardEntities.last();
         })
         .respondWithData(() => testData.extendedAudits.sorted())
-        .respondWithData(() => []);
+        .respondWithData(() => testData.extendedEntityVersions.sorted());
 
       component.find('#conflict-summary').exists().should.be.false();
     });

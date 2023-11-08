@@ -1523,9 +1523,6 @@
           "string": "If everything looks okay, click “Mark as resolved” to dismiss this warning."
         }
       },
-      "markAsResolved": {
-        "string": "Mark as resolved"
-      },
       "confirmation": {
         "title": {
           "string": "Is this Entity okay?"
