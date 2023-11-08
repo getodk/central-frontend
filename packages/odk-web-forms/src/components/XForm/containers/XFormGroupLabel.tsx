@@ -5,7 +5,14 @@ import { Stack, styled } from 'suid/material';
 import { PlainTextButton } from '../../styled/PlainTextButton.tsx';
 import { XFormLabel, type XFormLabelProps } from '../XFormLabel.tsx';
 
+const GroupLabelStack = styled(Stack)(({ theme }) => ({
+	alignItems: '1rem',
+	flexDirection: 'row',
+	gap: theme.spacing(0.5),
+}));
+
 const ClippedGroupToggleIconContainer = styled('div')(({ theme }) => ({
+	alignSelf: '1rem',
 	overflow: 'hidden',
 
 	'& > *': {
@@ -28,7 +35,7 @@ export const XFormGroupLabel = (props: XFormGroupLabelProps) => {
 				}
 			}}
 		>
-			<Stack alignItems="center" direction="row" spacing={0.5}>
+			<GroupLabelStack>
 				<ClippedGroupToggleIconContainer>
 					<Switch>
 						<Match when={props.isGroupVisible}>
@@ -41,7 +48,7 @@ export const XFormGroupLabel = (props: XFormGroupLabelProps) => {
 				</ClippedGroupToggleIconContainer>
 
 				<XFormLabel as="span" id={props.id} binding={props.binding} label={props.label} />
-			</Stack>
+			</GroupLabelStack>
 		</PlainTextButton>
 	);
 };
