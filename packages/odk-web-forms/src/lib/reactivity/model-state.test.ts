@@ -440,6 +440,117 @@ describe('Model state reactive computations', () => {
 			expect(second.isReadonly()).toBe(true);
 		});
 
-		describe.todo('readonly inheritance');
+		describe('readonly inheritance', () => {
+			let dispose: () => void;
+			let entry: XFormEntry;
+
+			beforeEach(() => {
+				[dispose, entry] = createRoot((disposeRoot) => {
+					const xform = html(
+						head(
+							title('Readonly'),
+							model(
+								mainInstance(
+									// Preserve indentation...
+									t(
+										'root id="minimal"',
+										t('a', 'a default'),
+										// ...
+										t(
+											'grp',
+											// ...
+											t('b'),
+											t('c')
+										)
+									)
+								),
+								bind('/root/a'),
+								bind('/root/grp').readonly("/root/a = 'set b readonly'"),
+								bind('/root/grp/b'),
+								bind('/root/grp/c').readonly("/root/grp/b = 'yep'")
+							)
+						),
+						body()
+					);
+
+					const definition = new XFormDefinition(xform.asXml());
+
+					return [disposeRoot, new XFormEntry(definition)];
+				});
+			});
+
+			afterEach(() => {
+				dispose();
+			});
+
+			it('is readonly if a parent is readonly', () => {
+				const a = entry.getBinding('/root/a')!;
+				const b = entry.getBinding('/root/grp/b')!;
+
+				// Check assumptions
+				expect(b.isReadonly()).toBe(false);
+
+				a.setValue('set b readonly');
+
+				expect(b.isReadonly()).toBe(true);
+			});
+
+			it('is not readonly if the parent is no longer readonly', () => {
+				const a = entry.getBinding('/root/a')!;
+				const b = entry.getBinding('/root/grp/b')!;
+
+				a.setValue('set b readonly');
+
+				// Check assumptions
+				expect(b.isReadonly()).toBe(true);
+
+				a.setValue('not anymore');
+
+				expect(b.isReadonly()).toBe(false);
+			});
+
+			it('remains readonly for its own condition if the parent is not readonly', () => {
+				const a = entry.getBinding('/root/a')!;
+				const b = entry.getBinding('/root/grp/b')!;
+				const c = entry.getBinding('/root/grp/c')!;
+
+				b.setValue('yep');
+
+				// Check assumptions
+				expect(c.isReadonly()).toBe(true);
+
+				a.setValue('set b readonly');
+
+				// Check assumptions
+				expect(c.isReadonly()).toBe(true);
+
+				a.setValue('not anymore');
+
+				expect(c.isReadonly()).toBe(true);
+			});
+
+			it("is no longer readonly if both its own condition and parent's are not satisfied", () => {
+				const a = entry.getBinding('/root/a')!;
+				const b = entry.getBinding('/root/grp/b')!;
+				const c = entry.getBinding('/root/grp/c')!;
+
+				b.setValue('yep');
+
+				// Check assumptions
+				expect(c.isReadonly()).toBe(true);
+
+				a.setValue('set b readonly');
+
+				// Check assumptions
+				expect(c.isReadonly()).toBe(true);
+
+				a.setValue('not anymore');
+				b.setValue('');
+
+				expect(c.isReadonly()).toBe(false);
+			});
+		});
+
+		describe.todo('write prevention');
 	});
 });

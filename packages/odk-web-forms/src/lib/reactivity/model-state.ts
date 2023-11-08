@@ -206,12 +206,71 @@ const createBindExpressionEvaluation = <T extends BindExpressionEvaluationType>(
 };
 
 export interface BindingState {
+	/**
+	 * Returns the binding's **runtime value**. This value may differ from its
+	 * state in the submission DOM: if the binding is presently non-relevant, its
+	 * DOM value will be blank but its runtime value will remain set to whatever
+	 * it had been prior to becoming non-relevant.
+	 *
+	 * This interface-level distinction may change if it turns out to be
+	 * confusing. The preservation of state will remain, as it is expected
+	 * behavior for relevance, but we may consider producing the same non-relevant
+	 * blank value when calling this getter.
+	 */
 	readonly getValue: Accessor<string>;
+
+	/**
+	 * Per ODK XForms spec:
+	 *
+	 * > As in
+	 * > {@link https://www.w3.org/TR/2003/REC-xforms-20031014/slice6.html#model-prop-readOnly | XForms 1.0}
+	 * > [...]
+	 *
+	 * While the ODK spec is not explicit about inheritance, according to the
+	 * linked W3C XForms spec:
+	 *
+	 * > If any ancestor node evaluates to true, this value is treated as true.
+	 * > Otherwise, the local value is used.
+	 */
 	readonly isReadonly: Accessor<boolean>;
+
+	/**
+	 * Per ODK XForms spec:
+	 *
+	 * > As in
+	 * > {@link https://www.w3.org/TR/2003/REC-xforms-20031014/slice6.html#model-prop-relevant | XForms 1.0}
+	 * > [...]
+	 *
+	 * Which states:
+	 *
+	 * > If any ancestor node evaluates to XPath false, this value is treated as
+	 * > false. Otherwise, the local value is used.
+	 */
 	readonly isRelevant: Accessor<boolean>;
+
+	/**
+	 * Consistent with ODK and W3C XForms specifications; as such, it is not
+	 * inherited. TODO: what does it mean for a group to be required if none of
+	 * its descendants are?
+	 */
 	readonly isRequired: Accessor<boolean>;
+
+	/**
+	 * Sets the binding's **runtime value**, which may differ from its value in
+	 * the submission DOM: if the question is not relevant, its DOM value will
+	 * remain blank.
+	 *
+	 * This setter should be used when a value is set by explicit user
+	 * interaction, or any equivalent action which would set user-defined state.
+	 *
+	 * TODO: What restrictions should be placed on this setter when...
+	 *
+	 * - non-relevant
+	 * - readonly
+	 *
+	 * Instinctually, both should prevent setting any value.
+	 */
 	readonly setValue: ValueSetter<string>;
-	readonly state: ValueSetterSignal<string>;
 }
 
 const NOOP_BINDING_STATE: BindingState = (() => {
@@ -285,14 +344,21 @@ export const createBindingState = (entry: XFormEntry, binding: XFormEntryBinding
 
 		const [getState, setState] = state;
 
+		const isSelfReadonly = createBindExpressionEvaluation(
+			entry,
+			binding,
+			readonly,
+			createMemo(() => false)
+		);
+		const isReadonly = createMemo(() => {
+			const isParentReadonly = parent?.isReadonly() ?? false;
+
+			return isParentReadonly || isSelfReadonly();
+		});
+
 		return {
 			getValue: getState,
-			isReadonly: createBindExpressionEvaluation(
-				entry,
-				binding,
-				readonly,
-				createMemo(() => false)
-			),
+			isReadonly,
 			isRelevant,
 			isRequired: createBindExpressionEvaluation(
 				entry,
@@ -301,7 +367,6 @@ export const createBindingState = (entry: XFormEntry, binding: XFormEntryBinding
 				createMemo(() => false)
 			),
 			setValue: setState,
-			state,
 		};
 	});
 };
