@@ -1,10 +1,16 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src"],
+  "include": ["src", "test/**/*.ts", "test/**/*.tsx", "tools/**/*.ts", "vite-env.d.ts"],
   "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
     "declarationDir": "./dist",
     "jsx": "preserve",
+    "jsxImportSource": "solid-js",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "outDir": "./dist"
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "paths": {
+      "@solidjs/testing-library": ["./tools/@solidjs/testing-library/index.ts"]
+    }
   }
 }

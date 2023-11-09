@@ -12,15 +12,30 @@ An XPath evaluator, with intent to support:
 
 ## Install
 
-Install with `npm` (or the equivalent command for your preferred package manager):
+Install this package and its required peer dependencies with `npm` (or the equivalent command for your preferred package manager):
 
 ```sh
-npm install @odk/xpath
+npm install @odk/xpath web-tree-sitter tree-sitter-xpath
 ```
 
 ### A note on tree-sitter, usage with or without a bundler
 
 The `@odk/xpath` package depends on the `web-tree-sitter` and `tree-sitter-xpath` libraries. Both provide WASM resources which must be accessible to initialize parsing in this libary. We intend to make setting it all up as easy as possible, and document it thoroughly. That effort is a work in progress, pending our own experience using this library internally. We'll update this space as that effort progresses.
+
+A solution which is working so far, both in the @odk/xpath test suite and downstream within the odk-web-forms monorepo:
+
+```ts
+import xpathLanguage from 'tree-sitter-xpath/tree-sitter-xpath.wasm?url';
+import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
+import { TreeSitterXPathParser } from '@odk/xpath/static/grammar/TreeSitterXPathParser.ts';
+
+export const xpathParser = await TreeSitterXPathParser.init({
+  webTreeSitter,
+  xpathLanguage,
+});
+```
+
+Note that this depends on Vite's [`?url` import suffix](https://vitejs.dev/guide/assets.html#explicit-url-imports). The same general approach should apply for other tooling/bundlers or even without a build step, so long as `webTreeSitter` and `xpathLanguage` successfully resolve to their respective WASM resources.
 
 ## Example usage
 
@@ -57,12 +72,12 @@ Likewise, `result` is API-compatible with the standard DOM [`XPathResult`](https
 
 ## Supported/tested environments
 
-- Browsers (latest versions)
+- Browsers (latest versions):
   - Chrome/Chromium-based browsers (tested only in Chromium)
   - Firefox
-  - Safari/WebKit (tested WebKit directly)
-- Non-browser runtimes with a DOM compatibility environement.
-  - Node (current/LTS; tested with [jsdom](https://github.com/jsdom/jsdom)). Node compatibility **does not** require any native extensions. DOM compatibility **does not** require any underlying XPath evaluation functionality (though it does currently rely on global constants like `XPathResult`).
+  - Safari/WebKit (tested in WebKit directly)
+- Non-browser runtimes with a DOM compatibility environement:
+  - Node (current/LTS; tested with [jsdom](https://github.com/jsdom/jsdom)). Node DOM compatibility **does not** require any native extensions for. DOM compatibility **does not** require any underlying XPath evaluation functionality (though it does currently rely on global constants like `XPathResult`).
   - Other runtimes and DOM compatibility libraries are not currently tested, support is unknown.
 
 ## Known issues and incompatibilities

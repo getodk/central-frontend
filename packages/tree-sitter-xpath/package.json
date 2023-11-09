@@ -41,7 +41,7 @@
     "node-gyp": "^9.4.0",
     "tree-sitter": "^0.20.5",
     "tree-sitter-cli": "^0.20.8",
-    "vite": "^4.4.11",
+    "vite": "^4.5.0",
     "web-tree-sitter": "^0.20.8"
   },
   "peerDependencies": {

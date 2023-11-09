@@ -1,6 +1,7 @@
 import { expect } from 'vitest';
 import { Evaluator } from '../src/index.ts';
 import type { AnyXPathEvaluator, XPathResultType } from '../src/shared/interface.ts';
+import { xpathParser } from './parser.ts';
 
 declare global {
 	// eslint-disable-next-line no-var
@@ -50,7 +51,7 @@ export class TestContext {
 	) {
 		const xml = sourceXML ?? '<root/>';
 
-		const evaluator = new Evaluator({
+		const evaluator = new Evaluator(xpathParser, {
 			parseOptions: {
 				attemptErrorRecovery: true,
 			},
