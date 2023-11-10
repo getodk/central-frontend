@@ -6,10 +6,10 @@
   "author": "getodk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eyelidlessness/odk-web-forms",
+    "url": "https://github.com/getodk/web-forms",
     "directory": "packages/odk-xpath"
   },
-  "bugs": "https://github.com/eyelidlessness/odk-web-forms/issues",
+  "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",
   "exports": {
     ".": {
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
+    "@odk/common": "0.0.0",
     "crypto-js": "^4.1.1",
     "itertools-ts": "^1.23.0"
   },

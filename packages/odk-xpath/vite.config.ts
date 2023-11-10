@@ -1,11 +1,12 @@
 /// <reference types="vite/client" />
 /// <reference types="vitest" />
 
+import type { CollectionValues } from '@odk/common/types/collections/CollectionValues';
+import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
 import dts from 'vite-plugin-dts';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
-import type { CollectionValues } from './src/lib/collections/types';
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
@@ -124,8 +125,15 @@ export default defineConfig(({ command, mode }) => {
 			// Generate type definitions. This is somehow more reliable than directly calling tsc
 			dts({
 				exclude: ['test', 'vite-env.d.ts'],
+				entryRoot: './src',
 			}),
 		].filter((plugin) => plugin != null),
+		resolve: {
+			alias: {
+				'@odk/common/types': resolvePath(__dirname, '../common/types'),
+				'@odk/common': resolvePath(__dirname, '../common/src'),
+			},
+		},
 		test: {
 			browser: {
 				enabled: BROWSER_ENABLED,

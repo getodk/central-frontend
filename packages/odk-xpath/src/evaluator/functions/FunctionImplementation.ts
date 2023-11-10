@@ -7,12 +7,12 @@
 // - Type hints -> anything?
 // - TS types for arity -> expression nullishness?
 
-import { UnreachableError } from '../../lib/error/UnreachableError.ts';
-import type { Evaluation } from '../../evaluations/Evaluation.ts';
-import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-import type { IterableReadonlyTuple } from '../../lib/collections/types';
+import type { IterableReadonlyTuple } from '@odk/common/types/collections/IterableReadonlyTuple.ts';
 import type { Context } from '../../context/Context.ts';
+import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type { EvaluationType } from '../../evaluations/EvaluationType.ts';
+import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
+import { UnreachableError } from '../../lib/error/UnreachableError.ts';
 
 export class UnknownFunctionError extends Error {
 	constructor(functionName: string) {

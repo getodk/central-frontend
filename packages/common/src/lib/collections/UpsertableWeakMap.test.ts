@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { UpsertableMap } from './UpsertableMap.ts';
+import { UpsertableWeakMap } from './UpsertableWeakMap.ts';
 
-describe('UpsertableMap', () => {
+describe('UpsertableWeakMap', () => {
 	class Key {
 		constructor(readonly key: string) {}
 	}
@@ -10,14 +10,14 @@ describe('UpsertableMap', () => {
 		constructor(readonly value: string) {}
 	}
 
-	let testMap: UpsertableMap<Key, Value> | null = null;
+	let testMap: UpsertableWeakMap<Key, Value> | null = null;
 	let initialKey!: Key;
 	let initialValue!: Value;
 
 	beforeEach(() => {
 		initialKey = new Key('initial key');
 		initialValue = new Value('initial value');
-		testMap = new UpsertableMap([[initialKey, initialValue]]);
+		testMap = new UpsertableWeakMap([[initialKey, initialValue]]);
 	});
 
 	afterEach(() => {
@@ -108,14 +108,14 @@ describe('UpsertableMap', () => {
 	describe('nullish values', () => {
 		type NullishTestValue = Value | null | undefined;
 
-		let nullishTestMap: UpsertableMap<Key, NullishTestValue> | null = null;
+		let nullishTestMap: UpsertableWeakMap<Key, NullishTestValue> | null = null;
 		let initialNullValueKey!: Key;
 		let initialUndefinedValueKey!: Key;
 
 		beforeEach(() => {
 			initialNullValueKey = new Key('key to initial null value');
 			initialUndefinedValueKey = new Key('key to initial undefined value');
-			nullishTestMap = new UpsertableMap([
+			nullishTestMap = new UpsertableWeakMap([
 				[initialKey, initialValue],
 				[initialNullValueKey, null],
 				[initialUndefinedValueKey, undefined],
@@ -157,20 +157,20 @@ describe('UpsertableMap', () => {
 		it('preserves an existing null value', () => {
 			const unassignedValue = new Value('not set');
 
-			nullishTestMap?.upsert(initialNullValueKey, () => unassignedValue);
-
+			const upserted = nullishTestMap?.upsert(initialNullValueKey, () => unassignedValue);
 			const actual = nullishTestMap?.get(initialNullValueKey);
 
+			expect(upserted).toBe(actual);
 			expect(actual).to.be.null;
 		});
 
 		it('preserves an existing undefined value', () => {
 			const unassignedValue = new Value('not set');
 
-			nullishTestMap?.upsert(initialUndefinedValueKey, () => unassignedValue);
-
+			const upserted = nullishTestMap?.upsert(initialUndefinedValueKey, () => unassignedValue);
 			const actual = nullishTestMap?.get(initialUndefinedValueKey);
 
+			expect(upserted).toBe(actual);
 			expect(actual).to.be.undefined;
 		});
 	});
