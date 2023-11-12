@@ -45,6 +45,11 @@ export interface EvaluationContextOptions {
  * is evaluated.
  */
 export class EvaluationContext implements Context {
+	/**
+	 * @see {@link Context.evaluationContextNode}
+	 */
+	readonly evaluationContextNode: ContextNode;
+
 	readonly contextDocument: ContextDocument;
 	readonly rootNode: ContextParentNode;
 
@@ -72,6 +77,7 @@ export class EvaluationContext implements Context {
 		} = options;
 
 		this.contextDocument = document;
+		this.evaluationContextNode = contextNode;
 		this.contextNodes = [contextNode];
 		this.rootNode = rootNode;
 		this.functions = functions;

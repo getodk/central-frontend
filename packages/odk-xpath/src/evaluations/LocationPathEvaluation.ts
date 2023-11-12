@@ -148,6 +148,12 @@ export class LocationPathEvaluation
 	// --- Context ---
 	readonly evaluator: Evaluator;
 	readonly context: LocationPathEvaluation = this;
+
+	/**
+	 * @see {@link Context.evaluationContextNode}
+	 */
+	readonly evaluationContextNode: ContextNode;
+
 	readonly contextDocument: ContextDocument;
 	readonly rootNode: ContextParentNode;
 
@@ -220,6 +226,7 @@ export class LocationPathEvaluation
 		const {
 			evaluator,
 			contextDocument,
+			evaluationContextNode,
 			functions,
 			namespaceResolver,
 			rootNode,
@@ -229,6 +236,7 @@ export class LocationPathEvaluation
 
 		this.evaluator = evaluator;
 		this.contextDocument = contextDocument;
+		this.evaluationContextNode = evaluationContextNode;
 		this.functions = functions;
 		this.namespaceResolver = namespaceResolver;
 		this.rootNode = rootNode;

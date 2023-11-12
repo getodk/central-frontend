@@ -24,6 +24,10 @@ export const count = new NumberFunction(
 	}
 );
 
+export const current = new NodeSetFunction('current', [], (context) => {
+	return [context.evaluationContextNode];
+});
+
 export const id = new NodeSetFunction(
 	'id',
 	[{ arityType: 'required' }],
