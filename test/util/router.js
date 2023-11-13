@@ -5,7 +5,7 @@ import { shallowRef } from 'vue';
 import RouterViewStub from './components/router-view-stub.vue';
 
 import createCentralRouter from '../../src/router';
-import { createScrollBehavior } from '../../src/util/router';
+import { createScrollBehavior } from '../../src/scroll-behavior';
 import { noop } from '../../src/util/util';
 
 // Returns a function to create a real router configured for use in testing.
@@ -55,6 +55,7 @@ export const mockRouter = (location = undefined) => (container) => {
     : START_LOCATION);
   const mock = {
     currentRoute,
+    options: router.options,
     isReady: currentRoute.value !== START_LOCATION
       ? () => Promise.resolve()
       : () => { throw new Error('not ready'); },

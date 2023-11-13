@@ -13,7 +13,8 @@ import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
-import { canRoute, createScrollBehavior, forceReplace, preservedData, unlessFailure } from './util/router';
+import { canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
+import { createScrollBehavior } from './scroll-behavior';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';

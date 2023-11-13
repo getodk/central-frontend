@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, nextTick, ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 import EntityFeedEntry from './feed-entry.vue';
@@ -35,6 +35,7 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
 import { useRequestData } from '../../request-data';
+import { useScrollBehavior } from '../../scroll-behavior';
 
 defineOptions({
   name: 'EntityActivity'
@@ -71,18 +72,37 @@ const feed = computed(() => {
   return groups;
 });
 
+// scrollTarget.value is the version number of the entity version that the page
+// should scroll to.
+const scrollTarget = ref(null);
 const route = useRoute();
+watchEffect(() => {
+  const match = route.hash.match(/^#v(\d+)$/);
+  scrollTarget.value = match != null ? Number.parseInt(match[1], 10) : null;
+});
+watch(() => audits.awaitingResponse, (awaitingResponse) => {
+  // If a change is made that causes the feed to be refreshed, don't scroll to
+  // or highlight any feed entry.
+  if (awaitingResponse) scrollTarget.value = null;
+});
 const scrollData = (entryData) => {
   const { action } = entryData.entry;
   if (!(action === 'entity.create' || action === 'entity.update.version'))
     return {};
   const version = action === 'entity.create' ? 1 : entryData.entityVersion.version;
-  const scrollId = `v${version}`;
   return {
-    'data-scroll-id': scrollId,
-    class: route.hash === `#${scrollId}` ? 'scroll-target' : null
+    'data-version': version,
+    class: version === scrollTarget.value ? 'scroll-target' : null
   };
 };
+const scrollTo = useScrollBehavior();
+watchEffect(() => {
+  if (scrollTarget.value != null && dataExists.value) {
+    nextTick(() => {
+      scrollTo(`#entity-activity [data-version="${scrollTarget.value}"]`);
+    });
+  }
+});
 </script>
 
 <style lang="scss">

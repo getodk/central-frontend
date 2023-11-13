@@ -4,9 +4,12 @@ import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 import useEntity from '../../../src/request-data/entity';
 
 import testData from '../../data';
+import { load } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
+import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { testRequestData } from '../../util/request-data';
+import { wait } from '../../util/util';
 
 const mountComponent = (options = undefined) =>
   mount(EntityActivity, mergeMountOptions(options, {
@@ -115,15 +118,15 @@ describe('EntityActivity', () => {
   });
 
   describe('scroll behavior', () => {
-    beforeEach(resolveConflict);
-
-    it('sets data-scroll-id attributes correctly', () => {
+    it('sets data-version attributes correctly', () => {
+      resolveConflict();
       mountComponent().findAll('.feed-entry-group')
-        .map(group => group.attributes('data-scroll-id'))
-        .should.eql([undefined, 'v3', 'v2', 'v1']);
+        .map(group => group.attributes('data-version'))
+        .should.eql([undefined, '3', '2', '1']);
     });
 
-    it('adds scroll-target class if data-scroll-id matches route hash', () => {
+    it('adds scroll-target class if data-version matches route hash', () => {
+      resolveConflict();
       const component = mountComponent({
         container: {
           router: mockRouter('/projects/1/entity-lists/trees/entities/e#v2')
@@ -132,6 +135,108 @@ describe('EntityActivity', () => {
       component.findAll('.feed-entry-group')
         .map(group => group.classes('scroll-target'))
         .should.eql([false, false, true, false]);
+    });
+
+    // Creates an entity with 50 versions.
+    const createV50 = () => {
+      mockLogin();
+      testData.extendedEntities.createPast(1, {
+        uuid: 'e',
+        label: 'My Entity'
+      });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {}
+      });
+      for (let version = 2; version <= 50; version += 1) {
+        testData.extendedEntityVersions.createPast(1);
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.update.version',
+          details: {}
+        });
+      }
+    };
+    const pxTo = (wrapper) =>
+      Math.floor(wrapper.element.getBoundingClientRect().y);
+
+    it('scrolls to a target that exists in the DOM', async () => {
+      createV50();
+      const app = await load('/projects/1/entity-lists/trees/entities/e', {
+        attachTo: document.body
+      });
+
+      // Scroll to v40.
+      await app.vm.$router.push('/projects/1/entity-lists/trees/entities/e#v40');
+      // Scrolling doesn't seem to be synchronous, so we wait in order to give
+      // it a chance to complete. Even nextTick() didn't work here for some
+      // reason.
+      await wait();
+      const yForV40 = window.scrollY;
+      yForV40.should.be.above(0);
+      pxTo(app.get('[data-version="40"]')).should.equal(10);
+
+      // Scroll to v20 even farther below.
+      await app.vm.$router.push('/projects/1/entity-lists/trees/entities/e#v20');
+      await wait();
+      window.scrollY.should.be.above(yForV40);
+      pxTo(app.get('[data-version="20"]')).should.equal(10);
+    });
+
+    it('waits for the scroll target to appear in the DOM', async () => {
+      createV50();
+      const app = await load('/projects/1/entity-lists/trees/entities/e#v40', {
+        attachTo: document.body
+      });
+      window.scrollY.should.be.above(0);
+      pxTo(app.get('[data-version="40"]')).should.equal(10);
+    });
+
+    describe('after the feed is refreshed', () => {
+      const updateEntity = (series) => series
+        .request(async (app) => {
+          await app.get('#entity-data-update-button').trigger('click');
+          const form = app.get('#entity-update form');
+          await form.get('textarea').setValue('Updated Entity');
+          return form.trigger('submit');
+        })
+        .respondWithData(() => {
+          testData.extendedEntityVersions.createNew({
+            label: 'Updated Entity'
+          });
+          testData.extendedAudits.createPast(1, {
+            action: 'entity.update.version',
+            details: {}
+          });
+          return testData.standardEntities.last();
+        })
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .respondWithData(() => testData.extendedEntityVersions.sorted());
+
+      it('does not scroll again', () => {
+        createV50();
+        return load('/projects/1/entity-lists/trees/entities/e#v40', {
+          attachTo: document.body
+        })
+          .afterResponses(() => {
+            window.scrollTo(0, 0);
+          })
+          .modify(updateEntity)
+          .afterResponses(() => {
+            window.scrollY.should.equal(0);
+          });
+      });
+
+      it('no longer highlights the feed entry', () => {
+        createV50();
+        return load('/projects/1/entity-lists/trees/entities/e#v40', {
+          attachTo: document.body
+        })
+          .complete()
+          .modify(updateEntity)
+          .afterResponses(app => {
+            app.find('.scroll-target').exists().should.be.false();
+          });
+      });
     });
   });
 });
