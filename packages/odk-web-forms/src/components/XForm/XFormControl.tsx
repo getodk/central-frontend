@@ -3,12 +3,18 @@ import type { XFormEntry } from '../../lib/xform/XFormEntry.ts';
 import type { XFormViewChild, XFormViewChildType } from '../../lib/xform/XFormViewChild.ts';
 import { XFormRelevanceGuard } from './XFormRelevanceGuard.tsx';
 import { XFormGroup, xFormGroupProps } from './containers/XFormGroup.tsx';
+import { XFormRepeatList, xFormRepeatListProps } from './containers/XFormRepeatList.tsx';
 import { XFormInputControl, xFormInputControlProps } from './controls/XFormInputControl.tsx';
 import { XFormUnknownControl } from './debugging/XFormUnknownControl.tsx';
 
+export type XFormControlPropsViewControl<Type extends XFormViewChildType> =
+	// prettier-ignore
+	& XFormViewChild
+	& { readonly type: Type };
+
 export interface XFormControlProps<Type extends XFormViewChildType> {
 	readonly entry: XFormEntry;
-	readonly viewControl: XFormViewChild & { readonly type: Type };
+	readonly viewControl: XFormControlPropsViewControl<Type>;
 }
 
 export const XFormControl = (props: XFormControlProps<XFormViewChildType>) => {
@@ -27,6 +33,9 @@ export const XFormControl = (props: XFormControlProps<XFormViewChildType>) => {
 				</Match>
 				<Match when={xFormInputControlProps(props)} keyed={true}>
 					{(inputControlProps) => <XFormInputControl {...inputControlProps} />}
+				</Match>
+				<Match when={xFormRepeatListProps(props)} keyed={true}>
+					{(viewListProps) => <XFormRepeatList {...viewListProps} />}
 				</Match>
 			</Switch>
 		</XFormRelevanceGuard>

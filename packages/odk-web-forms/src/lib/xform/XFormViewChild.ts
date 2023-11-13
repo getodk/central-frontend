@@ -8,7 +8,7 @@ export type UnsupportedXFormViewChildType = typeof UNSUPPORTED_XFORM_VIEW_CHILD_
 
 const XFORM_FORM_CONTROLS = ['input'] as const;
 
-const XFORM_UI_ELEMENTS = ['group'] as const;
+const XFORM_UI_ELEMENTS = ['group', 'repeat'] as const;
 
 const XFORM_SUPPORT_ELEMENTS = ['label', 'hint', 'output', 'item', 'itemset', 'value'] as const;
 
@@ -49,7 +49,7 @@ const refAttributePriority = ['ref', 'nodeset'] as const;
 
 type XFormViewChildRefAttribute = CollectionValues<typeof refAttributePriority>;
 
-// const reverseRefAttributePriority = refAttributePriority.slice().reverse();
+const reverseRefAttributePriority = refAttributePriority.slice().reverse();
 
 // XLSForms will assign `nodeset` to `<repeat>` and `<itemset>`, otherwise it
 // will assign `ref`. Both are accepted by spec. It's marginally more efficient
@@ -58,7 +58,7 @@ const refAttributePriorities: Record<string, readonly XFormViewChildRefAttribute
 	input: refAttributePriority,
 	group: refAttributePriority,
 	// itemset: reverseRefAttributePriority,
-	// repeat: reverseRefAttributePriority,
+	repeat: reverseRefAttributePriority,
 } satisfies Record<SupportedXFormViewChildType, readonly XFormViewChildRefAttribute[]>;
 
 // TODO: should we get the ref (etc) for unsupported/unrecognized view types? It

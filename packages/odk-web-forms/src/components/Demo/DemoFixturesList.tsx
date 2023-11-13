@@ -50,8 +50,11 @@ export const DemoFixturesList = (props: DemoFixturesListProps) => {
 		return new Map(entries);
 	};
 
+	const isDemoFixture = (fixtureKey: string) =>
+		fixtureKey.includes('/computations-demo/') || fixtureKey.includes('/repeats/');
+
 	const demoFixtures = createMemo(() =>
-		Array.from(getFixtures().values()).filter(({ key }) => key.includes('/computations-demo/'))
+		Array.from(getFixtures().values()).filter(({ key }) => isDemoFixture(key))
 	);
 
 	createComputed(() => {
