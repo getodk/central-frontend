@@ -13,7 +13,7 @@ export class XFormDefinition {
 	readonly view: XFormViewDefinition;
 
 	constructor(readonly sourceXML: string) {
-		const xformDOM = new XFormDOM(sourceXML);
+		const xformDOM = XFormDOM.from(sourceXML);
 
 		this.xformDOM = xformDOM;
 
@@ -28,7 +28,7 @@ export class XFormDefinition {
 		this.id = id;
 		this.title = title.textContent ?? '';
 
-		this.model = new XFormModelDefinition(this);
 		this.view = new XFormViewDefinition(this);
+		this.model = new XFormModelDefinition(this);
 	}
 }
