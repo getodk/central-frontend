@@ -243,6 +243,20 @@ describe('createCentralRouter()', () => {
       }
     };
 
+    it('preserves data if the path is the same', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {}
+      });
+      return load('/projects/1/entity-lists/trees/entities/e', {
+        attachTo: document.body
+      })
+        .complete()
+        .route('/projects/1/entity-lists/trees/entities/e?foo=bar#v1')
+        .then(dataExists(['project', 'dataset']));
+    });
+
     describe('navigating between project routes', () => {
       beforeEach(() => {
         testData.extendedProjects.createPast(1, { datasets: 1 });

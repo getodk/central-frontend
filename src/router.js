@@ -14,6 +14,7 @@ import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
 import { canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
+import { createScrollBehavior } from './scroll-behavior';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';
@@ -21,8 +22,12 @@ import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 import { setDocumentTitle } from './util/reactivity';
 
-export default (container, history = createWebHashHistory()) => {
-  const router = createRouter({ history, routes: createRoutes(container) });
+export default (container, {
+  history = createWebHashHistory(),
+  scrollBehavior = createScrollBehavior()
+} = {}) => {
+  const routes = createRoutes(container);
+  const router = createRouter({ history, routes, scrollBehavior });
   const { requestData, alert, unsavedChanges, config } = container;
 
 

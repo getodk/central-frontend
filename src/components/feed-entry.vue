@@ -36,9 +36,10 @@ defineProps({
 <style lang="scss">
 @import '../assets/scss/mixins';
 
+$margin-bottom: 20px;
 .feed-entry {
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
+  margin-bottom: $margin-bottom;
 }
 
 .feed-entry-heading, .feed-entry-body .markdown-view { padding: 10px 15px; }
@@ -82,5 +83,14 @@ defineProps({
   background-color: #f9f9f9;
 
   .markdown-view > p:last-child { margin: 0 0 0px; }
+}
+
+// Container of multiple FeedEntry components
+.feed-entry-group {
+  // Move the bottom margin to the container, but keep 1px between FeedEntry
+  // components.
+  margin-bottom: $margin-bottom;
+  .feed-entry { margin-bottom: 0; }
+  .feed-entry + .feed-entry { margin-top: 1px; }
 }
 </style>

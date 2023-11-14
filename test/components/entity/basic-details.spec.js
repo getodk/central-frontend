@@ -152,7 +152,7 @@ describe('EntityBasicDetails', () => {
           return testData.standardEntities.last();
         })
         .respondWithData(() => testData.extendedAudits.sorted())
-        .respondWithData(() => [])
+        .respondWithData(() => testData.extendedEntityVersions.sorted())
         .afterResponses(component => {
           const dd = component.get('#entity-basic-details-creating-submission');
           dd.text().should.equal('s');

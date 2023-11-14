@@ -11,8 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <feed-entry :iso="entry.loggedAt" :wrap-title="wrapTitle"
-    class="entity-feed-entry"
-    :class="{ 'submission-entry': entry.action.startsWith('submission.') }">
+    class="entity-feed-entry">
     <template #title>
       <template v-if="entry.action === 'submission.create'">
         <span class="icon-cloud-upload"></span>
@@ -162,8 +161,6 @@ const { reviewStateIcon } = useReviewState();
 @import '../../assets/scss/variables';
 
 .entity-feed-entry {
-  &.submission-entry { margin-top: -19px; }
-
   .icon-cloud-upload { color: #bbb; }
   .icon-magic-wand { color: $color-action-foreground; }
   .icon-pencil { color: #666; }

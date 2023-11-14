@@ -593,6 +593,7 @@ class MockHttp {
     }
 
     this._requestCount = 0;
+    this._responseCount = 0;
     this._errorFromBeforeAnyResponse = null;
     this._errorFromBeforeEachResponse = null;
     this._errorFromResponse = null;
@@ -683,6 +684,8 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
+          this._responseCount += 1;
+
           let responseWithoutConfig;
           try {
             const callback = this._responses[index];
@@ -778,6 +781,10 @@ class MockHttp {
         throw new Error('request without response: no response specified for request');
       else
         throw new Error('response without request: not all responses were requested');
+    }
+    if (this._responseCount !== this._responses.length) {
+      this._listRequestResponseLog();
+      throw new Error('All responses were requested, but not all were returned in time. By default, all responses are expected to be returned in microtasks, before the next task. You may need to use the pollWork option of afterResponses().');
     }
   }
 

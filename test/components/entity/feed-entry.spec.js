@@ -8,7 +8,6 @@ import FeedEntry from '../../../src/components/feed-entry.vue';
 import useEntity from '../../../src/request-data/entity';
 
 import testData from '../../data';
-import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
@@ -351,32 +350,5 @@ describe('EntityFeedEntry', () => {
       .last();
     const component = mountComponent();
     component.getComponent(FeedEntry).props().iso.should.equal(audit.loggedAt);
-  });
-
-  it('lists submission events immediately below entity.create event', async () => {
-    const sourceDetails = testData.extendedEntities
-      .createSourceSubmission('submission.update');
-    testData.extendedEntities.createPast(1, { uuid: 'e' });
-    testData.extendedAudits.createPast(1, {
-      action: 'entity.create',
-      details: sourceDetails
-    });
-    const component = await load('/projects/1/entity-lists/trees/entities/e', {
-      root: false,
-      attachTo: document.body
-    });
-    const margin = component.findAllComponents(EntityFeedEntry)
-      .map(({ element }) => {
-        const { marginTop, marginBottom } = getComputedStyle(element);
-        return {
-          top: marginTop === '' ? 0 : Number.parseFloat(marginTop),
-          bottom: marginBottom === '' ? 0 : Number.parseFloat(marginBottom)
-        };
-      });
-    margin.length.should.equal(3);
-    margin[0].top.should.equal(0);
-    (margin[0].bottom + margin[1].top).should.equal(1);
-    (margin[1].bottom + margin[2].top).should.equal(1);
-    margin[2].bottom.should.equal(20);
   });
 });
