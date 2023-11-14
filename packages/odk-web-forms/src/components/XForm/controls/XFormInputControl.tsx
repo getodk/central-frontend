@@ -32,9 +32,9 @@ export const XFormInputControl = (props: XFormInputControlProps) => {
 	// handling of props. (I can't say yet for sure, but here felt like as good a
 	// place as any to capture the observation and hypothesis.)
 	const binding = createMemo(() => {
-		const { ref } = props.viewControl;
+		const { reference } = props.viewControl;
 
-		if (ref == null) {
+		if (reference == null) {
 			return null;
 		}
 
@@ -46,7 +46,11 @@ export const XFormInputControl = (props: XFormInputControlProps) => {
 			<Show when={props.viewControl.label == null}>
 				<XFormUnlabeledControl entry={props.entry} viewControl={props.viewControl} />
 			</Show>
-			<TextWidget label={props.viewControl.label} ref={props.viewControl.ref} binding={binding()} />
+			<TextWidget
+				label={props.viewControl.label}
+				ref={props.viewControl.reference}
+				binding={binding()}
+			/>
 		</>
 	);
 };

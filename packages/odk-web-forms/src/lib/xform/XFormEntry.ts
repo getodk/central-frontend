@@ -81,18 +81,18 @@ export class XFormEntry {
 		this.serializedSubmission = serializedSubmission;
 	}
 
-	getBinding(ref: string): XFormEntryBinding | null {
-		return this.bindings.get(ref) ?? null;
+	getBinding(reference: string): XFormEntryBinding | null {
+		return this.bindings.get(reference) ?? null;
 	}
 
 	getViewBinding(viewChild: XFormViewChild): XFormEntryBinding | null {
-		const { ref } = viewChild;
+		const { reference } = viewChild;
 
-		if (ref == null) {
+		if (reference == null) {
 			return null;
 		}
 
-		return this.getBinding(ref);
+		return this.getBinding(reference);
 	}
 
 	toJSON() {

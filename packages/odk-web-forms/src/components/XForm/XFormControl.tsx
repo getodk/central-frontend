@@ -19,8 +19,8 @@ export interface XFormControlProps<Type extends XFormViewChildType> {
 
 export const XFormControl = (props: XFormControlProps<XFormViewChildType>) => {
 	const isRelevant = createMemo(() => {
-		const ref = props.viewControl.ref;
-		const binding = ref == null ? null : props.entry.getBinding(ref);
+		const reference = props.viewControl.reference;
+		const binding = reference == null ? null : props.entry.getBinding(reference);
 
 		return binding?.isRelevant() ?? true;
 	});

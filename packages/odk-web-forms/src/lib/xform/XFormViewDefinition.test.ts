@@ -64,13 +64,13 @@ describe('XFormViewDefinition', () => {
 	});
 
 	it.each([
-		{ index: 0, ref: '/root/first-question' },
-		{ index: 1, ref: '/root/second-question' },
-		{ index: 2, ref: '/root/third-question' },
-	])('defines the ref of child at index $index to $ref', ({ index, ref }) => {
+		{ index: 0, reference: '/root/first-question' },
+		{ index: 1, reference: '/root/second-question' },
+		{ index: 2, reference: '/root/third-question' },
+	])('defines the reference of child at index $index to $reference', ({ index, reference }) => {
 		const child = xformViewDefinition.children[index]!;
 
-		expect(child.ref).toBe(ref);
+		expect(child.reference).toBe(reference);
 	});
 
 	it.each([

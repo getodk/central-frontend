@@ -45,37 +45,16 @@ const viewChildType = (element: Element): XFormViewChildType => {
 	return 'UNSUPPORTED';
 };
 
-const refAttributePriority = ['ref', 'nodeset'] as const;
-
-type XFormViewChildRefAttribute = CollectionValues<typeof refAttributePriority>;
-
-const reverseRefAttributePriority = refAttributePriority.slice().reverse();
-
-// XLSForms will assign `nodeset` to `<repeat>` and `<itemset>`, otherwise it
-// will assign `ref`. Both are accepted by spec. It's marginally more efficient
-// to check in the preferred order by type.
-const refAttributePriorities: Record<string, readonly XFormViewChildRefAttribute[]> = {
-	input: refAttributePriority,
-	group: refAttributePriority,
-	// itemset: reverseRefAttributePriority,
-	repeat: reverseRefAttributePriority,
-} satisfies Record<SupportedXFormViewChildType, readonly XFormViewChildRefAttribute[]>;
-
-// TODO: should we get the ref (etc) for unsupported/unrecognized view types? It
+// TODO: should we get the ref for unsupported/unrecognized view types? It
 // would make sense if (and only if) forms out there have group-like elements
 // that aren't actually named `<group>` for whatever reason...
-const viewChildRef = (type: XFormViewChildType, element: Element): string | null => {
-	const attributes = refAttributePriorities[type] ?? refAttributePriority;
+const viewChildNodesetReference = (type: XFormViewChildType, element: Element): string | null => {
+	const referenceAttribute =
+		type === 'repeat' // || type === 'itemset'
+			? 'nodeset'
+			: 'ref';
 
-	for (const attribute of attributes) {
-		const ref = element.getAttribute(attribute);
-
-		if (ref != null) {
-			return ref;
-		}
-	}
-
-	return null;
+	return element.getAttribute(referenceAttribute);
 };
 
 // TODO: this will likely be supported by multiple classes to handle particulars
@@ -90,7 +69,7 @@ export class XFormViewChild {
 	}
 
 	readonly type: XFormViewChildType;
-	readonly ref: string | null;
+	readonly reference: string | null;
 	readonly label: XFormViewLabel | null;
 	readonly children: readonly XFormViewChild[];
 
@@ -101,7 +80,7 @@ export class XFormViewChild {
 		const type = viewChildType(element);
 
 		this.type = type;
-		this.ref = viewChildRef(type, element);
+		this.reference = viewChildNodesetReference(type, element);
 		this.label = isLabeledElement(type) ? XFormViewLabel.fromViewChild(this, element) : null;
 		this.children = XFormViewChild.children(form, element);
 	}
