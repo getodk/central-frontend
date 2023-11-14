@@ -31,7 +31,7 @@ const pxTo = (wrapper) => Math.floor(wrapper.element.getBoundingClientRect().y);
 describe('useScrollBehavior()', () => {
   beforeEach(mockLogin);
 
-  it('does not scroll initially', async () => {
+  it('does not scroll if scrollTo() is not called', async () => {
     await mountComponent();
     // Scrolling doesn't seem to be synchronous, so we wait in order to give it
     // a chance to complete. (But we don't actually expect there to be any,
@@ -62,24 +62,24 @@ describe('useScrollBehavior()', () => {
     window.scrollY.should.equal(0);
   });
 
-  it('scrolls only once per navigation', async () => {
+  it('scrolls at most once per navigation', async () => {
     const component = await mountComponent();
     component.vm.scrollTo('#div2');
     await wait();
-    const previousY = window.scrollY;
+    const yForDiv2 = window.scrollY;
     component.vm.scrollTo('#div3');
     await wait();
-    window.scrollY.should.equal(previousY);
+    window.scrollY.should.equal(yForDiv2);
     await component.vm.$router.push('/#foo');
     // Not sure why this tick is needed.
     await nextTick();
     component.vm.scrollTo('#div3');
     await wait();
-    window.scrollY.should.be.above(previousY);
+    window.scrollY.should.be.above(yForDiv2);
     pxTo(component.get('#div3')).should.equal(10);
   });
 
-  it('scrolls even if there was no scroll after previous navigation', async () => {
+  it('scrolls if there was no scroll after previous navigation', async () => {
     // Don't scroll after mounting (after the initial navigation). Wait until
     // after the next navigation.
     const component = await mountComponent();

@@ -137,7 +137,9 @@ describe('EntityActivity', () => {
         .should.eql([false, false, true, false]);
     });
 
-    // Creates an entity with 50 versions.
+    // Creates an entity with 50 versions. Creating a large number of versions
+    // helps ensure that the versions we scroll to are at the top of the
+    // viewport. (In contrast, the last version is always toward the bottom.)
     const createV50 = () => {
       mockLogin();
       testData.extendedEntities.createPast(1, {
@@ -159,7 +161,7 @@ describe('EntityActivity', () => {
     const pxTo = (wrapper) =>
       Math.floor(wrapper.element.getBoundingClientRect().y);
 
-    it('scrolls to a target that exists in the DOM', async () => {
+    it('scrolls to a target that already exists in the DOM', async () => {
       createV50();
       const app = await load('/projects/1/entity-lists/trees/entities/e', {
         attachTo: document.body
@@ -184,6 +186,8 @@ describe('EntityActivity', () => {
 
     it('waits for the scroll target to appear in the DOM', async () => {
       createV50();
+      // The scroll target will not exist until responses are received, yet the
+      // page should scroll to it once it exists.
       const app = await load('/projects/1/entity-lists/trees/entities/e#v40', {
         attachTo: document.body
       });
@@ -191,7 +195,17 @@ describe('EntityActivity', () => {
       pxTo(app.get('[data-version="40"]')).should.equal(10);
     });
 
+    it('does not scroll for an invalid hash', async () => {
+      createV50();
+      await load('/projects/1/entity-lists/trees/entities/e#foo', {
+        attachTo: document.body
+      });
+      window.scrollY.should.equal(0);
+    });
+
     describe('after the feed is refreshed', () => {
+      beforeEach(createV50);
+
       const updateEntity = (series) => series
         .request(async (app) => {
           await app.get('#entity-data-update-button').trigger('click');
@@ -212,31 +226,28 @@ describe('EntityActivity', () => {
         .respondWithData(() => testData.extendedAudits.sorted())
         .respondWithData(() => testData.extendedEntityVersions.sorted());
 
-      it('does not scroll again', () => {
-        createV50();
-        return load('/projects/1/entity-lists/trees/entities/e#v40', {
+      it('does not scroll again', () =>
+        load('/projects/1/entity-lists/trees/entities/e#v40', {
           attachTo: document.body
         })
           .afterResponses(() => {
+            // After scrolling to the top, we should see that we stay there.
             window.scrollTo(0, 0);
           })
           .modify(updateEntity)
           .afterResponses(() => {
             window.scrollY.should.equal(0);
-          });
-      });
+          }));
 
-      it('no longer highlights the feed entry', () => {
-        createV50();
-        return load('/projects/1/entity-lists/trees/entities/e#v40', {
+      it('no longer highlights the feed entry', () =>
+        load('/projects/1/entity-lists/trees/entities/e#v40', {
           attachTo: document.body
         })
           .complete()
           .modify(updateEntity)
           .afterResponses(app => {
             app.find('.scroll-target').exists().should.be.false();
-          });
-      });
+          }));
     });
   });
 });

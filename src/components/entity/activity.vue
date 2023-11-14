@@ -81,8 +81,8 @@ watchEffect(() => {
   scrollTarget.value = match != null ? Number.parseInt(match[1], 10) : null;
 });
 watch(() => audits.awaitingResponse, (awaitingResponse) => {
-  // If a change is made that causes the feed to be refreshed, don't scroll to
-  // or highlight any feed entry.
+  // If the user takes an action that causes the feed to be refreshed, then
+  // don't scroll to or highlight any feed entry.
   if (awaitingResponse) scrollTarget.value = null;
 });
 const scrollData = (entryData) => {
