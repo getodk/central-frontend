@@ -21,6 +21,8 @@ export class XFormDOM {
 	readonly primaryInstance: Element;
 	readonly primaryInstanceRoot: Element;
 
+	readonly body: Element;
+
 	constructor(protected readonly sourceXML: string) {
 		const xformDocument: XMLDocument = domParser.parseFromString(sourceXML, 'text/xml');
 		const rootEvaluator = new XFormXPathEvaluator(xformDocument);
@@ -40,6 +42,9 @@ export class XFormDOM {
 		const primaryInstance = rootEvaluator.evaluateNonNullElement('..', {
 			contextNode: primaryInstanceRoot,
 		});
+		const body = rootEvaluator.evaluateNonNullElement('./h:body', {
+			contextNode: html,
+		});
 
 		this.rootEvaluator = rootEvaluator;
 		this.primaryInstanceEvaluator = new XFormXPathEvaluator(primaryInstance);
@@ -50,6 +55,7 @@ export class XFormDOM {
 		this.model = model;
 		this.primaryInstance = primaryInstance;
 		this.primaryInstanceRoot = primaryInstanceRoot;
+		this.body = body;
 	}
 
 	// TODO: anticipating this will be an entry point for edits as well

@@ -1,17 +1,11 @@
-import type { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
 import { XFormViewChild } from './XFormViewChild.ts';
 
 export class XFormViewDefinition {
 	readonly children: readonly XFormViewChild[];
 
-	constructor(
-		protected readonly form: XFormDefinition,
-		evaluator: XFormXPathEvaluator
-	) {
-		const bodyElement = evaluator.evaluateNonNullElement('/h:html/h:body');
-
-		this.children = XFormViewChild.children(form, bodyElement);
+	constructor(protected readonly form: XFormDefinition) {
+		this.children = XFormViewChild.children(form, form.xformDOM.body);
 	}
 
 	toJSON() {

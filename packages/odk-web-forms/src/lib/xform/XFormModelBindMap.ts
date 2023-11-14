@@ -34,7 +34,7 @@ export class XFormModelBindMap
 	) {
 		super();
 
-		const bindElements = form.rootEvaluator.evaluateNodes<BindElement & Element>(
+		const bindElements = form.xformDOM.rootEvaluator.evaluateNodes<BindElement & Element>(
 			'./xf:bind[@nodeset]',
 			{
 				contextNode: form.xformDOM.model,
