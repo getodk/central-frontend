@@ -3,7 +3,7 @@ import { createEffect, createSignal, on } from 'solid-js';
 import type { XFormDOM } from './XFormDOM.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
 import { XFormEntryBinding } from './XFormEntryBinding.ts';
-import type { XFormViewChild } from './XFormViewChild.ts';
+import type { AnyBodyElementDefinition } from './body/BodyDefinition.ts';
 
 export class XFormEntry {
 	protected readonly bindings: Map<string, XFormEntryBinding>;
@@ -85,14 +85,9 @@ export class XFormEntry {
 		return this.bindings.get(reference) ?? null;
 	}
 
-	getViewBinding(viewChild: XFormViewChild): XFormEntryBinding | null {
-		const { reference } = viewChild;
-
-		if (reference == null) {
-			return null;
-		}
-
-		return this.getBinding(reference);
+	getBodyElements(): readonly AnyBodyElementDefinition[] {
+		// TODO: anticipating this will be reactive as we introduce N <> 1 repeats
+		return this.form.body.elements;
 	}
 
 	toJSON() {

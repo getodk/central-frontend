@@ -13,7 +13,7 @@ import {
 } from '../../test/fixtures/xform-dsl';
 import { XFormDefinition } from './XFormDefinition.ts';
 import { XFormModelDefinition } from './XFormModelDefinition.ts';
-import { XFormViewDefinition } from './XFormViewDefinition.ts';
+import { BodyDefinition } from './body/BodyDefinition.ts';
 
 describe('XFormDefinition', () => {
 	const FORM_TITLE = 'Minimal XForm';
@@ -63,7 +63,7 @@ describe('XFormDefinition', () => {
 		expect(xformDefinition.model).toBeInstanceOf(XFormModelDefinition);
 	});
 
-	it("gets the form's view definition", () => {
-		expect(xformDefinition.view).toBeInstanceOf(XFormViewDefinition);
+	it("gets the form's body definition", () => {
+		expect(xformDefinition.body).toBeInstanceOf(BodyDefinition);
 	});
 });

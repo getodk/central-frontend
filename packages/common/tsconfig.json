@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "include": ["src/**/*.ts", "test/**/*.ts", "types/**/*.ts", "vite-env.d.ts"],
   "compilerOptions": {
-    "lib": ["ES2022"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true
   }
 }

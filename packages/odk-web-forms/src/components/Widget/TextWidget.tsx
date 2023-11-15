@@ -1,14 +1,13 @@
 import { Show, createMemo, createUniqueId } from 'solid-js';
 import type { XFormEntryBinding } from '../../lib/xform/XFormEntryBinding.ts';
-import type { XFormViewLabel } from '../../lib/xform/XFormViewLabel.ts';
+import type { InputDefinition } from '../../lib/xform/body/control/InputDefinition.ts';
 import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 import { DefaultTextField } from '../styled/DefaultTextField.tsx';
 import { DefaultTextFormControl } from '../styled/DefaultTextFormControl.tsx';
 
 export interface TextWidgetProps {
-	readonly label: XFormViewLabel | null;
-	readonly ref: string | null;
 	readonly binding: XFormEntryBinding | null;
+	readonly input: InputDefinition;
 }
 
 export const TextWidget = (props: TextWidgetProps) => {
@@ -23,7 +22,7 @@ export const TextWidget = (props: TextWidgetProps) => {
 
 				return (
 					<DefaultTextFormControl fullWidth={true}>
-						<Show when={props.label} keyed={true}>
+						<Show when={props.input.label} keyed={true}>
 							{(label) => {
 								return <XFormControlLabel id={id} binding={binding} label={label} />;
 							}}

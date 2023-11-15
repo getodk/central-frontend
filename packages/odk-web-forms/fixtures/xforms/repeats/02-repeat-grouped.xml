@@ -6,10 +6,10 @@
   xmlns:orx="http://openrosa.org/xforms/"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <h:head>
-    <h:title>Repeat (basic)</h:title>
+    <h:title>Repeat (grouped)</h:title>
     <model>
       <instance>
-        <root id="repeat-basic">
+        <root id="repeat-grouped">
           <rep>
             <a>default value</a>
           </rep>
@@ -23,10 +23,13 @@
     </model>
   </h:head>
   <h:body>
-    <repeat nodeset="/root/rep">
-      <input ref="/root/rep/a">
-        <label>Repeat input a</label>
-      </input>
-    </repeat>
+    <group ref="/root/rep">
+      <label>Repeat group</label>
+      <repeat nodeset="/root/rep">
+        <input ref="/root/rep/a">
+          <label>Repeat input a</label>
+        </input>
+      </repeat>
+    </group>
   </h:body>
 </h:html>

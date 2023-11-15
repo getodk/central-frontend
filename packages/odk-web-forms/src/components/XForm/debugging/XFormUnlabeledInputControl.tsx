@@ -1,8 +1,10 @@
-import type { XFormViewChildType } from '../../../lib/xform/XFormViewChild.ts';
-import type { XFormControlProps } from '../XFormControl.tsx';
+import type { ControlDefinition } from '../../../lib/xform/body/control/ControlDefinition.ts';
 import { XFormAlert } from './XFormAlert.tsx';
 
-interface XFormUnlabeledControlProps extends XFormControlProps<XFormViewChildType> {}
+interface XFormUnlabeledControlProps {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	readonly control: ControlDefinition<any>;
+}
 
 export const XFormUnlabeledControl = (props: XFormUnlabeledControlProps) => {
 	return (
@@ -10,7 +12,7 @@ export const XFormUnlabeledControl = (props: XFormUnlabeledControlProps) => {
 			severity="warning"
 			title={
 				<>
-					Unlabeled <code>{props.viewControl.type}</code> control
+					Unlabeled <code>{props.control.type}</code> control
 				</>
 			}
 			detailsSummary="Control"

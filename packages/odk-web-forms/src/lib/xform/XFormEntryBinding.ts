@@ -1,19 +1,19 @@
 import { createBindingState, type BindingState } from '../reactivity/model-state.ts';
+import type { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
+import type { AnyBodyElementDefinition } from './body/BodyDefinition.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
 import type { XFormDOM } from './XFormDOM.ts';
 import type { XFormEntry } from './XFormEntry.ts';
 import type { XFormModelBind } from './XFormModelBind.ts';
 
 export class XFormEntryBinding {
-	protected readonly xformDocument: XMLDocument;
-	protected readonly model: Element;
-	protected readonly primaryInstance: Element;
-	protected readonly primaryInstanceRoot: Element;
+	readonly evaluator: XFormXPathEvaluator;
 
 	// TODO: non-element bindings (i.e. Attr, ...?)
 	protected readonly modelNode: Element;
 
 	readonly nodeset: string;
+	readonly bodyElement: AnyBodyElementDefinition | null;
 
 	// TODO: ideally this would not be public. Perhaps it can be again if state
 	// becomes part of this class?
@@ -27,18 +27,14 @@ export class XFormEntryBinding {
 		protected readonly entry: XFormEntry,
 		readonly bind: XFormModelBind
 	) {
-		const { xformDocument, model, primaryInstance, primaryInstanceRoot, primaryInstanceEvaluator } =
-			instanceDOM;
-
-		this.xformDocument = xformDocument;
-		this.model = model;
-		this.primaryInstance = primaryInstance;
-		this.primaryInstanceRoot = primaryInstanceRoot;
+		const { primaryInstanceEvaluator } = instanceDOM;
+		this.evaluator = primaryInstanceEvaluator;
 
 		const { nodeset, parentNodeset } = bind;
 		const modelNode = primaryInstanceEvaluator.evaluateNonNullElement(nodeset);
 
 		this.nodeset = nodeset;
+		this.bodyElement = form.body.getBodyElement(nodeset);
 		this.modelNode = modelNode;
 
 		if (parentNodeset == null) {
@@ -56,7 +52,7 @@ export class XFormEntryBinding {
 		this.state = createBindingState(entry, this);
 	}
 
-	getElement(): Element {
+	getModelElement(): Element {
 		return this.modelNode;
 	}
 

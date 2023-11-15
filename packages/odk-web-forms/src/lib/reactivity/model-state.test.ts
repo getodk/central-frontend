@@ -59,7 +59,7 @@ describe('Model state reactive computations', () => {
 		it('updates the calculated DOM node with the calculated value', () => {
 			const binding = entry.getBinding('/root/second-question')!;
 
-			expect(binding.getElement().textContent).toBe('2');
+			expect(binding.getModelElement().textContent).toBe('2');
 		});
 
 		it.each([
@@ -74,7 +74,7 @@ describe('Model state reactive computations', () => {
 				first.setValue(firstValue);
 
 				expect(second.getValue()).toBe(expected);
-				expect(second.getElement().textContent).toBe(expected);
+				expect(second.getModelElement().textContent).toBe(expected);
 			}
 		);
 
@@ -86,7 +86,7 @@ describe('Model state reactive computations', () => {
 			second.setValue('234');
 
 			expect(second.getValue()).toBe('234');
-			expect(second.getElement().textContent).toBe('234');
+			expect(second.getModelElement().textContent).toBe('234');
 		});
 
 		it("overrides the arbitrary value with a new calculation when the calculation's dependency is updated", () => {
@@ -98,7 +98,7 @@ describe('Model state reactive computations', () => {
 			first.setValue('3');
 
 			expect(second.getValue()).toBe('6');
-			expect(second.getElement().textContent).toBe('6');
+			expect(second.getModelElement().textContent).toBe('6');
 		});
 	});
 
@@ -148,7 +148,7 @@ describe('Model state reactive computations', () => {
 		it('clears the value when non-relevant', () => {
 			const binding = entry.getBinding('/root/second-question')!;
 
-			expect(binding.getElement().textContent).toBe('');
+			expect(binding.getModelElement().textContent).toBe('');
 		});
 
 		it('stores the DOM value when relevant', () => {
@@ -158,7 +158,7 @@ describe('Model state reactive computations', () => {
 
 			const second = entry.getBinding('/root/second-question')!;
 
-			expect(second.getElement().textContent).toBe('default if relevant');
+			expect(second.getModelElement().textContent).toBe('default if relevant');
 		});
 
 		it('restores the DOM value when it becomes relevant again', () => {
@@ -171,15 +171,15 @@ describe('Model state reactive computations', () => {
 			second.setValue('updated value');
 
 			// Check assumptions
-			expect(second.getElement().textContent).toBe('updated value');
+			expect(second.getModelElement().textContent).toBe('updated value');
 
 			first.setValue('1');
 
 			// Check assumptions
-			expect(second.getElement().textContent).toBe('');
+			expect(second.getModelElement().textContent).toBe('');
 
 			first.setValue('3');
-			expect(second.getElement().textContent).toBe('updated value');
+			expect(second.getModelElement().textContent).toBe('updated value');
 		});
 
 		describe('relevance inheritance', () => {
@@ -195,7 +195,7 @@ describe('Model state reactive computations', () => {
 				expect(parent.isRelevant()).toBe(false);
 				expect(child.isRelevant()).toBe(false);
 
-				expect(child.getElement().textContent).toBe('');
+				expect(child.getModelElement().textContent).toBe('');
 			});
 
 			it('restores the child value of a parent which becomes relevant', () => {
@@ -212,7 +212,7 @@ describe('Model state reactive computations', () => {
 				expect(child.isRelevant()).toBe(true);
 
 				expect(child.getValue()).toBe('anything');
-				expect(child.getElement().textContent).toBe('anything');
+				expect(child.getModelElement().textContent).toBe('anything');
 			});
 		});
 	});
@@ -260,7 +260,7 @@ describe('Model state reactive computations', () => {
 		it('clears the value when non-relevant', () => {
 			const binding = entry.getBinding('/root/third-question')!;
 
-			expect(binding.getElement().textContent).toBe('');
+			expect(binding.getModelElement().textContent).toBe('');
 		});
 
 		it('calculates the value when it becomes relevant', () => {
@@ -270,7 +270,7 @@ describe('Model state reactive computations', () => {
 			second.setValue('yes');
 
 			expect(third.getValue()).toBe('3');
-			expect(third.getElement().textContent).toBe('3');
+			expect(third.getModelElement().textContent).toBe('3');
 		});
 
 		it.each([
@@ -288,7 +288,7 @@ describe('Model state reactive computations', () => {
 				first.setValue(firstValue);
 
 				expect(third.getValue()).toBe(expected);
-				expect(third.getElement().textContent).toBe(expected);
+				expect(third.getModelElement().textContent).toBe(expected);
 			}
 		);
 
@@ -310,7 +310,7 @@ describe('Model state reactive computations', () => {
 				second.setValue('yes');
 
 				expect(third.getValue()).toBe(expected);
-				expect(third.getElement().textContent).toBe(expected);
+				expect(third.getModelElement().textContent).toBe(expected);
 			}
 		);
 
@@ -325,7 +325,7 @@ describe('Model state reactive computations', () => {
 			second.setValue('yes');
 
 			expect(third.getValue()).toBe('999');
-			expect(third.getElement().textContent).toBe('999');
+			expect(third.getModelElement().textContent).toBe('999');
 		});
 	});
 

@@ -1,28 +1,17 @@
 import { For, createMemo } from 'solid-js';
 import { Stack } from 'suid/material';
-import type { XFormViewChildType } from '../../../lib/xform/XFormViewChild.ts';
-import type { XFormControlProps } from '../XFormControl.tsx';
+import type { XFormEntry } from '../../../lib/xform/XFormEntry.ts';
+import type { RepeatDefinition } from '../../../lib/xform/body/RepeatDefinition.ts';
 import { XFormRepeatInstance } from './XFormRepeatInstance.tsx';
 
-export type XFormRepeatListProps = XFormControlProps<'repeat'>;
-
-const isXFormRepeatListProps = (
-	props: XFormControlProps<XFormViewChildType>
-): props is XFormRepeatListProps => props.viewControl.type === 'repeat';
-
-export const xFormRepeatListProps = (
-	props: XFormControlProps<XFormViewChildType>
-): XFormRepeatListProps | null => {
-	if (isXFormRepeatListProps(props)) {
-		return props;
-	}
-
-	return null;
-};
+interface XFormRepeatListProps {
+	readonly entry: XFormEntry;
+	readonly repeat: RepeatDefinition;
+}
 
 export const XFormRepeatList = (props: XFormRepeatListProps) => {
 	const repeatInstanceBindings = createMemo(() => {
-		const singleBindingTemp = props.entry.getViewBinding(props.viewControl);
+		const singleBindingTemp = props.entry.getBinding(props.repeat.reference);
 
 		if (singleBindingTemp == null) {
 			return [];
@@ -36,11 +25,7 @@ export const XFormRepeatList = (props: XFormRepeatListProps) => {
 			<For each={repeatInstanceBindings()}>
 				{(binding) => {
 					return (
-						<XFormRepeatInstance
-							binding={binding}
-							entry={props.entry}
-							viewControl={props.viewControl}
-						/>
+						<XFormRepeatInstance binding={binding} entry={props.entry} repeat={props.repeat} />
 					);
 				}}
 			</For>

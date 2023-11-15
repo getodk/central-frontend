@@ -1,8 +1,8 @@
 import { For } from 'solid-js';
 import { Box } from 'suid/material';
 import type { XFormViewChildType } from '../../../lib/xform/XFormViewChild.ts';
-import type { XFormControlProps } from '../XFormControl.tsx';
-import { XFormControl } from '../XFormControl.tsx';
+import type { XFormControlProps } from '../controls/XFormControl.tsx';
+import { XFormControl } from '../controls/XFormControl.tsx';
 import { XFormAlert } from './XFormAlert.tsx';
 
 interface XFormUnknownControlProps extends XFormControlProps<XFormViewChildType> {}

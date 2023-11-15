@@ -163,7 +163,10 @@ const createBindExpressionEvaluation = <T extends BindExpressionEvaluationType>(
 	}
 
 	const evaluateExpression = () => {
-		return expression.evaluate(entry.instanceDOM.primaryInstanceEvaluator, binding.getElement());
+		return expression.evaluate(
+			entry.instanceDOM.primaryInstanceEvaluator,
+			binding.getModelElement()
+		);
 	};
 
 	const [accessor, { refetch }] = createResource(evaluateExpression, {
@@ -309,7 +312,7 @@ export const createBindingState = (entry: XFormEntry, binding: XFormEntryBinding
 		const { bind, parent } = binding;
 		const { calculate: calculateBindExpression, readonly, relevant, required } = bind;
 
-		const modelNode = binding.getElement();
+		const modelNode = binding.getModelElement();
 
 		const isSelfRelevant = createBindExpressionEvaluation(
 			entry,
