@@ -8,10 +8,10 @@ import {
 	model,
 	t,
 	title,
-} from '../../test/fixtures/xform-dsl';
-import { XFormDefinition } from './XFormDefinition.ts';
+} from '../../../test/fixtures/xform-dsl/index.ts';
+import { XFormDefinition } from '../XFormDefinition.ts';
 
-describe('XFormModelBind', () => {
+describe('BindDefinition', () => {
 	it.each([
 		{ dataType: 'string', expected: 'string' },
 		{ dataType: 'int', expected: 'int' },

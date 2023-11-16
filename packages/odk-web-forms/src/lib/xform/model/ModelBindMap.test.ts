@@ -8,13 +8,13 @@ import {
 	model,
 	t,
 	title,
-} from '../../test/fixtures/xform-dsl';
-import { XFormDefinition } from './XFormDefinition';
-import { XFormModelBind } from './XFormModelBind';
-import type { ReadonlyXFormModelBindMap } from './XFormModelBindMap';
+} from '../../../test/fixtures/xform-dsl';
+import { XFormDefinition } from '../XFormDefinition.ts';
+import { BindDefinition } from './BindDefinition.ts';
+import type { ReadonlyModelBindMap } from './ModelBindMap.ts';
 
-describe('XFormModelBindMap', () => {
-	let binds: ReadonlyXFormModelBindMap;
+describe('ModelBindMap', () => {
+	let binds: ReadonlyModelBindMap;
 
 	beforeEach(() => {
 		const xform = html(
@@ -56,8 +56,8 @@ describe('XFormModelBindMap', () => {
 	});
 
 	it('includes parent nodesets without explicit binds (for ancestor relevance)', () => {
-		expect(binds.get('/root/group')).toBeInstanceOf(XFormModelBind);
-		expect(binds.get('/root/group/sub-group')).toBeInstanceOf(XFormModelBind);
+		expect(binds.get('/root/group')).toBeInstanceOf(BindDefinition);
+		expect(binds.get('/root/group/sub-group')).toBeInstanceOf(BindDefinition);
 	});
 
 	it('sorts nodesets based on bind computation dependencies', () => {

@@ -1,9 +1,9 @@
-import type { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
-import { getNodesetDependencies } from '../xpath/expression-dependencies.ts';
-import type { XFormDataType } from './XFormDataType.ts';
-import { bindDataType } from './XFormDataType.ts';
-import type { XFormDefinition } from './XFormDefinition.ts';
-import type { XFormModelDefinition } from './XFormModelDefinition.ts';
+import type { XFormXPathEvaluator } from '../../xpath/XFormXPathEvaluator.ts';
+import { getNodesetDependencies } from '../../xpath/expression-dependencies.ts';
+import type { XFormDataType } from '../XFormDataType.ts';
+import { bindDataType } from '../XFormDataType.ts';
+import type { XFormDefinition } from '../XFormDefinition.ts';
+import type { ModelDefinition } from './ModelDefinition.ts';
 
 type BindExpressionType =
 	| 'calculate'
@@ -39,7 +39,7 @@ abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
 	readonly dependencyExpressions: readonly string[] = [];
 
 	constructor(
-		protected readonly bind: XFormModelBind,
+		protected readonly bind: BindDefinition,
 		readonly expressionType: BindExpressionType,
 		readonly evaluationType: Type
 	) {
@@ -87,7 +87,7 @@ abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
 }
 
 class StaticBooleanBindExpression extends StaticBindExpression<'BOOLEAN'> {
-	constructor(bind: XFormModelBind, expressionType: BindExpressionType) {
+	constructor(bind: BindDefinition, expressionType: BindExpressionType) {
 		super(bind, expressionType, 'BOOLEAN');
 	}
 
@@ -101,7 +101,7 @@ abstract class DependentBindExpression<
 > extends StaticBindExpression<Type> {
 	override readonly dependencyExpressions: readonly string[];
 
-	constructor(bind: XFormModelBind, expressionType: BindExpressionType, evaluationType: Type) {
+	constructor(bind: BindDefinition, expressionType: BindExpressionType, evaluationType: Type) {
 		super(bind, expressionType, evaluationType);
 
 		const { expression } = this;
@@ -126,7 +126,7 @@ abstract class DependentBindExpression<
 }
 
 class DependentBooleanBindExpression extends DependentBindExpression<'BOOLEAN'> {
-	constructor(bind: XFormModelBind, expressionType: BindExpressionType) {
+	constructor(bind: BindDefinition, expressionType: BindExpressionType) {
 		super(bind, expressionType, 'BOOLEAN');
 	}
 
@@ -136,7 +136,7 @@ class DependentBooleanBindExpression extends DependentBindExpression<'BOOLEAN'> 
 }
 
 class DependentStringBindExpression extends DependentBindExpression<'STRING'> {
-	constructor(bind: XFormModelBind, expressionType: BindExpressionType) {
+	constructor(bind: BindDefinition, expressionType: BindExpressionType) {
 		super(bind, expressionType, 'STRING');
 	}
 
@@ -152,7 +152,7 @@ export interface BindElement {
 	getAttribute(name: string): string | null;
 }
 
-export class XFormModelBind {
+export class BindDefinition {
 	readonly bindType: string | null;
 	readonly dataType: XFormDataType;
 	readonly parentNodeset: string | null;
@@ -185,9 +185,9 @@ export class XFormModelBind {
 	// readonly preloadParams: string | null;
 	// readonly 'max-pixels': string | null;
 
-	protected _parentBind: XFormModelBind | null | undefined;
+	protected _parentBind: BindDefinition | null | undefined;
 
-	get parentBind(): XFormModelBind | null {
+	get parentBind(): BindDefinition | null {
 		let bind = this._parentBind;
 
 		if (typeof bind === 'undefined') {
@@ -207,7 +207,7 @@ export class XFormModelBind {
 
 	constructor(
 		readonly form: XFormDefinition,
-		protected readonly model: XFormModelDefinition,
+		protected readonly model: ModelDefinition,
 		readonly nodeset: string,
 		readonly bindElement: BindElement
 	) {

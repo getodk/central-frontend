@@ -1,10 +1,10 @@
 import { createBindingState, type BindingState } from '../reactivity/model-state.ts';
 import type { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
-import type { AnyBodyElementDefinition } from './body/BodyDefinition.ts';
-import type { XFormDefinition } from './XFormDefinition.ts';
 import type { XFormDOM } from './XFormDOM.ts';
+import type { XFormDefinition } from './XFormDefinition.ts';
 import type { XFormEntry } from './XFormEntry.ts';
-import type { XFormModelBind } from './XFormModelBind.ts';
+import type { AnyBodyElementDefinition } from './body/BodyDefinition.ts';
+import type { BindDefinition } from './model/BindDefinition.ts';
 
 export class XFormEntryBinding {
 	readonly evaluator: XFormXPathEvaluator;
@@ -25,7 +25,7 @@ export class XFormEntryBinding {
 		readonly form: XFormDefinition,
 		protected readonly instanceDOM: XFormDOM,
 		protected readonly entry: XFormEntry,
-		readonly bind: XFormModelBind
+		readonly bind: BindDefinition
 	) {
 		const { primaryInstanceEvaluator } = instanceDOM;
 		this.evaluator = primaryInstanceEvaluator;

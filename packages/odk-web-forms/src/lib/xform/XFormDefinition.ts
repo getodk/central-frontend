@@ -1,6 +1,6 @@
 import { XFormDOM } from './XFormDOM.ts';
-import { XFormModelDefinition } from './XFormModelDefinition.ts';
 import { BodyDefinition } from './body/BodyDefinition.ts';
+import { ModelDefinition } from './model/ModelDefinition.ts';
 
 export class XFormDefinition {
 	readonly xformDOM: XFormDOM;
@@ -10,7 +10,7 @@ export class XFormDefinition {
 	readonly title: string;
 
 	readonly body: BodyDefinition;
-	readonly model: XFormModelDefinition;
+	readonly model: ModelDefinition;
 
 	constructor(readonly sourceXML: string) {
 		const xformDOM = XFormDOM.from(sourceXML);
@@ -29,6 +29,6 @@ export class XFormDefinition {
 		this.title = title.textContent ?? '';
 
 		this.body = new BodyDefinition(this);
-		this.model = new XFormModelDefinition(this);
+		this.model = new ModelDefinition(this);
 	}
 }

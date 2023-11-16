@@ -1,7 +1,7 @@
-import type { XFormDefinition } from './XFormDefinition.ts';
-import type { BindElement, BindNodeset } from './XFormModelBind.ts';
-import { XFormModelBind } from './XFormModelBind.ts';
-import type { XFormModelDefinition } from './XFormModelDefinition.ts';
+import type { XFormDefinition } from '../XFormDefinition.ts';
+import type { BindElement, BindNodeset } from './BindDefinition.ts';
+import { BindDefinition } from './BindDefinition.ts';
+import type { ModelDefinition } from './ModelDefinition.ts';
 
 class ArtificialAncestorBindElement {
 	constructor(protected readonly ancestorNodeset: string) {}
@@ -17,20 +17,17 @@ class ArtificialAncestorBindElement {
 	}
 }
 
-export type ReadonlyXFormModelBindMap = ReadonlyMap<BindNodeset, XFormModelBind>;
+export type ReadonlyModelBindMap = ReadonlyMap<BindNodeset, BindDefinition>;
 
-export class XFormModelBindMap
-	extends Map<BindNodeset, XFormModelBind>
-	implements ReadonlyXFormModelBindMap
-{
+export class ModelBindMap extends Map<BindNodeset, BindDefinition> implements ReadonlyModelBindMap {
 	// This is probably overkill, just produces a type that's readonly at call site.
-	static fromModel(model: XFormModelDefinition): ReadonlyXFormModelBindMap {
+	static fromModel(model: ModelDefinition): ReadonlyModelBindMap {
 		return new this(model.form, model);
 	}
 
 	protected constructor(
 		protected readonly form: XFormDefinition,
-		protected readonly model: XFormModelDefinition
+		protected readonly model: ModelDefinition
 	) {
 		super();
 
@@ -61,12 +58,12 @@ export class XFormModelBindMap
 		// Build bindings for ancestors without explict `<bind>`s, so that depth > 1
 		// descendants' relevance can be determined.
 		for (const [nodeset, bindElement] of bindElementEntries) {
-			const bind = new XFormModelBind(form, model, nodeset, bindElement);
+			const bind = new BindDefinition(form, model, nodeset, bindElement);
 
 			let ancestorNodeset = bind.parentNodeset;
 
 			while (ancestorNodeset != null && ancestorNodeset.length > 1 && !this.has(ancestorNodeset)) {
-				const ancestor = new XFormModelBind(
+				const ancestor = new BindDefinition(
 					form,
 					model,
 					ancestorNodeset,
@@ -87,11 +84,11 @@ export class XFormModelBindMap
 	 * @see {@link sort}
 	 */
 	protected visit(
-		visited: Set<XFormModelBind>,
-		visiting: Set<XFormModelBind>,
-		bind: XFormModelBind,
-		sorted: XFormModelBind[]
-	): XFormModelBind[] {
+		visited: Set<BindDefinition>,
+		visiting: Set<BindDefinition>,
+		bind: BindDefinition,
+		sorted: BindDefinition[]
+	): BindDefinition[] {
 		if (visited.has(bind)) {
 			return sorted;
 		}
@@ -125,9 +122,9 @@ export class XFormModelBindMap
 	 * Topological sort (depth first search)
 	 */
 	protected sort(): void {
-		const visited = new Set<XFormModelBind>();
-		const visiting = new Set<XFormModelBind>();
-		const sorted: XFormModelBind[] = [];
+		const visited = new Set<BindDefinition>();
+		const visiting = new Set<BindDefinition>();
+		const sorted: BindDefinition[] = [];
 
 		for (const bind of this.values()) {
 			this.visit(visited, visiting, bind, sorted);
@@ -140,7 +137,7 @@ export class XFormModelBindMap
 		}
 	}
 
-	getDependencies(bind: XFormModelBind) {
+	getDependencies(bind: BindDefinition) {
 		return bind.nodesetDependencies.map((nodeset) => this.get(nodeset));
 	}
 

@@ -15,7 +15,7 @@ import type {
 	BindExpression,
 	BindExpressionEvaluation,
 	BindExpressionEvaluationType,
-} from '../xform/XFormModelBind.ts';
+} from '../xform/model/BindDefinition.ts';
 import { createLatest } from './primitives/createLatest.ts';
 
 // TODO: the assumption here is that an XForm may only bind elements and attributes.

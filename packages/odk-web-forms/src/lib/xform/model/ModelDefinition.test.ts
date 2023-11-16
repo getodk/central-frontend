@@ -10,13 +10,13 @@ import {
 	model,
 	t,
 	title,
-} from '../../test/fixtures/xform-dsl';
-import { XFormDefinition } from './XFormDefinition.ts';
-import { XFormModelBind } from './XFormModelBind.ts';
-import { XFormModelDefinition } from './XFormModelDefinition.ts';
+} from '../../../test/fixtures/xform-dsl/index.ts';
+import { XFormDefinition } from '../XFormDefinition.ts';
+import { BindDefinition } from './BindDefinition.ts';
+import { ModelDefinition } from './ModelDefinition.ts';
 
-describe('XFormModelDefinition', () => {
-	let xformModelDefinition: XFormModelDefinition;
+describe('ModelDefinition', () => {
+	let modelDefinition: ModelDefinition;
 
 	beforeEach(() => {
 		const xform = html(
@@ -45,7 +45,7 @@ describe('XFormModelDefinition', () => {
 
 		const xformDefinition = new XFormDefinition(xform.asXml());
 
-		xformModelDefinition = xformDefinition.model;
+		modelDefinition = xformDefinition.model;
 	});
 
 	it.each([
@@ -53,8 +53,8 @@ describe('XFormModelDefinition', () => {
 		{ nodeset: '/root/second-question' },
 		{ nodeset: '/root/third-question' },
 	])('defines model bindings for $nodeset', ({ nodeset }) => {
-		const bindDefinition = xformModelDefinition.binds.get(nodeset);
+		const bindDefinition = modelDefinition.binds.get(nodeset);
 
-		expect(bindDefinition).toBeInstanceOf(XFormModelBind);
+		expect(bindDefinition).toBeInstanceOf(BindDefinition);
 	});
 });
