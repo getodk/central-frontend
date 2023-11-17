@@ -1,4 +1,4 @@
-import { UnreachableError } from '../lib/error/UnreachableError.ts';
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import type { Evaluation } from './Evaluation.ts';
 import type { EvaluationType, EvaluationTypes } from './EvaluationType.ts';
 import { LocationPathEvaluation } from './LocationPathEvaluation.ts';

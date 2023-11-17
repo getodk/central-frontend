@@ -1,6 +1,6 @@
-import type { XPathResultType } from '../../shared/index.ts';
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
-import { UnreachableError } from '../../lib/error/UnreachableError.ts';
+import type { XPathResultType } from '../../shared/index.ts';
 import { BooleanResult } from './BooleanResult';
 import { NodeSetIteratorResult, NodeSetSnapshotResult } from './NodeSetResult';
 import { NumberResult } from './NumberResult';

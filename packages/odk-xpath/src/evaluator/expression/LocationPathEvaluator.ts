@@ -1,7 +1,7 @@
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { ContextNode } from '../../lib/dom/types.ts';
-import { UnreachableError } from '../../lib/error/UnreachableError.ts';
 import type {
 	AbsoluteLocationPathNode,
 	FilterPathExprNode,
