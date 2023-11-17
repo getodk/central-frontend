@@ -1,6 +1,6 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { XFormEntry } from '../XFormEntry.ts';
 import type { XFormEntryBinding } from '../XFormEntryBinding.ts';
+import type { EntryState } from '../state/EntryState.ts';
 import type { HintDefinition } from './text/HintDefinition.ts';
 import type { LabelDefinition } from './text/LabelDefinition.ts';
 
@@ -30,7 +30,7 @@ export abstract class BodyElementDefinition<Type extends string> {
 		protected readonly element: Element
 	) {}
 
-	getBinding(entry: XFormEntry): XFormEntryBinding | null {
+	getBinding(entry: EntryState): XFormEntryBinding | null {
 		const { reference } = this;
 
 		if (reference == null) {

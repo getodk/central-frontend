@@ -76,28 +76,28 @@ describe('BodyDefinition', () => {
 									t('r3-1')
 								)
 							)
-						),
-						bind('/root/input'),
-						bind('/root/input-label-hint'),
-						bind('/root/loggrp'),
-						bind('/root/loggrp/lg-child-1'),
-						bind('/root/loggrp/lg-child-2'),
-						bind('/root/loggrp-2/lg2-1'),
-						bind('/root/loggrp-2/lg2-2'),
-						bind('/root/presgrp/pg-a'),
-						bind('/root/presgrp/pg-b'),
-						bind('/root/sg-1'),
-						bind('/root/sg-2'),
-						bind('/root/sg-3'),
-						bind('/root/sg-4'),
-						bind('/root/sg-5'),
-						bind('/root/rep1'),
-						bind('/root/rep1/r1-1'),
-						bind('/root/rep1/r1-2'),
-						bind('/root/rep2/r2-1'),
-						bind('/root/unrelated-grp'),
-						bind('/root/unrelated-grp/rep3/r3-1')
-					)
+						)
+					),
+					bind('/root/input'),
+					bind('/root/input-label-hint'),
+					bind('/root/loggrp'),
+					bind('/root/loggrp/lg-child-1'),
+					bind('/root/loggrp/lg-child-2'),
+					bind('/root/loggrp-2/lg2-1'),
+					bind('/root/loggrp-2/lg2-2'),
+					bind('/root/presgrp/pg-a'),
+					bind('/root/presgrp/pg-b'),
+					bind('/root/sg-1'),
+					bind('/root/sg-2'),
+					bind('/root/sg-3'),
+					bind('/root/sg-4'),
+					bind('/root/sg-5'),
+					bind('/root/rep1'),
+					bind('/root/rep1/r1-1'),
+					bind('/root/rep1/r1-2'),
+					bind('/root/rep2/r2-1'),
+					bind('/root/unrelated-grp'),
+					bind('/root/unrelated-grp/rep3/r3-1')
 				)
 			),
 			body(

@@ -1,11 +1,11 @@
 import { For } from 'solid-js';
-import type { XFormEntry } from '../../lib/xform/XFormEntry.ts';
 import type { BodyElementDefinitionArray } from '../../lib/xform/body/BodyDefinition.ts';
+import type { EntryState } from '../../lib/xform/state/EntryState.ts';
 import { XFormBodyElement } from './XFormBodyElement.tsx';
 import { XFormControlStack } from './XFormControlStack.tsx';
 
 interface XFormQuestionListProps {
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 	readonly elements: BodyElementDefinitionArray;
 }
 

@@ -1,11 +1,11 @@
 import type { Accessor } from 'solid-js';
 import { createEffect, createSignal, on } from 'solid-js';
-import type { XFormDOM } from './XFormDOM.ts';
-import type { XFormDefinition } from './XFormDefinition.ts';
-import { XFormEntryBinding } from './XFormEntryBinding.ts';
-import type { AnyBodyElementDefinition } from './body/BodyDefinition.ts';
+import type { XFormDOM } from '../XFormDOM.ts';
+import type { XFormDefinition } from '../XFormDefinition.ts';
+import { XFormEntryBinding } from '../XFormEntryBinding.ts';
+import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 
-export class XFormEntry {
+export class EntryState {
 	protected readonly bindings: Map<string, XFormEntryBinding>;
 
 	readonly instanceDOM: XFormDOM;

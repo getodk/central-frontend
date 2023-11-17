@@ -1,7 +1,7 @@
 import { render } from '@solidjs/testing-library';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
-import { XFormEntry } from '../../lib/xform/XFormEntry.ts';
+import { EntryState } from '../../lib/xform/state/EntryState.ts';
 import {
 	bind,
 	body,
@@ -43,11 +43,11 @@ describe('XFormView', () => {
 		)
 	);
 
-	let xformEntry: XFormEntry;
+	let xformEntry: EntryState;
 
 	beforeEach(() => {
 		const xformDefinition = new XFormDefinition(xform.asXml());
-		xformEntry = new XFormEntry(xformDefinition);
+		xformEntry = new EntryState(xformDefinition);
 	});
 
 	it('renders the form title', () => {

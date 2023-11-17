@@ -9,13 +9,13 @@ import {
 	on,
 	untrack,
 } from 'solid-js';
-import type { XFormEntry } from '../xform/XFormEntry.ts';
 import { XFormEntryBinding } from '../xform/XFormEntryBinding.ts';
 import type {
 	BindExpression,
 	BindExpressionEvaluation,
 	BindExpressionEvaluationType,
 } from '../xform/model/BindDefinition.ts';
+import type { EntryState } from '../xform/state/EntryState.ts';
 import { createLatest } from './primitives/createLatest.ts';
 
 // TODO: the assumption here is that an XForm may only bind elements and attributes.
@@ -153,7 +153,7 @@ const createModelState = (
 // TODO: it probably makes most sense for inheritance to be handled here as an
 // explicit option, as it's more general than I'd originally thought.
 const createBindExpressionEvaluation = <T extends BindExpressionEvaluationType>(
-	entry: XFormEntry,
+	entry: EntryState,
 	binding: XFormEntryBinding,
 	expression: BindExpression<T>,
 	defaultAccessor: Accessor<BindExpressionEvaluation<T>> | null = null
@@ -307,7 +307,7 @@ const bindingStates = new UpsertableMap<XFormEntryBinding, BindingState>();
  * is currently inconsistent with the XForms spec (`relevant` is inherited as
  * expected, `readonly` inheritance isn't yet handled).
  */
-export const createBindingState = (entry: XFormEntry, binding: XFormEntryBinding): BindingState => {
+export const createBindingState = (entry: EntryState, binding: XFormEntryBinding): BindingState => {
 	return bindingStates.upsert(binding, () => {
 		const { bind, parent } = binding;
 		const { calculate: calculateBindExpression, readonly, relevant, required } = bind;

@@ -1,15 +1,15 @@
 import { Match, Switch } from 'solid-js';
-import type { XFormEntry } from '../../lib/xform/XFormEntry.ts';
 import {
 	controlElementDefinition,
 	groupElementDefinition,
 	type AnyBodyElementDefinition,
 } from '../../lib/xform/body/BodyDefinition.ts';
+import type { EntryState } from '../../lib/xform/state/EntryState.ts';
 import { XFormGroup } from './containers/XFormGroup.tsx';
 import { XFormControl } from './controls/XFormControl.tsx';
 
 interface XFormUnknownElementProps {
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 	readonly element: AnyBodyElementDefinition;
 }
 
@@ -19,7 +19,7 @@ const XFormUnknownElement = (props: XFormUnknownElementProps) => {
 };
 
 export interface XFormBodyElementProps {
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 	readonly element: AnyBodyElementDefinition;
 }
 

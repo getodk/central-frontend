@@ -2,9 +2,9 @@ import { createBindingState, type BindingState } from '../reactivity/model-state
 import type { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
 import type { XFormDOM } from './XFormDOM.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
-import type { XFormEntry } from './XFormEntry.ts';
 import type { AnyBodyElementDefinition } from './body/BodyDefinition.ts';
 import type { BindDefinition } from './model/BindDefinition.ts';
+import type { EntryState } from './state/EntryState.ts';
 
 export class XFormEntryBinding {
 	readonly evaluator: XFormXPathEvaluator;
@@ -15,16 +15,14 @@ export class XFormEntryBinding {
 	readonly nodeset: string;
 	readonly bodyElement: AnyBodyElementDefinition | null;
 
-	// TODO: ideally this would not be public. Perhaps it can be again if state
-	// becomes part of this class?
-	readonly state: BindingState;
+	protected readonly state: BindingState;
 
 	readonly parent: XFormEntryBinding | null;
 
 	constructor(
 		readonly form: XFormDefinition,
 		protected readonly instanceDOM: XFormDOM,
-		protected readonly entry: XFormEntry,
+		protected readonly entry: EntryState,
 		readonly bind: BindDefinition
 	) {
 		const { primaryInstanceEvaluator } = instanceDOM;

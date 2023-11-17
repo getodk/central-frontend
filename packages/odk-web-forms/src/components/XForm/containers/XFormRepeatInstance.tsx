@@ -1,14 +1,14 @@
 import { Show, createSignal, createUniqueId } from 'solid-js';
-import type { XFormEntry } from '../../../lib/xform/XFormEntry.ts';
 import type { XFormEntryBinding } from '../../../lib/xform/XFormEntryBinding.ts';
 import type { RepeatDefinition } from '../../../lib/xform/body/RepeatDefinition.ts';
+import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
 import { TopLevelRepeatInstance } from '../../styled/TopLevelRepeatInstance.tsx';
 import { XFormQuesetionList } from '../XFormQuestionList.tsx';
 import { XFormRepeatInstanceLabel } from './XFormRepeatInstanceLabel.tsx';
 
 interface XFormRepeatInstanceProps {
 	readonly binding: XFormEntryBinding;
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 	readonly repeat: RepeatDefinition;
 }
 

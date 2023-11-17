@@ -33,6 +33,11 @@ export type AnyGroupElementDefinition = Extract<
 	{ readonly type: `${string}-group` }
 >;
 
+export type NonRepeatGroupElementDefinition = Exclude<
+	AnyGroupElementDefinition,
+	{ readonly type: 'repeat-group' }
+>;
+
 const isGroupElementDefinition = (
 	element: AnyBodyElementDefinition
 ): element is AnyGroupElementDefinition => {
@@ -145,8 +150,14 @@ export class BodyDefinition {
 		return this.elementsByReference.get(reference) ?? null;
 	}
 
-	isRepeatReference(reference: string) {
-		return this.elementsByReference.getBodyElementType(reference) === 'repeat-group';
+	getRepeatGroup(reference: string): RepeatGroupDefinition | null {
+		const element = this.getBodyElement(reference);
+
+		if (element?.type === 'repeat-group') {
+			return element;
+		}
+
+		return null;
 	}
 
 	toJSON() {

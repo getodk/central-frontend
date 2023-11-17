@@ -1,6 +1,6 @@
 import { styled } from 'suid/material';
 import type { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
-import type { XFormEntry } from '../../lib/xform/XFormEntry.ts';
+import type { EntryState } from '../../lib/xform/state/EntryState.ts';
 
 const Details = styled('details')({
 	position: 'relative',
@@ -21,7 +21,7 @@ const Pre = styled('pre')({
 
 export interface XFormDetailsProps {
 	readonly definition: XFormDefinition;
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 }
 
 export const XFormDetails = (props: XFormDetailsProps) => (

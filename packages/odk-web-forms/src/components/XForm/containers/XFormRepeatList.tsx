@@ -1,11 +1,11 @@
 import { For, createMemo } from 'solid-js';
 import { Stack } from 'suid/material';
-import type { XFormEntry } from '../../../lib/xform/XFormEntry.ts';
 import type { RepeatDefinition } from '../../../lib/xform/body/RepeatDefinition.ts';
+import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
 import { XFormRepeatInstance } from './XFormRepeatInstance.tsx';
 
 interface XFormRepeatListProps {
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 	readonly repeat: RepeatDefinition;
 }
 

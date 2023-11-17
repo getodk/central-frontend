@@ -1,14 +1,13 @@
 import { Box } from 'suid/material';
-import type { XFormEntry } from '../../../lib/xform/XFormEntry.ts';
-import type { ControlDefinition } from '../../../lib/xform/body/control/ControlDefinition.ts';
+import type { AnyControlDefinition } from '../../../lib/xform/body/control/ControlDefinition.ts';
+import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
 import { XFormAlert } from './XFormAlert.tsx';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface UnknownControl extends ControlDefinition<any> {}
+interface UnknownControl extends AnyControlDefinition {}
 
 interface XFormUnknownControlProps {
 	readonly control: UnknownControl;
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 }
 
 export const XFormUnknownControl = (props: XFormUnknownControlProps) => {

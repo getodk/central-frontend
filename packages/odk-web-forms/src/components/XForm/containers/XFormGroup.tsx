@@ -1,7 +1,7 @@
 import { Match, Show, Switch, createMemo, createSignal, createUniqueId } from 'solid-js';
-import type { XFormEntry } from '../../../lib/xform/XFormEntry.ts';
 import type { AnyGroupElementDefinition } from '../../../lib/xform/body/BodyDefinition.ts';
 import { nonRepeatGroup, repeatGroup } from '../../../lib/xform/body/group/BaseGroupDefinition.ts';
+import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
 import { NestedGroupBox } from '../../styled/NestedGroupBox.tsx';
 import { XFormQuesetionList } from '../XFormQuestionList.tsx';
 import { XFormRelevanceGuard } from '../XFormRelevanceGuard.tsx';
@@ -9,7 +9,7 @@ import { XFormGroupLabel } from './XFormGroupLabel.tsx';
 import { XFormRepeatList } from './XFormRepeatList.tsx';
 
 export interface XFormGroupProps {
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 	readonly group: AnyGroupElementDefinition;
 }
 

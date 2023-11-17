@@ -1,12 +1,12 @@
 import { Show, createMemo } from 'solid-js';
-import type { XFormEntry } from '../../../lib/xform/XFormEntry.ts';
 import { InputDefinition } from '../../../lib/xform/body/control/InputDefinition.ts';
+import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
 import { TextWidget } from '../../Widget/TextWidget.tsx';
 import { XFormUnlabeledControl } from '../debugging/XFormUnlabeledInputControl.tsx';
 import type { XFormControlProps } from './XFormControl.tsx';
 
 interface XFormInputControlProps {
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 	readonly control: InputDefinition;
 }
 

@@ -36,3 +36,6 @@ export abstract class ControlDefinition<
 		this.hint = HintDefinition.forElement(form, element);
 	}
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyControlDefinition = ControlDefinition<any>;

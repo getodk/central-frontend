@@ -11,12 +11,12 @@ import {
 	title,
 } from '../../test/fixtures/xform-dsl/index.ts';
 import { XFormDefinition } from '../xform/XFormDefinition.ts';
-import { XFormEntry } from '../xform/XFormEntry.ts';
+import { EntryState } from '../xform/state/EntryState.ts';
 
 describe('Model state reactive computations', () => {
 	describe('basic calculation', () => {
 		let dispose: () => void;
-		let entry: XFormEntry;
+		let entry: EntryState;
 
 		beforeEach(() => {
 			[dispose, entry] = createRoot((disposeRoot) => {
@@ -42,7 +42,7 @@ describe('Model state reactive computations', () => {
 
 				const definition = new XFormDefinition(xform.asXml());
 
-				return [disposeRoot, new XFormEntry(definition)];
+				return [disposeRoot, new EntryState(definition)];
 			});
 		});
 
@@ -104,7 +104,7 @@ describe('Model state reactive computations', () => {
 
 	describe('basic relevance', () => {
 		let dispose: () => void;
-		let entry: XFormEntry;
+		let entry: EntryState;
 
 		beforeEach(() => {
 			[dispose, entry] = createRoot((disposeRoot) => {
@@ -137,7 +137,7 @@ describe('Model state reactive computations', () => {
 
 				const definition = new XFormDefinition(xform.asXml());
 
-				return [disposeRoot, new XFormEntry(definition)];
+				return [disposeRoot, new EntryState(definition)];
 			});
 		});
 
@@ -219,7 +219,7 @@ describe('Model state reactive computations', () => {
 
 	describe('relevance and calculation together', () => {
 		let dispose: () => void;
-		let entry: XFormEntry;
+		let entry: EntryState;
 
 		beforeEach(() => {
 			[dispose, entry] = createRoot((disposeRoot) => {
@@ -249,7 +249,7 @@ describe('Model state reactive computations', () => {
 
 				const definition = new XFormDefinition(xform.asXml());
 
-				return [disposeRoot, new XFormEntry(definition)];
+				return [disposeRoot, new EntryState(definition)];
 			});
 		});
 
@@ -331,7 +331,7 @@ describe('Model state reactive computations', () => {
 
 	describe('required', () => {
 		let dispose: () => void;
-		let entry: XFormEntry;
+		let entry: EntryState;
 
 		beforeEach(() => {
 			[dispose, entry] = createRoot((disposeRoot) => {
@@ -357,7 +357,7 @@ describe('Model state reactive computations', () => {
 
 				const definition = new XFormDefinition(xform.asXml());
 
-				return [disposeRoot, new XFormEntry(definition)];
+				return [disposeRoot, new EntryState(definition)];
 			});
 		});
 
@@ -387,7 +387,7 @@ describe('Model state reactive computations', () => {
 
 	describe('readonly', () => {
 		let dispose: () => void;
-		let entry: XFormEntry;
+		let entry: EntryState;
 
 		beforeEach(() => {
 			[dispose, entry] = createRoot((disposeRoot) => {
@@ -413,7 +413,7 @@ describe('Model state reactive computations', () => {
 
 				const definition = new XFormDefinition(xform.asXml());
 
-				return [disposeRoot, new XFormEntry(definition)];
+				return [disposeRoot, new EntryState(definition)];
 			});
 		});
 
@@ -442,7 +442,7 @@ describe('Model state reactive computations', () => {
 
 		describe('readonly inheritance', () => {
 			let dispose: () => void;
-			let entry: XFormEntry;
+			let entry: EntryState;
 
 			beforeEach(() => {
 				[dispose, entry] = createRoot((disposeRoot) => {
@@ -475,7 +475,7 @@ describe('Model state reactive computations', () => {
 
 					const definition = new XFormDefinition(xform.asXml());
 
-					return [disposeRoot, new XFormEntry(definition)];
+					return [disposeRoot, new EntryState(definition)];
 				});
 			});
 
