@@ -1,4 +1,4 @@
-import type { CollectionValues } from '../collections/types.ts';
+import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
 import type { XFormDefinition } from './XFormDefinition.ts';
 import { XFormViewLabel } from './XFormViewLabel.ts';
 

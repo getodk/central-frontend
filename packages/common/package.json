@@ -1,0 +1,60 @@
+{
+  "name": "@odk/common",
+  "private": true,
+  "version": "0.0.0",
+  "description": "@odk/common",
+  "type": "module",
+  "author": "getodk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getodk/web-forms",
+    "directory": "packages/odk-xpath"
+  },
+  "bugs": "https://github.com/getodk/web-forms/issues",
+  "homepage": "https://getodk.org/",
+  "exports": {
+    "./*": {
+      "types": "./src/*.ts",
+      "default": "./src/*.ts"
+    },
+    "./*.ts": {
+      "types": "./src/*.ts",
+      "default": "./src/*.ts"
+    },
+    "./types/*": {
+      "types": "./types/*.ts",
+      "default": "./types/*.ts"
+    },
+    "./types/*.ts": {
+      "types": "./types/*.ts",
+      "default": "./types/*.ts"
+    }
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18 <21",
+    "yarn": "1.22.19"
+  },
+  "scripts": {
+    "test": "npm-run-all --print-name --print-label test-node:* test-browser:*",
+    "test-node:jsdom": "vitest run",
+    "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
+    "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
+    "test-browser:webkit": "BROWSER_NAME=webkit vitest run",
+    "test-watch:jsdom": "vitest",
+    "test-watch:chromium": "BROWSER_NAME=chromium vitest",
+    "test-watch:firefox": "BROWSER_NAME=firefox vitest",
+    "test-watch:webkit": "BROWSER_NAME=webkit vitest",
+    "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
+  },
+  "devDependencies": {
+    "@vitest/browser": "^1.0.0-beta.3",
+    "jsdom": "^22.1.0",
+    "vite": "^4.5.0",
+    "vitest": "^1.0.0-beta.3",
+    "vitest-github-actions-reporter": "^0.10.0"
+  }
+}

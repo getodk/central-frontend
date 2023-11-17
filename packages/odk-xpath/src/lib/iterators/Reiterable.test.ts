@@ -1,6 +1,6 @@
+import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
 import { describe, expect, it } from 'vitest';
 import { Reiterable } from './Reiterable.ts';
-import type { CollectionValues } from '../collections/types.ts';
 
 describe('Reiterable', () => {
 	const sourceItems = ['a', 'b', 'c'] as const;

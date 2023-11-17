@@ -1,4 +1,4 @@
-import { UpsertableMap } from '../../lib/collections/UpsertableMap.ts';
+import { UpsertableMap } from '@odk/common/lib/collections/UpsertableMap.ts';
 import type {
 	SyntaxLanguageTypeName,
 	SyntaxLanguage as TreeSitterLanguage,

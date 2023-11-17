@@ -10,6 +10,8 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "paths": {
+      "@odk/common/types/*": ["../common/types/*"],
+      "@odk/common/*": ["../common/src/*"],
       "@solidjs/testing-library": ["./tools/@solidjs/testing-library/index.ts"]
     }
   }

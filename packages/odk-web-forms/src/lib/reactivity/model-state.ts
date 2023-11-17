@@ -1,3 +1,4 @@
+import { UpsertableMap } from '@odk/common/lib/collections/UpsertableMap.ts';
 import type { Accessor } from 'solid-js';
 import {
 	createComputed,
@@ -8,7 +9,6 @@ import {
 	on,
 	untrack,
 } from 'solid-js';
-import { UpsertableMap } from '../collections/UpsertableMap.ts';
 import type { XFormEntry } from '../xform/XFormEntry.ts';
 import { XFormEntryBinding } from '../xform/XFormEntryBinding.ts';
 import type {

@@ -3,14 +3,15 @@
 
 // TODO: share Vite config where makes sense
 
+import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
 import suidPlugin from '@suid/vite-plugin';
 import { createRequire } from 'node:module';
+import { resolve as resolvePath } from 'node:path';
 import unpluginFonts from 'unplugin-fonts/vite';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import solidPlugin from 'vite-plugin-solid';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
-import type { CollectionValues } from './src/lib/collections/types';
 import { solidVitestNoNodeLoader } from './tools/vite/solid-vitest-no-node-loader';
 
 export default defineConfig(({ mode }) => {
@@ -137,11 +138,14 @@ export default defineConfig(({ mode }) => {
 			// this package
 			dts({
 				exclude: ['test', 'tools', 'vite-env.d.ts'],
+				entryRoot: './src',
 			}),
 		],
 
 		resolve: {
 			alias: {
+				'@odk/common/types': resolvePath(__dirname, '../common/types'),
+				'@odk/common': resolvePath(__dirname, '../common/src'),
 				'@solidjs/testing-library': require.resolve('./tools/@solidjs/testing-library/index.ts'),
 			},
 

@@ -1,3 +1,4 @@
+import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
 import type {
 	FilterPathExprNode,
 	SyntaxNode,
@@ -9,7 +10,6 @@ import type {
 	FilterPathExprType,
 	RelativeLocationPathType,
 } from '@odk/xpath/static/grammar/type-names.js';
-import type { CollectionValues } from '../collections/types';
 import { xpathParser } from './parser.ts';
 
 // TODO: this should probably be derived from the function definitions themselves.

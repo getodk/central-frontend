@@ -4,6 +4,10 @@
   "compilerOptions": {
     "declarationDir": "./dist",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "@odk/common/types/*": ["../common/types/*"],
+      "@odk/common/*": ["../common/src/*"]
+    }
   }
 }

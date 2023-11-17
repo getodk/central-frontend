@@ -1,21 +1,3 @@
-export type CollectionValues<T> = T extends ArrayLike<infer U>
-	? U
-	: T extends ReadonlyArray<infer U>
-	? U
-	: T extends Array<infer U>
-	? U
-	: T extends ReadonlySet<infer U>
-	? U
-	: T extends Set<infer U>
-	? U
-	: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-	T extends ReadonlyMap<any, infer U>
-	? U
-	: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-	T extends Map<any, infer U>
-	? U
-	: never;
-
 /**
  * From https://github.com/sindresorhus/type-fest with the following changes:
  *
@@ -73,7 +55,3 @@ export type ReadonlyTuple<Element, Length extends number> = number extends Lengt
 	  readonly Element[]
 	: // Otherwise it is a fixed length tuple.
 	  BuildTupleHelper<Element, Length, []>;
-
-// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-export type IterableReadonlyTuple<T, Length extends number> = ReadonlyTuple<T, Length> &
-	Pick<readonly T[], 'entries' | 'keys' | 'values'>;
