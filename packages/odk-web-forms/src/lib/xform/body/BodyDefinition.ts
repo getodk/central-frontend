@@ -80,8 +80,16 @@ class BodyElementMap extends Map<BodyElementReference, AnyBodyElementDefinition>
 		for (const element of elements) {
 			const { reference } = element;
 
+			if (element instanceof RepeatGroupDefinition) {
+				if (reference == null) {
+					throw new Error('Missing reference for repeat/repeat group');
+				}
+
+				this.set(reference, element);
+				this.mapElementsByReference(element.repeatChildren);
+			}
+
 			if (
-				element instanceof RepeatGroupDefinition ||
 				element instanceof LogicalGroupDefinition ||
 				element instanceof PresentationGroupDefinition ||
 				element instanceof StructuralGroupDefinition

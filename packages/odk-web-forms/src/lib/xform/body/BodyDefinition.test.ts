@@ -483,5 +483,16 @@ describe('BodyDefinition', () => {
 				},
 			});
 		});
+
+		it('gets repeat instance children by reference', () => {
+			const control = bodyDefinition.getBodyElement('/root/rep1/r1-1');
+
+			expect(control).toMatchObject({
+				category: 'control',
+				type: 'input',
+				reference: '/root/rep1/r1-1',
+				label: null,
+			});
+		});
 	});
 });

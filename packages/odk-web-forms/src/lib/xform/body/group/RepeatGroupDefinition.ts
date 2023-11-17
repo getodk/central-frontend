@@ -1,5 +1,6 @@
 import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import type { BodyElementDefinitionArray } from '../BodyDefinition.ts';
 import { RepeatDefinition } from '../RepeatDefinition.ts';
 import { BaseGroupDefinition } from './BaseGroupDefinition.ts';
 
@@ -11,6 +12,10 @@ export class RepeatGroupDefinition extends BaseGroupDefinition<'repeat-group'> {
 	readonly type = 'repeat-group';
 
 	readonly repeat: RepeatDefinition;
+
+	get repeatChildren(): BodyElementDefinitionArray {
+		return this.repeat.children;
+	}
 
 	constructor(form: XFormDefinition, element: Element) {
 		// TODO: this has already been queried at least twice before reaching this
