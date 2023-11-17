@@ -1,8 +1,8 @@
 import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
+import { xml } from '@odk/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Evaluator } from '../../src/index.ts';
 import { UnreachableError } from '../../src/lib/error/UnreachableError.ts';
-import { xml } from '../../src/test-factories.ts';
 import { xpathParser } from '../parser.ts';
 
 describe("Specifying an Evaluator's root node", () => {

@@ -1,5 +1,5 @@
+import { xml } from '@odk/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { xml } from '../test-factories.ts';
 import { NamespaceResolver, staticNamespaces } from './NamespaceResolver.ts';
 
 describe('NamespaceResolver', () => {
