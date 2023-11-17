@@ -1,7 +1,7 @@
 import { render } from '@solidjs/testing-library';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { parseXForm } from '../../lib/xform/parse.ts';
-import type { XFormDefinition } from '../../lib/xform/types.ts';
+import { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
+import { XFormEntry } from '../../lib/xform/XFormEntry.ts';
 import {
 	bind,
 	body,
@@ -28,12 +28,12 @@ describe('XFormView', () => {
 						t('second-question'),
 						t('third-question'),
 						t('meta', t('instanceID'))
-					),
-					bind('/root/first-question').type('string'),
-					bind('/root/second-question').type('string'),
-					bind('/root/third-question').type('string'),
-					bind('/root/meta/instanceID').type('string')
-				)
+					)
+				),
+				bind('/root/first-question').type('string'),
+				bind('/root/second-question').type('string'),
+				bind('/root/third-question').type('string'),
+				bind('/root/meta/instanceID').type('string')
 			)
 		),
 		body(
@@ -43,20 +43,21 @@ describe('XFormView', () => {
 		)
 	);
 
-	let xformDefinition: XFormDefinition;
+	let xformEntry: XFormEntry;
 
 	beforeEach(() => {
-		xformDefinition = parseXForm(xform.asXml());
+		const xformDefinition = new XFormDefinition(xform.asXml());
+		xformEntry = new XFormEntry(xformDefinition);
 	});
 
 	it('renders the form title', () => {
-		const rendered = render(() => <XFormView definition={xformDefinition} />);
+		const rendered = render(() => <XFormView entry={xformEntry} />);
 
 		expect(rendered.getByText('Minimal XForm')).toBeInTheDocument();
 	});
 
 	it('renders the first question', () => {
-		const rendered = render(() => <XFormView definition={xformDefinition} />);
+		const rendered = render(() => <XFormView entry={xformEntry} />);
 
 		expect(rendered.getByText('First question')).toBeInTheDocument();
 	});

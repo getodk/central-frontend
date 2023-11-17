@@ -2,7 +2,29 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 
 import type { JSX } from 'solid-js';
-import { createTheme, ThemeProvider as SUIDThemeProvider } from 'suid/material';
+import type { StyledProps } from 'suid/material';
+import { createPalette, createTheme, ThemeProvider as SUIDThemeProvider } from 'suid/material';
+
+declare module '@suid/material/styles/createTheme' {
+	interface ThemeInput {
+		nonRelevant: {
+			default: StyledProps;
+			debug: StyledProps;
+		};
+	}
+
+	interface Theme extends ThemeInput {}
+}
+
+declare module '@suid/material/styles/createPalette' {
+	type PaletteShades = Record<number | `${number}%`, string>;
+
+	interface PaletteOptions {
+		primaryShades?: PaletteShades;
+
+		required?: string;
+	}
+}
 
 const REM = 16;
 
@@ -16,29 +38,7 @@ export const odkTheme = createTheme({
 			},
 		};
 	},
-	// components: {
-	// 	MuiOutlinedInput: {
-	// 		defaultProps: {},
-	// 		// fontSize: '30rem',
-	// 	},
-	// },
-
-	// components: {
-	// 	MuiOutlinedInput: {
-	// 		defaultProps: {
-	// 			styleOverrides: {
-
-	// 			},
-	// 		},
-	// 		styleOverrides: {
-	// 			root: {
-	// 				color: 'red',
-	// 			},
-	// 		},
-	// 	},
-	// },
-
-	palette: {
+	palette: createPalette({
 		mode: 'light',
 		background: {
 			default: '#f7f7f7',
@@ -47,13 +47,11 @@ export const odkTheme = createTheme({
 			main: '#009ecc',
 			contrastText: '#fff',
 		},
-	},
-	// shape() {
-	// 	return {
-	// 		// borderRadius: REM,
-	// 		// borderRadius:
-	// 	};
-	// },
+		primaryShades: {
+			'15%': '#D8ECF5',
+		},
+		required: '#D42C2C',
+	}),
 	spacing() {
 		return (units) => {
 			if (typeof units !== 'number') {
@@ -77,6 +75,20 @@ export const odkTheme = createTheme({
 			fontWeight: 400,
 		},
 		fontWeightMedium: 500,
+	},
+
+	nonRelevant: {
+		default: {
+			display: 'none',
+		},
+		debug: {
+			'&::before': {
+				display: 'block',
+				position: 'absolute',
+			},
+
+			opacity: '0.35',
+		},
 	},
 });
 

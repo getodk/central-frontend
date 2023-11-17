@@ -9,9 +9,8 @@ import type {
 	XPathNamespaceResolverObject,
 	XPathResultType,
 } from '../shared/index.ts';
-import type { ParseOptions } from '../static/grammar/ExpressionParser.ts';
+import type { BaseParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { ExpressionParser } from '../static/grammar/ExpressionParser.ts';
-import type { TreeSitterXPathParser } from '../static/grammar/TreeSitterXPathParser.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibrary } from './functions/FunctionLibrary.ts';
 import { ResultTypes } from './result/ResultType.ts';
@@ -50,12 +49,12 @@ export class Evaluator implements AnyXPathEvaluator {
 	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
 	readonly timeZone: Temporal.TimeZone;
 
-	constructor(xpathParser: TreeSitterXPathParser, options: EvaluatorOptions = {}) {
+	constructor(parser: BaseParser, options: EvaluatorOptions = {}) {
 		const { functionLibrary = fn, parseOptions = {}, rootNode, timeZoneId } = options;
 
 		this.functionLibrary = functionLibrary;
 		this.parseOptions = parseOptions;
-		this.parser = new ExpressionParser(xpathParser);
+		this.parser = ExpressionParser.from(parser);
 		this.sharedContextOptions = partialOmitNullish({
 			rootNode,
 		});

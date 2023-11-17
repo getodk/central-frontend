@@ -15,23 +15,21 @@ export abstract class PrimitiveResult extends BaseResult implements XPathResult 
 		return this.type;
 	}
 
-	protected readonly invalidNodeSetResultError: Error = new InvalidNodeSetResultError();
-
 	get singleNodeValue(): Node | null {
-		throw this.invalidNodeSetResultError;
+		throw new InvalidNodeSetResultError();
 	}
 
 	get snapshotLength(): number {
-		throw this.invalidNodeSetResultError;
+		throw new InvalidNodeSetResultError();
 	}
 
 	readonly invalidIteratorState = true;
 
 	iterateNext(): Node | null {
-		throw this.invalidNodeSetResultError;
+		throw new InvalidNodeSetResultError();
 	}
 
 	snapshotItem(_index?: number): Node | null {
-		throw this.invalidNodeSetResultError;
+		throw new InvalidNodeSetResultError();
 	}
 }

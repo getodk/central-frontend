@@ -21,7 +21,6 @@ describe('XFormXPathEvaluator (convenience wrapper)', () => {
 	let evaluator: XFormXPathEvaluator;
 
 	beforeEach(() => {
-		const parser = new DOMParser();
 		const xform = html(
 			head(
 				title(FORM_TITLE),
@@ -33,12 +32,12 @@ describe('XFormXPathEvaluator (convenience wrapper)', () => {
 							t('second-question'),
 							t('third-question'),
 							t('meta', t('instanceID'))
-						),
-						bind('/root/first-question').type('string'),
-						bind('/root/second-question').type('string'),
-						bind('/root/third-question').type('string'),
-						bind('/root/meta/instanceID').type('string')
-					)
+						)
+					),
+					bind('/root/first-question').type('string'),
+					bind('/root/second-question').type('string'),
+					bind('/root/third-question').type('string'),
+					bind('/root/meta/instanceID').type('string')
 				)
 			),
 			body(
@@ -48,9 +47,7 @@ describe('XFormXPathEvaluator (convenience wrapper)', () => {
 			)
 		);
 
-		// TODO: test DSL, like JavaRosa
-		xformDocument = parser.parseFromString(xform.asXml(), 'text/xml');
-
+		xformDocument = xform.asXMLDocument();
 		evaluator = new XFormXPathEvaluator(xformDocument);
 	});
 

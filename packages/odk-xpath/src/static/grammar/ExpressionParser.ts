@@ -5,7 +5,10 @@ import type {
 } from './SyntaxLanguage.ts';
 import type { ASyntaxNode, UnknownSyntaxNode, XPathNode } from './SyntaxNode.ts';
 import { type SyntaxTree as TreeSitterTree } from './SyntaxTree.ts';
-import type { TreeSitterXPathParser } from './TreeSitterXPathParser.ts';
+import {
+	TreeSitterXPathParser,
+	type WebAssemblyResourceSpecifiers,
+} from './TreeSitterXPathParser.ts';
 import type { AnySyntaxType } from './type-names.ts';
 
 class SyntaxNode implements ASyntaxNode {
@@ -59,8 +62,24 @@ export interface ParseOptions {
 	readonly attemptErrorRecovery?: boolean;
 }
 
+export type BaseParser = ExpressionParser | TreeSitterXPathParser;
+
 export class ExpressionParser {
-	constructor(protected readonly xpathParser: TreeSitterXPathParser) {}
+	static from(baseParser: BaseParser): ExpressionParser {
+		if (baseParser instanceof ExpressionParser) {
+			return baseParser;
+		}
+
+		return new this(baseParser);
+	}
+
+	static async init(resources: WebAssemblyResourceSpecifiers): Promise<ExpressionParser> {
+		const baseParser = await TreeSitterXPathParser.init(resources);
+
+		return this.from(baseParser);
+	}
+
+	protected constructor(protected readonly xpathParser: TreeSitterXPathParser) {}
 
 	// TODO: this cache can grow indefinitely. If the parser instance continues
 	// to be used as a singleton (see `Evaluator.ts`), it would make sense to
