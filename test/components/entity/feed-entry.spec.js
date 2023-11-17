@@ -224,7 +224,7 @@ describe('EntityFeedEntry', () => {
 
     it('shows the correct text', () => {
       const component = mountComponent();
-      const text = component.get('.feed-entry-title').text();
+      const text = component.get('.feed-entry-title .title').text();
       text.should.equal('Data updated by Alice');
     });
 
@@ -233,6 +233,12 @@ describe('EntityFeedEntry', () => {
       const title = component.get('.feed-entry-title');
       const actorLink = title.getComponent(ActorLink);
       actorLink.props().actor.displayName.should.equal('Alice');
+    });
+
+    it('shows the version number', () => {
+      const component = mountComponent();
+      const version = component.get('.feed-entry-title .entity-version-tag').text();
+      version.should.equal('v2');
     });
   });
 
@@ -276,26 +282,26 @@ describe('EntityFeedEntry', () => {
 
     it('shows the correct text with submission instance ID', () => {
       const component = mountComponent({ props: updateEntityFromSubmission() });
-      const text = component.get('.feed-entry-title').text();
+      const text = component.get('.feed-entry-title .title').text();
       text.should.equal('Data updated by Submission s');
     });
 
     it('shows the correct text with submission instance name', () => {
       const component = mountComponent({ props: updateEntityFromSubmission({ meta: { instanceName: 'Some Name' } }) });
-      const text = component.get('.feed-entry-title').text();
+      const text = component.get('.feed-entry-title  .title').text();
       text.should.equal('Data updated by Submission Some Name');
     });
 
     it('links to the submission', () => {
       const component = mountComponent({ props: updateEntityFromSubmission() });
-      const title = component.get('.feed-entry-title');
+      const title = component.get('.feed-entry-title .title');
       const { to } = title.getComponent(RouterLinkStub).props();
       to.should.equal('/projects/1/forms/f/submissions/s');
     });
 
     it('shows the correct text with deleted submission instance id', () => {
       const component = mountComponent({ props: updateEntityFromSubmission({ deleted: true }) });
-      const text = component.get('.feed-entry-title').text();
+      const text = component.get('.feed-entry-title .title').text();
       text.should.equal('Data updated by (deleted Submission x)');
     });
 
@@ -304,7 +310,13 @@ describe('EntityFeedEntry', () => {
         props: updateEntityFromSubmission({ deleted: true })
       });
       const links = component.findAllComponents(RouterLinkStub);
-      links.length.should.equal(0);
+      links.length.should.equal(1); // only link is anchor link on version tag
+    });
+
+    it('shows the version number', () => {
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const version = component.get('.feed-entry-title .entity-version-tag').text();
+      version.should.equal('v2');
     });
   });
 
