@@ -1,0 +1,136 @@
+<!--
+Copyright 2023 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <table class="entity-diff-table table">
+    <colgroup>
+      <col>
+      <col>
+      <col>
+      <col>
+    </colgroup>
+    <thead class="sr-only">
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">{{ $t('header.oldValue') }}</th>
+        <th scope="col" aria-hidden="true"></th>
+        <th scope="col">{{ $t('header.newValue') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-if="entityVersion.conflict != null" class="comparing">
+        <td>{{ $t('comparing') }}</td>
+        <i18n-t tag="td" keypath="version" v-tooltip.text>
+          <template #version>
+            <span class="version-string">{{ $t('common.versionShort', oldVersion) }}</span>
+          </template>
+          <template #source>
+            <entity-version-link :uuid="uuid" :version="oldVersion"/>
+          </template>
+        </i18n-t>
+        <td aria-hidden="true"><span class="icon-arrow-circle-right"></span></td>
+        <i18n-t tag="td" keypath="version" v-tooltip.text>
+          <template #version>
+            <span class="version-string">{{ $t('common.versionShort', entityVersion) }}</span>
+          </template>
+          <template #source>
+            <entity-version-link :uuid="uuid" :version="entityVersion"/>
+          </template>
+        </i18n-t>
+      </tr>
+      <entity-diff-row v-for="name of diff" :key="name"
+        :old-version="oldVersion" :name="name"/>
+    </tbody>
+  </table>
+</template>
+
+<script setup>
+import { computed, inject, toRaw } from 'vue';
+
+import EntityDiffRow from './row.vue';
+import EntityVersionLink from '../version-link.vue';
+
+import { useRequestData } from '../../../request-data';
+
+defineOptions({
+  name: 'EntityDiffTable'
+});
+const props = defineProps({
+  diff: {
+    type: Array,
+    required: true
+  }
+});
+const entityVersion = inject('entityVersion');
+
+// The component assumes that this data will exist when the component is
+// created.
+const { entityVersions } = useRequestData();
+const oldVersion = computed(() => {
+  // toRaw() isn't needed in production, but it is needed in testing for some
+  // reason.
+  const version = toRaw(props.diff) === entityVersion.baseDiff
+    ? entityVersion.baseVersion
+    : entityVersion.version - 1;
+  return entityVersions[version - 1];
+});
+
+const uuid = inject('uuid');
+</script>
+
+<style lang="scss">
+@import '../../../assets/scss/mixins';
+
+.entity-diff-table {
+  margin-bottom: 0;
+  table-layout: fixed;
+
+  tbody tr td {
+    padding-top: 12px;
+    padding-bottom: 10px;
+
+    &:nth-child(3) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  tr:first-child td { border-top: none; }
+
+  .comparing {
+    td { @include text-overflow-ellipsis; }
+    td:first-child, .version-string { font-weight: bold; }
+  }
+
+  td:nth-child(3) { text-align: center; }
+  .icon-arrow-circle-right { color: #888; }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      // The value of an Entity property in an older version of the Entity
+      "oldValue": "Old value",
+      // The value of an Entity property in a newer version of the Entity
+      "newValue": "New value",
+    },
+    // This is shown when Central displays a comparison of two versions of an
+    // Entity.
+    "comparing": "Comparing",
+    // {version} is a short identifier of an Entity version, for example, "v3".
+    // {source} indicates who or what created the Entity version, for example,
+    // "Update by Alice".
+    "version": "{version} ({source})"
+  }
+}
+</i18n>

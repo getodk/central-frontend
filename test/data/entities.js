@@ -19,7 +19,7 @@ const diffVersions = (dataReceived, previousVersion) => {
   const diff = Object.keys(dataReceived).filter(name =>
     name !== 'label' && dataReceived[name] !== previousVersion.data[name]);
   if (dataReceived.label != null && dataReceived.label !== previousVersion.label)
-    diff.push('label');
+    diff.unshift('label');
   return diff;
 };
 
@@ -34,6 +34,7 @@ const entityVersions = dataStore({
     label = undefined,
     data = {},
     conflictingProperties = undefined,
+    source = {},
     creator = extendedUsers.first(),
 
     // Internal option for the `entities` store. This is an entity that is in
@@ -100,6 +101,7 @@ const entityVersions = dataStore({
       baseDiff: diffVersions(dataReceived, baseVersion),
       serverDiff: diffVersions(dataReceived, lastVersion),
       resolved: false,
+      source,
       creatorId: creator.id,
       creator: toActor(creator),
       createdAt
@@ -125,6 +127,7 @@ entities = dataStore({
     version = 1,
     label = faker.random.word(),
     data = undefined,
+    source = undefined,
     creator: creatorOption = undefined
   }) => {
     if (extendedDatasets.size === 0) {
@@ -157,10 +160,11 @@ entities = dataStore({
       _entity: entity,
       label,
       data: data ?? randomData(dataset.properties),
+      source,
       creator
     });
     for (let i = 2; i <= version; i += 1)
-      createVersion({ _entity: entity, creator });
+      createVersion({ _entity: entity, source, creator });
 
     return entity;
   },

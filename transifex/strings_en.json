@@ -778,6 +778,12 @@
       "string": "Basic Information",
       "developer_comment": "This is a title shown above a section of the page."
     },
+    "conflict": {
+      "string": "Conflict"
+    },
+    "conflicts": {
+      "string": "Conflicts"
+    },
     "currentDraft": {
       "string": "Your Current Draft",
       "developer_comment": "This is a title shown above a section of the page."
@@ -864,8 +870,9 @@
     "totalEntities": {
       "string": "Total Entities"
     },
-    "conflicts": {
-      "string": "Conflicts"
+    "versionShort": {
+      "string": "v{version}",
+      "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
     }
   },
   "mixin": {
@@ -1544,6 +1551,70 @@
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
+    "EntityDiff": {
+      "noChange": {
+        "string": "There are no changes to show."
+      }
+    },
+    "EntityDiffHead": {
+      "introduction": {
+        "string": "This Submission update was applied to version {version} of this Entity, but it was created based on version {baseVersion}.",
+        "developer_comment": "{version} and {baseVersion} are version numbers."
+      },
+      "hardConflict": {
+        "description": {
+          "string": "Other updates had already written to the same properties."
+        }
+      },
+      "softConflict": {
+        "title": {
+          "string": "Parallel Update"
+        },
+        "description": {
+          "string": "No parallel update before this one touched the same properties."
+        }
+      },
+      "tab": {
+        "baseDiff": {
+          "string": "Author’s View",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the data collector (the author)"
+        },
+        "serverDiff": {
+          "string": "Central’s View",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the Central server"
+        },
+        "updating": {
+          "string": "(updating {version})",
+          "developer_comment": "This text is shown above a comparison of two versions of an Entity. {version} is a short version identifier, for example, \"v3\"."
+        }
+      }
+    },
+    "EntityDiffRow": {
+      "conflictingProp": {
+        "string": "Another update already wrote to this property.",
+        "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity"
+      }
+    },
+    "EntityDiffTable": {
+      "header": {
+        "oldValue": {
+          "string": "Old value",
+          "developer_comment": "The value of an Entity property in an older version of the Entity"
+        },
+        "newValue": {
+          "string": "New value",
+          "developer_comment": "The value of an Entity property in a newer version of the Entity"
+        }
+      },
+      "comparing": {
+        "string": "Comparing",
+        "developer_comment": "This is shown when Central displays a comparison of two versions of an Entity."
+      },
+      "version": {
+        "string": "{version} ({source})",
+        "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates who or what created the Entity version, for example, \"Update by Alice\"."
+      }
+    },
     "EntityFeedEntry": {
       "title": {
         "submission": {
@@ -1735,6 +1806,14 @@
         "409_15": {
           "string": "Data has been modified by another user. Please refresh to see the updated data."
         }
+      }
+    },
+    "EntityVersionLink": {
+      "submission": {
+        "string": "Submission {instanceName}"
+      },
+      "api": {
+        "string": "Update by {name}"
       }
     },
     "FieldKeyList": {

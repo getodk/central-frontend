@@ -91,13 +91,13 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
-      <entity-diff v-if="entityVersion != null" :entity-version="entityVersion"/>
+      <entity-diff v-if="entityVersion != null"/>
     </template>
   </feed-entry>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ActorLink from '../actor-link.vue';
@@ -121,6 +121,7 @@ const props = defineProps({
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
+provide('entityVersion', props.entityVersion);
 
 // The component assumes that this data will exist when the component is
 // created.

@@ -13,10 +13,11 @@ import { mockRouter } from '../../util/router';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (options) =>
-  mount(EntityFeedEntry, mergeMountOptions(options, {
+const mountComponent = (options) => {
+  const entity = testData.extendedEntities.last();
+  return mount(EntityFeedEntry, mergeMountOptions(options, {
     global: {
-      provide: { projectId: '1', datasetName: 'trees' }
+      provide: { projectId: '1', datasetName: 'trees', uuid: entity.uuid }
     },
     props: {
       entry: testData.extendedAudits.last(),
@@ -25,13 +26,14 @@ const mountComponent = (options) =>
         : null
     },
     container: {
-      router: mockRouter('/projects/1/entity-lists/trees/entities/e'),
+      router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`),
       requestData: testRequestData([useEntity], {
-        entity: testData.extendedEntities.last(),
+        entity,
         entityVersions: testData.extendedEntityVersions.sorted()
       })
     }
   }));
+};
 
 describe('EntityFeedEntry', () => {
   beforeEach(() => {
@@ -303,7 +305,7 @@ describe('EntityFeedEntry', () => {
       const component = mountComponent({
         props: updateEntityFromSubmission({ deleted: true })
       });
-      const links = component.findAllComponents(RouterLinkStub);
+      const links = component.get('.feed-entry-title').findAllComponents(RouterLinkStub);
       links.length.should.equal(0);
     });
   });
@@ -314,8 +316,7 @@ describe('EntityFeedEntry', () => {
       action: 'entity.update.version',
       details: {}
     });
-    const diff = mountComponent().getComponent(EntityDiff);
-    diff.props().entityVersion.version.should.equal(2);
+    mountComponent().findComponent(EntityDiff).exists().should.be.true();
   });
 
   describe('entity.update.resolve audit event', () => {
