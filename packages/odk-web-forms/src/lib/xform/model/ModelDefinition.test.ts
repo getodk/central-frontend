@@ -268,6 +268,14 @@ describe('ModelDefinition', () => {
 								),
 								t('rep4',
 									t('f', 'default instance f 2')
+								),
+
+								// prettier-ignore
+								t('rep5',
+									t('g', 'default instance g 0')
+								),
+								t('rep5',
+									t('g', 'default instance g 1')
 								)
 							)
 						),
@@ -276,7 +284,8 @@ describe('ModelDefinition', () => {
 						bind('/root/rep2/c').type('string'),
 						bind('/root/rep2/d').type('string'),
 						bind('/root/rep3/e').type('string'),
-						bind('/root/rep4/f').type('string')
+						bind('/root/rep4/f').type('string'),
+						bind('/root/rep5/g').type('string')
 					)
 				),
 				// prettier-ignore
@@ -295,6 +304,9 @@ describe('ModelDefinition', () => {
 					),
 					repeat('/root/rep4',
 						input('/root/rep4/f')
+					),
+					repeat('/root/rep5',
+						input('/root/rep5/g')
 					)
 				)
 			);
@@ -310,7 +322,7 @@ describe('ModelDefinition', () => {
 				expected: {
 					type: 'repeat-sequence',
 					bind: { nodeset: '/root/rep' },
-					groupDefinition: {
+					bodyElement: {
 						type: 'repeat-group',
 					},
 					instances: [
@@ -340,7 +352,7 @@ describe('ModelDefinition', () => {
 				expected: {
 					type: 'repeat-sequence',
 					bind: { nodeset: '/root/rep2' },
-					groupDefinition: {
+					bodyElement: {
 						type: 'repeat-group',
 					},
 					instances: [
@@ -383,22 +395,90 @@ describe('ModelDefinition', () => {
 			const expectRepeatTemplate = (definition: RepeatSequenceDefinition, expectedXML: string) => {
 				const expected = xformsElement`${expectedXML}`;
 
-				expectEqualNode(definition.templateElement, expected);
+				expectEqualNode(definition.template.node, expected);
 			};
 
 			it('defines an explicit repeat template', () => {
 				const definition = modelDefinition.root.children[0] as RepeatSequenceDefinition;
 
-				expectRepeatTemplate(definition, /* xml */ `<rep><a>a default</a><b>b default</b></rep>`);
+				expectRepeatTemplate(
+					definition,
+					/* xml */ `<rep jr:template=""><a>a default</a><b>b default</b></rep>`
+				);
 			});
 
 			it('defines an implicit repeat template', () => {
 				const definition = modelDefinition.root.children[1] as RepeatSequenceDefinition;
 
-				expectRepeatTemplate(definition, /* xml */ `<rep2><c /><d /></rep2>`);
+				expectRepeatTemplate(definition, /* xml */ `<rep2 jr:template=""><c /><d /></rep2>`);
 			});
 
-			it.todo('defines an implicit repeat template with (or without?) blank children');
+			it('defines an implicit repeat template with blank children', () => {
+				const definition = modelDefinition.root.children[4] as RepeatSequenceDefinition;
+
+				expectRepeatTemplate(definition, /* xml */ `<rep5 jr:template=""><g /></rep5>`);
+			});
+
+			it.each([
+				{ index: 1, expected: 1 },
+				{ index: 4, expected: 2 },
+			])(
+				'defines $expected default instances from nodes in the form definition when a repeat template is implicitly derived',
+				({ index, expected }) => {
+					const definition = modelDefinition.root.children[index] as RepeatSequenceDefinition;
+
+					expect(definition.instances.length).toBe(expected);
+				}
+			);
+
+			it.fails('rejects multiple templates for the same repeat', () => {
+				const xform = html(
+					head(
+						title('Model definition'),
+						model(
+							mainInstance(
+								// prettier-ignore
+								t(`root id="model-definition"`,
+									// prettier-ignore
+									t('rep',
+										t('rep2 jr:template=""'),
+										t('rep2',
+											t('a'),
+											t('b')
+										)
+									),
+									t('rep',
+										t('rep2 jr:template=""'),
+										t('rep2',
+											t('a'),
+											t('b')
+										)
+									)
+								)
+							),
+							bind('/root/rep/rep2/a').type('string'),
+							bind('/root/rep/rep2/b').type('string')
+						)
+					),
+					// prettier-ignore
+					body(
+						group('/root/rep',
+							repeat('/root/rep',
+								group('/root/rep/rep2',
+									repeat('/group/rep/rep2',
+										input('/root/rep/rep2/a'),
+										input('/root/rep/rep2/b')
+									)
+								)
+							)
+						)
+					)
+				);
+
+				expect(() => new XFormDefinition(xform.asXml())).toThrow(
+					'Multiple explicit templates defined for /root/rep/rep2'
+				);
+			});
 		});
 
 		describe('default instances', () => {
@@ -472,5 +552,7 @@ describe('ModelDefinition', () => {
 				}
 			);
 		});
+
+		describe.todo('nesting');
 	});
 });

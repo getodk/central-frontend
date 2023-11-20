@@ -20,6 +20,7 @@ export class SubtreeNodeDefinition implements NodeDefinition<'subtree'> {
 
 	readonly root: RootDefinition;
 	readonly children: readonly ChildNodeDefinition[];
+	readonly instances = null;
 
 	constructor(
 		readonly parent: ParentNodeDefinition,

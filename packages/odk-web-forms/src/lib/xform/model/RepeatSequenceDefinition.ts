@@ -1,11 +1,11 @@
-import { JAVAROSA_NAMESPACE_URI } from '@odk/common/constants/xmlns.ts';
 import { RepeatGroupDefinition } from '../body/group/RepeatGroupDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
-import type { ParentNodeDefinition } from './NodeDefinition.ts';
+import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 import { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
+import { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 
-export class RepeatSequenceDefinition {
+export class RepeatSequenceDefinition implements NodeDefinition<'repeat-sequence'> {
 	// TODO: if an implicit template is derived from an instance in a form
 	// definition, should its default values (if any) be cleared? Probably!
 	static createTemplateElement(instanceElement: Element): Element {
@@ -19,49 +19,33 @@ export class RepeatSequenceDefinition {
 	readonly type = 'repeat-sequence';
 
 	readonly root: RootDefinition;
-	readonly instances: readonly RepeatInstanceDefinition[];
+	readonly template: RepeatTemplateDefinition;
+	readonly children = null;
+	readonly instances: RepeatInstanceDefinition[];
 
-	readonly templateElement: Element;
+	readonly node = null;
 
 	constructor(
 		readonly parent: ParentNodeDefinition,
 		readonly bind: BindDefinition,
-		readonly groupDefinition: RepeatGroupDefinition,
-		readonly elements: readonly [Element, ...Element[]]
+		readonly bodyElement: RepeatGroupDefinition,
+		modelNodes: readonly [Element, ...Element[]]
 	) {
 		const { root } = parent;
 
 		this.root = root;
 		this.bind = bind;
 
-		let templateElement: Element;
-		let instanceElements: readonly Element[];
+		const { template, instanceNodes } = RepeatTemplateDefinition.parseModelNodes(this, modelNodes);
 
-		const [firstElement, ...restElements] = elements;
-
-		const isFirstElementTemplate = firstElement.hasAttributeNS(JAVAROSA_NAMESPACE_URI, 'template');
-
-		if (isFirstElementTemplate) {
-			templateElement = firstElement.cloneNode(true) as Element;
-			templateElement.removeAttributeNS(JAVAROSA_NAMESPACE_URI, 'template');
-			instanceElements = restElements;
-		} else {
-			// Should empty leaf/bound nodes here?
-			templateElement = firstElement.cloneNode(true) as Element;
-			instanceElements = elements;
-		}
-
-		this.templateElement = templateElement;
-
-		const repeatDefinition = groupDefinition.repeat;
-
-		this.instances = instanceElements.map((element, index) => {
-			return new RepeatInstanceDefinition(this, parent, bind, repeatDefinition, element, index);
+		this.template = template;
+		this.instances = instanceNodes.map((element) => {
+			return new RepeatInstanceDefinition(this, element);
 		});
 	}
 
 	toJSON() {
-		const { bind, groupDefinition, parent, root, ...rest } = this;
+		const { bind, bodyElement: groupDefinition, parent, root, ...rest } = this;
 
 		return rest;
 	}

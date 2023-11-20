@@ -10,6 +10,7 @@ export class ValueNodeDefinition implements NodeDefinition<'value-node'> {
 
 	readonly root: RootDefinition;
 	readonly children = null;
+	readonly instances = null;
 
 	// TODO: it seems like a safe assumption that a model leaf node may only have
 	// a body control, not a group/repeat, but is it actually?

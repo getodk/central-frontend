@@ -1,4 +1,3 @@
-import { JAVAROSA_NAMESPACE_URI } from '@odk/common/constants/xmlns.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { RepeatGroupDefinition } from '../body/group/RepeatGroupDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
@@ -19,6 +18,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 	readonly root = this;
 	readonly parent = null;
 	readonly children: readonly ChildNodeDefinition[];
+	readonly instances = null;
 	readonly node: Element;
 
 	constructor(
@@ -92,27 +92,6 @@ export class RootDefinition implements NodeDefinition<'root'> {
 
 				if (repeatDefinition == null) {
 					throw 'TODO: this is why I have hesitated to pick an "is repeat" predicate direction';
-				}
-
-				// TODO:
-				//
-				// 0. Alllll of this stuff probably doesn't belong here, can it be
-				//    reasonably pushed down to `RepeatSequenceDefinition`?
-				// 1. Track templates by nodeset, multiple nested instances, ugh...
-				// 2. Should template derived from initial definition be emptied?
-				const isFirstChildTemplate = firstChild.hasAttributeNS(JAVAROSA_NAMESPACE_URI, 'template');
-				const templateElement = isFirstChildTemplate
-					? firstChild
-					: RepeatSequenceDefinition.createTemplateElement(firstChild);
-
-				const defaultInstanceElements = isFirstChildTemplate ? restChildren : children;
-
-				let instanceElements: readonly Element[] = defaultInstanceElements;
-
-				const { countExpression, isFixedCount } = repeatDefinition;
-
-				if (!isFixedCount && countExpression == null && instanceElements.length === 0) {
-					instanceElements = [RepeatSequenceDefinition.createInstanceElement(templateElement)];
 				}
 
 				return new RepeatSequenceDefinition(parent, bind, repeatGroup, children);
