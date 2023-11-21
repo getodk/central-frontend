@@ -11,20 +11,37 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse" large
-    backdrop @hide="$emit('hide')">
+    backdrop @hide="hide">
     <template #title>{{ $t('title', props.entity) }}</template>
     <template #body>
       <div v-if="!success">
         <p>{{ $t('instructions[0]', props.entity) }}</p>
         <p>{{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}</p>
 
-        <!-- placeholder for summary table -->
+        <div v-show="tableShown" id="entity-resolve-table-container">
+          <loading :state="entityVersions.awaitingResponse"/>
+          <entity-conflict-table v-if="entityVersions.dataExists" ref="table"
+            :uuid="entity.__id" :versions="entityVersions.data"
+            link-target="_blank"/>
+        </div>
+        <div id="entity-resolve-table-toggle">
+          <button type="button" class="btn btn-link" @click="toggleTable">
+            <template v-if="!tableShown">
+              <span class="icon-angle-down"></span>
+              <span>{{ $t('action.table.show') }}</span>
+            </template>
+            <template v-else>
+              <span class="icon-angle-up"></span>
+              <span>{{ $t('action.table.hide') }}</span>
+            </template>
+          </button>
+        </div>
 
-        <router-link class="btn btn-default more-details" :to="entityPath(dataset.projectId, dataset.name, props.entity?.__id)"
-        :aria-disabled="awaitingResponse" target="_blank">
+        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, props.entity?.__id)"
+          :aria-disabled="awaitingResponse" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
-        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="$emit('hide', true)">
+        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="hide(true)">
           <span class="icon-pencil"></span>{{ $t('action.editEntity') }}
         </button>
         <button type="button" class="btn btn-default mark-as-resolved" :aria-disabled="awaitingResponse" @click="markAsResolve">
@@ -36,7 +53,7 @@ except according to the terms contained in the LICENSE file.
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary" :aria-disabled="awaitingResponse" @click="$emit('hide')">
+        <button type="button" class="btn btn-primary" :aria-disabled="awaitingResponse" @click="hide">
           {{ $t('action.close') }}
         </button>
       </div>
@@ -45,40 +62,64 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { inject, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import useRoutes from '../../composables/routes';
-import useRequest from '../../composables/request';
-
+import EntityConflictTable from './conflict-table.vue';
+import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
+import useEntityVersions from '../../request-data/entity-versions';
+import useRequest from '../../composables/request';
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'EntityResolve'
 });
-
 const props = defineProps({
   state: Boolean,
   entity: Object
 });
-
 const emit = defineEmits(['hide', 'success']);
 
+// Conflict summary table
+const entityVersions = useEntityVersions();
+const projectId = inject('projectId');
+const datasetName = inject('datasetName');
+const alert = inject('alert');
 const { t } = useI18n();
-const { request, awaitingResponse } = useRequest();
-const { dataset } = useRequestData();
+watch(() => props.entity, (entity) => {
+  if (entity != null) {
+    entityVersions.request({
+      url: apiPaths.entityVersions(projectId, datasetName, entity.__id, { relevantToConflict: true }),
+      extended: true
+    })
+      .then(() => {
+        if (entityVersions.length === 0) alert.danger(t('problem.409_15'));
+      })
+      .catch(noop);
+  } else {
+    entityVersions.reset();
+  }
+});
+const tableShown = ref(false);
+const table = ref(null);
+const toggleTable = () => {
+  tableShown.value = !tableShown.value;
+  if (tableShown.value) nextTick(() => { table.value.resize(); });
+};
+
 const { entityPath } = useRoutes();
 
+// "Mark as resolved" button
+const { request, awaitingResponse } = useRequest();
 const success = ref(false);
-
 const markAsResolve = () => {
   const { entity } = props;
-  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.__id, { resolve: true });
+  const url = apiPaths.entity(projectId, datasetName, entity.__id, { resolve: true });
 
   request.patch(
     url,
@@ -99,23 +140,46 @@ const markAsResolve = () => {
     .catch(noop);
 };
 
-watch(() => props.state, (state) => {
-  if (!state) success.value = false;
-});
+const hide = (showUpdate = false) => {
+  emit('hide', showUpdate);
+  if (!showUpdate) {
+    tableShown.value = false;
+    success.value = false;
+  }
+};
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/variables';
 
 #entity-resolve {
-  .btn {
-    margin-right: 10px;
+  .btn + .btn {
+    margin-left: 10px;
   }
   .success {
     font-size: 30px;
     color: $color-success;
     vertical-align: -7px;
     margin-right: 10px;
+  }
+}
+
+#entity-resolve-table-container {
+  margin-left: -$padding-modal-body;
+  margin-right: -$padding-modal-body;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-bottom: 6px;
+  padding-top: 5px;
+
+  .loading { margin-left: $padding-modal-body; }
+}
+#entity-resolve-table-toggle {
+  margin-bottom: 15px;
+
+  .btn-link {
+    font-size: inherit;
+    padding: 0;
   }
 }
 </style>
@@ -131,6 +195,10 @@ watch(() => props.state, (state) => {
       "Review the updates, make any edits you need to, and if you are sure this Entity data is correct press “Mark as resolved” to clear this warning message."
     ],
     "action": {
+      "table": {
+        "show": "Show summary table",
+        "hide": "Hide summary table"
+      },
       "seeMoreDetails": "See more details",
       "editEntity": "Edit Entity",
       "markAsResolved": "Mark as resolved"

@@ -51,6 +51,7 @@ import PageHead from '../page/head.vue';
 import EntityConflictSummary from './conflict-summary.vue';
 
 import useEntity from '../../request-data/entity';
+import useEntityVersions from '../../request-data/entity-versions';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { setDocumentTitle } from '../../util/reactivity';
@@ -78,7 +79,8 @@ provide('datasetName', props.datasetName);
 provide('uuid', props.uuid);
 
 const { project, dataset } = useRequestData();
-const { entity, audits, entityVersions } = useEntity();
+const { entity, audits } = useEntity();
+const entityVersions = useEntityVersions();
 
 Promise.allSettled([
   entity.request({

@@ -108,7 +108,7 @@ const change = (value) => {
       }
     }
     &.active a {
-      &, &:hover, &:focus { background-color: $color-page-background; }
+      &, &:hover, &:focus { background-color: $background-color-feed-entry; }
     }
   }
   .entity-diff.hard-conflict & {

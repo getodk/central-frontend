@@ -24,8 +24,8 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <div class="panel-body">
-      <!-- Placeholder for table  -->
-
+      <entity-conflict-table v-if="entityVersions.dataExists"
+        :uuid="entity.uuid" :versions="relevantToConflict"/>
       <div class="panel-footer">
         <span class="icon-arrow-circle-right"></span>
         <p>
@@ -54,34 +54,35 @@ import { ref, inject, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Confirmation from '../confirmation.vue';
+import EntityConflictTable from './conflict-table.vue';
 
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-import useRequest from '../../composables/request';
-
 const { request, awaitingResponse } = useRequest();
-
 const { t } = useI18n();
-const { dataset } = useRequestData();
+// The component does not assume that this data will exist when the component is
+// created.
+const { dataset, entityVersions } = useRequestData();
 const { alert } = inject('container');
 
 defineOptions({
   name: 'EntityConflictSummary'
 });
-
 const props = defineProps({
   entity: {
     type: Object,
     required: true
   }
 });
-
 const emit = defineEmits(['resolve']);
 
-const confirmModalState = ref(false);
+const relevantToConflict = computed(() =>
+  entityVersions.filter(version => version.relevantToConflict));
 
+const confirmModalState = ref(false);
 const confirm = computed(() => ({
   state: confirmModalState.value,
   title: t('confirmation.title'),
@@ -89,11 +90,9 @@ const confirm = computed(() => ({
   noText: t('action.noCancel'),
   awaitingResponse: awaitingResponse.value
 }));
-
 const showConfirmation = () => {
   confirmModalState.value = true;
 };
-
 const hideConfirm = () => {
   confirmModalState.value = false;
 };
@@ -124,6 +123,8 @@ const markAsResolved = () => {
 </script>
 
 <style lang="scss" scoped>
+  @import '../../assets/scss/variables';
+
   .panel-heading {
     display: flex;
     padding: 15px;
@@ -145,6 +146,17 @@ const markAsResolved = () => {
       }
     }
 
+  }
+
+  .panel-body { padding-top: 0; }
+
+  #entity-conflict-table {
+    margin-left: -15px;
+    margin-right: -15px;
+
+    // Align the leftmost text of the first column with the icon in the
+    // .panel-heading.
+    :deep(th:first-child) { padding-left: 14px; }
   }
 
   .panel-footer {
@@ -172,7 +184,6 @@ const markAsResolved = () => {
       overflow: visible;
     }
   }
-
 </style>
 
 <i18n lang="json5">

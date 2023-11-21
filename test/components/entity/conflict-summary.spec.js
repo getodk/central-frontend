@@ -4,13 +4,25 @@ import Confirmation from '../../../src/components/confirmation.vue';
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockHttp } from '../../util/http';
+import { mockRouter } from '../../util/router';
 
-const mountOptions = (options = undefined) => mergeMountOptions(options, {
-  props: { entity: testData.extendedEntities.last() },
-  container: {
-    requestData: { dataset: testData.extendedDatasets.last() }
-  }
-});
+const mountOptions = (options = undefined) => {
+  const dataset = testData.extendedDatasets.last();
+  const entity = testData.extendedEntities.last();
+  return mergeMountOptions(options, {
+    props: { entity },
+    global: {
+      provide: { projectId: '1', datasetName: dataset.name }
+    },
+    container: {
+      requestData: {
+        dataset,
+        entityVersions: testData.extendedEntityVersions.sorted()
+      },
+      router: mockRouter(`/projects/1/entity-lists/${encodeURIComponent(dataset.name)}/entities/${entity.uuid}`)
+    }
+  });
+};
 const mountComponent = (options = undefined) =>
   mount(ConflictSummary, mountOptions(options));
 

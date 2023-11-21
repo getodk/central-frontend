@@ -380,6 +380,7 @@
     "noResults": "No results",
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
+    "status": "@:formHead.draftNav.tab.status",
     "success": "Success!",
     // "System" refers to the server and how it is configured. It may be shown
     // as a title, for example, at the top of the page.
@@ -399,6 +400,10 @@
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
     "new": "New!",
     "totalEntities": "Total Entities",
+    // @transifexKey component.NavbarHelpDropdown.version
+    // An identifier of a particular version of something (of Central, of a
+    // Form, of an Entity)
+    "version": "Version",
     // A short identifier of an Entity version. "v" is short for "version".
     // {version} is a version number.
     "versionShort": "v{version}"

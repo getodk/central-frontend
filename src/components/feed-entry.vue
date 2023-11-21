@@ -83,7 +83,7 @@ $margin-bottom: 20px;
 }
 
 .feed-entry-body {
-  background-color: $color-page-background;
+  background-color: $background-color-feed-entry;
 
   .markdown-view > p:last-child { margin: 0 0 0px; }
 }

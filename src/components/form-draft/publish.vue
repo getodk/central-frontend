@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
-          :placeholder="$t('field.version')" required autocomplete="off"/>
+          :placeholder="$t('common.version')" required autocomplete="off"/>
         <p>{{ $t('introduction[3]') }}</p>
         <!-- We specify two nearly identical .modal-actions, because here we
         want the Proceed button to be a submit button (which means that browsers
@@ -257,11 +257,6 @@ export default {
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"
     ],
-    "field": {
-      // This is the text of a form field. It is used to specify a unique
-      // version name for the version of the Form that is about to be published.
-      "version": "Version"
-    },
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     },

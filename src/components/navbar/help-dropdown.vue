@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         <a href="https://forum.getodk.org/" target="_blank">{{ $t('common.forum') }}</a>
       </li>
       <li>
-        <a href="/version.txt" target="_blank">{{ $t('version') }}</a>
+        <a href="/version.txt" target="_blank">{{ $t('common.version') }}</a>
       </li>
     </ul>
   </li>
@@ -43,10 +43,7 @@ export default {
   "en": {
     // This text is used to label a help menu that lists links to useful
     // resources.
-    "help": "Help",
-    // This is the text of a link that shows what version of ODK Central is in
-    // use.
-    "version": "Version"
+    "help": "Help"
   }
 }
 </i18n>

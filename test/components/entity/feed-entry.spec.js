@@ -7,6 +7,7 @@ import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 import FeedEntry from '../../../src/components/feed-entry.vue';
 
 import useEntity from '../../../src/request-data/entity';
+import useEntityVersions from '../../../src/request-data/entity-versions';
 
 import createTestContainer from '../../util/container';
 import testData from '../../data';
@@ -19,7 +20,7 @@ const mountComponent = (options = undefined) => {
   const entity = testData.extendedEntities.last();
   const container = createTestContainer({
     router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`),
-    requestData: testRequestData([useEntity], {
+    requestData: testRequestData([useEntity, useEntityVersions], {
       entity,
       entityVersions: testData.extendedEntityVersions.sorted()
     })
