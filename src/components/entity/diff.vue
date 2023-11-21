@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="entity-diff" :class="conflictClass">
     <entity-diff-head v-if="entityVersion.conflict != null" v-model="diffProp"/>
-    <entity-diff-table :diff="diff"/>
+    <entity-diff-table v-if="entityVersion.conflict != null || diff.length !== 0"
+      :diff="diff"/>
     <p v-if="diff.length === 0" class="empty-table-message">
       {{ $t('noChange') }}
     </p>

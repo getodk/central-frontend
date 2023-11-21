@@ -33,13 +33,14 @@ const mountComponent = (options = undefined) => {
 describe('EntityDiffTable', () => {
   describe('Comparing row', () => {
     const createConflict = () => {
-      const users = Array.from(testData.extendedUsers
-        .createPast(1, { displayName: 'Alice' })
-        .createPast(1, { displayName: 'Bob' })
-        .createPast(1, { displayName: 'David' }));
+      const users = testData.extendedUsers
+        .createPast(1, { displayName: 'Alice', email: 'alice@getodk.org' })
+        .createPast(1, { displayName: 'Bob', email: 'bob@getodk.org' })
+        .createPast(1, { displayName: 'David', email: 'david@getodk.org' })
+        .sorted();
       testData.extendedEntities.createPast(1, { creator: users[0] });
       testData.extendedEntityVersions
-        .createPast(1, { baseVersion: 1, creator: users[1] })
+        .createPast(1, { creator: users[1] })
         .createPast(1, { baseVersion: 1, creator: users[2] });
     };
 
@@ -87,25 +88,12 @@ describe('EntityDiffTable', () => {
     table.findAllComponents(EntityDiffRow).length.should.equal(3);
   });
 
-  it('passes correct props to EntityDiffRow for a label change', () => {
+  it('passes the correct props to EntityDiffRow', () => {
     testData.extendedEntities.createPast(1, { label: 'dogwood' });
     testData.extendedEntityVersions.createPast(1, { label: 'Dogwood' });
     const table = mountComponent();
     const props = table.getComponent(EntityDiffRow).props();
     props.oldVersion.version.should.equal(1);
     props.name.should.equal('label');
-  });
-
-  it('passes correct props to EntityDiffRow for a property change', () => {
-    testData.extendedEntities.createPast(1, {
-      data: { height: '1' }
-    });
-    testData.extendedEntityVersions.createPast(1, {
-      data: { height: '2' }
-    });
-    const table = mountComponent();
-    const props = table.getComponent(EntityDiffRow).props();
-    props.oldVersion.version.should.equal(1);
-    props.name.should.equal('height');
   });
 });

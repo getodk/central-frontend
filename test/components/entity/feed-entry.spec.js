@@ -305,7 +305,7 @@ describe('EntityFeedEntry', () => {
       const component = mountComponent({
         props: updateEntityFromSubmission({ deleted: true })
       });
-      const links = component.get('.feed-entry-title').findAllComponents(RouterLinkStub);
+      const links = component.findAllComponents(RouterLinkStub);
       links.length.should.equal(0);
     });
   });

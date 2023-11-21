@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="entity-diff-row">
     <td :class="{ property: name !== 'label', conflicting }" v-tooltip.text>
       {{ name === 'label' ? $t('entity.label') : name }}
-      <span v-if="conflicting" class="conflicting sr-only">&nbsp;{{ $t('conflictingProp') }}</span>
+      <span v-if="conflicting" class="sr-only">&nbsp;{{ $t('conflictingProp') }}</span>
     </td>
 
     <td v-if="oldValue === ''" class="empty">{{ $t('common.emptyValue') }}</td>

@@ -95,7 +95,7 @@ const uuid = inject('uuid');
 
   tbody tr td {
     padding-top: 12px;
-    padding-bottom: 10px;
+    padding-bottom: 12px;
 
     &:nth-child(3) {
       padding-left: 0;

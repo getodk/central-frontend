@@ -64,15 +64,15 @@ describe('EntityDiffRow', () => {
 
     it('shows the old value of a property', () => {
       testData.extendedEntities.createPast(1, {
-        data: { height: '111111' }
+        data: { height: '1' }
       });
       testData.extendedEntityVersions.createPast(1, {
-        data: { height: '222222' }
+        data: { height: '2' }
       });
       const row = mountComponent({
         props: { name: 'height' }
       });
-      row.get('td:nth-child(2)').text().should.equal('111111');
+      row.get('td:nth-child(2)').text().should.equal('1');
     });
 
     it('renders correctly if the old value is an empty string', () => {
@@ -120,15 +120,15 @@ describe('EntityDiffRow', () => {
 
     it('shows the new value of a property', () => {
       testData.extendedEntities.createPast(1, {
-        data: { height: '111111' }
+        data: { height: '1' }
       });
       testData.extendedEntityVersions.createPast(1, {
-        data: { height: '222222' }
+        data: { height: '2' }
       });
       const row = mountComponent({
         props: { name: 'height' }
       });
-      row.get('td:nth-child(4)').text().should.equal('222222');
+      row.get('td:nth-child(4)').text().should.equal('2');
     });
 
     it('renders correctly if the new value is an empty string', () => {

@@ -81,6 +81,12 @@ describe('EntityDiff', () => {
     table.props().diff.should.eql(['height']);
   });
 
+  it('does not render the table if there is no change or conflict', () => {
+    testData.extendedEntities.createPast(1);
+    testData.extendedEntityVersions.createPast(1);
+    mountComponent().findComponent(EntityDiffTable).exists().should.be.false();
+  });
+
   it('shows a message for an empty diff', () => {
     testData.extendedEntities.createPast(1);
     testData.extendedEntityVersions.createPast(1);
