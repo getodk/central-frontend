@@ -62,6 +62,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else-if="entry.action === 'entity.update.version'">
         <span class="icon-pencil"></span>
+        <span class="title">
         <template v-if="entry.details.submissionCreate != null">
           <i18n-t v-if="submission != null"
             keypath="title.entity.update_version.submission.notDeleted">
@@ -82,6 +83,8 @@ except according to the terms contained in the LICENSE file.
         <i18n-t v-else keypath="title.entity.update_version.api">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
+        </span>
+        <span class="entity-version-tag"><router-link :to="versionAnchor(entityVersion.version)">v{{ entityVersion.version }}</router-link></span>
       </template>
       <template v-else-if="entry.action === 'entity.update.resolve'">
         <span class="icon-random"></span>
@@ -156,10 +159,13 @@ const deletedSubmissionEntityEvent = computed(() => {
   return t('title.entity.update_version.submission.deleted.deletedSubmission', { id });
 });
 const { reviewStateIcon } = useReviewState();
+
+const versionAnchor = (v) => `#v${v}`;
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 .entity-feed-entry {
   .icon-cloud-upload { color: #bbb; }
@@ -173,6 +179,19 @@ const { reviewStateIcon } = useReviewState();
   .deleted-submission, .entity-label { font-weight: normal; }
   .deleted-submission { color: $color-danger; }
   .approval { color: $color-success; }
+
+  .entity-version-tag {
+    background-color: #ddd;
+    font-size: 12px;
+    margin: 5px;
+    padding: 3px;
+    border-radius: 2px;
+
+    a {
+      @include text-link;
+      font-weight: bold;
+    }
+  }
 }
 </style>
 
