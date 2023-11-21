@@ -1,4 +1,5 @@
 import { RouterLinkStub } from '@vue/test-utils';
+import { last } from 'ramda';
 
 import ActorLink from '../../../src/components/actor-link.vue';
 import EntityDiff from '../../../src/components/entity/diff.vue';
@@ -7,31 +8,35 @@ import FeedEntry from '../../../src/components/feed-entry.vue';
 
 import useEntity from '../../../src/request-data/entity';
 
+import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (options) =>
-  mount(EntityFeedEntry, mergeMountOptions(options, {
+const mountComponent = (options = undefined) => {
+  const entity = testData.extendedEntities.last();
+  const container = createTestContainer({
+    router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`),
+    requestData: testRequestData([useEntity], {
+      entity,
+      entityVersions: testData.extendedEntityVersions.sorted()
+    })
+  });
+  return mount(EntityFeedEntry, mergeMountOptions(options, {
     global: {
-      provide: { projectId: '1', datasetName: 'trees' }
+      provide: { projectId: '1', datasetName: 'trees', uuid: entity.uuid }
     },
     props: {
       entry: testData.extendedAudits.last(),
       entityVersion: testData.extendedEntityVersions.size > 1
-        ? testData.extendedEntityVersions.last()
+        ? last(container.requestData.localResources.entityVersions)
         : null
     },
-    container: {
-      router: mockRouter('/projects/1/entity-lists/trees/entities/e'),
-      requestData: testRequestData([useEntity], {
-        entity: testData.extendedEntities.last(),
-        entityVersions: testData.extendedEntityVersions.sorted()
-      })
-    }
+    container
   }));
+};
 
 describe('EntityFeedEntry', () => {
   beforeEach(() => {
@@ -326,8 +331,7 @@ describe('EntityFeedEntry', () => {
       action: 'entity.update.version',
       details: {}
     });
-    const diff = mountComponent().getComponent(EntityDiff);
-    diff.props().entityVersion.version.should.equal(2);
+    mountComponent().findComponent(EntityDiff).exists().should.be.true();
   });
 
   describe('entity.update.resolve audit event', () => {

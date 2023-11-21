@@ -19,6 +19,16 @@ export default () => {
     transformResponse: ({ data }) => reactive(data)
   }));
   const audits = createResource('audits');
-  const entityVersions = createResource('entityVersions');
+  const entityVersions = createResource('entityVersions', () => ({
+    transformResponse: ({ data }) => {
+      for (const version of data) {
+        const { conflictingProperties } = version;
+        version.conflictingProperties = conflictingProperties != null
+          ? new Set(conflictingProperties)
+          : new Set();
+      }
+      return data;
+    }
+  }));
   return { entity, audits, entityVersions };
 };

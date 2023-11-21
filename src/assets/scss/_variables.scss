@@ -37,7 +37,9 @@ $color-info-light: #d9edf7;
 $color-info-dark: darken($color-info, 10%);
 $color-warning: #f29e00;
 $color-warning-light: #f5c93b;
+$color-warning-dark: #e06f0b;
 $color-danger: #de2a11;
+$color-danger-lighter: #dd5454; // Between $color-danger and $color-danger-light
 $color-danger-light: #ffe6e6;
 $color-danger-dark: darken($color-danger, 10%);
 
@@ -80,6 +82,9 @@ $padding-top-table-data: 8px;
 // Panels
 $box-shadow-panel-main: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
 
+// Navs
+$hpadding-nav-tab: 8px;
+
 $color-subpanel-background: #eee;
 $color-subpanel-active: #ddd;
 $color-subpanel-border: #e6e6e6;
@@ -91,6 +96,9 @@ $ease-extreme-out: cubic-bezier(.05, .9, 0, 1);
 
 ////////////////////////////////////////////////////////////////////////////////
 // COMPONENTS
+
+// FeedEntry
+$hpadding-feed-entry: 15px;
 
 // Modal
 $padding-modal-body: 15px;

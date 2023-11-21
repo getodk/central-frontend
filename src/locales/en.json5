@@ -357,6 +357,8 @@
     "areYouSure": "Are you sure you wish to proceed?",
     // This is a title shown above a section of the page.
     "basicInfo": "Basic Information",
+    "conflict": "Conflict",
+    "conflicts": "Conflicts",
     // This is a title shown above a section of the page.
     "currentDraft": "Your Current Draft",
     // This is a title shown above a section of the page.
@@ -397,7 +399,9 @@
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
     "new": "New!",
     "totalEntities": "Total Entities",
-    "conflicts": "Conflicts"
+    // A short identifier of an Entity version. "v" is short for "version".
+    // {version} is a version number.
+    "versionShort": "v{version}"
   },
   "mixin": {
     "request": {

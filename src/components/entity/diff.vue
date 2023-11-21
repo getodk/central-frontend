@@ -10,37 +10,89 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <diff-item v-for="key of entityVersion.serverDiff" :key="key" :path="[key]"
-      :old="propOrLabel(oldVersion, key)"
-      :new="propOrLabel(entityVersion, key)"/>
+  <div class="entity-diff" :class="conflictClass">
+    <entity-diff-head v-if="entityVersion.conflict != null" v-model="diffProp"/>
+    <entity-diff-table v-if="entityVersion.conflict != null || diff.length !== 0"
+      :diff="diff"/>
+    <p v-if="entityVersion.conflict != null && diff.length === 0"
+      class="empty-table-message">
+      {{ $t('noChange') }}
+    </p>
   </div>
 </template>
 
-<script>
-const propOrLabel = (version, key) =>
-  (key === 'label' ? version.label : version.data[key]);
-</script>
-
 <script setup>
-import { computed } from 'vue';
+import { computed, inject, ref } from 'vue';
 
-import DiffItem from '../diff-item.vue';
-import { useRequestData } from '../../request-data';
+import EntityDiffHead from './diff/head.vue';
+import EntityDiffTable from './diff/table.vue';
 
 defineOptions({
   name: 'EntityDiff'
 });
-const props = defineProps({
-  entityVersion: {
-    type: Object,
-    required: true
-  }
-});
+const entityVersion = inject('entityVersion');
 
-// The component assumes that this data will exist when the component is
-// created.
-const { entityVersions } = useRequestData();
-const oldVersion = computed(() =>
-  entityVersions[props.entityVersion.version - 2]);
+const conflictClass = entityVersion.conflict != null
+  ? `${entityVersion.conflict}-conflict`
+  : null;
+
+const diffProp = ref('baseDiff');
+const diff = computed(() => entityVersion[diffProp.value]);
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+$border-width: 1px;
+.entity-diff {
+  border-left: $border-width solid transparent;
+  border-right: $border-width solid transparent;
+  &.hard-conflict, &.soft-conflict {
+    border-bottom: $border-width solid transparent;
+    border-top: 12px solid transparent;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  &.hard-conflict { border-color: $color-danger; }
+  &.soft-conflict { border-color: $color-warning-dark; }
+
+  .empty-table-message { margin-left: $hpadding-feed-entry; }
+}
+
+// The styles below are here rather than in EntityDiffHead and EntityDiffTable
+// because they have to do with the alignment of the EntityDiff as a whole. Many
+// of the styles below reference $border-width.
+
+$tabs-indent: 3px;
+.entity-diff-head {
+  $hpadding: $hpadding-feed-entry - $border-width;
+  padding-left: $hpadding;
+  padding-right: $hpadding;
+
+  // By itself, -$hpadding-nav-tab would align the text of the first tab with
+  // the text above it. However, we want it to be a little more indented than
+  // that.
+  .nav-tabs { margin-left: #{$tabs-indent - $hpadding-nav-tab}; }
+}
+
+.entity-diff-table {
+  // Align the text of the first column with the text of the first tab.
+  $padding-left: $hpadding-feed-entry - $border-width + $tabs-indent;
+  col:nth-child(1) {
+    // 150px is for the text (the property name).
+    width: #{$padding-left + 150px + $padding-right-table-data};
+  }
+  col:nth-child(3) { width: 30px; }
+
+  td:first-child { padding-left: $padding-left; }
+  td:last-child { padding-right: #{$hpadding-feed-entry - $border-width}; }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "noChange": "There are no changes to show."
+  }
+}
+</i18n>

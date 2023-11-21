@@ -11,21 +11,23 @@ import { mockRouter } from '../../util/router';
 import { testRequestData } from '../../util/request-data';
 import { wait } from '../../util/util';
 
-const mountComponent = (options = undefined) =>
-  mount(EntityActivity, mergeMountOptions(options, {
+const mountComponent = (options = undefined) => {
+  const entity = testData.extendedEntities.last();
+  return mount(EntityActivity, mergeMountOptions(options, {
     global: {
-      provide: { projectId: '1', datasetName: 'trees' }
+      provide: { projectId: '1', datasetName: 'trees', uuid: entity.uuid }
     },
     container: {
       requestData: testRequestData([useEntity], {
-        entity: testData.extendedEntities.last(),
+        entity,
         audits: testData.extendedAudits.sorted()
           .filter(({ action }) => action.startsWith('entity.')),
         entityVersions: testData.extendedEntityVersions.sorted()
       }),
-      router: mockRouter('/projects/1/entity-lists/trees/entities/e')
+      router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`)
     }
   }));
+};
 // Creates an entity with three versions, including a conflict, then resolves
 // the conflict.
 const resolveConflict = () => {

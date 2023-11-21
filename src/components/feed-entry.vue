@@ -38,11 +38,14 @@ defineProps({
 
 $margin-bottom: 20px;
 .feed-entry {
+  @include clearfix;
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.05);
   margin-bottom: $margin-bottom;
 }
 
-.feed-entry-heading, .feed-entry-body .markdown-view { padding: 10px 15px; }
+.feed-entry-heading, .feed-entry-body .markdown-view {
+  padding: 10px $hpadding-feed-entry;
+}
 
 .feed-entry-heading {
   background-color: #fff;
@@ -80,7 +83,7 @@ $margin-bottom: 20px;
 }
 
 .feed-entry-body {
-  background-color: #f9f9f9;
+  background-color: $color-page-background;
 
   .markdown-view > p:last-child { margin: 0 0 0px; }
 }

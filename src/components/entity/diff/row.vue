@@ -1,0 +1,105 @@
+<!--
+Copyright 2023 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <tr class="entity-diff-row">
+    <td :class="{ property: name !== 'label', conflicting }" v-tooltip.text>
+      {{ name === 'label' ? $t('entity.label') : name }}
+      <span v-if="conflicting" class="sr-only">{{ $t('conflictingProp') }}</span>
+    </td>
+
+    <td v-if="oldValue === ''" class="empty">{{ $t('common.emptyValue') }}</td>
+    <td v-else class="value">{{ oldValue }}</td>
+
+    <td aria-hidden="true">
+      <span v-if="conflicting" v-tooltip.no-aria="$t('conflictingProp')">
+        <span class="icon-arrow-circle-right"></span>
+        <span class="icon-exclamation-circle"></span>
+      </span>
+      <template v-else>
+        <span class="icon-arrow-circle-right"></span>
+      </template>
+    </td>
+
+    <td v-if="newValue === ''" class="empty">{{ $t('common.emptyValue') }}</td>
+    <td v-else class="value">{{ newValue }}</td>
+  </tr>
+</template>
+
+<script setup>
+import { computed, inject } from 'vue';
+
+defineOptions({
+  name: 'EntityDiffRow'
+});
+const props = defineProps({
+  oldVersion: {
+    type: Object,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  }
+});
+const entityVersion = inject('entityVersion');
+
+// Destructuring here rather than in a computed() means that `name` won't be
+// reactive. However, that should be OK given how EntityDiffRow is used in a
+// v-for: props.name should never change.
+const { name } = props;
+const conflicting = entityVersion.conflictingProperties.has(name);
+const oldValue = computed(() => (name === 'label'
+  ? props.oldVersion.label
+  : props.oldVersion.data[name] ?? ''));
+const newValue = name === 'label' ? entityVersion.label : entityVersion.data[name];
+</script>
+
+<style lang="scss">
+@import '../../../assets/scss/mixins';
+
+.entity-diff-row {
+  .property {
+    @include text-overflow-ellipsis;
+    font-family: $font-family-monospace;
+  }
+  .conflicting { color: $color-danger; }
+
+  .empty {
+    color: #888;
+    font-style: italic;
+  }
+  .value {
+    overflow-wrap: break-word;
+    white-space: break-spaces;
+  }
+
+  .icon-arrow-circle-right {
+    position: relative;
+    z-index: 1;
+  }
+  .icon-exclamation-circle {
+    color: $color-danger;
+    position: relative;
+    right: 2px;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is shown for an Entity property that is part of a conflict between
+    // versions of the Entity.
+    "conflictingProp": "Another update already wrote to this property."
+  }
+}
+</i18n>
