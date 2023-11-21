@@ -8,8 +8,8 @@ import useEntity from '../../../../src/request-data/entity';
 
 import createTestContainer from '../../../util/container';
 import testData from '../../../data';
-import { mount } from '../../../util/lifecycle';
 import { mockRouter } from '../../../util/router';
+import { mount } from '../../../util/lifecycle';
 import { testRequestData } from '../../../util/request-data';
 
 const mountComponent = (options = undefined) => {
@@ -45,9 +45,9 @@ describe('EntityDiffTable', () => {
     };
 
     it('does not show the row if the version is not a conflict', () => {
-      testData.extendedEntities.createPast(1);
-      testData.extendedEntityVersions.createPast(1);
-      mountComponent().find('.conflicting').exists().should.be.false();
+      testData.extendedEntities.createPast(1, { label: 'dogwood' });
+      testData.extendedEntityVersions.createPast(1, { label: 'Dogwood' });
+      mountComponent().find('.comparing').exists().should.be.false();
     });
 
     it('shows the old version number', () => {
@@ -91,8 +91,7 @@ describe('EntityDiffTable', () => {
   it('passes the correct props to EntityDiffRow', () => {
     testData.extendedEntities.createPast(1, { label: 'dogwood' });
     testData.extendedEntityVersions.createPast(1, { label: 'Dogwood' });
-    const table = mountComponent();
-    const props = table.getComponent(EntityDiffRow).props();
+    const props = mountComponent().getComponent(EntityDiffRow).props();
     props.oldVersion.version.should.equal(1);
     props.name.should.equal('label');
   });

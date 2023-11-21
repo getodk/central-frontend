@@ -32,8 +32,7 @@ except according to the terms contained in the LICENSE file.
     <ul class="nav nav-tabs">
       <li v-for="[diff, version] of tabs" :key="diff"
         :class="{ active: modelValue === diff }" role="presentation">
-        <a href="#" role="button"
-          @click.prevent="$emit('update:modelValue', diff)">
+        <a href="#" role="button" @click.prevent="change(diff)">
           {{ $t(`tab.${diff}`) }}
           <span class="updating">
             {{ $t('tab.updating', { version: $t('common.versionShort', { version }) }) }}
@@ -50,34 +49,38 @@ import { inject } from 'vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
-  name: 'EntityDiffTabs'
+  name: 'EntityDiffHead'
 });
-defineProps({
+const props = defineProps({
   modelValue: {
     type: String,
     required: true
   }
 });
-defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue']);
 
 const entityVersion = inject('entityVersion');
 const tabs = [
   ['baseDiff', entityVersion.baseVersion],
   ['serverDiff', entityVersion.version - 1]
 ];
+
+const change = (value) => {
+  if (value !== props.modelValue) emit('update:modelValue', value);
+};
 </script>
 
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
 .entity-diff-head {
-  color: #fff;
-  padding-top: 12px;
-
   .entity-diff.hard-conflict & { background-color: $color-danger; }
   .entity-diff.soft-conflict & { background-color: $color-warning-dark; }
 
-  > div { display: flex; }
+  > div {
+    color: #fff;
+    display: flex;
+  }
 
   p {
     line-height: 1.2;
@@ -88,8 +91,6 @@ const tabs = [
 
   .icon-warning, .icon-info-circle { font-size: 16px; }
   strong { margin-right: 4px; }
-  // Align the text of the first tab with the text above and below it.
-  ul { margin-left: -$padding-left-nav-tab; }
 
   li {
     margin-bottom: 0;
@@ -99,31 +100,25 @@ const tabs = [
     a, &.active a {
       &, &:hover, &:focus {
         border-bottom: none;
-        border-top: 1px solid transparent;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
         color: #fff;
+        padding-bottom: 5px;
+        padding-top: 6px;
       }
-    }
-    a {
-      &, &:hover, &:focus { background-color: transparent; }
     }
     &.active a {
       &, &:hover, &:focus { background-color: $color-page-background; }
     }
   }
   .entity-diff.hard-conflict & {
-    li.active a {
-      &, &:hover, &:focus { color: $color-danger; }
-    }
+    li.active a { color: $color-danger; }
     .entity-feed-entry:hover & li:not(.active) a {
       background-color: $color-danger-lighter;
     }
   }
   .entity-diff.soft-conflict & {
-    li.active a {
-      &, &:hover, &:focus { color: $color-warning-dark; }
-    }
+    li.active a { color: $color-warning-dark; }
     .entity-feed-entry:hover & li:not(.active) a {
       background-color: $color-warning;
     }
@@ -142,6 +137,7 @@ const tabs = [
       "description": "Other updates had already written to the same properties."
     },
     "softConflict": {
+      // An update to an Entity that was made at the same time as another update
       "title": "Parallel Update",
       "description": "No parallel update before this one touched the same properties."
     },
@@ -152,8 +148,9 @@ const tabs = [
       // A comparison between two versions of an Entity, from the point of view
       // of the Central server
       "serverDiff": "Central’s View",
-      // This text is shown above a comparison of two versions of an Entity.
-      // {version} is a short version identifier, for example, "v3".
+      // This text is shown for an update to an Entity. {version} is a short
+      // version identifier, for example, "v3". It is the version that the
+      // update was applied to.
       "updating": "(updating {version})"
     }
   }

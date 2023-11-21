@@ -57,7 +57,10 @@ const text = computed(() => {
 <i18n lang="json5">
 {
   "en": {
+    // This text is shown for a Submission. {instanceName} is the instance name
+    // of the Submission.
     "submission": "Submission {instanceName}",
+    // This refers to an update to an Entity. {name} is the name of a Web User.
     "api": "Update by {name}"
   }
 }

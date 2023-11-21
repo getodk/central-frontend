@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="entity-diff-row">
     <td :class="{ property: name !== 'label', conflicting }" v-tooltip.text>
       {{ name === 'label' ? $t('entity.label') : name }}
-      <span v-if="conflicting" class="sr-only">&nbsp;{{ $t('conflictingProp') }}</span>
+      <span v-if="conflicting" class="sr-only">{{ $t('conflictingProp') }}</span>
     </td>
 
     <td v-if="oldValue === ''" class="empty">{{ $t('common.emptyValue') }}</td>
@@ -53,7 +53,8 @@ const props = defineProps({
 const entityVersion = inject('entityVersion');
 
 // Destructuring here rather than in a computed() means that `name` won't be
-// reactive. However, that's OK given how EntityDiffRow is used in a v-for.
+// reactive. However, that should be OK given how EntityDiffRow is used in a
+// v-for: props.name should never change.
 const { name } = props;
 const conflicting = entityVersion.conflictingProperties.has(name);
 const oldValue = computed(() => (name === 'label'
@@ -97,7 +98,7 @@ const newValue = name === 'label' ? entityVersion.label : entityVersion.data[nam
 {
   "en": {
     // This is shown for an Entity property that is part of a conflict between
-    // versions of the Entity
+    // versions of the Entity.
     "conflictingProp": "Another update already wrote to this property."
   }
 }

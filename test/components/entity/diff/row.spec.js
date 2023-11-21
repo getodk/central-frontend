@@ -20,7 +20,8 @@ const mountComponent = (options) => {
     global: {
       provide: { entityVersion: last(entityVersions) }
     },
-    props: { oldVersion: entityVersions[0] }
+    props: { oldVersion: entityVersions[0] },
+    container
   }));
 };
 
@@ -147,7 +148,7 @@ describe('EntityDiffRow', () => {
     });
   });
 
-  it('renders correctly if the property is conflicting', async () => {
+  it('renders correctly for a conflicting property', async () => {
     testData.extendedEntities.createPast(1, {
       data: { height: '1' }
     });
@@ -167,6 +168,6 @@ describe('EntityDiffRow', () => {
     iconContainer.find('.icon-exclamation-circle').exists().should.be.true();
     await iconContainer.should.have.tooltip('Another update already wrote to this property.');
     const text = row.get('.sr-only').text();
-    await text.should.equal('Another update already wrote to this property.');
+    text.should.equal('Another update already wrote to this property.');
   });
 });

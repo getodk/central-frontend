@@ -87,9 +87,9 @@ describe('EntityDiff', () => {
     mountComponent().findComponent(EntityDiffTable).exists().should.be.false();
   });
 
-  it('shows a message for an empty diff', () => {
+  it('shows a message for an empty diff if the version is a conflict', () => {
     testData.extendedEntities.createPast(1);
-    testData.extendedEntityVersions.createPast(1);
+    testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
     mountComponent().get('.empty-table-message').should.be.visible();
   });
 });

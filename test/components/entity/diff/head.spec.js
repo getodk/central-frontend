@@ -1,15 +1,14 @@
 import EntityDiffHead from '../../../../src/components/entity/diff/head.vue';
 
 import testData from '../../../data';
-import { mergeMountOptions, mount } from '../../../util/lifecycle';
+import { mount } from '../../../util/lifecycle';
 
-const mountComponent = (options = undefined) =>
-  mount(EntityDiffHead, mergeMountOptions(options, {
-    props: { modelValue: 'baseDiff' },
-    global: {
-      provide: { entityVersion: testData.extendedEntityVersions.last() }
-    }
-  }));
+const mountComponent = () => mount(EntityDiffHead, {
+  props: { modelValue: 'baseDiff' },
+  global: {
+    provide: { entityVersion: testData.extendedEntityVersions.last() }
+  }
+});
 
 describe('EntityDiffHead', () => {
   describe('hard conflict', () => {

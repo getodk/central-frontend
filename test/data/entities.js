@@ -164,7 +164,7 @@ entities = dataStore({
       creator
     });
     for (let i = 2; i <= version; i += 1)
-      createVersion({ _entity: entity, source, creator });
+      createVersion({ _entity: entity, creator });
 
     return entity;
   },

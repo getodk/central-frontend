@@ -14,7 +14,8 @@ except according to the terms contained in the LICENSE file.
     <entity-diff-head v-if="entityVersion.conflict != null" v-model="diffProp"/>
     <entity-diff-table v-if="entityVersion.conflict != null || diff.length !== 0"
       :diff="diff"/>
-    <p v-if="diff.length === 0" class="empty-table-message">
+    <p v-if="entityVersion.conflict != null && diff.length === 0"
+      class="empty-table-message">
       {{ $t('noChange') }}
     </p>
   </div>
@@ -23,8 +24,8 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, inject, ref } from 'vue';
 
-import EntityDiffTable from './diff/table.vue';
 import EntityDiffHead from './diff/head.vue';
+import EntityDiffTable from './diff/table.vue';
 
 defineOptions({
   name: 'EntityDiff'
@@ -48,9 +49,9 @@ $border-width: 1px;
   border-right: $border-width solid transparent;
   &.hard-conflict, &.soft-conflict {
     border-bottom: $border-width solid transparent;
-    border-top: $border-width solid transparent;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    border-top: 12px solid transparent;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
   }
   &.hard-conflict { border-color: $color-danger; }
   &.soft-conflict { border-color: $color-warning-dark; }
@@ -58,23 +59,32 @@ $border-width: 1px;
   .empty-table-message { margin-left: $hpadding-feed-entry; }
 }
 
-// The styles below are here rather than in EntityDiffHead because they
-// reference $border-width.
+// The styles below are here rather than in EntityDiffHead and EntityDiffTable
+// because they have to do with the alignment of the EntityDiff as a whole. Many
+// of the styles below reference $border-width.
 
+$tabs-indent: 3px;
 .entity-diff-head {
-  $hpadding: #{$hpadding-feed-entry - $border-width};
+  $hpadding: $hpadding-feed-entry - $border-width;
   padding-left: $hpadding;
   padding-right: $hpadding;
+
+  // By itself, -$hpadding-nav-tab would align the text of the first tab with
+  // the text above it. However, we want it to be a little more indented than
+  // that.
+  .nav-tabs { margin-left: #{$tabs-indent - $hpadding-nav-tab}; }
 }
 
 .entity-diff-table {
+  // Align the text of the first column with the text of the first tab.
+  $padding-left: $hpadding-feed-entry - $border-width + $tabs-indent;
   col:nth-child(1) {
-    // 150px for the text (the property name)
-    width: #{$hpadding-feed-entry - $border-width + 150px + $padding-right-table-data};
+    // 150px is for the text (the property name).
+    width: #{$padding-left + 150px + $padding-right-table-data};
   }
   col:nth-child(3) { width: 30px; }
 
-  td:first-child { padding-left: #{$hpadding-feed-entry - $border-width}; }
+  td:first-child { padding-left: $padding-left; }
   td:last-child { padding-right: #{$hpadding-feed-entry - $border-width}; }
 }
 </style>

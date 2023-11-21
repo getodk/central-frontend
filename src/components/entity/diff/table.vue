@@ -77,10 +77,10 @@ const { entityVersions } = useRequestData();
 const oldVersion = computed(() => {
   // toRaw() isn't needed in production, but it is needed in testing for some
   // reason.
-  const version = toRaw(props.diff) === entityVersion.baseDiff
+  const oldVersionNumber = toRaw(props.diff) === entityVersion.baseDiff
     ? entityVersion.baseVersion
     : entityVersion.version - 1;
-  return entityVersions[version - 1];
+  return entityVersions[oldVersionNumber - 1];
 });
 
 const uuid = inject('uuid');
@@ -94,8 +94,8 @@ const uuid = inject('uuid');
   table-layout: fixed;
 
   tbody tr td {
-    padding-top: 12px;
     padding-bottom: 12px;
+    padding-top: 12px;
 
     &:nth-child(3) {
       padding-left: 0;
@@ -122,13 +122,13 @@ const uuid = inject('uuid');
       // The value of an Entity property in an older version of the Entity
       "oldValue": "Old value",
       // The value of an Entity property in a newer version of the Entity
-      "newValue": "New value",
+      "newValue": "New value"
     },
     // This is shown when Central displays a comparison of two versions of an
     // Entity.
     "comparing": "Comparing",
     // {version} is a short identifier of an Entity version, for example, "v3".
-    // {source} indicates who or what created the Entity version, for example,
+    // {source} indicates what created the Entity version, for example,
     // "Update by Alice".
     "version": "{version} ({source})"
   }

@@ -84,7 +84,9 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
         </span>
-        <span class="entity-version-tag"><router-link :to="versionAnchor(entityVersion.version)">v{{ entityVersion.version }}</router-link></span>
+        <span class="entity-version-tag">
+          <router-link :to="versionAnchor(entityVersion.version)">{{ $t('common.versionShort', entityVersion) }}</router-link>
+        </span>
       </template>
       <template v-else-if="entry.action === 'entity.update.resolve'">
         <span class="icon-random"></span>
@@ -124,6 +126,8 @@ const props = defineProps({
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
+// The provided entityVersion won't be reactive, but that should be OK given how
+// EntityFeedEntry is used in a v-for: props.entityVersion should never change.
 provide('entityVersion', props.entityVersion);
 
 // The component assumes that this data will exist when the component is

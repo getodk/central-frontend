@@ -1568,7 +1568,8 @@
       },
       "softConflict": {
         "title": {
-          "string": "Parallel Update"
+          "string": "Parallel Update",
+          "developer_comment": "An update to an Entity that was made at the same time as another update"
         },
         "description": {
           "string": "No parallel update before this one touched the same properties."
@@ -1585,14 +1586,14 @@
         },
         "updating": {
           "string": "(updating {version})",
-          "developer_comment": "This text is shown above a comparison of two versions of an Entity. {version} is a short version identifier, for example, \"v3\"."
+          "developer_comment": "This text is shown for an update to an Entity. {version} is a short version identifier, for example, \"v3\". It is the version that the update was applied to."
         }
       }
     },
     "EntityDiffRow": {
       "conflictingProp": {
         "string": "Another update already wrote to this property.",
-        "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity"
+        "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity."
       }
     },
     "EntityDiffTable": {
@@ -1612,7 +1613,7 @@
       },
       "version": {
         "string": "{version} ({source})",
-        "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates who or what created the Entity version, for example, \"Update by Alice\"."
+        "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
       }
     },
     "EntityFeedEntry": {
@@ -1810,10 +1811,12 @@
     },
     "EntityVersionLink": {
       "submission": {
-        "string": "Submission {instanceName}"
+        "string": "Submission {instanceName}",
+        "developer_comment": "This text is shown for a Submission. {instanceName} is the instance name of the Submission."
       },
       "api": {
-        "string": "Update by {name}"
+        "string": "Update by {name}",
+        "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
       }
     },
     "FieldKeyList": {
