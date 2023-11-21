@@ -40,10 +40,7 @@ describe('EntityResolve', () => {
       })
       .testRequests([{
         method: 'PATCH',
-        url: '/v1/projects/1/datasets/people/entities/the_id?resolve=true',
-        headers: {
-          'If-Match': '"1"'
-        }
+        url: '/v1/projects/1/datasets/people/entities/the_id?resolve=true&baseVersion=1',
       }])
       .afterResponse(async modal => {
         modal.get('.success-msg').text().should.eql('The conflict warning has been cleared from the Entity.');
