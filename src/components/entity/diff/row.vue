@@ -82,14 +82,19 @@ const newValue = name === 'label' ? entityVersion.label : entityVersion.data[nam
     white-space: break-spaces;
   }
 
+  // If both icons are shown, then both are repositioned (rather than just one)
+  // so that they remain centered in the cell.
   .icon-arrow-circle-right {
     position: relative;
     z-index: 1;
+
+    left: 1px;
+    &:last-child { left: 0; }
   }
   .icon-exclamation-circle {
     color: $color-danger;
     position: relative;
-    right: 2px;
+    right: 1px;
   }
 }
 </style>
