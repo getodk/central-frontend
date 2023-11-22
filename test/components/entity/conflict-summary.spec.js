@@ -36,10 +36,7 @@ describe('EntityConflictSummary', () => {
       .respondWithProblem()
       .testRequests([{
         method: 'PATCH',
-        url: '/v1/projects/1/datasets/trees/entities/e?resolve=true',
-        headers: {
-          'If-Match': '"1"'
-        }
+        url: '/v1/projects/1/datasets/trees/entities/e?resolve=true&baseVersion=1',
       }]);
   });
 

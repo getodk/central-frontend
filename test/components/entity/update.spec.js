@@ -137,14 +137,11 @@ describe('EntityUpdate', () => {
       .respondWithProblem()
       .testRequests([{
         method: 'PATCH',
-        url: '/v1/projects/1/datasets/%C3%A1/entities/e',
+        url: '/v1/projects/1/datasets/%C3%A1/entities/e?baseVersion=1',
         data: {
           label: 'Updated Entity',
           data: Object.assign(Object.create(null), { height: '2' })
         },
-        headers: {
-          'If-Match': '"1"'
-        }
       }]);
   });
 
