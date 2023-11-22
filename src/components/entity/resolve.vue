@@ -119,13 +119,12 @@ const { request, awaitingResponse } = useRequest();
 const success = ref(false);
 const markAsResolve = () => {
   const { entity } = props;
-  const url = apiPaths.entity(projectId, datasetName, entity.__id, { resolve: true });
+  const url = apiPaths.entity(projectId, datasetName, entity.__id, { resolve: true, baseVersion: entity.__system.version });
 
   request.patch(
     url,
     null,
     {
-      headers: { 'If-Match': `"${entity.__system.version}"` },
       problemToAlert: ({ code }) => {
         if (code === 409.15) return t('problem.409_15');
         return null;

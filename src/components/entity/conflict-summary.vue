@@ -99,13 +99,12 @@ const hideConfirm = () => {
 
 const markAsResolved = () => {
   const { entity } = props;
-  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, { resolve: true });
+  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, { resolve: true, baseVersion: entity.currentVersion.version });
 
   request.patch(
     url,
     null,
     {
-      headers: { 'If-Match': `"${entity.currentVersion.version}"` },
       problemToAlert: ({ code }) => {
         if (code === 409.15) return t('problem.409_15');
         return null;
