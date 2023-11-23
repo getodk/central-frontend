@@ -4,7 +4,7 @@ import EntityDiffRow from '../../../../src/components/entity/diff/row.vue';
 import EntityDiffTable from '../../../../src/components/entity/diff/table.vue';
 import EntityVersionLink from '../../../../src/components/entity/version-link.vue';
 
-import useEntity from '../../../../src/request-data/entity';
+import useEntityVersions from '../../../../src/request-data/entity-versions';
 
 import createTestContainer from '../../../util/container';
 import testData from '../../../data';
@@ -15,7 +15,7 @@ import { testRequestData } from '../../../util/request-data';
 const mountComponent = (options = undefined) => {
   const { uuid } = testData.extendedEntities.last();
   const container = createTestContainer({
-    requestData: testRequestData([useEntity], {
+    requestData: testRequestData([useEntityVersions], {
       entityVersions: testData.extendedEntityVersions.sorted()
     }),
     router: mockRouter(`/projects/1/entity-lists/trees/entities/${uuid}`)

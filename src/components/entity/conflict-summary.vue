@@ -122,8 +122,6 @@ const markAsResolved = () => {
 </script>
 
 <style lang="scss" scoped>
-  @import '../../assets/scss/variables';
-
   .panel-heading {
     display: flex;
     padding: 15px;
@@ -155,7 +153,7 @@ const markAsResolved = () => {
 
     // Align the leftmost text of the first column with the icon in the
     // .panel-heading.
-    :deep(th:first-child) { padding-left: 14px; }
+    :deep(th:first-child) { padding-left: 15px; }
   }
 
   .panel-footer {

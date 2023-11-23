@@ -46,13 +46,12 @@
     },
     "draftNav": {
       "tab": {
-        "status": {
-          "string": "Status",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "testing": {
           "string": "Testing",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "status": {
+          "string": "Status"
         }
       }
     }
@@ -1553,7 +1552,7 @@
       "basedOn": {
         "label": {
           "string": "Based on",
-          "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the data collector saw when they made their changes."
+          "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the author saw when they made their changes."
         },
         "description": {
           "string": "The version of this Entity that the author saw when they made their changes"

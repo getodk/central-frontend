@@ -4,44 +4,43 @@ import useEntityVersions from '../../../src/request-data/entity-versions';
 
 import createTestContainer from '../../util/container';
 import testData from '../../data';
-import { mockLogin } from '../../util/session';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockRouter } from '../../util/router';
-import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => {
-  const dataset = testData.extendedDatasets.last();
+const mountComponent = (options = undefined) => {
   const container = createTestContainer({
     requestData: testRequestData([useEntityVersions], {
-      dataset,
+      dataset: testData.extendedDatasets.last(),
       entityVersions: testData.extendedEntityVersions.sorted()
     }),
-    router: mockRouter(`/projects/1/datasets/${encodeURIComponent(dataset.name)}/entities`)
+    router: mockRouter('/')
   });
-  return mount(EntityConflictTable, {
+  return mount(EntityConflictTable, mergeMountOptions(options, {
     props: {
       uuid: testData.extendedEntities.last().uuid,
-      versions: container.requestData.entityVersions
+      versions: container.requestData.localResources.entityVersions
         .filter(version => version.relevantToConflict)
     },
+    global: {
+      provide: { projectId: '1', datasetName: 'trees' }
+    },
     container
-  });
+  }));
 };
-// Returns the column headers. Excludes the first column, which is static text.
-const headers = (component) =>
-  component.findAll('th:nth-child(n + 1)').map(th => th.text());
-// Returns the table data for a row. Excludes the first column, which is static
+// Returns the column headers. Excludes the first column header, which is static
 // text.
+const headers = (component) =>
+  component.findAll('thead th:nth-child(n + 2)').map(th => th.text());
+// Returns the table data for a row. Excludes the row header in the first
+// column, which is often static text.
 const rowData = (component, row) =>
-  component.findAll(`tbody tr:nth-child(${row + 1}) td:nth-child(n + 1)`)
-    .map(td => td.text());
+  component.findAll(`tbody tr:nth-child(${row + 1}) td`).map(td => td.text());
 
 describe('EntityConflictTable', () => {
-  beforeEach(mockLogin);
-
-  it('shows a column for each version', () => {
-    testData.extendedEntities.createPast(1, { uuid: 'e' });
-    testData.extendedEntityVersions.createPast(1, { baseVersion: 1 });
+  it('shows a column header for each version', () => {
+    testData.extendedEntities.createPast(1);
+    testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
     headers(mountComponent()).should.eql(['v1', 'v2', 'v3']);
   });
 
@@ -56,8 +55,9 @@ describe('EntityConflictTable', () => {
 
     it('shows the base version numbers', () => {
       testData.extendedEntities.createPast(1);
-      testData.extendedEntityVersions.createPast(1);
-      testData.extendedEntityVersions.createPast(2, { baseVersion: 2 });
+      testData.extendedEntityVersions
+        .createPast(2)
+        .createPast(1, { baseVersion: 2 });
       const component = mountComponent();
       headers(component).should.eql(['v2', 'v3', 'v4']);
       rowData(component, 0).should.eql(['v1', 'v2', 'v2']);

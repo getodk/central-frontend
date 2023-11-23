@@ -25,7 +25,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
         "testing": "Testing"
       }
     }
@@ -380,7 +379,8 @@
     "noResults": "No results",
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
-    "status": "@:formHead.draftNav.tab.status",
+    // @transifexKey formHead.draftNav.tab.status
+    "status": "Status",
     "success": "Success!",
     // "System" refers to the server and how it is configured. It may be shown
     // as a title, for example, at the top of the page.

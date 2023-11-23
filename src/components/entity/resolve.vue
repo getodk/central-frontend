@@ -11,11 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse" large
-    backdrop @hide="hide">
-    <template #title>{{ $t('title', props.entity) }}</template>
+    backdrop @hide="$emit('hide')">
+    <template #title>{{ $t('title', entity) }}</template>
     <template #body>
       <div v-if="!success">
-        <p>{{ $t('instructions[0]', props.entity) }}</p>
+        <p>{{ $t('instructions[0]', entity) }}</p>
         <p>{{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}</p>
 
         <div v-show="tableShown" id="entity-resolve-table-container">
@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
             link-target="_blank"/>
         </div>
         <div id="entity-resolve-table-toggle">
-          <button type="button" class="btn btn-link" @click="toggleTable">
+          <a href="#" role="button" @click.prevent="toggleTable">
             <template v-if="!tableShown">
               <span class="icon-angle-down"></span>
               <span>{{ $t('action.table.show') }}</span>
@@ -34,14 +34,14 @@ except according to the terms contained in the LICENSE file.
               <span class="icon-angle-up"></span>
               <span>{{ $t('action.table.hide') }}</span>
             </template>
-          </button>
+          </a>
         </div>
 
-        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, props.entity?.__id)"
+        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, entity?.__id)"
           :aria-disabled="awaitingResponse" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
-        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="hide(true)">
+        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="$emit('hide', true)">
           <span class="icon-pencil"></span>{{ $t('action.editEntity') }}
         </button>
         <button type="button" class="btn btn-default mark-as-resolved" :aria-disabled="awaitingResponse" @click="markAsResolve">
@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary" :aria-disabled="awaitingResponse" @click="hide">
+        <button type="button" class="btn btn-primary" :aria-disabled="awaitingResponse" @click="$emit('hide')">
           {{ $t('action.close') }}
         </button>
       </div>
@@ -91,20 +91,16 @@ const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 const alert = inject('alert');
 const { t } = useI18n();
-watch(() => props.entity, (entity) => {
-  if (entity != null) {
-    entityVersions.request({
-      url: apiPaths.entityVersions(projectId, datasetName, entity.__id, { relevantToConflict: true }),
-      extended: true
+const requestEntityVersions = () => {
+  entityVersions.request({
+    url: apiPaths.entityVersions(projectId, datasetName, props.entity.__id, { relevantToConflict: true }),
+    extended: true
+  })
+    .then(() => {
+      if (entityVersions.length === 0) alert.danger(t('problem.409_15'));
     })
-      .then(() => {
-        if (entityVersions.length === 0) alert.danger(t('problem.409_15'));
-      })
-      .catch(noop);
-  } else {
-    entityVersions.reset();
-  }
-});
+    .catch(noop);
+};
 const tableShown = ref(false);
 const table = ref(null);
 const toggleTable = () => {
@@ -139,19 +135,28 @@ const markAsResolve = () => {
     .catch(noop);
 };
 
-const hide = (showUpdate = false) => {
-  emit('hide', showUpdate);
-  if (!showUpdate) {
+// props.entity is changed after the user clicks the button in the table row,
+// when the modal is shown. It is also changed after the user clicks the
+// "Edit Entity" button in the modal, then uses EntityUpdate to update the
+// entity. props.entity is changed to `null` when the modal is completely
+// hidden (not just when switching to EntityUpdate).
+watch(() => props.entity, (entity) => {
+  if (entity != null) {
+    requestEntityVersions();
+  } else {
+    entityVersions.reset();
     tableShown.value = false;
     success.value = false;
   }
-};
+});
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/variables';
 
 #entity-resolve {
+  .modal-dialog { margin-top: 15vh; }
+
   .btn + .btn {
     margin-left: 10px;
   }
@@ -164,23 +169,21 @@ const hide = (showUpdate = false) => {
 }
 
 #entity-resolve-table-container {
+  margin-bottom: 6px;
   margin-left: -$padding-modal-body;
   margin-right: -$padding-modal-body;
-  max-height: 300px;
+  // If the height of the modal content other than the table is no more than
+  // 375px, this allows the table to push the modal to 75vh tall. After that,
+  // the table container will scroll.
+  max-height: max(calc(75vh - 375px), 175px);
   overflow-y: auto;
-  padding-bottom: 6px;
   padding-top: 5px;
-
-  .loading { margin-left: $padding-modal-body; }
 }
-#entity-resolve-table-toggle {
-  margin-bottom: 15px;
-
-  .btn-link {
-    font-size: inherit;
-    padding: 0;
-  }
+#entity-resolve #entity-conflict-table {
+  tbody tr { background-color: transparent; }
+  th:first-child { padding-left: $padding-modal-body; }
 }
+#entity-resolve-table-toggle { margin-bottom: 15px; }
 </style>
 
 <i18n lang="json5">

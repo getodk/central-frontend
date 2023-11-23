@@ -81,7 +81,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
                 role="presentation">
                 <router-link :to="tabPath('draft')">
-                  {{ $t('formHead.draftNav.tab.status') }}
+                  {{ $t('common.status') }}
                 </router-link>
               </li>
               <li v-if="canRoute(tabPath('draft/attachments'))"

@@ -241,9 +241,9 @@ export default {
       this.resolve.entity = odataEntity;
       this.showModal('resolve');
     },
-    hideResolve(showEdit) {
+    hideResolve(showUpdate) {
       this.hideModal('resolve');
-      if (showEdit) {
+      if (showUpdate) {
         this.$nextTick(() => this.showUpdate(this.resolveIndex));
       } else {
         this.resolve.entity = null;

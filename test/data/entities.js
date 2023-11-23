@@ -73,11 +73,15 @@ const entityVersions = dataStore({
     // Update the last version and the base version.
     if (lastVersion != null) {
       const updates = { current: false };
-      if (lastVersion.lastGoodVersion && baseVersion === lastVersion)
-        updates.lastGoodVersion = false;
+      if (lastVersion.lastGoodVersion) {
+        if (baseVersion === lastVersion)
+          updates.lastGoodVersion = false;
+        else
+          updates.relevantToConflict = true;
+      }
       entityVersions.update(lastVersionIndex, updates);
     }
-    if (baseVersion !== lastVersion)
+    if (baseVersion !== lastVersion && !baseVersion.relevantToConflict)
       entityVersions.update(baseVersionIndex, { relevantToConflict: true });
 
     // Timestamps
@@ -300,14 +304,16 @@ extendedEntities.resolve = (index) => {
   const entity = entities.get(index);
   if (entity == null) throw new Error('entity not found');
 
+  const lastIndex = entityVersions.findLastIndex(version =>
+    version.uuid === entity.uuid);
   for (const [i, version] of entityVersions.entries()) {
     // eslint-disable-next-line no-continue
     if (version.uuid !== entity.uuid) continue;
     const updates = {};
-    if (version.conflict != null && !version.resolved)
-      updates.resolved = true;
-    if (version.relevantToConflict)
-      version.relevantToConflict = false;
+    if (version.conflict != null && !version.resolved) updates.resolved = true;
+    if (version.lastGoodVersion) updates.lastGoodVersion = false;
+    if (i === lastIndex) updates.lastGoodVersion = true;
+    if (version.relevantToConflict) updates.relevantToConflict = false;
     if (Object.keys(updates).length !== 0) entityVersions.update(i, updates);
   }
 

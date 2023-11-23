@@ -23,8 +23,9 @@ body {
   color: $color-text;
   min-height: 100vh;
 
-  // Always show the scrollbar in order to prevent content shifting to the left.
-  overflow-y: scroll;
+  // Always show the scrollbar so that content doesn't shift to the left if/when
+  // the scrollbar happens to appear.
+  overflow: hidden scroll;
   &.modal-open { overflow-y: hidden; }
 
   &:lang(ja) { font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; }
@@ -555,7 +556,7 @@ tr.uncommitted-change { background-color: #ffef67; }
   }
 
   > tbody {
-    > tr > td {
+    > tr > th, > tr > td {
       border-top: $border-top-table-data;
       padding: $padding-top-table-data $padding-right-table-data
                $padding-bottom-table-data $padding-left-table-data;

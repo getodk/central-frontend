@@ -1,30 +1,32 @@
-import ConflictSummary from '../../../src/components/entity/conflict-summary.vue';
 import Confirmation from '../../../src/components/confirmation.vue';
+import EntityConflictSummary from '../../../src/components/entity/conflict-summary.vue';
+
+import useEntityVersions from '../../../src/request-data/entity-versions';
 
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockHttp } from '../../util/http';
 import { mockRouter } from '../../util/router';
+import { testRequestData } from '../../util/request-data';
 
 const mountOptions = (options = undefined) => {
-  const dataset = testData.extendedDatasets.last();
   const entity = testData.extendedEntities.last();
   return mergeMountOptions(options, {
     props: { entity },
     global: {
-      provide: { projectId: '1', datasetName: dataset.name }
+      provide: { projectId: '1', datasetName: 'trees' }
     },
     container: {
-      requestData: {
-        dataset,
+      requestData: testRequestData([useEntityVersions], {
+        dataset: testData.extendedDatasets.last(),
         entityVersions: testData.extendedEntityVersions.sorted()
-      },
-      router: mockRouter(`/projects/1/entity-lists/${encodeURIComponent(dataset.name)}/entities/${entity.uuid}`)
+      }),
+      router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`)
     }
   });
 };
 const mountComponent = (options = undefined) =>
-  mount(ConflictSummary, mountOptions(options));
+  mount(EntityConflictSummary, mountOptions(options));
 
 describe('EntityConflictSummary', () => {
   it('show the confirmation modal', async () => {
@@ -39,7 +41,7 @@ describe('EntityConflictSummary', () => {
   it('sends the correct request', async () => {
     testData.extendedEntities.createPast(1, { uuid: 'e' });
     return mockHttp()
-      .mount(ConflictSummary, mountOptions())
+      .mount(EntityConflictSummary, mountOptions())
       .request(async (component) => {
         await component.get('.btn-default').trigger('click');
         const modal = component.getComponent(Confirmation);
@@ -55,7 +57,7 @@ describe('EntityConflictSummary', () => {
   describe('Resolve Conflict', () => {
     const resolve = () =>
       mockHttp()
-        .mount(ConflictSummary, mountOptions())
+        .mount(EntityConflictSummary, mountOptions())
         .request(async (component) => {
           await component.get('.btn-default').trigger('click');
           const modal = component.getComponent(Confirmation);
@@ -92,7 +94,7 @@ describe('EntityConflictSummary', () => {
     it('shows conflict error', () => {
       testData.extendedEntities.createPast(1);
       return mockHttp()
-        .mount(ConflictSummary, mountOptions())
+        .mount(EntityConflictSummary, mountOptions())
         .request(async (component) => {
           await component.get('.btn-default').trigger('click');
           const modal = component.getComponent(Confirmation);

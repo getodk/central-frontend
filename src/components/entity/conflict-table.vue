@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <table v-else ref="table" class="table">
       <thead>
         <tr>
-          <th ref="labelHeader">{{ $t('common.version') }}</th>
+          <th ref="firstHeader">{{ $t('common.version') }}</th>
           <th v-for="version of versions" ref="versionHeaders"
             :key="version.version">
             {{ $t('common.versionShort', version) }}
@@ -132,39 +132,56 @@ const { dataset } = useRequestData();
 const propertyNames = computed(() => {
   const result = [];
   if (!dataset.dataExists) return result;
+
   const { allReceived } = summary.value;
   for (const { name } of dataset.properties) {
     if (allReceived.has(name)) result.push(name);
   }
+
+  // Check for properties that are in allReceived but not dataset.properties.
+  const expectedCount = allReceived.has('label')
+    ? allReceived.size - 1
+    : allReceived.size;
+  if (result.length !== expectedCount) {
+    const propertySet = new Set(dataset.properties);
+    for (const name of allReceived) {
+      if (name !== 'label' && !propertySet.has(name)) result.push(name);
+    }
+  }
+
   return result;
 });
 
 // Resize columns using a strategy similar to useColumnGrow().
 const el = ref(null);
 const table = ref(null);
-const labelHeader = ref(null);
+const firstHeader = ref(null);
 const versionHeaders = ref([]);
 const minWidth = 50;
 const maxWidth = 250;
 const clampWidth = clamp(minWidth, maxWidth);
 const resize = () => {
-  if (table.value == null) return;
+  if (props.versions.length === 0) return;
   const containerWidth = el.value.getBoundingClientRect().width;
   if (containerWidth === 0) return;
 
   // Undo previous resizing.
-  labelHeader.value.style.width = '';
+  firstHeader.value.style.width = '';
   for (const header of versionHeaders.value)
     header.style.width = '';
+
+  // This makes the width of each column equal to its content width. After
+  // getting those content widths and setting the new column widths, we will
+  // remove this style.
   table.value.style.width = 'auto';
 
-  // Resize the label column.
-  const labelHeaderWidth = clampWidth(labelHeader.value.getBoundingClientRect().width);
-  labelHeader.value.style.width = px(labelHeaderWidth);
+  // Resize the first column.
+  const firstHeaderWidth = clampWidth(firstHeader.value.getBoundingClientRect().width);
+  firstHeader.value.style.width = px(firstHeaderWidth);
 
-  // Resize the version columns. Keep the column width between the min width and
-  // the maximum content width, but otherwise use the remaining width of the
-  // container.
+  // Resize the version columns, giving each column the same width. Keep the
+  // column width between the min width and the maximum content width, but
+  // otherwise use the remaining width of the container.
   const maxVersionWidth = clampWidth(versionHeaders.value.reduce(
     (acc, header) => Math.max(acc, header.getBoundingClientRect().width),
     0
@@ -172,14 +189,14 @@ const resize = () => {
   const versionWidth = clamp(
     minWidth,
     maxVersionWidth,
-    (containerWidth - labelHeaderWidth) / props.versions.length
+    (containerWidth - firstHeaderWidth) / props.versions.length
   );
   const versionWidthPx = px(versionWidth);
   for (const header of versionHeaders.value)
     header.style.width = versionWidthPx;
 
-  // Stretch the last column if there's still space.
-  if (containerWidth > labelHeaderWidth + props.versions.length * versionWidth) {
+  // Stretch the last column if there's leftover width in the container.
+  if (containerWidth > firstHeaderWidth + props.versions.length * versionWidth) {
     table.value.style.width = '100%';
     last(versionHeaders.value).style.width = '';
   } else {
@@ -203,7 +220,6 @@ defineExpose({ resize });
   overflow-x: auto;
 
   p, table { margin-bottom: 0; }
-
   table { table-layout: fixed; }
 
   thead th { font-size: 14px; }
@@ -214,7 +230,7 @@ defineExpose({ resize });
     &:first-child, &:nth-child(2), &:last-child { background-color: #f4f4f4; }
   }
 
-  tbody th, td { @include text-overflow-ellipsis; }
+  th, td { @include text-overflow-ellipsis; }
   td { border-left: 1px solid #bbb; }
 
   tbody tr:nth-child(n + 2) {
@@ -222,6 +238,9 @@ defineExpose({ resize });
       padding-bottom: 12px;
       padding-top: 12px;
     }
+  }
+  tbody tr:last-child {
+    th, td { padding-bottom: 15px; }
   }
 
   .label-header, .property-name {
@@ -241,8 +260,8 @@ defineExpose({ resize });
   }
   .icon-history { color: #888; }
   .icon-check-circle { color: $color-success; }
-  .icon-warning { color: $color-danger-dark; }
   .icon-question-circle { color: $color-warning-dark; }
+  .icon-warning { color: $color-danger-dark; }
 }
 </style>
 
@@ -255,7 +274,7 @@ defineExpose({ resize });
     "basedOn": {
       // "Based on" as in "the version of the Entity that this version is based
       // on". That version is known as the "base version". It is the version of
-      // the Entity that the data collector saw when they made their changes.
+      // the Entity that the author saw when they made their changes.
       "label": "Based on",
       "description": "The version of this Entity that the author saw when they made their changes"
     },

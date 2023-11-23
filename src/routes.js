@@ -458,7 +458,7 @@ const routes = [
             ]),
             formDraft: () => formDraft.isDefined()
           },
-          title: () => [i18n.t('formHead.draftNav.tab.status'), form.nameOrId]
+          title: () => [i18n.t('common.status'), form.nameOrId]
         }
       }),
       asyncRoute({
