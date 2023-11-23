@@ -254,7 +254,7 @@ export default {
       const index = this.resolveIndex;
       const newOData = Object.assign(Object.create(null), this.odataEntities.value[index]);
       newOData.__system.conflict = null;
-      newOData.__system.updateAt = updatedEntity.updatedAt;
+      newOData.__system.updatedAt = updatedEntity.updatedAt;
       this.odataEntities.value[index] = newOData;
       this.$refs.table.afterUpdate(index);
     },
