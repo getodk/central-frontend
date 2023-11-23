@@ -1,3 +1,4 @@
+import { XHTML_NAMESPACE_URI } from '@odk/common/constants/xmlns';
 import { For, createComputed, createMemo, createSignal } from 'solid-js';
 import Assignment from 'suid/icons-material/Assignment';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from 'suid/material';
@@ -19,7 +20,6 @@ interface DemoFixturesListProps {
 	setDemoFixture(selected: SelectedDemoFixture | null): void;
 }
 
-const htmlNamespaceURI = document.lookupNamespaceURI(null);
 const domParser = new DOMParser();
 
 export const DemoFixturesList = (props: DemoFixturesListProps) => {
@@ -33,7 +33,7 @@ export const DemoFixturesList = (props: DemoFixturesListProps) => {
 			const url = import.meta.resolve(key, import.meta.url);
 			const parsed: XMLDocument = domParser.parseFromString(xml, 'text/xml');
 			const title =
-				parsed.getElementsByTagNameNS(htmlNamespaceURI, 'title')[0]?.textContent ?? name;
+				parsed.getElementsByTagNameNS(XHTML_NAMESPACE_URI, 'title')[0]?.textContent ?? name;
 
 			return [
 				key,
