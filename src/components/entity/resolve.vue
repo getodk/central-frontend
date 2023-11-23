@@ -12,16 +12,33 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse" large
     backdrop @hide="$emit('hide')">
-    <template #title>{{ $t('title', props.entity) }}</template>
+    <template #title>{{ $t('title', entity) }}</template>
     <template #body>
       <div v-if="!success">
-        <p>{{ $t('instructions[0]', props.entity) }}</p>
+        <p>{{ $t('instructions[0]', entity) }}</p>
         <p>{{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}</p>
 
-        <!-- placeholder for summary table -->
+        <div v-show="tableShown" id="entity-resolve-table-container">
+          <loading :state="entityVersions.awaitingResponse"/>
+          <entity-conflict-table v-if="entityVersions.dataExists" ref="table"
+            :uuid="entity.__id" :versions="entityVersions.data"
+            link-target="_blank"/>
+        </div>
+        <div id="entity-resolve-table-toggle">
+          <a href="#" role="button" @click.prevent="toggleTable">
+            <template v-if="!tableShown">
+              <span class="icon-angle-down"></span>
+              <span>{{ $t('action.table.show') }}</span>
+            </template>
+            <template v-else>
+              <span class="icon-angle-up"></span>
+              <span>{{ $t('action.table.hide') }}</span>
+            </template>
+          </a>
+        </div>
 
-        <router-link class="btn btn-default more-details" :to="entityPath(dataset.projectId, dataset.name, props.entity?.__id)"
-        :aria-disabled="awaitingResponse" target="_blank">
+        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, entity?.__id)"
+          :aria-disabled="awaitingResponse" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
         <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="$emit('hide', true)">
@@ -45,40 +62,60 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { inject, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import useRoutes from '../../composables/routes';
-import useRequest from '../../composables/request';
-
+import EntityConflictTable from './conflict-table.vue';
+import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
+import useEntityVersions from '../../request-data/entity-versions';
+import useRequest from '../../composables/request';
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'EntityResolve'
 });
-
 const props = defineProps({
   state: Boolean,
   entity: Object
 });
-
 const emit = defineEmits(['hide', 'success']);
 
+// Conflict summary table
+const entityVersions = useEntityVersions();
+const projectId = inject('projectId');
+const datasetName = inject('datasetName');
+const alert = inject('alert');
 const { t } = useI18n();
-const { request, awaitingResponse } = useRequest();
-const { dataset } = useRequestData();
+const requestEntityVersions = () => {
+  entityVersions.request({
+    url: apiPaths.entityVersions(projectId, datasetName, props.entity.__id, { relevantToConflict: true }),
+    extended: true
+  })
+    .then(() => {
+      if (entityVersions.length === 0) alert.danger(t('problem.409_15'));
+    })
+    .catch(noop);
+};
+const tableShown = ref(false);
+const table = ref(null);
+const toggleTable = () => {
+  tableShown.value = !tableShown.value;
+  if (tableShown.value) nextTick(() => { table.value.resize(); });
+};
+
 const { entityPath } = useRoutes();
 
+// "Mark as resolved" button
+const { request, awaitingResponse } = useRequest();
 const success = ref(false);
-
 const markAsResolve = () => {
   const { entity } = props;
-  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.__id, { resolve: true, baseVersion: entity.__system.version });
+  const url = apiPaths.entity(projectId, datasetName, entity.__id, { resolve: true, baseVersion: entity.__system.version });
 
   request.patch(
     url,
@@ -98,8 +135,19 @@ const markAsResolve = () => {
     .catch(noop);
 };
 
-watch(() => props.state, (state) => {
-  if (!state) success.value = false;
+// props.entity is changed after the user clicks the button in the table row,
+// when the modal is shown. It is also changed after the user clicks the
+// "Edit Entity" button in the modal, then uses EntityUpdate to update the
+// entity. props.entity is changed to `null` when the modal is completely
+// hidden (not just when switching to EntityUpdate).
+watch(() => props.entity, (entity) => {
+  if (entity != null) {
+    requestEntityVersions();
+  } else {
+    entityVersions.reset();
+    tableShown.value = false;
+    success.value = false;
+  }
 });
 </script>
 
@@ -107,8 +155,10 @@ watch(() => props.state, (state) => {
 @import '../../assets/scss/variables';
 
 #entity-resolve {
-  .btn {
-    margin-right: 10px;
+  .modal-dialog { margin-top: 15vh; }
+
+  .btn + .btn {
+    margin-left: 10px;
   }
   .success {
     font-size: 30px;
@@ -117,6 +167,23 @@ watch(() => props.state, (state) => {
     margin-right: 10px;
   }
 }
+
+#entity-resolve-table-container {
+  margin-bottom: 6px;
+  margin-left: -$padding-modal-body;
+  margin-right: -$padding-modal-body;
+  // If the height of the modal content other than the table is no more than
+  // 375px, this allows the table to push the modal to 75vh tall. After that,
+  // the table container will scroll.
+  max-height: max(calc(75vh - 375px), 175px);
+  overflow-y: auto;
+  padding-top: 5px;
+}
+#entity-resolve #entity-conflict-table {
+  tbody tr { background-color: transparent; }
+  th:first-child { padding-left: $padding-modal-body; }
+}
+#entity-resolve-table-toggle { margin-bottom: 15px; }
 </style>
 
 <i18n lang="json5">
@@ -130,6 +197,10 @@ watch(() => props.state, (state) => {
       "Review the updates, make any edits you need to, and if you are sure this Entity data is correct press “Mark as resolved” to clear this warning message."
     ],
     "action": {
+      "table": {
+        "show": "Show summary table",
+        "hide": "Hide summary table"
+      },
       "seeMoreDetails": "See more details",
       "editEntity": "Edit Entity",
       "markAsResolved": "Mark as resolved"

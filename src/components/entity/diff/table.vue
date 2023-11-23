@@ -65,7 +65,7 @@ defineOptions({
 });
 const props = defineProps({
   diff: {
-    type: Array,
+    type: Set,
     required: true
   }
 });

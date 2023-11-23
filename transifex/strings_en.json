@@ -46,13 +46,12 @@
     },
     "draftNav": {
       "tab": {
-        "status": {
-          "string": "Status",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "testing": {
           "string": "Testing",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "status": {
+          "string": "Status"
         }
       }
     }
@@ -1545,6 +1544,43 @@
         "string": "Conflict warning resolved."
       }
     },
+    "EntityConflictTable": {
+      "noConflicts": {
+        "string": "There are no conflicts to show.",
+        "developer_comment": "This is shown if all conflicts between versions have been resolved for an Entity."
+      },
+      "basedOn": {
+        "label": {
+          "string": "Based on",
+          "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the author saw when they made their changes."
+        },
+        "description": {
+          "string": "The version of this Entity that the author saw when they made their changes"
+        }
+      },
+      "source": {
+        "label": {
+          "string": "Source"
+        },
+        "description": {
+          "string": "The update that generated this version"
+        }
+      },
+      "status": {
+        "historical": {
+          "string": "This historical version is included because a recent parallel update was made based on this version of this Entity."
+        },
+        "lastGoodVersion": {
+          "string": "This is the most recent version in good agreement. After this update, potentially conflicting updates have been made in parallel."
+        },
+        "softConflict": {
+          "string": "This version was made in parallel with others, but it doesn’t write any properties touched by the parallel updates before it."
+        },
+        "hardConflict": {
+          "string": "This version was made in parallel with other updates, some of which attempt to write to the same properties as this update."
+        }
+      }
+    },
     "EntityData": {
       "title": {
         "string": "Entity Data",
@@ -1751,6 +1787,16 @@
         }
       },
       "action": {
+        "table": {
+          "show": {
+            "string": "Show summary table",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "hide": {
+            "string": "Hide summary table",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
         "seeMoreDetails": {
           "string": "See more details",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -2450,12 +2496,6 @@
           "string": "Would you like to proceed?"
         }
       },
-      "field": {
-        "version": {
-          "string": "Version",
-          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
-        }
-      },
       "problem": {
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
@@ -3049,7 +3089,7 @@
       },
       "version": {
         "string": "Version",
-        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
+        "developer_comment": "An identifier of a particular version of something (of Central, of a Form, of an Entity)"
       }
     },
     "NavbarLinks": {

@@ -231,6 +231,9 @@ describe('EntityList', () => {
   });
 
   describe('resolve', () => {
+    const relevantToConflict = () => testData.extendedEntityVersions.sorted()
+      .filter(version => version.relevantToConflict);
+
     it('toggles the Modal', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
@@ -238,29 +241,42 @@ describe('EntityList', () => {
         .testModalToggles({
           modal: EntityResolve,
           show: '.entity-metadata-row .resolve-button',
-          hide: ['.btn-primary']
+          hide: ['.btn-primary'],
+          respond: (series) => series.respondWithData(relevantToConflict)
         });
     });
 
-    it('passes the correct entity to the modal', async () => {
+    it('passes the correct entity to the modal', () => {
       testData.extendedEntities
         .createPast(1, { uuid: 'e1' })
         .createPast(1, { uuid: 'e2' });
       testData.extendedEntityVersions
         .createPast(2, { uuid: 'e1', baseVersion: 1 })
         .createPast(2, { uuid: 'e2', baseVersion: 1 });
-      const component = await load('/projects/1/entity-lists/trees/entities', {
-        root: false
-      });
-      const modal = component.getComponent(EntityResolve);
-      should.not.exist(modal.props().entity);
-      const buttons = component.findAll('.entity-metadata-row .resolve-button');
-      buttons.length.should.equal(2);
-      await buttons[0].trigger('click');
-      modal.props().entity.__id.should.equal('e2');
-      await modal.get('.btn-primary').trigger('click');
-      await buttons[1].trigger('click');
-      modal.props().entity.__id.should.equal('e1');
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component => {
+          const modal = component.getComponent(EntityResolve);
+          should.not.exist(modal.props().entity);
+        })
+        .request(component => {
+          const button = component.get('.entity-metadata-row:first-child .resolve-button');
+          return button.trigger('click');
+        })
+        .respondWithData(relevantToConflict)
+        .afterResponse(component => {
+          const modal = component.getComponent(EntityResolve);
+          modal.props().entity.__id.should.equal('e2');
+          return modal.get('.btn-primary').trigger('click');
+        })
+        .request(component => {
+          const button = component.get('.entity-metadata-row:nth-child(2) .resolve-button');
+          return button.trigger('click');
+        })
+        .respondWithData(relevantToConflict)
+        .afterResponse(component => {
+          const modal = component.getComponent(EntityResolve);
+          modal.props().entity.__id.should.equal('e1');
+        });
     });
 
     it('does not show the modal during a refresh of the table', () => {
@@ -281,69 +297,114 @@ describe('EntityList', () => {
         });
     });
 
-    it('removes the conflict icon after conflict resolution', async () => {
+    it('removes the conflict icon after conflict resolution', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-
-      const component = await load('/projects/1/entity-lists/trees/entities', { root: false })
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
-        .request(async (c) => {
-          c.get('.wrap-circle').exists().should.be.true();
-          await c.get('.entity-metadata-row .resolve-button').trigger('click');
-          return c.get('#entity-resolve .mark-as-resolved').trigger('click');
+        .request(component => {
+          component.get('.wrap-circle').exists().should.be.true();
+          return component.get('.entity-metadata-row .resolve-button').trigger('click');
         })
-        .respondWithSuccess();
-
-      component.find('.wrap-circle').exists().should.be.false();
-      component.find('.resolve-button').exists().should.be.false();
+        .respondWithData(relevantToConflict)
+        .complete()
+        .request(component =>
+          component.get('#entity-resolve .mark-as-resolved').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedEntities.resolve(-1);
+          return testData.standardEntities.last();
+        })
+        .afterResponse(component => {
+          component.find('.wrap-circle').exists().should.be.false();
+          component.find('.resolve-button').exists().should.be.false();
+        });
     });
 
     describe('Edit Entity from Resolve Modal', () => {
       const openUpdateFromResolve = async () => {
-        testData.extendedEntities.createPast(1);
+        testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
+        testData.extendedEntities.createPast(1, {
+          uuid: 'e',
+          label: 'My Entity'
+        });
         testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-        const mockHttp = load('/projects/1/entity-lists/trees/entities', { root: false }).complete();
+        const mockHttp = load('/projects/1/entity-lists/%C3%A1/entities', { root: false })
+          .complete()
+          .request(component => {
+            const button = component.get('.entity-metadata-row .resolve-button');
+            return button.trigger('click');
+          })
+          .respondWithData(relevantToConflict)
+          .complete();
         const component = await mockHttp;
         const resolveModal = component.getComponent(EntityResolve);
         const updateModal = component.getComponent(EntityUpdate);
-
-        await component.find('.entity-metadata-row .resolve-button').trigger('click');
-        resolveModal.props().state.should.be.true();
-
         await resolveModal.find('.edit-entity').trigger('click');
-        resolveModal.props().state.should.be.false();
-        updateModal.props().state.should.be.true();
-
         return { mockHttp, resolveModal, updateModal };
       };
 
-      it('should come back to resolve modal after update', async () => {
-        const { mockHttp, resolveModal, updateModal } = await openUpdateFromResolve();
-
-        await mockHttp.request(async () => {
-          const form = updateModal.get('form');
-          const textareas = form.findAll('textarea');
-          await textareas[0].setValue('Updated Entity');
-          await form.trigger('submit');
-        })
-          .respondWithData(() => {
-            testData.extendedEntityVersions.createPast(1, { baseVersion: 3, label: 'Updated Entity' });
-            return testData.standardEntities.last();
-          });
-
-        resolveModal.props().state.should.be.true();
-        updateModal.props().state.should.be.false();
-
-        resolveModal.get('.modal-title').text().should.equal('Parallel updates to “Updated Entity”');
+      it('toggles the modals', async () => {
+        const { resolveModal, updateModal } = await openUpdateFromResolve();
+        resolveModal.props().state.should.be.false();
+        updateModal.props().state.should.be.true();
       });
 
-      it('should come back to resolve modal after cancel', async () => {
-        const { resolveModal, updateModal } = await openUpdateFromResolve();
+      describe('after a successful update', () => {
+        const update = (updateModal) => (series) => series
+          .request(async () => {
+            const form = updateModal.get('form');
+            const textareas = form.findAll('textarea');
+            await textareas[0].setValue('Updated Entity');
+            await form.trigger('submit');
+          })
+          .respondWithData(() => {
+            testData.extendedEntityVersions.createPast(1, { label: 'Updated Entity' });
+            return testData.standardEntities.last();
+          })
+          .respondWithData(relevantToConflict);
 
-        await updateModal.get('.close').trigger('click');
+        it('sends a new request for the entity versions', async () => {
+          const { mockHttp, updateModal } = await openUpdateFromResolve();
+          return mockHttp
+            .modify(update(updateModal))
+            .testRequests([
+              null,
+              {
+                url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions?relevantToConflict=true',
+                extended: true
+              }
+            ]);
+        });
 
-        resolveModal.props().state.should.be.true();
-        updateModal.props().state.should.be.false();
+        it('comes back to the resolve modal', async () => {
+          const { mockHttp, resolveModal, updateModal } = await openUpdateFromResolve();
+          await mockHttp.modify(update(updateModal));
+          resolveModal.props().state.should.be.true();
+          updateModal.props().state.should.be.false();
+        });
+
+        it('shows the updated entity', async () => {
+          const { mockHttp, resolveModal, updateModal } = await openUpdateFromResolve();
+          await mockHttp.modify(update(updateModal));
+          resolveModal.get('.modal-title').text().should.equal('Parallel updates to “Updated Entity”');
+        });
+      });
+
+      describe('after the update is canceled', () => {
+        it('does not request the entity versions', async () => {
+          const { mockHttp, updateModal } = await openUpdateFromResolve();
+          return mockHttp.testNoRequest(() =>
+            updateModal.get('.close').trigger('click'));
+        });
+
+        it('comes back to the resolve modal', async () => {
+          const { resolveModal, updateModal } = await openUpdateFromResolve();
+
+          await updateModal.get('.close').trigger('click');
+
+          resolveModal.props().state.should.be.true();
+          updateModal.props().state.should.be.false();
+        });
       });
     });
   });

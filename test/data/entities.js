@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { comparator, last, omit, pick } from 'ramda';
+import { comparator, omit, pick } from 'ramda';
 
 import { dataStore, view } from './data-store';
 import { extendedAudits } from './audits';
@@ -41,6 +41,7 @@ const entityVersions = dataStore({
     // the process of being created.
     _entity = undefined
   }) => {
+    // Get the entity.
     if (entities.size === 0 && _entity == null)
       throw new Error('there is no entity for which to create a new version');
     const entityIndex = _entity != null
@@ -51,24 +52,39 @@ const entityVersions = dataStore({
     if (entityIndex === -1) throw new Error('entity not found');
     const entity = _entity ?? entities.get(entityIndex);
 
-    const versions = [];
+    // Find the last version (i.e., the current/server version) and the base
+    // version.
     let lastVersionIndex;
+    let baseVersionIndex;
     for (const [i, version] of entityVersions.entries()) {
       if (version.uuid === entity.uuid) {
-        versions.push(version);
         lastVersionIndex = i;
+        if (version.version === baseVersionOption) baseVersionIndex = i;
       }
     }
-    const lastVersion = last(versions);
-    if (lastVersion != null)
-      entityVersions.update(lastVersionIndex, { current: false });
+    const lastVersion = entityVersions.get(lastVersionIndex);
+    if (baseVersionOption != null) {
+      if (baseVersionIndex == null) throw new Error('base version not found');
+    } else {
+      baseVersionIndex = lastVersionIndex;
+    }
+    const baseVersion = entityVersions.get(baseVersionIndex);
 
-    const baseVersion = baseVersionOption == null || baseVersionOption === lastVersion?.version
-      ? lastVersion
-      : versions.find(version => version.version === baseVersionOption);
-    if (baseVersionOption != null && baseVersion == null)
-      throw new Error('base version not found');
+    // Update the last version and the base version.
+    if (lastVersion != null) {
+      const updates = { current: false };
+      if (lastVersion.lastGoodVersion) {
+        if (baseVersion === lastVersion)
+          updates.lastGoodVersion = false;
+        else
+          updates.relevantToConflict = true;
+      }
+      entityVersions.update(lastVersionIndex, updates);
+    }
+    if (baseVersion !== lastVersion && !baseVersion.relevantToConflict)
+      entityVersions.update(baseVersionIndex, { relevantToConflict: true });
 
+    // Timestamps
     const createdAt = lastVersion == null
       ? entity.createdAt
       : (!inPast
@@ -83,13 +99,16 @@ const entityVersions = dataStore({
 
     const dataReceived = { ...data };
     if (label != null) dataReceived.label = label;
+    const lastGoodVersion = (lastVersion == null || lastVersion.lastGoodVersion) &&
+      baseVersion === lastVersion;
     return {
       uuid: entity.uuid,
-      version: versions.length + 1,
+      version: lastVersion == null ? 1 : lastVersion.version + 1,
       baseVersion: baseVersion == null ? null : baseVersion.version,
       current: true,
       label: label ?? lastVersion.label,
       data: { ...lastVersion?.data, ...data },
+      dataReceived,
       conflict: baseVersion === lastVersion
         ? null
         : (conflictingProperties != null && conflictingProperties.length !== 0
@@ -101,6 +120,8 @@ const entityVersions = dataStore({
       baseDiff: diffVersions(dataReceived, baseVersion),
       serverDiff: diffVersions(dataReceived, lastVersion),
       resolved: false,
+      lastGoodVersion,
+      relevantToConflict: !lastGoodVersion,
       source,
       creatorId: creator.id,
       creator: toActor(creator),
@@ -283,9 +304,17 @@ extendedEntities.resolve = (index) => {
   const entity = entities.get(index);
   if (entity == null) throw new Error('entity not found');
 
+  const lastIndex = entityVersions.findLastIndex(version =>
+    version.uuid === entity.uuid);
   for (const [i, version] of entityVersions.entries()) {
-    if (version.uuid === entity.uuid && version.conflict != null)
-      entityVersions.update(i, { resolved: true });
+    // eslint-disable-next-line no-continue
+    if (version.uuid !== entity.uuid) continue;
+    const updates = {};
+    if (version.conflict != null && !version.resolved) updates.resolved = true;
+    if (version.lastGoodVersion) updates.lastGoodVersion = false;
+    if (i === lastIndex) updates.lastGoodVersion = true;
+    if (version.relevantToConflict) updates.relevantToConflict = false;
+    if (Object.keys(updates).length !== 0) entityVersions.update(i, updates);
   }
 
   // Update updatedAt.

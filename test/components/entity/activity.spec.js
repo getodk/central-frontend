@@ -2,6 +2,7 @@ import EntityActivity from '../../../src/components/entity/activity.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 
 import useEntity from '../../../src/request-data/entity';
+import useEntityVersions from '../../../src/request-data/entity-versions';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -18,7 +19,7 @@ const mountComponent = (options = undefined) => {
       provide: { projectId: '1', datasetName: 'trees', uuid: entity.uuid }
     },
     container: {
-      requestData: testRequestData([useEntity], {
+      requestData: testRequestData([useEntity, useEntityVersions], {
         entity,
         audits: testData.extendedAudits.sorted()
           .filter(({ action }) => action.startsWith('entity.')),
