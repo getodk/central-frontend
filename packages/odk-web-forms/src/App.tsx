@@ -54,7 +54,6 @@ export const App = () => {
 
 								return (
 									<Stack spacing={4}>
-										<Divider />
 										<Stack spacing={7}>
 											<XFormView entry={entry} />
 											<Divider />
