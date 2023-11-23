@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Repeat (no default instances)</h:title>
+    <model>
+      <instance>
+        <root id="repeat-no-default-instances">
+          <rep jr:template="">
+            <a>[template default value]</a>
+          </rep>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/rep/a"/>
+      <bind nodeset="/root/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/root/rep">
+      <label>Repeat group</label>
+      <repeat nodeset="/root/rep">
+        <input ref="/root/rep/a">
+          <label>Repeat input a</label>
+        </input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>
