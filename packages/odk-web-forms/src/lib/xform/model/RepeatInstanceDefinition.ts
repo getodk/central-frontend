@@ -14,9 +14,11 @@ export class RepeatInstanceDefinition implements NodeDefinition<'repeat-instance
 	readonly root: RootDefinition;
 	readonly parent: ParentNodeDefinition;
 	readonly bind: BindDefinition;
+	readonly nodeName: string;
 	readonly bodyElement: RepeatDefinition;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
+	readonly defaultValue = null;
 
 	constructor(
 		protected readonly sequence: RepeatSequenceDefinition,
@@ -32,6 +34,7 @@ export class RepeatInstanceDefinition implements NodeDefinition<'repeat-instance
 		this.root = root;
 		this.parent = repeatSequenceParent;
 		this.bind = bind;
+		this.nodeName = sequence.nodeName;
 		this.bodyElement = repeatGroupBodyElement.repeat;
 		this.children = root.buildSubtree(this);
 	}

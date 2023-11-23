@@ -1,93 +1,188 @@
-import type { Accessor } from 'solid-js';
-import { createEffect, createSignal, on } from 'solid-js';
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
+import { createMemo, type Accessor } from 'solid-js';
+import type { XFormXPathEvaluator } from '../../xpath/XFormXPathEvaluator.ts';
 import type { XFormDOM } from '../XFormDOM.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import { XFormEntryBinding } from '../XFormEntryBinding.ts';
-import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
+import type { RootDefinition } from '../model/RootDefinition.ts';
+import type { AnyChildState, AnyNodeState, AnyParentState, NodeState } from './NodeState.ts';
+import { RepeatSequenceState } from './RepeatSequenceState.ts';
+import { SubtreeState } from './SubtreeState.ts';
+import { ValueNodeState } from './ValueNodeState.ts';
 
-export class EntryState {
-	protected readonly bindings: Map<string, XFormEntryBinding>;
+export const buildChildStates = (
+	entry: EntryState,
+	parent: AnyParentState
+): readonly AnyChildState[] => {
+	switch (parent.type) {
+		case 'root':
+		case 'repeat-instance':
+		case 'subtree':
+			return parent.definition.children.map((childDefinition) => {
+				switch (childDefinition.type) {
+					case 'subtree': {
+						return new SubtreeState(entry, parent, childDefinition);
+					}
 
-	readonly instanceDOM: XFormDOM;
+					case 'repeat-sequence': {
+						return new RepeatSequenceState(entry, parent, childDefinition);
+					}
 
-	// Temp, just to be able to demo and visually inspect reactive output of the
-	// full state of a submission.
-	readonly serializedSubmission: Accessor<string>;
+					case 'value-node': {
+						return new ValueNodeState(entry, parent, childDefinition);
+					}
+				}
+			});
+
+		default:
+			throw new UnreachableError(parent);
+	}
+};
+
+type Reference = string;
+type ReferenceStateEntry = readonly [Reference, AnyNodeState];
+type ReferenceStateEntries = readonly ReferenceStateEntry[];
+type ReferenceStateMap = ReadonlyMap<Reference, AnyNodeState>;
+
+// TODO: "root" makes sense in model definition, makes less sense in state. The
+// "root" of a form entry is... the entry itself. This became obvious when the
+// orignal `EntryState` became effectively an object of type `{ root: RootState
+// }` with some pass-through methods. This is probably the only significant
+// mental model distinction between the model definition and state trees.
+export class EntryState implements NodeState<'root'> {
+	readonly type = 'root';
+	readonly definition: RootDefinition;
+	readonly reference: string;
+
+	readonly entry = this;
+
+	readonly parent = null;
+	readonly children: readonly AnyChildState[];
+
+	protected readonly instanceDOM: XFormDOM;
+
+	readonly xformDocument: XMLDocument;
+	readonly evaluator: XFormXPathEvaluator;
+
+	readonly node: Element;
+
+	readonly valueState = null;
+
+	readonly isReadonly = () => false;
+	readonly isRelevant = () => true;
+	readonly isRequired = () => false;
+
+	protected readonly referenceStateEntries: Accessor<ReferenceStateEntries>;
+	protected readonly stateByReference: Accessor<ReferenceStateMap>;
+
+	readonly instanceState: Accessor<Element>;
+	readonly serializedInstanceState: Accessor<string>;
 
 	constructor(readonly form: XFormDefinition) {
-		const bindings = new Map<string, XFormEntryBinding>();
+		const { root } = form.model;
+
+		this.definition = root;
+		this.reference = `/${root.nodeName}`;
+
 		const instanceDOM = form.xformDOM.createInstance();
 
-		this.bindings = bindings;
 		this.instanceDOM = instanceDOM;
+		this.xformDocument = instanceDOM.xformDocument;
+		this.node = instanceDOM.primaryInstanceRoot;
+		this.node.replaceChildren();
 
-		for (const [nodeset, bind] of form.model.binds) {
-			bindings.set(nodeset, new XFormEntryBinding(form, instanceDOM, this, bind));
-		}
+		this.evaluator = instanceDOM.primaryInstanceEvaluator;
+		this.children = buildChildStates(this, this);
 
-		const bindingStateAccessors = Array.from(bindings.values()).map((binding) => {
-			return binding.getValue;
+		const referenceStateEntries = this.createReferenceStateEntries(this);
+
+		this.referenceStateEntries = referenceStateEntries;
+		this.stateByReference = createMemo(() => new Map(referenceStateEntries()));
+		this.instanceState = this.createInstanceState();
+		this.serializedInstanceState = this.createSerializedInstanceState();
+	}
+
+	private createReferenceStateEntries(state: AnyParentState): Accessor<ReferenceStateEntries> {
+		return createMemo(() => {
+			const self = [state.reference, state] as const;
+			const children = state.children.flatMap((child): ReferenceStateEntries => {
+				switch (child.type) {
+					case 'repeat-sequence':
+						return child.getInstances().flatMap((instance) => {
+							const instanceEntries = this.createReferenceStateEntries(instance);
+
+							return instanceEntries();
+						});
+
+					case 'subtree':
+						const subtreeEntries = this.createReferenceStateEntries(child);
+
+						return subtreeEntries();
+
+					case 'value-node':
+						return [[child.reference, child]];
+				}
+			});
+
+			return [self, ...children] as const;
 		});
-		const serializeSubmission = () => instanceDOM.primaryInstanceRoot.outerHTML;
-
-		const [serializedSubmission, setSerializedSubmission] = createSignal(serializeSubmission());
-
-		// TODO: granted the current submission serialization is kind of a quick
-		// thrown together thing for demoing the complete reactivity behavior, but
-		// this is as good a place to call out this concern as any...
-		//
-		// 1. It is my understanding that Solid effects should not be used for
-		//    setting reactive state.
-		// 2. It is also my understanding that `createComputed` is intended to fit
-		//    this purpose.
-		// 3. It is also my understanding that `on` with `{ defer: true }` is meant
-		//    to defer its callback until the next *microtask* (which is to say, it
-		//    is scheduled synchronously). This is in contrast with the similarly
-		//    named `createDeferred`, which is meant to defer its callback until the
-		//    browser is idle (`requestIdleCallback` or some polyfill approximation
-		//    thereof).
-		// 4. The idea here is not just to demonstrate submission state reactivity,
-		//    but also to demonstrate efficient reactive computation. In this case,
-		//    it makes no sense to schedule the serialization for intermediate
-		//    states, which it would do by default for e.g. `calculate`s. The
-		//    intended behavior is to defer serialization until all such
-		//    computations have settled, serializing full submission state *once per
-		//    value change and all of its dependent computations*.
-		//
-		// So, here's the rub: as far as I can tell, the only way to achieve this
-		// intent with Solid's built-in primitives is with
-		// `createEffect(on(accessors, stateSettingCallback, { defer: true }))`.
-		// This is explicitly what you are not supposed to do. But it seems likely
-		// it's exactly what we'll need to do for certain other computations which
-		// have a similar expectation to defer until all other computations have
-		// settled. This is called out here both because it's where the issue first
-		// came up in this implementation (though I knew it was coming form prior
-		// prototyping efforts), *and* because it's a fairly likely place to
-		// encounter the discussion of the issue for frame of reference (as the
-		// current entrypoint to reactive state in the first place).
-		//
-		// ... And this whole comment should probably go away, as even
-		// `createEffect` has begun over-computing as more of the underlying
-		// reactivity is built out.
-		createEffect(
-			on(bindingStateAccessors, () => {
-				queueMicrotask(() => {
-					console.log('Recomputing full submission state');
-					setSerializedSubmission(serializeSubmission());
-				});
-			})
-		);
-
-		this.serializedSubmission = serializedSubmission;
 	}
 
-	getBinding(reference: string): XFormEntryBinding | null {
-		return this.bindings.get(reference) ?? null;
+	private createValueNodeDependentMemo(parent: AnyParentState): Accessor<string[]> {
+		const children = parent.children.flatMap((child): Accessor<string[]> => {
+			switch (child.type) {
+				case 'repeat-sequence':
+					return createMemo(
+						() => {
+							return child.getInstances().flatMap((instance) => {
+								const instanceMemo = this.createValueNodeDependentMemo(instance);
+
+								return instanceMemo();
+							});
+						},
+						{ equals: false }
+					);
+
+				case 'subtree':
+					return this.createValueNodeDependentMemo(child);
+
+				case 'value-node':
+					return () => [child.getValue()];
+			}
+		});
+
+		return createMemo(() => children.flatMap((child) => child()), { equals: false });
 	}
 
-	getBodyElements(): readonly AnyBodyElementDefinition[] {
-		// TODO: anticipating this will be reactive as we introduce N <> 1 repeats
-		return this.form.body.elements;
+	private createInstanceState(): Accessor<Element> {
+		const states = createMemo(() => {
+			return this.referenceStateEntries().flatMap(([, state]) => {
+				if (state.type === 'value-node') {
+					const [value] = state.valueState;
+
+					return [state.node, value()];
+				}
+
+				return [];
+			});
+		});
+
+		return () => {
+			states();
+
+			return this.instanceDOM.primaryInstanceRoot;
+		};
+	}
+
+	private createSerializedInstanceState(): Accessor<string> {
+		return () => {
+			const instance = this.instanceState();
+
+			return instance.outerHTML;
+		};
+	}
+
+	getState(reference: string): AnyNodeState | null {
+		return this.stateByReference().get(reference) ?? null;
 	}
 
 	toJSON() {

@@ -8,18 +8,20 @@ import type {
 	ParentNodeDefinition,
 } from './NodeDefinition.ts';
 import { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
-import { SubtreeNodeDefinition } from './SubtreeDefinition.ts';
+import { SubtreeDefinition } from './SubtreeDefinition.ts';
 import { ValueNodeDefinition } from './ValueNodeDefinition.ts';
 
 export class RootDefinition implements NodeDefinition<'root'> {
 	readonly type = 'root';
 	readonly bind: BindDefinition;
+	readonly nodeName: string;
 	readonly bodyElement = null;
 	readonly root = this;
 	readonly parent = null;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly node: Element;
+	readonly defaultValue = null;
 
 	constructor(
 		protected readonly form: XFormDefinition,
@@ -35,6 +37,9 @@ export class RootDefinition implements NodeDefinition<'root'> {
 		// resolving to the root).
 		const { primaryInstanceRoot } = form.xformDOM;
 		const { localName: rootNodeName } = primaryInstanceRoot;
+
+		this.nodeName = rootNodeName;
+
 		const nodeset = `/${rootNodeName}`;
 		const bind = model.binds.get(nodeset);
 
@@ -65,12 +70,8 @@ export class RootDefinition implements NodeDefinition<'root'> {
 				elements = [child];
 				childrenByName.set(localName, elements);
 			} else {
-				// TODO: check...
-				//
-				// 1. If previous element exists, was it previous element sibling
-				// 2. If previous element exists, is this a repeat
-				//
-				// Highly likely this should otherwise fail!
+				// TODO: check if previous element exists, was it previous element
+				// sibling. Highly likely this should otherwise fail!
 				elements.push(child);
 			}
 		}
@@ -108,7 +109,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 				return new ValueNodeDefinition(parent, bind, bodyElement, element);
 			}
 
-			return new SubtreeNodeDefinition(parent, bind, bodyElement, element);
+			return new SubtreeDefinition(parent, bind, bodyElement, element);
 		});
 	}
 

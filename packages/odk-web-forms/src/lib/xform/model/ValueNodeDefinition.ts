@@ -8,9 +8,11 @@ import type { RootDefinition } from './RootDefinition.ts';
 export class ValueNodeDefinition implements NodeDefinition<'value-node'> {
 	readonly type = 'value-node';
 
+	readonly nodeName: string;
 	readonly root: RootDefinition;
 	readonly children = null;
 	readonly instances = null;
+	readonly defaultValue: string;
 
 	// TODO: it seems like a safe assumption that a model leaf node may only have
 	// a body control, not a group/repeat, but is it actually?
@@ -24,6 +26,8 @@ export class ValueNodeDefinition implements NodeDefinition<'value-node'> {
 	) {
 		this.root = parent.root;
 		this.bind = bind;
+		this.nodeName = node.localName;
+		this.defaultValue = node.textContent ?? '';
 
 		if (bodyElement == null || bodyElement instanceof ControlDefinition) {
 			this.bodyElement = bodyElement;

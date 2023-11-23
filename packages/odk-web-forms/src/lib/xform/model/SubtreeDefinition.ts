@@ -13,14 +13,16 @@ import type {
 } from './NodeDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 
-export class SubtreeNodeDefinition implements NodeDefinition<'subtree'> {
+export class SubtreeDefinition implements NodeDefinition<'subtree'> {
 	readonly type = 'subtree';
 
+	readonly nodeName: string;
 	readonly bodyElement: NonRepeatGroupElementDefinition | null;
 
 	readonly root: RootDefinition;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
+	readonly defaultValue = null;
 
 	constructor(
 		readonly parent: ParentNodeDefinition,
@@ -30,6 +32,7 @@ export class SubtreeNodeDefinition implements NodeDefinition<'subtree'> {
 	) {
 		const { root } = parent;
 
+		this.nodeName = node.localName;
 		this.root = root;
 		this.children = root.buildSubtree(this);
 		this.bind = bind;

@@ -9,11 +9,12 @@ import {
 	model,
 	t,
 	title,
-} from '../../test/fixtures/xform-dsl/index.ts';
-import { XFormDefinition } from '../xform/XFormDefinition.ts';
-import { EntryState } from '../xform/state/EntryState.ts';
+} from '../../../test/fixtures/xform-dsl/index.ts';
+import { XFormDefinition } from '../XFormDefinition.ts';
+import { EntryState } from './EntryState.ts';
+import type { ValueNodeState } from './ValueNodeState.ts';
 
-describe('Model state reactive computations', () => {
+describe('Form entry state', () => {
 	describe('basic calculation', () => {
 		let dispose: () => void;
 		let entry: EntryState;
@@ -51,15 +52,15 @@ describe('Model state reactive computations', () => {
 		});
 
 		it('calculates the bound question state on initialization', () => {
-			const binding = entry.getBinding('/root/second-question')!;
+			const state = entry.getState('/root/second-question') as ValueNodeState;
 
-			expect(binding.getValue()).toBe('2');
+			expect(state.getValue()).toBe('2');
 		});
 
 		it('updates the calculated DOM node with the calculated value', () => {
-			const binding = entry.getBinding('/root/second-question')!;
+			const state = entry.getState('/root/second-question')!;
 
-			expect(binding.getModelElement().textContent).toBe('2');
+			expect(state.node.textContent).toBe('2');
 		});
 
 		it.each([
@@ -68,37 +69,37 @@ describe('Model state reactive computations', () => {
 		])(
 			'updates the calculation to $expected when its dependency value is updated to $firstValue',
 			({ firstValue, expected }) => {
-				const first = entry.getBinding('/root/first-question')!;
-				const second = entry.getBinding('/root/second-question')!;
+				const first = entry.getState('/root/first-question') as ValueNodeState;
+				const second = entry.getState('/root/second-question') as ValueNodeState;
 
 				first.setValue(firstValue);
 
 				expect(second.getValue()).toBe(expected);
-				expect(second.getModelElement().textContent).toBe(expected);
+				expect(second.node.textContent).toBe(expected);
 			}
 		);
 
 		it('sets an arbitrary value overriding the calculated value', () => {
-			const first = entry.getBinding('/root/first-question')!;
-			const second = entry.getBinding('/root/second-question')!;
+			const first = entry.getState('/root/first-question') as ValueNodeState;
+			const second = entry.getState('/root/second-question') as ValueNodeState;
 
 			first.setValue('1');
 			second.setValue('234');
 
 			expect(second.getValue()).toBe('234');
-			expect(second.getModelElement().textContent).toBe('234');
+			expect(second.node.textContent).toBe('234');
 		});
 
 		it("overrides the arbitrary value with a new calculation when the calculation's dependency is updated", () => {
-			const first = entry.getBinding('/root/first-question')!;
-			const second = entry.getBinding('/root/second-question')!;
+			const first = entry.getState('/root/first-question') as ValueNodeState;
+			const second = entry.getState('/root/second-question') as ValueNodeState;
 
 			first.setValue('1');
 			second.setValue('234');
 			first.setValue('3');
 
 			expect(second.getValue()).toBe('6');
-			expect(second.getModelElement().textContent).toBe('6');
+			expect(second.node.textContent).toBe('6');
 		});
 	});
 
@@ -146,47 +147,47 @@ describe('Model state reactive computations', () => {
 		});
 
 		it('clears the value when non-relevant', () => {
-			const binding = entry.getBinding('/root/second-question')!;
+			const state = entry.getState('/root/second-question')!;
 
-			expect(binding.getModelElement().textContent).toBe('');
+			expect(state.node.textContent).toBe('');
 		});
 
 		it('stores the DOM value when relevant', () => {
-			const first = entry.getBinding('/root/first-question')!;
+			const first = entry.getState('/root/first-question') as ValueNodeState;
 
 			first.setValue('3');
 
-			const second = entry.getBinding('/root/second-question')!;
+			const second = entry.getState('/root/second-question')!;
 
-			expect(second.getModelElement().textContent).toBe('default if relevant');
+			expect(second.node.textContent).toBe('default if relevant');
 		});
 
 		it('restores the DOM value when it becomes relevant again', () => {
-			const first = entry.getBinding('/root/first-question')!;
+			const first = entry.getState('/root/first-question') as ValueNodeState;
 
 			first.setValue('3');
 
-			const second = entry.getBinding('/root/second-question')!;
+			const second = entry.getState('/root/second-question') as ValueNodeState;
 
 			second.setValue('updated value');
 
 			// Check assumptions
-			expect(second.getModelElement().textContent).toBe('updated value');
+			expect(second.node.textContent).toBe('updated value');
 
 			first.setValue('1');
 
 			// Check assumptions
-			expect(second.getModelElement().textContent).toBe('');
+			expect(second.node.textContent).toBe('');
 
 			first.setValue('3');
-			expect(second.getModelElement().textContent).toBe('updated value');
+			expect(second.node.textContent).toBe('updated value');
 		});
 
 		describe('relevance inheritance', () => {
 			it('clears the child of a non-relevant parent', () => {
-				const first = entry.getBinding('/root/first-question')!;
-				const parent = entry.getBinding('/root/parent-group')!;
-				const child = entry.getBinding('/root/parent-group/child-question')!;
+				const first = entry.getState('/root/first-question') as ValueNodeState;
+				const parent = entry.getState('/root/parent-group')!;
+				const child = entry.getState('/root/parent-group/child-question') as ValueNodeState;
 
 				child.setValue('anything');
 				first.setValue('3');
@@ -195,13 +196,13 @@ describe('Model state reactive computations', () => {
 				expect(parent.isRelevant()).toBe(false);
 				expect(child.isRelevant()).toBe(false);
 
-				expect(child.getModelElement().textContent).toBe('');
+				expect(child.node.textContent).toBe('');
 			});
 
 			it('restores the child value of a parent which becomes relevant', () => {
-				const first = entry.getBinding('/root/first-question')!;
-				const parent = entry.getBinding('/root/parent-group')!;
-				const child = entry.getBinding('/root/parent-group/child-question')!;
+				const first = entry.getState('/root/first-question') as ValueNodeState;
+				const parent = entry.getState('/root/parent-group')!;
+				const child = entry.getState('/root/parent-group/child-question') as ValueNodeState;
 
 				child.setValue('anything');
 				first.setValue('3');
@@ -212,7 +213,7 @@ describe('Model state reactive computations', () => {
 				expect(child.isRelevant()).toBe(true);
 
 				expect(child.getValue()).toBe('anything');
-				expect(child.getModelElement().textContent).toBe('anything');
+				expect(child.node.textContent).toBe('anything');
 			});
 		});
 	});
@@ -258,19 +259,19 @@ describe('Model state reactive computations', () => {
 		});
 
 		it('clears the value when non-relevant', () => {
-			const binding = entry.getBinding('/root/third-question')!;
+			const state = entry.getState('/root/third-question') as ValueNodeState;
 
-			expect(binding.getModelElement().textContent).toBe('');
+			expect(state.node.textContent).toBe('');
 		});
 
 		it('calculates the value when it becomes relevant', () => {
-			const second = entry.getBinding('/root/second-question')!;
-			const third = entry.getBinding('/root/third-question')!;
+			const second = entry.getState('/root/second-question') as ValueNodeState;
+			const third = entry.getState('/root/third-question') as ValueNodeState;
 
 			second.setValue('yes');
 
 			expect(third.getValue()).toBe('3');
-			expect(third.getModelElement().textContent).toBe('3');
+			expect(third.node.textContent).toBe('3');
 		});
 
 		it.each([
@@ -280,15 +281,15 @@ describe('Model state reactive computations', () => {
 		])(
 			'updates the calculated value $expected while it is relevant',
 			({ firstValue, expected }) => {
-				const first = entry.getBinding('/root/first-question')!;
-				const second = entry.getBinding('/root/second-question')!;
-				const third = entry.getBinding('/root/third-question')!;
+				const first = entry.getState('/root/first-question') as ValueNodeState;
+				const second = entry.getState('/root/second-question') as ValueNodeState;
+				const third = entry.getState('/root/third-question') as ValueNodeState;
 
 				second.setValue('yes');
 				first.setValue(firstValue);
 
 				expect(third.getValue()).toBe(expected);
-				expect(third.getModelElement().textContent).toBe(expected);
+				expect(third.node.textContent).toBe(expected);
 			}
 		);
 
@@ -299,9 +300,9 @@ describe('Model state reactive computations', () => {
 		])(
 			'updates the calculated value $expected when it becomes relevant after the calculated dependency has been updated',
 			({ firstValue, expected }) => {
-				const first = entry.getBinding('/root/first-question')!;
-				const second = entry.getBinding('/root/second-question')!;
-				const third = entry.getBinding('/root/third-question')!;
+				const first = entry.getState('/root/first-question') as ValueNodeState;
+				const second = entry.getState('/root/second-question') as ValueNodeState;
+				const third = entry.getState('/root/third-question') as ValueNodeState;
 
 				first.setValue('20');
 				second.setValue('no');
@@ -310,14 +311,14 @@ describe('Model state reactive computations', () => {
 				second.setValue('yes');
 
 				expect(third.getValue()).toBe(expected);
-				expect(third.getModelElement().textContent).toBe(expected);
+				expect(third.node.textContent).toBe(expected);
 			}
 		);
 
 		it('restores an arbitrary value without recalculating when becoming relevant again', () => {
-			const first = entry.getBinding('/root/first-question')!;
-			const second = entry.getBinding('/root/second-question')!;
-			const third = entry.getBinding('/root/third-question')!;
+			const first = entry.getState('/root/first-question') as ValueNodeState;
+			const second = entry.getState('/root/second-question') as ValueNodeState;
+			const third = entry.getState('/root/third-question') as ValueNodeState;
 
 			first.setValue('20');
 			third.setValue('999');
@@ -325,7 +326,7 @@ describe('Model state reactive computations', () => {
 			second.setValue('yes');
 
 			expect(third.getValue()).toBe('999');
-			expect(third.getModelElement().textContent).toBe('999');
+			expect(third.node.textContent).toBe('999');
 		});
 	});
 
@@ -365,15 +366,15 @@ describe('Model state reactive computations', () => {
 			dispose();
 		});
 
-		it("computes the binding's required state on initialization", () => {
-			const second = entry.getBinding('/root/second-question')!;
+		it("computes the state's required condition on initialization", () => {
+			const second = entry.getState('/root/second-question')!;
 
 			expect(second.isRequired()).toBe(true);
 		});
 
-		it("recomputes the binding's required state when a dependency changes", () => {
-			const first = entry.getBinding('/root/first-question')!;
-			const second = entry.getBinding('/root/second-question')!;
+		it("recomputes the state's required condition when a dependency changes", () => {
+			const first = entry.getState('/root/first-question') as ValueNodeState;
+			const second = entry.getState('/root/second-question') as ValueNodeState;
 
 			first.setValue('1');
 
@@ -421,15 +422,15 @@ describe('Model state reactive computations', () => {
 			dispose();
 		});
 
-		it("computes the binding's readonly state on initialization", () => {
-			const second = entry.getBinding('/root/second-question')!;
+		it("computes the state's readonly condition on initialization", () => {
+			const second = entry.getState('/root/second-question')!;
 
 			expect(second.isReadonly()).toBe(true);
 		});
 
-		it("recomputes the binding's readonly state when a dependency changes", () => {
-			const first = entry.getBinding('/root/first-question')!;
-			const second = entry.getBinding('/root/second-question')!;
+		it("recomputes the state's readonly condition when a dependency changes", () => {
+			const first = entry.getState('/root/first-question') as ValueNodeState;
+			const second = entry.getState('/root/second-question') as ValueNodeState;
 
 			first.setValue('1');
 
@@ -484,8 +485,8 @@ describe('Model state reactive computations', () => {
 			});
 
 			it('is readonly if a parent is readonly', () => {
-				const a = entry.getBinding('/root/a')!;
-				const b = entry.getBinding('/root/grp/b')!;
+				const a = entry.getState('/root/a') as ValueNodeState;
+				const b = entry.getState('/root/grp/b') as ValueNodeState;
 
 				// Check assumptions
 				expect(b.isReadonly()).toBe(false);
@@ -496,8 +497,8 @@ describe('Model state reactive computations', () => {
 			});
 
 			it('is not readonly if the parent is no longer readonly', () => {
-				const a = entry.getBinding('/root/a')!;
-				const b = entry.getBinding('/root/grp/b')!;
+				const a = entry.getState('/root/a') as ValueNodeState;
+				const b = entry.getState('/root/grp/b') as ValueNodeState;
 
 				a.setValue('set b readonly');
 
@@ -510,9 +511,9 @@ describe('Model state reactive computations', () => {
 			});
 
 			it('remains readonly for its own condition if the parent is not readonly', () => {
-				const a = entry.getBinding('/root/a')!;
-				const b = entry.getBinding('/root/grp/b')!;
-				const c = entry.getBinding('/root/grp/c')!;
+				const a = entry.getState('/root/a') as ValueNodeState;
+				const b = entry.getState('/root/grp/b') as ValueNodeState;
+				const c = entry.getState('/root/grp/c') as ValueNodeState;
 
 				b.setValue('yep');
 
@@ -530,9 +531,9 @@ describe('Model state reactive computations', () => {
 			});
 
 			it("is no longer readonly if both its own condition and parent's are not satisfied", () => {
-				const a = entry.getBinding('/root/a')!;
-				const b = entry.getBinding('/root/grp/b')!;
-				const c = entry.getBinding('/root/grp/c')!;
+				const a = entry.getState('/root/a') as ValueNodeState;
+				const b = entry.getState('/root/grp/b') as ValueNodeState;
+				const c = entry.getState('/root/grp/c') as ValueNodeState;
 
 				b.setValue('yep');
 

@@ -5,7 +5,7 @@ import type { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
 import type { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
 import type { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
-import type { SubtreeNodeDefinition } from './SubtreeDefinition.ts';
+import type { SubtreeDefinition } from './SubtreeDefinition.ts';
 import type { ValueNodeDefinition } from './ValueNodeDefinition.ts';
 
 /**
@@ -67,12 +67,12 @@ export type ParentNodeDefinition =
 	| RootDefinition
 	| RepeatTemplateDefinition
 	| RepeatInstanceDefinition
-	| SubtreeNodeDefinition;
+	| SubtreeDefinition;
 
 // prettier-ignore
 export type ChildNodeDefinition =
 	| RepeatSequenceDefinition
-	| SubtreeNodeDefinition
+	| SubtreeDefinition
 	| ValueNodeDefinition;
 
 // prettier-ignore
@@ -80,7 +80,7 @@ export type ChildNodeInstanceDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RepeatTemplateDefinition
 	| RepeatInstanceDefinition
-	| SubtreeNodeDefinition
+	| SubtreeDefinition
 	| ValueNodeDefinition;
 
 // prettier-ignore
@@ -101,14 +101,24 @@ type NodeParent<Type extends NodeDefinitionType> =
 		? ParentNodeDefinition
 		: null;
 
-type DefinitionNode<Type extends NodeDefinitionType> = Type extends 'repeat-sequence'
-	? null
-	: Element;
+// TODO: value-node may be Attr
+// prettier-ignore
+type DefinitionNode<Type extends NodeDefinitionType> =
+	Type extends 'repeat-sequence'
+		? null
+		: Element;
+
+// prettier-ignore
+type DefaultValue<Type extends NodeDefinitionType> =
+	Type extends 'value-node'
+		? string
+		: null;
 
 export interface NodeDefinition<Type extends NodeDefinitionType> {
 	readonly type: Type;
 
 	readonly bind: BindDefinition;
+	readonly nodeName: string;
 	readonly bodyElement: AnyBodyElementDefinition | RepeatDefinition | null;
 
 	readonly root: RootDefinition;
@@ -116,6 +126,17 @@ export interface NodeDefinition<Type extends NodeDefinitionType> {
 	readonly children: NodeChildren<Type>;
 	readonly instances: NodeInstances<Type>;
 
-	// TODO: value-node may be Attr
 	readonly node: DefinitionNode<Type>;
+	readonly defaultValue: DefaultValue<Type>;
 }
+
+export type AnyNodeDefinition =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| RootDefinition
+	| RepeatSequenceDefinition
+	| RepeatTemplateDefinition
+	| RepeatInstanceDefinition
+	| SubtreeDefinition
+	| ValueNodeDefinition;
+
+export type TypedNodeDefinition<Type> = Extract<AnyNodeDefinition, { readonly type: Type }>;

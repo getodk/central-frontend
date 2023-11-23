@@ -5,7 +5,7 @@ import { bindDataType } from '../XFormDataType.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
-type BindExpressionType =
+export type BindExpressionType =
 	| 'calculate'
 	| 'constraint'
 	| 'readonly'

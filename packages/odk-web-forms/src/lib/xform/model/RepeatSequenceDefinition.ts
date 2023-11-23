@@ -24,6 +24,8 @@ export class RepeatSequenceDefinition implements NodeDefinition<'repeat-sequence
 	readonly instances: RepeatInstanceDefinition[];
 
 	readonly node = null;
+	readonly nodeName: string;
+	readonly defaultValue = null;
 
 	constructor(
 		readonly parent: ParentNodeDefinition,
@@ -39,6 +41,7 @@ export class RepeatSequenceDefinition implements NodeDefinition<'repeat-sequence
 		const { template, instanceNodes } = RepeatTemplateDefinition.parseModelNodes(this, modelNodes);
 
 		this.template = template;
+		this.nodeName = template.nodeName;
 		this.instances = instanceNodes.map((element) => {
 			return new RepeatInstanceDefinition(this, element);
 		});

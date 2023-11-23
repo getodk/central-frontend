@@ -401,22 +401,19 @@ describe('ModelDefinition', () => {
 			it('defines an explicit repeat template', () => {
 				const definition = modelDefinition.root.children[0] as RepeatSequenceDefinition;
 
-				expectRepeatTemplate(
-					definition,
-					/* xml */ `<rep jr:template=""><a>a default</a><b>b default</b></rep>`
-				);
+				expectRepeatTemplate(definition, /* xml */ `<rep><a>a default</a><b>b default</b></rep>`);
 			});
 
-			it('defines an implicit repeat template', () => {
+			it('derives a repeat template from a non-template instance in the form definition', () => {
 				const definition = modelDefinition.root.children[1] as RepeatSequenceDefinition;
 
-				expectRepeatTemplate(definition, /* xml */ `<rep2 jr:template=""><c /><d /></rep2>`);
+				expectRepeatTemplate(definition, /* xml */ `<rep2><c /><d /></rep2>`);
 			});
 
-			it('defines an implicit repeat template with blank children', () => {
+			it('clears default values from a derived template', () => {
 				const definition = modelDefinition.root.children[4] as RepeatSequenceDefinition;
 
-				expectRepeatTemplate(definition, /* xml */ `<rep5 jr:template=""><g /></rep5>`);
+				expectRepeatTemplate(definition, /* xml */ `<rep5><g /></rep5>`);
 			});
 
 			it.each([
