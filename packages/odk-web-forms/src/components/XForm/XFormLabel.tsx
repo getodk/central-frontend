@@ -1,31 +1,29 @@
 import { For, Show, createMemo } from 'solid-js';
-import type { XFormEntryBinding } from '../../lib/xform/XFormEntryBinding';
 import type { LabelDefinition } from '../../lib/xform/body/text/LabelDefinition';
+import type { AnyNodeState } from '../../lib/xform/state/NodeState';
 import { DefaultLabel } from '../styled/DefaultLabel';
 import { DefaultLabelRequiredIndicator } from '../styled/DefaultLabelRequiredIndicator';
 
 export interface XFormLabelProps {
 	readonly as?: 'span';
-	readonly binding: XFormEntryBinding;
-	readonly id: string;
+	readonly state: AnyNodeState;
 	readonly label: LabelDefinition;
 }
 
 export const XFormLabel = (props: XFormLabelProps) => {
-	const modelElement = createMemo(() => {
-		return props.binding.getModelElement();
+	const modelNode = createMemo(() => {
+		return props.state.node;
 	});
 
 	return (
 		<>
-			<Show when={props.binding.isRequired()}>
+			<Show when={props.state.isRequired()}>
 				<DefaultLabelRequiredIndicator>* </DefaultLabelRequiredIndicator>
 			</Show>
-			<DefaultLabel as={props.as ?? 'label'} for={props.id}>
+			<DefaultLabel as={props.as ?? 'label'} for={props.state.reference}>
 				<For each={props.label.parts}>
 					{(part) => {
-						console.log('eval output? model el', modelElement());
-						return part.evaluate(props.binding.evaluator, modelElement());
+						return part.evaluate(props.state.entry.evaluator, modelNode());
 					}}
 				</For>
 			</DefaultLabel>

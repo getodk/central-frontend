@@ -13,6 +13,7 @@ const GroupLabelStack = styled(Stack)(({ theme }) => ({
 
 const ClippedGroupToggleIconContainer = styled('div')(({ theme }) => ({
 	alignSelf: '1rem',
+	flexShrink: 0,
 	overflow: 'hidden',
 
 	'& > *': {
@@ -28,9 +29,9 @@ interface XFormGroupLabelProps extends XFormLabelProps {
 export const XFormGroupLabel = (props: XFormGroupLabelProps) => {
 	return (
 		<PlainTextButton
-			disabled={!props.binding.isRelevant()}
+			disabled={!props.state.isRelevant()}
 			onClick={() => {
-				if (props.binding.isRelevant()) {
+				if (props.state.isRelevant()) {
 					props.setGroupVisible(!props.isGroupVisible);
 				}
 			}}
@@ -47,7 +48,7 @@ export const XFormGroupLabel = (props: XFormGroupLabelProps) => {
 					</Switch>
 				</ClippedGroupToggleIconContainer>
 
-				<XFormLabel as="span" id={props.id} binding={props.binding} label={props.label} />
+				<XFormLabel as="span" state={props.state} label={props.label} />
 			</GroupLabelStack>
 		</PlainTextButton>
 	);

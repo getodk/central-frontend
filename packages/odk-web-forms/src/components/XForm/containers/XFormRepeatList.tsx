@@ -1,34 +1,34 @@
-import { For, createMemo } from 'solid-js';
-import { Stack } from 'suid/material';
-import type { RepeatDefinition } from '../../../lib/xform/body/RepeatDefinition.ts';
-import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
+import { For, getOwner, runWithOwner } from 'solid-js';
+import { Box, Stack } from 'suid/material';
+import type { RepeatSequenceState } from '../../../lib/xform/state/RepeatSequenceState.ts';
+import { ThemeColorOutlineButton } from '../../styled/ThemeColorOutlineButton.tsx';
 import { XFormRepeatInstance } from './XFormRepeatInstance.tsx';
 
 interface XFormRepeatListProps {
-	readonly entry: EntryState;
-	readonly repeat: RepeatDefinition;
+	readonly state: RepeatSequenceState;
 }
 
 export const XFormRepeatList = (props: XFormRepeatListProps) => {
-	const repeatInstanceBindings = createMemo(() => {
-		const singleBindingTemp = props.entry.getBinding(props.repeat.reference);
-
-		if (singleBindingTemp == null) {
-			return [];
-		}
-
-		return [singleBindingTemp];
-	});
+	const owner = getOwner();
 
 	return (
 		<Stack spacing={2}>
-			<For each={repeatInstanceBindings()}>
-				{(binding) => {
-					return (
-						<XFormRepeatInstance binding={binding} entry={props.entry} repeat={props.repeat} />
-					);
+			<For each={props.state.getInstances()}>
+				{(instance) => {
+					return <XFormRepeatInstance state={instance} />;
 				}}
 			</For>
+			<Box>
+				<ThemeColorOutlineButton
+					onClick={() => {
+						runWithOwner(owner, () => {
+							props.state.createInstance();
+						});
+					}}
+				>
+					+ Add
+				</ThemeColorOutlineButton>
+			</Box>
 		</Stack>
 	);
 };

@@ -1,23 +1,21 @@
 import { Box } from 'suid/material';
-import type { AnyControlDefinition } from '../../../lib/xform/body/control/ControlDefinition.ts';
-import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
+import type { ValueNodeState } from '../../../lib/xform/state/ValueNodeState.ts';
 import { XFormAlert } from './XFormAlert.tsx';
 
-interface UnknownControl extends AnyControlDefinition {}
-
 interface XFormUnknownControlProps {
-	readonly control: UnknownControl;
-	readonly entry: EntryState;
+	readonly state: ValueNodeState;
 }
 
 export const XFormUnknownControl = (props: XFormUnknownControlProps) => {
+	const element = () => props.state.definition.bodyElement;
+
 	return (
 		<Box>
 			<XFormAlert
 				severity="error"
 				title={
 					<>
-						Unrecognized form control: <code>{props.control.type}</code>
+						Unrecognized form control: <code>{element()?.type}</code>
 					</>
 				}
 				detailsSummary="Control"

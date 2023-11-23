@@ -1,36 +1,44 @@
-import { Show, createSignal, createUniqueId } from 'solid-js';
-import type { XFormEntryBinding } from '../../../lib/xform/XFormEntryBinding.ts';
-import type { RepeatDefinition } from '../../../lib/xform/body/RepeatDefinition.ts';
-import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
+import { Show, createSignal } from 'solid-js';
+import { Box, Stack, styled } from 'suid/material';
+import type { RepeatInstanceState } from '../../../lib/xform/state/RepeatInstanceState.ts';
 import { TopLevelRepeatInstance } from '../../styled/TopLevelRepeatInstance.tsx';
-import { XFormQuesetionList } from '../XFormQuestionList.tsx';
+import { XFormQuestionList } from '../XFormQuestionList.tsx';
+import { RepeatInstanceOptionsMenu } from './RepeatInstanceOptionsMenu.tsx';
 import { XFormRepeatInstanceLabel } from './XFormRepeatInstanceLabel.tsx';
 
+const RepeatInstanceOptionsMenuContainer = styled(Box)({
+	marginInlineStart: 'auto',
+});
+
 interface XFormRepeatInstanceProps {
-	readonly binding: XFormEntryBinding;
-	readonly entry: EntryState;
-	readonly repeat: RepeatDefinition;
+	readonly state: RepeatInstanceState;
 }
 
 export const XFormRepeatInstance = (props: XFormRepeatInstanceProps) => {
 	const [isRepeatInstanceVisible, setRepeatInstanceVisible] = createSignal(true);
-	const id = createUniqueId();
+	const elementDefinition = () => props.state.definition.bodyElement;
+	const labelDefinition = () =>
+		elementDefinition().label ?? elementDefinition().groupDefinition.label;
 
 	return (
 		<TopLevelRepeatInstance>
-			<Show when={props.repeat.groupDefinition.label} keyed={true}>
-				{(label) => (
-					<XFormRepeatInstanceLabel
-						id={id}
-						binding={props.binding}
-						label={label}
-						isRepeatInstanceVisible={isRepeatInstanceVisible()}
-						setRepeatInstanceVisible={setRepeatInstanceVisible}
-					/>
-				)}
-			</Show>
+			<Stack direction="row" justifyContent="space-between">
+				<Show when={labelDefinition()} keyed={true}>
+					{(label) => (
+						<XFormRepeatInstanceLabel
+							state={props.state}
+							label={label}
+							isRepeatInstanceVisible={isRepeatInstanceVisible()}
+							setRepeatInstanceVisible={setRepeatInstanceVisible}
+						/>
+					)}
+				</Show>
+				<RepeatInstanceOptionsMenuContainer justifySelf="flex-end">
+					<RepeatInstanceOptionsMenu state={props.state} />
+				</RepeatInstanceOptionsMenuContainer>
+			</Stack>
 			<Show when={isRepeatInstanceVisible()}>
-				<XFormQuesetionList entry={props.entry} elements={props.repeat.children} />
+				<XFormQuestionList state={props.state} />
 			</Show>
 		</TopLevelRepeatInstance>
 	);

@@ -1,59 +1,69 @@
-import { Match, Show, Switch, createMemo, createSignal, createUniqueId } from 'solid-js';
-import type { AnyGroupElementDefinition } from '../../../lib/xform/body/BodyDefinition.ts';
-import { nonRepeatGroup, repeatGroup } from '../../../lib/xform/body/group/BaseGroupDefinition.ts';
-import type { EntryState } from '../../../lib/xform/state/EntryState.ts';
+import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
+import type { RepeatSequenceState } from '../../../lib/xform/state/RepeatSequenceState.ts';
+import type { SubtreeState } from '../../../lib/xform/state/SubtreeState.ts';
 import { NestedGroupBox } from '../../styled/NestedGroupBox.tsx';
-import { XFormQuesetionList } from '../XFormQuestionList.tsx';
+import { XFormQuestionList } from '../XFormQuestionList.tsx';
 import { XFormRelevanceGuard } from '../XFormRelevanceGuard.tsx';
 import { XFormGroupLabel } from './XFormGroupLabel.tsx';
 import { XFormRepeatList } from './XFormRepeatList.tsx';
 
 export interface XFormGroupProps {
-	readonly entry: EntryState;
-	readonly group: AnyGroupElementDefinition;
+	readonly state: RepeatSequenceState | SubtreeState;
 }
 
+const repeatState = (state: RepeatSequenceState | SubtreeState): RepeatSequenceState | null => {
+	if (state.type === 'repeat-sequence') {
+		return state;
+	}
+
+	return null;
+};
+
+const nonRepeatState = (state: RepeatSequenceState | SubtreeState): SubtreeState | null => {
+	if (state.type === 'repeat-sequence') {
+		return null;
+	}
+
+	return state;
+};
+
 export const XFormGroup = (props: XFormGroupProps) => {
+	const element = () => props.state.definition.bodyElement;
 	const isRelevant = createMemo(() => {
-		return props.group.getBinding(props.entry)?.isRelevant() ?? true;
+		return props.state.isRelevant();
 	});
 	const [isGroupVisible, setGroupVisible] = createSignal(true);
-	const id = createUniqueId();
 
 	return (
 		<XFormRelevanceGuard isRelevant={isRelevant()}>
-			<NestedGroupBox as="section">
-				<Show when={props.group.getBinding(props.entry)} keyed={true}>
-					{(binding) => (
-						<Show when={props.group.type !== 'repeat-group' && props.group.label} keyed={true}>
-							{(label) => (
-								<XFormGroupLabel
-									id={id}
-									binding={binding}
-									label={label}
-									isGroupVisible={isGroupVisible()}
-									setGroupVisible={setGroupVisible}
-								/>
-							)}
-						</Show>
-					)}
-				</Show>
-				<Show when={isGroupVisible()}>
-					<Switch>
-						<Match when={repeatGroup(props.group)} keyed={true}>
-							{(group) => {
-								return <XFormRepeatList entry={props.entry} repeat={group.repeat} />;
-							}}
-						</Match>
-						<Match when={nonRepeatGroup(props.group)} keyed={true}>
-							{(group) => {
-								return <XFormQuesetionList entry={props.entry} elements={group.children} />;
-							}}
-						</Match>
-					</Switch>
-					<XFormQuesetionList entry={props.entry} elements={props.group.children} />
-				</Show>
-			</NestedGroupBox>
+			<Show when={element()?.type !== 'repeat-group' && element()?.label} keyed={true}>
+				{(label) => (
+					<XFormGroupLabel
+						state={props.state}
+						label={label}
+						isGroupVisible={isGroupVisible()}
+						setGroupVisible={setGroupVisible}
+					/>
+				)}
+			</Show>
+			<Show when={isGroupVisible()}>
+				<Switch>
+					<Match when={repeatState(props.state)} keyed={true}>
+						{(state) => {
+							return <XFormRepeatList state={state} />;
+						}}
+					</Match>
+					<Match when={nonRepeatState(props.state)} keyed={true}>
+						{(state) => {
+							return (
+								<NestedGroupBox as="section">
+									<XFormQuestionList state={state} />
+								</NestedGroupBox>
+							);
+						}}
+					</Match>
+				</Switch>
+			</Show>
 		</XFormRelevanceGuard>
 	);
 };

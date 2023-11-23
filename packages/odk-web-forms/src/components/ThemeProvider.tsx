@@ -42,15 +42,17 @@ export const odkTheme = createTheme({
 		mode: 'light',
 		background: {
 			default: '#f7f7f7',
+			paper: '#fff',
 		},
 		primary: {
 			main: '#009ecc',
 			contrastText: '#fff',
 		},
 		primaryShades: {
-			'15%': '#D8ECF5',
+			'10%': '#ecf5fa',
+			'15%': '#d8ecf5',
 		},
-		required: '#D42C2C',
+		required: '#d42c2c',
 	}),
 	spacing() {
 		return (units) => {

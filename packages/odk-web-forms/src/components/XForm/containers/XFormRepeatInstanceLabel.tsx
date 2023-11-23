@@ -20,6 +20,7 @@ const RepeatInstanceLabelStack = styled(Stack)(({ theme }) => ({
 
 const ClippedRepeatInstanceToggleIconContainer = styled('div')(({ theme }) => ({
 	alignSelf: '1rem',
+	flexShrink: 0,
 	overflow: 'hidden',
 
 	'& > *': {
@@ -35,9 +36,9 @@ interface XFormRepeatInstanceLabelProps extends XFormLabelProps {
 export const XFormRepeatInstanceLabel = (props: XFormRepeatInstanceLabelProps) => {
 	return (
 		<PlainTextButton
-			disabled={!props.binding.isRelevant()}
+			disabled={!props.state.isRelevant()}
 			onClick={() => {
-				if (props.binding.isRelevant()) {
+				if (props.state.isRelevant()) {
 					props.setRepeatInstanceVisible(!props.isRepeatInstanceVisible);
 				}
 			}}
@@ -54,7 +55,7 @@ export const XFormRepeatInstanceLabel = (props: XFormRepeatInstanceLabelProps) =
 					</Switch>
 				</ClippedRepeatInstanceToggleIconContainer>
 
-				<XFormLabel as="span" id={props.id} binding={props.binding} label={props.label} />
+				<XFormLabel as="span" state={props.state} label={props.label} />
 			</RepeatInstanceLabelStack>
 		</PlainTextButton>
 	);

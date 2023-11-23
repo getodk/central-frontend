@@ -17,6 +17,7 @@ const Pre = styled('pre')({
 	overflowX: 'auto',
 	background:
 		'linear-gradient(to left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.045) 0.0625rem, rgba(0, 0, 0, 0) 0.5rem)',
+	whiteSpace: 'pre-wrap',
 });
 
 export interface XFormDetailsProps {
@@ -28,7 +29,7 @@ export const XFormDetails = (props: XFormDetailsProps) => (
 	<>
 		<Details>
 			<Summary>Submission state (XML)</Summary>
-			<Pre>{props.entry.serializedSubmission()}</Pre>
+			<Pre>{props.entry.serializedInstanceState()}</Pre>
 		</Details>
 		<Details>
 			<Summary>XFormDefinition</Summary>
