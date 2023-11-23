@@ -333,7 +333,7 @@ describe('axis', () => {
 		});
 	});
 
-	describe('descendendant axis', () => {
+	describe('descendant axis', () => {
 		it('works with Element context', () => {
 			const contextNode = document.getElementById('testStepAxisDescendant')!;
 

@@ -172,14 +172,14 @@ describe('Union operator', () => {
 		]);
 	});
 
-	it('combines attributes that live on descendent elements', () => {
+	it('combines attributes that live on descendant elements', () => {
 		testContext.assertNodeSet("id('eee30')/attribute::*[1] | id('eee40')/attribute::*[1]", [
 			getNonNamespaceAttributes(document.getElementById('eee30')!)[0]!,
 			getNonNamespaceAttributes(document.getElementById('eee40')!)[0]!,
 		]);
 	});
 
-	it('combines attributes that live on descendent element (reversed)', () => {
+	it('combines attributes that live on descendant element (reversed)', () => {
 		testContext.assertNodeSet("id('eee40')/attribute::*[1] | id('eee30')/attribute::*[1]", [
 			getNonNamespaceAttributes(document.getElementById('eee30')!)[0]!,
 			getNonNamespaceAttributes(document.getElementById('eee40')!)[0]!,
