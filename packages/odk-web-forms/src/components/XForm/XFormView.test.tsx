@@ -43,21 +43,28 @@ describe('XFormView', () => {
 		)
 	);
 
-	let xformEntry: EntryState;
+	let xformDefinition: XFormDefinition;
 
 	beforeEach(() => {
-		const xformDefinition = new XFormDefinition(xform.asXml());
-		xformEntry = new EntryState(xformDefinition);
+		xformDefinition = new XFormDefinition(xform.asXml());
 	});
 
 	it('renders the form title', () => {
-		const rendered = render(() => <XFormView entry={xformEntry} />);
+		const rendered = render(() => {
+			const entry = new EntryState(xformDefinition);
+
+			return <XFormView entry={entry} />;
+		});
 
 		expect(rendered.getByText('Minimal XForm')).toBeInTheDocument();
 	});
 
 	it('renders the first question', () => {
-		const rendered = render(() => <XFormView entry={xformEntry} />);
+		const rendered = render(() => {
+			const entry = new EntryState(xformDefinition);
+
+			return <XFormView entry={entry} />;
+		});
 
 		expect(rendered.getByText('First question')).toBeInTheDocument();
 	});
