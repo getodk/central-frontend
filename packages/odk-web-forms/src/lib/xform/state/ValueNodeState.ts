@@ -1,6 +1,7 @@
 import type { Accessor, Signal } from 'solid-js';
 import { createComputed, createSignal, untrack } from 'solid-js';
 import { createLatest } from '../../reactivity/primitives/createLatest.ts';
+import { createUninitialized } from '../../reactivity/primitives/uninitialized.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import { DescendantNodeState } from './DescendantNodeState.ts';
 import type { EntryState } from './EntryState.ts';
@@ -12,7 +13,8 @@ export class ValueNodeState
 {
 	readonly node: Element;
 	readonly children = null;
-	readonly valueState: Signal<string>;
+
+	valueState: Signal<string>;
 
 	constructor(entry: EntryState, parent: AnyParentState, definition: ValueNodeDefinition) {
 		super(entry, parent, 'value-node', definition);
@@ -22,7 +24,12 @@ export class ValueNodeState
 
 		parent.node.append(node);
 		this.node = node;
-		this.valueState = this.createValueNodeState(node);
+		this.valueState = createUninitialized<string>();
+	}
+
+	override initializeState(): void {
+		super.initializeState();
+		this.valueState = this.createValueNodeState(this.node);
 	}
 
 	/**
@@ -112,12 +119,6 @@ export class ValueNodeState
 
 		return [state, setState];
 	}
-
-	getValue = (): string => {
-		const [value] = this.valueState;
-
-		return value();
-	};
 
 	setValue(value: string): string {
 		const [, setValue] = this.valueState;

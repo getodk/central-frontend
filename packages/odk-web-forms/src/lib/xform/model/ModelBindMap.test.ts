@@ -11,10 +11,10 @@ import {
 } from '../../../test/fixtures/xform-dsl';
 import { XFormDefinition } from '../XFormDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
-import type { ReadonlyModelBindMap } from './ModelBindMap.ts';
+import type { ModelBindMap } from './ModelBindMap.ts';
 
 describe('ModelBindMap', () => {
-	let binds: ReadonlyModelBindMap;
+	let binds: ModelBindMap;
 
 	beforeEach(() => {
 		const xform = html(

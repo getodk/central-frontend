@@ -61,6 +61,26 @@ export class RepeatSequenceState
 
 		this.node = anchorNode;
 
+		// TODO: it's trivial to use a Signal here, but it may not be the best
+		// solution, both for modeling sequence state and for efficiency of the
+		// computation and those which react from it. In terns of efficiency, after
+		// some quick profiling, I do believe there is likely excessive computation
+		// when adding repeat instances. For example, when adding a large number of
+		// instances, each with computations, it would be expected that computation
+		// time does not grow per instance, but it seemingly does. Some effort has
+		// been made to mitigate this, making runtime growth sublinear, but it is
+		// definitely sitll a clear optimization opportunity (and very likely
+		// optimization will correlate with correctness issues depending on the
+		// nautre of the computation[s] involved).
+		//
+		// Also of note: I may have been inclined to spend more time profiling
+		// upfront and get ahead of this particular performance issue before it has
+		// an opportunity to get entrenched, but it was challenging to separate the
+		// form computation wheat from the Solid call stack chaff. I was hoping
+		// `solid-devtools` may be of help here, but it was not. I don't think it
+		// was worth investigating further until there are more fully functioning
+		// forms to measure, but I did want to make sure all of these observations
+		// have a place somewhere if/when we come back to these issues.
 		const instancesState = createSignal<readonly RepeatInstanceState[]>([]);
 		const [instances] = instancesState;
 
@@ -73,6 +93,11 @@ export class RepeatSequenceState
 		definition.instances.forEach((instance) => {
 			this.createInstance(instance);
 		});
+	}
+
+	override initializeState(): void {
+		super.initializeState();
+		this.getInstances().forEach((instance) => instance.initializeState());
 	}
 
 	createInstance(from?: RepeatInstanceDefinition): readonly RepeatInstanceState[] {
@@ -88,6 +113,10 @@ export class RepeatSequenceState
 				modelDefinition,
 				previousInstance
 			);
+
+			if (from == null) {
+				nextInstance.initializeState();
+			}
 
 			return [...current, nextInstance];
 		});

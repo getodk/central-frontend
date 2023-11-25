@@ -96,12 +96,21 @@ class StaticBooleanBindExpression extends StaticBindExpression<'BOOLEAN'> {
 	}
 }
 
+interface DependentBindExpressionOptions {
+	readonly isInherited?: boolean;
+}
+
 abstract class DependentBindExpression<
 	Type extends BindExpressionEvaluationType,
 > extends StaticBindExpression<Type> {
 	override readonly dependencyExpressions: readonly string[];
 
-	constructor(bind: BindDefinition, expressionType: BindExpressionType, evaluationType: Type) {
+	constructor(
+		bind: BindDefinition,
+		expressionType: BindExpressionType,
+		evaluationType: Type,
+		options: DependentBindExpressionOptions = {}
+	) {
 		super(bind, expressionType, evaluationType);
 
 		const { expression } = this;
@@ -117,7 +126,7 @@ abstract class DependentBindExpression<
 
 		const { parentNodeset } = bind;
 
-		if (expressionType === 'relevant' && parentNodeset != null) {
+		if (options.isInherited && parentNodeset != null) {
 			dependencyExpressions.push(parentNodeset);
 		}
 
@@ -126,8 +135,12 @@ abstract class DependentBindExpression<
 }
 
 class DependentBooleanBindExpression extends DependentBindExpression<'BOOLEAN'> {
-	constructor(bind: BindDefinition, expressionType: BindExpressionType) {
-		super(bind, expressionType, 'BOOLEAN');
+	constructor(
+		bind: BindDefinition,
+		expressionType: BindExpressionType,
+		options: DependentBindExpressionOptions = {}
+	) {
+		super(bind, expressionType, 'BOOLEAN', options);
 	}
 
 	override evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): boolean {
@@ -220,8 +233,12 @@ export class BindDefinition {
 		this.parentNodeset = parentNodeset.length > 1 ? parentNodeset : null;
 
 		const calculate = new DependentStringBindExpression(this, 'calculate');
-		const readonly = new DependentBooleanBindExpression(this, 'readonly');
-		const relevant = new DependentBooleanBindExpression(this, 'relevant');
+		const readonly = new DependentBooleanBindExpression(this, 'readonly', {
+			isInherited: true,
+		});
+		const relevant = new DependentBooleanBindExpression(this, 'relevant', {
+			isInherited: true,
+		});
 		const required = new DependentBooleanBindExpression(this, 'required');
 
 		this.calculate = calculate;

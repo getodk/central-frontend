@@ -3,7 +3,10 @@ import { createMemo, type Accessor } from 'solid-js';
 import type { XFormXPathEvaluator } from '../../xpath/XFormXPathEvaluator.ts';
 import type { XFormDOM } from '../XFormDOM.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
+import type { ModelBindMap } from '../model/ModelBindMap.ts';
 import type { RootDefinition } from '../model/RootDefinition.ts';
+import type { AnyDescandantNodeState } from './DescendantNodeState.ts';
 import type { AnyChildState, AnyNodeState, AnyParentState, NodeState } from './NodeState.ts';
 import { RepeatSequenceState } from './RepeatSequenceState.ts';
 import { SubtreeState } from './SubtreeState.ts';
@@ -43,6 +46,17 @@ type ReferenceStateEntry = readonly [Reference, AnyNodeState];
 type ReferenceStateEntries = readonly ReferenceStateEntry[];
 type ReferenceStateMap = ReadonlyMap<Reference, AnyNodeState>;
 
+/**
+ * The top level of a form entry/submission in progress which:
+ *
+ * - Corresponds to the submission's root node (as in
+ *   `ModelDefinition` > `RootDefinition`)
+ * - Initiates state and reactive computations of descendant nodes
+ */
+// TODO: entry -> submission? "Entry" corresponds to the verb and "submission"
+// is the term used most commonly across the rest of ODK. "Entry" also has
+// potential for technical/tooling confusion.
+//
 // TODO: "root" makes sense in model definition, makes less sense in state. The
 // "root" of a form entry is... the entry itself. This became obvious when the
 // orignal `EntryState` became effectively an object of type `{ root: RootState
@@ -51,7 +65,10 @@ type ReferenceStateMap = ReadonlyMap<Reference, AnyNodeState>;
 export class EntryState implements NodeState<'root'> {
 	readonly type = 'root';
 	readonly definition: RootDefinition;
+	readonly nodeset: string;
 	readonly reference: string;
+
+	readonly isReferenceStatic: boolean = true;
 
 	readonly entry = this;
 
@@ -72,7 +89,8 @@ export class EntryState implements NodeState<'root'> {
 	readonly isRequired = () => false;
 
 	protected readonly referenceStateEntries: Accessor<ReferenceStateEntries>;
-	protected readonly stateByReference: Accessor<ReferenceStateMap>;
+
+	protected stateByReference: Accessor<ReferenceStateMap>;
 
 	readonly instanceState: Accessor<Element>;
 	readonly serializedInstanceState: Accessor<string>;
@@ -81,7 +99,16 @@ export class EntryState implements NodeState<'root'> {
 		const { root } = form.model;
 
 		this.definition = root;
-		this.reference = `/${root.nodeName}`;
+
+		const { nodeset } = root.bind;
+		const reference = `/${root.nodeName}`;
+
+		if (nodeset !== reference) {
+			throw new Error('Unexpected bind nodeset for root node');
+		}
+
+		this.nodeset = nodeset;
+		this.reference = reference;
 
 		const instanceDOM = form.xformDOM.createInstance();
 
@@ -93,12 +120,84 @@ export class EntryState implements NodeState<'root'> {
 		this.evaluator = instanceDOM.primaryInstanceEvaluator;
 		this.children = buildChildStates(this, this);
 
+		this.initializeState();
+
 		const referenceStateEntries = this.createReferenceStateEntries(this);
 
 		this.referenceStateEntries = referenceStateEntries;
 		this.stateByReference = createMemo(() => new Map(referenceStateEntries()));
 		this.instanceState = this.createInstanceState();
 		this.serializedInstanceState = this.createSerializedInstanceState();
+	}
+
+	/**
+	 * Sorts a set or subset of descendants based on the topological order
+	 * already performed in {@link ModelBindMap}
+	 */
+	protected sortDescendants(
+		descendants: readonly AnyDescandantNodeState[]
+	): readonly AnyDescandantNodeState[] {
+		const { sortedNodesetIndexes } = this.form.model.binds;
+
+		return descendants.slice().sort((a, b) => {
+			const aIndex = sortedNodesetIndexes.get(a.nodeset) ?? -1;
+			const bIndex = sortedNodesetIndexes.get(b.nodeset) ?? -1;
+
+			return aIndex - bIndex;
+		});
+	}
+
+	protected collectUninitializedDescendants(
+		parent: AnyNodeState
+	): readonly AnyDescandantNodeState[] {
+		let children: readonly AnyDescandantNodeState[];
+
+		if (parent.type === 'repeat-sequence') {
+			children = parent.getInstances();
+		} else {
+			children = parent.children ?? [];
+		}
+
+		const descendants = children.flatMap((child) => {
+			return this.collectUninitializedDescendants(child);
+		});
+
+		if (parent.isStateInitialized || parent.type === 'root') {
+			return descendants;
+		}
+
+		return [parent, ...descendants];
+	}
+
+	getUninitializedDescendants(parent: AnyNodeState): readonly AnyDescandantNodeState[] {
+		const descendants = this.collectUninitializedDescendants(parent);
+
+		return this.sortDescendants(descendants);
+	}
+
+	isStateInitialized = false;
+
+	initializeState(): void {
+		if (this.isStateInitialized) {
+			return;
+		}
+
+		const descendants = this.collectUninitializedDescendants(this);
+		const stateByReference = new Map<string, AnyNodeState>([
+			[this.reference, this],
+			...descendants.map((descendant) => {
+				return [descendant.reference, descendant] as const;
+			}),
+		]);
+
+		this.stateByReference = () => stateByReference;
+
+		for (const descendant of descendants) {
+			descendant.initializeState();
+			stateByReference.set(descendant.reference, descendant);
+		}
+
+		this.isStateInitialized = true;
 	}
 
 	private createReferenceStateEntries(state: AnyParentState): Accessor<ReferenceStateEntries> {
@@ -174,10 +273,51 @@ export class EntryState implements NodeState<'root'> {
 	}
 
 	private createSerializedInstanceState(): Accessor<string> {
+		const indent = (str: string, depth: number) => {
+			const prefix = ' '.repeat(depth * 2);
+
+			return `${prefix}${str}`;
+		};
+
+		const serializeAttribute = (attribute: Attr): string => {
+			return `${attribute.name}="${attribute.value.replaceAll('"', '&quot;')}"`;
+		};
+		const serializeElement = (element: Element, depth = 0): string => {
+			const { attributes, children, tagName, textContent } = element;
+
+			let openTag: string;
+
+			const closeTag = `</${tagName}>`;
+
+			if (attributes.length === 0) {
+				openTag = `<${tagName}>`;
+			} else {
+				const serializedAttributes = Array.from(attributes).map(serializeAttribute);
+
+				openTag = `<${tagName} ${serializedAttributes.join(' ')}>`;
+			}
+
+			if (children.length === 0) {
+				if (textContent === '') {
+					return indent(openTag.replace(/>$/, '/>'), depth);
+				}
+
+				return indent(`${openTag}${textContent}${closeTag}`, depth);
+			}
+
+			return [
+				indent(openTag, depth),
+				...Array.from(children).map((child) => {
+					return serializeElement(child, depth + 1);
+				}),
+				indent(closeTag, depth),
+			].join('\n');
+		};
+
 		return () => {
 			const instance = this.instanceState();
 
-			return instance.outerHTML;
+			return serializeElement(instance);
 		};
 	}
 

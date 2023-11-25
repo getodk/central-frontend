@@ -17,13 +17,17 @@ class ArtificialAncestorBindElement {
 	}
 }
 
-export type ReadonlyModelBindMap = ReadonlyMap<BindNodeset, BindDefinition>;
+type TopologicalSortIndex = number;
 
-export class ModelBindMap extends Map<BindNodeset, BindDefinition> implements ReadonlyModelBindMap {
+export type SortedNodesetIndexes = ReadonlyMap<BindNodeset, TopologicalSortIndex>;
+
+export class ModelBindMap extends Map<BindNodeset, BindDefinition> {
 	// This is probably overkill, just produces a type that's readonly at call site.
-	static fromModel(model: ModelDefinition): ReadonlyModelBindMap {
+	static fromModel(model: ModelDefinition): ModelBindMap {
 		return new this(model.form, model);
 	}
+
+	readonly sortedNodesetIndexes: SortedNodesetIndexes;
 
 	protected constructor(
 		protected readonly form: XFormDefinition,
@@ -77,7 +81,7 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> implements Re
 			this.set(nodeset, bind);
 		}
 
-		this.sort();
+		this.sortedNodesetIndexes = this.sort();
 	}
 
 	/**
@@ -121,7 +125,7 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> implements Re
 	/**
 	 * Topological sort (depth first search)
 	 */
-	protected sort(): void {
+	protected sort(): SortedNodesetIndexes {
 		const visited = new Set<BindDefinition>();
 		const visiting = new Set<BindDefinition>();
 		const sorted: BindDefinition[] = [];
@@ -132,9 +136,14 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> implements Re
 
 		this.clear();
 
-		for (const bind of sorted) {
+		const sortedNosdesetIndexes = new Map<BindNodeset, TopologicalSortIndex>();
+
+		for (const [index, bind] of sorted.entries()) {
 			this.set(bind.nodeset, bind);
+			sortedNosdesetIndexes.set(bind.nodeset, index);
 		}
+
+		return sortedNosdesetIndexes;
 	}
 
 	getDependencies(bind: BindDefinition) {

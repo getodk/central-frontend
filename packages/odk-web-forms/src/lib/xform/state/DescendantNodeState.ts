@@ -1,5 +1,6 @@
 import type { Accessor } from 'solid-js';
-import { createEffect, createMemo, createResource, getOwner, runWithOwner } from 'solid-js';
+import { createComputed, createMemo, createSignal, on } from 'solid-js';
+import { createUninitializedAccessor } from '../../reactivity/primitives/uninitialized.ts';
 import type {
 	BindDefinition,
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
@@ -8,6 +9,7 @@ import type {
 } from '../model/BindDefinition.ts';
 import type { EntryState } from './EntryState.ts';
 import type {
+	AnyNodeState,
 	ChildStates,
 	NodeState,
 	NodeStateType,
@@ -35,15 +37,9 @@ type DescendantNodeStateType = Exclude<NodeStateType, 'root'>;
 export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 	implements NodeState<Type>
 {
+	readonly nodeset: string;
+
 	abstract readonly node: StateNode<Type>;
-	abstract readonly children: ChildStates<Type>;
-
-	abstract readonly valueState: ValueSignal<Type>;
-
-	readonly calculate: Accessor<string> | null;
-	readonly isReadonly: Accessor<boolean>;
-	readonly isRelevant: Accessor<boolean>;
-	readonly isRequired: Accessor<boolean>;
 
 	protected referenceMemo: Accessor<string> | null = null;
 
@@ -62,35 +58,86 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		return referenceMemo();
 	}
 
+	readonly isReferenceStatic: boolean;
+
+	// TODO: constraint, saveIncomplete(?)
+
+	calculate: Accessor<string> | null;
+	isReadonly: Accessor<boolean>;
+	isRelevant: Accessor<boolean>;
+	isRequired: Accessor<boolean>;
+
+	abstract readonly valueState: ValueSignal<Type>;
+
+	abstract readonly children: ChildStates<Type>;
+
 	constructor(
 		readonly entry: EntryState,
 		readonly parent: ParentState<Type>,
 		readonly type: Type,
 		readonly definition: StateModelDefinition<Type>
 	) {
+		this.nodeset = definition.bind.nodeset;
+		this.isReferenceStatic = parent.isReferenceStatic && type !== 'repeat-instance';
+		this.calculate = createUninitializedAccessor<string>();
+		this.isReadonly = createUninitializedAccessor<boolean>();
+		this.isRelevant = createUninitializedAccessor<boolean>();
+		this.isRequired = createUninitializedAccessor<boolean>();
+	}
+
+	isStateInitialized = false;
+
+	initializeState(): void {
+		if (this.isStateInitialized) {
+			return;
+		}
+
+		const { definition, parent } = this;
 		const { bind } = definition;
-
-		this.calculate = this.createOptionalBindExpressionEvaluation(bind.calculate);
-
 		const isSelfReadonly = this.createBindExpressionEvaluation(bind.readonly);
-
-		this.isReadonly = createMemo(() => {
-			return this.parent?.isReadonly() || isSelfReadonly();
-		});
-
 		const isSelfRelevant = this.createBindExpressionEvaluation(bind.relevant);
 
-		this.isRelevant = createMemo(() => {
-			const ancestor = this.parent;
-
-			if (ancestor != null && !ancestor.isRelevant()) {
-				return false;
-			}
-
-			return isSelfRelevant();
-		});
-
+		this.calculate = this.createOptionalBindExpressionEvaluation(bind.calculate);
+		this.isReadonly = createMemo(() => parent.isReadonly() || isSelfReadonly());
+		this.isRelevant = createMemo(() => parent.isRelevant() && isSelfRelevant());
 		this.isRequired = this.createBindExpressionEvaluation(bind.required);
+		this.isStateInitialized = true;
+	}
+
+	getValue(this: DescendantNodeState<'value-node'>): string;
+	getValue(): null;
+	getValue(): string | null {
+		if (this.valueState == null) {
+			return null;
+		}
+
+		const [value] = this.valueState;
+
+		return value();
+	}
+
+	// TODO: super naive, just meant to communicate a starting point/direction.
+	protected contextualizeDependencyExpression(expression: string): string {
+		const { nodeset } = this;
+
+		if (nodeset.startsWith(`${expression}/`)) {
+			let parent: AnyNodeState | null = this.parent;
+
+			while (parent != null) {
+				if (parent.nodeset === expression) {
+					return parent.reference;
+				}
+
+				parent = parent.parent;
+			}
+		}
+
+		return expression;
+	}
+
+	// TODO: actually do something with this at all
+	protected contextualizeComputationExpression(expression: string): string {
+		return expression;
 	}
 
 	/**
@@ -99,10 +146,11 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 	 * (runtime or DOM, @see {@link createModelState}) of any of its dependencies
 	 * is updated.
 	 */
-	createBindExpressionEvaluation<Expression extends AnyBindExpression>(
+	protected createBindExpressionEvaluation<Expression extends AnyBindExpression>(
 		bindExpression: Expression
 	): Accessor<EvaluationResult<Expression>> {
-		const { expression, expressionType } = bindExpression;
+		const { entry } = this;
+		const { dependencyExpressions, expression, expressionType } = bindExpression;
 
 		if (expression == null) {
 			const defaultResult = defaultEvaluationResults[
@@ -112,76 +160,96 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			return () => defaultResult;
 		}
 
-		const { evaluator } = this.entry;
-		const evaluate = () => bindExpression.evaluate(evaluator, this.node);
+		const { evaluator } = entry;
+		const evaluateExpression = () =>
+			bindExpression.evaluate(evaluator, this.node) as EvaluationResult<Expression>;
 
-		const [evaluation, { refetch }] = createResource(evaluate, {
-			initialValue: evaluate(),
-		});
+		if (dependencyExpressions.length === 0 && this.isReferenceStatic) {
+			return evaluateExpression;
+		}
 
-		// TODO (RE everything below...):
-		//
-		// - The business with owner and microtask are a lucky (temporary)
-		//   workaround for the fact that the top-down tree construction approach is
-		//   presently ignoring dependency order.
-		// - It's possible this is also why `createEffect` is needed, where it had
-		//   been `createComputed` in a previous iteration (and which it should
-		//   still be, at least so long as there's an explicit state reaction ->
-		//   state update chain).
-		// - This (or somewhere related) would probably be an excellent candidate
-		//   for contextualizing repeat-sensitive dependency expressions. For
-		//   instance, currently repeats will produce error logs like "No state for
-		//   dependency /root/rep". Which makes sense, as the dependency should
-		//   actually be `/root/rep[1]` and so on.
-		// - "value" is only one aspect of reactive dependency to establish here.
-		//   It's actually surprising that this hasn't broken inheritance of
-		//   readonly/relevant (or more specifically, it's probably introduced
-		//   subtle bugs which aren't well tested yet).
-		const owner = getOwner();
+		const [isEvaluationStale, setIsEvaluationStale] = createSignal(false);
+		const triggerStaleReevaluation = () => {
+			setIsEvaluationStale(true);
+		};
 
-		queueMicrotask(() => {
-			runWithOwner(owner, () => {
-				const dependencyAccessors = createMemo(() => {
-					return bindExpression.dependencyExpressions.flatMap((dependencyExpression) => {
-						const state = this.entry.getState(dependencyExpression);
+		interface DependencyState {
+			readonly reference: string;
+			readonly isRelevant: boolean;
+			readonly value: string | null;
+		}
+
+		const isDependencyEqual = (previous: DependencyState, current: DependencyState): boolean => {
+			return (
+				previous.reference === current.reference &&
+				previous.isRelevant === current.isRelevant &&
+				previous.value === current.value
+			);
+		};
+
+		const dependencies = dependencyExpressions.map(
+			(dependencyExpression): Accessor<DependencyState> => {
+				return createMemo(
+					() => {
+						const reference = this.contextualizeDependencyExpression(dependencyExpression);
+						const state = entry.getState(reference);
 
 						if (state == null) {
-							console.error('No state for dependency', dependencyExpression);
-
-							return [];
+							console.error('No state for dependency', reference);
 						}
 
-						if (state.type !== 'value-node') {
-							return [];
+						if (state == null || state.type === 'root') {
+							return {
+								reference: reference,
+								isRelevant: true,
+								value: null,
+							};
 						}
-
-						const [value] = state.valueState;
 
 						return {
-							state,
-							value,
+							reference: state.reference,
+							isRelevant: state.isRelevant(),
+							value: state.getValue(),
 						};
-					});
-				});
-				const dependencies = () => {
-					dependencyAccessors().forEach((dependency) => {
-						const { value } = dependency;
+					},
+					{ equals: isDependencyEqual }
+				);
+			}
+		);
 
-						value();
-					});
-				};
+		createComputed(on(dependencies, triggerStaleReevaluation, { defer: true }));
 
-				createEffect(() => {
-					dependencies();
-					void refetch();
-				});
-			});
-		});
+		// TODO: super naive, assumes that a reference change (e.g. a repeat
+		// position change) warrants recomputation. A less naive solution would
+		// determine if the expression would be impacted by the expression change.
+		createComputed((previousReference) => {
+			const currentReference = this.reference;
 
-		return evaluation as Accessor<EvaluationResult<Expression>>;
+			if (currentReference !== previousReference) {
+				triggerStaleReevaluation();
+			}
+
+			return currentReference;
+		}, this.reference);
+
+		const evaluate = createMemo<EvaluationResult<Expression>>((evaluated) => {
+			if (isEvaluationStale()) {
+				return evaluateExpression();
+			}
+
+			return evaluated;
+		}, evaluateExpression());
+
+		const completeStaleReevaluation = () => {
+			setIsEvaluationStale(false);
+		};
+
+		createComputed(on(isEvaluationStale, completeStaleReevaluation, { defer: true }));
+
+		return evaluate;
 	}
 
-	createOptionalBindExpressionEvaluation<Expression extends AnyBindExpression>(
+	protected createOptionalBindExpressionEvaluation<Expression extends AnyBindExpression>(
 		bindExpression: Expression
 	): Accessor<EvaluationResult<Expression>> | null {
 		if (bindExpression.expression == null) {
@@ -191,3 +259,6 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		return this.createBindExpressionEvaluation(bindExpression);
 	}
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyDescandantNodeState = Extract<AnyNodeState, DescendantNodeState<any>>;
