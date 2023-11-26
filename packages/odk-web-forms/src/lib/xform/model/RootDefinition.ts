@@ -78,12 +78,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 
 		return Array.from(childrenByName).map(([localName, children]) => {
 			const nodeset = `${parentNodeset}/${localName}`;
-			const bind = binds.get(nodeset);
-
-			if (bind == null) {
-				throw new Error(`No bind for node. Computed nodeset: ${nodeset}`);
-			}
-
+			const bind = binds.getOrCreateBindDefinition(nodeset);
 			const bodyElement = body.getBodyElement(nodeset);
 			const [firstChild, ...restChildren] = children;
 			const repeatGroup = body.getRepeatGroup(nodeset);

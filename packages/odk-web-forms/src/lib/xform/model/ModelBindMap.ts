@@ -3,7 +3,7 @@ import type { BindElement, BindNodeset } from './BindDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
-class ArtificialAncestorBindElement {
+class ArtificialBindElement {
 	constructor(protected readonly ancestorNodeset: string) {}
 
 	getAttribute(name: 'nodeset'): string;
@@ -71,7 +71,7 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> {
 					form,
 					model,
 					ancestorNodeset,
-					new ArtificialAncestorBindElement(ancestorNodeset)
+					new ArtificialBindElement(ancestorNodeset)
 				);
 				this.set(ancestorNodeset, ancestor);
 
@@ -104,13 +104,7 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> {
 		visiting.add(bind);
 
 		for (const nodeset of bind.nodesetDependencies) {
-			const dependency = this.get(nodeset);
-
-			if (dependency == null) {
-				console.warn(`No bind for nodeset: ${nodeset}`);
-
-				continue;
-			}
+			const dependency = this.getOrCreateBindDefinition(nodeset);
 
 			this.visit(visited, visiting, dependency, sorted);
 		}
@@ -144,6 +138,23 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> {
 		}
 
 		return sortedNosdesetIndexes;
+	}
+
+	override get(nodeset: string): BindDefinition | undefined {
+		return super.get(nodeset);
+	}
+
+	getOrCreateBindDefinition(nodeset: string): BindDefinition {
+		let bind = this.get(nodeset);
+
+		if (bind == null) {
+			const bindElement = new ArtificialBindElement(nodeset);
+
+			bind = new BindDefinition(this.form, this.model, nodeset, bindElement);
+			this.set(nodeset, bind);
+		}
+
+		return bind;
 	}
 
 	getDependencies(bind: BindDefinition) {

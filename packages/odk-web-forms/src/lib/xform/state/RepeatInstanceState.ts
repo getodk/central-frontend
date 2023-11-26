@@ -86,17 +86,9 @@ export class RepeatInstanceState
 		return index();
 	}
 
-	// TODO: this performs two state updates, and it is expected to be called
-	// during a user interaction (i.e. an event handler). My understanding of how
-	// this works in Solid is that these state changes will not be batched, and in
-	// fact they may under certain circumstances (e.g. if for whatever reason it
-	// becomes async) need to be wrapped in `runWithOwner`. Deferring all of that
-	// for now until there's more measurement to gain clarity about any potential
-	// for overcomputation.
 	remove() {
 		this.node.remove();
 		this.parent.removeInstance(this);
-		this.setIndex(-1);
 	}
 
 	setIndex(index: number) {

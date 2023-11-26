@@ -1,6 +1,6 @@
 import { isDocumentNode } from '@odk/common/lib/dom/predicates.ts';
 import type { Signal } from 'solid-js';
-import { createComputed, createSignal } from 'solid-js';
+import { batch, createComputed, createSignal, untrack } from 'solid-js';
 import type { RepeatInstanceDefinition } from '../model/RepeatInstanceDefinition.ts';
 import type { RepeatSequenceDefinition } from '../model/RepeatSequenceDefinition.ts';
 import { DescendantNodeState } from './DescendantNodeState.ts';
@@ -63,7 +63,7 @@ export class RepeatSequenceState
 
 		// TODO: it's trivial to use a Signal here, but it may not be the best
 		// solution, both for modeling sequence state and for efficiency of the
-		// computation and those which react from it. In terns of efficiency, after
+		// computation and those which react from it. In terms of efficiency, after
 		// some quick profiling, I do believe there is likely excessive computation
 		// when adding repeat instances. For example, when adding a large number of
 		// instances, each with computations, it would be expected that computation
@@ -81,14 +81,7 @@ export class RepeatSequenceState
 		// was worth investigating further until there are more fully functioning
 		// forms to measure, but I did want to make sure all of these observations
 		// have a place somewhere if/when we come back to these issues.
-		const instancesState = createSignal<readonly RepeatInstanceState[]>([]);
-		const [instances] = instancesState;
-
-		createComputed(() => {
-			instances().forEach((instance, index) => instance.setIndex(index));
-		});
-
-		this.instancesState = instancesState;
+		this.instancesState = createSignal<readonly RepeatInstanceState[]>([]);
 
 		definition.instances.forEach((instance) => {
 			this.createInstance(instance);
@@ -97,28 +90,80 @@ export class RepeatSequenceState
 
 	override initializeState(): void {
 		super.initializeState();
-		this.getInstances().forEach((instance) => instance.initializeState());
+
+		// **Important:** Update this comment if related logic in `createInstance`
+		// is changed in a way that invalidates this.
+		//
+		// Initialize state of instances **created at entry init**. This is not
+		// reactive because initialization of subsequently added repeat instances
+		// (i.e. from the repeat's template, rather than instances in the form
+		// definition) happens in phases. See further discussion in the
+		// `createInstance` body.
+		this.getInstances().forEach((instance) => {
+			instance.initializeState();
+		});
+
+		createComputed(() => {
+			this.getInstances().forEach((instance, index) => {
+				instance.setIndex(index);
+			});
+		});
 	}
 
-	createInstance(from?: RepeatInstanceDefinition): readonly RepeatInstanceState[] {
+	createInstance(from?: RepeatInstanceDefinition): RepeatInstanceState {
 		const modelDefinition: RepeatModelDefinition = from ?? this.definition.template;
 		const { instancesState: instances, entry } = this;
 		const [, setInstances] = instances;
 
-		return setInstances((current) => {
-			const previousInstance = current[current.length - 1] ?? null;
-			const nextInstance = RepeatInstanceState.create(
+		// **Important:** Update the related comment in the `initializeState` body
+		// if the logic below is changed.
+		//
+		// Repeat instance creation is a two-step process:
+		//
+		// 1. Create the instance and its descendants.
+		// 2. Initialize the state of the instance and its descendants.
+		//
+		// This is conceptually the exact same logic used during form init for all
+		// other state, and it ensures that state objects are present before
+		// dependent state objects attempt to reference them. Repeat instances which
+		// are present during init follow the same **code paths** to implement this
+		// logic, but instances added afterward are necessarily a special case as
+		// the initialization stack will have already exited.
+		//
+		// The below accounts for both scenarios (repeat instances added during
+		// init, and those added after) by:
+		//
+		// - deferring state initialization for instances present in the form
+		//   definition (i.e. those with `type: 'repeat-instance'` **in the model
+		//   definition**, as those will be initialized in `initializeState`, like
+		//   all other state nodes created in the init flow)
+		// - eagerly initializing state for instances created afterward (i.e. those
+		//   with `type: 'repeat-template'`, although this heuristic will probably
+		//   not hold when `jr:count` support is introduced)
+		//
+		// The use of `batch` ensures state is updated atomically and synchronously
+		// for post-init instance creation. It was already expected this would be
+		// needed for repeat instance creation triggered at the view level, and it
+		// turned out it was needed for the first test ported from JavaRosa as well,
+		// so it made sense to do the batching here instead of pushing it out to all
+		// call sites.
+		return batch(() => {
+			const currentInstances = untrack(() => this.getInstances());
+			const previousInstance = currentInstances[currentInstances.length - 1] ?? null;
+			const newInstance = RepeatInstanceState.create(
 				entry,
 				this,
 				modelDefinition,
 				previousInstance
 			);
 
+			setInstances([...currentInstances, newInstance]);
+
 			if (from == null) {
-				nextInstance.initializeState();
+				newInstance.initializeState();
 			}
 
-			return [...current, nextInstance];
+			return newInstance;
 		});
 	}
 

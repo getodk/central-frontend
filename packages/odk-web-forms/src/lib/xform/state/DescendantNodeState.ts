@@ -118,18 +118,22 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 
 	// TODO: super naive, just meant to communicate a starting point/direction.
 	protected contextualizeDependencyExpression(expression: string): string {
-		const { nodeset } = this;
+		let current: AnyNodeState | null = this.parent;
 
-		if (nodeset.startsWith(`${expression}/`)) {
-			let parent: AnyNodeState | null = this.parent;
+		while (current != null) {
+			const { nodeset } = current;
 
-			while (parent != null) {
-				if (parent.nodeset === expression) {
-					return parent.reference;
-				}
-
-				parent = parent.parent;
+			if (expression === nodeset) {
+				return current.reference;
 			}
+
+			const prefix = `${nodeset}/`;
+
+			if (expression.startsWith(prefix)) {
+				return expression.replace(prefix, `${current.reference}/`);
+			}
+
+			current = current.parent;
 		}
 
 		return expression;
