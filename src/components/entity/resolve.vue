@@ -15,8 +15,12 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title', entity) }}</template>
     <template #body>
       <div v-if="!success">
-        <p>{{ $t('instructions[0]', entity) }}</p>
-        <p v-if="canUpdate">{{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}</p>
+        <div class="modal-introduction">
+          <p>{{ $t('instructions[0]', entity) }}</p>
+          <p v-if="canUpdate">
+            {{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}
+          </p>
+        </div>
 
         <div v-show="tableShown" id="entity-resolve-table-container">
           <loading :state="entityVersions.awaitingResponse"/>
@@ -166,6 +170,7 @@ watch(() => props.entity, (entity) => {
 
 #entity-resolve {
   .modal-dialog { margin-top: 15vh; }
+  .modal-introduction { margin-bottom: 12px; }
 
   .btn + .btn {
     margin-left: 10px;
@@ -183,11 +188,11 @@ watch(() => props.entity, (entity) => {
   margin-left: -$padding-modal-body;
   margin-right: -$padding-modal-body;
   // If the height of the modal content other than the table is no more than
-  // 375px, this allows the table to push the modal to 75vh tall. After that,
+  // 365px, this allows the table to push the modal to 75vh tall. After that,
   // the table container will scroll.
-  max-height: max(calc(75vh - 375px), 175px);
+  max-height: max(calc(75vh - 365px), 175px);
   overflow-y: auto;
-  padding-top: 5px;
+  padding-top: 3px;
 }
 #entity-resolve #entity-conflict-table {
   tbody tr { background-color: transparent; }
