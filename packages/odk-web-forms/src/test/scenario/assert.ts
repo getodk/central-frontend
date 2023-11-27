@@ -49,6 +49,17 @@ class IntAnswer extends ExpectedAnswer {
 
 export const intAnswer = (value: bigint | number): IntAnswer => new IntAnswer(value);
 
+class StringAnswer extends ExpectedAnswer {
+	protected readonly value: string;
+
+	constructor(value: string) {
+		super();
+		this.value = value;
+	}
+}
+
+export const stringAnswer = (value: string): StringAnswer => new StringAnswer(value);
+
 export const assertThat = (value: unknown, matcher: Matcher) => {
 	matcher.assertMatch(value);
 };

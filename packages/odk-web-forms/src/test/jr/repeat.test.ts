@@ -13,7 +13,7 @@ import {
 	title,
 } from '../fixtures/xform-dsl/index.ts';
 import { Scenario } from '../scenario/Scenario.ts';
-import { CoreMatchers, assertThat, intAnswer } from '../scenario/assert.ts';
+import { CoreMatchers, assertThat, intAnswer, stringAnswer } from '../scenario/assert.ts';
 
 describe('Tests ported from JavaRosa - repeats', () => {
 	describe('Adding or deleting repeats', () => {
@@ -56,6 +56,71 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					assertThat(scenario.answerOf('/data/repeat[2]/inner2'), CoreMatchers.is(intAnswer(2)));
 					assertThat(scenario.answerOf('/data/repeat[2]/inner3'), CoreMatchers.is(intAnswer(4)));
 				});
+			});
+
+			// Currently fails due to use of absolute XPath expression into repeat
+			// instance which is not contextualized to the repeat instance
+			it.todo('updates inner calculations with multiple dependencies', () => {
+				// prettier-ignore
+				const scenario = Scenario.init("Repeat cascading calc", html(
+					head(
+							title("Repeat cascading calc"),
+							model(
+									mainInstance(t("data id=\"repeat-calcs\"",
+											t("repeat",
+													t("position"),
+													t("position_2"),
+													t("other"),
+													t("concatenated")
+											))),
+									// position(..) means the full cascade is evaulated as part of triggerTriggerables
+									bind("/data/repeat/position").calculate("position(..)"),
+									bind("/data/repeat/position_2").calculate("/data/repeat/position * 2"),
+									bind("/data/repeat/other").calculate("2 * 2"),
+									// concat needs to be evaluated after /data/repeat/other has a value
+									bind("/data/repeat/concatenated").calculate("concat(../position_2, '-', ../other)"))),
+					body(
+							repeat("/data/repeat",
+									input("/data/repeat/concatenated"))
+					)));
+
+				const theXML = html(
+					head(
+						title('Repeat cascading calc'),
+						model(
+							mainInstance(
+								t(
+									'data id="repeat-calcs"',
+									t('repeat', t('position'), t('position_2'), t('other'), t('concatenated'))
+								)
+							),
+							// position(..) means the full cascade is evaulated as part of triggerTriggerables
+							bind('/data/repeat/position').calculate('position(..)'),
+							bind('/data/repeat/position_2').calculate('/data/repeat/position * 2'),
+							bind('/data/repeat/other').calculate('2 * 2'),
+							// concat needs to be evaluated after /data/repeat/other has a value
+							bind('/data/repeat/concatenated').calculate("concat(../position_2, '-', ../other)")
+						)
+					),
+					body(repeat('/data/repeat', input('/data/repeat/concatenated')))
+				).asXml();
+				console.log('the xml', theXML);
+
+				scenario.next('/data/repeat[1]');
+				scenario.next('/data/repeat[1]/concatenated');
+				assertThat(
+					scenario.answerOf('/data/repeat[1]/concatenated'),
+					CoreMatchers.is(stringAnswer('2-4'))
+				);
+
+				scenario.next('/data/repeat');
+				scenario.createNewRepeat('/data/repeat');
+
+				scenario.next('/data/repeat[2]/concatenated');
+				assertThat(
+					scenario.answerOf('/data/repeat[2]/concatenated'),
+					CoreMatchers.is(stringAnswer('4-4'))
+				);
 			});
 		});
 	});
