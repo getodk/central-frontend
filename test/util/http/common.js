@@ -112,7 +112,10 @@ export const assertStandardButton = (
 
   for (const selector of disabledSelectors) {
     const wrapper = component.get(selector);
-    (wrapper.attributes('aria-disabled') === 'true').should.equal(awaitingResponse);
+    const disabled = wrapper.element.tagName === 'A'
+      ? wrapper.classes('disabled')
+      : wrapper.attributes('aria-disabled') === 'true';
+    disabled.should.equal(awaitingResponse);
   }
 
   if (modal != null) {
@@ -132,7 +135,7 @@ export function testStandardButton({
   // Selector for the button
   button,
   request = (component) => component.get(button).trigger('click'),
-  // Selectors for additional buttons that should be disabled during the request
+  // Selectors for additional actions that should be disabled during the request
   disabled = [],
   // Specifies a modal that should not be hideable during the request. If the
   // series' component is a modal, specify `true`. Otherwise, specify the modal

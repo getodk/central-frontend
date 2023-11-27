@@ -207,17 +207,7 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 }
 
 a, .btn-link {
-  &, &:hover { color: $color-action-foreground; }
-  &:hover { text-decoration: none; }
-
-  &:focus {
-    background-color: transparentize(#000, 0.94);
-    color: #23527c;
-    text-decoration: underline;
-  }
-
-  &.disabled, &[aria-disabled="true"], fieldset[disabled] & {
-    color: #888;
+  &:hover, &.disabled, &[aria-disabled="true"], fieldset[disabled] & {
     text-decoration: none;
   }
 
@@ -228,14 +218,19 @@ a, .btn-link {
   }
 }
 
-a {
-  &.disabled, fieldset[disabled] & {
-    // Not specifying pointer-events so that the cursor and any tooltip is
-    // shown.
+a:not(.btn), .btn-link {
+  &, &:hover { color: $color-action-foreground; }
 
-    &.btn { color: #fff; }
+  &:focus {
+    background-color: transparentize(#000, 0.94);
+    color: #23527c;
+    text-decoration: underline;
   }
 
+  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: #888; }
+}
+
+a {
   &:focus { outline: none; }
 
   &, &:visited {
@@ -247,6 +242,9 @@ a {
   > .icon-angle-right:last-child:not(:first-child) {
     color: $color-accent-primary;
   }
+
+  // Not specifying pointer-events if the link is disabled so that the cursor
+  // and any tooltip are shown.
 }
 
 .btn-link {
