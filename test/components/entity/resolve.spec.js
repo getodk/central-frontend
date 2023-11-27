@@ -4,6 +4,7 @@ import EntityResolve from '../../../src/components/entity/resolve.vue';
 
 import testData from '../../data';
 import { mockHttp } from '../../util/http';
+import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 
 const relevantToConflict = () => testData.extendedEntityVersions.sorted()
@@ -16,7 +17,7 @@ const showModal = () => {
         provide: { projectId: '1', datasetName: dataset.name }
       },
       container: {
-        requestData: { dataset },
+        requestData: { project: testData.extendedProjects.last(), dataset },
         router: mockRouter(`/projects/1/entity-lists/${encodeURIComponent(dataset.name)}/entities`)
       }
     })
@@ -136,6 +137,27 @@ describe('EntityResolve', () => {
         .afterResponse(modal => {
           modal.find('.success-msg').exists().should.be.false();
         });
+    });
+  });
+
+  describe('project viewer', () => {
+    beforeEach(() => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+    });
+
+    it('does not show the second paragraph', async () => {
+      const modal = await showModal();
+      modal.findAll('p').length.should.equal(1);
+    });
+
+    it('does not show the update or resolve buttons', async () => {
+      const modal = await showModal();
+      const btns = modal.findAll('#entity-resolve-table-toggle ~ .btn');
+      btns.length.should.equal(1);
+      btns[0].classes('more-details').should.be.true();
     });
   });
 });
