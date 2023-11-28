@@ -16,6 +16,7 @@ except according to the terms contained in the LICENSE file.
         <th>{{ $t('header.listName') }}</th>
         <th class="entities">{{ $t('header.entities') }}</th>
         <th>{{ $t('header.lastEntity') }}</th>
+        <th>{{ $t('common.status') }}</th>
         <th>{{ $t('header.actions') }}</th>
       </tr>
     </thead>

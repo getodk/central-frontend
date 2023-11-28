@@ -16,6 +16,14 @@ const mountComponent = () => mount(DatasetTable, {
 });
 
 describe('DatasetTable', () => {
+  it('shows the correct columns', async () => {
+    testData.extendedDatasets.createPast(1);
+    const table = mountComponent().getComponent(DatasetTable);
+    const headers = table.findAll('th').map(th => th.text());
+    headers.should.eql(['List Name', 'Total Entities', 'Latest Entity', 'Status', 'Actions']);
+    table.findAll('td').length.should.equal(5);
+  });
+
   it('renders the correct number of rows', () => {
     testData.extendedDatasets.createPast(2);
     mountComponent().findAllComponents(DatasetRow).length.should.equal(2);

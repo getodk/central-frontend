@@ -39,6 +39,41 @@ describe('DatasetRow', () => {
     row.get('time').text().should.be.containEql('today');
   });
 
+  describe('conflicts', () => {
+    it('shows empty cell if no conflicts', () => {
+      testData.extendedDatasets.createPast(1, { name: 'my_dataset', conflicts: 0 });
+      const row = mountComponent();
+      row.find('.conflicts .icon-warning').exists().should.be.false();
+      row.find('.conflicts').text().should.be.eql('');
+    });
+
+    it('shows the warning icon', () => {
+      testData.extendedDatasets.createPast(1, { name: 'my_dataset', conflicts: 10 });
+      const row = mountComponent();
+      row.find('.icon-warning').exists().should.be.true();
+    });
+
+    it('shows the count of conflicts', () => {
+      testData.extendedDatasets.createPast(1, { name: 'my_dataset', conflicts: 1 });
+      const row = mountComponent();
+      row.get('.conflicts').text().should.be.eql('1 possible conflict');
+    });
+
+    it('formats the count of conflicts', () => {
+      testData.extendedDatasets.createPast(1, { name: 'my_dataset', conflicts: 1000 });
+      const row = mountComponent();
+      row.get('.conflicts').text().should.be.eql('1,000 possible conflicts');
+    });
+
+    it('links to the entities filtered by conflict', () => {
+      testData.extendedDatasets.createPast(1, { name: 'my_dataset', conflicts: 10 });
+      const cell = mountComponent().get('.conflicts');
+      const link = cell.getComponent(RouterLinkStub);
+      link.props().to.should.equal('/projects/1/entity-lists/my_dataset/entities?conflict=true');
+      link.text().should.equal('10 possible conflicts');
+    });
+  });
+
   it('links to the CSV file', () => {
     testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
     const { href } = mountComponent().get('a.btn').attributes();

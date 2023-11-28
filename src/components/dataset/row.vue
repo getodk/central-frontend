@@ -20,6 +20,16 @@ except according to the terms contained in the LICENSE file.
     <td>
       <span> <date-time :iso="dataset.lastEntity"/> </span>
     </td>
+    <td class="conflicts">
+      <span v-if="dataset.conflicts > 0">
+        <router-link :to="datasetPath(dataset.projectId, dataset.name, 'entities?conflict=true')">
+          <span class="wrap-circle">
+            <span class="icon-warning"></span>
+          </span>
+          {{ dataset.conflicts > 0 ? $tcn('possibleConflictsCount', dataset.conflicts) : $n(0) }}
+        </router-link>
+      </span>
+    </td>
     <td>
       <a class="btn btn-primary" :href="href">
         <span class="icon-download"></span>{{ $t('action.download') }}
@@ -70,6 +80,21 @@ export default {
     text-align: right;
     padding-right: 10%;
   }
+  .wrap-circle {
+    width: 25px;
+    display: inline-block;
+    background: $color-danger;
+    height: 25px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    padding-top: 2px;
+    margin-top: -1px;
+    margin-right: 3px;
+  }
+  .conflicts a {
+    color: $color-danger;
+  }
 }
 </style>
 
@@ -78,7 +103,8 @@ export default {
   "en": {
     "action": {
       "download": "Download data (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} possible conflict | {count} possible conflicts"
   }
 }
 </i18n>
