@@ -1,3 +1,4 @@
+import type { EvaluatorConvenienceMethodOptions } from '@odk/xpath';
 import { Evaluator } from '@odk/xpath';
 import { xpathParser } from './parser.ts';
 
@@ -15,28 +16,14 @@ type EvaluatedNode<AssertExists extends boolean, T extends Node> = AssertExists 
 	: T | null;
 
 export class XFormXPathEvaluator extends Evaluator {
-	constructor(protected readonly rootNode: Element | XMLDocument) {
+	constructor(override readonly rootNode: Element | XMLDocument) {
 		super(xpathParser, {
 			rootNode,
 		});
 	}
 
-	evaluateBoolean(expression: string, options: XFormXPathEvaluatorEvaluateOptions = {}): boolean {
-		return this.evaluate(
-			expression,
-			options.contextNode ?? this.rootNode,
-			null,
-			XPathResult.BOOLEAN_TYPE
-		).booleanValue;
-	}
-
-	evaluateString(expression: string, options: XFormXPathEvaluatorEvaluateOptions = {}): string {
-		return this.evaluate(
-			expression,
-			options.contextNode ?? this.rootNode,
-			null,
-			XPathResult.STRING_TYPE
-		).stringValue;
+	protected override getContextNode(options: EvaluatorConvenienceMethodOptions): Node {
+		return options.contextNode ?? this.rootNode;
 	}
 
 	evaluateNode<T extends Node, AssertExists extends boolean = false>(

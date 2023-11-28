@@ -38,6 +38,10 @@ const partialOmitNullish = <T extends Record<PropertyKey, unknown>>(
 ): PartialOmitNullish<T> =>
 	Object.fromEntries(Object.entries(object).filter(isNonNullEntry)) as PartialOmitNullish<T>;
 
+export interface EvaluatorConvenienceMethodOptions {
+	readonly contextNode?: Node;
+}
+
 export class Evaluator implements AnyXPathEvaluator {
 	// TODO: see notes on cache in `ExpressionParser.ts`, update or remove those
 	// if this usage changes in a way that addresses concerns expressed there.
@@ -46,6 +50,7 @@ export class Evaluator implements AnyXPathEvaluator {
 	readonly functionLibrary: FunctionLibrary;
 	readonly parseOptions: ParseOptions;
 	readonly resultTypes: ResultTypes = ResultTypes;
+	readonly rootNode: AnyParentNode | null;
 	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
 	readonly timeZone: Temporal.TimeZone;
 
@@ -55,6 +60,7 @@ export class Evaluator implements AnyXPathEvaluator {
 		this.functionLibrary = functionLibrary;
 		this.parseOptions = parseOptions;
 		this.parser = ExpressionParser.from(parser);
+		this.rootNode = options.rootNode ?? null;
 		this.sharedContextOptions = partialOmitNullish({
 			rootNode,
 		});
@@ -86,5 +92,35 @@ export class Evaluator implements AnyXPathEvaluator {
 		const results = expr.evaluate(context);
 
 		return toXPathResult(resultType ?? XPathResult.ANY_TYPE, results);
+	}
+
+	protected getContextNode(options: EvaluatorConvenienceMethodOptions): Node {
+		const contextNode = options.contextNode ?? this.rootNode;
+
+		if (contextNode == null) {
+			throw new Error(
+				'Context node must be provided in options or as Evaluator constructor options.rootNode'
+			);
+		}
+
+		return contextNode;
+	}
+
+	evaluateBoolean(expression: string, options: EvaluatorConvenienceMethodOptions = {}): boolean {
+		const contextNode = this.getContextNode(options);
+
+		return this.evaluate(expression, contextNode, null, XPathResult.BOOLEAN_TYPE).booleanValue;
+	}
+
+	evaluateNumber(expression: string, options: EvaluatorConvenienceMethodOptions = {}): number {
+		const contextNode = this.getContextNode(options);
+
+		return this.evaluate(expression, contextNode, null, XPathResult.NUMBER_TYPE).numberValue;
+	}
+
+	evaluateString(expression: string, options: EvaluatorConvenienceMethodOptions = {}): string {
+		const contextNode = this.getContextNode(options);
+
+		return this.evaluate(expression, contextNode, null, XPathResult.STRING_TYPE).stringValue;
 	}
 }
