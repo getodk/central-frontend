@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { AnyXPathEvaluator } from '../../src/shared/interface.ts';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe.skip('custom XPath functions', () => {
 	interface CustomFunctionEvaluator extends AnyXPathEvaluator {
@@ -10,14 +10,14 @@ describe.skip('custom XPath functions', () => {
 		};
 	}
 
-	interface CustomFunctionEvaluatorTestContext extends TestContext {
+	interface CustomFunctionEvaluatorTestContext extends XFormsTestContext {
 		readonly evaluator: CustomFunctionEvaluator;
 	}
 
 	let testContext: CustomFunctionEvaluatorTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('should not allow unexpected arg types', () => {

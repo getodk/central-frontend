@@ -1,16 +1,16 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#coalesce()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('should return first value if provided via xpath', () => {
-		testContext = createTextContentTestContext('first');
+		testContext = createXFormsTextContentTestContext('first');
 
 		testContext.assertStringValue('coalesce(/simple/xpath/to/node, "whatever")', 'first');
 	});
@@ -20,7 +20,7 @@ describe('#coalesce()', () => {
 	});
 
 	it('should return second value from xpath if first value is empty string', () => {
-		testContext = createTextContentTestContext('second');
+		testContext = createXFormsTextContentTestContext('second');
 
 		testContext.assertStringValue('coalesce("", /simple/xpath/to/node)', 'second');
 	});
@@ -31,7 +31,7 @@ describe('#coalesce()', () => {
 	});
 
 	it('should return second value from xpath if first value is empty xpath', () => {
-		testContext = createTextContentTestContext('second');
+		testContext = createXFormsTextContentTestContext('second');
 
 		testContext.assertStringValue('coalesce(/simple/empty, /simple/xpath/to/node)', 'second');
 	});
@@ -41,7 +41,7 @@ describe('#coalesce()', () => {
 	});
 
 	it('coalesce(self::*)', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <div id="FunctionSelectedCase">
         <div id="FunctionSelectedCaseEmpty"></div>
         <div id="FunctionSelectedCaseSingle">ab</div>

@@ -1,13 +1,13 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 // @see https://docs.opendatakit.org/form-operators-functions/?highlight=checklist#weighted-checklist
 describe('#weighted-checklist()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('simple', () => {
@@ -29,7 +29,7 @@ describe('#weighted-checklist()', () => {
 	});
 
 	it('with nodes', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <div id="FunctionChecklistCase">
           <div id="FunctionChecklistCaseNo">no</div>
@@ -84,7 +84,7 @@ describe('#weighted-checklist()', () => {
 		},
 	].forEach(({ expression, expected }) => {
 		it(`evaluates ${expression} to ${expected}`, () => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <thedata id="thedata">
           <somenodes>
             <A>one</A>

@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#count-selected()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
     <div id="FunctionSelectedCase">
       <div id="FunctionSelectedCaseEmpty"></div>
       <div id="FunctionSelectedCaseSingle">ab</div>

@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('openrosa-xpath', () => {
 	let testContext: TestContext;
@@ -10,7 +10,7 @@ describe('openrosa-xpath', () => {
 	});
 
 	it('should process simple xpaths', () => {
-		testContext = createTextContentTestContext('val');
+		testContext = createXFormsTextContentTestContext('val');
 
 		testContext.assertStringValue('/simple/xpath/to/node', 'val');
 	});

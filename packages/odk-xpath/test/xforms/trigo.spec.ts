@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, namespaceResolver } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, namespaceResolver } from '../helpers.ts';
 
 describe('math functions', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('sin()', () => {
@@ -15,7 +15,7 @@ describe('math functions', () => {
 	});
 
 	it('sin() for node', () => {
-		testContext = createTestContext(
+		testContext = createXFormsTestContext(
 			`
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
@@ -115,7 +115,7 @@ describe('math functions', () => {
 
 	describe('referencing nodesets', () => {
 		beforeEach(() => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <numbers>
           <minusone>-1</minusone>
           <minuspointfive>-0.5</minuspointfive>

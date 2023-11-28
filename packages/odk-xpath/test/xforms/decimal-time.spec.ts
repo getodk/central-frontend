@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('decimal-time()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	[
@@ -29,7 +29,7 @@ describe('decimal-time()', () => {
 	});
 
 	it('should convert times provided with a node parameter', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <data>
         <a>06:00:00.000-07:00</a>
       </data>`);

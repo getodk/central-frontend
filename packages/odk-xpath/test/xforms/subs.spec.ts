@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#substr()', () => {
 	let testContext: TestContext;
@@ -10,13 +10,13 @@ describe('#substr()', () => {
 	});
 
 	it('should give the rest of a string if supplied with only startIndex', () => {
-		testContext = createTextContentTestContext('0123456789');
+		testContext = createXFormsTextContentTestContext('0123456789');
 
 		testContext.assertStringValue('substr(/simple/xpath/to/node, 5)', '56789');
 	});
 
 	it('should give substring from start to finish if supplied with 2 indexes', () => {
-		testContext = createTextContentTestContext('0123456789');
+		testContext = createXFormsTextContentTestContext('0123456789');
 
 		testContext.assertStringValue('substr(/simple/xpath/to/node, 2, 4)', '23');
 	});

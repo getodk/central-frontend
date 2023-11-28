@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#regex()', () => {
 	let testContext: TestContext;
@@ -11,7 +11,7 @@ describe('#regex()', () => {
 
 	it('should return `true` if value matches supplied regex', () => {
 		// given
-		testContext = createTextContentTestContext('123');
+		testContext = createXFormsTextContentTestContext('123');
 
 		// expect
 		testContext.assertBooleanValue('regex(/simple/xpath/to/node, "[0-9]{3}")', true);
@@ -21,7 +21,7 @@ describe('#regex()', () => {
 	// not explicitly stated in the spec.
 	it('should return `false` if value matches supplied regex', () => {
 		// given
-		testContext = createTextContentTestContext('1234');
+		testContext = createXFormsTextContentTestContext('1234');
 
 		// expect
 		testContext.assertBooleanValue('regex(/simple/xpath/to/node, "[0-9]{3}")', true);

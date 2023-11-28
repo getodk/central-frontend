@@ -1,13 +1,13 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 // @see https://docs.opendatakit.org/form-operators-functions/?highlight=checklist#checklist
 describe('#checklist()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	[
@@ -36,7 +36,7 @@ describe('#checklist()', () => {
 		},
 	].forEach(({ expression, id, expected }) => {
 		it(`evaluates ${expression} with context #${id} to ${expected}`, () => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <div id="FunctionChecklistCase">
           <div id="FunctionChecklistCaseNo">no</div>
           <div id="FunctionChecklistCaseEmpty"></div>

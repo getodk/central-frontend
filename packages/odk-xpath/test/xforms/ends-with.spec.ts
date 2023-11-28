@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('ends-with', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('ends-with', () => {
@@ -29,7 +29,7 @@ describe('ends-with', () => {
 	});
 
 	it('with a node parameter', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <data>
         <a id="A">TAXIcab</a>
       </data>`);

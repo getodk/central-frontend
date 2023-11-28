@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#pow()', () => {
 	let testContext: TestContext;
@@ -11,19 +11,19 @@ describe('#pow()', () => {
 
 	describe('should return power of text values', () => {
 		it('3^0', () => {
-			testContext = createTextContentTestContext('3');
+			testContext = createXFormsTextContentTestContext('3');
 
 			testContext.assertNumberValue('pow(/simple/xpath/to/node, 0)', 1);
 		});
 
 		it('1^3', () => {
-			testContext = createTextContentTestContext('1');
+			testContext = createXFormsTextContentTestContext('1');
 
 			testContext.assertNumberValue('pow(/simple/xpath/to/node, 3)', 1);
 		});
 
 		it('4^2', () => {
-			testContext = createTextContentTestContext('4');
+			testContext = createXFormsTextContentTestContext('4');
 
 			testContext.assertNumberValue('pow(/simple/xpath/to/node, 2)', 16);
 		});

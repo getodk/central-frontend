@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#concat', () => {
 	let testContext: TestContext;
@@ -10,7 +10,7 @@ describe('#concat', () => {
 	});
 
 	it('should concatenate two xpath values', () => {
-		testContext = createTextContentTestContext('jaja');
+		testContext = createXFormsTextContentTestContext('jaja');
 
 		// TODO: this was previously named `regex`, but it is clearly not a regular
 		// expression. Copypasta?!
@@ -24,13 +24,13 @@ describe('#concat', () => {
 	});
 
 	it('should concatenate a string and an xpath value', () => {
-		testContext = createTextContentTestContext('port');
+		testContext = createXFormsTextContentTestContext('port');
 
 		testContext.assertStringValue('concat(/simple/xpath/to/node, "manteau")', 'portmanteau');
 	});
 
 	it('should concatenate an xpath and a string value', () => {
-		testContext = createTextContentTestContext('port');
+		testContext = createXFormsTextContentTestContext('port');
 
 		testContext.assertStringValue('concat(/simple/xpath/to/node, "manteau")', 'portmanteau');
 	});

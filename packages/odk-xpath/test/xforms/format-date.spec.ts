@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#format-date()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	[
@@ -29,7 +29,7 @@ describe('#format-date()', () => {
 		{ expression: 'format-date("not a date", "%M")', id: null, expected: '' },
 	].forEach(({ expression, id, expected }) => {
 		it(`evaluates ${expression} with context #${id} to ${expected}`, () => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <div id="FunctionDate">
           <div id="FunctionDateCase1">2012-07-23</div>
           <div id="FunctionDateCase2">2012-08-20T00:00:00.00+00:00</div>

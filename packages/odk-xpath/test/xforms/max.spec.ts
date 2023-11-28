@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#max()', () => {
 	let testContext: TestContext;
@@ -23,13 +23,13 @@ describe('#max()', () => {
 	});
 
 	it('should return NaN if no numerical nodes are matched', () => {
-		testContext = createTextContentTestContext('');
+		testContext = createXFormsTextContentTestContext('');
 
 		testContext.assertNumberValue('max(/simple)', NaN);
 	});
 
 	it('should return value of a single node if only one matches', () => {
-		testContext = createTextContentTestContext('3');
+		testContext = createXFormsTextContentTestContext('3');
 
 		testContext.assertNumberValue('max(/simple/xpath/to/node)', 3);
 	});

@@ -265,6 +265,28 @@ export const createTestContext = (xml?: string, options: TestContextOptions = {}
 	return new TestContext(xml, options);
 };
 
+interface XFormsTestContextOptions extends TestContextOptions {
+	readonly xforms?: true;
+}
+
+export class XFormsTestContext extends TestContext {
+	readonly xforms = true;
+
+	constructor(sourceXML?: string, options: XFormsTestContextOptions = {}) {
+		super(sourceXML, {
+			...options,
+			xforms: true,
+		});
+	}
+}
+
+export const createXFormsTestContext = (
+	xml?: string,
+	options: XFormsTestContextOptions = {}
+): XFormsTestContext => {
+	return new XFormsTestContext(xml, options);
+};
+
 /**
  * Creates a text context to evaluate expressions against a document with a
  * predictable structure:
@@ -280,9 +302,9 @@ export const createTestContext = (xml?: string, options: TestContextOptions = {}
  * </simple>
  * ```
  */
-export const createTextContentTestContext = (textContent: string) => {
+export const createXFormsTextContentTestContext = (textContent: string) => {
 	//         ^ Say *that* ten times fast! ;)
-	return createTestContext(/* xml */ `<simple>
+	return createXFormsTestContext(/* xml */ `<simple>
     <xpath>
       <to>
         <node>${textContent}</node>

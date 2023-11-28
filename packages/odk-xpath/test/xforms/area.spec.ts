@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('distance() and area() functions', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	const SHAPE1 =
@@ -45,7 +45,7 @@ describe('distance() and area() functions', () => {
 
 	describe('area with nodes', () => {
 		beforeEach(() => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <root>
           <div id="FunctionArea1">
             <div>7.9377 -11.5845 0 0</div>

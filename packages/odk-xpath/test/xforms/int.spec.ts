@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 const PATH = '/simple/xpath/to/node';
 
@@ -12,13 +12,13 @@ describe('#int()', () => {
 	});
 
 	it('should convert a string to an integer', () => {
-		testContext = createTextContentTestContext('123');
+		testContext = createXFormsTextContentTestContext('123');
 
 		testContext.assertNumberValue(`int(${PATH})`, 123);
 	});
 
 	it('should convert a decimal to an integer', () => {
-		testContext = createTextContentTestContext('123.456');
+		testContext = createXFormsTextContentTestContext('123.456');
 
 		testContext.assertNumberValue(`int(${PATH})`, 123);
 	});

@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#min()', () => {
 	let testContext: TestContext;
@@ -27,7 +27,7 @@ describe('#min()', () => {
 	});
 
 	it('should return value of a single node if only one matches', () => {
-		testContext = createTextContentTestContext('3');
+		testContext = createXFormsTextContentTestContext('3');
 
 		testContext.assertNumberValue('min(/simple/xpath/to/node)', 3);
 	});

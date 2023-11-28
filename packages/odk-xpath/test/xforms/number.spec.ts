@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#number()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	describe('called on a boolean', () => {
@@ -91,7 +91,7 @@ describe('#number()', () => {
 		});
 
 		it('number() conversion of nodesets', () => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <div id="FunctionNumberCase">
           <div id="FunctionNumberCaseNumber">123</div>
           <div id="FunctionNumberCaseNotNumber">  a a  </div>

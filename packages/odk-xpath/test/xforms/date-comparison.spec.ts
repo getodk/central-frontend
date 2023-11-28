@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('date comparison', () => {
 	let testContext: TestContext;
@@ -134,7 +134,7 @@ describe('date comparison', () => {
 	describe('comparisons with a field', () => {
 		describe('set to today', () => {
 			beforeEach(() => {
-				testContext = createTextContentTestContext(relativeDateAsString(0));
+				testContext = createXFormsTextContentTestContext(relativeDateAsString(0));
 			});
 
 			it('should be less than tomorrow', () => {

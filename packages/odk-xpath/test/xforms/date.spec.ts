@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, namespaceResolver } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, namespaceResolver } from '../helpers.ts';
 
 describe('#date()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	describe('invalid dates', () => {
@@ -212,7 +212,7 @@ describe('#date()', () => {
 
 	describe('for nodes (where the date datatype is guessed)', () => {
 		beforeEach(() => {
-			testContext = createTestContext(
+			testContext = createXFormsTestContext(
 				`
         <div id="FunctionDate">
           <div id="FunctionDateCase1">2012-07-23</div>
@@ -281,7 +281,7 @@ describe('#date()', () => {
 
 	describe('datestring comparisons (date detection)', () => {
 		beforeEach(() => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <div id="FunctionDate">
           <div id="FunctionDateCase1">2012-07-23</div>
           <div id="FunctionDateCase2">2012-08-20T00:00:00.00+00:00</div>
@@ -317,7 +317,7 @@ describe('#date()', () => {
 
 	describe('date calculations', () => {
 		beforeEach(() => {
-			testContext = createTestContext(
+			testContext = createXFormsTestContext(
 				`
         <!DOCTYPE html>
         <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">

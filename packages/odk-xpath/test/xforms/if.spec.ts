@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#if()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('should return first option if true', () => {
@@ -23,7 +23,7 @@ describe('#if()', () => {
 
 	describe('with node evaluation', () => {
 		beforeEach(() => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
       <div id="FunctionChecklistCase">
         <div id="FunctionChecklistCaseNo">no</div>
         <div id="FunctionChecklistCaseEmpty"></div>
@@ -204,7 +204,7 @@ describe('#if()', () => {
 
 	describe('should deal with nesting and lengthy or/and clauses (with derived values)', () => {
 		beforeEach(() => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <data>
           <a/>
           <b/>
@@ -258,7 +258,7 @@ describe('#if()', () => {
 
 	describe('deviation from the XForms spec', () => {
 		beforeEach(() => {
-			testContext = createTestContext(`<data><a/><b/><b/></data>`);
+			testContext = createXFormsTestContext(`<data><a/><b/><b/></data>`);
 		});
 
 		describe('it should NOT coerce the result to a string', () => {

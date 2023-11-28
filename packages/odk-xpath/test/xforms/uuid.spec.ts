@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#uuid()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('should provide an RFC 4122 version 4 compliant UUID string', () => {
@@ -34,7 +34,7 @@ describe('#uuid()', () => {
 
 	describe('referencing nodesets', () => {
 		beforeEach(() => {
-			testContext = createTestContext(`
+			testContext = createXFormsTestContext(`
         <numbers>
           <one>1</one>
           <two>2</two>

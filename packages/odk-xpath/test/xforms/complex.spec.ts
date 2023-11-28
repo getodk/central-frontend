@@ -1,7 +1,7 @@
 import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 const SIMPLE_DATE_MATCH = /^\d{4}-[0-1]\d-[0-3]\d$/;
 const SIMPLE_DATE_OR_DATE_TIME_MATCH =
@@ -12,10 +12,10 @@ const isDocument = (node: Node | null) => {
 };
 
 describe('some complex examples', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	[

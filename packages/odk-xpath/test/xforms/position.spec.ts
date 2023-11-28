@@ -1,16 +1,16 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#position()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('position(node) with an argument', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
         <head>
@@ -51,7 +51,7 @@ describe('#position()', () => {
 	});
 
 	it('position(node) with p node', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <div id="testFunctionNodeset">
         <div id="testFunctionNodeset2">
           <p>1</p>

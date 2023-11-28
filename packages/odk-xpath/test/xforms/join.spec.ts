@@ -1,16 +1,16 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#join()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('should join a list of strings with supplied separator', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <item>one</item>
         <item>two</item>
@@ -29,7 +29,7 @@ describe('#join()', () => {
 	});
 
 	it('should join nodes', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
         <root id='xroot'>
           <item>1</item>
           <item>2</item>

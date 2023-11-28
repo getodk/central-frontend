@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
-import { createTestContext, createTextContentTestContext } from '../helpers.ts';
+import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#selected()', () => {
 	let testContext: TestContext;
@@ -16,7 +16,7 @@ describe('#selected()', () => {
 	].forEach(({ expression, expected }) => {
 		it(`should return true if requested item is in list (evaluating ${expression})`, () => {
 			// given
-			testContext = createTextContentTestContext('one two three');
+			testContext = createXFormsTextContentTestContext('one two three');
 
 			testContext.assertBooleanValue(expression, expected);
 		});
@@ -29,7 +29,7 @@ describe('#selected()', () => {
 	].forEach(({ expression, expected }) => {
 		it(`should return false if requested item not in list (evaluating ${expression})`, () => {
 			// given
-			testContext = createTextContentTestContext('one two three');
+			testContext = createXFormsTextContentTestContext('one two three');
 
 			testContext.assertBooleanValue(expression, expected);
 		});

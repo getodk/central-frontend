@@ -1,16 +1,16 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#sum()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('sum(self::*)', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <div id="FunctionNumberCase">
         <div id="FunctionNumberCaseNumber">123</div>
         <div id="FunctionNumberCaseNotNumber">  a a  </div>
@@ -52,7 +52,7 @@ describe('#sum()', () => {
 	});
 
 	it('sum(*)', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root id="root">
         <item>-10</item>
         <item>11</item>
