@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from './helpers.ts';
-import { createTestContext, createTextContentTestContext } from './helpers.ts';
+import type { TestContext } from '../helpers.ts';
+import { createTestContext, createTextContentTestContext } from '../helpers.ts';
 
 describe('date comparison', () => {
 	let testContext: TestContext;

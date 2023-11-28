@@ -1,7 +1,7 @@
 import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { TestContext } from './helpers.ts';
-import { createTestContext } from './helpers.ts';
+import type { TestContext } from '../helpers.ts';
+import { createTestContext } from '../helpers.ts';
 
 const SIMPLE_DATE_MATCH = /^\d{4}-[0-1]\d-[0-3]\d$/;
 const SIMPLE_DATE_OR_DATE_TIME_MATCH =

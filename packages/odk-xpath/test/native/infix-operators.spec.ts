@@ -1,5 +1,5 @@
 import { beforeEach, describe, it } from 'vitest';
-import { TestContext, createTestContext } from './helpers';
+import { TestContext, createTestContext } from '../helpers';
 
 describe('infix operators', () => {
 	let testContext: TestContext;

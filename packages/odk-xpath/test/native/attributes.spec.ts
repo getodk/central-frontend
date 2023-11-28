@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from './helpers.ts';
-import { createTestContext } from './helpers.ts';
+import type { TestContext } from '../helpers.ts';
+import { createTestContext } from '../helpers.ts';
 
 describe('Attribute context nodes', () => {
 	let testContext: TestContext;
