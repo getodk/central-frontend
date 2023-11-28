@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
     <div class="panel-body">
       <entity-conflict-table v-if="entityVersions.dataExists"
         :uuid="entity.uuid" :versions="relevantToConflict"/>
-      <div class="panel-footer">
+      <div v-if="project.permits('entity.update')" class="panel-footer">
         <span class="icon-arrow-circle-right"></span>
         <p>
           {{ $t('footer[0]') }}
@@ -63,9 +63,7 @@ import { useRequestData } from '../../request-data';
 
 const { request, awaitingResponse } = useRequest();
 const { t } = useI18n();
-// The component does not assume that this data will exist when the component is
-// created.
-const { dataset, entityVersions } = useRequestData();
+const { project, dataset, entityVersions } = useRequestData();
 const { alert } = inject('container');
 
 defineOptions({
@@ -150,6 +148,7 @@ const markAsResolved = () => {
   #entity-conflict-table {
     margin-left: -15px;
     margin-right: -15px;
+    &:last-child { margin-bottom: -15px; }
 
     // Align the leftmost text of the first column with the icon in the
     // .panel-heading.

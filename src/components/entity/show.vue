@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
           <entity-data @update="update.state = true"/>
         </div>
         <div class="col-xs-8">
-          <entity-conflict-summary v-if="entity.data?.conflict" :entity="entity" @resolve="afterResolve"/>
+          <entity-conflict-summary v-if="project.dataExists && entity.data?.conflict" :entity="entity" @resolve="afterResolve"/>
           <entity-activity/>
         </div>
       </div>

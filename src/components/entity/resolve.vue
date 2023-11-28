@@ -15,8 +15,12 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title', entity) }}</template>
     <template #body>
       <div v-if="!success">
-        <p>{{ $t('instructions[0]', entity) }}</p>
-        <p>{{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}</p>
+        <div class="modal-introduction">
+          <p>{{ $t('instructions[0]', entity) }}</p>
+          <p v-if="canUpdate">
+            {{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}
+          </p>
+        </div>
 
         <div v-show="tableShown" id="entity-resolve-table-container">
           <loading :state="entityVersions.awaitingResponse"/>
@@ -41,12 +45,14 @@ except according to the terms contained in the LICENSE file.
           :aria-disabled="awaitingResponse" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
-        <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="$emit('hide', true)">
-          <span class="icon-pencil"></span>{{ $t('action.editEntity') }}
-        </button>
-        <button type="button" class="btn btn-default mark-as-resolved" :aria-disabled="awaitingResponse" @click="markAsResolve">
-          <span class="icon-check"></span>{{ $t('action.markAsResolved') }} <spinner :state="awaitingResponse"/>
-        </button>
+        <template v-if="canUpdate">
+          <button type="button" class="btn btn-default edit-entity" :aria-disabled="awaitingResponse" @click="$emit('hide', true)">
+            <span class="icon-pencil"></span>{{ $t('action.editEntity') }}
+          </button>
+          <button type="button" class="btn btn-default mark-as-resolved" :aria-disabled="awaitingResponse" @click="markAsResolve">
+            <span class="icon-check"></span>{{ $t('action.markAsResolved') }} <spinner :state="awaitingResponse"/>
+          </button>
+        </template>
       </div>
       <div v-else class="success-msg">
         <span class="icon-check-circle success"></span> {{ $t('successMessage') }}
@@ -62,7 +68,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { inject, nextTick, ref, watch } from 'vue';
+import { computed, inject, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import EntityConflictTable from './conflict-table.vue';
@@ -73,6 +79,7 @@ import Spinner from '../spinner.vue';
 import useEntityVersions from '../../request-data/entity-versions';
 import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
+import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
@@ -85,8 +92,15 @@ const props = defineProps({
 });
 const emit = defineEmits(['hide', 'success']);
 
-// Conflict summary table
+// The component does not assume that this data will exist when the component is
+// created.
+const { project } = useRequestData();
 const entityVersions = useEntityVersions();
+
+const canUpdate = computed(() =>
+  project.dataExists && project.permits('entity.update'));
+
+// Conflict summary table
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 const alert = inject('alert');
@@ -156,6 +170,7 @@ watch(() => props.entity, (entity) => {
 
 #entity-resolve {
   .modal-dialog { margin-top: 15vh; }
+  .modal-introduction { margin-bottom: 12px; }
 
   .btn + .btn {
     margin-left: 10px;
@@ -173,11 +188,11 @@ watch(() => props.entity, (entity) => {
   margin-left: -$padding-modal-body;
   margin-right: -$padding-modal-body;
   // If the height of the modal content other than the table is no more than
-  // 375px, this allows the table to push the modal to 75vh tall. After that,
+  // 365px, this allows the table to push the modal to 75vh tall. After that,
   // the table container will scroll.
-  max-height: max(calc(75vh - 375px), 175px);
+  max-height: max(calc(75vh - 365px), 175px);
   overflow-y: auto;
-  padding-top: 5px;
+  padding-top: 3px;
 }
 #entity-resolve #entity-conflict-table {
   tbody tr { background-color: transparent; }
