@@ -175,8 +175,6 @@ describe('native number functions', () => {
 			{ expression: 'round(5)', expected: 5 },
 			{ expression: 'round(1.00)', expected: 1 },
 			{ expression: 'round(-1.05)', expected: -1 },
-			// TODO: this is not native!!!
-			{ expression: 'round(33.33, -1)', expected: 30 },
 		].forEach(({ expression, expected }) => {
 			it(`evaluates ${expression} to ${expected}`, () => {
 				testContext.assertNumberValue(expression, expected);
