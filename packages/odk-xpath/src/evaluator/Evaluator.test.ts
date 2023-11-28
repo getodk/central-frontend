@@ -85,4 +85,36 @@ describe('Evaluator convenience methods', () => {
 			expect(actual).toBe('4');
 		});
 	});
+
+	describe('nodes', () => {
+		it('evaluates a node result', () => {
+			const expected = testDocument.querySelector('a')!;
+			const actual = evaluator.evaluateNode('/root/a');
+
+			expect(actual).toBe(expected);
+		});
+
+		it('evaluates a node result from an explicit context node', () => {
+			const expected = testDocument.querySelector('d')!;
+			const contextNode = testDocument.querySelector('c')!;
+			const actual = evaluator.evaluateNode('./d', { contextNode });
+
+			expect(actual).toBe(expected);
+		});
+
+		it('asserts an element exists', () => {
+			const evaluate = () => {
+				return evaluator.evaluateNonNullElement('/root/nope');
+			};
+
+			expect(evaluate).toThrow();
+		});
+
+		it('evaluates an array of nodes', () => {
+			const expected = Array.from(testDocument.querySelectorAll('a, b, c, d'));
+			const actual = evaluator.evaluateNodes('/root//*');
+
+			expect(actual).toEqual(expected);
+		});
+	});
 });

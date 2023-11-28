@@ -42,6 +42,15 @@ export interface EvaluatorConvenienceMethodOptions {
 	readonly contextNode?: Node;
 }
 
+export interface EvaluatorNodeConvenienceMethodOptions<AssertExists extends boolean = false>
+	extends EvaluatorConvenienceMethodOptions {
+	readonly assertExists?: AssertExists;
+}
+
+type EvaluatedNode<AssertExists extends boolean, T extends Node> = AssertExists extends true
+	? T
+	: T | null;
+
 export class Evaluator implements AnyXPathEvaluator {
 	// TODO: see notes on cache in `ExpressionParser.ts`, update or remove those
 	// if this usage changes in a way that addresses concerns expressed there.
@@ -122,5 +131,68 @@ export class Evaluator implements AnyXPathEvaluator {
 		const contextNode = this.getContextNode(options);
 
 		return this.evaluate(expression, contextNode, null, XPathResult.STRING_TYPE).stringValue;
+	}
+
+	evaluateNode<T extends Node, AssertExists extends boolean = false>(
+		expression: string,
+		options: EvaluatorNodeConvenienceMethodOptions<AssertExists> = {}
+	): EvaluatedNode<AssertExists, T> {
+		const contextNode = this.getContextNode(options);
+
+		// TODO: unsafe cast
+		const node = this.evaluate(expression, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE)
+			.singleNodeValue as T | null;
+
+		if (!options.assertExists) {
+			return node as EvaluatedNode<AssertExists, T>;
+		}
+
+		if (node == null) {
+			throw new Error(`Failed to evaluate node for expression ${expression}`);
+		}
+
+		return node as EvaluatedNode<AssertExists, T>;
+	}
+
+	evaluateElement<AssertExists extends boolean = false>(
+		expression: string,
+		options: EvaluatorNodeConvenienceMethodOptions<AssertExists> = {}
+	) {
+		return this.evaluateNode<Element, AssertExists>(expression, options);
+	}
+
+	evaluateNonNullElement(
+		expression: string,
+		options: Omit<EvaluatorNodeConvenienceMethodOptions<true>, 'assertExists'> = {}
+	): Element {
+		return this.evaluateElement<true>(expression, {
+			...options,
+			assertExists: true,
+		});
+	}
+
+	evaluateNodes<T extends Node>(
+		expression: string,
+		options: EvaluatorNodeConvenienceMethodOptions = {}
+	): T[] {
+		const contextNode = this.getContextNode(options);
+
+		const snapshotResult = this.evaluate(
+			expression,
+			contextNode,
+			null,
+			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
+		);
+		const { snapshotLength } = snapshotResult;
+		const nodes: T[] = [];
+
+		for (let i = 0; i < snapshotLength; i += 1) {
+			nodes.push(
+				// TODO: unsafe cast
+				snapshotResult.snapshotItem(i) as T
+			);
+		}
+
+		return nodes;
 	}
 }
