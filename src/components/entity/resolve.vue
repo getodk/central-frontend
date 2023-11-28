@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
         </div>
 
         <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, entity?.__id)"
-          :aria-disabled="awaitingResponse" target="_blank">
+          :class="{ disabled: awaitingResponse }" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
         <template v-if="canUpdate">
