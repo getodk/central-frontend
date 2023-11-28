@@ -1,6 +1,6 @@
 import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
+import type { XFormsXPathEvaluator } from '@odk/xpath';
 import { createMemo, type Accessor } from 'solid-js';
-import type { XFormXPathEvaluator } from '../../xpath/XFormXPathEvaluator.ts';
 import type { XFormDOM } from '../XFormDOM.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
@@ -78,7 +78,7 @@ export class EntryState implements NodeState<'root'> {
 	protected readonly instanceDOM: XFormDOM;
 
 	readonly xformDocument: XMLDocument;
-	readonly evaluator: XFormXPathEvaluator;
+	readonly evaluator: XFormsXPathEvaluator;
 
 	readonly node: Element;
 

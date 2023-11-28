@@ -16,7 +16,7 @@ import { FunctionLibrary } from './functions/FunctionLibrary.ts';
 import { ResultTypes } from './result/ResultType.ts';
 import { toXPathResult } from './result/index.ts';
 
-interface EvaluatorOptions {
+export interface EvaluatorOptions {
 	readonly functionLibrary?: FunctionLibrary;
 	readonly parseOptions?: ParseOptions;
 	readonly rootNode?: AnyParentNode | null | undefined;

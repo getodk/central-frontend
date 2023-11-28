@@ -1,6 +1,7 @@
 import { expect } from 'vitest';
 import { Evaluator } from '../src/index.ts';
 import type { AnyXPathEvaluator, XPathResultType } from '../src/shared/interface.ts';
+import { XFormsXPathEvaluator } from '../src/xforms/XFormsXPathEvaluator.ts';
 import { xpathParser } from './parser.ts';
 
 declare global {
@@ -38,6 +39,7 @@ interface EvaluationAssertionOptions {
 
 interface TestContextOptions {
 	readonly namespaceResolver?: Nullish<XPathNSResolver>;
+	readonly xforms?: boolean;
 }
 
 export class TestContext {
@@ -50,16 +52,25 @@ export class TestContext {
 		options: TestContextOptions = {}
 	) {
 		const xml = sourceXML ?? '<root/>';
+		const testDocument: XMLDocument = domParser.parseFromString(xml, 'text/xml');
 
-		const evaluator = new Evaluator(xpathParser, {
+		const evaluatorOptions = {
 			parseOptions: {
 				attemptErrorRecovery: true,
 			},
 			timeZoneId: TZ,
-		});
+		} as const;
 
-		this.document = domParser.parseFromString(xml, 'text/xml');
-		this.evaluator = evaluator;
+		if (options.xforms) {
+			this.evaluator = new XFormsXPathEvaluator(xpathParser, {
+				...evaluatorOptions,
+				rootNode: testDocument,
+			});
+		} else {
+			this.evaluator = new Evaluator(xpathParser, evaluatorOptions);
+		}
+
+		this.document = testDocument;
 		this.namespaceResolver = options.namespaceResolver ?? namespaceResolver;
 	}
 

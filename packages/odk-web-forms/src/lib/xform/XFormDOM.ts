@@ -1,5 +1,6 @@
 import { XFORMS_NAMESPACE_URI } from '@odk/common/constants/xmlns.ts';
-import { XFormXPathEvaluator } from '../xpath/XFormXPathEvaluator.ts';
+import { XFormsXPathEvaluator } from '@odk/xpath';
+import { xpathEvaluator } from '../xpath/evaluator.ts';
 
 const domParser = new DOMParser();
 
@@ -72,7 +73,7 @@ const normalizeRepeatGroups = (xformDocument: XMLDocument, body: Element): void 
 
 interface NormalizedXForm {
 	readonly xformDocument: XMLDocument;
-	readonly rootEvaluator: XFormXPathEvaluator;
+	readonly rootEvaluator: XFormsXPathEvaluator;
 	readonly html: Element;
 	readonly body: Element;
 	readonly normalizedXML: string;
@@ -97,7 +98,7 @@ const parseNormalizedXForm = (
 	options: XFormDOMNormalizationOptions
 ): NormalizedXForm => {
 	const xformDocument: XMLDocument = domParser.parseFromString(sourceXML, 'text/xml');
-	const rootEvaluator = new XFormXPathEvaluator(xformDocument);
+	const rootEvaluator = xpathEvaluator(xformDocument);
 	const html = rootEvaluator.evaluateNonNullElement('/h:html');
 	const body = rootEvaluator.evaluateNonNullElement('./h:body', {
 		contextNode: html,
@@ -131,8 +132,8 @@ export class XFormDOM {
 	protected readonly normalizedXML: string;
 
 	// XPath
-	readonly rootEvaluator: XFormXPathEvaluator;
-	readonly primaryInstanceEvaluator: XFormXPathEvaluator;
+	readonly rootEvaluator: XFormsXPathEvaluator;
+	readonly primaryInstanceEvaluator: XFormsXPathEvaluator;
 
 	// Commonly accessed landmark nodes
 	readonly xformDocument: XMLDocument;
@@ -174,7 +175,7 @@ export class XFormDOM {
 
 		this.normalizedXML = normalizedXML;
 		this.rootEvaluator = rootEvaluator;
-		this.primaryInstanceEvaluator = new XFormXPathEvaluator(primaryInstance);
+		this.primaryInstanceEvaluator = xpathEvaluator(primaryInstance);
 		this.xformDocument = xformDocument;
 		this.html = html;
 		this.head = head;

@@ -1,7 +1,7 @@
-import type { XFormXPathEvaluator } from '../../../xpath/XFormXPathEvaluator';
+import type { XFormsXPathEvaluator } from '@odk/xpath';
 
 export interface TextElementPart {
 	readonly dependencyExpressions: readonly string[];
 
-	evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): string;
+	evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): string;
 }

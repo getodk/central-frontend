@@ -1,4 +1,4 @@
-import type { XFormXPathEvaluator } from '../../xpath/XFormXPathEvaluator.ts';
+import type { XFormsXPathEvaluator } from '@odk/xpath';
 import { getNodesetDependencies } from '../../xpath/expression-dependencies.ts';
 import type { XFormDataType } from '../XFormDataType.ts';
 import { bindDataType } from '../XFormDataType.ts';
@@ -29,7 +29,7 @@ export interface BindExpression<Type extends BindExpressionEvaluationType> {
 	readonly dependencyExpressions: readonly string[];
 	readonly evaluationType: Type;
 
-	evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): BindExpressionEvaluation<Type>;
+	evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): BindExpressionEvaluation<Type>;
 }
 
 abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
@@ -46,7 +46,7 @@ abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
 		this.expression = bind.bindElement.getAttribute(expressionType);
 	}
 
-	protected evaluateBoolean(evaluator: XFormXPathEvaluator, contextNode: Node): boolean {
+	protected evaluateBoolean(evaluator: XFormsXPathEvaluator, contextNode: Node): boolean {
 		const { expression } = this;
 
 		if (expression == null) {
@@ -58,7 +58,7 @@ abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
 		});
 	}
 
-	protected evaluateString(evaluator: XFormXPathEvaluator, contextNode: Node): string {
+	protected evaluateString(evaluator: XFormsXPathEvaluator, contextNode: Node): string {
 		const { expression } = this;
 
 		if (expression == null) {
@@ -71,7 +71,7 @@ abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
 	}
 
 	abstract evaluate(
-		evaluator: XFormXPathEvaluator,
+		evaluator: XFormsXPathEvaluator,
 		contextNode: Node
 	): BindExpressionEvaluation<Type>;
 
@@ -91,7 +91,7 @@ class StaticBooleanBindExpression extends StaticBindExpression<'BOOLEAN'> {
 		super(bind, expressionType, 'BOOLEAN');
 	}
 
-	override evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): boolean {
+	override evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): boolean {
 		return this.evaluateBoolean(evaluator, contextNode);
 	}
 }
@@ -143,7 +143,7 @@ class DependentBooleanBindExpression extends DependentBindExpression<'BOOLEAN'> 
 		super(bind, expressionType, 'BOOLEAN', options);
 	}
 
-	override evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): boolean {
+	override evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): boolean {
 		return this.evaluateBoolean(evaluator, contextNode);
 	}
 }
@@ -153,7 +153,7 @@ class DependentStringBindExpression extends DependentBindExpression<'STRING'> {
 		super(bind, expressionType, 'STRING');
 	}
 
-	override evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): string {
+	override evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): string {
 		return this.evaluateString(evaluator, contextNode);
 	}
 }
