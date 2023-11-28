@@ -143,6 +143,4 @@ export const namespaceURI = new StringFunction(
 	{ localName: 'namespace-uri' }
 );
 
-export const position = new NumberFunction([{ arityType: 'optional' }], (context, []): number =>
-	context.contextPosition()
-);
+export const position = new NumberFunction([], (context, []): number => context.contextPosition());
