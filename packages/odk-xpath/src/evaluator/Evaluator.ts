@@ -1,7 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill';
 import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
 import { EvaluationContext } from '../context/EvaluationContext.ts';
-import { fn } from '../functions/index.ts';
+import * as fnImplementations from '../functions/fn/index.ts';
 import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
 import type {
 	AnyXPathEvaluator,
@@ -11,10 +11,13 @@ import type {
 } from '../shared/index.ts';
 import type { BaseParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { ExpressionParser } from '../static/grammar/ExpressionParser.ts';
+import { FN_NAMESPACE_URI } from './NamespaceResolver.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibrary } from './functions/FunctionLibrary.ts';
 import { ResultTypes } from './result/ResultType.ts';
 import { toXPathResult } from './result/index.ts';
+
+const fn = new FunctionLibrary(FN_NAMESPACE_URI, Object.entries(fnImplementations));
 
 export interface EvaluatorOptions {
 	readonly functionLibrary?: FunctionLibrary;

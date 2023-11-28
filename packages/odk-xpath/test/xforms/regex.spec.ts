@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#regex()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('should return `true` if value matches supplied regex', () => {

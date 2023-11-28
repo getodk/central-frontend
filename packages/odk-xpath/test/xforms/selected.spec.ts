@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#selected()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	[
@@ -52,7 +52,7 @@ describe('#selected()', () => {
 	});
 
 	it('with nodes', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
         <head>

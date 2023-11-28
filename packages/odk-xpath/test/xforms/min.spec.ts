@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#min()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	[
@@ -33,7 +33,7 @@ describe('#min()', () => {
 	});
 
 	it('should return NaN if any node evaluates to NaN', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <item>3</item>
         <item>17</item>
@@ -45,7 +45,7 @@ describe('#min()', () => {
 	});
 
 	it('should return the min value in a node set', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <item>3</item>
         <item>-17</item>
@@ -56,7 +56,7 @@ describe('#min()', () => {
 	});
 
 	it('should return the min value in a node set of negative numbers', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
         <root>
           <item>-3</item>
           <item>-17</item>
@@ -67,7 +67,7 @@ describe('#min()', () => {
 	});
 
 	it('min(self::*) & min(*)', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <div id="FunctionNumberCase">
         <div id="FunctionNumberCaseNumber">123</div>
         <div id="FunctionNumberCaseNotNumber">  a a  </div>
@@ -96,7 +96,7 @@ describe('#min()', () => {
 	});
 
 	it('min()', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <div>
         <div id="FunctionMinCase">
           <div>5</div>

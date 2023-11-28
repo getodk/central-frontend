@@ -1,14 +1,14 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 const PATH = '/simple/xpath/to/node';
 
 describe('#int()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	it('should convert a string to an integer', () => {

@@ -1,12 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
-import type { TestContext } from '../helpers.ts';
-import { createTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
+import type { XFormsTestContext } from '../helpers.ts';
+import { createXFormsTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
 
 describe('#max()', () => {
-	let testContext: TestContext;
+	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
-		testContext = createTestContext();
+		testContext = createXFormsTestContext();
 	});
 
 	[
@@ -35,7 +35,7 @@ describe('#max()', () => {
 	});
 
 	it('should return NaN if any node evaluates to NaN', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <item>3</item>
         <item>17</item>
@@ -47,7 +47,7 @@ describe('#max()', () => {
 	});
 
 	it('should return the max value in a node set', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <item>3</item>
         <item>17</item>
@@ -58,7 +58,7 @@ describe('#max()', () => {
 	});
 
 	it('should return the max value in a node set of negative numbers', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <item>-3</item>
         <item>-17</item>
@@ -69,7 +69,7 @@ describe('#max()', () => {
 	});
 
 	it('max(self::*) & max(*)', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <root>
         <div id="FunctionMaxCase">
           <div>-5</div>
@@ -105,7 +105,7 @@ describe('#max()', () => {
 	});
 
 	it('max(self::*) & max(*)', () => {
-		testContext = createTestContext(`
+		testContext = createXFormsTestContext(`
       <div id="FunctionNumberCase">
         <div id="FunctionNumberCaseNumber">123</div>
         <div id="FunctionNumberCaseNotNumber">  a a  </div>
