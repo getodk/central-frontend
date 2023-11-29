@@ -1,10 +1,15 @@
+import { FunctionAlias } from '../../evaluator/functions/FunctionAlias.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { mathAlias } from '../_shared/number.ts';
 
-export const ceiling = mathAlias('ceil');
+const ceil = mathAlias('ceil');
+
+export const ceiling = new FunctionAlias('ceiling', ceil);
+
 export const floor = mathAlias('floor');
 
 export const number = new NumberFunction(
+	'number',
 	[{ arityType: 'optional' }],
 	(context, [expression]): number => (expression?.evaluate(context) ?? context).toNumber()
 );
@@ -12,6 +17,7 @@ export const number = new NumberFunction(
 export const round = mathAlias('round');
 
 export const sum = new NumberFunction(
+	'sum',
 	[{ arityType: 'required' }],
 	(context, expressions): number => {
 		if (expressions.length === 0) {

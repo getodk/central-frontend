@@ -1,19 +1,20 @@
+import { zipLongest } from 'itertools-ts/lib/multi';
+import { chunkwise } from 'itertools-ts/lib/single';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
-import { chunkwise } from 'itertools-ts/lib/single';
-import { zipLongest } from 'itertools-ts/lib/multi';
 
 export const booleanFromString = new BooleanFunction(
+	'boolean-from-string',
 	[{ arityType: 'required', typeHint: 'string' }],
 	(context, [expression]): boolean => {
 		const value = expression!.evaluate(context).toString();
 
 		return value === '1' || value === 'true';
-	},
-	{ localName: 'boolean-from-string' }
+	}
 );
 
-export const unweightedChecklist = new BooleanFunction(
+export const checklist = new BooleanFunction(
+	'checklist',
 	[
 		{ arityType: 'required', typeHint: 'number' },
 		{ arityType: 'required', typeHint: 'number' },
@@ -49,11 +50,11 @@ export const unweightedChecklist = new BooleanFunction(
 		}
 
 		return satisfied >= min;
-	},
-	{ localName: 'checklist' }
+	}
 );
 
 export const weightedChecklist = new BooleanFunction(
+	'weighted-checklist',
 	[
 		{ arityType: 'required', typeHint: 'number' },
 		{ arityType: 'required', typeHint: 'number' },
@@ -94,11 +95,11 @@ export const weightedChecklist = new BooleanFunction(
 		}
 
 		return satisfied >= min;
-	},
-	{ localName: 'weighted-checklist' }
+	}
 );
 
 export const xfIf = new FunctionImplementation(
+	'if',
 	[
 		{ arityType: 'required', typeHint: 'boolean' },
 		{ arityType: 'required' },
@@ -109,6 +110,5 @@ export const xfIf = new FunctionImplementation(
 		const expression = condition ? whenTrueExpression! : whenFalseExpression!;
 
 		return expression.evaluate(context);
-	},
-	{ localName: 'if' }
+	}
 );

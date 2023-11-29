@@ -20,7 +20,7 @@ export class StringEvaluation extends ValueEvaluation<'STRING'> {
 		this.numberValue = isEmpty ? NaN : Number(value);
 		this.stringValue = value;
 
-		const numberFunction = context.functionLibrary.getImplementation('number');
+		const numberFunction = context.functions.getDefaultImplementation('number');
 
 		if (isEmpty) {
 			this.numberValue = NaN;

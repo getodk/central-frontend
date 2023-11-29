@@ -5,6 +5,7 @@ import { evaluateInt } from '../_shared/number.ts';
 import { trimXPathWhitespace, whitespaceSeparatedList } from '../_shared/string.ts';
 
 export const countSelected = new NumberFunction(
+	'count-selected',
 	[{ arityType: 'required' }],
 	(context, [listExpression]): number => {
 		const string = trimXPathWhitespace(listExpression!.evaluate(context).toString());
@@ -15,11 +16,11 @@ export const countSelected = new NumberFunction(
 
 		// TODO: count matches, don't waste time allocating a list we don't use
 		return whitespaceSeparatedList(string).length;
-	},
-	{ localName: 'count-selected' }
+	}
 );
 
 export const selected = new BooleanFunction(
+	'selected',
 	[{ arityType: 'required' }, { arityType: 'required' }],
 	(context, [listExpression, valueExpression]): boolean => {
 		const list = whitespaceSeparatedList(listExpression!.evaluate(context).toString());
@@ -35,12 +36,12 @@ export const selected = new BooleanFunction(
 );
 
 export const selectedAt = new StringFunction(
+	'selected-at',
 	[{ arityType: 'required' }, { arityType: 'required', typeHint: 'number' }],
 	(context, [listExpression, indexExpression]): string => {
 		const list = whitespaceSeparatedList(listExpression!.evaluate(context).toString());
 		const index = evaluateInt(context, indexExpression!);
 
 		return list[index] ?? '';
-	},
-	{ localName: 'selected-at' }
+	}
 );

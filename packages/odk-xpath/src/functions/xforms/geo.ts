@@ -1,7 +1,7 @@
 import { pairwise } from 'itertools-ts/lib/single';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
-import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
+import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 
 interface Point {
 	readonly latitude: number;
@@ -161,17 +161,21 @@ const geodesicArea = (lines: readonly Line[]): number => {
 	return (total * EARTH_EQUATORIAL_RADIUS_METERS * EARTH_EQUATORIAL_RADIUS_METERS) / 2;
 };
 
-export const area = new NumberFunction([{ arityType: 'required' }], (context, [expression]) => {
-	const lines = evaluateLines(context, expression!);
+export const area = new NumberFunction(
+	'area',
+	[{ arityType: 'required' }],
+	(context, [expression]) => {
+		const lines = evaluateLines(context, expression!);
 
-	if (lines.some(isInvalidLine)) {
-		return NaN;
+		if (lines.some(isInvalidLine)) {
+			return NaN;
+		}
+
+		const areaResult = geodesicArea(lines);
+
+		return toAbsolutePrecision(areaResult, PRECISION);
 	}
-
-	const areaResult = geodesicArea(lines);
-
-	return toAbsolutePrecision(areaResult, PRECISION);
-});
+);
 
 const geodesicDistance = (line: Line): number => {
 	const { start, end } = line;
@@ -197,6 +201,7 @@ const sum = (values: readonly number[]) => {
 };
 
 export const distance = new NumberFunction(
+	'distance',
 	[{ arityType: 'required' }],
 	(context, [expression]) => {
 		const lines = evaluateLines(context, expression!);
@@ -208,8 +213,5 @@ export const distance = new NumberFunction(
 		const distances = lines.map(geodesicDistance);
 
 		return toAbsolutePrecision(sum(distances), PRECISION);
-	},
-	{
-		localName: 'distance',
 	}
 );

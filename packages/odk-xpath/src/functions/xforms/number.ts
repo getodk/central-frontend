@@ -4,7 +4,9 @@ import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
-import { mathAlias, math2Alias, mathNAlias } from '../_shared/number.ts';
+import { math2Alias, mathAlias, mathNAlias } from '../_shared/number.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
+import { XFormsXPathEvaluator } from '../../index.ts';
 
 export const abs = mathAlias('abs');
 export const acos = mathAlias('acos');
@@ -15,6 +17,7 @@ export const cos = mathAlias('cos');
 export const exp = mathAlias('exp');
 
 export const exp10 = new NumberFunction(
+	'exp10',
 	[{ arityType: 'required', typeHint: 'number' }],
 	(context, [expression]): number => {
 		const number = expression!.evaluate(context).toNumber();
@@ -24,6 +27,7 @@ export const exp10 = new NumberFunction(
 );
 
 export const int = new NumberFunction(
+	'int',
 	[{ arityType: 'required', typeHint: 'number' }],
 	(context, [expression]): number => {
 		const number = expression!.evaluate(context).toNumber();
@@ -37,7 +41,15 @@ export const log10 = mathAlias('log10');
 export const max = mathNAlias('max');
 export const min = mathNAlias('min');
 
+/**
+ * Overrides the standard XPath 1.0 (fn namespaced) `number` in an
+ * {@link XFormsXPathEvaluator}. This supports various date/datetime
+ * cases where values would otherwise be treated as string literals
+ * and fail to numerically compare as expected.
+ */
+// TODO: explicit override semantics?
 export const number = new FunctionImplementation(
+	'number',
 	[{ arityType: 'optional' }],
 	(context, [expression]): Evaluation<'NUMBER'> => {
 		const results = expression?.evaluate(context) ?? context;
@@ -66,13 +78,14 @@ export const number = new FunctionImplementation(
 
 const { PI } = Math;
 
-export const pi = new NumberFunction([], (): number => PI);
+export const pi = new NumberFunction('pi', [], (): number => PI);
 
 export const pow = math2Alias('pow');
 
-export const random = new NumberFunction([], Math.random);
+export const random = new NumberFunction('random', [], Math.random);
 
 export const round = new NumberFunction(
+	'round',
 	[
 		{ arityType: 'required', typeHint: 'number' },
 		{ arityType: 'optional', typeHint: 'number' },

@@ -1,4 +1,6 @@
 import {
+	ENKETO_NAMESPACE_URI,
+	ENKETO_PREFIX,
 	FN_NAMESPACE_URI,
 	FN_PREFIX,
 	HTML_NAMESPACE_URI,
@@ -22,6 +24,8 @@ import type { ContextParentNode } from '../lib/dom/types.ts';
 import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 
 export {
+	ENKETO_NAMESPACE_URI,
+	ENKETO_PREFIX,
 	FN_NAMESPACE_URI,
 	FN_PREFIX,
 	HTML_NAMESPACE_URI,
@@ -81,6 +85,7 @@ export class StaticNamespaces<
 }
 
 export const staticNamespaces = new StaticNamespaces('xf', XFORMS_NAMESPACE_URI, {
+	[ENKETO_PREFIX]: ENKETO_NAMESPACE_URI,
 	[FN_PREFIX]: FN_NAMESPACE_URI,
 	[HTML_PREFIX]: XHTML_NAMESPACE_URI,
 	html: XHTML_NAMESPACE_URI,

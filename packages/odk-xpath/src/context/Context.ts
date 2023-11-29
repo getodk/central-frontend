@@ -1,7 +1,7 @@
 import type { Temporal } from '@js-temporal/polyfill';
 import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
-import type { FunctionLibrary } from '../evaluator/functions/FunctionLibrary.ts';
+import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
 import type { ContextDocument, ContextNode, ContextParentNode } from '../lib/dom/types.ts';
 
 /**
@@ -19,8 +19,7 @@ export interface Context {
 	contextPosition(): number;
 	contextSize(): number;
 
-	// TODO: namespaced function libraries? Could accommodate custom functions
-	readonly functionLibrary: FunctionLibrary;
+	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
 	readonly timeZone: Temporal.TimeZone;
 }

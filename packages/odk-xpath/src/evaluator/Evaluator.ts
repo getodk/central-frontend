@@ -1,7 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill';
 import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
 import { EvaluationContext } from '../context/EvaluationContext.ts';
-import * as fnImplementations from '../functions/fn/index.ts';
+import { fn } from '../functions/fn/index.ts';
 import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
 import type {
 	AnyXPathEvaluator,
@@ -11,16 +11,15 @@ import type {
 } from '../shared/index.ts';
 import type { BaseParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { ExpressionParser } from '../static/grammar/ExpressionParser.ts';
-import { FN_NAMESPACE_URI } from './NamespaceResolver.ts';
 import { createExpression } from './expression/factory.ts';
-import { FunctionLibrary } from './functions/FunctionLibrary.ts';
+import { FunctionLibraryCollection } from './functions/FunctionLibraryCollection.ts';
 import { ResultTypes } from './result/ResultType.ts';
 import { toXPathResult } from './result/index.ts';
 
-const fn = new FunctionLibrary(FN_NAMESPACE_URI, Object.entries(fnImplementations));
+const functions = new FunctionLibraryCollection([fn]);
 
 export interface EvaluatorOptions {
-	readonly functionLibrary?: FunctionLibrary;
+	readonly functions?: FunctionLibraryCollection;
 	readonly parseOptions?: ParseOptions;
 	readonly rootNode?: AnyParentNode | null | undefined;
 	readonly timeZoneId?: string | undefined;
@@ -59,7 +58,7 @@ export class Evaluator implements AnyXPathEvaluator {
 	// if this usage changes in a way that addresses concerns expressed there.
 	protected readonly parser: ExpressionParser;
 
-	readonly functionLibrary: FunctionLibrary;
+	readonly functions: FunctionLibraryCollection;
 	readonly parseOptions: ParseOptions;
 	readonly resultTypes: ResultTypes = ResultTypes;
 	readonly rootNode: AnyParentNode | null;
@@ -67,9 +66,9 @@ export class Evaluator implements AnyXPathEvaluator {
 	readonly timeZone: Temporal.TimeZone;
 
 	constructor(parser: BaseParser, options: EvaluatorOptions = {}) {
-		const { functionLibrary = fn, parseOptions = {}, rootNode, timeZoneId } = options;
+		const { parseOptions = {}, rootNode, timeZoneId } = options;
 
-		this.functionLibrary = functionLibrary;
+		this.functions = options.functions ?? functions;
 		this.parseOptions = parseOptions;
 		this.parser = ExpressionParser.from(parser);
 		this.rootNode = options.rootNode ?? null;

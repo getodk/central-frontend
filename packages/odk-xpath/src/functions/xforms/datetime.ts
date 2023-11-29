@@ -11,7 +11,7 @@ import { DAY_MILLISECONDS } from '../../lib/datetime/constants.ts';
 import { now } from '../../lib/datetime/functions.ts';
 import { isValidTimeString } from '../../lib/datetime/predicates.ts';
 
-export const today = new FunctionImplementation([], (context) => {
+export const today = new FunctionImplementation('today', [], (context) => {
 	const todayDateTime = now(context.timeZone).with({
 		hour: 0,
 		minute: 0,
@@ -24,15 +24,9 @@ export const today = new FunctionImplementation([], (context) => {
 	return new DateTimeLikeEvaluation(context, todayDateTime);
 });
 
-export const xfNow = new FunctionImplementation(
-	[],
-	(context) => {
-		return new DateTimeLikeEvaluation(context, now(context.timeZone));
-	},
-	{
-		localName: 'now',
-	}
-);
+export const xfNow = new FunctionImplementation('now', [], (context) => {
+	return new DateTimeLikeEvaluation(context, now(context.timeZone));
+});
 
 type DateTimeFormatFunction = (dateTime: Temporal.ZonedDateTime) => string;
 type DateFormatterRecord = Record<`%${string}`, DateTimeFormatFunction>;
@@ -178,6 +172,7 @@ const formatter = (formatters: DateTimeFormatters) => {
 const dateFormatter = formatter(dateFormatters);
 
 export const formatDate = new StringFunction(
+	'format-date',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -192,15 +187,13 @@ export const formatDate = new StringFunction(
 		}
 
 		return dateFormatter(format, dateTime);
-	},
-	{
-		localName: 'format-date',
 	}
 );
 
 const dateTimeFormatter = formatter(dateTimeFormatters);
 
 export const formatDateTime = new StringFunction(
+	'format-date-time',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -216,9 +209,6 @@ export const formatDateTime = new StringFunction(
 		}
 
 		return dateTimeFormatter(format, dateTime);
-	},
-	{
-		localName: 'format-date-time',
 	}
 );
 
@@ -258,6 +248,7 @@ const DATE_OR_DATE_TIME_PATTERN =
 	/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[-+]\d{2}:\d{2})?)?/;
 
 export const date = new FunctionImplementation(
+	'date',
 	[
 		// TODO: spec says variadic?!
 		{ arityType: 'required' },
@@ -307,6 +298,7 @@ export const date = new FunctionImplementation(
 );
 
 export const decimalDateTime = new NumberFunction(
+	'decimal-date-time',
 	[{ arityType: 'required' }],
 	(context, [expression]) => {
 		const results = expression!.evaluate(context);
@@ -317,13 +309,11 @@ export const decimalDateTime = new NumberFunction(
 		}
 
 		return dateTime.epochMilliseconds / DAY_MILLISECONDS;
-	},
-	{
-		localName: 'decimal-date-time',
 	}
 );
 
 export const decimalTime = new NumberFunction(
+	'decimal-time',
 	[{ arityType: 'required' }],
 	(context, [expression]) => {
 		const string = expression!.evaluate(context).toString();
@@ -354,8 +344,5 @@ export const decimalTime = new NumberFunction(
 		}
 
 		return NaN;
-	},
-	{
-		localName: 'decimal-time',
 	}
 );

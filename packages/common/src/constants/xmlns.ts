@@ -11,6 +11,9 @@ export const ODK_NAMESPACE_URI = 'http://www.opendatakit.org/xforms';
 export const OPENROSA_XFORMS_NAMESPACE_URI = 'http://openrosa.org/xforms';
 export const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
+// Enketo
+export const ENKETO_NAMESPACE_URI = 'http://enketo.org/xforms';
+
 // Default prefixes
 export const HTML_PREFIX = 'h';
 export const XML_PREFIX = 'xml';
@@ -21,3 +24,5 @@ export const JAVAROSA_PREFIX = 'jr';
 export const ODK_PREFIX = 'odk';
 export const OPENROSA_XFORMS_PREFIX = 'orx';
 export const XFORMS_PREFIX = 'xf';
+
+export const ENKETO_PREFIX = 'enk';

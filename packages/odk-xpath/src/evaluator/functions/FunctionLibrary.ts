@@ -20,22 +20,17 @@ export interface LibraryFunction extends AnyFunctionImplementation {
 	readonly qualifiedName: QualifiedName;
 }
 
-type FunctionLibraryEntry = readonly [
-	localName: LocalName,
-	implementation: AnyFunctionImplementation,
-];
-
 export class FunctionLibrary {
 	protected readonly implementations: Map<LocalName, LibraryFunction>;
 
 	constructor(
 		readonly namespaceURI: string,
-		entries: readonly FunctionLibraryEntry[]
+		entries: readonly AnyFunctionImplementation[]
 	) {
 		const implementations = new Map<LocalName, LibraryFunction>();
 
-		entries.forEach(([entryLocalName, implementation]) => {
-			const localName = implementation.localName ?? entryLocalName;
+		entries.forEach((implementation) => {
+			const { localName } = implementation;
 
 			const qualifiedName: QualifiedName = {
 				namespaceURI,
@@ -67,10 +62,6 @@ export class FunctionLibrary {
 		if (implementation == null) {
 			throw new UnknownFunctionError(localName);
 		}
-
-		const fn: FunctionImplementation<number> = implementation;
-
-		fn.validateArguments(args);
 
 		return implementation.call(context, args);
 	}

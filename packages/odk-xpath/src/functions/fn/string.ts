@@ -5,6 +5,7 @@ import { escapeRegExp } from '../../lib/regex/escape.ts';
 import { normalizeXPathWhitespace } from '../_shared/string.ts';
 
 export const concat = new StringFunction(
+	'concat',
 	[{ arityType: 'variadic', typeHint: 'string' }],
 	(context, expressions): string => {
 		if (expressions.length === 0) {
@@ -19,6 +20,7 @@ export const concat = new StringFunction(
 );
 
 export const contains = new BooleanFunction(
+	'contains',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -31,16 +33,17 @@ export const contains = new BooleanFunction(
 );
 
 export const normalizeSpace = new StringFunction(
+	'normalize-space',
 	[{ arityType: 'optional', typeHint: 'string' }],
 	(context, [expression]): string => {
 		const value = (expression?.evaluate(context) ?? context).toString();
 
 		return normalizeXPathWhitespace(value);
-	},
-	{ localName: 'normalize-space' }
+	}
 );
 
 export const startsWith = new BooleanFunction(
+	'starts-with',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -50,19 +53,19 @@ export const startsWith = new BooleanFunction(
 		const needle = needleExpression!.evaluate(context).toString();
 
 		return haystack.startsWith(needle);
-	},
-	{ localName: 'starts-with' }
+	}
 );
 
 export const stringLength = new NumberFunction(
+	'string-length',
 	[{ arityType: 'optional', typeHint: 'string' }],
 	(context, [expression]): number => {
 		return (expression?.evaluate(context) ?? context).toString().length;
-	},
-	{ localName: 'string-length' }
+	}
 );
 
 export const substringAfter = new StringFunction(
+	'substring-after',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -83,11 +86,11 @@ export const substringAfter = new StringFunction(
 		const needleIndex = haystack.indexOf(needle);
 
 		return needleIndex === -1 ? '' : haystack.slice(needleIndex + 1);
-	},
-	{ localName: 'substring-after' }
+	}
 );
 
 export const substringBefore = new StringFunction(
+	'substring-before',
 	[{ arityType: 'required' }, { arityType: 'required', typeHint: 'string' }],
 	(context, [haystackExpression, needleExpression]): string => {
 		const haystack = haystackExpression!.evaluate(context).toString();
@@ -100,11 +103,11 @@ export const substringBefore = new StringFunction(
 		const needleIndex = haystack.indexOf(needle);
 
 		return needleIndex === -1 ? '' : haystack.slice(0, needleIndex);
-	},
-	{ localName: 'substring-before' }
+	}
 );
 
 export const substring = new StringFunction(
+	'substring',
 	[
 		{ arityType: 'required' },
 		{ arityType: 'required', typeHint: 'number' },
@@ -136,11 +139,13 @@ export const substring = new StringFunction(
 );
 
 export const string = new StringFunction(
+	'string',
 	[{ arityType: 'optional' }],
 	(context, [expression]): string => (expression?.evaluate(context) ?? context).toString()
 );
 
 export const translate = new StringFunction(
+	'translate',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
