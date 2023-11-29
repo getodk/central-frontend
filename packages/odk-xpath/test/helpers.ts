@@ -1,6 +1,7 @@
 import { expect } from 'vitest';
 import { Evaluator } from '../src/index.ts';
-import type { AnyXPathEvaluator, XPathResultType } from '../src/shared/interface.ts';
+import type { AnyParentNode } from '../src/lib/dom/types.ts';
+import type { XPathResultType } from '../src/shared/interface.ts';
 import { XFormsXPathEvaluator } from '../src/xforms/XFormsXPathEvaluator.ts';
 import { xpathParser } from './parser.ts';
 
@@ -37,19 +38,24 @@ interface EvaluationAssertionOptions {
 	readonly message?: string;
 }
 
-interface TestContextOptions {
+interface TestContextOptions<XForms extends boolean = false> {
+	readonly getRootNode?: (testDocument: XMLDocument) => AnyParentNode;
 	readonly namespaceResolver?: Nullish<XPathNSResolver>;
-	readonly xforms?: boolean;
+	readonly xforms?: XForms;
 }
 
-export class TestContext {
+type TestContextEvaluator<XForms extends boolean> = XForms extends true
+	? XFormsXPathEvaluator
+	: Evaluator;
+
+export class TestContext<XForms extends boolean = false> {
 	readonly document: XMLDocument;
-	readonly evaluator: AnyXPathEvaluator;
+	readonly evaluator: TestContextEvaluator<XForms>;
 	readonly namespaceResolver: XPathNSResolver;
 
 	constructor(
 		readonly sourceXML?: string,
-		options: TestContextOptions = {}
+		options: TestContextOptions<XForms> = {}
 	) {
 		const xml = sourceXML ?? '<root/>';
 		const testDocument: XMLDocument = domParser.parseFromString(xml, 'text/xml');
@@ -62,12 +68,14 @@ export class TestContext {
 		} as const;
 
 		if (options.xforms) {
+			const rootNode = options.getRootNode?.(testDocument) ?? testDocument;
+
 			this.evaluator = new XFormsXPathEvaluator(xpathParser, {
 				...evaluatorOptions,
-				rootNode: testDocument,
-			});
+				rootNode,
+			}) as TestContextEvaluator<XForms>;
 		} else {
-			this.evaluator = new Evaluator(xpathParser, evaluatorOptions);
+			this.evaluator = new Evaluator(xpathParser, evaluatorOptions) as TestContextEvaluator<XForms>;
 		}
 
 		this.document = testDocument;
@@ -265,11 +273,11 @@ export const createTestContext = (xml?: string, options: TestContextOptions = {}
 	return new TestContext(xml, options);
 };
 
-interface XFormsTestContextOptions extends TestContextOptions {
+interface XFormsTestContextOptions extends TestContextOptions<true> {
 	readonly xforms?: true;
 }
 
-export class XFormsTestContext extends TestContext {
+export class XFormsTestContext extends TestContext<true> {
 	readonly xforms = true;
 
 	constructor(sourceXML?: string, options: XFormsTestContextOptions = {}) {
@@ -277,6 +285,10 @@ export class XFormsTestContext extends TestContext {
 			...options,
 			xforms: true,
 		});
+	}
+
+	setLanguage(language: string | null): string | null {
+		return this.evaluator.translations.setActiveLanguage(language);
 	}
 }
 
