@@ -39,36 +39,52 @@ Note that this depends on Vite's [`?url` import suffix](https://vitejs.dev/guide
 
 ## Example usage
 
-To use `@odk/xpath` at runtime, you first create an `Evaluator` instance. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
+To use `@odk/xpath` at runtime, first create an `XFormsXPathEvaluator` instance, specifying a parser instance and the XForm `rootNode`. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
 
 ```ts
-import { Evaluator } from '@odk/xpath';
+import { XFormsXPathEvaluator } from '@odk/xpath';
 
-const evaluator = new Evaluator();
+// Given an XForms DOM document...
+declare const xform: XMLDocument;
 
-// Given some DOM document, e.g. ...
-const parser = new DOMParser();
-const doc = parser.parseFromString(
-  `<root>
-    <!-- ... --->
-  </root>`,
-  'text/xml'
-);
+const evaluator = new XFormsXPathEvaluator(xpathParser, { rootNode: xform });
 
 // A namespace resolver is optional, and the context node can be used (which is the default)
-const nsResolver: XPathNSResolver = doc;
+const nsResolver: XPathNSResolver = xform;
 
 const result: XPathResult = evaluator.evaluate(
   '/root/...',
-  doc,
+  xform,
   nsResolver,
   XPathResult.ORDERED_NODE_ITERATOR_TYPE
 );
 ```
 
-Likewise, `result` is API-compatible with the standard DOM [`XPathResult`](https://developer.mozilla.org/en-US/docs/Web/API/XPathResult).
+For typical XForms usage, `rootNode` will be either an XForm `XMLDocument` or its primary instance `Element`.
 
-**Note on APIs:** we do not currently provide typical convience API extensions for e.g. common iteration tasks (although we may eventually). It is likely that the standard iterator API result types will perform better than their snapshot counterparts. It is also likely that unordered results may perform better than ordered, now or after future optimizations. Of course, caution should be used with unordered results in general.
+For XPath 1.0 functionality without XForms extension functions, you may use `Evaluator` the same way, and `rootNode` is optional:
+
+```ts
+import { Evaluator } from '@odk/xpath';
+
+const evaluator = new Evaluator(xpathParser);
+
+// ...
+```
+
+In either case, the `result` returned by `evaluate` is API-compatible with the standard DOM [`XPathResult`](https://developer.mozilla.org/en-US/docs/Web/API/XPathResult).
+
+### Convenience APIs
+
+Both evaluator classes provide the following convenience methods:
+
+- `evaluateBoolean(expression: string, options?: { contextNode?: Node }): boolean`
+- `evaluateNumber(expression: string, options?: { contextNode?: Node }): number`
+- `evaluateString(expression: string, options?: { contextNode?: Node }): string`
+- `evaluateNode(expression: string, options?: { contextNode?: Node }): Node | null`
+- `evaluateNodes(expression: string, options?: { contextNode?: Node }): Node[]`
+
+(Also provided: `evaluateElement` and `evaluateNonNullElement`, but these are not type safe so use them at your own risk.)
 
 ## Supported/tested environments
 
@@ -85,7 +101,6 @@ Likewise, `result` is API-compatible with the standard DOM [`XPathResult`](https
 ### XPath 1.0
 
 - Expressions with variable references are parsed incorrectly. There is also no API to provide variable values, even if variable references were supported.
-- ODK extensions are currently enabled by default, which introduces some differences in behavior around `dateTime` data types. It is possible to omit these extensions, restoring standard compliance for affected expressions. Documentation for this may be provided in the future as interest arises.
 
 ### ODK XForms
 
