@@ -1,5 +1,5 @@
 /* @refresh reload */
 import { render } from 'solid-js/web';
-import { App } from './App.tsx';
+import { Demo } from './Demo.tsx';
 
-render(() => <App />, document.getElementById('root')!);
+render(() => <Demo />, document.getElementById('root')!);

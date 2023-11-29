@@ -1,5 +1,6 @@
 import type { JSX } from 'solid-js';
 import { GlobalStyles, Stack, useTheme } from 'suid/material';
+import type { EntryState } from '../../lib/xform/state/EntryState.ts';
 import { PageContainer } from '../styled/PageContainer.tsx';
 import { PageFooter } from './PageFooter.tsx';
 import { PageHeader } from './PageHeader.tsx';
@@ -7,6 +8,7 @@ import { PageMain } from './PageMain.tsx';
 
 interface PageProps {
 	readonly children?: JSX.Element;
+	readonly entry: EntryState | null;
 }
 
 export const Page = (props: PageProps) => {
@@ -36,7 +38,7 @@ export const Page = (props: PageProps) => {
 			/>
 			<PageContainer>
 				<Stack spacing={2}>
-					<PageHeader />
+					<PageHeader entry={props.entry} />
 					<PageMain elevation={2}>{props.children}</PageMain>
 					<PageFooter />
 				</Stack>

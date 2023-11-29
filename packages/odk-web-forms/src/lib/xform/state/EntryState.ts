@@ -10,6 +10,7 @@ import type { AnyDescandantNodeState } from './DescendantNodeState.ts';
 import type { AnyChildState, AnyNodeState, AnyParentState, NodeState } from './NodeState.ts';
 import { RepeatSequenceState } from './RepeatSequenceState.ts';
 import { SubtreeState } from './SubtreeState.ts';
+import { TranslationState } from './TranslationState.ts';
 import { ValueNodeState } from './ValueNodeState.ts';
 
 export const buildChildStates = (
@@ -80,6 +81,8 @@ export class EntryState implements NodeState<'root'> {
 	readonly xformDocument: XMLDocument;
 	readonly evaluator: XFormsXPathEvaluator;
 
+	readonly translations: TranslationState | null;
+
 	readonly node: Element;
 
 	readonly valueState = null;
@@ -117,7 +120,10 @@ export class EntryState implements NodeState<'root'> {
 		this.node = instanceDOM.primaryInstanceRoot;
 		this.node.replaceChildren();
 
-		this.evaluator = instanceDOM.primaryInstanceEvaluator;
+		const evaluator = instanceDOM.primaryInstanceEvaluator;
+
+		this.evaluator = evaluator;
+		this.translations = TranslationState.from(this);
 		this.children = buildChildStates(this, this);
 
 		this.initializeState();

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Itext (basic)</h:title>
+    <model>
+      <itext>
+        <translation lang="English">
+          <text id="q1:label">
+            <value>1. Question one</value>
+          </text>
+        </translation>
+        <translation lang="Español">
+          <text id="q1:label">
+            <value>1. Pregunta uno</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <root id="itext-basic">
+          <q1/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/q1"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/q1">
+      <label ref="jr:itext('q1:label')" />
+    </input>
+  </h:body>
+</h:html>
