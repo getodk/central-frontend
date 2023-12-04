@@ -58,7 +58,7 @@ describe('EntityConflictSummary', () => {
       .request(async (component) => {
         await component.get('.btn-default').trigger('click');
         const modal = component.getComponent(Confirmation);
-        await modal.get('.btn-danger').trigger('click');
+        await modal.get('.btn-primary').trigger('click');
       })
       .respondWithProblem()
       .testRequests([{
@@ -74,7 +74,7 @@ describe('EntityConflictSummary', () => {
         .request(async (component) => {
           await component.get('.btn-default').trigger('click');
           const modal = component.getComponent(Confirmation);
-          await modal.get('.btn-danger').trigger('click');
+          await modal.get('.btn-primary').trigger('click');
         })
         .respondWithData(() => {
           testData.extendedEntities.resolve(-1);
@@ -110,7 +110,7 @@ describe('EntityConflictSummary', () => {
         .request(async (component) => {
           await component.get('.btn-default').trigger('click');
           const modal = component.getComponent(Confirmation);
-          await modal.get('.btn-danger').trigger('click');
+          await modal.get('.btn-primary').trigger('click');
         })
         .respondWithProblem(409.15)
         .afterResponse(component => {
