@@ -1,9 +1,11 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { BindElement, BindNodeset } from './BindDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
+import type { BindElement, BindNodeset } from './BindElement.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
-class ArtificialBindElement {
+class ArtificialBindElement implements BindElement {
+	readonly localName = 'bind';
+
 	constructor(protected readonly ancestorNodeset: string) {}
 
 	getAttribute(name: 'nodeset'): string;
@@ -103,7 +105,7 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> {
 
 		visiting.add(bind);
 
-		for (const nodeset of bind.nodesetDependencies) {
+		for (const nodeset of bind.dependencyExpressions) {
 			const dependency = this.getOrCreateBindDefinition(nodeset);
 
 			this.visit(visited, visiting, dependency, sorted);
@@ -155,10 +157,6 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> {
 		}
 
 		return bind;
-	}
-
-	getDependencies(bind: BindDefinition) {
-		return bind.nodesetDependencies.map((nodeset) => this.get(nodeset));
 	}
 
 	toJSON() {

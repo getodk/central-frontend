@@ -49,7 +49,7 @@ export class ValueNodeState
 	 *   future update.
 	 * - Both `calculate` (if provided) and `isRelevant` are expected to be
 	 *   reactive based on their dependencies (@see
-	 *   {@link createBindExpressionEvaluation}). When they're updated, the above
+	 *   {@link createBooleanBindComputation}). When they're updated, the above
 	 *   logic is continually applied to both the runtime and DOM state.
 	 */
 	protected createValueNodeState(node: Element): Signal<string> {

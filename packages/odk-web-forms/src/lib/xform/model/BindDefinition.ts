@@ -1,195 +1,35 @@
-import type { XFormsXPathEvaluator } from '@odk/xpath';
-import { getNodesetDependencies } from '../../xpath/expression-dependencies.ts';
 import type { XFormDataType } from '../XFormDataType.ts';
 import { bindDataType } from '../XFormDataType.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { DependencyContext } from '../expression/DependencyContext.ts';
+import type { DependentExpression } from '../expression/DependentExpression.ts';
+import { BindComputation } from './BindComputation.ts';
+import type { BindElement } from './BindElement.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
-export type BindExpressionType =
-	| 'calculate'
-	| 'constraint'
-	| 'readonly'
-	| 'relevant'
-	| 'required'
-	| 'saveIncomplete';
-
-interface BindExpressionEvaluationTypes {
-	readonly BOOLEAN: boolean;
-	readonly STRING: string;
-}
-
-export type BindExpressionEvaluationType = keyof BindExpressionEvaluationTypes;
-
-export type BindExpressionEvaluation<Type extends BindExpressionEvaluationType> =
-	BindExpressionEvaluationTypes[Type];
-
-export interface BindExpression<Type extends BindExpressionEvaluationType> {
-	readonly expression: string | null;
-	readonly expressionType: BindExpressionType;
-	readonly dependencyExpressions: readonly string[];
-	readonly evaluationType: Type;
-
-	evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): BindExpressionEvaluation<Type>;
-}
-
-abstract class StaticBindExpression<Type extends BindExpressionEvaluationType>
-	implements BindExpression<Type>
-{
-	readonly expression: string | null;
-	readonly dependencyExpressions: readonly string[] = [];
-
-	constructor(
-		protected readonly bind: BindDefinition,
-		readonly expressionType: BindExpressionType,
-		readonly evaluationType: Type
-	) {
-		this.expression = bind.bindElement.getAttribute(expressionType);
-	}
-
-	protected evaluateBoolean(evaluator: XFormsXPathEvaluator, contextNode: Node): boolean {
-		const { expression } = this;
-
-		if (expression == null) {
-			throw new Error('todo');
-		}
-
-		return evaluator.evaluateBoolean(expression, {
-			contextNode,
-		});
-	}
-
-	protected evaluateString(evaluator: XFormsXPathEvaluator, contextNode: Node): string {
-		const { expression } = this;
-
-		if (expression == null) {
-			throw new Error('todo');
-		}
-
-		return evaluator.evaluateString(expression, {
-			contextNode,
-		});
-	}
-
-	abstract evaluate(
-		evaluator: XFormsXPathEvaluator,
-		contextNode: Node
-	): BindExpressionEvaluation<Type>;
-
-	toJSON() {
-		const { bind, ...rest } = this;
-
-		return rest;
-	}
-
-	toString() {
-		return this.expression;
-	}
-}
-
-class StaticBooleanBindExpression extends StaticBindExpression<'BOOLEAN'> {
-	constructor(bind: BindDefinition, expressionType: BindExpressionType) {
-		super(bind, expressionType, 'BOOLEAN');
-	}
-
-	override evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): boolean {
-		return this.evaluateBoolean(evaluator, contextNode);
-	}
-}
-
-interface DependentBindExpressionOptions {
-	readonly isInherited?: boolean;
-}
-
-abstract class DependentBindExpression<
-	Type extends BindExpressionEvaluationType,
-> extends StaticBindExpression<Type> {
-	override readonly dependencyExpressions: readonly string[];
-
-	constructor(
-		bind: BindDefinition,
-		expressionType: BindExpressionType,
-		evaluationType: Type,
-		options: DependentBindExpressionOptions = {}
-	) {
-		super(bind, expressionType, evaluationType);
-
-		const { expression } = this;
-		const dependencyExpressions: string[] = [];
-
-		if (expression != null) {
-			dependencyExpressions.push(
-				...getNodesetDependencies(expression, {
-					contextExpression: bind.nodeset,
-				})
-			);
-		}
-
-		const { parentNodeset } = bind;
-
-		if (options.isInherited && parentNodeset != null) {
-			dependencyExpressions.push(parentNodeset);
-		}
-
-		this.dependencyExpressions = dependencyExpressions;
-	}
-}
-
-class DependentBooleanBindExpression extends DependentBindExpression<'BOOLEAN'> {
-	constructor(
-		bind: BindDefinition,
-		expressionType: BindExpressionType,
-		options: DependentBindExpressionOptions = {}
-	) {
-		super(bind, expressionType, 'BOOLEAN', options);
-	}
-
-	override evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): boolean {
-		return this.evaluateBoolean(evaluator, contextNode);
-	}
-}
-
-class DependentStringBindExpression extends DependentBindExpression<'STRING'> {
-	constructor(bind: BindDefinition, expressionType: BindExpressionType) {
-		super(bind, expressionType, 'STRING');
-	}
-
-	override evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): string {
-		return this.evaluateString(evaluator, contextNode);
-	}
-}
-
-export type BindNodeset = string;
-
-export interface BindElement {
-	getAttribute(name: 'nodeset'): BindNodeset;
-	getAttribute(name: string): string | null;
-}
-
-export class BindDefinition {
+export class BindDefinition extends DependencyContext {
 	readonly bindType: string | null;
 	readonly dataType: XFormDataType;
 	readonly parentNodeset: string | null;
 
-	readonly calculate: DependentStringBindExpression;
-	readonly readonly: DependentBooleanBindExpression;
-	readonly relevant: DependentBooleanBindExpression;
-	readonly required: DependentBooleanBindExpression;
+	readonly calculate: BindComputation<'calculate'> | null;
+	readonly readonly: BindComputation<'readonly'>;
+	readonly relevant: BindComputation<'relevant'>;
+	readonly required: BindComputation<'required'>;
 
-	readonly nodesetDependencies: readonly string[];
-
-	// According to https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/dag.md
-	// this is not stored in the DAG.
-	// TODO: while it certainly makes sense to exclude *self-references* from the DAG
-	// it isn't clear whether the expression should be entirely excluded, as other
-	// dependencies in the expression may update. Presumably this is resolved by
-	// deferring final constraint validation until submission time or some other
-	// event which triggers a more thorough recomputation, but I don't believe that
-	// is strictly necessary (nor necessarily a significant performance concern).
-	readonly constraint: StaticBooleanBindExpression;
+	// According to
+	//
+	// this is not stored in the DAG. In contrast, we do compute constraint
+	// dependencies, but self-references are ignored (handled by `BindComputation`
+	// and its `DependentExpression` parent class).
+	/**
+	 * Diverges from {@link https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/dag.md | JavaRosa's}, which excludes `constraint` expressions. We compute `constraint` dependencies like the other <bind> computation expressions, but explicitly ignore self-references (this is currently handled by {@link BindComputation}, via its {@link DependentExpression} parent class).
+	 */
+	readonly constraint: BindComputation<'constraint'> & DependentExpression;
 
 	// TODO: it is unclear whether this will need to be supported.
 	// https://github.com/getodk/collect/issues/3758 mentions deprecation.
-	readonly saveIncomplete: StaticBooleanBindExpression;
+	readonly saveIncomplete: BindComputation<'saveIncomplete'>;
 
 	// TODO: these are deferred just to put off sharing namespace stuff
 	// readonly requiredMsg: string | null;
@@ -218,12 +58,23 @@ export class BindDefinition {
 		return bind;
 	}
 
+	// DependencyContext
+	get reference(): string {
+		return this.nodeset;
+	}
+
+	get parentReference(): string | null {
+		return this.parentNodeset;
+	}
+
 	constructor(
 		readonly form: XFormDefinition,
 		protected readonly model: ModelDefinition,
 		readonly nodeset: string,
 		readonly bindElement: BindElement
 	) {
+		super();
+
 		const bindType = (this.bindType = bindElement.getAttribute('type'));
 
 		this.dataType = bindDataType(bindType);
@@ -231,36 +82,18 @@ export class BindDefinition {
 		const parentNodeset = nodeset.replace(/\/[^/]+$/, '');
 
 		this.parentNodeset = parentNodeset.length > 1 ? parentNodeset : null;
+		this.calculate = BindComputation.forExpression(this, 'calculate');
+		this.readonly = BindComputation.forExpression(this, 'readonly');
+		this.relevant = BindComputation.forExpression(this, 'relevant');
+		this.required = BindComputation.forExpression(this, 'required');
+		this.constraint = BindComputation.forExpression(this, 'constraint');
+		this.saveIncomplete = BindComputation.forExpression(this, 'saveIncomplete');
 
-		const calculate = new DependentStringBindExpression(this, 'calculate');
-		const readonly = new DependentBooleanBindExpression(this, 'readonly', {
-			isInherited: true,
-		});
-		const relevant = new DependentBooleanBindExpression(this, 'relevant', {
-			isInherited: true,
-		});
-		const required = new DependentBooleanBindExpression(this, 'required');
-
-		this.calculate = calculate;
-		this.readonly = readonly;
-		this.relevant = relevant;
-		this.required = required;
-
-		this.nodesetDependencies = Array.from(
-			new Set(
-				[calculate, readonly, relevant, required].flatMap(
-					({ dependencyExpressions }) => dependencyExpressions
-				)
-			)
-		);
-
-		this.constraint = new StaticBooleanBindExpression(this, 'constraint');
-		this.saveIncomplete = new StaticBooleanBindExpression(this, 'saveIncomplete');
-		// this.requiredMsg = bindElement.getAttributeNS(...)
-		// this.constraintMsg = bindElement.getAttributeNS(...)
-		// this.preload = bindElement.getAttributeNS(...)
-		// this.preloadParams = bindElement.getAttributeNS(...)
-		// this['max-pixels'] = bindElement.getAttributeNS(...)
+		// this.requiredMsg = BindComputation.forExpression(this, 'requiredMsg');
+		// this.constraintMsg = BindComputation.forExpression(this, 'constraintMsg');
+		// this.preload = BindComputation.forExpression(this, 'preload');
+		// this.preloadParams = BindComputation.forExpression(this, 'preloadParams');
+		// this['max-pixels'] = BindComputation.forExpression(this, 'max-pixels');
 	}
 
 	toJSON() {

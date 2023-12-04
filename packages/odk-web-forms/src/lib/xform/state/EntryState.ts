@@ -188,7 +188,7 @@ export class EntryState implements NodeState<'root'> {
 			return;
 		}
 
-		const descendants = this.collectUninitializedDescendants(this);
+		const descendants = this.getUninitializedDescendants(this);
 		const stateByReference = new Map<string, AnyNodeState>([
 			[this.reference, this],
 			...descendants.map((descendant) => {
