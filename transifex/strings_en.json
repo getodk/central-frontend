@@ -1418,6 +1418,9 @@
           "string": "Download data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "possibleConflictsCount": {
+        "string": "{count, plural, one {{count} possible conflict} other {{count} possible conflicts}}"
       }
     },
     "DatasetSettings": {
