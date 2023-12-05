@@ -26,8 +26,7 @@ except according to the terms contained in the LICENSE file.
           <entity-data @update="update.state = true"/>
         </div>
         <div class="col-xs-8">
-          <entity-conflict-summary v-if="project.dataExists && entity.data?.conflict" :entity="entity" @resolve="afterResolve"/>
-          <entity-activity/>
+          <entity-activity @resolve="fetchActivityData"/>
         </div>
       </div>
     </page-body>
@@ -48,7 +47,6 @@ import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
-import EntityConflictSummary from './conflict-summary.vue';
 
 import useEntity from '../../request-data/entity';
 import useEntityVersions from '../../request-data/entity-versions';
@@ -124,13 +122,6 @@ const afterUpdate = (updated) => {
   });
 };
 
-const afterResolve = (updated) => {
-  fetchActivityData();
-  entity.patch(() => {
-    entity.updatedAt = updated.updatedAt;
-    entity.conflict = updated.conflict;
-  });
-};
 const { datasetPath } = useRoutes();
 </script>
 
