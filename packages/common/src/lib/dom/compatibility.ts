@@ -14,41 +14,101 @@ const SUPPORTS_SCOPE_CHILD_SELECTOR = (() => {
 
 type ScopedSelector = `:scope > ${string}`;
 
-type UnscopedSelector<Selector extends ScopedSelector> =
-	Selector extends `:scope > ${infer Unscoped}` ? Unscoped : never;
+// prettier-ignore
+type ScopedElementLookupContextNode =
+	| Document
+	| DocumentFragment
+	| Element
+	| XMLDocument;
 
-type GetScopeChildBySelector = <Selector extends ScopedSelector>(
-	element: Element,
-	scopedSelector: Selector,
-	unscopedSelector: UnscopedSelector<Selector>
-) => Element | null;
+type GetScopedElement = <Selector extends ScopedSelector, T extends Element = Element>(
+	lookup: ScopedElementLookup<Selector>,
+	contextNode: ScopedElementLookupContextNode
+) => T | null;
+
+type GetScopedElements = <Selector extends ScopedSelector, T extends Element = Element>(
+	lookup: ScopedElementLookup<Selector>,
+	contextNode: ScopedElementLookupContextNode
+) => Iterable<T>;
+
+const getScopedElement: GetScopedElement = (() => {
+	if (SUPPORTS_SCOPE_CHILD_SELECTOR) {
+		return <Selector extends ScopedSelector, T extends Element = Element>(
+			lookup: ScopedElementLookup<Selector>,
+			contextNode: ScopedElementLookupContextNode
+		): T | null => {
+			return contextNode.querySelector<T>(lookup.scopedSelector);
+		};
+	}
+
+	return <Selector extends ScopedSelector, T extends Element = Element>(
+		lookup: ScopedElementLookup<Selector>,
+		contextNode: ScopedElementLookupContextNode
+	): T | null => {
+		const { unscopedSelector } = lookup;
+
+		for (const child of contextNode.children) {
+			if (child.matches(unscopedSelector)) {
+				return child as T;
+			}
+		}
+
+		return null;
+	};
+})();
+
+const getScopedElements: GetScopedElements = (() => {
+	if (SUPPORTS_SCOPE_CHILD_SELECTOR) {
+		return <Selector extends ScopedSelector, T extends Element = Element>(
+			lookup: ScopedElementLookup<Selector>,
+			contextNode: ScopedElementLookupContextNode
+		): Iterable<T> => {
+			return contextNode.querySelectorAll<T>(lookup.scopedSelector);
+		};
+	}
+
+	return <Selector extends ScopedSelector, T extends Element = Element>(
+		lookup: ScopedElementLookup<Selector>,
+		contextNode: ScopedElementLookupContextNode
+	): Iterable<T> => {
+		const { unscopedSelector } = lookup;
+
+		return Array.from(contextNode.children).filter((child): child is T => {
+			return child.matches(unscopedSelector);
+		});
+	};
+})();
 
 /**
  * Provides compatibility for `ParentNode.querySelector(':scope > $SELECTOR')`
- * in environments where the `:scope > ` prefix is ignored (e.g.
- * {@link https://github.com/jsdom/jsdom/issues/3067 | jsdom}).
+ * (and `querySelectorAll`) in environments where the `:scope > ` prefix is
+ * ignored (e.g. {@link https://github.com/jsdom/jsdom/issues/3067 | jsdom}).
  *
  * Both the scoped and unscoped selector should be provided, to avoid a common
  * deoptimization caused by producing selectors dynamically.
  */
-export const getScopeChildBySelector = (() => {
-	if (SUPPORTS_SCOPE_CHILD_SELECTOR) {
-		return ((element, scopedSelector) => {
-			return element.querySelector(scopedSelector);
-		}) satisfies GetScopeChildBySelector;
-		// ^ Note `satisfies` here (and below) allows TypeScript to infer the
-		// literal type rather than referencing it by name, which is generally
-		// easier to work with from a call site.
+export class ScopedElementLookup<Selector extends ScopedSelector = ScopedSelector> {
+	constructor(
+		readonly scopedSelector: Selector,
+		readonly unscopedSelector: UnscopedSelector<Selector>
+	) {}
+
+	/**
+	 * WARNING: `T` is unchecked at runtime, use with caution!
+	 */
+	getElement<T extends Element = Element>(contextNode: ScopedElementLookupContextNode): T | null {
+		return getScopedElement(this, contextNode);
 	}
 
-	// `scopedSelector` isn't used for this compatibility fallback, but it's
-	// included here as part of the inferred function signature.
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	return ((element, scopedSelector, unscopedSelector) => {
-		const children = Array.from(element.children);
-		const result = children.find((child) => child.matches(unscopedSelector));
+	/**
+	 * WARNING: `T` is unchecked at runtime, use with caution!
+	 */
+	getElements<T extends Element = Element>(
+		contextNode: ScopedElementLookupContextNode
+	): Iterable<T> {
+		return getScopedElements(this, contextNode);
+	}
+}
 
-		return result ?? null;
-	}) satisfies GetScopeChildBySelector;
-})();
+type UnscopedSelector<Selector extends ScopedSelector> =
+	Selector extends `:scope > ${infer Unscoped}` ? Unscoped : never;

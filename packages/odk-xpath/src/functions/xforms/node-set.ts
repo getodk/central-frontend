@@ -1,9 +1,14 @@
+import { UpsertableWeakMap } from '@odk/common/lib/collections/UpsertableWeakMap.ts';
+import { ScopedElementLookup } from '@odk/common/lib/dom/compatibility.ts';
+import type { LocalNamedElement } from '@odk/common/types/dom.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
+import { XFormsXPathEvaluator } from '../../index.ts';
 import { seededRandomize } from '../../lib/collections/sort.ts';
 import type { MaybeElementNode } from '../../lib/dom/types.ts';
+import type { ModelElement } from '../../xforms/XFormsXPathEvaluator.ts';
 
 export const countNonEmpty = new NumberFunction(
 	'count-non-empty',
@@ -24,6 +29,56 @@ export const countNonEmpty = new NumberFunction(
 		}
 
 		return result;
+	}
+);
+
+interface InstanceElement extends LocalNamedElement<'instance'> {}
+
+const identifiedInstanceLookup = new ScopedElementLookup(':scope > instance[id]', 'instance[id]');
+
+type InstanceID = string;
+
+const instancesCache = new UpsertableWeakMap<
+	ModelElement,
+	ReadonlyMap<InstanceID | null, InstanceElement>
+>();
+
+const getInstanceElementByID = (modelElement: ModelElement, id: string): Element | null => {
+	const instances = instancesCache.upsert(modelElement, () => {
+		const instanceElements = Array.from(
+			identifiedInstanceLookup.getElements<InstanceElement>(modelElement)
+		);
+
+		return new Map(
+			instanceElements.map((element) => {
+				return [element.getAttribute('id'), element];
+			})
+		);
+	});
+
+	return instances.get(id) ?? null;
+};
+
+export const instance = new NodeSetFunction(
+	'instance',
+	[{ arityType: 'required' }],
+	(context, [idExpression]): readonly Element[] => {
+		const id = idExpression!.evaluate(context).toString();
+		const { evaluator } = context;
+
+		if (!(evaluator instanceof XFormsXPathEvaluator)) {
+			throw new Error('itext not available');
+		}
+
+		const { modelElement } = evaluator;
+
+		if (modelElement == null) {
+			return [];
+		}
+
+		const instanceElement = getInstanceElementByID(modelElement, id);
+
+		return instanceElement == null ? [] : [instanceElement];
 	}
 );
 

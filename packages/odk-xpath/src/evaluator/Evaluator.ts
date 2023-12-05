@@ -61,6 +61,7 @@ export class Evaluator implements AnyXPathEvaluator {
 	readonly functions: FunctionLibraryCollection;
 	readonly parseOptions: ParseOptions;
 	readonly resultTypes: ResultTypes = ResultTypes;
+	readonly rootNodeDocument: Document | XMLDocument | null = null;
 	readonly rootNode: AnyParentNode | null;
 	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
 	readonly timeZone: Temporal.TimeZone;
@@ -71,7 +72,12 @@ export class Evaluator implements AnyXPathEvaluator {
 		this.functions = options.functions ?? functions;
 		this.parseOptions = parseOptions;
 		this.parser = ExpressionParser.from(parser);
-		this.rootNode = options.rootNode ?? null;
+		this.rootNode = rootNode ?? null;
+
+		if (rootNode != null) {
+			this.rootNodeDocument = rootNode.ownerDocument ?? rootNode;
+		}
+
 		this.sharedContextOptions = partialOmitNullish({
 			rootNode,
 		});

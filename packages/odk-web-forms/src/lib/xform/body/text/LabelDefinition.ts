@@ -1,5 +1,5 @@
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import { getLabelElement } from '../../query.ts';
 import type { TextElement, TextElementContext } from './TextElementDefinition.ts';
 import { TextElementDefinition } from './TextElementDefinition.ts';
 
@@ -9,11 +9,7 @@ export interface LabelElement extends TextElement {
 
 export class LabelDefinition extends TextElementDefinition<'label'> {
 	static forElement(form: XFormDefinition, definition: TextElementContext): LabelDefinition | null {
-		const labelElement = getScopeChildBySelector(
-			definition.element,
-			':scope > label',
-			'label'
-		) as LabelElement | null;
+		const labelElement = getLabelElement(definition.element);
 
 		if (labelElement == null) {
 			return null;

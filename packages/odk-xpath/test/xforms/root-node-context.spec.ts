@@ -1,4 +1,4 @@
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
+import { ScopedElementLookup } from '@odk/common/lib/dom/compatibility.ts';
 import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import { xml } from '@odk/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -207,16 +207,13 @@ describe("Specifying an Evaluator's root node", () => {
 			bind,
 			index,
 		}));
+		const instanceLookup = new ScopedElementLookup(':scope > instance', 'instance');
 
 		it.each(bindCases)(
 			'gets the model node for the nodeset defined on the bind at index $index',
 			({ bind }) => {
 				const modelElement = xformDocument.querySelector(':root > head > model')!;
-				const primaryInstanceElement = getScopeChildBySelector(
-					modelElement,
-					':scope > instance',
-					'instance'
-				)!;
+				const primaryInstanceElement = instanceLookup.getElement(modelElement)!;
 				const evaluator = new Evaluator(xpathParser, {
 					rootNode: primaryInstanceElement,
 				});

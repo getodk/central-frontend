@@ -1,5 +1,5 @@
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import { getHintElement } from '../../query.ts';
 import type { AnyControlDefinition } from '../control/ControlDefinition.ts';
 import type { TextElement } from './TextElementDefinition.ts';
 import { TextElementDefinition } from './TextElementDefinition.ts';
@@ -13,11 +13,7 @@ export class HintDefinition extends TextElementDefinition<'hint'> {
 		form: XFormDefinition,
 		definition: AnyControlDefinition
 	): HintDefinition | null {
-		const hintElement = getScopeChildBySelector(
-			definition.element,
-			':scope > hint',
-			'hint'
-		) as HintElement | null;
+		const hintElement = getHintElement(definition.element);
 
 		if (hintElement == null) {
 			return null;

@@ -1,8 +1,8 @@
 import { UpsertableMap } from '@odk/common/lib/collections/UpsertableMap.ts';
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- refrenced in JSDoc
 import type { XFormDOM } from '../../XFormDOM.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import { getLabelElement, getRepeatElement } from '../../query.ts';
 import {
 	BodyDefinition,
 	type BodyElementDefinitionArray,
@@ -60,7 +60,7 @@ export abstract class BaseGroupDefinition<
 			const ref = element.getAttribute('ref');
 
 			if (ref != null) {
-				const repeat = getScopeChildBySelector(element, ':scope > repeat', 'repeat');
+				const repeat = getRepeatElement(element);
 
 				if (repeat == null) {
 					return 'logical-group';
@@ -73,7 +73,7 @@ export abstract class BaseGroupDefinition<
 				throw new Error('Unexpected <repeat> child of unrelated <group>');
 			}
 
-			const label = getScopeChildBySelector(element, ':scope > label', 'label');
+			const label = getLabelElement(element);
 
 			if (label == null) {
 				return 'structural-group';

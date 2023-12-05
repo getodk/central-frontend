@@ -17,12 +17,19 @@ const functions = new FunctionLibraryCollection([enk, xf, fn, jr], {
 	defaultNamespaceURIs: [enk.namespaceURI, xf.namespaceURI, fn.namespaceURI],
 });
 
+export interface ModelElement extends Element {
+	readonly localName: 'model';
+}
+
 interface XFormsXPathEvaluatorOptions extends EvaluatorOptions {
 	readonly rootNode: AnyParentNode;
 }
 
 export class XFormsXPathEvaluator extends Evaluator {
 	override readonly rootNode: AnyParentNode;
+	override readonly rootNodeDocument: XMLDocument;
+
+	readonly modelElement: ModelElement | null;
 
 	readonly translations: XFormsItextTranslations;
 
@@ -32,7 +39,20 @@ export class XFormsXPathEvaluator extends Evaluator {
 			...options,
 		});
 
+		const { rootNode } = options;
+
+		const rootNodeDocument: XMLDocument = rootNode.ownerDocument ?? rootNode;
+
+		/**
+		 * TODO: as noted in {@link XFormsItextTranslations}, this breaks out of
+		 * the {@link rootNode} sandbox.
+		 */
+		this.modelElement = this.evaluateNode<ModelElement>('./h:html/h:head/xf:model', {
+			contextNode: rootNodeDocument,
+		});
+
 		this.rootNode = options.rootNode;
+		this.rootNodeDocument = rootNodeDocument;
 		this.translations = new XFormsItextTranslations(this);
 	}
 }

@@ -166,7 +166,6 @@ Both evaluator classes provide the following convenience methods:
 We intend to support the full ODK XForms function library, but support is currently incomplete. The following functions are not yet supported (the `jr:` prefix is used by convention to refer to the JavaRosa namespace):
 
 - `indexed-repeat`
-- `instance`
 - `pulldata`
 - `jr:choice-name`
 
