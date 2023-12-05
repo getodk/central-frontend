@@ -1544,7 +1544,7 @@
         }
       },
       "conflictResolved": {
-        "string": "Conflict warning resolved."
+        "string": "The conflict warning has been cleared."
       }
     },
     "EntityConflictTable": {
