@@ -44,7 +44,7 @@ describe('EntityDiffHead', () => {
 
     it('shows the correct text', () => {
       const text = mountComponent().get('p').text();
-      text.should.equal('Parallel Update\u00a0This Submission update was applied to version 2 of this Entity, but it was created based on version 1. No parallel update before this one touched the same properties.');
+      text.should.equal('Parallel Update\u00a0This Submission update was applied to version 2 of this Entity, but it was created based on version 1.');
     });
   });
 

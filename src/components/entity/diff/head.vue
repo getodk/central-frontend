@@ -25,8 +25,6 @@ except according to the terms contained in the LICENSE file.
       <p>
         <strong>{{ $t('softConflict.title') }}&nbsp;</strong>
         <span>{{ $t('introduction', { version: entityVersion.version - 1, baseVersion: entityVersion.baseVersion }) }}</span>
-        <sentence-separator/>
-        <span>{{ $t('softConflict.description') }}</span>
       </p>
     </div>
     <ul class="nav nav-tabs">
@@ -138,8 +136,7 @@ const change = (value) => {
     },
     "softConflict": {
       // An update to an Entity that was made at the same time as another update
-      "title": "Parallel Update",
-      "description": "No parallel update before this one touched the same properties."
+      "title": "Parallel Update"
     },
     "tab": {
       // A comparison between two versions of an Entity, from the point of view
