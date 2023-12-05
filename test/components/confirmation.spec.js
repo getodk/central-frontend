@@ -23,7 +23,7 @@ describe('Confirmation', () => {
   });
 
   it('shows default text for yes button', () => {
-    const text = mountComponent().get('.btn-danger').text();
+    const text = mountComponent().get('.btn-primary').text();
     text.should.equal('Yes');
   });
 
@@ -33,7 +33,7 @@ describe('Confirmation', () => {
   });
 
   it('shows passed text for yes button', () => {
-    const text = mountComponent({ props: { yesText: 'Custom Yes Text' } }).get('.btn-danger').text();
+    const text = mountComponent({ props: { yesText: 'Custom Yes Text' } }).get('.btn-primary').text();
     text.should.equal('Custom Yes Text');
   });
 
@@ -50,12 +50,12 @@ describe('Confirmation', () => {
 
   it('should disable all action buttons when awaitingResponse', async () => {
     const component = mountComponent({ props: { awaitingResponse: true } });
-    assertStandardButton(component, '.btn-danger', ['.btn-link', '.close'], null, true);
+    assertStandardButton(component, '.btn-primary', ['.btn-link', '.close'], null, true);
   });
 
   it('should emit success on yes button', async () => {
     const component = mountComponent();
-    await component.get('.btn-danger').trigger('click');
+    await component.get('.btn-primary').trigger('click');
     component.emitted().should.have.property('success');
   });
 });

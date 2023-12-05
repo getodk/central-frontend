@@ -145,7 +145,7 @@ describe('EntityShow', () => {
         .complete()
         .request(async (c) => {
           await c.get('#entity-conflict-summary .btn-default').trigger('click');
-          await c.getComponent(Confirmation).get('.btn-danger').trigger('click');
+          await c.getComponent(Confirmation).get('.btn-primary').trigger('click');
         })
         .respondWithData(() => {
           testData.extendedEntities.resolve(-1);
