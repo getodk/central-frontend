@@ -175,6 +175,9 @@ watch(() => props.entity, (entity) => {
   .btn + .btn {
     margin-left: 10px;
   }
+  .mark-as-resolved { border: 1px solid $color-success; }
+  .icon-check { color: $color-success; }
+
   .success {
     font-size: 30px;
     color: $color-success;
