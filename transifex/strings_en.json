@@ -1609,9 +1609,6 @@
         "title": {
           "string": "Parallel Update",
           "developer_comment": "An update to an Entity that was made at the same time as another update"
-        },
-        "description": {
-          "string": "No parallel update before this one touched the same properties."
         }
       },
       "tab": {
