@@ -1,6 +1,9 @@
+import type { XFormsXPathEvaluator } from '@odk/xpath';
 import type { Accessor } from 'solid-js';
 import { createComputed, createMemo, createSignal, on } from 'solid-js';
 import { createUninitializedAccessor } from '../../reactivity/primitives/uninitialized.ts';
+import type { AnyTextElementDefinition } from '../body/text/TextElementDefinition.ts';
+import type { AnyTextElementPart } from '../body/text/TextElementPart.ts';
 import type { DependentExpression } from '../expression/DependentExpression.ts';
 import type { BindComputation } from '../model/BindComputation.ts';
 import type { EntryState } from './EntryState.ts';
@@ -25,6 +28,11 @@ type BooleanBindComputationType =
 	| 'saveIncomplete';
 
 type DescendantNodeStateType = Exclude<NodeStateType, 'root'>;
+
+type DependentExpressionEvaluateMethod = 'evaluateBoolean' | 'evaluateString';
+
+type DependentExpressionEvaluateResult<Method extends DependentExpressionEvaluateMethod> =
+	ReturnType<XFormsXPathEvaluator[Method]>;
 
 export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 	implements NodeState<Type>
@@ -69,7 +77,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		readonly type: Type,
 		readonly definition: StateModelDefinition<Type>
 	) {
-		this.nodeset = definition.bind.nodeset;
+		this.nodeset = definition.nodeset;
 		this.isReferenceStatic = parent.isReferenceStatic && type !== 'repeat-instance';
 		this.calculate = createUninitializedAccessor<string>();
 		this.isReadonly = createUninitializedAccessor<boolean>();
@@ -136,14 +144,21 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		return expression;
 	}
 
-	protected createEvaluation<T>(
+	protected createEvaluation<Method extends DependentExpressionEvaluateMethod>(
 		dependentExpression: DependentExpression,
-		evaluateExpression: () => T
-	): Accessor<T> {
-		const { entry } = this;
-		const { dependencyReferences } = dependentExpression;
+		method: Method
+	): Accessor<DependentExpressionEvaluateResult<Method>> {
+		const { entry, node: contextNode } = this;
+		const { evaluator } = entry;
+		const { dependencyReferences, isTranslated } = dependentExpression;
+		const { expression } = dependentExpression;
+		const evaluateExpression = (): DependentExpressionEvaluateResult<Method> => {
+			return evaluator[method](expression, {
+				contextNode,
+			}) as DependentExpressionEvaluateResult<Method>;
+		};
 
-		if (dependencyReferences.size === 0 && this.isReferenceStatic) {
+		if (dependencyReferences.size === 0 && this.isReferenceStatic && !isTranslated) {
 			return evaluateExpression;
 		}
 
@@ -198,6 +213,16 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 
 		createComputed(on(dependencies, triggerStaleReevaluation, { defer: true }));
 
+		if (dependentExpression.isTranslated) {
+			const { translations } = entry;
+
+			if (translations != null) {
+				const activeLanguage = () => translations.getActiveLanguage();
+
+				createComputed(on(activeLanguage, triggerStaleReevaluation, { defer: true }));
+			}
+		}
+
 		// TODO: super naive, assumes that a reference change (e.g. a repeat
 		// position change) warrants recomputation. A less naive solution would
 		// determine if the expression would be impacted by the expression change.
@@ -211,7 +236,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			return currentReference;
 		}, this.reference);
 
-		const evaluate = createMemo<T>((evaluated) => {
+		const evaluate = createMemo<DependentExpressionEvaluateResult<Method>>((evaluated) => {
 			if (isEvaluationStale()) {
 				return evaluateExpression();
 			}
@@ -237,12 +262,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 	protected createBooleanBindComputation<
 		Computation extends BindComputation<BooleanBindComputationType>,
 	>(bindComputation: Computation): Accessor<boolean> {
-		const { entry, node: contextNode } = this;
-		const { evaluator } = entry;
-		const { expression } = bindComputation;
-		const evaluateExpression = () => evaluator.evaluateBoolean(expression, { contextNode });
-
-		return this.createEvaluation(bindComputation, evaluateExpression);
+		return this.createEvaluation(bindComputation, 'evaluateBoolean');
 	}
 
 	protected createCalculate(
@@ -252,13 +272,42 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			return null;
 		}
 
-		const { entry, node: contextNode } = this;
-		const { evaluator } = entry;
+		return this.createEvaluation(computation, 'evaluateString');
+	}
 
-		const evaluateExpression = () =>
-			evaluator.evaluateString(computation.expression, { contextNode });
+	protected createTextPartEvaluation(part: AnyTextElementPart): Accessor<string> {
+		if (part.type === 'static') {
+			return () => part.stringValue;
+		}
 
-		return this.createEvaluation(computation, evaluateExpression);
+		return this.createEvaluation(part, 'evaluateString');
+	}
+
+	createTextEvaluation(textElement: AnyTextElementDefinition): Accessor<string> {
+		const childEvaluations = textElement.children.map((childPart) => {
+			return this.createTextPartEvaluation(childPart);
+		});
+		const childText = createMemo(() => {
+			return childEvaluations.map((evaluation) => evaluation()).join('');
+		});
+
+		const { referenceExpression } = textElement;
+
+		if (referenceExpression == null) {
+			return childText;
+		}
+
+		const referenceEvaluation = this.createTextPartEvaluation(referenceExpression);
+
+		return createMemo(() => {
+			const referenceText = referenceEvaluation();
+
+			if (referenceText == '') {
+				return childText();
+			}
+
+			return referenceText;
+		});
 	}
 }
 

@@ -1,21 +1,15 @@
 import { RepeatDefinition } from '../body/RepeatDefinition.ts';
-import type { BindDefinition } from './BindDefinition.ts';
-import type {
-	ChildNodeDefinition,
-	NodeDefinition,
-	ParentNodeDefinition,
-} from './NodeDefinition.ts';
+import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
+import type { ChildNodeDefinition, NodeDefinition } from './NodeDefinition.ts';
 import type { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
-import type { RootDefinition } from './RootDefinition.ts';
 
-export class RepeatInstanceDefinition implements NodeDefinition<'repeat-instance'> {
+export class RepeatInstanceDefinition
+	extends DescendentNodeDefinition<'repeat-instance', RepeatDefinition>
+	implements NodeDefinition<'repeat-instance'>
+{
 	readonly type = 'repeat-instance';
 
-	readonly root: RootDefinition;
-	readonly parent: ParentNodeDefinition;
-	readonly bind: BindDefinition;
 	readonly nodeName: string;
-	readonly bodyElement: RepeatDefinition;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -31,11 +25,9 @@ export class RepeatInstanceDefinition implements NodeDefinition<'repeat-instance
 			root,
 		} = sequence;
 
-		this.root = root;
-		this.parent = repeatSequenceParent;
-		this.bind = bind;
+		super(repeatSequenceParent, bind, repeatGroupBodyElement.repeat);
+
 		this.nodeName = sequence.nodeName;
-		this.bodyElement = repeatGroupBodyElement.repeat;
 		this.children = root.buildSubtree(this);
 	}
 

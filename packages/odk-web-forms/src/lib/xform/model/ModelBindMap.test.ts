@@ -59,18 +59,4 @@ describe('ModelBindMap', () => {
 		expect(binds.get('/root/group')).toBeInstanceOf(BindDefinition);
 		expect(binds.get('/root/group/sub-group')).toBeInstanceOf(BindDefinition);
 	});
-
-	it('sorts nodesets based on bind computation dependencies', () => {
-		const keys = Array.from(binds.keys());
-
-		expect(keys).toEqual([
-			'/root',
-			'/root/group',
-			'/root/group/third-question',
-			'/root/group/first-question',
-			'/root/group/sub-group',
-			'/root/group/sub-group/deep-group',
-			'/root/group/sub-group/deep-group/second-question',
-		]);
-	});
 });

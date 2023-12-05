@@ -1,11 +1,14 @@
 import { RepeatGroupDefinition } from '../body/group/RepeatGroupDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
+import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 import { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
 import { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
-import type { RootDefinition } from './RootDefinition.ts';
 
-export class RepeatSequenceDefinition implements NodeDefinition<'repeat-sequence'> {
+export class RepeatSequenceDefinition
+	extends DescendentNodeDefinition<'repeat-sequence', RepeatGroupDefinition>
+	implements NodeDefinition<'repeat-sequence'>
+{
 	// TODO: if an implicit template is derived from an instance in a form
 	// definition, should its default values (if any) be cleared? Probably!
 	static createTemplateElement(instanceElement: Element): Element {
@@ -18,7 +21,6 @@ export class RepeatSequenceDefinition implements NodeDefinition<'repeat-sequence
 
 	readonly type = 'repeat-sequence';
 
-	readonly root: RootDefinition;
 	readonly template: RepeatTemplateDefinition;
 	readonly children = null;
 	readonly instances: RepeatInstanceDefinition[];
@@ -28,16 +30,12 @@ export class RepeatSequenceDefinition implements NodeDefinition<'repeat-sequence
 	readonly defaultValue = null;
 
 	constructor(
-		readonly parent: ParentNodeDefinition,
-		readonly bind: BindDefinition,
-		readonly bodyElement: RepeatGroupDefinition,
+		parent: ParentNodeDefinition,
+		bind: BindDefinition,
+		bodyElement: RepeatGroupDefinition,
 		modelNodes: readonly [Element, ...Element[]]
 	) {
-		const { root } = parent;
-
-		this.root = root;
-		this.bind = bind;
-
+		super(parent, bind, bodyElement);
 		const { template, instanceNodes } = RepeatTemplateDefinition.parseModelNodes(this, modelNodes);
 
 		this.template = template;

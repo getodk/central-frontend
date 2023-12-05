@@ -1,4 +1,3 @@
-import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { BaseGroupDefinition } from './BaseGroupDefinition.ts';
 
 export class StructuralGroupDefinition extends BaseGroupDefinition<'structural-group'> {
@@ -7,10 +6,6 @@ export class StructuralGroupDefinition extends BaseGroupDefinition<'structural-g
 	}
 
 	readonly type = 'structural-group';
-
-	constructor(form: XFormDefinition, element: Element) {
-		super(form, element);
-	}
 }
 
 export type StructuralGroupDefinitionClass = typeof StructuralGroupDefinition;

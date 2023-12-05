@@ -1,4 +1,5 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import type { BodyElementParentContext } from './BodyDefinition.ts';
 import { BodyElementDefinition } from './BodyElementDefinition.ts';
 
 export class UnsupportedBodyElementDefinition extends BodyElementDefinition<'UNSUPPORTED'> {
@@ -10,7 +11,7 @@ export class UnsupportedBodyElementDefinition extends BodyElementDefinition<'UNS
 	readonly type = 'UNSUPPORTED';
 	override readonly reference: null = null;
 
-	constructor(form: XFormDefinition, element: Element) {
-		super(form, element);
+	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
+		super(form, parent, element);
 	}
 }

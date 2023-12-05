@@ -1,19 +1,16 @@
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
+import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { MixedContentTextElementDefinition } from './MixedContentTextElementDefinition.ts';
+import type { TextElement, TextElementContext } from './TextElementDefinition.ts';
+import { TextElementDefinition } from './TextElementDefinition.ts';
 
-export interface LabelElement extends Element {
+export interface LabelElement extends TextElement {
 	readonly localName: 'label';
 }
 
-export const isLabelElement = (element: Element): element is LabelElement => {
-	return element.localName === 'label';
-};
-
-export class LabelDefinition extends MixedContentTextElementDefinition<'label'> {
-	static forElement(form: XFormDefinition, element: Element): LabelDefinition | null {
+export class LabelDefinition extends TextElementDefinition<'label'> {
+	static forElement(form: XFormDefinition, definition: TextElementContext): LabelDefinition | null {
 		const labelElement = getScopeChildBySelector(
-			element,
+			definition.element,
 			':scope > label',
 			'label'
 		) as LabelElement | null;
@@ -22,12 +19,8 @@ export class LabelDefinition extends MixedContentTextElementDefinition<'label'> 
 			return null;
 		}
 
-		return new LabelDefinition(form, labelElement);
+		return new this(form, definition, labelElement);
 	}
 
-	override readonly type = 'label';
-
-	constructor(form: XFormDefinition, element: LabelElement) {
-		super(form, element);
-	}
+	readonly type = 'label';
 }

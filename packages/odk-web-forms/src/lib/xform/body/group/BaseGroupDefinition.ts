@@ -3,7 +3,11 @@ import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- refrenced in JSDoc
 import type { XFormDOM } from '../../XFormDOM.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { BodyDefinition, type BodyElementDefinitionArray } from '../BodyDefinition.ts';
+import {
+	BodyDefinition,
+	type BodyElementDefinitionArray,
+	type BodyElementParentContext,
+} from '../BodyDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
 import { LabelDefinition } from '../text/LabelDefinition.ts';
 
@@ -86,12 +90,17 @@ export abstract class BaseGroupDefinition<
 	override readonly reference: string | null;
 	override readonly label: LabelDefinition | null;
 
-	constructor(form: XFormDefinition, element: Element, children?: BodyElementDefinitionArray) {
-		super(form, element);
+	constructor(
+		form: XFormDefinition,
+		parent: BodyElementParentContext,
+		element: Element,
+		children?: BodyElementDefinitionArray
+	) {
+		super(form, parent, element);
 
 		this.children = children ?? this.getChildren(element);
 		this.reference = element.getAttribute('ref');
-		this.label = LabelDefinition.forElement(form, element);
+		this.label = LabelDefinition.forElement(form, this);
 	}
 
 	getChildren(element: Element): BodyElementDefinitionArray {
@@ -102,7 +111,7 @@ export abstract class BaseGroupDefinition<
 			return childName !== 'label' && childName !== 'repeat';
 		});
 
-		return BodyDefinition.getChildElementDefinitions(form, element, children);
+		return BodyDefinition.getChildElementDefinitions(form, this, element, children);
 	}
 }
 

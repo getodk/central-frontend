@@ -22,7 +22,7 @@ export class RepeatDefinition extends BodyElementDefinition<'repeat'> {
 		readonly groupDefinition: RepeatGroupDefinition,
 		element: Element
 	) {
-		super(form, element);
+		super(form, groupDefinition, element);
 
 		const reference = element.getAttribute('nodeset');
 

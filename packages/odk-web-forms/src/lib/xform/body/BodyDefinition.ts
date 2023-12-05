@@ -1,5 +1,5 @@
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { DependencyContext } from '../expression/DependencyContext.ts';
 import { UnsupportedBodyElementDefinition } from './UnsupportedBodyElementDefinition.ts';
 import { ControlDefinition } from './control/ControlDefinition.ts';
 import { InputDefinition } from './control/InputDefinition.ts';
@@ -8,17 +8,29 @@ import { PresentationGroupDefinition } from './group/PresentationGroupDefinition
 import { RepeatGroupDefinition } from './group/RepeatGroupDefinition.ts';
 import { StructuralGroupDefinition } from './group/StructuralGroupDefinition.ts';
 
+export interface BodyElementParentContext {
+	readonly reference: string | null;
+	readonly element: Element;
+}
+
+type SupportedBodyElementDefinition =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| RepeatGroupDefinition
+	| LogicalGroupDefinition
+	| PresentationGroupDefinition
+	| StructuralGroupDefinition
+	| InputDefinition;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BodyElementDefinitionConstructor = new (...args: any[]) => SupportedBodyElementDefinition;
+
 const BodyElementDefinitionConstructors = [
 	RepeatGroupDefinition,
 	LogicalGroupDefinition,
 	PresentationGroupDefinition,
 	StructuralGroupDefinition,
 	InputDefinition,
-] as const;
-
-type SupportedBodyElementDefinition = InstanceType<
-	CollectionValues<typeof BodyElementDefinitionConstructors>
->;
+] as const satisfies readonly BodyElementDefinitionConstructor[];
 
 export type AnyBodyElementDefinition =
 	| SupportedBodyElementDefinition
@@ -124,9 +136,10 @@ class BodyElementMap extends Map<BodyElementReference, AnyBodyElementDefinition>
 	}
 }
 
-export class BodyDefinition {
+export class BodyDefinition extends DependencyContext {
 	static getChildElementDefinitions(
 		form: XFormDefinition,
+		parent: BodyElementParentContext,
 		parentElement: Element,
 		children: readonly Element[] = Array.from(parentElement.children)
 	): readonly AnyBodyElementDefinition[] {
@@ -135,23 +148,32 @@ export class BodyDefinition {
 
 			for (const Constructor of BodyElementDefinitionConstructors) {
 				if (Constructor.isCompatible(localName, element)) {
-					return new Constructor(form, element);
+					return new Constructor(form, parent, element);
 				}
 			}
 
-			return new UnsupportedBodyElementDefinition(form, element);
+			return new UnsupportedBodyElementDefinition(form, parent, element);
 		});
 	}
 
+	readonly element: Element;
 	readonly elements: readonly AnyBodyElementDefinition[];
 
 	protected readonly elementsByReference: BodyElementMap;
 
-	constructor(protected readonly form: XFormDefinition) {
-		const elements = BodyDefinition.getChildElementDefinitions(form, form.xformDOM.body);
+	// DependencyContext
+	readonly parentReference = null;
+	readonly reference: string;
 
-		this.elements = elements;
-		this.elementsByReference = new BodyElementMap(elements);
+	constructor(protected readonly form: XFormDefinition) {
+		super();
+
+		const { body: element } = form.xformDOM;
+
+		this.reference = form.rootReference;
+		this.element = element;
+		this.elements = BodyDefinition.getChildElementDefinitions(form, this, element);
+		this.elementsByReference = new BodyElementMap(this.elements);
 	}
 
 	getBodyElement(reference: string): AnyBodyElementDefinition | null {

@@ -14,6 +14,7 @@ import { ValueNodeDefinition } from './ValueNodeDefinition.ts';
 export class RootDefinition implements NodeDefinition<'root'> {
 	readonly type = 'root';
 	readonly bind: BindDefinition;
+	readonly nodeset: string;
 	readonly nodeName: string;
 	readonly bodyElement = null;
 	readonly root = this;
@@ -22,6 +23,9 @@ export class RootDefinition implements NodeDefinition<'root'> {
 	readonly instances = null;
 	readonly node: Element;
 	readonly defaultValue = null;
+
+	readonly isTranslated = false;
+	readonly dependencyExpressions: ReadonlySet<string> = new Set<string>();
 
 	constructor(
 		protected readonly form: XFormDefinition,
@@ -48,6 +52,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 		}
 
 		this.bind = bind;
+		this.nodeset = nodeset;
 		this.node = primaryInstanceRoot;
 		this.children = this.buildSubtree(this);
 	}
