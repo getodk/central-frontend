@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
           <span class="wrap-circle">
             <span class="icon-warning"></span>
           </span>
-          {{ dataset.conflicts > 0 ? $tcn('possibleConflictsCount', dataset.conflicts) : $n(0) }}
+          {{ $tcn('possibleConflictsCount', dataset.conflicts) }}
         </router-link>
       </span>
     </td>

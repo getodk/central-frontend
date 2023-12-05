@@ -18,7 +18,7 @@ const mountComponent = () => mount(DatasetTable, {
 describe('DatasetTable', () => {
   it('shows the correct columns', async () => {
     testData.extendedDatasets.createPast(1);
-    const table = mountComponent().getComponent(DatasetTable);
+    const table = mountComponent();
     const headers = table.findAll('th').map(th => th.text());
     headers.should.eql(['List Name', 'Total Entities', 'Latest Entity', 'Status', 'Actions']);
     table.findAll('td').length.should.equal(5);
