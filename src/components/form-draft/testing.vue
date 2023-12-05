@@ -166,9 +166,9 @@ export default {
     "collectProjectName": "[Draft] {name}",
     // @transifexKey component.FormDraftTesting.datasetsPreview
     "entitiesTesting": {
-      "title": "This Form can create Entities",
+      "title": "This Form can update Entities",
       "body": [
-        "Entities are only created for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state.",
+        "Entities are only updated for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state.",
         "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
       ]
     }

@@ -1354,9 +1354,9 @@
       }
     },
     "DatasetOverviewConnectionToForms": {
-      "formsCreateEntities": {
-        "string": "{count, plural, one {Form creates Entities in this Entity List} other {Forms create Entities in this Entity List}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+      "formsUpdateEntities": {
+        "string": "{count, plural, one {Form updates Entities in this Entity List} other {Forms update Entities in this Entity List}}",
+        "developer_comment": "The number of Form(s) is shown separately above this text."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1577,7 +1577,7 @@
           "string": "This is the most recent version in good agreement. After this update, potentially conflicting updates have been made in parallel."
         },
         "softConflict": {
-          "string": "This version was made in parallel with others, but it doesn’t write any properties touched by the parallel updates before it."
+          "string": "This version may have been made based on old data."
         },
         "hardConflict": {
           "string": "This version was made in parallel with other updates, some of which attempt to write to the same properties as this update."
@@ -2595,11 +2595,11 @@
       },
       "datasetsPreview": {
         "title": {
-          "string": "This Form can create Entities"
+          "string": "This Form can update Entities"
         },
         "body": {
           "0": {
-            "string": "Entities are only created for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state."
+            "string": "Entities are only updated for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state."
           },
           "1": {
             "string": "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."

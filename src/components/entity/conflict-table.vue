@@ -285,7 +285,7 @@ defineExpose({ resize });
     "status": {
       "historical": "This historical version is included because a recent parallel update was made based on this version of this Entity.",
       "lastGoodVersion": "This is the most recent version in good agreement. After this update, potentially conflicting updates have been made in parallel.",
-      "softConflict": "This version was made in parallel with others, but it doesn’t write any properties touched by the parallel updates before it.",
+      "softConflict": "This version may have been made based on old data.",
       "hardConflict": "This version was made in parallel with other updates, some of which attempt to write to the same properties as this update."
     }
   }
