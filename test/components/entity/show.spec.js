@@ -1,3 +1,4 @@
+import EntityConflictSummary from '../../../src/components/entity/conflict-summary.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import PageBack from '../../../src/components/page/back.vue';
@@ -121,6 +122,46 @@ describe('EntityShow', () => {
     });
 
     it('updates the number of entries in the feed');
+
+    it('updates the conflict status', async () => {
+      testData.extendedEntities.createPast(1, {
+        uuid: 'e',
+        label: 'My Entity'
+      });
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
+        .afterResponses(component => {
+          component.findComponent(EntityConflictSummary).exists().should.be.true();
+        })
+        .request(async (component) => {
+          await component.get('#entity-data-update-button').trigger('click');
+          const form = component.get('#entity-update form');
+          await form.get('textarea').setValue('Updated Entity');
+          return form.trigger('submit');
+        })
+        .respondWithData(() => {
+          // Another user has resolved the conflict.
+          testData.extendedEntities.resolve(-1);
+          testData.extendedAudits.createPast(1, {
+            action: 'entity.update.resolve'
+          });
+
+          testData.extendedEntityVersions.createNew({
+            label: 'Updated Entity'
+          });
+          testData.extendedAudits.createPast(1, {
+            action: 'entity.update.version',
+            details: {}
+          });
+
+          return testData.standardEntities.last();
+        })
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .respondWithData(() => testData.extendedEntityVersions.sorted())
+        .afterResponses(component => {
+          component.findComponent(EntityConflictSummary).exists().should.be.false();
+        });
+    });
   });
 
   describe('after a conflict is marked as resolved', () => {

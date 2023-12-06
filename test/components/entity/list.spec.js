@@ -227,6 +227,34 @@ describe('EntityList', () => {
         td.get('.updates').text().should.equal('1');
         td.get('.update-button').attributes('aria-label').should.equal('Edit (1)');
       });
+
+      it('updates the conflict status', () => {
+        testData.extendedEntities.createPast(1, { label: 'My Entity' });
+        testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+        return load('/projects/1/entity-lists/trees/entities', { root: false })
+          .afterResponses(component => {
+            component.find('.entity-metadata-row .icon-warning').exists().should.be.true();
+          })
+          .request(async (component) => {
+            await component.get('.entity-metadata-row .update-button').trigger('click');
+            const form = component.get('#entity-update form');
+            await form.get('textarea').setValue('Updated Entity');
+            return form.trigger('submit');
+          })
+          .respondWithData(() => {
+            // Another user has resolved the conflict.
+            testData.extendedEntities.resolve(-1);
+
+            testData.extendedEntityVersions.createNew({
+              label: 'Updated Entity'
+            });
+
+            return testData.standardEntities.last();
+          })
+          .afterResponse(component => {
+            component.find('.entity-metadata-row .icon-warning').exists().should.be.false();
+          });
+      });
     });
   });
 
