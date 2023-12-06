@@ -205,7 +205,7 @@ const markAsResolved = () => {
         // @transifexKey component.EntityUpdate.problem.409_15
         "409_15": "Data has been modified by another user. Please refresh to see the updated data."
       },
-      "conflictResolved": "Conflict warning resolved."
+      "conflictResolved": "The conflict warning has been cleared."
     }
   }
 </i18n>
