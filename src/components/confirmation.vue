@@ -9,10 +9,9 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
   <modal :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')">
+    backdrop class="confirmation" @hide="$emit('hide')">
     <template #title>{{ title }}</template>
     <template #body>
       <div class="modal-introduction">

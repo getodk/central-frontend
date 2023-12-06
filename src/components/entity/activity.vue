@@ -15,10 +15,10 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('common.activity') }}</span>
     </template>
     <template #body>
-      <entity-conflict-summary v-if="dataExistsForSummary && entity.conflict != null"
-        @resolve="$emit('resolve')"/>
       <loading :state="initiallyLoading"/>
-      <template v-if="dataExistsForFeed">
+      <template v-if="dataExists">
+        <entity-conflict-summary v-if="entity.conflict != null"
+          @resolve="$emit('resolve')"/>
         <div v-for="(group, i) of feed" :key="feed.length - i"
           class="feed-entry-group" v-bind="scrollData(group[0])">
           <entity-feed-entry v-for="(data, j) of group" :key="j" v-bind="data"/>
@@ -49,8 +49,6 @@ defineEmits(['resolve']);
 // created.
 const { project, dataset, entity, audits, entityVersions, resourceStates } = useRequestData();
 const { initiallyLoading, dataExists } = resourceStates([project, dataset, entity, audits, entityVersions]);
-const { dataExists: dataExistsForSummary } = resourceStates([project, dataset, entity, entityVersions]);
-const { dataExists: dataExistsForFeed } = resourceStates([audits, entityVersions]);
 
 // feed.value is an array of feed entry groups, each of which is an array of
 // feed entries.

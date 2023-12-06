@@ -122,4 +122,29 @@ describe('EntityShow', () => {
 
     it('updates the number of entries in the feed');
   });
+
+  describe('after a conflict is marked as resolved', () => {
+    it('sends the correct requests for activity data', () => {
+      testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      return load('/projects/1/entity-lists/%C3%A1/entities/e', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('#entity-conflict-summary .btn-default').trigger('click');
+          await component.get('.confirmation .btn-primary').trigger('click');
+        })
+        .respondWithData(() => {
+          testData.extendedEntities.resolve(-1);
+          return testData.standardEntities.last();
+        })
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .respondWithData(() => testData.extendedEntityVersions.sorted())
+        .testRequests([
+          null,
+          { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits' },
+          { url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions', extended: true }
+        ]);
+    });
+  });
 });

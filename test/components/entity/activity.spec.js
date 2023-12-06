@@ -1,4 +1,3 @@
-import Confirmation from '../../../src/components/confirmation.vue';
 import EntityActivity from '../../../src/components/entity/activity.vue';
 import EntityConflictSummary from '../../../src/components/entity/conflict-summary.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
@@ -68,15 +67,14 @@ describe('EntityActivity', () => {
       component.findComponent(EntityConflictSummary).exists().should.be.true();
     });
 
-    it('hides the summary after resolve', async () => {
+    it('hides the summary after resolve', () => {
       testData.extendedEntities.createPast(1, { uuid: 'e' });
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       return load('/projects/1/entity-lists/trees/entities/e', { root: false })
         .complete()
         .request(async (component) => {
           await component.get('#entity-conflict-summary .btn-default').trigger('click');
-          const modal = component.getComponent(Confirmation);
-          return modal.get('.btn-primary').trigger('click');
+          await component.get('.confirmation .btn-primary').trigger('click');
         })
         .respondWithData(() => {
           testData.extendedEntities.resolve(-1);

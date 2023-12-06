@@ -89,11 +89,12 @@ const hideConfirm = () => {
   confirmModalState.value = false;
 };
 
-const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 const markAsResolved = () => {
-  const url = apiPaths.entity(projectId, datasetName, entity.uuid, { resolve: true, baseVersion: entity.currentVersion.version });
-
+  const url = apiPaths.entity(project.id, datasetName, entity.uuid, {
+    resolve: true,
+    baseVersion: entity.currentVersion.version
+  });
   request.patch(
     url,
     null,
@@ -115,7 +116,6 @@ const markAsResolved = () => {
     })
     .catch(noop);
 };
-
 </script>
 
 <style lang="scss" scoped>
