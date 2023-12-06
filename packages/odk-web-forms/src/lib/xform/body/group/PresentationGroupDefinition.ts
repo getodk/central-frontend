@@ -15,7 +15,7 @@ export class PresentationGroupDefinition extends BaseGroupDefinition<'presentati
 	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
 		super(form, parent, element);
 
-		const label = LabelDefinition.forElement(form, this);
+		const label = LabelDefinition.forGroup(form, this);
 
 		if (label == null) {
 			throw new Error('Invalid presentation-group: missing label');

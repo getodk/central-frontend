@@ -3,6 +3,8 @@ import { DependencyContext } from '../expression/DependencyContext.ts';
 import { UnsupportedBodyElementDefinition } from './UnsupportedBodyElementDefinition.ts';
 import { ControlDefinition } from './control/ControlDefinition.ts';
 import { InputDefinition } from './control/InputDefinition.ts';
+import type { AnySelectDefinition } from './control/select/SelectDefinition.ts';
+import { SelectDefinition } from './control/select/SelectDefinition.ts';
 import { LogicalGroupDefinition } from './group/LogicalGroupDefinition.ts';
 import { PresentationGroupDefinition } from './group/PresentationGroupDefinition.ts';
 import { RepeatGroupDefinition } from './group/RepeatGroupDefinition.ts';
@@ -19,7 +21,8 @@ type SupportedBodyElementDefinition =
 	| LogicalGroupDefinition
 	| PresentationGroupDefinition
 	| StructuralGroupDefinition
-	| InputDefinition;
+	| InputDefinition
+	| AnySelectDefinition;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BodyElementDefinitionConstructor = new (...args: any[]) => SupportedBodyElementDefinition;
@@ -30,6 +33,7 @@ const BodyElementDefinitionConstructors = [
 	PresentationGroupDefinition,
 	StructuralGroupDefinition,
 	InputDefinition,
+	SelectDefinition,
 ] as const satisfies readonly BodyElementDefinitionConstructor[];
 
 export type AnyBodyElementDefinition =

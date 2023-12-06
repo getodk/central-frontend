@@ -1,5 +1,23 @@
+import type { XFormsXPathEvaluator } from '@odk/xpath';
 import { getNodesetDependencies, isItextFunctionCalled } from '../../xpath/analysis.ts';
 import type { DependencyContext } from './DependencyContext.ts';
+
+const evaluatorMethodsByResultType = {
+	boolean: 'evaluateBoolean',
+	nodes: 'evaluateNodes',
+	string: 'evaluateString',
+} as const;
+
+type EvaluatorMethodsByResultType = typeof evaluatorMethodsByResultType;
+
+export type DependentExpressionResultType = keyof EvaluatorMethodsByResultType;
+
+export type DependentExpressionEvaluatorMethod<Type extends DependentExpressionResultType> =
+	EvaluatorMethodsByResultType[Type];
+
+export type DependentExpressionResult<Type extends DependentExpressionResultType> = ReturnType<
+	XFormsXPathEvaluator[DependentExpressionEvaluatorMethod<Type>]
+>;
 
 interface SemanticDependencyOptions {
 	/**
@@ -27,15 +45,19 @@ interface DependentExpressionOptions {
 	readonly semanticDependencies?: SemanticDependencyOptions;
 }
 
-export class DependentExpression {
+export class DependentExpression<Type extends DependentExpressionResultType> {
 	readonly dependencyReferences: ReadonlySet<string> = new Set();
 	readonly isTranslated: boolean = false;
+	readonly evaluatorMethod: DependentExpressionEvaluatorMethod<Type>;
 
 	constructor(
 		context: DependencyContext,
+		readonly resultType: Type,
 		readonly expression: string,
 		options: DependentExpressionOptions = {}
 	) {
+		this.evaluatorMethod = evaluatorMethodsByResultType[resultType];
+
 		const {
 			ignoreContextReference = false,
 			ignoreNullExpressions = true,
@@ -75,3 +97,6 @@ export class DependentExpression {
 		return this.expression;
 	}
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyDependentExpression = DependentExpression<any>;

@@ -1,10 +1,10 @@
-import type { DependentExpression } from './DependentExpression.ts';
+import type { AnyDependentExpression } from './DependentExpression.ts';
 
 export abstract class DependencyContext {
 	abstract get parentReference(): string | null;
 	abstract get reference(): string | null;
 
-	protected readonly dependentExpressions = new Set<DependentExpression>();
+	protected readonly dependentExpressions = new Set<AnyDependentExpression>();
 
 	protected dependencyExpressionsCache: ReadonlySet<string> | null = null;
 
@@ -46,7 +46,7 @@ export abstract class DependencyContext {
 	// Update note on `set isTranslated` if this internal storage changes.
 	protected _isTranslated = false;
 
-	registerDependentExpression(expression: DependentExpression): void {
+	registerDependentExpression(expression: AnyDependentExpression): void {
 		this.dependencyExpressionsCache = null;
 		this.dependentExpressions.add(expression);
 	}

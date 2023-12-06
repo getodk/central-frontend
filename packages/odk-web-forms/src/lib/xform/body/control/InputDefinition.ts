@@ -5,6 +5,5 @@ export class InputDefinition extends ControlDefinition<'input'> {
 		return localName === 'input';
 	}
 
-	override readonly category = 'control';
 	readonly type = 'input';
 }

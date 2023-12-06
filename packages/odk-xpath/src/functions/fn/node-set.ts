@@ -1,3 +1,4 @@
+import { normalizeXMLXPathWhitespace } from '@odk/common/lib/string/whitespace.ts';
 import { reduce } from 'itertools-ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
@@ -6,7 +7,6 @@ import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { isNamespaceNode, isProcessingInstructionNode } from '../../lib/dom/predicates.ts';
 import { sortDocumentOrder } from '../../lib/dom/sort.ts';
 import type { MaybeNamedNode } from '../../lib/dom/types.ts';
-import { normalizeXPathWhitespace } from '../_shared/string.ts';
 
 const { toCount } = reduce;
 
@@ -37,7 +37,7 @@ export const id = new NodeSetFunction(
 		const elementIds = Array.from(
 			new Set(
 				idArguments.flatMap((argument) =>
-					normalizeXPathWhitespace(argument?.toString() ?? '').split(' ')
+					normalizeXMLXPathWhitespace(argument?.toString() ?? '').split(' ')
 				)
 			)
 		);

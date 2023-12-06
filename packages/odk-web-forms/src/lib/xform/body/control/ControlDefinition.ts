@@ -33,7 +33,7 @@ export abstract class ControlDefinition<
 		}
 
 		this.reference = reference;
-		this.label = LabelDefinition.forElement(form, this);
+		this.label = LabelDefinition.forControl(form, this);
 		this.hint = HintDefinition.forElement(form, this);
 	}
 }

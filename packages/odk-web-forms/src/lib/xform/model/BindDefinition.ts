@@ -25,7 +25,7 @@ export class BindDefinition extends DependencyContext {
 	/**
 	 * Diverges from {@link https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/dag.md | JavaRosa's}, which excludes `constraint` expressions. We compute `constraint` dependencies like the other <bind> computation expressions, but explicitly ignore self-references (this is currently handled by {@link BindComputation}, via its {@link DependentExpression} parent class).
 	 */
-	readonly constraint: BindComputation<'constraint'> & DependentExpression;
+	readonly constraint: BindComputation<'constraint'> & DependentExpression<'boolean'>;
 
 	// TODO: it is unclear whether this will need to be supported.
 	// https://github.com/getodk/collect/issues/3758 mentions deprecation.

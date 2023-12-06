@@ -47,7 +47,7 @@ export class RepeatDefinition extends BodyElementDefinition<'repeat'> {
 	}
 
 	override toJSON() {
-		const { form, groupDefinition, ...rest } = this;
+		const { form, groupDefinition, parent, ...rest } = this;
 
 		return rest;
 	}

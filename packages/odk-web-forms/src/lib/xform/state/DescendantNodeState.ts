@@ -1,10 +1,13 @@
-import type { XFormsXPathEvaluator } from '@odk/xpath';
 import type { Accessor } from 'solid-js';
 import { createComputed, createMemo, createSignal, on } from 'solid-js';
 import { createUninitializedAccessor } from '../../reactivity/primitives/uninitialized.ts';
 import type { AnyTextElementDefinition } from '../body/text/TextElementDefinition.ts';
 import type { AnyTextElementPart } from '../body/text/TextElementPart.ts';
-import type { DependentExpression } from '../expression/DependentExpression.ts';
+import type {
+	DependentExpression,
+	DependentExpressionResult,
+	DependentExpressionResultType,
+} from '../expression/DependentExpression.ts';
 import type { BindComputation } from '../model/BindComputation.ts';
 import type { EntryState } from './EntryState.ts';
 import type {
@@ -20,6 +23,10 @@ import type {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
 import type { ValueNodeState } from './ValueNodeState.ts';
 
+interface ReactiveEvaluationOptions {
+	readonly contextNode?: Node;
+}
+
 type BooleanBindComputationType =
 	| 'constraint'
 	| 'readonly'
@@ -28,11 +35,6 @@ type BooleanBindComputationType =
 	| 'saveIncomplete';
 
 type DescendantNodeStateType = Exclude<NodeStateType, 'root'>;
-
-type DependentExpressionEvaluateMethod = 'evaluateBoolean' | 'evaluateString';
-
-type DependentExpressionEvaluateResult<Method extends DependentExpressionEvaluateMethod> =
-	ReturnType<XFormsXPathEvaluator[Method]>;
 
 export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 	implements NodeState<Type>
@@ -144,18 +146,19 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		return expression;
 	}
 
-	protected createEvaluation<Method extends DependentExpressionEvaluateMethod>(
-		dependentExpression: DependentExpression,
-		method: Method
-	): Accessor<DependentExpressionEvaluateResult<Method>> {
-		const { entry, node: contextNode } = this;
+	protected createEvaluation<ResultType extends DependentExpressionResultType>(
+		dependentExpression: DependentExpression<ResultType>,
+		options: ReactiveEvaluationOptions = {}
+	): Accessor<DependentExpressionResult<ResultType>> {
+		const { entry, node } = this;
+		const { contextNode = node } = options;
 		const { evaluator } = entry;
-		const { dependencyReferences, isTranslated } = dependentExpression;
+		const { dependencyReferences, evaluatorMethod, isTranslated } = dependentExpression;
 		const { expression } = dependentExpression;
-		const evaluateExpression = (): DependentExpressionEvaluateResult<Method> => {
-			return evaluator[method](expression, {
+		const evaluateExpression = (): DependentExpressionResult<ResultType> => {
+			return evaluator[evaluatorMethod](expression, {
 				contextNode,
-			}) as DependentExpressionEvaluateResult<Method>;
+			}) as DependentExpressionResult<ResultType>;
 		};
 
 		if (dependencyReferences.size === 0 && this.isReferenceStatic && !isTranslated) {
@@ -236,7 +239,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			return currentReference;
 		}, this.reference);
 
-		const evaluate = createMemo<DependentExpressionEvaluateResult<Method>>((evaluated) => {
+		const evaluate = createMemo<DependentExpressionResult<ResultType>>((evaluated) => {
 			if (isEvaluationStale()) {
 				return evaluateExpression();
 			}
@@ -262,7 +265,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 	protected createBooleanBindComputation<
 		Computation extends BindComputation<BooleanBindComputationType>,
 	>(bindComputation: Computation): Accessor<boolean> {
-		return this.createEvaluation(bindComputation, 'evaluateBoolean');
+		return this.createEvaluation(bindComputation);
 	}
 
 	protected createCalculate(
@@ -272,20 +275,30 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			return null;
 		}
 
-		return this.createEvaluation(computation, 'evaluateString');
+		return this.createEvaluation(computation);
 	}
 
-	protected createTextPartEvaluation(part: AnyTextElementPart): Accessor<string> {
+	createNodesetEvaluation(expression: DependentExpression<'nodes'>): Accessor<readonly Node[]> {
+		return this.createEvaluation(expression);
+	}
+
+	protected createTextPartEvaluation(
+		part: AnyTextElementPart,
+		options: ReactiveEvaluationOptions = {}
+	): Accessor<string> {
 		if (part.type === 'static') {
 			return () => part.stringValue;
 		}
 
-		return this.createEvaluation(part, 'evaluateString');
+		return this.createEvaluation(part, options);
 	}
 
-	createTextEvaluation(textElement: AnyTextElementDefinition): Accessor<string> {
+	createTextEvaluation(
+		textElement: AnyTextElementDefinition,
+		options: ReactiveEvaluationOptions = {}
+	): Accessor<string> {
 		const childEvaluations = textElement.children.map((childPart) => {
-			return this.createTextPartEvaluation(childPart);
+			return this.createTextPartEvaluation(childPart, options);
 		});
 		const childText = createMemo(() => {
 			return childEvaluations.map((evaluation) => evaluation()).join('');
@@ -297,7 +310,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			return childText;
 		}
 
-		const referenceEvaluation = this.createTextPartEvaluation(referenceExpression);
+		const referenceEvaluation = this.createTextPartEvaluation(referenceExpression, options);
 
 		return createMemo(() => {
 			const referenceText = referenceEvaluation();
@@ -308,6 +321,12 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 
 			return referenceText;
 		});
+	}
+
+	toJSON() {
+		const { entry, parent, ...rest } = this;
+
+		return rest;
 	}
 }
 

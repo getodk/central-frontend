@@ -19,7 +19,23 @@ type BindComputationFactoryResult<Type extends BindComputationType> =
 		? BindComputation<Type> | null
 		: BindComputation<Type>;
 
-export class BindComputation<Type extends BindComputationType> extends DependentExpression {
+const bindComputationResultTypes = {
+	calculate: 'string',
+	constraint: 'boolean',
+	readonly: 'boolean',
+	relevant: 'boolean',
+	required: 'boolean',
+	saveIncomplete: 'boolean',
+} as const;
+
+type BindComputationResultTypes = typeof bindComputationResultTypes;
+
+export type BindComputationResultType<Computation extends BindComputationType> =
+	BindComputationResultTypes[Computation];
+
+export class BindComputation<Computation extends BindComputationType> extends DependentExpression<
+	BindComputationResultType<Computation>
+> {
 	static forExpression<Type extends BindComputationType>(
 		bind: BindDefinition,
 		computation: Type
@@ -36,13 +52,13 @@ export class BindComputation<Type extends BindComputationType> extends Dependent
 
 	protected constructor(
 		bind: BindDefinition,
-		readonly computation: Type,
+		readonly computation: Computation,
 		expression: string
 	) {
 		const isInherited = computation === 'readonly' || computation === 'relevant';
 		const ignoreContextReference = computation === 'constraint';
 
-		super(bind, expression, {
+		super(bind, bindComputationResultTypes[computation], expression, {
 			ignoreContextReference,
 			semanticDependencies: {
 				parentContext: isInherited,

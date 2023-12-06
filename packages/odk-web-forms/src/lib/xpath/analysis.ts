@@ -1,5 +1,4 @@
 import { UnreachableError } from '@odk/common/lib/error/UnreachableError';
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
 import type {
 	AbsoluteLocationPathNode,
 	AnyBinaryExprNode,
@@ -119,17 +118,6 @@ export const isItextFunctionCalled = (expression: string): boolean => {
 	return isFunctionCalled('itext', rootNode);
 };
 
-// TODO: this should probably be derived from the function definitions themselves.
-// They don't actually support that (yet), and some are not yet implemented.
-const nodesetReturningFunctionNames = ['id', 'instance', 'current', 'randomize'] as const;
-
-type NodesetReturningFunctionName = CollectionValues<typeof nodesetReturningFunctionNames>;
-
-const isNodesetReturningFunctionName = (
-	functionName: string
-): functionName is NodesetReturningFunctionName =>
-	nodesetReturningFunctionNames.includes(functionName as NodesetReturningFunctionName);
-
 type LocationPathSubExpressionNode =
 	| AbsoluteLocationPathNode
 	| FilterPathExprNode
@@ -142,22 +130,6 @@ const isAnyLocationPathExprNode = (node: AnySyntaxNode): node is LocationPathSub
 		return true;
 	}
 
-	if (type === 'filter_path_expr') {
-		// TODO: all of these types probably need simplification, if they're so
-		// jumbled in my own brain just a couple weeks after I committed them.
-		const filterPathExprNode = node as unknown as FilterPathExprNode;
-		const [filterExprChild] = filterPathExprNode.children[0].children;
-
-		if (filterExprChild.type === 'function_call') {
-			const [functionNameNode] = filterExprChild.children;
-			const functionName = functionNameNode.text;
-
-			if (isNodesetReturningFunctionName(functionName)) {
-				return true;
-			}
-		}
-	}
-
 	return false;
 };
 
@@ -166,13 +138,19 @@ const isAnyLocationPathExprNode = (node: AnySyntaxNode): node is LocationPathSub
 const findLocationPathExprNodes = (
 	node: AnySyntaxNode
 ): readonly LocationPathSubExpressionNode[] => {
+	const results: LocationPathSubExpressionNode[] = [];
+
 	if (isAnyLocationPathExprNode(node)) {
-		return [node];
+		results.push(node);
 	}
 
-	return node.children.flatMap((childNode) => {
-		return findLocationPathExprNodes(childNode);
-	});
+	results.push(
+		...node.children.flatMap((childNode) => {
+			return findLocationPathExprNodes(childNode);
+		})
+	);
+
+	return results;
 };
 
 // TODO: this is a very small subset of resolution that needs to be supported,

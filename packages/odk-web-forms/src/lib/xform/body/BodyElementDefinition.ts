@@ -29,7 +29,7 @@ export abstract class BodyElementDefinition<Type extends string> extends Depende
 
 	protected constructor(
 		protected readonly form: XFormDefinition,
-		parent: BodyElementParentContext,
+		readonly parent: BodyElementParentContext,
 		readonly element: Element
 	) {
 		super();
@@ -37,7 +37,7 @@ export abstract class BodyElementDefinition<Type extends string> extends Depende
 	}
 
 	toJSON(): object {
-		const { form, ...rest } = this;
+		const { form, parent, ...rest } = this;
 
 		return rest;
 	}

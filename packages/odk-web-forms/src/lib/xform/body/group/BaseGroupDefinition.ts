@@ -100,7 +100,7 @@ export abstract class BaseGroupDefinition<
 
 		this.children = children ?? this.getChildren(element);
 		this.reference = element.getAttribute('ref');
-		this.label = LabelDefinition.forElement(form, this);
+		this.label = LabelDefinition.forGroup(form, this);
 	}
 
 	getChildren(element: Element): BodyElementDefinitionArray {

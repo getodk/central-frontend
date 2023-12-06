@@ -8,7 +8,7 @@ export type TextElementPartType = 'output' | 'reference' | 'static';
 
 export abstract class TextElementPart<
 	Type extends TextElementPartType,
-> extends DependentExpression {
+> extends DependentExpression<'string'> {
 	readonly stringValue?: string;
 
 	constructor(
@@ -16,7 +16,7 @@ export abstract class TextElementPart<
 		context: AnyTextElementDefinition,
 		expression: string
 	) {
-		super(context, expression, {
+		super(context, 'string', expression, {
 			semanticDependencies: {
 				translations: type !== 'static',
 			},

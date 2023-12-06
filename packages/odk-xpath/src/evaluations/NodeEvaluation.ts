@@ -1,4 +1,4 @@
-import { trimXPathWhitespace } from '../lib/strings/xpath-whitespace.ts';
+import { trimXMLXPathWhitespace } from '@odk/common/lib/string/whitespace.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { StringEvaluation } from './StringEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
@@ -46,7 +46,7 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 		if (computedValues == null) {
 			const { context, value: node } = this;
 			const stringValue = node.textContent ?? '';
-			const isEmpty = trimXPathWhitespace(stringValue) === '';
+			const isEmpty = trimXMLXPathWhitespace(stringValue) === '';
 			const booleanValue = !isEmpty;
 			const numberFunction = context.functions.getDefaultImplementation('number');
 

@@ -1,9 +1,12 @@
 import { isCommentNode, isElementNode, isTextNode } from '@odk/common/lib/dom/predicates.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { DependentExpression } from '../../expression/DependentExpression.ts';
+import { type AnyDependentExpression } from '../../expression/DependentExpression.ts';
+import type { AnyGroupElementDefinition } from '../BodyDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
-import type { AnyControlDefinition } from '../control/ControlDefinition.ts';
-import type { BaseGroupDefinition } from '../group/BaseGroupDefinition.ts';
+import type { InputDefinition } from '../control/InputDefinition.ts';
+import type { ItemDefinition } from '../control/select/ItemDefinition.ts';
+import type { ItemsetDefinition } from '../control/select/ItemsetDefinition.ts';
+import type { AnySelectDefinition } from '../control/select/SelectDefinition.ts';
 import { TextElementOutputPart } from './TextElementOutputPart.ts';
 import { TextElementReferencePart } from './TextElementReferencePart.ts';
 import { TextElementStaticPart } from './TextElementStaticPart.ts';
@@ -14,8 +17,12 @@ export interface TextElement extends Element {
 	readonly localName: TextElementType;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type TextElementContext = AnyControlDefinition | BaseGroupDefinition<any>;
+export type TextElementOwner =
+	| AnyGroupElementDefinition
+	| AnySelectDefinition
+	| InputDefinition
+	| ItemDefinition
+	| ItemsetDefinition;
 
 type TextElementChild = TextElementOutputPart | TextElementStaticPart;
 
@@ -41,7 +48,7 @@ export abstract class TextElementDefinition<
 
 	protected constructor(
 		form: XFormDefinition,
-		readonly owner: TextElementContext,
+		readonly owner: TextElementOwner,
 		element: TextElement
 	) {
 		super(form, owner, element);
@@ -75,12 +82,12 @@ export abstract class TextElementDefinition<
 		this.children = children;
 	}
 
-	override registerDependentExpression(expression: DependentExpression): void {
+	override registerDependentExpression(expression: AnyDependentExpression): void {
 		this.owner.registerDependentExpression(expression);
 	}
 
 	override toJSON(): object {
-		const { form, owner, ...rest } = this;
+		const { form, owner, parent, ...rest } = this;
 
 		return rest;
 	}

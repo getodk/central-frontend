@@ -26,7 +26,7 @@ const XFormRelevanceGuardBox = styled<typeof BaseXFormRelevanceGuardBox>(Box)(({
 });
 
 export const XFormRelevanceGuard = (props: XFormRelevanceGuardProps) => {
-	const debug = () => props.debug ?? true;
+	const debug = () => props.debug ?? false;
 
 	return (
 		<Show when={props.isRelevant || debug()}>
