@@ -105,6 +105,10 @@ const { entityPath } = useRoutes();
     max-width: 250px;
   }
 
+  .action-cell {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
   .col-content {
     align-items: flex-start;
     display: flex;
@@ -122,25 +126,21 @@ const { entityPath } = useRoutes();
 
     .icon-pencil { margin-right: 5px; }
   }
-  .col-content .icon-angle-right {
-    color: $color-accent-primary;
-    font-size: 20px;
-  }
-
-  .wrap-circle{
-    width: 25px;
+  .wrap-circle {
+    width: 22px;
     display: inline-block;
     background: $color-danger;
-    height: 25px;
+    height: 22px;
     border-radius: 15px;
     text-align: center;
     color: white;
-    padding-top: 2px;
-    margin-top: -1px;
+
+    margin-left: 8px;
   }
-  .action-cell{
-    padding-top: 4px;
-    padding-bottom: 4px;
+  .icon-warning { font-size: 12px; }
+  .col-content .icon-angle-right {
+    color: $color-accent-primary;
+    font-size: 20px;
   }
 }
 </style>

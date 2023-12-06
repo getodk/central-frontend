@@ -150,7 +150,6 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
-@import '../../assets/scss/_variables.scss';
 
 .project-home-block {
   margin-bottom: 15px;
@@ -193,13 +192,11 @@ export default {
     }
   }
 
-
   .icon-angle-down, .icon-angle-up {
     margin-left: 5px;
   }
 
   .project-table {
-
     .transparent-bg{
       background: transparent !important;
     }
@@ -231,7 +228,6 @@ export default {
       span {
         margin-left: 0;
       }
-
     }
 
     .project-form-row .col-icon {
@@ -239,7 +235,6 @@ export default {
 
       span {
         color: #009ccc;
-
       }
     }
 
@@ -253,15 +248,15 @@ export default {
         }
 
         .btn-danger {
-            color: white;
-            margin-right: -9px;
-            font-size: 16px;
-            padding: 2px $hpadding-btn;
+          color: white;
+          margin-right: -5px;
+          font-size: 14px;
+          padding: 2px 7px;
 
-            [class*='icon'] {
-              color: white;
-            }
+          [class*='icon'] {
+            color: white;
           }
+        }
       }
 
       .col-icon{
