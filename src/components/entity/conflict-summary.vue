@@ -154,6 +154,12 @@ const markAsResolved = () => {
     // Align the leftmost text of the first column with the icon in the
     // .panel-heading.
     :deep(th:first-child) { padding-left: 15px; }
+
+    :deep(.empty-table-message) {
+      margin-bottom: 15px;
+      margin-left: 15px;
+      margin-top: 15px;
+    }
   }
 
   .panel-footer {

@@ -200,6 +200,7 @@ watch(() => props.entity, (entity) => {
 #entity-resolve #entity-conflict-table {
   tbody tr { background-color: transparent; }
   th:first-child { padding-left: $padding-modal-body; }
+  .empty-table-message { margin-left: $padding-modal-body; }
 }
 #entity-resolve-table-toggle { margin-bottom: 15px; }
 </style>

@@ -11,7 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-conflict-table" ref="el">
-    <p v-if="versions.length === 0">{{ $t('noConflicts') }}</p>
+    <p v-if="versions.length === 0" class="empty-table-message">
+      {{ $t('noConflicts') }}
+    </p>
     <table v-else ref="table" class="table">
       <thead>
         <tr>
