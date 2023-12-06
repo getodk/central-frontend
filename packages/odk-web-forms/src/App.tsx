@@ -8,7 +8,7 @@ import { XFormDetails } from './components/XForm/XFormDetails.tsx';
 import { XFormView } from './components/XForm/XFormView.tsx';
 import type { Localization } from './lib/i18n-l10n/types.ts';
 import { XFormDefinition } from './lib/xform/XFormDefinition.ts';
-import { XFormEntry } from './lib/xform/XFormEntry.ts';
+import { EntryState } from './lib/xform/state/EntryState.ts';
 
 // TODO: this is just to populate the menu for now
 const localizations: readonly Localization[] = [
@@ -50,11 +50,10 @@ export const App = () => {
 						<Show when={fixtureSourceXML()} keyed={true}>
 							{(sourceXML) => {
 								const definition = new XFormDefinition(sourceXML);
-								const entry = new XFormEntry(definition);
+								const entry = new EntryState(definition);
 
 								return (
 									<Stack spacing={4}>
-										<Divider />
 										<Stack spacing={7}>
 											<XFormView entry={entry} />
 											<Divider />

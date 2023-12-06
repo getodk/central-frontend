@@ -1,4 +1,5 @@
 import type { Temporal } from '@js-temporal/polyfill';
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import type { Context } from '../context/Context.ts';
 import type {
 	EvaluationContext,
@@ -21,7 +22,6 @@ import type {
 	MaybeNamedNode,
 	MaybeProcessingInstructionNode,
 } from '../lib/dom/types.ts';
-import { UnreachableError } from '../lib/error/UnreachableError.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
 import { distinct, filter, map, tee } from '../lib/iterators/common.ts';
 import type { XPathNamespaceResolverObject } from '../shared/interface.ts';

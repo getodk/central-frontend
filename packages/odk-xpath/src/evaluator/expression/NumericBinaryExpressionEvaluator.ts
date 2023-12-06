@@ -1,6 +1,6 @@
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
-import { UnreachableError } from '../../lib/error/UnreachableError.ts';
 import type {
 	AdditionExprNode,
 	DivisionExprNode,

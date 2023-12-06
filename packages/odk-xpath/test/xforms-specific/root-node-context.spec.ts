@@ -1,7 +1,8 @@
+import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
+import { xml } from '@odk/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Evaluator } from '../../src/index.ts';
-import { UnreachableError } from '../../src/lib/error/UnreachableError.ts';
-import { xml } from '../../src/test-factories.ts';
 import { xpathParser } from '../parser.ts';
 
 describe("Specifying an Evaluator's root node", () => {
@@ -211,7 +212,11 @@ describe("Specifying an Evaluator's root node", () => {
 			'gets the model node for the nodeset defined on the bind at index $index',
 			({ bind }) => {
 				const modelElement = xformDocument.querySelector(':root > head > model')!;
-				const primaryInstanceElement = modelElement.querySelector(':scope > instance')!;
+				const primaryInstanceElement = getScopeChildBySelector(
+					modelElement,
+					':scope > instance',
+					'instance'
+				)!;
 				const evaluator = new Evaluator(xpathParser, {
 					rootNode: primaryInstanceElement,
 				});

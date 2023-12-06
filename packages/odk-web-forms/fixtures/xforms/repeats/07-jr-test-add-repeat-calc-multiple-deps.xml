@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:odk="http://www.opendatakit.org/xforms"
+  xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>JavaRosa test fixture 2 (repeat with cascading calculate)</h:title>
+    <model>
+      <instance>
+        <data id="repeat-calcs">
+          <repeat>
+            <position/>
+            <position_2/>
+            <other/>
+            <concatenated/>
+          </repeat>
+        </data>
+      </instance>
+      <bind nodeset="/data/repeat/position" calculate="position(..)"/>
+      <bind nodeset="/data/repeat/position_2" calculate="/data/repeat/position * 2"/>
+      <bind nodeset="/data/repeat/other" calculate="2 * 2"/>
+      <bind nodeset="/data/repeat/concatenated" calculate="concat(../position_2, '-', ../other)"/>
+    </model>
+  </h:head>
+  <h:body>
+    <repeat nodeset="/data/repeat">
+      <input ref="/data/repeat/concatenated"/>
+    </repeat>
+  </h:body>
+</h:html>

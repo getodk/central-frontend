@@ -1,25 +1,17 @@
-import { For } from 'solid-js/web';
 import { Box } from 'suid/material';
-import type { XFormEntry } from '../../lib/xform/XFormEntry.ts';
-import { XFormControl } from './XFormControl.tsx';
-import { XFormControlStack } from './XFormControlStack.tsx';
+import type { EntryState } from '../../lib/xform/state/EntryState.ts';
+import { XFormQuestionList } from './XFormQuestionList.tsx';
 import { XFormTitle } from './XFormTitle.tsx';
 
 interface XFormViewProps {
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 }
 
 export const XFormView = (props: XFormViewProps) => {
 	return (
 		<Box>
 			<XFormTitle>{props.entry.form.title}</XFormTitle>
-			<XFormControlStack>
-				<For each={props.entry.form.view.children}>
-					{(viewControl) => {
-						return <XFormControl entry={props.entry} viewControl={viewControl} />;
-					}}
-				</For>
-			</XFormControlStack>
+			<XFormQuestionList state={props.entry} />
 		</Box>
 	);
 };

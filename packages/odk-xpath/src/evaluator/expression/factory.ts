@@ -1,4 +1,4 @@
-import { UnreachableError } from '../../lib/error/UnreachableError.ts';
+import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
 import type {
 	AnyExprNode,
 	ArgumentNode,

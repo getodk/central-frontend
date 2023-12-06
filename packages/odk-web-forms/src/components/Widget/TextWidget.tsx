@@ -1,49 +1,40 @@
-import { Show, createMemo, createUniqueId } from 'solid-js';
-import type { XFormEntryBinding } from '../../lib/xform/XFormEntryBinding.ts';
-import type { XFormViewLabel } from '../../lib/xform/XFormViewLabel.ts';
+import { Show, createMemo } from 'solid-js';
+import type { InputDefinition } from '../../lib/xform/body/control/InputDefinition.ts';
+import type { ValueNodeState } from '../../lib/xform/state/ValueNodeState.ts';
 import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 import { DefaultTextField } from '../styled/DefaultTextField.tsx';
 import { DefaultTextFormControl } from '../styled/DefaultTextFormControl.tsx';
 
 export interface TextWidgetProps {
-	readonly label: XFormViewLabel | null;
-	readonly ref: string | null;
-	readonly binding: XFormEntryBinding | null;
+	readonly control: InputDefinition;
+	readonly state: ValueNodeState;
 }
 
 export const TextWidget = (props: TextWidgetProps) => {
-	const id = createUniqueId();
+	const isDisabled = createMemo(() => {
+		return props.state.isReadonly() === true || props.state.isRelevant() === false;
+	});
 
 	return (
-		<Show when={props.binding} keyed={true}>
-			{(binding) => {
-				const isDisabled = createMemo(() => {
-					return binding.isReadonly() === true || binding.isRelevant() === false;
-				});
-
-				return (
-					<DefaultTextFormControl fullWidth={true}>
-						<Show when={props.label} keyed={true}>
-							{(label) => {
-								return <XFormControlLabel id={id} binding={binding} label={label} />;
-							}}
-						</Show>
-						<DefaultTextField
-							id={id}
-							value={binding.getValue()}
-							onChange={(event) => {
-								binding.setValue(event.target.value);
-							}}
-							disabled={isDisabled()}
-							inputProps={{
-								disabled: isDisabled(),
-								readonly: isDisabled(),
-								required: binding.isRequired() ?? false,
-							}}
-						/>
-					</DefaultTextFormControl>
-				);
-			}}
-		</Show>
+		<DefaultTextFormControl fullWidth={true}>
+			<Show when={props.control.label} keyed={true}>
+				{(label) => {
+					return <XFormControlLabel state={props.state} label={label} />;
+				}}
+			</Show>
+			<DefaultTextField
+				id={props.state.reference}
+				value={props.state.getValue()}
+				onChange={(event) => {
+					props.state.setValue(event.target.value);
+				}}
+				disabled={isDisabled()}
+				inputProps={{
+					disabled: isDisabled(),
+					readonly: isDisabled(),
+					required: props.state.isRequired() ?? false,
+				}}
+			/>
+		</DefaultTextFormControl>
 	);
 };

@@ -1,6 +1,6 @@
 import { styled } from 'suid/material';
 import type { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
-import type { XFormEntry } from '../../lib/xform/XFormEntry.ts';
+import type { EntryState } from '../../lib/xform/state/EntryState.ts';
 
 const Details = styled('details')({
 	position: 'relative',
@@ -17,18 +17,19 @@ const Pre = styled('pre')({
 	overflowX: 'auto',
 	background:
 		'linear-gradient(to left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.045) 0.0625rem, rgba(0, 0, 0, 0) 0.5rem)',
+	whiteSpace: 'pre-wrap',
 });
 
 export interface XFormDetailsProps {
 	readonly definition: XFormDefinition;
-	readonly entry: XFormEntry;
+	readonly entry: EntryState;
 }
 
 export const XFormDetails = (props: XFormDetailsProps) => (
 	<>
 		<Details>
 			<Summary>Submission state (XML)</Summary>
-			<Pre>{props.entry.serializedSubmission()}</Pre>
+			<Pre>{props.entry.serializedInstanceState()}</Pre>
 		</Details>
 		<Details>
 			<Summary>XFormDefinition</Summary>
