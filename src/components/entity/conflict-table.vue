@@ -126,13 +126,11 @@ const summary = computed(() => {
 const lastGoodVersion = computed(() => summary.value.lastGoodVersion);
 
 // Property names
-// The component does not assume that this data will exist when the component is
+// The component assumes that this data will exist when the component is
 // created.
 const { dataset } = useRequestData();
 const propertyNames = computed(() => {
   const result = [];
-  if (!dataset.dataExists) return result;
-
   const { allReceived } = summary.value;
   for (const { name } of dataset.properties) {
     if (allReceived.has(name)) result.push(name);
