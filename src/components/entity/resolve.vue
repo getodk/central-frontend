@@ -129,13 +129,16 @@ const { request, awaitingResponse } = useRequest();
 const success = ref(false);
 const markAsResolve = () => {
   const { entity } = props;
-  const url = apiPaths.entity(projectId, datasetName, entity.__id, { resolve: true, baseVersion: entity.__system.version });
-
+  const url = apiPaths.entity(projectId, datasetName, entity.__id, {
+    resolve: true,
+    baseVersion: entity.__system.version
+  });
   request.patch(
     url,
     null,
     {
       problemToAlert: ({ code }) => {
+        if (code === 400.32) return t('problem.400_32');
         if (code === 409.15) return t('problem.409_15');
         return null;
       }
@@ -225,6 +228,7 @@ watch(() => props.entity, (entity) => {
     },
     "successMessage": "The conflict warning has been cleared from the Entity.",
     "problem": {
+      "400_32": "Another user has already marked the conflict as resolved. Please refresh to see the updated data.",
       // @transifexKey component.EntityUpdate.problem.409_15
       "409_15": "Data has been modified by another user. Please refresh to see the updated data."
     }
