@@ -1,6 +1,7 @@
 import Confirmation from '../../../src/components/confirmation.vue';
 import EntityConflictSummary from '../../../src/components/entity/conflict-summary.vue';
 
+import useEntity from '../../../src/request-data/entity';
 import useEntityVersions from '../../../src/request-data/entity-versions';
 
 import testData from '../../data';
@@ -13,14 +14,14 @@ import { testRequestData } from '../../util/request-data';
 const mountOptions = (options = undefined) => {
   const entity = testData.extendedEntities.last();
   return mergeMountOptions(options, {
-    props: { entity },
     global: {
       provide: { projectId: '1', datasetName: 'trees' }
     },
     container: {
-      requestData: testRequestData([useEntityVersions], {
+      requestData: testRequestData([useEntity, useEntityVersions], {
         project: testData.extendedProjects.last(),
         dataset: testData.extendedDatasets.last(),
+        entity,
         entityVersions: testData.extendedEntityVersions.sorted()
       }),
       router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`)

@@ -1,7 +1,6 @@
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import PageBack from '../../../src/components/page/back.vue';
-import Confirmation from '../../../src/components/confirmation.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -124,37 +123,28 @@ describe('EntityShow', () => {
     it('updates the number of entries in the feed');
   });
 
-  describe('Conflict summary', () => {
-    it('shows conflict summary', async () => {
+  describe('after a conflict is marked as resolved', () => {
+    it('sends the correct requests for activity data', () => {
+      testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
       testData.extendedEntities.createPast(1, { uuid: 'e' });
-      testData.extendedEntityVersions.createPast(2, { uuid: 'e', baseVersion: 1 });
-
-      const component = await load('/projects/1/entity-lists/trees/entities/e', {
-        root: false
-      });
-      component.find('#entity-conflict-summary').exists().should.be.true();
-    });
-
-    it('hides conflict summary after resolve', async () => {
-      testData.extendedEntities.createPast(1, { uuid: 'e' });
-      testData.extendedEntityVersions.createPast(2, { uuid: 'e', baseVersion: 1 });
-
-      const component = await load('/projects/1/entity-lists/trees/entities/e', {
-        root: false
-      })
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      return load('/projects/1/entity-lists/%C3%A1/entities/e', { root: false })
         .complete()
-        .request(async (c) => {
-          await c.get('#entity-conflict-summary .btn-default').trigger('click');
-          await c.getComponent(Confirmation).get('.btn-primary').trigger('click');
+        .request(async (component) => {
+          await component.get('#entity-conflict-summary .btn-default').trigger('click');
+          await component.get('.confirmation .btn-primary').trigger('click');
         })
         .respondWithData(() => {
           testData.extendedEntities.resolve(-1);
           return testData.standardEntities.last();
         })
         .respondWithData(() => testData.extendedAudits.sorted())
-        .respondWithData(() => testData.extendedEntityVersions.sorted());
-
-      component.find('#conflict-summary').exists().should.be.false();
+        .respondWithData(() => testData.extendedEntityVersions.sorted())
+        .testRequests([
+          null,
+          { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits' },
+          { url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions', extended: true }
+        ]);
     });
   });
 });

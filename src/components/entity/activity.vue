@@ -17,6 +17,8 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <loading :state="initiallyLoading"/>
       <template v-if="dataExists">
+        <entity-conflict-summary v-if="entity.conflict != null"
+          @resolve="$emit('resolve')"/>
         <div v-for="(group, i) of feed" :key="feed.length - i"
           class="feed-entry-group" v-bind="scrollData(group[0])">
           <entity-feed-entry v-for="(data, j) of group" :key="j" v-bind="data"/>
@@ -30,6 +32,7 @@ except according to the terms contained in the LICENSE file.
 import { computed, nextTick, ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
+import EntityConflictSummary from './conflict-summary.vue';
 import EntityFeedEntry from './feed-entry.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -40,11 +43,12 @@ import { useScrollBehavior } from '../../scroll-behavior';
 defineOptions({
   name: 'EntityActivity'
 });
+defineEmits(['resolve']);
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { audits, entityVersions, resourceStates } = useRequestData();
-const { initiallyLoading, dataExists } = resourceStates([audits, entityVersions]);
+const { project, dataset, entity, audits, entityVersions, resourceStates } = useRequestData();
+const { initiallyLoading, dataExists } = resourceStates([project, dataset, entity, audits, entityVersions]);
 
 // feed.value is an array of feed entry groups, each of which is an array of
 // feed entries.

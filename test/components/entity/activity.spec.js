@@ -1,4 +1,5 @@
 import EntityActivity from '../../../src/components/entity/activity.vue';
+import EntityConflictSummary from '../../../src/components/entity/conflict-summary.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 
 import useEntity from '../../../src/request-data/entity';
@@ -20,6 +21,8 @@ const mountComponent = (options = undefined) => {
     },
     container: {
       requestData: testRequestData([useEntity, useEntityVersions], {
+        project: testData.extendedProjects.last(),
+        dataset: testData.extendedDatasets.last(),
         entity,
         audits: testData.extendedAudits.sorted()
           .filter(({ action }) => action.startsWith('entity.')),
@@ -52,6 +55,39 @@ const resolveConflict = () => {
 };
 
 describe('EntityActivity', () => {
+  describe('conflict summary', () => {
+    beforeEach(mockLogin);
+
+    it('shows the summary if there is a conflict', async () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      const component = await load('/projects/1/entity-lists/trees/entities/e', {
+        root: false
+      });
+      component.findComponent(EntityConflictSummary).exists().should.be.true();
+    });
+
+    it('hides the summary after resolve', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('#entity-conflict-summary .btn-default').trigger('click');
+          await component.get('.confirmation .btn-primary').trigger('click');
+        })
+        .respondWithData(() => {
+          testData.extendedEntities.resolve(-1);
+          return testData.standardEntities.last();
+        })
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .respondWithData(() => testData.extendedEntityVersions.sorted())
+        .afterResponses(component => {
+          component.findComponent(EntityConflictSummary).exists().should.be.false();
+        });
+    });
+  });
+
   describe('structure of the feed', () => {
     it('renders each entity event in its own group of feed entries', () => {
       resolveConflict();
@@ -113,7 +149,7 @@ describe('EntityActivity', () => {
     });
   });
 
-  it('passes the correct entityVersion prop', () => {
+  it('passes the correct entityVersion prop to EntityFeedEntry', () => {
     resolveConflict();
     mountComponent().findAllComponents(EntityFeedEntry)
       .map(entry => entry.props().entityVersion?.version)

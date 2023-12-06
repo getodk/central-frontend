@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
   <div id="entity-conflict-summary" class="panel panel-hazard">
     <div class="panel-heading">
@@ -24,8 +23,8 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <div class="panel-body">
-      <entity-conflict-table v-if="entityVersions.dataExists"
-        :uuid="entity.uuid" :versions="relevantToConflict"/>
+      <entity-conflict-table :uuid="entity.uuid"
+        :versions="relevantToConflict"/>
       <div v-if="project.permits('entity.update')" class="panel-footer">
         <span class="icon-arrow-circle-right"></span>
         <p>
@@ -49,7 +48,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-
 import { ref, inject, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -63,17 +61,13 @@ import { useRequestData } from '../../request-data';
 
 const { request, awaitingResponse } = useRequest();
 const { t } = useI18n();
-const { project, dataset, entityVersions } = useRequestData();
+// The component assumes that this data will exist when the component is
+// created.
+const { project, entity, entityVersions } = useRequestData();
 const { alert } = inject('container');
 
 defineOptions({
   name: 'EntityConflictSummary'
-});
-const props = defineProps({
-  entity: {
-    type: Object,
-    required: true
-  }
 });
 const emit = defineEmits(['resolve']);
 
@@ -95,10 +89,12 @@ const hideConfirm = () => {
   confirmModalState.value = false;
 };
 
+const datasetName = inject('datasetName');
 const markAsResolved = () => {
-  const { entity } = props;
-  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, { resolve: true, baseVersion: entity.currentVersion.version });
-
+  const url = apiPaths.entity(project.id, datasetName, entity.uuid, {
+    resolve: true,
+    baseVersion: entity.currentVersion.version
+  });
   request.patch(
     url,
     null,
@@ -109,17 +105,22 @@ const markAsResolved = () => {
       }
     }
   )
-    .then(response => {
+    .then(({ data }) => {
       hideConfirm();
       alert.success(t('conflictResolved'));
-      emit('resolve', response.data);
+      entity.patch(() => {
+        entity.conflict = data.conflict;
+        entity.updatedAt = data.updatedAt;
+      });
+      emit('resolve');
     })
     .catch(noop);
 };
-
 </script>
 
 <style lang="scss" scoped>
+  .panel { margin-bottom: 35px; }
+
   .panel-heading {
     display: flex;
     padding: 15px;
