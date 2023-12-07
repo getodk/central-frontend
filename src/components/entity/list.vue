@@ -220,10 +220,7 @@ export default {
           ...oldOData.__system,
           version: updatedEntity.currentVersion.version,
           updates: oldOData.__system.updates + 1,
-          updatedAt: updatedEntity.updatedAt,
-          // Update `conflict` in case a conflict has been resolved by another
-          // user or in another tab.
-          conflict: updatedEntity.conflict
+          updatedAt: updatedEntity.updatedAt
         }
       });
       const { data: updatedData } = updatedEntity.currentVersion;
