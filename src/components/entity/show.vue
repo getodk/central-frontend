@@ -110,15 +110,18 @@ setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null])
 
 const update = reactive({ state: false });
 const { i18n, alert } = inject('container');
-const afterUpdate = (updated) => {
+const afterUpdate = (updatedEntity) => {
   fetchActivityData();
   update.state = false;
   alert.success(i18n.t('alert.updateEntity'));
   entity.patch(() => {
     // entity.currentVersion will no longer have extended metadata, but we don't
     // need it to.
-    entity.currentVersion = updated.currentVersion;
-    entity.updatedAt = updated.updatedAt;
+    entity.currentVersion = updatedEntity.currentVersion;
+    entity.updatedAt = updatedEntity.updatedAt;
+    // Update entity.conflict in case a conflict has been resolved by another
+    // user or in another tab.
+    entity.conflict = updatedEntity.conflict;
   });
 };
 

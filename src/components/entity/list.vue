@@ -228,11 +228,10 @@ export default {
         newOData[odataName] = updatedData[name];
       this.odataEntities.value[index] = newOData;
 
-      this.$refs.table.afterUpdate(index);
-
-      if (this.resolveIndex != null) {
+      if (this.resolveIndex == null)
+        this.$refs.table.afterUpdate(index);
+      else
         this.showResolve(this.resolveIndex);
-      }
     },
     showResolve(index) {
       if (this.refreshing) return;
@@ -251,12 +250,17 @@ export default {
       }
     },
     afterResolve(updatedEntity) {
-      const index = this.resolveIndex;
-      const newOData = Object.assign(Object.create(null), this.odataEntities.value[index]);
-      newOData.__system.conflict = null;
-      newOData.__system.updatedAt = updatedEntity.updatedAt;
-      this.odataEntities.value[index] = newOData;
-      this.$refs.table.afterUpdate(index);
+      // Update the OData using the REST response.
+      const newOData = Object.create(null);
+      Object.assign(newOData, this.odataEntities.value[this.resolveIndex]);
+      newOData.__system = {
+        ...newOData.__system,
+        conflict: null,
+        updatedAt: updatedEntity.updatedAt
+      };
+      this.odataEntities.value[this.resolveIndex] = newOData;
+
+      this.$refs.table.afterUpdate(this.resolveIndex);
     },
     scrolledToBottom() {
       // Using pageYOffset rather than scrollY in order to support IE.
