@@ -123,7 +123,7 @@ describe('EntityShow', () => {
 
     it('updates the number of entries in the feed');
 
-    it('updates the conflict status', async () => {
+    it('updates the conflict status', () => {
       testData.extendedEntities.createPast(1, {
         uuid: 'e',
         label: 'My Entity'
@@ -140,7 +140,7 @@ describe('EntityShow', () => {
           return form.trigger('submit');
         })
         .respondWithData(() => {
-          // Another user has resolved the conflict.
+          // Another user has resolved the conflict since the page was loaded.
           testData.extendedEntities.resolve(-1);
           testData.extendedAudits.createPast(1, {
             action: 'entity.update.resolve'
