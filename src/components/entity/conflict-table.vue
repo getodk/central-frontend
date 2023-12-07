@@ -11,7 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-conflict-table" ref="el">
-    <p v-if="versions.length === 0">{{ $t('noConflicts') }}</p>
+    <p v-if="versions.length === 0" class="empty-table-message">
+      {{ $t('noConflicts') }}
+    </p>
     <table v-else ref="table" class="table">
       <thead>
         <tr>
@@ -126,13 +128,11 @@ const summary = computed(() => {
 const lastGoodVersion = computed(() => summary.value.lastGoodVersion);
 
 // Property names
-// The component does not assume that this data will exist when the component is
+// The component assumes that this data will exist when the component is
 // created.
 const { dataset } = useRequestData();
 const propertyNames = computed(() => {
   const result = [];
-  if (!dataset.dataExists) return result;
-
   const { allReceived } = summary.value;
   for (const { name } of dataset.properties) {
     if (allReceived.has(name)) result.push(name);

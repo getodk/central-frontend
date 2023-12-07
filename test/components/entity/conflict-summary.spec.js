@@ -89,7 +89,7 @@ describe('EntityConflictSummary', () => {
       component.emitted().should.have.property('resolve');
     });
 
-    it('should show alert', async () => {
+    it('should show a success alert', async () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       const component = await resolve();
@@ -103,22 +103,39 @@ describe('EntityConflictSummary', () => {
       component.getComponent(Confirmation).props().state.should.be.false();
     });
 
-    it('shows conflict error', () => {
-      testData.extendedEntities.createPast(1);
-      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-      return mockHttp()
-        .mount(EntityConflictSummary, mountOptions())
-        .request(async (component) => {
-          await component.get('.btn-default').trigger('click');
-          const modal = component.getComponent(Confirmation);
-          await modal.get('.btn-primary').trigger('click');
-        })
-        .respondWithProblem(409.15)
-        .afterResponse(component => {
-          component.should.alert('danger', (message) => {
-            message.should.eql('Data has been modified by another user. Please refresh to see the updated data.');
-          });
-        });
+    describe('custom alert messages', () => {
+      beforeEach(() => {
+        testData.extendedEntities.createPast(1);
+        testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      });
+
+      it('shows a message if the conflict has already been resolved', () =>
+        mockHttp()
+          .mount(EntityConflictSummary, mountOptions())
+          .request(async (component) => {
+            await component.get('.btn-default').trigger('click');
+            await component.get('.confirmation .btn-primary').trigger('click');
+          })
+          .respondWithProblem(400.32)
+          .afterResponse(component => {
+            component.should.alert('danger', (message) => {
+              message.should.startWith('Another user has already marked the conflict as resolved.');
+            });
+          }));
+
+      it('shows a message if there has been another update', () =>
+        mockHttp()
+          .mount(EntityConflictSummary, mountOptions())
+          .request(async (component) => {
+            await component.get('.btn-default').trigger('click');
+            await component.get('.confirmation .btn-primary').trigger('click');
+          })
+          .respondWithProblem(409.15)
+          .afterResponse(component => {
+            component.should.alert('danger', (message) => {
+              message.should.eql('Data has been modified by another user. Please refresh to see the updated data.');
+            });
+          }));
     });
   });
 });

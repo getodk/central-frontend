@@ -1812,6 +1812,11 @@
       },
       "successMessage": {
         "string": "The conflict warning has been cleared from the Entity."
+      },
+      "problem": {
+        "400_32": {
+          "string": "Another user has already marked the conflict as resolved. Please refresh to see the updated data."
+        }
       }
     },
     "EntityShow": {
