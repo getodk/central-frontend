@@ -111,7 +111,7 @@ const requestEntityVersions = () => {
     extended: true
   })
     .then(() => {
-      if (entityVersions.length === 0) alert.danger(t('problem.409_15'));
+      if (entityVersions.length === 0) alert.danger(t('problem.400_32'));
     })
     .catch(noop);
 };

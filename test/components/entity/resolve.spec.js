@@ -9,7 +9,7 @@ import { mockRouter } from '../../util/router';
 
 const relevantToConflict = () => testData.extendedEntityVersions.sorted()
   .filter(version => version.relevantToConflict);
-const showModal = () => {
+const showModal = (respond = true) => {
   const dataset = testData.extendedDatasets.last();
   return mockHttp()
     .mount(EntityResolve, {
@@ -25,7 +25,8 @@ const showModal = () => {
       state: true,
       entity: last(testData.entityOData().value)
     }))
-    .respondWithData(relevantToConflict);
+    .modify(series =>
+      (respond ? series.respondWithData(relevantToConflict) : series));
 };
 
 describe('EntityResolve', () => {
@@ -46,6 +47,18 @@ describe('EntityResolve', () => {
         url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions?relevantToConflict=true',
         extended: true
       }]);
+    });
+
+    it('shows an alert if no conflicts are returned', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      return showModal(false)
+        .respondWithData(() => [])
+        .afterResponse(modal => {
+          modal.should.alert('danger', (message) => {
+            message.should.startWith('Another user has already marked the conflict as resolved.');
+          });
+        });
     });
   });
 
