@@ -90,18 +90,33 @@ describe('EntityResolve', () => {
         });
     });
 
-    it('shows conflict error', () => {
-      testData.extendedEntities.createPast(1);
-      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-      return showModal()
-        .complete()
-        .request(modal => modal.get('.mark-as-resolved').trigger('click'))
-        .respondWithProblem(409.15)
-        .afterResponse(component => {
-          component.should.alert('danger', (message) => {
-            message.should.eql('Data has been modified by another user. Please refresh to see the updated data.');
-          });
-        });
+    describe('custom alert messages', () => {
+      beforeEach(() => {
+        testData.extendedEntities.createPast(1);
+        testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      });
+
+      it('shows a message if the conflict has already been resolved', () =>
+        showModal()
+          .complete()
+          .request(modal => modal.get('.mark-as-resolved').trigger('click'))
+          .respondWithProblem(400.32)
+          .afterResponse(component => {
+            component.should.alert('danger', (message) => {
+              message.should.startWith('Another user has already marked the conflict as resolved.');
+            });
+          }));
+
+      it('shows a message if there has been another update', () =>
+        showModal()
+          .complete()
+          .request(modal => modal.get('.mark-as-resolved').trigger('click'))
+          .respondWithProblem(409.15)
+          .afterResponse(component => {
+            component.should.alert('danger', (message) => {
+              message.should.eql('Data has been modified by another user. Please refresh to see the updated data.');
+            });
+          }));
     });
 
     it('shows a success message', () => {

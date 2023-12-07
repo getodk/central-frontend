@@ -100,6 +100,7 @@ const markAsResolved = () => {
     null,
     {
       problemToAlert: ({ code }) => {
+        if (code === 400.32) return t('problem.400_32');
         if (code === 409.15) return t('problem.409_15');
         return null;
       }
@@ -209,6 +210,8 @@ const markAsResolved = () => {
         "confirm": "Confirm"
       },
       "problem": {
+        // @transifexKey component.EntityResolve.problem.400_32
+        "400_32": "Another user has already marked the conflict as resolved. Please refresh to see the updated data.",
         // @transifexKey component.EntityUpdate.problem.409_15
         "409_15": "Data has been modified by another user. Please refresh to see the updated data."
       },
