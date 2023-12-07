@@ -123,7 +123,7 @@ describe('EntityConflictSummary', () => {
             });
           }));
 
-      it('shows a message if there has been another conflict', () =>
+      it('shows a message if there has been another update', () =>
         mockHttp()
           .mount(EntityConflictSummary, mountOptions())
           .request(async (component) => {
