@@ -276,6 +276,13 @@ export default {
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+
+      // refresh keys when refreshing submissions (keys initially loaded in form/submissions)
+      if (refresh) {
+        this.keys.request({
+          url: apiPaths.submissionKeys(this.projectId, this.xmlFormId)
+        }).catch(noop);
+      }
     },
     fetchData() {
       this.fields.request({
