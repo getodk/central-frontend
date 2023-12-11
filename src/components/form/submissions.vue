@@ -90,7 +90,7 @@ export default {
       if (this.form.dataExists && this.form.keyId != null &&
         this.form.submissions === 0)
         return true;
-      if (this.keys != null && this.keys.length !== 0) return true;
+      if (this.keys.dataExists && this.keys.length !== 0) return true;
       return false;
     },
     analyzeDisabledMessage() {
