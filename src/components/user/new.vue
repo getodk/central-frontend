@@ -38,6 +38,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { equals } from 'ramda';
+
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -80,7 +82,15 @@ export default {
     submit() {
       const postData = { email: this.email };
       if (this.displayName !== '') postData.displayName = this.displayName;
-      this.request({ method: 'POST', url: '/v1/users', data: postData })
+      this.request({
+        method: 'POST',
+        url: '/v1/users',
+        data: postData,
+        problemToAlert: ({ code, details }) =>
+          (code === 409.3 && equals(details.fields, ['email', 'deleted'])
+            ? this.$t('problem.409_3', { email: details.values[0] })
+            : null)
+      })
         .then(response => {
           this.$emit('success', response.data);
         })
@@ -100,7 +110,10 @@ export default {
     ],
     "oidcIntroduction": [
       "Users on your login server must have a Central account to log in to Central. Once you create this account, the user on your login server with the email address you provide will be able to log in to Central."
-    ]
+    ],
+    "problem": {
+      "409_3": "It looks like {email} already has an account. Please try another email address."
+    }
   }
 }
 </i18n>

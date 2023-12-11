@@ -4280,6 +4280,11 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
+      "problem": {
+        "409_3": {
+          "string": "You cannot change your email to {email} because this account already exists. Please try another email address."
+        }
+      },
       "alert": {
         "success": {
           "string": "User details saved!"
@@ -4365,6 +4370,11 @@
       "oidcIntroduction": {
         "0": {
           "string": "Users on your login server must have a Central account to log in to Central. Once you create this account, the user on your login server with the email address you provide will be able to log in to Central."
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": "It looks like {email} already has an account. Please try another email address."
         }
       }
     },

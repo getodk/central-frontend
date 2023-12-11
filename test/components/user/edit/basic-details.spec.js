@@ -96,6 +96,51 @@ describe('UserEditBasicDetails', () => {
       });
   });
 
+  describe('custom alert messages', () => {
+    beforeEach(() => {
+      mockLogin({ email: 'old@email.com' });
+    });
+
+    it('shows a message for a duplicate email', () =>
+      mockHttp()
+        .mount(UserEditBasicDetails, mountOptions())
+        .request(async (component) => {
+          await component.get('input[type="email"]').setValue('new@email.com');
+          return component.get('form').trigger('submit');
+        })
+        .respondWithProblem({
+          code: 409.3,
+          message: 'A resource already exists with email,deleted value(s) of new@email.com,false.',
+          details: {
+            fields: ['email', 'deleted'],
+            values: ['new@email.com', false]
+          }
+        })
+        .afterResponse(modal => {
+          modal.should.alert('danger', (message) => {
+            message.should.startWith('You cannot change your email to new@email.com');
+          });
+        }));
+
+    // I don't think a different uniqueness violation is currently possible.
+    // This is mostly about future-proofing.
+    it('does not show a message for a different uniqueness violation', () =>
+      mockHttp()
+        .mount(UserEditBasicDetails, mountOptions())
+        .request(async (component) => {
+          await component.get('input[type="email"]').setValue('new@email.com');
+          return component.get('form').trigger('submit');
+        })
+        .respondWithProblem({
+          code: 409.3,
+          message: 'A resource already exists with foo value(s) of bar.',
+          details: { fields: ['foo'], values: ['bar'] }
+        })
+        .afterResponse(modal => {
+          modal.should.alert('danger', 'A resource already exists with foo value(s) of bar.');
+        }));
+  });
+
   describe('after a successful response', () => {
     beforeEach(() => {
       mockLogin({ displayName: 'Old Name' });

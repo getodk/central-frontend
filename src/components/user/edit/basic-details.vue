@@ -34,6 +34,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, ref } from 'vue';
+import { equals } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import FormGroup from '../../form-group.vue';
@@ -70,7 +71,11 @@ const submit = () => {
       user.email = data.email;
       user.displayName = data.displayName;
       user.updatedAt = data.updatedAt;
-    }
+    },
+    problemToAlert: ({ code, details }) =>
+      (code === 409.3 && equals(details.fields, ['email', 'deleted'])
+        ? t('problem.409_3', { email: details.values[0] })
+        : null)
   })
     .then(() => { alert.success(t('alert.success')); })
     .catch(noop);
@@ -85,6 +90,9 @@ const submit = () => {
     "emailDisabled": "Your email address cannot be changed. It is used between Central and your login server to ensure your identity.",
     "action": {
       "update": "Update details"
+    },
+    "problem": {
+      "409_3": "You cannot change your email to {email} because this account already exists. Please try another email address."
     },
     "alert": {
       "success": "User details saved!"

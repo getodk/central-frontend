@@ -107,6 +107,51 @@ describe('UserNew', () => {
         modal: true
       }));
 
+  describe('custom alert messages', () => {
+    it('shows a message for a duplicate email', () =>
+      mockHttp()
+        .mount(UserNew, {
+          props: { state: true }
+        })
+        .request(async (modal) => {
+          await modal.get('input[type="email"]').setValue('new@email.com');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithProblem({
+          code: 409.3,
+          message: 'A resource already exists with email,deleted value(s) of new@email.com,false.',
+          details: {
+            fields: ['email', 'deleted'],
+            values: ['new@email.com', false]
+          }
+        })
+        .afterResponse(modal => {
+          modal.should.alert('danger', (message) => {
+            message.should.startWith('It looks like new@email.com already has an account.');
+          });
+        }));
+
+    // I don't think a different uniqueness violation is currently possible.
+    // This is mostly about future-proofing.
+    it('does not shows a message for a different uniqueness violation', () =>
+      mockHttp()
+        .mount(UserNew, {
+          props: { state: true }
+        })
+        .request(async (modal) => {
+          await modal.get('input[type="email"]').setValue('new@email.com');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithProblem({
+          message: 'A resource already exists with foo value(s) of bar.',
+          code: 409.3,
+          details: { fields: ['foo'], values: ['bar'] }
+        })
+        .afterResponse(modal => {
+          modal.should.alert('danger', 'A resource already exists with foo value(s) of bar.');
+        }));
+  });
+
   describe('after a successful response', () => {
     const submitWithSuccess = () => load('/users', { root: false })
       .complete()
