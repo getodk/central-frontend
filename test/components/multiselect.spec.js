@@ -243,22 +243,41 @@ describe('Multiselect', () => {
   });
 
   describe('defaultToAll prop is true', () => {
-    it('emits all option values if no option was left checked', async () => {
-      const component = mountComponent({
-        props: {
-          options: [{ value: 0 }, { value: 1 }],
-          modelValue: [0],
-          defaultToAll: true
-        },
-        attachTo: document.body
+    describe('some (not all) options were checked, then were unchecked', () => {
+      it('emits all option values', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.get('input[type="checkbox"]').setValue(false);
+        await toggle(component);
+        component.emitted('update:modelValue').should.eql([[[0, 1]]]);
       });
-      await toggle(component);
-      await component.get('input[type="checkbox"]').setValue(false);
-      await toggle(component);
-      component.emitted('update:modelValue').should.eql([[[0, 1]]]);
+
+      it('checks all checkboxes again', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.get('input[type="checkbox"]').setValue(false);
+        await toggle(component);
+        await component.setProps({ modelValue: [0, 1] });
+        await toggle(component);
+        assertChecked(component, [true, true]);
+      });
     });
 
-    describe('all options were checked, then were all unchecked', () => {
+    describe('all options were checked, then were unchecked', () => {
       it('does not emit an event', async () => {
         const component = mountComponent({
           props: {

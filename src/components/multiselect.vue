@@ -219,28 +219,30 @@ const changeCheckbox = ({ target }) => {
   change(props.options[target.dataset.index].value);
 };
 
-// emittedValue holds the last value that has been emitted since
-// props.modelValue was last set. It equals `null` if no value has been emitted
-// since then, or if no value has ever been emitted. We use emittedValue for an
-// optimization in order to avoid an extra sync.
+// emittedValue is used for an optimization, to avoid an unnecessary sync.
+// Unless it is `null`, it holds the last value emitted since props.modelValue
+// was last set. It equals `null` if no value has been emitted since then (or if
+// no value has ever been emitted).
 let emittedValue = null;
 const emitIfChanged = () => {
   if (changes.size === 0) return;
   changes.clear();
 
-  // If props.defaultToAll is `true`, and no options are selected, then the
-  // selection falls back to all options. If props.modelValue is already all
-  // options, then we just toggle needsSync and return.
-  const needsDefault = props.defaultToAll && selected.size === 0;
-  if (needsDefault && props.modelValue.length === props.options.length) {
-    needsSync = true;
-    return;
+  if (props.defaultToAll && selected.size === 0) {
+    if (props.modelValue.length === props.options.length) {
+      // If props.modelValue is already all options, then there hasn't been a
+      // change. We don't need to emit a new value, but we do need to sync the
+      // checkboxes.
+      needsSync = true;
+    } else {
+      // Setting emittedValue to `null` so that checkboxes are synced.
+      emittedValue = null;
+      emit('update:modelValue', props.options.map(({ value }) => value));
+    }
+  } else {
+    emittedValue = [...selected];
+    emit('update:modelValue', emittedValue);
   }
-
-  emittedValue = needsDefault
-    ? props.options.map(({ value }) => value)
-    : [...selected];
-  emit('update:modelValue', emittedValue);
 };
 
 watch(
