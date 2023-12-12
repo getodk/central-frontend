@@ -153,6 +153,8 @@ export default {
     };
   },
   computed: {
+    // At the moment, there can only be a single managed key at most: once
+    // encrypted, a project cannot be decrypted.
     managedKey() {
       return this.keys.dataExists ? this.keys.find(key => key.managed) : null;
     },
