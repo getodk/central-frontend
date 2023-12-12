@@ -1,6 +1,5 @@
 import Spinner from '../../../src/components/spinner.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
-import SubmissionDownload from '../../../src/components/submission/download.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 
@@ -94,12 +93,11 @@ describe('SubmissionList', () => {
           .afterResponses(assertRowCount(1))
           .request(component =>
             component.get('#submission-list-refresh-button').trigger('click'))
-          .beforeAnyResponse(assertRowCount(1))
+          .beforeEachResponse(assertRowCount(1))
           .respondWithData(() => {
             testData.extendedSubmissions.createNew();
             return testData.submissionOData();
           })
-          .respondWithData(() => testData.standardKeys.sorted())
           .afterResponse(assertRowCount(2));
       });
 
@@ -112,8 +110,7 @@ describe('SubmissionList', () => {
           .beforeEachResponse(component => {
             component.get('#odata-loading-message').should.be.hidden();
           })
-          .respondWithData(testData.submissionOData)
-          .respondWithData(() => testData.standardKeys.sorted());
+          .respondWithData(testData.submissionOData);
       });
 
       it('should show correct row number after refresh', () => {
@@ -127,7 +124,6 @@ describe('SubmissionList', () => {
             component.get('#odata-loading-message').should.be.hidden();
           })
           .respondWithData(testData.submissionOData)
-          .respondWithData(() => testData.standardKeys.sorted())
           .afterResponse(component => {
             component.findAllComponents(SubmissionMetadataRow).forEach((r, i) => {
               r.props().rowNumber.should.be.equal(2 - i);
@@ -207,11 +203,9 @@ describe('SubmissionList', () => {
           .request(component =>
             component.get('#submission-list-refresh-button').trigger('click'))
           .beforeEachResponse((_, config) => {
-            if (config.url.startsWith('/v1/projects/1/forms/f.svc/Submission'))
-              checkTop(config, 2, 0);
+            checkTop(config, 2, 0);
           })
           .respondWithData(() => testData.submissionOData(2, 0))
-          .respondWithData(() => testData.standardKeys.sorted())
           .afterResponse(component => {
             checkIds(component, 2);
           });
@@ -336,11 +330,9 @@ describe('SubmissionList', () => {
             .request(component =>
               component.get('#submission-list-refresh-button').trigger('click'))
             .beforeEachResponse((_, config) => {
-              if (config.url.startsWith('/v1/projects/1/forms/f.svc/Submission'))
-                checkTop(config, 2, 0);
+              checkTop(config, 2, 0);
             })
             .respondWithData(() => testData.submissionOData(2, 0))
-            .respondWithData(() => testData.standardKeys.sorted())
             .afterResponse(component => {
               checkIds(component, 2);
             })
@@ -369,8 +361,7 @@ describe('SubmissionList', () => {
               component.get('#submission-list-refresh-button').trigger('click'))
             // Should not send a request.
             .beforeAnyResponse(scroll)
-            .respondWithData(() => testData.submissionOData(2, 0))
-            .respondWithData(() => testData.standardKeys.sorted());
+            .respondWithData(() => testData.submissionOData(2, 0));
         });
 
         it('scrolling has no effect after all submissions have been loaded', () => {
@@ -385,58 +376,24 @@ describe('SubmissionList', () => {
 
       describe('refreshing keys', () => {
         it('sends request for encryption keys on submission refresh', () => {
-          createSubmissions(2);
-          return loadSubmissionList({
-            props: { top: () => 2 }
+          testData.extendedProjects.createPast(1, {
+            key: testData.standardKeys.createPast(1).last(),
+            forms: 1
+          });
+          testData.extendedForms.createPast(1, {
+            submissions: 1
+          });
+          return load('/projects/1/forms/f/submissions', { root: false }, {
+            keys: () => [] // if there are 0 submissions, backend returns empty key array
           })
             .complete()
             .request(component =>
               component.get('#submission-list-refresh-button').trigger('click'))
             .beforeAnyResponse(() => {
-              testData.standardKeys.createPast(1, { managed: true });
+              testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
             })
-            .respondWithData(() => testData.submissionOData(2, 0))
+            .respondWithData(() => testData.submissionOData(1, 0))
             .respondWithData(() => testData.standardKeys.sorted());
-        });
-
-        it('sends request for encryption keys on submission refresh in draft page', () => {
-          testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-          return loadSubmissionList({
-            props: { top: () => 2 }
-          })
-            .complete()
-            .request(component =>
-              component.get('#submission-list-refresh-button').trigger('click'))
-            .beforeAnyResponse(() => {
-              testData.standardKeys.createPast(1, { managed: true });
-            })
-            .respondWithData(() => testData.submissionOData(2, 0))
-            .respondWithData(() => testData.standardKeys.sorted());
-        });
-
-        it('changes download modal to ask for password for managed encryption', () => {
-          createSubmissions(2);
-          return loadSubmissionList({
-            props: { top: () => 2 }
-          })
-            .complete()
-            .request(async (app) => {
-              await app.get('#submission-download-button').trigger('click');
-              const modal = app.getComponent(SubmissionDownload);
-              await modal.find('input[type="password"]').exists().should.be.false();
-              return app.get('#submission-list-refresh-button').trigger('click');
-            })
-            .beforeAnyResponse(() => {
-              testData.standardKeys.createPast(1, { managed: true });
-            })
-            .respondWithData(() => testData.submissionOData(2, 0))
-            .respondWithData(() => testData.standardKeys.sorted())
-            .complete()
-            .request(async (app) => {
-              await app.get('#submission-download-button').trigger('click');
-              const modal = app.getComponent(SubmissionDownload);
-              await modal.find('input[type="password"]').exists().should.be.true();
-            });
         });
       });
 
@@ -557,11 +514,9 @@ describe('SubmissionList', () => {
         .request(component =>
           component.get('#submission-list-refresh-button').trigger('click'))
         .beforeEachResponse((_, { url }) => {
-          if (url.includes('.svc/Submissions'))
-            $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
+          $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
         })
-        .respondWithData(() => testData.submissionOData(1, 0))
-        .respondWithData(() => testData.standardKeys.sorted()));
+        .respondWithData(() => testData.submissionOData(1, 0)));
 
     it('specifies $select if a filter is changed', () =>
       load('/projects/1/forms/f/submissions', { attachTo: document.body })

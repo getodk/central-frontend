@@ -111,6 +111,7 @@ export default {
       default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
+  emits: ['fetch-keys'],
   setup(props) {
     const { form, keys, resourceView } = useRequestData();
     const formVersion = props.draft
@@ -277,12 +278,9 @@ export default {
         .finally(() => { this.refreshing = false; })
         .catch(noop);
 
-      // refresh keys when refreshing submissions (keys initially loaded in form/submissions)
-      if (refresh) {
-        this.keys.request({
-          url: apiPaths.submissionKeys(this.projectId, this.xmlFormId)
-        }).catch(noop);
-      }
+      // emit event to parent component to re-fetch keys if needed
+      if (refresh && this.formVersion.keyId != null && this.keys.length === 0)
+        this.$emit('fetch-keys');
     },
     fetchData() {
       this.fields.request({
