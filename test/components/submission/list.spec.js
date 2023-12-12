@@ -1,5 +1,6 @@
 import Spinner from '../../../src/components/spinner.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
+import SubmissionDownload from '../../../src/components/submission/download.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 
@@ -371,6 +372,83 @@ describe('SubmissionList', () => {
           })
             .complete()
             .testNoRequest(scroll);
+        });
+      });
+
+      describe('refreshing keys', () => {
+        it('opens modal with encrpytion password after refreshing keys', () => {
+          // create project with managed encryption, form, and 0 submissions to start
+          testData.extendedProjects.createPast(1, {
+            key: testData.standardKeys.createPast(1, { managed: true }).last()
+          });
+          testData.extendedForms.createPast(1);
+          return load('/projects/1/forms/f/submissions', { root: false }, {
+            keys: () => [] // if there are 0 submissions, backend returns empty key array
+          })
+            .complete()
+            .request(async (app) => {
+              await app.get('#submission-download-button').trigger('click');
+              const modal = app.getComponent(SubmissionDownload);
+              await modal.find('input[type="password"]').exists().should.be.false();
+              return app.get('#submission-list-refresh-button').trigger('click');
+            })
+            .beforeAnyResponse(() => {
+              testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+            })
+            .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.standardKeys.sorted())
+            .complete()
+            .request(async (app) => {
+              await app.get('#submission-download-button').trigger('click');
+              const modal = app.getComponent(SubmissionDownload);
+              await modal.find('input[type="password"]').exists().should.be.true();
+            });
+        });
+
+        it('sends request for encryption keys on draft/testing submission refresh', () => {
+          // create project with managed encryption, form, and 0 submissions to start
+          testData.extendedProjects.createPast(1, {
+            key: testData.standardKeys.createPast(1, { managed: true }).last()
+          });
+          testData.extendedForms.createPast(1, { xmlFormId: 'e', draft: true });
+          return load('/projects/1/forms/e/draft/testing', { root: false }, {
+            keys: () => [] // if there are 0 submissions, backend returns empty key array
+          })
+            .complete()
+            .request(component =>
+              component.get('#submission-list-refresh-button').trigger('click'))
+            .beforeAnyResponse(() => {
+              testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+            })
+            .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.standardKeys.sorted())
+            .testRequests([
+              null,
+              { url: '/v1/projects/1/forms/e/draft/submissions/keys' }
+            ]);
+        });
+
+        it('sends request for encryption keys on published submission refresh', () => {
+          // create project with managed encryption, form, and 0 submissions to start
+          testData.extendedProjects.createPast(1, {
+            key: testData.standardKeys.createPast(1, { managed: true }).last()
+          });
+          testData.extendedForms.createPast(1);
+          return load('/projects/1/forms/f/submissions', { root: false }, {
+            keys: () => [] // if there are 0 submissions, backend returns empty key array
+          })
+            .complete()
+            .request(component =>
+              component.get('#submission-list-refresh-button').trigger('click'))
+            .beforeAnyResponse(() => {
+              testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+            })
+            .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.standardKeys.sorted())
+            .testRequests([
+              null,
+              { url: '/v1/projects/1/forms/f/submissions/keys' }
+            ]);
         });
       });
 

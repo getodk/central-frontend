@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
           @analyze="showModal('analyze')"/>
       </template>
       <template #body>
-        <submission-list :project-id="projectId" :xml-form-id="xmlFormId"/>
+        <submission-list :project-id="projectId" :xml-form-id="xmlFormId" @fetch-keys="fetchData"/>
       </template>
     </page-section>
     <odata-analyze v-bind="analyze" :odata-url="odataUrl"

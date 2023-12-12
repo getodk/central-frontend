@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
 
     <loading :state="keys.initiallyLoading"/>
     <submission-list v-show="keys.dataExists" :project-id="projectId"
-      :xml-form-id="xmlFormId" draft/>
+      :xml-form-id="xmlFormId" draft @fetch-keys="fetchData"/>
   </div>
 </template>
 

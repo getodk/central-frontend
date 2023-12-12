@@ -111,6 +111,7 @@ export default {
       default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
+  emits: ['fetch-keys'],
   setup(props) {
     const { form, keys, resourceView } = useRequestData();
     const formVersion = props.draft
@@ -276,6 +277,10 @@ export default {
       })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+
+      // emit event to parent component to re-fetch keys if needed
+      if (refresh && this.formVersion.keyId != null && this.keys.length === 0)
+        this.$emit('fetch-keys');
     },
     fetchData() {
       this.fields.request({
