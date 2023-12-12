@@ -101,7 +101,7 @@ describe('UserEditBasicDetails', () => {
       mockLogin({ email: 'old@email.com' });
     });
 
-    it('shows a message for a duplicate email', () =>
+    it('shows a custom message for a duplicate email', () =>
       mockHttp()
         .mount(UserEditBasicDetails, mountOptions())
         .request(async (component) => {
@@ -124,7 +124,7 @@ describe('UserEditBasicDetails', () => {
 
     // I don't think a different uniqueness violation is currently possible.
     // This is mostly about future-proofing.
-    it('does not show a message for a different uniqueness violation', () =>
+    it('shows the default message for a different uniqueness violation', () =>
       mockHttp()
         .mount(UserEditBasicDetails, mountOptions())
         .request(async (component) => {

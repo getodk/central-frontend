@@ -69,12 +69,12 @@ describe('UserNew', () => {
           await modal.get('input[type="email"]').setValue('new@email.com');
           return modal.get('form').trigger('submit');
         })
-        .beforeEachResponse((_, { method, url, data }) => {
-          method.should.equal('POST');
-          url.should.equal('/v1/users');
-          data.should.eql({ email: 'new@email.com' });
-        })
-        .respondWithProblem());
+        .respondWithProblem()
+        .testRequests([{
+          method: 'POST',
+          url: '/v1/users',
+          data: { email: 'new@email.com' }
+        }]));
 
     it('sends the display name if there is one', () =>
       mockHttp()
@@ -108,7 +108,7 @@ describe('UserNew', () => {
       }));
 
   describe('custom alert messages', () => {
-    it('shows a message for a duplicate email', () =>
+    it('shows a custom message for a duplicate email', () =>
       mockHttp()
         .mount(UserNew, {
           props: { state: true }
@@ -133,7 +133,7 @@ describe('UserNew', () => {
 
     // I don't think a different uniqueness violation is currently possible.
     // This is mostly about future-proofing.
-    it('does not shows a message for a different uniqueness violation', () =>
+    it('shows the default message for a different uniqueness violation', () =>
       mockHttp()
         .mount(UserNew, {
           props: { state: true }
@@ -143,8 +143,8 @@ describe('UserNew', () => {
           return modal.get('form').trigger('submit');
         })
         .respondWithProblem({
-          message: 'A resource already exists with foo value(s) of bar.',
           code: 409.3,
+          message: 'A resource already exists with foo value(s) of bar.',
           details: { fields: ['foo'], values: ['bar'] }
         })
         .afterResponse(modal => {
