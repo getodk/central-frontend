@@ -16,11 +16,13 @@ describe('DatasetShow', () => {
     ]);
   });
 
-  it('shows the correct title', () =>
-    load('/projects/1/entity-lists/trees').then(app => {
+  it('shows the correct title', () => {
+    testData.extendedDatasets.createPast(1);
+    return load('/projects/1/entity-lists/trees').then(app => {
       const title = app.get('#page-head-title');
       title.text().should.be.equal('trees');
-    }));
+    });
+  });
 
   it('re-renders the router view after a route change', () => {
     testData.extendedDatasets
@@ -43,6 +45,7 @@ describe('DatasetShow', () => {
   });
 
   it('renders a back link', async () => {
+    testData.extendedDatasets.createPast(1);
     const component = await load('/projects/1/entity-lists/trees');
     const { to } = component.getComponent(PageBack).props();
     to.should.eql(['/projects/1', '/projects/1/entity-lists']);
