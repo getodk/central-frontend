@@ -82,15 +82,19 @@ export default {
       return this.project.dataExists &&
         this.project.permits('submission.create') && this.form.dataExists;
     },
+    /*
+    Disable the "Analyze via OData" button if:
+
+      - There are encrypted submissions, or
+      - There are no submissions yet, but the form is encrypted. In that case,
+        there will never be decrypted submissions available to OData (as long as
+        the form remains encrypted).
+    */
     analyzeDisabled() {
-      // Used to disable odata access button if criteria met:
-      // If an encrypted form has no submissions, then there will never be
-      // decrypted submissions available to OData (as long as the form remains
-      // encrypted).
+      if (this.keys.dataExists && this.keys.length !== 0) return true;
       if (this.form.dataExists && this.form.keyId != null &&
         this.form.submissions === 0)
         return true;
-      if (this.keys.dataExists && this.keys.length !== 0) return true;
       return false;
     },
     analyzeDisabledMessage() {
