@@ -104,11 +104,20 @@ export default {
 <i18n>
 {
   "cs": {
+    "introduction": [
+      "Opravdu chcete propojit seznam entit?",
+      "Nahraný soubor bude odstraněn. Později jej můžete vždy nahrát znovu."
+    ],
     "action": {
       "link": "Odkaz"
     }
   },
   "de": {
+    "title": "Entitätsliste verknüpfen",
+    "introduction": [
+      "Sind Sie sicher, dass Sie die Entitätsliste verknüpfen möchten?",
+      "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
+    ],
     "action": {
       "link": "Link"
     }
@@ -144,6 +153,11 @@ export default {
     }
   },
   "sw": {
+    "title": "Orodha ya Huluki",
+    "introduction": [
+      "Je, una uhakika unataka kuunganisha Orodha ya Huluki?",
+      "Faili uliyopakia itafutwa. Unaweza kuipakia tena baadaye."
+    ],
     "action": {
       "link": "Kiungo"
     }

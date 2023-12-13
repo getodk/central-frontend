@@ -123,6 +123,11 @@ defineExpose({ afterUpdate });
     "header": {
       "updatedAtAndActions": "Ultimo aggiornamento/ azioni"
     }
+  },
+  "sw": {
+    "header": {
+      "updatedAtAndActions": "Ilisasishwa Mwisho / Vitendo"
+    }
   }
 }
 </i18n>

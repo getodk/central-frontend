@@ -161,6 +161,12 @@ const message = computed(() => {
 <i18n>
 {
   "cs": {
+    "entity": {
+      "withoutCount": "Načítání entit...",
+      "last": {
+        "one": "Načítání poslední entity..."
+      }
+    },
     "submission": {
       "withoutCount": "Načítání příspěvků…",
       "all": "Načítání {count} příspěvku ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ...",
@@ -181,6 +187,24 @@ const message = computed(() => {
     }
   },
   "de": {
+    "entity": {
+      "withoutCount": "Lade Entitäten ...",
+      "all": "Lade {count} Entität ... | Lade {count} Entitäten ...",
+      "first": "Laden der ersten {top} von {count} Entität ... | Laden der ersten {top} von {count} Entitäten ...",
+      "middle": "Lade {top} weitere Entität von {count} übrigen... | Lade weitere {top} von {count} übrigen Entitäten...",
+      "last": {
+        "multiple": "Lade die letzte {count} Entität... | Lade die letzten {count} Entitäten...",
+        "one": "Die letzte Entität wird geladen…"
+      },
+      "filtered": {
+        "withoutCount": "Lade passende Entitäten...",
+        "middle": "Lade {top} weitere passende Entität von {count} übrigen... | Lade weitere {top} von {count} übrigen passenden Entitäten...",
+        "last": {
+          "multiple": "Lade die letzte {count} passende Entität... | Lade die letzten {count} passenden Entitäten...",
+          "one": "Lade die letzte passende Entität..."
+        }
+      }
+    },
     "submission": {
       "withoutCount": "Übermittlungen laden...",
       "all": "{count} Übermittlung laden... | {count} Übermittlungen laden...",
@@ -201,6 +225,24 @@ const message = computed(() => {
     }
   },
   "es": {
+    "entity": {
+      "withoutCount": "Cargando las entidades...",
+      "all": "Cargando {count} Entidad... | Cargando {count} Entidades... | Cargando {count} Entidades...",
+      "first": "Cargando la primera {top} de {count} entidad... | Cargando la primera {top} de {count} entidades... | Cargando la primera {top} de {count} entidades...",
+      "middle": "Cargando {top} más de {count} entidad restante... | Cargando {top} más de {count} entidades restantes... | Cargando {top} más de {count} entidades restantes...",
+      "last": {
+        "multiple": "Cargando la última {count} entidad… | Cargando las últimas {count} entidades… | Cargando las últimas {count} entidades…",
+        "one": "Cargando la última entidad..."
+      },
+      "filtered": {
+        "withoutCount": "Cargando entidades coincidentes...",
+        "middle": "Cargando {top} más de {count} entidades restantes coincidentes... | Cargando {top} más de {count} entidades restantes coincidentes... | Cargando {top} más de {count} entidades restantes coincidentes...",
+        "last": {
+          "multiple": "Cargando la última {count} entidad coincidente… | Cargando las últimas {count} entidades coincidentes… | Cargando las últimas {count} entidades coincidentes…",
+          "one": "Cargando la última entidad coincidente..."
+        }
+      }
+    },
     "submission": {
       "withoutCount": "Cargando los envíos...",
       "all": "Cargando {count} envío... | Cargando {count} envíos... | Cargando {count} envíos...",
@@ -229,6 +271,14 @@ const message = computed(() => {
       "last": {
         "multiple": "Chargement de la dernière {count} entité... | Chargement des dernières {count} entités... | Chargement des dernières {count} entités...",
         "one": "Chargement de la dernière entité..."
+      },
+      "filtered": {
+        "withoutCount": "Chargement des Entités correspondantes...",
+        "middle": "Chargement de {top} Entités correspondantes supplémentaires sur {count} restantes | Chargement de {top} Entités correspondantes supplémentaires sur {count} restantes | Chargement de {top} Entités correspondantes supplémentaires sur {count} restantes",
+        "last": {
+          "multiple": "Chargement de la dernière ({count}) entité correspondante | Chargement des dernières {count} entités correspondantes | Chargement des dernières {count} entités correspondantes",
+          "one": "Chargement d la dernière Entité correspondante..."
+        }
       }
     },
     "submission": {
@@ -271,6 +321,24 @@ const message = computed(() => {
     }
   },
   "it": {
+    "entity": {
+      "withoutCount": "Caricando le Entità...",
+      "all": "Cricando {count} Entità... | Cricando {count} Entità... | Caricando {count} Entità...",
+      "first": "Caricando la prima {top} di {count} Entità… | Caricando la prima {top} di {count} Entità… | Caricando la prima {top} di {count} Entità…",
+      "middle": "Caricamento di {top} in più di {count} Entità rimanente... | Caricamento di {top} in più di {count} Entità rimanenti... | Caricamento di {top} in più di {count} Entità rimanenti...",
+      "last": {
+        "multiple": "Caricando la ultima {count} Entità… | Caricando la ultima {count} Entità… | Caricando la ultima {count} Entità…",
+        "one": "Caricamento l'ultima Entità in corso..."
+      },
+      "filtered": {
+        "withoutCount": "Caricando Entità corrispondenti...",
+        "middle": "Caricamento di {top} in più di {count} Entità corrispondente rimanente... | Caricamento di {top} in più di {count} Entità corrispondenti rimanenti... | Caricamento di {top} in più di {count} Entità corrispondenti rimanenti...",
+        "last": {
+          "multiple": "Caricando l'ultima {count} Entità corrispondente… | Caricando le ultime {count} Entità corrispondenti… | Caricando le ultime {count} Entità corrispondenti…",
+          "one": "Caricamento l'ultima Entità corrispondente..."
+        }
+      }
+    },
     "submission": {
       "withoutCount": "Caricando invii...",
       "all": "Cricando {count} invio... | Cricando {count} invii... | Caricando {count} invii...",
@@ -311,6 +379,24 @@ const message = computed(() => {
     }
   },
   "sw": {
+    "entity": {
+      "withoutCount": "Inapakia Huluki...",
+      "all": "Inapakia Shirika {count}... | Inapakia Huluki {count}...",
+      "first": "Inapakia {top} ya kwanza kati ya {count} Huluki... | Inapakia {top} ya kwanza kati ya Mashirika {count}...",
+      "middle": "Inapakia {top} zaidi ya Huluki {count} iliyosalia... | Inapakia {top} zaidi ya Mashirika {count} yaliyosalia...",
+      "last": {
+        "multiple": "Inapakia Huluki {count} ya mwisho... | Inapakia Huluki {count} za mwisho...",
+        "one": "Inapakia Huluki ya mwisho..."
+      },
+      "filtered": {
+        "withoutCount": "Inapakia Huluki zinazolingana...",
+        "middle": "Inapakia {top} zaidi ya Huluki {count} iliyosalia inayolingana... | Inapakia {top} zaidi ya Mashirika {count} yaliyosalia yanayolingana...",
+        "last": {
+          "multiple": "Inapakia Huluki {count} ya mwisho inayolingana... | Inapakia Huluki {count} za mwisho zinazolingana...",
+          "one": "Inapakia Huluki ya mwisho inayolingana..."
+        }
+      }
+    },
     "submission": {
       "withoutCount": "Inapakia Mawasilisho...",
       "all": "Inapakia Mawasilisho {count}... | Inapakia Mawasilisho {count}...",

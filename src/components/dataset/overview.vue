@@ -94,7 +94,8 @@ export default {
 <i18n>
 {
   "cs": {
-    "connectionsToForms": "Připojení k formulářům"
+    "connectionsToForms": "Připojení k formulářům",
+    "entityProperties": "Vlastnosti entity"
   },
   "de": {
     "connectionsToForms": "Verbindungen zu Formularen",
@@ -113,7 +114,8 @@ export default {
     "entityProperties": "Proprietà della Entità"
   },
   "sw": {
-    "connectionsToForms": "Viunganisho kwa Fomu"
+    "connectionsToForms": "Viunganisho kwa Fomu",
+    "entityProperties": "Sifa za Mashirika"
   }
 }
 </i18n>

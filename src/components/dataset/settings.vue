@@ -151,10 +151,12 @@ const hideAndReset = () => {
     "entityWorkflow": "Entitätsworkflow",
     "onReceipt": {
       "label": "Entitäten anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind",
+      "description": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Entitäten erstellt werden.",
       "successMessage": "Die Entitäten werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
     },
     "onApproval": {
       "label": "Entitäten erstellen, wenn Einsendungen als genehmigt markiert sind",
+      "description": "Entitätsdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
       "successMessage": "Die Entitäten werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
     }
   },
@@ -195,6 +197,19 @@ const hideAndReset = () => {
       "label": "Crea Entità quando gli invii sono contrassegnati come approvati",
       "description": "I dati dell'entità non verranno aggiornati fino a quando una persona non li esamina. Se necessario, possono essere apportate correzioni.",
       "successMessage": "Le entità verranno create non appena gli Invii saranno contrassegnati come approvati."
+    }
+  },
+  "sw": {
+    "entityWorkflow": "Mtiririko wa Kazi wa Huluki",
+    "onReceipt": {
+      "label": "Unda Huluki mara tu Mawasilisho yanapopokelewa na Central",
+      "description": "Hutakuwa na nafasi ya kukagua au kurekebisha data kabla ya Huluki kuundwa.",
+      "successMessage": "Huluki zitaundwa mara tu Mawasilisho yatakapopokelewa na Central."
+    },
+    "onApproval": {
+      "label": "Unda Huluki wakati Mawasilisho yametiwa alama kuwa Yameidhinishwa",
+      "description": "Data ya huluki haitasasishwa hadi mtu aikague data. Marekebisho yanaweza kufanywa ikiwa ni lazima.",
+      "successMessage": "Huluki zitaundwa Mawasilisho yanapotiwa alama kuwa Yameidhinishwa."
     }
   }
 }

@@ -130,7 +130,8 @@ export default {
   "fr": {
     "action": {
       "download": "Télécharger les données (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} conflit possible | {count} conflits possibles | {count} conflits possibles"
   },
   "it": {
     "action": {

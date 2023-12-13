@@ -317,19 +317,35 @@ export default {
 {
   "cs": {
     "encrypted": "Šifrováno",
-    "encryptionTip": "Tento projekt používá řízené šifrování."
+    "encryptionTip": "Tento projekt používá řízené šifrování.",
+    "hidden": "skryto"
   },
   "de": {
     "encrypted": "Verschlüsselt",
-    "encryptionTip": "Dieses Projekt verwendet verwaltete Verschlüsselung."
+    "encryptionTip": "Dieses Projekt verwendet verwaltete Verschlüsselung.",
+    "showMore": "Zeige alle {count} Formular | Zeige alle {count} Formulare",
+    "showMoreDatasets": "Zeige alle {count} Entitätsliste | Zeige alle {count} Entitätslisten",
+    "showFewer": "Zeige weniger von insgesamt {count} Formular | Zeige weniger von insgesamt {count} Formularen",
+    "showFewerDatasets": "Zeige weniger von insgesamt {count} Entitätsliste | Zeige weniger von insgesamt {count} Entitätslisten",
+    "hidden": "versteckt"
   },
   "es": {
     "encrypted": "Cifrado",
-    "encryptionTip": "Este proyecto utiliza cifrado administrado."
+    "encryptionTip": "Este proyecto utiliza cifrado administrado.",
+    "showMore": "Mostrar {count} total formulario | Mostrar {count} totales formularios | Mostrar {count} totales formularios",
+    "showMoreDatasets": "Mostrar {count} lista de entidades | Mostrar {count} listas de entidades | Mostrar {count} listas de entidades",
+    "showFewer": "Mostrar menos de {count} total formulario | Mostrar menos de {count} totales formularios | Mostrar menos de {count} totales formularios",
+    "showFewerDatasets": "Mostrar menos de {count} lista de entidades | Mostrar menos de {count} listas de entidades | Mostrar menos de {count} listas de entidades",
+    "hidden": "oculto"
   },
   "fr": {
     "encrypted": "Chiffré",
-    "encryptionTip": "Ce projet utilise un chiffrement des données."
+    "encryptionTip": "Ce projet utilise un chiffrement des données.",
+    "showMore": "Afficher tous les {count} Formulaires | Afficher tous les {count} Formulaires | Afficher tous les {count} Formulaires",
+    "showMoreDatasets": "Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} Listes d'Entités",
+    "showFewer": "Voir moins que ce {count} formulaire | Voir moins que ces {count} formulaires | Voir moins que ces {count} formulaires",
+    "showFewerDatasets": "Voir moins que cette {count} Liste d'Entités | Voir moins que ces {count} Listes d'Entités | Voir moins que ces {count} Listes d'Entités",
+    "hidden": "caché"
   },
   "id": {
     "encrypted": "Terenkripsi",
@@ -337,11 +353,21 @@ export default {
   },
   "it": {
     "encrypted": "Crittografato",
-    "encryptionTip": "Questo progetto utilizza la crittografia gestita."
+    "encryptionTip": "Questo progetto utilizza la crittografia gestita.",
+    "showMore": "Mostra {count} del totale formulari | Mostra {count} del totale formulari | Mostra {count} del totale formulari",
+    "showMoreDatasets": "Mostra {count} del totale Lista Entità | Mostra {count} del totale Lista Entità | Mostra {count} del totale Lista Entità",
+    "showFewer": "Mostra meno {count} del totale Formulario | Mostra meno {count} del totale Formulari | Mostra meno {count} del totale Formulari",
+    "showFewerDatasets": "Mostra meno del {count} totale Lista Entità | Mostra meno del {count} totale Lista Entità | Mostra meno del {count} totale Lista Entità",
+    "hidden": "nascosto"
   },
   "sw": {
     "encrypted": "Imesimbwa kwa njia fiche",
-    "encryptionTip": "Mradi huu unatumia usimbaji fiche unaodhibitiwa."
+    "encryptionTip": "Mradi huu unatumia usimbaji fiche unaodhibitiwa.",
+    "showMore": "Onyesha Jumla ya Fomu {count} | Onyesha Jumla ya Fomu {count}",
+    "showMoreDatasets": "Onyesha Orodha {count} jumla ya Huluki | Onyesha Orodha {count} jumla ya Huluki",
+    "showFewer": "Onyesha idadi ndogo ya Fomu {count} jumla | Onyesha Jumla ya Fomu {count} chache",
+    "showFewerDatasets": "Onyesha idadi ndogo ya Orodha ya Huluki chache kati ya {count} | Onyesha chini ya Orodha {count} jumla ya Huluki",
+    "hidden": "Fiche"
   }
 }
 </i18n>

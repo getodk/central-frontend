@@ -245,7 +245,7 @@ export default {
       "full": "{submissions} a été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire.",
       "submissions": "Soumission | Soumissions | Soumissions"
     },
-    "datasetsLinked": "Dataset attaché à ce formulaire | Datasets attachés à ce formulaire | Datasets attachés à ce formulaire"
+    "datasetsLinked": "Liste d'entités attachée à ce formulaire | Listes d'entités attachées à ce formulaire | Listes d'entités attachées à ce formulaire"
   },
   "id": {
     "version": {

@@ -106,6 +106,7 @@ const submit = () => {
 {
   "cs": {
     "title": "Základní podrobnosti",
+    "emailDisabled": "Vaši e-mailovou adresu nelze změnit. Používá se mezi serverem Central a přihlašovacím serverem k zajištění vaší identity.",
     "action": {
       "update": "Aktualizovat podrobnosti"
     },
@@ -115,6 +116,7 @@ const submit = () => {
   },
   "de": {
     "title": "Basisinformationen",
+    "emailDisabled": "Ihre E-Mail-Adresse kann nicht geändert werden. Sie wird zwischen Central und Ihrem Anmeldeserver verwendet, um Ihre Identität sicherzustellen.",
     "action": {
       "update": "Details aktualisieren"
     },
@@ -124,6 +126,7 @@ const submit = () => {
   },
   "es": {
     "title": "Información básica",
+    "emailDisabled": "Su dirección de correo electrónico no se puede cambiar. Se utiliza entre Central y su servidor de inicio de sesión para garantizar su identidad.",
     "action": {
       "update": "Actualizar información"
     },
@@ -136,6 +139,9 @@ const submit = () => {
     "emailDisabled": "Votre adresse de courriel ne peut être changée. Elle est utilisée entre Central et votre serveur de connexion pour vérifier votre identité.",
     "action": {
       "update": "Mettre à jour les détails"
+    },
+    "problem": {
+      "409_3": "Vous ne pouvez pas changer votre adresse de courriel pour {email} car ce compte existe déjà. Merci d'essayer une autre adresse."
     },
     "alert": {
       "success": "Détails de l'utilisateur sauvegardées !"
@@ -171,6 +177,7 @@ const submit = () => {
   },
   "sw": {
     "title": "Maelezo ya Msingi",
+    "emailDisabled": "Anwani yako ya barua pepe haiwezi kubadilishwa. Inatumika kati ya Central na seva yako ya kuingia ili kuhakikisha utambulisho wako.",
     "action": {
       "update": "Sasisha maelezo"
     },

@@ -134,7 +134,8 @@ const { submissionPath } = useRoutes();
     "submissionDeleted": "Questo invio è stato eliminato."
   },
   "sw": {
-    "creatingSubmission": "Kuunda Uwasilishaji"
+    "creatingSubmission": "Kuunda Uwasilishaji",
+    "submissionDeleted": "Wasilisho hili limefutwa."
   }
 }
 </i18n>

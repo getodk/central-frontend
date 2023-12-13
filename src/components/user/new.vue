@@ -125,18 +125,27 @@ export default {
     "title": "Vytvořit webového uživatele",
     "introduction": [
       "Po vytvoření tohoto účtu vám bude zaslána e-mailová adresa, kterou zadáte, s pokyny, jak nastavit heslo a jak pokračovat."
+    ],
+    "oidcIntroduction": [
+      "Uživatelé na přihlašovacím serveru musí mít účet Central, aby se mohli přihlásit do Central. Jakmile tento účet vytvoříte, bude se uživatel na přihlašovacím serveru s vámi zadanou e-mailovou adresou moci přihlásit do Centralu."
     ]
   },
   "de": {
     "title": "Web-Benutzer anlegen",
     "introduction": [
       "Sobald Sie dieses Benutzerkonto angelegt haben, senden wir eine Email mit weiteren Schritten zur Passworterstellung an die angegebene E-Mail-Adresse."
+    ],
+    "oidcIntroduction": [
+      "Benutzer auf Ihrem Anmeldeserver müssen über ein Central-Konto verfügen, um sich bei Central anzumelden. Sobald Sie dieses Konto erstellt haben, kann sich der Benutzer auf Ihrem Anmeldeserver mit der von Ihnen angegebenen E-Mail-Adresse bei Central anmelden."
     ]
   },
   "es": {
     "title": "Crear usuario web",
     "introduction": [
       "Al crear esta cuenta, se enviarán al correo electrónico que ha proporcionado las instrucciones para establecer una contraseña y cómo proceder."
+    ],
+    "oidcIntroduction": [
+      "Los usuarios de su servidor de inicio de sesión deben tener una cuenta de Central para iniciar sesión en Central. Una vez que cree esta cuenta, el usuario en su servidor de inicio de sesión con la dirección de correo electrónico que proporcione podrá iniciar sesión en Central."
     ]
   },
   "fr": {
@@ -146,7 +155,10 @@ export default {
     ],
     "oidcIntroduction": [
       "Les utilisateurs de votre serveur de connexion doivent avoir un compte Central pour se connecter à Central. Une fois ce compte créé, l'utilisateur de votre serveur de connexion ayant cette adresse de courriel pourra se connecter à Central."
-    ]
+    ],
+    "problem": {
+      "409_3": "Il semblerait que {email} dispose déjà d'un compte. Merci d'essayer une autre adresse de courriel."
+    }
   },
   "id": {
     "title": "Buat Pengguna Web",
@@ -173,6 +185,9 @@ export default {
     "title": "Unda Mtumiaji wa Wavuti",
     "introduction": [
       "Ukishafungua akaunti hii, barua pepe utakayotoa itatumiwa maelekezo ya jinsi ya kuweka nenosiri na kuendelea."
+    ],
+    "oidcIntroduction": [
+      "Watumiaji kwenye seva yako ya kuingia lazima wawe na akaunti ya Kati ili kuingia Kati. Mara tu unapofungua akaunti hii, mtumiaji kwenye seva yako ya kuingia na anwani ya barua pepe unayotoa ataweza kuingia kwenye Central."
     ]
   }
 }

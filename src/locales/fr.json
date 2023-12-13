@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Statut",
         "testing": "Test"
       }
     }
@@ -267,13 +266,16 @@
     "entityLabel": "Étiquette de l'entité",
     "entityId": "ID de l'entité",
     "noProperties": "Ce formulaire définit seulement l'étiquette.",
-    "noEntity": "(aucune)"
+    "noEntity": "(aucune)",
+    "conflictsCount": "{count} conflit | {count} conflits | {count} conflits"
   },
   "common": {
     "activity": "Activité",
     "anybody": "(n'importe qui)",
     "areYouSure": "Êtes vous sûr de vouloir procéder ?",
     "basicInfo": "Information de base",
+    "conflict": "Conflit",
+    "conflicts": "Conflits",
     "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
     "data": "Données",
@@ -300,7 +302,10 @@
     },
     "propertiesCount": "{inform} de {count} propriété | {inform} de {count} propriétés | {inform} de {count} propriété(s)",
     "new": "Nouveau !",
-    "totalEntities": "Nombre d'entités"
+    "totalEntities": "Nombre d'entités",
+    "versionShort": "v {version}",
+    "status": "Statut",
+    "version": "Version"
   },
   "mixin": {
     "request": {

@@ -356,7 +356,8 @@ export default {
             ],
             [
               "Po aktivaci nelze šifrování vypnout."
-            ]
+            ],
+            "Testovací odeslání ke stávajícím návrhům formulářů budou trvale odstraněna."
           ],
           {
             "full": "{here} se dozvíte více o šifrování. Pokud to zní jako něco, co chcete, pokračujte stisknutím tlačítka Další.",
@@ -714,7 +715,8 @@ export default {
             ],
             [
               "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa"
-            ]
+            ],
+            "Mawasilisho ya Jaribio kwa Fomu zilizopo Rasimu yataondolewa kabisa."
           ],
           {
             "full": "Unaweza kupata maelezo zaidi kuhusu usimbaji fiche {here}. Ikiwa hii inaonekana kama kitu unachotaka, bonyeza Ifuatayo ili kuendelea.",

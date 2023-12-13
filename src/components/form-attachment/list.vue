@@ -498,7 +498,14 @@ export default {
       "someUploaded": "{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}. | {message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}."
     },
     "alert": {
-      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno."
+      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
+      "link": "Seznam entit byl úspěšně propojen."
+    },
+    "entitiesTesting": {
+      "title": "Testování entit",
+      "body": [
+        "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy seznamu entit. Ty jsou ve výchozím nastavení propojeny se seznamy entit. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit se seznamy entit, jakmile ověříte logiku formuláře."
+      ]
     }
   },
   "de": {
@@ -517,7 +524,14 @@ export default {
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
-      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
+      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
+      "link": "Entitätsliste erfolgreich verknüpft."
+    },
+    "entitiesTesting": {
+      "title": "Entitäten testen",
+      "body": [
+        "Mindestens ein Formularanhang hat Dateinamen, die mit Datensatznamen übereinstimmen. Standardmässig sind diese mit Datensätzen verknüpft. Zu Testzwecken können Sie temporäre Daten als CSV-Dateien hochladen und dann eine Verknüpfung zu den Datensätzen herstellen, sobald Sie Ihre Formularlogik überprüft haben."
+      ]
     }
   },
   "es": {
@@ -540,7 +554,10 @@ export default {
       "link": "Lista de entidades enlazada correctamente."
     },
     "entitiesTesting": {
-      "title": "Comprobación de las entidades"
+      "title": "Comprobación de las entidades",
+      "body": [
+        "Uno o más archivos adjuntos de formulario tienen nombres de archivo que coinciden con los nombres de la lista de entidades. De forma predeterminada, están vinculados a listas de entidades. Para realizar pruebas, es posible que desee cargar datos temporales como archivos .csv y luego vincularlos a las Listas de entidades una vez que haya verificado la lógica de su formulario."
+      ]
     }
   },
   "fr": {
@@ -641,7 +658,14 @@ export default {
       "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
     },
     "alert": {
-      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
+      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa.",
+      "link": "Orodha ya Huluki imeunganishwa."
+    },
+    "entitiesTesting": {
+      "title": "Vyombo vya Kujaribu",
+      "body": [
+        "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Orodha ya Huluki. Kwa chaguomsingi, hizo zimeunganishwa kwenye Orodha za Huluki. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe kwenye Orodha za Huluki mara tu utakapothibitisha mantiki ya fomu yako."
+      ]
     }
   }
 }

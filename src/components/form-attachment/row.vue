@@ -257,7 +257,11 @@ export default {
       "text": "Noch nicht hochgeladen",
       "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
     },
+    "linkedToDataset": "Mit Entitätsliste {datasetName} verknüpft",
     "uploadToOverride": "Laden Sie eine zu überschreibende Datei hoch.",
+    "action": {
+      "linkDataset": "Mit Entitätsliste {datasetName} verknüpfen"
+    },
     "override": "Überschreiben"
   },
   "es": {
@@ -272,7 +276,11 @@ export default {
       "text": "Aún no cargado",
       "title": "Para cargar archivos, arrastre y suelte uno o más archivos en esta página."
     },
+    "linkedToDataset": "Vinculado a la lista de entidades {datasetName}",
     "uploadToOverride": "Cargue un archivo para anular.",
+    "action": {
+      "linkDataset": "Vincular la lista de entidades {datasetName}"
+    },
     "override": "Invalidar"
   },
   "fr": {
@@ -351,7 +359,11 @@ export default {
       "text": "Bado haijapakiwa",
       "title": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
     },
+    "linkedToDataset": "Imeunganishwa kwenye Orodha ya Huluki {datasetName}",
     "uploadToOverride": "Pakia faili ili kubatilisha",
+    "action": {
+      "linkDataset": "Unganisha Orodha ya Huluki {datasetName}"
+    },
     "override": "Batilisha"
   }
 }

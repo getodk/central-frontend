@@ -252,6 +252,15 @@ export default {
       "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten.",
       "changePassword": "Ihr Passwort ist kürzer als 10 Zeichen. Um Ihr Konto zu schützen, verlängerns Sie bitte Ihr Passwort."
     },
+    "oidc": {
+      "body": "Klicken Sie auf Weiter, um zur Anmeldeseite zu gelangen.",
+      "error": {
+        "auth-ok-user-not-found": "Mit Ihrer E-Mail-Adresse ist kein Central-Konto verknüpft. Bitten Sie Ihren zentralen Administrator, ein Konto zu erstellen, damit Sie fortfahren können.",
+        "email-not-verified": "Ihre E-Mail-Adresse wurde von Ihrem Anmeldeserver nicht überprüft. Bitte wenden Sie sich an Ihren Serveradministrator.",
+        "email-claim-not-provided": "Central konnte nicht auf die mit Ihrem Konto verknüpfte E-Mail-Adresse zugreifen. Dies kann daran liegen, dass Ihr Serveradministrator etwas falsch konfiguriert hat oder keine E-Mail-Adresse für Ihr Konto festgelegt hat. Dies könnte auch auf Datenschutzoptionen zurückzuführen sein, die Sie während des Anmeldevorgangs auswählen können. Wenn ja, versuchen Sie es bitte erneut und stellen Sie sicher, dass Ihre E-Mail-Adresse geteilt wird.",
+        "internal-server-error": "Beim Anmelden ist ein Fehler aufgetreten. Bitte wenden Sie sich an Ihren Serveradministrator."
+      }
+    },
     "problem": {
       "401_2": "Falsche E-Mail-Adresse und/oder Passwort."
     }
@@ -260,6 +269,15 @@ export default {
     "alert": {
       "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar.",
       "changePassword": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
+    },
+    "oidc": {
+      "body": "Haga clic en Continuar para pasar a la página de inicio de sesión.",
+      "error": {
+        "auth-ok-user-not-found": "No hay ninguna cuenta Central asociada con su dirección de correo electrónico. Pídale a su administrador central que cree una cuenta para continuar.",
+        "email-not-verified": "Su dirección de correo electrónico no ha sido verificada por su servidor de inicio de sesión. Comuníquese con el administrador de su servidor.",
+        "email-claim-not-provided": "Central no pudo acceder a la dirección de correo electrónico asociada con su cuenta. Esto podría deberse a que el administrador de su servidor haya configurado algo incorrectamente o no haya configurado una dirección de correo electrónico para su cuenta. También podría ser el resultado de las opciones de privacidad que puedes elegir durante el proceso de inicio de sesión. Si es así, inténtalo de nuevo y asegúrate de que tu correo electrónico esté compartido.",
+        "internal-server-error": "Algo salió mal durante el inicio de sesión. Comuníquese con el administrador de su servidor."
+      }
     },
     "problem": {
       "401_2": "Dirección de correo electrónico y/o contraseña incorrecta."
@@ -322,6 +340,15 @@ export default {
     "alert": {
       "alreadyLoggedIn": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea.",
       "changePassword": "Nenosiri lako ni fupi kuliko vibambo 10. Ili kulinda akaunti yako, tafadhali badilisha nenosiri lako ili kuifanya iwe ndefu."
+    },
+    "oidc": {
+      "body": "Bofya Endelea ili kuendelea na ukurasa wa kuingia.",
+      "error": {
+        "auth-ok-user-not-found": "Hakuna akaunti ya Kati inayohusishwa na anwani yako ya barua pepe. Tafadhali muulize msimamizi wako Mkuu akufungulie akaunti ili uendelee.",
+        "email-not-verified": "Anwani yako ya barua pepe haijathibitishwa na seva yako ya kuingia. Tafadhali wasiliana na msimamizi wa seva yako.",
+        "email-claim-not-provided": "Central haikuweza kufikia anwani ya barua pepe inayohusishwa na akaunti yako. Hii inaweza kuwa kwa sababu msimamizi wa seva yako amesanidi kitu vibaya, au hajaweka anwani ya barua pepe kwa akaunti yako. Inaweza pia kuwa matokeo ya chaguzi za faragha ambazo unaweza kuchagua wakati wa mchakato wa kuingia. Ikiwa ndivyo, tafadhali jaribu tena na uhakikishe kuwa barua pepe yako inashirikiwa.",
+        "internal-server-error": "Hitilafu fulani imetokea wakati wa kuingia. Tafadhali wasiliana na msimamizi wa seva yako."
+      }
     },
     "problem": {
       "401_2": "Anwani ya barua pepe na/au nenosiri si sahihi."

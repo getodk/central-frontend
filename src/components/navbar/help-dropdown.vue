@@ -52,35 +52,25 @@ export default {
 <i18n>
 {
   "cs": {
-    "help": "Nápověda",
-    "version": "Verze"
+    "help": "Nápověda"
   },
   "de": {
-    "help": "Hilfe",
-    "version": "Version"
+    "help": "Hilfe"
   },
   "es": {
-    "help": "Ayuda",
-    "version": "Versión"
+    "help": "Ayuda"
   },
   "fr": {
-    "help": "Aide",
-    "version": "Version"
+    "help": "Aide"
   },
   "id": {
-    "help": "Bantuan",
-    "version": "Versi"
+    "help": "Bantuan"
   },
   "it": {
-    "help": "Aiuto",
-    "version": "Versione"
-  },
-  "ja": {
-    "version": "バージョン"
+    "help": "Aiuto"
   },
   "sw": {
-    "help": "msaada",
-    "version": "Toleo"
+    "help": "msaada"
   }
 }
 </i18n>
