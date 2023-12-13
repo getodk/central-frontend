@@ -50,6 +50,28 @@ describe('EntityList', () => {
     ]);
   });
 
+  it('updates dataset.entities using the OData count', () => {
+    testData.extendedEntities.createPast(1);
+    return load('/projects/1/entity-lists/trees')
+      .afterResponses(() => {
+        testData.extendedEntities.createNew();
+      })
+      .load('/projects/1/entity-lists/trees/entities', {
+        project: false,
+        dataset: false
+      })
+      .beforeAnyResponse(app => {
+        app.vm.$container.requestData.dataset.entities.should.equal(1);
+        const text = app.get('#entity-download-button').text();
+        text.should.equal('Download 1 Entity');
+      })
+      .afterResponse(app => {
+        app.vm.$container.requestData.dataset.entities.should.equal(2);
+        const text = app.get('#entity-download-button').text();
+        text.should.equal('Download 2 Entities');
+      });
+  });
+
   it('shows a message if there are no entities', async () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     const component = await load(

@@ -63,7 +63,9 @@ export default ({ i18n }, createResource) => {
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
 
-  createResource('dataset');
+  createResource('dataset', () => ({
+    transformResponse: ({ data }) => shallowReactive(data)
+  }));
 
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));
