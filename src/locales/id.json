@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
         "testing": "Uji Coba"
       }
     }
@@ -291,7 +290,9 @@
     "punctuations": {
       "comma": ","
     },
-    "propertiesCount": "{inform} dari {count} properti"
+    "propertiesCount": "{inform} dari {count} properti",
+    "status": "Status",
+    "version": "Versi"
   },
   "mixin": {
     "request": {

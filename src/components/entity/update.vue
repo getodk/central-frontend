@@ -215,9 +215,13 @@ const currentVersion = computed(() =>
 <i18n>
 {
   "cs": {
+    "title": "Aktualizace {label}",
     "header": {
       "currentValue": "Aktuální hodnota",
       "updatedValue": "Aktualizovaná hodnota"
+    },
+    "problem": {
+      "409_15": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data."
     }
   },
   "de": {
@@ -225,6 +229,9 @@ const currentVersion = computed(() =>
     "header": {
       "currentValue": "Aktueller Wert",
       "updatedValue": "Aktualisierter Wert"
+    },
+    "problem": {
+      "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
     }
   },
   "es": {
@@ -232,6 +239,9 @@ const currentVersion = computed(() =>
     "header": {
       "currentValue": "Valor actual",
       "updatedValue": "Valor actualizado"
+    },
+    "problem": {
+      "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
     }
   },
   "fr": {
@@ -252,6 +262,16 @@ const currentVersion = computed(() =>
     },
     "problem": {
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
+    }
+  },
+  "sw": {
+    "title": "Sasisha {label}",
+    "header": {
+      "currentValue": "Thamani ya Sasa",
+      "updatedValue": "Thamani Iliyosasishwa"
+    },
+    "problem": {
+      "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
     }
   }
 }

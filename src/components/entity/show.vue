@@ -146,7 +146,8 @@ const { datasetPath } = useRoutes();
 {
   "cs": {
     "back": {
-      "title": "Detail entity"
+      "title": "Detail entity",
+      "back": "Zpět na tabulku {datasetName}"
     }
   },
   "de": {

@@ -46,13 +46,12 @@
     },
     "draftNav": {
       "tab": {
-        "status": {
-          "string": "Stav",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "testing": {
           "string": "Testování",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "status": {
+          "string": "Stav"
         }
       }
     }
@@ -756,6 +755,9 @@
     },
     "noEntity": {
       "string": "(žádný)"
+    },
+    "conflictsCount": {
+      "string": "{count, plural, one {{count} konflikt} few {{count} konflikty} many {{count} konfliktů} other {{count} konfliktů}}"
     }
   },
   "common": {
@@ -774,6 +776,12 @@
     "basicInfo": {
       "string": "Základní informace",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "conflict": {
+      "string": "Konflikt"
+    },
+    "conflicts": {
+      "string": "Konflikty"
     },
     "currentDraft": {
       "string": "Váš aktuální koncept",
@@ -860,6 +868,10 @@
     },
     "totalEntities": {
       "string": "Celkem entit"
+    },
+    "versionShort": {
+      "string": "v{version}",
+      "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
     }
   },
   "mixin": {
@@ -1212,25 +1224,25 @@
           "string": "Počet aktualizací entity"
         },
         "sso_enabled": {
-          "string": ""
+          "string": "SSO povoleno na serveru"
         },
         "num_client_audit_attachments": {
-          "string": ""
+          "string": "Počet příloh auditu klienta"
         },
         "num_client_audit_attachments_failures": {
-          "string": ""
+          "string": "Počet selhání zpracování auditu klienta"
         },
         "num_client_audit_rows": {
-          "string": ""
+          "string": "Počet řádků auditu klienta"
         },
         "num_audits_failed": {
-          "string": ""
+          "string": "Počet událostí protokolu auditů, které selhaly alespoň jednou"
         },
         "num_audits_failed5": {
-          "string": ""
+          "string": "Počet událostí protokolu auditů, které zcela selhaly"
         },
         "num_audits_unprocessed": {
-          "string": ""
+          "string": "Počet událostí protokolu auditů, jejichž zpracování bylo odloženo"
         }
       }
     },
@@ -1323,11 +1335,11 @@
     "DatasetList": {
       "heading": {
         "0": {
-          "string": "",
+          "string": "Entity umožňují sdílet informace mezi formuláři, takže můžete shromažďovat longitudinální data, spravovat případy v čase a reprezentovat další pracovní postupy s více kroky.",
           "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
-          "string": ""
+          "string": "Entity se vytvářejí prostřednictvím návrhu formuláře a lze je připojit k libovolnému formuláři."
         }
       }
     },
@@ -1337,19 +1349,19 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "entityProperties": {
-        "string": "",
+        "string": "Vlastnosti entity",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "DatasetOverviewConnectionToForms": {
-      "formsCreateEntities": {
+      "formsUpdateEntities": {
         "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "developer_comment": "The number of Form(s) is shown separately above this text."
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": ""
+        "string": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti."
       }
     },
     "DatasetOverviewLinkedForms": {
@@ -1406,6 +1418,9 @@
           "string": "Stáhnout data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "possibleConflictsCount": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "DatasetSettings": {
@@ -1438,7 +1453,7 @@
     },
     "DatasetShow": {
       "back": {
-        "string": "",
+        "string": "Zpět na projektové entity",
         "developer_comment": "This is shown at the top of the page."
       }
     },
@@ -1460,7 +1475,7 @@
     },
     "DatasetTable": {
       "emptyTable": {
-        "string": ""
+        "string": "Nebyly vytvořeny žádné entity pro tento projekt."
       }
     },
     "Download": {
@@ -1497,10 +1512,144 @@
         "string": "Toto podání bylo smazáno."
       }
     },
+    "EntityConflictSummary": {
+      "title": {
+        "string": "Aktualizace dat paralelně"
+      },
+      "subtitle": {
+        "0": {
+          "string": "Jedna nebo více aktualizací bylo provedeno na základě dat, která mohla být zastaralá."
+        },
+        "1": {
+          "string": "Prosím, zkontrolujte tuto souhrn paralelních aktualizací."
+        }
+      },
+      "footer": {
+        "0": {
+          "string": "Pokud je třeba upravit nějaké hodnoty, můžete přímo upravit data Entity."
+        },
+        "1": {
+          "string": "Pokud vše vypadá v pořádku, klikněte na \"Označit jako vyřešeno\" k zavření tohoto varování."
+        }
+      },
+      "confirmation": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": "Poté, co jste zkontrolovali možně konfliktní aktualizace a provedli všechny potřebné aktualizace, můžete kliknout na Potvrdit níže, abyste odstranili varování o paralelní aktualizaci."
+        },
+        "confirm": {
+          "string": "Potvrdit"
+        }
+      },
+      "conflictResolved": {
+        "string": ""
+      }
+    },
+    "EntityConflictTable": {
+      "noConflicts": {
+        "string": "Nejsou žádné konflikty k zobrazení.",
+        "developer_comment": "This is shown if all conflicts between versions have been resolved for an Entity."
+      },
+      "basedOn": {
+        "label": {
+          "string": "",
+          "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the author saw when they made their changes."
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "source": {
+        "label": {
+          "string": "Zdroj"
+        },
+        "description": {
+          "string": "Aktualizace, která vygenerovala tuto verzi"
+        }
+      },
+      "status": {
+        "historical": {
+          "string": "Tato historická verze je zahrnuta, protože nedávná paralelní aktualizace byla provedena na základě této verze této Entity."
+        },
+        "lastGoodVersion": {
+          "string": "Toto je nejnovější verze v dobré shodě. Po této aktualizaci byly provedeny potenciálně konfliktní aktualizace paralelně."
+        },
+        "softConflict": {
+          "string": ""
+        },
+        "hardConflict": {
+          "string": "Tato verze byla vytvořena paralelně s dalšími aktualizacemi, z nichž některé se snaží zapisovat do stejných vlastností jako tato aktualizace."
+        }
+      }
+    },
     "EntityData": {
       "title": {
-        "string": "",
+        "string": "Údaje o entitě",
         "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "EntityDiff": {
+      "noChange": {
+        "string": "Nejsou žádné změny k zobrazení."
+      }
+    },
+    "EntityDiffHead": {
+      "introduction": {
+        "string": "",
+        "developer_comment": "{version} and {baseVersion} are version numbers."
+      },
+      "hardConflict": {
+        "description": {
+          "string": ""
+        }
+      },
+      "softConflict": {
+        "title": {
+          "string": "Paralelní aktualizace",
+          "developer_comment": "An update to an Entity that was made at the same time as another update"
+        }
+      },
+      "tab": {
+        "baseDiff": {
+          "string": "",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the data collector (the author)"
+        },
+        "serverDiff": {
+          "string": "",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the Central server"
+        },
+        "updating": {
+          "string": "",
+          "developer_comment": "This text is shown for an update to an Entity. {version} is a short version identifier, for example, \"v3\". It is the version that the update was applied to."
+        }
+      }
+    },
+    "EntityDiffRow": {
+      "conflictingProp": {
+        "string": "Další aktualizace již zapsala do této vlastnosti.",
+        "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity."
+      }
+    },
+    "EntityDiffTable": {
+      "header": {
+        "oldValue": {
+          "string": "Stará hodnota",
+          "developer_comment": "The value of an Entity property in an older version of the Entity"
+        },
+        "newValue": {
+          "string": "Nová hodnota",
+          "developer_comment": "The value of an Entity property in a newer version of the Entity"
+        }
+      },
+      "comparing": {
+        "string": "Srovnání",
+        "developer_comment": "This is shown when Central displays a comparison of two versions of an Entity."
+      },
+      "version": {
+        "string": "{version} ({source})",
+        "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
       }
     },
     "EntityFeedEntry": {
@@ -1527,30 +1676,147 @@
           "create": {
             "api": {
               "string": "Entita {label}  vytvořena od {name}",
-              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             }
           },
           "update_version": {
+            "submission": {
+              "notDeleted": {
+                "string": "Data aktualizována prostřednictvím odeslání {instanceName}"
+              },
+              "deleted": {
+                "full": {
+                  "string": "Data aktualizována pomocí {deletedSubmission}",
+                  "developer_comment": "{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+                },
+                "deletedSubmission": {
+                  "string": "(smazáno Odeslání {id})",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\nData updated by {deletedSubmission}"
+                }
+              }
+            },
             "api": {
               "string": "Data aktualizovaná od {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             }
+          },
+          "update_resolve": {
+            "string": "Varování konfliktu vyřešeno {name}",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          }
+        }
+      }
+    },
+    "EntityFiltersConflict": {
+      "conflict": {
+        "true": {
+          "string": "Možný konflikt",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        },
+        "false": {
+          "string": "Žádný konflikt",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        }
+      },
+      "field": {
+        "conflict": {
+          "string": "Stav konfliktu",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "string": "{selected} z {total}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
+      },
+      "action": {
+        "select": {
+          "all": {
+            "string": "Vše",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+          },
+          "none": {
+            "string": "Žádný",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
       }
     },
     "EntityList": {
+      "noEntities": {
+        "string": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      },
+      "noMatching": {
+        "string": ""
+      },
       "action": {
         "download": {
           "unfiltered": {
             "string": "{count, plural, one {} few {} many {} other {}}",
-            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withCount": {
+              "string": "{count, plural, one {} few {} many {} other {}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            },
+            "withoutCount": {
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
+            }
           }
         }
+      }
+    },
+    "EntityMetadataRow": {
+      "reviewParallelUpdates": {
+        "string": ""
+      }
+    },
+    "EntityResolve": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "noEntities": {
-        "string": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
-        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      "instructions": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
+      },
+      "action": {
+        "table": {
+          "show": {
+            "string": "Zobrazit souhrnnou tabulku",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "hide": {
+            "string": "Skrýt souhrnnou tabulku",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "seeMoreDetails": {
+          "string": "Více podrobností",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "editEntity": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "markAsResolved": {
+          "string": "Označit jako vyřešeno",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "successMessage": {
+        "string": ""
+      },
+      "problem": {
+        "400_32": {
+          "string": ""
+        }
       }
     },
     "EntityShow": {
@@ -1560,7 +1826,7 @@
           "developer_comment": "This is shown at the top of the page."
         },
         "back": {
-          "string": "",
+          "string": "Zpět na tabulku {datasetName}",
           "developer_comment": "This is shown at the top of the page. The user can click it to go back."
         }
       }
@@ -1575,7 +1841,7 @@
     },
     "EntityUpdate": {
       "title": {
-        "string": "",
+        "string": "Aktualizace {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "header": {
@@ -1590,8 +1856,18 @@
       },
       "problem": {
         "409_15": {
-          "string": ""
+          "string": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data."
         }
+      }
+    },
+    "EntityVersionLink": {
+      "submission": {
+        "string": "Odeslání {instanceName}",
+        "developer_comment": "This text is shown for a Submission. {instanceName} is the instance name of the Submission."
+      },
+      "api": {
+        "string": "",
+        "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
       }
     },
     "FieldKeyList": {
@@ -1801,7 +2077,7 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Opravdu chcete propojit seznam entit?"
         },
         "1": {
           "string": "Nahraný soubor bude odstraněn. Později jej můžete vždy nahrát znovu."
@@ -1850,16 +2126,16 @@
           "string": "{count, plural, one {{count} soubor byl úspěšně nahrán.} few {{count} soubory byly úspěšně nahrány.} many {{count} souborů bylo úspěšně nahráno.} other {{count} souborů bylo úspěšně nahráno.}}"
         },
         "link": {
-          "string": ""
+          "string": "Seznam entit byl úspěšně propojen."
         }
       },
       "datasetsPreview": {
         "title": {
-          "string": ""
+          "string": "Testování entit"
         },
         "body": {
           "0": {
-            "string": ""
+            "string": "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy seznamu entit. Ty jsou ve výchozím nastavení propojeny se seznamy entit. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit se seznamy entit, jakmile ověříte logiku formuláře."
           }
         }
       }
@@ -2225,12 +2501,6 @@
           "string": "Chcete pokračovat?"
         }
       },
-      "field": {
-        "version": {
-          "string": "Verze",
-          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
-        }
-      },
       "problem": {
         "409_6": {
           "string": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
@@ -2330,11 +2600,11 @@
       },
       "datasetsPreview": {
         "title": {
-          "string": "Tento formulář může vytvářet entity"
+          "string": ""
         },
         "body": {
           "0": {
-            "string": "Entity se vytvářejí pouze pro zveřejněné formuláře. V některé z budoucích verzí Centralu bude možné testovat funkce Entity ve stavu návrhu."
+            "string": ""
           },
           "1": {
             "string": "Prozatím doporučujeme vyzkoušet definici formuláře ve stavu Návrh a ověřit její logiku. Před publikováním můžete ověřit, zda aktualizuje všechny požadované vlastnosti."
@@ -2824,7 +3094,7 @@
       },
       "version": {
         "string": "Verze",
-        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
+        "developer_comment": "An identifier of a particular version of something (of Central, of a Form, of an Entity)"
       }
     },
     "NavbarLinks": {
@@ -2859,7 +3129,7 @@
     "OdataLoadingMessage": {
       "entity": {
         "withoutCount": {
-          "string": "",
+          "string": "Načítání entit...",
           "developer_comment": "This text is shown when the number of Entities loading is unknown."
         },
         "all": {
@@ -2878,7 +3148,25 @@
             "string": "{count, plural, one {} few {} many {} other {}}"
           },
           "one": {
-            "string": ""
+            "string": "Načítání poslední entity..."
+          }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "",
+            "developer_comment": "This text is shown when the number of Entities loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {} few {} many {} other {}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {} few {} many {} other {}}"
+            },
+            "one": {
+              "string": ""
+            }
           }
         }
       }
@@ -2986,7 +3274,7 @@
                 }
               },
               "3": {
-                "string": ""
+                "string": "Testovací odeslání ke stávajícím návrhům formulářů budou trvale odstraněna."
               }
             },
             "2": {
@@ -3154,6 +3442,10 @@
       "showFewerDatasets": {
         "string": "{count, plural, one {} few {} many {} other {}}",
         "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
+      },
+      "hidden": {
+        "string": "skryto",
+        "developer_comment": "Static text shown besides hidden Entity Lists with number of conflicts on the Homepage"
       }
     },
     "ProjectList": {
@@ -3341,7 +3633,7 @@
         },
         "2": {
           "full": {
-            "string": "",
+            "string": "{projectViewers} může přistupovat ke všem datům formulářů a entit v tomto projektu a stahovat je, ale nemůže provádět žádné změny nastavení nebo dat.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
@@ -3735,8 +4027,11 @@
           "create": {
             "string": ""
           },
+          "update": {
+            "string": ""
+          },
           "error": {
-            "string": "Problém s vytvořením entity"
+            "string": ""
           }
         },
         "updateReviewState": {
@@ -3977,12 +4272,17 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "emailDisabled": {
-        "string": ""
+        "string": "Vaši e-mailovou adresu nelze změnit. Používá se mezi serverem Central a přihlašovacím serverem k zajištění vaší identity."
       },
       "action": {
         "update": {
           "string": "Aktualizovat podrobnosti",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
         }
       },
       "alert": {
@@ -3997,7 +4297,7 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "oidcBody": {
-        "string": ""
+        "string": "Tento centrální server nespravuje žádná přihlašovací hesla."
       },
       "action": {
         "change": {
@@ -4069,6 +4369,11 @@
       },
       "oidcIntroduction": {
         "0": {
+          "string": "Uživatelé na přihlašovacím serveru musí mít účet Central, aby se mohli přihlásit do Central. Jakmile tento účet vytvoříte, bude se uživatel na přihlašovacím serveru s vámi zadanou e-mailovou adresou moci přihlásit do Centralu."
+        }
+      },
+      "problem": {
+        "409_3": {
           "string": ""
         }
       }

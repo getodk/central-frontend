@@ -275,8 +275,16 @@ const versionAnchor = (v) => `#v${v}`;
           "api": "Entita {label} vytvořena od {name}"
         },
         "update_version": {
+          "submission": {
+            "notDeleted": "Data aktualizována prostřednictvím odeslání {instanceName}",
+            "deleted": {
+              "full": "Data aktualizována pomocí {deletedSubmission}",
+              "deletedSubmission": "(smazáno Odeslání {id})"
+            }
+          },
           "api": "Data aktualizovaná od {name}"
-        }
+        },
+        "update_resolve": "Varování konfliktu vyřešeno {name}"
       }
     }
   },
@@ -284,9 +292,9 @@ const versionAnchor = (v) => `#v${v}`;
     "title": {
       "submission": {
         "create": {
-          "notDeleted": "Übermittlung {instanceName}hochgeladen von{submitter}",
+          "notDeleted": "Übermittlung {instanceName} hochgeladen von {submitter}",
           "deleted": {
-            "full": "{deletedSubmission} hochgeladen von{name}",
+            "full": "{deletedSubmission} hochgeladen von {name}",
             "deletedSubmission": "(Gelöschte Übermittlungen {id})"
           }
         },
@@ -297,11 +305,20 @@ const versionAnchor = (v) => `#v${v}`;
       },
       "entity": {
         "create": {
-          "api": "Entität {label} erstellt von {name}"
+          "api": "Entität {label} erstellt von {name}",
+          "submission": "Entität {label} in {dataset} Entitätsliste erzeugt"
         },
         "update_version": {
-          "api": "Daten aktualisiert von{name}"
-        }
+          "submission": {
+            "notDeleted": "Daten aktualisiert durch Übermittlung {instanceName}",
+            "deleted": {
+              "full": "Daten aktualisiert durch {deletedSubmission}",
+              "deletedSubmission": "(gelöschte Übermittlung {id})"
+            }
+          },
+          "api": "Daten aktualisiert von {name}"
+        },
+        "update_resolve": "Konfliktwarnung gelöst von {name}"
       }
     }
   },
@@ -309,10 +326,10 @@ const versionAnchor = (v) => `#v${v}`;
     "title": {
       "submission": {
         "create": {
-          "notDeleted": "Envío {instanceName}subido por{submitter}",
+          "notDeleted": "Envío {instanceName} subido por {submitter}",
           "deleted": {
-            "full": "{deletedSubmission}subido por{name}",
-            "deletedSubmission": "(envío eliminado{id})"
+            "full": "{deletedSubmission} subido por {name}",
+            "deletedSubmission": "(envío eliminado {id})"
           }
         },
         "approval": {
@@ -322,11 +339,20 @@ const versionAnchor = (v) => `#v${v}`;
       },
       "entity": {
         "create": {
-          "api": "Entidad {label}creada por{name}"
+          "api": "Entidad {label} creada por {name}",
+          "submission": "Entidad creada {label} en {dataset} Lista de entidades"
         },
         "update_version": {
+          "submission": {
+            "notDeleted": "Datos actualizados por el envío {instanceName}",
+            "deleted": {
+              "full": "Datos actualizados por {deletedSubmission}",
+              "deletedSubmission": "(envío eliminado {id})"
+            }
+          },
           "api": "Datos actualizados por {name}"
-        }
+        },
+        "update_resolve": "Advertencia de conflicto resuelto por {name}"
       }
     }
   },
@@ -337,7 +363,7 @@ const versionAnchor = (v) => `#v${v}`;
           "notDeleted": "Soumission {instanceName} téléversée par {submitter}",
           "deleted": {
             "full": "{deletedSubmission} téléversée par {name}",
-            "deletedSubmission": "(Soumission {id}supprimée)"
+            "deletedSubmission": "(Soumission {id} supprimée)"
           }
         },
         "approval": {
@@ -347,12 +373,20 @@ const versionAnchor = (v) => `#v${v}`;
       },
       "entity": {
         "create": {
-          "api": "Entité {label}créée par {name}",
+          "api": "Entité {label} créée par {name}",
           "submission": "Création de l'entité {label} dans la liste {dataset}"
         },
         "update_version": {
+          "submission": {
+            "notDeleted": "Données mises à jour par la Soumission {instanceName}",
+            "deleted": {
+              "full": "Données mises à jour par {deletedSubmission}",
+              "deletedSubmission": "(Soumission supprimée {id})"
+            }
+          },
           "api": "Donnée mise à jour par {name}"
-        }
+        },
+        "update_resolve": "Avertissement de conflit résolu par {name}"
       }
     }
   },
@@ -395,8 +429,16 @@ const versionAnchor = (v) => `#v${v}`;
           "submission": "Entità creata {label} in {dataset} Lista Entità"
         },
         "update_version": {
+          "submission": {
+            "notDeleted": "Dati aggiornati tramite invio {instanceName}",
+            "deleted": {
+              "full": "Dati aggiornati da {deletedSubmission}",
+              "deletedSubmission": "(Invio cancellato {id})"
+            }
+          },
           "api": "Dati aggiornati da {name}"
-        }
+        },
+        "update_resolve": "Avviso di conflitto risolto da {name}"
       }
     }
   },
@@ -413,10 +455,34 @@ const versionAnchor = (v) => `#v${v}`;
   "sw": {
     "title": {
       "submission": {
+        "create": {
+          "notDeleted": "Wasilisho {instanceName} limepakiwa na {submitter}",
+          "deleted": {
+            "full": "{deletedSubmission} imepakiwa na {name}",
+            "deletedSubmission": "(Wasilisho limefutwa {id})"
+          }
+        },
         "approval": {
           "full": "{reviewState} kwa {name}",
           "reviewState": "Imeidhinishwa"
         }
+      },
+      "entity": {
+        "create": {
+          "api": "Huluki {label} iliyoundwa na {name}",
+          "submission": "Imeunda Huluki {label} katika {dataset} Orodha ya Huluki"
+        },
+        "update_version": {
+          "submission": {
+            "notDeleted": "Data imesasishwa na Uwasilishaji {instanceName}",
+            "deleted": {
+              "full": "Data imesasishwa na {deletedSubmission}",
+              "deletedSubmission": "(Wasilisho limefutwa {id})"
+            }
+          },
+          "api": "Data iliyosasishwa na {name}"
+        },
+        "update_resolve": "Onyo la migogoro limetatuliwa kwa {name}"
       }
     }
   }

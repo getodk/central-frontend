@@ -294,7 +294,10 @@ export default {
         "full": "{projectManagers} mohou provádět jakékoli administrativní úkoly související s tímto projektem a mohou vyplnit formuláře ve webovém prohlížeči",
         "projectManagers": "Projektoví manažeři"
       },
-      {},
+      {
+        "full": "{projectViewers} může přistupovat ke všem datům formulářů a entit v tomto projektu a stahovat je, ale nemůže provádět žádné změny nastavení nebo dat.",
+        "projectViewers": "Prohlížeči Projektu"
+      },
       {
         "full": "{dataCollectors} mohou vyplnit formuláře ve webovém prohlížeči, ale nemohou zobrazit ani změnit data nebo nastavení",
         "dataCollectors": "Sběrači dat"
@@ -327,7 +330,10 @@ export default {
         "full": "{projectManagers} können jede administrative Aufgabe im Zusammenhang mit diesem Projekt ausführen und können Formulare in einem Webbrowser ausfüllen.",
         "projectManagers": "Projekt-Manager"
       },
-      {},
+      {
+        "full": "{projectViewers} können auf alle Formular- und Entitätsdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
+        "projectViewers": "Projekt-Viewer"
+      },
       {
         "full": "{dataCollectors} können Formulare in einem Webbrowser ausfüllen, aber können keine Daten oder Einstellungen anzeigen oder ändern.",
         "dataCollectors": "Datensammler"
@@ -360,7 +366,10 @@ export default {
         "full": "{projectManagers} pueden realizar cualquier tarea administrativa relacionada con este proyecto y puede llenar formularios desde un navegador web",
         "projectManagers": "Administradores de proyecto"
       },
-      {},
+      {
+        "full": "{projectViewers} puede acceder y descargar todos los datos de formularios y entidades en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
+        "projectViewers": "Visores de proyecto"
+      },
       {
         "full": "{dataCollectors} pueden llenar formularios desde un navegador web, pero no pueden ver o cambiar datos o configuraciones",
         "dataCollectors": "Recolectores de datos"
@@ -531,7 +540,10 @@ export default {
         "full": "{projectManagers} inaweza kutekeleza kazi yoyote ya usimamizi inayohusiana na Mradi huu na inaweza kujaza Fomu katika kivinjari cha wavuti.",
         "projectManagers": "Wasimamizi wa Mradi"
       },
-      {},
+      {
+        "full": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu na Huluki katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data.",
+        "projectViewers": "Watazamaji wa Mradi"
+      },
       {
         "full": "{dataCollectors} inaweza kujaza Fomu katika kivinjari, lakini haiwezi kuona au kubadilisha data au mipangilio",
         "dataCollectors": "Wakusanyaji Data"

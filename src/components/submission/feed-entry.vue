@@ -338,9 +338,6 @@ export default {
   "cs": {
     "title": {
       "create": "Odesláno od {name}",
-      "entity": {
-        "error": "Problém s vytvořením entity"
-      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} u {name}",
@@ -370,6 +367,8 @@ export default {
     "title": {
       "create": "Übermittelt von {name}",
       "entity": {
+        "create": "Entität {label} in {dataset} Entitätsliste erzeugt",
+        "update": "Entität {label} in {dataset} Entitätsliste aktualisiert",
         "error": "Problem beim Erstellen einer Entität"
       },
       "updateReviewState": {
@@ -401,7 +400,9 @@ export default {
     "title": {
       "create": "Enviado por {name}",
       "entity": {
-        "error": "Problema creando Entidad"
+        "create": "Entidad creada {label} en {dataset} Lista de entidades",
+        "update": "Entidad Actualizada {label} en {dataset} Lista de entidades",
+        "error": "Problema procesando la Entidad"
       },
       "updateReviewState": {
         "null": {
@@ -433,7 +434,8 @@ export default {
       "create": "Soumis par {name}",
       "entity": {
         "create": "Création de l'entité {label} dans la liste {dataset}",
-        "error": "Problème lors de la création de l'entité"
+        "update": "{label} Entité mise à jour dans {dataset} Listes d'Entités",
+        "error": "Problème lors du traitement de l'Entité"
       },
       "updateReviewState": {
         "null": {
@@ -463,9 +465,6 @@ export default {
   "id": {
     "title": {
       "create": "Terkirim oleh {name}",
-      "entity": {
-        "error": "Masalah saat membuat Entitas"
-      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} per {name}",
@@ -496,7 +495,8 @@ export default {
       "create": "Inviato da {name}",
       "entity": {
         "create": "Entità creata {label} in {dataset} Lista Entità",
-        "error": "Problema durante la creazione dell'Entità"
+        "update": "Entità aggiornata {label} in {dataset} Lista Entità",
+        "error": "Problema durante la elaborazione dell'Entità"
       },
       "updateReviewState": {
         "null": {
@@ -555,7 +555,9 @@ export default {
     "title": {
       "create": "Imewasilishwa na {name}",
       "entity": {
-        "error": "Tatizo limetokea wakati wa kuunda Huluki"
+        "create": "Imeunda Huluki {label} katika {dataset} Orodha ya Huluki",
+        "update": "Imesasisha Huluki {label} katika {dataset} Orodha ya Huluki",
+        "error": "Tatizo la kuchakata Huluki"
       },
       "updateReviewState": {
         "null": {

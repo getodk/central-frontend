@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
         "testing": "Testen"
       }
     }
@@ -58,6 +57,7 @@
       "user": "Webnutzer-Aktionen",
       "project": "Projekt-Aktionen",
       "form": "Formular-Aktionen",
+      "dataset": "Entitätslistenaktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
       "config": "Server-Konfigurationsaktionen",
@@ -129,6 +129,7 @@
     "clear": "Löschen",
     "close": "Schließen",
     "comment": "Kommentieren",
+    "continue": "Weitermachen",
     "create": "Anlegen",
     "createSubmission": "Neu",
     "done": "Fertig",
@@ -181,6 +182,7 @@
     "email": "E-Mail-Adresse",
     "instanceId": "Instanz-ID",
     "lastSubmission": "Letzte Übermittlung",
+    "recentActivity": "Letzte Aktivität",
     "name": "Name",
     "listName": "Name der Liste",
     "submitterName": "Übermittelt von",
@@ -207,6 +209,7 @@
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
     "config": "Server-Konfiguration",
+    "entityList": "Entitätsliste",
     "entities": "Entitäten",
     "form": "Formular",
     "forms": "Formulare",
@@ -262,13 +265,16 @@
     "label": "Etikett",
     "entityLabel": "Objektbezeichnung",
     "entityId": "Entitäts-ID",
-    "noEntity": "(keine)"
+    "noProperties": "Dieses Formular legt nur das \"Label“ fest.",
+    "noEntity": "(keine)",
+    "conflictsCount": "{count} Konflikt | {count} Konflikte"
   },
   "common": {
     "activity": "Aktivität",
     "anybody": "(Jeder)",
     "areYouSure": "Wollen Sie wirklich fortfahren?",
     "basicInfo": "Basis-Informationen",
+    "conflicts": "Konflikte",
     "currentDraft": "Ihr aktueller Entwurf",
     "dangerZone": "Gefahrenbereich",
     "data": "Daten",
@@ -294,7 +300,10 @@
       "comma": ","
     },
     "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
-    "new": "Neu!"
+    "new": "Neu!",
+    "totalEntities": "Entitäten insgesamt",
+    "status": "Status",
+    "version": "Version"
   },
   "mixin": {
     "request": {

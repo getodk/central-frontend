@@ -131,6 +131,7 @@ export default {
 {
   "cs": {
     "title": "Změnit heslo",
+    "oidcBody": "Tento centrální server nespravuje žádná přihlašovací hesla.",
     "action": {
       "change": "Změnit heslo"
     },
@@ -142,6 +143,7 @@ export default {
   },
   "de": {
     "title": "Passwort ändern",
+    "oidcBody": "Dieser Central-Server verwaltet keine Anmeldepasswörter.",
     "action": {
       "change": "Passwort ändern"
     },
@@ -153,6 +155,7 @@ export default {
   },
   "es": {
     "title": "Cambiar contraseña",
+    "oidcBody": "Este servidor central no gestiona ninguna contraseña de inicio de sesión.",
     "action": {
       "change": "Cambiar contraseña"
     },
@@ -210,6 +213,7 @@ export default {
   },
   "sw": {
     "title": "Badilisha neno la siri",
+    "oidcBody": "Seva hii ya Kati haidhibiti manenosiri yoyote ya kuingia.",
     "action": {
       "change": "Badilisha neno la siri"
     },

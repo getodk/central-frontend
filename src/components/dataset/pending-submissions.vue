@@ -130,11 +130,20 @@ const convert = ref(null);
     "action": {
       "changeSetting": "Einstellung ändern"
     },
+    "explanation": {
+      "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
+      "implication": {
+        "full": "Sobald dies in Kraft tritt, werden Entitäten nicht mehr generiert, wenn Übermittlungen als genehmigt markiert werden, einschließlich der {records}, die weder als genehmigt noch als abgelehnt markiert wurden, die wir gefunden haben. | Sobald dies in Kraft tritt, werden Entitäten nicht mehr generiert, wenn Übermittlungen als genehmigt markiert werden, einschließlich der {records}, die weder als genehmigt noch als abgelehnt markiert wurden, die wir gefunden haben.",
+        "records": "{count} Datensatz | {count} Datensätze"
+      }
+    },
     "dontConvert": {
-      "label": "Ich verstehe und das ist für mich kein Problem."
+      "label": "Ich verstehe und das ist für mich kein Problem.",
+      "description": "\"Ändern Sie die Einstellung und tun Sie nichts mit der ausstehenden Übermittlung.\" | Ändern Sie die Einstellung und tun Sie nichts mit den ausstehenden Übermittlungen."
     },
     "convert": {
-      "label": "Konvertieren Sie jetzt alle ausstehenden Einsendungen in Entitäten."
+      "label": "Konvertieren Sie jetzt alle ausstehenden Einsendungen in Entitäten.",
+      "description": "Ändern Sie die Einstellung und erstellen Sie eine Entität aus allen {count} noch nicht genehmigten oder abgelehnten Übermittlungen. Die Überprüfungszustände werden nicht beeinflusst. | Ändern Sie die Einstellung und erstellen Sie Entitäten aus allen {count} noch nicht genehmigten oder abgelehnten Übermittlungen. Die Überprüfungszustände werden nicht beeinflusst."
     }
   },
   "es": {
@@ -145,8 +154,8 @@ const convert = ref(null);
     "explanation": {
       "userAction": "Está configurando la creación de la Entidad para que ocurra cuando Central recibe los Envíos por primera vez.",
       "implication": {
-        "full": "Una vez que esto surta efecto, ya no se generarán Entidades cuando las Presentaciones se marquen como Aprobadas, incluyendo el {records} que encontramos que no se ha marcado ni como Aprobado ni como Rechazado. | Una vez que esto entre en vigor, ya no se generarán Entidades cuando los Envíos sean marcados como Aprobados, incluyendo {records}que encontremos que no hayan sido marcados ni como Aprobados ni como Rechazados. | Una vez que esto entre en vigor, ya no se generarán Entidades cuando los Envíos sean marcados como Aprobados, incluyendo {records} que encontremos que no hayan sido marcados ni como Aprobados ni como Rechazados.",
-        "records": "{count} registro | {count}registros | {count} registros"
+        "full": "Una vez que esto surta efecto, ya no se generarán Entidades cuando las Presentaciones se marquen como Aprobadas, incluyendo el {records} que encontramos que no se ha marcado ni como Aprobado ni como Rechazado. | Una vez que esto entre en vigor, ya no se generarán Entidades cuando los Envíos sean marcados como Aprobados, incluyendo {records} que encontremos que no hayan sido marcados ni como Aprobados ni como Rechazados. | Una vez que esto entre en vigor, ya no se generarán Entidades cuando los Envíos sean marcados como Aprobados, incluyendo {records} que encontremos que no hayan sido marcados ni como Aprobados ni como Rechazados.",
+        "records": "{count} registro | {count} registros | {count} registros"
       }
     },
     "dontConvert": {
@@ -155,7 +164,7 @@ const convert = ref(null);
     },
     "convert": {
       "label": "Convierta todos los Envíos pendientes a Entidades ahora.",
-      "description": "Cambie la configuración y cree la Entidad a partir del {count} Envío aún no Aprobado o Rechazado. Los Estados de Revisión no se verán afectados. | Cambie la configuración y cree Entidades a partir de todos los {count}Envíos que aún no hayan sido Aprobados o Rechazados. Los Estados de Revisión no se verán afectados. | Cambie la configuración y cree Entidades a partir de todos los {count}Envíos que aún no hayan sido Aprobados o Rechazados. Los Estados de Revisión no se verán afectados."
+      "description": "Cambie la configuración y cree la Entidad a partir del {count} Envío aún no Aprobado o Rechazado. Los Estados de Revisión no se verán afectados. | Cambie la configuración y cree Entidades a partir de todos los {count} Envíos que aún no hayan sido Aprobados o Rechazados. Los Estados de Revisión no se verán afectados. | Cambie la configuración y cree Entidades a partir de todos los {count} Envíos que aún no hayan sido Aprobados o Rechazados. Los Estados de Revisión no se verán afectados."
     }
   },
   "fr": {
@@ -198,6 +207,27 @@ const convert = ref(null);
     "convert": {
       "label": "Converti ora tutti gli invii in sospeso in Entità.",
       "description": "Modifica l'impostazione e crea entità per il {count} invio non ancora approvato o rifiutato. Gli Stati di revisione non saranno interessati. | Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati. | Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati."
+    }
+  },
+  "sw": {
+    "title": "Mawasilisho Yanayosubiri",
+    "action": {
+      "changeSetting": "Badilisha mpangilio"
+    },
+    "explanation": {
+      "userAction": "Unaweka uundaji wa Huluki ufanyike wakati Mawasilisho yanapokewa kwa mara ya kwanza na Central.",
+      "implication": {
+        "full": "Hili likianza kutekelezwa, Huluki hazitazalishwa tena Mawasilisho yanapowekwa alama kuwa Yameidhinishwa, ikijumuisha {records} tumegundua kuwa hayajaalamishwa kama Yameidhinishwa wala Yamekataliwa. | Hili likianza kutumika, Huluki hazitatolewa tena Mawasilisho yanapowekwa alama kuwa Yameidhinishwa, ikijumuisha {records} tumegundua kuwa hayajaalamishwa kama Yameidhinishwa wala Yamekataliwa.",
+        "records": "{count} Kumbukumbu | {count} kumbukumbu"
+      }
+    },
+    "dontConvert": {
+      "label": "Ninaelewa na hii sio shida kwangu.",
+      "description": "Badilisha mpangilio na usifanye chochote na Wasilisho linalosubiri. | Badilisha mpangilio na usifanye chochote na Mawasilisho yanayosubiri."
+    },
+    "convert": {
+      "label": "Badilisha Mawasilisho yote yanayosubiri kuwa Huluki sasa.",
+      "description": "Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika. | Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika."
     }
   }
 }

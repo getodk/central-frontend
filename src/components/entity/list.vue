@@ -320,51 +320,24 @@ export default {
     "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
   },
   "de": {
-    "action": {
-      "download": {
-        "unfiltered": "{count} Entität herunterladen | {count} Entitäten herunterladen"
-      }
-    },
-    "noEntities": "Es gibt keine Entitäten zum Anzeigen."
+    "noEntities": "Es gibt keine Entitäten zum Anzeigen.",
+    "noMatching": "Es gibt keine passenden Entitäten."
   },
   "es": {
-    "action": {
-      "download": {
-        "unfiltered": "Descargar {count} Entidad | Descargar {count} Entidades | Descargar {count} Entidades"
-      }
-    },
-    "noEntities": "No hay Entidades para mostrar."
+    "noEntities": "No hay Entidades para mostrar.",
+    "noMatching": "No hay entidades coincidentes."
   },
   "fr": {
-    "action": {
-      "download": {
-        "unfiltered": "Télécharger {count} entité | Télécharger {count} entités | Télécharger {count} entités"
-      }
-    },
-    "noEntities": "Pas d'entités à montrer."
-  },
-  "id": {
-    "action": {
-      "download": {
-        "unfiltered": "Unduh {count} Entitas"
-      }
-    }
+    "noEntities": "Pas d'entités à montrer.",
+    "noMatching": "Il n'y a pas d'Entités correspondantes"
   },
   "it": {
-    "action": {
-      "download": {
-        "unfiltered": "Scarica {count} entità | Scarica {count} entità | Scarica {count} entità"
-      }
-    },
-    "noEntities": "Non ci sono entità da mostrare."
+    "noEntities": "Non ci sono entità da mostrare.",
+    "noMatching": "Non sono presenti Entità corrispondenti."
   },
   "sw": {
-    "action": {
-      "download": {
-        "unfiltered": "Pakua shirika {count} | Pakua Mashirika {count}"
-      }
-    },
-    "noEntities": "Hakuna Fomu za kuonyesha."
+    "noEntities": "Hakuna Fomu za kuonyesha.",
+    "noMatching": "Hakuna Huluki zinazolingana."
   }
 }
 </i18n>

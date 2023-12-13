@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Stav",
         "testing": "Testování"
       }
     }
@@ -267,13 +266,16 @@
     "entityLabel": "Štítek Entity",
     "entityId": "ID subjektu",
     "noProperties": "Tento formulář nastavuje pouze \"štítek\".",
-    "noEntity": "(žádný)"
+    "noEntity": "(žádný)",
+    "conflictsCount": "{count} konflikt | {count} konflikty | {count} konfliktů | {count} konfliktů"
   },
   "common": {
     "activity": "Aktivita",
     "anybody": "(Kdokoli)",
     "areYouSure": "Opravdu chcete pokračovat?",
     "basicInfo": "Základní informace",
+    "conflict": "Konflikt",
+    "conflicts": "Konflikty",
     "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
     "data": "Data",
@@ -299,7 +301,10 @@
       "comma": ","
     },
     "new": "Novinka!",
-    "totalEntities": "Celkem entit"
+    "totalEntities": "Celkem entit",
+    "versionShort": "v{version}",
+    "status": "Stav",
+    "version": "Verze"
   },
   "mixin": {
     "request": {

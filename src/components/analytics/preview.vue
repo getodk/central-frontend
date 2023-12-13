@@ -240,6 +240,10 @@ export default {
       "subtitle": "(Zeigt das aktivste Projekt der {count} Projekt) | (Zeigt das aktivste Projekt der {count} Projekte)"
     },
     "submissionStates": "Einsendungenstatus",
+    "entities": {
+      "title": "Entitätszusammenfassungen",
+      "subtitle": "(Zeigt die aktivste Entitätsliste von {count} Entitätsliste) | (Zeigt die aktivste Entitätsliste von {count} Entitätslisten)"
+    },
     "other": "Anderes"
   },
   "es": {
@@ -255,7 +259,8 @@ export default {
     },
     "submissionStates": "Estados de envío",
     "entities": {
-      "title": "Resúmenes de entidades"
+      "title": "Resúmenes de entidades",
+      "subtitle": "(Mostrando la lista de entidades más activa de {count} lista de entidades) | (Mostrando las listas de entidades más activas de {count} listas de entidades) | (Mostrando las listas de entidades más activas de {count} listas de entidades)"
     },
     "other": "Otro"
   },
@@ -320,6 +325,10 @@ export default {
       "subtitle": "(Inaonyesha Mradi amilifu zaidi wa Mradi ya {count}) | (Inaonyesha Mradi amilifu zaidi wa Miradi ya {count})"
     },
     "submissionStates": "Nchi za Uwasilishaji",
+    "entities": {
+      "title": "Muhtasari wa Vyombo",
+      "subtitle": "(Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha ya Huluki) | (Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha za Huluki)"
+    },
     "other": "Nyingine"
   }
 }

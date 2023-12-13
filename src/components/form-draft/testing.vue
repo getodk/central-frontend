@@ -185,14 +185,7 @@ export default {
       "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče.",
       "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
     ],
-    "collectProjectName": "[Návrh] {name}",
-    "entitiesTesting": {
-      "title": "Tento formulář může vytvářet entity",
-      "body": [
-        "Entity se vytvářejí pouze pro zveřejněné formuláře. V některé z budoucích verzí Centralu bude možné testovat funkce Entity ve stavu návrhu.",
-        "Prozatím doporučujeme vyzkoušet definici formuláře ve stavu Návrh a ověřit její logiku. Před publikováním můžete ověřit, zda aktualizuje všechny požadované vlastnosti."
-      ]
-    }
+    "collectProjectName": "[Návrh] {name}"
   },
   "de": {
     "title": "Entwurfs-Test",
@@ -200,10 +193,7 @@ export default {
       "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
       "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
     ],
-    "collectProjectName": "[Entwurf] {name}",
-    "entitiesTesting": {
-      "title": "Dieses Formular kann Entitäten erstellen"
-    }
+    "collectProjectName": "[Entwurf] {name}"
   },
   "es": {
     "title": "Prueba de borrador",
@@ -211,14 +201,7 @@ export default {
       "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
       "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
     ],
-    "collectProjectName": "borrador {name}",
-    "entitiesTesting": {
-      "title": "Este Formulario puede crear Entidades",
-      "body": [
-        "Las entidades solo se crean para formularios publicados. En una versión futura de Central, podrá probar la funcionalidad de la Entidad en un estado Borrador.",
-        "Por ahora, recomendamos probar la definición de su Formulario en estado Borrador para verificar su lógica. Antes de publicar, puede verificar que actualice todas las propiedades deseadas."
-      ]
-    }
+    "collectProjectName": "borrador {name}"
   },
   "fr": {
     "title": "Test de l'ébauche",
@@ -228,9 +211,9 @@ export default {
     ],
     "collectProjectName": "[Brouillon] {name}",
     "entitiesTesting": {
-      "title": "Ce Formulaire peu créer des Entités.",
+      "title": "Ce formulaire peut mettre à jour des Entités.",
       "body": [
-        "Les Entités ne sont créées que pour les Formulaires publiés. Dans une version future de Central, vous pourrez tester la fonctionnalité des Entités à l'état d'Ébauche.",
+        "Les entités ne peuvent être mises à jour qu'avec des formulaires publiés. Dans une future version de Central, vous pourrez tester la mise à jour des entités avec des ébauches de formulaires.",
         "Pour le moment, nous vous conseillons de tester la définition de votre formulaire à l'état d'ébauche pour vérifier sa logique. Avant de le publier, vous pouvez vérifier qu'il met à jour les propriétés désirées."
       ]
     }
@@ -249,14 +232,7 @@ export default {
       "Puoi utilizzare il codice di configurazione a destra per configurare un dispositivo mobile per scaricare questa bozza. Puoi anche fare clic sul pulsante Nuovo sopra per creare un nuovo invio dal tuo browser web.",
       "Le bozze inviate vanno nella tabella di prova sottostante, dove puoi visualizzarle in anteprima e scaricarle. Quando pubblichi questa bozza di formulario, i suoi Invii di prova verranno rimossi in modo permanente."
     ],
-    "collectProjectName": "[Draft] {name}",
-    "entitiesTesting": {
-      "title": "Questo Formulario può creare Entità",
-      "body": [
-        "Le entità vengono create solo per i formulari pubblicati. In una versione futura di Central, sarai in grado di testare la funzionalità dell'entità in uno stato bozza.",
-        "Per ora, ti consigliamo di provare la definizione del formulario nello stato Bozza per verificarne la logica. Prima della pubblicazione, puoi verificare che aggiorni tutte le proprietà desiderate."
-      ]
-    }
+    "collectProjectName": "[Draft] {name}"
   },
   "ja": {
     "title": "下書きのテスト",
