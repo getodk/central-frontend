@@ -1223,6 +1223,21 @@
         "num_entity_updates": {
           "string": "Number of Entity updates"
         },
+        "num_entity_updates_sub": {
+          "string": "Number of Entity updates via Submissions"
+        },
+        "num_entity_updates_api": {
+          "string": "Number of Entity updates via API"
+        },
+        "num_entities_updated": {
+          "string": "Number of modified Entities"
+        },
+        "num_entity_conflicts": {
+          "string": "Number of Entities ever with conflict"
+        },
+        "num_entity_conflicts_resolved": {
+          "string": "Number of Entities with conflict now marked as resolved"
+        },
         "sso_enabled": {
           "string": "SSO enabled on server"
         },
