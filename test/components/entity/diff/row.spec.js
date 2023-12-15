@@ -48,7 +48,7 @@ describe('EntityDiffRow', () => {
       });
       const td = row.get('td');
       td.text().should.equal('height');
-      await td.should.have.textTooltip();
+      await td.get('span').should.have.textTooltip();
       td.classes('property').should.be.true();
     });
   });
