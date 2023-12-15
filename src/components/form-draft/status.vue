@@ -136,10 +136,10 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
-    const { form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    const { form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
     const { projectPath, formPath } = useRoutes();
     return {
-      form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff,
+      form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff,
       projectPath, formPath
     };
   },
@@ -183,14 +183,22 @@ export default {
       // the form didn't already have a published version, then there would be a
       // validateData violation if we didn't clear it.
       this.$emit('fetch-form');
-      this.formDraftDatasetDiff.reset();
-      this.formDatasetDiff.reset();
+
+      // Other resources that may have changed after publish
       this.publishedAttachments.reset();
+      this.datasets.reset();
+      this.formDatasetDiff.reset();
+      this.formDraftDatasetDiff.reset();
+
+      // We will update additional resources, but only after navigating to the
+      // form overview. We need to wait to update these resources because they
+      // are used on this page.
       afterNextNavigation(this.$router, () => {
         // Re-request the project in case its `datasets` property has changed.
         this.$emit('fetch-project', true);
         this.formVersions.data = null;
         this.formDraft.setToNone();
+
         this.alert.success(this.$t('alert.publish'));
       });
       this.$router.push(this.formPath());
