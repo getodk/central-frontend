@@ -1,7 +1,6 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
-import FormAttachmentLinkDataset from '../../../src/components/form-attachment/link-dataset.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 
 import testData from '../../data';
@@ -1042,15 +1041,9 @@ describe('FormAttachmentList', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft/attachments')
+      return load('/projects/1/forms/f/draft/attachments', { root: false })
         .respondWithData(() => testData.extendedDatasets.sorted())
-        .testRequests([
-          null, // project
-          null, // form
-          null, // formDraft
-          null, // attachments
-          { url: '/v1/projects/1/datasets' }
-        ]);
+        .testRequests([{ url: '/v1/projects/1/datasets' }]);
     });
 
     it('renders correctly for an attachment linked to a dataset', async () => {
@@ -1072,8 +1065,8 @@ describe('FormAttachmentList', () => {
     describe('Datasets preview hint', () => {
       beforeEach(() => {
         testData.extendedProjects.createPast(1, { forms: 2, datasets: 1 });
-        testData.extendedForms.createPast(1, { draft: true });
         testData.extendedDatasets.createPast(1, { name: 'shovels' });
+        testData.extendedForms.createPast(1, { draft: true });
       });
 
       const loadAttachmentComponent = () => load('/projects/1/forms/f/draft/attachments', {
@@ -1096,8 +1089,8 @@ describe('FormAttachmentList', () => {
     describe('"Link Entity List" button', () => {
       beforeEach(() => {
         testData.extendedProjects.createPast(1, { forms: 2, datasets: 1 });
-        testData.extendedForms.createPast(1, { draft: true });
         testData.extendedDatasets.createPast(1, { name: 'shovels' });
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', blobExists: true });
       });
 
@@ -1110,14 +1103,12 @@ describe('FormAttachmentList', () => {
       });
 
       it('updates the attachment after it is linked', () =>
-        load('/projects/1/forms/f/draft/attachments', {
-          root: false
-        })
+        load('/projects/1/forms/f/draft/attachments', { root: false })
           .respondWithData(() => testData.extendedDatasets.sorted())
           .complete()
           .request(async (component) => {
             await component.get('td.form-attachment-list-action .btn-link-dataset').trigger('click');
-            component.getComponent(FormAttachmentLinkDataset).get('.btn-link-dataset').trigger('click');
+            return component.get('#form-attachment-link-dataset .btn-link-dataset').trigger('click');
           })
           .respondWithSuccess()
           .afterResponse(component => {
@@ -1131,11 +1122,9 @@ describe('FormAttachmentList', () => {
         testData.extendedForms.createPast(1, { draft: true });
         // Create an attachment with the same name as the dataset that will be
         // published along with the form draft.
-        testData.standardFormAttachments.createPast(1, {
-          type: 'file',
-          name: 'shovels.csv',
-          blobExists: true
-        });
+        const attachments = testData.standardFormAttachments
+          .createPast(1, { type: 'file', name: 'shovels.csv', blobExists: true })
+          .sorted();
         return load('/projects/1/forms/f/draft/attachments')
           .complete()
           .load('/projects/1/forms/f/draft', {
@@ -1159,7 +1148,7 @@ describe('FormAttachmentList', () => {
             ...testData.extendedProjects.last(),
             datasets: 1
           }))
-          .respondWithData(() => testData.standardFormAttachments.sorted())
+          .respondWithData(() => attachments)
           .complete()
           .request(app =>
             app.get('#form-head-create-draft-button').trigger('click'))
@@ -1174,8 +1163,8 @@ describe('FormAttachmentList', () => {
           .complete()
           .route('/projects/1/forms/f/draft/attachments')
           .respondWithData(() => testData.extendedDatasets.sorted())
-          // After a form draft is published, a new request should be sent for
-          // `datasets`.
+          // Now that a dataset has been published, a request should be sent for
+          // `datasets`, even though one wasn't sent before.
           .testRequests([{ url: '/v1/projects/1/datasets' }])
           .afterResponse(app => {
             const button = app.find('.form-attachment-row .btn-link-dataset');
@@ -1184,16 +1173,16 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows "Link Entity List" after another dataset is published', () => {
-        testData.extendedProjects.createPast(1, { forms: 2, datasets: 1 });
+        const project = testData.extendedProjects
+          .createPast(1, { forms: 2, datasets: 1 })
+          .last();
         // There is an existing dataset named shovels. Publishing the form draft
         // will publish a new dataset named trees.
         testData.extendedDatasets.createPast(1, { name: 'shovels' });
         testData.extendedForms.createPast(1, { draft: true });
-        testData.standardFormAttachments.createPast(1, {
-          type: 'file',
-          name: 'trees.csv',
-          blobExists: true
-        });
+        const attachments = testData.standardFormAttachments
+          .createPast(1, { type: 'file', name: 'trees.csv', blobExists: true })
+          .sorted();
         return load('/projects/1/forms/f/draft/attachments')
           .respondWithData(() => testData.extendedDatasets.sorted())
           .complete()
@@ -1214,11 +1203,8 @@ describe('FormAttachmentList', () => {
             return { success: true };
           })
           .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => ({
-            ...testData.extendedProjects.last(),
-            datasets: 2
-          }))
-          .respondWithData(() => testData.standardFormAttachments.sorted())
+          .respondWithData(() => ({ ...project, datasets: 2 }))
+          .respondWithData(() => attachments)
           .complete()
           .request(app =>
             app.get('#form-head-create-draft-button').trigger('click'))
@@ -1233,6 +1219,8 @@ describe('FormAttachmentList', () => {
           .complete()
           .route('/projects/1/forms/f/draft/attachments')
           .respondWithData(() => testData.extendedDatasets.sorted())
+          // After the form draft is published, a new request should be sent for
+          // `datasets`.
           .testRequests([{ url: '/v1/projects/1/datasets' }])
           .afterResponse(app => {
             const button = app.find('.form-attachment-row .btn-link-dataset');
