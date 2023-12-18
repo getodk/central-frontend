@@ -160,6 +160,11 @@ const change = (value) => {
   "cs": {
     "softConflict": {
       "title": "Paralelní aktualizace"
+    },
+    "tab": {
+      "baseDiff": "Pohled autora",
+      "serverDiff": "Pohled Centralu",
+      "updating": "(aktualizace {version})"
     }
   },
   "fr": {
@@ -174,6 +179,20 @@ const change = (value) => {
       "baseDiff": "Vue de l'Auteur",
       "serverDiff": "Vue de Central",
       "updating": "(mise à jour {version})"
+    }
+  },
+  "it": {
+    "introduction": "Questa modifica di invio è stata applicata alla versione {version} di questa Entità, ma è stata creata sulla base della versione {baseVersion}.",
+    "hardConflict": {
+      "description": "Altre aggiornamenti erano già stati scritti sulle stesse proprietà."
+    },
+    "softConflict": {
+      "title": "Aggiornamento parallelo"
+    },
+    "tab": {
+      "baseDiff": "Vista dell'autore",
+      "serverDiff": "Vista di Central",
+      "updating": "(aggiornando {version})"
     }
   }
 }

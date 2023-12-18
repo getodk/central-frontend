@@ -662,7 +662,7 @@
       "string": "L'entité a été mise à jour ! "
     },
     "updateReviewState": {
-      "string": "État sauvegardé!"
+      "string": "État sauvegardé !"
     },
     "versionChange": {
       "string": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu."
@@ -1222,6 +1222,21 @@
         },
         "num_entity_updates": {
           "string": "Nombre de mises à jour de l'entité"
+        },
+        "num_entity_updates_sub": {
+          "string": "Nombre de mises à jour d'Entités par Soumissions."
+        },
+        "num_entity_updates_api": {
+          "string": "Nombre de mises à jour d'Entités via l'API"
+        },
+        "num_entities_updated": {
+          "string": "Nombre d'Entités modifiées"
+        },
+        "num_entity_conflicts": {
+          "string": "Nombre d'Entités ayant déjà eu un conflit"
+        },
+        "num_entity_conflicts_resolved": {
+          "string": "Nombre d'Entités avec conflit désormais marqué comme résolu"
         },
         "sso_enabled": {
           "string": "Authentification unique (SSO) activée"
@@ -3761,7 +3776,7 @@
       },
       "alert": {
         "create": {
-          "string": "Succès! Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer."
+          "string": "Succès ! Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer."
         },
         "revoke": {
           "string": "Le lien d'accès public \"{displayName}\" a été révoqué avec succès. Aucune soumission ne sera acceptée depuis ce lien."

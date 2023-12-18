@@ -229,7 +229,7 @@
   "alert": {
     "passwordTooShort": "Merci de renseigner un mot de passe d'au moins 10 caractères.",
     "updateEntity": "L'entité a été mise à jour !",
-    "updateReviewState": "État sauvegardé!",
+    "updateReviewState": "État sauvegardé !",
     "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu."
   },
   "moreInfo": {

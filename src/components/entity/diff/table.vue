@@ -153,6 +153,14 @@ const uuid = inject('uuid');
     },
     "comparing": "Comparaison",
     "version": "{version} ({source})"
+  },
+  "it": {
+    "header": {
+      "oldValue": "Vecchio valore",
+      "newValue": "Nuovo valore"
+    },
+    "comparing": "Paragonando",
+    "version": "{version} ({source})"
   }
 }
 </i18n>

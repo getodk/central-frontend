@@ -274,6 +274,7 @@
     "anybody": "(Chiunque)",
     "areYouSure": "Sei sicuro di voler procedere?",
     "basicInfo": "Informazioni di base",
+    "conflict": "Conflitto",
     "conflicts": "Conflitti",
     "currentDraft": "La tua bozza attuale",
     "dangerZone": "Zona pericolo",
@@ -302,6 +303,7 @@
     "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà",
     "new": "Novità!",
     "totalEntities": "Entità totali",
+    "versionShort": "v{version}",
     "status": "Stato",
     "version": "Versione"
   },

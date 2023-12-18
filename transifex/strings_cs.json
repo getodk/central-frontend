@@ -1223,6 +1223,21 @@
         "num_entity_updates": {
           "string": "Počet aktualizací entity"
         },
+        "num_entity_updates_sub": {
+          "string": ""
+        },
+        "num_entity_updates_api": {
+          "string": ""
+        },
+        "num_entities_updated": {
+          "string": ""
+        },
+        "num_entity_conflicts": {
+          "string": ""
+        },
+        "num_entity_conflicts_resolved": {
+          "string": ""
+        },
         "sso_enabled": {
           "string": "SSO povoleno na serveru"
         },
@@ -1577,7 +1592,7 @@
           "string": "Toto je nejnovější verze v dobré shodě. Po této aktualizaci byly provedeny potenciálně konfliktní aktualizace paralelně."
         },
         "softConflict": {
-          "string": ""
+          "string": "Tato verze může být vytvořena na základě starých dat."
         },
         "hardConflict": {
           "string": "Tato verze byla vytvořena paralelně s dalšími aktualizacemi, z nichž některé se snaží zapisovat do stejných vlastností jako tato aktualizace."
@@ -1613,15 +1628,15 @@
       },
       "tab": {
         "baseDiff": {
-          "string": "",
+          "string": "Pohled autora",
           "developer_comment": "A comparison between two versions of an Entity, from the point of view of the data collector (the author)"
         },
         "serverDiff": {
-          "string": "",
+          "string": "Pohled Centralu",
           "developer_comment": "A comparison between two versions of an Entity, from the point of view of the Central server"
         },
         "updating": {
-          "string": "",
+          "string": "(aktualizace {version})",
           "developer_comment": "This text is shown for an update to an Entity. {version} is a short version identifier, for example, \"v3\". It is the version that the update was applied to."
         }
       }
@@ -1747,7 +1762,7 @@
         "developer_comment": "This text is shown when there are no Entities to show in a table."
       },
       "noMatching": {
-        "string": ""
+        "string": "Neexistují žádné odpovídající entity."
       },
       "action": {
         "download": {
@@ -1761,7 +1776,7 @@
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "",
+              "string": "Stáhnout odpovídající entity",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -1783,7 +1798,7 @@
           "string": ""
         },
         "1": {
-          "string": ""
+          "string": "Zkontrolujte aktualizace, provedte případné úpravy, a pokud jste si jisti, že tato data Entity jsou správná, stiskněte „Označit jako vyřešené“, abyste vymazali tuto varovnou zprávu."
         }
       },
       "action": {
@@ -1802,7 +1817,7 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "editEntity": {
-          "string": "",
+          "string": "Upravit entitu",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "markAsResolved": {
@@ -1811,11 +1826,11 @@
         }
       },
       "successMessage": {
-        "string": ""
+        "string": "Varování konfliktu bylo odstraněno z Entity."
       },
       "problem": {
         "400_32": {
-          "string": ""
+          "string": "Jiný uživatel již označil konflikt jako vyřešený. Aktualizujte prosím, abyste viděli aktualizovaná data."
         }
       }
     },
@@ -1866,7 +1881,7 @@
         "developer_comment": "This text is shown for a Submission. {instanceName} is the instance name of the Submission."
       },
       "api": {
-        "string": "",
+        "string": "Aktualizace od {name}",
         "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
       }
     },
@@ -2600,11 +2615,11 @@
       },
       "datasetsPreview": {
         "title": {
-          "string": ""
+          "string": "Tento formulář může aktualizovat entity."
         },
         "body": {
           "0": {
-            "string": ""
+            "string": "Entity jsou aktualizovány pouze pro publikované formuláře. V budoucí verzi Central budete moci testovat funkčnost Entity ve stavu Koncept."
           },
           "1": {
             "string": "Prozatím doporučujeme vyzkoušet definici formuláře ve stavu Návrh a ověřit její logiku. Před publikováním můžete ověřit, zda aktualizuje všechny požadované vlastnosti."
@@ -3153,7 +3168,7 @@
         },
         "filtered": {
           "withoutCount": {
-            "string": "",
+            "string": "Načítání odpovídajících entit...",
             "developer_comment": "This text is shown when the number of Entities loading is unknown."
           },
           "middle": {
@@ -3165,7 +3180,7 @@
               "string": "{count, plural, one {} few {} many {} other {}}"
             },
             "one": {
-              "string": ""
+              "string": "Načítání poslední odpovídající entity..."
             }
           }
         }

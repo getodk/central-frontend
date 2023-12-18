@@ -239,6 +239,7 @@ const markAsResolved = () => {
     },
     "markAsResolved": "Označit jako vyřešeno",
     "problem": {
+      "400_32": "Jiný uživatel již označil konflikt jako vyřešený. Aktualizujte prosím, abyste viděli aktualizovaná data.",
       "409_15": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data."
     }
   },
@@ -263,6 +264,11 @@ const markAsResolved = () => {
     }
   },
   "es": {
+    "title": "Actualizaciones de datos en paralelo",
+    "confirmation": {
+      "title": "¿Esta entidad está bien?",
+      "confirm": "Confirmar"
+    },
     "markAsResolved": "Marcar como resuelto",
     "problem": {
       "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
@@ -291,8 +297,24 @@ const markAsResolved = () => {
     }
   },
   "it": {
+    "title": "Aggiornamenti Dati in parallelo",
+    "subtitle": [
+      "Uno o più aggiornamenti sono stati effettuati in base a dati che potrebbero essere stati obsoleti.",
+      "Per favore, rivedi questo riassunto degli aggiornamenti paralleli."
+    ],
+    "footer": [
+      "Se è necessario modificare alcuni valori, è possibile modificare direttamente i dati dell'Entità.",
+      "Se tutto sembra corretto, clicca su \"Segna come risolto\" per ignorare questo avviso."
+    ],
+    "confirmation": {
+      "title": "È questa Entità okay?",
+      "body": "Dopo aver esaminato gli aggiornamenti potenzialmente in conflitto e aver effettuato gli aggiornamenti necessari, puoi fare clic su Conferma in basso per eliminare l'avviso di aggiornamento parallelo.",
+      "confirm": "Conferma"
+    },
+    "conflictResolved": "L'avviso di conflitto è stato eliminato.",
     "markAsResolved": "Segna come risolto",
     "problem": {
+      "400_32": "Un altro utente ha già segnato il conflitto come risolto. Aggiorna la pagina per vedere i dati aggiornati.",
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
     }
   },
