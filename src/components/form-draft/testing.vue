@@ -185,7 +185,14 @@ export default {
       "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče.",
       "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
     ],
-    "collectProjectName": "[Návrh] {name}"
+    "collectProjectName": "[Návrh] {name}",
+    "entitiesTesting": {
+      "title": "Tento formulář může aktualizovat entity.",
+      "body": [
+        "Entity jsou aktualizovány pouze pro publikované formuláře. V budoucí verzi Central budete moci testovat funkčnost Entity ve stavu Koncept.",
+        "Prozatím doporučujeme vyzkoušet definici formuláře ve stavu Návrh a ověřit její logiku. Před publikováním můžete ověřit, zda aktualizuje všechny požadované vlastnosti."
+      ]
+    }
   },
   "de": {
     "title": "Entwurfs-Test",
@@ -232,7 +239,14 @@ export default {
       "Puoi utilizzare il codice di configurazione a destra per configurare un dispositivo mobile per scaricare questa bozza. Puoi anche fare clic sul pulsante Nuovo sopra per creare un nuovo invio dal tuo browser web.",
       "Le bozze inviate vanno nella tabella di prova sottostante, dove puoi visualizzarle in anteprima e scaricarle. Quando pubblichi questa bozza di formulario, i suoi Invii di prova verranno rimossi in modo permanente."
     ],
-    "collectProjectName": "[Draft] {name}"
+    "collectProjectName": "[Draft] {name}",
+    "entitiesTesting": {
+      "title": "Questo Formulario può aggiornare Entità",
+      "body": [
+        "Le entità vengono aggiornate solo per i Moduli pubblicati. In una futura versione di Central, sarà possibile testare la funzionalità delle entità in uno stato di bozza.",
+        "Per ora, ti consigliamo di provare la definizione del formulario nello stato Bozza per verificarne la logica. Prima della pubblicazione, puoi verificare che aggiorni tutte le proprietà desiderate."
+      ]
+    }
   },
   "ja": {
     "title": "下書きのテスト",

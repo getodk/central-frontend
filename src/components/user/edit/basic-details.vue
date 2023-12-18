@@ -162,6 +162,9 @@ const submit = () => {
     "action": {
       "update": "Aggiornare dettagli"
     },
+    "problem": {
+      "409_3": "Non puoi cambiare la tua email in {email} perché questo account esiste già. Per favore, prova un altro indirizzo email."
+    },
     "alert": {
       "success": "Dettagli utente salvati!"
     }

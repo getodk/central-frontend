@@ -304,7 +304,17 @@ defineExpose({ resize });
     "status": {
       "historical": "Tato historická verze je zahrnuta, protože nedávná paralelní aktualizace byla provedena na základě této verze této Entity.",
       "lastGoodVersion": "Toto je nejnovější verze v dobré shodě. Po této aktualizaci byly provedeny potenciálně konfliktní aktualizace paralelně.",
+      "softConflict": "Tato verze může být vytvořena na základě starých dat.",
       "hardConflict": "Tato verze byla vytvořena paralelně s dalšími aktualizacemi, z nichž některé se snaží zapisovat do stejných vlastností jako tato aktualizace."
+    }
+  },
+  "es": {
+    "noConflicts": "No hay conflictos para mostrar.",
+    "basedOn": {
+      "label": "Basado en"
+    },
+    "source": {
+      "label": "Fuente"
     }
   },
   "fr": {
@@ -322,6 +332,23 @@ defineExpose({ resize });
       "lastGoodVersion": "Ceci est la version cohérente la plus récente. Après cette mise à jour, des mises à jour potentiellement contradictoires ont été effectuées en parallèle.",
       "softConflict": "Cette version pourrait avoir été faite sur la base d'une vieille donnée.",
       "hardConflict": "Cette version a été faite en parallèle avec d'autres, certaines tentent d'écrire les mêmes propriétés que cette mise à jour."
+    }
+  },
+  "it": {
+    "noConflicts": "Non ci sono conflitti da mostrare.",
+    "basedOn": {
+      "label": "Basato su",
+      "description": "La versione di questa Entità che l'autore ha visto quando ha apportato le sue modifiche"
+    },
+    "source": {
+      "label": "Sorgente",
+      "description": "L'aggiornamento che ha generato questa versione"
+    },
+    "status": {
+      "historical": "Questa versione storica è inclusa perché è stata effettuata un'aggiornamento parallelo recente basato su questa versione di questa Entità.",
+      "lastGoodVersion": "Questa è la versione più recente in buon accordo. Dopo questo aggiornamento, sono state effettuate aggiornamenti potenzialmente in contrasto in parallelo.",
+      "softConflict": "Questa versione potrebbe essere stata creata basandosi su dati vecchi.",
+      "hardConflict": "Questa versione è stata realizzata parallelamente ad altri aggiornamenti, alcuni dei quali cercano di scrivere sulle stesse proprietà di questo aggiornamento."
     }
   }
 }

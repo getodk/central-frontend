@@ -778,7 +778,7 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "conflict": {
-      "string": ""
+      "string": "Conflicto"
     },
     "conflicts": {
       "string": "Conflictos"
@@ -870,7 +870,7 @@
       "string": "Entidades totales"
     },
     "versionShort": {
-      "string": "",
+      "string": "v{version}",
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
     }
   },
@@ -1223,6 +1223,21 @@
         "num_entity_updates": {
           "string": "Número de actualizaciones de la entidad"
         },
+        "num_entity_updates_sub": {
+          "string": ""
+        },
+        "num_entity_updates_api": {
+          "string": ""
+        },
+        "num_entities_updated": {
+          "string": ""
+        },
+        "num_entity_conflicts": {
+          "string": ""
+        },
+        "num_entity_conflicts_resolved": {
+          "string": ""
+        },
         "sso_enabled": {
           "string": "SSO habilitado en el servidor"
         },
@@ -1420,7 +1435,7 @@
         }
       },
       "possibleConflictsCount": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {{count} posible conflicto} many {{count} posibles conflictos} other {{count} posibles conflictos}}"
       }
     },
     "DatasetSettings": {
@@ -1514,7 +1529,7 @@
     },
     "EntityConflictSummary": {
       "title": {
-        "string": ""
+        "string": "Actualizaciones de datos en paralelo"
       },
       "subtitle": {
         "0": {
@@ -1534,13 +1549,13 @@
       },
       "confirmation": {
         "title": {
-          "string": ""
+          "string": "¿Esta entidad está bien?"
         },
         "body": {
           "string": ""
         },
         "confirm": {
-          "string": ""
+          "string": "Confirmar"
         }
       },
       "conflictResolved": {
@@ -1549,12 +1564,12 @@
     },
     "EntityConflictTable": {
       "noConflicts": {
-        "string": "",
+        "string": "No hay conflictos para mostrar.",
         "developer_comment": "This is shown if all conflicts between versions have been resolved for an Entity."
       },
       "basedOn": {
         "label": {
-          "string": "",
+          "string": "Basado en",
           "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the author saw when they made their changes."
         },
         "description": {
@@ -1563,7 +1578,7 @@
       },
       "source": {
         "label": {
-          "string": ""
+          "string": "Fuente"
         },
         "description": {
           "string": ""

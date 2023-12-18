@@ -778,7 +778,7 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "conflict": {
-      "string": ""
+      "string": "Conflitto"
     },
     "conflicts": {
       "string": "Conflitti"
@@ -870,7 +870,7 @@
       "string": "Entità totali"
     },
     "versionShort": {
-      "string": "",
+      "string": "v{version}",
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
     }
   },
@@ -1223,6 +1223,21 @@
         "num_entity_updates": {
           "string": "Numero di aggiornamenti dell'entità"
         },
+        "num_entity_updates_sub": {
+          "string": ""
+        },
+        "num_entity_updates_api": {
+          "string": ""
+        },
+        "num_entities_updated": {
+          "string": ""
+        },
+        "num_entity_conflicts": {
+          "string": ""
+        },
+        "num_entity_conflicts_resolved": {
+          "string": ""
+        },
         "sso_enabled": {
           "string": "SSO abilitato sul server"
         },
@@ -1355,7 +1370,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Formulario aggiorna Entità in questa lista di Entità} many {Formulari aggiornano Entità in questa lista di Entità} other {Formulari aggiornano Entità in questa lista di Entità}}",
         "developer_comment": "The number of Form(s) is shown separately above this text."
       }
     },
@@ -1420,7 +1435,7 @@
         }
       },
       "possibleConflictsCount": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {{count} possibile conflitto} many {{count} possibili conflitti} other {{count} possibili conflitti}}"
       }
     },
     "DatasetSettings": {
@@ -1514,73 +1529,73 @@
     },
     "EntityConflictSummary": {
       "title": {
-        "string": ""
+        "string": "Aggiornamenti Dati in parallelo"
       },
       "subtitle": {
         "0": {
-          "string": ""
+          "string": "Uno o più aggiornamenti sono stati effettuati in base a dati che potrebbero essere stati obsoleti."
         },
         "1": {
-          "string": ""
+          "string": "Per favore, rivedi questo riassunto degli aggiornamenti paralleli."
         }
       },
       "footer": {
         "0": {
-          "string": ""
+          "string": "Se è necessario modificare alcuni valori, è possibile modificare direttamente i dati dell'Entità."
         },
         "1": {
-          "string": ""
+          "string": "Se tutto sembra corretto, clicca su \"Segna come risolto\" per ignorare questo avviso."
         }
       },
       "confirmation": {
         "title": {
-          "string": ""
+          "string": "È questa Entità okay?"
         },
         "body": {
-          "string": ""
+          "string": "Dopo aver esaminato gli aggiornamenti potenzialmente in conflitto e aver effettuato gli aggiornamenti necessari, puoi fare clic su Conferma in basso per eliminare l'avviso di aggiornamento parallelo."
         },
         "confirm": {
-          "string": ""
+          "string": "Conferma"
         }
       },
       "conflictResolved": {
-        "string": ""
+        "string": "L'avviso di conflitto è stato eliminato."
       }
     },
     "EntityConflictTable": {
       "noConflicts": {
-        "string": "",
+        "string": "Non ci sono conflitti da mostrare.",
         "developer_comment": "This is shown if all conflicts between versions have been resolved for an Entity."
       },
       "basedOn": {
         "label": {
-          "string": "",
+          "string": "Basato su",
           "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the author saw when they made their changes."
         },
         "description": {
-          "string": ""
+          "string": "La versione di questa Entità che l'autore ha visto quando ha apportato le sue modifiche"
         }
       },
       "source": {
         "label": {
-          "string": ""
+          "string": "Sorgente"
         },
         "description": {
-          "string": ""
+          "string": "L'aggiornamento che ha generato questa versione"
         }
       },
       "status": {
         "historical": {
-          "string": ""
+          "string": "Questa versione storica è inclusa perché è stata effettuata un'aggiornamento parallelo recente basato su questa versione di questa Entità."
         },
         "lastGoodVersion": {
-          "string": ""
+          "string": "Questa è la versione più recente in buon accordo. Dopo questo aggiornamento, sono state effettuate aggiornamenti potenzialmente in contrasto in parallelo."
         },
         "softConflict": {
-          "string": ""
+          "string": "Questa versione potrebbe essere stata creata basandosi su dati vecchi."
         },
         "hardConflict": {
-          "string": ""
+          "string": "Questa versione è stata realizzata parallelamente ad altri aggiornamenti, alcuni dei quali cercano di scrivere sulle stesse proprietà di questo aggiornamento."
         }
       }
     },
@@ -1592,63 +1607,63 @@
     },
     "EntityDiff": {
       "noChange": {
-        "string": ""
+        "string": "Non ci sono cambiamenti da mostrare."
       }
     },
     "EntityDiffHead": {
       "introduction": {
-        "string": "",
+        "string": "Questa modifica di invio è stata applicata alla versione {version} di questa Entità, ma è stata creata sulla base della versione {baseVersion}.",
         "developer_comment": "{version} and {baseVersion} are version numbers."
       },
       "hardConflict": {
         "description": {
-          "string": ""
+          "string": "Altre aggiornamenti erano già stati scritti sulle stesse proprietà."
         }
       },
       "softConflict": {
         "title": {
-          "string": "",
+          "string": "Aggiornamento parallelo",
           "developer_comment": "An update to an Entity that was made at the same time as another update"
         }
       },
       "tab": {
         "baseDiff": {
-          "string": "",
+          "string": "Vista dell'autore",
           "developer_comment": "A comparison between two versions of an Entity, from the point of view of the data collector (the author)"
         },
         "serverDiff": {
-          "string": "",
+          "string": "Vista di Central",
           "developer_comment": "A comparison between two versions of an Entity, from the point of view of the Central server"
         },
         "updating": {
-          "string": "",
+          "string": "(aggiornando {version})",
           "developer_comment": "This text is shown for an update to an Entity. {version} is a short version identifier, for example, \"v3\". It is the version that the update was applied to."
         }
       }
     },
     "EntityDiffRow": {
       "conflictingProp": {
-        "string": "",
+        "string": "Un altro aggiornamento è già stato scritto su questa proprietà.",
         "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity."
       }
     },
     "EntityDiffTable": {
       "header": {
         "oldValue": {
-          "string": "",
+          "string": "Vecchio valore",
           "developer_comment": "The value of an Entity property in an older version of the Entity"
         },
         "newValue": {
-          "string": "",
+          "string": "Nuovo valore",
           "developer_comment": "The value of an Entity property in a newer version of the Entity"
         }
       },
       "comparing": {
-        "string": "",
+        "string": "Paragonando",
         "developer_comment": "This is shown when Central displays a comparison of two versions of an Entity."
       },
       "version": {
-        "string": "",
+        "string": "{version} ({source})",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
       }
     },
@@ -1789,11 +1804,11 @@
       "action": {
         "table": {
           "show": {
-            "string": "",
+            "string": "Mostra tabella di riepilogo",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "hide": {
-            "string": "",
+            "string": "Nascondi tabella di riepilogo",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         },
@@ -1815,7 +1830,7 @@
       },
       "problem": {
         "400_32": {
-          "string": ""
+          "string": "Un altro utente ha già segnato il conflitto come risolto. Aggiorna la pagina per vedere i dati aggiornati."
         }
       }
     },
@@ -1862,11 +1877,11 @@
     },
     "EntityVersionLink": {
       "submission": {
-        "string": "",
+        "string": "Invio {instanceName}",
         "developer_comment": "This text is shown for a Submission. {instanceName} is the instance name of the Submission."
       },
       "api": {
-        "string": "",
+        "string": "Aggiornato da {name}",
         "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
       }
     },
@@ -2600,11 +2615,11 @@
       },
       "datasetsPreview": {
         "title": {
-          "string": ""
+          "string": "Questo Formulario può aggiornare Entità"
         },
         "body": {
           "0": {
-            "string": ""
+            "string": "Le entità vengono aggiornate solo per i Moduli pubblicati. In una futura versione di Central, sarà possibile testare la funzionalità delle entità in uno stato di bozza."
           },
           "1": {
             "string": "Per ora, ti consigliamo di provare la definizione del formulario nello stato Bozza per verificarne la logica. Prima della pubblicazione, puoi verificare che aggiorni tutte le proprietà desiderate."
@@ -4282,7 +4297,7 @@
       },
       "problem": {
         "409_3": {
-          "string": ""
+          "string": "Non puoi cambiare la tua email in {email} perché questo account esiste già. Per favore, prova un altro indirizzo email."
         }
       },
       "alert": {
@@ -4374,7 +4389,7 @@
       },
       "problem": {
         "409_3": {
-          "string": ""
+          "string": "Sembra che {email} abbia già un account. Per favore, prova un altro indirizzo email."
         }
       }
     },

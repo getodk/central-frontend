@@ -165,6 +165,12 @@ const message = computed(() => {
       "withoutCount": "Načítání entit...",
       "last": {
         "one": "Načítání poslední entity..."
+      },
+      "filtered": {
+        "withoutCount": "Načítání odpovídajících entit...",
+        "last": {
+          "one": "Načítání poslední odpovídající entity..."
+        }
       }
     },
     "submission": {

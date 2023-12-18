@@ -247,9 +247,12 @@ watch(() => props.entity, (entity) => {
         "hide": "Skrýt souhrnnou tabulku"
       },
       "seeMoreDetails": "Více podrobností",
+      "editEntity": "Upravit entitu",
       "markAsResolved": "Označit jako vyřešeno"
     },
+    "successMessage": "Varování konfliktu bylo odstraněno z Entity.",
     "problem": {
+      "400_32": "Jiný uživatel již označil konflikt jako vyřešený. Aktualizujte prosím, abyste viděli aktualizovaná data.",
       "409_15": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data."
     }
   },
@@ -313,12 +316,17 @@ watch(() => props.entity, (entity) => {
       "Rivedi gli aggiornamenti, apporta le modifiche necessarie e, se sei sicuro che i dati dell'entità siano corretti, premi \"Segna come risolto\" per cancellare questo messaggio di avviso."
     ],
     "action": {
+      "table": {
+        "show": "Mostra tabella di riepilogo",
+        "hide": "Nascondi tabella di riepilogo"
+      },
       "seeMoreDetails": "Vedi maggiori dettagli",
       "editEntity": "Modifica Entità",
       "markAsResolved": "Segna come risolto"
     },
     "successMessage": "L'avviso di conflitto è stato cancellato dall'Entità.",
     "problem": {
+      "400_32": "Un altro utente ha già segnato il conflitto come risolto. Aggiorna la pagina per vedere i dati aggiornati.",
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
     }
   },

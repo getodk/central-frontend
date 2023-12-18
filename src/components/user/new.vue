@@ -173,7 +173,10 @@ export default {
     ],
     "oidcIntroduction": [
       "Gli utenti del server di accesso devono avere un account Central per accedere a Central. Una volta creato questo account, l'utente del server di accesso con l'indirizzo e-mail fornito potrà accedere a Central."
-    ]
+    ],
+    "problem": {
+      "409_3": "Sembra che {email} abbia già un account. Per favore, prova un altro indirizzo email."
+    }
   },
   "ja": {
     "title": "Webユーザーの作成",

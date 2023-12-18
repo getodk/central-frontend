@@ -144,6 +144,9 @@ export default {
 {
   "fr": {
     "formsUpdateEntities": "Formulaire modifiant des Entités de cette Liste d'Entités | Formulaires modifiant des Entités de cette Liste d'Entités | Formulaires modifiant des Entités de cette Liste d'Entités"
+  },
+  "it": {
+    "formsUpdateEntities": "Formulario aggiorna Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità"
   }
 }
 </i18n>

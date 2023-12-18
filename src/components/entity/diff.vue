@@ -105,6 +105,9 @@ $tabs-indent: 3px;
   },
   "fr": {
     "noChange": "Il n'y a pas de modification à montrer."
+  },
+  "it": {
+    "noChange": "Non ci sono cambiamenti da mostrare."
   }
 }
 </i18n>

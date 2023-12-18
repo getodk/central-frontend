@@ -1223,6 +1223,21 @@
         "num_entity_updates": {
           "string": ""
         },
+        "num_entity_updates_sub": {
+          "string": ""
+        },
+        "num_entity_updates_api": {
+          "string": ""
+        },
+        "num_entities_updated": {
+          "string": ""
+        },
+        "num_entity_conflicts": {
+          "string": ""
+        },
+        "num_entity_conflicts_resolved": {
+          "string": ""
+        },
         "sso_enabled": {
           "string": ""
         },

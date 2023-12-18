@@ -125,7 +125,8 @@ export default {
   "es": {
     "action": {
       "download": "Descargar datos (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} posible conflicto | {count} posibles conflictos | {count} posibles conflictos"
   },
   "fr": {
     "action": {
@@ -136,7 +137,8 @@ export default {
   "it": {
     "action": {
       "download": "Scarica dati (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} possibile conflitto | {count} possibili conflitti | {count} possibili conflitti"
   },
   "sw": {
     "action": {

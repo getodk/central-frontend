@@ -317,7 +317,8 @@ export default {
 <i18n>
 {
   "cs": {
-    "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
+    "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
+    "noMatching": "Neexistují žádné odpovídající entity."
   },
   "de": {
     "noEntities": "Es gibt keine Entitäten zum Anzeigen.",

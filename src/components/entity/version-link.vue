@@ -70,11 +70,16 @@ const text = computed(() => {
 <i18n>
 {
   "cs": {
-    "submission": "Odeslání {instanceName}"
+    "submission": "Odeslání {instanceName}",
+    "api": "Aktualizace od {name}"
   },
   "fr": {
     "submission": "Soumission {instanceName}",
     "api": "Mise à jour par {name}"
+  },
+  "it": {
+    "submission": "Invio {instanceName}",
+    "api": "Aggiornato da {name}"
   }
 }
 </i18n>
