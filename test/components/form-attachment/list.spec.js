@@ -1,7 +1,6 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FormAttachmentNameMismatch from '../../../src/components/form-attachment/name-mismatch.vue';
 import FormAttachmentRow from '../../../src/components/form-attachment/row.vue';
-import FormAttachmentLinkDataset from '../../../src/components/form-attachment/link-dataset.vue';
 import FormAttachmentUploadFiles from '../../../src/components/form-attachment/upload-files.vue';
 
 import testData from '../../data';
@@ -1037,15 +1036,25 @@ describe('FormAttachmentList', () => {
   });
 
   describe('dataset linking', () => {
-    beforeEach(() => {
+    it('sends a request for datasets if the project has one', () => {
+      testData.extendedProjects.createPast(1, { forms: 2, datasets: 1 });
+      testData.extendedDatasets.createPast(1);
       testData.extendedForms.createPast(1, { draft: true });
+      testData.standardFormAttachments.createPast(1);
+      return load('/projects/1/forms/f/draft/attachments', { root: false })
+        .respondWithData(() => testData.extendedDatasets.sorted())
+        .testRequests([{ url: '/v1/projects/1/datasets' }]);
     });
 
-    it('autolinks dataset', async () => {
+    it('renders correctly for an attachment linked to a dataset', async () => {
+      testData.extendedProjects.createPast(1, { forms: 2, datasets: 1 });
+      testData.extendedDatasets.createPast(1, { name: 'shovels' });
+      testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', datasetExists: true });
       const component = await load('/projects/1/forms/f/draft/attachments', {
         root: false
-      });
+      })
+        .respondWithData(() => testData.extendedDatasets.sorted());
       component.get('td.form-attachment-list-uploaded .dataset-label').text().should.equal('Linked to Entity List shovels');
       component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');
       const a = component.get('td.form-attachment-list-name a');
@@ -1055,12 +1064,9 @@ describe('FormAttachmentList', () => {
 
     describe('Datasets preview hint', () => {
       beforeEach(() => {
-        testData.extendedProjects.createPast(1, {
-          name: 'My Project Name',
-          forms: 1,
-          datasets: 1
-        });
+        testData.extendedProjects.createPast(1, { forms: 2, datasets: 1 });
         testData.extendedDatasets.createPast(1, { name: 'shovels' });
+        testData.extendedForms.createPast(1, { draft: true });
       });
 
       const loadAttachmentComponent = () => load('/projects/1/forms/f/draft/attachments', {
@@ -1080,18 +1086,15 @@ describe('FormAttachmentList', () => {
       });
     });
 
-    describe('link dataset', () => {
+    describe('"Link Entity List" button', () => {
       beforeEach(() => {
-        testData.extendedProjects.createPast(1, {
-          name: 'My Project Name',
-          forms: 1,
-          datasets: 1
-        });
+        testData.extendedProjects.createPast(1, { forms: 2, datasets: 1 });
         testData.extendedDatasets.createPast(1, { name: 'shovels' });
+        testData.extendedForms.createPast(1, { draft: true });
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', blobExists: true });
       });
 
-      it('shows Link Dataset button', async () => {
+      it('shows the button if an attachment can be linked', async () => {
         const component = await load('/projects/1/forms/f/draft/attachments', {
           root: false
         })
@@ -1099,20 +1102,129 @@ describe('FormAttachmentList', () => {
         component.get('td.form-attachment-list-action .btn-link-dataset').exists().should.be.true();
       });
 
-      it('links dataset', async () => {
-        await load('/projects/1/forms/f/draft/attachments', {
-          root: false
-        })
+      it('updates the attachment after it is linked', () =>
+        load('/projects/1/forms/f/draft/attachments', { root: false })
           .respondWithData(() => testData.extendedDatasets.sorted())
           .complete()
           .request(async (component) => {
             await component.get('td.form-attachment-list-action .btn-link-dataset').trigger('click');
-            component.getComponent(FormAttachmentLinkDataset).get('.btn-link-dataset').trigger('click');
+            return component.get('#form-attachment-link-dataset .btn-link-dataset').trigger('click');
           })
           .respondWithSuccess()
           .afterResponse(component => {
             component.get('td.form-attachment-list-uploaded .dataset-label').text().should.equal('Linked to Entity List shovels');
             component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');
+          }));
+    });
+
+    describe('linking after publishing new dataset', () => {
+      it('shows "Link Entity List" after first dataset is published', () => {
+        testData.extendedForms.createPast(1, { draft: true });
+        // Create an attachment with the same name as the dataset that will be
+        // published along with the form draft.
+        const attachments = testData.standardFormAttachments
+          .createPast(1, { type: 'file', name: 'shovels.csv', blobExists: true })
+          .sorted();
+        return load('/projects/1/forms/f/draft/attachments')
+          .complete()
+          .load('/projects/1/forms/f/draft', {
+            project: false,
+            form: false,
+            formDraft: false,
+            attachments: false
+          })
+          .complete()
+          .request(async (app) => {
+            await app.get('#form-draft-status-publish-button').trigger('click');
+            return app.get('#form-draft-publish .btn-primary').trigger('click');
+          })
+          .respondWithData(() => {
+            testData.extendedFormDrafts.publish(-1);
+            testData.extendedDatasets.createPast(1, { name: 'shovels' });
+            return { success: true };
+          })
+          .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() => ({
+            ...testData.extendedProjects.last(),
+            datasets: 1
+          }))
+          .respondWithData(() => attachments)
+          .complete()
+          .request(app =>
+            app.get('#form-head-create-draft-button').trigger('click'))
+          .respondWithData(() => {
+            testData.extendedFormVersions.createNew({ draft: true });
+            return { success: true };
+          })
+          .respondFor('/projects/1/forms/f/draft', {
+            project: false,
+            form: false
+          })
+          .complete()
+          .route('/projects/1/forms/f/draft/attachments')
+          .respondWithData(() => testData.extendedDatasets.sorted())
+          // Now that a dataset has been published, a request should be sent for
+          // `datasets`, even though one wasn't sent before.
+          .testRequests([{ url: '/v1/projects/1/datasets' }])
+          .afterResponse(app => {
+            const button = app.find('.form-attachment-row .btn-link-dataset');
+            button.exists().should.be.true();
+          });
+      });
+
+      it('shows "Link Entity List" after another dataset is published', () => {
+        const project = testData.extendedProjects
+          .createPast(1, { forms: 2, datasets: 1 })
+          .last();
+        // There is an existing dataset named shovels. Publishing the form draft
+        // will publish a new dataset named trees.
+        testData.extendedDatasets.createPast(1, { name: 'shovels' });
+        testData.extendedForms.createPast(1, { draft: true });
+        const attachments = testData.standardFormAttachments
+          .createPast(1, { type: 'file', name: 'trees.csv', blobExists: true })
+          .sorted();
+        return load('/projects/1/forms/f/draft/attachments')
+          .respondWithData(() => testData.extendedDatasets.sorted())
+          .complete()
+          .load('/projects/1/forms/f/draft', {
+            project: false,
+            form: false,
+            formDraft: false,
+            attachments: false
+          })
+          .complete()
+          .request(async (app) => {
+            await app.get('#form-draft-status-publish-button').trigger('click');
+            return app.get('#form-draft-publish .btn-primary').trigger('click');
+          })
+          .respondWithData(() => {
+            testData.extendedFormDrafts.publish(-1);
+            testData.extendedDatasets.createPast(1, { name: 'trees' });
+            return { success: true };
+          })
+          .respondWithData(() => testData.extendedForms.last())
+          .respondWithData(() => ({ ...project, datasets: 2 }))
+          .respondWithData(() => attachments)
+          .complete()
+          .request(app =>
+            app.get('#form-head-create-draft-button').trigger('click'))
+          .respondWithData(() => {
+            testData.extendedFormVersions.createNew({ draft: true });
+            return { success: true };
+          })
+          .respondFor('/projects/1/forms/f/draft', {
+            project: false,
+            form: false
+          })
+          .complete()
+          .route('/projects/1/forms/f/draft/attachments')
+          .respondWithData(() => testData.extendedDatasets.sorted())
+          // After the form draft is published, a new request should be sent for
+          // `datasets`.
+          .testRequests([{ url: '/v1/projects/1/datasets' }])
+          .afterResponse(app => {
+            const button = app.find('.form-attachment-row .btn-link-dataset');
+            button.exists().should.be.true();
           });
       });
     });
