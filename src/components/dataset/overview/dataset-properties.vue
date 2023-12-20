@@ -47,26 +47,24 @@ except according to the terms contained in the LICENSE file.
     </p>
 </template>
 
-<script>
+<script setup>
 import useRoutes from '../../../composables/routes';
 
-export default {
-  name: 'DatasetProperties',
-  props: {
-    properties: {
-      type: Array,
-      required: true
-    },
-    projectId: {
-      type: String,
-      required: true
-    }
+defineOptions({
+  name: 'DatasetProperties'
+});
+defineProps({
+  properties: {
+    type: Array,
+    required: true
   },
-  setup() {
-    const { publishedFormPath } = useRoutes();
-    return { publishedFormPath };
+  projectId: {
+    type: String,
+    required: true
   }
-};
+});
+
+const { publishedFormPath } = useRoutes();
 </script>
 
 <style lang="scss">

@@ -20,11 +20,10 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Alert',
-  inject: ['alert']
-};
+<script setup>
+import { inject } from 'vue';
+
+const alert = inject('alert');
 </script>
 
 <style lang="scss">

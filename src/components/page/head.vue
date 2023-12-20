@@ -21,10 +21,10 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
+defineOptions({
   name: 'PageHead'
-};
+});
 </script>
 
 <style lang="scss">

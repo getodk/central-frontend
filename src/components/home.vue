@@ -24,11 +24,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Home'
-};
-</script>
 <script setup>
 import { defineAsyncComponent, inject } from 'vue';
 
@@ -40,6 +35,10 @@ import ProjectList from './project/list.vue';
 import useProjects from '../request-data/projects';
 import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
+
+defineOptions({
+  name: 'Home'
+});
 
 const HomeConfigSection = defineAsyncComponent(loadAsync('HomeConfigSection'));
 

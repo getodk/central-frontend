@@ -22,13 +22,13 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PageSection',
-  props: {
-    horizontal: Boolean
-  }
-};
+<script setup>
+defineOptions({
+  name: 'PageSection'
+});
+defineProps({
+  horizontal: Boolean
+});
 </script>
 
 <style lang="scss">

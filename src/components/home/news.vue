@@ -20,13 +20,12 @@ except according to the terms contained in the LICENSE file.
   </page-section>
 </template>
 
-<script>
+<script setup>
 import PageSection from '../page/section.vue';
 
-export default {
-  name: 'HomeNews',
-  components: { PageSection }
-};
+defineOptions({
+  name: 'HomeNews'
+});
 </script>
 
 <style lang="scss">
