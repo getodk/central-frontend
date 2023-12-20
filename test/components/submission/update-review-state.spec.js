@@ -82,7 +82,7 @@ describe('SubmissionUpdateReviewState', () => {
     testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
     const modal = mount(SubmissionUpdateReviewState, mountOptions());
     await modal.setProps({ state: true });
-    await modal.get('input[value="rejected"]').setChecked();
+    await modal.get('input[value="rejected"]').setValue(true);
     await modal.setData({ notes: 'Some notes' });
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
@@ -104,7 +104,7 @@ describe('SubmissionUpdateReviewState', () => {
         .mount(SubmissionUpdateReviewState, mountOptions())
         .request(async (modal) => {
           await modal.setProps({ state: true });
-          await modal.get('input[value="hasIssues"]').setChecked();
+          await modal.get('input[value="hasIssues"]').setValue(true);
           return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { method, url, data }) => {

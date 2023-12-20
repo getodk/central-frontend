@@ -91,7 +91,7 @@ describe('SubmissionActivity', () => {
             const button = component.get('#submission-activity-update-review-state-button');
             await button.trigger('click');
             const modal = component.getComponent(SubmissionUpdateReviewState);
-            await modal.get('input[value="hasIssues"]').setChecked();
+            await modal.get('input[value="hasIssues"]').setValue(true);
             return modal.get('form').trigger('submit');
           })
           .respondWithData(() => {

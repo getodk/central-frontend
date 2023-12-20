@@ -126,7 +126,7 @@ describe('AnalyticsForm', () => {
 
   it('enables the checkbox once share is selected', async () => {
     const form = mount(AnalyticsForm, mountOptions());
-    await form.findAll('input[type="radio"]')[2].setChecked();
+    await form.findAll('input[type="radio"]')[2].setValue(true);
     form.get('fieldset').element.disabled.should.be.false();
   });
 
@@ -137,10 +137,10 @@ describe('AnalyticsForm', () => {
     });
     const form = mount(AnalyticsForm, mountOptions());
     const checkbox = form.get('input[type="checkbox"]');
-    await checkbox.setChecked();
+    await checkbox.setValue(true);
     const fieldset = form.get('fieldset fieldset');
     fieldset.element.disabled.should.be.false();
-    await checkbox.setChecked(false);
+    await checkbox.setValue(false);
     fieldset.element.disabled.should.be.true();
   });
 
@@ -156,7 +156,7 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.get('input[type="radio"]').setChecked();
+          await form.get('input[type="radio"]').setValue(true);
           return form.trigger('submit');
         })
         .respondWithSuccess()
@@ -166,7 +166,7 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.get('input[type="radio"]').setChecked();
+          await form.get('input[type="radio"]').setValue(true);
           return form.trigger('submit');
         })
         .respondWithSuccess()
@@ -181,7 +181,7 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[1].setChecked();
+          await form.findAll('input[type="radio"]')[1].setValue(true);
           return form.trigger('submit');
         })
         .respondWithProblem()
@@ -195,11 +195,11 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[2].setChecked();
-          await form.get('input[type="checkbox"]').setChecked();
+          await form.findAll('input[type="radio"]')[2].setValue(true);
+          await form.get('input[type="checkbox"]').setValue(true);
           await form.get('input[type="email"]').setValue('bob@getodk.org');
           await form.get('input[autocomplete="organization"]').setValue('ODK');
-          await form.findAll('input[type="radio"]')[1].setChecked();
+          await form.findAll('input[type="radio"]')[1].setValue(true);
           return form.trigger('submit');
         })
         .respondWithProblem()
@@ -213,7 +213,7 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[1].setChecked();
+          await form.findAll('input[type="radio"]')[1].setValue(true);
           return form.trigger('submit');
         })
         .respondWithData(() => testData.standardConfigs.createNew({
@@ -231,7 +231,7 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[2].setChecked();
+          await form.findAll('input[type="radio"]')[2].setValue(true);
           return form.trigger('submit');
         })
         .respondWithProblem()
@@ -245,8 +245,8 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[2].setChecked();
-          await form.get('input[type="checkbox"]').setChecked();
+          await form.findAll('input[type="radio"]')[2].setValue(true);
+          await form.get('input[type="checkbox"]').setValue(true);
           await form.get('input[type="email"]').setValue('bob@getodk.org');
           return form.trigger('submit');
         })
@@ -261,8 +261,8 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[2].setChecked();
-          await form.get('input[type="checkbox"]').setChecked();
+          await form.findAll('input[type="radio"]')[2].setValue(true);
+          await form.get('input[type="checkbox"]').setValue(true);
           await form.get('input[type="email"]').setValue('');
           await form.get('input[autocomplete="organization"]').setValue('ODK');
           return form.trigger('submit');
@@ -278,11 +278,11 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[2].setChecked();
-          await form.get('input[type="checkbox"]').setChecked();
+          await form.findAll('input[type="radio"]')[2].setValue(true);
+          await form.get('input[type="checkbox"]').setValue(true);
           await form.get('input[type="email"]').setValue('bob@getodk.org');
           await form.get('input[autocomplete="organization"]').setValue('ODK');
-          await form.get('input[type="checkbox"]').setChecked(false);
+          await form.get('input[type="checkbox"]').setValue(false);
           return form.trigger('submit');
         })
         .respondWithProblem()
@@ -296,7 +296,7 @@ describe('AnalyticsForm', () => {
       mockHttp()
         .mount(AnalyticsForm, mountOptions())
         .request(async (form) => {
-          await form.findAll('input[type="radio"]')[2].setChecked();
+          await form.findAll('input[type="radio"]')[2].setValue(true);
           return form.trigger('submit');
         })
         .respondWithData(() => testData.standardConfigs.createNew({
@@ -315,7 +315,7 @@ describe('AnalyticsForm', () => {
       .testStandardButton({
         button: '.btn-primary',
         request: async (form) => {
-          await form.findAll('input[type="radio"]')[2].setChecked();
+          await form.findAll('input[type="radio"]')[2].setValue(true);
           return form.trigger('submit');
         }
       }));
@@ -324,7 +324,7 @@ describe('AnalyticsForm', () => {
     mockHttp()
       .mount(AnalyticsForm, mountOptions())
       .request(async (form) => {
-        await form.findAll('input[type="radio"]')[2].setChecked();
+        await form.findAll('input[type="radio"]')[2].setValue(true);
         return form.trigger('submit');
       })
       .respondWithData(() => testData.standardConfigs.createNew({

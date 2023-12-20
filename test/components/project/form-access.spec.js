@@ -137,14 +137,14 @@ describe('ProjectFormAccess', () => {
       it('highlights the checkbox', async () => {
         const app = await load('/projects/1/form-access');
         const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
-        await checkbox.setChecked(false);
+        await checkbox.setValue(false);
         checkbox.classes('uncommitted-change').should.be.true();
       });
 
       it('updates the Save button', async () => {
         const app = await load('/projects/1/form-access');
         const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
-        await checkbox.setChecked(false);
+        await checkbox.setValue(false);
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.true();
         button.attributes('aria-disabled').should.equal('false');
@@ -154,15 +154,15 @@ describe('ProjectFormAccess', () => {
         const app = await load('/projects/1/form-access');
         app.vm.$container.unsavedChanges.count.should.equal(0);
         const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
-        await checkbox.setChecked(false);
+        await checkbox.setValue(false);
         app.vm.$container.unsavedChanges.count.should.equal(1);
       });
 
       it('undoes these if the checkbox is checked again', async () => {
         const app = await load('/projects/1/form-access');
         const checkbox = app.get('#project-form-access-table input[type="checkbox"]');
-        await checkbox.setChecked(false);
-        await checkbox.setChecked();
+        await checkbox.setValue(false);
+        await checkbox.setValue(true);
 
         // Checkbox
         checkbox.classes('uncommitted-change').should.be.false();
@@ -184,14 +184,14 @@ describe('ProjectFormAccess', () => {
         const app = await load('/projects/1/form-access');
         const checkboxes = app.findAll('#project-form-access-table input[type="checkbox"]');
         checkboxes.length.should.equal(2);
-        await checkboxes[1].setChecked();
+        await checkboxes[1].setValue(true);
         checkboxes[1].classes('uncommitted-change').should.be.true();
       });
 
       it('updates the Save button', async () => {
         const app = await load('/projects/1/form-access');
         const checkboxes = app.findAll('#project-form-access-table input[type="checkbox"]');
-        await checkboxes[1].setChecked();
+        await checkboxes[1].setValue(true);
         const button = app.get('#project-form-access-save-button');
         button.classes('uncommitted-change').should.be.true();
         button.attributes('aria-disabled').should.equal('false');
@@ -205,8 +205,8 @@ describe('ProjectFormAccess', () => {
         const table = app.get('#project-form-access-table');
         await table.get('select').setValue('open');
         const checkboxes = table.findAll('input[type="checkbox"]');
-        await checkboxes[0].setChecked(false);
-        return checkboxes[1].setChecked();
+        await checkboxes[0].setValue(false);
+        return checkboxes[1].setValue(true);
       };
       const saveWithSuccess = () => load('/projects/1/form-access')
         .complete()
