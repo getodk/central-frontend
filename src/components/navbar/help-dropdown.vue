@@ -29,13 +29,12 @@ except according to the terms contained in the LICENSE file.
   </li>
 </template>
 
-<script>
+<script setup>
 import DocLink from '../doc-link.vue';
 
-export default {
-  name: 'NavbarHelpDropdown',
-  components: { DocLink }
-};
+defineOptions({
+  name: 'NavbarHelpDropdown'
+});
 </script>
 
 <i18n lang="json5">

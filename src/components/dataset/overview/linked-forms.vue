@@ -30,31 +30,26 @@ except according to the terms contained in the LICENSE file.
   </summary-item>
 </template>
 
-<script>
+<script setup>
 import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
 
-export default {
-  name: 'LinkedForms',
-  components: {
-    SummaryItem
+defineOptions({
+  name: 'LinkedForms'
+});
+defineProps({
+  linkedForms: {
+    type: Array,
+    required: true
   },
-  props: {
-    linkedForms: {
-      type: Array,
-      required: true
-    },
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    const { publishedFormPath } = useRoutes();
-    return { publishedFormPath };
+  projectId: {
+    type: String,
+    required: true
   }
-};
+});
+
+const { publishedFormPath } = useRoutes();
 </script>
 
 <style lang="scss">

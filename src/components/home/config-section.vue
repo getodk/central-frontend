@@ -20,24 +20,23 @@ except according to the terms contained in the LICENSE file.
   </page-section>
 </template>
 
-<script>
+<script setup>
 import MarkdownView from '../markdown/view.vue';
 import PageSection from '../page/section.vue';
 
-export default {
-  name: 'HomeConfigSection',
-  components: { MarkdownView, PageSection },
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    body: {
-      type: String,
-      required: true
-    }
+defineOptions({
+  name: 'HomeConfigSection'
+});
+defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  body: {
+    type: String,
+    required: true
   }
-};
+});
 </script>
 
 <style lang="scss">

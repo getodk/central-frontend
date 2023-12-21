@@ -10,21 +10,19 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="selectable" @click="select"><!-- eslint-disable-line vuejs-accessibility/click-events-have-key-events, vue/multiline-html-element-content-newline -->
+  <div ref="el" class="selectable" @click="select"><!-- eslint-disable-line vuejs-accessibility/click-events-have-key-events, vue/multiline-html-element-content-newline -->
     <slot></slot>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Selectable',
-  methods: {
-    select() {
-      const selection = getSelection();
-      // Select all unless the user has made a specific selection.
-      if (selection.isCollapsed) selection.selectAllChildren(this.$el);
-    }
-  }
+<script setup>
+import { ref } from 'vue';
+
+const el = ref(null);
+const select = () => {
+  const selection = getSelection();
+  // Select all unless the user has made a specific selection.
+  if (selection.isCollapsed) selection.selectAllChildren(el.value);
 };
 </script>
 

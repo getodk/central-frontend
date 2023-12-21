@@ -25,19 +25,17 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-
-export default {
-  name: 'FormSort',
-  components: {},
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue']
-};
+<script setup>
+defineOptions({
+  name: 'FormSort'
+});
+defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['update:modelValue']);
 </script>
 
 <style lang="scss">

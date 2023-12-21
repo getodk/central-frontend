@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
+<script setup>
 import PageSection from '../page/section.vue';
 import ConnectionToForms from './overview/connection-to-forms.vue';
 import LinkedForms from './overview/linked-forms.vue';
@@ -46,31 +46,23 @@ import DatasetProperties from './overview/dataset-properties.vue';
 
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'DatasetOverview',
-  components: {
-    PageSection,
-    ConnectionToForms,
-    LinkedForms,
-    DatasetProperties
+defineOptions({
+  name: 'DatasetOverview'
+});
+defineProps({
+  projectId: {
+    type: String,
+    required: true
   },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    datasetName: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { dataset } = useRequestData();
-    return { dataset };
+  datasetName: {
+    type: String,
+    required: true
   }
-};
+});
+
+// The component does not assume that this data will exist when the component is
+// created.
+const { dataset } = useRequestData();
 </script>
 
 <style lang="scss">
