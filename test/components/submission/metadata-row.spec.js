@@ -158,7 +158,7 @@ describe('SubmissionMetadataRow', () => {
           .request(async (component) => {
             await component.get('.submission-metadata-row .review-button').trigger('click');
             const modal = component.getComponent(SubmissionUpdateReviewState);
-            await modal.get('input[value="hasIssues"]').setChecked();
+            await modal.get('input[value="hasIssues"]').setValue(true);
             return modal.get('form').trigger('submit');
           })
           .respondWithData(() => {
