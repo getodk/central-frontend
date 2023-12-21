@@ -36,20 +36,12 @@ defineProps({
 
 .page-section {
   margin-bottom: 20px;
-
-  &.horizontal { display: flex; }
 }
 
 .page-section-heading {
   font-size: 30px;
   margin-bottom: 10px;
   position: relative;
-
-  .page-section.horizontal & {
-    line-height: 1;
-    margin-bottom: 0;
-    margin-right: 20px;
-  }
 
   @mixin page-section-heading {
     color: $color-accent-primary;
@@ -67,13 +59,25 @@ defineProps({
   > h3:first-child,
   > h4:first-child,
   > h5:first-child,
-  > h6:first-child{
-    @include page-section-heading();
+  > h6:first-child {
+    @include page-section-heading;
     margin-top: 0px; // Bootstrap sets top margin to 20px
   }
 
   > span:first-child {
     @include page-section-heading;
   }
+}
+
+.page-section.horizontal {
+  display: flex;
+
+  .page-section-heading {
+    line-height: 1;
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
+
+  .page-section-body { flex: 1; }
 }
 </style>

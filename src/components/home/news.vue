@@ -35,6 +35,7 @@ defineOptions({
   iframe {
     border-width: 0;
     height: 40px;
+    width: calc(100% - 35px);
   }
 }
 </style>
