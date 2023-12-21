@@ -21,15 +21,17 @@ describe('NavbarActions', () => {
     text.should.equal('Not logged in');
   });
 
-  it("shows the user's display name", () => {
-    mockLogin({ displayName: 'Alice' });
+  it("shows the user's display name", async () => {
+    mockLogin({ displayName: 'Alice Allison' });
     const navbar = mount(Navbar, {
       container: { router: mockRouter('/') },
       global: {
         stubs: { AnalyticsIntroduction: true }
       }
     });
-    navbar.getComponent(NavbarActions).get('a').text().should.equal('Alice');
+    const a = navbar.getComponent(NavbarActions).get('a');
+    a.text().should.equal('Alice Allison');
+    await a.get('span:nth-child(2)').should.have.textTooltip();
   });
 
   describe('after the user clicks "Log out"', () => {
