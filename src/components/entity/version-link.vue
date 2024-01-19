@@ -44,10 +44,10 @@ const versionPath = computed(() => {
 const { t } = useI18n();
 const text = computed(() => {
   const { source } = props.version;
-  const { submissionCreate } = source;
-  if (submissionCreate != null) {
-    const nameOrId = source.submission?.currentVersion?.instanceName ??
-      submissionCreate.details.instanceId;
+  const { submission } = source;
+  if (submission != null) {
+    const nameOrId = submission?.currentVersion?.instanceName ??
+      submission.instanceId;
     return t('submission', { instanceName: nameOrId });
   }
   return t('api', { name: props.version.creator.displayName });

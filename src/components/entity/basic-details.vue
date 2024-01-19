@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         <div v-if="instanceId != null">
           <dt>{{ $t('creatingSubmission') }}</dt>
           <dd id="entity-basic-details-creating-submission">
-            <router-link v-if="submission != null"
+            <router-link v-if="submission.currentVersion != null"
               :to="submissionPath(projectId, submission.xmlFormId, instanceId)">
               {{ submission.currentVersion.instanceName ?? instanceId }}
             </router-link>
@@ -75,10 +75,11 @@ watchEffect(() => {
   // `audit` should always exist in production, but it doesn't always exist in
   // testing.
   if (audit == null) return;
-  const { submissionCreate } = audit.details;
-  if (submissionCreate != null) {
-    instanceId.value = submissionCreate.details.instanceId;
-    submission.value = audit.details.submission;
+  // TODO refactor
+  const submissionFromCreateEvent = audit.details.submission;
+  if (submissionFromCreateEvent != null) {
+    instanceId.value = submissionFromCreateEvent.instanceId;
+    submission.value = submissionFromCreateEvent;
   } else {
     instanceId.value = null;
   }

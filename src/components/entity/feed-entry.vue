@@ -15,20 +15,20 @@ except according to the terms contained in the LICENSE file.
     <template #title>
       <template v-if="entry.action === 'submission.create'">
         <span class="icon-cloud-upload"></span>
-        <i18n-t v-if="submission != null"
+        <i18n-t v-if="submission.currentVersion != null"
           keypath="title.submission.create.notDeleted">
           <template #instanceName>
             <router-link :to="creatingSubmissionPath">
               {{ submission.currentVersion.instanceName ?? submission.instanceId }}
             </router-link>
           </template>
-          <template #submitter><actor-link :actor="entry.actor"/></template>
+          <template #submitter><actor-link :actor="submission.submitter"/></template>
         </i18n-t>
         <i18n-t v-else keypath="title.submission.create.deleted.full">
           <template #deletedSubmission>
             <span class="deleted-submission">{{ deletedSubmission }}</span>
           </template>
-          <template #name><actor-link :actor="entry.actor"/></template>
+          <template #name><actor-link :actor="submission.submitter"/></template>
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'submission.update'">
@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else-if="entry.action === 'entity.create'">
         <span class="icon-magic-wand"></span>
-        <i18n-t v-if="entry.details.submissionCreate != null"
+        <i18n-t v-if="entry.details.submission != null"
           keypath="title.entity.create.submission">
           <template #label>
             <span class="entity-label">{{ entity.currentVersion.label }}</span>
@@ -63,8 +63,8 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'entity.update.version'">
         <span class="icon-pencil"></span>
         <span class="title">
-        <template v-if="entry.details.submissionCreate != null">
-          <i18n-t v-if="submission != null"
+        <template v-if="entry.details.submission != null">
+          <i18n-t v-if="submission.currentVersion != null"
             keypath="title.entity.update_version.submission.notDeleted">
             <template #instanceName>
               <router-link :to="creatingSubmissionPath">
@@ -152,14 +152,14 @@ const { t } = useI18n();
 // is about a submission (creation, approval) and the ID is directly
 // in the event details.
 const deletedSubmission = computed(() => {
-  const id = props.entry.details.instanceId;
+  const id = props.submission.instanceId;
   return t('title.submission.create.deleted.deletedSubmission', { id });
 });
 
 // This function pulls out the submission instance ID in events about
-// entities, where the instance ID is found deep inside the submissionCreate event.
+// entities
 const deletedSubmissionEntityEvent = computed(() => {
-  const id = props.entry.details.submissionCreate.details.instanceId;
+  const id = props.submission.instanceId;
   return t('title.entity.update_version.submission.deleted.deletedSubmission', { id });
 });
 const { reviewStateIcon } = useReviewState();

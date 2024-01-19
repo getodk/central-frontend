@@ -273,7 +273,7 @@ extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {})
     actee: formVersion,
     details: { instanceId: submission.instanceId }
   };
-  const submissionCreate = extendedAudits
+  extendedAudits
     .createPast(1, {
       action: 'submission.create',
       loggedAt: submission.createdAt,
@@ -297,7 +297,7 @@ extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {})
   }
   const sourceEvent = extendedAudits.last();
 
-  return { submission: submissionWithFormId, submissionCreate, sourceEvent };
+  return { submission: submissionWithFormId, sourceEvent };
 };
 
 extendedEntities.resolve = (index) => {

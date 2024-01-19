@@ -64,10 +64,12 @@ const feed = computed(() => {
     } else if (audit.action === 'entity.create') {
       const group = [{ entry: audit }];
       const { details } = audit;
+      // this will insert a feed entry for the submission approval event
       if (details.sourceEvent?.action === 'submission.update')
         group.push({ entry: details.sourceEvent });
-      if (details.submissionCreate != null)
-        group.push({ entry: details.submissionCreate, submission: details.submission });
+      // this will insert a feed entry for the submission creation
+      if (details.submission != null)
+        group.push({ entry: { action: 'submission.create', loggedAt: details.submission.createdAt }, submission: details.submission });
       groups.push(group);
     } else {
       groups.push([{ entry: audit }]);

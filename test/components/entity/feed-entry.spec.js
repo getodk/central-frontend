@@ -50,18 +50,25 @@ describe('EntityFeedEntry', () => {
 
   describe('submission.create audit event', () => {
     const createSubmission = ({ deleted = false, ...options } = {}) => {
-      const submission = testData.extendedSubmissions
+      // create a submission
+      const fullSubmission = testData.extendedSubmissions
         .createPast(1, { instanceId: 's', ...options })
         .last();
+      // return either full or partial submission info depending on if submission was deleted
+      const submission = (deleted)
+        ? { instanceId: fullSubmission.instanceId, submitter: fullSubmission.submitter, createdAt: fullSubmission.createdAt }
+        : { ...fullSubmission, xmlFormId: 'f' }; // full submission augmented with form id
+
       const audit = testData.extendedAudits
         .createPast(1, {
           action: 'submission.create',
-          details: { instanceId: 's' }
+          details: { instanceId: submission.instanceId }
         })
         .last();
+
       return {
         entry: audit,
-        submission: deleted ? null : { ...submission, xmlFormId: 'f' }
+        submission
       };
     };
 
@@ -163,10 +170,8 @@ describe('EntityFeedEntry', () => {
         entity: { uuid: 'e' }
       };
       if (options.submission === true) {
-        testData.extendedSubmissions.createPast(1);
-        details.submissionCreate = testData.extendedAudits
-          .createPast(1, { action: 'submission.create' })
-          .last();
+        const submission = testData.extendedSubmissions.createPast(1);
+        details.submission = { ...submission, xmlFormId: 'f' };
       }
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
@@ -189,6 +194,8 @@ describe('EntityFeedEntry', () => {
         const text = mountComponent().get('.feed-entry-title').text();
         text.should.equal('Created Entity dogwood in trees Entity List');
       });
+
+      // TODO: also check text if sub is deleted
 
       it('links to the dataset', () => {
         const title = mountComponent().get('.feed-entry-title');
@@ -250,20 +257,20 @@ describe('EntityFeedEntry', () => {
 
   describe('entity.update.version (via submission) audit event', () => {
     const updateEntityFromSubmission = ({ deleted = false, ...options } = {}) => {
-      const details = {
-        entity: { uuid: 'e' }
-      };
-
-      details.submissionCreate = testData.extendedAudits
-        .createPast(1, {
-          action: 'submission.create',
-          details: { instanceId: 'x' }
-        })
-        .last();
-
-      const submission = testData.extendedSubmissions
+      // create the submission this event is based on
+      const fullSubmission = testData.extendedSubmissions
         .createPast(1, { instanceId: 's', ...options })
         .last();
+
+      // return either full or partial submission info depending on if submission was deleted
+      const submission = (deleted)
+        ? { instanceId: fullSubmission.instanceId, submitter: fullSubmission.submitter, createdAt: fullSubmission.createdAt }
+        : { ...fullSubmission, xmlFormId: 'f' }; // full submission augmented with form id
+
+      const details = {
+        entity: { uuid: 'e' },
+        submission
+      };
 
       testData.extendedEntityVersions.createPast(1);
       const audit = testData.extendedAudits
@@ -275,7 +282,7 @@ describe('EntityFeedEntry', () => {
 
       return {
         entry: audit,
-        submission: deleted ? null : { ...submission, xmlFormId: 'f' }
+        submission
       };
     };
 
@@ -308,7 +315,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct text with deleted submission instance id', () => {
       const component = mountComponent({ props: updateEntityFromSubmission({ deleted: true }) });
       const text = component.get('.feed-entry-title .title').text();
-      text.should.equal('Data updated by (deleted Submission x)');
+      text.should.equal('Data updated by (deleted Submission s)');
     });
 
     it('does not link to the deleted submission', () => {
