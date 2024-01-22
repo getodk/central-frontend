@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-list" ref="dropZone">
+  <file-drop-zone id="form-attachment-list" :disabled="uploading"
+    :styled="false" @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
         @click="showModal('uploadFilesModal')">
@@ -50,7 +51,7 @@ except according to the terms contained in the LICENSE file.
       <tbody v-if="form.dataExists && attachments.dataExists">
         <form-attachment-row v-for="attachment of attachments.values()"
           :key="attachment.name" :attachment="attachment"
-          :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
+          :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments" :data-name="attachment.name"
@@ -70,26 +71,24 @@ except according to the terms contained in the LICENSE file.
     <form-attachment-name-mismatch :state="nameMismatch.state"
       :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
-
-
     <form-attachment-link-dataset v-bind="linkDatasetModal" @hide="hideModal('linkDatasetModal')"
       @success="afterLinkDataset"/>
-  </div>
+  </file-drop-zone>
 </template>
 
 <script>
 import { any } from 'ramda';
 import { markRaw } from 'vue';
 
+import DocLink from '../doc-link.vue';
+import FileDropZone from '../file-drop-zone.vue';
+import FormAttachmentLinkDataset from './link-dataset.vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import FormAttachmentLinkDataset from './link-dataset.vue';
-import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import dropZone from '../../mixins/drop-zone';
 import modal from '../../mixins/modal';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
@@ -99,15 +98,16 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormAttachmentList',
   components: {
+    DocLink,
+    FileDropZone,
+    FormAttachmentLinkDataset,
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles,
-    FormAttachmentLinkDataset,
-    DocLink,
     SentenceSeparator
   },
-  mixins: [dropZone(), modal()],
+  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -123,7 +123,6 @@ export default {
   },
   data() {
     return {
-      dragDepth: 0,
       /*
       Most properties fall into exactly one of four groups:
 
@@ -175,13 +174,11 @@ export default {
       linkDatasetModal: {
         state: false,
         attachmentName: ''
-      },
-      // Used for testing
-      uploading: false
+      }
     };
   },
   computed: {
-    disabled() {
+    uploading() {
       return this.uploadStatus.total !== 0;
     },
     dsHashset() {
@@ -222,12 +219,11 @@ export default {
         if (items[i].kind === 'file') count += 1;
       return count;
     },
-    ondragenter(jQueryEvent) {
-      const { items } = jQueryEvent.originalEvent.dataTransfer;
+    dragenter(event) {
+      const { items } = event.dataTransfer;
       this.countOfFilesOverDropZone = this.fileItemCount(items);
       if (this.countOfFilesOverDropZone === 1) {
-        const tr = jQueryEvent.target
-          .closest('#form-attachment-list-table tbody tr');
+        const tr = event.target.closest('.form-attachment-row');
         this.dragoverAttachment = tr != null
           ? this.attachments.get(tr.dataset.name)
           : null;
@@ -235,15 +231,15 @@ export default {
       this.cancelUploads();
       this.updatedAttachments.clear();
     },
-    ondragleave() {
-      if (!this.fileIsOverDropZone) {
+    dragleave(_, leftDropZone) {
+      if (leftDropZone) {
         if (this.countOfFilesOverDropZone === 1) this.dragoverAttachment = null;
         this.countOfFilesOverDropZone = 0;
       }
     },
-    ondrop(jQueryEvent) {
+    drop(event) {
       this.countOfFilesOverDropZone = 0;
-      const { files } = jQueryEvent.originalEvent.dataTransfer;
+      const { files } = event.dataTransfer;
       if (this.dragoverAttachment != null) {
         const upload = { attachment: this.dragoverAttachment, file: files[0] };
         this.dragoverAttachment = null;
@@ -328,7 +324,6 @@ export default {
         });
     },
     uploadFiles() {
-      this.uploading = true;
       this.alert.blank();
       this.uploadStatus.total = this.plannedUploads.length;
       // This will soon be decremented by 1.
@@ -362,7 +357,6 @@ export default {
             }
           });
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
-          this.uploading = false;
         });
       this.plannedUploads = [];
       this.unmatchedFiles = [];
