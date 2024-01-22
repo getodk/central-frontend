@@ -258,15 +258,18 @@ export const entityOData = (top = 250, skip = 0) => {
 };
 
 // Creates a source submission along with submission audit log events.
-extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}) => {
-  const submission = extendedSubmissions
+extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}, deleted = false) => {
+  const fullSubmission = extendedSubmissions
     .createPast(1, submissionOptions)
     .last();
   const formVersion = submissionOptions.formVersion ?? extendedForms.first();
-  const submissionWithFormId = {
-    ...submission,
-    xmlFormId: formVersion.xmlFormId
-  };
+  const submission = (!deleted)
+    ? { ...fullSubmission, xmlFormId: formVersion.xmlFormId }
+    : {
+      instanceId: fullSubmission.instanceId,
+      submitter: fullSubmission.submitter,
+      createdAt: fullSubmission.createdAt
+    };
 
   const auditOptions = {
     actor: submission.submitter,
@@ -297,7 +300,7 @@ extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {})
   }
   const sourceEvent = extendedAudits.last();
 
-  return { submission: submissionWithFormId, sourceEvent };
+  return { submission, sourceEvent };
 };
 
 extendedEntities.resolve = (index) => {

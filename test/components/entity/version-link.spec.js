@@ -47,12 +47,21 @@ describe('EntityVersionLink', () => {
       mountComponent().text().should.equal('Submission Some Name');
     });
 
-    it('falls back to the instance ID if submission deleted', () => {
-      testData.extendedEntities
+    it('shows the instance ID if the submission has no instance name', () => {
+      const { submission } = testData.extendedEntities
         .createSourceSubmission('submission.create', { instanceId: 's' });
       testData.extendedEntities.createPast(1, {
-        // Specify partial submission (with only instance id) if deleted
-        source: { submission: { instanceId: 'x' } }
+        source: { submission }
+      });
+      mountComponent().text().should.equal('Submission s');
+    });
+
+    it('falls back to the instance ID if submission deleted', () => {
+      // Final argument about source submission: deleted=true
+      const { submission } = testData.extendedEntities
+        .createSourceSubmission('submission.create', { instanceId: 'x' }, true);
+      testData.extendedEntities.createPast(1, {
+        source: { submission }
       });
       mountComponent().text().should.equal('Submission x');
     });

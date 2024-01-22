@@ -195,8 +195,6 @@ describe('EntityFeedEntry', () => {
         text.should.equal('Created Entity dogwood in trees Entity List');
       });
 
-      // TODO: also check text if sub is deleted
-
       it('links to the dataset', () => {
         const title = mountComponent().get('.feed-entry-title');
         const { to } = title.getComponent(RouterLinkStub).props();
