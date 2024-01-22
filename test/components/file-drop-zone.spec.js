@@ -21,8 +21,9 @@ describe('FileDropZone', () => {
     await component.trigger('dragenter', {
       dataTransfer: fileDataTransfer([createFile()])
     });
-    const args = component.emitted().dragenter[0];
-    args[0].type.should.equal('dragenter');
+    const event = component.emitted().dragenter[0][0];
+    event.should.be.an.instanceof(DragEvent);
+    event.type.should.equal('dragenter');
   });
 
   describe('dragleave', () => {
@@ -35,8 +36,9 @@ describe('FileDropZone', () => {
       await component.trigger('dragleave', {
         dataTransfer: fileDataTransfer(files)
       });
-      const args = component.emitted().dragleave[0];
-      args[0].type.should.equal('dragleave');
+      const event = component.emitted().dragleave[0][0];
+      event.should.be.an.instanceof(DragEvent);
+      event.type.should.equal('dragleave');
     });
 
     it('emits true after leaving the drop zone', async () => {
@@ -55,8 +57,8 @@ describe('FileDropZone', () => {
       const component = mountComponent();
       const p = component.get('p');
       const files = [createFile()];
-      // Trigger events as if the user is dragging over the <p> child element
-      // without dragging over any other part of the drop zone.
+      // Trigger events as if the user drags over, then out of the <p> child
+      // element, without dragging over any other part of the drop zone.
       await p.trigger('dragenter', { dataTransfer: fileDataTransfer(files) });
       await p.trigger('dragleave', { dataTransfer: fileDataTransfer(files) });
       component.emitted().dragleave[0][1].should.be.true();
@@ -77,7 +79,7 @@ describe('FileDropZone', () => {
     it('emits true after leaving drop zone after previously dropping', async () => {
       const component = mountComponent();
       const files = [createFile()];
-      await dragAndDrop(component.get('p'), files);
+      await dragAndDrop(component, files);
       await component.trigger('dragenter', {
         dataTransfer: fileDataTransfer(files)
       });
@@ -93,8 +95,9 @@ describe('FileDropZone', () => {
   it('emits an event after drop', async () => {
     const component = mountComponent();
     await dragAndDrop(component, [createFile()]);
-    const args = component.emitted().drop[0];
-    args[0].type.should.equal('drop');
+    const event = component.emitted().drop[0][0];
+    event.should.be.an.instanceof(DragEvent);
+    event.type.should.equal('drop');
   });
 
   describe('dragover class', () => {

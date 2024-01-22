@@ -20,9 +20,6 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, ref } from 'vue';
 
-defineOptions({
-  name: 'FileDropZone'
-});
 const props = defineProps({
   disabled: Boolean,
   styled: {
@@ -32,6 +29,11 @@ const props = defineProps({
 });
 const emit = defineEmits(['dragenter', 'dragleave', 'drop']);
 
+// A dragleave event is triggered when the user drags out of a particular
+// element, but we also want to know when the user has left the drop zone as a
+// whole. `depth` is used to track this: depth.value > 0 if the user is
+// currently dragging over the drop zone, and depth.value === 0 if the user has
+// dragged out of the drop zone or has dropped their file(s).
 const depth = ref(0);
 const noFiles = (event) =>
   !event.dataTransfer.types.some(type => type === 'Files');
