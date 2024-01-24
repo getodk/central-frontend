@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else-if="entry.action === 'entity.create'">
         <span class="icon-magic-wand"></span>
-        <i18n-t v-if="entry.details.submission != null"
+        <i18n-t v-if="entry.details.source?.submission != null"
           keypath="title.entity.create.submission">
           <template #label>
             <span class="entity-label">{{ entity.currentVersion.label }}</span>
@@ -63,7 +63,7 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'entity.update.version'">
         <span class="icon-pencil"></span>
         <span class="title">
-        <template v-if="entry.details.submission != null">
+        <template v-if="entry.details.source?.submission != null">
           <i18n-t v-if="submission.currentVersion != null"
             keypath="title.entity.update_version.submission.notDeleted">
             <template #instanceName>

@@ -298,9 +298,9 @@ extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {},
   } else if (sourceAction !== 'submission.create') {
     throw new Error('invalid action');
   }
-  const sourceEvent = extendedAudits.last();
+  const event = extendedAudits.last();
 
-  return { submission, sourceEvent };
+  return { submission, event };
 };
 
 extendedEntities.resolve = (index) => {

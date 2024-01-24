@@ -38,17 +38,17 @@ const resolveConflict = () => {
   testData.extendedEntities.createPast(1, { uuid: 'e' });
   testData.extendedAudits.createPast(1, {
     action: 'entity.create',
-    details: {}
+    details: { source: {} }
   });
   testData.extendedEntityVersions.createPast(1);
   testData.extendedAudits.createPast(1, {
     action: 'entity.update.version',
-    details: {}
+    details: { source: {} }
   });
   testData.extendedEntityVersions.createPast(1, { baseVersion: 1 });
   testData.extendedAudits.createPast(1, {
     action: 'entity.update.version',
-    details: {}
+    details: { source: {} }
   });
   testData.extendedEntities.resolve(-1);
   testData.extendedAudits.createPast(1, { action: 'entity.update.resolve' });
@@ -102,7 +102,7 @@ describe('EntityActivity', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
-        details: sourceDetails
+        details: { source: sourceDetails }
       });
       const component = mountComponent();
       component.findAll('.feed-entry-group').length.should.equal(1);
@@ -119,7 +119,7 @@ describe('EntityActivity', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
-        details: sourceDetails
+        details: { source: sourceDetails }
       });
       const component = mountComponent();
       component.findAll('.feed-entry-group').length.should.equal(1);
@@ -137,7 +137,7 @@ describe('EntityActivity', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
-        details: sourceDetails
+        details: { source: sourceDetails }
       });
       const component = mountComponent();
       component.findAll('.feed-entry-group').length.should.equal(1);
@@ -187,13 +187,13 @@ describe('EntityActivity', () => {
       });
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
-        details: {}
+        details: { source: {} }
       });
       for (let version = 2; version <= 50; version += 1) {
         testData.extendedEntityVersions.createPast(1);
         testData.extendedAudits.createPast(1, {
           action: 'entity.update.version',
-          details: {}
+          details: { source: {} }
         });
       }
     };
@@ -258,7 +258,7 @@ describe('EntityActivity', () => {
           });
           testData.extendedAudits.createPast(1, {
             action: 'entity.update.version',
-            details: {}
+            details: { source: {} }
           });
           return testData.standardEntities.last();
         })

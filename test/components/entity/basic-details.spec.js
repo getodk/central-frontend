@@ -50,13 +50,14 @@ describe('EntityBasicDetails', () => {
       testData.extendedEntities.createPast(1, { uuid: 'e' });
       const details = {
         entity: { uuid: 'e' },
+        source: {}
       };
       if (!submissionDeleted)
-        details.submission = { ...submission, xmlFormId: 'f' }; // Use entire submission, augmented with form id
+        details.source = { submission: { ...submission, xmlFormId: 'f' } }; // Use entire submission, augmented with form id
       else {
         // If submission is deleted, these are the only fields we pass through in the audit log
         const { instanceId, submitter, createdAt } = submission;
-        details.submission = { instanceId, submitter, createdAt };
+        details.source = { submission: { instanceId, submitter, createdAt } };
       }
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
@@ -144,7 +145,7 @@ describe('EntityBasicDetails', () => {
           });
           testData.extendedAudits.createPast(1, {
             action: 'entity.update.version',
-            details: {}
+            details: { source: {} }
           });
           return testData.standardEntities.last();
         })

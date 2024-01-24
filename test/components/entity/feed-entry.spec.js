@@ -167,11 +167,12 @@ describe('EntityFeedEntry', () => {
     // entity.create event.
     const createEntity = (options = {}) => {
       const details = {
-        entity: { uuid: 'e' }
+        entity: { uuid: 'e' },
+        source: {}
       };
       if (options.submission === true) {
         const submission = testData.extendedSubmissions.createPast(1);
-        details.submission = { ...submission, xmlFormId: 'f' };
+        details.source = { submission: { ...submission, xmlFormId: 'f' } };
       }
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
@@ -223,7 +224,7 @@ describe('EntityFeedEntry', () => {
       testData.extendedEntityVersions.createPast(1);
       testData.extendedAudits.createPast(1, {
         action: 'entity.update.version',
-        details: {}
+        details: { source: {} }
       });
     });
 
@@ -267,7 +268,7 @@ describe('EntityFeedEntry', () => {
 
       const details = {
         entity: { uuid: 'e' },
-        submission
+        source: { submission } // source would also have `event` but that is not used in this component
       };
 
       testData.extendedEntityVersions.createPast(1);

@@ -74,7 +74,7 @@ watchEffect(() => {
   // `audit` should always exist in production, but it doesn't always exist in
   // testing.
   if (audit == null) return;
-  submission.value = audit.details.submission;
+  submission.value = audit.details.source?.submission;
 });
 const { submissionPath } = useRoutes();
 </script>
