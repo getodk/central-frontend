@@ -258,28 +258,30 @@ export const entityOData = (top = 250, skip = 0) => {
 };
 
 // Creates a source submission along with submission audit log events.
-extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}) => {
-  const submission = extendedSubmissions
+extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}, deleted = false) => {
+  const fullSubmission = extendedSubmissions
     .createPast(1, submissionOptions)
     .last();
   const formVersion = submissionOptions.formVersion ?? extendedForms.first();
-  const submissionWithFormId = {
-    ...submission,
-    xmlFormId: formVersion.xmlFormId
-  };
+  const submission = (!deleted)
+    ? { ...fullSubmission, xmlFormId: formVersion.xmlFormId }
+    : {
+      instanceId: fullSubmission.instanceId,
+      submitter: fullSubmission.submitter,
+      createdAt: fullSubmission.createdAt
+    };
 
   const auditOptions = {
     actor: submission.submitter,
     actee: formVersion,
     details: { instanceId: submission.instanceId }
   };
-  const submissionCreate = extendedAudits
+  extendedAudits
     .createPast(1, {
       action: 'submission.create',
       loggedAt: submission.createdAt,
       ...auditOptions
-    })
-    .last();
+    });
   if (sourceAction === 'submission.update') {
     extendedSubmissions.update(-1, { reviewState: 'approved' });
     extendedAudits.createPast(1, {
@@ -295,9 +297,9 @@ extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {})
   } else if (sourceAction !== 'submission.create') {
     throw new Error('invalid action');
   }
-  const sourceEvent = extendedAudits.last();
+  const event = extendedAudits.last();
 
-  return { submission: submissionWithFormId, submissionCreate, sourceEvent };
+  return { submission, event };
 };
 
 extendedEntities.resolve = (index) => {

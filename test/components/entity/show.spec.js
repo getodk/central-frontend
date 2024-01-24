@@ -86,7 +86,7 @@ describe('EntityShow', () => {
           });
           testData.extendedAudits.createPast(1, {
             action: 'entity.update.version',
-            details: {}
+            details: { source: {} }
           });
           return testData.standardEntities.last();
         })
@@ -151,7 +151,7 @@ describe('EntityShow', () => {
           });
           testData.extendedAudits.createPast(1, {
             action: 'entity.update.version',
-            details: {}
+            details: { source: {} }
           });
 
           return testData.standardEntities.last();

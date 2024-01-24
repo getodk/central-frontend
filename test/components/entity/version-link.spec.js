@@ -37,25 +37,33 @@ describe('EntityVersionLink', () => {
 
   describe('entity source is a submission', () => {
     it('shows the instance name if the submission has one', () => {
-      const { submission, submissionCreate } = testData.extendedEntities
+      const { submission } = testData.extendedEntities
         .createSourceSubmission('submission.create', {
           meta: { instanceName: 'Some Name' }
         });
       testData.extendedEntities.createPast(1, {
-        source: { submission, submissionCreate }
+        source: { submission }
       });
       mountComponent().text().should.equal('Submission Some Name');
     });
 
-    it('falls back to the instance ID', () => {
-      const { submissionCreate } = testData.extendedEntities
+    it('shows the instance ID if the submission has no instance name', () => {
+      const { submission } = testData.extendedEntities
         .createSourceSubmission('submission.create', { instanceId: 's' });
       testData.extendedEntities.createPast(1, {
-        // Don't specify source.submission, matching the response if the
-        // submission is deleted.
-        source: { submissionCreate }
+        source: { submission }
       });
       mountComponent().text().should.equal('Submission s');
+    });
+
+    it('falls back to the instance ID if submission deleted', () => {
+      // Final argument about source submission: deleted=true
+      const { submission } = testData.extendedEntities
+        .createSourceSubmission('submission.create', { instanceId: 'x' }, true);
+      testData.extendedEntities.createPast(1, {
+        source: { submission }
+      });
+      mountComponent().text().should.equal('Submission x');
     });
   });
 });

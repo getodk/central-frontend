@@ -57,17 +57,23 @@ const feed = computed(() => {
   let versionIndex = entityVersions.length - 1;
   for (const audit of audits) {
     if (audit.action === 'entity.update.version') {
-      const { submission } = audit.details;
+      const { submission } = audit.details.source;
       const entityVersion = entityVersions[versionIndex];
       versionIndex -= 1;
       groups.push([{ entry: audit, submission, entityVersion }]);
     } else if (audit.action === 'entity.create') {
       const group = [{ entry: audit }];
       const { details } = audit;
-      if (details.sourceEvent?.action === 'submission.update')
-        group.push({ entry: details.sourceEvent });
-      if (details.submissionCreate != null)
-        group.push({ entry: details.submissionCreate, submission: details.submission });
+      // this will insert a feed entry for the submission approval event
+      if (details.source?.event?.action === 'submission.update')
+        group.push({ entry: details.source.event });
+      // this will insert a feed entry for the submission creation
+      if (details.source?.submission != null) {
+        group.push({
+          entry: { action: 'submission.create', loggedAt: details.source.submission.createdAt },
+          submission: details.source.submission
+        });
+      }
       groups.push(group);
     } else {
       groups.push([{ entry: audit }]);

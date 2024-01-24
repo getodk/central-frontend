@@ -18,16 +18,16 @@ except according to the terms contained in the LICENSE file.
           <dt>{{ $t('entity.entityId') }}</dt>
           <dd>{{ entity.uuid }}</dd>
         </div>
-        <div v-if="instanceId != null">
+        <div v-if="submission != null">
           <dt>{{ $t('creatingSubmission') }}</dt>
           <dd id="entity-basic-details-creating-submission">
-            <router-link v-if="submission != null"
-              :to="submissionPath(projectId, submission.xmlFormId, instanceId)">
-              {{ submission.currentVersion.instanceName ?? instanceId }}
+            <router-link v-if="submission.currentVersion != null"
+              :to="submissionPath(projectId, submission.xmlFormId, submission.instanceId)">
+              {{ submission.currentVersion.instanceName ?? submission.instanceId }}
             </router-link>
             <template v-else>
               <span class="icon-trash" v-tooltip.sr-only></span>
-              <span>{{ instanceId }}</span>
+              <span>{{ submission.instanceId }}</span>
               <span class="sr-only">&nbsp;{{ $t('submissionDeleted') }}</span>
             </template>
           </dd>
@@ -65,23 +65,16 @@ const projectId = inject('projectId');
 // created.
 const { entity, audits } = useRequestData();
 
-// Using `ref` and watchEffect() for instanceId and `submission` rather than
-// `computed` so that they don't change whenever `audits` is refreshed.
-const instanceId = ref(undefined);
+// Using `ref` and watchEffect() for `submission` rather than
+// `computed` so that it doesn't change whenever `audits` is refreshed.
 const submission = ref(undefined);
 watchEffect(() => {
-  if (instanceId.value !== undefined || !audits.dataExists) return;
+  if (submission.value !== undefined || !audits.dataExists) return;
   const audit = audits.find(({ action }) => action === 'entity.create');
   // `audit` should always exist in production, but it doesn't always exist in
   // testing.
   if (audit == null) return;
-  const { submissionCreate } = audit.details;
-  if (submissionCreate != null) {
-    instanceId.value = submissionCreate.details.instanceId;
-    submission.value = audit.details.submission;
-  } else {
-    instanceId.value = null;
-  }
+  submission.value = audit.details.source?.submission;
 });
 const { submissionPath } = useRoutes();
 </script>
