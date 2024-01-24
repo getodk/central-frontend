@@ -171,7 +171,7 @@ describe('EntityFeedEntry', () => {
         source: {}
       };
       if (options.submission === true) {
-        const submission = testData.extendedSubmissions.createPast(1);
+        const submission = testData.extendedSubmissions.createPast(1).last();
         details.source = { submission: { ...submission, xmlFormId: 'f' } };
       }
       testData.extendedAudits.createPast(1, {

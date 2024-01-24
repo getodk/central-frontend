@@ -46,7 +46,7 @@ const text = computed(() => {
   const { source } = props.version;
   const { submission } = source;
   if (submission != null) {
-    const nameOrId = submission?.currentVersion?.instanceName ??
+    const nameOrId = submission.currentVersion?.instanceName ??
       submission.instanceId;
     return t('submission', { instanceName: nameOrId });
   }

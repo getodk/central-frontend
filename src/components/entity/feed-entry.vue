@@ -63,7 +63,7 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'entity.update.version'">
         <span class="icon-pencil"></span>
         <span class="title">
-        <template v-if="entry.details.source?.submission != null">
+        <template v-if="submission != null">
           <i18n-t v-if="submission.currentVersion != null"
             keypath="title.entity.update_version.submission.notDeleted">
             <template #instanceName>
@@ -148,16 +148,11 @@ const creatingSubmissionPath = computed(() => submissionPath(
 ));
 const { t } = useI18n();
 
-// This function pulls out the submission instance ID when the event
-// is about a submission (creation, approval) and the ID is directly
-// in the event details.
 const deletedSubmission = computed(() => {
   const id = props.submission.instanceId;
   return t('title.submission.create.deleted.deletedSubmission', { id });
 });
 
-// This function pulls out the submission instance ID in events about
-// entities
 const deletedSubmissionEntityEvent = computed(() => {
   const id = props.submission.instanceId;
   return t('title.entity.update_version.submission.deleted.deletedSubmission', { id });

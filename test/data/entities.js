@@ -281,8 +281,7 @@ extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {},
       action: 'submission.create',
       loggedAt: submission.createdAt,
       ...auditOptions
-    })
-    .last();
+    });
   if (sourceAction === 'submission.update') {
     extendedSubmissions.update(-1, { reviewState: 'approved' });
     extendedAudits.createPast(1, {
