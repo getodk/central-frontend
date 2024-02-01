@@ -1875,6 +1875,18 @@
         }
       }
     },
+    "EntityUploadDataTemplate": {
+      "text": {
+        "full": {
+          "string": "If you aren’t sure, you can {downloadTemplate}",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+        },
+        "downloadTemplate": {
+          "string": "Download a data template (.csv)",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+        }
+      }
+    },
     "EntityVersionLink": {
       "submission": {
         "string": "Submission {instanceName}",
