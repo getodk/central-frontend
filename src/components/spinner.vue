@@ -10,25 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- `Spinner` toggles a spinner according to its `state` prop. `Spinner` is
-positioned absolutely, so you may need to set the position of an ancestor
-element. -->
+<!-- `Spinner` toggles a spinner according to its `state` prop. -->
 <template>
   <div :class="{ spinner: true, active: state }">
     <div class="spinner-glyph"></div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Spinner',
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
+<script setup>
+defineProps({
+  state: Boolean
+});
 </script>
 
 <style lang="scss">
@@ -45,7 +37,6 @@ $spinner-width: 3px;
 
 .spinner {
   $adjusted-position: calc(50% - #{math.div($spinner-size, 2)});
-  display: block;
   left: $adjusted-position;
   opacity: 0;
   pointer-events: none;
@@ -60,6 +51,15 @@ $spinner-width: 3px;
     animation-timing-function: linear;
     opacity: 1;
     transition-delay: 0.15s;
+  }
+
+  select + & {
+    display: inline-block;
+    left: 0;
+    margin-left: 7px;
+    position: relative;
+    top: 0;
+    vertical-align: text-top;
   }
 }
 .spinner-glyph {
