@@ -26,9 +26,7 @@ except according to the terms contained in the LICENSE file.
             <option value="admin">{{ $t('role.admin') }}</option>
             <option value="">{{ $t('role.none') }}</option>
           </select>
-          <span class="spinner-container">
-            <spinner :state="awaitingResponse"/>
-          </span>
+          <spinner :state="awaitingResponse"/>
         </div>
       </form>
     </td>
@@ -142,12 +140,6 @@ export default {
     .form-control {
       display: inline-block;
       width: 150px;
-    }
-
-    .spinner-container {
-      margin-left: 15px;
-      // Spinner is positioned absolutely.
-      position: relative;
     }
   }
 }
