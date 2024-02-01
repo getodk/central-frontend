@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     href() {
-      return apiPaths.entities(this.dataset.projectId, this.dataset.name);
+      return apiPaths.entities(this.dataset.projectId, this.dataset.name, '.csv');
     },
     datasetOverviewPage() {
       return this.datasetPath(this.dataset.projectId, this.dataset.name);

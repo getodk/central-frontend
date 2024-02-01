@@ -31,7 +31,7 @@ const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 
 const href = computed(() =>
-  apiPaths.entities(projectId, datasetName, { $filter: props.odataFilter }));
+  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter }));
 
 const { dataset, odataEntities } = useRequestData();
 const { t } = useI18n();
