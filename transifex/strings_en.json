@@ -828,6 +828,10 @@
       "string": "Right Now",
       "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
     },
+    "rowNumber": {
+      "string": "Row",
+      "developer_comment": "This is shown for the row number."
+    },
     "success": {
       "string": "Success!"
     },

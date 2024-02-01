@@ -50,7 +50,12 @@ describe('SubmissionTable', () => {
         props: { draft: false }
       });
       const table = component.get('.table-freeze-frozen');
-      headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
+      headers(table).should.eql([
+        'Row',
+        'Submitted by',
+        'Submitted at',
+        'State and actions'
+      ]);
     });
 
     it('renders the correct headers for a form draft', () => {
@@ -60,7 +65,7 @@ describe('SubmissionTable', () => {
         props: { draft: true }
       });
       const table = component.get('.table-freeze-frozen');
-      headers(table).should.eql(['', 'Submitted at']);
+      headers(table).should.eql(['Row', 'Submitted at']);
     });
   });
 
