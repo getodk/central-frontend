@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <table-freeze id="entity-table" ref="table" :data="odataEntities.value"
     key-prop="__id" :frozen-only="properties == null" divider @action="update">
     <template #head-frozen>
-      <th><!-- Row number --></th>
+      <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
       <th>{{ $t('header.updatedAtAndActions') }}</th>

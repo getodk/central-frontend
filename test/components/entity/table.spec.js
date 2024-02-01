@@ -41,7 +41,12 @@ describe('EntityTable', () => {
       testData.extendedEntities.createPast(1);
       const component = mountComponent();
       const table = component.get('.table-freeze-frozen');
-      headers(table).should.eql(['', 'Created by', 'Created at', 'Last Updated / Actions']);
+      headers(table).should.eql([
+        'Row',
+        'Created by',
+        'Created at',
+        'Last Updated / Actions'
+      ]);
     });
   });
 

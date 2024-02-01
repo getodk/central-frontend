@@ -127,14 +127,6 @@ export default {
 @import '../../assets/scss/mixins';
 
 .submission-metadata-row {
-  .row-number {
-    color: #999;
-    font-size: 11px;
-    padding-top: 11px;
-    text-align: right;
-    vertical-align: middle;
-  }
-
   .submitter-name {
     @include text-overflow-ellipsis;
     max-width: 250px;
