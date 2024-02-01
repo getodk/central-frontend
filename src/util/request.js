@@ -158,7 +158,11 @@ export const apiPaths = {
   publicLinks: formPath('/public-links'),
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
-  entities: datasetPath('/entities.csv'),
+  entities: (projectId, datasetName, extension = '', query = undefined) => {
+    const encodedName = encodeURIComponent(datasetName);
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/datasets/${encodedName}/entities${extension}${qs}`;
+  },
   odataEntitiesSvc: datasetPath('.svc'),
   odataEntities: datasetPath('.svc/Entities'),
   entity: entityPath(''),

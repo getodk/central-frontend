@@ -301,9 +301,21 @@ describe('util/request', () => {
       apiPaths.dataset(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b');
     });
 
-    it('entities', () => {
-      const path = apiPaths.entities(1, 'á');
-      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+    describe('entities', () => {
+      it('returns the correct path', () => {
+        const path = apiPaths.entities(1, 'á');
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities');
+      });
+
+      it('appends a file extension', () => {
+        const path = apiPaths.entities(1, 'á', '.csv');
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+      });
+
+      it('returns a query string', () => {
+        const path = apiPaths.entities(1, 'á', '.csv', { $filter: 'true' });
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv?%24filter=true');
+      });
     });
 
     it('odataEntitiesSvc', () => {
