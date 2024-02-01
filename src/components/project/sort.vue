@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="project-sort">
     <form class="form-inline" @submit.prevent>
-      <span id="project-sort-label">{{ $t('action.sort') }}</span>
       <label class="form-group">
+        <span id="project-sort-label">{{ $t('action.sort') }}</span>
         <select :value="modelValue" class="form-control"
           @change="$emit('update:modelValue', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
@@ -39,15 +39,14 @@ defineEmits(['update:modelValue']);
 </script>
 
 <style lang="scss">
-
 #project-sort {
   float: right;
 
   #project-sort-label {
     font-size: 14px;
     padding-right: 8px;
+    vertical-align: middle;
   }
-
 }
 </style>
 
