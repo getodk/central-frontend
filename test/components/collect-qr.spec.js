@@ -85,6 +85,6 @@ describe('CollectQr', () => {
       10
     );
 
-    width2.should.equal(2 * width1);
+    width2.should.equal(2 * (width1 - 15)); // remove negative padding
   });
 });

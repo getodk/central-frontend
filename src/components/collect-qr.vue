@@ -45,7 +45,15 @@ const imgHtml = computed(() => {
   const json = JSON.stringify(props.settings);
   code.addData(btoa(pako.deflate(json, { to: 'string' })));
   code.make();
-  return code.createImgTag(props.cellSize, 0);
+  return code.createImgTag(props.cellSize, 15);
 });
 
 </script>
+
+<style lang="scss">
+
+.collect-qr img {
+  margin: -15px;
+}
+
+</style>
