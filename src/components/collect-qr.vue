@@ -16,34 +16,36 @@ except according to the terms contained in the LICENSE file.
 </template>
 <!-- eslint-enable vue/no-v-html -->
 
-<script>
+<script setup>
+import { computed } from 'vue';
 import qrcode from 'qrcode-generator';
 import pako from 'pako/lib/deflate';
 
-export default {
-  name: 'CollectQr',
-  props: {
-    settings: {
-      type: Object,
-      required: true
-    },
-    errorCorrectionLevel: {
-      type: String,
-      required: true
-    },
-    cellSize: {
-      type: Number,
-      required: true
-    }
+defineOptions({
+  name: 'CollectQr'
+});
+
+const props = defineProps({
+  settings: {
+    type: Object,
+    required: true
   },
-  computed: {
-    imgHtml() {
-      const code = qrcode(0, this.errorCorrectionLevel);
-      const json = JSON.stringify(this.settings);
-      code.addData(btoa(pako.deflate(json, { to: 'string' })));
-      code.make();
-      return code.createImgTag(this.cellSize, 0);
-    }
+  errorCorrectionLevel: {
+    type: String,
+    required: true
+  },
+  cellSize: {
+    type: Number,
+    required: true
   }
-};
+});
+
+const imgHtml = computed(() => {
+  const code = qrcode(0, props.errorCorrectionLevel);
+  const json = JSON.stringify(props.settings);
+  code.addData(btoa(pako.deflate(json, { to: 'string' })));
+  code.make();
+  return code.createImgTag(props.cellSize, 0);
+});
+
 </script>
