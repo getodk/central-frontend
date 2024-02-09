@@ -88,10 +88,11 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { clamp, last } from 'ramda';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import EntityVersionLink from './version-link.vue';
 
+import useEventListener from '../../composables/event-listener';
 import { px } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
@@ -203,13 +204,8 @@ const resize = () => {
     table.value.style.width = '';
   }
 };
-onMounted(() => {
-  resize();
-  window.addEventListener('resize', resize);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', resize);
-});
+onMounted(resize);
+useEventListener(window, 'resize', resize);
 defineExpose({ resize });
 </script>
 
