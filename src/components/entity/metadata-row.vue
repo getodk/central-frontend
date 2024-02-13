@@ -33,7 +33,12 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-angle-right"></span>
       </div>
       <div class="btn-group">
-        <button v-if="canUpdate" type="button"
+        <button v-if="verbs.has('entity.delete')" type="button"
+          class="delete-button btn btn-danger" :aria-label="$t('action.delete')"
+          v-tooltip.aria-label>
+          <span class="icon-trash"></span>
+        </button>
+        <button v-if="verbs.has('entity.update')" type="button"
           class="update-button btn btn-default" :aria-label="updateLabel"
           v-tooltip.aria-label>
           <span class="icon-pencil"></span>
@@ -74,7 +79,10 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  canUpdate: Boolean
+  verbs: {
+    type: Set,
+    required: true
+  }
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');

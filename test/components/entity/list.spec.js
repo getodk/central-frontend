@@ -1,9 +1,10 @@
 import DateTime from '../../../src/components/date-time.vue';
 import EntityDataRow from '../../../src/components/entity/data-row.vue';
+import EntityDelete from '../../../src/components/entity/delete.vue';
 import EntityList from '../../../src/components/entity/list.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
-import EntityUpdate from '../../../src/components/entity/update.vue';
 import EntityResolve from '../../../src/components/entity/resolve.vue';
+import EntityUpdate from '../../../src/components/entity/update.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
 import testData from '../../data';
@@ -428,6 +429,213 @@ describe('EntityList', () => {
           updateModal.props().state.should.be.false();
         });
       });
+    });
+  });
+
+  describe('delete', () => {
+    it('toggles the modal', () => {
+      testData.extendedEntities.createPast(1);
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .complete()
+        .testModalToggles({
+          modal: EntityDelete,
+          show: '.entity-metadata-row .delete-button',
+          hide: '.btn-link'
+        });
+    });
+
+    it('passes the correct entity to the modal', async () => {
+      testData.extendedEntities
+        .createPast(1, { uuid: 'e1', label: 'Entity 1' })
+        .createPast(1, { uuid: 'e2', label: 'Entity 2' });
+      const component = await load('/projects/1/entity-lists/trees/entities', {
+        root: false
+      });
+      const modal = component.getComponent(EntityDelete);
+      await component.get('.entity-metadata-row .delete-button').trigger('click');
+      modal.props().uuid.should.equal('e2');
+      modal.props().label.should.equal('Entity 2');
+    });
+
+    it('implements some standard button things', () => {
+      testData.extendedEntities.createPast(1);
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component =>
+          component.get('.entity-metadata-row .delete-button').trigger('click'))
+        .testStandardButton({
+          button: '#entity-delete .btn-danger',
+          disabled: ['#entity-delete .btn-link'],
+          modal: EntityDelete
+        });
+    });
+
+    it('sends the correct request', () => {
+      testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      return load('/projects/1/entity-lists/%C3%A1/entities', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('.entity-metadata-row .delete-button').trigger('click');
+          return component.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'DELETE',
+          url: '/v1/projects/1/datasets/%C3%A1/entities/e'
+        }]);
+    });
+
+    describe('after a successful response', () => {
+      const del = () => {
+        testData.extendedEntities.createPast(1, { label: 'My Entity' });
+        return load('/projects/1/entity-lists/trees/entities', { root: false })
+          .complete()
+          .request(async (component) => {
+            await component.get('.entity-metadata-row .delete-button').trigger('click');
+            return component.get('#entity-delete .btn-danger').trigger('click');
+          })
+          .respondWithSuccess();
+      };
+
+      it('hides the modal', async () => {
+        const component = await del();
+        component.getComponent(EntityDelete).props().state.should.be.false();
+      });
+
+      it('shows a success alert', async () => {
+        const component = await del();
+        component.should.alert('success', 'Entity “My Entity” has been deleted.');
+      });
+
+      it('hides the row', async () => {
+        const component = await del();
+        const row = component.get('.entity-metadata-row');
+        row.element.dataset.markRowsDeleted.should.equal('true');
+      });
+
+      it('updates the entity count', async () => {
+        const component = await del();
+        const text = component.get('#entity-download-button').text();
+        text.should.equal('Download 0 Entities');
+      });
+    });
+
+    describe('last entity was deleted', () => {
+      beforeEach(() => {
+        testData.extendedEntities.createPast(2);
+      });
+
+      const del = (index) => async (component) => {
+        const row = component.get(`.entity-metadata-row:nth-child(${index + 1})`);
+        await row.get('.delete-button').trigger('click');
+        return component.get('#entity-delete .btn-danger').trigger('click');
+      };
+
+      it('hides the table', () =>
+        load('/projects/1/entity-lists/trees/entities', { root: false })
+          .complete()
+          .request(del(1))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('#entity-table').should.be.visible();
+          })
+          .request(del(0))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('#entity-table').should.be.hidden();
+          }));
+
+      it('shows a message', () =>
+        load('/projects/1/entity-lists/trees/entities', { root: false })
+          .complete()
+          .request(del(1))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('.empty-table-message').should.be.hidden();
+          })
+          .request(del(0))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('.empty-table-message').should.be.visible();
+          }));
+    });
+
+    it('continues to show modal if checkbox was not checked', () => {
+      testData.extendedEntities.createPast(2);
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .complete()
+        .request(async (component) => {
+          const row = component.get('.entity-metadata-row:last-child');
+          await row.get('.delete-button').trigger('click');
+          return component.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .afterResponse(async (component) => {
+          await component.get('.entity-metadata-row .delete-button').trigger('click');
+          component.getComponent(EntityDelete).props().state.should.be.true();
+        });
+    });
+
+    describe('deleting after checking checkbox', () => {
+      const delAndCheck = () => {
+        testData.extendedEntities
+          .createPast(1, { uuid: 'e1', label: 'Entity 1' })
+          .createPast(1, { uuid: 'e2', label: 'Entity 2' });
+        return load('/projects/1/entity-lists/trees/entities', { root: false })
+          .complete()
+          .request(async (component) => {
+            const row = component.get('.entity-metadata-row:last-child');
+            await row.get('.delete-button').trigger('click');
+            const modal = component.getComponent(EntityDelete);
+            await modal.get('input').setChecked();
+            return modal.get('.btn-danger').trigger('click');
+          })
+          .respondWithSuccess()
+          .complete();
+      };
+
+      it('immediately sends a request', () =>
+        delAndCheck()
+          .request(component =>
+            component.get('.entity-metadata-row .delete-button').trigger('click'))
+          .respondWithProblem()
+          .testRequests([{
+            method: 'DELETE',
+            url: '/v1/projects/1/datasets/trees/entities/e2'
+          }]));
+
+      it('does not show the modal', () =>
+        delAndCheck()
+          .request(async (component) => {
+            await component.get('.entity-metadata-row .delete-button').trigger('click');
+            component.getComponent(EntityDelete).props().state.should.be.false();
+          })
+          .respondWithProblem());
+
+      it('shows the correct alert', () =>
+        delAndCheck()
+          .request(component =>
+            component.get('.entity-metadata-row .delete-button').trigger('click'))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.should.alert('success', 'Entity “Entity 2” has been deleted.');
+          }));
+
+      it('does not hide table after deleting last entity if entities are concurrently replaced', () =>
+        delAndCheck()
+          .request(async (component) => {
+            await component.get('#entity-list-refresh-button').trigger('click');
+            return component.get('.entity-metadata-row .delete-button').trigger('click');
+          })
+          .respondWithData(() => {
+            testData.extendedEntities.splice(0);
+            testData.extendedEntities.createNew(2);
+            return testData.entityOData();
+          })
+          .respondWithSuccess()
+          .afterResponses(component => {
+            component.get('#entity-table').should.be.visible();
+          }));
     });
   });
 

@@ -49,6 +49,11 @@ export const requiredLabel = (text, required) => {
   return `${text}${star}`;
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ROW ANIMATIONS
+
 export const markRowsChanged = (trs) => {
   for (const tr of trs) tr.dataset.markRowsChanged = 'true';
   // Toggling data-mark-rows-changed from 'true' to 'false' will trigger a CSS
@@ -58,3 +63,12 @@ export const markRowsChanged = (trs) => {
   });
 };
 export const markRowChanged = (tr) => { markRowsChanged([tr]); };
+
+export const markRowsDeleted = (trs) => {
+  for (const tr of trs) tr.dataset.markRowsDeleted = 'true';
+  setTimeout(
+    () => { for (const tr of trs) tr.dataset.markRowsDeleted = 'false'; },
+    750
+  );
+};
+export const markRowDeleted = (tr) => { markRowsDeleted([tr]); };
