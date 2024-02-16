@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
     <select :id="toggleId" ref="toggle" class="form-control"
       :aria-disabled="options == null" data-toggle="dropdown" role="button"
       aria-haspopup="true" aria-expanded="false" :aria-label="label"
-      @keydown="toggleAfterEnter" @mousedown.prevent>
+      @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
       <option value="">{{ selectOption }}</option>
     </select>
     <span class="form-label" aria-hidden="true">{{ label }}</span>
@@ -76,7 +76,9 @@ except according to the terms contained in the LICENSE file.
 let id = 1;
 </script>
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+import { computed, inject, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+
+import { noop } from '../util/util';
 
 const props = defineProps({
   /*
@@ -352,17 +354,13 @@ const toggleAfterEnter = ({ key }) => {
   if (key === 'Enter') $toggle.value.dropdown('toggle');
 };
 
-if (process.env.NODE_ENV === 'test') {
-  const verifyAttached = ({ target }) => {
+const verifyAttached = process.env.NODE_ENV === 'test'
+  ? ({ target }) => {
     if (target.closest('body') == null)
       // eslint-disable-next-line no-console
       console.error('Clicking Multiselect toggle has no effect unless component is attached to body.');
-  };
-  onMounted(() => { toggle.value.addEventListener('click', verifyAttached); });
-  onBeforeUnmount(() => {
-    toggle.value.removeEventListener('click', verifyAttached);
-  });
-}
+  }
+  : noop;
 
 
 
