@@ -34,8 +34,8 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="btn-group">
         <button v-if="verbs.has('entity.delete')" type="button"
-          class="delete-button btn btn-danger" :aria-label="$t('action.delete')"
-          v-tooltip.aria-label>
+          class="delete-button btn btn-default"
+          :aria-label="$t('action.delete')" v-tooltip.aria-label>
           <span class="icon-trash"></span>
         </button>
         <button v-if="verbs.has('entity.update')" type="button"
@@ -108,6 +108,7 @@ const { entityPath } = useRoutes();
     padding-top: 4px;
     padding-bottom: 4px;
   }
+
   .col-content {
     align-items: flex-start;
     display: flex;
@@ -141,6 +142,8 @@ const { entityPath } = useRoutes();
     color: $color-accent-primary;
     font-size: 20px;
   }
+
+  .delete-button .icon-trash { color: $color-danger; }
 }
 </style>
 

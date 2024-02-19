@@ -54,7 +54,6 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
-  uuid: String,
   label: {
     type: String,
     default: ''

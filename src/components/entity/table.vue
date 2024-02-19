@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze id="entity-table" ref="table" :data="odataEntities.value"
-    key-prop="__id" :frozen-only="properties == null" divider
-    @action="afterAction">
+  <table-freeze v-if="project.dataExists" id="entity-table" ref="table"
+    :data="odataEntities.value" key-prop="__id"
+    :frozen-only="properties == null" divider @action="afterAction">
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th>{{ $t('header.createdBy') }}</th>

@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
     <entity-delete v-bind="del" @hide="hideDelete"
-      @delete="requestDelete(del.uuid, del.label, $event)"/>
+      @delete="requestDelete(uuidToDelete, del.label, $event)"/>
   </div>
 </template>
 
@@ -144,9 +144,9 @@ export default {
       },
 
       confirmDelete: true,
+      uuidToDelete: null,
       del: {
         state: false,
-        uuid: null,
         label: null,
         awaitingResponse: false
       }
@@ -160,7 +160,9 @@ export default {
     },
     showsEmptyMessage() {
       // If there are more entities to fetch, then we don't show the message
-      // even if all entities on the page are deleted.
+      // even if all entities on the page are deleted. That case is pretty
+      // unlikely though, because the user would have had to delete 250+
+      // entities.
       return this.odataEntities.dataExists && !this.showsTable &&
         this.odataEntities.nextLink == null;
     },
@@ -294,7 +296,7 @@ export default {
     showDelete(index) {
       const entity = this.odataEntities.value[index];
       if (this.confirmDelete) {
-        this.del.uuid = entity.__id;
+        this.uuidToDelete = entity.__id;
         this.del.label = entity.label;
         this.showModal('del');
       } else {
@@ -303,10 +305,10 @@ export default {
     },
     hideDelete() {
       this.hideModal('del');
-      this.del.uuid = null;
       this.del.label = null;
+      this.uuidToDelete = null;
     },
-    requestDelete(uuid, label, confirm = this.confirmDelete) {
+    requestDelete(uuid, label, confirm = undefined) {
       if (this.del.state) this.del.awaitingResponse = true;
       this.request({
         method: 'DELETE',
@@ -315,18 +317,20 @@ export default {
         .then(() => {
           this.hideDelete();
           this.alert.success(this.$t('alert.delete', { label }));
-          this.confirmDelete = confirm;
+          if (confirm != null) this.confirmDelete = confirm;
 
           /* Before doing a couple more things, we first determine whether
           this.odataEntities.value still includes the entity and if so, what the
-          current index of the entity is. If this.odataEntities was replaced
-          while the deletion request was in progress (for example, if the
-          refresh button was clicked), then there could be a race condition such
-          that this.odataEntities.value no longer includes the entity. Another
-          possible result of the race condition is that this.odataEntities.value
-          still includes the entity, but the entity's index has changed. */
-          const index = this.odataEntities.value.findIndex(entity =>
-            entity.__id === uuid);
+          current index of the entity is. If a request to refresh
+          this.odataEntities was sent while the deletion request was in
+          progress, then there could be a race condition such that data doesn't
+          exist for this.odataEntities, or this.odataEntities.value no longer
+          includes the entity. Another possible result of the race condition is
+          that this.odataEntities.value still includes the entity, but the
+          entity's index has changed. */
+          const index = this.odataEntities.dataExists
+            ? this.odataEntities.value.findIndex(entity => entity.__id === uuid)
+            : -1;
           if (index !== -1) {
             this.odataEntities.countDeletion();
             this.$refs.table.afterDelete(index);

@@ -6,11 +6,7 @@ import { mergeMountOptions, mount } from '../../util/lifecycle';
 const mountComponent = (options = undefined) => {
   const entity = testData.extendedEntities.last();
   return mount(EntityDelete, mergeMountOptions(options, {
-    props: {
-      state: true,
-      uuid: entity.uuid,
-      label: entity.currentVersion.label
-    }
+    props: { state: true, label: entity.currentVersion.label }
   }));
 };
 

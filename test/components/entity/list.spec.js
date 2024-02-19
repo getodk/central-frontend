@@ -444,17 +444,14 @@ describe('EntityList', () => {
         });
     });
 
-    it('passes the correct entity to the modal', async () => {
-      testData.extendedEntities
-        .createPast(1, { uuid: 'e1', label: 'Entity 1' })
-        .createPast(1, { uuid: 'e2', label: 'Entity 2' });
+    it('passes the entity label to the modal', async () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
       const component = await load('/projects/1/entity-lists/trees/entities', {
         root: false
       });
       const modal = component.getComponent(EntityDelete);
       await component.get('.entity-metadata-row .delete-button').trigger('click');
-      modal.props().uuid.should.equal('e2');
-      modal.props().label.should.equal('Entity 2');
+      modal.props().label.should.equal('My Entity');
     });
 
     it('implements some standard button things', () => {
@@ -629,11 +626,32 @@ describe('EntityList', () => {
           })
           .respondWithData(() => {
             testData.extendedEntities.splice(0);
-            testData.extendedEntities.createNew(2);
+            testData.extendedEntities.createNew();
+            testData.extendedEntities.createNew();
             return testData.entityOData();
           })
           .respondWithSuccess()
           .afterResponses(component => {
+            // Even though there were 2 entities before, and there are 2
+            // entities now, and 2 entities have been deleted, the table should
+            // still be shown.
+            component.get('#entity-table').should.be.visible();
+            // No row should be hidden.
+            component.find('[data-mark-rows-deleted]').exists().should.be.false();
+          })
+          .request(component =>
+            component.get('.entity-metadata-row .delete-button').trigger('click'))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            /* The delete count should have been reset to 0 when the refreshed
+            entities were received. (Otherwise, the previous assertion should
+            have failed.) However, imagine that after that, the delete count was
+            incorrectly increased to 1 following the success response (if
+            requestDelete() in EntityList didn't check whether
+            odataEntities.value still includes the deleted entity). In that
+            case, this latest deletion would increase the delete count to 2,
+            which would hide the table. Here, we check that that doesn't
+            happen. */
             component.get('#entity-table').should.be.visible();
           }));
     });
