@@ -52,7 +52,7 @@ export const requiredLabel = (text, required) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ROW ANIMATIONS
+// TABLE ROW ANIMATIONS
 
 export const markRowsChanged = (trs) => {
   for (const tr of trs) tr.dataset.markRowsChanged = 'true';

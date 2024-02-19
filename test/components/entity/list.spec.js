@@ -449,9 +449,9 @@ describe('EntityList', () => {
       const component = await load('/projects/1/entity-lists/trees/entities', {
         root: false
       });
-      const modal = component.getComponent(EntityDelete);
       await component.get('.entity-metadata-row .delete-button').trigger('click');
-      modal.props().label.should.equal('My Entity');
+      const { label } = component.getComponent(EntityDelete).props();
+      label.should.equal('My Entity');
     });
 
     it('implements some standard button things', () => {
@@ -506,7 +506,7 @@ describe('EntityList', () => {
 
       it('hides the row', async () => {
         const component = await del();
-        const row = component.get('.entity-metadata-row');
+        const row = component.getComponent(EntityMetadataRow);
         row.element.dataset.markRowsDeleted.should.equal('true');
       });
 
@@ -573,7 +573,7 @@ describe('EntityList', () => {
         });
     });
 
-    describe('deleting after checking checkbox', () => {
+    describe('deleting after checking the checkbox', () => {
       const delAndCheck = () => {
         testData.extendedEntities
           .createPast(1, { uuid: 'e1', label: 'Entity 1' })

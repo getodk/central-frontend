@@ -12,7 +12,7 @@ const mountComponent = (props = undefined) => {
   const mergedProps = {
     entity: testData.entityOData().value[0],
     rowNumber: 1,
-    verbs: new Set(testData.extendedUsers.last().verbs),
+    verbs: new Set(testData.extendedUsers.first().verbs),
     ...props
   };
   return mount(EntityMetadataRow, {
