@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </i18n-t>
         <p>{{ $t('introduction[1]') }}</p>
-        <p>{{ $t('introduction[2]') }}</p>
+        <p>{{ $t('common.noUndo') }}</p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
@@ -80,8 +80,7 @@ export default {
     "introduction": [
       // {displayName} is formatted in bold.
       "Are you sure you want to revoke access from the App User {displayName}?",
-      "Existing Submissions from this user will remain, but anybody relying on this user will have to create a new one to continue downloading Forms or uploading Submissions.",
-      "This action cannot be undone."
+      "Existing Submissions from this user will remain, but anybody relying on this user will have to create a new one to continue downloading Forms or uploading Submissions."
     ]
   }
 }

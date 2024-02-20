@@ -10,8 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze id="entity-table" ref="table" :data="odataEntities.value"
-    key-prop="__id" :frozen-only="properties == null" divider @action="update">
+  <table-freeze v-if="project.dataExists" id="entity-table" ref="table"
+    :data="odataEntities.value" key-prop="__id"
+    :frozen-only="properties == null" divider @action="afterAction">
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th>{{ $t('header.createdBy') }}</th>
@@ -31,7 +32,7 @@ except according to the terms contained in the LICENSE file.
     <template #data-frozen="{ data, index }">
       <entity-metadata-row :entity="data"
         :row-number="odataEntities.originalCount - index"
-        :can-update="canUpdate"/>
+        :verbs="project.verbs"/>
     </template>
     <template #data-scrolling="{ data }">
       <entity-data-row :entity="data" :properties="properties"/>
@@ -40,13 +41,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table-freeze.vue';
 
-import { markRowsChanged } from '../../util/dom';
+import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -55,20 +56,25 @@ defineOptions({
 defineProps({
   properties: Array
 });
-const emit = defineEmits(['update', 'resolve']);
+const emit = defineEmits(['update', 'resolve', 'delete']);
 
 // The component does not assume that this data will exist when the component is
 // created.
 const { project, odataEntities } = useRequestData();
 
-const canUpdate = computed(() => project.permits(['entity.update']));
-const update = ({ target, index }) => {
-  if (target.classList.contains('update-button')) emit('update', index);
-  else if (target.classList.contains('resolve-button')) emit('resolve', index);
+const afterAction = ({ target, index }) => {
+  const { classList } = target;
+  if (classList.contains('delete-button'))
+    emit('delete', index);
+  else if (classList.contains('update-button'))
+    emit('update', index);
+  else if (classList.contains('resolve-button'))
+    emit('resolve', index);
 };
 const table = ref(null);
 const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-defineExpose({ afterUpdate });
+const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
+defineExpose({ afterUpdate, afterDelete });
 </script>
 
 <style lang="scss">

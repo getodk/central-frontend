@@ -21,7 +21,7 @@ class Collection {
   // Returns the objects of the collection as an Array that is sorted in some
   // way (in order of creation or otherwise).
   sorted() { throw new Error('not implemented'); }
-  splice(start, deleteCount) { throw new Error('not implemented'); }
+  splice(start, deleteCount = undefined) { throw new Error('not implemented'); }
 
   /* eslint-enable no-unused-vars */
 
@@ -170,8 +170,10 @@ class Store extends Collection {
     return copy;
   }
 
-  splice(start, deleteCount) {
-    return this._objects.splice(start, deleteCount);
+  splice(start, deleteCount = undefined) {
+    return deleteCount == null
+      ? this._objects.splice(start)
+      : this._objects.splice(start, deleteCount);
   }
 
   // Updates an object in the store, setting the properties specified by
@@ -231,7 +233,7 @@ class View extends Collection {
     return sorted;
   }
 
-  splice(start, deleteCount) {
+  splice(start, deleteCount = undefined) {
     return this._store.splice(start, deleteCount)
       .map(object => this._transform(object));
   }

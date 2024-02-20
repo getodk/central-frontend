@@ -20,15 +20,29 @@ export default () => {
       value: shallowReactive(data.value),
       originalCount: data['@odata.count'],
       count: data['@odata.count'],
+      deletedCount: 0,
       filtered: new URL(config.url, window.location.origin).searchParams.has('$filter'),
       nextLink: data['@odata.nextLink']
     }),
-    addChunk(chunk) {
+    addChunk: (chunk) => {
       for (const e of chunk.value) {
         entityOData.value.push(e);
       }
       entityOData.count = chunk['@odata.count'];
       entityOData.nextLink = chunk['@odata.nextLink'];
+    },
+    // countDeletion() updates the counts after an entity is deleted. We do not
+    // modify entityOData.value when an entity is deleted: doing so is possible,
+    // but it would cause EntityTable to re-render and overall doesn't seem
+    // simpler.
+    countDeletion: () => {
+      // This change to entityOData.count will be overwritten if/when the next
+      // chunk is received with the latest count. However, the change to
+      // entityOData.deletedCount will persist as long as entityOData is not
+      // cleared (e.g., when the refresh button is clicked or a filter is
+      // changed).
+      entityOData.count -= 1;
+      entityOData.deletedCount += 1;
     }
   }));
   return entityOData;

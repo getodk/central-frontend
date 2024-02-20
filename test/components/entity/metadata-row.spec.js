@@ -12,6 +12,7 @@ const mountComponent = (props = undefined) => {
   const mergedProps = {
     entity: testData.entityOData().value[0],
     rowNumber: 1,
+    verbs: new Set(testData.extendedUsers.first().verbs),
     ...props
   };
   return mount(EntityMetadataRow, {
@@ -94,9 +95,29 @@ describe('EntityMetadataRow', () => {
     });
   });
 
+  describe('buttons and roles', () => {
+    it('renders the correct buttons for an administrator', () => {
+      mockLogin();
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      mountComponent().findAll('.btn').length.should.equal(4);
+    });
+
+    it('renders the correct buttons for a project viewer', () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
+      const btn = mountComponent().findAll('.btn');
+      btn.length.should.equal(2);
+      btn[0].classes('resolve-button').should.be.true();
+      btn[1].classes('more-button').should.be.true();
+    });
+  });
+
   it('renders the edit button correctly', async () => {
     testData.extendedEntities.createPast(1, { version: 1001 });
-    const button = mountComponent({ canUpdate: true }).get('.update-button');
+    const button = mountComponent().get('.update-button');
     button.attributes('aria-label').should.equal('Edit (1,000)');
     await button.should.have.tooltip('Edit (1,000)');
   });
