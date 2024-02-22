@@ -302,7 +302,6 @@ export default {
       "chooseOne": "choose one"
     },
     "action": {
-      "upload": "Upload",
       "uploadAnyway": "Upload anyway"
     },
     "alert": {

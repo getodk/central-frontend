@@ -195,6 +195,8 @@
     // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
     "sort": "Sort",
     "update": "Update",
+    // @transifexKey component.FormNew.action.upload
+    "upload": "Upload",
     "yesProceed": "Yes, proceed",
     // This text is shown on a button that the user clicks to show a preview of something
     "showPreview": "Preview",

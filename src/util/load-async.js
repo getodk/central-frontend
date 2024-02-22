@@ -83,6 +83,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-entity-show" */
     '../components/entity/show.vue'
   )))
+  .set('EntityUpload', loader(() => import(
+    /* webpackChunkName: "component-entity-upload" */
+    '../components/entity/upload.vue'
+  )))
   .set('FieldKeyList', loader(() => import(
     /* webpackChunkName: "component-field-key-list" */
     '../components/field-key/list.vue'

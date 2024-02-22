@@ -1909,6 +1909,21 @@
         }
       }
     },
+    "EntityUpload": {
+      "title": {
+        "string": "Import Data from File",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "headersNote": {
+        "string": "The first row in your data file must exactly match the table header you see above."
+      },
+      "action": {
+        "append": {
+          "string": "Append data",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "EntityUploadDataTemplate": {
       "text": {
         "full": {
@@ -2765,12 +2780,12 @@
         }
       },
       "action": {
-        "upload": {
-          "string": "Upload",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "uploadAnyway": {
           "string": "Upload anyway",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "upload": {
+          "string": "Upload",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
