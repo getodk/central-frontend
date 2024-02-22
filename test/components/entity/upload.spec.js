@@ -22,7 +22,7 @@ describe('EntityUpload', () => {
       .testModalToggles({
         modal: EntityUpload,
         show: '#dataset-entities-upload-button',
-        hide: '.modal-actions .btn-link'
+        hide: '.btn-link'
       });
   });
 
@@ -70,8 +70,10 @@ describe('EntityUpload', () => {
       testData.extendedDatasets.createPast(1);
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
-        .request(component =>
-          component.get('#entity-upload .btn-primary').trigger('click'))
+        .request(async (component) => {
+          await component.get('#dataset-entities-upload-button').trigger('click');
+          return component.get('#entity-upload .btn-primary').trigger('click');
+        })
         .respondWithSuccess()
         .afterResponse(component => {
           component.getComponent(EntityUpload).props().state.should.be.false();

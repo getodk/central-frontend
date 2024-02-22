@@ -89,7 +89,7 @@ export default {
   methods: {
     afterUpload() {
       this.hideModal('upload');
-      this.alert.success('Entities were imported successfully!');
+      this.alert.success('Entities were imported successfully! [TODO: i18n]');
     }
   }
 };
