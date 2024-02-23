@@ -11,6 +11,8 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
+This mixin is deprecated. Use modalData() instead.
+
 A component that contains one or more modals may use this mixin, which includes
 methods for toggling a modal.
 

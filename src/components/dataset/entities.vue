@@ -16,10 +16,10 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('resource.entities') }}</span>
         <button v-if="project.dataExists && project.permits('entity.create')"
           id="dataset-entities-upload-button" type="button"
-          class="btn btn-primary" @click="showModal('upload')">
+          class="btn btn-primary" @click="upload.show()">
           <span class="icon-upload"></span>{{ $t('action.upload') }}
         </button>
-        <odata-data-access @analyze="showModal('analyze')"/>
+        <odata-data-access @analyze="analyze.show()"/>
       </template>
       <template #body>
         <entity-list :project-id="projectId" :dataset-name="datasetName"/>
@@ -27,8 +27,8 @@ except according to the terms contained in the LICENSE file.
     </page-section>
 
     <entity-upload v-if="dataset.dataExists" v-bind="upload"
-      @hide="hideModal('upload')" @success="afterUpload"/>
-    <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="hideModal('analyze')"/>
+      @hide="upload.hide()" @success="afterUpload"/>
+    <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="analyze.hide()"/>
   </div>
 </template>
 
@@ -40,9 +40,9 @@ import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
 import PageSection from '../page/section.vue';
 
-import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -54,7 +54,6 @@ export default {
     EntityUpload: defineAsyncComponent(loadAsync('EntityUpload')),
     PageSection
   },
-  mixins: [modal({ upload: 'EntityUpload' })],
   inject: ['alert'],
   props: {
     projectId: {
@@ -72,12 +71,8 @@ export default {
   },
   data() {
     return {
-      upload: {
-        state: false
-      },
-      analyze: {
-        state: false
-      }
+      upload: modalData('EntityUpload'),
+      analyze: modalData()
     };
   },
   computed: {
@@ -88,7 +83,7 @@ export default {
   },
   methods: {
     afterUpload() {
-      this.hideModal('upload');
+      this.upload.hide();
       this.alert.success('Entities were imported successfully! [TODO: i18n]');
     }
   }

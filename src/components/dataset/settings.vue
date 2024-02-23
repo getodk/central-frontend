@@ -52,6 +52,7 @@ import { useI18n } from 'vue-i18n';
 import DatasetPendingSubmissions from './pending-submissions.vue';
 
 import { apiPaths, isProblem } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -66,10 +67,7 @@ const { project, dataset } = useRequestData();
 
 const approvalRequired = ref(dataset.approvalRequired);
 
-const pendingSubmissionModal = ref({
-  state: false,
-  pendingSubmissions: 0
-});
+const pendingSubmissionModal = modalData();
 
 watch(() => dataset.dataExists, () => {
   approvalRequired.value = dataset.approvalRequired;
@@ -85,8 +83,7 @@ const update = (convert) => {
     fulfillProblem: ({ code }) => code === 400.29,
     patch: ({ data }) => {
       if (isProblem(data)) {
-        pendingSubmissionModal.value.pendingSubmissions = data.details.count;
-        pendingSubmissionModal.value.state = true;
+        pendingSubmissionModal.show({ pendingSubmissions: data.details.count });
       } else {
         dataset.approvalRequired = data.approvalRequired;
         alert.success(dataset.approvalRequired ? t('onApproval.successMessage') : t('onReceipt.successMessage'));
@@ -99,12 +96,12 @@ const update = (convert) => {
 };
 
 const hideAndUpdate = (convert) => {
-  pendingSubmissionModal.value.state = false;
+  pendingSubmissionModal.hide();
   update(convert);
 };
 
 const hideAndReset = () => {
-  pendingSubmissionModal.value.state = false;
+  pendingSubmissionModal.hide();
   approvalRequired.value = dataset.approvalRequired;
 };
 </script>

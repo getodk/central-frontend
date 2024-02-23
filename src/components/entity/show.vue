@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       <div v-show="entity.dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
-          <entity-data @update="update.state = true"/>
+          <entity-data @update="update.show()"/>
         </div>
         <div class="col-xs-8">
           <entity-activity @resolve="fetchActivityData"/>
@@ -31,13 +31,13 @@ except according to the terms contained in the LICENSE file.
       </div>
     </page-body>
     <entity-update v-bind="update"
-      :entity="entity.dataExists ? entity.data : null"
-      @hide="update.state = false" @success="afterUpdate"/>
+      :entity="entity.dataExists ? entity.data : null" @hide="update.hide()"
+      @success="afterUpdate"/>
   </div>
 </template>
 
 <script setup>
-import { inject, provide, reactive } from 'vue';
+import { inject, provide } from 'vue';
 
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
@@ -52,7 +52,7 @@ import useEntity from '../../request-data/entity';
 import useEntityVersions from '../../request-data/entity-versions';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
-import { setDocumentTitle } from '../../util/reactivity';
+import { modalData, setDocumentTitle } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -108,11 +108,11 @@ fetchActivityData();
 
 setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null]);
 
-const update = reactive({ state: false });
+const update = modalData();
 const { i18n, alert } = inject('container');
 const afterUpdate = (updatedEntity) => {
   fetchActivityData();
-  update.state = false;
+  update.hide();
   alert.success(i18n.t('alert.updateEntity'));
   entity.patch(() => {
     // entity.currentVersion will no longer have extended metadata, but we don't
