@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')">
+    size="full" backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div>

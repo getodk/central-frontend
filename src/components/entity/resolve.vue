@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse" large
-    backdrop @hide="$emit('hide')">
+  <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse"
+    size="large" backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title', entity) }}</template>
     <template #body>
       <div v-if="!success">

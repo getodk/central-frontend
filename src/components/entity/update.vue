@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-update" :state="state" :hideable="!awaitingResponse" large
-    backdrop @shown="afterShown" @hide="$emit('hide')">
+  <modal id="entity-update" :state="state" :hideable="!awaitingResponse"
+    size="large" backdrop @shown="afterShown" @hide="$emit('hide')">
     <template #title>{{ $t('title', currentVersion) }}</template>
     <template #body>
       <form @submit.prevent="submit">

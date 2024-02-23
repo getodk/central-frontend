@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="analytics-preview" :state="state" hideable backdrop large @hide="$emit('hide')">
+  <modal id="analytics-preview" :state="state" hideable backdrop size="large"
+    @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">

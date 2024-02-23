@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { nextTick } from 'vue';
 
 import Alert from '../../src/components/alert.vue';
 import Modal from '../../src/components/modal.vue';
@@ -104,6 +105,45 @@ describe('Modal', () => {
     });
   });
 
+  describe('size prop', () => {
+    it("adds the correct class if the prop is 'large'", () => {
+      const modal = mountComponent({
+        props: { size: 'large' }
+      });
+      modal.get('.modal-dialog').classes('modal-lg').should.be.true();
+    });
+
+    describe("prop is 'full'", () => {
+      it('adds the correct class', () => {
+        const modal = mountComponent({
+          props: { size: 'full' }
+        });
+        modal.get('.modal-dialog').classes('modal-full').should.be.true();
+      });
+
+      it('adds a class if modal vertically overflows viewport', async () => {
+        const modal = mountComponent({
+          props: { size: 'full' },
+          slots: {
+            body: { template: '<div style="height: 10000px;"></div>' }
+          },
+          attachTo: document.body
+        });
+        await nextTick();
+        modal.classes('scroll').should.be.true();
+      });
+
+      it('does not add the class if the modal does not overflow', async () => {
+        const modal = mountComponent({
+          props: { size: 'full' },
+          attachTo: document.body
+        });
+        await nextTick();
+        modal.classes('scroll').should.be.false();
+      });
+    });
+  });
+
   it("updates the modal's position after its body changes", async () => {
     const modal = mountComponent({
       slots: {
@@ -118,12 +158,5 @@ describe('Modal', () => {
     modal.get('.modal-body p').element.textContent = 'New text';
     await modal.vm.$nextTick();
     bs.args.should.eql([['handleUpdate'], ['handleUpdate']]);
-  });
-
-  it('adds the modal-lg class if the large prop is true', () => {
-    const modal = mountComponent({
-      props: { large: true }
-    });
-    modal.get('.modal-dialog').classes('modal-lg').should.be.true();
   });
 });
