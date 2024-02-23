@@ -55,13 +55,13 @@ import EntityResolve from './resolve.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Spinner from '../spinner.vue';
 
-import modal from '../../mixins/modal';
 import useEntities from '../../request-data/entities';
 import useQueryRef from '../../composables/query-ref';
 import useRequest from '../../composables/request';
-import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'EntityList',
@@ -75,7 +75,6 @@ export default {
     Spinner,
     EntityResolve
   },
-  mixins: [modal()],
   inject: ['alert'],
   provide() {
     return { projectId: this.projectId, datasetName: this.datasetName };
@@ -129,27 +128,15 @@ export default {
 
       // The index of the entity being updated
       updateIndex: null,
-      // Data to pass to the update modal
-      update: {
-        state: false,
-        entity: null
-      },
+      update: modalData(),
 
       // The index of the entity being resolved
       resolveIndex: null,
-      // Data to pass to the resolve modal
-      resolve: {
-        state: false,
-        entity: null
-      },
+      resolve: modalData(),
 
       confirmDelete: true,
       uuidToDelete: null,
-      del: {
-        state: false,
-        label: null,
-        awaitingResponse: false
-      }
+      del: modalData()
     };
   },
   computed: {
@@ -223,15 +210,15 @@ export default {
       const data = Object.create(null);
       for (const { name, odataName } of this.dataset.properties)
         data[name] = odataEntity[odataName];
-      this.update.entity = {
-        uuid: odataEntity.__id,
-        currentVersion: { label: odataEntity.label, version: odataEntity.__system.version, data }
-      };
-      this.showModal('update');
+      this.update.show({
+        entity: {
+          uuid: odataEntity.__id,
+          currentVersion: { label: odataEntity.label, version: odataEntity.__system.version, data }
+        }
+      });
     },
     hideUpdate() {
-      this.hideModal('update');
-      this.update.entity = null;
+      this.update.hide();
       this.updateIndex = null;
       if (this.resolveIndex != null) {
         this.showResolve(this.resolveIndex);
@@ -267,16 +254,14 @@ export default {
     showResolve(index) {
       if (this.refreshing) return;
       this.resolveIndex = index;
-      const odataEntity = this.odataEntities.value[index];
-      this.resolve.entity = odataEntity;
-      this.showModal('resolve');
+      this.resolve.show({ entity: this.odataEntities.value[index] });
     },
     hideResolve(showUpdate) {
-      this.hideModal('resolve');
       if (showUpdate) {
+        this.resolve.hide(false);
         this.$nextTick(() => this.showUpdate(this.resolveIndex));
       } else {
-        this.resolve.entity = null;
+        this.resolve.hide();
         this.resolveIndex = null;
       }
     },
@@ -297,15 +282,13 @@ export default {
       const entity = this.odataEntities.value[index];
       if (this.confirmDelete) {
         this.uuidToDelete = entity.__id;
-        this.del.label = entity.label;
-        this.showModal('del');
+        this.del.show({ label: entity.label });
       } else {
         this.requestDelete(entity.__id, entity.label);
       }
     },
     hideDelete() {
-      this.hideModal('del');
-      this.del.label = null;
+      this.del.hide();
       this.uuidToDelete = null;
     },
     requestDelete(uuid, label, confirm = undefined) {
@@ -336,8 +319,7 @@ export default {
             this.$refs.table.afterDelete(index);
           }
         })
-        .finally(() => { this.del.awaitingResponse = false; })
-        .catch(noop);
+        .catch(() => { this.del.awaitingResponse = false; });
     },
     scrolledToBottom() {
       // Using pageYOffset rather than scrollY in order to support IE.

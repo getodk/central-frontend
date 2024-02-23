@@ -73,7 +73,7 @@ defineProps({
   },
   pendingSubmissions: {
     type: Number,
-    required: true
+    default: 0
   }
 });
 defineEmits(['hide', 'success']);
