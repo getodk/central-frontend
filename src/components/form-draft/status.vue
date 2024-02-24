@@ -41,11 +41,11 @@ except according to the terms contained in the LICENSE file.
                 </i18n-t>
                 <div id="form-draft-status-standard-buttons-container">
                   <form-version-standard-buttons :version="formDraft.get()"
-                    @view-xml="showModal('viewXml')"/>
+                    @view-xml="viewXml.show()"/>
                 </div>
                 <div>
                   <button id="form-draft-status-upload-button" type="button"
-                    class="btn btn-primary" @click="showModal('upload')">
+                    class="btn btn-primary" @click="upload.show()">
                     <span class="icon-upload"></span>{{ $t('currentDraft.action.upload') }}&hellip;
                   </button>
                 </div>
@@ -63,11 +63,11 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template #body>
             <button id="form-draft-status-publish-button" type="button"
-              class="btn btn-primary" @click="showModal('publish')">
+              class="btn btn-primary" @click="publish.show()">
               <span class="icon-check"></span>{{ $t('actions.action.publish') }}&hellip;
             </button>
             <button id="form-draft-status-abandon-button" type="button"
-              class="btn btn-danger" @click="showModal('abandon')">
+              class="btn btn-danger" @click="abandon.show()">
               <span class="icon-trash"></span>{{ $t('actions.action.abandon') }}&hellip;
             </button>
           </template>
@@ -75,13 +75,12 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
-    <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
-    <form-new v-bind="upload" @hide="hideModal('upload')"
-      @success="afterUpload"/>
-    <form-draft-publish v-bind="publish" @hide="hideModal('publish')"
+    <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
+    <form-new v-bind="upload" @hide="upload.hide()" @success="afterUpload"/>
+    <form-draft-publish v-bind="publish" @hide="publish.hide()"
       @success="afterPublish"/>
     <form-draft-abandon v-if="form.dataExists" v-bind="abandon"
-      @hide="hideModal('abandon')" @success="afterAbandon"/>
+      @hide="abandon.hide()" @success="afterAbandon"/>
   </div>
 </template>
 
@@ -99,11 +98,11 @@ import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
 import DatasetSummary from '../dataset/summary.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -122,7 +121,6 @@ export default {
     SummaryItem,
     DatasetSummary
   },
-  mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   inject: ['alert'],
   props: {
     projectId: {
@@ -146,18 +144,10 @@ export default {
   data() {
     return {
       // Modals
-      viewXml: {
-        state: false
-      },
-      upload: {
-        state: false
-      },
-      publish: {
-        state: false
-      },
-      abandon: {
-        state: false
-      }
+      viewXml: modalData('FormVersionViewXml'),
+      upload: modalData(),
+      publish: modalData(),
+      abandon: modalData()
     };
   },
   created() {
@@ -175,7 +165,7 @@ export default {
     afterUpload() {
       this.$emit('fetch-draft');
       this.formDraftDatasetDiff.reset();
-      this.hideModal('upload');
+      this.upload.hide();
       this.alert.success(this.$t('alert.upload'));
     },
     afterPublish() {
