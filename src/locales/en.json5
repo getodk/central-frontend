@@ -190,6 +190,8 @@
     "refresh": "Refresh",
     "resetPassword": "Reset password",
     "review": "Review",
+    // @transifexKey component.EntityMetadataRow.reviewParallelUpdates
+    "reviewParallelUpdates": "Review parallel updates",
     "save": "Save",
     "saveSettings": "Save settings",
     // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms

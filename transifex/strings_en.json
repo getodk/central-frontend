@@ -1819,7 +1819,8 @@
     },
     "EntityMetadataRow": {
       "reviewParallelUpdates": {
-        "string": "Review parallel updates"
+        "string": "Review parallel updates",
+        "developer_comment": "This is the text for an action, for example, the text of a button."
       }
     },
     "EntityResolve": {
