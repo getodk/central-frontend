@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-delete" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="checkbox.focus()">
+    backdrop @hide="$emit('hide')" @shown="focusCheckbox">
     <template #title>{{ $t('title', { label }) }}</template>
     <template #body>
       <p class="modal-introduction">
@@ -19,18 +19,17 @@ except according to the terms contained in the LICENSE file.
         <sentence-separator/>
         <span>{{ $t('common.noUndo') }}</span>
       </p>
-      <form>
+      <form v-if="checkbox">
         <div class="checkbox">
           <label>
-            <input ref="checkbox" v-model="noConfirm" type="checkbox">
+            <input ref="input" v-model="noConfirm" type="checkbox">
             {{ $t('field.noConfirm') }}
           </label>
         </div>
       </form>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
-          :aria-disabled="awaitingResponse"
-          @click="$emit('delete', !noConfirm)">
+          :aria-disabled="awaitingResponse" @click="del">
           {{ $t('action.delete') }} <spinner :state="awaitingResponse"/>
         </button>
         <button type="button" class="btn btn-link"
@@ -54,18 +53,27 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
+  checkbox: Boolean,
   label: {
     type: String,
     default: ''
   },
   awaitingResponse: Boolean
 });
-defineEmits(['hide', 'delete']);
+const emit = defineEmits(['hide', 'delete']);
 
 const noConfirm = ref(false);
 watch(() => props.state, (state) => { if (!state) noConfirm.value = false; });
 
-const checkbox = ref(null);
+const input = ref(null);
+const focusCheckbox = () => { if (props.checkbox) input.value.focus(); };
+
+const del = () => {
+  if (props.checkbox)
+    emit('delete', !noConfirm.value);
+  else
+    emit('delete');
+};
 </script>
 
 <i18n lang="json5">

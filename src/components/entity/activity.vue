@@ -13,6 +13,11 @@ except according to the terms contained in the LICENSE file.
   <page-section id="entity-activity">
     <template #heading>
       <span>{{ $t('common.activity') }}</span>
+      <button v-if="project.dataExists && project.permits('entity.delete')"
+        id="entity-activity-delete-button" type="button" class="btn btn-default"
+        @click="$emit('delete')">
+        <span class="icon-trash"></span>{{ $t('action.delete') }}
+      </button>
     </template>
     <template #body>
       <loading :state="initiallyLoading"/>
@@ -43,7 +48,7 @@ import { useScrollBehavior } from '../../scroll-behavior';
 defineOptions({
   name: 'EntityActivity'
 });
-defineEmits(['resolve']);
+defineEmits(['delete', 'resolve']);
 
 // The component does not assume that this data will exist when the component is
 // created.
@@ -139,4 +144,16 @@ watchEffect(() => {
     .feed-entry { box-shadow: none; }
   }
 }
+
+#entity-activity-delete-button .icon-trash { color: $color-danger; }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "delete": "Delete Entity"
+    }
+  }
+}
+</i18n>

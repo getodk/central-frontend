@@ -55,6 +55,23 @@ const resolveConflict = () => {
 };
 
 describe('EntityActivity', () => {
+  describe('delete button', () => {
+    it('renders the button for a sitewide administrator', () => {
+      mockLogin();
+      testData.extendedEntities.createPast(1);
+      const button = mountComponent().find('#entity-activity-delete-button');
+      button.exists().should.be.true();
+    });
+
+    it('does not render the button for a project viewer', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedEntities.createPast(1);
+      const button = mountComponent().find('#entity-activity-delete-button');
+      button.exists().should.be.false();
+    });
+  });
+
   describe('conflict summary', () => {
     beforeEach(mockLogin);
 

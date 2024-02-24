@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
-    <entity-delete v-bind="del" @hide="hideDelete"
+    <entity-delete v-bind="del" checkbox @hide="hideDelete"
       @delete="requestDelete(uuidToDelete, del.label, $event)"/>
   </div>
 </template>
