@@ -23,25 +23,34 @@ except according to the terms contained in the LICENSE file.
       <div v-show="entity.dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
-          <entity-data @update="update.show()"/>
+          <entity-data @update="updateModal.show()"/>
         </div>
         <div class="col-xs-8">
-          <entity-activity @resolve="fetchActivityData"/>
+          <entity-activity @delete="deleteModal.show()"
+            @resolve="fetchActivityData"/>
         </div>
       </div>
     </page-body>
-    <entity-update v-bind="update"
-      :entity="entity.dataExists ? entity.data : null" @hide="update.hide()"
+
+    <entity-update v-bind="updateModal"
+      :entity="entity.dataExists ? entity.data : null" @hide="updateModal.hide()"
       @success="afterUpdate"/>
+    <entity-delete v-bind="deleteModal"
+      :label="entity.dataExists ? entity.currentVersion.label : ''"
+      :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
+      @delete="requestDelete"/>
   </div>
 </template>
 
 <script setup>
 import { inject, provide } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
 import EntityData from './data.vue';
+import EntityDelete from './delete.vue';
 import EntityUpdate from './update.vue';
 import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
@@ -50,9 +59,11 @@ import PageHead from '../page/head.vue';
 
 import useEntity from '../../request-data/entity';
 import useEntityVersions from '../../request-data/entity-versions';
+import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { modalData, setDocumentTitle } from '../../util/reactivity';
+import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -108,11 +119,11 @@ fetchActivityData();
 
 setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null]);
 
-const update = modalData();
+const updateModal = modalData();
 const { i18n, alert } = inject('container');
 const afterUpdate = (updatedEntity) => {
   fetchActivityData();
-  update.hide();
+  updateModal.hide();
   alert.success(i18n.t('alert.updateEntity'));
   entity.patch(() => {
     // entity.currentVersion will no longer have extended metadata, but we don't
@@ -125,7 +136,23 @@ const afterUpdate = (updatedEntity) => {
   });
 };
 
+const deleteModal = modalData();
+const { request, awaitingResponse } = useRequest();
+const router = useRouter();
 const { datasetPath } = useRoutes();
+const { t } = useI18n();
+const requestDelete = () => {
+  request({
+    method: 'DELETE',
+    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid)
+  })
+    .then(() => {
+      const { label } = entity.currentVersion;
+      return router.push(datasetPath('entities'))
+        .then(() => { alert.success(t('alert.delete', { label })); });
+    })
+    .catch(noop);
+};
 </script>
 
 <i18n lang="json5">
@@ -136,6 +163,10 @@ const { datasetPath } = useRoutes();
       "title": "Entity Detail",
       // This is shown at the top of the page. The user can click it to go back.
       "back": "Back to {datasetName} Table"
+    },
+    "alert": {
+      // @transifexKey component.EntityList.alert.delete
+      "delete": "Entity “{label}” has been deleted."
     }
   }
 }

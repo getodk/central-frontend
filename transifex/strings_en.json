@@ -1529,6 +1529,14 @@
         }
       }
     },
+    "EntityActivity": {
+      "action": {
+        "delete": {
+          "string": "Delete Entity",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "EntityBasicDetails": {
       "creatingSubmission": {
         "string": "Creating Submission",

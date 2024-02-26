@@ -1,4 +1,5 @@
 import EntityConflictSummary from '../../../src/components/entity/conflict-summary.vue';
+import EntityDelete from '../../../src/components/entity/delete.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import PageBack from '../../../src/components/page/back.vue';
@@ -186,6 +187,76 @@ describe('EntityShow', () => {
           { url: '/v1/projects/1/datasets/%C3%A1/entities/e/audits' },
           { url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions', extended: true }
         ]);
+    });
+  });
+
+  describe('delete', () => {
+    it('toggles the modal', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
+        .testModalToggles({
+          modal: EntityDelete,
+          show: '#entity-activity-delete-button',
+          hide: '.btn-link'
+        });
+    });
+
+    it('sends the correct request', () => {
+      testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      return load('/projects/1/entity-lists/%C3%A1/entities/e', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('#entity-activity-delete-button').trigger('click');
+          return component.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'DELETE',
+          url: '/v1/projects/1/datasets/%C3%A1/entities/e'
+        }]);
+    });
+
+    it('implements some standard button things', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
+        .afterResponses(component =>
+          component.get('#entity-activity-delete-button').trigger('click'))
+        .testStandardButton({
+          button: '#entity-delete .btn-danger',
+          disabled: ['#entity-delete .btn-link'],
+          modal: EntityDelete
+        });
+    });
+
+    describe('after a successful response', () => {
+      const del = () => {
+        testData.extendedEntities.createPast(1, {
+          uuid: 'e',
+          label: 'My Entity'
+        });
+        return load('/projects/1/entity-lists/trees/entities/e')
+          .complete()
+          .request(async (app) => {
+            await app.get('#entity-activity-delete-button').trigger('click');
+            return app.get('#entity-delete .btn-danger').trigger('click');
+          })
+          .respondWithSuccess()
+          .respondFor('/projects/1/entity-lists/trees/entities', {
+            project: false
+          });
+      };
+
+      it('redirects to the Data page', async () => {
+        const app = await del();
+        const { path } = app.vm.$route;
+        path.should.equal('/projects/1/entity-lists/trees/entities');
+      });
+
+      it('shows a success alert', async () => {
+        const app = await del();
+        app.should.alert('success', 'Entity “My Entity” has been deleted.');
+      });
     });
   });
 });
