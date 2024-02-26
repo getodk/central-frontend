@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <navbar-links v-if="loggedIn"/>
           <div class="navbar-right">
             <a v-show="showsAnalyticsNotice" id="navbar-analytics-notice"
-              href="#" @click.prevent="showModal('analyticsIntroduction')">
+              href="#" @click.prevent="analyticsIntroduction.show()">
               {{ $t('analyticsNotice') }}
             </a>
             <ul class="nav navbar-nav">
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </nav>
     <analytics-introduction v-if="config.showsAnalytics" v-bind="analyticsIntroduction"
-      @hide="hideModal('analyticsIntroduction')"/>
+      @hide="analyticsIntroduction.hide()"/>
   </div>
 </template>
 
@@ -53,9 +53,9 @@ import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
-import modal from '../mixins/modal';
 import useRoutes from '../composables/routes';
 import { loadAsync } from '../util/load-async';
+import { modalData } from '../util/reactivity';
 import { useRequestData } from '../request-data';
 
 export default {
@@ -67,7 +67,6 @@ export default {
     NavbarLinks,
     NavbarLocaleDropdown
   },
-  mixins: [modal({ analyticsIntroduction: 'AnalyticsIntroduction' })],
   inject: ['config'],
   setup() {
     // The component does not assume that this data will exist when the
@@ -78,9 +77,7 @@ export default {
   },
   data() {
     return {
-      analyticsIntroduction: {
-        state: false
-      }
+      analyticsIntroduction: modalData('AnalyticsIntroduction')
     };
   },
   computed: {
