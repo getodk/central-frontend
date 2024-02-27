@@ -1945,6 +1945,18 @@
         }
       }
     },
+    "EntityUploadFileSelect": {
+      "text": {
+        "full": {
+          "string": "Drag a .csv file here, or {chooseOne} to import.",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "choose one",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        }
+      }
+    },
     "EntityVersionLink": {
       "submission": {
         "string": "Submission {instanceName}",
