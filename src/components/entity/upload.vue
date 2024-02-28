@@ -62,7 +62,7 @@ const { dataset } = useRequestData();
 
 const file = ref(null);
 const selectFile = (value) => { file.value = value; };
-watch(() => props.state, () => { if (!props.state) file.value = null; });
+watch(() => props.state, (state) => { if (!state) file.value = null; });
 
 const { request, awaitingResponse } = useRequest();
 const upload = () => {
