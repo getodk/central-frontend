@@ -1956,6 +1956,10 @@
       "api": {
         "string": "Update by {name}",
         "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
+      },
+      "bulk": {
+        "string": "File {filename} uploaded by {name}",
+        "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
     "FieldKeyList": {
