@@ -6,6 +6,7 @@ import { seededRandomize } from '../../lib/collections/sort.ts';
 import type { MaybeElementNode } from '../../lib/dom/types.ts';
 
 export const countNonEmpty = new NumberFunction(
+	'count-non-empty',
 	[{ arityType: 'required' }],
 	(context, [expression]): number => {
 		const results = expression!.evaluate(context);
@@ -23,13 +24,13 @@ export const countNonEmpty = new NumberFunction(
 		}
 
 		return result;
-	},
-	{ localName: 'count-non-empty' }
+	}
 );
 
 // TODO: Only kinda sorta a node-set fn. Not a boolean fn either though! Returns
 // a string... where // does this belong?
 export const once = new StringFunction(
+	'once',
 	[{ arityType: 'required' }],
 	(context, [expression]): string => {
 		const [contextNode] = context.contextNodes;
@@ -49,7 +50,9 @@ export const once = new StringFunction(
 	}
 );
 
+// TODO: this probably belongs in `fn`?
 export const position = new NumberFunction(
+	'position',
 	[{ arityType: 'optional' }],
 	(context, [expression]): number => {
 		if (expression == null) {
@@ -90,6 +93,7 @@ export const position = new NumberFunction(
 );
 
 export const randomize = new NodeSetFunction(
+	'randomize',
 	[
 		{ arityType: 'required', typeHint: 'node' },
 		{ arityType: 'optional', typeHint: 'number' },

@@ -48,7 +48,7 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 			const stringValue = node.textContent ?? '';
 			const isEmpty = trimXPathWhitespace(stringValue) === '';
 			const booleanValue = !isEmpty;
-			const numberFunction = context.functionLibrary.getImplementation('number');
+			const numberFunction = context.functions.getDefaultImplementation('number');
 
 			let numberValue: number;
 

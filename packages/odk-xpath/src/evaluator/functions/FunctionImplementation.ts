@@ -48,7 +48,6 @@ export type ParameterTypeHint =
 	// `FunctionImplementation`.
 	| 'any' // TODO: naming? Could be 'unknown' or 'result' or...?
 	| 'boolean'
-	// | 'date'
 	| 'node'
 	| 'number'
 	| 'string';
@@ -84,10 +83,6 @@ export type ValidArguments<
 	IsValid extends boolean,
 > = [true] extends [IsValid] ? Arguments : never;
 
-export interface FunctionImplementationOptions {
-	readonly localName?: string | undefined;
-}
-
 interface FunctionArity {
 	readonly min: number;
 	readonly max: number;
@@ -100,12 +95,13 @@ export type FunctionCallable = <Arguments extends readonly EvaluableArgument[]>(
 
 export class FunctionImplementation<Length extends number> {
 	readonly arity: FunctionArity;
-	readonly localName: string | null;
+	protected readonly callable: FunctionCallable;
 
 	constructor(
+		readonly localName: string,
 		readonly signature: FunctionSignature<Length>,
-		readonly call: FunctionCallable,
-		options: FunctionImplementationOptions = {}
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		runtimeImplementation: FunctionCallable | FunctionImplementation<any>
 	) {
 		// TODO: *validate signature order!*
 		const arity = [...signature].reduce(
@@ -142,11 +138,19 @@ export class FunctionImplementation<Length extends number> {
 		);
 
 		this.arity = arity;
-
-		this.localName = options.localName ?? null;
+		this.callable =
+			runtimeImplementation instanceof FunctionImplementation
+				? runtimeImplementation.callable
+				: runtimeImplementation;
 	}
 
-	validateArguments<Arguments extends readonly EvaluableArgument[]>(
+	call(context: LocationPathEvaluation, args: readonly EvaluableArgument[]): Evaluation {
+		this.validateArguments(args);
+
+		return this.callable(context, args);
+	}
+
+	protected validateArguments<Arguments extends readonly EvaluableArgument[]>(
 		args: Arguments
 	): asserts args is ValidArguments<Arguments, true> {
 		const { arity, signature } = this;

@@ -65,7 +65,9 @@ export const DemoFixturesList = (props: DemoFixturesListProps) => {
 	};
 
 	const isDemoFixture = (fixtureKey: string) =>
-		fixtureKey.includes('/computations-demo/') || fixtureKey.includes('/repeats/');
+		fixtureKey.includes('/computations-demo/') ||
+		fixtureKey.includes('/repeats/') ||
+		fixtureKey.includes('/itext/');
 
 	const demoFixtures = createMemo(() =>
 		Array.from(getFixtures().values()).filter(({ key }) => isDemoFixture(key))

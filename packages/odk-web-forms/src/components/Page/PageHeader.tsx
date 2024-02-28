@@ -1,10 +1,22 @@
+import { Show } from 'solid-js';
 import { Stack } from 'suid/material';
+import type { EntryState } from '../../lib/xform/state/EntryState.ts';
 import { FormLanguageMenu } from '../FormLanguageMenu.tsx';
 
-export const PageHeader = () => {
+interface PageHeaderProps {
+	readonly entry: EntryState | null;
+}
+
+export const PageHeader = (props: PageHeaderProps) => {
 	return (
-		<Stack direction="row" justifyContent="flex-end">
-			<FormLanguageMenu />
-		</Stack>
+		<Show when={props.entry?.translations} keyed={true}>
+			{(translations) => {
+				return (
+					<Stack direction="row" justifyContent="flex-end">
+						<FormLanguageMenu translations={translations} />
+					</Stack>
+				);
+			}}
+		</Show>
 	);
 };

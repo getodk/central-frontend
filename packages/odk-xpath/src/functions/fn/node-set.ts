@@ -1,16 +1,17 @@
 import { reduce } from 'itertools-ts';
+import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
+import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { isNamespaceNode, isProcessingInstructionNode } from '../../lib/dom/predicates.ts';
 import { sortDocumentOrder } from '../../lib/dom/sort.ts';
-import { normalizeXPathWhitespace } from '../_shared/string.ts';
-import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
-import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { MaybeNamedNode } from '../../lib/dom/types.ts';
+import { normalizeXPathWhitespace } from '../_shared/string.ts';
 
 const { toCount } = reduce;
 
 export const count = new NumberFunction(
+	'count',
 	[{ arityType: 'required' }],
 	(context, [expression]): number => {
 		const results = expression!.evaluate(context);
@@ -23,7 +24,12 @@ export const count = new NumberFunction(
 	}
 );
 
+export const current = new NodeSetFunction('current', [], (context) => {
+	return [context.evaluationContextNode];
+});
+
 export const id = new NodeSetFunction(
+	'id',
 	[{ arityType: 'required' }],
 	(context, [expression]): Iterable<Node> => {
 		const idArgument = expression!.evaluate(context);
@@ -55,9 +61,10 @@ export const id = new NodeSetFunction(
 	}
 );
 
-export const last = new NumberFunction([], (context, []): number => context.contextSize());
+export const last = new NumberFunction('last', [], (context, []): number => context.contextSize());
 
 export const localName = new StringFunction(
+	'local-name',
 	[{ arityType: 'optional' }],
 	(context, [expression]): string => {
 		const evaluated = expression?.evaluate(context) ?? context;
@@ -87,39 +94,43 @@ export const localName = new StringFunction(
 			: (node as MaybeNamedNode).localName ?? '';
 
 		return name;
-	},
-	{ localName: 'local-name' }
+	}
 );
 
-export const name = new StringFunction([{ arityType: 'optional' }], (context, [expression]) => {
-	const evaluated = expression?.evaluate(context) ?? context;
+export const name = new StringFunction(
+	'name',
+	[{ arityType: 'optional' }],
+	(context, [expression]) => {
+		const evaluated = expression?.evaluate(context) ?? context;
 
-	if (!(evaluated instanceof LocationPathEvaluation)) {
-		throw 'todo not a node-set';
+		if (!(evaluated instanceof LocationPathEvaluation)) {
+			throw 'todo not a node-set';
+		}
+
+		const node = evaluated.first()?.value;
+
+		if (node == null) {
+			return '';
+		}
+
+		if (
+			node.nodeType !== Node.ELEMENT_NODE &&
+			node.nodeType !== Node.ATTRIBUTE_NODE &&
+			node.nodeType !== Node.PROCESSING_INSTRUCTION_NODE
+		) {
+			return '';
+		}
+
+		if (isNamespaceNode(node)) {
+			return '';
+		}
+
+		return (node as MaybeNamedNode).nodeName ?? '';
 	}
-
-	const node = evaluated.first()?.value;
-
-	if (node == null) {
-		return '';
-	}
-
-	if (
-		node.nodeType !== Node.ELEMENT_NODE &&
-		node.nodeType !== Node.ATTRIBUTE_NODE &&
-		node.nodeType !== Node.PROCESSING_INSTRUCTION_NODE
-	) {
-		return '';
-	}
-
-	if (isNamespaceNode(node)) {
-		return '';
-	}
-
-	return (node as MaybeNamedNode).nodeName ?? '';
-});
+);
 
 export const namespaceURI = new StringFunction(
+	'namespace-uri',
 	[{ arityType: 'optional' }],
 	(context, [expression]): string => {
 		const evaluated = expression?.evaluate(context) ?? context;
@@ -139,10 +150,9 @@ export const namespaceURI = new StringFunction(
 		}
 
 		return (node as MaybeNamedNode).namespaceURI ?? '';
-	},
-	{ localName: 'namespace-uri' }
+	}
 );
 
-export const position = new NumberFunction([{ arityType: 'optional' }], (context, []): number =>
+export const position = new NumberFunction('position', [], (context, []): number =>
 	context.contextPosition()
 );

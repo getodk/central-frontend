@@ -1,4 +1,4 @@
-import type { XFormXPathEvaluator } from '../../../xpath/XFormXPathEvaluator.ts';
+import type { XFormsXPathEvaluator } from '@odk/xpath';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { BaseTextElementDefinition } from './BaseTextElementDefinition.ts';
 import type { TextElementPart } from './TextElementPart.ts';
@@ -34,7 +34,7 @@ export class OutputDefintion
 		this.parts = [this];
 	}
 
-	evaluate(evaluator: XFormXPathEvaluator, contextNode: Node): string {
+	evaluate(evaluator: XFormsXPathEvaluator, contextNode: Node): string {
 		return evaluator.evaluateString(this.expression, { contextNode });
 	}
 

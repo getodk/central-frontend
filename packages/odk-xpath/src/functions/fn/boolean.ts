@@ -2,15 +2,16 @@ import { XML_NAMESPACE_URI } from '../../evaluator/NamespaceResolver.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import { isElementNode } from '../../lib/dom/predicates.ts';
 
-const falseFn = new BooleanFunction([], (): boolean => false);
+const falseFn = new BooleanFunction('false', [], (): boolean => false);
 
 export { falseFn as false };
 
-const trueFn = new BooleanFunction([], (): boolean => true);
+const trueFn = new BooleanFunction('true', [], (): boolean => true);
 
 export { trueFn as true };
 
 export const boolean = new BooleanFunction(
+	'boolean',
 	[{ arityType: 'required' }],
 	(context, [expression]): boolean => {
 		return expression!.evaluate(context).toBoolean();
@@ -18,6 +19,7 @@ export const boolean = new BooleanFunction(
 );
 
 export const lang = new BooleanFunction(
+	'lang',
 	[{ arityType: 'required' }],
 	(context, [expression]): boolean => {
 		const language = expression!.evaluate(context).toString().toLowerCase();
@@ -51,6 +53,7 @@ export const lang = new BooleanFunction(
 );
 
 export const not = new BooleanFunction(
+	'not',
 	[{ arityType: 'required' }],
 	(context, [expression]): boolean => {
 		return !expression!.evaluate(context).toBoolean();

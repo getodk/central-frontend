@@ -2,7 +2,7 @@ import { Temporal } from '@js-temporal/polyfill';
 import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
 import { NamespaceResolver } from '../evaluator/NamespaceResolver.ts';
-import type { FunctionLibrary } from '../evaluator/functions/FunctionLibrary.ts';
+import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
 import type { FilteredTreeWalker, FilteredTreeWalkers } from '../lib/dom/traversal.ts';
 import { getDocument, getRootNode, getTreeWalker } from '../lib/dom/traversal.ts';
 import type { ContextDocument, ContextNode, ContextParentNode } from '../lib/dom/types.ts';
@@ -34,7 +34,7 @@ export type { EvaluationContextTreeWalkers };
 export interface EvaluationContextOptions {
 	readonly document: ContextDocument;
 	readonly rootNode: ContextParentNode;
-	readonly functionLibrary: FunctionLibrary;
+	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
 	readonly timeZone: Temporal.TimeZone;
 	readonly treeWalkers: EvaluationContextTreeWalkers;
@@ -45,12 +45,17 @@ export interface EvaluationContextOptions {
  * is evaluated.
  */
 export class EvaluationContext implements Context {
+	/**
+	 * @see {@link Context.evaluationContextNode}
+	 */
+	readonly evaluationContextNode: ContextNode;
+
 	readonly contextDocument: ContextDocument;
 	readonly rootNode: ContextParentNode;
 
 	readonly contextNodes: Iterable<ContextNode>;
 
-	readonly functionLibrary: FunctionLibrary;
+	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
 
 	readonly timeZone: Temporal.TimeZone;
@@ -65,16 +70,17 @@ export class EvaluationContext implements Context {
 		const {
 			rootNode = getRootNode(contextNode),
 			document = getDocument(rootNode),
-			functionLibrary = evaluator.functionLibrary,
+			functions = evaluator.functions,
 			namespaceResolver = new NamespaceResolver(document, contextNode),
 			treeWalkers = new EvaluationContextTreeWalkers(document, rootNode),
 			timeZone = evaluator.timeZone,
 		} = options;
 
 		this.contextDocument = document;
+		this.evaluationContextNode = contextNode;
 		this.contextNodes = [contextNode];
 		this.rootNode = rootNode;
-		this.functionLibrary = functionLibrary;
+		this.functions = functions;
 		this.namespaceResolver = namespaceResolver;
 		this.treeWalkers = treeWalkers;
 		this.timeZone = timeZone;

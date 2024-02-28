@@ -8,6 +8,7 @@ import { evaluateInt } from '../_shared/number.ts';
 import { toStrings } from '../_shared/string.ts';
 
 export const coalesce = new StringFunction(
+	'coalesce',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -24,6 +25,7 @@ export const coalesce = new StringFunction(
 );
 
 export const concat = new StringFunction(
+	'concat',
 	[{ arityType: 'variadic', typeHint: 'string' }],
 	(context, expressions): string => {
 		if (expressions.length === 0) {
@@ -64,6 +66,7 @@ const isDigestEncoding = (encoding: string): encoding is DigestEncoding =>
 	encoding in digestEncodeFunctions;
 
 export const digest = new StringFunction(
+	'digest',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -92,6 +95,7 @@ export const digest = new StringFunction(
 );
 
 export const endsWith = new BooleanFunction(
+	'ends-with',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -103,11 +107,11 @@ export const endsWith = new BooleanFunction(
 		const result = haystack.endsWith(needle);
 
 		return result;
-	},
-	{ localName: 'ends-with' }
+	}
 );
 
 export const join = new StringFunction(
+	'join',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		// Deviates from ODK XForms spec, matches ORXE
@@ -122,6 +126,7 @@ export const join = new StringFunction(
 );
 
 export const regex = new BooleanFunction(
+	'regex',
 	[
 		{ arityType: 'required', typeHint: 'string' },
 		{ arityType: 'required', typeHint: 'string' },
@@ -136,6 +141,7 @@ export const regex = new BooleanFunction(
 );
 
 export const substr = new StringFunction(
+	'substr',
 	[
 		{ arityType: 'required' },
 		{ arityType: 'required', typeHint: 'number' },
@@ -169,6 +175,7 @@ export const substr = new StringFunction(
 );
 
 export const uuid = new StringFunction(
+	'uuid',
 	[{ arityType: 'optional', typeHint: 'number' }],
 	(context, [lengthExpression]) => {
 		let result: string = crypto.randomUUID();

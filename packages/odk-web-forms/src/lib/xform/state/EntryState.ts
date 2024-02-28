@@ -1,6 +1,6 @@
 import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
+import type { XFormsXPathEvaluator } from '@odk/xpath';
 import { createMemo, type Accessor } from 'solid-js';
-import type { XFormXPathEvaluator } from '../../xpath/XFormXPathEvaluator.ts';
 import type { XFormDOM } from '../XFormDOM.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
@@ -10,6 +10,7 @@ import type { AnyDescandantNodeState } from './DescendantNodeState.ts';
 import type { AnyChildState, AnyNodeState, AnyParentState, NodeState } from './NodeState.ts';
 import { RepeatSequenceState } from './RepeatSequenceState.ts';
 import { SubtreeState } from './SubtreeState.ts';
+import { TranslationState } from './TranslationState.ts';
 import { ValueNodeState } from './ValueNodeState.ts';
 
 export const buildChildStates = (
@@ -78,7 +79,9 @@ export class EntryState implements NodeState<'root'> {
 	protected readonly instanceDOM: XFormDOM;
 
 	readonly xformDocument: XMLDocument;
-	readonly evaluator: XFormXPathEvaluator;
+	readonly evaluator: XFormsXPathEvaluator;
+
+	readonly translations: TranslationState | null;
 
 	readonly node: Element;
 
@@ -117,7 +120,10 @@ export class EntryState implements NodeState<'root'> {
 		this.node = instanceDOM.primaryInstanceRoot;
 		this.node.replaceChildren();
 
-		this.evaluator = instanceDOM.primaryInstanceEvaluator;
+		const evaluator = instanceDOM.primaryInstanceEvaluator;
+
+		this.evaluator = evaluator;
+		this.translations = TranslationState.from(this);
 		this.children = buildChildStates(this, this);
 
 		this.initializeState();

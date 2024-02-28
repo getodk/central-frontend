@@ -1,5 +1,5 @@
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
-import type { FunctionImplementationOptions, FunctionSignature } from './FunctionImplementation.ts';
+import type { FunctionSignature } from './FunctionImplementation.ts';
 import type { TypedFunctionCallable } from './TypedFunctionImplementation.ts';
 import { TypedFunctionImplementation } from './TypedFunctionImplementation.ts';
 
@@ -8,10 +8,10 @@ export class NumberFunction<Length extends number> extends TypedFunctionImplemen
 	Length
 > {
 	constructor(
+		localName: string,
 		signature: FunctionSignature<Length>,
-		call: TypedFunctionCallable<number>,
-		options?: FunctionImplementationOptions
+		call: TypedFunctionCallable<number>
 	) {
-		super(NumberEvaluation, signature, call, options);
+		super(localName, NumberEvaluation, signature, call);
 	}
 }

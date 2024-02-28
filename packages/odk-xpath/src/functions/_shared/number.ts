@@ -22,7 +22,7 @@ type MathAliasMethodName =
 	| 'tan';
 
 export const mathAlias = (method: MathAliasMethodName) =>
-	new NumberFunction([{ arityType: 'required' }], (context, [expression]): number => {
+	new NumberFunction(method, [{ arityType: 'required' }], (context, [expression]): number => {
 		const number = (expression?.evaluate(context) ?? context).toNumber();
 
 		if (Number.isNaN(number)) {
@@ -36,6 +36,7 @@ type Math2AliasMethodName = 'atan2' | 'pow';
 
 export const math2Alias = (method: Math2AliasMethodName) =>
 	new NumberFunction(
+		method,
 		[{ arityType: 'required' }, { arityType: 'required' }],
 		(context, [expression0, expression1]): number => {
 			const number0 = expression0!.evaluate(context).toNumber();
@@ -86,6 +87,7 @@ const toNumberArguments = (
 
 export const mathNAlias = (method: MathNAliasMethodName) =>
 	new NumberFunction(
+		method,
 		[
 			// Deviates from ODK XForms spec, matches ORXE
 			{ arityType: 'variadic' },

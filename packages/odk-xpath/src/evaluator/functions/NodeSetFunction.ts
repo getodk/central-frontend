@@ -1,10 +1,6 @@
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { ContextNode } from '../../lib/dom/types.ts';
-import type {
-	EvaluableArgument,
-	FunctionImplementationOptions,
-	FunctionSignature,
-} from './FunctionImplementation.ts';
+import type { EvaluableArgument, FunctionSignature } from './FunctionImplementation.ts';
 import { FunctionImplementation } from './FunctionImplementation.ts';
 
 export type NodeSetFunctionCallable = <Arguments extends readonly EvaluableArgument[]>(
@@ -14,22 +10,18 @@ export type NodeSetFunctionCallable = <Arguments extends readonly EvaluableArgum
 
 export class NodeSetFunction<Length extends number> extends FunctionImplementation<Length> {
 	constructor(
+		localName: string,
 		signature: FunctionSignature<Length>,
-		call: NodeSetFunctionCallable,
-		options?: FunctionImplementationOptions
+		call: NodeSetFunctionCallable
 	) {
-		super(
-			signature,
-			(context, args) => {
-				const nodes = call(context, args);
+		super(localName, signature, (context, args) => {
+			const nodes = call(context, args);
 
-				return LocationPathEvaluation.fromArbitraryNodes(
-					context,
-					nodes as Iterable<ContextNode>,
-					this
-				);
-			},
-			options
-		);
+			return LocationPathEvaluation.fromArbitraryNodes(
+				context,
+				nodes as Iterable<ContextNode>,
+				this
+			);
+		});
 	}
 }

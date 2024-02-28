@@ -1,6 +1,8 @@
 import { expect } from 'vitest';
 import { Evaluator } from '../src/index.ts';
-import type { AnyXPathEvaluator, XPathResultType } from '../src/shared/interface.ts';
+import type { AnyParentNode } from '../src/lib/dom/types.ts';
+import type { XPathResultType } from '../src/shared/interface.ts';
+import { XFormsXPathEvaluator } from '../src/xforms/XFormsXPathEvaluator.ts';
 import { xpathParser } from './parser.ts';
 
 declare global {
@@ -36,30 +38,47 @@ interface EvaluationAssertionOptions {
 	readonly message?: string;
 }
 
-interface TestContextOptions {
+interface TestContextOptions<XForms extends boolean = false> {
+	readonly getRootNode?: (testDocument: XMLDocument) => AnyParentNode;
 	readonly namespaceResolver?: Nullish<XPathNSResolver>;
+	readonly xforms?: XForms;
 }
 
-export class TestContext {
+type TestContextEvaluator<XForms extends boolean> = XForms extends true
+	? XFormsXPathEvaluator
+	: Evaluator;
+
+export class TestContext<XForms extends boolean = false> {
 	readonly document: XMLDocument;
-	readonly evaluator: AnyXPathEvaluator;
+	readonly evaluator: TestContextEvaluator<XForms>;
 	readonly namespaceResolver: XPathNSResolver;
 
 	constructor(
 		readonly sourceXML?: string,
-		options: TestContextOptions = {}
+		options: TestContextOptions<XForms> = {}
 	) {
 		const xml = sourceXML ?? '<root/>';
+		const testDocument: XMLDocument = domParser.parseFromString(xml, 'text/xml');
 
-		const evaluator = new Evaluator(xpathParser, {
+		const evaluatorOptions = {
 			parseOptions: {
 				attemptErrorRecovery: true,
 			},
 			timeZoneId: TZ,
-		});
+		} as const;
 
-		this.document = domParser.parseFromString(xml, 'text/xml');
-		this.evaluator = evaluator;
+		if (options.xforms) {
+			const rootNode = options.getRootNode?.(testDocument) ?? testDocument;
+
+			this.evaluator = new XFormsXPathEvaluator(xpathParser, {
+				...evaluatorOptions,
+				rootNode,
+			}) as TestContextEvaluator<XForms>;
+		} else {
+			this.evaluator = new Evaluator(xpathParser, evaluatorOptions) as TestContextEvaluator<XForms>;
+		}
+
+		this.document = testDocument;
 		this.namespaceResolver = options.namespaceResolver ?? namespaceResolver;
 	}
 
@@ -254,6 +273,32 @@ export const createTestContext = (xml?: string, options: TestContextOptions = {}
 	return new TestContext(xml, options);
 };
 
+interface XFormsTestContextOptions extends TestContextOptions<true> {
+	readonly xforms?: true;
+}
+
+export class XFormsTestContext extends TestContext<true> {
+	readonly xforms = true;
+
+	constructor(sourceXML?: string, options: XFormsTestContextOptions = {}) {
+		super(sourceXML, {
+			...options,
+			xforms: true,
+		});
+	}
+
+	setLanguage(language: string | null): string | null {
+		return this.evaluator.translations.setActiveLanguage(language);
+	}
+}
+
+export const createXFormsTestContext = (
+	xml?: string,
+	options: XFormsTestContextOptions = {}
+): XFormsTestContext => {
+	return new XFormsTestContext(xml, options);
+};
+
 /**
  * Creates a text context to evaluate expressions against a document with a
  * predictable structure:
@@ -269,9 +314,9 @@ export const createTestContext = (xml?: string, options: TestContextOptions = {}
  * </simple>
  * ```
  */
-export const createTextContentTestContext = (textContent: string) => {
+export const createXFormsTextContentTestContext = (textContent: string) => {
 	//         ^ Say *that* ten times fast! ;)
-	return createTestContext(/* xml */ `<simple>
+	return createXFormsTestContext(/* xml */ `<simple>
     <xpath>
       <to>
         <node>${textContent}</node>

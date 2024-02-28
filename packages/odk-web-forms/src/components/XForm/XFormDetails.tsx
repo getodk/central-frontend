@@ -1,5 +1,4 @@
 import { styled } from 'suid/material';
-import type { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
 import type { EntryState } from '../../lib/xform/state/EntryState.ts';
 
 const Details = styled('details')({
@@ -21,7 +20,6 @@ const Pre = styled('pre')({
 });
 
 export interface XFormDetailsProps {
-	readonly definition: XFormDefinition;
 	readonly entry: EntryState;
 }
 
@@ -33,11 +31,11 @@ export const XFormDetails = (props: XFormDetailsProps) => (
 		</Details>
 		<Details>
 			<Summary>XFormDefinition</Summary>
-			<Pre>{JSON.stringify(props.definition, null, 2)}</Pre>
+			<Pre>{JSON.stringify(props.entry.form, null, 2)}</Pre>
 		</Details>
 		<Details>
 			<Summary>XForm (XML)</Summary>
-			<Pre>{props.definition.xformDocument.documentElement.outerHTML}</Pre>
+			<Pre>{props.entry.form.xformDocument.documentElement.outerHTML}</Pre>
 		</Details>
 	</>
 );

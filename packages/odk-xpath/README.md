@@ -37,38 +37,113 @@ export const xpathParser = await TreeSitterXPathParser.init({
 
 Note that this depends on Vite's [`?url` import suffix](https://vitejs.dev/guide/assets.html#explicit-url-imports). The same general approach should apply for other tooling/bundlers or even without a build step, so long as `webTreeSitter` and `xpathLanguage` successfully resolve to their respective WASM resources.
 
-## Example usage
+## Usage
 
-To use `@odk/xpath` at runtime, you first create an `Evaluator` instance. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
+To use `@odk/xpath` at runtime, first create an `XFormsXPathEvaluator` instance, specifying a parser instance and the XForm `rootNode`. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
 
 ```ts
-import { Evaluator } from '@odk/xpath';
+import { XFormsXPathEvaluator } from '@odk/xpath';
 
-const evaluator = new Evaluator();
+// Given an XForms DOM document...
+declare const xform: XMLDocument;
 
-// Given some DOM document, e.g. ...
-const parser = new DOMParser();
-const doc = parser.parseFromString(
-  `<root>
-    <!-- ... --->
-  </root>`,
-  'text/xml'
-);
+const evaluator = new XFormsXPathEvaluator(xpathParser, { rootNode: xform });
 
 // A namespace resolver is optional, and the context node can be used (which is the default)
-const nsResolver: XPathNSResolver = doc;
+const nsResolver: XPathNSResolver = xform;
 
 const result: XPathResult = evaluator.evaluate(
   '/root/...',
-  doc,
+  xform,
   nsResolver,
   XPathResult.ORDERED_NODE_ITERATOR_TYPE
 );
 ```
 
-Likewise, `result` is API-compatible with the standard DOM [`XPathResult`](https://developer.mozilla.org/en-US/docs/Web/API/XPathResult).
+For typical XForms usage, `rootNode` will be either an XForm `XMLDocument` or its primary instance `Element`.
 
-**Note on APIs:** we do not currently provide typical convience API extensions for e.g. common iteration tasks (although we may eventually). It is likely that the standard iterator API result types will perform better than their snapshot counterparts. It is also likely that unordered results may perform better than ordered, now or after future optimizations. Of course, caution should be used with unordered results in general.
+For XPath 1.0 functionality without XForms extension functions, you may use `Evaluator` the same way, and `rootNode` is optional:
+
+```ts
+import { Evaluator } from '@odk/xpath';
+
+const evaluator = new Evaluator(xpathParser);
+
+// ...
+```
+
+In either case, the `result` returned by `evaluate` is API-compatible with the standard DOM [`XPathResult`](https://developer.mozilla.org/en-US/docs/Web/API/XPathResult).
+
+### XForms `itext` translations
+
+`XFormsXPathEvaluator` supports the JavaRosa `itext` function (`jr:itext` by convention), as specified in ODK XForms, which says:
+
+> Obtains an itext value for the provided reference in the active language from the `<itext>` block in the model.
+
+This active language state is managed at the `XFormXPathEvaluator` instance level, with the default language (again as specified in ODK XForms) active on construction. You can access a form's available languages, and get or set the active language under the `XFormXPathEvaluator.translations` object.
+
+Example:
+
+```ts
+const domParser = new DOMParser();
+const xform: XMLDocument = domParser.parseFromString(
+  `<h:html>
+  <h:head>
+    <model>
+      <itext>
+        <translation lang="English" default="true()">
+          <text id="hello">
+            <value>hello</value>
+          </text>
+        </translation>
+        <translation lang="Español">
+          <text id="hello">
+            <value>hola</value>
+          </text>
+        </translation>
+      </itext>
+    </model>
+  </h:head>
+  <!-- ... -->
+</h:html>`,
+  'text/xml'
+);
+const evaluator = new XFormsXPathEvaluator(xpathParser, { rootNode: xform });
+
+evaluator.translations.getLanguages(); // ['English', 'Español']
+evaluator.translations.getActiveLanguage(); // 'English'
+evaluator.evaluate('jr:itext("hello")', xform, null, XPathResult.STRING_TYPE).stringValue; // 'hello'
+
+evaluator.translations.setActiveLanguage('Español'); // 'Español'
+evaluator.translations.getActiveLanguage(); // 'Español'
+evaluator.evaluate('jr:itext("hello")', xform, null, XPathResult.STRING_TYPE).stringValue; // 'hola'
+```
+
+There are currently a few caveats to `jr:itext` use:
+
+- `<itext>` and its translations are evaluated from the **document root** of the `rootNode` specified in `XFormsXPathEvaluator` options. As such:
+
+  - translations _will_ be resolved if a descendant `rootNode` (e.g. the XForm's primary `<instance>` element) is specified
+
+  - translations _will not_ be resolved for an XForm in an unusual DOM structure (e.g. a `DocumentFragment`, or in an arbitrary subtree of an unrelated document)
+
+- Translations are treated as static, and cached during construction of `XFormsXPathEvaluator`. This is based on typical usage, wherein an XForm definition itself is expected to be static, but it will not (yet) support use cases like authoring an XForm definition.
+
+- `<value form="...anything...">` is not yet supported. It's unclear what the interface for this usage might be.
+
+- The interface for getting and setting language state is currently experimental pending integration experience, and may be changed in the future. The intent of this interface is to be relatively agnostic to outside state management, and to isolate this sort of stateful context from the XForm DOM, but that approach may also change.
+
+### Convenience APIs
+
+Both evaluator classes provide the following convenience methods:
+
+- `evaluateBoolean(expression: string, options?: { contextNode?: Node }): boolean`
+- `evaluateNumber(expression: string, options?: { contextNode?: Node }): number`
+- `evaluateString(expression: string, options?: { contextNode?: Node }): string`
+- `evaluateNode(expression: string, options?: { contextNode?: Node }): Node | null`
+- `evaluateNodes(expression: string, options?: { contextNode?: Node }): Node[]`
+
+(Also provided: `evaluateElement` and `evaluateNonNullElement`, but these are not type safe so use them at your own risk.)
 
 ## Supported/tested environments
 
@@ -85,17 +160,15 @@ Likewise, `result` is API-compatible with the standard DOM [`XPathResult`](https
 ### XPath 1.0
 
 - Expressions with variable references are parsed incorrectly. There is also no API to provide variable values, even if variable references were supported.
-- ODK extensions are currently enabled by default, which introduces some differences in behavior around `dateTime` data types. It is possible to omit these extensions, restoring standard compliance for affected expressions. Documentation for this may be provided in the future as interest arises.
 
 ### ODK XForms
 
-We intend to support the full ODK XForms function library, but support is currently incomplete. The following functions are not yet supported:
+We intend to support the full ODK XForms function library, but support is currently incomplete. The following functions are not yet supported (the `jr:` prefix is used by convention to refer to the JavaRosa namespace):
 
-- `current`
 - `indexed-repeat`
 - `instance`
 - `pulldata`
-- `version`
+- `jr:choice-name`
 
 ### Non-browser environments
 
