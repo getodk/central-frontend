@@ -14,15 +14,17 @@ except according to the terms contained in the LICENSE file.
     backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <div>
-        <span>{{ $t('headersNote') }}</span>
-        <sentence-separator/>
-        <entity-upload-data-template/>
-      </div>
-
+      <entity-upload-file-select v-show="file == null" @change="selectFile">
+        <div>
+          <span>{{ $t('headersNote') }}</span>
+          <sentence-separator/>
+          <entity-upload-data-template/>
+        </div>
+      </entity-upload-file-select>
+      <div v-if="file != null" id="entity-upload-filename">{{ file.name }}</div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
-          :aria-disabled="awaitingResponse" @click="upload">
+          :aria-disabled="file == null || awaitingResponse" @click="upload">
           {{ $t('action.append') }} <spinner :state="awaitingResponse"/>
         </button>
         <button type="button" class="btn btn-link"
@@ -35,7 +37,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { ref, watch } from 'vue';
+
 import EntityUploadDataTemplate from './upload/data-template.vue';
+import EntityUploadFileSelect from './upload/file-select.vue';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
@@ -48,12 +53,16 @@ import { useRequestData } from '../../request-data';
 defineOptions({
   name: 'EntityUpload'
 });
-defineProps({
+const props = defineProps({
   state: Boolean
 });
 const emit = defineEmits(['hide', 'success']);
 
 const { dataset } = useRequestData();
+
+const file = ref(null);
+const selectFile = (value) => { file.value = value; };
+watch(() => props.state, (state) => { if (!state) file.value = null; });
 
 const { request, awaitingResponse } = useRequest();
 const upload = () => {
@@ -61,7 +70,7 @@ const upload = () => {
     method: 'POST',
     url: apiPaths.entities(dataset.projectId, dataset.name),
     data: {
-      source: { name: 'TODO' },
+      source: { name: file.value.name, size: file.value.size },
       entities: []
     }
   })
