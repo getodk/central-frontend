@@ -1729,6 +1729,9 @@
             "api": {
               "string": "Entity {label} created by {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            },
+            "bulkSource": {
+              "string": "File {name} uploaded by {actor}"
             }
           },
           "update_version": {
