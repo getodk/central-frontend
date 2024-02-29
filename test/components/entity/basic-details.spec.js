@@ -156,6 +156,20 @@ describe('EntityBasicDetails', () => {
           dd.text().should.equal('s');
         });
     });
+  });
+
+  describe('entity created using single entity API', () => {
+    it('does not show any block about entity creation', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {
+          entity: { uuid: 'e' }
+        }
+      });
+      const component = mountComponent();
+      component.findAll('dd').length.should.equal(3);
+    });
 
     it('does not show creating submission for entity created using API', () => {
       testData.extendedEntities.createPast(1, { uuid: 'e' });
@@ -168,6 +182,21 @@ describe('EntityBasicDetails', () => {
       const component = mountComponent();
       const dd = component.find('#entity-basic-details-creating-submission');
       dd.exists().should.be.false();
+    });
+  });
+
+  describe('entity created using bulk upload', () => {
+    it('shows the creating source as the word upload', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {
+          source: { name: 'my_file.csv' }
+        }
+      });
+      const component = mountComponent();
+      const dd = component.find('#entity-basic-details-creating-source');
+      dd.text().should.equal('Upload');
     });
   });
 

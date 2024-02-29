@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div v-if="source?.name != null">
           <dt>{{ $t('creatingSource') }}</dt>
-          <dd>{{ $t('upload') }}</dd>
+          <dd id="entity-basic-details-creating-source">{{ $t('upload') }}</dd>
         </div>
         <div>
           <dt>{{ $t('header.createdAt') }}</dt>
