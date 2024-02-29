@@ -62,15 +62,16 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else-if="entry.action === 'entity.bulk.create'">
         <span class="icon-cloud-upload"></span>
-        <!--use same title template as entity created by submission-->
-        <i18n-t keypath="title.entity.create.submission">
-          <template #label>
-            <span class="entity-label">{{ entity.currentVersion.label }}</span>
-          </template>
-          <template #dataset>
-            <router-link :to="datasetPath()">{{ datasetName }}</router-link>
-          </template>
-        </i18n-t>
+        <div class="bulk-event">
+          <i18n-t keypath="title.entity.create.submission">
+            <template #label>
+              <span class="entity-label">{{ entity.currentVersion.label }}</span>
+            </template>
+            <template #dataset>
+              <router-link :to="datasetPath()">{{ datasetName }}</router-link>
+            </template>
+          </i18n-t>
+        </div>
         <div class="bulk-source">
           <i18n-t keypath="title.entity.create.bulkSource">
             <template #name>
@@ -210,6 +211,10 @@ const versionAnchor = (v) => `#v${v}`;
       @include text-link;
       font-weight: bold;
     }
+  }
+
+  .bulk-event {
+    display: inline;
   }
 
   .bulk-source {

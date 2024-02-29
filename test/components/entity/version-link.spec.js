@@ -35,6 +35,14 @@ describe('EntityVersionLink', () => {
     mountComponent().text().should.equal('Update by Alice');
   });
 
+  it('shows the filename and actor if the entity source is bulk upload', () => {
+    testData.extendedUsers.createPast(1, { displayName: 'Alice' });
+    testData.extendedEntities.createPast(1, {
+      source: { name: 'my_file.csv', size: 100 } // size not used
+    });
+    mountComponent().text().should.equal('File my_file.csv uploaded by Alice');
+  });
+
   describe('entity source is a submission', () => {
     it('shows the instance name if the submission has one', () => {
       const { submission } = testData.extendedEntities

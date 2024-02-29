@@ -219,6 +219,46 @@ describe('EntityFeedEntry', () => {
     });
   });
 
+  describe('entity.bulk.create audit event', () => {
+    beforeEach(() => {
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.bulk.create',
+        details: { source: { name: 'my_file.csv' } }
+      });
+    });
+
+    it('shows the correct icon', () => {
+      const component = mountComponent();
+      const icon = component.find('.feed-entry-title .icon-cloud-upload');
+      icon.exists().should.be.true();
+    });
+
+    it('shows the correct text in top of event block', () => {
+      const component = mountComponent();
+      const text = component.get('.feed-entry-title .bulk-event').text();
+      text.should.equal('Created Entity dogwood in trees Entity List');
+    });
+
+    it('links to the dataset in the top of the event block', () => {
+      const title = mountComponent().get('.feed-entry-title .bulk-event');
+      const { to } = title.getComponent(RouterLinkStub).props();
+      to.should.equal('/projects/1/entity-lists/trees');
+    });
+
+    it('shows the correct text in bottom of event block', () => {
+      const component = mountComponent();
+      const text = component.get('.feed-entry-title .bulk-source').text();
+      text.should.equal('File my_file.csv uploaded by Alice');
+    });
+
+    it('links to actor in bottom of event block', () => {
+      const component = mountComponent();
+      const title = component.get('.feed-entry-title .bulk-source');
+      const actorLink = title.getComponent(ActorLink);
+      actorLink.props().actor.displayName.should.equal('Alice');
+    });
+  });
+
   describe('entity.update.version (via API) audit event', () => {
     beforeEach(() => {
       testData.extendedEntityVersions.createPast(1);
