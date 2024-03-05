@@ -67,7 +67,7 @@ const text = computed(() => {
     "api": "Update by {name}",
     // This refers to creation of an Entity. {filename} is the name of
     // an uploaded file containing the Entity. {name} is the name of a Web User.
-    "bulk": "File {filename} uploaded by {name}"
+    "bulk": "File {filename} upload by {name}"
   }
 }
 </i18n>

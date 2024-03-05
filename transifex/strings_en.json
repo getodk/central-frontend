@@ -1543,7 +1543,7 @@
         "developer_comment": "This is shown above the Submission that created the Entity."
       },
       "creatingSource": {
-        "string": "Creating Source",
+        "string": "Creating source",
         "developer_comment": "This is shown above the source (e.g. a CSV file) that created the entity"
       },
       "upload": {
@@ -1739,7 +1739,8 @@
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             },
             "bulkSource": {
-              "string": "File {name} uploaded by {actor}"
+              "string": "File {name} uploaded by {actor}",
+              "developer_comment": "This text is shown in a list of events. {name} is a filename, e.g. myfile.csv, and {actor} is a name/link to a Web User."
             }
           },
           "update_version": {
@@ -1966,7 +1967,7 @@
         "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
       },
       "bulk": {
-        "string": "File {filename} uploaded by {name}",
+        "string": "File {filename} upload by {name}",
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },

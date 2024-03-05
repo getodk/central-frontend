@@ -254,6 +254,8 @@ const versionAnchor = (v) => `#v${v}`;
           // This text is shown in a list of events. {name} is the name of a Web
           // User.
           "api": "Entity {label} created by {name}",
+          // This text is shown in a list of events. {name} is a filename, e.g.
+          // myfile.csv, and {actor} is a name/link to a Web User.
           "bulkSource": "File {name} uploaded by {actor}"
         },
         "update_version": {

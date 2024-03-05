@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
             </template>
           </dd>
         </div>
-        <div v-if="source?.name != null">
+        <div v-else-if="source?.name != null">
           <dt>{{ $t('creatingSource') }}</dt>
           <dd id="entity-basic-details-creating-source">{{ $t('upload') }}</dd>
         </div>
@@ -104,7 +104,7 @@ const { submissionPath } = useRoutes();
     // This is shown above the Submission that created the Entity.
     "creatingSubmission": "Creating Submission",
     // This is shown above the source (e.g. a CSV file) that created the entity
-    "creatingSource": "Creating Source",
+    "creatingSource": "Creating source",
     // This describes an "upload" being a generic source of an entity
     "upload": "Upload",
     "submissionDeleted": "This Submission has been deleted."

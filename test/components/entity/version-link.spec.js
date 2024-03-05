@@ -40,7 +40,7 @@ describe('EntityVersionLink', () => {
     testData.extendedEntities.createPast(1, {
       source: { name: 'my_file.csv', size: 100 } // size not used
     });
-    mountComponent().text().should.equal('File my_file.csv uploaded by Alice');
+    mountComponent().text().should.equal('File my_file.csv upload by Alice');
   });
 
   describe('entity source is a submission', () => {
