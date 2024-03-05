@@ -32,6 +32,10 @@ except according to the terms contained in the LICENSE file.
             </template>
           </dd>
         </div>
+        <div v-else-if="source?.name != null">
+          <dt>{{ $t('creatingSource') }}</dt>
+          <dd id="entity-basic-details-creating-source">{{ $t('upload') }}</dd>
+        </div>
         <div>
           <dt>{{ $t('header.createdAt') }}</dt>
           <dd><date-time :iso="entity.createdAt"/></dd>
@@ -65,17 +69,21 @@ const projectId = inject('projectId');
 // created.
 const { entity, audits } = useRequestData();
 
-// Using `ref` and watchEffect() for `submission` rather than
+// Using `ref` and watchEffect() for `source` rather than
 // `computed` so that it doesn't change whenever `audits` is refreshed.
-const submission = ref(undefined);
+const source = ref(undefined);
+const submission = ref(undefined); // submission is contained within source
 watchEffect(() => {
-  if (submission.value !== undefined || !audits.dataExists) return;
-  const audit = audits.find(({ action }) => action === 'entity.create');
+  // if we don't have the audit data yet, or if we have already found the source, return.
+  if ((!audits.dataExists || source.value !== undefined)) return;
+  const audit = audits.find(({ action }) => action === 'entity.create' || action === 'entity.bulk.create');
   // `audit` should always exist in production, but it doesn't always exist in
   // testing.
   if (audit == null) return;
   submission.value = audit.details.source?.submission;
+  source.value = audit.details.source;
 });
+
 const { submissionPath } = useRoutes();
 </script>
 
@@ -95,6 +103,10 @@ const { submissionPath } = useRoutes();
   "en": {
     // This is shown above the Submission that created the Entity.
     "creatingSubmission": "Creating Submission",
+    // This is shown above the source (e.g. a CSV file) that created the entity
+    "creatingSource": "Creating source",
+    // This describes an "upload" being a generic source of an entity
+    "upload": "Upload",
     "submissionDeleted": "This Submission has been deleted."
   }
 }

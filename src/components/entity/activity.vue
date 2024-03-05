@@ -102,9 +102,9 @@ watch(() => audits.awaitingResponse, (awaitingResponse) => {
 });
 const scrollData = (entryData) => {
   const { action } = entryData.entry;
-  if (!(action === 'entity.create' || action === 'entity.update.version'))
+  if (!(action === 'entity.create' || action === 'entity.bulk.create' || action === 'entity.update.version'))
     return {};
-  const version = action === 'entity.create' ? 1 : entryData.entityVersion.version;
+  const version = (action === 'entity.create' || action === 'entity.bulk.create') ? 1 : entryData.entityVersion.version;
   return {
     'data-version': version,
     class: version === scrollTarget.value ? 'scroll-target' : null

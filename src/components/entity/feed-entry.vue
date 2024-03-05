@@ -60,6 +60,27 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
+      <template v-else-if="entry.action === 'entity.bulk.create'">
+        <span class="icon-cloud-upload"></span>
+        <div class="bulk-event">
+          <i18n-t keypath="title.entity.create.submission">
+            <template #label>
+              <span class="entity-label">{{ entity.currentVersion.label }}</span>
+            </template>
+            <template #dataset>
+              <router-link :to="datasetPath()">{{ datasetName }}</router-link>
+            </template>
+          </i18n-t>
+        </div>
+        <div class="bulk-source">
+          <i18n-t keypath="title.entity.create.bulkSource">
+            <template #name>
+              <span class="source-name">{{ entry.details.source.name }}</span>
+            </template>
+            <template #actor><actor-link :actor="entry.actor"/></template>
+          </i18n-t>
+        </div>
+      </template>
       <template v-else-if="entry.action === 'entity.update.version'">
         <span class="icon-pencil"></span>
         <span class="title">
@@ -137,7 +158,7 @@ const { entity } = useRequestData();
 // Allow titles that contain more than one string to wrap.
 const wrapTitle = computed(() => {
   const { action } = props.entry;
-  return action === 'submission.create' || action === 'entity.create' || action === 'entity.update.version';
+  return action === 'submission.create' || action === 'entity.create' || action === 'entity.bulk.create' || action === 'entity.update.version';
 });
 
 const { submissionPath, datasetPath } = useRoutes();
@@ -175,7 +196,7 @@ const versionAnchor = (v) => `#v${v}`;
     vertical-align: -2px;
   }
 
-  .deleted-submission, .entity-label { font-weight: normal; }
+  .deleted-submission, .entity-label, .source-name { font-weight: normal; }
   .deleted-submission { color: $color-danger; }
   .approval { color: $color-success; }
 
@@ -190,6 +211,14 @@ const versionAnchor = (v) => `#v${v}`;
       @include text-link;
       font-weight: bold;
     }
+  }
+
+  .bulk-event {
+    display: inline;
+  }
+
+  .bulk-source {
+    text-indent: 0px;
   }
 }
 </style>
@@ -224,7 +253,10 @@ const versionAnchor = (v) => `#v${v}`;
           "submission": "Created Entity {label} in {dataset} Entity List",
           // This text is shown in a list of events. {name} is the name of a Web
           // User.
-          "api": "Entity {label} created by {name}"
+          "api": "Entity {label} created by {name}",
+          // This text is shown in a list of events. {name} is a filename, e.g.
+          // myfile.csv, and {actor} is a name/link to a Web User.
+          "bulkSource": "File {name} uploaded by {actor}"
         },
         "update_version": {
           "submission": {

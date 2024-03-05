@@ -44,11 +44,14 @@ const versionPath = computed(() => {
 const { t } = useI18n();
 const text = computed(() => {
   const { source } = props.version;
-  const { submission } = source;
+  const { submission, name } = source;
   if (submission != null) {
     const nameOrId = submission.currentVersion?.instanceName ??
       submission.instanceId;
     return t('submission', { instanceName: nameOrId });
+  }
+  if (name != null) {
+    return t('bulk', { filename: name, name: props.version.creator.displayName });
   }
   return t('api', { name: props.version.creator.displayName });
 });
@@ -61,7 +64,10 @@ const text = computed(() => {
     // of the Submission.
     "submission": "Submission {instanceName}",
     // This refers to an update to an Entity. {name} is the name of a Web User.
-    "api": "Update by {name}"
+    "api": "Update by {name}",
+    // This refers to creation of an Entity. {filename} is the name of
+    // an uploaded file containing the Entity. {name} is the name of a Web User.
+    "bulk": "File {filename} upload by {name}"
   }
 }
 </i18n>
