@@ -50,6 +50,7 @@ type TestContextEvaluator<XForms extends boolean> = XForms extends true
 
 export class TestContext<XForms extends boolean = false> {
 	readonly document: XMLDocument;
+	readonly defaultContextNode: Node;
 	readonly evaluator: TestContextEvaluator<XForms>;
 	readonly namespaceResolver: XPathNSResolver;
 
@@ -59,6 +60,8 @@ export class TestContext<XForms extends boolean = false> {
 	) {
 		const xml = sourceXML ?? '<root/>';
 		const testDocument: XMLDocument = domParser.parseFromString(xml, 'text/xml');
+
+		this.document = testDocument;
 
 		const evaluatorOptions = {
 			parseOptions: {
@@ -74,12 +77,13 @@ export class TestContext<XForms extends boolean = false> {
 				...evaluatorOptions,
 				rootNode,
 			}) as TestContextEvaluator<XForms>;
+			this.defaultContextNode = rootNode;
+			this.namespaceResolver = options.namespaceResolver ?? rootNode;
 		} else {
 			this.evaluator = new Evaluator(xpathParser, evaluatorOptions) as TestContextEvaluator<XForms>;
+			this.defaultContextNode = testDocument;
+			this.namespaceResolver = options.namespaceResolver ?? namespaceResolver;
 		}
-
-		this.document = testDocument;
-		this.namespaceResolver = options.namespaceResolver ?? namespaceResolver;
 	}
 
 	evaluate(
@@ -89,7 +93,7 @@ export class TestContext<XForms extends boolean = false> {
 		// eslint-disable-next-line @typescript-eslint/no-shadow
 		namespaceResolver?: Nullish<XPathNSResolver>
 	): XPathResult {
-		const context = contextNode ?? this.document;
+		const context = contextNode ?? this.defaultContextNode;
 
 		return this.evaluator.evaluate(
 			expression,

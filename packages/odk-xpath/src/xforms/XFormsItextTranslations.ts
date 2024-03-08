@@ -1,91 +1,169 @@
-import type { XFormsNamespaceURI } from '@odk/common/constants/xmlns.ts';
-import type { XFormsXPathEvaluator } from './XFormsXPathEvaluator.ts';
+import { UpsertableWeakMap } from '@odk/common/lib/collections/UpsertableWeakMap.ts';
+import { ScopedElementLookup } from '@odk/common/lib/dom/compatibility.ts';
+import type { KnownAttributeLocalNamedElement, LocalNamedElement } from '@odk/common/types/dom.ts';
+import type { ModelElement, XFormsXPathEvaluator } from './XFormsXPathEvaluator.ts';
 
-export interface XFormsItextContext {
-	get language(): string | null;
+export interface ItextRootElement extends LocalNamedElement<'itext'> {}
 
-	setLanguages(defaultLanguage: string, languages: readonly string[]): void;
-}
+const itextRootLookup = new ScopedElementLookup(':scope > itext', 'itext');
 
-interface XFormsItextRootElement extends Element {
-	readonly namespaceURI: XFormsNamespaceURI;
-	readonly localName: 'itext';
-}
+export const getItextRoot = (modelElement: ModelElement): ItextRootElement | null => {
+	return itextRootLookup.getElement<ItextRootElement>(modelElement);
+};
 
-interface XFormsItextTranslationElement extends Element {
-	readonly namespaceURI: XFormsNamespaceURI;
-	readonly localName: 'translation';
-	readonly parentNode: XFormsItextRootElement;
+interface TranslationElement extends KnownAttributeLocalNamedElement<'translation', 'lang'> {}
 
-	getAttribute(name: 'lang'): string;
+const translationLookup = new ScopedElementLookup(
+	':scope > translation[lang]',
+	'translation[lang]'
+);
+
+type TranslationLanguage = string;
+
+const translationElementsCache = new UpsertableWeakMap<
+	ModelElement,
+	ReadonlyMap<TranslationLanguage, TranslationElement>
+>();
+
+type TranslationElementMap = ReadonlyMap<TranslationLanguage, TranslationElement>;
+
+const getTranslationElementMap = (modelElement: ModelElement): TranslationElementMap => {
+	return translationElementsCache.upsert(modelElement, () => {
+		const itextRoot = getItextRoot(modelElement);
+
+		if (itextRoot == null) {
+			return new Map();
+		}
+
+		const translationElements = Array.from(
+			translationLookup.getElements<TranslationElement>(itextRoot)
+		);
+
+		return new Map(
+			translationElements.map((element) => {
+				return [element.getAttribute('lang'), element];
+			})
+		);
+	});
+};
+
+const getTranslationElement = (
+	modelElement: ModelElement,
+	translationLanguage: TranslationLanguage
+): TranslationElement | null => {
+	const translationElementMap = getTranslationElementMap(modelElement);
+
+	return translationElementMap.get(translationLanguage) ?? null;
+};
+
+interface TranslationTextElement extends KnownAttributeLocalNamedElement<'text', 'id'> {}
+
+const translationTextLookup = new ScopedElementLookup(':scope > text[id]', 'text[id]');
+
+type ItextID = string;
+
+type TranslationTextMap = ReadonlyMap<ItextID, TranslationTextElement>;
+
+const translationsCache = new UpsertableWeakMap<
+	ModelElement,
+	UpsertableWeakMap<TranslationElement, TranslationTextMap>
+>();
+
+export const getTranslationTextByLanguage = (
+	modelElement: ModelElement,
+	language: TranslationLanguage,
+	itextID: ItextID
+): TranslationTextElement | null => {
+	const translationElement = getTranslationElement(modelElement, language);
+
+	if (translationElement == null) {
+		return null;
+	}
+
+	const textMaps = translationsCache.upsert(modelElement, () => {
+		return new UpsertableWeakMap();
+	});
+	const textMap = textMaps.upsert(translationElement, () => {
+		const textElements = Array.from(
+			translationTextLookup.getElements<TranslationTextElement>(translationElement)
+		);
+
+		return new Map(
+			textElements.map((element) => {
+				return [element.getAttribute('id'), element];
+			})
+		);
+	});
+
+	return textMap.get(itextID) ?? null;
+};
+
+interface DefaultTextValueElement extends LocalNamedElement<'value'> {
+	getAttribute(name: 'form'): null;
 	getAttribute(name: string): string | null;
 }
 
-interface XFormsItextTextElement extends Element {
-	readonly namspaceURI: XFormsNamespaceURI;
-	readonly localName: 'text';
+const defaultTextValueLookup = new ScopedElementLookup(
+	':scope > value:not([form])',
+	'value:not([form])'
+);
 
-	getAttribute(name: 'id'): string;
-	getAttribute(name: string): string | null;
+export const getDefaultTextValueElement = (
+	textElement: TranslationTextElement
+): DefaultTextValueElement | null => {
+	return defaultTextValueLookup.getElement<DefaultTextValueElement>(textElement);
+};
+
+interface TranslationMetadata {
+	readonly defaultLanguage: string | null;
+	readonly languages: readonly string[];
 }
+
+const getTranslationMetadata = (modelElement: ModelElement | null): TranslationMetadata => {
+	const languages: string[] = [];
+
+	let defaultLanguage: string | null = null;
+
+	if (modelElement == null) {
+		return {
+			defaultLanguage,
+			languages,
+		};
+	}
+
+	const translationElementMap = getTranslationElementMap(modelElement);
+
+	for (const [language, element] of translationElementMap) {
+		if (defaultLanguage == null && element.hasAttribute('default')) {
+			defaultLanguage = language;
+			languages.unshift(language);
+		} else {
+			languages.push(language);
+		}
+	}
+
+	if (defaultLanguage == null) {
+		defaultLanguage = languages[0] ?? null;
+	}
+
+	return {
+		defaultLanguage,
+		languages,
+	};
+};
 
 export class XFormsItextTranslations {
 	protected readonly defaultLanguage: string | null;
 	protected readonly languages: readonly string[];
-	protected readonly translationsByLanguage: Map<string, Map<string, string>>;
 
 	protected activeLanguage: string | null;
 
 	constructor(protected readonly evaluator: XFormsXPathEvaluator) {
-		const { rootNode } = evaluator;
-		const xformRoot = rootNode.ownerDocument ?? rootNode;
-		// TODO: this clearly breaks out of `rootNode`'s hierarhy! It's exactly what
-		// we want for this use case, but it's definitely something that should be
-		// called out in any case where there might be an impression that `rootNode`
-		// provides any kind of isolation guarantees.
-		const translationElements = evaluator.evaluateNodes<XFormsItextTranslationElement>(
-			'./h:html/h:head/xf:model/xf:itext/xf:translation[@lang]',
-			{ contextNode: xformRoot }
-		);
-		// TODO: spec says this may be `"true()"` or `""`, what about other cases?
-		const defaultTranslationElement =
-			translationElements.find((translationElement) => {
-				return translationElement.hasAttribute('default');
-			}) ?? translationElements[0];
-
-		const defaultLanguage = defaultTranslationElement?.getAttribute('lang') ?? null;
-		const languages = translationElements.map((translationElement) => {
-			return translationElement.getAttribute('lang');
-		});
+		const { defaultLanguage, languages } = getTranslationMetadata(evaluator.modelElement);
 
 		this.defaultLanguage = defaultLanguage;
 		this.activeLanguage = defaultLanguage;
 		this.languages = languages;
-		this.translationsByLanguage = new Map(
-			translationElements.map((translationElement) => {
-				const language = translationElement.getAttribute('lang');
-				const textElements = evaluator.evaluateNodes<XFormsItextTextElement>('./xf:text[@id]', {
-					contextNode: translationElement,
-				});
-				const translations = new Map(
-					textElements.flatMap((textElement) => {
-						const value = evaluator.evaluateString('./xf:value[not(@form)]', {
-							contextNode: textElement,
-						});
-
-						if (value == null || value === '') {
-							return [];
-						}
-
-						const id = textElement.getAttribute('id');
-
-						return [[id, value]];
-					})
-				);
-
-				return [language, translations];
-			})
-		);
 	}
 
 	getLanguages(): readonly string[] {
@@ -100,23 +178,5 @@ export class XFormsItextTranslations {
 		this.activeLanguage = language ?? this.defaultLanguage;
 
 		return this.activeLanguage;
-	}
-
-	// TODO: currently only the default <value> (i.e. without a `form` attribute)
-	// is supported.
-	getTranslation(itextId: string): string | null {
-		const language = this.activeLanguage ?? this.defaultLanguage;
-
-		if (language == null) {
-			return null;
-		}
-
-		const translations = this.translationsByLanguage.get(language);
-
-		if (translations == null) {
-			throw new Error(`No translations for language: ${language}`);
-		}
-
-		return translations.get(itextId) ?? null;
 	}
 }

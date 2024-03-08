@@ -1,13 +1,9 @@
 import { JAVAROSA_NAMESPACE_URI } from '@odk/common/constants/xmlns.ts';
 import type { RepeatDefinition } from '../body/RepeatDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
-import type {
-	ChildNodeDefinition,
-	NodeDefinition,
-	ParentNodeDefinition,
-} from './NodeDefinition.ts';
+import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
+import type { ChildNodeDefinition, NodeDefinition } from './NodeDefinition.ts';
 import type { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
-import type { RootDefinition } from './RootDefinition.ts';
 
 const repeatTemplates = new WeakMap<BindDefinition, RepeatTemplateDefinition>();
 
@@ -76,7 +72,10 @@ interface ParsedRepeatNodes {
 	readonly instanceNodes: readonly Element[];
 }
 
-export class RepeatTemplateDefinition implements NodeDefinition<'repeat-template'> {
+export class RepeatTemplateDefinition
+	extends DescendentNodeDefinition<'repeat-template', RepeatDefinition>
+	implements NodeDefinition<'repeat-template'>
+{
 	static parseModelNodes(
 		sequence: RepeatSequenceDefinition,
 		modelNodes: readonly [Element, ...Element[]]
@@ -115,12 +114,8 @@ export class RepeatTemplateDefinition implements NodeDefinition<'repeat-template
 
 	readonly type = 'repeat-template';
 
-	readonly root: RootDefinition;
-	readonly parent: ParentNodeDefinition;
-	readonly bind: BindDefinition;
 	readonly node: Element;
 	readonly nodeName: string;
-	readonly bodyElement: RepeatDefinition;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -135,16 +130,15 @@ export class RepeatTemplateDefinition implements NodeDefinition<'repeat-template
 			parent: repeatSequenceParent,
 			root,
 		} = sequence;
+
+		super(repeatSequenceParent, bind, repeatGroupBodyElement.repeat);
+
 		const node = templateNode.cloneNode(true) as Element;
 
 		node.removeAttributeNS(JAVAROSA_NAMESPACE_URI, 'template');
 
-		this.root = root;
-		this.parent = repeatSequenceParent;
-		this.bind = bind;
 		this.node = node;
 		this.nodeName = node.localName;
-		this.bodyElement = repeatGroupBodyElement.repeat;
 		this.children = root.buildSubtree(this);
 	}
 

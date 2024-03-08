@@ -1,33 +1,26 @@
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { MixedContentTextElementDefinition } from './MixedContentTextElementDefinition.ts';
+import { getHintElement } from '../../query.ts';
+import type { AnyControlDefinition } from '../control/ControlDefinition.ts';
+import type { TextElement } from './TextElementDefinition.ts';
+import { TextElementDefinition } from './TextElementDefinition.ts';
 
-export interface HintElement extends Element {
+export interface HintElement extends TextElement {
 	readonly localName: 'hint';
 }
 
-export const isHintElement = (element: Element): element is HintElement => {
-	return element.localName === 'hint';
-};
-
-export class HintDefinition extends MixedContentTextElementDefinition<'hint'> {
-	static forElement(form: XFormDefinition, element: Element): HintDefinition | null {
-		const hintElement = getScopeChildBySelector(
-			element,
-			':scope > hint',
-			'hint'
-		) as HintElement | null;
+export class HintDefinition extends TextElementDefinition<'hint'> {
+	static forElement(
+		form: XFormDefinition,
+		definition: AnyControlDefinition
+	): HintDefinition | null {
+		const hintElement = getHintElement(definition.element);
 
 		if (hintElement == null) {
 			return null;
 		}
 
-		return new HintDefinition(form, hintElement);
+		return new this(form, definition, hintElement);
 	}
 
-	override readonly type = 'hint';
-
-	constructor(form: XFormDefinition, element: HintElement) {
-		super(form, element);
-	}
+	readonly type = 'hint';
 }

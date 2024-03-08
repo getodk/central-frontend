@@ -1,4 +1,5 @@
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { LabelDefinition } from '../text/LabelDefinition.ts';
 import { BaseGroupDefinition } from './BaseGroupDefinition.ts';
 
@@ -11,10 +12,10 @@ export class PresentationGroupDefinition extends BaseGroupDefinition<'presentati
 
 	override readonly label: LabelDefinition;
 
-	constructor(form: XFormDefinition, element: Element) {
-		super(form, element);
+	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
+		super(form, parent, element);
 
-		const label = LabelDefinition.forElement(form, element);
+		const label = LabelDefinition.forGroup(form, this);
 
 		if (label == null) {
 			throw new Error('Invalid presentation-group: missing label');

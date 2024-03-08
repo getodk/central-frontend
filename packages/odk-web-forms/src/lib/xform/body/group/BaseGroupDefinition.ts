@@ -1,9 +1,13 @@
 import { UpsertableMap } from '@odk/common/lib/collections/UpsertableMap.ts';
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- refrenced in JSDoc
 import type { XFormDOM } from '../../XFormDOM.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { BodyDefinition, type BodyElementDefinitionArray } from '../BodyDefinition.ts';
+import { getLabelElement, getRepeatElement } from '../../query.ts';
+import {
+	BodyDefinition,
+	type BodyElementDefinitionArray,
+	type BodyElementParentContext,
+} from '../BodyDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
 import { LabelDefinition } from '../text/LabelDefinition.ts';
 
@@ -56,7 +60,7 @@ export abstract class BaseGroupDefinition<
 			const ref = element.getAttribute('ref');
 
 			if (ref != null) {
-				const repeat = getScopeChildBySelector(element, ':scope > repeat', 'repeat');
+				const repeat = getRepeatElement(element);
 
 				if (repeat == null) {
 					return 'logical-group';
@@ -69,7 +73,7 @@ export abstract class BaseGroupDefinition<
 				throw new Error('Unexpected <repeat> child of unrelated <group>');
 			}
 
-			const label = getScopeChildBySelector(element, ':scope > label', 'label');
+			const label = getLabelElement(element);
 
 			if (label == null) {
 				return 'structural-group';
@@ -86,12 +90,17 @@ export abstract class BaseGroupDefinition<
 	override readonly reference: string | null;
 	override readonly label: LabelDefinition | null;
 
-	constructor(form: XFormDefinition, element: Element, children?: BodyElementDefinitionArray) {
-		super(form, element);
+	constructor(
+		form: XFormDefinition,
+		parent: BodyElementParentContext,
+		element: Element,
+		children?: BodyElementDefinitionArray
+	) {
+		super(form, parent, element);
 
 		this.children = children ?? this.getChildren(element);
 		this.reference = element.getAttribute('ref');
-		this.label = LabelDefinition.forElement(form, element);
+		this.label = LabelDefinition.forGroup(form, this);
 	}
 
 	getChildren(element: Element): BodyElementDefinitionArray {
@@ -102,7 +111,7 @@ export abstract class BaseGroupDefinition<
 			return childName !== 'label' && childName !== 'repeat';
 		});
 
-		return BodyDefinition.getChildElementDefinitions(form, element, children);
+		return BodyDefinition.getChildElementDefinitions(form, this, element, children);
 	}
 }
 

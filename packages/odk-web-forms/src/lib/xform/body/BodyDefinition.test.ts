@@ -203,7 +203,7 @@ describe('BodyDefinition', () => {
 				label: {
 					category: 'support',
 					type: 'label',
-					parts: [{ textContent: 'Label text' }],
+					children: [{ expression: '"Label text"' }],
 				},
 			});
 		});
@@ -218,7 +218,7 @@ describe('BodyDefinition', () => {
 				hint: {
 					category: 'support',
 					type: 'hint',
-					parts: [{ textContent: 'Hint text' }],
+					children: [{ expression: '"Hint text"' }],
 				},
 			});
 		});
@@ -256,7 +256,7 @@ describe('BodyDefinition', () => {
 							label: {
 								category: 'support',
 								type: 'label',
-								parts: [{ textContent: 'Logical group child 2' }],
+								children: [{ expression: '"Logical group child 2"' }],
 							},
 							hint: null,
 						},
@@ -274,7 +274,7 @@ describe('BodyDefinition', () => {
 					label: {
 						category: 'support',
 						type: 'label',
-						parts: [{ textContent: 'Logical group 2 with label' }],
+						children: [{ expression: '"Logical group 2 with label"' }],
 					},
 				});
 			});
@@ -314,7 +314,7 @@ describe('BodyDefinition', () => {
 					label: {
 						category: 'support',
 						type: 'label',
-						parts: [{ textContent: 'Presentation group label' }],
+						children: [{ expression: '"Presentation group label"' }],
 					},
 				});
 			});
@@ -338,7 +338,7 @@ describe('BodyDefinition', () => {
 							label: {
 								category: 'support',
 								type: 'label',
-								parts: [{ textContent: 'Presentation group child b' }],
+								children: [{ expression: '"Presentation group child b"' }],
 							},
 							hint: null,
 						},
@@ -416,7 +416,7 @@ describe('BodyDefinition', () => {
 				label: {
 					category: 'support',
 					type: 'label',
-					parts: [{ textContent: 'Repeat group' }],
+					children: [{ expression: '"Repeat group"' }],
 				},
 			});
 		});
@@ -452,7 +452,7 @@ describe('BodyDefinition', () => {
 							label: {
 								category: 'support',
 								type: 'label',
-								parts: [{ textContent: 'Repeat 1 input 2' }],
+								children: [{ expression: '"Repeat 1 input 2"' }],
 							},
 						},
 					],

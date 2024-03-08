@@ -1,6 +1,6 @@
-import { getScopeChildBySelector } from '@odk/common/lib/dom/compatibility.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import type { BodyElementDefinitionArray } from '../BodyDefinition.ts';
+import { getRepeatElement } from '../../query.ts';
+import type { BodyElementDefinitionArray, BodyElementParentContext } from '../BodyDefinition.ts';
 import { RepeatDefinition } from '../RepeatDefinition.ts';
 import { BaseGroupDefinition } from './BaseGroupDefinition.ts';
 
@@ -70,17 +70,17 @@ export class RepeatGroupDefinition extends BaseGroupDefinition<'repeat-group'> {
 		return this.repeat.children;
 	}
 
-	constructor(form: XFormDefinition, element: Element) {
+	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
 		// TODO: this has already been queried at least twice before reaching this
 		// point!
-		const repeat = getScopeChildBySelector(element, ':scope > repeat', 'repeat');
+		const repeat = getRepeatElement(element);
 
 		// TODO: and as such, this should not happen
 		if (repeat == null) {
 			throw new Error('Invalid repeat-group');
 		}
 
-		super(form, element);
+		super(form, parent, element);
 
 		const repeatDefinition = new RepeatDefinition(form, this, repeat);
 

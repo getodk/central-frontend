@@ -1,39 +1,34 @@
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { AnyControlDefinition } from '../body/control/ControlDefinition.ts';
-import { ControlDefinition } from '../body/control/ControlDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
+import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
-import type { RootDefinition } from './RootDefinition.ts';
 
-export class ValueNodeDefinition implements NodeDefinition<'value-node'> {
+export class ValueNodeDefinition
+	extends DescendentNodeDefinition<'value-node', AnyControlDefinition | null>
+	implements NodeDefinition<'value-node'>
+{
 	readonly type = 'value-node';
 
 	readonly nodeName: string;
-	readonly root: RootDefinition;
 	readonly children = null;
 	readonly instances = null;
 	readonly defaultValue: string;
 
-	// TODO: it seems like a safe assumption that a model leaf node may only have
-	// a body control, not a group/repeat, but is it actually?
-	readonly bodyElement: AnyControlDefinition | null;
-
 	constructor(
-		readonly parent: ParentNodeDefinition,
-		readonly bind: BindDefinition,
+		parent: ParentNodeDefinition,
+		bind: BindDefinition,
 		bodyElement: AnyBodyElementDefinition | null,
 		readonly node: Element
 	) {
-		this.root = parent.root;
-		this.bind = bind;
-		this.nodeName = node.localName;
-		this.defaultValue = node.textContent ?? '';
-
-		if (bodyElement == null || bodyElement instanceof ControlDefinition) {
-			this.bodyElement = bodyElement;
-		} else {
+		if (bodyElement != null && bodyElement.category !== 'control') {
 			throw new Error(`Unexpected body element for nodeset ${bind.nodeset}`);
 		}
+
+		super(parent, bind, bodyElement);
+
+		this.nodeName = node.localName;
+		this.defaultValue = node.textContent ?? '';
 	}
 
 	toJSON() {

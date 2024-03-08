@@ -1,12 +1,14 @@
 import type { Accessor } from 'solid-js';
 import { createComputed, createMemo, createSignal, on } from 'solid-js';
 import { createUninitializedAccessor } from '../../reactivity/primitives/uninitialized.ts';
+import type { AnyTextElementDefinition } from '../body/text/TextElementDefinition.ts';
+import type { AnyTextElementPart } from '../body/text/TextElementPart.ts';
 import type {
-	BindDefinition,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
-	BindExpression,
-	BindExpressionType,
-} from '../model/BindDefinition.ts';
+	DependentExpression,
+	DependentExpressionResult,
+	DependentExpressionResultType,
+} from '../expression/DependentExpression.ts';
+import type { BindComputation } from '../model/BindComputation.ts';
 import type { EntryState } from './EntryState.ts';
 import type {
 	AnyNodeState,
@@ -18,19 +20,19 @@ import type {
 	StateNode,
 	ValueSignal,
 } from './NodeState.ts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
+import type { ValueNodeState } from './ValueNodeState.ts';
 
-const defaultEvaluationResults = {
-	calculate: null as string | null,
-	constraint: true as boolean,
-	readonly: false as boolean,
-	relevant: true as boolean,
-	required: false as boolean,
-	saveIncomplete: false as boolean,
-} as const;
+interface ReactiveEvaluationOptions {
+	readonly contextNode?: Node;
+}
 
-type AnyBindExpression = BindDefinition[BindExpressionType];
-
-type EvaluationResult<Expression extends AnyBindExpression> = ReturnType<Expression['evaluate']>;
+type BooleanBindComputationType =
+	| 'constraint'
+	| 'readonly'
+	| 'relevant'
+	| 'required'
+	| 'saveIncomplete';
 
 type DescendantNodeStateType = Exclude<NodeStateType, 'root'>;
 
@@ -77,7 +79,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		readonly type: Type,
 		readonly definition: StateModelDefinition<Type>
 	) {
-		this.nodeset = definition.bind.nodeset;
+		this.nodeset = definition.nodeset;
 		this.isReferenceStatic = parent.isReferenceStatic && type !== 'repeat-instance';
 		this.calculate = createUninitializedAccessor<string>();
 		this.isReadonly = createUninitializedAccessor<boolean>();
@@ -94,13 +96,13 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 
 		const { definition, parent } = this;
 		const { bind } = definition;
-		const isSelfReadonly = this.createBindExpressionEvaluation(bind.readonly);
-		const isSelfRelevant = this.createBindExpressionEvaluation(bind.relevant);
+		const isSelfReadonly = this.createBooleanBindComputation(bind.readonly);
+		const isSelfRelevant = this.createBooleanBindComputation(bind.relevant);
 
-		this.calculate = this.createOptionalBindExpressionEvaluation(bind.calculate);
+		this.calculate = this.createCalculate(bind.calculate);
 		this.isReadonly = createMemo(() => parent.isReadonly() || isSelfReadonly());
 		this.isRelevant = createMemo(() => parent.isRelevant() && isSelfRelevant());
-		this.isRequired = this.createBindExpressionEvaluation(bind.required);
+		this.isRequired = this.createBooleanBindComputation(bind.required);
 		this.isStateInitialized = true;
 	}
 
@@ -144,31 +146,22 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		return expression;
 	}
 
-	/**
-	 * Creates a reactive getter which produces the evaluated result for the
-	 * provided {@link BindExpression} on initialization, and whenever the state
-	 * (runtime or DOM, @see {@link createModelState}) of any of its dependencies
-	 * is updated.
-	 */
-	protected createBindExpressionEvaluation<Expression extends AnyBindExpression>(
-		bindExpression: Expression
-	): Accessor<EvaluationResult<Expression>> {
-		const { entry } = this;
-		const { dependencyExpressions, expression, expressionType } = bindExpression;
-
-		if (expression == null) {
-			const defaultResult = defaultEvaluationResults[
-				expressionType
-			] as EvaluationResult<Expression>;
-
-			return () => defaultResult;
-		}
-
+	protected createEvaluation<ResultType extends DependentExpressionResultType>(
+		dependentExpression: DependentExpression<ResultType>,
+		options: ReactiveEvaluationOptions = {}
+	): Accessor<DependentExpressionResult<ResultType>> {
+		const { entry, node } = this;
+		const { contextNode = node } = options;
 		const { evaluator } = entry;
-		const evaluateExpression = () =>
-			bindExpression.evaluate(evaluator, this.node) as EvaluationResult<Expression>;
+		const { dependencyReferences, evaluatorMethod, isTranslated } = dependentExpression;
+		const { expression } = dependentExpression;
+		const evaluateExpression = (): DependentExpressionResult<ResultType> => {
+			return evaluator[evaluatorMethod](expression, {
+				contextNode,
+			}) as DependentExpressionResult<ResultType>;
+		};
 
-		if (dependencyExpressions.length === 0 && this.isReferenceStatic) {
+		if (dependencyReferences.size === 0 && this.isReferenceStatic && !isTranslated) {
 			return evaluateExpression;
 		}
 
@@ -191,7 +184,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			);
 		};
 
-		const dependencies = dependencyExpressions.map(
+		const dependencies = Array.from(dependencyReferences).map(
 			(dependencyExpression): Accessor<DependencyState> => {
 				return createMemo(
 					() => {
@@ -223,6 +216,16 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 
 		createComputed(on(dependencies, triggerStaleReevaluation, { defer: true }));
 
+		if (dependentExpression.isTranslated) {
+			const { translations } = entry;
+
+			if (translations != null) {
+				const activeLanguage = () => translations.getActiveLanguage();
+
+				createComputed(on(activeLanguage, triggerStaleReevaluation, { defer: true }));
+			}
+		}
+
 		// TODO: super naive, assumes that a reference change (e.g. a repeat
 		// position change) warrants recomputation. A less naive solution would
 		// determine if the expression would be impacted by the expression change.
@@ -236,7 +239,7 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 			return currentReference;
 		}, this.reference);
 
-		const evaluate = createMemo<EvaluationResult<Expression>>((evaluated) => {
+		const evaluate = createMemo<DependentExpressionResult<ResultType>>((evaluated) => {
 			if (isEvaluationStale()) {
 				return evaluateExpression();
 			}
@@ -253,14 +256,77 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 		return evaluate;
 	}
 
-	protected createOptionalBindExpressionEvaluation<Expression extends AnyBindExpression>(
-		bindExpression: Expression
-	): Accessor<EvaluationResult<Expression>> | null {
-		if (bindExpression.expression == null) {
+	/**
+	 * Creates a reactive getter which produces the evaluated result for the
+	 * provided {@link BindComputation} on initialization, and whenever the state
+	 * (runtime or DOM, @see {@link ValueNodeState.createValueNodeState}) of any
+	 * of its dependencies is updated.
+	 */
+	protected createBooleanBindComputation<
+		Computation extends BindComputation<BooleanBindComputationType>,
+	>(bindComputation: Computation): Accessor<boolean> {
+		return this.createEvaluation(bindComputation);
+	}
+
+	protected createCalculate(
+		computation: BindComputation<'calculate'> | null
+	): Accessor<string> | null {
+		if (computation == null) {
 			return null;
 		}
 
-		return this.createBindExpressionEvaluation(bindExpression);
+		return this.createEvaluation(computation);
+	}
+
+	createNodesetEvaluation(expression: DependentExpression<'nodes'>): Accessor<readonly Node[]> {
+		return this.createEvaluation(expression);
+	}
+
+	protected createTextPartEvaluation(
+		part: AnyTextElementPart,
+		options: ReactiveEvaluationOptions = {}
+	): Accessor<string> {
+		if (part.type === 'static') {
+			return () => part.stringValue;
+		}
+
+		return this.createEvaluation(part, options);
+	}
+
+	createTextEvaluation(
+		textElement: AnyTextElementDefinition,
+		options: ReactiveEvaluationOptions = {}
+	): Accessor<string> {
+		const childEvaluations = textElement.children.map((childPart) => {
+			return this.createTextPartEvaluation(childPart, options);
+		});
+		const childText = createMemo(() => {
+			return childEvaluations.map((evaluation) => evaluation()).join('');
+		});
+
+		const { referenceExpression } = textElement;
+
+		if (referenceExpression == null) {
+			return childText;
+		}
+
+		const referenceEvaluation = this.createTextPartEvaluation(referenceExpression, options);
+
+		return createMemo(() => {
+			const referenceText = referenceEvaluation();
+
+			if (referenceText == '') {
+				return childText();
+			}
+
+			return referenceText;
+		});
+	}
+
+	toJSON() {
+		const { entry, parent, ...rest } = this;
+
+		return rest;
 	}
 }
 

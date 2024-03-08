@@ -1,4 +1,5 @@
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
 import { HintDefinition } from '../text/HintDefinition.ts';
 import { LabelDefinition } from '../text/LabelDefinition.ts';
@@ -22,8 +23,8 @@ export abstract class ControlDefinition<
 	override readonly label: LabelDefinition | null;
 	override readonly hint: HintDefinition | null;
 
-	constructor(form: XFormDefinition, element: Element) {
-		super(form, element);
+	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
+		super(form, parent, element);
 
 		const reference = element.getAttribute('ref');
 
@@ -32,8 +33,8 @@ export abstract class ControlDefinition<
 		}
 
 		this.reference = reference;
-		this.label = LabelDefinition.forElement(form, element);
-		this.hint = HintDefinition.forElement(form, element);
+		this.label = LabelDefinition.forControl(form, this);
+		this.hint = HintDefinition.forElement(form, this);
 	}
 }
 

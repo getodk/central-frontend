@@ -1,8 +1,8 @@
+import { normalizeXMLXPathWhitespace } from '@odk/common/lib/string/whitespace.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { escapeRegExp } from '../../lib/regex/escape.ts';
-import { normalizeXPathWhitespace } from '../_shared/string.ts';
 
 export const concat = new StringFunction(
 	'concat',
@@ -38,7 +38,7 @@ export const normalizeSpace = new StringFunction(
 	(context, [expression]): string => {
 		const value = (expression?.evaluate(context) ?? context).toString();
 
-		return normalizeXPathWhitespace(value);
+		return normalizeXMLXPathWhitespace(value);
 	}
 );
 

@@ -103,7 +103,7 @@ describe('ModelDefinition', () => {
 			index: 0,
 			expected: {
 				type: 'input',
-				label: { parts: [{ textContent: 'First question' }] },
+				label: { children: [expect.anything()] },
 			},
 		},
 		{
@@ -508,7 +508,7 @@ describe('ModelDefinition', () => {
 				const definition = modelDefinition.root.children[index] as RepeatSequenceDefinition;
 
 				// Ensure we're testing the right sequence in the first place
-				expect(definition.bind.nodeset).toBe(nodeset);
+				expect(definition.nodeset).toBe(nodeset);
 
 				expect(definition.instances.length).toBe(expected);
 			});
@@ -540,7 +540,7 @@ describe('ModelDefinition', () => {
 					] as RepeatSequenceDefinition;
 
 					// Ensure we're testing the right sequence in the first place
-					expect(definition.bind.nodeset).toBe(nodeset);
+					expect(definition.nodeset).toBe(nodeset);
 
 					const instance = definition.instances[instanceIndex]!;
 					const expected = xformsElement`${expectedXML}`;

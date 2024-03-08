@@ -1,4 +1,6 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { DependencyContext } from '../expression/DependencyContext.ts';
+import type { BodyElementParentContext } from './BodyDefinition.ts';
 import type { HintDefinition } from './text/HintDefinition.ts';
 import type { LabelDefinition } from './text/LabelDefinition.ts';
 
@@ -9,7 +11,7 @@ import type { LabelDefinition } from './text/LabelDefinition.ts';
  */
 type BodyElementCategory = 'control' | 'structure' | 'support' | 'UNSUPPORTED';
 
-export abstract class BodyElementDefinition<Type extends string> {
+export abstract class BodyElementDefinition<Type extends string> extends DependencyContext {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -21,15 +23,21 @@ export abstract class BodyElementDefinition<Type extends string> {
 	abstract readonly type: Type;
 	readonly hint: HintDefinition | null = null;
 	readonly label: LabelDefinition | null = null;
+
 	readonly reference: string | null = null;
+	readonly parentReference: string | null;
 
 	protected constructor(
 		protected readonly form: XFormDefinition,
-		protected readonly element: Element
-	) {}
+		readonly parent: BodyElementParentContext,
+		readonly element: Element
+	) {
+		super();
+		this.parentReference = parent.reference;
+	}
 
 	toJSON(): object {
-		const { form, ...rest } = this;
+		const { form, parent, ...rest } = this;
 
 		return rest;
 	}

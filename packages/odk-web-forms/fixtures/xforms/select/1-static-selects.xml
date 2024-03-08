@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<!-- This fixture is loosely derived from the Enketo test fixture itemset-relevant-2.xml -->
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:odk="http://www.opendatakit.org/xforms"
+  xmlns:orx="http://openrosa.org/xforms"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Static selects</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="French">
+          <text id="fruit:label">
+            <value>1. Sélectionnez un fruit</value>
+          </text>
+          <text id="fruits:label">
+            <value>2. Sélectionnez plusieurs fruits</value>
+          </text>
+          <text id="fruit:mango">
+            <value>mangue</value>
+          </text>
+          <text id="fruit:apple">
+            <value>Pomme</value>
+          </text>
+          <text id="fruit:orange">
+            <value>Orange</value>
+          </text>
+          <text id="fruit:banana">
+            <value>Banane</value>
+          </text>
+          <text id="fruit:kiwi">
+            <value>kiwi</value>
+          </text>
+          <text id="fruit:grape">
+            <value>Raisin</value>
+          </text>
+          <text id="fruit:cherry">
+            <value>Cerise</value>
+          </text>
+          <text id="fruit:pineapple">
+            <value>Ananas</value>
+          </text>
+          <text id="fruit:grapefruit">
+            <value>Pamplemousse</value>
+          </text>
+          <text id="fruit:apricot">
+            <value>Abricot</value>
+          </text>
+          <text id="fruit:avocado">
+            <value>Avocat</value>
+          </text>
+          <text id="fruit:papaya">
+            <value>Papaye</value>
+          </text>
+          <text id="fruit:lemon">
+            <value>Citron</value>
+          </text>
+          <text id="fruit:watermelon">
+            <value>Pastèque</value>
+          </text>
+          <text id="fruit:peach">
+            <value>Pêche</value>
+          </text>
+          <text id="fruit:strawberry">
+            <value>Fraise</value>
+          </text>
+          <text id="fruit:blueberry">
+            <value>Myrtille</value>
+          </text>
+          <text id="fruit:pear">
+            <value>Poire</value>
+          </text>
+          <text id="fruit:plum">
+            <value>Prune</value>
+          </text>
+          <text id="fruit:pomegranate">
+            <value>Grenade</value>
+          </text>
+          <text id="fruit:blackberry">
+            <value>Mûre</value>
+          </text>
+          <text id="fruit:lychee">
+            <value>Litchi</value>
+          </text>
+        </translation>
+        <translation lang="English" default="true()">
+          <text id="fruit:label">
+            <value>1. Select a fruit</value>
+          </text>
+          <text id="fruits:label">
+            <value>2. Select multiple fruits</value>
+          </text>
+          <text id="fruit:mango">
+            <value>Mango</value>
+          </text>
+          <text id="fruit:apple">
+            <value>Apple</value>
+          </text>
+          <text id="fruit:orange">
+            <value>Orange</value>
+          </text>
+          <text id="fruit:banana">
+            <value>Banana</value>
+          </text>
+          <text id="fruit:kiwi">
+            <value>Kiwi</value>
+          </text>
+          <text id="fruit:grape">
+            <value>Grape</value>
+          </text>
+          <text id="fruit:cherry">
+            <value>Cherry</value>
+          </text>
+          <text id="fruit:pineapple">
+            <value>Pineapple</value>
+          </text>
+          <text id="fruit:grapefruit">
+            <value>Grapefruit</value>
+          </text>
+          <text id="fruit:apricot">
+            <value>Apricot</value>
+          </text>
+          <text id="fruit:avocado">
+            <value>Avocado</value>
+          </text>
+          <text id="fruit:papaya">
+            <value>Papaya</value>
+          </text>
+          <text id="fruit:lemon">
+            <value>Lemon</value>
+          </text>
+          <text id="fruit:watermelon">
+            <value>Watermelon</value>
+          </text>
+          <text id="fruit:peach">
+            <value>Peach</value>
+          </text>
+          <text id="fruit:strawberry">
+            <value>Strawberry</value>
+          </text>
+          <text id="fruit:blueberry">
+            <value>Blueberry</value>
+          </text>
+          <text id="fruit:pear">
+            <value>Pear</value>
+          </text>
+          <text id="fruit:plum">
+            <value>Plum</value>
+          </text>
+          <text id="fruit:pomegranate">
+            <value>Pomegranate</value>
+          </text>
+          <text id="fruit:blackberry">
+            <value>Blackberry</value>
+          </text>
+          <text id="fruit:lychee">
+            <value>Lychee</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="static-selects">
+          <fruit>cherry</fruit>
+          <fruits>blackberry  peach</fruits>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/fruit" type="string"/>
+      <bind nodeset="/data/fruits" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/fruit">
+      <label ref="jr:itext('fruit:label')" />
+      <item>
+        <value>mango</value>
+        <label ref="jr:itext('fruit:mango')" />
+      </item>
+      <item>
+        <value>apple</value>
+        <label ref="jr:itext('fruit:apple')" />
+      </item>
+      <item>
+        <value>orange</value>
+        <label ref="jr:itext('fruit:orange')" />
+      </item>
+      <item>
+        <value>banana</value>
+        <label ref="jr:itext('fruit:banana')" />
+      </item>
+      <item>
+        <value>kiwi</value>
+        <label ref="jr:itext('fruit:kiwi')" />
+      </item>
+      <item>
+        <value>grape</value>
+        <label ref="jr:itext('fruit:grape')" />
+      </item>
+      <item>
+        <value>cherry</value>
+        <label ref="jr:itext('fruit:cherry')" />
+      </item>
+      <item>
+        <value>pineapple</value>
+        <label ref="jr:itext('fruit:pineapple')" />
+      </item>
+      <item>
+        <value>grapefruit</value>
+        <label ref="jr:itext('fruit:grapefruit')" />
+      </item>
+      <item>
+        <value>apricot</value>
+        <label ref="jr:itext('fruit:apricot')" />
+      </item>
+      <item>
+        <value>avocado</value>
+        <label ref="jr:itext('fruit:avocado')" />
+      </item>
+      <item>
+        <value>papaya</value>
+        <label ref="jr:itext('fruit:papaya')" />
+      </item>
+    </select1>
+
+    <select ref="/data/fruits">
+      <label ref="jr:itext('fruits:label')" />
+
+      <item>
+        <value>watermelon</value>
+        <label ref="jr:itext('fruit:watermelon')" />
+      </item>
+      <item>
+        <value>peach</value>
+        <label ref="jr:itext('fruit:peach')" />
+      </item>
+      <item>
+        <value>strawberry</value>
+        <label ref="jr:itext('fruit:strawberry')" />
+      </item>
+      <item>
+        <value>blueberry</value>
+        <label ref="jr:itext('fruit:blueberry')" />
+      </item>
+      <item>
+        <value>pear</value>
+        <label ref="jr:itext('fruit:pear')" />
+      </item>
+      <item>
+        <value>plum</value>
+        <label ref="jr:itext('fruit:plum')" />
+      </item>
+      <item>
+        <value>pomegranate</value>
+        <label ref="jr:itext('fruit:pomegranate')" />
+      </item>
+      <item>
+        <value>blackberry</value>
+        <label ref="jr:itext('fruit:blackberry')" />
+      </item>
+      <item>
+        <value>lychee</value>
+        <label ref="jr:itext('fruit:lychee')" />
+      </item>
+    </select>
+  </h:body>
+</h:html>

@@ -226,7 +226,7 @@
   </h:head>
   <h:body>
     <group ref="/root/rep">
-      <label>Repeat group with a longer title lorem ipsum dolor sit amet consectetur</label>
+      <label>Repeat (<output value="position(.)" />) group with a longer title lorem ipsum dolor sit amet consectetur</label>
       <repeat nodeset="/root/rep">
         <input ref="/root/rep/a">
           <label>Repeat input a</label>

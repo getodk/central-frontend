@@ -34,10 +34,7 @@ export const createRepeatSequenceAnchorComment = (
 	state: AnyNodeState,
 	definition: RepeatSequenceDefinition
 ): RepeatSequenceAnchorComment => {
-	return createMarkerComment(
-		state.entry.xformDocument,
-		`repeat-sequence: ${definition.bind.nodeset}`
-	);
+	return createMarkerComment(state.entry.xformDocument, `repeat-sequence: ${definition.nodeset}`);
 };
 
 export class RepeatSequenceState

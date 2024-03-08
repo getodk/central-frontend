@@ -2,10 +2,12 @@ import type { Accessor, Signal } from 'solid-js';
 import { createComputed, createSignal, untrack } from 'solid-js';
 import { createLatest } from '../../reactivity/primitives/createLatest.ts';
 import { createUninitialized } from '../../reactivity/primitives/uninitialized.ts';
+import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import { DescendantNodeState } from './DescendantNodeState.ts';
 import type { EntryState } from './EntryState.ts';
 import type { AnyParentState, NodeState } from './NodeState.ts';
+import { SelectState } from './select/SelectState.ts';
 
 export class ValueNodeState
 	extends DescendantNodeState<'value-node'>
@@ -49,7 +51,7 @@ export class ValueNodeState
 	 *   future update.
 	 * - Both `calculate` (if provided) and `isRelevant` are expected to be
 	 *   reactive based on their dependencies (@see
-	 *   {@link createBindExpressionEvaluation}). When they're updated, the above
+	 *   {@link createBooleanBindComputation}). When they're updated, the above
 	 *   logic is continually applied to both the runtime and DOM state.
 	 */
 	protected createValueNodeState(node: Element): Signal<string> {
@@ -118,6 +120,10 @@ export class ValueNodeState
 		}, isRelevant());
 
 		return [state, setState];
+	}
+
+	createSelect(select: AnySelectDefinition): SelectState {
+		return new SelectState(this, select);
 	}
 
 	setValue(value: string): string {

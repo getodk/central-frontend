@@ -84,32 +84,32 @@ export type ChildNodeInstanceDefinition =
 	| ValueNodeDefinition;
 
 // prettier-ignore
-type NodeChildren<Type extends NodeDefinitionType> =
+export type NodeChildren<Type extends NodeDefinitionType> =
 	Type extends ParentNodeDefinition['type']
 		? readonly ChildNodeDefinition[]
 		: null;
 
 // prettier-ignore
-type NodeInstances<Type extends NodeDefinitionType> =
+export type NodeInstances<Type extends NodeDefinitionType> =
 	Type extends 'repeat-sequence'
 		? readonly RepeatInstanceDefinition[]
 		: null;
 
 // prettier-ignore
-type NodeParent<Type extends NodeDefinitionType> =
+export type NodeParent<Type extends NodeDefinitionType> =
 	Type extends ChildNodeDefinition['type'] | ChildNodeInstanceDefinition['type']
 		? ParentNodeDefinition
 		: null;
 
 // TODO: value-node may be Attr
 // prettier-ignore
-type DefinitionNode<Type extends NodeDefinitionType> =
+export type ModelNode<Type extends NodeDefinitionType> =
 	Type extends 'repeat-sequence'
 		? null
 		: Element;
 
 // prettier-ignore
-type DefaultValue<Type extends NodeDefinitionType> =
+export type NodeDefaultValue<Type extends NodeDefinitionType> =
 	Type extends 'value-node'
 		? string
 		: null;
@@ -118,16 +118,20 @@ export interface NodeDefinition<Type extends NodeDefinitionType> {
 	readonly type: Type;
 
 	readonly bind: BindDefinition;
+	readonly nodeset: string;
 	readonly nodeName: string;
 	readonly bodyElement: AnyBodyElementDefinition | RepeatDefinition | null;
+
+	readonly isTranslated: boolean;
+	readonly dependencyExpressions: ReadonlySet<string>;
 
 	readonly root: RootDefinition;
 	readonly parent: NodeParent<Type>;
 	readonly children: NodeChildren<Type>;
 	readonly instances: NodeInstances<Type>;
 
-	readonly node: DefinitionNode<Type>;
-	readonly defaultValue: DefaultValue<Type>;
+	readonly node: ModelNode<Type>;
+	readonly defaultValue: NodeDefaultValue<Type>;
 }
 
 export type AnyNodeDefinition =

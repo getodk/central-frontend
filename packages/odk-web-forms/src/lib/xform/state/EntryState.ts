@@ -143,7 +143,7 @@ export class EntryState implements NodeState<'root'> {
 	protected sortDescendants(
 		descendants: readonly AnyDescandantNodeState[]
 	): readonly AnyDescandantNodeState[] {
-		const { sortedNodesetIndexes } = this.form.model.binds;
+		const { sortedNodesetIndexes } = this.form;
 
 		return descendants.slice().sort((a, b) => {
 			const aIndex = sortedNodesetIndexes.get(a.nodeset) ?? -1;
@@ -188,7 +188,7 @@ export class EntryState implements NodeState<'root'> {
 			return;
 		}
 
-		const descendants = this.collectUninitializedDescendants(this);
+		const descendants = this.getUninitializedDescendants(this);
 		const stateByReference = new Map<string, AnyNodeState>([
 			[this.reference, this],
 			...descendants.map((descendant) => {
