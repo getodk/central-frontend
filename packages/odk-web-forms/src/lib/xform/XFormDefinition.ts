@@ -59,6 +59,21 @@ const visit = (
 	return sorted;
 };
 
+/**
+ * Performs a topological sort on all of a form's nodes, using a general
+ * depth-first search algorithm. This (presently) differs from the
+ * {@link https://www.w3.org/TR/xforms11/#rpm-processing-recalc-mddg | algorithm as described in XForms 1.0},
+ * in that:
+ *
+ * - it performs a single sort up-front upon parsing the form; handling of
+ *   recomputed subgraphs after a value change is (at least presently) deferred
+ *   to reactive subscriptions, established when computing the complete form on
+ *   load (with the same process applied to newly added subtrees, i.e. when
+ *   adding a repeat instance)
+ * - dependency types are not tracked separately
+ * - the number of vertices is not tracked, and cycles are detected by a binary
+ *   "visiting" condition
+ */
 const sortNodes = (root: RootDefinition): SortedNodesetIndexes => {
 	const nodes = collectNodes(root);
 	const nodesByNodeset = new Map<string, AnyNodeDefinition>(
