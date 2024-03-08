@@ -76,6 +76,9 @@ const isFunctionCalled = (localName: string, node: AnySyntaxNode): boolean => {
 		case 'variable_reference':
 
 		// Path sub-nodes which could not have a function call child
+		//
+		// This only errors because this set of cases is commented:
+		// eslint-disable-next-line no-fallthrough
 		case '//':
 		case 'absolute_root_location_path':
 		case 'axis_name':
@@ -84,6 +87,9 @@ const isFunctionCalled = (localName: string, node: AnySyntaxNode): boolean => {
 		case 'self':
 
 		// Name nodes are also not function call parents
+		//
+		// This only errors because this set of cases is commented:
+		// eslint-disable-next-line no-fallthrough
 		case 'local_part':
 		case 'prefixed_name':
 		case 'prefix':
@@ -101,11 +107,12 @@ const isFunctionCalled = (localName: string, node: AnySyntaxNode): boolean => {
 		case 'step':
 			return node.children.some((childNode) => isFunctionCalled(localName, childNode));
 
-		case 'function_call':
+		case 'function_call': {
 			const [functionNameNode] = node.children;
 			const [nameNode] = functionNameNode.children;
 
 			return matchesLocalName(localName, nameNode);
+		}
 
 		default:
 			throw new UnreachableError(node);
@@ -167,7 +174,7 @@ const resolveRelativeSubExpression = (contextReference: string | null, expressio
 	}
 
 	const [, axisAbbreviation, relativeExpression = ''] = expression.match(/^(\.{1,2})(\/.*$)?/) ?? [
-		,
+		null,
 		'',
 		expression,
 	];

@@ -50,15 +50,15 @@ export interface StaticNamespaces<
 	DefaultURI extends string,
 	Mapping extends Record<string, string>,
 > {
-	get<Key extends string | null>(
-		key: Key
-	): Key extends null
-		? DefaultURI
+	// prettier-ignore
+	get<Key extends string | null>(key: Key):
+		Key extends null
+			? DefaultURI
 		: Key extends DefaultPrefix
-		? DefaultURI
+			? DefaultURI
 		: Key extends keyof Mapping
-		? Mapping[Key]
-		: undefined;
+			? Mapping[Key]
+			: undefined;
 
 	has(key: null): true;
 	has(key: DefaultPrefix | keyof Mapping): true;

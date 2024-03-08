@@ -239,7 +239,7 @@ const axisTestStep = (
 	const { text } = axisTestNode;
 
 	switch (axisTestNode.type) {
-		case 'node_type_test':
+		case 'node_type_test': {
 			let nodeType: Exclude<NodeType, '__NAMED__'>;
 
 			if (text.startsWith('comment')) {
@@ -253,6 +253,7 @@ const axisTestStep = (
 			}
 
 			return new NodeTypeTestStep(axisType, nodeType, predicateNodes);
+		}
 
 		case 'prefixed_name': {
 			const [prefixNode, localPartNode] = axisTestNode.children;
@@ -374,10 +375,11 @@ export type PathExprSteps = readonly [context: PathExprContextStep, ...steps: Co
 export const pathExprSteps = (syntaxNode: AnyLocationPathExprNode): PathExprSteps => {
 	const { children } = syntaxNode;
 	const [contextChildNode, ...rest] = children;
+	// prettier-ignore
 	const stepNodes =
 		contextChildNode.type === 'abbreviated_absolute_location_path'
 			? contextChildNode.children
-			: contextChildNode.type === 'step'
+		: contextChildNode.type === 'step'
 			? [contextChildNode, ...rest]
 			: rest;
 

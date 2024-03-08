@@ -1,0 +1,19 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "exclude": ["node_modules", "../../node_modules", "src/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true,
+    // `vue-tsc` errors without this, regardless of whether it's specified on
+    // the CLI. Ugh.
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "skipLibCheck": true,
+    "plugins": [{ "name": "ts-vue-plugin" }]
+  }
+}

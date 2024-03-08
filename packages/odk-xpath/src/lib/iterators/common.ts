@@ -40,24 +40,24 @@ type PredicateGuardIterated<T> = (value: T) => boolean;
 
 type GuardIterated<T, U extends T> = PredicateGuardIterated<T & U> | TypedGuardIterated<T, U>;
 
+// prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UnguardedIterated<Guard extends GuardIterated<any, any>> =
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	Guard extends TypedGuardIterated<infer T, any>
 		? T
-		: Guard extends PredicateGuardIterated<infer T>
+	: Guard extends PredicateGuardIterated<infer T>
 		? T
 		: never;
 
+// prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type GuardedIterated<Guard extends GuardIterated<any, any>> = Guard extends TypedGuardIterated<
-	infer T,
-	infer U
->
-	? T & U
+type GuardedIterated<Guard extends GuardIterated<any, any>> =
+	Guard extends TypedGuardIterated<infer T, infer U>
+		? T & U
 	: Guard extends PredicateGuardIterated<infer T>
-	? T
-	: never;
+		? T
+		: never;
 
 type FilterIterable<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,0 +1,61 @@
+{
+  "name": "@odk-web-forms/ui-vue",
+  "version": "0.1.0-alpha.0",
+  "description": "Currently a stub/strawman project, reflecting potential naming and structure discussed in https://github.com/getodk/web-forms/issues/40",
+  "author": "getodk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getodk/web-forms",
+    "directory": "packages/ui-vue"
+  },
+  "bugs": "https://github.com/getodk/web-forms/issues",
+  "homepage": "https://getodk.org/",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": "^18.19.1 || ^20.11.1",
+    "yarn": "1.22.19"
+  },
+  "scripts": {
+    "build": "npm-run-all -nl build:*",
+    "build:clean": "rimraf dist/",
+    "build:js": "vite build",
+    "dev": "vite",
+    "test": "npm-run-all -nl test:*",
+    "test:e2e": "playwright test",
+    "test-node:jsdom": "vitest run",
+    "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
+    "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
+    "test-browser:webkit": "BROWSER_NAME=webkit vitest run",
+    "test-watch:jsdom": "vitest",
+    "test-watch:chromium": "BROWSER_NAME=chromium vitest",
+    "test-watch:firefox": "BROWSER_NAME=firefox vitest",
+    "test-watch:webkit": "BROWSER_NAME=webkit vitest",
+    "test:types": "npm-run-all -nl test:types:*",
+    "test:types:app": "vue-tsc --project ./tsconfig.app.json --emitDeclarationOnly false --noEmit",
+    "test:types:node": "vue-tsc --project ./tsconfig.node.json --emitDeclarationOnly false --noEmit",
+    "test:types:vitest": "vue-tsc --project ./tsconfig.vitest.json --emitDeclarationOnly false --noEmit"
+  },
+  "dependencies": {
+    "vue": "^3.4.19",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.1",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vue/test-utils": "^2.4.4",
+    "jsdom": "^24.0.0",
+    "vite": "^4.5.0",
+    "vitest": "^1.0.0-beta.3"
+  }
+}

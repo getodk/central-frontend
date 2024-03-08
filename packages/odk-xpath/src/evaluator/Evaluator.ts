@@ -96,7 +96,7 @@ export class Evaluator implements AnyXPathEvaluator {
 			typeof namespaceResolver === 'function'
 				? {
 						lookupNamespaceURI: namespaceResolver,
-				  }
+					}
 				: namespaceResolver;
 
 		const contextOptions = partialOmitNullish({

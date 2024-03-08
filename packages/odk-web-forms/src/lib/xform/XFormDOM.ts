@@ -22,20 +22,22 @@ const normalizeBodyRefNodesetAttributes = (body: Element): void => {
 	for (const element of referenceElements) {
 		switch (element.localName) {
 			case 'itemset':
-			case 'repeat':
+			case 'repeat': {
 				// Non-null assertion safe by selector
 				const ref = element.getAttribute('ref')!;
 
 				element.setAttribute('nodeset', ref);
 				element.removeAttribute('ref');
 				break;
+			}
 
-			default:
+			default: {
 				// Non-null assertion safe by selector
 				const nodeset = element.getAttribute('nodeset')!;
 
 				element.setAttribute('ref', nodeset);
 				element.removeAttribute('nodeset');
+			}
 		}
 	}
 };

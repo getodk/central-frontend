@@ -61,7 +61,7 @@ export const id = new NodeSetFunction(
 	}
 );
 
-export const last = new NumberFunction('last', [], (context, []): number => context.contextSize());
+export const last = new NumberFunction('last', [], (context): number => context.contextSize());
 
 export const localName = new StringFunction(
 	'local-name',
@@ -87,11 +87,13 @@ export const localName = new StringFunction(
 			return '';
 		}
 
-		const name = isNamespaceNode(node)
-			? ''
+		// prettier-ignore
+		const name =
+			isNamespaceNode(node)
+				? ''
 			: isProcessingInstructionNode(node)
-			? node.nodeName
-			: (node as MaybeNamedNode).localName ?? '';
+				? node.nodeName
+				: (node as MaybeNamedNode).localName ?? '';
 
 		return name;
 	}
@@ -153,6 +155,6 @@ export const namespaceURI = new StringFunction(
 	}
 );
 
-export const position = new NumberFunction('position', [], (context, []): number =>
+export const position = new NumberFunction('position', [], (context): number =>
 	context.contextPosition()
 );

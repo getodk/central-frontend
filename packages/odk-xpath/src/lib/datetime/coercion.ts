@@ -1,6 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill';
-import { isISODateOrDateTimeLike } from './predicates.ts';
 import { MILLISECOND_NANOSECONDS } from './constants.ts';
+import { isISODateOrDateTimeLike } from './predicates.ts';
 
 export const tryParseDateString = (value: string): Date | null => {
 	try {
@@ -11,7 +11,9 @@ export const tryParseDateString = (value: string): Date | null => {
 		}
 
 		return date;
-	} catch {}
+	} catch {
+		// Intentionally ignored, returns `null` on failure
+	}
 
 	return null;
 };

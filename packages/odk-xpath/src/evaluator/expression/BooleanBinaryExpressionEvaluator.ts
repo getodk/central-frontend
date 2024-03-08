@@ -23,23 +23,25 @@ type BooleanBinaryExprNode =
 	| NeExprNode
 	| OrExprNode;
 
-type BooleanOperator<Node extends BooleanBinaryExprNode> = Node extends AndExprNode
-	? 'and'
+// prettier-ignore
+type BooleanOperator<Node extends BooleanBinaryExprNode> =
+	Node extends AndExprNode
+		? 'and'
 	: Node extends EqExprNode
-	? 'eq'
+		? 'eq'
 	: Node extends GtExprNode
-	? 'gt'
+		? 'gt'
 	: Node extends GteExprNode
-	? 'gte'
+		? 'gte'
 	: Node extends LtExprNode
-	? 'lt'
+		? 'lt'
 	: Node extends LteExprNode
-	? 'lte'
+		? 'lte'
 	: Node extends NeExprNode
-	? 'ne'
+		? 'ne'
 	: Node extends OrExprNode
-	? 'or'
-	: never;
+		? 'or'
+		: never;
 
 type CompareOperator = 'eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'ne';
 

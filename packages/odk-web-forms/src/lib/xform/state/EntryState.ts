@@ -218,10 +218,11 @@ export class EntryState implements NodeState<'root'> {
 							return instanceEntries();
 						});
 
-					case 'subtree':
+					case 'subtree': {
 						const subtreeEntries = this.createReferenceStateEntries(child);
 
 						return subtreeEntries();
+					}
 
 					case 'value-node':
 						return [[child.reference, child]];

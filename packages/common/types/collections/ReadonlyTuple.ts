@@ -49,9 +49,9 @@ type BuildTupleHelper<
  */
 export type ReadonlyTuple<Element, Length extends number> = number extends Length
 	? // Because `Length extends number` and `number extends Length`, then
-	  // `Length` is not a specific finite number.
+		// `Length` is not a specific finite number.
 
-	  // It's not fixed length.
-	  readonly Element[]
+		// It's not fixed length.
+		readonly Element[]
 	: // Otherwise it is a fixed length tuple.
-	  BuildTupleHelper<Element, Length, []>;
+		BuildTupleHelper<Element, Length, []>;

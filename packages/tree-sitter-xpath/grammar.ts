@@ -25,10 +25,12 @@ const binaryExpression = <
 const UNQUALIFIED_NAME_START_CHAR =
 	/[_a-zA-Z\u{C0}-\u{D6}\u{D8}-\u{F6}\u{F8}-\u{2FF}\u{370}-\u{37D}\u{37F}-\u{1FFF}\u{200C}-\u{200D}\u{2070}-\u{218F}\u{2C00}-\u{2FEF}\u{3001}-\u{D7FF}\u{F900}-\u{FDCF}\u{FDF0}-\u{FFFD}\u{10000}-\u{EFFFF}]/u;
 
+// eslint-disable-next-line no-misleading-character-class -- this is per spec
 const NAME_CHAR_ADDITIONS = /[-.\u{B7}0-9\u{0300}-\u{036F}\u{203F}-\u{2040}]/u;
 
 // The above subpatterns are spec-defined. They're combined here so tree-sitter
 // matches the full pattern without error.
+// eslint-disable-next-line no-misleading-character-class
 const NC_NAME = new RegExp(
 	[
 		UNQUALIFIED_NAME_START_CHAR.source,

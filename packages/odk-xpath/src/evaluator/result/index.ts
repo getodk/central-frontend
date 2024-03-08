@@ -36,6 +36,9 @@ export const toXPathResult = (resultType: XPathResultType, evaluation: Evaluatio
 
 				case 'NODE':
 					return new NodeSetIteratorResult(UNORDERED_NODE_ITERATOR_TYPE, evaluation.nodes!);
+
+				default:
+					throw new UnreachableError(evaluation.type);
 			}
 
 		case BOOLEAN_TYPE:

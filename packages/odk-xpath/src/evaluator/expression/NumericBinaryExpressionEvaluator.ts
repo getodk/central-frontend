@@ -17,17 +17,19 @@ type NumericBinaryExprNode =
 	| MultiplicationExprNode
 	| SubtractionExprNode;
 
-type NumericOperation<Node extends NumericBinaryExprNode> = Node extends AdditionExprNode
-	? 'addition'
+// prettier-ignore
+type NumericOperation<Node extends NumericBinaryExprNode> =
+	Node extends AdditionExprNode
+		? 'addition'
 	: Node extends DivisionExprNode
-	? 'division'
+		? 'division'
 	: Node extends ModuloExprNode
-	? 'modulo'
+		? 'modulo'
 	: Node extends MultiplicationExprNode
-	? 'multiplication'
+		? 'multiplication'
 	: Node extends SubtractionExprNode
-	? 'subtraction'
-	: never;
+		? 'subtraction'
+		: never;
 
 export class NumericBinaryExpressionEvaluator<
 	Node extends NumericBinaryExprNode,

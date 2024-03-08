@@ -65,12 +65,13 @@ export enum AxisName {
 	SELF = 'self',
 }
 
+// prettier-ignore
 type AxisMethod = {
 	[Name in AxisName]: Name extends `${infer Prefix}-or-self`
 		? `${Prefix}OrSelf`
-		: Name extends `${infer Prefix}-sibling`
+			: Name extends `${infer Prefix}-sibling`
 		? `${Prefix}Sibling`
-		: `${Name}`;
+			: `${Name}`;
 }[AxisName];
 
 interface LocationStep extends Readonly<Record<AxisName, AxisMethod>> {}

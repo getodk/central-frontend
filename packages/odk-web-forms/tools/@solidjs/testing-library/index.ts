@@ -128,7 +128,7 @@ function render(ui: Ui, options: Options = {}): Result {
 												? createComponent(
 														() => (useNavigate()(location, { replace: true, scroll: false }), null),
 														{}
-												  )
+													)
 												: null,
 											createComponent(wrappedUi, {}),
 										];
@@ -150,7 +150,7 @@ function render(ui: Ui, options: Options = {}): Result {
 						);
 						return { default: () => createComponent(wrappedUi, {}) };
 					}
-			  })
+				})
 			: wrappedUi;
 
 	const dispose = hydrate
@@ -269,13 +269,14 @@ export function renderDirective<A, U extends A, E extends HTMLElement>(
 		render(() => {
 			const targetElement =
 				(options?.targetElement &&
+					// prettier-ignore
 					(options.targetElement instanceof HTMLElement
 						? options.targetElement
-						: typeof options.targetElement === 'string'
+							: typeof options.targetElement === 'string'
 						? document.createElement(options.targetElement)
-						: typeof options.targetElement === 'function'
+							: typeof options.targetElement === 'function'
 						? options.targetElement()
-						: undefined)) ??
+							: undefined)) ??
 				document.createElement('div');
 			onMount(() => directive(targetElement as E, arg));
 			return targetElement;
