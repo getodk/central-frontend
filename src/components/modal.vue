@@ -143,8 +143,8 @@ export default {
       this.checkScroll();
     },
     handleWindowResize() {
-      // Most of the time, a window resize shouldn't affect the height of the
-      // modal. However, if this.size === 'full', it could.
+      // Most of the time, a window resize won't affect the height of the modal.
+      // However, if this.size === 'full', it could.
       if (this.size === 'full') this.handleHeightChange();
     },
     show() {
@@ -257,19 +257,19 @@ export default {
 
 .modal-full {
   $margin: 15px;
-  // Because we set margin-left and width, we don't need margin-right.
+  // Because we set margin-left and width, we don't need to set margin-right.
   margin: $margin 0 $margin $margin;
   // Subtract 10px so that there is space between the modal and the scrollbar.
-  width: calc(100vw - #{2 * $margin} - 10px);
+  width: calc(100vw - #{2 * $margin + 10px});
 
   // 50px is the approximate height of .modal-header.
-  .modal-body { min-height: calc(100vh - #{2 * $margin} - 50px); }
+  .modal-body { min-height: calc(100vh - #{2 * $margin + 50px}); }
 
   // If .modal-body has so much content that it causes the modal to scroll, then
   // .modal-actions will naturally appear at the bottom of the modal as it
-  // usually does. However, if the .modal-body is taller than its content, such
-  // that the modal does not scroll, then we need to position .modal-actions at
-  // the bottom ourselves.
+  // usually does. However, if the min height of the .modal-body is greater than
+  // the height of its content, such that the modal doesn't scroll, then we need
+  // to position .modal-actions at the bottom of the modal ourselves.
   .modal:not(.has-scroll) & .modal-actions {
     bottom: 0;
     left: 0;

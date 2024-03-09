@@ -62,19 +62,17 @@ describe('SubmissionDownload', () => {
     });
   });
 
-  describe('size', () => {
+  describe('modal size', () => {
     it('is normal size if the form is not encrypted', () => {
       testData.extendedForms.createPast(1);
-      const modal = mountComponent();
-      modal.getComponent(Modal).props().size.should.equal('normal');
+      mountComponent().getComponent(Modal).props().size.should.equal('normal');
     });
 
-    it('is large if the form is encrypted', () => {
+    it('is large if there is a managed key', () => {
       testData.extendedForms.createPast(1, {
         key: testData.standardKeys.createPast(1, { managed: true }).last()
       });
-      const modal = mountComponent();
-      modal.getComponent(Modal).props().size.should.equal('large');
+      mountComponent().getComponent(Modal).props().size.should.equal('large');
     });
   });
 

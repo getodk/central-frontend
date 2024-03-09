@@ -5,6 +5,7 @@ import Alert from '../../src/components/alert.vue';
 import Modal from '../../src/components/modal.vue';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
+import { wait } from '../util/util';
 
 const mountComponent = (options = undefined) =>
   mount(Modal, mergeMountOptions(options, {
@@ -105,6 +106,22 @@ describe('Modal', () => {
     });
   });
 
+  it("updates the modal's position after its body changes", async () => {
+    const modal = mountComponent({
+      slots: {
+        body: { template: '<p>Some text</p>' }
+      },
+      attachTo: document.body
+    });
+    const bs = sinon.fake(modal.vm.bs);
+    modal.setData({ bs });
+    modal.vm.$container.alert.info('Some alert');
+    await modal.vm.$nextTick();
+    modal.get('.modal-body p').element.textContent = 'New text';
+    await modal.vm.$nextTick();
+    bs.args.should.eql([['handleUpdate'], ['handleUpdate']]);
+  });
+
   describe('size prop', () => {
     it("adds the correct class if the prop is 'large'", () => {
       const modal = mountComponent({
@@ -121,42 +138,43 @@ describe('Modal', () => {
         modal.get('.modal-dialog').classes('modal-full').should.be.true();
       });
 
-      it('adds a class if modal vertically overflows viewport', async () => {
-        const modal = mountComponent({
-          props: { size: 'full' },
-          slots: {
-            body: { template: '<div style="height: 10000px;"></div>' }
-          },
-          attachTo: document.body
+      describe('has-scroll class', () => {
+        it('adds class if modal vertically overflows viewport', async () => {
+          const modal = mountComponent({
+            props: { size: 'full' },
+            slots: {
+              body: { template: '<div style="height: 10000px;"></div>' }
+            },
+            attachTo: document.body
+          });
+          await nextTick();
+          modal.classes('has-scroll').should.be.true();
         });
-        await nextTick();
-        modal.classes('has-scroll').should.be.true();
-      });
 
-      it('does not add the class if the modal does not overflow', async () => {
-        const modal = mountComponent({
-          props: { size: 'full' },
-          attachTo: document.body
+        it('does not add class if modal does not overflow', async () => {
+          const modal = mountComponent({
+            props: { size: 'full' },
+            attachTo: document.body
+          });
+          await nextTick();
+          modal.classes('has-scroll').should.be.false();
         });
-        await nextTick();
-        modal.classes('has-scroll').should.be.false();
+
+        it('adds class if .modal-body changes, causing overflow', async () => {
+          const modal = mountComponent({
+            props: { size: 'full' },
+            slots: {
+              body: { template: '<div id="div" style="height: 10px;"></div>' }
+            },
+            attachTo: document.body
+          });
+          await nextTick();
+          modal.classes('has-scroll').should.be.false();
+          modal.get('#div').element.setAttribute('style', 'height: 10000px;');
+          await wait();
+          modal.classes('has-scroll').should.be.true();
+        });
       });
     });
-  });
-
-  it("updates the modal's position after its body changes", async () => {
-    const modal = mountComponent({
-      slots: {
-        body: { template: '<p>Some text</p>' }
-      },
-      attachTo: document.body
-    });
-    const bs = sinon.fake(modal.vm.bs);
-    modal.setData({ bs });
-    modal.vm.$container.alert.info('Some alert');
-    await modal.vm.$nextTick();
-    modal.get('.modal-body p').element.textContent = 'New text';
-    await modal.vm.$nextTick();
-    bs.args.should.eql([['handleUpdate'], ['handleUpdate']]);
   });
 });
