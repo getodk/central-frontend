@@ -1,5 +1,5 @@
 {
-  "name": "@odk/web-forms",
+  "name": "@odk-web-forms/xforms-engine",
   "version": "1.0.0-alpha.0",
   "description": "ODK Web forms",
   "type": "module",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/getodk/web-forms",
-    "directory": "packages/odk-web-forms"
+    "directory": "packages/xforms-engine"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",

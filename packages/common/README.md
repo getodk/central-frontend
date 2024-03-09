@@ -17,4 +17,5 @@ Being an internal package, for now there is no build step: downstream packages s
 - consideration for downstream build and bundle impact
 - usage in a package intended for both internal and external purposes (i.e.
   packages such as `@odk-web-forms/tree-sitter-xpath` or `@odk-web-forms/xpath`
-  which are used in `@odk/web-forms` but may also be used on their own)
+  which are used in `@odk-web-forms/xforms-engine` but may also be used on their
+  own)

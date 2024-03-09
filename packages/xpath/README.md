@@ -22,7 +22,7 @@ npm install @odk-web-forms/tree-sitter-xpath @odk-web-forms/xpath web-tree-sitte
 
 The `@odk-web-forms/xpath` package depends on the `web-tree-sitter` and `@odk-web-forms/tree-sitter-xpath` libraries. Both provide WASM resources which must be accessible to initialize parsing in this libary. We intend to make setting it all up as easy as possible, and document it thoroughly. That effort is a work in progress, pending our own experience using this library internally. We'll update this space as that effort progresses.
 
-A solution which is working so far, both in the @odk-web-forms/xpath test suite and downstream within the odk-web-forms monorepo:
+A solution which is working so far, both in the @odk-web-forms/xpath test suite and downstream within the ODK web-forms monorepo:
 
 ```ts
 import xpathLanguage from '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm?url';

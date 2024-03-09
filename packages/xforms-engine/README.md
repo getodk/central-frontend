@@ -7,7 +7,7 @@
 Install with `npm` (or the equivalent command for your preferred package manager):
 
 ```sh
-npm install @odk/web-forms
+npm install @odk-web-forms/xforms-engine
 ```
 
 ## Development
@@ -15,26 +15,26 @@ npm install @odk/web-forms
 > **Note**
 > All commands should be run from the root of the monorepo, not this package's subdirectory.
 
-To run @odk/web-forms in development mode:
+To run @odk-web-forms/xforms-engine in development mode:
 
 ```sh
-yarn workspace @odk/web-forms dev
+yarn workspace @odk-web-forms/xforms-engine dev
 ```
 
 Test commands:
 
 ```sh
 # Single run
-yarn workspace @odk/web-forms test-node:jsdom
-yarn workspace @odk/web-forms test-browser:chromium
-yarn workspace @odk/web-forms test-browser:firefox
-yarn workspace @odk/web-forms test-browser:webkit
+yarn workspace @odk-web-forms/xforms-engine test-node:jsdom
+yarn workspace @odk-web-forms/xforms-engine test-browser:chromium
+yarn workspace @odk-web-forms/xforms-engine test-browser:firefox
+yarn workspace @odk-web-forms/xforms-engine test-browser:webkit
 
 # Watch mode (convenient during development)
-yarn workspace @odk/web-forms test-watch:jsdom
-yarn workspace @odk/web-forms test-watch:chromium
-yarn workspace @odk/web-forms test-watch:firefox
-yarn workspace @odk/web-forms test-watch:webkit
+yarn workspace @odk-web-forms/xforms-engine test-watch:jsdom
+yarn workspace @odk-web-forms/xforms-engine test-watch:chromium
+yarn workspace @odk-web-forms/xforms-engine test-watch:firefox
+yarn workspace @odk-web-forms/xforms-engine test-watch:webkit
 ```
 
 ### Project structure (WIP)

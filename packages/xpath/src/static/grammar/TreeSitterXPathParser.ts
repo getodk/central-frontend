@@ -148,10 +148,10 @@ interface WebTreeSitterInitOptions {
  *    its returned Promise, likely use cases (such as our own) will need to
  *    perform this async initialization upfront before (otherwise synchronous)
  *    XPath evaluation may proceed. This is more or less a solved problem for
- *    e.g. @odk/web-forms, which uses ESM in environments supporting top-level
- *    `await`. But it will require extra consideration in environments which
- *    currently initialize synchronously (such as enketo-core, should we want to
- *    adopt this evaluator there).
+ *    e.g. @odk-web-forms/xforms-engine, which uses ESM in environments
+ *    supporting top-level `await`. But it will require extra consideration in
+ *    environments which currently initialize synchronously (such as
+ *    enketo-core, should we want to adopt this evaluator there).
  */
 export class TreeSitterXPathParser {
 	static async init(resources: WebAssemblyResourceSpecifiers = {}): Promise<TreeSitterXPathParser> {
