@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="modal" :class="{ scroll }" tabindex="-1"
+  <div class="modal" :class="{ 'has-scroll': hasScroll }" tabindex="-1"
     :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
     role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
     @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
@@ -86,7 +86,7 @@ export default {
       id,
       // `true` if the modal vertically overflows the viewport, causing it to
       // scroll; `false` if not.
-      scroll: false,
+      hasScroll: false,
       // The modal() method of the Boostrap plugin
       bs: null,
       observer: markRaw(new MutationObserver(() => {
@@ -135,21 +135,21 @@ export default {
     if (this.state) this.hide();
   },
   methods: {
-    setScroll() {
-      this.scroll = this.$el.scrollHeight > this.$el.clientHeight;
+    checkScroll() {
+      this.hasScroll = this.$el.scrollHeight > this.$el.clientHeight;
     },
     handleHeightChange() {
       this.bs('handleUpdate');
-      this.setScroll();
+      this.checkScroll();
     },
     handleWindowResize() {
-      // Most of the time, a window resize shouldn't affect the size of the
+      // Most of the time, a window resize shouldn't affect the height of the
       // modal. However, if this.size === 'full', it could.
       if (this.size === 'full') this.handleHeightChange();
     },
     show() {
       this.bs('show');
-      this.setScroll();
+      this.checkScroll();
       this.observer.observe(this.$refs.body, {
         subtree: true,
         childList: true,
@@ -162,7 +162,7 @@ export default {
     hide() {
       this.observer.disconnect();
       this.bs('hide');
-      this.scroll = false;
+      this.hasScroll = false;
       window.removeEventListener('resize', this.handleWindowResize);
 
       const selection = getSelection();
@@ -270,7 +270,7 @@ export default {
   // usually does. However, if the .modal-body is taller than its content, such
   // that the modal does not scroll, then we need to position .modal-actions at
   // the bottom ourselves.
-  .modal:not(.scroll) & .modal-actions {
+  .modal:not(.has-scroll) & .modal-actions {
     bottom: 0;
     left: 0;
     margin: 0;

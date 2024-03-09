@@ -130,7 +130,7 @@ describe('Modal', () => {
           attachTo: document.body
         });
         await nextTick();
-        modal.classes('scroll').should.be.true();
+        modal.classes('has-scroll').should.be.true();
       });
 
       it('does not add the class if the modal does not overflow', async () => {
@@ -139,7 +139,7 @@ describe('Modal', () => {
           attachTo: document.body
         });
         await nextTick();
-        modal.classes('scroll').should.be.false();
+        modal.classes('has-scroll').should.be.false();
       });
     });
   });
