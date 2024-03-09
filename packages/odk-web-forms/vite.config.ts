@@ -46,7 +46,7 @@ export default defineConfig(({ mode }) => {
 	const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
 	/**
-	 * @see notes on the same variable in the config for @odk/xpath
+	 * @see notes on the same variable in the config for @odk-web-forms/xpath
 	 */
 	const TEST_TIME_ZONE = 'America/Phoenix';
 
@@ -65,7 +65,7 @@ export default defineConfig(({ mode }) => {
 			'assets/**/*',
 			'fixtures/**/*.xml',
 			'../../node_modules/web-tree-sitter/tree-sitter.wasm',
-			'../../node_modules/tree-sitter-xpath/tree-sitter-xpath.wasm',
+			'../../node_modules/@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm',
 		],
 		build: {
 			target: 'esnext',
@@ -134,8 +134,8 @@ export default defineConfig(({ mode }) => {
 			solidVitestNoNodeLoader,
 
 			// Generate type definitions. This turned out to be more reliable in
-			// @odk/xpath. TODO: revisit in case it makes sense to use tsc directly in
-			// this package
+			// @odk-web-forms/xpath. TODO: revisit in case it makes sense to use tsc
+			// directly in this package
 			dts({
 				exclude: ['test', 'tools', 'vite-env.d.ts'],
 				entryRoot: './src',

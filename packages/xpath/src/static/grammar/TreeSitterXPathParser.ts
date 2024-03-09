@@ -61,8 +61,8 @@ class ResourceResolutionError extends Error {
 }
 
 /**
- * Resolves tree-sitter and tree-sitter-xpath WASM resources in all supported
- * environments. The following cases are handled:
+ * Resolves tree-sitter and @odk-web-forms/tree-sitter-xpath WASM resources in
+ * all supported environments. The following cases are handled:
  *
  * - web-tree-sitter `Parser.init` expects its WASM resource to be specified by
  *   URL in a web environment, but it expects a file system path in a Node
@@ -79,10 +79,10 @@ class ResourceResolutionError extends Error {
  *
  * - `resource` is a `data:` URL which may be provided by a bundled build, which
  *   in turn is pre-fetched and stored as a `blob:` object URL for fetching the
- *   tree-sitter-xpath language WASM asset.
+ *   @odk-web-forms/tree-sitter-xpath language WASM asset.
  *
  * - `resource` is an arbitrary URL, as provided by a downstream user of
- *   @odk/xpath as a library. Resolving it
+ *   @odk-web-forms/xpath as a library.
  */
 const resolveWebAssemblyResource = async <T extends ResourceType>(
 	resource: string,
@@ -131,10 +131,10 @@ interface WebTreeSitterInitOptions {
 }
 
 /**
- * `TreeSitterXPathParser` is a separate entry provided by @odk/xpath as a
- * simpler means to handle various conditions where the tree-sitter and
- * tree-sitter-xpath WASM resources need to be loaded before we can begin
- * parsing XPath expressions.
+ * `TreeSitterXPathParser` is a separate entry provided by @odk-web-forms/xpath
+ * as a simpler means to handle various conditions where the tree-sitter and
+ * @odk-web-forms/tree-sitter-xpath WASM resources need to be loaded before we
+ * can begin parsing XPath expressions.
  *
  * Note: Loading these resources is (for now) inherently asynchronous, as they
  * are expected to be loaded with either file system or network calls. This has

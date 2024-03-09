@@ -41,8 +41,8 @@ interface FunctionLibraryCollectionOptions {
 //    demonstrating custom functions. This has different semantics than ORXE
 //    (where overrides are explicitly disallowed), otherwise I'd be inclined to
 //    both document its usage now and to update the custom function tests to use
-//    the @odk/xpath API (which would of course be a breaking change if we do
-//    decide to backport this implementation to Enketo...).
+//    the @odk-web-forms/xpath API (which would of course be a breaking change
+//    if we do decide to backport this implementation to Enketo...).
 export class FunctionLibraryCollection {
 	/**
 	 * Default function libraries determine, for a given Evaluator instance and

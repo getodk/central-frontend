@@ -1,4 +1,4 @@
-# @odk/xpath
+# @odk-web-forms/xpath
 
 An XPath evaluator, with intent to support:
 
@@ -15,19 +15,19 @@ An XPath evaluator, with intent to support:
 Install this package and its required peer dependencies with `npm` (or the equivalent command for your preferred package manager):
 
 ```sh
-npm install @odk/xpath web-tree-sitter tree-sitter-xpath
+npm install @odk-web-forms/tree-sitter-xpath @odk-web-forms/xpath web-tree-sitter
 ```
 
 ### A note on tree-sitter, usage with or without a bundler
 
-The `@odk/xpath` package depends on the `web-tree-sitter` and `tree-sitter-xpath` libraries. Both provide WASM resources which must be accessible to initialize parsing in this libary. We intend to make setting it all up as easy as possible, and document it thoroughly. That effort is a work in progress, pending our own experience using this library internally. We'll update this space as that effort progresses.
+The `@odk-web-forms/xpath` package depends on the `web-tree-sitter` and `@odk-web-forms/tree-sitter-xpath` libraries. Both provide WASM resources which must be accessible to initialize parsing in this libary. We intend to make setting it all up as easy as possible, and document it thoroughly. That effort is a work in progress, pending our own experience using this library internally. We'll update this space as that effort progresses.
 
-A solution which is working so far, both in the @odk/xpath test suite and downstream within the odk-web-forms monorepo:
+A solution which is working so far, both in the @odk-web-forms/xpath test suite and downstream within the odk-web-forms monorepo:
 
 ```ts
 import xpathLanguage from '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm?url';
 import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
-import { TreeSitterXPathParser } from '@odk/xpath/static/grammar/TreeSitterXPathParser.ts';
+import { TreeSitterXPathParser } from '@odk-web-forms/xpath/static/grammar/TreeSitterXPathParser.ts';
 
 export const xpathParser = await TreeSitterXPathParser.init({
   webTreeSitter,
@@ -39,10 +39,10 @@ Note that this depends on Vite's [`?url` import suffix](https://vitejs.dev/guide
 
 ## Usage
 
-To use `@odk/xpath` at runtime, first create an `XFormsXPathEvaluator` instance, specifying a parser instance and the XForm `rootNode`. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
+To use `@odk-web-forms/xpath` at runtime, first create an `XFormsXPathEvaluator` instance, specifying a parser instance and the XForm `rootNode`. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
 
 ```ts
-import { XFormsXPathEvaluator } from '@odk/xpath';
+import { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 
 // Given an XForms DOM document...
 declare const xform: XMLDocument;
@@ -65,7 +65,7 @@ For typical XForms usage, `rootNode` will be either an XForm `XMLDocument` or it
 For XPath 1.0 functionality without XForms extension functions, you may use `Evaluator` the same way, and `rootNode` is optional:
 
 ```ts
-import { Evaluator } from '@odk/xpath';
+import { Evaluator } from '@odk-web-forms/xpath';
 
 const evaluator = new Evaluator(xpathParser);
 

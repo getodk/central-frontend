@@ -1,5 +1,5 @@
 {
-  "name": "@odk/xpath",
+  "name": "@odk-web-forms/xpath",
   "version": "1.0.0-alpha.0",
   "description": "ODK XPath",
   "type": "module",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/getodk/web-forms",
-    "directory": "packages/odk-xpath"
+    "directory": "packages/xpath"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",

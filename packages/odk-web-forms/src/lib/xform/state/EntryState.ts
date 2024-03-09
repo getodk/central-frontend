@@ -1,5 +1,5 @@
 import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
-import type { XFormsXPathEvaluator } from '@odk/xpath';
+import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import { createMemo, type Accessor } from 'solid-js';
 import type { XFormDOM } from '../XFormDOM.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';

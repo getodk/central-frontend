@@ -1,4 +1,4 @@
-import { XFormsXPathEvaluator } from '@odk/xpath';
+import { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { EntryState } from './EntryState.ts';

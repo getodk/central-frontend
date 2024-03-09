@@ -8,8 +8,8 @@ import type {
 	PrefixedNameNode,
 	RelativeLocationPathNode,
 	UnprefixedNameNode,
-} from '@odk/xpath/static/grammar/SyntaxNode.js';
-import type { AnyBinaryExprType } from '@odk/xpath/static/grammar/type-names.js';
+} from '@odk-web-forms/xpath/static/grammar/SyntaxNode.js';
+import type { AnyBinaryExprType } from '@odk-web-forms/xpath/static/grammar/type-names.js';
 import { xpathParser } from './parser';
 
 export type SingleChildNode = Extract<

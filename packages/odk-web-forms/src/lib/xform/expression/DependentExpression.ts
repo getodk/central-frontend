@@ -1,4 +1,4 @@
-import type { XFormsXPathEvaluator } from '@odk/xpath';
+import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import { getNodesetDependencies, isItextFunctionCalled } from '../../xpath/analysis.ts';
 import type { DependencyContext } from './DependencyContext.ts';
 
