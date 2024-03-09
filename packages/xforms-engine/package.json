@@ -11,16 +11,15 @@
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",
-  "types": "./index.d.ts",
+  "types": "./dist/lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/lib/index.d.ts",
+      "default": "./dist/lib/index.js"
     }
   },
   "files": [
     "dist",
-    "index.d.ts",
     "README.md"
   ],
   "engines": {
@@ -30,18 +29,18 @@
   "scripts": {
     "build": "npm-run-all -nl build:*",
     "build:clean": "rimraf dist/",
-    "build:js": "vite --config vite.engine-solid-combined.config.ts build",
-    "dev": "vite --config vite.engine-solid-combined.config.ts",
+    "build:js": "vite build",
+    "dev": "vite",
     "test": "npm-run-all -nl test:*",
     "test:e2e": "playwright test",
-    "test-node:jsdom": "vitest --config vite.engine-solid-combined.config.ts run",
-    "test-browser:chromium": "BROWSER_NAME=chromium vitest --config vite.engine-solid-combined.config.ts run",
-    "test-browser:firefox": "BROWSER_NAME=firefox vitest --config vite.engine-solid-combined.config.ts run",
-    "test-browser:webkit": "BROWSER_NAME=webkit vitest --config vite.engine-solid-combined.config.ts run",
-    "test-watch:jsdom": "vitest --config vite.engine-solid-combined.config.ts",
-    "test-watch:chromium": "BROWSER_NAME=chromium vitest --config vite.engine-solid-combined.config.ts",
-    "test-watch:firefox": "BROWSER_NAME=firefox vitest --config vite.engine-solid-combined.config.ts",
-    "test-watch:webkit": "BROWSER_NAME=webkit vitest --config vite.engine-solid-combined.config.ts",
+    "test-node:jsdom": "vitest run",
+    "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
+    "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
+    "test-browser:webkit": "BROWSER_NAME=webkit vitest run",
+    "test-watch:jsdom": "vitest",
+    "test-watch:chromium": "BROWSER_NAME=chromium vitest",
+    "test-watch:firefox": "BROWSER_NAME=firefox vitest",
+    "test-watch:webkit": "BROWSER_NAME=webkit vitest",
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
