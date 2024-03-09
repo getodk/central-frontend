@@ -435,7 +435,12 @@
       "noRequest": "Something went wrong: there was no request.",
       "noResponse": "Something went wrong: there was no response to your request.",
       // {status} is an HTTP status code, for example, 404.
-      "errorNotProblem": "Something went wrong: error code {status}."
+      "errorNotProblem": "Something went wrong: error code {status}.",
+      "problem": {
+        // A "resource" is a generic term for something in Central, for example,
+        // a Project, a Web User, or a Form.
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
+      }
     },
     "session": {
       "alert": {
