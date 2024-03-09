@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
         <odata-data-access @analyze="analyze.show()"/>
       </template>
       <template #body>
-        <entity-list :project-id="projectId" :dataset-name="datasetName"/>
+        <entity-list ref="list" :project-id="projectId" :dataset-name="datasetName"/>
       </template>
     </page-section>
 
@@ -82,9 +82,13 @@ export default {
     }
   },
   methods: {
-    afterUpload() {
+    afterUpload(count) {
       this.upload.hide();
-      this.alert.success('Entities were imported successfully! [TODO: i18n]');
+      this.alert.success(this.$t('alert.upload'));
+      this.$refs.list.refreshWithClear();
+      // Update dataset.entities so that the count in the OData loading message
+      // reflects the new entities.
+      this.dataset.entities += count;
     }
   }
 };
@@ -93,3 +97,13 @@ export default {
 <style lang="scss">
 #odata-data-access { float: right; }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "upload": "Success! Your Entities have been uploaded."
+    }
+  }
+}
+</i18n>
