@@ -120,7 +120,7 @@ export interface WebAssemblyResourceSpecifiers {
 	readonly webTreeSitter?: string | undefined;
 
 	/**
-	 * @default 'tree-sitter-xpath/tree-sitter-xpath.wasm' (unbundled, expected to
+	 * @default '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm' (unbundled, expected to
 	 * be resolved by downstream environment)
 	 */
 	readonly xpathLanguage?: string | undefined;
@@ -157,7 +157,8 @@ export class TreeSitterXPathParser {
 	static async init(resources: WebAssemblyResourceSpecifiers = {}): Promise<TreeSitterXPathParser> {
 		const {
 			webTreeSitter: webTreeSitterResource,
-			xpathLanguage: xpathLanguageResource = 'tree-sitter-xpath/tree-sitter-xpath.wasm',
+			xpathLanguage:
+				xpathLanguageResource = '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm',
 		} = resources;
 
 		let webTreeSitterInitOptions: WebTreeSitterInitOptions = {};

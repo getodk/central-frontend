@@ -18,9 +18,12 @@ const correctedTypes = baseGeneratedTypes.replaceAll(
 	'$1: this;'
 );
 
-const wrappedTypes = ["declare module 'tree-sitter-xpath/parser' {", correctedTypes, '}', ''].join(
-	'\n'
-);
+const wrappedTypes = [
+	"declare module '@odk-web-forms/tree-sitter-xpath/parser' {",
+	correctedTypes,
+	'}',
+	'',
+].join('\n');
 
 fs.mkdirSync('./types', {
 	recursive: true,

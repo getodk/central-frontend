@@ -87,7 +87,7 @@ export default defineConfig(({ command, mode }) => {
 				formats: ['es'],
 			},
 			rollupOptions: {
-				external: isBuild ? ['tree-sitter-xpath', 'web-tree-sitter'] : [],
+				external: isBuild ? ['@odk-web-forms/tree-sitter-xpath', 'web-tree-sitter'] : [],
 			},
 		},
 		define: {

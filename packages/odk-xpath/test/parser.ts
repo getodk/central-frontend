@@ -1,4 +1,4 @@
-import xpathLanguage from 'tree-sitter-xpath/tree-sitter-xpath.wasm?url';
+import xpathLanguage from '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm?url';
 import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
 import { TreeSitterXPathParser } from '../src/static/grammar/TreeSitterXPathParser.ts';
 

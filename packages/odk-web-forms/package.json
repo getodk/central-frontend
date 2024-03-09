@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.8",
+    "@odk-web-forms/tree-sitter-xpath": "1.0.0-alpha.0",
     "@odk/common": "0.0.0",
     "@odk/xpath": "1.0.0-alpha.0",
     "@solid-primitives/set": "^0.4.8",
@@ -53,7 +54,6 @@
     "@suid/icons-material": "^0.6.11",
     "@suid/material": "^0.15.1",
     "solid-js": "^1.8.3",
-    "tree-sitter-xpath": "1.0.0-alpha.0",
     "web-tree-sitter": "^0.20.8"
   },
   "devDependencies": {
