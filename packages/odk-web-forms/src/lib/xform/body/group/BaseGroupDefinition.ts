@@ -1,4 +1,4 @@
-import { UpsertableMap } from '@odk/common/lib/collections/UpsertableMap.ts';
+import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- refrenced in JSDoc
 import type { XFormDOM } from '../../XFormDOM.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';

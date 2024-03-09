@@ -1,4 +1,4 @@
-import { isDocumentNode } from '@odk/common/lib/dom/predicates.ts';
+import { isDocumentNode } from '@odk-web-forms/common/lib/dom/predicates.ts';
 import type { Signal } from 'solid-js';
 import { batch, createComputed, createSignal, untrack } from 'solid-js';
 import type { RepeatInstanceDefinition } from '../model/RepeatInstanceDefinition.ts';

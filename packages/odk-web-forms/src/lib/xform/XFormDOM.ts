@@ -1,4 +1,4 @@
-import { XFORMS_NAMESPACE_URI } from '@odk/common/constants/xmlns.ts';
+import { XFORMS_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
 import { XFormsXPathEvaluator } from '@odk/xpath';
 import { xpathEvaluator } from '../xpath/evaluator.ts';
 

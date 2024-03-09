@@ -3,7 +3,7 @@
 
 // TODO: share Vite config where makes sense
 
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 import suidPlugin from '@suid/vite-plugin';
 import { createRequire } from 'node:module';
 import { resolve as resolvePath } from 'node:path';
@@ -144,8 +144,8 @@ export default defineConfig(({ mode }) => {
 
 		resolve: {
 			alias: {
-				'@odk/common/types': resolvePath(__dirname, '../common/types'),
-				'@odk/common': resolvePath(__dirname, '../common/src'),
+				'@odk-web-forms/common/types': resolvePath(__dirname, '../common/types'),
+				'@odk-web-forms/common': resolvePath(__dirname, '../common/src'),
 				'@solidjs/testing-library': require.resolve('./tools/@solidjs/testing-library/index.ts'),
 			},
 

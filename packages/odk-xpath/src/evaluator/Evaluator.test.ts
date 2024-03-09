@@ -1,4 +1,4 @@
-import { xml } from '@odk/common/test/factories/xml';
+import { xml } from '@odk-web-forms/common/test/factories/xml';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { xpathParser } from '../../test/parser.ts';
 import { Evaluator } from './Evaluator.ts';

@@ -1,5 +1,5 @@
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
-import type { LocalNamedElement } from '@odk/common/types/dom.ts';
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
+import type { LocalNamedElement } from '@odk-web-forms/common/types/dom.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
 import { getItemElements, getItemsetElement } from '../../../query.ts';
 import type { AnyBodyElementDefinition, BodyElementParentContext } from '../../BodyDefinition.ts';

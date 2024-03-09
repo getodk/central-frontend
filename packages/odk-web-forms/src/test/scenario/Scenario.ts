@@ -1,6 +1,6 @@
-import { UpsertableMap } from '@odk/common/lib/collections/UpsertableMap.ts';
-import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
+import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
+import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 import { createMemo, createSignal, type Accessor, type Signal } from 'solid-js';
 import { afterEach, expect } from 'vitest';
 import { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';

@@ -1,14 +1,14 @@
 {
-  "name": "@odk/common",
+  "name": "@odk-web-forms/common",
   "private": true,
   "version": "0.0.0",
-  "description": "@odk/common",
+  "description": "@odk-web-forms/common",
   "type": "module",
   "author": "getodk",
   "repository": {
     "type": "git",
     "url": "https://github.com/getodk/web-forms",
-    "directory": "packages/odk-xpath"
+    "directory": "packages/common"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",

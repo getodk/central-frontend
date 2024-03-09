@@ -1,4 +1,4 @@
-import { normalizeXMLXPathWhitespace } from '@odk/common/lib/string/whitespace.ts';
+import { normalizeXMLXPathWhitespace } from '@odk-web-forms/common/lib/string/whitespace.ts';
 import { reduce } from 'itertools-ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';

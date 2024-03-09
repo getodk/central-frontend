@@ -1,4 +1,4 @@
-import { UnreachableError } from '@odk/common/lib/error/UnreachableError';
+import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError';
 import type {
 	AbsoluteLocationPathNode,
 	AnyBinaryExprNode,

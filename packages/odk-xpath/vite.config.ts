@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 /// <reference types="vitest" />
 
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues';
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues';
 import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
@@ -130,8 +130,8 @@ export default defineConfig(({ command, mode }) => {
 		].filter((plugin) => plugin != null),
 		resolve: {
 			alias: {
-				'@odk/common/types': resolvePath(__dirname, '../common/types'),
-				'@odk/common': resolvePath(__dirname, '../common/src'),
+				'@odk-web-forms/common/types': resolvePath(__dirname, '../common/types'),
+				'@odk-web-forms/common': resolvePath(__dirname, '../common/src'),
 			},
 		},
 		test: {

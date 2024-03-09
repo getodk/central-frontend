@@ -1,4 +1,4 @@
-import { XHTML_NAMESPACE_URI } from '@odk/common/constants/xmlns';
+import { XHTML_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns';
 import { For, Show, createComputed, createMemo, createSignal } from 'solid-js';
 import Assignment from 'suid/icons-material/Assignment';
 import ChevronLeft from 'suid/icons-material/ChevronLeft';

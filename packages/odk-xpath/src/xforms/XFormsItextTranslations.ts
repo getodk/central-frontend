@@ -1,6 +1,9 @@
-import { UpsertableWeakMap } from '@odk/common/lib/collections/UpsertableWeakMap.ts';
-import { ScopedElementLookup } from '@odk/common/lib/dom/compatibility.ts';
-import type { KnownAttributeLocalNamedElement, LocalNamedElement } from '@odk/common/types/dom.ts';
+import { UpsertableWeakMap } from '@odk-web-forms/common/lib/collections/UpsertableWeakMap.ts';
+import { ScopedElementLookup } from '@odk-web-forms/common/lib/dom/compatibility.ts';
+import type {
+	KnownAttributeLocalNamedElement,
+	LocalNamedElement,
+} from '@odk-web-forms/common/types/dom.ts';
 import type { ModelElement, XFormsXPathEvaluator } from './XFormsXPathEvaluator.ts';
 
 export interface ItextRootElement extends LocalNamedElement<'itext'> {}

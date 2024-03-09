@@ -1,4 +1,4 @@
-import { trimXMLXPathWhitespace } from '@odk/common/lib/string/whitespace.ts';
+import { trimXMLXPathWhitespace } from '@odk-web-forms/common/lib/string/whitespace.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { StringEvaluation } from './StringEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';

@@ -1,4 +1,4 @@
-import { ENKETO_NAMESPACE_URI } from '@odk/common/constants/xmlns.ts';
+import { ENKETO_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
 import { FunctionAlias } from '../../evaluator/functions/FunctionAlias.ts';
 import { FunctionLibrary } from '../../evaluator/functions/FunctionLibrary.ts';
 import { date, formatDateTime } from '../xforms/datetime.ts';

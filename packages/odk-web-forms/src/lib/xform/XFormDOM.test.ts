@@ -1,4 +1,4 @@
-import { XFORMS_NAMESPACE_URI } from '@odk/common/constants/xmlns.ts';
+import { XFORMS_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
 	body,

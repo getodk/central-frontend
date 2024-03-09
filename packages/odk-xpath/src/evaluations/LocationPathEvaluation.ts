@@ -1,5 +1,5 @@
 import type { Temporal } from '@js-temporal/polyfill';
-import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
+import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
 import type { Context } from '../context/Context.ts';
 import type {
 	EvaluationContext,

@@ -1,7 +1,7 @@
 import {
 	trimXMLXPathWhitespace,
 	xmlXPathWhitespaceSeparatedList,
-} from '@odk/common/lib/string/whitespace.ts';
+} from '@odk-web-forms/common/lib/string/whitespace.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';

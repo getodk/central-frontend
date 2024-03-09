@@ -1,4 +1,4 @@
-import { xmlXPathWhitespaceSeparatedList } from '@odk/common/lib/string/whitespace.ts';
+import { xmlXPathWhitespaceSeparatedList } from '@odk-web-forms/common/lib/string/whitespace.ts';
 import { ReactiveSet } from '@solid-primitives/set';
 import type { Accessor } from 'solid-js';
 import { batch, createComputed, createMemo } from 'solid-js';

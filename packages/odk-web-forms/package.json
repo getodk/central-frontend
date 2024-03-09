@@ -47,7 +47,7 @@
   "dependencies": {
     "@fontsource/roboto": "^5.0.8",
     "@odk-web-forms/tree-sitter-xpath": "1.0.0-alpha.0",
-    "@odk/common": "0.0.0",
+    "@odk-web-forms/common": "0.0.0",
     "@odk/xpath": "1.0.0-alpha.0",
     "@solid-primitives/set": "^0.4.8",
     "@solidjs/router": "^0.8.3",

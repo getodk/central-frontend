@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
-    "@odk/common": "0.0.0",
+    "@odk-web-forms/common": "0.0.0",
     "crypto-js": "^4.1.1",
     "itertools-ts": "^1.23.0"
   },

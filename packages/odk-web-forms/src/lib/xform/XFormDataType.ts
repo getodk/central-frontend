@@ -1,4 +1,4 @@
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 
 /**
  * Like JavaRosa. Presumably for explicit types which aren't impelemnted?

@@ -1,5 +1,5 @@
-import { expectEqualNode } from '@odk/common/test/assertions/dom.ts';
-import { xformsElement } from '@odk/common/test/factories/xml.ts';
+import { expectEqualNode } from '@odk-web-forms/common/test/assertions/dom.ts';
+import { xformsElement } from '@odk-web-forms/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
 	bind,

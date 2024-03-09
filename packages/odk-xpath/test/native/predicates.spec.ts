@@ -1,4 +1,4 @@
-import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
+import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
 import { beforeEach, describe, it } from 'vitest';
 import type { TestContext } from '../helpers.ts';
 import { createTestContext } from '../helpers.ts';

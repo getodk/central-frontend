@@ -1,6 +1,6 @@
-import { ScopedElementLookup } from '@odk/common/lib/dom/compatibility.ts';
-import { UnreachableError } from '@odk/common/lib/error/UnreachableError.ts';
-import { xml } from '@odk/common/test/factories/xml.ts';
+import { ScopedElementLookup } from '@odk-web-forms/common/lib/dom/compatibility.ts';
+import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import { xml } from '@odk-web-forms/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Evaluator } from '../../src/index.ts';
 import { xpathParser } from '../parser.ts';

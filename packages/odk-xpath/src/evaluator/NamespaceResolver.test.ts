@@ -1,4 +1,4 @@
-import { xml } from '@odk/common/test/factories/xml.ts';
+import { xml } from '@odk-web-forms/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NamespaceResolver, staticNamespaces } from './NamespaceResolver.ts';
 

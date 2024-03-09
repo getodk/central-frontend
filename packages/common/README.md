@@ -1,4 +1,4 @@
-# @odk/common (private package)
+# @odk-web-forms/common (private package)
 
 An internal package to address common (e.g. the dreaded "utils") concerns across two or more getodk/web-forms packages. There have already been several such cross-cutting concerns.
 
