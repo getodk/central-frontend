@@ -1,9 +1,11 @@
 import sinon from 'sinon';
+import { nextTick } from 'vue';
 
 import Alert from '../../src/components/alert.vue';
 import Modal from '../../src/components/modal.vue';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
+import { wait } from '../util/util';
 
 const mountComponent = (options = undefined) =>
   mount(Modal, mergeMountOptions(options, {
@@ -120,10 +122,59 @@ describe('Modal', () => {
     bs.args.should.eql([['handleUpdate'], ['handleUpdate']]);
   });
 
-  it('adds the modal-lg class if the large prop is true', () => {
-    const modal = mountComponent({
-      props: { large: true }
+  describe('size prop', () => {
+    it("adds the correct class if the prop is 'large'", () => {
+      const modal = mountComponent({
+        props: { size: 'large' }
+      });
+      modal.get('.modal-dialog').classes('modal-lg').should.be.true();
     });
-    modal.get('.modal-dialog').classes('modal-lg').should.be.true();
+
+    describe("prop is 'full'", () => {
+      it('adds the correct class', () => {
+        const modal = mountComponent({
+          props: { size: 'full' }
+        });
+        modal.get('.modal-dialog').classes('modal-full').should.be.true();
+      });
+
+      describe('has-scroll class', () => {
+        it('adds class if modal vertically overflows viewport', async () => {
+          const modal = mountComponent({
+            props: { size: 'full' },
+            slots: {
+              body: { template: '<div style="height: 10000px;"></div>' }
+            },
+            attachTo: document.body
+          });
+          await nextTick();
+          modal.classes('has-scroll').should.be.true();
+        });
+
+        it('does not add class if modal does not overflow', async () => {
+          const modal = mountComponent({
+            props: { size: 'full' },
+            attachTo: document.body
+          });
+          await nextTick();
+          modal.classes('has-scroll').should.be.false();
+        });
+
+        it('adds class if .modal-body changes, causing overflow', async () => {
+          const modal = mountComponent({
+            props: { size: 'full' },
+            slots: {
+              body: { template: '<div id="div" style="height: 10px;"></div>' }
+            },
+            attachTo: document.body
+          });
+          await nextTick();
+          modal.classes('has-scroll').should.be.false();
+          modal.get('#div').element.setAttribute('style', 'height: 10000px;');
+          await wait();
+          modal.classes('has-scroll').should.be.true();
+        });
+      });
+    });
   });
 });

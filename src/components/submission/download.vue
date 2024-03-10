@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" hideable :large="managedKey != null" backdrop
-    @hide="$emit('hide')"
+  <modal :state="state" hideable :size="managedKey == null ? 'normal' : 'large'"
+    backdrop @hide="$emit('hide')"
     @shown="$refs.form.querySelector('input:not([disabled])').focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>

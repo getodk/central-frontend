@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 
+import Modal from '../../../src/components/modal.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
 
 import useFields from '../../../src/request-data/fields';
@@ -58,6 +59,20 @@ describe('SubmissionDownload', () => {
       modal: SubmissionDownload,
       show: '#submission-download-button',
       hide: '.modal-actions .btn'
+    });
+  });
+
+  describe('modal size', () => {
+    it('is normal size if the form is not encrypted', () => {
+      testData.extendedForms.createPast(1);
+      mountComponent().getComponent(Modal).props().size.should.equal('normal');
+    });
+
+    it('is large if there is a managed key', () => {
+      testData.extendedForms.createPast(1, {
+        key: testData.standardKeys.createPast(1, { managed: true }).last()
+      });
+      mountComponent().getComponent(Modal).props().size.should.equal('large');
     });
   });
 

@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="modal" tabindex="-1" :data-backdrop="backdrop ? 'static' : 'false'"
-    data-keyboard="false" role="dialog" :aria-labelledby="titleId"
-    @mousedown="modalMousedown" @click="modalClick" @keydown.esc="hideIfCan"
-    @focusout="refocus">
-    <div class="modal-dialog" :class="{ 'modal-lg': large }" role="document">
+  <div class="modal" :class="{ 'has-scroll': hasScroll }" tabindex="-1"
+    :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
+    role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
+    @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
+    <div class="modal-dialog" :class="sizeClass" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" :aria-disabled="!hideable"
@@ -65,8 +65,11 @@ export default {
     // Indicates whether the user is able to hide the modal by clicking ×,
     // pressing escape, or clicking outside the modal.
     hideable: Boolean,
-    backdrop: Boolean,
-    large: Boolean
+    size: {
+      type: String,
+      default: 'normal'
+    },
+    backdrop: Boolean
   },
   emits: ['shown', 'hide'],
   setup(props) {
@@ -81,10 +84,13 @@ export default {
     id += 1;
     return {
       id,
+      // `true` if the modal vertically overflows the viewport, causing it to
+      // scroll; `false` if not.
+      hasScroll: false,
       // The modal() method of the Boostrap plugin
       bs: null,
       observer: markRaw(new MutationObserver(() => {
-        if (this.state) this.bs('handleUpdate');
+        if (this.state) this.handleHeightChange();
       })),
       mousedownOutsideDialog: false
     };
@@ -92,6 +98,13 @@ export default {
   computed: {
     titleId() {
       return `modal-title${this.id}`;
+    },
+    sizeClass() {
+      switch (this.size) {
+        case 'large': return 'modal-lg';
+        case 'full': return 'modal-full';
+        default: return null; // 'normal'
+      }
     }
   },
   watch: {
@@ -122,19 +135,35 @@ export default {
     if (this.state) this.hide();
   },
   methods: {
+    checkScroll() {
+      this.hasScroll = this.$el.scrollHeight > this.$el.clientHeight;
+    },
+    handleHeightChange() {
+      this.bs('handleUpdate');
+      this.checkScroll();
+    },
+    handleWindowResize() {
+      // Most of the time, a window resize won't affect the height of the modal.
+      // However, if this.size === 'full', it could.
+      if (this.size === 'full') this.handleHeightChange();
+    },
     show() {
       this.bs('show');
+      this.checkScroll();
       this.observer.observe(this.$refs.body, {
         subtree: true,
         childList: true,
         attributes: true,
         characterData: true
       });
+      window.addEventListener('resize', this.handleWindowResize);
       this.$emit('shown');
     },
     hide() {
-      this.bs('hide');
       this.observer.disconnect();
+      this.bs('hide');
+      this.hasScroll = false;
+      window.removeEventListener('resize', this.handleWindowResize);
 
       const selection = getSelection();
       const { anchorNode } = selection;
@@ -209,22 +238,44 @@ export default {
         letter-spacing: -0.02em;
       }
     }
+  }
+}
 
-    .modal-body {
-      padding: $padding-modal-body;
+.modal-body {
+  padding: $padding-modal-body;
 
-      .form-group .form-control {
-        background-color: $color-panel-input-background;
-      }
+  .form-group .form-control { background-color: $color-panel-input-background; }
+}
 
-      .modal-actions {
-        background: $color-subpanel-background;
-        border-top: 1px solid $color-subpanel-border;
-        margin: -15px;
-        margin-top: 20px;
-        padding: 10px 15px;
-      }
-    }
+.modal-actions {
+  background: $color-subpanel-background;
+  border-top: 1px solid $color-subpanel-border;
+  margin: -$padding-modal-body;
+  margin-top: 20px;
+  padding: 10px $padding-modal-body;
+}
+
+.modal-full {
+  $margin: 15px;
+  // Because we set margin-left and width, we don't need to set margin-right.
+  margin: $margin 0 $margin $margin;
+  // Subtract 10px so that there is space between the modal and the scrollbar.
+  width: calc(100vw - #{2 * $margin + 10px});
+
+  // 50px is the approximate height of .modal-header.
+  .modal-body { min-height: calc(100vh - #{2 * $margin + 50px}); }
+
+  // If .modal-body has so much content that it causes the modal to scroll, then
+  // .modal-actions will naturally appear at the bottom of the modal as it
+  // usually does. However, if the min height of the .modal-body is greater than
+  // the height of its content, such that the modal doesn't scroll, then we need
+  // to position .modal-actions at the bottom of the modal ourselves.
+  .modal:not(.has-scroll) & .modal-actions {
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    position: absolute;
+    width: 100%;
   }
 }
 
