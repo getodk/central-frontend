@@ -19,7 +19,7 @@
     "tree-sitter-xpath.wasm"
   ],
   "engines": {
-    "node": ">=18 <21",
+    "node": "^18.19.1 || ^20.11.1",
     "yarn": "1.22.19"
   },
   "scripts": {

@@ -92,7 +92,7 @@ export default defineConfig(({ mode }) => {
 						'@testing-library/jest-dom',
 						'@testing-library/jest-dom/matchers',
 						'loupe',
-				  ]
+					]
 				: [],
 			entries: isTest ? ['./index.html', './tools/vite/vitest-setup.ts'] : ['./index.html'],
 			force: true,

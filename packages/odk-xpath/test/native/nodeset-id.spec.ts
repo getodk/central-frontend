@@ -49,8 +49,9 @@ describe('nodeset id() function', () => {
 	// TODO: the browser behavior described here seems correct, the test seems wrong?
 	//TODO Browsers still return the node for this scenario when the nodes namespace is empty (xmlns='')
 	it.skip('returns empty result if the default namespace for the node is empty', () => {
-		const contextNode = document.getElementById('FunctionNodesetIdCaseNoDefaultNamespaceContainer')!
-			.firstChild!;
+		const contextNode = document.getElementById(
+			'FunctionNodesetIdCaseNoDefaultNamespaceContainer'
+		)!.firstChild!;
 
 		testContext.assertNodeSet("id('FunctionNodesetIdCaseNoDefaultNamespace')", [], {
 			contextNode,
@@ -58,8 +59,9 @@ describe('nodeset id() function', () => {
 	});
 
 	it('works if the default namespace for the node is the XHTML namespace', () => {
-		const expected = document.getElementById('FunctionNodesetIdCaseXhtmlDefaultNamespaceContainer')!
-			.firstChild!;
+		const expected = document.getElementById(
+			'FunctionNodesetIdCaseXhtmlDefaultNamespaceContainer'
+		)!.firstChild!;
 
 		testContext.assertNodeSet("id('FunctionNodesetIdCaseXhtmlDefaultNamespace')", [expected]);
 	});
@@ -68,8 +70,9 @@ describe('nodeset id() function', () => {
 	// shorthand for `[@id = ...]`.
 	// Browsers do not return anything in this case
 	it.skip('works if the namespace of the id attribute is the XHTML namespace', () => {
-		const expected = document.getElementById('FunctionNodesetIdCaseXhtmlNamespaceContainer')!
-			.firstChild!;
+		const expected = document.getElementById(
+			'FunctionNodesetIdCaseXhtmlNamespaceContainer'
+		)!.firstChild!;
 
 		testContext.assertNodeSet("id('FunctionNodesetIdCaseXhtmlNamespace')", [expected]);
 	});
@@ -78,8 +81,9 @@ describe('nodeset id() function', () => {
 	// again has a namespaced `id` attribute.
 	// Browsers do not return anything in this case
 	it.skip('works if the namespace of the id attribute is defined in the parent container', () => {
-		const expected = document.getElementById('FunctionNodesetIdCaseXhtmlNamespaceParentContainer')!
-			.firstChild!;
+		const expected = document.getElementById(
+			'FunctionNodesetIdCaseXhtmlNamespaceParentContainer'
+		)!.firstChild!;
 
 		testContext.assertNodeSet("id('FunctionNodesetIdCaseXhtmlNamespaceParent')", [expected]);
 	});

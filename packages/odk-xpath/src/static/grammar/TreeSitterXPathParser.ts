@@ -178,9 +178,6 @@ export class TreeSitterXPathParser {
 			IS_NODE ? 'locator' : 'binary'
 		);
 
-		if (xpathLanguageResource != null) {
-		}
-
 		await Parser.init(webTreeSitterInitOptions);
 
 		const language = await Parser.Language.load(xpathLanguageBinary);

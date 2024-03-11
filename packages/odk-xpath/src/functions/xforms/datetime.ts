@@ -33,7 +33,7 @@ type DateFormatterRecord = Record<`%${string}`, DateTimeFormatFunction>;
 
 // TODO: localization
 const shortMonths = [
-	,
+	null,
 	'Jan',
 	'Feb',
 	'Mar',
@@ -46,7 +46,7 @@ const shortMonths = [
 	'Oct',
 	'Nov',
 	'Dec',
-];
+] as const;
 
 // TODO: localization
 const shortDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -260,7 +260,7 @@ export const date = new FunctionImplementation(
 			case 'BOOLEAN':
 				return new StringEvaluation(context, '');
 
-			case 'STRING':
+			case 'STRING': {
 				const string = results.toString();
 
 				if (string === '') {
@@ -283,6 +283,7 @@ export const date = new FunctionImplementation(
 				}
 
 				break;
+			}
 
 			case 'NUMBER':
 				break;
@@ -322,7 +323,7 @@ export const decimalTime = new NumberFunction(
 			return NaN;
 		}
 
-		if (/^\d{2}:\d{2}(\:[0-5]\d)?(\.\d+)?(Z|[-+]\d{2}:\d{2})?$/.test(string)) {
+		if (/^\d{2}:\d{2}(:[0-5]\d)?(\.\d+)?(Z|[-+]\d{2}:\d{2})?$/.test(string)) {
 			const dateTimeString = `1970-01-01T${string}`;
 
 			const dateTime = dateTimeFromString(context.timeZone, dateTimeString);

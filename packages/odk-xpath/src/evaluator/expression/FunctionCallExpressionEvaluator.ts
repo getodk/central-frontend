@@ -14,13 +14,14 @@ const functionCallName = (syntaxNode: FunctionCallNode): FunctionCallName => {
 	const [nameNode] = syntaxNode.children[0].children;
 
 	switch (nameNode.type) {
-		case 'prefixed_name':
+		case 'prefixed_name': {
 			const [prefixNode, localNameNode] = nameNode.children;
 
 			return {
 				prefix: prefixNode.text,
 				localName: localNameNode.text,
 			};
+		}
 
 		case 'unprefixed_name':
 			return {

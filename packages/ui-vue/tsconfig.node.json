@@ -1,0 +1,23 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "include": [
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*",
+    "tooks/vue-tsc-hook.cjs"
+  ],
+  "exclude": ["node_modules", "../../node_modules"],
+  "compilerOptions": {
+    "composite": true,
+    "emitDeclarationOnly": true,
+    // `vue-tsc` errors without this, regardless of whether it's specified on
+    // the CLI. Ugh.
+    "noEmit": false,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "types": ["node"]
+  }
+}
