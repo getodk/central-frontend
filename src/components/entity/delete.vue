@@ -87,7 +87,7 @@ const del = () => {
       "Are you sure you want to delete “{label}”?"
     ],
     "field": {
-      "noConfirm": "Don’t ask again for now"
+      "noConfirm": "Don’t show this message again for this session"
     }
   }
 }

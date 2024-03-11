@@ -1645,7 +1645,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "Don’t ask again for now",
+          "string": "Don’t show this message again for this session",
           "developer_comment": "This is the text of a form field."
         }
       }
