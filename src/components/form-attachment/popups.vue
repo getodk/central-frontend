@@ -146,11 +146,7 @@ export default {
         this.shownDuringUpload;
     },
     percentUploaded() {
-      const { progress } = this.uploadStatus;
-      const fraction = progress != null && progress.lengthComputable
-        ? progress.loaded / progress.total
-        : 0;
-      return this.$n(fraction, 'percent');
+      return this.$n(this.uploadStatus.progress, 'percent');
     }
   },
   updated() {
