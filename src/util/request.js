@@ -231,7 +231,8 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
   const problem = response.data;
   if (problemToAlert != null) {
     const message = problemToAlert(problem);
-    return message != null ? message : problem.message;
+    if (message != null) return message;
   }
+  if (problem.code === 404.1) return i18n.t('util.request.problem.404_1');
   return problem.message;
 };

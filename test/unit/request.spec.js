@@ -632,6 +632,13 @@ describe('util/request', () => {
       message.should.equal('Message from API');
     });
 
+    describe('custom messages for specific Problems', () => {
+      it('returns a message for a 404.1', () => {
+        const message = requestAlertMessage(i18n, errorWithProblem(404.1));
+        message.should.equal('The resource you are looking for cannot be found. The resource may have been deleted.');
+      });
+    });
+
     describe('problemToAlert', () => {
       it('returns the message from the function', () => {
         const message = requestAlertMessage(
@@ -643,7 +650,7 @@ describe('util/request', () => {
         message.should.equal('Message from problemToAlert: Message from API (500.1)');
       });
 
-      it('returns the Problem message if the function returns null', () => {
+      it('falls back to default message if function returns a nullish value', () => {
         const message = requestAlertMessage(
           i18n,
           errorWithProblem(),
