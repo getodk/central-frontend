@@ -155,7 +155,7 @@ export default {
   },
   updated() {
     if (this.shownAfterSelection)
-      $(this.$refs.popups).find('.btn-primary').focus();
+      this.$refs.popups.querySelector('.btn-primary').focus();
   }
 };
 </script>
