@@ -47,6 +47,8 @@ export default defineConfig(({ mode }) => {
 		entries.map((entry) => [entry.replaceAll(/^\.\/src\/|\.ts$/g, ''), entry])
 	);
 
+	const external = ['@odk-web-forms/common'];
+
 	return {
 		build: {
 			target: 'esnext',
@@ -59,32 +61,26 @@ export default defineConfig(({ mode }) => {
 				entry: libEntry,
 				formats: ['es'],
 				name: '@odk-web-forms/xforms-engine',
+				fileName(_, entryName) {
+					if (entryName in libEntry) {
+						return `${entryName}.js`;
+					}
+
+					return entryName.replace(/^\.src\//, '').replace(/\.ts$/, '.js');
+				},
 			},
+			rollupOptions: { external },
 		},
 
 		esbuild: {
-			sourcemap: true,
 			target: 'esnext',
 			format: 'esm',
+			exclude: external,
 		},
 
 		optimizeDeps: {
 			entries,
 			force: true,
-			include: BROWSER_ENABLED
-				? [
-						// For reasons that aren't yet clear, these need to be present for
-						// WebKit tests. Without either, there are weird import errors that
-						// prevent at least one of the test modules from running.
-						'@odk-web-forms/xpath',
-						'@odk-web-forms/xpath/static/grammar/ExpressionParser.js',
-
-						// This is necessary for the current versions of Vite and Vitest. It
-						// will almost certainly need to be removed when we upgrade. (Same
-						// goes for its presence in other packages' Vite configs.)
-						'loupe',
-					]
-				: [],
 		},
 
 		plugins: [
@@ -92,7 +88,7 @@ export default defineConfig(({ mode }) => {
 			// calling tsc
 			dts({
 				entryRoot: './src',
-				exclude: ['test', 'vite-env.d.ts'],
+				exclude: ['@odk-web-forms/common', 'test', 'vite-env.d.ts'],
 				include: ['src/lib/**/*.ts'],
 			}),
 		],
@@ -103,10 +99,12 @@ export default defineConfig(({ mode }) => {
 				'@odk-web-forms/common': resolvePath(__dirname, '../common/src'),
 			},
 
-			conditions: isTest
-				? // Without this, anything using Solid reactivity fails inexplicably...
-					['development', 'browser']
-				: ['import', 'browser'],
+			// prettier-ignore
+			conditions:
+				isTest
+					// Without this, anything using Solid reactivity fails inexplicably...
+					? ['development', 'browser']
+					: ['import', 'browser'],
 		},
 
 		test: {

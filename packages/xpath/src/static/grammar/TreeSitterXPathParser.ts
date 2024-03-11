@@ -60,6 +60,28 @@ class ResourceResolutionError extends Error {
 	}
 }
 
+const WEB_ASSEMBLY_DATA_URL_PREFIX = 'data:application/wasm;base64,';
+
+/**
+ * Node-specific: convert a `data:` URL resource to binary data. This will be
+ * encountered when `@odk-web-forms/xpath` is built/bundled, and downstream
+ * packages (like `@odk-web-forms/xforms-engine` and its clients) initialize
+ * a tree-sitter {@link Parser}.
+ */
+const resolveWebAssemblyDataURL = (resource: string): Uint8Array | null => {
+	const base64 = resource.replace(WEB_ASSEMBLY_DATA_URL_PREFIX, '');
+
+	if (base64 === resource) {
+		throw new ResourceResolutionError(resource, 'binary');
+	}
+
+	// Node's `Buffer` is supposed to be a Uint8Array. web-tree-sitter disagrees!
+	const buffer = Buffer.from(base64, 'base64');
+	const u8a = new Uint8Array(buffer);
+
+	return u8a;
+};
+
 /**
  * Resolves tree-sitter and @odk-web-forms/tree-sitter-xpath WASM resources in
  * all supported environments. The following cases are handled:
@@ -76,10 +98,14 @@ class ResourceResolutionError extends Error {
  *
  * - `resource` is a URL (likely a path relative to the server host), as
  *   provided by Vite in an import like `package-name/file-name.wasm?url`
+ *   (typically `@odk-web-forms/xpath` test mode)
  *
  * - `resource` is a `data:` URL which may be provided by a bundled build, which
- *   in turn is pre-fetched and stored as a `blob:` object URL for fetching the
- *   @odk-web-forms/tree-sitter-xpath language WASM asset.
+ *   in turn is:
+ *
+ *     - Converted to a `Uint8Array` (Node)
+ *     - pre-fetched and stored as a `blob:` object URL for fetching the
+ *       @odk-web-forms/tree-sitter-xpath language WASM asset (Browser)
  *
  * - `resource` is an arbitrary URL, as provided by a downstream user of
  *   @odk-web-forms/xpath as a library.
@@ -88,6 +114,14 @@ const resolveWebAssemblyResource = async <T extends ResourceType>(
 	resource: string,
 	resourceType: T
 ): Promise<ResolvedResourceType<T>> => {
+	if (IS_NODE && resourceType === 'binary' && resource.startsWith('data:')) {
+		const binary = resolveWebAssemblyDataURL(resource);
+
+		if (binary != null) {
+			return binary as ResolvedResourceType<T>;
+		}
+	}
+
 	const baseResult = unprefixNodeFileSystemPath(resource);
 
 	if (resourceType === 'locator' && !baseResult.startsWith('data:')) {
@@ -174,9 +208,17 @@ export class TreeSitterXPathParser {
 			};
 		}
 
+		let xpathLanguageResourceType: ResourceType;
+
+		if (IS_NODE && !xpathLanguageResource.startsWith('data:')) {
+			xpathLanguageResourceType = 'locator';
+		} else {
+			xpathLanguageResourceType = 'binary';
+		}
+
 		const xpathLanguageBinary = await resolveWebAssemblyResource(
 			xpathLanguageResource,
-			IS_NODE ? 'locator' : 'binary'
+			xpathLanguageResourceType
 		);
 
 		await Parser.init(webTreeSitterInitOptions);

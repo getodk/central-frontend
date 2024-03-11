@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it } from 'vitest';
 import {
 	bind,
 	body,
@@ -8,7 +7,8 @@ import {
 	model,
 	t,
 	title,
-} from '../../../test/fixtures/xform-dsl';
+} from '@odk-web-forms/common/test/fixtures/xform-dsl';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../XFormDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
 import type { ModelBindMap } from './ModelBindMap.ts';

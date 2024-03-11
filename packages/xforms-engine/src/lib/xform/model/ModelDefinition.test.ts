@@ -1,6 +1,5 @@
 import { expectEqualNode } from '@odk-web-forms/common/test/assertions/dom.ts';
 import { xformsElement } from '@odk-web-forms/common/test/factories/xml.ts';
-import { beforeEach, describe, expect, it } from 'vitest';
 import {
 	bind,
 	body,
@@ -14,7 +13,8 @@ import {
 	repeat,
 	t,
 	title,
-} from '../../../test/fixtures/xform-dsl/index.ts';
+} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../XFormDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
 import { ModelDefinition } from './ModelDefinition.ts';

@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import {
 	bind,
 	body,
@@ -8,7 +7,8 @@ import {
 	model,
 	t,
 	title,
-} from '../../../test/fixtures/xform-dsl/index.ts';
+} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
+import { describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../XFormDefinition.ts';
 
 describe('BindDefinition', () => {

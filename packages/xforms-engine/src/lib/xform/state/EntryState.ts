@@ -6,7 +6,7 @@ import type { XFormDefinition } from '../XFormDefinition.ts';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
 import type { ModelBindMap } from '../model/ModelBindMap.ts';
 import type { RootDefinition } from '../model/RootDefinition.ts';
-import type { AnyDescandantNodeState } from './DescendantNodeState.ts';
+import type { AnyDescendantNodeState } from './DescendantNodeState.ts';
 import type { AnyChildState, AnyNodeState, AnyParentState, NodeState } from './NodeState.ts';
 import { RepeatSequenceState } from './RepeatSequenceState.ts';
 import { SubtreeState } from './SubtreeState.ts';
@@ -141,8 +141,8 @@ export class EntryState implements NodeState<'root'> {
 	 * already performed in {@link ModelBindMap}
 	 */
 	protected sortDescendants(
-		descendants: readonly AnyDescandantNodeState[]
-	): readonly AnyDescandantNodeState[] {
+		descendants: readonly AnyDescendantNodeState[]
+	): readonly AnyDescendantNodeState[] {
 		const { sortedNodesetIndexes } = this.form;
 
 		return descendants.slice().sort((a, b) => {
@@ -155,8 +155,8 @@ export class EntryState implements NodeState<'root'> {
 
 	protected collectUninitializedDescendants(
 		parent: AnyNodeState
-	): readonly AnyDescandantNodeState[] {
-		let children: readonly AnyDescandantNodeState[];
+	): readonly AnyDescendantNodeState[] {
+		let children: readonly AnyDescendantNodeState[];
 
 		if (parent.type === 'repeat-sequence') {
 			children = parent.getInstances();
@@ -175,7 +175,7 @@ export class EntryState implements NodeState<'root'> {
 		return [parent, ...descendants];
 	}
 
-	getUninitializedDescendants(parent: AnyNodeState): readonly AnyDescandantNodeState[] {
+	getUninitializedDescendants(parent: AnyNodeState): readonly AnyDescendantNodeState[] {
 		const descendants = this.collectUninitializedDescendants(parent);
 
 		return this.sortDescendants(descendants);

@@ -45,8 +45,7 @@ const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
  */
 const TEST_TIME_ZONE = 'America/Phoenix';
 
-export default defineConfig(({ command, mode }) => {
-	const isBuild = command === 'build';
+export default defineConfig(({ mode }) => {
 	const isTest = mode === 'test';
 
 	let timeZoneId: string | null = process.env.TZ ?? null;
@@ -70,10 +69,6 @@ export default defineConfig(({ command, mode }) => {
 		entries.map((entry) => [entry.replaceAll(/^\.\/src\/|\.ts$/g, ''), entry])
 	);
 
-	if (isTest) {
-		entries.push('./tools/vite/vitest-setup.ts');
-	}
-
 	return {
 		build: {
 			target: 'esnext',
@@ -87,29 +82,18 @@ export default defineConfig(({ command, mode }) => {
 				formats: ['es'],
 			},
 			rollupOptions: {
-				external: isBuild ? ['@odk-web-forms/tree-sitter-xpath', 'web-tree-sitter'] : [],
+				external: ['fs', 'path'],
 			},
 		},
 		define: {
 			TZ: JSON.stringify(timeZoneId),
 		},
 		esbuild: {
-			sourcemap: true,
 			target: 'esnext',
 			format: 'esm',
 		},
 		optimizeDeps: {
-			// Entries is also specified here so Vite will detect dependencies which
-			// need to be converted to ESM. Namely: tree-sitter/tree-sitter.js, which
-			// is published as an optionally-CJS module.
-			//
-			// TODO: investigate transforming it to ESM separately, to minimize the
-			// necessity for special tooling consideration here (and downstream).
-			entries,
-
 			force: true,
-
-			include: BROWSER_ENABLED ? ['loupe'] : [],
 		},
 		plugins: [
 			// Transform the BigInt polyfill (used by the Temporal polyfill) to use native

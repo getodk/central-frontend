@@ -1,5 +1,6 @@
 import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
 import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import type { XFormsElement } from '@odk-web-forms/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 import { createMemo, createSignal, type Accessor, type Signal } from 'solid-js';
 import { afterEach, expect } from 'vitest';
@@ -15,7 +16,6 @@ import type { RepeatInstanceState } from '../../lib/xform/state/RepeatInstanceSt
 import type { RepeatSequenceState } from '../../lib/xform/state/RepeatSequenceState.ts';
 import type { SubtreeState } from '../../lib/xform/state/SubtreeState.ts';
 import { ValueNodeState } from '../../lib/xform/state/ValueNodeState.ts';
-import type { XFormsElement } from '../fixtures/xform-dsl/XFormsElement.ts';
 import { castToString } from './cast.ts';
 
 interface BodyElementSpecifier<

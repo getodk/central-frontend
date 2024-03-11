@@ -1,5 +1,5 @@
 import { XFORMS_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
-import { beforeEach, describe, expect, it } from 'vitest';
+import type { HtmlXFormsElement } from '@odk-web-forms/common/test/fixtures/xform-dsl/HtmlXFormsElement.ts';
 import {
 	body,
 	head,
@@ -9,8 +9,8 @@ import {
 	model,
 	t,
 	title,
-} from '../../test/fixtures/xform-dsl';
-import type { HtmlXFormsElement } from '../../test/fixtures/xform-dsl/HtmlXFormsElement.ts';
+} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDOM } from './XFormDOM.ts';
 
 describe('XFormDOM', () => {

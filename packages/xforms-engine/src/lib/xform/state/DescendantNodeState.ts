@@ -331,4 +331,4 @@ export abstract class DescendantNodeState<Type extends DescendantNodeStateType>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyDescandantNodeState = Extract<AnyNodeState, DescendantNodeState<any>>;
+export type AnyDescendantNodeState = Extract<AnyNodeState, DescendantNodeState<any>>;
