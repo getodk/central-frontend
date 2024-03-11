@@ -21,7 +21,6 @@ except according to the terms contained in the LICENSE file.
           <entity-upload-data-template/>
         </div>
       </entity-upload-file-select>
-      <div v-if="file != null" id="entity-upload-filename">{{ file.name }}</div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
           :aria-disabled="file == null || awaitingResponse" @click="upload">
@@ -32,6 +31,12 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.cancel') }}
         </button>
       </div>
+      <div v-if="file != null" id="entity-upload-popups">
+        <!-- TODO. Pass the actual count. -->
+        <entity-upload-popup :filename="file.name" :count="1"
+          :awaiting-response="awaitingResponse" :progress="uploadProgress"
+          @clear="clearFile"/>
+      </div>
     </template>
   </modal>
 </template>
@@ -41,6 +46,7 @@ import { ref, watch } from 'vue';
 
 import EntityUploadDataTemplate from './upload/data-template.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
+import EntityUploadPopup from './upload/popup.vue';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
@@ -62,9 +68,11 @@ const { dataset } = useRequestData();
 
 const file = ref(null);
 const selectFile = (value) => { file.value = value; };
-watch(() => props.state, (state) => { if (!state) file.value = null; });
+const clearFile = () => { file.value = null; };
+watch(() => props.state, (state) => { if (!state) clearFile(); });
 
 const { request, awaitingResponse } = useRequest();
+const uploadProgress = ref(0);
 const upload = () => {
   request({
     method: 'POST',
@@ -72,12 +80,32 @@ const upload = () => {
     data: {
       source: { name: file.value.name, size: file.value.size },
       entities: []
-    }
+    },
+    onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
   })
     .then(() => { emit('success'); })
+    .finally(() => { uploadProgress.value = 0; })
     .catch(noop);
 };
 </script>
+
+<style lang="scss">
+@keyframes tocorner {
+  0% { transform: translate(-70px, -70px); }
+  100% { transform: translate(0, 0); }
+}
+
+#entity-upload-popups {
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-name: tocorner;
+  animation-timing-function: cubic-bezier(0.05, 0.9, 0, 1);
+  bottom: 70px;
+  position: absolute;
+  right: 15px;
+  width: 325px;
+}
+</style>
 
 <i18n lang="json5">
 {
