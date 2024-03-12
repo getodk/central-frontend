@@ -31,7 +31,7 @@
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
     "dev": "vite",
-    "test": "npm-run-all -nl test:*",
+    "test": "npm-run-all --print-name --print-label test:* test-node:* test-browser:*",
     "test:e2e": "playwright test",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
