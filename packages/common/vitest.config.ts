@@ -42,8 +42,6 @@ export default defineConfig(() => {
 				target: 'esnext',
 			},
 			force: true,
-			// Vitest...
-			include: ['loupe'],
 		},
 		test: {
 			browser: {
