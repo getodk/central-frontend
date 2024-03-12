@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <span v-if="!oidcEnabled" id="odata-data-access">
     <a class="btn btn-default"
-      href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
+      href="https://docs.getodk.org/central-api-odata-endpoints/"
       target="_blank" rel="noopener">
       <span class="icon-plug"></span>{{ $t('action.apiAccess') }}
     </a>
