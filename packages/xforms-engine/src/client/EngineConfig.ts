@@ -8,12 +8,13 @@ import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.
  * - Ambiguous if a client supplies an alternative implementation which doesn't
  *   exhaust the body on access
  */
-interface FetchResourceResponse {
+export interface FetchResourceResponse {
+	readonly ok?: boolean;
 	readonly body?: ReadableStream<Uint8Array> | null;
 	readonly bodyUsed?: boolean;
 
-	blob(): Promise<Blob>;
-	text(): Promise<string>;
+	readonly blob: () => Promise<Blob>;
+	readonly text: () => Promise<string>;
 }
 
 /**
@@ -28,7 +29,7 @@ interface FetchResourceResponse {
  * actual resources (likely, but not necessarily, accessed at a corresponding
  * HTTP URL).
  */
-type FetchResource = (resource: URL) => Promise<FetchResourceResponse>;
+export type FetchResource = (resource: URL) => Promise<FetchResourceResponse>;
 
 /**
  * Options provided by a client to specify certain aspects of engine runtime
