@@ -1,5 +1,5 @@
+import { getLabelElement } from '../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { getLabelElement } from '../../query.ts';
 import type { AnyControlDefinition } from '../control/ControlDefinition.ts';
 import type { ItemDefinition } from '../control/select/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../control/select/ItemsetDefinition.ts';

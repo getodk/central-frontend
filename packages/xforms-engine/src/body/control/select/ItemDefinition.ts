@@ -1,5 +1,5 @@
+import { getValueElement, type ItemElement } from '../../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import { getValueElement, type ItemElement } from '../../../query.ts';
 import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
 import { LabelDefinition } from '../../text/LabelDefinition.ts';
 import type { AnySelectDefinition } from './SelectDefinition.ts';

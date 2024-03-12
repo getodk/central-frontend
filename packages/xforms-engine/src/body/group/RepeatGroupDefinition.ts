@@ -1,5 +1,5 @@
+import { getRepeatElement } from '../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { getRepeatElement } from '../../query.ts';
 import type { BodyElementDefinitionArray, BodyElementParentContext } from '../BodyDefinition.ts';
 import { RepeatDefinition } from '../RepeatDefinition.ts';
 import { BaseGroupDefinition } from './BaseGroupDefinition.ts';

@@ -38,7 +38,7 @@ const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
 export default defineConfig(({ mode }) => {
 	const isTest = mode === 'test';
-	const entries = ['./src/lib/index.ts'];
+	const entries = ['./src/index.ts'];
 
 	// Mapping entry names with path-based keys gives a more predictable output
 	// which we control at the filesystem level, so the exports in package.json
@@ -89,7 +89,7 @@ export default defineConfig(({ mode }) => {
 			dts({
 				entryRoot: './src',
 				exclude: ['@odk-web-forms/common', 'test', 'vite-env.d.ts'],
-				include: ['src/lib/**/*.ts'],
+				include: ['src/**/*.ts'],
 			}),
 		],
 

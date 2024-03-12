@@ -3,7 +3,7 @@ import type {
 	KnownAttributeLocalNamedElement,
 	LocalNamedElement,
 } from '@odk-web-forms/common/types/dom.ts';
-import type { SelectElement } from './body/control/select/SelectDefinition';
+import type { SelectElement } from '../../body/control/select/SelectDefinition';
 
 const hintLookup = new ScopedElementLookup(':scope > hint', 'hint');
 const itemLookup = new ScopedElementLookup(':scope > item', 'item');

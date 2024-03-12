@@ -4,18 +4,18 @@ import type { XFormsElement } from '@odk-web-forms/common/test/fixtures/xform-ds
 import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 import { createMemo, createSignal, type Accessor, type Signal } from 'solid-js';
 import { afterEach, expect } from 'vitest';
-import { XFormDefinition } from '../../lib/xform/XFormDefinition.ts';
+import { XFormDefinition } from '../../src/XFormDefinition.ts';
 import type {
 	AnyBodyElementDefinition,
 	NonRepeatGroupElementDefinition,
-} from '../../lib/xform/body/BodyDefinition.ts';
-import type { AnyControlDefinition } from '../../lib/xform/body/control/ControlDefinition.ts';
-import { EntryState } from '../../lib/xform/state/EntryState.ts';
-import type { AnyNodeState } from '../../lib/xform/state/NodeState.ts';
-import type { RepeatInstanceState } from '../../lib/xform/state/RepeatInstanceState.ts';
-import type { RepeatSequenceState } from '../../lib/xform/state/RepeatSequenceState.ts';
-import type { SubtreeState } from '../../lib/xform/state/SubtreeState.ts';
-import { ValueNodeState } from '../../lib/xform/state/ValueNodeState.ts';
+} from '../../src/body/BodyDefinition.ts';
+import type { AnyControlDefinition } from '../../src/body/control/ControlDefinition.ts';
+import { EntryState } from '../../src/state/EntryState.ts';
+import type { AnyNodeState } from '../../src/state/NodeState.ts';
+import type { RepeatInstanceState } from '../../src/state/RepeatInstanceState.ts';
+import type { RepeatSequenceState } from '../../src/state/RepeatSequenceState.ts';
+import type { SubtreeState } from '../../src/state/SubtreeState.ts';
+import { ValueNodeState } from '../../src/state/ValueNodeState.ts';
 import { castToString } from './cast.ts';
 
 interface BodyElementSpecifier<

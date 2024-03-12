@@ -1,6 +1,5 @@
 import type { Accessor } from 'solid-js';
 import { createComputed, createMemo, createSignal, on } from 'solid-js';
-import { createUninitializedAccessor } from '../../reactivity/primitives/uninitialized.ts';
 import type { AnyTextElementDefinition } from '../body/text/TextElementDefinition.ts';
 import type { AnyTextElementPart } from '../body/text/TextElementPart.ts';
 import type {
@@ -8,6 +7,7 @@ import type {
 	DependentExpressionResult,
 	DependentExpressionResultType,
 } from '../expression/DependentExpression.ts';
+import { createUninitializedAccessor } from '../lib/reactivity/primitives/uninitialized.ts';
 import type { BindComputation } from '../model/BindComputation.ts';
 import type { EntryState } from './EntryState.ts';
 import type {

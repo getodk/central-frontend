@@ -1,5 +1,5 @@
+import { getHintElement } from '../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { getHintElement } from '../../query.ts';
 import type { AnyControlDefinition } from '../control/ControlDefinition.ts';
 import type { TextElement } from './TextElementDefinition.ts';
 import { TextElementDefinition } from './TextElementDefinition.ts';

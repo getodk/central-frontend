@@ -11,11 +11,11 @@
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",
-  "types": "./dist/lib/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/lib/index.d.ts",
-      "default": "./dist/lib/index.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [

@@ -1,6 +1,6 @@
 import { XFORMS_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
 import { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
-import { xpathEvaluator } from '../xpath/evaluator.ts';
+import { xpathEvaluator } from './lib/xpath/evaluator.ts';
 
 const domParser = new DOMParser();
 

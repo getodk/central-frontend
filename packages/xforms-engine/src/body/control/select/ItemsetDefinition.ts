@@ -1,5 +1,5 @@
+import { getValueElement, type ItemsetElement } from '../../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import { getValueElement, type ItemsetElement } from '../../../query.ts';
 import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
 import { LabelDefinition } from '../../text/LabelDefinition.ts';
 import { ItemsetNodesetExpression } from './ItemsetNodesetExpression.ts';
