@@ -163,7 +163,7 @@ export default {
     odataFilter: 'refreshWithClear'
   },
   created() {
-    this.fetchChunk(true);
+    this.refreshWithClear();
   },
   mounted() {
     document.addEventListener('scroll', this.afterScroll);
