@@ -78,7 +78,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { any } from 'ramda';
-import { markRaw } from 'vue';
 
 import DocLink from '../doc-link.vue';
 import FileDropZone from '../file-drop-zone.vue';
@@ -147,7 +146,8 @@ export default {
              - total. The total number of files to upload.
              - remaining. The number of files that have not been uploaded yet.
              - current. The name of the file currently being uploaded.
-             - progress. The latest ProgressEvent for the current upload.
+             - progress. The upload progress for the current upload as a
+               fraction.
         4. Properties set once the uploads have finished or stopped and reset
            once a new drag is started or another file input selection is made
            - updatedAttachments. A Set of the names of the attachments for which
@@ -161,7 +161,7 @@ export default {
         total: 0,
         remaining: 0,
         current: null,
-        progress: null
+        progress: 0
       },
       updatedAttachments: new Set(),
       // Modals
@@ -286,7 +286,7 @@ export default {
       // sync.
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
-      this.uploadStatus.progress = null;
+      this.uploadStatus.progress = 0;
 
       return this.request({
         method: 'POST',
@@ -300,8 +300,8 @@ export default {
           'Content-Encoding': 'identity'
         },
         data: file,
-        onUploadProgress: (progressEvent) => {
-          this.uploadStatus.progress = markRaw(progressEvent);
+        onUploadProgress: (event) => {
+          this.uploadStatus.progress = event.progress ?? 0;
         },
         problemToAlert: (problem) => {
           const { total } = this.uploadStatus;
@@ -356,7 +356,7 @@ export default {
               this.updatedAttachments.add(name);
             }
           });
-          this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
+          this.uploadStatus = { total: 0, remaining: 0, current: null, progress: 0 };
         });
       this.plannedUploads = [];
       this.unmatchedFiles = [];

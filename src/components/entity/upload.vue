@@ -83,7 +83,8 @@ const upload = () => {
     },
     onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
   })
-    .then(() => { emit('success'); })
+    // TODO. Emit the correct count.
+    .then(() => { emit('success', 1); })
     .finally(() => { uploadProgress.value = 0; })
     .catch(noop);
 };

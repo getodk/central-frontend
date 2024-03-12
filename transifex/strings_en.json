@@ -913,6 +913,12 @@
       "errorNotProblem": {
         "string": "Something went wrong: error code {status}.",
         "developer_comment": "{status} is an HTTP status code, for example, 404."
+      },
+      "problem": {
+        "404_1": {
+          "string": "The resource you are looking for cannot be found. The resource may have been deleted.",
+          "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        }
       }
     },
     "session": {
@@ -1358,6 +1364,13 @@
         }
       }
     },
+    "DatasetEntities": {
+      "alert": {
+        "upload": {
+          "string": "Success! Your Entities have been uploaded."
+        }
+      }
+    },
     "DatasetList": {
       "heading": {
         "0": {
@@ -1645,7 +1658,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "Don’t ask again for now",
+          "string": "Don’t show this message again for this session",
           "developer_comment": "This is the text of a form field."
         }
       }

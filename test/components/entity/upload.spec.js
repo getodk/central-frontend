@@ -1,5 +1,6 @@
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
+import OdataLoadingMessage from '../../../src/components/odata-loading-message.vue';
 
 import testData from '../../data';
 import { mockHttp, load } from '../../util/http';
@@ -125,7 +126,7 @@ describe('EntityUpload', () => {
   });
 
   describe('after a successful upload', () => {
-    it('hides the modal', () => {
+    const upload = () => {
       testData.extendedDatasets.createPast(1);
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
@@ -136,9 +137,38 @@ describe('EntityUpload', () => {
           return modal.get('.modal-actions .btn-primary').trigger('click');
         })
         .respondWithSuccess()
-        .afterResponse(component => {
-          component.getComponent(EntityUpload).props().state.should.be.false();
+        .respondWithData(() => {
+          testData.extendedEntities.createPast(1);
+          return testData.entityOData();
         });
+    };
+
+    it('hides the modal', async () => {
+      const component = await upload();
+      component.getComponent(EntityUpload).props().state.should.be.false();
     });
+
+    it('shows a success alert', async () => {
+      const component = await upload();
+      component.should.alert('success', 'Success! Your Entities have been uploaded.');
+    });
+
+    it('sends a new request for OData', () =>
+      upload().testRequests([
+        null,
+        {
+          url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true'
+        }
+      ]));
+
+    it('renders correctly during the request', () =>
+      upload().beforeEachResponse((component, _, i) => {
+        if (i === 0) return;
+        component.get('#entity-table').should.be.hidden();
+        const props = component.getComponent(OdataLoadingMessage).props();
+        props.odata.awaitingResponse.should.be.true();
+        props.refreshing.should.be.false();
+        props.totalCount.should.equal(1);
+      }));
   });
 });

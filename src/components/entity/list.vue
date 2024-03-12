@@ -160,12 +160,10 @@ export default {
     }
   },
   watch: {
-    odataFilter() {
-      this.fetchChunk(true);
-    }
+    odataFilter: 'refreshWithClear'
   },
   created() {
-    this.fetchData();
+    this.refreshWithClear();
   },
   mounted() {
     document.addEventListener('scroll', this.afterScroll);
@@ -200,7 +198,8 @@ export default {
         .finally(() => { this.refreshing = false; })
         .catch(noop);
     },
-    fetchData() {
+    // This method is called directly by DatasetEntities.
+    refreshWithClear() {
       this.fetchChunk(true);
     },
     showUpdate(index) {

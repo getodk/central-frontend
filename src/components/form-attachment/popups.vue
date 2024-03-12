@@ -146,16 +146,12 @@ export default {
         this.shownDuringUpload;
     },
     percentUploaded() {
-      const { progress } = this.uploadStatus;
-      const fraction = progress != null && progress.lengthComputable
-        ? progress.loaded / progress.total
-        : 0;
-      return this.$n(fraction, 'percent');
+      return this.$n(this.uploadStatus.progress, 'percent');
     }
   },
   updated() {
     if (this.shownAfterSelection)
-      $(this.$refs.popups).find('.btn-primary').focus();
+      this.$refs.popups.querySelector('.btn-primary').focus();
   }
 };
 </script>
