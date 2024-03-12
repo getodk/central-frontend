@@ -15,7 +15,7 @@ npm install @odk-web-forms/xforms-engine
 
 ## Development
 
-> **Note**
+> [!NOTE]
 > All commands should be run from the root of the monorepo, not this package's subdirectory.
 
 Test commands:

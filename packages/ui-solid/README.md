@@ -2,7 +2,7 @@
 
 A [Solid](https://www.solidjs.com/) UI for ODK web forms; currently a reference client of [`@odk-web-forms/xforms-engine`][vue-client].
 
-> **Note**
+> [!NOTE]
 > The future of this package is unclear! Its current state reflects an early spike/prototyping effort to explore viability of the ODK web forms project. As development of the project proceeds overall, it is likely that the [Vue client](../ui-vue/) will be be more mature and actively developed.
 
 ## Install
@@ -15,7 +15,7 @@ npm install @odk-web-forms/ui-solid
 
 ## Development
 
-> **Note**
+> [!NOTE]
 > All commands should be run from the root of the monorepo, not this package's subdirectory.
 
 To run in development mode:
