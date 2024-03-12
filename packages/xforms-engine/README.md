@@ -1,6 +1,9 @@
-# ODK Web Forms
+# @odk-web-forms/xforms-engine
 
-[ODK XForms](https://getodk.github.io/xforms-spec/#:~:text=The%20ODK%20XForms%20specification%20is,in%20the%20W3C%20XForms%20specification.) for the web. This package is still in very early stages!
+Implementation of the [ODK XForms specification](https://getodk.github.io/xforms-spec/)'s data model and computation logic. This package does not handle presentation or user interaction. Those aspects of web forms are meant to be handled by a client. Presently, those clients are:
+
+- [`@odk-web-forms/ui-vue`](../ui-vue)
+- [`@odk-web-forms/ui-solid`](../ui-solid)
 
 ## Install
 
@@ -14,12 +17,6 @@ npm install @odk-web-forms/xforms-engine
 
 > **Note**
 > All commands should be run from the root of the monorepo, not this package's subdirectory.
-
-To run @odk-web-forms/xforms-engine in development mode:
-
-```sh
-yarn workspace @odk-web-forms/xforms-engine dev
-```
 
 Test commands:
 
@@ -36,27 +33,6 @@ yarn workspace @odk-web-forms/xforms-engine test-watch:chromium
 yarn workspace @odk-web-forms/xforms-engine test-watch:firefox
 yarn workspace @odk-web-forms/xforms-engine test-watch:webkit
 ```
-
-### Project structure (WIP)
-
-As noted, this package is still young. This structure may change as development progresses, but this captures the general intent for now.
-
-#### Components
-
-Aspects of a form concerned with presentation and user interaction are developed as components, under the `src/components` directory. These components are further structured by abstraction/composition layer and/or domain concern, e.g.:
-
-- `src/styled`: concerned only with presentation—generally visual, typically augmenting base Material UI components provided by [SUID](https://suid.io/)
-- `src/components/XForm`: designed to take XForms data (either raw or parsed into runtime data structures used throughout the system) and render form UI, generally deferring to more user-/UI-specialized components
-- `src/components/Widget`: intended to correspond as closely as possible to [ODK Collect](https://docs.getodk.org/form-question-types/) question types (there also referred to as "widgets" at this time)
-- `src/components/XForm/controls`: specific to visible form controls as defined in an XForm's `body`
-- `src/components/XForm/debugging`: as the name suggests, these are being used to convey visible developer-facing information about aspects of the rendered form which might be of interest (and should this concept persist, they would not be user facing outside of development)
-- The remaining components are named, and grouped where appropriate, around user-facing features or sets of related features
-
-Being (again) early stages, this structure is mostly an aspirational attempt at conveying a sense of where abstraction and composition boundaries are anticipated for the view layer. All are subject to change and refinement.
-
-#### Non-view logic
-
-All non-view logic is presently implemented in `src/lib`. It is highly likely that this will be reduced to more conventional "library"-style logic, with e.g. XForms-specific implementation details broken out into a more explicit structure. This aspect of code organization was deferred until more of that logic is introduced.
 
 ## Supported/tested environments
 
