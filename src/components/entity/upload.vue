@@ -74,7 +74,8 @@ const upload = () => {
       entities: []
     }
   })
-    .then(() => { emit('success'); })
+    // TODO. Emit the correct count.
+    .then(() => { emit('success', 1); })
     .catch(noop);
 };
 </script>
