@@ -14,7 +14,7 @@ $primary50: #d8ecf5;
 
 	.p-button.p-button-secondary {
 		&:enabled:focus {
-			background: rgba($primary50, 0.68);
+			background: var(--primary-100);
 		}
 
 		&:enabled:active {
@@ -26,5 +26,9 @@ $primary50: #d8ecf5;
 		border-radius: 10px;
 		border-top: 15px solid $primary50;
 		box-shadow: 0px 1px 3px 1px #00000026;
+	}
+
+	h1 {
+		font-size: 2rem;
 	}
 }

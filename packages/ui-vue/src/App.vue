@@ -1,3 +1,7 @@
+<template>
+	<OdkForm :xform="xform" />
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue';
 import OdkForm from './components/OdkForm.vue';
@@ -33,8 +37,5 @@ xform.value = `<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www
 </h:html>`;
 </script>
 
-<template>
-	<OdkForm :xform="xform" />
-</template>
 
 <style scoped></style>

@@ -8,7 +8,7 @@ import App from './App.vue';
 import './themes/2024-light/theme.scss';
 
 import './assets/css/icomoon.css';
-import './assets/css/style.css';
+import './assets/css/style.scss';
 
 // TODO: Purge it - postcss-purgecss
 import 'primeflex/primeflex.css';
