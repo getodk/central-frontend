@@ -7,16 +7,19 @@ $primary50: #d8ecf5;
 
 @import 'primevue-sass-theme/themes/material/material-light/standard/indigo/theme.scss';
 
-@layer primevue {
-	:root {
-		--primary-50: #{$primary50};
-	}
+:root {
+	--primary-50: #{$primary50};
+}
 
+@layer primevue {
 	.p-button.p-button-secondary {
-		&:enabled:focus {
+		&:enabled:focus,
+		&:enabled.p-focus {
 			background: var(--primary-100);
 		}
-
+		&:enabled:hover {
+			background: var(--primary-100);
+		}
 		&:enabled:active {
 			background: $primary50;
 		}
@@ -26,6 +29,22 @@ $primary50: #d8ecf5;
 		border-radius: 10px;
 		border-top: 15px solid $primary50;
 		box-shadow: 0px 1px 3px 1px #00000026;
+	}
+
+	.p-panel {
+		border-radius: 10px;
+		border-top: 15px solid $primary50;
+		box-shadow: 0px 1px 3px 1px #00000026;
+		background: var(--surface-0);
+
+		.p-panel-header {
+			background: transparent;
+		}
+
+		.p-panel-content:last-child {
+			border-bottom-right-radius: 10px;
+			border-bottom-left-radius: 10px;
+		}
 	}
 
 	h1 {
