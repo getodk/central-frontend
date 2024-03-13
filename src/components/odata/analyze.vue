@@ -71,7 +71,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
         <i18n-t v-else-if="tool === 'other'" tag="p" keypath="help.other.full">
           <template #article>
-            <a href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints/" target="_blank" rel="noopener">{{ $t('help.other.article') }}</a>
+            <a href="https://docs.getodk.org/central-api-odata-endpoints/" target="_blank" rel="noopener">{{ $t('help.other.article') }}</a>
           </template>
         </i18n-t>
       </div>
