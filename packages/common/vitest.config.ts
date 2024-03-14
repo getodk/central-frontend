@@ -3,7 +3,7 @@
 
 // TODO: much of this may be a good candidate for sharing from this internal package!
 
-import type { CollectionValues } from '@odk/common/types/collections/CollectionValues.ts';
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 import { defineConfig } from 'vite';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
 
@@ -42,8 +42,6 @@ export default defineConfig(() => {
 				target: 'esnext',
 			},
 			force: true,
-			// Vitest...
-			include: ['loupe'],
 		},
 		test: {
 			browser: {

@@ -1,3 +1,3 @@
 /// <reference path="./types/tree-sitter-xpath-parser.d.ts" />
 
-export * from 'tree-sitter-xpath/parser';
+export * from '@odk-web-forms/tree-sitter-xpath/parser';

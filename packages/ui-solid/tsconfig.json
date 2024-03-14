@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src", "test/**/*.ts", "test/**/*.tsx", "tools/**/*.ts", "vite-env.d.ts"],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
+    "declarationDir": "./dist",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "paths": {
+      "@odk-web-forms/common/types/*": ["../common/types/*"],
+      "@odk-web-forms/common/*": ["../common/src/*"]
+    }
+  }
+}

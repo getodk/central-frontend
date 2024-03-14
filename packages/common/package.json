@@ -1,14 +1,14 @@
 {
-  "name": "@odk/common",
+  "name": "@odk-web-forms/common",
   "private": true,
   "version": "0.0.0",
-  "description": "@odk/common",
+  "description": "@odk-web-forms/common",
   "type": "module",
   "author": "getodk",
   "repository": {
     "type": "git",
     "url": "https://github.com/getodk/web-forms",
-    "directory": "packages/odk-xpath"
+    "directory": "packages/common"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",
@@ -51,10 +51,10 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
-    "@vitest/browser": "^1.0.0-beta.3",
-    "jsdom": "^22.1.0",
-    "vite": "^4.5.0",
-    "vitest": "^1.0.0-beta.3",
-    "vitest-github-actions-reporter": "^0.10.0"
+    "@vitest/browser": "^1.3.1",
+    "jsdom": "^24.0.0",
+    "vite": "^5.1.5",
+    "vitest": "^1.3.1",
+    "vitest-github-actions-reporter": "^0.11.1"
   }
 }

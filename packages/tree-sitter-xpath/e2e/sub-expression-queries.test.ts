@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import Parser from 'web-tree-sitter';
 import { resolve as resolvePath } from 'node:path';
+import Parser from 'web-tree-sitter';
 
 const { describe } = test;
 const it = test;
@@ -2387,10 +2387,18 @@ describe('Parsing subexpressions', () => {
 			const parsed = parser.parse(expression);
 			const visited = new Set<number>();
 
+			// Workaround: `SyntaxNode.id` was removed from the `web-tree-sitter`
+			// types in a recent release. It's unclear if that was a mistake, but we
+			// likely won't maintain these tests or logic that requires this id
+			// indefinitely anyway.
+			const getNodeId = (node: Parser.SyntaxNode): number => {
+				return node.walk().nodeId;
+			};
+
 			const allCaptures = pathExpressionsQuery.captures(parsed.rootNode);
 			const captures = allCaptures.filter((capture) => {
 				const { node } = capture;
-				const { id } = node;
+				const id = getNodeId(node);
 
 				if (visited.has(id)) {
 					return false;
@@ -2403,7 +2411,7 @@ describe('Parsing subexpressions', () => {
 					node.parent!
 				);
 
-				if (potentiallyVisited.some((ancestor) => visited.has(ancestor.id))) {
+				if (potentiallyVisited.some((ancestor) => visited.has(getNodeId(ancestor)))) {
 					return false;
 				}
 

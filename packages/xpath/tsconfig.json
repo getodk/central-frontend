@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src", "test/**/*.ts", "vite-env.d.ts"],
+  "compilerOptions": {
+    "declarationDir": "./dist",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "outDir": "./dist",
+    "paths": {
+      "@odk-web-forms/common/types/*": ["../common/types/*"],
+      "@odk-web-forms/common/*": ["../common/src/*"]
+    }
+  }
+}

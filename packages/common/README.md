@@ -1,4 +1,4 @@
-# @odk/common (private package)
+# @odk-web-forms/common (private package)
 
 An internal package to address common (e.g. the dreaded "utils") concerns across two or more getodk/web-forms packages. There have already been several such cross-cutting concerns.
 
@@ -15,4 +15,7 @@ Being an internal package, for now there is no build step: downstream packages s
 
 - downstream package setup concerns
 - consideration for downstream build and bundle impact
-- usage in a package intended for both internal and external purposes (i.e. packages such as `tree-sitter-xpath` or `@odk/xpath` which are used in `@odk/web-forms` but may also be used on their own)
+- usage in a package intended for both internal and external purposes (i.e.
+  packages such as `@odk-web-forms/tree-sitter-xpath` or `@odk-web-forms/xpath`
+  which are used in `@odk-web-forms/xforms-engine` but may also be used on their
+  own)

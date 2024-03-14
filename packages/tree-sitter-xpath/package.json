@@ -1,5 +1,5 @@
 {
-  "name": "tree-sitter-xpath",
+  "name": "@odk-web-forms/tree-sitter-xpath",
   "version": "1.0.0-alpha.0",
   "description": "XPath grammar for tree-sitter",
   "type": "commonjs",
@@ -41,11 +41,11 @@
     "node-gyp": "^9.4.0",
     "tree-sitter": "^0.20.5",
     "tree-sitter-cli": "^0.20.8",
-    "vite": "^4.5.0",
-    "web-tree-sitter": "^0.20.8"
+    "vite": "^5.1.5",
+    "web-tree-sitter": "0.21.0"
   },
   "peerDependencies": {
-    "web-tree-sitter": "^0.20.8"
+    "web-tree-sitter": "0.21.0"
   },
   "resolutions": {
     "**/tree-sitter": "^0.20.5",
