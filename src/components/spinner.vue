@@ -19,9 +19,12 @@ except according to the terms contained in the LICENSE file.
 defineProps({
   // Determines whether the spinner is shown or not.
   state: Boolean,
-  // By default, the spinner is positioned in the center of its closest
-  // positioned ancestor. However, if the `inline` prop is `true`, the spinner
-  // will not be positioned and will be rendered inline.
+  /* By default, a spinner is positioned in the center of its closest positioned
+  ancestor. However, in some cases, a spinner should not be positioned and
+  should be rendered inline. A spinner is sometimes rendered inline
+  automatically, for example, if the spinner is after a <select> element. You
+  can force a spinner to be rendered inline by specifying `true` for the
+  `inline` prop. */
   inline: Boolean
 });
 </script>

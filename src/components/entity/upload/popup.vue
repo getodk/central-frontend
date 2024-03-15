@@ -73,7 +73,7 @@ const status = computed(() => (props.progress < 1
   align-items: baseline;
   display: flex;
 
-  div {
+  > div {
     @include text-overflow-ellipsis;
     font-size: 18px;
     font-weight: bold;
@@ -94,7 +94,7 @@ const status = computed(() => (props.progress < 1
 
   .spinner + span {
     font-weight: bold;
-    margin-left: 5px;
+    margin-left: 6px;
   }
 }
 </style>

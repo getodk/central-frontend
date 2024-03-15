@@ -98,13 +98,12 @@ const upload = () => {
 
 #entity-upload-popups {
   animation-duration: 2s;
-  animation-iteration-count: 1;
   animation-name: tocorner;
   animation-timing-function: cubic-bezier(0.05, 0.9, 0, 1);
   bottom: 70px;
   position: absolute;
   right: 15px;
-  width: 325px;
+  width: 305px;
 }
 </style>
 
