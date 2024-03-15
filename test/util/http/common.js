@@ -94,21 +94,20 @@ export function testModalToggles({
 ////////////////////////////////////////////////////////////////////////////////
 // STANDARD BUTTON THINGS
 
-export const assertStandardButton = (
-  component,
-  buttonSelector,
-  disabledSelectors,
+const assertStandardButton = (component, {
+  button: buttonSelector,
+  disabled: disabledSelectors,
   modal,
+  spinner: hasSpinner,
   awaitingResponse,
-  showsAlert
-) => {
+  alert: showsAlert
+}) => {
   const button = component.get(buttonSelector);
   (button.attributes('aria-disabled') === 'true').should.equal(awaitingResponse);
 
-  const spinners = component.findAllComponents(Spinner).filter(spinner =>
-    button.element.contains(spinner.element));
-  spinners.length.should.equal(1);
-  spinners[0].props().state.should.equal(awaitingResponse);
+  const spinner = button.findComponent(Spinner);
+  spinner.exists().should.equal(hasSpinner);
+  if (hasSpinner) spinner.props().state.should.equal(awaitingResponse);
 
   for (const selector of disabledSelectors) {
     const wrapper = component.get(selector);
@@ -140,10 +139,16 @@ export function testStandardButton({
   // Specifies a modal that should not be hideable during the request. If the
   // series' component is a modal, specify `true`. Otherwise, specify the modal
   // component.
-  modal = undefined
+  modal = undefined,
+  // `true` if the button is expected to contain a spinner and `false` if not.
+  spinner = true
 }) {
-  const assert = (awaitingResponse, showsModal) => (component) =>
-    assertStandardButton(component, button, disabled, modal, awaitingResponse, showsModal);
+  const assert = (awaitingResponse, alert) => (component) => {
+    assertStandardButton(
+      component,
+      { button, disabled, modal, spinner, awaitingResponse, alert }
+    );
+  };
   let series = this;
   if (request != null) {
     series = series.request(component => {

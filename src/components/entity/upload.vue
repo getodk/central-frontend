@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
           :aria-disabled="file == null || awaitingResponse" @click="upload">
-          {{ $t('action.append') }} <spinner :state="awaitingResponse"/>
+          {{ $t('action.append') }}
         </button>
         <button type="button" class="btn btn-link"
           :aria-disabled="awaitingResponse" @click="$emit('hide')">
@@ -51,7 +51,6 @@ import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
-import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';

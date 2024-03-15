@@ -121,7 +121,8 @@ describe('EntityUpload', () => {
       .testStandardButton({
         button: '.modal-actions .btn-primary',
         disabled: ['.btn-link'],
-        modal: true
+        modal: true,
+        spinner: false
       });
   });
 
