@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import Button from 'primevue/button';
-import Menu, { type MenuState } from 'primevue/menu';
-import { type MenuItem } from 'primevue/menuitem';
+import Menu, { type MenuItem, type MenuState } from 'primevue/menu';
+// import { type MenuItem } from 'primevue/menuitem';
 import Panel from 'primevue/panel';
 import { ref } from 'vue';
 
