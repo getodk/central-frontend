@@ -1982,6 +1982,21 @@
         }
       }
     },
+    "EntityUploadPopup": {
+      "rowCount": {
+        "string": "{count, plural, one {{count} data row found} other {{count} data rows found}}"
+      },
+      "status": {
+        "sending": {
+          "string": "Sending file… ({percentUploaded})",
+          "developer_comment": "This text is shown while a file is being uploaded to the server."
+        },
+        "processing": {
+          "string": "Processing file…",
+          "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
+        }
+      }
+    },
     "EntityVersionLink": {
       "submission": {
         "string": "Submission {instanceName}",

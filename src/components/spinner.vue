@@ -9,17 +9,23 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
-<!-- `Spinner` toggles a spinner according to its `state` prop. -->
 <template>
-  <div :class="{ spinner: true, active: state }">
+  <div class="spinner" :class="{ inline, active: state }">
     <div class="spinner-glyph"></div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  state: Boolean
+  // Determines whether the spinner is shown or not.
+  state: Boolean,
+  /* By default, a spinner is positioned in the center of its closest positioned
+  ancestor. However, in some cases, a spinner should not be positioned and
+  should be rendered inline. A spinner is sometimes rendered inline
+  automatically, for example, if the spinner is after a <select> element. You
+  can force a spinner to be rendered inline by specifying `true` for the
+  `inline` prop. */
+  inline: Boolean
 });
 </script>
 
@@ -53,14 +59,14 @@ $spinner-width: 3px;
     transition-delay: 0.15s;
   }
 
-  select + & {
+  select + &, &.inline {
     display: inline-block;
     left: 0;
-    margin-left: 7px;
     position: relative;
     top: 0;
     vertical-align: text-top;
   }
+  select + & { margin-left: 7px; }
 }
 .spinner-glyph {
   height: $spinner-size;

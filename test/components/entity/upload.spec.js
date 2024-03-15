@@ -1,4 +1,5 @@
 import EntityUpload from '../../../src/components/entity/upload.vue';
+import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import OdataLoadingMessage from '../../../src/components/odata-loading-message.vue';
 
 import testData from '../../data';
@@ -47,10 +48,12 @@ describe('EntityUpload', () => {
       testData.extendedDatasets.createPast(1);
     });
 
-    it('shows the filename', async () => {
+    it('shows the pop-up', async () => {
       const modal = mountComponent();
       await setFiles(modal.get('input'), [csv()]);
-      modal.get('#entity-upload-filename').text().should.equal('my_data.csv');
+      const popup = modal.getComponent(EntityUploadPopup);
+      popup.props().filename.should.equal('my_data.csv');
+      popup.props().count.should.equal(1);
     });
 
     it('hides the drop zone', async () => {
@@ -69,12 +72,22 @@ describe('EntityUpload', () => {
       button.attributes('aria-disabled').should.equal('false');
     });
 
+    it('resets after the clear button is clicked', async () => {
+      const modal = mountComponent();
+      await setFiles(modal.get('input'), [csv()]);
+      await modal.get('#entity-upload-popup .close').trigger('click');
+      modal.findComponent(EntityUploadPopup).exists().should.be.false();
+      modal.get('#entity-upload-file-select').should.be.visible();
+      const button = modal.get('.modal-actions .btn-primary');
+      button.attributes('aria-disabled').should.equal('true');
+    });
+
     it('resets after the modal is hidden', async () => {
       const modal = mountComponent();
       await setFiles(modal.get('input'), [csv()]);
       await modal.setProps({ state: false });
       await modal.setProps({ state: true });
-      modal.find('#entity-upload-filename').exists().should.be.false();
+      modal.findComponent(EntityUploadPopup).exists().should.be.false();
       modal.get('#entity-upload-file-select').should.be.visible();
       const button = modal.get('.modal-actions .btn-primary');
       button.attributes('aria-disabled').should.equal('true');
