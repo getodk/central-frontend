@@ -85,7 +85,7 @@ export default {
     afterUpload(count) {
       this.upload.hide();
       this.alert.success(this.$t('alert.upload'));
-      this.$refs.list.refreshWithClear();
+      this.$refs.list.reset();
       // Update dataset.entities so that the count in the OData loading message
       // reflects the new entities.
       this.dataset.entities += count;
