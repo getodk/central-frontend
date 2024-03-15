@@ -10,11 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-upload" :state="state" :hideable="!awaitingResponse"
-    size="full" backdrop @hide="$emit('hide')">
+  <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
+    backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <div :class="{ backdrop: awaitingResponse }">
+      <div :class="{ backdrop: uploading }">
+        <loading :state="serverEntities.initiallyLoading"/>
         <entity-upload-file-select v-show="file == null" @change="selectFile">
           <div>
             <span>{{ $t('headersNote') }}</span>
@@ -25,18 +26,18 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
-          :aria-disabled="file == null || awaitingResponse" @click="upload">
+          :aria-disabled="file == null || uploading" @click="upload">
           {{ $t('action.append') }}
         </button>
-        <button type="button" class="btn btn-link"
-          :aria-disabled="awaitingResponse" @click="$emit('hide')">
+        <button type="button" class="btn btn-link" :aria-disabled="uploading"
+          @click="$emit('hide')">
           {{ $t('action.cancel') }}
         </button>
       </div>
       <div v-if="file != null" id="entity-upload-popups">
         <!-- TODO. Pass the actual count. -->
         <entity-upload-popup :filename="file.name" :count="1"
-          :awaiting-response="awaitingResponse" :progress="uploadProgress"
+          :awaiting-response="uploading" :progress="uploadProgress"
           @clear="clearFile"/>
       </div>
     </template>
@@ -49,6 +50,7 @@ import { ref, watch } from 'vue';
 import EntityUploadDataTemplate from './upload/data-template.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadPopup from './upload/popup.vue';
+import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
@@ -65,14 +67,30 @@ const props = defineProps({
 });
 const emit = defineEmits(['hide', 'success']);
 
-const { dataset } = useRequestData();
+const defaultPageSize = 5;
+
+const { dataset, createResource } = useRequestData();
+const serverEntities = createResource('serverEntities');
+watch(() => props.state, (state) => {
+  if (state) {
+    if (dataset.entities === 0) return;
+    serverEntities.request({
+      url: apiPaths.odataEntities(dataset.projectId, dataset.name, {
+        $orderby: '__system/createdAt asc',
+        $top: defaultPageSize
+      })
+    }).catch(noop);
+  } else {
+    serverEntities.reset();
+  }
+});
 
 const file = ref(null);
 const selectFile = (value) => { file.value = value; };
 const clearFile = () => { file.value = null; };
 watch(() => props.state, (state) => { if (!state) clearFile(); });
 
-const { request, awaitingResponse } = useRequest();
+const { request, awaitingResponse: uploading } = useRequest();
 const uploadProgress = ref(0);
 const upload = () => {
   request({
