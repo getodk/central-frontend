@@ -125,6 +125,24 @@ describe('EntityUpload', () => {
       });
   });
 
+  it('shows a backdrop during the request', () => {
+    testData.extendedDatasets.createPast(1);
+    return mockHttp()
+      .mount(EntityUpload, mountOptions())
+      .request(async (modal) => {
+        modal.find('.backdrop').exists().should.be.false();
+        await setFiles(modal.get('input'), [csv()]);
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .beforeAnyResponse(modal => {
+        modal.find('.backdrop').exists().should.be.true();
+      })
+      .respondWithProblem()
+      .afterResponse(modal => {
+        modal.find('.backdrop').exists().should.be.false();
+      });
+  });
+
   describe('after a successful upload', () => {
     const upload = () => {
       testData.extendedDatasets.createPast(1);

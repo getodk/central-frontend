@@ -14,13 +14,15 @@ except according to the terms contained in the LICENSE file.
     size="full" backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <entity-upload-file-select v-show="file == null" @change="selectFile">
-        <div>
-          <span>{{ $t('headersNote') }}</span>
-          <sentence-separator/>
-          <entity-upload-data-template/>
-        </div>
-      </entity-upload-file-select>
+      <div :class="{ backdrop: awaitingResponse }">
+        <entity-upload-file-select v-show="file == null" @change="selectFile">
+          <div>
+            <span>{{ $t('headersNote') }}</span>
+            <sentence-separator/>
+            <entity-upload-data-template/>
+          </div>
+        </entity-upload-file-select>
+      </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
           :aria-disabled="file == null || awaitingResponse" @click="upload">
@@ -94,6 +96,13 @@ const upload = () => {
 @keyframes tocorner {
   0% { transform: translate(-70px, -70px); }
   100% { transform: translate(0, 0); }
+}
+
+#entity-upload {
+  .backdrop {
+    opacity: 0.27;
+    pointer-events: none;
+  }
 }
 
 #entity-upload-popups {
