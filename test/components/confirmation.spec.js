@@ -1,7 +1,10 @@
 import Confirmation from '../../src/components/confirmation.vue';
 
+import useRequest from '../../src/composables/request';
+import { noop } from '../../src/util/util';
+
 import { mergeMountOptions, mount } from '../util/lifecycle';
-import { assertStandardButton } from '../util/http/common';
+import { mockHttp } from '../util/http';
 
 const mountComponent = (options = undefined) =>
   mount(Confirmation, mergeMountOptions(options, {
@@ -42,20 +45,31 @@ describe('Confirmation', () => {
     text.should.equal('Custom No Text');
   });
 
-  it('should not hide on ESC when awaitingResponse', async () => {
-    const component = mountComponent({ props: { awaitingResponse: true } });
-    await component.trigger('keydown.esc');
-    component.emitted().should.not.have.property('hide');
-  });
-
-  it('should disable all action buttons when awaitingResponse', async () => {
-    const component = mountComponent({ props: { awaitingResponse: true } });
-    assertStandardButton(component, '.btn-primary', ['.btn-link', '.close'], null, true);
-  });
-
   it('should emit success on yes button', async () => {
     const component = mountComponent();
     await component.get('.btn-primary').trigger('click');
     component.emitted().should.have.property('success');
+  });
+
+  it('implements some standard button things', () => {
+    const Parent = {
+      template: `<confirmation :state="true" title="Some Title"
+        :awaiting-response="awaitingResponse" @success="deleteProject"/>`,
+      components: { Confirmation },
+      setup() {
+        const { request, awaitingResponse } = useRequest();
+        const deleteProject = () => {
+          request({ method: 'DELETE', url: '/v1/projects/1' }).catch(noop);
+        };
+        return { deleteProject, awaitingResponse };
+      }
+    };
+    return mockHttp()
+      .mount(Parent)
+      .testStandardButton({
+        button: '.btn-primary',
+        disabled: ['.btn-link'],
+        modal: Confirmation
+      });
   });
 });
