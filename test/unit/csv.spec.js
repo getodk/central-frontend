@@ -21,10 +21,24 @@ describe('util/csv', () => {
       columns.should.eql(['a']);
     });
 
-    it('returns an error for a missing quote', async () => {
-      const { errors } = await parseCSVHeader(i18n, createCSV('"a\n1'));
-      errors.length.should.equal(1);
-      errors[0].code.should.equal('MissingQuotes');
+    describe('error', () => {
+      it('returns an error for a missing quote', async () => {
+        const { errors } = await parseCSVHeader(i18n, createCSV('"a\n1'));
+        errors.length.should.equal(1);
+        errors[0].code.should.equal('MissingQuotes');
+      });
+
+      it('returns values along with errors', async () => {
+        const { columns } = await parseCSVHeader(i18n, createCSV('"a\n1'));
+        columns.should.eql(['a\n1']);
+      });
+
+      it('returns trailing empty cells', async () => {
+        const csv = createCSV('a,"b"c",');
+        const { errors, columns } = await parseCSVHeader(i18n, csv);
+        errors.length.should.equal(1);
+        columns.should.eql(['a', 'b"c', '']);
+      });
     });
 
     describe('abort signal', () => {
@@ -51,6 +65,14 @@ describe('util/csv', () => {
       const csv = createCSV('a,b\n1,2\n"3,4","5\n6"');
       const { data } = await parseCSV(i18n, csv, ['a', 'b']);
       data.should.eql([['1', '2'], ['3,4', '5\n6']]);
+    });
+
+    it('returns to start of file after parseCSVHeader() is called', async () => {
+      const csv = createCSV('a,b\n1,2\n3,4');
+      const { columns } = await parseCSVHeader(i18n, csv);
+      columns.should.eql(['a', 'b']);
+      const { data } = await parseCSV(i18n, csv, columns);
+      data.should.eql([['1', '2'], ['3', '4']]);
     });
 
     describe('number of cells', () => {
@@ -185,7 +207,7 @@ describe('util/csv', () => {
     });
 
     it('truncates the string if there are too many elements', () => {
-      formatCSVRow(['1', '2', '3'], { maxLength: 2 }).should.eql('1,2,…');
+      formatCSVRow(['1', '2', '3', '4'], { maxLength: 2 }).should.eql('1,2,…');
     });
 
     it('truncates the string if it is too large', () => {

@@ -48,7 +48,8 @@ const promiseParse = (i18n, file, signal = mockSignal(), papaOptions = {}) => {
       complete: (maybeResults) => {
         removeAbortListener();
         if (!(hasError || signal.aborted)) resolve(maybeResults);
-      }
+      },
+      ...papaOptions
     };
     const streamOption = 'step' in papaOptions
       ? 'step'
