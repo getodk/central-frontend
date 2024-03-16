@@ -222,17 +222,20 @@ export const standardEntities = view(entities, (entity) =>
   omit(['creator'], combineEntityWithVersions(entity)));
 
 // Converts entity response objects to OData.
-export const entityOData = (top = 250, skip = 0) => {
+export const entityOData = (top = 250, skip = 0, asc = false) => {
   if (extendedDatasets.size === 0) throw new Error('dataset not found');
   // There needs to be exactly one dataset for us to be able to identify the
   // correct one.
   if (extendedDatasets.size > 1) throw new Error('too many datasets');
-  const { properties } = extendedDatasets.last();
 
+  const sorted = extendedEntities.sorted();
+  if (asc) sorted.reverse();
+
+  const { properties } = extendedDatasets.last();
   return {
     '@odata.count': extendedEntities.size,
     '@odata.nextLink': top > 0 && (top + skip < extendedEntities.size) ? `https://test/Entities?$top=${top}&$skipToken=thetoken` : undefined,
-    value: extendedEntities.sorted().slice(skip, skip + top).map(entity => {
+    value: sorted.slice(skip, skip + top).map(entity => {
       const result = {
         label: entity.currentVersion.label,
         __id: entity.uuid,

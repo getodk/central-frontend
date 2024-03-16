@@ -2,22 +2,26 @@ import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import OdataLoadingMessage from '../../../src/components/odata-loading-message.vue';
 
+import { queryString } from '../../../src/util/request';
+
 import testData from '../../data';
 import { mockHttp, load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mount } from '../../util/lifecycle';
 import { setFiles } from '../../util/trigger';
 
-const mountOptions = () => {
+const showModal = () => {
   const dataset = testData.extendedDatasets.last();
-  return {
-    props: { state: true },
-    container: {
-      requestData: { dataset }
-    }
-  };
+  return mockHttp()
+    .mount(EntityUpload, {
+      container: {
+        requestData: { dataset }
+      }
+    })
+    .request(modal => modal.setProps({ state: true }))
+    .modify(series => (dataset.entities !== 0
+      ? series.respondWithData(() => testData.entityOData(5, 0, true))
+      : series));
 };
-const mountComponent = () => mount(EntityUpload, mountOptions());
 const csv = (text = 'label\ndogwood') => new File([text], 'my_data.csv');
 
 describe('EntityUpload', () => {
@@ -43,13 +47,44 @@ describe('EntityUpload', () => {
     button.exists().should.be.false();
   });
 
+  describe('request for server data', () => {
+    it('sends the correct request', () => {
+      testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
+      testData.extendedEntities.createPast(1);
+      const qs = queryString({ $orderby: '__system/createdAt asc', $top: 5 });
+      return showModal().testRequests([
+        { url: `/v1/projects/1/datasets/%C3%A1.svc/Entities${qs}` }
+      ]);
+    });
+
+    it('does not send a request if there are no entities', () => {
+      testData.extendedDatasets.createPast(1);
+      return showModal().testNoRequest();
+    });
+
+    it('sends a new request if the modal is hidden, then shown again', () => {
+      testData.extendedEntities.createPast(1);
+      const qs = queryString({ $orderby: '__system/createdAt asc', $top: 5 });
+      return showModal()
+        .complete()
+        .request(async (modal) => {
+          await modal.setProps({ state: false });
+          await modal.setProps({ state: true });
+        })
+        .respondWithData(() => testData.entityOData(5, 0, true))
+        .testRequests([
+          { url: `/v1/projects/1/datasets/trees.svc/Entities${qs}` }
+        ]);
+    });
+  });
+
   describe('after a file is selected', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1);
     });
 
     it('shows the pop-up', async () => {
-      const modal = mountComponent();
+      const modal = await showModal();
       await setFiles(modal.get('input'), [csv()]);
       const popup = modal.getComponent(EntityUploadPopup);
       popup.props().filename.should.equal('my_data.csv');
@@ -57,7 +92,7 @@ describe('EntityUpload', () => {
     });
 
     it('hides the drop zone', async () => {
-      const modal = mountComponent();
+      const modal = await showModal();
       const dropZone = modal.get('#entity-upload-file-select');
       dropZone.should.be.visible();
       await setFiles(dropZone.get('input'), [csv()]);
@@ -65,7 +100,7 @@ describe('EntityUpload', () => {
     });
 
     it('enables the append button', async () => {
-      const modal = mountComponent();
+      const modal = await showModal();
       const button = modal.get('.modal-actions .btn-primary');
       button.attributes('aria-disabled').should.equal('true');
       await setFiles(modal.get('input'), [csv()]);
@@ -73,7 +108,7 @@ describe('EntityUpload', () => {
     });
 
     it('resets after the clear button is clicked', async () => {
-      const modal = mountComponent();
+      const modal = await showModal();
       await setFiles(modal.get('input'), [csv()]);
       await modal.get('#entity-upload-popup .close').trigger('click');
       modal.findComponent(EntityUploadPopup).exists().should.be.false();
@@ -83,7 +118,7 @@ describe('EntityUpload', () => {
     });
 
     it('resets after the modal is hidden', async () => {
-      const modal = mountComponent();
+      const modal = await showModal();
       await setFiles(modal.get('input'), [csv()]);
       await modal.setProps({ state: false });
       await modal.setProps({ state: true });
@@ -96,8 +131,8 @@ describe('EntityUpload', () => {
 
   it('sends the correct upload request', () => {
     testData.extendedDatasets.createPast(1, { name: 'á' });
-    return mockHttp()
-      .mount(EntityUpload, mountOptions())
+    return showModal()
+      .complete()
       .request(async (modal) => {
         await setFiles(modal.get('input'), [csv()]);
         return modal.get('.modal-actions .btn-primary').trigger('click');
@@ -115,8 +150,7 @@ describe('EntityUpload', () => {
 
   it('implements some standard button things', () => {
     testData.extendedDatasets.createPast(1);
-    return mockHttp()
-      .mount(EntityUpload, mountOptions())
+    return showModal()
       .afterResponses(modal => setFiles(modal.get('input'), [csv()]))
       .testStandardButton({
         button: '.modal-actions .btn-primary',
@@ -128,10 +162,11 @@ describe('EntityUpload', () => {
 
   it('shows a backdrop during the request', () => {
     testData.extendedDatasets.createPast(1);
-    return mockHttp()
-      .mount(EntityUpload, mountOptions())
-      .request(async (modal) => {
+    return showModal()
+      .afterResponses(modal => {
         modal.find('.backdrop').exists().should.be.false();
+      })
+      .request(async (modal) => {
         await setFiles(modal.get('input'), [csv()]);
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
