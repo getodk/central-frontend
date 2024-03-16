@@ -160,10 +160,12 @@ export default {
     }
   },
   watch: {
-    odataFilter: 'refreshWithClear'
+    odataFilter() {
+      this.fetchChunk(true);
+    }
   },
   created() {
-    this.refreshWithClear();
+    this.fetchChunk(true);
   },
   mounted() {
     document.addEventListener('scroll', this.afterScroll);
@@ -199,8 +201,13 @@ export default {
         .catch(noop);
     },
     // This method is called directly by DatasetEntities.
-    refreshWithClear() {
-      this.fetchChunk(true);
+    reset() {
+      if (this.odataFilter == null)
+        this.fetchChunk(true);
+      else
+        // This change will cause the watcher on this.odataFilter to fetch
+        // entities.
+        this.conflict = [true, false];
     },
     showUpdate(index) {
       if (this.refreshing) return;

@@ -1,3 +1,4 @@
+import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import OdataLoadingMessage from '../../../src/components/odata-loading-message.vue';
@@ -180,9 +181,12 @@ describe('EntityUpload', () => {
   });
 
   describe('after a successful upload', () => {
-    const upload = () => {
+    const upload = (query = '') => {
+      mockLogin();
       testData.extendedDatasets.createPast(1);
-      return load('/projects/1/entity-lists/trees/entities', { root: false })
+      return load(`/projects/1/entity-lists/trees/entities${query}`, {
+        root: query !== ''
+      })
         .complete()
         .request(async (component) => {
           await component.get('#dataset-entities-upload-button').trigger('click');
@@ -223,6 +227,16 @@ describe('EntityUpload', () => {
         props.odata.awaitingResponse.should.be.true();
         props.refreshing.should.be.false();
         props.totalCount.should.equal(1);
+      }));
+
+    it('resets the filter', () =>
+      upload('?conflict=true').beforeEachResponse((app, { url }, i) => {
+        if (i === 0) return;
+        // There should be no $filter query parameter.
+        url.should.equal('/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true');
+        app.getComponent(OdataLoadingMessage).props().filter.should.be.false();
+        const filters = app.getComponent(EntityFilters).props();
+        filters.conflict.should.eql([true, false]);
       }));
   });
 });
