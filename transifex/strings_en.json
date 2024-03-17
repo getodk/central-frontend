@@ -912,6 +912,10 @@
         "string": "There is a problem on row {row} of the CSV file: {message}",
         "developer_comment": "{row} is a row number. {message} is a description of the problem."
       },
+      "invalidQuotes": {
+        "string": "A quoted field is invalid.",
+        "developer_comment": "This is an error that is shown for a CSV file. The field may be any cell in the file."
+      },
       "dataWithoutHeader": {
         "string": "{count, plural, one {Expected {expected} column, but found {actual}.} other {Expected {expected} columns, but found {actual}.}}",
         "developer_comment": "This is an error that is shown for a data file. {expected} and {actual} are each a number of columns. The string will be pluralized based on {expected}."

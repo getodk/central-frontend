@@ -436,6 +436,9 @@
       "readError": "There was a problem reading your CSV file: {message}",
       // {row} is a row number. {message} is a description of the problem.
       "rowError": "There is a problem on row {row} of the CSV file: {message}",
+      // This is an error that is shown for a CSV file. The field may be any
+      // cell in the file.
+      "invalidQuotes": "A quoted field is invalid.",
       // This is an error that is shown for a data file. {expected} and {actual}
       // are each a number of columns. The string will be pluralized based on
       // {expected}.

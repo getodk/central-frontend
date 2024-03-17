@@ -180,11 +180,17 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
   try {
     await promiseParse(i18n, file, signal, {
       chunk: ({ data: chunkData, errors }) => {
-        // I'm not sure that an error is actually possible here.
-        // UndectableDelimiter, TooFewFields, and TooManyFields shouldn't be
-        // possible. I've also only ever seen Papa Parse return a MissingQuotes
-        // or InvalidQuotes error for the header.
-        if (errors.length !== 0) throw errors[0];
+        if (errors.length !== 0) {
+          const error = errors[0];
+          // I think MissingQuotes and InvalidQuotes are the only errors that
+          // are possible here: UndetectableDelimiter, TooFewFields, and
+          // TooManyFields should not be possible.
+          const i18nError = new Error(error.type === 'Quotes'
+            ? i18n.t('util.csv.invalidQuotes')
+            : error.message);
+          i18nError.row = error.row;
+          throw i18nError;
+        }
 
         // Skip the header.
         if (rowIndex === 0) {
