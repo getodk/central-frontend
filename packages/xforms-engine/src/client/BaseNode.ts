@@ -87,6 +87,18 @@ export interface BaseNodeState {
 	get children(): readonly BaseNode[] | null;
 
 	/**
+	 * Certain kinds of nodes restrict their {@link value} to a specific set of
+	 * valid values. Where they do, they will provide a collection (typically an
+	 * array) of those values. This collection may be updated depending on other
+	 * aspects of form state, which is why it is treated as a part of the node's
+	 * state.
+	 *
+	 * Nodes which do not have this restriction (including nodes which cannot have
+	 * a value at all) will always produce `valueOptions: null`.
+	 */
+	get valueOptions(): unknown;
+
+	/**
 	 * Certain kinds of nodes store a value state. Where they do, they will
 	 * specify the type of the value directly.
 	 *

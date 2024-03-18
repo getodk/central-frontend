@@ -2,10 +2,7 @@
  * For clients providing a {@link OpaqueReactiveObjectFactory}, its argument
  * **MUST** be an object.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/ban-types
-export interface OpaqueReactiveObject extends Object {
-	[key: string]: unknown;
-}
+export type OpaqueReactiveObject = object;
 
 declare const WRAPPED_OPAQUE_REACTIVE_OBJECT_BRAND: unique symbol;
 
@@ -24,7 +21,7 @@ declare const WRAPPED_OPAQUE_REACTIVE_OBJECT_BRAND: unique symbol;
 // assigned `undefined` if it were hypothetically present. We know that it will
 // never be present, but the type-level possibility that it could is sufficient
 // for TypeScript to treat it as a distinct-but-compatible type to `T`.
-type WrappedOpaqueReactiveObject<T extends OpaqueReactiveObject> =
+export type WrappedOpaqueReactiveObject<T extends OpaqueReactiveObject> =
 	& T
 	& { readonly [WRAPPED_OPAQUE_REACTIVE_OBJECT_BRAND]?: undefined };
 

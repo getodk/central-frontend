@@ -7,12 +7,13 @@ import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 export interface GroupNodeState extends BaseNodeState {
 	get hint(): null;
 	get children(): readonly GeneralChildNode[];
+	get valueOptions(): null;
 	get value(): null;
 }
 
 // TODO: as with `SubtreeNode`'s `SubtreeDefinition`, there is a naming
 // inconsistency emerging here.
-interface GroupDefinition extends SubtreeDefinition {
+export interface GroupDefinition extends SubtreeDefinition {
 	readonly bodyElement: NonRepeatGroupElementDefinition;
 }
 

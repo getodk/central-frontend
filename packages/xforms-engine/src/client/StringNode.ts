@@ -5,6 +5,7 @@ import type { GeneralParentNode } from './hierarchy.ts';
 
 export interface StringNodeState extends BaseNodeState {
 	get children(): null;
+	get valueOptions(): null;
 
 	/**
 	 * Reflects the current value of a {@link StringNode}. This value may be

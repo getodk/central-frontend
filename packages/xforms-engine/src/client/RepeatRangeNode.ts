@@ -18,6 +18,7 @@ export interface RepeatRangeNodeState extends BaseNodeState {
 	 */
 	get children(): readonly RepeatInstanceNode[];
 
+	get valueOptions(): null;
 	get value(): null;
 }
 

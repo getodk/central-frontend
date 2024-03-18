@@ -7,11 +7,12 @@ export interface SubtreeNodeState extends BaseNodeState {
 	get label(): null;
 	get hint(): null;
 	get children(): readonly GeneralChildNode[];
+	get valueOptions(): null;
 	get value(): null;
 }
 
 // TODO: obviously there is a naming inconsistency emerging here.
-interface SubtreeDefinition extends BaseSubtreeDefinition {
+export interface SubtreeDefinition extends BaseSubtreeDefinition {
 	readonly bodyElement: null;
 }
 

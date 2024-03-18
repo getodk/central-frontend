@@ -21,7 +21,7 @@ type AnyLeafNode =
  * - Repeat instances should (continue to) specify {@link RepeatRangeNode}.
  * - All other child nodes should specify {@link GeneralParentNode}.
  */
-type AnyParentNode =
+export type AnyParentNode =
 	| RootNode // eslint-disable-line @typescript-eslint/sort-type-constituents
 	| SubtreeNode
 	| GroupNode
@@ -56,7 +56,7 @@ export type RepeatRangeChildNode = RepeatInstanceNode;
  * - All other parent nodes should specify {@link GeneralChildNode}.
  */
 // prettier-ignore
-type AnyChildNode = Exclude<AnyNode, RootNode>;
+export type AnyChildNode = Exclude<AnyNode, RootNode>;
 
 /**
  * Any of the concrete node types which may be a child of non-repeat range

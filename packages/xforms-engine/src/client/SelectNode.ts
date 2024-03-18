@@ -5,13 +5,18 @@ import type { StringNode } from './StringNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 
-interface SelectItem {
+export interface SelectItem {
 	get value(): string;
 	get label(): TextRange<'label'> | null;
 }
 
 export interface SelectNodeState extends BaseNodeState {
 	get children(): null;
+
+	/**
+	 * @todo should {@link BaseNodeState} include this??
+	 */
+	get valueOptions(): readonly SelectItem[];
 
 	/**
 	 * This value is treated as set-like by the engine, where each
