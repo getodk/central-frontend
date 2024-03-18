@@ -3,10 +3,9 @@ import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
+import { XFormsXPathEvaluator } from '../../index.ts';
 import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
 import { math2Alias, mathAlias, mathNAlias } from '../_shared/number.ts';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
-import { XFormsXPathEvaluator } from '../../index.ts';
 
 export const abs = mathAlias('abs');
 export const acos = mathAlias('acos');

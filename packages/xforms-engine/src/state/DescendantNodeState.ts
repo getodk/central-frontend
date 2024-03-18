@@ -20,7 +20,6 @@ import type {
 	StateNode,
 	ValueSignal,
 } from './NodeState.ts';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
 import type { ValueNodeState } from './ValueNodeState.ts';
 
 interface ReactiveEvaluationOptions {

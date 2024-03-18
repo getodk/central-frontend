@@ -1,11 +1,10 @@
 import type { Accessor, Signal } from 'solid-js';
+import type { BindDefinition } from '../model/BindDefinition.ts';
 import type {
 	NodeDefinition,
 	NodeDefinitionType,
 	TypedNodeDefinition,
 } from '../model/NodeDefinition.ts';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
-import type { BindDefinition } from '../model/BindDefinition.ts';
 import type { RepeatInstanceDefinition } from '../model/RepeatInstanceDefinition.ts';
 import type { RepeatTemplateDefinition } from '../model/RepeatTemplateDefinition.ts';
 import type { EntryState } from './EntryState.ts';

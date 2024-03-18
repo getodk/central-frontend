@@ -1,9 +1,9 @@
 /// <reference path="./base.d.ts" />
 
+type base = typeof import('eslint-plugin-vue/lib/configs/base.js');
+
 declare module 'eslint-plugin-vue/lib/configs/vue3-essential.js' {
 	import type { Linter } from 'eslint';
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced in JSDoc
-	import type base from 'eslint-plugin-vue/lib/configs/base.js';
 
 	interface ESLintPluginVue3Essential extends Linter.Config {
 		/**
