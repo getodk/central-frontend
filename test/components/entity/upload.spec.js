@@ -1,9 +1,11 @@
+import { DateTime } from 'luxon';
+
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import OdataLoadingMessage from '../../../src/components/odata-loading-message.vue';
 
-import { queryString } from '../../../src/util/request';
+import { relativeUrl } from '../../util/request';
 
 import testData from '../../data';
 import { mockHttp, load } from '../../util/http';
@@ -24,6 +26,12 @@ const showModal = () => {
       : series));
 };
 const csv = (text = 'label\ndogwood') => new File([text], 'my_data.csv');
+const parseFilterTime = (filter) => {
+  const match = filter.match(/^__system\/createdAt le (.+)/);
+  return match == null
+    ? NaN
+    : DateTime.fromISO(match[1]).toMillis();
+};
 
 describe('EntityUpload', () => {
   it('toggles the modal', () => {
@@ -52,10 +60,15 @@ describe('EntityUpload', () => {
     it('sends the correct request', () => {
       testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
       testData.extendedEntities.createPast(1);
-      const qs = queryString({ $orderby: '__system/createdAt asc', $top: 5 });
-      return showModal().testRequests([
-        { url: `/v1/projects/1/datasets/%C3%A1.svc/Entities${qs}` }
-      ]);
+      return showModal().beforeEachResponse((_, { url }) => {
+        url.should.startWith('/v1/projects/1/datasets/%C3%A1.svc/Entities?');
+        const params = relativeUrl(url).searchParams;
+        const millis = parseFilterTime(params.get('$filter'));
+        (Date.now() - millis).should.be.below(2000);
+        params.get('$top').should.equal('5');
+        params.get('$skip').should.equal('0');
+        params.get('$count').should.equal('true');
+      });
     });
 
     it('does not send a request if there are no entities', () => {
@@ -65,17 +78,25 @@ describe('EntityUpload', () => {
 
     it('sends a new request if the modal is hidden, then shown again', () => {
       testData.extendedEntities.createPast(1);
-      const qs = queryString({ $orderby: '__system/createdAt asc', $top: 5 });
+      let firstTime;
       return showModal()
+        .beforeEachResponse((_, { url }) => {
+          const params = relativeUrl(url).searchParams;
+          firstTime = parseFilterTime(params.get('$filter'));
+        })
         .complete()
         .request(async (modal) => {
           await modal.setProps({ state: false });
           await modal.setProps({ state: true });
         })
         .respondWithData(() => testData.entityOData(5, 0, true))
-        .testRequests([
-          { url: `/v1/projects/1/datasets/trees.svc/Entities${qs}` }
-        ]);
+        .beforeEachResponse((_, { url }) => {
+          url.should.startWith('/v1/projects/1/datasets/trees.svc/Entities?');
+          const params = relativeUrl(url).searchParams;
+          const millis = parseFilterTime(params.get('$filter'));
+          millis.should.be.above(firstTime);
+          (Date.now() - millis).should.be.below(2000);
+        });
     });
   });
 

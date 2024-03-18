@@ -46,6 +46,7 @@ const changeInput = (event) => {
 <style lang="scss">
 #entity-upload-file-select {
   border-radius: 5px;
+  margin-top: 27px;
   padding-bottom: 10px;
   padding-top: 10px;
   text-align: left;

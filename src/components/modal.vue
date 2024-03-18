@@ -71,7 +71,7 @@ export default {
     },
     backdrop: Boolean
   },
-  emits: ['shown', 'hide'],
+  emits: ['shown', 'hide', 'resize'],
   setup(props) {
     const alert = inject('alert');
     let oldAlertAt;
@@ -87,6 +87,7 @@ export default {
       // `true` if the modal vertically overflows the viewport, causing it to
       // scroll; `false` if not.
       hasScroll: false,
+      bodyHeight: 0,
       // The modal() method of the Boostrap plugin
       bs: null,
       observer: markRaw(new MutationObserver(() => {
@@ -139,8 +140,13 @@ export default {
       this.hasScroll = this.$el.scrollHeight > this.$el.clientHeight;
     },
     handleHeightChange() {
-      this.bs('handleUpdate');
-      this.checkScroll();
+      const newHeight = this.$refs.body.getBoundingClientRect().height;
+      if (newHeight !== this.bodyHeight) {
+        this.bs('handleUpdate');
+        this.checkScroll();
+        this.bodyHeight = newHeight;
+        this.$emit('resize', newHeight);
+      }
     },
     handleWindowResize() {
       // Most of the time, a window resize won't affect the height of the modal.
@@ -150,6 +156,8 @@ export default {
     show() {
       this.bs('show');
       this.checkScroll();
+      this.bodyHeight = this.$refs.body.getBoundingClientRect().height;
+      this.$emit('resize', this.bodyHeight);
       this.observer.observe(this.$refs.body, {
         subtree: true,
         childList: true,
@@ -241,11 +249,7 @@ export default {
   }
 }
 
-.modal-body {
-  padding: $padding-modal-body;
-
-  .form-group .form-control { background-color: $color-panel-input-background; }
-}
+.modal-body { padding: $padding-modal-body; }
 
 .modal-actions {
   background: $color-subpanel-background;

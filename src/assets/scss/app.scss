@@ -353,7 +353,7 @@ $form-group-padding-bottom: 15px;
 
   $form-control-z-index: 1;
   .form-control {
-    background: $color-input-background;
+    @include form-control-background;
     border: none;
     border-bottom: 1px solid $color-input-inactive;
     border-radius: 0;
@@ -576,6 +576,11 @@ tr.uncommitted-change { background-color: #ffef67; }
   }
 }
 
+.data-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .row-number {
   color: #999;
   font-size: 11px;
@@ -660,12 +665,6 @@ becomes more complicated.
     .panel-title {
       font-size: 18px;
       letter-spacing: -0.02em;
-    }
-  }
-
-  .panel-body {
-    .form-group .form-control {
-      background-color: $color-panel-input-background;
     }
   }
 }

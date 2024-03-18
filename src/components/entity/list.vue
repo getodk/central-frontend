@@ -61,6 +61,7 @@ import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
+import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -213,14 +214,8 @@ export default {
       if (this.refreshing) return;
       this.updateIndex = index;
       const odataEntity = this.odataEntities.value[index];
-      const data = Object.create(null);
-      for (const { name, odataName } of this.dataset.properties)
-        data[name] = odataEntity[odataName];
       this.update.show({
-        entity: {
-          uuid: odataEntity.__id,
-          currentVersion: { label: odataEntity.label, version: odataEntity.__system.version, data }
-        }
+        entity: odataEntityToRest(odataEntity, this.dataset.properties)
       });
     },
     hideUpdate() {

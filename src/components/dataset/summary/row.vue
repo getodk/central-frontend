@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ property.name }}</span>
         <span v-if="property.isNew" class="icon-plus-circle property-new" v-tooltip.sr-only></span>
         <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
-        <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma') }}<sentence-separator/></template>
+        <template v-if="index < inFormProperties.length - 1">{{ $t('punctuation.comma') }}<sentence-separator/></template>
       </span>
       <span v-if="inFormProperties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
     </div>

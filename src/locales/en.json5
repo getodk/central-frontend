@@ -350,6 +350,12 @@
     "noEntity": "(none)",
     "conflictsCount": "{count} conflict | {count} conflicts"
   },
+  "punctuation": {
+    // @transifexKey common.punctuations.comma
+    "comma": ",",
+    // This is a range of numbers. {start} and {end} are numbers.
+    "range": "{start}-{end}"
+  },
   "common": {
     // This is a title shown above a section of the page.
     "activity": "Activity",
@@ -400,9 +406,6 @@
     },
     "total": "Total",
     "totalSubmissions": "Total Submissions",
-    "punctuations": {
-      "comma": ","
-    },
     // {inform} is the number of Entity Properties defined by the form.
     // {count} is the total number of Properties. The string will be pluralized based on {count}.
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",

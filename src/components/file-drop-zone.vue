@@ -74,8 +74,8 @@ const dragging = computed(() => depth.value !== 0);
 @import '../assets/scss/mixins';
 
 .file-drop-zone.styled {
+  @include form-control-background;
   @include clearfix;
-  background-color: $color-panel-input-background;
   border: 1px dashed $color-subpanel-border;
   padding: $padding-file-drop-zone;
   text-align: center;
