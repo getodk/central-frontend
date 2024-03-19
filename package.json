@@ -26,6 +26,7 @@
     "luxon": "~1",
     "marked": "~4",
     "pako": "~1.0",
+    "papaparse": "^5.4.1",
     "pinia": "^2.0.23",
     "qrcode-generator": "~1",
     "ramda": "~0.27",
