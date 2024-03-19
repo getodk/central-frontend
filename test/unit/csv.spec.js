@@ -78,17 +78,17 @@ describe('util/csv', () => {
     describe('quote error', () => {
       it('returns a rejected promise', () => {
         const promise = parseCSV(i18n, createCSV('a\n"1"2"'), ['a']);
-        return promise.should.be.rejectedWith('There is a problem on row 2 of the CSV file: A quoted field is invalid.');
+        return promise.should.be.rejectedWith('There is a problem on row 2 of the CSV file: A quoted field is invalid. Check the row to see if there are any unusual values.');
       });
 
       it('indicates correct row number if error is not in first row', () => {
         const promise = parseCSV(i18n, createCSV('a\n1\n"2"3"'), ['a']);
-        return promise.should.be.rejectedWith('There is a problem on row 3 of the CSV file: A quoted field is invalid.');
+        return promise.should.be.rejectedWith(/^There is a problem on row 3 /);
       });
 
       it('indicates the first row with an error', () => {
         const promise = parseCSV(i18n, createCSV('a\n"1"2"\n"3"4"'), ['a']);
-        return promise.should.be.rejectedWith('There is a problem on row 2 of the CSV file: A quoted field is invalid.');
+        return promise.should.be.rejectedWith(/^There is a problem on row 2 /);
       });
     });
 

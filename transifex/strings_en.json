@@ -913,7 +913,7 @@
         "developer_comment": "{row} is a row number. {message} is a description of the problem."
       },
       "invalidQuotes": {
-        "string": "A quoted field is invalid.",
+        "string": "A quoted field is invalid. Check the row to see if there are any unusual values.",
         "developer_comment": "This is an error that is shown for a CSV file. The field may be any cell in the file."
       },
       "dataWithoutHeader": {

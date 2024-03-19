@@ -222,7 +222,7 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
 
 // truncateRow() truncates an array of strings, returning a new array whose
 // number of elements and combined size do not exceed the maximum.
-const truncateRow = (values, { maxLength = 100000, maxSize = 1000000 }) => {
+const truncateRow = (values, { maxLength = 10000, maxSize = 10000 }) => {
   // The length of the truncated array
   let length = 0;
   const minMaxLength = Math.min(values.length, maxLength);
