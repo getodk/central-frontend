@@ -77,6 +77,7 @@ const dragging = computed(() => depth.value !== 0);
   @include form-control-background;
   @include clearfix;
   border: 1px dashed $color-subpanel-border;
+  margin-bottom: 20px;
   padding: $padding-file-drop-zone;
   text-align: center;
 

@@ -18,7 +18,10 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 defineProps({
   // Determines whether the spinner is shown or not.
-  state: Boolean,
+  state: {
+    type: Boolean,
+    default: true
+  },
   /* By default, a spinner is positioned in the center of its closest positioned
   ancestor. However, in some cases, a spinner should not be positioned and
   should be rendered inline. A spinner is sometimes rendered inline

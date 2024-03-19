@@ -169,7 +169,7 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
         expected: i18n.n(columns.length, 'default'),
         actual: i18n.n(values.length, 'default')
       };
-      throw new Error(i18n.t('util.csv.dataWithoutHeader', counts, columns.length));
+      throw new Error(i18n.tc('util.csv.dataWithoutHeader', columns.length, counts));
     }
 
     data.push(transformRow(values, columns));

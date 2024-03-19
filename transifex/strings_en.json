@@ -1981,14 +1981,22 @@
           "string": "Data to import"
         }
       },
-      "headersNote": {
-        "string": "The first row in your data file must exactly match the table header you see above."
-      },
       "action": {
         "append": {
           "string": "Append data",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "alert": {
+        "blankLabel": {
+          "string": "The label is missing."
+        },
+        "noCSVData": {
+          "string": "Your CSV file does not contain any data."
+        }
+      },
+      "headersNote": {
+        "string": "The first row in your data file must exactly match the table header you see above."
       }
     },
     "EntityUploadDataTemplate": {
@@ -2003,6 +2011,33 @@
         }
       }
     },
+    "EntityUploadErrors": {
+      "expectedHeader": {
+        "string": "Expected header"
+      },
+      "suggestions": {
+        "title": {
+          "string": "Suggestions",
+          "developer_comment": "Suggestions to fix an error"
+        },
+        "invalidQuotes": {
+          "string": "A quoted field is invalid. Check the header row of your CSV file to see if there are any unusual values."
+        },
+        "missingLabel": {
+          "string": "A {label} property is required. The label indicates the name to use for each Entity throughout Central and elsewhere.",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "unknownProperty": {
+          "string": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property."
+        },
+        "duplicateColumn": {
+          "string": "It looks like two or more columns have the same header. Please make sure column headers are unique."
+        },
+        "emptyColumn": {
+          "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your CSV file."
+        }
+      }
+    },
     "EntityUploadFileSelect": {
       "text": {
         "full": {
@@ -2013,6 +2048,9 @@
           "string": "choose one",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
         }
+      },
+      "parsing": {
+        "string": "Reading data…"
       }
     },
     "EntityUploadPopup": {

@@ -11,6 +11,7 @@ import testData from '../../data';
 import { mockHttp, load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { setFiles } from '../../util/trigger';
+import { waitUntil } from '../../util/util';
 
 const showModal = () => {
   const dataset = testData.extendedDatasets.last();
@@ -32,6 +33,12 @@ const parseFilterTime = (filter) => {
     ? NaN
     : DateTime.fromISO(match[1]).toMillis();
 };
+const selectFile = async (modal, file = csv()) => {
+  if (modal.element.id !== 'entity-upload')
+    throw new Error('expected EntityUpload');
+  await setFiles(modal.get('input'), [file]);
+  return waitUntil(() => !modal.vm.parsing);
+};
 
 describe('EntityUpload', () => {
   it('toggles the modal', () => {
@@ -41,7 +48,7 @@ describe('EntityUpload', () => {
       .testModalToggles({
         modal: EntityUpload,
         show: '#dataset-entities-upload-button',
-        hide: '.btn-link'
+        hide: '.modal-actions .btn-link'
       });
   });
 
@@ -107,7 +114,7 @@ describe('EntityUpload', () => {
 
     it('shows the pop-up', async () => {
       const modal = await showModal();
-      await setFiles(modal.get('input'), [csv()]);
+      await selectFile(modal);
       const popup = modal.getComponent(EntityUploadPopup);
       popup.props().filename.should.equal('my_data.csv');
       popup.props().count.should.equal(1);
@@ -117,7 +124,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       const dropZone = modal.get('#entity-upload-file-select');
       dropZone.should.be.visible();
-      await setFiles(dropZone.get('input'), [csv()]);
+      await selectFile(modal);
       dropZone.should.be.hidden();
     });
 
@@ -125,13 +132,13 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       const button = modal.get('.modal-actions .btn-primary');
       button.attributes('aria-disabled').should.equal('true');
-      await setFiles(modal.get('input'), [csv()]);
+      await selectFile(modal);
       button.attributes('aria-disabled').should.equal('false');
     });
 
     it('resets after the clear button is clicked', async () => {
       const modal = await showModal();
-      await setFiles(modal.get('input'), [csv()]);
+      await selectFile(modal);
       await modal.get('#entity-upload-popup .close').trigger('click');
       modal.findComponent(EntityUploadPopup).exists().should.be.false();
       modal.get('#entity-upload-file-select').should.be.visible();
@@ -141,7 +148,7 @@ describe('EntityUpload', () => {
 
     it('resets after the modal is hidden', async () => {
       const modal = await showModal();
-      await setFiles(modal.get('input'), [csv()]);
+      await selectFile(modal);
       await modal.setProps({ state: false });
       await modal.setProps({ state: true });
       modal.findComponent(EntityUploadPopup).exists().should.be.false();
@@ -156,7 +163,7 @@ describe('EntityUpload', () => {
     return showModal()
       .complete()
       .request(async (modal) => {
-        await setFiles(modal.get('input'), [csv()]);
+        await selectFile(modal);
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
       .respondWithProblem()
@@ -165,7 +172,7 @@ describe('EntityUpload', () => {
         url: '/v1/projects/1/datasets/%C3%A1/entities',
         data: {
           source: { name: 'my_data.csv', size: 13 },
-          entities: []
+          entities: [{ label: 'dogwood' }]
         }
       }]);
   });
@@ -173,10 +180,10 @@ describe('EntityUpload', () => {
   it('implements some standard button things', () => {
     testData.extendedDatasets.createPast(1);
     return showModal()
-      .afterResponses(modal => setFiles(modal.get('input'), [csv()]))
+      .afterResponses(selectFile)
       .testStandardButton({
         button: '.modal-actions .btn-primary',
-        disabled: ['.btn-link'],
+        disabled: ['.modal-actions .btn-link'],
         modal: true,
         spinner: false
       });
@@ -189,7 +196,7 @@ describe('EntityUpload', () => {
         modal.find('.backdrop').exists().should.be.false();
       })
       .request(async (modal) => {
-        await setFiles(modal.get('input'), [csv()]);
+        await selectFile(modal);
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
       .beforeAnyResponse(modal => {
@@ -212,7 +219,7 @@ describe('EntityUpload', () => {
         .request(async (component) => {
           await component.get('#dataset-entities-upload-button').trigger('click');
           const modal = component.getComponent(EntityUpload);
-          await setFiles(modal.get('input'), [csv()]);
+          await selectFile(modal);
           return modal.get('.modal-actions .btn-primary').trigger('click');
         })
         .respondWithSuccess()
