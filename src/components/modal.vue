@@ -9,8 +9,12 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- This component should not use v-bind:class on the .modal element. Bootstrap
+may add the `in` class to the element, and the checkScroll() method may add the
+`has-scroll` class. -->
 <template>
-  <div class="modal" :class="{ 'has-scroll': hasScroll }" tabindex="-1"
+  <div class="modal" tabindex="-1"
     :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
     role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
     @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
@@ -71,7 +75,7 @@ export default {
     },
     backdrop: Boolean
   },
-  emits: ['shown', 'hide', 'resize'],
+  emits: ['shown', 'hide', 'resize', 'mutate'],
   setup(props) {
     const alert = inject('alert');
     let oldAlertAt;
@@ -84,14 +88,14 @@ export default {
     id += 1;
     return {
       id,
-      // `true` if the modal vertically overflows the viewport, causing it to
-      // scroll; `false` if not.
-      hasScroll: false,
       bodyHeight: 0,
       // The modal() method of the Boostrap plugin
       bs: null,
       observer: markRaw(new MutationObserver(() => {
-        if (this.state) this.handleHeightChange();
+        if (this.state) {
+          this.handleHeightChange();
+          this.$emit('mutate');
+        }
       })),
       mousedownOutsideDialog: false
     };
@@ -136,14 +140,29 @@ export default {
     if (this.state) this.hide();
   },
   methods: {
+    // checkScroll() checks whether the modal vertically overflows the viewport,
+    // causing it to scroll. The method toggles the has-scroll class based on
+    // whether the modal overflows.
     checkScroll() {
-      this.hasScroll = this.$el.scrollHeight > this.$el.clientHeight;
+      /* Before checking whether the modal overflows the viewport, we add the
+      has-scroll class. The default assumption is that the modal may
+      overflow. It's necessary to add the class, because if the modal currently
+      doesn't have the class, and its content has just changed, it could be that
+      its content doesn't overflow the viewport, yet does flow underneath
+      .modal-actions. In that case, once we add the class, .modal-actions will
+      be repositioned, and the content will start to overflow the viewport: the
+      modal will be allowed to scroll as it should. */
+      this.$el.classList.add('has-scroll');
+      if (this.$el.scrollHeight === this.$el.clientHeight)
+        this.$el.classList.remove('has-scroll');
     },
     handleHeightChange() {
+      // Call checkScroll() before measuring the height, as the has-scroll class
+      // can affect the height.
+      this.checkScroll();
       const newHeight = this.$refs.body.getBoundingClientRect().height;
       if (newHeight !== this.bodyHeight) {
         this.bs('handleUpdate');
-        this.checkScroll();
         this.bodyHeight = newHeight;
         this.$emit('resize', newHeight);
       }
@@ -170,7 +189,9 @@ export default {
     hide() {
       this.observer.disconnect();
       this.bs('hide');
-      this.hasScroll = false;
+      this.$el.classList.remove('has-scroll');
+      this.bodyHeight = 0;
+      this.$emit('resize', 0);
       window.removeEventListener('resize', this.handleWindowResize);
 
       const selection = getSelection();

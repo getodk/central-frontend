@@ -10,41 +10,44 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="entity-upload-table panel panel-simple">
-    <div class="panel-heading"><h1 class="panel-title">{{ title }}</h1></div>
+  <div class="entity-upload-table panel panel-simple"
+    :class="{ 'overlaps-popups': overlapsPopups }">
+    <div class="panel-heading">
+      <h1 class="panel-title" v-tooltip.text>{{ title }}</h1>
+    </div>
     <div class="panel-body">
       <div ref="container" class="table-container"
-      :style="{ minHeight, maxHeight: px(maxHeight) }">
-      <table class="table">
-        <thead>
-          <tr>
-            <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
-            <th>label</th>
-            <th v-for="{ name } of dataset.properties" :key="name" v-tooltip.text>
-              {{ name }}
-            </th>
-          </tr>
-        </thead>
-        <tbody v-if="entities != null && entities.length !== 0"
-          :class="{ 'data-loading': awaitingResponse }">
-          <tr v-for="(entity, entityIndex) of entities" :key="entityIndex">
-            <td class="row-number">
-              {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
-            </td>
-            <td v-tooltip.text>{{ entity.label }}</td>
-            <td v-for="{ name } of dataset.properties" :key="name" v-tooltip.text>
-              {{ entity.data[name] }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        :style="{ minHeight, maxHeight: px(maxHeight) }">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
+              <th>label</th>
+              <th v-for="{ name } of dataset.properties" :key="name">
+                <div v-tooltip.text>{{ name }}</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody v-if="entities != null && entities.length !== 0"
+            :class="{ 'data-loading': awaitingResponse }">
+            <tr v-for="(entity, entityIndex) of entities" :key="entityIndex">
+              <td class="row-number">
+                {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
+              </td>
+              <td><div v-tooltip.text>{{ entity.label }}</div></td>
+              <td v-for="{ name } of dataset.properties" :key="name">
+                <div v-tooltip.text>{{ entity.data[name] }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { nextTick, ref, watchEffect } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 
 import { px } from '../../../util/dom';
 import { useRequestData } from '../../../request-data';
@@ -58,6 +61,7 @@ const props = defineProps({
     required: true
   },
   entities: Array,
+  // The 0-indexed row number of the first row of the table
   rowIndex: Number,
   pageSize: {
     type: Number,
@@ -77,38 +81,42 @@ const { dataset } = useRequestData();
 // Prevent the table container from shrinking on the last page.
 const container = ref(null);
 const minHeight = ref('auto');
-watchEffect(() => {
-  if (props.awaitingResponse) return;
-  if (props.entities != null && props.entities.length !== 0 &&
-    props.entities.length < props.pageSize) {
-    nextTick(() => {
-      const containerHeight = container.value.getBoundingClientRect().height;
-      const firstRow = container.value.querySelector('tbody tr');
-      const rowHeight = firstRow.getBoundingClientRect().height;
-      minHeight.value = px(Math.min(
-        containerHeight + rowHeight * (props.pageSize - props.entities.length),
-        props.maxHeight
-      ));
-    });
-  } else {
+// The page size and height of the last full page that was rendered
+const lastFullPage = { size: 0, height: 0 };
+watch(() => props.entities, () => {
+  if (props.entities == null) {
     minHeight.value = 'auto';
+    Object.assign(lastFullPage, { size: 0, height: 0 });
+  } else if (props.entities.length === props.pageSize) {
+    minHeight.value = 'auto';
+    nextTick(() => {
+      lastFullPage.size = props.pageSize;
+      lastFullPage.height = container.value.getBoundingClientRect().height;
+    });
+  } else if (props.pageSize === lastFullPage.size) {
+    minHeight.value = px(lastFullPage.height);
   }
 });
 
+const overlapsPopups = ref(false);
 const resizeLastColumn = () => {
-  if (container.value.clientWidth === 0) return;
-
   // Undo previous resizing.
   const th = container.value.querySelector('th:last-child');
   th.style.width = '';
 
-  // Ensure that the column is not obscured by the pop-ups.
+  if (container.value.clientWidth === 0) {
+    overlapsPopups.value = false;
+    return;
+  }
+
+  // Check whether the column is obscured by the pop-ups.
   const popups = container.value.closest('.modal-body')
-    .querySelector('#entity-uploads-popups');
+    .querySelector('#entity-upload-popups');
   if (popups != null) {
     const popupsRect = popups.getBoundingClientRect();
     const containerRect = container.value.getBoundingClientRect();
-    if (popupsRect.top > containerRect.bottom) {
+    overlapsPopups.value = popupsRect.top < containerRect.bottom;
+    if (overlapsPopups.value) {
       const overlap = containerRect.right - popupsRect.left;
       // Adding 10px for some extra space between the column and the pop-up.
       th.style.width = px(th.clientWidth + overlap + 10);
@@ -122,17 +130,23 @@ const resizeLastColumn = () => {
   if (container.value.scrollWidth === container.value.clientWidth)
     th.style.width = 'auto';
 };
-defineExpose({ resizeLastColumn });
+
+const resetScroll = () => { container.value.scroll(0, 0); };
+
+defineExpose({ resizeLastColumn, resetScroll });
 </script>
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
 
 .entity-upload-table {
-  margin-bottom: $margin-bottom-table;
+  // The margin before text, e.g., the .empty-table-message
+  margin-bottom: 10px;
+  // The margin before the Pagination component or the next table
   &:has(tbody) { margin-bottom: 0; }
 
   .panel-heading {
+    @include text-overflow-ellipsis;
     background-color: #ccc;
     border-bottom: none;
   }
@@ -145,10 +159,20 @@ defineExpose({ resizeLastColumn });
     table-layout: fixed;
   }
 
-  th, td { @include text-overflow-ellipsis; }
+  $col-width: 160px;
+  th, td {
+    div { @include text-overflow-ellipsis; }
+  }
+  &.overlaps-popups {
+    th, td {
+      &:last-child div {
+        width: #{$col-width - $padding-left-table-data - $padding-right-table-data};
+      }
+    }
+  }
 
   th {
-    width: 160px;
+    width: $col-width;
     // Wide enough to fit a 6-digit number.
     &:first-child { width: 54px; }
   }
@@ -160,8 +184,6 @@ defineExpose({ resizeLastColumn });
 }
 
 .entity-upload-table ~ .entity-upload-table {
-  margin-top: 12px;
-
   .panel-heading {
     background-color: $color-action-background;
     color: #fff;
@@ -169,4 +191,9 @@ defineExpose({ resizeLastColumn });
 
   thead { background-color: #c5dfe7; }
 }
+
+// The margin after text, e.g., the .empty-table-message
+.entity-upload-table ~ .entity-upload-table { margin-top: 20px; }
+// The margin after the Pagination component
+.pagination ~ .entity-upload-table { margin-top: 12px; }
 </style>

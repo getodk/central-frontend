@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
       <label class="form-group">
         <select v-model="sizeModel" class="form-control">
           <option v-for="x of sizeOptions" :key="x" :value="x">
-            {{ $n(x, 'noGrouping') }}
+            {{ $n(x, 'default') }}
           </option>
         </select>
         <span>{{ $t('field.size') }}</span>
@@ -98,10 +98,10 @@ const pageRange = (page) => {
   const end = page < lastPage.value ? start + props.size - 1 : props.count;
   // `start` may equal `end` on the last page.
   return start === end
-    ? i18n.n(start, 'noGrouping')
+    ? i18n.n(start, 'default')
     : i18n.t('punctuation.range', {
-      start: i18n.n(start, 'noGrouping'),
-      end: i18n.n(end, 'noGrouping')
+      start: i18n.n(start, 'default'),
+      end: i18n.n(end, 'default')
     });
 };
 const options = computed(() => {
@@ -150,17 +150,17 @@ const sizeModel = computed({
 @import '../assets/scss/mixins';
 
 .pagination {
-  // Stretch the buttons in order to expand the click target.
-  align-items: stretch;
+  align-items: center;
   display: flex;
 
   .form-inline, .form-control { font-size: 12px; }
 
   .btn {
-    &, &:hover { color: $color-action-background; }
+    &:not([aria-disabled="true"]) {
+      &, &:hover { color: $color-action-background; }
+    }
 
-    // The button will be stretched, so it doesn't need vertical padding.
-    padding: 0 6px;
+    padding: 2px 6px;
     &:nth-child(1) { padding-left: 0; }
     &:nth-child(4) { padding-right: 0; }
   }

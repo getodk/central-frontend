@@ -11,7 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
-    backdrop @hide="$emit('hide')" @resize="setTableHeight">
+    backdrop @hide="$emit('hide')" @resize="setTableHeight"
+    @mutate="resizeColumnUnlessAnimating">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
@@ -51,7 +52,9 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.cancel') }}
         </button>
       </div>
-      <div v-if="file != null" id="entity-upload-popups">
+      <div v-if="file != null" id="entity-upload-popups"
+        @animationstart="animatePopup(true)"
+        @animationend="animatePopup(false)">
         <!-- TODO. Pass the actual count. -->
         <entity-upload-popup :filename="file.name" :count="1"
           :awaiting-response="uploading" :progress="uploadProgress"
@@ -76,7 +79,7 @@ import SentenceSeparator from '../sentence-separator.vue';
 import useEventListener from '../../composables/event-listener';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
+import { noop, throttle } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 
@@ -109,7 +112,10 @@ However, one downside of this approach is that if entities are deleted, it is
 possible for the table to have blank pages. */
 const serverPage = reactive({ count: 0, page: -1, size: defaultPageSize });
 let odataFilter;
-// The 0-indexed row number of the first entity of serverEntities.value
+// serverRow.value holds the 0-indexed row number of the first entity of
+// serverEntities.value. Usually, that will be the same as the first row of the
+// page (i.e., serverPage.page * serverPage.count). However, the two may differ
+// while a request for entities is in progress.
 const serverRow = ref(-1);
 watch(() => props.state, (state) => {
   if (state) {
@@ -117,10 +123,13 @@ watch(() => props.state, (state) => {
       serverPage.page = 0;
       const now = new Date().toISOString();
       odataFilter = `__system/createdAt le ${now}`;
+    } else {
+      serverEntities.data = { value: [] };
     }
   } else {
     serverEntities.reset();
     Object.assign(serverPage, { count: 0, page: -1, size: defaultPageSize });
+    odataFilter = null;
     serverRow.value = -1;
   }
 });
@@ -170,9 +179,23 @@ const upload = () => {
 
 // The max height of a table
 const tableHeight = ref(0);
-const setTableHeight = (heightOfModalBody) => {
-  tableHeight.value = heightOfModalBody / 2;
-};
+// Use throttle() to prevent a loop such that a change to the height of the
+// table changes the height of the modal, which changes the height of the table,
+// and so on.
+const setTableHeight = throttle(heightOfModalBody => {
+  tableHeight.value = heightOfModalBody === 0
+    ? 0
+    : Math.max(
+      Math.min(heightOfModalBody, document.documentElement.clientHeight) / 2,
+      250
+    );
+});
+
+const popupAnimating = ref(false);
+const animatePopup = (value) => { popupAnimating.value = value; };
+watch(file, (value) => {
+  if (value == null) popupAnimating.value = false;
+});
 
 // Resize the last column of the tables.
 const tables = [null, null];
@@ -180,9 +203,17 @@ const setTable = (i) => (el) => { tables[i] = el; };
 const resizeLastColumn = () => {
   for (const table of tables) table.resizeLastColumn();
 };
-watch([() => props.state, file], () => { nextTick(resizeLastColumn); });
-useEventListener(window, 'resize', () => {
-  if (props.state) resizeLastColumn();
+watch(() => props.state, () => { nextTick(resizeLastColumn); });
+watch(popupAnimating, (value) => { if (!value) resizeLastColumn(); });
+const resizeColumnUnlessAnimating = throttle(() => {
+  if (props.state && !popupAnimating.value) resizeLastColumn();
+});
+useEventListener(window, 'resize', resizeColumnUnlessAnimating);
+
+watch(() => props.state, (state) => {
+  if (!state) {
+    for (const table of tables) table.resetScroll();
+  }
 });
 </script>
 

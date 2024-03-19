@@ -74,6 +74,16 @@ describe('Modal', () => {
       await modal.setProps({ state: true });
       modal.should.not.alert();
     });
+
+    it('emits a resize event', () => {
+      const modal = mountComponent({
+        slots: {
+          body: { template: '<div id="div" style="height: 10px;"></div>' }
+        },
+        attachTo: document.body
+      });
+      modal.emitted().resize.should.eql([[40]]);
+    });
   });
 
   describe('after the state prop changes to false', () => {
@@ -104,23 +114,53 @@ describe('Modal', () => {
       await modal.setProps({ state: false });
       modal.should.alert();
     });
+
+    it('emits a resize event', async () => {
+      const modal = mountComponent({
+        slots: {
+          body: { template: '<div id="div" style="height: 10px;"></div>' }
+        },
+        attachTo: document.body
+      });
+      await modal.setProps({ state: false });
+      modal.emitted().resize.should.eql([[40], [0]]);
+    });
   });
 
-  // TODO
-  it.skip("updates the modal's position after its body changes", async () => {
-    const modal = mountComponent({
-      slots: {
-        body: { template: '<p>Some text</p>' }
-      },
-      attachTo: document.body
+  describe('height of the modal changes', () => {
+    it("updates the modal's position", async () => {
+      const modal = mountComponent({
+        slots: {
+          body: { template: '<div id="div" style="height: 10px;"></div>' }
+        },
+        attachTo: document.body
+      });
+      const bs = sinon.fake(modal.vm.bs);
+      modal.setData({ bs });
+
+      const div = modal.get('#div').element;
+      div.setAttribute('style', 'height: 20px;');
+      await nextTick();
+      bs.calledWith('handleUpdate').should.be.true();
+
+      // bs() should not called if the content of the modal changes, but its
+      // height stays the same.
+      div.textContent = 'Some text';
+      await nextTick();
+      bs.callCount.should.equal(1);
     });
-    const bs = sinon.fake(modal.vm.bs);
-    modal.setData({ bs });
-    modal.vm.$container.alert.info('Some alert');
-    await modal.vm.$nextTick();
-    modal.get('.modal-body p').element.textContent = 'New text';
-    await modal.vm.$nextTick();
-    bs.args.should.eql([['handleUpdate'], ['handleUpdate']]);
+
+    it('emits a resize event', async () => {
+      const modal = mountComponent({
+        slots: {
+          body: { template: '<div id="div" style="height: 10px;"></div>' }
+        },
+        attachTo: document.body
+      });
+      modal.get('#div').element.setAttribute('style', 'height: 20px;');
+      await nextTick();
+      modal.emitted().resize.should.eql([[40], [50]]);
+    });
   });
 
   describe('size prop', () => {
