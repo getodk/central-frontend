@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <button v-if="currentUser.can('dataset.create')"
           id="dataset-list-new-button" type="button" class="btn btn-primary"
           @click="newDatasetModal.show()">
-          <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+          <span class="icon-plus-circle"></span>{{ $t('createEntityList') }}
         </button>
       </template>
     </page-section>
@@ -35,11 +35,14 @@ except according to the terms contained in the LICENSE file.
     </div>
     <dataset-table/>
     <loading :state="datasets.initiallyLoading"/>
-    <dataset-new v-bind="newDatasetModal" @hide="newDatasetModal.hide()" @success="afterCreateDataset"/>
+    <dataset-new v-bind="newDatasetModal" :project-id="projectId" @hide="newDatasetModal.hide()" @success="afterCreateDataset"/>
   </div>
 </template>
 
 <script setup>
+import { inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import DatasetNew from './new.vue';
 import DatasetTable from './table.vue';
 import DocLink from '../doc-link.vue';
@@ -63,8 +66,13 @@ const props = defineProps({
   }
 });
 
-const { datasetPath } = useRoutes();
+const alert = inject('alert');
+
 const { currentUser, datasets } = useRequestData();
+const { datasetPath } = useRoutes();
+const router = useRouter();
+const { t } = useI18n();
+
 datasets.request({
   url: apiPaths.datasets(props.projectId),
   extended: true,
@@ -74,12 +82,10 @@ datasets.request({
 const newDatasetModal = modalData();
 
 const afterCreateDataset = (dataset) => {
-  console.log('new dataset made', dataset);
   newDatasetModal.hide();
-  const message = this.$t('alert.create');
-  this.alert.success(message);
-  //this.$router.push(datasetPath(props.projectId, dataset.name))
-  //  .then(() => { this.alert.success(message); });
+  const message = t('alert.create');
+  router.push(datasetPath(props.projectId, dataset.name))
+    .then(() => { alert.success(message); });
 };
 </script>
 
@@ -90,7 +96,13 @@ const afterCreateDataset = (dataset) => {
         // A brief introduction to Entities shown above Entity Lists for the current Project
         "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
         "Entities are created through form design and can be attached to any Form."
-      ]
+      ],
+      // This is the text of a button that is used to create a new Entity List
+      // It is shown next to a heading whose text is "Entity Lists".
+      "createEntityList": "New",
+      "alert": {
+        "create": "Your new Dataset has been successfully created."
+      }
     }
   }
 </i18n>

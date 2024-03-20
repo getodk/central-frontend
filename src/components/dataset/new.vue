@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="dataset-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')" @shown="$refs.name.focus()">
+    @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </div>
       <form @submit.prevent="submit">
-        <form-group ref="name" v-model.trim="name"
+        <form-group ref="name.value" v-model.trim="name"
           :placeholder="$t('field.name')" required autocomplete="off"/>
         <div class="modal-actions">
           <button type="submit" class="btn btn-primary"
@@ -40,56 +40,51 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
+import { ref, watch } from 'vue';
+
+import Modal from '../modal.vue';
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
-import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
-import { useRequestData } from '../../request-data';
 import { noop } from '../../util/util';
 
-export default {
-  name: 'DatasetNew',
-  components: { DocLink, FormGroup, Modal, Spinner },
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
+const { request, awaitingResponse } = useRequest();
+
+defineOptions({
+  name: 'DatasetNew'
+});
+const props = defineProps({
+  state: {
+    type: Boolean,
+    default: false
   },
-  emits: ['hide', 'success'],
-  setup() {
-    const { request, awaitingResponse } = useRequest();
-    const { project } = useRequestData();
-    return { project, request, awaitingResponse };
-  },
-  data() {
-    return {
-      name: ''
-    };
-  },
-  watch: {
-    state(state) {
-      if (!state) this.name = '';
-    }
-  },
-  methods: {
-    submit() {
-      this.request({
-        // TODO: change to apiPaths
-        method: 'POST',
-        url: `/v1/projects/${this.project.id}/datasets`,
-        data: { name: this.name }
-      })
-        .then(({ data }) => {
-          console.log('response data', data);
-          this.$emit('success', data);
-        })
-        .catch(noop);
-    }
+  projectId: {
+    type: String,
+    required: true
   }
+});
+const name = ref('');
+
+const emit = defineEmits(['hide', 'success']);
+
+watch(() => props.state, (state) => {
+  if (!state) name.value = '';
+});
+
+const submit = () => {
+  request({
+    // TODO: change to apiPaths
+    method: 'POST',
+    url: `/v1/projects/${props.projectId}/datasets`,
+    data: { name: name.value }
+  })
+    .then(({ data }) => {
+      emit('success', data);
+    })
+    .catch(noop);
 };
 </script>
 
@@ -99,7 +94,7 @@ export default {
     // This is the title at the top of a pop-up.
     "title": "Create Dataset",
     "introduction": [
-      "TODO ... introduction about datasets"
+      "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps."
     ]
   }
 }
