@@ -1,5 +1,4 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { EngineConfig } from '../client/EngineConfig.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode, RootNodeState } from '../client/RootNode.ts';
 import type { RootDefinition } from '../model/RootDefinition.ts';
@@ -7,6 +6,7 @@ import type { InstanceNodeState } from './abstract/InstanceNode.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
+import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
 interface RootState extends RootNodeState, InstanceNodeState {
@@ -29,8 +29,8 @@ export abstract class Root
 
 	abstract readonly languages: FormLanguages;
 
-	constructor(form: XFormDefinition, _engineConfig: EngineConfig) {
-		super(form.model.root);
+	constructor(form: XFormDefinition, engineConfig: InstanceConfig) {
+		super(engineConfig, form.model.root);
 	}
 
 	// RootNode

@@ -45,7 +45,7 @@ export abstract class DescendantNode<
 		override readonly parent: DescendantNodeParent<Definition>,
 		override readonly definition: Definition
 	) {
-		super(definition);
+		super(parent.engineConfig, definition);
 	}
 
 	/**

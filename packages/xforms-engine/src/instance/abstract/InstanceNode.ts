@@ -1,11 +1,11 @@
 import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { BaseNode, BaseNodeState } from '../../client/BaseNode.ts';
-import type { EngineConfig } from '../../client/EngineConfig.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
 import type { Root } from '../Root.ts';
 import type { AnyChildNode, AnyParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 
 export interface InstanceNodeState extends BaseNodeState {
@@ -19,7 +19,7 @@ export abstract class InstanceNode<
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
 	// BaseNode: identity
-	abstract readonly nodeId: string;
+	readonly nodeId: string;
 
 	// BaseNode: node-specific
 	readonly definition: Definition;
@@ -27,7 +27,7 @@ export abstract class InstanceNode<
 	abstract readonly currentState: State;
 
 	// BaseNode: instance-global/shared
-	abstract readonly engineConfig: EngineConfig;
+	readonly engineConfig: InstanceConfig;
 
 	// BaseNode: structural
 	abstract readonly root: Root;
@@ -43,7 +43,9 @@ export abstract class InstanceNode<
 	abstract get contextReference(): string;
 	abstract readonly contextNode: Element;
 
-	constructor(definition: Definition) {
+	constructor(engineConfig: InstanceConfig, definition: Definition) {
+		this.engineConfig = engineConfig;
+		this.nodeId = engineConfig.createUniqueId();
 		this.definition = definition;
 	}
 
