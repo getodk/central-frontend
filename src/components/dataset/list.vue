@@ -11,6 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-list">
+    <page-section>
+      <template #heading>
+        <span>{{ $t('resource.entityLists') }}</span>
+        <button v-if="currentUser.can('dataset.create')"
+          id="dataset-list-new-button" type="button" class="btn btn-primary"
+          @click="newDatasetModal.show()">
+          <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+        </button>
+      </template>
+    </page-section>
     <div class="page-body-heading">
       <p>{{ $t('heading[0]') }}</p>
       <p>
@@ -25,16 +35,21 @@ except according to the terms contained in the LICENSE file.
     </div>
     <dataset-table/>
     <loading :state="datasets.initiallyLoading"/>
+    <dataset-new v-bind="newDatasetModal" @hide="newDatasetModal.hide()" @success="afterCreateDataset"/>
   </div>
 </template>
 
 <script setup>
+import DatasetNew from './new.vue';
 import DatasetTable from './table.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -48,12 +63,24 @@ const props = defineProps({
   }
 });
 
-const { datasets } = useRequestData();
+const { datasetPath } = useRoutes();
+const { currentUser, datasets } = useRequestData();
 datasets.request({
   url: apiPaths.datasets(props.projectId),
   extended: true,
   resend: false
 }).catch(noop);
+
+const newDatasetModal = modalData();
+
+const afterCreateDataset = (dataset) => {
+  console.log('new dataset made', dataset);
+  newDatasetModal.hide();
+  const message = this.$t('alert.create');
+  this.alert.success(message);
+  //this.$router.push(datasetPath(props.projectId, dataset.name))
+  //  .then(() => { this.alert.success(message); });
+};
 </script>
 
 <i18n lang="json5">
