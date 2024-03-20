@@ -15,6 +15,7 @@ except according to the terms contained in the LICENSE file.
     will affect how the navbar is rendered. -->
     <navbar v-show="routerReady"/>
     <alert id="app-alert"/>
+    <feedback-button/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
@@ -30,6 +31,7 @@ import { START_LOCATION } from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
+import FeedbackButton from './feedback-button.vue';
 
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
@@ -38,7 +40,7 @@ import { useSessions } from '../util/session';
 
 export default {
   name: 'App',
-  components: { Alert, Navbar },
+  components: { Alert, Navbar, FeedbackButton },
   inject: ['alert'],
   setup() {
     useSessions();
