@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     will affect how the navbar is rendered. -->
     <navbar v-show="routerReady"/>
     <alert id="app-alert"/>
-    <feedback-button/>
+    <feedback-button v-if="loggedIn"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
@@ -53,6 +53,10 @@ export default {
   computed: {
     routerReady() {
       return this.$route !== START_LOCATION;
+    },
+
+    loggedIn() {
+      return useRequestData().currentUser.dataExists && this.$route.path !== '/login';
     }
   },
   created() {
