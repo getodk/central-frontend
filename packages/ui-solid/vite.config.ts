@@ -128,6 +128,7 @@ export default defineConfig(({ mode }) => {
 			alias: {
 				'@odk-web-forms/common/types': resolvePath(__dirname, '../common/types'),
 				'@odk-web-forms/common': resolvePath(__dirname, '../common/src'),
+				'@odk-web-forms/xforms-engine': resolvePath(__dirname, '../xforms-engine/src/index.ts'),
 			},
 
 			conditions: ['solid', 'browser', 'development'],
