@@ -922,6 +922,9 @@
         "string": "A quoted field is invalid. Check the row to see if there are any unusual values.",
         "developer_comment": "This is an error that is shown for a CSV file. The field may be any cell in the file."
       },
+      "emptyRow": {
+        "string": "The row is empty."
+      },
       "dataWithoutHeader": {
         "string": "{count, plural, one {Expected {expected} column, but found {actual}.} other {Expected {expected} columns, but found {actual}.}}",
         "developer_comment": "This is an error that is shown for a data file. {expected} and {actual} are each a number of columns. The string will be pluralized based on {expected}."

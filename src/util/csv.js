@@ -158,12 +158,26 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
   } = options;
 
   const data = [];
+  let emptyRow = -1;
   const warnings = [raggedRowsWarning(columns), largeCellWarning()];
 
-  let rowIndex = 0;
-  const processRow = (values) => {
+  const processRow = (values, index) => {
     // Remove trailing empty cells.
     while (values.length > columns.length && last(values) === '') values.pop();
+
+    // Skip trailing empty rows and do not check them for warnings. Throw for an
+    // empty row that is not trailing.
+    if (values.every(value => value === '')) {
+      if (emptyRow === -1) emptyRow = index;
+      return;
+    }
+    if (emptyRow !== -1) {
+      const error = new Error(i18n.t('util.csv.emptyRow'));
+      error.row = emptyRow;
+      throw error;
+    }
+
+    // Throw if there are too many cells.
     if (values.length > columns.length) {
       const counts = {
         expected: i18n.n(columns.length, 'default'),
@@ -173,10 +187,10 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
     }
 
     data.push(transformRow(values, columns));
-    for (const warning of warnings) warning.pushRow(values, rowIndex, columns);
-    rowIndex += 1;
+    for (const warning of warnings) warning.pushRow(values, index, columns);
   };
 
+  let rowIndex = 0;
   try {
     await promiseParse(i18n, file, signal, {
       chunk: ({ data: chunkData, errors }) => {
@@ -198,7 +212,10 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
           rowIndex += 1;
         }
 
-        for (const values of chunkData) processRow(values);
+        for (const values of chunkData) {
+          processRow(values, rowIndex);
+          rowIndex += 1;
+        }
       },
       worker: true
     });

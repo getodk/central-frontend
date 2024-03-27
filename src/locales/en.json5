@@ -442,6 +442,7 @@
       // This is an error that is shown for a CSV file. The field may be any
       // cell in the file.
       "invalidQuotes": "A quoted field is invalid. Check the row to see if there are any unusual values.",
+      "emptyRow": "The row is empty.",
       // This is an error that is shown for a data file. {expected} and {actual}
       // are each a number of columns. The string will be pluralized based on
       // {expected}.
