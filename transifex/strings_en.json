@@ -764,6 +764,12 @@
       "string": "{count, plural, one {{count} conflict} other {{count} conflicts}}"
     }
   },
+  "punctuation": {
+    "range": {
+      "string": "{start}-{end}",
+      "developer_comment": "This is a range of numbers. {start} and {end} are numbers."
+    }
+  },
   "common": {
     "activity": {
       "string": "Activity",
@@ -865,11 +871,6 @@
     "totalSubmissions": {
       "string": "Total Submissions"
     },
-    "punctuations": {
-      "comma": {
-        "string": ","
-      }
-    },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} of {count} property} other {{inform} of {count} properties}}",
       "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
@@ -883,6 +884,11 @@
     "versionShort": {
       "string": "v{version}",
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
+    },
+    "punctuations": {
+      "comma": {
+        "string": ","
+      }
     }
   },
   "mixin": {
@@ -915,6 +921,9 @@
       "invalidQuotes": {
         "string": "A quoted field is invalid. Check the row to see if there are any unusual values.",
         "developer_comment": "This is an error that is shown for a CSV file. The field may be any cell in the file."
+      },
+      "emptyRow": {
+        "string": "The row is empty."
       },
       "dataWithoutHeader": {
         "string": "{count, plural, one {Expected {expected} column, but found {actual}.} other {Expected {expected} columns, but found {actual}.}}",
@@ -1966,14 +1975,31 @@
         "string": "Import Data from File",
         "developer_comment": "This is the title at the top of a pop-up."
       },
-      "headersNote": {
-        "string": "The first row in your data file must exactly match the table header you see above."
+      "table": {
+        "server": {
+          "string": "{name} server data",
+          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
+        },
+        "file": {
+          "string": "Data to import"
+        }
       },
       "action": {
         "append": {
           "string": "Append data",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "alert": {
+        "blankLabel": {
+          "string": "The label is missing."
+        },
+        "noCSVData": {
+          "string": "Your CSV file does not contain any data."
+        }
+      },
+      "headersNote": {
+        "string": "The first row in your data file must exactly match the table header you see above."
       }
     },
     "EntityUploadDataTemplate": {
@@ -1988,6 +2014,33 @@
         }
       }
     },
+    "EntityUploadErrors": {
+      "expectedHeader": {
+        "string": "Expected header"
+      },
+      "suggestions": {
+        "title": {
+          "string": "Suggestions",
+          "developer_comment": "Suggestions to fix an error"
+        },
+        "invalidQuotes": {
+          "string": "A quoted field is invalid. Check the header row of your CSV file to see if there are any unusual values."
+        },
+        "missingLabel": {
+          "string": "A {label} property is required. The label indicates the name to use for each Entity throughout Central and elsewhere.",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "unknownProperty": {
+          "string": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property."
+        },
+        "duplicateColumn": {
+          "string": "It looks like two or more columns have the same header. Please make sure column headers are unique."
+        },
+        "emptyColumn": {
+          "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your CSV file."
+        }
+      }
+    },
     "EntityUploadFileSelect": {
       "text": {
         "full": {
@@ -1998,6 +2051,9 @@
           "string": "choose one",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
         }
+      },
+      "parsing": {
+        "string": "Reading data…"
       }
     },
     "EntityUploadPopup": {
@@ -3324,6 +3380,36 @@
               "string": "Loading the last matching Entity…"
             }
           }
+        }
+      }
+    },
+    "Pagination": {
+      "action": {
+        "first": {
+          "string": "First page",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "previous": {
+          "string": "Previous page",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "next": {
+          "string": "Next page",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "last": {
+          "string": "Last page",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "rows": {
+        "string": "{count, plural, one {Row {range} of {count}} other {Rows {range} of {count}}}",
+        "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "field": {
+        "size": {
+          "string": "per page",
+          "developer_comment": "This is shown next to a field to select the number of rows to show on each page."
         }
       }
     },

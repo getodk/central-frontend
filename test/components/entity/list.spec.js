@@ -161,16 +161,15 @@ describe('EntityList', () => {
         root: false
       });
       await component.get('.entity-metadata-row .update-button').trigger('click');
-      component.getComponent(EntityUpdate).props().entity.should.eql({
-        uuid: 'abc',
-        currentVersion: {
-          label: 'My Entity',
-          version: 1,
-          data: Object.assign(Object.create(null), {
-            height: '1',
-            'circumference.cm': '2'
-          })
-        }
+      const { entity } = component.getComponent(EntityUpdate).props();
+      entity.uuid.should.equal('abc');
+      entity.currentVersion.should.eql({
+        label: 'My Entity',
+        version: 1,
+        data: Object.assign(Object.create(null), {
+          height: '1',
+          'circumference.cm': '2'
+        })
       });
     });
 

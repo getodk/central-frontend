@@ -268,7 +268,7 @@ export default {
 }
 
 #form-new-filename {
-  background-color: $color-input-background;
+  background-color: #eee;
   border-top: 1px solid #ddd;
   font-family: $font-family-monospace;
   margin-bottom: -$padding-file-drop-zone;

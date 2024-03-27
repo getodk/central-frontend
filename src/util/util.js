@@ -14,4 +14,21 @@ export const enketoBasePath = '/-';
 
 export const noop = () => {};
 export const noargs = (f) => () => f();
+
 export const sumUnderThreshold = (list, threshold) => list.reduce((acc, i) => acc + Math.min(i, threshold), 0);
+
+/* throttle() returns a function that manages calls to the provided function
+f(). It prevents f() from being called more than once within a given interval.
+If the throttled function is called within `delay` milliseconds of the last call
+to f(), then it will simply ignore the call and will not call f(). Note that
+this means that it is not guaranteed that every call to the throttled function
+will eventually be followed by a call to f(). */
+export const throttle = (f, delay = 200) => {
+  let timeOfLastCall = -Infinity;
+  return (...args) => {
+    if (Date.now() - timeOfLastCall >= delay) {
+      f(...args);
+      timeOfLastCall = Date.now();
+    }
+  };
+};

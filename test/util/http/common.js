@@ -1,7 +1,5 @@
 // Common tests for a series of request-response cycles
 
-import { pick } from 'ramda';
-
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
@@ -18,24 +16,31 @@ export function testRequests(expectedConfigs) {
       // expectedConfigs[i] == null, the request is intentionally not checked
       // (presumably because it is checked elsewhere).
       if (i < expectedConfigs.length && expectedConfigs[i] != null) {
-        const normalized = pick(['method', 'url', 'headers', 'data'], config);
-        if (normalized.method == null) normalized.method = 'GET';
-        if (normalized.headers == null) normalized.headers = {};
-
         const { extended = false, ...expectedConfig } = expectedConfigs[i];
-        if (expectedConfig.method == null) expectedConfig.method = 'GET';
+        (config.method ?? 'GET').should.equal(expectedConfig.method ?? 'GET');
+        config.url.should.equal(expectedConfig.url);
+
+        try {
+          should(config.data).eql(expectedConfig.data);
+        } catch (error) {
+          try {
+            should(JSON.stringify(config.data)).equal(JSON.stringify(expectedConfig.data));
+          } catch (_) {
+            throw error;
+          }
+        }
+
         if (extended) {
           expectedConfig.headers = {
             ...expectedConfig.headers,
             'X-Extended-Metadata': 'true'
           };
         }
-        const expectedWithAuth = withAuth(expectedConfig, component != null
+        const token = component != null
           ? component.vm.$container.requestData.session.token
-          : null);
-        if (expectedWithAuth.headers == null) expectedWithAuth.headers = {};
-
-        normalized.should.eql(expectedWithAuth);
+          : null;
+        const { headers: expectedHeaders = {} } = withAuth(expectedConfig, token);
+        (config.headers ?? {}).should.eql(expectedHeaders);
       }
     })
     .afterResponses(() => {

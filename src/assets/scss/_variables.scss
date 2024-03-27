@@ -51,8 +51,6 @@ $color-action-background-disabled: #999;
 $color-action-overlay: #0096c1;
 $color-input: #555;
 $color-input-inactive: #777;
-$color-input-background: #eee;
-$color-panel-input-background: #f7f7f7;
 $font-size-btn: 12px;
 $hpadding-btn: 10px;
 $padding-bottom-btn: 5px;
@@ -81,6 +79,7 @@ $padding-top-table-data: 8px;
 
 // Panels
 $box-shadow-panel-main: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+$padding-panel-body: 15px;
 
 // Navs
 $hpadding-nav-tab: 8px;

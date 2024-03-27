@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <i18n-t tag="span" keypath="text.full">
     <template #downloadTemplate>
-      <a class="btn btn-default" :href="href"
+      <a class="btn" :class="error ? 'btn-danger' : 'btn-default'" :href="href"
         :download="`${dataset.name} template.csv`">
         <span class="icon-download"></span>{{ $t('text.downloadTemplate') }}
       </a>
@@ -24,6 +24,13 @@ except according to the terms contained in the LICENSE file.
 import { computed } from 'vue';
 
 import { useRequestData } from '../../../request-data';
+
+defineOptions({
+  name: 'EntityUploadDataTemplate'
+});
+defineProps({
+  error: Boolean
+});
 
 // The component assumes that this data will exist when the component is
 // created.
