@@ -34,8 +34,7 @@ export const initializeForm = async (
 	const sourceXML = await retrieveSourceXMLResource(input, engineConfig);
 	const form = new XFormDefinition(sourceXML);
 
-	// @ts-expect-error - it won't be an abstract class forever
-	return new Root(form, engineConfig) as Root;
+	return new Root(form, engineConfig);
 };
 
 initializeForm satisfies InitializeForm;

@@ -18,7 +18,7 @@ export const createCurrentState = <Spec extends StateSpec>(
 				return clientState[key as keyof SpecifiedState<Spec>];
 			},
 			set: () => {
-				throw new Error('Cannot write directly to client-facing currentState');
+				throw new TypeError('Cannot write directly to client-facing currentState');
 			},
 		});
 
