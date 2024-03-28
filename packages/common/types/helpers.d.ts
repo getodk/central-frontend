@@ -22,3 +22,15 @@ export type Merge<T> = Identity<{
  * in-editor documentation.
  */
 export type ExpandUnion<T> = Exclude<T, never>;
+
+/**
+ * Maps an object type to a shallowly-mutable type otherwise of the same shape
+ * and type.
+ *
+ * {@link T} should be a {@link Record}-like object. This type is **NOT
+ * SUITABLE** for producing mutable versions of built-in collections like
+ * `readonly T[]` -> `T[]` or `ReadonlyMap<T>` -> `Map<T>`.
+ */
+type ShallowMutable<T extends object> = {
+	-readonly [K in keyof T]: T[K];
+};
