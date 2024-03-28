@@ -11,6 +11,7 @@ import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { XFormDOM } from '../XFormDOM.ts';
 import type { InstanceNodeState, InstanceNodeStateSpec } from './abstract/InstanceNode.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
+import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
@@ -148,6 +149,8 @@ export class Root
 		this.contextNode = contextNode;
 		this.instanceDOM = instanceDOM;
 		this.languages = languages;
+
+		state.setProperty('children', buildChildren(this));
 	}
 
 	// RootNode

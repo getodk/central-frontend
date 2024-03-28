@@ -1,3 +1,4 @@
+import { createSignal, type Signal } from 'solid-js';
 import type {
 	RepeatDefinition,
 	RepeatInstanceNode,
@@ -7,12 +8,14 @@ import type { CurrentState } from '../lib/reactivity/node-state/createCurrentSta
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import type { RepeatRange } from './RepeatRange.ts';
 import type { DescendantNodeState } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
+import type { InstanceNodeStateSpec } from './abstract/InstanceNode.ts';
+import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
+import type { RepeatRange } from './RepeatRange.ts';
 
 interface RepeatInstanceState extends RepeatInstanceNodeState, DescendantNodeState {
 	get hint(): null;
@@ -21,11 +24,16 @@ interface RepeatInstanceState extends RepeatInstanceNodeState, DescendantNodeSta
 	get value(): null;
 }
 
+// prettier-ignore
+type RepeatInstanceStateSpec = InstanceNodeStateSpec<RepeatInstanceState, {
+	readonly children: Signal<readonly GeneralChildNode[]>;
+}>;
+
 export class RepeatInstance
 	extends DescendantNode<RepeatDefinition, RepeatInstanceState>
 	implements RepeatInstanceNode, EvaluationContext, SubscribableDependency
 {
-	protected readonly state: SharedNodeState<RepeatInstanceState>;
+	protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
 	protected override engineState: EngineState<RepeatInstanceState>;
 
 	readonly currentState: CurrentState<RepeatInstanceState>;
@@ -39,7 +47,7 @@ export class RepeatInstance
 
 		const initialPosition = initialIndex + 1;
 
-		const state = createSharedNodeState<RepeatInstanceState>(
+		const state = createSharedNodeState(
 			this.scope,
 			{
 				reference: `${parent.contextReference}[${initialPosition}]`,
@@ -48,7 +56,7 @@ export class RepeatInstance
 				required: false,
 				label: null,
 				hint: null,
-				children: [],
+				children: createSignal<readonly GeneralChildNode[]>([]),
 				valueOptions: null,
 				value: null,
 			},
@@ -60,5 +68,7 @@ export class RepeatInstance
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
+
+		state.setProperty('children', buildChildren(this));
 	}
 }

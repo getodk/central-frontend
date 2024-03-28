@@ -284,7 +284,7 @@ describe('Instance root', () => {
 		}
 	});
 
-	it.fails("gets the root node's first child", () => {
+	it("gets the root node's first child", () => {
 		const firstChild = reactiveTestScope(({ mutable }) => {
 			// @ts-expect-error ...
 			const root = createRootNode(mutable);
