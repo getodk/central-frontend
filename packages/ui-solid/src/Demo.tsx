@@ -1,5 +1,6 @@
 import { initializeForm } from '@odk-web-forms/xforms-engine';
 import { createEffect, createMemo, createResource, createSignal, on } from 'solid-js';
+import { createMutable } from 'solid-js/store';
 import { App } from './App.tsx';
 import { DemoFixturesList, type SelectedDemoFixture } from './components/Demo/DemoFixturesList.tsx';
 
@@ -11,9 +12,7 @@ export const Demo = () => {
 		if (sourceXML != null) {
 			return initializeForm(sourceXML, {
 				config: {
-					stateFactory: (input) => {
-						return input;
-					},
+					stateFactory: createMutable,
 				},
 			});
 		}
