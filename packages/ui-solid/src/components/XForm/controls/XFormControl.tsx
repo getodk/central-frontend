@@ -1,30 +1,29 @@
-import type {
-	AnySelectDefinition,
-	InputDefinition,
-	ValueNodeState,
-} from '@odk-web-forms/xforms-engine';
+import type { SelectNode, StringNode } from '@odk-web-forms/xforms-engine';
 import { Match, Switch, createMemo } from 'solid-js';
 import { XFormRelevanceGuard } from '../XFormRelevanceGuard.tsx';
 import { XFormUnknownControl } from '../debugging/XFormUnknownControl.tsx';
 import { SelectControl } from './SelectControl.tsx';
 import { XFormInputControl } from './XFormInputControl.tsx';
 
+type ControlNode = SelectNode | StringNode;
+
 export interface XFormControlProps {
-	readonly state: ValueNodeState;
+	readonly node: ControlNode;
 }
 
-const inputContol = (props: XFormControlProps): InputDefinition | null => {
-	const { bodyElement } = props.state.definition;
+const inputNode = (node: ControlNode): StringNode | null => {
+	const { bodyElement } = node.definition;
 
-	if (bodyElement?.type === 'input') {
-		return bodyElement;
+	// TODO: better narrowing
+	if (bodyElement == null || bodyElement.type === 'input') {
+		return node as StringNode;
 	}
 
 	return null;
 };
 
-const selectControl = (props: XFormControlProps): AnySelectDefinition | null => {
-	const { bodyElement } = props.state.definition;
+const selectNode = (node: ControlNode): SelectNode | null => {
+	const { bodyElement } = node.definition;
 
 	if (bodyElement == null) {
 		return null;
@@ -34,7 +33,7 @@ const selectControl = (props: XFormControlProps): AnySelectDefinition | null => 
 		case 'rank':
 		case 'select':
 		case 'select1':
-			return bodyElement as AnySelectDefinition;
+			return node as SelectNode;
 	}
 
 	return null;
@@ -42,20 +41,20 @@ const selectControl = (props: XFormControlProps): AnySelectDefinition | null => 
 
 export const XFormControl = (props: XFormControlProps) => {
 	const isRelevant = createMemo(() => {
-		return props.state.isRelevant();
+		return props.node.currentState.relevant;
 	});
 
 	return (
 		<XFormRelevanceGuard isRelevant={isRelevant()}>
 			<Switch fallback={<XFormUnknownControl {...props} />}>
-				<Match when={inputContol(props)} keyed={true}>
-					{(control) => {
-						return <XFormInputControl control={control} state={props.state} />;
+				<Match when={inputNode(props.node)} keyed={true}>
+					{(node) => {
+						return <XFormInputControl node={node} />;
 					}}
 				</Match>
-				<Match when={selectControl(props)} keyed={true}>
-					{(control) => {
-						return <SelectControl control={control} state={props.state} />;
+				<Match when={selectNode(props.node)} keyed={true}>
+					{(node) => {
+						return <SelectControl node={node} />;
 					}}
 				</Match>
 			</Switch>

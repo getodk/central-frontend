@@ -10,7 +10,8 @@ import {
 	t,
 	title,
 } from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
-import { EntryState, XFormDefinition } from '@odk-web-forms/xforms-engine';
+import type { RootNode } from '@odk-web-forms/xforms-engine';
+import { initializeForm } from '@odk-web-forms/xforms-engine';
 import { render } from 'solid-js/web';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { XFormView } from './XFormView.tsx';
@@ -42,15 +43,16 @@ describe('XFormView', () => {
 		)
 	);
 
-	let xformDefinition: XFormDefinition;
+	let root: RootNode;
 	let rootElement: Element;
 	let dispose: VoidFunction;
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		dispose = () => {
 			throw new Error('Render must have failed');
 		};
 
+		root = await initializeForm(xform.asXml());
 		rootElement = document.createElement('div');
 	});
 
@@ -58,15 +60,9 @@ describe('XFormView', () => {
 		dispose();
 	});
 
-	beforeEach(() => {
-		xformDefinition = new XFormDefinition(xform.asXml());
-	});
-
 	it('renders the form title', () => {
 		dispose = render(() => {
-			const entry = new EntryState(xformDefinition);
-
-			return <XFormView entry={entry} />;
+			return <XFormView root={root} />;
 		}, rootElement);
 
 		expect(rootElement.textContent).toContain('Minimal XForm');
@@ -74,9 +70,7 @@ describe('XFormView', () => {
 
 	it('renders the first question', () => {
 		dispose = render(() => {
-			const entry = new EntryState(xformDefinition);
-
-			return <XFormView entry={entry} />;
+			return <XFormView root={root} />;
 		}, rootElement);
 
 		expect(rootElement.textContent).toContain('First question');

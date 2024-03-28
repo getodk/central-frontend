@@ -9,8 +9,9 @@ import {
 	t,
 	title,
 } from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
-import { EntryState, XFormDefinition } from '@odk-web-forms/xforms-engine';
+import { EntryState, initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
 // import { render } from '@solidjs/testing-library';
+import { createMutable } from 'solid-js/store';
 import { render } from 'solid-js/web';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { App } from '../../src/App.tsx';
@@ -43,10 +44,14 @@ describe('XFormView', () => {
 		body(input('/root/q1', t(`label ref="jr:itext('q1:label')"`)))
 	);
 
-	let xformDefinition: XFormDefinition;
+	let root: RootNode;
 
-	beforeEach(() => {
-		xformDefinition = new XFormDefinition(xform.asXml());
+	beforeEach(async () => {
+		root = await initializeForm(xform.asXml(), {
+			config: {
+				stateFactory: createMutable,
+			},
+		});
 		rootElement = document.createElement('div');
 		dispose = null;
 	});
@@ -57,9 +62,7 @@ describe('XFormView', () => {
 
 	it('renders a label in the default language', () => {
 		dispose = render(() => {
-			const entry = new EntryState(xformDefinition);
-
-			return <App entry={entry} />;
+			return <App root={root} />;
 		}, rootElement);
 
 		const label = Array.from(rootElement.querySelectorAll('label')).find((element) => {
@@ -74,9 +77,7 @@ describe('XFormView', () => {
 		let entry!: EntryState;
 
 		dispose = render(() => {
-			entry = new EntryState(xformDefinition);
-
-			return <App entry={entry} />;
+			return <App root={root} />;
 		}, rootElement);
 
 		// TODO: the intent was actually to test this by selecting the menu item,

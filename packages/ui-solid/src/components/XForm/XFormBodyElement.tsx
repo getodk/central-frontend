@@ -1,62 +1,66 @@
 import type {
-	AnyBodyElementDefinition,
-	AnyChildState,
-	RepeatSequenceState,
-	SubtreeState,
-	ValueNodeState,
+	GeneralChildNode,
+	GroupNode,
+	RepeatRangeNode,
+	SelectNode,
+	StringNode,
 } from '@odk-web-forms/xforms-engine';
-import { Match, Switch } from 'solid-js';
+import { Match, Show, Switch } from 'solid-js';
 import { XFormGroup } from './containers/XFormGroup.tsx';
 import { XFormControl } from './controls/XFormControl.tsx';
 
 interface XFormUnknownElementProps {
-	readonly state: AnyChildState;
-	readonly element: AnyBodyElementDefinition;
+	readonly node: GeneralChildNode;
 }
 
-const XFormUnknownElement = (props: XFormUnknownElementProps) => {
-	props;
+const XFormUnknownElement = (_?: XFormUnknownElementProps) => {
 	return <></>;
 };
 
-type GroupState = RepeatSequenceState | SubtreeState;
+type GroupLikeNode = GroupNode | RepeatRangeNode;
 
-const groupState = (props: XFormBodyElementProps): GroupState | null => {
-	const { state } = props;
+const groupLikeNode = (props: XFormBodyElementProps): GroupLikeNode | null => {
+	const { node } = props;
 
-	if (state.type === 'value-node') {
+	if (node.definition.type === 'value-node') {
 		return null;
 	}
 
-	return state;
+	// TODO narrowing
+	return node as GroupLikeNode;
 };
 
-const controlState = (props: XFormBodyElementProps): ValueNodeState | null => {
-	const { state } = props;
+type ControlNode = SelectNode | StringNode;
 
-	if (state.type === 'value-node') {
-		return state;
+const controlNode = (props: XFormBodyElementProps): ControlNode | null => {
+	const { node } = props;
+
+	if (node.definition.type === 'value-node') {
+		// TODO narrowing
+		return node as ControlNode;
 	}
 
 	return null;
 };
 
+// TODO: unclear if the input prop types are right
 export interface XFormBodyElementProps {
-	readonly state: AnyChildState;
-	readonly element: AnyBodyElementDefinition;
+	readonly node: GeneralChildNode;
 }
 
 export const XFormBodyElement = (props: XFormBodyElementProps) => {
 	return (
-		<Switch fallback={<XFormUnknownElement {...props} />}>
-			<Match when={groupState(props)} keyed={true}>
-				{(state) => <XFormGroup state={state} />}
-			</Match>
-			<Match when={controlState(props)} keyed={true}>
-				{(state) => {
-					return <XFormControl state={state} />;
-				}}
-			</Match>
-		</Switch>
+		<Show when={props.node.definition.bodyElement != null}>
+			<Switch fallback={<XFormUnknownElement {...props} />}>
+				<Match when={groupLikeNode(props)} keyed={true}>
+					{(node) => <XFormGroup node={node} />}
+				</Match>
+				<Match when={controlNode(props)} keyed={true}>
+					{(node) => {
+						return <XFormControl node={node} />;
+					}}
+				</Match>
+			</Switch>
+		</Show>
 	);
 };

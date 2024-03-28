@@ -1,4 +1,4 @@
-import type { RepeatInstanceState } from '@odk-web-forms/xforms-engine';
+import type { RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
 import { Box, Stack, styled } from '@suid/material';
 import { Show, createSignal } from 'solid-js';
 import { TopLevelRepeatInstance } from '../../styled/TopLevelRepeatInstance.tsx';
@@ -11,22 +11,23 @@ const RepeatInstanceOptionsMenuContainer = styled(Box)({
 });
 
 interface XFormRepeatInstanceProps {
-	readonly state: RepeatInstanceState;
+	readonly index: number;
+	readonly instance: RepeatInstanceNode;
 }
 
 export const XFormRepeatInstance = (props: XFormRepeatInstanceProps) => {
 	const [isRepeatInstanceVisible, setRepeatInstanceVisible] = createSignal(true);
-	const elementDefinition = () => props.state.definition.bodyElement;
-	const labelDefinition = () =>
-		elementDefinition().label ?? elementDefinition().groupDefinition.label;
+	const repeatLabel = () => {
+		return props.instance.currentState.label;
+	};
 
 	return (
 		<TopLevelRepeatInstance>
 			<Stack direction="row" justifyContent="space-between">
-				<Show when={labelDefinition()} keyed={true}>
+				<Show when={repeatLabel()} keyed={true}>
 					{(label) => (
 						<XFormRepeatInstanceLabel
-							state={props.state}
+							node={props.instance}
 							label={label}
 							isRepeatInstanceVisible={isRepeatInstanceVisible()}
 							setRepeatInstanceVisible={setRepeatInstanceVisible}
@@ -34,11 +35,11 @@ export const XFormRepeatInstance = (props: XFormRepeatInstanceProps) => {
 					)}
 				</Show>
 				<RepeatInstanceOptionsMenuContainer justifySelf="flex-end">
-					<RepeatInstanceOptionsMenu state={props.state} />
+					<RepeatInstanceOptionsMenu index={props.index} instance={props.instance} />
 				</RepeatInstanceOptionsMenuContainer>
 			</Stack>
 			<Show when={isRepeatInstanceVisible()}>
-				<XFormQuestionList state={props.state} />
+				<XFormQuestionList node={props.instance} />
 			</Show>
 		</TopLevelRepeatInstance>
 	);

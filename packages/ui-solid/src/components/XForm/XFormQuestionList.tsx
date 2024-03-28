@@ -1,22 +1,18 @@
-import type { AnyParentState } from '@odk-web-forms/xforms-engine';
+import type { GeneralParentNode } from '@odk-web-forms/xforms-engine';
 import { For } from 'solid-js';
 import { XFormBodyElement } from './XFormBodyElement.tsx';
 import { XFormControlStack } from './XFormControlStack.tsx';
 
 interface XFormQuestionListProps {
-	readonly state: AnyParentState;
+	readonly node: GeneralParentNode;
 }
 
 export const XFormQuestionList = (props: XFormQuestionListProps) => {
 	return (
 		<XFormControlStack>
-			<For each={props.state.children}>
+			<For each={props.node.currentState.children}>
 				{(child) => {
-					if (child.definition.bodyElement == null) {
-						return;
-					}
-
-					return <XFormBodyElement state={child} element={child.definition.bodyElement} />;
+					return <XFormBodyElement node={child} />;
 				}}
 			</For>
 		</XFormControlStack>

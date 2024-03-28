@@ -1,6 +1,6 @@
 // TODO: lots of this should get broken out
 
-import type { TranslationState } from '@odk-web-forms/xforms-engine';
+import type { FormLanguage, RootNode } from '@odk-web-forms/xforms-engine';
 import Check from '@suid/icons-material/Check';
 import ExpandMore from '@suid/icons-material/ExpandMore';
 import Language from '@suid/icons-material/Language';
@@ -30,7 +30,7 @@ const MenuItemSmallTypography = styled(Typography)({
 });
 
 interface FormLanguageMenuProps {
-	readonly translations: TranslationState;
+	readonly root: RootNode;
 }
 
 export const FormLanguageMenu = (props: FormLanguageMenuProps) => {
@@ -40,6 +40,16 @@ export const FormLanguageMenu = (props: FormLanguageMenuProps) => {
 	const closeMenu = () => {
 		setIsOpen(false);
 	};
+
+	const activeLanguage = () => props.root.currentState.activeLanguage;
+	const formLanguages = () =>
+		props.root.languages.filter((language): language is FormLanguage => {
+			return !language.isSyntheticDefault;
+		});
+
+	if (props.root.currentState.activeLanguage.isSyntheticDefault) {
+		return;
+	}
 
 	return (
 		<div>
@@ -56,7 +66,9 @@ export const FormLanguageMenu = (props: FormLanguageMenuProps) => {
 			>
 				<Stack alignItems="center" direction="row">
 					<FormLanguageMenuButtonIcon fontSize="small" />
-					<span style={{ 'line-height': 1 }}>{props.translations.getActiveLanguage()}</span>
+					<span style={{ 'line-height': 1 }}>
+						{props.root.currentState.activeLanguage.language}
+					</span>
 					<FormLanguageMenuExpandMoreIcon fontSize="small" />
 				</Stack>
 			</PageMenuButton>
@@ -81,10 +93,10 @@ export const FormLanguageMenu = (props: FormLanguageMenuProps) => {
 					horizontal: 'right',
 				}}
 			>
-				<For each={props.translations.getLanguages()}>
+				<For each={formLanguages()}>
 					{(language) => {
 						const isSelected = () => {
-							return language === props.translations.getActiveLanguage();
+							return language === activeLanguage();
 						};
 
 						return (
@@ -93,7 +105,7 @@ export const FormLanguageMenu = (props: FormLanguageMenuProps) => {
 								dense={true}
 								selected={isSelected()}
 								onClick={() => {
-									props.translations.setActiveLanguage(language);
+									props.root.setLanguage(language);
 									closeMenu();
 								}}
 							>
@@ -104,7 +116,7 @@ export const FormLanguageMenu = (props: FormLanguageMenuProps) => {
 								</Show>
 
 								<ListItemText inset={!isSelected()} disableTypography={true}>
-									<MenuItemSmallTypography>{language}</MenuItemSmallTypography>
+									<MenuItemSmallTypography>{language.language}</MenuItemSmallTypography>
 								</ListItemText>
 							</MenuItem>
 						);

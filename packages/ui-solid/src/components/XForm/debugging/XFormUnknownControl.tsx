@@ -1,13 +1,15 @@
-import type { ValueNodeState } from '@odk-web-forms/xforms-engine';
+import type { SelectNode, StringNode } from '@odk-web-forms/xforms-engine';
 import { Box } from '@suid/material';
 import { XFormAlert } from './XFormAlert.tsx';
 
+type ValueNode = SelectNode | StringNode;
+
 interface XFormUnknownControlProps {
-	readonly state: ValueNodeState;
+	readonly node: ValueNode;
 }
 
 export const XFormUnknownControl = (props: XFormUnknownControlProps) => {
-	const element = () => props.state.definition.bodyElement;
+	const element = () => props.node.definition.bodyElement;
 
 	return (
 		<Box>
