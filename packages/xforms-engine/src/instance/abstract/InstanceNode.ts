@@ -1,13 +1,16 @@
 import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
-import type { Signal } from 'solid-js';
+import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode, BaseNodeState } from '../../client/BaseNode.ts';
+import type { TextRange } from '../../index.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
-import type { StatePropertySpec } from '../../lib/reactivity/node-state/createSpecifiedState.ts';
+import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createReactiveScope, type ReactiveScope } from '../../lib/reactivity/scope.ts';
+import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
+import type { RepeatInstance } from '../RepeatInstance.ts';
 import type { Root } from '../Root.ts';
-import type { AnyChildNode, AnyParentNode } from '../hierarchy.ts';
+import type { AnyChildNode, AnyParentNode, GeneralChildNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
@@ -17,34 +20,32 @@ export interface InstanceNodeState extends BaseNodeState {
 }
 
 // prettier-ignore
-type InstanceNodeStateChildrenSpec<Children> =
-	Children extends null
-		? null
-		: Signal<Children>;
+type InstanceNodeChildrenSpec =
+	| Signal<readonly GeneralChildNode[]>
+	| Signal<readonly RepeatInstance[]>
+	| null;
 
-// prettier-ignore
-type BaseInstanceNodeStateSpec<State extends InstanceNodeState> = {
-	[K in keyof State]:
-		K extends 'children'
-			? InstanceNodeStateChildrenSpec<State[K]>
-			: StatePropertySpec<State[K]>;
-};
-
-// prettier-ignore
-export type InstanceNodeStateSpec<
-	State extends InstanceNodeState,
-	Overrides = never
-> =
-	& Omit<BaseInstanceNodeStateSpec<State>, keyof Overrides>
-	& Overrides;
+export interface InstanceNodeStateSpec<Value = never> {
+	readonly reference: Accessor<string> | string;
+	readonly readonly: Accessor<boolean> | boolean;
+	readonly relevant: Accessor<boolean> | boolean;
+	readonly required: Accessor<boolean> | boolean;
+	readonly label: Accessor<TextRange<'label'> | null> | null;
+	readonly hint: Accessor<TextRange<'hint'> | null> | null;
+	readonly children: InstanceNodeChildrenSpec;
+	readonly valueOptions: Accessor<null> | Accessor<readonly unknown[]> | null;
+	readonly value: Signal<Value> | SimpleAtomicState<Value> | null;
+}
 
 export abstract class InstanceNode<
 		Definition extends AnyNodeDefinition,
-		State extends InstanceNodeState,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		Spec extends InstanceNodeStateSpec<any>,
 	>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
-	protected abstract readonly engineState: EngineState<State>;
+	protected abstract readonly state: SharedNodeState<Spec>;
+	protected abstract readonly engineState: EngineState<Spec>;
 
 	// BaseNode: identity
 	readonly nodeId: string;
@@ -52,7 +53,7 @@ export abstract class InstanceNode<
 	// BaseNode: node-specific
 	readonly definition: Definition;
 
-	abstract readonly currentState: CurrentState<State>;
+	abstract readonly currentState: CurrentState<Spec>;
 
 	// BaseNode: instance-global/shared
 	readonly engineConfig: InstanceConfig;

@@ -1,15 +1,15 @@
 import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
-import { createSignal, type Signal } from 'solid-js';
+import type { Signal } from 'solid-js';
+import { createSignal } from 'solid-js';
+import type { XFormDOM } from '../XFormDOM.ts';
+import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
-import type { RootNode, RootNodeState } from '../client/RootNode.ts';
+import type { RootNode } from '../client/RootNode.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import type { RootDefinition } from '../model/RootDefinition.ts';
-import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { XFormDOM } from '../XFormDOM.ts';
-import type { InstanceNodeState, InstanceNodeStateSpec } from './abstract/InstanceNode.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
@@ -17,21 +17,24 @@ import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
-interface RootState extends RootNodeState, InstanceNodeState {
-	get label(): null;
-	get hint(): null;
-	get children(): readonly GeneralChildNode[];
-	get valueOptions(): null;
-	get value(): null;
+interface RootStateSpec {
+	readonly reference: string;
+	readonly readonly: boolean;
+	readonly relevant: boolean;
+	readonly required: boolean;
+
+	readonly label: null;
+	readonly hint: null;
+
+	// TODO: map children by `nodeId`
+	readonly children: Signal<readonly GeneralChildNode[]>;
+
+	readonly valueOptions: null;
+	readonly value: null;
 
 	// Root-specific
-	get activeLanguage(): ActiveLanguage;
-}
-
-// prettier-ignore
-type RootStateSpec = InstanceNodeStateSpec<RootState, {
 	readonly activeLanguage: Signal<ActiveLanguage>;
-}>;
+}
 
 // Subset of types expected from evaluator
 interface ItextTranslations {
@@ -86,13 +89,13 @@ const getInitialLanguageState = (translations: ItextTranslations): InitialLangua
 };
 
 export class Root
-	extends InstanceNode<RootDefinition, RootState>
+	extends InstanceNode<RootDefinition, RootStateSpec>
 	implements RootNode, EvaluationContext, SubscribableDependency
 {
-	private readonly state: SharedNodeState<RootStateSpec>;
-	protected readonly engineState: EngineState<RootState>;
+	protected readonly state: SharedNodeState<RootStateSpec>;
+	protected readonly engineState: EngineState<RootStateSpec>;
 
-	readonly currentState: CurrentState<RootState>;
+	readonly currentState: CurrentState<RootStateSpec>;
 
 	protected readonly instanceDOM: XFormDOM;
 

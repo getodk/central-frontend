@@ -1,38 +1,32 @@
 import { createSignal, type Signal } from 'solid-js';
-import type { SubtreeDefinition, SubtreeNode, SubtreeNodeState } from '../client/SubtreeNode.ts';
+import type { SubtreeDefinition, SubtreeNode } from '../client/SubtreeNode.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import type { DescendantNodeState } from './abstract/DescendantNode.ts';
+import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
-import type { InstanceNodeStateSpec } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
-interface SubtreeState extends SubtreeNodeState, DescendantNodeState {
-	get hint(): null;
-	get label(): null;
-	get children(): readonly GeneralChildNode[];
-	get valueOptions(): null;
-	get value(): null;
+interface SubtreeStateSpec extends DescendantNodeSharedStateSpec {
+	readonly label: null;
+	readonly hint: null;
+	readonly children: Signal<readonly GeneralChildNode[]>;
+	readonly valueOptions: null;
+	readonly value: null;
 }
 
-// prettier-ignore
-type SubtreeStateSpec = InstanceNodeStateSpec<SubtreeState, {
-	readonly children: Signal<readonly GeneralChildNode[]>;
-}>;
-
 export class Subtree
-	extends DescendantNode<SubtreeDefinition, SubtreeState>
+	extends DescendantNode<SubtreeDefinition, SubtreeStateSpec>
 	implements SubtreeNode, EvaluationContext, SubscribableDependency
 {
 	protected readonly state: SharedNodeState<SubtreeStateSpec>;
-	protected override engineState: EngineState<SubtreeState>;
+	protected override engineState: EngineState<SubtreeStateSpec>;
 
-	readonly currentState: CurrentState<SubtreeState>;
+	readonly currentState: CurrentState<SubtreeStateSpec>;
 
 	constructor(parent: GeneralParentNode, definition: SubtreeDefinition) {
 		super(parent, definition);
@@ -40,10 +34,8 @@ export class Subtree
 		const state = createSharedNodeState(
 			this.scope,
 			{
-				reference: `${parent.contextReference}/${definition.nodeName}`,
-				readonly: false,
-				relevant: true,
-				required: false,
+				...this.buildSharedStateSpec(parent, definition),
+
 				label: null,
 				hint: null,
 				children: createSignal<readonly GeneralChildNode[]>([]),
@@ -60,5 +52,9 @@ export class Subtree
 		this.currentState = state.currentState;
 
 		state.setProperty('children', buildChildren(this));
+	}
+
+	protected computeReference(parent: GeneralParentNode): string {
+		return this.computeChildStepReference(parent);
 	}
 }
