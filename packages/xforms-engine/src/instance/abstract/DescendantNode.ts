@@ -1,9 +1,11 @@
+import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type { AnyDescendantNodeDefinition } from '../../model/DescendentNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
 import type { RepeatInstanceDefinition } from '../../model/RepeatInstanceDefinition.ts';
 import type { RepeatRange } from '../RepeatRange.ts';
+import type { Root } from '../Root.ts';
 import type { AnyChildNode, GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
@@ -41,11 +43,41 @@ export abstract class DescendantNode<
 	extends InstanceNode<Definition, State>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
+	readonly root: Root;
+	readonly evaluator: XFormsXPathEvaluator;
+	readonly contextNode: Element;
+
 	constructor(
 		override readonly parent: DescendantNodeParent<Definition>,
 		override readonly definition: Definition
 	) {
 		super(parent.engineConfig, definition);
+
+		const { evaluator, root } = parent;
+
+		this.root = root;
+		this.evaluator = evaluator;
+		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
+	}
+
+	/**
+	 * Currently expected to be overridden by repeat range.
+	 */
+	protected initializeContextNode(parentContextNode: Element, nodeName: string): Element {
+		const { ownerDocument } = parentContextNode;
+		const element = ownerDocument.createElement(nodeName);
+
+		parentContextNode.append(element);
+
+		return element;
+	}
+
+	getSubscribableDependencyByReference(_reference: string): SubscribableDependency | null {
+		throw new Error('Not implemented');
+	}
+
+	subscribe(): void {
+		throw new Error('Not implemented');
 	}
 
 	/**
@@ -60,5 +92,7 @@ export abstract class DescendantNode<
 	 * should investigate the details and ramifications of that, and whether it's
 	 * the desired behavior.
 	 */
-	abstract remove(): void;
+	remove(): void {
+		throw new Error('Not implemented');
+	}
 }
