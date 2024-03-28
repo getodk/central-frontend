@@ -1,3 +1,4 @@
+import type { InputDefinition } from '../body/control/InputDefinition.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { RootNode } from './RootNode.ts';
@@ -16,6 +17,10 @@ export interface StringNodeState extends BaseNodeState {
 	get value(): string;
 }
 
+export interface StringDefinition extends ValueNodeDefinition {
+	readonly bodyElement: InputDefinition | null;
+}
+
 /**
  * A node which can be assigned a string/text value. A string node **MAY**
  * correspond to form field defined as an XForms `<input>`, which a user-facing
@@ -24,7 +29,7 @@ export interface StringNodeState extends BaseNodeState {
  * (for instance if the node is bound to an XForms `calculate` expression).
  */
 export interface StringNode extends BaseNode {
-	readonly definition: ValueNodeDefinition;
+	readonly definition: StringDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 

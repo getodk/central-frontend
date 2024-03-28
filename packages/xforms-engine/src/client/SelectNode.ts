@@ -1,3 +1,4 @@
+import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { RootNode } from './RootNode.ts';
@@ -33,10 +34,15 @@ export interface SelectNodeState extends BaseNodeState {
 	get value(): readonly SelectItem[];
 }
 
+export interface SelectDefinition extends ValueNodeDefinition {
+	readonly bodyElement: AnySelectDefinition;
+}
+
 export interface SelectNode extends BaseNode {
-	readonly definition: ValueNodeDefinition;
+	readonly definition: SelectDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
+	readonly currentState: SelectNodeState;
 
 	/**
 	 * For use by a client to update the selection of a select node where:
