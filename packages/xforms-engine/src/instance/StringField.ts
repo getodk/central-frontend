@@ -1,7 +1,8 @@
-import { createSignal, type Accessor } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import type { InputDefinition } from '../body/control/InputDefinition.ts';
 import type { StringNode } from '../client/StringNode.ts';
 import type { TextRange } from '../index.ts';
+import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -14,6 +15,7 @@ import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
+import type { ValueContext } from './internal-api/ValueContext.ts';
 
 export interface StringFieldDefinition extends ValueNodeDefinition {
 	readonly bodyElement: InputDefinition | null;
@@ -29,12 +31,21 @@ interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
 
 export class StringField
 	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec>
-	implements StringNode, EvaluationContext, SubscribableDependency
+	implements StringNode, EvaluationContext, SubscribableDependency, ValueContext<string>
 {
 	protected readonly state: SharedNodeState<StringFieldStateSpec>;
 	protected override engineState: EngineState<StringFieldStateSpec>;
 
 	readonly currentState: CurrentState<StringFieldStateSpec>;
+
+	// ValueContext
+	readonly encodeValue = (runtimeValue: string): string => {
+		return runtimeValue;
+	};
+
+	readonly decodeValue = (instanceValue: string): string => {
+		return instanceValue;
+	};
 
 	constructor(parent: GeneralParentNode, definition: StringFieldDefinition) {
 		super(parent, definition);
@@ -48,7 +59,7 @@ export class StringField
 				hint: () => null,
 				children: null,
 				valueOptions: null,
-				value: createSignal(''),
+				value: createValueState(this),
 			},
 			{
 				clientStateFactory: this.engineConfig.stateFactory,
@@ -65,7 +76,16 @@ export class StringField
 	}
 
 	// StringNode
-	setValue(_value: string): Root {
-		throw new Error('Not implemented');
+	setValue(value: string): Root {
+		this.state.setProperty('value', value);
+
+		return this.root;
+	}
+
+	// SubscribableDependency
+	override subscribe(): void {
+		if (this.engineState.relevant) {
+			this.engineState.value;
+		}
 	}
 }
