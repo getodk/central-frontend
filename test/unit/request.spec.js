@@ -301,6 +301,10 @@ describe('util/request', () => {
       apiPaths.dataset(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b');
     });
 
+    it('datasetProperties', () => {
+      apiPaths.datasetProperties(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b/properties');
+    });
+
     describe('entities', () => {
       it('returns the correct path', () => {
         const path = apiPaths.entities(1, 'á');

@@ -1408,6 +1408,10 @@
       "entityProperties": {
         "string": "Entity Properties",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "new": {
+        "string": "New",
+        "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
     "DatasetOverviewConnectionToForms": {
@@ -1425,6 +1429,23 @@
       "formsConsumeData": {
         "string": "{count, plural, one {Form uses this Entity List} other {Forms use this Entity List}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewNewProperty": {
+      "title": {
+        "string": "Add Entity Property",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "To add an Entity Property, choose a unique property name below."
+        },
+        "1": {
+          "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
+        }
+      },
+      "newPropertyName": {
+        "string": "New property name"
       }
     },
     "DatasetPendingSubmissions": {

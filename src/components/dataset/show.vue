@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
-      <router-view v-show="dataExists"/>
+      <router-view v-show="dataExists" @fetch-dataset="fetchDataset"/>
     </page-body>
   </div>
 </template>
