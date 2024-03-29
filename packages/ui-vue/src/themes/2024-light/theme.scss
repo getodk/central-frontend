@@ -15,162 +15,180 @@ $primary50: #d8ecf5;
 	--primary-50: #{$primary50};
 }
 
-@layer primevue {
-	.odk-form {
-		width: 100%;
+.odk-form {
+	width: 100%;
 
-		.form-wrapper {
-			max-width: 800px;
-			margin: 10px auto;
+	.form-wrapper {
+		max-width: 800px;
+		margin: auto;
+		padding-top: 10px;
 
-			.form-title {
-				border-top: none;
-				margin-top: 20px;
 
-				.p-card-content {
-					padding: 0 1rem;
 
-					h1 {
-						margin: 10px 0;
-					}
-				}
-			}
+		label span {
+			// it is required asterisk - be more specific
+			color: var(--red-500); // TODO maybe theme should export color of danger / error
+		}
 
-			label span {
-				// it is required asterisk - be more specific
-				color: var(--red-500); // TODO maybe theme should export color of danger / error
-			}
+		.footer {
+			margin-top: 20px;
 
-			.footer {
-				margin-top: 20px;
-
-				button {
-					min-width: 160px;
-				}
+			button {
+				min-width: 160px;
 			}
 		}
-	}
 
-	.p-button.p-button-secondary {
-		&:enabled:focus,
-		&:enabled.p-focus {
-			background: var(--primary-100);
+
+		.p-button.p-button-secondary {
+
+			&:enabled:focus,
+			&:enabled.p-focus {
+				background: var(--primary-100);
+			}
+
+			&:enabled:hover {
+				background: var(--primary-100);
+			}
+
+			&:enabled:active {
+				background: $primary50;
+			}
 		}
-		&:enabled:hover {
-			background: var(--primary-100);
+
+		.p-card {
+			border-radius: 10px;
+			border-top: 15px solid $primary50;
+			box-shadow: 0px 1px 3px 1px #00000026;
 		}
-		&:enabled:active {
-			background: $primary50;
-		}
-	}
 
-	.p-card {
-		border-radius: 10px;
-		border-top: 15px solid $primary50;
-		box-shadow: 0px 1px 3px 1px #00000026;
-	}
-
-	.p-panel {
-		background: var(--surface-0);
-		padding: 1rem;
-
-		&.level-0 {
+		.form-questions>div>.p-panel {
 			border-radius: 10px;
 			box-shadow: 0px 1px 3px 1px #00000026;
 			border-top: 15px solid $primary50;
 			margin-top: 20px;
 
 			&.with-title {
-				> .p-toggleable-content > .p-panel-content {
+				>.p-toggleable-content>.p-panel-content {
 					padding: 1rem;
 				}
 			}
 
 			&.no-title {
-				> .p-panel-header {
+				>.p-panel-header {
 					display: none;
 				}
-				> .p-toggleable-content > .p-panel-content {
+
+				>.p-toggleable-content>.p-panel-content {
 					padding: 1rem;
 				}
 			}
-		}
 
-		// .no-title under level-0 is not possible
-		&:not(.level-0) {
-			border-radius: 0;
-			box-shadow: none;
-			border-left: 5px solid var(--primary-50);
-			padding: 0 0 0 1rem;
+			// nested groups/repeats
+			.p-panel {
+				border-radius: 0;
+				box-shadow: none;
+				border-left: 5px solid var(--primary-50);
+				padding: 0 0 0 1rem;
 
-			> .p-panel-header {
-				padding: 0;
-				align-items: start;
+				>.p-panel-header {
+					padding: 0;
+					align-items: start;
 
-				.btn-context {
-					margin-top: -10px;
+					.btn-context {
+						margin-top: -10px;
 
-					.p-button-icon {
-						font-size: 1.25rem;
+						.p-button-icon {
+							font-size: 1.25rem;
+						}
 					}
 				}
-			}
-			> .p-toggleable-content > .p-panel-content {
-				padding: 1rem 0 0 1rem;
-			}
-		}
 
-		.p-panel-header {
-			background: transparent;
-		}
-
-		.p-panel-content:last-child {
-			border-bottom-right-radius: 10px;
-			border-bottom-left-radius: 10px;
-		}
-
-		.p-panel-toggler {
-			display: none;
-		}
-
-		.panel-title {
-			cursor: pointer;
-		}
-	}
-
-	h1 {
-		font-size: 2rem;
-	}
-
-	.odk-menu-bar {
-		.p-button-icon-only.p-button-rounded {
-			height: 2rem;
-			width: 2rem;
-		}
-	}
-
-	.p-dropdown.rounded {
-		border-radius: 30px;
-		border: none;
-		width: 160px;
-
-		&.p-focus {
-			box-shadow: inset 0 0 0 1px var(--primary-500);
-		}
-
-		.p-dropdown-label {
-			padding: 5px 16px;
-
-			span {
-				vertical-align: middle;
+				>.p-toggleable-content>.p-panel-content {
+					padding: 1rem 0 0 0.5rem;
+				}
 			}
 		}
 
-		&.with-icon {
-			[class^='icon-'],
-			[class*=' icon-'] {
-				font-size: 22px;
-				margin-right: 10px;
+		.p-panel {
+			background: var(--surface-0);
+			padding: 1rem;
+
+			.p-panel-header {
+				background: transparent;
+				display: flex;
+			}
+
+			.p-panel-content:last-child {
+				border-bottom-right-radius: 10px;
+				border-bottom-left-radius: 10px;
+			}
+
+			.p-panel-toggler {
+				display: none;
+			}
+
+			.panel-title {
+				cursor: pointer;
+			}
+		}
+
+		h1 {
+			font-size: 2rem;
+		}
+
+		.p-dropdown.rounded {
+			border-radius: 30px;
+			border: none;
+			width: 160px;
+
+			&.p-focus {
+				box-shadow: inset 0 0 0 1px var(--primary-500);
+			}
+
+			.p-dropdown-label {
+				padding: 5px 16px;
+
+				span {
+					vertical-align: middle;
+				}
+			}
+
+			&.with-icon {
+
+				[class^='icon-'],
+				[class*=' icon-'] {
+					font-size: 22px;
+					margin-right: 10px;
+				}
+			}
+		}
+
+		.form-title {
+			border-top: none;
+			margin-top: 20px;
+
+			.p-card-content {
+				padding: 0 1rem;
+
+				h1 {
+					margin: 10px 0;
+				}
+			}
+		}
+
+		.questions-card {
+			border-top: none;
+			margin-top: 20px;
+
+			.p-card-content {
+				padding: 1rem;
+			}
+		}
+
+		.odk-menu-bar {
+			.p-button.p-button-icon-only.p-button-rounded {
+				height: 2rem;
+				width: 2rem;
 			}
 		}
 	}

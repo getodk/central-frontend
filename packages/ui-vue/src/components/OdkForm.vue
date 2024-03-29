@@ -1,54 +1,20 @@
 <template>
-	<div class="odk-form">
+	<div v-if="odkForm" class="odk-form">
 		<div class="form-wrapper">
 			<FormMenuBar />
-			<OdkFormHeader title="Health Survey" />
-			
-			<OdkPanel :level="0">
-				<div class="flex flex-column gap-2">
-					<label for="username">1. What's your first name? <span>*</span></label>
-					<InputText id="username" aria-describedby="username-help" variant="filled" />
-				</div>
 
-				<div class="flex flex-column gap-2">
-					<label for="username">2. What's your last name? <span>*</span></label>
-					<InputText id="username" aria-describedby="username-help" variant="filled" />
-				</div>
-			</OdkPanel>
+			<!-- TODO/q: should the title be on the definition or definition.form be accessible instead of definition.bind.form -->
+			<OdkFormHeader :title="odkForm.definition.bind.form.title" />
 
-			<OdkPanel :level="0" title="Background">
-				<div class="flex flex-column gap-3">
-					<label for="username">1. Which country are you currently residing in? <span>*</span></label>
-					<Dropdown v-model="selectedCountry" :options="countries" option-label="name" placeholder="Select country" class="w-20rem" />
-				</div>
-			</OdkPanel>
-			
-			<OdkPanel :level="0" title="Repeats">
-				<OdkPanel :level="1" title="Date 1" :more="true">
-					<div class="flex flex-column gap-2">
-						<label for="username">1. Enter the date?</label>
-						<div>
-							<Calendar v-model="someDate" show-icon icon-display="input" />
+			<Card class="questions-card">
+				<template #content>
+					<div class="form-questions">
+						<div class="flex flex-column gap-5">
+							<OdkQuestionList :questions="odkForm.currentState.children"/>
 						</div>
 					</div>
-					<OdkPanel :level="2" title="Nested repeat" :more="true">
-						<div class="flex flex-column gap-2">
-							<label for="username">1. Enter the date?</label>
-							<div>
-								<Calendar v-model="someDate" show-icon icon-display="input" />
-							</div>
-						</div>
-					</OdkPanel>
-				</OdkPanel>
-				<OdkPanel :level="1" title="Date 2" :more="true">
-					<div class="flex flex-column gap-2">
-						<label for="username">1. Enter the date?</label>
-						<div>
-							<Calendar v-model="someDate" show-icon icon-display="input" />
-						</div>
-					</div>
-				</OdkPanel>
-			</OdkPanel>
+				</template>
+			</Card>
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
 				<Button label="Save as draft" severity="secondary" rounded raised />
@@ -59,23 +25,35 @@
 </template>
 
 <script setup lang="ts">
+import { initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
 import Button from 'primevue/button';
-import Calendar from 'primevue/calendar';
-import Dropdown from 'primevue/dropdown';
-import InputText from 'primevue/inputtext';
+import Card from 'primevue/card';
 import { ref } from 'vue';
 import OdkFormHeader from './OdkFormHeader.vue';
 import FormMenuBar from './OdkMenuBar.vue';
-import OdkPanel from './OdkPanel.vue';
+import OdkQuestionList from './OdkQuestionList.vue';
 
-defineProps<{ xform: string }>();
+const props = defineProps<{ formXml: string }>();
 
-const selectedCountry = ref('');
-const countries = [
-	{ name: 'Canada', code: 'ca' },
-	{ name: 'Pakistan', code: 'pk' },
-	{ name: 'US', code: 'us' }
-]
+const odkForm = ref<RootNode>();
 
-const someDate = ref('');
+const container = ref<Element | null>(null);
+const ccc = ref<Element | null>(null);
+
+initializeForm(props.formXml, {
+    config: {
+      // TODO/sk: to replace with 'ref'
+      stateFactory: (input) => {
+        return input;
+      },
+    },
+  }).then((f) => {
+    // console.log(f);
+    odkForm.value = f;
+		
+  });
 </script>
+
+<style>
+
+</style>

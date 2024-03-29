@@ -1,5 +1,5 @@
 <template>
-	<Panel :class="panelClass" :toggleable="!!title" :collapsed="panelState">
+	<Panel v-if="!!title" :class="panelClass" :toggleable="!!title" :collapsed="panelState">
 		<template #header>
 			<div class="panel-title" role="button" @click="toggle">
 				<h2 class="inline">					
@@ -17,19 +17,21 @@
 			</div>
 		</template>
 	</Panel>
+	<template v-else>
+		<slot />
+	</template>
 </template>
 
 <script setup lang="ts">
 import Button from 'primevue/button';
-import Menu, { type MenuItem, type MenuState } from 'primevue/menu';
-// import { type MenuItem } from 'primevue/menuitem';
+import Menu, { type MenuState } from 'primevue/menu';
+import { type MenuItem } from 'primevue/menuitem';
 import Panel from 'primevue/panel';
 import { ref } from 'vue';
 
-const props = defineProps<{level: number, title?: string, more?: boolean}>();
+const props = defineProps<{title?: string, more?: boolean}>();
 
 const panelClass = [
-  'level-'+props.level,
   props.title ? 'with-title' : 'no-title',
   props.more ? 'with-context-menu' : 'no-context-menue',
 ];

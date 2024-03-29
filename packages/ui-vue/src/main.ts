@@ -1,17 +1,15 @@
-import { createApp } from 'vue';
 import type { Component } from 'vue';
+import { createApp } from 'vue';
 
 import PrimeVue from 'primevue/config';
 import App from './App.vue';
 
-// Due to vite#11012, Roboto font files are manually copied in public/fonts folder.
-import './themes/2024-light/theme.scss';
-
 import './assets/css/icomoon.css';
-import './assets/css/style.scss';
-
-// TODO: Purge it - postcss-purgecss
+import './themes/2024-light/theme.scss';
+// TODO/sk: Purge it - postcss-purgecss
 import 'primeflex/primeflex.css';
+
+import './assets/css/style.scss';
 
 const app = createApp(App as Component);
 app.use(PrimeVue, { ripple: false }); // Collect has no ripple
