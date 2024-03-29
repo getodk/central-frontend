@@ -192,4 +192,10 @@ export class SelectField
 
 		return root;
 	}
+
+	override subscribe(): void {
+		if (this.engineState.relevant) {
+			this.engineState.value;
+		}
+	}
 }
