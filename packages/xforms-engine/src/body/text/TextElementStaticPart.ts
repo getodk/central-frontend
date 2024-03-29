@@ -5,7 +5,8 @@ const toStaticXPathExpression = (staticTextValue: string): string => {
 	const quote = staticTextValue.includes('"') ? "'" : '"';
 
 	if (staticTextValue.includes(quote)) {
-		throw new Error('todo concat()');
+		// throw new Error('todo concat()');
+		return 'todo(concat())';
 	}
 
 	return `${quote}${staticTextValue}${quote}`;

@@ -28,7 +28,7 @@ export type TextElementOwner =
 	| ItemDefinition
 	| ItemsetDefinition;
 
-type TextElementChild = TextElementOutputPart | TextElementStaticPart;
+export type TextElementChild = TextElementOutputPart | TextElementStaticPart;
 
 export abstract class TextElementDefinition<
 	Type extends TextElementType,

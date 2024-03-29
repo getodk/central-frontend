@@ -2,6 +2,9 @@ import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { DependentExpression } from '../../expression/DependentExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SubscribableDependency } from './SubscribableDependency.ts';
+import type { TranslationContext } from './TranslationContext.ts';
+
+export interface EvaluationContextRoot extends SubscribableDependency, TranslationContext {}
 
 /**
  * Provides a common interface to establish context for XPath-based
@@ -18,7 +21,7 @@ import type { SubscribableDependency } from './SubscribableDependency.ts';
 export interface EvaluationContext {
 	readonly scope: ReactiveScope;
 	readonly evaluator: XFormsXPathEvaluator;
-	readonly root: SubscribableDependency;
+	readonly root: EvaluationContextRoot;
 
 	/**
 	 * Produces the current absolute reference to the {@link contextNode}, where
