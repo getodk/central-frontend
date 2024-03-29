@@ -7,7 +7,7 @@
   </ul>
   <div v-else>
       <button @click="selectForm = null">Back</button>
-      <OdkForm v-if="selectForm" :form-xml="selectForm[1]" />  
+      <OdkForm v-if="selectForm" :form-xml="selectForm[1]" @submit="handleSubmit" />  
   </div>
 	
 </template>
@@ -30,7 +30,9 @@ demoForms.forEach(f => {
 
 const selectForm = ref<[string, string] | null>(null);
 
-
+const handleSubmit = (data: any) => {
+    alert(`Submit button was pressed. Data: ${data}`);
+} 
 
 </script>
 

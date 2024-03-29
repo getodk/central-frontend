@@ -18,7 +18,8 @@
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
 				<Button label="Save as draft" severity="secondary" rounded raised />
-				<Button label="Send" rounded raised />
+				<!-- maybe current state is in odkForm.state.something -->
+				<Button label="Send" rounded raised @click="$emit('submit', odkForm.currentState.value)" /> 
 			</div>
 		</div>		
 	</div>	
@@ -37,8 +38,7 @@ const props = defineProps<{ formXml: string }>();
 
 const odkForm = ref<RootNode>();
 
-const container = ref<Element | null>(null);
-const ccc = ref<Element | null>(null);
+defineEmits(['submit']);
 
 initializeForm(props.formXml, {
     config: {
@@ -48,9 +48,8 @@ initializeForm(props.formXml, {
       },
     },
   }).then((f) => {
-    // console.log(f);
     odkForm.value = f;
-		
+		console.log(f);
   });
 </script>
 
