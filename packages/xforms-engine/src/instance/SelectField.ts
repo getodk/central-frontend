@@ -1,5 +1,6 @@
 import { xmlXPathWhitespaceSeparatedList } from '@odk-web-forms/common/lib/string/whitespace.ts';
 import type { Accessor } from 'solid-js';
+import { untrack } from 'solid-js';
 import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { SelectItem, SelectNode } from '../client/SelectNode.ts';
 import type { TextRange } from '../index.ts';
@@ -41,6 +42,8 @@ export class SelectField
 		SubscribableDependency,
 		ValueContext<readonly SelectItem[]>
 {
+	private readonly selectExclusive: boolean;
+
 	protected readonly state: SharedNodeState<SelectFieldStateSpec>;
 	protected override engineState: EngineState<SelectFieldStateSpec>;
 
@@ -59,7 +62,7 @@ export class SelectField
 				ignoreEmpty: true,
 			});
 
-			const items = this.getSelectItemsByValue(this.getValueOptions());
+			const items = this.getSelectItemsByValue();
 
 			return values
 				.map((value) => {
@@ -75,6 +78,8 @@ export class SelectField
 
 	constructor(parent: GeneralParentNode, definition: SelectFieldDefinition) {
 		super(parent, definition);
+
+		this.selectExclusive = definition.bodyElement.type === 'select1';
 
 		const valueOptions = createSelectItems(this);
 
@@ -102,7 +107,7 @@ export class SelectField
 	}
 
 	protected getSelectItemsByValue(
-		valueOptions: readonly SelectItem[]
+		valueOptions: readonly SelectItem[] = this.getValueOptions()
 	): ReadonlyMap<string, SelectItem> {
 		return new Map(
 			valueOptions.map((item) => {
@@ -115,12 +120,76 @@ export class SelectField
 		return this.computeChildStepReference(parent);
 	}
 
-	// SelectNode
-	select(_item: SelectItem): Root {
-		throw new Error('Not implemented');
+	protected updateSelectedItemValues(values: readonly string[]) {
+		const itemsByValue = untrack(() => this.getSelectItemsByValue());
+
+		const items = values.flatMap((value) => {
+			const item = itemsByValue.get(value);
+
+			if (item == null) {
+				return [];
+			}
+
+			return item ?? [];
+		});
+
+		this.state.setProperty('value', items);
 	}
 
-	deselect(_item: SelectItem): Root {
-		throw new Error('Not implemented');
+	protected setSelectedItemValue(value: string | null) {
+		if (value == null) {
+			this.state.setProperty('value', []);
+
+			return;
+		}
+
+		this.updateSelectedItemValues([value]);
+	}
+
+	// SelectNode
+	select(selectedItem: SelectItem): Root {
+		const { engineState, root } = this;
+
+		if (this.selectExclusive) {
+			this.setSelectedItemValue(selectedItem.value);
+
+			return root;
+		}
+
+		const currentValues = engineState.value.map(({ value }) => {
+			return value;
+		});
+
+		const selectedValue = selectedItem.value;
+
+		if (currentValues.includes(selectedValue)) {
+			return root;
+		}
+
+		this.updateSelectedItemValues(currentValues.concat(selectedValue));
+
+		return root;
+	}
+
+	deselect(deselectedItem: SelectItem): Root {
+		const { engineState, root } = this;
+
+		const currentValues = engineState.value.map(({ value }) => {
+			return value;
+		});
+
+		const selectedValue = deselectedItem.value;
+
+		if (!currentValues.includes(selectedValue)) {
+			return root;
+		}
+
+		const updatedValues = currentValues.filter((value) => {
+			return value !== selectedValue;
+		});
+
+		this.updateSelectedItemValues(updatedValues);
+
+		return root;
 	}
 }
