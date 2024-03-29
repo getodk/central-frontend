@@ -3,7 +3,7 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { TextRange } from '../../client/TextRange.ts';
-import type { BindComputation } from '../../model/BindComputation.ts';
+import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { AnyDescendantNodeDefinition } from '../../model/DescendentNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
 import type { RepeatInstanceDefinition } from '../../model/RepeatInstanceDefinition.ts';
@@ -95,22 +95,19 @@ export abstract class DescendantNode<
 	): DescendantNodeSharedStateSpec {
 		return this.scope.runTask(() => {
 			const reference = createMemo(() => this.computeReference(parent));
-
 			const { bind } = definition;
 
-			// Temporary, will be made reactive in subsequent commit
-			type BooleanBindComputationType = 'readonly' | 'relevant' | 'required';
-			const booleanEvaluation = (
-				computation: BindComputation<BooleanBindComputationType>
-			): Accessor<boolean> => {
-				return () =>
-					this.evaluator.evaluateBoolean(computation.expression, {
-						contextNode: this.contextNode,
-					});
-			};
-			const readonly = booleanEvaluation(bind.readonly);
-			const relevant = booleanEvaluation(bind.relevant);
-			const required = booleanEvaluation(bind.required);
+			const selfReadonly = createComputedExpression(this, bind.readonly);
+			const readonly = createMemo(() => {
+				return parent.isReadonly || selfReadonly();
+			});
+
+			const selfRelevant = createComputedExpression(this, bind.relevant);
+			const relevant = createMemo(() => {
+				return parent.isRelevant && selfRelevant();
+			});
+
+			const required = createComputedExpression(this, bind.required);
 
 			return {
 				reference,

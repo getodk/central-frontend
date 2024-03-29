@@ -5,7 +5,8 @@ import type { TextRange } from '../../index.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
-import { createReactiveScope, type ReactiveScope } from '../../lib/reactivity/scope.ts';
+import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
+import { createReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
 import type { RepeatInstance } from '../RepeatInstance.ts';
@@ -46,6 +47,20 @@ export abstract class InstanceNode<
 {
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
+
+	/**
+	 * @package Exposed on every node type to facilitate inheritance.
+	 */
+	get isReadonly(): boolean {
+		return this.engineState?.readonly ?? false;
+	}
+
+	/**
+	 * @package Exposed on every node type to facilitate inheritance.
+	 */
+	get isRelevant(): boolean {
+		return this.engineState?.relevant ?? true;
+	}
 
 	// BaseNode: identity
 	readonly nodeId: string;
