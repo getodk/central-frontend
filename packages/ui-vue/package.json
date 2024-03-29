@@ -46,6 +46,7 @@
     "test:types:vitest": "vue-tsc --project ./tsconfig.vitest.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
+    "@odk-web-forms/xforms-engine": "1.0.0-alpha.0",
     "primevue": "^3.49.1",
     "primeflex": "^3.3.1",
     "vue": "^3.4.19",
