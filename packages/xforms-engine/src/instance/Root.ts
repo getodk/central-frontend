@@ -13,9 +13,10 @@ import type { RootDefinition } from '../model/RootDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
-import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
+import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
+import type { TranslationContext } from './internal-api/TranslationContext.ts';
 
 interface RootStateSpec {
 	readonly reference: string;
@@ -90,7 +91,12 @@ const getInitialLanguageState = (translations: ItextTranslations): InitialLangua
 
 export class Root
 	extends InstanceNode<RootDefinition, RootStateSpec>
-	implements RootNode, EvaluationContext, SubscribableDependency
+	implements
+		RootNode,
+		EvaluationContext,
+		EvaluationContextRoot,
+		SubscribableDependency,
+		TranslationContext
 {
 	protected readonly state: SharedNodeState<RootStateSpec>;
 	protected readonly engineState: EngineState<RootStateSpec>;
@@ -110,6 +116,11 @@ export class Root
 	readonly parent = null;
 
 	readonly languages: FormLanguages;
+
+	// TranslationContext
+	get activeLanguage(): ActiveLanguage {
+		return this.engineState.activeLanguage;
+	}
 
 	constructor(form: XFormDefinition, engineConfig: InstanceConfig) {
 		const definition = form.model.root;
@@ -166,6 +177,7 @@ export class Root
 			throw new Error(`Language "${language.language}" not available`);
 		}
 
+		this.evaluator.translations.setActiveLanguage(activeLanguage.language);
 		this.state.setProperty('activeLanguage', activeLanguage);
 
 		return this;

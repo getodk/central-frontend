@@ -7,6 +7,8 @@ import type { CurrentState } from '../lib/reactivity/node-state/createCurrentSta
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
+import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import type { Root } from './Root.ts';
@@ -55,8 +57,8 @@ export class StringField
 			{
 				...this.buildSharedStateSpec(parent, definition),
 
-				label: () => null,
-				hint: () => null,
+				label: createNodeLabel(this, definition),
+				hint: createFieldHint(this, definition),
 				children: null,
 				valueOptions: null,
 				value: createValueState(this),
