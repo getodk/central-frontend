@@ -58,6 +58,13 @@ export type DescendantNodeParent<Definition extends DescendantNodeDefinition> =
 		? RepeatRange
 		: GeneralParentNode;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyDescendantNode = DescendantNode<DescendantNodeDefinition, DescendantNodeStateSpec<any>>;
+
+interface RemoveDescendantNodeOptions {
+	readonly isChildRemoval?: boolean;
+}
+
 export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,12 +125,23 @@ export abstract class DescendantNode<
 		});
 	}
 
+	protected createContextNode(parentContextNode: Element, nodeName: string): Element {
+		return parentContextNode.ownerDocument.createElement(nodeName);
+	}
+
 	/**
-	 * Currently expected to be overridden by repeat range.
+	 * Currently expected to be overridden by...
+	 *
+	 * - Repeat range: returns its parent's context node, because it doesn't have
+	 *   a node in the primary instance tree.
+	 *
+	 * - Repeat instance: returns its created context node, but overrides handles
+	 *   appending behavior separately (for inserting at the end of its parent
+	 *   range, or even at an arbitrary index within the range, after instance
+	 *   creation is has completed).
 	 */
 	protected initializeContextNode(parentContextNode: Element, nodeName: string): Element {
-		const { ownerDocument } = parentContextNode;
-		const element = ownerDocument.createElement(nodeName);
+		const element = this.createContextNode(parentContextNode, nodeName);
 
 		parentContextNode.append(element);
 
@@ -138,6 +156,10 @@ export abstract class DescendantNode<
 		throw new Error('Not implemented');
 	}
 
+	protected removePrimaryInstanceNode(): void {
+		this.contextNode.remove();
+	}
+
 	/**
 	 * To be called when:
 	 *
@@ -150,7 +172,27 @@ export abstract class DescendantNode<
 	 * should investigate the details and ramifications of that, and whether it's
 	 * the desired behavior.
 	 */
-	remove(): void {
-		throw new Error('Not implemented');
+	remove(this: AnyDescendantNode, options: RemoveDescendantNodeOptions = {}): void {
+		const { engineState } = this;
+
+		// No need to recursively remove all descendants from the DOM tree, when
+		// the whole subroot will be removed. (This logic might not be totally
+		// sound if the reactive scope disposal below is insufficient for cleaning
+		// up whatever remaining computations affect those descendants. But it
+		// will likely be a safe assumption if we can stop using a backing XML
+		// DOM store in the future.)
+		if (!options.isChildRemoval) {
+			this.removePrimaryInstanceNode();
+		}
+
+		this.scope.runTask(() => {
+			engineState.children?.forEach((child) => {
+				child.remove({
+					isChildRemoval: true,
+				});
+			});
+		});
+
+		this.scope.dispose();
 	}
 }

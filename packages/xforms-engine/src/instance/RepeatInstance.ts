@@ -14,12 +14,19 @@ import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
+export type { RepeatDefinition };
+
 interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
 	readonly children: Signal<readonly GeneralChildNode[]>;
 	readonly valueOptions: null;
 	readonly value: null;
+}
+
+interface RepeatInstanceOptions {
+	readonly precedingPrimaryInstanceNode: Comment | Element;
+	readonly precedingInstance: RepeatInstance | null;
 }
 
 export class RepeatInstance
@@ -36,10 +43,15 @@ export class RepeatInstance
 	constructor(
 		override readonly parent: RepeatRange,
 		definition: RepeatDefinition,
-		initialIndex: number
+		options: RepeatInstanceOptions
 	) {
 		super(parent, definition);
 
+		options.precedingPrimaryInstanceNode.after(this.contextNode);
+
+		const { precedingInstance } = options;
+		const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
+		const initialIndex = precedingIndex() + 1;
 		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
 
 		this.currentIndex = currentIndex;
@@ -99,5 +111,9 @@ export class RepeatInstance
 		const currentPosition = this.currentIndex() + 1;
 
 		return `${parent.contextReference}[${currentPosition}]`;
+	}
+
+	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {
+		return this.createContextNode(parentContextNode, nodeName);
 	}
 }
