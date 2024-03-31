@@ -6,6 +6,7 @@ export type InstanceValue = string;
 
 interface ValueContextDefinitionBind {
 	readonly calculate: BindComputation<'calculate'> | null;
+	readonly readonly: BindComputation<'readonly'>;
 }
 
 export interface ValueContextDefinition {
@@ -17,6 +18,8 @@ export interface ValueContext<RuntimeValue> extends EvaluationContext {
 	readonly scope: ReactiveScope;
 	readonly definition: ValueContextDefinition;
 	readonly contextNode: Element;
+
+	get isReadonly(): boolean;
 
 	readonly encodeValue: (this: unknown, runtimeValue: RuntimeValue) => InstanceValue;
 	readonly decodeValue: (this: unknown, instanceValue: InstanceValue) => RuntimeValue;

@@ -50,19 +50,39 @@ export class BindComputation<Computation extends BindComputationType> extends De
 		return new this(bind, computation, expression);
 	}
 
+	readonly isDefaultExpression: boolean;
+
 	protected constructor(
 		bind: BindDefinition,
 		readonly computation: Computation,
-		expression: string
+		expression: string | null
 	) {
 		const isInherited = computation === 'readonly' || computation === 'relevant';
 		const ignoreContextReference = computation === 'constraint';
 
-		super(bind, bindComputationResultTypes[computation], expression, {
+		let isDefaultExpression: boolean;
+		let resolvedExpression: string;
+
+		if (expression == null) {
+			if (computation === 'calculate') {
+				throw new Error('No default expression for calculate');
+			}
+
+			resolvedExpression =
+				defaultBindComputationExpressions[computation as Exclude<Computation, 'calculate'>];
+			isDefaultExpression = true;
+		} else {
+			isDefaultExpression = false;
+			resolvedExpression = expression;
+		}
+
+		super(bind, bindComputationResultTypes[computation], resolvedExpression, {
 			ignoreContextReference,
 			semanticDependencies: {
 				parentContext: isInherited,
 			},
 		});
+
+		this.isDefaultExpression = isDefaultExpression;
 	}
 }

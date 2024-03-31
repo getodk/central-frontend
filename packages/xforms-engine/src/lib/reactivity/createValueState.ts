@@ -107,7 +107,7 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
 const createRuntimeValueState = <RuntimeValue>(
 	context: ValueContext<RuntimeValue>,
 	primaryInstanceState: Signal<string>
-): SimpleAtomicState<RuntimeValue> => {
+): ValueState<RuntimeValue> => {
 	const { decodeValue, encodeValue } = context;
 
 	return context.scope.runTask(() => {
@@ -116,6 +116,12 @@ const createRuntimeValueState = <RuntimeValue>(
 			return decodeValue(primaryInstanceValue());
 		});
 		const setRuntimeValue: SimpleAtomicStateSetter<RuntimeValue> = (value) => {
+			if (context.isReadonly) {
+				const reference = untrack(() => context.contextReference);
+
+				throw new Error(`Cannot write to readonly field ${reference}`);
+			}
+
 			const encodedValue = encodeValue(value);
 
 			return decodeValue(setPrimaryInstanceValue(encodedValue));
@@ -123,6 +129,35 @@ const createRuntimeValueState = <RuntimeValue>(
 
 		return [getRuntimeValue, setRuntimeValue];
 	});
+};
+
+/**
+ * For fields with a `readonly` bind expression, prevent downstream
+ * (client/user) writes when the field is in a `readonly` state.
+ */
+const guardDownstreamReadonlyWrites = <RuntimeValue>(
+	context: ValueContext<RuntimeValue>,
+	baseState: SimpleAtomicState<RuntimeValue>
+): SimpleAtomicState<RuntimeValue> => {
+	const { readonly } = context.definition.bind;
+
+	if (readonly.isDefaultExpression) {
+		return baseState;
+	}
+
+	const [getValue, baseSetValue] = baseState;
+
+	const setValue: SimpleAtomicStateSetter<RuntimeValue> = (value) => {
+		if (context.isReadonly) {
+			const reference = untrack(() => context.contextReference);
+
+			throw new Error(`Cannot write to readonly field: ${reference}`);
+		}
+
+		return baseSetValue(value);
+	};
+
+	return [getValue, setValue];
 };
 
 /**
@@ -176,5 +211,5 @@ export const createValueState = <RuntimeValue>(
 		createCalculation(context, setValue, calculate);
 	}
 
-	return runtimeState;
+	return guardDownstreamReadonlyWrites(context, runtimeState);
 };
