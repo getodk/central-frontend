@@ -145,8 +145,8 @@ export class EntryState implements NodeState<'root'> {
 		const { sortedNodesetIndexes } = this.form;
 
 		return descendants.slice().sort((a, b) => {
-			const aIndex = sortedNodesetIndexes.get(a.nodeset) ?? -1;
-			const bIndex = sortedNodesetIndexes.get(b.nodeset) ?? -1;
+			const aIndex = sortedNodesetIndexes?.get(a.nodeset) ?? -1;
+			const bIndex = sortedNodesetIndexes?.get(b.nodeset) ?? -1;
 
 			return aIndex - bIndex;
 		});
