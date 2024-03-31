@@ -1,5 +1,4 @@
-import type { Signal } from 'solid-js';
-import { createComputed, createMemo, createSignal, on, untrack } from 'solid-js';
+import { createComputed, createMemo, createSignal, untrack } from 'solid-js';
 import type { DependentExpression } from '../../expression/DependentExpression.ts';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import type { ValueContext } from '../../instance/internal-api/ValueContext.ts';
@@ -34,9 +33,14 @@ export interface ValueStateOptions {
 	readonly initialValueSource?: InitialValueSource;
 }
 
-export type PrimaryInstanceValueState = Signal<string>;
+interface PersistedValueState {
+	readonly isRelevant: boolean;
+	readonly value: string;
+}
 
-export type ValueState<RuntimeValue> = SimpleAtomicState<RuntimeValue>;
+type PrimaryInstanceValueState = SimpleAtomicState<string>;
+
+type ValueState<RuntimeValue> = SimpleAtomicState<RuntimeValue>;
 
 /**
  * Creates a signal which:
@@ -56,33 +60,78 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
 	options: ValueStateOptions
 ): PrimaryInstanceValueState => {
 	const { contextNode, definition, scope } = context;
-
-	const { defaultValue } = definition;
 	const { initialValueSource } = options;
+	const { defaultValue } = definition;
 
 	return scope.runTask(() => {
 		// prettier-ignore
-		const initialValue = initialValueSource === 'PRIMARY_INSTANCE'
-			? (contextNode.textContent ?? defaultValue)
-			: defaultValue;
+		const initialValue =
+			initialValueSource === 'PRIMARY_INSTANCE'
+				? contextNode.textContent ?? defaultValue
+				: defaultValue;
 
-		const [persistedValue, setPersistedValue] = createSignal(initialValue);
+		const persistedValueState = createSignal<PersistedValueState>(
+			{
+				isRelevant: context.isRelevant,
+				value: initialValue,
+			},
+			{
+				// This could return a single boolean expression, but checking each
+				// equality condition separately feels like it more clearly expresses
+				// the intent.
+				equals: (previous, updated) => {
+					if (updated.isRelevant !== previous.isRelevant) {
+						return false;
+					}
+
+					return updated.value === previous.value;
+				},
+			}
+		);
+		const [persistedValue, setValueForPersistence] = persistedValueState;
 
 		createComputed(() => {
-			contextNode.textContent = persistedValue();
+			const isRelevant = context.isRelevant;
+
+			setValueForPersistence((persisted) => {
+				return {
+					isRelevant,
+					value: persisted.value,
+				};
+			});
 		});
 
-		const [signalValue, setSignalValue] = createSignal(untrack(persistedValue));
+		const toSignalValue = (current: PersistedValueState): string => {
+			if (current.isRelevant) {
+				return current.value;
+			}
 
-		createComputed(
-			on(persistedValue, (persisted) => {
-				setSignalValue(contextNode.textContent ?? persisted);
+			return '';
+		};
 
-				return persisted;
-			})
-		);
+		const [signalValue, setSignalValue] = createSignal(toSignalValue(persistedValue()));
 
-		return [signalValue, setPersistedValue];
+		createComputed(() => {
+			const { isRelevant, value } = persistedValue();
+			const preparedTextContent = isRelevant ? value : '';
+			const assignedTextContent = (contextNode.textContent = preparedTextContent);
+
+			setSignalValue(assignedTextContent);
+		});
+
+		const setPrimaryInstanceValue: SimpleAtomicStateSetter<string> = (value) => {
+			const persisted = setValueForPersistence(() => {
+				// TODO: Check (error?) for non-relevant value change?
+				return {
+					isRelevant: context.isRelevant,
+					value,
+				};
+			});
+
+			return persisted.value;
+		};
+
+		return [signalValue, setPrimaryInstanceValue];
 	});
 };
 
@@ -106,7 +155,7 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
  */
 const createRuntimeValueState = <RuntimeValue>(
 	context: ValueContext<RuntimeValue>,
-	primaryInstanceState: Signal<string>
+	primaryInstanceState: PrimaryInstanceValueState
 ): ValueState<RuntimeValue> => {
 	const { decodeValue, encodeValue } = context;
 
@@ -116,12 +165,6 @@ const createRuntimeValueState = <RuntimeValue>(
 			return decodeValue(primaryInstanceValue());
 		});
 		const setRuntimeValue: SimpleAtomicStateSetter<RuntimeValue> = (value) => {
-			if (context.isReadonly) {
-				const reference = untrack(() => context.contextReference);
-
-				throw new Error(`Cannot write to readonly field ${reference}`);
-			}
-
 			const encodedValue = encodeValue(value);
 
 			return decodeValue(setPrimaryInstanceValue(encodedValue));
@@ -174,10 +217,12 @@ const createCalculation = <RuntimeValue>(
 		const calculate = createComputedExpression(context, calculateDefinition);
 
 		createComputed(() => {
-			const calculated = calculate();
-			const value = context.decodeValue(calculated);
+			if (context.isRelevant) {
+				const calculated = calculate();
+				const value = context.decodeValue(calculated);
 
-			setValue(value);
+				setValue(value);
+			}
 		});
 	});
 };

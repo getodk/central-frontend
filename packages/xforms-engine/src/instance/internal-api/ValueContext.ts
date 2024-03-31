@@ -20,6 +20,7 @@ export interface ValueContext<RuntimeValue> extends EvaluationContext {
 	readonly contextNode: Element;
 
 	get isReadonly(): boolean;
+	get isRelevant(): boolean;
 
 	readonly encodeValue: (this: unknown, runtimeValue: RuntimeValue) => InstanceValue;
 	readonly decodeValue: (this: unknown, instanceValue: InstanceValue) => RuntimeValue;
