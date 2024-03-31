@@ -83,11 +83,4 @@ export class StringField
 
 		return this.root;
 	}
-
-	// SubscribableDependency
-	override subscribe(): void {
-		if (this.engineState.relevant) {
-			this.engineState.value;
-		}
-	}
 }

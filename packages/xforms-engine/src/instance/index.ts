@@ -34,7 +34,7 @@ export const initializeForm = async (
 	const sourceXML = await retrieveSourceXMLResource(input, engineConfig);
 	const form = new XFormDefinition(sourceXML);
 
-	return new Root(form, engineConfig);
+	return Root.initialize(form.xformDOM, form.model.root, engineConfig);
 };
 
 initializeForm satisfies InitializeForm;

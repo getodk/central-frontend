@@ -180,4 +180,14 @@ export class RepeatRange
 			return this.root;
 		});
 	}
+
+	override subscribe(): void {
+		super.subscribe();
+
+		// Subscribing to children can support reactive expressions dependent on the
+		// repeat range itself (e.g. `count()`).
+		this.engineState.children.forEach((child) => {
+			child.subscribe();
+		});
+	}
 }

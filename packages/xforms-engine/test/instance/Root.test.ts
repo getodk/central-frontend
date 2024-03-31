@@ -72,9 +72,9 @@ describe('Instance root', () => {
 	// boilerplate across tests. Most tests should use `createRootNode` below.
 	// Tests concerned with some aspects of internals may use this function
 	// directly, with caution.
-	const createRoot = (stateFactory: OpaqueReactiveObjectFactory): Root => {
+	const createRoot = async (stateFactory: OpaqueReactiveObjectFactory): Promise<Root> => {
 		return scope.runTask(() => {
-			return new Root(xformDefinition, {
+			return Root.initialize(xformDefinition.xformDOM, xformDefinition.model.root, {
 				createUniqueId,
 				fetchResource,
 				stateFactory,
@@ -83,8 +83,8 @@ describe('Instance root', () => {
 	};
 
 	describe('internals', () => {
-		it('exposes a context node for XPath evaluation purposes', () => {
-			const { contextNode } = reactiveTestScope(({ mutable }) => {
+		it('exposes a context node for XPath evaluation purposes', async () => {
+			const { contextNode } = await reactiveTestScope(({ mutable }) => {
 				// @ts-expect-error ...
 				return createRoot(mutable);
 			});
@@ -93,8 +93,8 @@ describe('Instance root', () => {
 			expect(contextNode.nodeName).toBe('data');
 		});
 
-		it("produces instance root's the static nodeset reference", () => {
-			const { contextReference } = reactiveTestScope(({ mutable }) => {
+		it("produces instance root's the static nodeset reference", async () => {
+			const { contextReference } = await reactiveTestScope(({ mutable }) => {
 				// @ts-expect-error ...
 				return createRoot(mutable);
 			});
@@ -102,10 +102,10 @@ describe('Instance root', () => {
 			expect(contextReference).toBe('/data');
 		});
 
-		it.fails('gets a node by reference', () => {
-			const q1 = reactiveTestScope(({ mutable }) => {
+		it('gets a node by reference', async () => {
+			const q1 = await reactiveTestScope(async ({ mutable }) => {
 				// @ts-expect-error ...
-				const root = createRoot(mutable);
+				const root = await createRoot(mutable);
 
 				return root.getSubscribableDependencyByReference('/data/q1');
 			});
@@ -120,12 +120,12 @@ describe('Instance root', () => {
 	// with graph computations), but the majority of tests should be focused on
 	// client-facing functionality. Those tests should use this convenience
 	// function if possible.
-	const createRootNode = (stateFactory: OpaqueReactiveObjectFactory): RootNode => {
+	const createRootNode = (stateFactory: OpaqueReactiveObjectFactory): Promise<RootNode> => {
 		return createRoot(stateFactory);
 	};
 
-	it('creates a Root instance', () => {
-		const root = reactiveTestScope(({ mutable }) => {
+	it('creates a Root instance', async () => {
+		const root = await reactiveTestScope(({ mutable }) => {
 			// @ts-expect-error - TODO the `mutable` type obviously needs to be relaxed in tandem with the types associated with `engineClientState`...
 			const stateFactory: OpaqueReactiveObjectFactory = mutable;
 
@@ -136,12 +136,12 @@ describe('Instance root', () => {
 	});
 
 	describe('translation languages', () => {
-		it("gets the form's available languages", () => {
-			const languages = reactiveTestScope(({ mutable }) => {
+		it("gets the form's available languages", async () => {
+			const languages = await reactiveTestScope(async ({ mutable }) => {
 				// @ts-expect-error ...
 				const stateFactory: OpaqueReactiveObjectFactory = mutable;
 
-				const root = createRootNode(stateFactory);
+				const root = await createRootNode(stateFactory);
 
 				return root.languages;
 			});
@@ -156,12 +156,12 @@ describe('Instance root', () => {
 			]);
 		});
 
-		it('gets the initial active language', () => {
-			const activeLanguage = reactiveTestScope(({ mutable }) => {
+		it('gets the initial active language', async () => {
+			const activeLanguage = await reactiveTestScope(async ({ mutable }) => {
 				// @ts-expect-error ...
 				const stateFactory: OpaqueReactiveObjectFactory = mutable;
 
-				const root = createRootNode(stateFactory);
+				const root = await createRootNode(stateFactory);
 
 				return root.currentState.activeLanguage;
 			});
@@ -171,12 +171,14 @@ describe('Instance root', () => {
 			});
 		});
 
-		it('sets the active language', () => {
-			const { activeLanguage } = reactiveTestScope(({ mutable }) => {
+		it('sets the active language', async () => {
+			const { activeLanguage } = await reactiveTestScope(async ({ mutable }) => {
 				// @ts-expect-error ...
 				const stateFactory: OpaqueReactiveObjectFactory = mutable;
 
-				const root = createRootNode(stateFactory).setLanguage({
+				const root = await createRootNode(stateFactory);
+
+				root.setLanguage({
 					language: 'Spanish',
 				});
 
@@ -188,12 +190,12 @@ describe('Instance root', () => {
 			});
 		});
 
-		it('fails to set a language not supported by the form', () => {
-			const caught = reactiveTestScope(({ mutable }) => {
+		it('fails to set a language not supported by the form', async () => {
+			const caught = await reactiveTestScope(async ({ mutable }) => {
 				// @ts-expect-error ...
 				const stateFactory: OpaqueReactiveObjectFactory = mutable;
 
-				const root = createRootNode(stateFactory);
+				const root = await createRootNode(stateFactory);
 
 				try {
 					root.setLanguage({ language: 'Not supported' });
@@ -207,15 +209,15 @@ describe('Instance root', () => {
 			expect(caught).toBeInstanceOf(Error);
 		});
 
-		it('updates reactive client state on language change', () => {
+		it('updates reactive client state on language change', async () => {
 			expect.assertions(2);
 
-			const lastObservedClientLanguage = reactiveTestScope(
-				({ mutable, effect }): ActiveLanguage | null => {
+			const lastObservedClientLanguage = await reactiveTestScope(
+				async ({ mutable, effect }): Promise<ActiveLanguage | null> => {
 					// @ts-expect-error ...
 					const stateFactory: OpaqueReactiveObjectFactory = mutable;
 
-					const root = createRootNode(stateFactory);
+					const root = await createRootNode(stateFactory);
 
 					let observedClientLanguage: ActiveLanguage | null = null;
 
@@ -251,10 +253,10 @@ describe('Instance root', () => {
 		{ stateKey: 'valueOptions', expectedValue: null },
 		{ stateKey: 'value', expectedValue: null },
 	] as const)('$stateKey state', ({ stateKey, expectedValue, invalidValue }) => {
-		it(`gets the initial, static state of ${stateKey}`, () => {
-			const state = reactiveTestScope(({ mutable }) => {
+		it(`gets the initial, static state of ${stateKey}`, async () => {
+			const state = await reactiveTestScope(async ({ mutable }) => {
 				// @ts-expect-error ...
-				const root = createRootNode(mutable);
+				const root = await createRootNode(mutable);
 
 				return root.currentState[stateKey];
 			});
@@ -263,10 +265,10 @@ describe('Instance root', () => {
 		});
 
 		if (!invalidValue != null) {
-			it(`fails to set update the static state of "${stateKey}" to ${invalidValue}`, () => {
-				const caught = reactiveTestScope(({ mutable }) => {
+			it(`fails to set update the static state of "${stateKey}" to ${invalidValue}`, async () => {
+				const caught = await reactiveTestScope(async ({ mutable }) => {
 					// @ts-expect-error ...
-					const root = createRootNode(mutable);
+					const root = await createRootNode(mutable);
 
 					try {
 						// @ts-expect-error - intentionally ignore unsafe assignment to
@@ -284,10 +286,10 @@ describe('Instance root', () => {
 		}
 	});
 
-	it("gets the root node's first child", () => {
-		const firstChild = reactiveTestScope(({ mutable }) => {
+	it("gets the root node's first child", async () => {
+		const firstChild = await reactiveTestScope(async ({ mutable }) => {
 			// @ts-expect-error ...
-			const root = createRootNode(mutable);
+			const root = await createRootNode(mutable);
 
 			return root.currentState.children[0];
 		});

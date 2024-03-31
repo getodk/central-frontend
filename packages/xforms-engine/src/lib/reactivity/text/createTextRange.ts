@@ -1,4 +1,4 @@
-import { createMemo, type Accessor } from 'solid-js';
+import { type Accessor } from 'solid-js';
 import type {
 	TextElementChild,
 	TextElementDefinition,
@@ -17,15 +17,7 @@ const createReferenceExpressionTextRange = <Role extends TextRole>(
 	referenceExpression: TextElementReferencePart
 ): Accessor<TextRange<Role>> => {
 	const { root } = context;
-	const computeReference = createComputedExpression(context, referenceExpression);
-	const translate = createMemo(() => {
-		// TODO: this should be handled in `createComputedExpression`!
-		// Handled here temporarily to validate that itext translations are actually
-		// reactive as expected.
-		root.subscribe();
-
-		return computeReference();
-	});
+	const translate = createComputedExpression(context, referenceExpression);
 	const translatedChunk = new TranslatedTextChunk(root, translate);
 	const range = new TextRange(role, [translatedChunk]);
 

@@ -117,4 +117,9 @@ export class RepeatInstance
 	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {
 		return this.createContextNode(parentContextNode, nodeName);
 	}
+
+	override subscribe(): void {
+		super.subscribe();
+		this.currentIndex();
+	}
 }

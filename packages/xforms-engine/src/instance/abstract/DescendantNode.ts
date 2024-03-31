@@ -81,7 +81,7 @@ export abstract class DescendantNode<
 		override readonly parent: DescendantNodeParent<Definition>,
 		override readonly definition: Definition
 	) {
-		super(parent.engineConfig, definition);
+		super(parent.engineConfig, parent, definition);
 
 		const { evaluator, root } = parent;
 
@@ -94,16 +94,21 @@ export abstract class DescendantNode<
 		return `${parent.contextReference}/${this.definition.nodeName}`;
 	}
 
-	protected abstract computeReference(parent: DescendantNodeParent<Definition>): string;
+	protected abstract override computeReference(
+		parent: DescendantNodeParent<Definition>,
+		definition: Definition
+	): string;
 
 	protected buildSharedStateSpec(
 		parent: DescendantNodeParent<Definition>,
 		definition: Definition
 	): DescendantNodeSharedStateSpec {
 		return this.scope.runTask(() => {
-			const reference = createMemo(() => this.computeReference(parent));
+			const reference = createMemo(() => this.contextReference);
 			const { bind } = definition;
 
+			// TODO: we can likely short-circuit `readonly` computation when a node
+			// is non-relevant.
 			const selfReadonly = createComputedExpression(this, bind.readonly);
 			const readonly = createMemo(() => {
 				return parent.isReadonly || selfReadonly();
@@ -114,6 +119,8 @@ export abstract class DescendantNode<
 				return parent.isRelevant && selfRelevant();
 			});
 
+			// TODO: we can likely short-circuit `required` computation when a node
+			// is non-relevant.
 			const required = createComputedExpression(this, bind.required);
 
 			return {
@@ -146,14 +153,6 @@ export abstract class DescendantNode<
 		parentContextNode.append(element);
 
 		return element;
-	}
-
-	getSubscribableDependencyByReference(_reference: string): SubscribableDependency | null {
-		throw new Error('Not implemented');
-	}
-
-	subscribe(): void {
-		throw new Error('Not implemented');
 	}
 
 	protected removePrimaryInstanceNode(): void {

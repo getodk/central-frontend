@@ -2,7 +2,6 @@ import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { XFormDOM } from '../XFormDOM.ts';
-import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -98,6 +97,18 @@ export class Root
 		SubscribableDependency,
 		TranslationContext
 {
+	static async initialize(
+		xformDOM: XFormDOM,
+		definition: RootDefinition,
+		engineConfig: InstanceConfig
+	): Promise<Root> {
+		const instance = new Root(xformDOM, definition, engineConfig);
+
+		await instance.formStateInitialized();
+
+		return instance;
+	}
+
 	protected readonly state: SharedNodeState<RootStateSpec>;
 	protected readonly engineState: EngineState<RootStateSpec>;
 
@@ -110,10 +121,17 @@ export class Root
 
 	// EvaluationContext
 	readonly evaluator: XFormsXPathEvaluator;
+
+	private readonly rootReference: string;
+
+	override get contextReference(): string {
+		return this.rootReference;
+	}
+
 	readonly contextNode: Element;
 
 	// RootNode
-	readonly parent = null;
+	override readonly parent = null;
 
 	readonly languages: FormLanguages;
 
@@ -122,13 +140,18 @@ export class Root
 		return this.engineState.activeLanguage;
 	}
 
-	constructor(form: XFormDefinition, engineConfig: InstanceConfig) {
-		const definition = form.model.root;
-
-		super(engineConfig, definition);
+	protected constructor(
+		xformDOM: XFormDOM,
+		definition: RootDefinition,
+		engineConfig: InstanceConfig
+	) {
+		super(engineConfig, null, definition);
 
 		const reference = definition.nodeset;
-		const instanceDOM = form.xformDOM.createInstance();
+
+		this.rootReference = reference;
+
+		const instanceDOM = xformDOM.createInstance();
 		const evaluator = instanceDOM.primaryInstanceEvaluator;
 		const { translations } = evaluator;
 		const { defaultLanguage, languages } = getInitialLanguageState(translations);
@@ -167,6 +190,40 @@ export class Root
 		state.setProperty('children', buildChildren(this));
 	}
 
+	/**
+	 * Waits until form state is fully initialized.
+	 *
+	 * As much as possible, all instance state computations are implemented so
+	 * that they complete synchronously.
+	 *
+	 * There is currently one exception: because instance nodes may form
+	 * computation dependencies into their descendants as well as their ancestors,
+	 * there is an allowance **during form initialization only** to account for
+	 * this chicken/egg scenario. Note that this allowance is intentionally,
+	 * strictly limited: if form state initialization is not resolved within a
+	 * single microtask tick we throw/reject.
+	 *
+	 * All subsequent computations are always performed synchronously (and we will
+	 * use tests to validate this, by utilizing the synchronously returned `Root`
+	 * state from client-facing write interfaces).
+	 */
+	async formStateInitialized(): Promise<void> {
+		await new Promise<void>((resolve) => {
+			queueMicrotask(resolve);
+		});
+
+		if (!this.isStateInitialized()) {
+			throw new Error(
+				'Form state initialization failed to complete in a single frame. Has some aspect of reactive computation been made asynchronous by mistake?'
+			);
+		}
+	}
+
+	// InstanceNode
+	protected computeReference(_parent: null, definition: RootDefinition): string {
+		return definition.nodeset;
+	}
+
 	// RootNode
 	setLanguage(language: FormLanguage): Root {
 		const activeLanguage = this.languages.find((formLanguage) => {
@@ -183,15 +240,10 @@ export class Root
 		return this;
 	}
 
-	// EvaluationContext
-	getSubscribableDependencyByReference(_reference: string): SubscribableDependency | null {
-		throw new Error('Not implemented');
-	}
-
 	// SubscribableDependency
-	subscribe(): void {
-		// Presently, the only reactive (and thus subscribable) aspect of the root
-		// node is the active form language.
+	override subscribe(): void {
+		super.subscribe();
+
 		this.engineState.activeLanguage;
 	}
 }
