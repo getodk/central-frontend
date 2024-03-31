@@ -6,6 +6,7 @@ import type { CurrentState } from '../lib/reactivity/node-state/createCurrentSta
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { RepeatRange } from './RepeatRange.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
@@ -61,7 +62,7 @@ export class RepeatInstance
 			{
 				...this.buildSharedStateSpec(parent, definition),
 
-				label: () => null,
+				label: createNodeLabel(this, definition),
 				hint: null,
 				children: createSignal<readonly GeneralChildNode[]>([]),
 				valueOptions: null,
