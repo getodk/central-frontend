@@ -54,13 +54,10 @@ export default defineConfig(({ mode }) => {
 		timeZoneId = timeZoneId ?? TEST_TIME_ZONE;
 	}
 
-	// `TreeSitterXPathParser.ts` is built as a separate entry so it can be
-	// initialized first, independently of the otherwise synchronous evaluator.
-	const entries = [
-		'./src/index.ts',
-		'./src/static/grammar/ExpressionParser.ts',
-		'./src/static/grammar/TreeSitterXPathParser.ts',
-	];
+	// `expressionParser.ts` is built as a separate entry so it can be consumed
+	// directly (once instantiated, with top-level await in its containin module)
+	// where the same parser instance is used downstream for static analysis.
+	const entries = ['./src/index.ts', './src/expressionParser.ts'];
 
 	// Mapping entry names with path-based keys gives a more predictable output which
 	// we control at the filesystem level, so the exports in package.json are stable

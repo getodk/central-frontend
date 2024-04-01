@@ -16,6 +16,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./expressionParser.js": {
+      "types": "./dist/expressionParser.d.ts",
+      "default": "./dist/expressionParser.js"
+    },
     "./static/grammar/*.js": {
       "types": "./dist/static/grammar/*.d.ts",
       "default": "./dist/static/grammar/*.js"

@@ -1,6 +1,5 @@
 import { xml } from '@odk-web-forms/common/test/factories/xml';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { xpathParser } from '../../test/parser.ts';
 import { Evaluator } from './Evaluator.ts';
 
 describe('Evaluator convenience methods', () => {
@@ -15,7 +14,7 @@ describe('Evaluator convenience methods', () => {
 				<d>4</d>
 			</c>
 		</root>`;
-		evaluator = new Evaluator(xpathParser, {
+		evaluator = new Evaluator({
 			rootNode: testDocument,
 		});
 	});

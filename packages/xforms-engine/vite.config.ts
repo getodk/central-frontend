@@ -94,7 +94,11 @@ export default defineConfig(({ mode }) => {
 		},
 
 		optimizeDeps: {
+			esbuildOptions: {
+				target: 'esnext',
+			},
 			entries,
+			include: ['@odk-web-forms/xpath'],
 			force: true,
 		},
 
