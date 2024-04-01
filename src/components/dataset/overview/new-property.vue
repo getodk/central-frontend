@@ -16,11 +16,11 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
-        <p>{{ $t('introduction[1]') }}</p>
       </div>
       <form @submit.prevent="submit">
         <form-group ref="name.value" v-model.trim="name"
           :placeholder="$t('newPropertyName')" required autocomplete="off"/>
+        <p>{{ $t('introduction[1]') }}</p>
         <div class="modal-actions">
           <button type="submit" class="btn btn-primary"
             :aria-disabled="awaitingResponse">

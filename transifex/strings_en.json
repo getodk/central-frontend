@@ -1423,6 +1423,10 @@
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "The Entities in this Entity List do not have any user-defined properties."
+      },
+      "none": {
+        "string": "(None)",
+        "developer_comment": "This is shown in a column about no Forms updating the Entity Property in this row"
       }
     },
     "DatasetOverviewLinkedForms": {

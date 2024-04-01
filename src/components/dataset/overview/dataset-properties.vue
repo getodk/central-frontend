@@ -29,6 +29,7 @@ except according to the terms contained in the LICENSE file.
             <router-link v-if="property.forms.length > 0" :to="publishedFormPath(projectId, property.forms[0].xmlFormId)" v-tooltip.text>
               {{ property.forms[0].name }}
             </router-link>
+            <div v-else class="empty-update-form">{{ $t('none') }}</div>
           </td>
         </tr>
         <template v-for="(form, index) in property.forms" :key="form.xmlFormId">
@@ -87,13 +88,19 @@ const { publishedFormPath } = useRoutes();
     }
   }
 
+  .empty-update-form {
+    color: #888;
+    font-style: italic;
+  }
 }
 </style>
 
 <i18n lang="json5">
   {
     "en": {
-      "emptyTable": "The Entities in this Entity List do not have any user-defined properties."
+      "emptyTable": "The Entities in this Entity List do not have any user-defined properties.",
+      // This is shown in a column about no Forms updating the Entity Property in this row
+      "none": "(None)"
     }
   }
   </i18n>
