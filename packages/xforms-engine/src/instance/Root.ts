@@ -1,9 +1,13 @@
 import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
-import type { Signal } from 'solid-js';
+import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { XFormDOM } from '../XFormDOM.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
+import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -12,6 +16,7 @@ import type { RootDefinition } from '../model/RootDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
+import type { NodeID } from './identity.ts';
 import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
@@ -22,13 +27,9 @@ interface RootStateSpec {
 	readonly readonly: boolean;
 	readonly relevant: boolean;
 	readonly required: boolean;
-
 	readonly label: null;
 	readonly hint: null;
-
-	// TODO: map children by `nodeId`
-	readonly children: Signal<readonly GeneralChildNode[]>;
-
+	readonly children: Accessor<readonly NodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 
@@ -89,7 +90,7 @@ const getInitialLanguageState = (translations: ItextTranslations): InitialLangua
 };
 
 export class Root
-	extends InstanceNode<RootDefinition, RootStateSpec>
+	extends InstanceNode<RootDefinition, RootStateSpec, GeneralChildNode>
 	implements
 		RootNode,
 		EvaluationContext,
@@ -109,10 +110,12 @@ export class Root
 		return instance;
 	}
 
+	private readonly childrenState: ChildrenState<GeneralChildNode>;
+
 	protected readonly state: SharedNodeState<RootStateSpec>;
 	protected readonly engineState: EngineState<RootStateSpec>;
 
-	readonly currentState: CurrentState<RootStateSpec>;
+	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 
 	protected readonly instanceDOM: XFormDOM;
 
@@ -155,6 +158,7 @@ export class Root
 		const evaluator = instanceDOM.primaryInstanceEvaluator;
 		const { translations } = evaluator;
 		const { defaultLanguage, languages } = getInitialLanguageState(translations);
+		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -167,16 +171,17 @@ export class Root
 				required: false,
 				valueOptions: null,
 				value: null,
-				children: createSignal<readonly GeneralChildNode[]>([]),
+				children: childrenState.childIds,
 			},
 			{
 				clientStateFactory: engineConfig.stateFactory,
 			}
 		);
 
+		this.childrenState = childrenState;
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = state.currentState;
+		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
 
 		const contextNode = instanceDOM.xformDocument.createElement(definition.nodeName);
 
@@ -187,7 +192,7 @@ export class Root
 		this.instanceDOM = instanceDOM;
 		this.languages = languages;
 
-		state.setProperty('children', buildChildren(this));
+		childrenState.setChildren(buildChildren(this));
 	}
 
 	/**
@@ -222,6 +227,10 @@ export class Root
 	// InstanceNode
 	protected computeReference(_parent: null, definition: RootDefinition): string {
 		return definition.nodeset;
+	}
+
+	getChildren(): readonly GeneralChildNode[] {
+		return this.childrenState.getChildren();
 	}
 
 	// RootNode

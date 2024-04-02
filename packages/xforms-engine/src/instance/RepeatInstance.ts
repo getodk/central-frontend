@@ -1,7 +1,11 @@
-import type { Accessor, Signal } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import { createComputed, createMemo, createSignal, on } from 'solid-js';
 import type { RepeatDefinition, RepeatInstanceNode } from '../client/RepeatInstanceNode.ts';
 import type { TextRange } from '../index.ts';
+import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
+import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -12,6 +16,7 @@ import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
+import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
@@ -20,7 +25,7 @@ export type { RepeatDefinition };
 interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
-	readonly children: Signal<readonly GeneralChildNode[]>;
+	readonly children: Accessor<readonly NodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }
@@ -31,13 +36,18 @@ interface RepeatInstanceOptions {
 }
 
 export class RepeatInstance
-	extends DescendantNode<RepeatDefinition, RepeatInstanceStateSpec>
+	extends DescendantNode<RepeatDefinition, RepeatInstanceStateSpec, GeneralChildNode>
 	implements RepeatInstanceNode, EvaluationContext, SubscribableDependency
 {
+	private readonly childrenState: ChildrenState<GeneralChildNode>;
+
 	protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
 	protected override engineState: EngineState<RepeatInstanceStateSpec>;
 
-	readonly currentState: CurrentState<RepeatInstanceStateSpec>;
+	readonly currentState: MaterializedChildren<
+		CurrentState<RepeatInstanceStateSpec>,
+		GeneralChildNode
+	>;
 
 	private readonly currentIndex: Accessor<number>;
 
@@ -57,6 +67,7 @@ export class RepeatInstance
 
 		this.currentIndex = currentIndex;
 
+		const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -64,7 +75,7 @@ export class RepeatInstance
 
 				label: createNodeLabel(this, definition),
 				hint: null,
-				children: createSignal<readonly GeneralChildNode[]>([]),
+				children: childrenState.childIds,
 				valueOptions: null,
 				value: null,
 			},
@@ -73,9 +84,10 @@ export class RepeatInstance
 			}
 		);
 
+		this.childrenState = childrenState;
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = state.currentState;
+		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
 
 		// Maintain current index state, updating as the parent range's children
 		// state is changed. Notable Solid reactivity nuances:
@@ -105,7 +117,7 @@ export class RepeatInstance
 			});
 		});
 
-		state.setProperty('children', buildChildren(this));
+		childrenState.setChildren(buildChildren(this));
 	}
 
 	protected computeReference(parent: RepeatRange): string {
@@ -121,5 +133,9 @@ export class RepeatInstance
 	override subscribe(): void {
 		super.subscribe();
 		this.currentIndex();
+	}
+
+	getChildren(): readonly GeneralChildNode[] {
+		return this.childrenState.getChildren();
 	}
 }

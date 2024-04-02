@@ -32,7 +32,7 @@ interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
 }
 
 export class StringField
-	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec>
+	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec, null>
 	implements StringNode, EvaluationContext, SubscribableDependency, ValueContext<string>
 {
 	protected readonly state: SharedNodeState<StringFieldStateSpec>;
@@ -75,6 +75,11 @@ export class StringField
 
 	protected computeReference(parent: GeneralParentNode): string {
 		return this.computeChildStepReference(parent);
+	}
+
+	// InstanceNode
+	getChildren(): readonly [] {
+		return [];
 	}
 
 	// StringNode

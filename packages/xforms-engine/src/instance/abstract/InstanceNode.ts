@@ -3,6 +3,7 @@ import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { BaseNode, BaseNodeState } from '../../client/BaseNode.ts';
 import type { TextRange } from '../../index.ts';
+import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -10,9 +11,10 @@ import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { createReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
-import type { RepeatInstance } from '../RepeatInstance.ts';
 import type { Root } from '../Root.ts';
-import type { AnyChildNode, AnyParentNode, GeneralChildNode } from '../hierarchy.ts';
+import type { AnyChildNode, AnyNode, AnyParentNode } from '../hierarchy.ts';
+import type { NodeID } from '../identity.ts';
+import { declareNodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
@@ -21,12 +23,6 @@ export interface InstanceNodeState extends BaseNodeState {
 	get children(): readonly AnyChildNode[] | null;
 }
 
-// prettier-ignore
-type InstanceNodeChildrenSpec =
-	| Signal<readonly GeneralChildNode[]>
-	| Signal<readonly RepeatInstance[]>
-	| null;
-
 export interface InstanceNodeStateSpec<Value = never> {
 	readonly reference: Accessor<string> | string;
 	readonly readonly: Accessor<boolean> | boolean;
@@ -34,7 +30,7 @@ export interface InstanceNodeStateSpec<Value = never> {
 	readonly required: Accessor<boolean> | boolean;
 	readonly label: Accessor<TextRange<'label'> | null> | null;
 	readonly hint: Accessor<TextRange<'hint'> | null> | null;
-	readonly children: InstanceNodeChildrenSpec;
+	readonly children: Accessor<readonly NodeID[]> | null;
 	readonly valueOptions: Accessor<null> | Accessor<readonly unknown[]> | null;
 	readonly value: Signal<Value> | SimpleAtomicState<Value> | null;
 }
@@ -42,17 +38,37 @@ export interface InstanceNodeStateSpec<Value = never> {
 type AnyInstanceNode = InstanceNode<
 	AnyNodeDefinition,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	InstanceNodeStateSpec<any>
+	InstanceNodeStateSpec<any>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	any
 >;
 
 interface InitializedStateOptions<T, K extends keyof T> {
 	readonly uninitializedFallback: T[K];
 }
 
+/**
+ * This type has the same effect as {@link MaterializedChildren}, but abstractly
+ * handles leaf node types as well.
+ */
+// prettier-ignore
+export type InstanceNodeCurrentState<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Spec extends InstanceNodeStateSpec<any>,
+	Child
+> =
+	& CurrentState<Omit<Spec, 'children'>>
+	& {
+			readonly children: [Child] extends [AnyChildNode]
+				? readonly Child[]
+				: null;
+		};
+
 export abstract class InstanceNode<
 		Definition extends AnyNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Spec extends InstanceNodeStateSpec<any>,
+		Child extends AnyChildNode | null = null,
 	>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
@@ -112,9 +128,9 @@ export abstract class InstanceNode<
 	}
 
 	// BaseNode: identity
-	readonly nodeId: string;
+	readonly nodeId: NodeID;
 
-	abstract readonly currentState: CurrentState<Spec>;
+	abstract readonly currentState: InstanceNodeCurrentState<Spec, Child>;
 
 	// BaseNode: instance-global/shared
 	readonly engineConfig: InstanceConfig;
@@ -142,7 +158,7 @@ export abstract class InstanceNode<
 	) {
 		this.scope = createReactiveScope();
 		this.engineConfig = engineConfig;
-		this.nodeId = engineConfig.createUniqueId();
+		this.nodeId = declareNodeID(engineConfig.createUniqueId());
 		this.definition = definition;
 
 		const checkStateInitialized = () => this.engineState != null;
@@ -159,14 +175,16 @@ export abstract class InstanceNode<
 		});
 	}
 
+	abstract getChildren(this: AnyInstanceNode): readonly AnyChildNode[];
+
 	protected abstract computeReference(
 		parent: AnyInstanceNode | null,
 		definition: Definition
 	): string;
 
 	getNodeByReference(
-		this: AnyInstanceNode,
-		visited: WeakSet<AnyInstanceNode>,
+		this: AnyNode,
+		visited: WeakSet<AnyNode>,
 		dependencyReference: string
 	): SubscribableDependency | null {
 		if (visited.has(this)) {
@@ -185,9 +203,7 @@ export abstract class InstanceNode<
 			dependencyReference.startsWith(`${nodeset}/`) ||
 			dependencyReference.startsWith(`${nodeset}[`)
 		) {
-			const children = this.getInitializedState('children', {
-				uninitializedFallback: [],
-			});
+			const children = this.getChildren();
 
 			if (children == null) {
 				return null;
@@ -207,7 +223,7 @@ export abstract class InstanceNode<
 
 	// EvaluationContext: node-relative
 	getSubscribableDependencyByReference(
-		this: AnyInstanceNode,
+		this: AnyNode,
 		reference: string
 	): SubscribableDependency | null {
 		const visited = new WeakSet<SubscribableDependency>();

@@ -1,6 +1,9 @@
-import type { Setter, Signal } from 'solid-js';
-import { createSignal } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import type { RepeatRangeNode } from '../client/RepeatRangeNode.ts';
+import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
+import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -12,19 +15,20 @@ import type { Root } from './Root.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
+import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
 	readonly label: null;
-	readonly children: Signal<readonly RepeatInstance[]>;
+	readonly children: Accessor<readonly NodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }
 
 export class RepeatRange
-	extends DescendantNode<RepeatSequenceDefinition, RepeatRangeStateSpec>
+	extends DescendantNode<RepeatSequenceDefinition, RepeatRangeStateSpec, RepeatInstance>
 	implements RepeatRangeNode, EvaluationContext, SubscribableDependency
 {
 	/**
@@ -51,19 +55,20 @@ export class RepeatRange
 	 */
 	private readonly anchorNode: Comment;
 
-	// Typically we'd be good with the no-callback setter from `SharedNodeState`,
-	// but basically all writes to this will be altering its current state.
-	private readonly setInstances: Setter<readonly RepeatInstance[]>;
+	private readonly childrenState: ChildrenState<RepeatInstance>;
 
 	protected readonly state: SharedNodeState<RepeatRangeStateSpec>;
 	protected override engineState: EngineState<RepeatRangeStateSpec>;
 
-	readonly currentState: CurrentState<RepeatRangeStateSpec>;
+	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
 
 	constructor(parent: GeneralParentNode, definition: RepeatSequenceDefinition) {
 		super(parent, definition);
 
-		const instances = createSignal<readonly RepeatInstance[]>([]);
+		const childrenState = createChildrenState<RepeatRange, RepeatInstance>(this);
+
+		this.childrenState = childrenState;
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -71,7 +76,7 @@ export class RepeatRange
 
 				label: null,
 				hint: null,
-				children: instances,
+				children: childrenState.childIds,
 				valueOptions: null,
 				value: null,
 			},
@@ -85,13 +90,9 @@ export class RepeatRange
 		);
 		this.contextNode.append(this.anchorNode);
 
-		const [, setInstances] = instances;
-
-		this.setInstances = setInstances;
-
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = state.currentState;
+		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
 
 		definition.instances.forEach((instanceDefinition, index) => {
 			const afterIndex = index - 1;
@@ -113,7 +114,7 @@ export class RepeatRange
 	}
 
 	getInstanceIndex(instance: RepeatInstance): number {
-		return this.engineState.children.indexOf(instance);
+		return this.engineState.children.indexOf(instance.nodeId);
 	}
 
 	addInstances(
@@ -127,7 +128,7 @@ export class RepeatRange
 			if (afterIndex === -1) {
 				precedingInstance = null;
 			} else {
-				const instance = this.engineState.children[afterIndex];
+				const instance = this.childrenState.getChildren()[afterIndex];
 
 				if (instance == null) {
 					throw new Error(`No repeat instance at index ${afterIndex}`);
@@ -144,7 +145,7 @@ export class RepeatRange
 			});
 			const initialIndex = afterIndex + 1;
 
-			this.setInstances((currentInstances) => {
+			this.childrenState.setChildren((currentInstances) => {
 				if (precedingInstance == null) {
 					return currentInstances.concat(newInstance);
 				}
@@ -166,7 +167,7 @@ export class RepeatRange
 
 	removeInstances(startIndex: number, count = 1): Root {
 		return this.scope.runTask(() => {
-			this.setInstances((currentInstances) => {
+			this.childrenState.setChildren((currentInstances) => {
 				const updatedInstances = currentInstances.slice();
 				const removedInstances = updatedInstances.splice(startIndex, count);
 
@@ -186,8 +187,12 @@ export class RepeatRange
 
 		// Subscribing to children can support reactive expressions dependent on the
 		// repeat range itself (e.g. `count()`).
-		this.engineState.children.forEach((child) => {
+		this.childrenState.getChildren().forEach((child) => {
 			child.subscribe();
 		});
+	}
+
+	getChildren(): readonly RepeatInstance[] {
+		return this.childrenState.getChildren();
 	}
 }

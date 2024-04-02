@@ -1,7 +1,10 @@
-import type { Accessor, Signal } from 'solid-js';
-import { createSignal } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import type { GroupDefinition, GroupNode } from '../client/GroupNode.ts';
 import type { TextRange } from '../index.ts';
+import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
+import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -11,6 +14,7 @@ import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
+import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
@@ -18,22 +22,26 @@ import type { SubscribableDependency } from './internal-api/SubscribableDependen
 interface GroupStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
-	readonly children: Signal<readonly GeneralChildNode[]>;
+	readonly children: Accessor<readonly NodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }
 
 export class Group
-	extends DescendantNode<GroupDefinition, GroupStateSpec>
+	extends DescendantNode<GroupDefinition, GroupStateSpec, GeneralChildNode>
 	implements GroupNode, EvaluationContext, SubscribableDependency
 {
+	private readonly childrenState: ChildrenState<GeneralChildNode>;
+
 	protected readonly state: SharedNodeState<GroupStateSpec>;
 	protected override engineState: EngineState<GroupStateSpec>;
 
-	readonly currentState: CurrentState<GroupStateSpec>;
+	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
 
 	constructor(parent: GeneralParentNode, definition: GroupDefinition) {
 		super(parent, definition);
+
+		const childrenState = createChildrenState<Group, GeneralChildNode>(this);
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -41,7 +49,7 @@ export class Group
 
 				label: createNodeLabel(this, definition),
 				hint: null,
-				children: createSignal<readonly GeneralChildNode[]>([]),
+				children: childrenState.childIds,
 				valueOptions: null,
 				value: null,
 			},
@@ -50,14 +58,19 @@ export class Group
 			}
 		);
 
+		this.childrenState = childrenState;
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = state.currentState;
+		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
 
-		state.setProperty('children', buildChildren(this));
+		childrenState.setChildren(buildChildren(this));
 	}
 
 	protected computeReference(parent: GeneralParentNode): string {
 		return this.computeChildStepReference(parent);
+	}
+
+	getChildren(): readonly GeneralChildNode[] {
+		return this.childrenState.getChildren();
 	}
 }

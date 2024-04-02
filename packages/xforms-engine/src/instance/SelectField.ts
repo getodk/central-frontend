@@ -35,7 +35,7 @@ interface SelectFieldStateSpec extends DescendantNodeStateSpec<readonly SelectIt
 }
 
 export class SelectField
-	extends DescendantNode<SelectFieldDefinition, SelectFieldStateSpec>
+	extends DescendantNode<SelectFieldDefinition, SelectFieldStateSpec, null>
 	implements
 		SelectNode,
 		EvaluationContext,
@@ -191,5 +191,10 @@ export class SelectField
 		this.updateSelectedItemValues(updatedValues);
 
 		return root;
+	}
+
+	// InstanceNode
+	getChildren(): readonly [] {
+		return [];
 	}
 }

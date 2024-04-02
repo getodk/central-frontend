@@ -58,8 +58,13 @@ export type DescendantNodeParent<Definition extends DescendantNodeDefinition> =
 		? RepeatRange
 		: GeneralParentNode;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyDescendantNode = DescendantNode<DescendantNodeDefinition, DescendantNodeStateSpec<any>>;
+export type AnyDescendantNode = DescendantNode<
+	DescendantNodeDefinition,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	DescendantNodeStateSpec<any>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	any
+>;
 
 interface RemoveDescendantNodeOptions {
 	readonly isChildRemoval?: boolean;
@@ -69,8 +74,9 @@ export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Spec extends DescendantNodeStateSpec<any>,
+		Child extends AnyChildNode | null = null,
 	>
-	extends InstanceNode<Definition, Spec>
+	extends InstanceNode<Definition, Spec, Child>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
 	readonly root: Root;
@@ -155,7 +161,11 @@ export abstract class DescendantNode<
 		return element;
 	}
 
-	protected removePrimaryInstanceNode(): void {
+	/**
+	 * @package exposed internally for access across all descendant
+	 * nodes
+	 */
+	removePrimaryInstanceNode(): void {
 		this.contextNode.remove();
 	}
 
@@ -171,9 +181,7 @@ export abstract class DescendantNode<
 	 * should investigate the details and ramifications of that, and whether it's
 	 * the desired behavior.
 	 */
-	remove(this: AnyDescendantNode, options: RemoveDescendantNodeOptions = {}): void {
-		const { engineState } = this;
-
+	remove(this: AnyChildNode, options: RemoveDescendantNodeOptions = {}): void {
 		// No need to recursively remove all descendants from the DOM tree, when
 		// the whole subroot will be removed. (This logic might not be totally
 		// sound if the reactive scope disposal below is insufficient for cleaning
@@ -185,7 +193,7 @@ export abstract class DescendantNode<
 		}
 
 		this.scope.runTask(() => {
-			engineState.children?.forEach((child) => {
+			this.getChildren()?.forEach((child) => {
 				child.remove({
 					isChildRemoval: true,
 				});
