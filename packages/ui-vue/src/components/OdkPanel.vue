@@ -7,9 +7,9 @@
 				</h2>
 			</div>
 		</template>
-		<template v-if="more" #icons>
+		<template v-if="menuItems && menuItems.length > 0" #icons>
 			<Button severity="secondary" rounded class="btn-context" :class="{ 'p-focus': menu?.overlayVisible }" icon="icon-more_vert" aria-label="Submit" @click="toggleMenu" />
-			<Menu ref="menu" :model="items" :popup="true" />
+			<Menu ref="menu" :model="menuItems" :popup="true" />
 		</template>
 		<template #default>
 			<div class="flex flex-column gap-5">
@@ -29,13 +29,13 @@ import { type MenuItem } from 'primevue/menuitem';
 import Panel from 'primevue/panel';
 import { ref } from 'vue';
 
-const props = defineProps<{title?: string, more?: boolean}>();
+const props = defineProps<{title?: string, menuItems?: MenuItem[]}>();
 
 const emit = defineEmits(['remove']);
 
 const panelClass = [
   props.title ? 'with-title' : 'no-title',
-  props.more ? 'with-context-menu' : 'no-context-menue',
+  props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menue',
 ];
 
 const panelState = ref(false);

@@ -1,18 +1,19 @@
 <template>
-  <OdkPanel :title="label" :more="true" @remove="$emit('remove')">
+  <OdkPanel :title="label" :more="true" :menu-items="menuItems">
     <OdkQuestionList :questions="children" />
   </OdkPanel>
 </template>
 
 <script setup lang="ts">
 import type { GroupNode, RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
+import { type MenuItem } from 'primevue/menuitem';
 import { computed } from 'vue';
 import OdkPanel from './OdkPanel.vue';
 import OdkQuestionList from './OdkQuestionList.vue';
 
 const props = defineProps<{ instance: RepeatInstanceNode, instanceIndex: number }>();
 
-defineEmits(['remove']);
+const emit = defineEmits(['remove']);
 
 const label = computed(() => {
   if(props.instance.currentState.children.length === 1 && props.instance.currentState.children[0].definition.bodyElement?.type === 'logical-group'){
@@ -37,6 +38,10 @@ const children = computed(() => {
 		return props.instance.currentState.children;
 	}
 });
+
+const menuItems: MenuItem[] = [
+	{label: 'Remove', icon: 'icon-delete', command: () => emit("remove")}
+];
 
 </script>
 
