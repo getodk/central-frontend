@@ -32,6 +32,7 @@ export interface StringNode extends BaseNode {
 	readonly definition: StringDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
+	readonly currentState: StringNodeState;
 
 	/**
 	 * For use by a client to update the value of a string node.
