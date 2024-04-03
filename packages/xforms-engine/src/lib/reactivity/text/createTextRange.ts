@@ -1,62 +1,60 @@
-import { type Accessor } from 'solid-js';
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
+import { createMemo, type Accessor } from 'solid-js';
 import type {
 	TextElementChild,
 	TextElementDefinition,
 } from '../../../body/text/TextElementDefinition.ts';
 import type { TextElementReferencePart } from '../../../body/text/TextElementReferencePart.ts';
+import type { TextChunkSource } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
-import { OutputTextChunk } from '../../../instance/text/OutputTextChunk.ts';
-import { StaticTextChunk } from '../../../instance/text/StaticTextChunk.ts';
+import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type TextRole } from '../../../instance/text/TextRange.ts';
-import { TranslatedTextChunk } from '../../../instance/text/TranslatedTextChunk.ts';
 import { createComputedExpression } from '../createComputedExpression.ts';
 
-const createReferenceExpressionTextRange = <Role extends TextRole>(
-	context: EvaluationContext,
-	role: Role,
-	referenceExpression: TextElementReferencePart
-): Accessor<TextRange<Role>> => {
-	const { root } = context;
-	const translate = createComputedExpression(context, referenceExpression);
-	const translatedChunk = new TranslatedTextChunk(root, translate);
-	const range = new TextRange(role, [translatedChunk]);
+// prettier-ignore
+type TextSources =
+	| readonly [TextElementReferencePart]
+	| readonly TextElementChild[];
 
-	return () => range;
-};
+type TextSource = CollectionValues<TextSources>;
 
-const createMixedTextRange = <Role extends TextRole>(
+interface TextChunkComputation {
+	readonly source: TextChunkSource;
+	readonly getText: Accessor<string>;
+}
+
+const createComputedTextChunk = (
 	context: EvaluationContext,
-	role: Role,
-	textSources: readonly TextElementChild[]
-): Accessor<TextRange<Role>> => {
+	textSource: TextSource
+): TextChunkComputation => {
 	return context.scope.runTask(() => {
-		const { root } = context;
-		const chunks = textSources.map((textSource) => {
-			const { type } = textSource;
+		const { type } = textSource;
+		const source: TextChunkSource = type === 'reference' ? 'itext' : type;
+		const getText = createComputedExpression(context, textSource);
 
-			if (type === 'static') {
-				return new StaticTextChunk(root, textSource.stringValue);
-			}
-
-			const getOutput = createComputedExpression(context, textSource);
-
-			return new OutputTextChunk(root, getOutput);
-		});
-
-		const range = new TextRange(role, chunks);
-
-		return () => range;
+		return {
+			source,
+			getText,
+		};
 	});
 };
 
-const createStaticTextRange = <Role extends TextRole>(
+const createTextChunks = (
 	context: EvaluationContext,
-	role: Role,
-	fallbackValue: string
-): TextRange<Role> => {
-	const staticChunk = new StaticTextChunk(context.root, fallbackValue);
+	textSources: TextSources
+): Accessor<readonly TextChunk[]> => {
+	return context.scope.runTask(() => {
+		const { root } = context;
+		const chunkComputations = textSources.map((textSource) => {
+			return createComputedTextChunk(context, textSource);
+		});
 
-	return new TextRange(role, [staticChunk]);
+		return createMemo(() => {
+			return chunkComputations.map(({ source, getText }) => {
+				return new TextChunk(root, source, getText());
+			});
+		});
+	});
 };
 
 interface CreateTextRangeOptions<FallbackValue extends string | null> {
@@ -94,14 +92,19 @@ const createFallbackTextRange = <Role extends TextRole, FallbackValue extends st
 		return null as FallbackTextRange<Role, FallbackValue>;
 	}
 
-	return createStaticTextRange(context, role, fallbackValue);
+	const staticChunk = new TextChunk(context.root, 'static', fallbackValue);
+
+	return new TextRange(role, [staticChunk]);
 };
 
 /**
  * Creates a text range (e.g. label or hint) from the provided definition,
  * reactive to:
  *
- * - The form's current language
+ * - The form's current language (e.g. `<label ref="jr:itext('text-id')" />`)
+ * - Direct `<output>` references within the label's children
+ *
+ * @todo This does not yet handle itext translations **with** outputs!
  */
 export const createTextRange = <
 	Role extends TextRole,
@@ -115,7 +118,11 @@ export const createTextRange = <
 ): ComputedTextRange<Role, Definition, FallbackValue> => {
 	return context.scope.runTask(() => {
 		if (definition == null) {
-			const textRange = createFallbackTextRange(context, role, options?.fallbackValue ?? null);
+			const textRange = createFallbackTextRange(
+				context,
+				role,
+				options?.fallbackValue ?? (null as FallbackValue)
+			);
 			const getTextRange = () => textRange;
 
 			return getTextRange as ComputedTextRange<Role, Definition, FallbackValue>;
@@ -123,10 +130,16 @@ export const createTextRange = <
 
 		const { children, referenceExpression } = definition;
 
-		if (referenceExpression != null) {
-			return createReferenceExpressionTextRange(context, role, referenceExpression);
+		let getTextChunks: Accessor<readonly TextChunk[]>;
+
+		if (referenceExpression == null) {
+			getTextChunks = createTextChunks(context, children);
+		} else {
+			getTextChunks = createTextChunks(context, [referenceExpression]);
 		}
 
-		return createMixedTextRange(context, role, children);
+		return createMemo(() => {
+			return new TextRange(role, getTextChunks());
+		});
 	});
 };

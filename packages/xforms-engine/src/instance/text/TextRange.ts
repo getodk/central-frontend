@@ -1,4 +1,5 @@
 import type { TextRange as ClientTextRange, TextChunk } from '../../client/TextRange.ts';
+import { FormattedTextStub } from './FormattedTextStub.ts';
 
 export type TextRole = 'hint' | 'label';
 
@@ -8,7 +9,7 @@ export class TextRange<Role extends TextRole> implements ClientTextRange<Role> {
 	}
 
 	get formatted() {
-		throw new Error('Not implemented');
+		return FormattedTextStub;
 	}
 
 	get asString(): string {

@@ -1,6 +1,8 @@
 import type { ActiveLanguage } from './FormLanguage.ts';
 import type { RootNodeState } from './RootNode.ts';
 
+export type TextChunkSource = 'itext' | 'output' | 'static';
+
 /**
  * @todo This (and everything else to do with {@link TextRange}s is for
  * illustration purposes, as a starting point where any particular detail is of
@@ -10,7 +12,7 @@ import type { RootNodeState } from './RootNode.ts';
  * @see {@link TextRange}
  */
 export interface TextChunk {
-	readonly source: 'itext' | 'output' | 'static';
+	readonly source: TextChunkSource;
 
 	/**
 	 * @see {@link ActiveLanguage} for additional commentary
