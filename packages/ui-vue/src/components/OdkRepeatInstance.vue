@@ -1,5 +1,5 @@
 <template>
-  <OdkPanel :title="label" :more="true">
+  <OdkPanel :title="label" :more="true" @remove="$emit('remove')">
     <OdkQuestionList :questions="children" />
   </OdkPanel>
 </template>
@@ -11,6 +11,8 @@ import OdkPanel from './OdkPanel.vue';
 import OdkQuestionList from './OdkQuestionList.vue';
 
 const props = defineProps<{ instance: RepeatInstanceNode, instanceIndex: number }>();
+
+defineEmits(['remove']);
 
 const label = computed(() => {
   if(props.instance.currentState.children.length === 1 && props.instance.currentState.children[0].definition.bodyElement?.type === 'logical-group'){

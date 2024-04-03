@@ -19,17 +19,17 @@
 			<div class="footer flex justify-content-end flex-wrap gap-3">
 				<Button label="Save as draft" severity="secondary" rounded raised />
 				<!-- maybe current state is in odkForm.state.something -->
-				<Button label="Send" rounded raised @click="$emit('submit', odkForm.currentState.value)" /> 
+				<Button label="Send" rounded raised @click="handleSubmit()" /> 
 			</div>
 		</div>		
 	</div>	
 </template>
 
 <script setup lang="ts">
-import { initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
+import { initializeForm, type OpaqueReactiveObject, type RootNode, type WrappedOpaqueReactiveObject } from '@odk-web-forms/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import OdkFormHeader from './OdkFormHeader.vue';
 import FormMenuBar from './OdkMenuBar.vue';
 import OdkQuestionList from './OdkQuestionList.vue';
@@ -38,19 +38,24 @@ const props = defineProps<{ formXml: string }>();
 
 const odkForm = ref<RootNode>();
 
-defineEmits(['submit']);
+const emit = defineEmits(['submit']);
 
 initializeForm(props.formXml, {
     config: {
-      // TODO/sk: to replace with 'ref'
-      stateFactory: (input) => {
-        return input;
-      },
+      stateFactory: reactive as <T extends OpaqueReactiveObject>(
+	object: T
+) => WrappedOpaqueReactiveObject<T>,
     },
   }).then((f) => {
     odkForm.value = f;
 		console.log(f);
   });
+
+const handleSubmit = () => {
+	// TODO/sk: it is not yet decided where engine will return submission data
+	// following is just a temporary line for personal satisfaction
+	emit('submit', (odkForm as any).contextNode.outerHTML)
+}
 </script>
 
 <style>

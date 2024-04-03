@@ -1,10 +1,10 @@
 <template>
   <OdkPanel :title="label">
 
-  <OdkRepeatInstance v-for="(instance, index) in question.currentState.children" :instance="instance" :instance-index="index" />
+  <OdkRepeatInstance v-for="(instance, index) in question.currentState.children" :instance="instance" :instance-index="index" @remove="question.removeInstances(index)" />
     
     <div class="flex justify-content-end flex-wrap">
-      <Button label="Add" rounded outlined class="w-2" />
+      <Button label="Add" rounded outlined class="w-2" @click="question.addInstances()" />
     </div>
 
   </OdkPanel>
