@@ -39,6 +39,9 @@ export class Subtree
 		super(parent, definition);
 
 		const childrenState = createChildrenState<Subtree, GeneralChildNode>(this);
+
+		this.childrenState = childrenState;
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -55,7 +58,6 @@ export class Subtree
 			}
 		);
 
-		this.childrenState = childrenState;
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);

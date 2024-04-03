@@ -58,6 +58,10 @@ export class RepeatInstance
 	) {
 		super(parent, definition);
 
+		const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
+
+		this.childrenState = childrenState;
+
 		options.precedingPrimaryInstanceNode.after(this.contextNode);
 
 		const { precedingInstance } = options;
@@ -66,8 +70,6 @@ export class RepeatInstance
 		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
 
 		this.currentIndex = currentIndex;
-
-		const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -84,7 +86,6 @@ export class RepeatInstance
 			}
 		);
 
-		this.childrenState = childrenState;
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);

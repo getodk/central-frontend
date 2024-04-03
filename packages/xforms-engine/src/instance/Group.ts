@@ -42,6 +42,9 @@ export class Group
 		super(parent, definition);
 
 		const childrenState = createChildrenState<Group, GeneralChildNode>(this);
+
+		this.childrenState = childrenState;
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -58,7 +61,6 @@ export class Group
 			}
 		);
 
-		this.childrenState = childrenState;
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);

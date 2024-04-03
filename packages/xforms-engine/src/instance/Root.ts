@@ -150,6 +150,10 @@ export class Root
 	) {
 		super(engineConfig, null, definition);
 
+		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
+
+		this.childrenState = childrenState;
+
 		const reference = definition.nodeset;
 
 		this.rootReference = reference;
@@ -158,7 +162,6 @@ export class Root
 		const evaluator = instanceDOM.primaryInstanceEvaluator;
 		const { translations } = evaluator;
 		const { defaultLanguage, languages } = getInitialLanguageState(translations);
-		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -178,7 +181,6 @@ export class Root
 			}
 		);
 
-		this.childrenState = childrenState;
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
