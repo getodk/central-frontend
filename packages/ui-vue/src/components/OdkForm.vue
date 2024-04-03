@@ -10,7 +10,7 @@
 				<template #content>
 					<div class="form-questions">
 						<div class="flex flex-column gap-5">
-							<OdkQuestionList :questions="odkForm.currentState.children"/>
+							<OdkQuestionList :questions="odkForm.currentState.children" />
 						</div>
 					</div>
 				</template>
@@ -48,13 +48,14 @@ initializeForm(props.formXml, {
     },
   }).then((f) => {
     odkForm.value = f;
-		console.log(f);
-  });
+		// TODO/sk: remove once dust settles
+		console.log(f); // eslint-disable-line -- temporary code
+  }).catch(() => {}); // eslint-disable-line -- noop
 
 const handleSubmit = () => {
 	// TODO/sk: it is not yet decided where engine will return submission data
 	// following is just a temporary line for personal satisfaction
-	emit('submit', (odkForm as any).contextNode.outerHTML)
+	emit('submit', (odkForm as any).contextNode.outerHTML); // eslint-disable-line
 }
 </script>
 

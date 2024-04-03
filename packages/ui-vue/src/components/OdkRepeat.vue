@@ -1,13 +1,11 @@
 <template>
-  <OdkPanel :title="label">
-
-  <OdkRepeatInstance v-for="(instance, index) in question.currentState.children" :instance="instance" :instance-index="index" @remove="question.removeInstances(index)" />
+	<OdkPanel :title="label">
+		<OdkRepeatInstance v-for="(instance, index) in question.currentState.children" :key="index" :instance="instance" :instance-index="index" @remove="question.removeInstances(index)" />
     
-    <div class="flex justify-content-end flex-wrap">
-      <Button label="Add" rounded outlined class="w-2" @click="question.addInstances()" />
-    </div>
-
-  </OdkPanel>
+		<div class="flex justify-content-end flex-wrap">
+			<Button label="Add" rounded outlined class="w-2" @click="question.addInstances()" />
+		</div>
+	</OdkPanel>
 </template>
 
 <script setup lang="ts">
@@ -20,7 +18,7 @@ import OdkRepeatInstance from './OdkRepeatInstance.vue';
 const props = defineProps<{ question: RepeatRangeNode}>();
 
 const label = computed(() => 
-  props.question.definition.bodyElement?.label?.children[0]?.stringValue ||
+  props.question.definition.bodyElement?.label?.children[0]?.stringValue ??
   ''
 );
 

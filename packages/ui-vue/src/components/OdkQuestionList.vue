@@ -1,21 +1,16 @@
 <template>
-	
-		<template v-for="question in questions" :key="question.nodeId">
-			<template v-if="question.definition.bodyElement && question.currentState.relevant">
-
-				<!-- Render leaf nodes like string, select, etc -->
-				<OdkQuestion v-if="isLeafNode(question)" :question="question" />
+	<template v-for="question in questions" :key="question.nodeId">
+		<template v-if="question.definition.bodyElement && question.currentState.relevant">
+			<!-- Render leaf nodes like string, select, etc -->
+			<OdkQuestion v-if="isLeafNode(question)" :question="question" />
 							
-				<!-- Render group nodes -->
-				<OdkGroup v-if="isGroupNode(question)" :question="question" />
+			<!-- Render group nodes -->
+			<OdkGroup v-if="isGroupNode(question)" :question="question" />
 
-				<!-- Render repeat nodes -->
-				<OdkRepeat v-if="isRepeatRangeNode(question)" :question="question" />
-			
-				
-			</template>
-			
+			<!-- Render repeat nodes -->
+			<OdkRepeat v-if="isRepeatRangeNode(question)" :question="question" />
 		</template>
+	</template>
 </template>
 
 <script setup lang="ts">

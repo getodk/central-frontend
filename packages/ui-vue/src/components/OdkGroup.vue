@@ -1,7 +1,7 @@
 <template>
-  <OdkPanel :title="label">
-    <OdkQuestionList :questions="question.currentState.children" />
-  </OdkPanel>
+	<OdkPanel :title="label">
+		<OdkQuestionList :questions="question.currentState.children" />
+	</OdkPanel>
 </template>
 
 <script setup lang="ts">
@@ -14,8 +14,8 @@ import OdkQuestionList from './OdkQuestionList.vue';
 const props = defineProps<{ question: GroupNode }>();
 
 const label = computed( () => 
-    props.question.currentState.label?.asString ||
-    props.question.definition.bodyElement?.label?.children[0]?.stringValue ||
+    props.question.currentState.label?.asString ??
+    props.question.definition.bodyElement?.label?.children[0]?.stringValue ??
 		''
 );
 

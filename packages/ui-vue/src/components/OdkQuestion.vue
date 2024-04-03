@@ -19,14 +19,13 @@ const props = defineProps<{question: AnyLeafNode}>();
 
 // TODO/sk: Label should be read from question.currentState.label?.asString only
 const label = computed(() => {
-	console.log(props.question.currentState.label);
 	return props.question.currentState.label?.asString 
-		|| props.question.definition.bodyElement?.label?.children[0].stringValue 
-		|| props.question.currentState.reference
+		?? props.question.definition.bodyElement?.label?.children[0].stringValue 
+		?? props.question.currentState.reference
 });
 
-const setValue = (e:any) => {
-	(props.question as StringNode).setValue(e.target.value);
+const setValue = (e:Event) => {
+	(props.question as StringNode).setValue((e.target as HTMLInputElement).value);
 }
 </script>
 

@@ -15,9 +15,9 @@ const baseQuestion = {
       asString: 'First Name'
     }
   }
-} as any as AnyLeafNode;
+} as any as AnyLeafNode; // eslint-disable-line @typescript-eslint/no-explicit-any -- don't want to set all fields of AnyLeafNode
 
-describe.only('OdkQuestion', () => {
+describe('OdkQuestion', () => {
 	it('shows asterisk with field is required', () => {
 		const component = mount(OdkQuestion, {
       props: {

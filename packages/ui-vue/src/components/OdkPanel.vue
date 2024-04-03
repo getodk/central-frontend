@@ -31,8 +31,6 @@ import { ref } from 'vue';
 
 const props = defineProps<{title?: string, menuItems?: MenuItem[]}>();
 
-const emit = defineEmits(['remove']);
-
 const panelClass = [
   props.title ? 'with-title' : 'no-title',
   props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menue',
@@ -50,7 +48,4 @@ const toggleMenu = (event:  Event) => {
     menu.value?.toggle(event);
 };
 
-const items: MenuItem[] = [
-	{label: 'Remove', icon: 'icon-delete', command: () => emit("remove")}
-];
 </script>
