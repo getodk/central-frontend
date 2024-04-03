@@ -40,11 +40,11 @@ const odkForm = ref<RootNode>();
 
 const emit = defineEmits(['submit']);
 
+const stateFactory = reactive as <T extends OpaqueReactiveObject>(object: T) => WrappedOpaqueReactiveObject<T>;
+
 initializeForm(props.formXml, {
     config: {
-      stateFactory: reactive as <T extends OpaqueReactiveObject>(
-	object: T
-) => WrappedOpaqueReactiveObject<T>,
+      stateFactory
     },
   }).then((f) => {
     odkForm.value = f;
