@@ -10,9 +10,9 @@ import {
 } from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
 import { createRoot } from 'solid-js';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { XFormDefinition } from '../XFormDefinition.ts';
-import { EntryState } from './EntryState.ts';
-import type { ValueNodeState } from './ValueNodeState.ts';
+import { XFormDefinition } from '../../src/XFormDefinition.ts';
+import { EntryState } from '../../src/state/EntryState.ts';
+import type { ValueNodeState } from '../../src/state/ValueNodeState.ts';
 
 describe('Form entry state', () => {
 	describe('basic calculation', () => {
