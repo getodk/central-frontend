@@ -44,8 +44,6 @@ export type AnyNode = ExpandUnion<AnyLeafNode | AnyParentNode>;
  */
 export type GeneralParentNode = Exclude<AnyParentNode, RepeatRangeNode>;
 
-export type RepeatRangeChildNode = RepeatInstanceNode;
-
 /**
  * Any of the concrete node types which may be a child of any other node.
  *
