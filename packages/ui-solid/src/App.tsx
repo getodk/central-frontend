@@ -3,6 +3,7 @@ import { Divider, Stack } from '@suid/material';
 import { Show, type JSX } from 'solid-js';
 import { Page } from './components/Page/Page.tsx';
 import { ThemeProvider } from './components/ThemeProvider.tsx';
+import { XFormDetails } from './components/XForm/XFormDetails.tsx';
 import { XFormView } from './components/XForm/XFormView.tsx';
 
 interface AppProps {
@@ -22,6 +23,7 @@ export const App = (props: AppProps) => {
 								<Stack spacing={7}>
 									<XFormView root={root} />
 									<Divider />
+									<XFormDetails root={root} />
 								</Stack>
 							</Stack>
 						);

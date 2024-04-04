@@ -1,5 +1,6 @@
-import type { EntryState } from '@odk-web-forms/xforms-engine';
+import type { AnyNode, RootNode } from '@odk-web-forms/xforms-engine';
 import { styled } from '@suid/material';
+import { Show, createMemo, createSignal } from 'solid-js';
 
 const Details = styled('details')({
 	position: 'relative',
@@ -20,22 +21,89 @@ const Pre = styled('pre')({
 });
 
 export interface XFormDetailsProps {
-	readonly entry: EntryState;
+	readonly root: RootNode;
 }
 
-export const XFormDetails = (props: XFormDetailsProps) => (
-	<>
-		<Details>
-			<Summary>Submission state (XML)</Summary>
-			<Pre>{props.entry.serializedInstanceState()}</Pre>
-		</Details>
-		<Details>
-			<Summary>XFormDefinition</Summary>
-			<Pre>{JSON.stringify(props.entry.form, null, 2)}</Pre>
-		</Details>
-		<Details>
-			<Summary>XForm (XML)</Summary>
-			<Pre>{props.entry.form.xformDocument.documentElement.outerHTML}</Pre>
-		</Details>
-	</>
-);
+let xmlEscaper: Element | null = null;
+
+const getEscaper = (): Element => {
+	xmlEscaper = xmlEscaper ?? document.createElement('esc-aper');
+
+	return xmlEscaper;
+};
+
+const escapeXMLText = (value: string) => {
+	const escaper = getEscaper();
+
+	escaper.textContent = value;
+
+	const { innerHTML } = escaper;
+
+	escaper.textContent = '';
+
+	return innerHTML;
+};
+
+type FakeSerializationInterface = AnyNode & {
+	readonly contextNode: {
+		readonly textContent: string | null;
+	};
+};
+
+const indentLine = (depth: number, line: string) => {
+	const indentation = ''.padStart(depth, '  ');
+
+	return `${indentation}${line}`;
+};
+
+const serializeNode = (node: AnyNode, depth = 0): string => {
+	node = node as FakeSerializationInterface;
+
+	const { currentState, definition } = node;
+	const { children } = currentState;
+	const { nodeName } = definition;
+
+	if (children == null) {
+		// Just read it to make it reactive...
+		currentState.value;
+
+		const serializedLeafNode = `<${nodeName}>${escapeXMLText((node as FakeSerializationInterface).contextNode.textContent ?? '')}</${nodeName}>`;
+
+		return indentLine(depth, serializedLeafNode);
+	}
+
+	return [
+		indentLine(depth, `<${nodeName}>`),
+		children.map((child) => {
+			return serializeNode(child, depth + 1);
+		}),
+		indentLine(depth, `</${nodeName}>`),
+	]
+		.flat()
+		.join('\n');
+};
+
+export const XFormDetails = (props: XFormDetailsProps) => {
+	const [showSubmissionState, setShowSubmissionState] = createSignal(false);
+
+	return (
+		<>
+			<Details
+				onToggle={(event) => {
+					setShowSubmissionState(event.currentTarget.open);
+				}}
+			>
+				<Summary>Submission state (XML)</Summary>
+				<Show when={showSubmissionState()}>
+					{(_) => {
+						const submissionState = createMemo(() => {
+							return serializeNode(props.root);
+						});
+
+						return <Pre>{submissionState()}</Pre>;
+					}}
+				</Show>
+			</Details>
+		</>
+	);
+};
