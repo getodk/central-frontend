@@ -53,13 +53,7 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "@fontsource/roboto": "^5.0.8",
-    "@solid-primitives/set": "^0.4.8",
-    "@solidjs/router": "^0.8.3",
-    "@suid/icons-material": "^0.6.11",
-    "@suid/material": "^0.15.1",
-    "solid-js": "^1.8.3",
-    "web-tree-sitter": "0.21.0"
+    "solid-js": "^1.8.3"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
