@@ -2,10 +2,6 @@ import { XFormDOM } from './XFormDOM.ts';
 import { BodyDefinition } from './body/BodyDefinition.ts';
 import { ModelDefinition } from './model/ModelDefinition.ts';
 
-type TopologicalSortIndex = number;
-
-type SortedNodesetIndexes = ReadonlyMap<string, TopologicalSortIndex>;
-
 export class XFormDefinition {
 	readonly xformDOM: XFormDOM;
 	readonly xformDocument: XMLDocument;
@@ -17,10 +13,6 @@ export class XFormDefinition {
 
 	readonly body: BodyDefinition;
 	readonly model: ModelDefinition;
-
-	// TODO: remove this entirely along with `EntryState` when we complete
-	// migration to the new client interface.
-	readonly sortedNodesetIndexes?: SortedNodesetIndexes;
 
 	constructor(readonly sourceXML: string) {
 		const xformDOM = XFormDOM.from(sourceXML);
