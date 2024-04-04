@@ -14,7 +14,7 @@ import { XFormDefinition } from '../../src/XFormDefinition.ts';
 import { EntryState } from '../../src/state/EntryState.ts';
 import type { ValueNodeState } from '../../src/state/ValueNodeState.ts';
 
-describe('Form entry state', () => {
+describe('Form instance state', () => {
 	describe('basic calculation', () => {
 		let dispose: () => void;
 		let entry: EntryState;
