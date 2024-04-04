@@ -9,8 +9,8 @@ import {
 	t,
 	title,
 } from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
-import { EntryState, initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
-// import { render } from '@solidjs/testing-library';
+import type { FormLanguage, RootNode } from '@odk-web-forms/xforms-engine';
+import { initializeForm } from '@odk-web-forms/xforms-engine';
 import { createMutable } from 'solid-js/store';
 import { render } from 'solid-js/web';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -73,9 +73,7 @@ describe('XFormView', () => {
 		expect(label!.textContent).toBe('1. Question one');
 	});
 
-	it.todo('translates the label to another language', () => {
-		let entry!: EntryState;
-
+	it('translates the label to another language', () => {
 		dispose = render(() => {
 			return <App root={root} />;
 		}, rootElement);
@@ -83,7 +81,17 @@ describe('XFormView', () => {
 		// TODO: the intent was actually to test this by selecting the menu item,
 		// but resolving the menu item proved difficult. Probably better as an
 		// e2e test?
-		entry.translations!.setActiveLanguage('Español');
+		const spanishLanguage = root.languages.find(
+			(activeLanguage): activeLanguage is FormLanguage => {
+				return activeLanguage.language === 'Español';
+			}
+		);
+
+		if (spanishLanguage == null) {
+			expect.fail('Could not find Spanish form language');
+		}
+
+		root.setLanguage(spanishLanguage);
 
 		const label = Array.from(rootElement.querySelectorAll('label')).find((element) => {
 			return element.textContent?.startsWith('1.');
