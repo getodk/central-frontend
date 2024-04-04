@@ -99,7 +99,7 @@ const { publishedFormPath } = useRoutes();
   {
     "en": {
       "emptyTable": "The Entities in this Entity List do not have any user-defined properties.",
-      // This is shown in a column about no Forms updating the Entity Property in this row
+      // This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms.
       "none": "(None)"
     }
   }

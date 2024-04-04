@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="dataset-property-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')">
+    @hide="$emit('hide')" @shown="nameGroup.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
       </div>
       <form @submit.prevent="submit">
-        <form-group ref="name.value" v-model.trim="name"
+        <form-group ref="nameGroup" v-model.trim="name"
           :placeholder="$t('newPropertyName')" required autocomplete="off"/>
         <p>{{ $t('introduction[1]') }}</p>
         <div class="modal-actions">
@@ -60,6 +60,7 @@ const props = defineProps({
     default: false
   }
 });
+const nameGroup = ref(null);
 const name = ref('');
 
 const emit = defineEmits(['hide', 'success']);
@@ -87,7 +88,7 @@ const submit = () => {
     // This is the title at the top of a pop-up.
     "title": "Add Entity Property",
     "introduction": [
-      "To add an Entity Property, choose a unique property name below.",
+      "To add an Entity property, choose a unique property name below.",
       "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
     ],
     "newPropertyName": "New property name"

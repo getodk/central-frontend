@@ -30,8 +30,8 @@ except according to the terms contained in the LICENSE file.
     <page-section id="dataset-overview-properties">
       <template #heading>
         <span>{{ $t('entityProperties') }}</span>
-        <button v-if="currentUser.can('dataset.update')"
-          id="dataset-list-new-button" type="button" class="btn btn-primary"
+        <button v-if="project.dataExists && project.permits('dataset.update')"
+          id="dataset-property-new-button" type="button" class="btn btn-primary"
           @click="newDatasetPropertyModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('new') }}
         </button>
@@ -74,7 +74,7 @@ const emit = defineEmits(['fetch-dataset']);
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { currentUser, dataset } = useRequestData();
+const { project, dataset } = useRequestData();
 
 const newDatasetPropertyModal = modalData();
 

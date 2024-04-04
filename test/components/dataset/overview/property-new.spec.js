@@ -46,12 +46,11 @@ describe('DatasetPropertyNew', () => {
   it('toggles the modal', () =>
     load('/projects/1/entity-lists/trees').testModalToggles({
       modal: DatasetPropertyNew,
-      show: '#dataset-list-new-button',
+      show: '#dataset-property-new-button',
       hide: '.btn-link'
     }));
 
-  // TODO: Figure out how to focus input with vue3 refs
-  it.skip('focuses the input', () => {
+  it('focuses the input', () => {
     const modal = mount(DatasetPropertyNew, mountOptions({ attachTo: document.body }));
     modal.get('input').should.be.focused();
   });
@@ -81,7 +80,7 @@ describe('DatasetPropertyNew', () => {
       load('/projects/1/entity-lists/trees')
         .complete()
         .request(async (app) => {
-          await app.get('#dataset-list-new-button').trigger('click');
+          await app.get('#dataset-property-new-button').trigger('click');
           return addProperty(app, newPropertyName);
         })
         .respondWithData(() => ({ success: true }))

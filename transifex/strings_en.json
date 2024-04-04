@@ -1426,7 +1426,7 @@
       },
       "none": {
         "string": "(None)",
-        "developer_comment": "This is shown in a column about no Forms updating the Entity Property in this row"
+        "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
       }
     },
     "DatasetOverviewLinkedForms": {
@@ -1442,7 +1442,7 @@
       },
       "introduction": {
         "0": {
-          "string": "To add an Entity Property, choose a unique property name below."
+          "string": "To add an Entity property, choose a unique property name below."
         },
         "1": {
           "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."

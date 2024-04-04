@@ -41,8 +41,7 @@ export const extendedDatasets = dataStore({
 });
 
 extendedDatasets.addProperty = (index, property) => {
-  const { properties } = extendedDatasets.get(index);
-  properties.push(normalizeProperty({ name: property }));
+  const properties = [...extendedDatasets.get(index).properties, normalizeProperty({ name: property })];
   extendedDatasets.update(index, { properties });
   return extendedDatasets.get(index);
 };
