@@ -49,7 +49,8 @@ initializeForm(props.formXml, {
   }).then((f) => {
     odkForm.value = f;
 		// TODO/sk: remove once dust settles
-		console.log(f); // eslint-disable-line -- temporary code
+		// eslint-disable-next-line -- temporary code
+		console.log((f as any).childrenState.getChildren()); 
   }).catch(() => {}); // eslint-disable-line -- noop
 
 const handleSubmit = () => {

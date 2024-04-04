@@ -1,7 +1,3 @@
-// Vue's template project used Playwright here, as well as in the /e2e directory.
-// Since our other packages are using Vitest for unit/non-e2e-integration tests,
-// this is a placeholder for doing that here as well.
-
 import type { AnyLeafNode } from '@odk-web-forms/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assocPath } from 'ramda';

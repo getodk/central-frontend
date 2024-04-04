@@ -1,23 +1,22 @@
 <template>
-	<OdkPanel :title="label">
+	<!-- TODO/sk: maybe pass label instead of asString
+			 asString can be computed as empty string which 
+			 will remove the UI Panel
+
+			 or have a separate prop to decide UI Panel render
+	-->
+	<OdkPanel :title="question.currentState.label?.asString" :no-ui="!question.currentState.label">
 		<OdkQuestionList :questions="question.currentState.children" />
 	</OdkPanel>
 </template>
 
 <script setup lang="ts">
 import type { GroupNode } from '@odk-web-forms/xforms-engine';
-import { computed } from 'vue';
 import OdkPanel from './OdkPanel.vue';
 import OdkQuestionList from './OdkQuestionList.vue';
 
+defineProps<{ question: GroupNode }>();
 
-const props = defineProps<{ question: GroupNode }>();
-
-const label = computed( () => 
-    props.question.currentState.label?.asString ??
-    props.question.definition.bodyElement?.label?.children[0]?.stringValue ??
-		''
-);
 
 </script>
 

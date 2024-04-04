@@ -1,5 +1,5 @@
 <template>
-	<Panel v-if="!!title" :class="panelClass" :toggleable="!!title" :collapsed="panelState">
+	<Panel v-if="!noUi" :class="panelClass" :toggleable="true" :collapsed="panelState">
 		<template #header>
 			<div class="panel-title" role="button" @click="toggle">
 				<h2 class="inline">					
@@ -8,7 +8,7 @@
 			</div>
 		</template>
 		<template v-if="menuItems && menuItems.length > 0" #icons>
-			<Button severity="secondary" rounded class="btn-context" :class="{ 'p-focus': menu?.overlayVisible }" icon="icon-more_vert" aria-label="Submit" @click="toggleMenu" />
+			<Button severity="secondary" rounded class="btn-context" :class="{ 'p-focus': menu?.overlayVisible }" icon="icon-more_vert" aria-label="More" @click="toggleMenu" />
 			<Menu ref="menu" :model="menuItems" :popup="true" />
 		</template>
 		<template #default>
@@ -27,14 +27,18 @@ import Button from 'primevue/button';
 import Menu, { type MenuState } from 'primevue/menu';
 import { type MenuItem } from 'primevue/menuitem';
 import Panel from 'primevue/panel';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-const props = defineProps<{title?: string, menuItems?: MenuItem[]}>();
+const props = withDefaults(defineProps<{title?: string, menuItems?: MenuItem[], noUi?: boolean}>(), {
+	title: undefined,
+	menuItems: undefined,
+	noUi: false
+});
 
-const panelClass = [
-  props.title ? 'with-title' : 'no-title',
+const panelClass = computed(() => [
+  'with-title',
   props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menue',
-];
+]);
 
 const panelState = ref(false);
 

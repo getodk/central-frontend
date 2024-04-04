@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GroupNode, RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
+import type { GeneralChildNode, GroupNode, RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
 import { type MenuItem } from 'primevue/menuitem';
 import { computed } from 'vue';
 import OdkPanel from './OdkPanel.vue';
@@ -15,23 +15,36 @@ const props = defineProps<{ instance: RepeatInstanceNode, instanceIndex: number 
 
 const emit = defineEmits(['remove']);
 
+const isGroup = (child: GeneralChildNode) => {
+	return (
+			child.definition.bodyElement?.type === 'logical-group' ||
+			 child.definition.bodyElement?.type === 'presentation-group'
+		);	
+}
+
 const label = computed(() => {
-  if(props.instance.currentState.children.length === 1 && props.instance.currentState.children[0].definition.bodyElement?.type === 'logical-group'){
-		if(props.instance.currentState.children[0].currentState.label?.asString ?? props.instance.currentState.children[0].definition.bodyElement.label?.children[0]?.stringValue){
-			return (props.instance.currentState.children[0].currentState.label?.asString ?? props.instance.currentState.children[0].definition.bodyElement.label?.children[0]?.stringValue)!;
-		}
+	// It has just one child and that is a group with label
+	// then we use label of that group
+  if( props.instance.currentState.children.length === 1 && 
+			isGroup(props.instance.currentState.children[0]) && 
+			props.instance.currentState.children[0].currentState.label
+	) {
+		return props.instance.currentState.children[0].currentState.label?.asString
 	}
 
+	// Use RepeatRangeNode label if it's there
+	// TODO/sk: use state.label.asString
   if(props.instance.parent.definition.bodyElement.label?.children[0]?.stringValue){
 		return `${props.instance.parent.definition.bodyElement.label?.children[0].stringValue} ${props.instanceIndex + 1}`;
 	}
-  else{
-    return `Repeats ${props.instanceIndex+1}`;
-  }
+
+	return `Repeats ${props.instanceIndex+1}`;
 });
 
 const children = computed(() => {
-  if(props.instance.currentState.children.length === 1 && props.instance.currentState.children[0].definition.bodyElement?.type === 'logical-group'){
+	// It has just one child and that is a group
+	// then we use its children - essentially coalesce RepeatInstance and Group into one.
+  if(props.instance.currentState.children.length === 1 && isGroup(props.instance.currentState.children[0])){
 		return (props.instance.currentState.children[0] as GroupNode).currentState.children;
 	}
 	else{
