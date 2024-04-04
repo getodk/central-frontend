@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <button v-if="currentUser.can('dataset.create')"
           id="dataset-list-new-button" type="button" class="btn btn-primary"
           @click="newDatasetModal.show()">
-          <span class="icon-plus-circle"></span>{{ $t('createEntityList') }}
+          <span class="icon-plus-circle"></span>{{ $t('new') }}
         </button>
       </template>
     </page-section>
@@ -90,9 +90,9 @@ const afterCreateDataset = (dataset) => {
         "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
         "Entities are created through form design and can be attached to any Form."
       ],
-      // This is the text of a button that is used to create a new Entity List
+      // This is the text of a button that is used to create a new Entity List.
       // It is shown next to a heading whose text is "Entity Lists".
-      "createEntityList": "New"
+      "new": "New"
     }
   }
 </i18n>

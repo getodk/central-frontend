@@ -139,6 +139,7 @@ const hideOrComplete = () => {
     // This is the title at the top of a pop-up.
     "title": "Create Entity List",
     "introduction": [
+      // @transifexKey component.DatasetList.heading.0
       "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps."
     ],
     // This appears above a text input field for the name of an Entity List

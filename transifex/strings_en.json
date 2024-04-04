@@ -1403,20 +1403,15 @@
           "string": "Entities are created through form design and can be attached to any Form."
         }
       },
-      "createEntityList": {
+      "new": {
         "string": "New",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List It is shown next to a heading whose text is \"Entity Lists\"."
+        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
       }
     },
     "DatasetNew": {
       "title": {
         "string": "Create Entity List",
         "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps."
-        }
       },
       "entityListName": {
         "string": "Entity List name",
