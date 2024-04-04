@@ -2,20 +2,20 @@ import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableM
 import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
 import type { XFormsElement } from '@odk-web-forms/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
-import { createMemo, createSignal, type Accessor, type Signal } from 'solid-js';
-import { afterEach, expect } from 'vitest';
-import { XFormDefinition } from '../../src/XFormDefinition.ts';
+import type {
+	RepeatInstanceState,
+	RepeatSequenceState,
+	SubtreeState,
+} from '@odk-web-forms/xforms-engine';
+import { EntryState, ValueNodeState, XFormDefinition } from '@odk-web-forms/xforms-engine';
 import type {
 	AnyBodyElementDefinition,
 	NonRepeatGroupElementDefinition,
-} from '../../src/body/BodyDefinition.ts';
-import type { AnyControlDefinition } from '../../src/body/control/ControlDefinition.ts';
-import { EntryState } from '../../src/state/EntryState.ts';
-import type { AnyNodeState } from '../../src/state/NodeState.ts';
-import type { RepeatInstanceState } from '../../src/state/RepeatInstanceState.ts';
-import type { RepeatSequenceState } from '../../src/state/RepeatSequenceState.ts';
-import type { SubtreeState } from '../../src/state/SubtreeState.ts';
-import { ValueNodeState } from '../../src/state/ValueNodeState.ts';
+} from '@odk-web-forms/xforms-engine/body/BodyDefinition.ts';
+import type { AnyControlDefinition } from '@odk-web-forms/xforms-engine/body/control/ControlDefinition.ts';
+import type { AnyNodeState } from '@odk-web-forms/xforms-engine/state/NodeState.ts';
+import { createMemo, createSignal, type Accessor, type Signal } from 'solid-js';
+import { afterEach, expect } from 'vitest';
 import { castToString } from './cast.ts';
 
 interface BodyElementSpecifier<
