@@ -19,10 +19,10 @@ describe('Tests ported from JavaRosa - repeats', () => {
 	describe('Adding or deleting repeats', () => {
 		describe('adding repeat instance', () => {
 			// https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/src/test/java/org/javarosa/core/model/TriggerableDagTest.java#L785
-			it('updates calculation cascade', () => {
-				createRoot(() => {
+			it('updates calculation cascade', async () => {
+				await createRoot(async () => {
 					// prettier-ignore
-					const scenario = Scenario.init("Add repeat instance", html(
+					const scenario = await Scenario.init("Add repeat instance", html(
 						head(
 								title("Add repeat instance"),
 								model(
@@ -60,9 +60,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
 			// Currently fails due to use of absolute XPath expression into repeat
 			// instance which is not contextualized to the repeat instance
-			it.todo('updates inner calculations with multiple dependencies', () => {
+			it.todo('updates inner calculations with multiple dependencies', async () => {
 				// prettier-ignore
-				const scenario = Scenario.init("Repeat cascading calc", html(
+				const scenario = await Scenario.init("Repeat cascading calc", html(
 					head(
 							title("Repeat cascading calc"),
 							model(

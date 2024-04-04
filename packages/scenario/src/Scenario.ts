@@ -1,34 +1,67 @@
 import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
 import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import { xmlXPathWhitespaceSeparatedList } from '@odk-web-forms/common/lib/string/whitespace';
 import type { XFormsElement } from '@odk-web-forms/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 import type {
-	RepeatInstanceState,
-	RepeatSequenceState,
-	SubtreeState,
+	AnyNode,
+	GroupNode,
+	RepeatInstanceNode,
+	RepeatRangeNode,
+	RootNode,
+	SelectItem,
+	SelectNode,
+	StringNode,
+	SubtreeNode,
 } from '@odk-web-forms/xforms-engine';
-import { EntryState, ValueNodeState, XFormDefinition } from '@odk-web-forms/xforms-engine';
-import type {
-	AnyBodyElementDefinition,
-	NonRepeatGroupElementDefinition,
-} from '@odk-web-forms/xforms-engine/body/BodyDefinition.ts';
-import type { AnyControlDefinition } from '@odk-web-forms/xforms-engine/body/control/ControlDefinition.ts';
-import type { AnyNodeState } from '@odk-web-forms/xforms-engine/state/NodeState.ts';
-import { createMemo, createSignal, type Accessor, type Signal } from 'solid-js';
+import { initializeForm } from '@odk-web-forms/xforms-engine';
+import type { Accessor, Signal } from 'solid-js';
+import {
+	batch,
+	createMemo,
+	createRoot,
+	createSignal,
+	getOwner,
+	runWithOwner,
+	untrack,
+} from 'solid-js';
 import { afterEach, expect } from 'vitest';
 import { castToString } from './cast.ts';
 
-interface BodyElementSpecifier<
-	Element extends AnyBodyElementDefinition = AnyBodyElementDefinition,
-> {
-	readonly bodyElement: Element;
-}
+const isRootNode = (node: AnyNode): node is RootNode => {
+	return node.definition.type === 'root';
+};
 
-interface GroupQuestionState
-	extends SubtreeState,
-		BodyElementSpecifier<NonRepeatGroupElementDefinition> {}
+type AnyValueNode = Extract<
+	AnyNode,
+	{
+		readonly definition: {
+			readonly type: 'value-node';
+		};
+	}
+>;
 
-interface ControlQuestionState extends ValueNodeState, BodyElementSpecifier<AnyControlDefinition> {}
+const isValueNode = (node: AnyNode): node is AnyValueNode => {
+	const { definition } = node;
+
+	return definition.type === 'value-node';
+};
+
+// prettier-ignore
+type ControlQuestionNode =
+	& AnyValueNode
+	& {
+			readonly definition: {
+				readonly bodyElement: Exclude<
+					AnyValueNode['definition']['bodyElement'],
+					null
+				>;
+			};
+		};
+
+const isControlQuestionNode = (node: AnyNode): node is ControlQuestionNode => {
+	return isValueNode(node) && node.definition.bodyElement != null;
+};
 
 /**
  * Based on the static members on JavaRosa's `FormEntryController` (there
@@ -50,22 +83,22 @@ type QuestionPositionState<Position extends QuestionPositon> =
 	Position extends 'BEGINNING_OF_FORM'
 		? null
 	: Position extends 'QUESTION'
-		? ControlQuestionState
+		? ControlQuestionNode
 	: Position extends 'GROUP'
-		? GroupQuestionState
+		? GroupNode
 	: Position extends 'REPEAT'
-		? RepeatInstanceState
+		? RepeatInstanceNode
 	: Position extends 'REPEAT_JUNCTURE'
 		? never // per @lognaturel, this can be ignored
 	: Position extends 'PROMPT_NEW_REPEAT'
-		? RepeatSequenceState
+		? RepeatRangeNode
 	: Position extends 'END_OF_FORM'
 		? null
 		: never;
 
 abstract class Question<Position extends QuestionPositon> {
 	abstract readonly position: Position;
-	abstract readonly state: QuestionPositionState<Position>;
+	abstract readonly node: QuestionPositionState<Position>;
 }
 
 let beginningOfForm!: BeginningOfForm;
@@ -80,7 +113,7 @@ class BeginningOfForm extends Question<'BEGINNING_OF_FORM'> {
 	}
 
 	override readonly position = 'BEGINNING_OF_FORM';
-	override readonly state = null;
+	override readonly node = null;
 
 	private constructor() {
 		super();
@@ -99,7 +132,7 @@ class EndOfForm extends Question<'END_OF_FORM'> {
 	}
 
 	override readonly position = 'END_OF_FORM';
-	override readonly state = null;
+	override readonly node = null;
 
 	private constructor() {
 		super();
@@ -108,213 +141,345 @@ class EndOfForm extends Question<'END_OF_FORM'> {
 
 type TerminalPosition = 'BEGINNING_OF_FORM' | 'END_OF_FORM';
 
-type AnyStatefulQuestionPosition = Question<Exclude<QuestionPositon, TerminalPosition>>;
+type AnyInstanceQuestionPosition = Question<Exclude<QuestionPositon, TerminalPosition>>;
 
-const isControlQuestionState = (state: AnyNodeState): state is ControlQuestionState => {
-	return state.type === 'value-node' && state.definition.bodyElement != null;
-};
-
-class QuestionSingletonMap extends UpsertableMap<AnyQuestionState, AnyStatefulQuestionPosition> {
+class QuestionSingletonMap extends UpsertableMap<string, AnyInstanceQuestionPosition> {
 	createSingleton(
 		position: 'QUESTION',
-		state: ControlQuestionState,
+		node: ControlQuestionNode,
 		produce: () => ControlQuestion
 	): ControlQuestion;
-	createSingleton(
-		position: 'GROUP',
-		state: GroupQuestionState,
-		produce: () => GroupQuestion
-	): GroupQuestion;
+	createSingleton(position: 'GROUP', node: GroupNode, produce: () => GroupQuestion): GroupQuestion;
 	createSingleton(
 		position: 'REPEAT',
-		state: RepeatInstanceState,
+		node: RepeatInstanceNode,
 		produce: () => RepeatInstanceQuestion
 	): RepeatInstanceQuestion;
 	createSingleton(
 		position: 'PROMPT_NEW_REPEAT',
-		state: RepeatSequenceState,
+		node: RepeatRangeNode,
 		produce: () => PromptNewRepeatQuestion
 	): PromptNewRepeatQuestion;
 
 	createSingleton(
 		_position: 'GROUP' | 'PROMPT_NEW_REPEAT' | 'QUESTION' | 'REPEAT',
-		state: AnyQuestionState,
-		produce: () => StatefulQuestion
+		node: AnyQuestionNode,
+		produce: () => InstanceQuestion
 	) {
-		return this.upsert(state, produce);
+		return this.upsert(node.nodeId, produce);
 	}
 }
 
 const questionSingletons = new QuestionSingletonMap();
 
+const isStringControlNode = (node: AnyNode): node is StringNode => {
+	const { bodyElement } = node.definition;
+
+	// TODO: we're going to a lot of trouble not to have a `type` field on the
+	// client interface's node types, but having one would almost certainly going
+	// to be more stable than this kind of stuff...
+	return bodyElement == null || bodyElement.type === 'input';
+};
+
+const isSelectNode = (node: AnyNode): node is SelectNode => {
+	const { bodyElement } = node.definition;
+
+	if (bodyElement == null) {
+		return false;
+	}
+
+	return bodyElement.type === 'select' || bodyElement.type === 'select1';
+};
+
 class ControlQuestion extends Question<'QUESTION'> {
-	static createSingleton(state: ControlQuestionState): ControlQuestion {
-		return questionSingletons.createSingleton('QUESTION', state, () => new this(state));
+	static createSingleton(node: ControlQuestionNode): ControlQuestion {
+		return questionSingletons.createSingleton('QUESTION', node, () => new this(node));
 	}
 
 	override readonly position = 'QUESTION';
 
-	private constructor(override readonly state: ControlQuestionState) {
+	private constructor(override readonly node: ControlQuestionNode) {
 		super();
+	}
+
+	getValue(options?: { untrack: true }): string {
+		if (options?.untrack) {
+			return untrack(() => {
+				return this.getValue();
+			});
+		}
+
+		const { node } = this;
+
+		if (isStringControlNode(node)) {
+			return node.currentState.value;
+		}
+
+		if (isSelectNode(node)) {
+			return node.currentState.value.map((item) => item.value).join(' ');
+		}
+
+		throw new UnreachableError(node);
+	}
+
+	setValue(value: string): string {
+		const { node } = this;
+
+		if (isStringControlNode(node)) {
+			node.setValue(value);
+
+			return this.getValue({ untrack: true });
+		}
+
+		// TODO: most clients probably shouldn't be doing any of this, but **this
+		// client** has to if we don't expose it in the interface...
+		if (isSelectNode(node)) {
+			const values = xmlXPathWhitespaceSeparatedList(value, {
+				ignoreEmpty: true,
+			});
+
+			if (values.length === 0) {
+				const currentValueItems = untrack(() => node.currentState.value);
+
+				currentValueItems.forEach((item) => {
+					node.deselect(item);
+				});
+
+				return '';
+			}
+
+			const itemOptionsByValue = untrack(() => {
+				return node.currentState.valueOptions.reduce((acc, item) => {
+					acc.set(item.value, item);
+
+					return acc;
+				}, new Map<string, SelectItem>());
+			});
+
+			const items = values.map((itemValue) => {
+				const item = itemOptionsByValue.get(itemValue);
+
+				if (item == null) {
+					throw new Error(`No select item for value: ${value}`);
+				}
+
+				return item;
+			});
+
+			batch(() => {
+				items.forEach((item) => {
+					node.select(item);
+				});
+			});
+
+			return this.getValue({ untrack: true });
+		}
+
+		throw new UnreachableError(node);
 	}
 }
 
-const isGroupQuestionState = (state: AnyNodeState): state is GroupQuestionState => {
-	return state.type === 'subtree' && state.definition.bodyElement != null;
+type ModelSubtreeNode = GroupNode | SubtreeNode;
+
+const isModelSubtreeNode = (node: AnyNode): node is ModelSubtreeNode => {
+	return node.definition.type === 'subtree';
+};
+
+const isGroupNode = (node: AnyNode): node is GroupNode => {
+	return isModelSubtreeNode(node) && node.definition.bodyElement != null;
 };
 
 class GroupQuestion extends Question<'GROUP'> {
-	static createSingleton(state: GroupQuestionState): GroupQuestion {
-		return questionSingletons.createSingleton('GROUP', state, () => new this(state));
+	static createSingleton(node: GroupNode): GroupQuestion {
+		return questionSingletons.createSingleton('GROUP', node, () => new this(node));
 	}
 
 	override readonly position = 'GROUP';
 
-	private constructor(override readonly state: GroupQuestionState) {
+	private constructor(override readonly node: GroupNode) {
 		super();
 	}
 }
 
-const isRepeatInstanceState = (state: AnyNodeState): state is RepeatInstanceState => {
-	return state.type === 'repeat-instance';
+const isRepeatInstanceNode = (node: AnyNode): node is RepeatInstanceNode => {
+	return !isRootNode(node) && isRepeatRangeNode(node.parent);
 };
 
 class RepeatInstanceQuestion extends Question<'REPEAT'> {
-	static createSingleton(state: RepeatInstanceState): RepeatInstanceQuestion {
-		return questionSingletons.createSingleton('REPEAT', state, () => new this(state));
+	static createSingleton(node: RepeatInstanceNode): RepeatInstanceQuestion {
+		return questionSingletons.createSingleton('REPEAT', node, () => new this(node));
 	}
 
 	override readonly position = 'REPEAT';
 
-	private constructor(override readonly state: RepeatInstanceState) {
+	private constructor(override readonly node: RepeatInstanceNode) {
 		super();
 	}
 }
 
-const isRepeatSequenceState = (state: AnyNodeState): state is RepeatSequenceState => {
-	return state.type === 'repeat-sequence';
+const isRepeatRangeNode = (node: AnyNode): node is RepeatRangeNode => {
+	return node.definition.type === 'repeat-sequence';
 };
 
 class PromptNewRepeatQuestion extends Question<'PROMPT_NEW_REPEAT'> {
-	static createSingleton(state: RepeatSequenceState): PromptNewRepeatQuestion {
-		return questionSingletons.createSingleton('PROMPT_NEW_REPEAT', state, () => {
-			return new this(state);
+	static createSingleton(node: RepeatRangeNode): PromptNewRepeatQuestion {
+		return questionSingletons.createSingleton('PROMPT_NEW_REPEAT', node, () => {
+			return new this(node);
 		});
 	}
 
 	override readonly position = 'PROMPT_NEW_REPEAT';
 
-	private constructor(override readonly state: RepeatSequenceState) {
+	private constructor(override readonly node: RepeatRangeNode) {
 		super();
 	}
 }
 
-type AnyQuestionState = Exclude<QuestionPositionState<QuestionPositon>, null>;
+type AnyQuestionNode = Exclude<QuestionPositionState<QuestionPositon>, null>;
 
-const getQuestionStates = (state: AnyNodeState): readonly AnyQuestionState[] => {
-	if (state.type === 'root') {
-		return state.children.flatMap(getQuestionStates);
+const getQuestionNodes = (node: AnyNode): readonly AnyQuestionNode[] => {
+	if (isRootNode(node)) {
+		return node.currentState.children.flatMap(getQuestionNodes);
 	}
 
-	if (isRepeatSequenceState(state)) {
-		return [...state.getInstances().flatMap(getQuestionStates), state];
+	if (isRepeatRangeNode(node)) {
+		return [...node.currentState.children.flatMap(getQuestionNodes), node];
 	}
 
-	if (isRepeatInstanceState(state) || isGroupQuestionState(state)) {
-		return [state, ...state.children.flatMap(getQuestionStates)];
+	if (isRepeatInstanceNode(node) || isGroupNode(node)) {
+		return [node, ...node.currentState.children.flatMap(getQuestionNodes)];
 	}
 
-	if (state.type === 'subtree') {
-		return state.children.flatMap(getQuestionStates);
+	if (isModelSubtreeNode(node)) {
+		return node.currentState.children.flatMap(getQuestionNodes);
 	}
 
-	if (isControlQuestionState(state)) {
-		return [state];
+	if (isControlQuestionNode(node)) {
+		return [node];
+	}
+
+	if (node.definition.bodyElement != null) {
+		throw new Error('Question node or container not collected in Scenario question list');
 	}
 
 	return [];
 };
 
-type StatefulQuestion =
+type InstanceQuestion =
 	| ControlQuestion
 	| GroupQuestion
 	| PromptNewRepeatQuestion
 	| RepeatInstanceQuestion;
 
-const getQuestionState = (state: AnyQuestionState): StatefulQuestion => {
-	switch (state.type) {
-		case 'repeat-instance':
-			return RepeatInstanceQuestion.createSingleton(state);
-
-		case 'repeat-sequence':
-			return PromptNewRepeatQuestion.createSingleton(state);
-
-		case 'subtree':
-			return GroupQuestion.createSingleton(state);
-
-		case 'value-node':
-			return ControlQuestion.createSingleton(state);
-
-		default:
-			throw new UnreachableError(state);
+const getQuestionNode = (node: AnyQuestionNode): InstanceQuestion => {
+	if (isRepeatInstanceNode(node)) {
+		return RepeatInstanceQuestion.createSingleton(node);
 	}
+
+	if (isRepeatRangeNode(node)) {
+		return PromptNewRepeatQuestion.createSingleton(node);
+	}
+
+	if (isGroupNode(node)) {
+		return GroupQuestion.createSingleton(node);
+	}
+
+	if (isControlQuestionNode(node)) {
+		return ControlQuestion.createSingleton(node);
+	}
+
+	throw new UnreachableError(node);
 };
 
-const getStatefulQuestions = (state: AnyNodeState): readonly StatefulQuestion[] => {
-	const questionStates = getQuestionStates(state);
+const getInstanceQuestions = (node: AnyNode): readonly InstanceQuestion[] => {
+	const questionNodes = getQuestionNodes(node);
 
-	return questionStates.map(getQuestionState);
+	return questionNodes.map(getQuestionNode);
 };
 
-type Questions = readonly [BeginningOfForm, ...StatefulQuestion[], EndOfForm];
+type Questions = readonly [BeginningOfForm, ...InstanceQuestion[], EndOfForm];
 
 type SelectedQuestion = CollectionValues<Questions>;
 
-const collectQuestions = (state: AnyNodeState): Questions => {
+const collectQuestions = (node: AnyNode): Questions => {
 	return [
 		BeginningOfForm.createSingleton(),
-		...getStatefulQuestions(state),
+		...getInstanceQuestions(node),
 		EndOfForm.createSingleton(),
 	];
 };
 
 interface ScenarioConstructorOptions {
 	readonly formName: string;
-	readonly form: XFormsElement;
+	readonly instanceRoot: RootNode;
 }
 
+/**
+ * Satisfies the xforms-engine client `stateFactory` option. Currently this is
+ * intentionally **not** reactive, as the current scenario tests (as
+ * ported/derived from JavaRosa's test suite) do not explicitly exercise any
+ * reactive aspects of the client interface.
+ *
+ * @todo It **is possible** to use Solid's `createMutable`, which would enable
+ * expansion of the JavaRosa test suite to _also_ test reactivity. In local
+ * testing during the migration to the new client interface, no additional
+ * changes were necessary to make that change. For now this non-reactive factory
+ * is supplied as a validation that reactivity is in fact optional (despite the
+ * fact that we're kind of observing the internal reactivity with a couple of
+ * memos below).
+ */
+const nonReactiveIdentityStateFactory = <T extends object>(value: T): T => value;
+
+/**
+ * @todo Currently we stub resource fetching. We can address this as needed
+ * while we port existing tests and/or add new ones which require it.
+ */
+const fetchResourceStub: typeof fetch = () => {
+	throw new Error('TODO: resource fetching not implemented');
+};
+
 export class Scenario {
-	static init(formName: string, form: XFormsElement) {
-		return new this({
-			formName,
-			form,
+	static async init(formName: string, form: XFormsElement): Promise<Scenario> {
+		return createRoot(async () => {
+			const owner = getOwner()!;
+
+			const instanceRoot = await initializeForm(form.asXml(), {
+				config: {
+					fetchResource: fetchResourceStub,
+					stateFactory: nonReactiveIdentityStateFactory,
+				},
+			});
+
+			return runWithOwner(owner, () => {
+				return new this({
+					formName,
+					instanceRoot,
+				});
+			})!;
 		});
 	}
 
 	readonly formName: string;
-	readonly form: XFormDefinition;
-	readonly entry: EntryState;
+	readonly instanceRoot: RootNode;
 
 	private readonly questions: Accessor<Questions>;
 	private readonly selectedQuestionIndex: Signal<number>;
 	private readonly selectedQuestion: Accessor<SelectedQuestion>;
 
 	private constructor(options: ScenarioConstructorOptions) {
-		this.formName = options.formName;
+		const { formName, instanceRoot } = options;
 
-		const form = new XFormDefinition(options.form.asXml());
-		const entry = new EntryState(form);
-
-		this.form = form;
-		this.entry = entry;
-
-		this.questions = createMemo(() => {
-			return collectQuestions(entry);
-		});
+		this.formName = formName;
+		this.instanceRoot = instanceRoot;
 
 		const selectedQuestionIndex = createSignal(0);
 
 		this.selectedQuestionIndex = selectedQuestionIndex;
+
+		this.questions = createMemo(() => {
+			return collectQuestions(instanceRoot);
+		});
+
 		this.selectedQuestion = createMemo(() => {
 			const [selectedQuestion] = selectedQuestionIndex;
 			const index = selectedQuestion();
@@ -332,7 +497,7 @@ export class Scenario {
 		});
 	}
 
-	private assertQuestionSelected(question: SelectedQuestion): asserts question is StatefulQuestion {
+	private assertQuestionSelected(question: SelectedQuestion): asserts question is InstanceQuestion {
 		expect(question).not.toBe(beginningOfForm);
 		expect(question).not.toBe(endOfForm);
 	}
@@ -340,17 +505,17 @@ export class Scenario {
 	private assertNodeset(
 		question: SelectedQuestion,
 		nodeset: string
-	): asserts question is StatefulQuestion {
+	): asserts question is InstanceQuestion {
 		this.assertQuestionSelected(question);
-		expect(question.state.nodeset).toBe(nodeset);
+		expect(question.node.definition.nodeset).toBe(nodeset);
 	}
 
 	private assertReference(
 		question: SelectedQuestion,
 		reference: string
-	): asserts question is StatefulQuestion {
+	): asserts question is InstanceQuestion {
 		this.assertQuestionSelected(question);
-		expect(question.state.reference).toBe(reference);
+		expect(question.node.currentState.reference).toBe(reference);
 	}
 
 	private setQuestionIndex(
@@ -388,53 +553,89 @@ export class Scenario {
 		}
 
 		if (!(question instanceof ControlQuestion)) {
-			throw new Error(`Cannot answer question of type ${question.state.type}`);
+			throw new Error(`Cannot answer question of type ${question.node.definition.type}`);
 		}
 
 		// TODO: in the future this should be... not in the test interface. I was
-		// tempted to handle it in the state interface itself, but I'm hesitant to
-		// establish any precedent for casting before digging into handling multiple
-		// data types more broadly.
+		// (previously) tempted to handle it in the engine interface itself, but I'm
+		// hesitant to establish any precedent for casting before digging into
+		// handling multiple data types more broadly.
 		const stringValue = castToString(value);
 
-		question.state.setValue(stringValue);
+		question.setValue(stringValue);
 
 		return;
 	}
 
-	answerOf(reference: string): string {
-		const question = this.entry.getState(reference);
-
-		if (!(question instanceof ValueNodeState)) {
-			throw new Error(`State for reference ${reference} is not a question`);
+	private getNodeForReference<QuestionNode extends AnyNode = AnyNode>(
+		reference: string,
+		currentNode: AnyNode = this.instanceRoot
+	): QuestionNode | null {
+		if (currentNode.currentState.reference === reference) {
+			return currentNode as QuestionNode;
 		}
 
-		return question.getValue();
+		const { children } = currentNode.currentState;
+
+		if (children == null) {
+			return null;
+		}
+
+		for (const child of children) {
+			const question = this.getNodeForReference<QuestionNode>(reference, child);
+
+			if (question != null) {
+				return question;
+			}
+		}
+
+		return null;
 	}
 
-	private getClosestRepeatSequence(
-		fromState: AnyNodeState,
-		currentState: AnyNodeState = fromState
-	): RepeatSequenceState {
-		switch (currentState.type) {
-			case 'root':
-				throw new Error(
-					`Failed to find closest repeat sequence to state with reference: ${fromState.reference}`
-				);
+	answerOf(reference: string): string {
+		const node = this.getNodeForReference(reference);
 
-			case 'repeat-sequence':
-				return currentState;
-
-			case 'repeat-instance':
-				return currentState.parent;
-
-			case 'subtree':
-			case 'value-node':
-				return this.getClosestRepeatSequence(currentState.parent);
-
-			default:
-				throw new UnreachableError(currentState);
+		if (node == null || !isValueNode(node)) {
+			throw new Error(`Node for reference ${reference} is not a question`);
 		}
+
+		// If node has a control, for now we defer to the `ControlQuestion` wrapper
+		// to produce a consistent string value for test assertions.
+		if (isControlQuestionNode(node)) {
+			const question = ControlQuestion.createSingleton(node);
+
+			return question.getValue();
+		}
+
+		// Currently a node at this point will be a model-only `StringNode`. This
+		// will likely change as we introduce other data types, as those types may
+		// also be assigned to model-only nodes.
+		return node.currentState.value;
+	}
+
+	private getClosestRepeatRange(
+		fromNode: AnyNode,
+		currentNode: AnyNode = fromNode
+	): RepeatRangeNode {
+		if (isRootNode(currentNode)) {
+			throw new Error(
+				`Failed to find closest repeat range to node with reference: ${fromNode.currentState.reference}`
+			);
+		}
+
+		if (isRepeatRangeNode(currentNode)) {
+			return currentNode;
+		}
+
+		if (isRepeatInstanceNode(currentNode)) {
+			return currentNode.parent;
+		}
+
+		if (isGroupNode(currentNode) || isModelSubtreeNode(currentNode) || isValueNode(currentNode)) {
+			return this.getClosestRepeatRange(currentNode.parent);
+		}
+
+		throw new UnreachableError(currentNode);
 	}
 
 	createNewRepeat(repeatNodeset: string): unknown {
@@ -442,13 +643,16 @@ export class Scenario {
 
 		this.assertNodeset(question, repeatNodeset);
 
-		const repeatSequence = this.getClosestRepeatSequence(question.state);
+		const repeatRange = this.getClosestRepeatRange(question.node);
 
-		const instance = repeatSequence.createInstance();
+		repeatRange.addInstances();
+
+		const instances = repeatRange.currentState.children;
+		const instance = instances[instances.length - 1]!;
 		const instanceQuestion = RepeatInstanceQuestion.createSingleton(instance);
 		const index = this.questions().indexOf(instanceQuestion);
 
-		this.setQuestionIndex(() => index, instance.reference);
+		this.setQuestionIndex(() => index, instance.currentState.reference);
 
 		return;
 	}
