@@ -27,33 +27,10 @@
  * dropping dependencies for such internal use.
  */
 
-import type { Primitive } from '@odk-web-forms/common/types/Primitive.ts';
-import type { OpaqueReactiveObjectFactory } from '../../../src/client/OpaqueReactiveObjectFactory.ts';
-
-/**
- * A value assigned to a {@link MutableState} property.
- *
- * @todo this type is intentionally limited to focus on our use case for the
- * engine/client reactive bridge, where we have intentionally designed for a
- * shallow representation of state. Notably, this type doesn't **yet** address
- * the use case for providing a shallow mapping for dynamic children (i.e.
- * repeat instances). It's defined as a distinct type anticipating that will be
- * implemented in a subsequent commit.
- */
-type MutableStateValue = Primitive;
-
-// A rare intentionally mutable object appears!
-export type MutableState = Record<string, MutableStateValue>;
-
-/**
- * An intentionally restricted subset of {@link OpaqueReactiveObjectFactory}.
- *
- * - The mutable object's shape is deliberately fixed on creation, i.e.
- *   properties cannot be added or removed.
- * - @see {@link MutableStateValue} for detail about restrictions on individual
- *   property values.
- */
-type MutableStateFactory = <T extends MutableState>(object: T) => T;
+import type {
+	OpaqueReactiveObject,
+	OpaqueReactiveObjectFactory,
+} from '../../../src/client/OpaqueReactiveObjectFactory.ts';
 
 type Thunk<T> = () => T;
 
@@ -108,8 +85,8 @@ export type DefineEffect = (effectFn: VoidFunction) => void;
  * mechanism, we should be careful with any async/timer logic within a reactive
  * test scope.
  */
-interface ReactiveTestScope {
-	readonly mutable: MutableStateFactory;
+export interface ReactiveTestScope {
+	readonly mutable: OpaqueReactiveObjectFactory;
 	readonly computed: DefineComputation;
 	readonly effect: DefineEffect;
 }
@@ -252,7 +229,7 @@ export const reactiveTestScope = <Result>(callback: ReactiveTestScopeCallback<Re
 		execute();
 	};
 
-	const mutable = <T extends MutableState>(object: T): T => {
+	const mutable = <T extends OpaqueReactiveObject>(object: T): T => {
 		// Creating a null-property object ensures we're *only* creating reactive
 		// properties for the explicitly defined members of the input object.
 		const reactiveObject = Object.create(null) as T;
