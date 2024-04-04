@@ -53,6 +53,7 @@
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "8.4.1",
     "@playwright/test": "^1.42.1",
     "@types/ramda": "0.29.11",
     "@vitejs/plugin-vue": "^5.0.4",

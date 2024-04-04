@@ -56,7 +56,7 @@ initializeForm(props.formXml, {
 const handleSubmit = () => {
 	// TODO/sk: it is not yet decided where engine will return submission data
 	// following is just a temporary line for personal satisfaction
-	emit('submit', (odkForm as any).contextNode.outerHTML); // eslint-disable-line
+	emit('submit', (odkForm as any).value.contextNode.outerHTML); // eslint-disable-line
 }
 </script>
 
