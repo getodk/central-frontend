@@ -357,19 +357,24 @@ describe('Form instance state', () => {
 			}
 		);
 
-		it('restores an arbitrary value without recalculating when becoming relevant again', () => {
-			const first = getStringNode('/root/first-question');
-			const second = getStringNode('/root/second-question');
-			const third = getStringNode('/root/third-question');
+		// This behavior was intentionally left out in the transition to the new
+		// client interface.
+		it.fails(
+			'restores an arbitrary value without recalculating when becoming relevant again',
+			() => {
+				const first = getStringNode('/root/first-question');
+				const second = getStringNode('/root/second-question');
+				const third = getStringNode('/root/third-question');
 
-			first.setValue('20');
-			third.setValue('999');
-			second.setValue('no');
-			second.setValue('yes');
+				first.setValue('20');
+				third.setValue('999');
+				second.setValue('no');
+				second.setValue('yes');
 
-			expect(third.currentState.value).toBe('999');
-			expect(getPrimaryInstanceValue(third)).toBe('999');
-		});
+				expect(third.currentState.value).toBe('999');
+				expect(getPrimaryInstanceValue(third)).toBe('999');
+			}
+		);
 	});
 
 	describe('required', () => {
