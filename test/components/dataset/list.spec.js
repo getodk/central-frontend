@@ -21,8 +21,9 @@ describe('DatasetList', () => {
       app.find('#dataset-list-new-button').exists().should.be.true();
     });
 
-    it('does not allow project viewers to see new button', async () => {
-      mockLogin({ role: 'viewer' });
+    it('does not render button if user cannot dataset.create', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer' });
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       const app = await load('/projects/1/entity-lists');
       app.find('#dataset-list-new-button').exists().should.be.false();

@@ -29,8 +29,7 @@ describe('DatasetPropertyNew', () => {
       hide: '.btn-link'
     }));
 
-  // TODO: Figure out how to focus input with vue3 refs
-  it.skip('focuses the input', () => {
+  it('focuses the input', () => {
     const modal = mount(DatasetNew, mountOptions({ attachTo: document.body }));
     modal.get('input').should.be.focused();
   });
@@ -72,10 +71,18 @@ describe('DatasetPropertyNew', () => {
 
     it('shows new name on second screen of modal', async () => {
       const app = await submit('MyNewDataset');
-      const p = app.findComponent(DatasetNew).find('#entity-list-new-success');
+      const p = app.findComponent(DatasetNew).find('#dataset-new-success');
       p.text().should.containEql('MyNewDataset');
     });
 
-    // TODO: it should redirect to page for new entity list
+    it('redirects to new entity list page after clicking done', () =>
+      submit('MyNewDataset')
+        .complete()
+        .request((app) => app.get('#dataset-new-done-button').trigger('click'))
+        .respondWithData(() => testData.extendedDatasets.last())
+        .complete()
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/entity-lists/MyNewDataset');
+        }));
   });
 });

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="dataset-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="hideOrComplete">
+    @hide="hideOrComplete" @shown="nameGroup.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <template v-if="step === 0">
@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </div>
         <form @submit.prevent="submit">
-          <form-group ref="name.value" v-model.trim="name"
+          <form-group ref="nameGroup" v-model.trim="name"
             :placeholder="$t('entityListName')" required autocomplete="off"/>
           <div class="modal-actions">
             <button type="submit" class="btn btn-primary"
@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div id="entity-list-new-success" class="modal-introduction">
+        <div id="dataset-new-success" class="modal-introduction">
           <p>
             <span class="icon-check-circle"></span>
             <strong>{{ $t('common.success') }}</strong>
@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
           <p>{{ $t('success[1]') }}</p>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-primary" @click="complete">
+          <button id="dataset-new-done-button" type="button" class="btn btn-primary" @click="complete">
             {{ $t('action.done') }}
           </button>
         </div>
@@ -83,6 +83,7 @@ const props = defineProps({
     default: false
   }
 });
+const nameGroup = ref(null);
 const name = ref('');
 const step = ref(0);
 const createdDataset = ref(null);
@@ -123,7 +124,7 @@ const hideOrComplete = () => {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#entity-list-new-success {
+#dataset-new-success {
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;

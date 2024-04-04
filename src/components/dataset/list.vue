@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <page-section>
       <template #heading>
         <span>{{ $t('resource.entityLists') }}</span>
-        <button v-if="currentUser.can('dataset.create')"
+        <button v-if="project.dataExists && project.permits('dataset.create')"
           id="dataset-list-new-button" type="button" class="btn btn-primary"
           @click="newDatasetModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('new') }}
@@ -64,7 +64,7 @@ const props = defineProps({
   }
 });
 
-const { currentUser, datasets } = useRequestData();
+const { project, datasets } = useRequestData();
 const { datasetPath } = useRoutes();
 const router = useRouter();
 
