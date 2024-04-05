@@ -18,7 +18,9 @@ interface XFormRepeatInstanceProps {
 export const XFormRepeatInstance = (props: XFormRepeatInstanceProps) => {
 	const [isRepeatInstanceVisible, setRepeatInstanceVisible] = createSignal(true);
 	const repeatLabel = () => {
-		return props.instance.currentState.label;
+		const { instance } = props;
+
+		return instance.currentState.label ?? instance.parent.currentState.label;
 	};
 
 	return (
