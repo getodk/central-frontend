@@ -8,6 +8,7 @@ import type { CurrentState } from '../lib/reactivity/node-state/createCurrentSta
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { RepeatSequenceDefinition } from '../model/RepeatSequenceDefinition.ts';
 import type { RepeatDefinition } from './RepeatInstance.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
@@ -18,10 +19,11 @@ import type { GeneralParentNode } from './hierarchy.ts';
 import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
+import type { TextRange } from './text/TextRange.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
-	readonly label: null;
+	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly children: Accessor<readonly NodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
@@ -74,7 +76,7 @@ export class RepeatRange
 			{
 				...this.buildSharedStateSpec(parent, definition),
 
-				label: null,
+				label: createNodeLabel(this, definition),
 				hint: null,
 				children: childrenState.childIds,
 				valueOptions: null,

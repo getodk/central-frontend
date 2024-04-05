@@ -2,11 +2,12 @@ import type { RepeatSequenceDefinition } from '../model/RepeatSequenceDefinition
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
 import type { RootNode } from './RootNode.ts';
+import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 
 export interface RepeatRangeNodeState extends BaseNodeState {
 	get hint(): null;
-	get label(): null;
+	get label(): TextRange<'label'> | null;
 
 	/**
 	 * A repeat range's children may only be {@link RepeatInstanceNode}s.
