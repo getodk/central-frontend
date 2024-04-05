@@ -27,8 +27,18 @@ const createComputedTextChunk = (
 	context: EvaluationContext,
 	textSource: TextSource
 ): TextChunkComputation => {
+	const { type } = textSource;
+
+	if (type === 'static') {
+		const { stringValue } = textSource;
+
+		return {
+			source: type,
+			getText: () => stringValue,
+		};
+	}
+
 	return context.scope.runTask(() => {
-		const { type } = textSource;
 		const source: TextChunkSource = type === 'reference' ? 'itext' : type;
 		const getText = createComputedExpression(context, textSource);
 
