@@ -8,7 +8,7 @@ import type { StringNode } from './StringNode.ts';
 import type { SubtreeNode } from './SubtreeNode.ts';
 
 // prettier-ignore
-type AnyLeafNode =
+export type AnyLeafNode =
 	| SelectNode
 	| StringNode;
 

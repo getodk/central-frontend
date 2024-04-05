@@ -11,6 +11,7 @@ export type * from './client/SubtreeNode.ts';
 export type * from './client/TextRange.ts';
 export type {
 	AnyChildNode,
+	AnyLeafNode,
 	AnyNode,
 	AnyParentNode,
 	GeneralChildNode,
