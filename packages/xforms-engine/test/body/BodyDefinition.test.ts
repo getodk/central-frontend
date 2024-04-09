@@ -13,8 +13,8 @@ import {
 	title,
 } from '@odk-web-forms/common/test/fixtures/xform-dsl';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { XFormDefinition } from '../XFormDefinition';
-import type { BodyDefinition } from './BodyDefinition';
+import { XFormDefinition } from '../../src/XFormDefinition.ts';
+import type { BodyDefinition } from '../../src/body/BodyDefinition.ts';
 
 describe('BodyDefinition', () => {
 	let bodyDefinition: BodyDefinition;

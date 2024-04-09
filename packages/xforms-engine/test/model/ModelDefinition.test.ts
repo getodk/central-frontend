@@ -15,11 +15,11 @@ import {
 	title,
 } from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { XFormDefinition } from '../XFormDefinition.ts';
-import { BindDefinition } from './BindDefinition.ts';
-import { ModelDefinition } from './ModelDefinition.ts';
-import type { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
-import type { ValueNodeDefinition } from './ValueNodeDefinition.ts';
+import { XFormDefinition } from '../../src/XFormDefinition.ts';
+import { BindDefinition } from '../../src/model/BindDefinition.ts';
+import { ModelDefinition } from '../../src/model/ModelDefinition.ts';
+import type { RepeatSequenceDefinition } from '../../src/model/RepeatSequenceDefinition.ts';
+import type { ValueNodeDefinition } from '../../src/model/ValueNodeDefinition.ts';
 
 describe('ModelDefinition', () => {
 	let modelDefinition: ModelDefinition;

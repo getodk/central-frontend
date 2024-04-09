@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getNodesetDependencies, isItextFunctionCalled } from './analysis.ts';
+import { getNodesetDependencies, isItextFunctionCalled } from '../../../src/lib/xpath/analysis.ts';
 
 describe('XPath expression analysis', () => {
 	describe('nodeset dependencies', () => {

@@ -11,9 +11,9 @@ import {
 	title,
 } from '@odk-web-forms/common/test/fixtures/xform-dsl';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { XFormDefinition } from './XFormDefinition.ts';
-import { BodyDefinition } from './body/BodyDefinition.ts';
-import { ModelDefinition } from './model/ModelDefinition.ts';
+import { XFormDefinition } from '../src/XFormDefinition.ts';
+import { BodyDefinition } from '../src/body/BodyDefinition.ts';
+import { ModelDefinition } from '../src/model/ModelDefinition.ts';
 
 describe('XFormDefinition', () => {
 	const FORM_TITLE = 'Minimal XForm';
