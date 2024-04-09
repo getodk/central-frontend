@@ -1,5 +1,4 @@
 import type { AnyNodeDefinition } from '../model/NodeDefinition.ts';
-import type { EngineConfig } from './EngineConfig.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';
 
@@ -114,14 +113,6 @@ type FormNodeID = string;
  * Base interface for common/shared aspects of any node type.
  */
 export interface BaseNode {
-	/**
-	 * Each node retains access to the client-provided engine configuration.
-	 *
-	 * @todo this is more of a hint to implementation than a contract with clients.
-	 * But it's likely harmless to expose as long as it remains (deeply) readonly.
-	 */
-	readonly engineConfig: EngineConfig;
-
 	/**
 	 * Each node has a unique identifier. This identifier is stable throughout
 	 * the lifetime of an active session filling a form.
