@@ -16,9 +16,7 @@ interface InitializeFormOptions extends BaseInitializeFormOptions {
 
 const identity = <T>(value: T): T => value;
 
-const getInstanceConfig = (
-	options: Partial<InitializeFormOptions['config']> = {}
-): InstanceConfig => {
+const getInstanceConfig = (options: Partial<InstanceConfig> = {}): InstanceConfig => {
 	return {
 		createUniqueId,
 		fetchResource: options.fetchResource ?? fetch,
