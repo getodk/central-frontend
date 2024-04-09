@@ -1,3 +1,8 @@
+import type { InitializeForm } from './index.ts';
+import { initializeForm as engine__initializeForm } from './instance/index.ts';
+
+export const initializeForm: InitializeForm = engine__initializeForm;
+
 export type * from './client/EngineConfig.ts';
 export type * from './client/FormLanguage.ts';
 export type * from './client/GroupNode.ts';
@@ -18,9 +23,6 @@ export type {
 	GeneralParentNode,
 } from './client/hierarchy.ts';
 export type * from './client/index.ts';
-
-// Expose implementation of new client interface
-export { initializeForm } from './instance/index.ts';
 
 // TODO: notwithstanding potential conflicts with parallel work on `ui-vue`,
 // these are the last remaining references **outside of `xforms-engine`** to

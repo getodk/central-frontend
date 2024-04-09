@@ -16,9 +16,9 @@ interface InitializeFormOptions extends BaseInitializeFormOptions {
 
 const identity = <T>(value: T): T => value;
 
-const getInstanceConfig = (options: Partial<InstanceConfig> = {}): InstanceConfig => {
+const buildInstanceConfig = (options: Partial<InstanceConfig> = {}): InstanceConfig => {
 	return {
-		createUniqueId,
+		createUniqueId: options.createUniqueId ?? createUniqueId,
 		fetchResource: options.fetchResource ?? fetch,
 		stateFactory: options.stateFactory ?? identity,
 	};
@@ -28,7 +28,7 @@ export const initializeForm = async (
 	input: FormResource,
 	options: Partial<InitializeFormOptions> = {}
 ): Promise<RootNode> => {
-	const engineConfig = getInstanceConfig(options.config);
+	const engineConfig = buildInstanceConfig(options.config);
 	const sourceXML = await retrieveSourceXMLResource(input, engineConfig);
 	const form = new XFormDefinition(sourceXML);
 
