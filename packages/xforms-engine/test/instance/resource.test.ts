@@ -88,11 +88,22 @@ describe('Resource retrieval', () => {
 			expect(sourceXML).toBe(formXML);
 		});
 
+		it.each([
+			{ paddingType: 'leading', paddedFormXML: ` \n\t${formXML}` },
+			{ paddingType: 'trailing', paddedFormXML: ` ${formXML}\n\t ` },
+		])('ignores $paddingType whitespace in provided XML', async ({ paddedFormXML }) => {
+			const sourceXML = await retrieveSourceXMLResource(paddedFormXML, {
+				fetchResource: globalThis.fetch,
+			});
+
+			expect(sourceXML).toBe(formXML);
+		});
+
 		// TODO: this is ambiguous in the client interface! It may very well be
 		// that a client will call the engine with a "form resource" which is actually
 		// a valid XForm, and still expect to perform additional retrieval logic with
 		// that valid XForm as input. It's an unlikely scenario, but one which we'd
-		// do well
+		// do well to address.
 		it('does not perform a superfluous network request', async () => {
 			const sourceXML = await retrieveSourceXMLResource(formXML, {
 				fetchResource: () => {

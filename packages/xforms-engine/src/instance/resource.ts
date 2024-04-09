@@ -1,3 +1,4 @@
+import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
 import { getBlobText } from '@odk-web-forms/common/lib/web-compat/blob.ts';
 import type { FetchResource, FetchResourceResponse } from '../client/EngineConfig.ts';
 import type { FormResource } from '../client/index.ts';
@@ -54,15 +55,19 @@ export const retrieveSourceXMLResource = async (
 		text = await fetchTextFromURL(resource, options);
 	} else if (resource instanceof Blob) {
 		text = await getBlobText(resource);
-	} else if (isXML(resource)) {
-		text = resource;
-	} else if (URL.canParse(resource)) {
-		text = await fetchTextFromURL(new URL(resource), options);
-	} else {
-		throw new InvalidFormResourceError(resource);
-	}
+	} else if (typeof resource === 'string') {
+		const trimmed = resource.trim();
 
-	text = text.trim();
+		if (isXML(trimmed)) {
+			text = trimmed;
+		} else if (URL.canParse(trimmed)) {
+			text = await fetchTextFromURL(new URL(trimmed), options);
+		} else {
+			throw new InvalidFormResourceError(trimmed);
+		}
+	} else {
+		throw new UnreachableError(resource);
+	}
 
 	assertResourceTextIsXML(text);
 
