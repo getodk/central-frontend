@@ -5,10 +5,10 @@ import type { GeneralChildNode } from './hierarchy.ts';
 
 export interface RootNodeState extends BaseNodeState {
 	/**
-	 * @todo this, along with {@link RootNode.languages} is the most significant
-	   break in consistency across node types. Exposing it across all node types
-	   seems like another point of potential confusion, so this particular
-	   divergence seems like the most reasonable compromise.
+	 * This, along with {@link RootNode.languages} is the most significant break
+	   in consistency across node types' state and static properties. Exposing it
+	   across all node types seems like a point of potential confusion, so this
+	   particular divergence seems like the most reasonable compromise.
 	 */
 	get activeLanguage(): ActiveLanguage;
 
