@@ -16,8 +16,7 @@ except according to the terms contained in the LICENSE file.
       <h1 class="panel-title" v-tooltip.text>{{ title }}</h1>
     </div>
     <div class="panel-body">
-      <div ref="container" class="table-container"
-        :style="{ minHeight, maxHeight: px(maxHeight) }">
+      <div ref="container" class="table-container" :style="{ minHeight }">
         <table class="table">
           <thead>
             <tr>
@@ -67,11 +66,7 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  awaitingResponse: Boolean,
-  maxHeight: {
-    type: Number,
-    required: true
-  }
+  awaitingResponse: Boolean
 });
 
 // The component assumes that this data will exist when the component is

@@ -11,16 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
-    backdrop @hide="$emit('hide')" @resize="setTableHeight"
-    @mutate="resizeColumnUnlessAnimating">
+    backdrop @hide="$emit('hide')" @mutate="resizeColumnUnlessAnimating">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
         <entity-upload-table :ref="setTable(0)"
           :title="$t('table.server', dataset)" :entities="serverEntities.value"
           :row-index="serverRow" :page-size="serverPage.size"
-          :awaiting-response="serverEntities.awaitingResponse"
-          :max-height="tableHeight"/>
+          :awaiting-response="serverEntities.awaitingResponse"/>
         <loading :state="serverEntities.initiallyLoading"/>
         <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
           class="empty-table-message">
@@ -32,8 +30,7 @@ except according to the terms contained in the LICENSE file.
           :spinner="serverEntities.awaitingResponse"/>
 
         <entity-upload-table :ref="setTable(1)" :title="$t('table.file')"
-          :entities="csvSlice" :row-index="csvRow" :page-size="csvPage.size"
-          :max-height="tableHeight"/>
+          :entities="csvSlice" :row-index="csvRow" :page-size="csvPage.size"/>
         <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
           v-model:size="csvPage.size" :count="csvEntities.length"
           :size-options="pageSizeOptions"/>
@@ -304,20 +301,6 @@ const upload = () => {
     .finally(() => { uploadProgress.value = 0; })
     .catch(noop);
 };
-
-// The max height of a table
-const tableHeight = ref(0);
-// Use throttle() to prevent a loop such that a change to the height of the
-// table changes the height of the modal, which changes the height of the table,
-// and so on.
-const setTableHeight = throttle(heightOfModalBody => {
-  tableHeight.value = heightOfModalBody === 0
-    ? 0
-    : Math.max(
-      Math.min(heightOfModalBody, document.documentElement.clientHeight) / 2,
-      250
-    );
-});
 
 const popupAnimating = ref(false);
 const animatePopup = (value) => { popupAnimating.value = value; };
