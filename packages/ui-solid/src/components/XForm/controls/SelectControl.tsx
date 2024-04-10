@@ -7,6 +7,9 @@ import { Match, Switch } from 'solid-js';
 import { MultiSelect } from '../../Widget/MultiSelect.tsx';
 import { SingleSelect } from '../../Widget/SingleSelect.tsx';
 
+/**
+ * @todo This should have a variant type in the engine's client interface.
+ */
 export type Select1Definition = SelectDefinition<'select1'>;
 
 const select1 = (control: AnySelectDefinition): Select1Definition | null => {
@@ -17,6 +20,9 @@ const select1 = (control: AnySelectDefinition): Select1Definition | null => {
 	return null;
 };
 
+/**
+ * @todo This should have a variant type in the engine's client interface.
+ */
 export type SelectNDefinition = SelectDefinition<'select'>;
 
 const selectN = (control: AnySelectDefinition): SelectNDefinition | null => {

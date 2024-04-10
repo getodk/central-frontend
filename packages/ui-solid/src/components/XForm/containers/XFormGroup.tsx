@@ -11,21 +11,19 @@ export interface XFormGroupProps {
 }
 
 const repeatNode = (node: GroupNode | RepeatRangeNode): RepeatRangeNode | null => {
-	if (node.definition.type === 'repeat-sequence') {
-		// TODO: this isn't narrowing the union as it did previously...
-		return node as RepeatRangeNode;
+	if (node.nodeType === 'repeat-range') {
+		return node;
 	}
 
 	return null;
 };
 
-const nonRepeatNode = (state: GroupNode | RepeatRangeNode): GroupNode | null => {
-	if (state.definition.type === 'repeat-sequence') {
-		return null;
+const groupNode = (node: GroupNode | RepeatRangeNode): GroupNode | null => {
+	if (node.nodeType === 'group') {
+		return node;
 	}
 
-	// TODO: also not narrowing the union as it did previously...
-	return state as GroupNode;
+	return null;
 };
 
 export const XFormGroup = (props: XFormGroupProps) => {
@@ -60,7 +58,7 @@ export const XFormGroup = (props: XFormGroupProps) => {
 							return <XFormRepeatList node={node} />;
 						}}
 					</Match>
-					<Match when={nonRepeatNode(props.node)} keyed={true}>
+					<Match when={groupNode(props.node)} keyed={true}>
 						{(node) => {
 							return (
 								<NestedGroupBox as="section">

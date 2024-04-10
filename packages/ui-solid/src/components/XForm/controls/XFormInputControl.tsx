@@ -3,7 +3,11 @@ import { Show } from 'solid-js';
 import { TextWidget } from '../../Widget/TextWidget.tsx';
 import { XFormUnlabeledControl } from '../debugging/XFormUnlabeledInputControl.tsx';
 
-interface XFormInputControlProps {
+export interface XFormInputControlProps {
+	/**
+	 * @todo This should be a `StringInputNode`, whose type should be defined and
+	 * exported in the engine's client interface.
+	 */
 	readonly node: StringNode;
 }
 

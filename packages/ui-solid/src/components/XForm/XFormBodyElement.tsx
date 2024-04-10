@@ -22,12 +22,14 @@ type GroupLikeNode = GroupNode | RepeatRangeNode;
 const groupLikeNode = (props: XFormBodyElementProps): GroupLikeNode | null => {
 	const { node } = props;
 
-	if (node.definition.type === 'value-node') {
-		return null;
-	}
+	switch (node.nodeType) {
+		case 'group':
+		case 'repeat-range':
+			return node;
 
-	// TODO narrowing
-	return node as GroupLikeNode;
+		default:
+			return null;
+	}
 };
 
 type ControlNode = SelectNode | StringNode;
@@ -35,15 +37,16 @@ type ControlNode = SelectNode | StringNode;
 const controlNode = (props: XFormBodyElementProps): ControlNode | null => {
 	const { node } = props;
 
-	if (node.definition.type === 'value-node') {
-		// TODO narrowing
-		return node as ControlNode;
-	}
+	switch (node.nodeType) {
+		case 'select':
+		case 'string':
+			return node;
 
-	return null;
+		default:
+			return null;
+	}
 };
 
-// TODO: unclear if the input prop types are right
 export interface XFormBodyElementProps {
 	readonly node: GeneralChildNode;
 }

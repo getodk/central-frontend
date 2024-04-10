@@ -4,6 +4,9 @@ import { For, Show, createMemo } from 'solid-js';
 import type { SelectNDefinition } from '../XForm/controls/SelectControl.tsx';
 import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 
+/**
+ * @todo This should have a variant type in the engine's client interface.
+ */
 export interface MultiSelectProps {
 	readonly control: SelectNDefinition;
 	readonly node: SelectNode;
