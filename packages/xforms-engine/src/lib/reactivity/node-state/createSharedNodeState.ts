@@ -1,4 +1,5 @@
 import { getPropertyKeys } from '@odk-web-forms/common/lib/objects/structure.ts';
+import type { OpaqueReactiveObjectFactory } from '../../../index.ts';
 import type { ReactiveScope } from '../scope.ts';
 import type { ClientState, SpecifiedClientStateFactory } from './createClientState.ts';
 import { createClientState } from './createClientState.ts';
@@ -30,14 +31,20 @@ export interface SharedNodeState<Spec extends StateSpec> {
 	readonly setProperty: SetEnginePropertyState<Spec>;
 }
 
-interface SharedNodeStateOptions<Spec extends StateSpec> {
-	readonly clientStateFactory: SpecifiedClientStateFactory<Spec>;
+interface SharedNodeStateOptions<
+	Factory extends OpaqueReactiveObjectFactory,
+	Spec extends StateSpec,
+> {
+	readonly clientStateFactory: SpecifiedClientStateFactory<Factory, Spec>;
 }
 
-export const createSharedNodeState = <Spec extends StateSpec>(
+export const createSharedNodeState = <
+	Factory extends OpaqueReactiveObjectFactory,
+	Spec extends StateSpec,
+>(
 	scope: ReactiveScope,
 	spec: Spec,
-	options: SharedNodeStateOptions<Spec>
+	options: SharedNodeStateOptions<Factory, Spec>
 ): SharedNodeState<Spec> => {
 	const engineState = createEngineState(scope, spec);
 	const clientState = createClientState(scope, engineState, options.clientStateFactory);

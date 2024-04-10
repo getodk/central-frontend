@@ -27,10 +27,7 @@
  * dropping dependencies for such internal use.
  */
 
-import type {
-	OpaqueReactiveObject,
-	OpaqueReactiveObjectFactory,
-} from '../../../src/client/OpaqueReactiveObjectFactory.ts';
+import type { OpaqueReactiveObjectFactory } from '../../../src/client/OpaqueReactiveObjectFactory.ts';
 
 type Thunk<T> = () => T;
 
@@ -63,6 +60,8 @@ export type DefineComputation = <T>(computeFn: Thunk<T>) => Thunk<T>;
  */
 export type DefineEffect = (effectFn: VoidFunction) => void;
 
+export type DefineMutableObject = <T extends object>(object: T) => T;
+
 /**
  * A reactive scope isolating reactive subscriptions within a
  * {@link ReactiveTestScopeCallback}.
@@ -86,7 +85,7 @@ export type DefineEffect = (effectFn: VoidFunction) => void;
  * test scope.
  */
 export interface ReactiveTestScope {
-	readonly mutable: OpaqueReactiveObjectFactory;
+	readonly mutable: DefineMutableObject;
 	readonly computed: DefineComputation;
 	readonly effect: DefineEffect;
 }
@@ -229,7 +228,7 @@ export const reactiveTestScope = <Result>(callback: ReactiveTestScopeCallback<Re
 		execute();
 	};
 
-	const mutable = <T extends OpaqueReactiveObject>(object: T): T => {
+	const mutable = <T extends object>(object: T): T => {
 		// Creating a null-property object ensures we're *only* creating reactive
 		// properties for the explicitly defined members of the input object.
 		const reactiveObject = Object.create(null) as T;

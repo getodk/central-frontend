@@ -1,29 +1,31 @@
-/**
- * For clients providing a {@link OpaqueReactiveObjectFactory}, its argument
- * **MUST** be an object.
- */
-export type OpaqueReactiveObject = object;
+import type { DefineMutableObject } from '../../test/helpers/reactive/internal.ts';
 
-declare const WRAPPED_OPAQUE_REACTIVE_OBJECT_BRAND: unique symbol;
-
-// prettier-ignore
+// This type is intended to satisfy two goals, each corresponding to the order
+// of the call signatures within the type:
 //
-// The intent of this type is to define a "nominal T", i.e. a type with the
-// following qualities:
+// 1. Ensure that **general** compatible interfaces are assignable.
+// 2. Ensure that **specific** call sites correctly infer their return type.
 //
-// - is assignable to `T`
-// - communicates that it is wrapped in a client's reactive implementation
-// - without knowing anything further about that implementation
-// - without actually changing anything else about the type
+// It does **not** currently satisfy another goal it was originally intended to
+// address: ensure that attempts to assign a function fail when the function
+// **does not** accept an object. The remnants of this attempt are intentionally
+// left here in case we want to try simplifying and clarifying these types
+// further, in a future effort.
 //
-// The `WRAPPED_OPAQUE_REACTIVE_OBJECT_BRAND` symbol is a fiction. In this type
-// definition, its presence on the object is optional and would only ever be
-// assigned `undefined` if it were hypothetically present. We know that it will
-// never be present, but the type-level possibility that it could is sufficient
-// for TypeScript to treat it as a distinct-but-compatible type to `T`.
-export type WrappedOpaqueReactiveObject<T extends OpaqueReactiveObject> =
-	& T
-	& { readonly [WRAPPED_OPAQUE_REACTIVE_OBJECT_BRAND]?: undefined };
+// It also does **not** currently make a difference to:
+//
+// - specify `in out` as is currently specified
+// - specify distinct `in` and `in out` type parameters
+//
+// These TypeScript keywords are intended to allow greater control over the
+// variance of type parameters in function argument/return type positions. It
+// was thought that they might aid in relaxing assignability for Vue's `reactive`,
+// but that didn't pan out (within the timebox allotted thus far). This, too, is
+// left as a remnant in case we want to revisit this in the future.
+interface BaseOpaqueReactiveObjectFactory<in out Input extends object = object> {
+	<T extends Input>(object: T): T;
+	<T extends object>(object: T): T;
+}
 
 /**
  * A client-provided reactivity factory. We assume little about the mechanism
@@ -49,6 +51,16 @@ export type WrappedOpaqueReactiveObject<T extends OpaqueReactiveObject> =
  * - In common usage, the engine **MAY** convey computed getter property types
  *   back to the client, to indicate that certain aspects the engine mutates
  *   are read-only to the client (even if they are mutable by the engine).
+ *
+ * Real world examples of reactive implementations include:
+ *
+ * - {@link https://vuejs.org/api/reactivity-core.html#reactive | `reactive` (Vue)}
+ * - {@link https://docs.solidjs.com/reference/store-utilities/create-mutable | `createMutable` (Solid)}
+ * - {@link DefineMutableObject | our internal `mutable` test helper}
+ *
+ * Each of these implementations are targeted as part of our effort to ensure
+ * the `xforms-engine` is agnostic to a client's framework and/or implementation
+ * of state.
  *
  * @example
  *
@@ -78,9 +90,11 @@ export type WrappedOpaqueReactiveObject<T extends OpaqueReactiveObject> =
  * // Engine: mutate values to convey state changes to subscribed client
  * engineFoo.bar = 'quux';
  * ```
- *
- * [TODO link to examples satisfying factory interface?]
  */
-export type OpaqueReactiveObjectFactory = <T extends OpaqueReactiveObject>(
-	object: T
-) => WrappedOpaqueReactiveObject<T>;
+// prettier-ignore
+export type OpaqueReactiveObjectFactory<Input extends object = object> =
+	// Possibly a TypeScript bug? The order of this intersection matters! Changing
+	// the order causes types in `createClientState.ts` to fail inexplicably.
+	& BaseOpaqueReactiveObjectFactory<Input>
+	& ((object: object) => unknown)
+	;

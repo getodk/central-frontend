@@ -1,6 +1,7 @@
 import { getPropertyKeys } from '@odk-web-forms/common/lib/objects/structure.ts';
 import type { ShallowMutable } from '@odk-web-forms/common/types/helpers.js';
 import { createComputed, untrack } from 'solid-js';
+import type { OpaqueReactiveObjectFactory } from '../../../index.ts';
 import type { ReactiveScope } from '../scope.ts';
 import type { EngineState } from './createEngineState.ts';
 import type { SpecifiedState, StateSpec } from './createSpecifiedState.ts';
@@ -18,18 +19,22 @@ const deriveInitialState = <Spec extends StateSpec>(
 	});
 };
 
-export type SpecifiedClientStateFactory<Spec extends StateSpec> = (
-	input: ShallowMutable<SpecifiedState<Spec>>
-) => ShallowMutable<SpecifiedState<Spec>>;
+export type SpecifiedClientStateFactory<
+	Factory extends OpaqueReactiveObjectFactory,
+	Spec extends StateSpec,
+> = ShallowMutable<SpecifiedState<Spec>> extends Parameters<Factory>[0] ? Factory : never;
 
 export type ClientState<Spec extends StateSpec> = InternalClientRepresentation<
 	SpecifiedState<Spec>
 >;
 
-export const createClientState = <Spec extends StateSpec>(
+export const createClientState = <
+	Factory extends OpaqueReactiveObjectFactory,
+	Spec extends StateSpec,
+>(
 	scope: ReactiveScope,
 	engineState: EngineState<Spec>,
-	clientStateFactory: SpecifiedClientStateFactory<Spec>
+	clientStateFactory: SpecifiedClientStateFactory<Factory, Spec>
 ): ClientState<Spec> => {
 	const initialState = deriveInitialState(scope, engineState);
 	const clientState = clientStateFactory(initialState);
