@@ -120,12 +120,10 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
 		});
 
 		const setPrimaryInstanceValue: SimpleAtomicStateSetter<string> = (value) => {
-			const persisted = setValueForPersistence(() => {
-				// TODO: Check (error?) for non-relevant value change?
-				return {
-					isRelevant: context.isRelevant,
-					value,
-				};
+			// TODO: Check (error?) for non-relevant value change?
+			const persisted = setValueForPersistence({
+				isRelevant: context.isRelevant,
+				value,
 			});
 
 			return persisted.value;
