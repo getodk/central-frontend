@@ -4,6 +4,37 @@ import type { ChildrenState, createChildrenState } from './createChildrenState.t
 import type { ClientState } from './node-state/createClientState.ts';
 import type { CurrentState } from './node-state/createCurrentState.ts';
 
+interface InconsistentChildrenStateDetails {
+	readonly missingIds: readonly NodeID[];
+	readonly unexpectedIds: readonly NodeID[];
+}
+
+class InconsistentChildrenStateError extends Error {
+	constructor(details: InconsistentChildrenStateDetails) {
+		const { missingIds, unexpectedIds } = details;
+
+		const messageLines = ['Detected inconsistent engine/client child state.'];
+
+		if (missingIds.length > 0) {
+			const missingIdLines = missingIds.map((missingId) => {
+				return `- ${missingId}`;
+			});
+
+			messageLines.push('\nMissing child nodes for ids:\n', ...missingIdLines);
+		}
+
+		if (unexpectedIds.length > 0) {
+			const unexpectedIdLines = unexpectedIds.map((unexpectedId) => {
+				return `- ${unexpectedId}`;
+			});
+
+			messageLines.push('\nUnexpected child nodes with ids:\n', ...unexpectedIdLines);
+		}
+
+		super(messageLines.join('\n'));
+	}
+}
+
 export interface EncodedParentState {
 	readonly children: readonly NodeID[];
 }
@@ -38,7 +69,7 @@ const reportInconsistentChildrenState = (
 	});
 
 	if (missingIds.length > 0 || unexpectedIds.length > 0) {
-		console.warn('Detected inconsistent engine/client child state.', {
+		throw new InconsistentChildrenStateError({
 			missingIds,
 			unexpectedIds,
 		});
