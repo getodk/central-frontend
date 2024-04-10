@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="entity-upload-popup">
+  <div id="entity-upload-popup" @animationstart="$emit('animationstart')"
+    @animationend="$emit('animationend')">
     <div id="entity-upload-popup-heading">
       <div v-tooltip.text>{{ filename }}</div>
       <button v-show="!awaitingResponse" type="button" class="btn btn-link"
@@ -49,7 +50,7 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['clear']);
+defineEmits(['clear', 'animationstart', 'animationend']);
 
 const { t, n } = useI18n();
 const status = computed(() => (props.progress < 1
@@ -61,12 +62,24 @@ const status = computed(() => (props.progress < 1
 @use 'sass:color';
 @import '../../../assets/scss/mixins';
 
+@keyframes tocorner {
+  0% { transform: translate(-70px, -70px); }
+  100% { transform: translate(0, 0); }
+}
+
 #entity-upload-popup {
+  animation-duration: 2s;
+  animation-name: tocorner;
+  animation-timing-function: cubic-bezier(0.05, 0.9, 0, 1);
   background-color: $color-subpanel-background;
   border: 2px solid $color-action-foreground;
   border-radius: 6px;
+  bottom: 70px;
   outline: 5px solid #{color.change($color-action-foreground, $alpha: 0.15)};
   padding: 15px;
+  position: absolute;
+  right: 15px;
+  width: 305px;
 }
 
 #entity-upload-popup-heading {

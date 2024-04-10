@@ -64,13 +64,11 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.cancel') }}
         </button>
       </div>
-      <div v-if="csvEntities != null" id="entity-upload-popups"
-        @animationstart="animatePopup(true)"
-        @animationend="animatePopup(false)">
-        <entity-upload-popup :filename="fileMetadata.name" :count="csvEntities.length"
-          :awaiting-response="uploading" :progress="uploadProgress"
-          @clear="clearFile"/>
-      </div>
+      <entity-upload-popup v-if="csvEntities != null"
+        :filename="fileMetadata.name" :count="csvEntities.length"
+        :awaiting-response="uploading" :progress="uploadProgress"
+        @clear="clearFile" @animationstart="animatePopup(true)"
+        @animationend="animatePopup(false)"/>
     </template>
   </modal>
 </template>
@@ -345,11 +343,6 @@ watch(() => props.state, (state) => {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-@keyframes tocorner {
-  0% { transform: translate(-70px, -70px); }
-  100% { transform: translate(0, 0); }
-}
-
 #entity-upload {
   .backdrop {
     opacity: 0.27;
@@ -395,16 +388,6 @@ watch(() => props.state, (state) => {
     // The margin if the last element is Pagination
     &:has(tbody) { margin-bottom: 12px; }
   }
-}
-
-#entity-upload-popups {
-  animation-duration: 2s;
-  animation-name: tocorner;
-  animation-timing-function: cubic-bezier(0.05, 0.9, 0, 1);
-  bottom: 70px;
-  position: absolute;
-  right: 15px;
-  width: 305px;
 }
 </style>
 

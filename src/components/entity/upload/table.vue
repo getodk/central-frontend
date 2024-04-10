@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div ref="container" class="entity-upload-table"
-    :class="{ 'overlaps-popups': overlapsPopups }" :style="{ minHeight }">
+    :class="{ 'overlaps-popup': overlapsPopup }" :style="{ minHeight }">
     <table class="table">
       <thead>
         <tr>
@@ -84,26 +84,26 @@ watch(() => props.entities, () => {
   }
 });
 
-const overlapsPopups = ref(false);
+const overlapsPopup = ref(false);
 const resizeLastColumn = () => {
   // Undo previous resizing.
   const th = container.value.querySelector('th:last-child');
   th.style.width = '';
 
   if (container.value.clientWidth === 0) {
-    overlapsPopups.value = false;
+    overlapsPopup.value = false;
     return;
   }
 
-  // Check whether the column is obscured by the pop-ups.
-  const popups = container.value.closest('.modal-body')
-    .querySelector('#entity-upload-popups');
-  if (popups != null) {
-    const popupsRect = popups.getBoundingClientRect();
+  // Check whether the column is obscured by the pop-up.
+  const popup = container.value.closest('.modal-body')
+    .querySelector('#entity-upload-popup');
+  if (popup != null) {
+    const popupRect = popup.getBoundingClientRect();
     const containerRect = container.value.getBoundingClientRect();
-    overlapsPopups.value = popupsRect.top < containerRect.bottom;
-    if (overlapsPopups.value) {
-      const overlap = containerRect.right - popupsRect.left;
+    overlapsPopup.value = popupRect.top < containerRect.bottom;
+    if (overlapsPopup.value) {
+      const overlap = containerRect.right - popupRect.left;
       // Adding 10px for some extra space between the column and the pop-up.
       th.style.width = px(th.clientWidth + overlap + 10);
     }
@@ -137,7 +137,7 @@ defineExpose({ resizeLastColumn, resetScroll });
   th, td {
     div { @include text-overflow-ellipsis; }
   }
-  &.overlaps-popups {
+  &.overlaps-popup {
     th, td {
       &:last-child div {
         width: #{$col-width - $padding-left-table-data - $padding-right-table-data};
