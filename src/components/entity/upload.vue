@@ -15,26 +15,40 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
-        <entity-upload-table :ref="setTable(0)"
-          :title="$t('table.server', dataset)" :entities="serverEntities.value"
-          :row-index="serverRow" :page-size="serverPage.size"
-          :awaiting-response="serverEntities.awaitingResponse"/>
-        <loading :state="serverEntities.initiallyLoading"/>
-        <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
-          class="empty-table-message">
-          {{ $t('noEntities') }}
-        </p>
-        <pagination v-if="serverPage.count !== 0" v-model:page="serverPage.page"
-          v-model:size="serverPage.size" :count="serverPage.count"
-          :size-options="pageSizeOptions"
-          :spinner="serverEntities.awaitingResponse"/>
-
-        <entity-upload-table :ref="setTable(1)" :title="$t('table.file')"
-          :entities="csvSlice" :row-index="csvRow" :page-size="csvPage.size"/>
-        <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
-          v-model:size="csvPage.size" :count="csvEntities.length"
-          :size-options="pageSizeOptions"/>
-
+        <div class="panel panel-simple">
+          <div class="panel-heading">
+            <h1 class="panel-title" v-tooltip.text>
+              {{ $t('table.server', dataset) }}
+            </h1>
+          </div>
+          <div class="panel-body">
+            <entity-upload-table :ref="setTable(0)"
+              :entities="serverEntities.value" :row-index="serverRow"
+              :page-size="serverPage.size"
+              :awaiting-response="serverEntities.awaitingResponse"/>
+            <loading :state="serverEntities.initiallyLoading"/>
+            <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
+              class="empty-table-message">
+              {{ $t('noEntities') }}
+            </p>
+            <pagination v-if="serverPage.count !== 0"
+              v-model:page="serverPage.page" v-model:size="serverPage.size"
+              :count="serverPage.count" :size-options="pageSizeOptions"
+              :spinner="serverEntities.awaitingResponse"/>
+          </div>
+        </div>
+        <div class="panel panel-simple">
+          <div class="panel-heading">
+            <h1 class="panel-title">{{ $t('table.file') }}</h1>
+          </div>
+          <div class="panel-body">
+            <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
+              :row-index="csvRow" :page-size="csvPage.size"/>
+            <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
+              v-model:size="csvPage.size" :count="csvEntities.length"
+              :size-options="pageSizeOptions"/>
+          </div>
+        </div>
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-help :errors="csvErrors"/>
@@ -329,6 +343,8 @@ watch(() => props.state, (state) => {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+
 @keyframes tocorner {
   0% { transform: translate(-70px, -70px); }
   100% { transform: translate(0, 0); }
@@ -338,6 +354,46 @@ watch(() => props.state, (state) => {
   .backdrop {
     opacity: 0.27;
     pointer-events: none;
+  }
+
+  .panel-simple {
+    margin-bottom: 0;
+
+    .panel-heading {
+      @include text-overflow-ellipsis;
+      background-color: #ccc;
+      border-bottom: none;
+    }
+
+    .panel-body { padding: 0; }
+  }
+  .panel-simple + .panel-simple {
+    .panel-heading {
+      background-color: $color-action-background;
+      color: #fff;
+    }
+
+    thead { background-color: #c5dfe7; }
+  }
+
+  .pagination { margin-left: $padding-left-table-data; }
+
+  // margin-bottom of the tables
+  .entity-upload-table {
+    // The margin before text, either the Loading component or the
+    // .empty-table-message
+    margin-bottom: 10px;
+    // The margin before the Pagination component
+    &:has(tbody) { margin-bottom: 0; }
+    // The margin if there is no text or Pagination
+    &:last-child { margin-bottom: 0; }
+  }
+  // margin-bottom of the first .panel-simple
+  .panel-simple:first-child {
+    // The margin if the last element of the .panel-body is text
+    margin-bottom: 10px;
+    // The margin if the last element is Pagination
+    &:has(tbody) { margin-bottom: 12px; }
   }
 }
 

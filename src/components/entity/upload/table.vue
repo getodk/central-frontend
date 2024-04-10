@@ -10,38 +10,31 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="entity-upload-table panel panel-simple"
-    :class="{ 'overlaps-popups': overlapsPopups }">
-    <div class="panel-heading">
-      <h1 class="panel-title" v-tooltip.text>{{ title }}</h1>
-    </div>
-    <div class="panel-body">
-      <div ref="container" class="table-container" :style="{ minHeight }">
-        <table class="table">
-          <thead>
-            <tr>
-              <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
-              <th>label</th>
-              <th v-for="{ name } of dataset.properties" :key="name">
-                <div v-tooltip.text>{{ name }}</div>
-              </th>
-            </tr>
-          </thead>
-          <tbody v-if="entities != null && entities.length !== 0"
-            :class="{ 'data-loading': awaitingResponse }">
-            <tr v-for="(entity, entityIndex) in entities" :key="entityIndex">
-              <td class="row-number">
-                {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
-              </td>
-              <td><div v-tooltip.text>{{ entity.label }}</div></td>
-              <td v-for="{ name } of dataset.properties" :key="name">
-                <div v-tooltip.text>{{ entity.data[name] }}</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div ref="container" class="entity-upload-table"
+    :class="{ 'overlaps-popups': overlapsPopups }" :style="{ minHeight }">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
+          <th>label</th>
+          <th v-for="{ name } of dataset.properties" :key="name">
+            <div v-tooltip.text>{{ name }}</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody v-if="entities != null && entities.length !== 0"
+        :class="{ 'data-loading': awaitingResponse }">
+        <tr v-for="(entity, entityIndex) in entities" :key="entityIndex">
+          <td class="row-number">
+            {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
+          </td>
+          <td><div v-tooltip.text>{{ entity.label }}</div></td>
+          <td v-for="{ name } of dataset.properties" :key="name">
+            <div v-tooltip.text>{{ entity.data[name] }}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -55,10 +48,6 @@ defineOptions({
   name: 'EntityUploadTable'
 });
 const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
   entities: Array,
   // The 0-indexed row number of the first row of the table
   rowIndex: Number,
@@ -137,19 +126,7 @@ defineExpose({ resizeLastColumn, resetScroll });
 @import '../../../assets/scss/mixins';
 
 .entity-upload-table {
-  // The margin before text, e.g., the .empty-table-message
-  margin-bottom: 10px;
-  // The margin before the Pagination component or the next table
-  &:has(tbody) { margin-bottom: 0; }
-
-  .panel-heading {
-    @include text-overflow-ellipsis;
-    background-color: #ccc;
-    border-bottom: none;
-  }
-
-  .panel-body { padding: 0; }
-  .table-container { overflow: auto; }
+  overflow: auto;
 
   table {
     margin-bottom: 0;
@@ -176,21 +153,5 @@ defineExpose({ resizeLastColumn, resetScroll });
 
   // Provide extra room for the row number in case it is large.
   td:first-child { padding-left: 0; }
-
-  ~ .pagination { margin-left: $padding-left-table-data; }
 }
-
-.entity-upload-table ~ .entity-upload-table {
-  .panel-heading {
-    background-color: $color-action-background;
-    color: #fff;
-  }
-
-  thead { background-color: #c5dfe7; }
-}
-
-// The margin after text, e.g., the .empty-table-message
-.entity-upload-table ~ .entity-upload-table { margin-top: 20px; }
-// The margin after the Pagination component
-.pagination ~ .entity-upload-table { margin-top: 12px; }
 </style>
