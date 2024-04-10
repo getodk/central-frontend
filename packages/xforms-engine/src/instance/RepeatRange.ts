@@ -152,11 +152,11 @@ export class RepeatRange
 					return currentInstances.concat(newInstance);
 				}
 
-				const updatedInstances = currentInstances.slice();
-
-				updatedInstances.splice(initialIndex, 0, newInstance);
-
-				return updatedInstances;
+				return [
+					...currentInstances.slice(0, initialIndex),
+					newInstance,
+					...currentInstances.slice(initialIndex),
+				];
 			});
 
 			if (count > 1) {
