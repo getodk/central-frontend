@@ -49,6 +49,8 @@ export interface SubtreeDefinition extends BaseSubtreeDefinition {
  */
 // TODO: directly test presentation of non-group subtree children/descendants
 export interface SubtreeNode extends BaseNode {
+	readonly nodeType: 'subtree';
+	readonly nodeVariant: null;
 	readonly definition: SubtreeDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

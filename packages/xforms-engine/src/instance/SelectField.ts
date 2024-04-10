@@ -44,8 +44,13 @@ export class SelectField
 {
 	private readonly selectExclusive: boolean;
 
+	// InstanceNode
 	protected readonly state: SharedNodeState<SelectFieldStateSpec>;
 	protected override engineState: EngineState<SelectFieldStateSpec>;
+
+	// SelectNode
+	readonly nodeType = 'select';
+	readonly nodeVariant = null;
 
 	readonly currentState: CurrentState<SelectFieldStateSpec>;
 

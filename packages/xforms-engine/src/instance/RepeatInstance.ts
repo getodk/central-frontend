@@ -40,16 +40,20 @@ export class RepeatInstance
 	implements RepeatInstanceNode, EvaluationContext, SubscribableDependency
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
+	private readonly currentIndex: Accessor<number>;
 
+	// InstanceNode
 	protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
 	protected override engineState: EngineState<RepeatInstanceStateSpec>;
+
+	// RepeatInstanceNode
+	readonly nodeType = 'repeat-instance';
+	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<
 		CurrentState<RepeatInstanceStateSpec>,
 		GeneralChildNode
 	>;
-
-	private readonly currentIndex: Accessor<number>;
 
 	constructor(
 		override readonly parent: RepeatRange,

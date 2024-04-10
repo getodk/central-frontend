@@ -2,6 +2,7 @@ import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { BaseNode, BaseNodeState } from '../../client/BaseNode.ts';
+import type { InstanceNodeType } from '../../client/node-types.ts';
 import type { TextRange } from '../../index.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
@@ -129,6 +130,10 @@ export abstract class InstanceNode<
 
 	// BaseNode: identity
 	readonly nodeId: NodeID;
+
+	// BaseNode: node types and variants (e.g. for narrowing)
+	abstract readonly nodeType: InstanceNodeType;
+	abstract readonly nodeVariant: null;
 
 	abstract readonly currentState: InstanceNodeCurrentState<Spec, Child>;
 

@@ -33,10 +33,15 @@ export class Group
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
+	// InstanceNode
 	protected readonly state: SharedNodeState<GroupStateSpec>;
 	protected override engineState: EngineState<GroupStateSpec>;
 
+	// GroupNode
 	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
+
+	readonly nodeType = 'group';
+	readonly nodeVariant = null;
 
 	constructor(parent: GeneralParentNode, definition: GroupDefinition) {
 		super(parent, definition);

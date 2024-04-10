@@ -30,8 +30,13 @@ export class Subtree
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
+	// InstanceNode
 	protected readonly state: SharedNodeState<SubtreeStateSpec>;
-	protected override engineState: EngineState<SubtreeStateSpec>;
+	protected engineState: EngineState<SubtreeStateSpec>;
+
+	// SubtreeNode
+	readonly nodeType = 'subtree';
+	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<CurrentState<SubtreeStateSpec>, GeneralChildNode>;
 

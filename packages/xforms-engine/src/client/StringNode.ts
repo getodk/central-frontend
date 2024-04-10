@@ -29,6 +29,8 @@ export interface StringDefinition extends ValueNodeDefinition {
  * (for instance if the node is bound to an XForms `calculate` expression).
  */
 export interface StringNode extends BaseNode {
+	readonly nodeType: 'string';
+	readonly nodeVariant: null;
 	readonly definition: StringDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

@@ -59,8 +59,13 @@ export class RepeatRange
 
 	private readonly childrenState: ChildrenState<RepeatInstance>;
 
+	// InstanceNode
 	protected readonly state: SharedNodeState<RepeatRangeStateSpec>;
 	protected override engineState: EngineState<RepeatRangeStateSpec>;
+
+	// RepeatRangeNode
+	readonly nodeType = 'repeat-range';
+	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
 

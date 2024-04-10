@@ -1,4 +1,5 @@
 import type { AnyNodeDefinition } from '../model/NodeDefinition.ts';
+import type { InstanceNodeType } from './node-types.js';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';
 
@@ -113,6 +114,16 @@ type FormNodeID = string;
  * Base interface for common/shared aspects of any node type.
  */
 export interface BaseNode {
+	/**
+	 * Specifies the node's general type. This can be useful for narrowing types,
+	 * e.g. those of children. Additional considerations for identifying and
+	 * narrowing {@link nodeVariant | node-specific variants} may also be present
+	 * on interfaces corresponding to a given node type.
+	 */
+	readonly nodeType: InstanceNodeType;
+
+	readonly nodeVariant: string | null;
+
 	/**
 	 * Each node has a unique identifier. This identifier is stable throughout
 	 * the lifetime of an active session filling a form.

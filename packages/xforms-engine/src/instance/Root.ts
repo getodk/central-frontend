@@ -112,8 +112,13 @@ export class Root
 
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
+	// InstanceNode
 	protected readonly state: SharedNodeState<RootStateSpec>;
 	protected readonly engineState: EngineState<RootStateSpec>;
+
+	// RootNode
+	readonly nodeType = 'root';
+	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 

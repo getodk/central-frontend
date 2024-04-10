@@ -25,6 +25,8 @@ export interface GroupDefinition extends SubtreeDefinition {
 // https://github.com/getodk/web-forms/blob/6cfff8b4c5a2cf6a23a71ef6d4308343bccd2436/packages/odk-web-forms/src/lib/xform/model/ModelDefinition.test.ts#L480-L540
 // for context.
 export interface GroupNode extends BaseNode {
+	readonly nodeType: 'group';
+	readonly nodeVariant: null;
 	readonly definition: GroupDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

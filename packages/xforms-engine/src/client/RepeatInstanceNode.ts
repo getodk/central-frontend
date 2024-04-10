@@ -23,6 +23,8 @@ export type RepeatDefinition =
 	| RepeatTemplateDefinition;
 
 export interface RepeatInstanceNode extends BaseNode {
+	readonly nodeType: 'repeat-instance';
+	readonly nodeVariant: null;
 	readonly definition: RepeatDefinition;
 	readonly root: RootNode;
 

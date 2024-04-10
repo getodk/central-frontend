@@ -36,7 +36,13 @@ export class StringField
 	implements StringNode, EvaluationContext, SubscribableDependency, ValueContext<string>
 {
 	protected readonly state: SharedNodeState<StringFieldStateSpec>;
-	protected override engineState: EngineState<StringFieldStateSpec>;
+
+	// InstanceNode
+	protected engineState: EngineState<StringFieldStateSpec>;
+
+	// StringNode
+	readonly nodeType = 'string';
+	readonly nodeVariant = null;
 
 	readonly currentState: CurrentState<StringFieldStateSpec>;
 
