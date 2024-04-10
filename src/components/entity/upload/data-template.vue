@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <i18n-t tag="span" keypath="text.full">
     <template #downloadTemplate>
       <a class="btn" :class="error ? 'btn-danger' : 'btn-default'" :href="href"
-        :download="`${dataset.name} template.csv`">
+        @click="setFilename">
         <span class="icon-download"></span>{{ $t('text.downloadTemplate') }}
       </a>
     </template>
@@ -21,6 +21,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { DateTime } from 'luxon';
 import { computed } from 'vue';
 
 import { useRequestData } from '../../../request-data';
@@ -42,6 +43,10 @@ const href = computed(() => {
   const csv = headers.join(',');
   return `data:text/csv;charset=UTF-8,${encodeURIComponent(csv)}`;
 });
+const setFilename = (event) => {
+  const now = DateTime.local().toFormat('yyyyMMddHHmmss');
+  event.target.setAttribute('download', `${dataset.name} ${now}.csv`);
+};
 </script>
 
 <i18n lang="json5">
