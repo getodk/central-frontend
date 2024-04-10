@@ -172,6 +172,16 @@ export abstract class InstanceNode<
 		});
 	}
 
+	/**
+	 * @package This presently serves a few internal use cases, where certain
+	 * behaviors depend on arbitrary traversal from any point in the instance
+	 * tree, without particular regard for the visited node type. It isn't
+	 * intended for external traversal or any other means of consuming children by
+	 * a client. This return type intentionally deviates from one structural
+	 * expectation, requiring even leaf nodes to return an array (though for those
+	 * nodes it will always be empty). This affords consistency and efficiency of
+	 * interface for those internal uses.
+	 */
 	abstract getChildren(this: AnyInstanceNode): readonly AnyChildNode[];
 
 	protected abstract computeReference(
