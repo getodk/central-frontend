@@ -149,7 +149,7 @@ const largeCellWarning = (delimiter) => {
   return {
     type: 'largeCell',
     pushRow,
-    hasWarning: () => largestCell.size > maxRowSizes[1],
+    hasWarning: () => largestCell.size > 10 * maxRowSizes[1],
     get details() { return largestCell.row; }
   };
 };

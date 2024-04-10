@@ -218,13 +218,13 @@ describe('util/csv', () => {
 
       describe('large cell', () => {
         it('returns the row of a relatively large cell that contains a comma', async () => {
-          const csv = createCSV('a\n1\n"2,3"');
+          const csv = createCSV('a\n1\n"12345,6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({ count: 1, largeCell: 2 });
         });
 
         it('returns row of a relatively large cell that contains specified delimiter', async () => {
-          const csv = createCSV('a\n1\n"2;3"');
+          const csv = createCSV('a\n1\n"12345;6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a'], {
             delimiter: ';'
           });
@@ -232,20 +232,20 @@ describe('util/csv', () => {
         });
 
         it('returns the row of a relatively large cell that contains a newline', async () => {
-          const csv = createCSV('a\n1\n"2\n3"');
+          const csv = createCSV('a\n1\n"12345\n6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({ count: 1, largeCell: 2 });
         });
 
         it('ignores cells that do not contain a delimiter or newline', async () => {
-          const csv = createCSV('a\n1\n"2.3"');
+          const csv = createCSV('a\n1\n"12345.6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({ count: 0 });
         });
 
         it('ignores cells that are not relatively large', async () => {
-          const csv = createCSV('a,b,c\n1,2,3\n"4,5",6');
-          const { warnings } = await parseCSV(i18n, csv, ['a', 'b', 'c']);
+          const csv = createCSV('a,b\n1,2\n3,"12345,6789ab"');
+          const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
           warnings.should.eql({ count: 0 });
         });
       });
