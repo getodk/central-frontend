@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import { createComputed, createMemo, createSignal, on } from 'solid-js';
+import { createComputed, createSignal, on } from 'solid-js';
 import type { RepeatDefinition, RepeatInstanceNode } from '../client/RepeatInstanceNode.ts';
 import type { TextRange } from '../index.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -74,6 +74,7 @@ export class RepeatInstance
 		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
 
 		this.currentIndex = currentIndex;
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -107,19 +108,12 @@ export class RepeatInstance
 		// - the same logic for deferring reaction on form init should apply for
 		//   adding new instances to a live form.
 		this.scope.runTask(() => {
-			createComputed(() => {
-				const getIndex = createMemo(() => parent.getInstanceIndex(this));
+			// TODO: even as minimal as this currently is, maybe we should move this
+			// into a named function under src/lib/reactivity (for consistency with
+			// other reactive implementations of specific XForms semantics)?
+			const computeCurrentIndex = parent.getInstanceIndex.bind(parent, this);
 
-				createComputed(
-					on(
-						getIndex,
-						(index) => {
-							setCurrentIndex(index);
-						},
-						{ defer: true }
-					)
-				);
-			});
+			createComputed(on(computeCurrentIndex, setCurrentIndex, { defer: true }));
 		});
 
 		childrenState.setChildren(buildChildren(this));
