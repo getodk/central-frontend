@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { identity } from 'ramda';
 
 import createCentralI18n from '../../src/i18n';
-import { formatCSVRow, parseCSV, parseCSVHeader } from '../../src/util/csv';
+import { formatCSVDelimiter, formatCSVRow, parseCSV, parseCSVHeader } from '../../src/util/csv';
 import { noop } from '../../src/util/util';
 
 const i18n = createCentralI18n().global;
@@ -24,6 +24,28 @@ describe('util/csv', () => {
     it('does not return trailing empty cells', async () => {
       const { columns } = await parseCSVHeader(i18n, createCSV('a,"",'));
       columns.should.eql(['a']);
+    });
+
+    describe('delimiter', () => {
+      it('returns the delimiter', async () => {
+        const { meta } = await parseCSVHeader(i18n, createCSV('a,b\n1,2'));
+        meta.delimiter.should.equal(',');
+      });
+
+      it('auto-detects a semicolon delimiter', async () => {
+        const { meta } = await parseCSVHeader(i18n, createCSV('a;b\n1;2'));
+        meta.delimiter.should.equal(';');
+      });
+
+      it('defaults to a comma if the delimiter is undectectable', async () => {
+        const { meta } = await parseCSVHeader(i18n, createCSV('a\n1'));
+        meta.delimiter.should.equal(',');
+      });
+
+      it('does not return an error for an undetectable delimiter', async () => {
+        const { errors } = await parseCSVHeader(i18n, createCSV('a\n1'));
+        errors.length.should.equal(0);
+      });
     });
 
     describe('error', () => {
@@ -83,7 +105,7 @@ describe('util/csv', () => {
     describe('quote error', () => {
       it('returns a rejected promise', () => {
         const promise = parseCSV(i18n, createCSV('a\n"1"2"'), ['a']);
-        return promise.should.be.rejectedWith('There is a problem on row 2 of the CSV file: A quoted field is invalid. Check the row to see if there are any unusual values.');
+        return promise.should.be.rejectedWith('There is a problem on row 2 of the file: A quoted field is invalid. Check the row to see if there are any unusual values.');
       });
 
       it('indicates correct row number if error is not in first row', () => {
@@ -106,7 +128,7 @@ describe('util/csv', () => {
 
       it('returns a rejected promise if there are too many cells', async () => {
         const promise = parseCSV(i18n, createCSV('a\n1,2'), ['a']);
-        return promise.should.be.rejectedWith('There is a problem on row 2 of the CSV file: Expected 1 column, but found 2.');
+        return promise.should.be.rejectedWith('There is a problem on row 2 of the file: Expected 1 column, but found 2.');
       });
 
       it('does not reject for an empty cell after last column', async () => {
@@ -119,6 +141,13 @@ describe('util/csv', () => {
         const { data } = await parseCSV(i18n, csv, ['a', 'b']);
         data.should.eql([['1', '']]);
       });
+    });
+
+    it('uses the specified delimiter', async () => {
+      const { data } = await parseCSV(i18n, createCSV('a;b\n1;2'), ['a', 'b'], {
+        delimiter: ';'
+      });
+      data.should.eql([['1', '2']]);
     });
 
     describe('transformRow option', () => {
@@ -194,13 +223,21 @@ describe('util/csv', () => {
           warnings.should.eql({ count: 1, largeCell: 2 });
         });
 
+        it('returns row of a relatively large cell that contains specified delimiter', async () => {
+          const csv = createCSV('a\n1\n"2;3"');
+          const { warnings } = await parseCSV(i18n, csv, ['a'], {
+            delimiter: ';'
+          });
+          warnings.should.eql({ count: 1, largeCell: 2 });
+        });
+
         it('returns the row of a relatively large cell that contains a newline', async () => {
           const csv = createCSV('a\n1\n"2\n3"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({ count: 1, largeCell: 2 });
         });
 
-        it('ignores cells that do not contain a comma or newline', async () => {
+        it('ignores cells that do not contain a delimiter or newline', async () => {
           const csv = createCSV('a\n1\n"2.3"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({ count: 0 });
@@ -215,6 +252,16 @@ describe('util/csv', () => {
     });
   });
 
+  describe('formatCSVDelimiter()', () => {
+    it('returns ⇥ for tab', () => {
+      formatCSVDelimiter('\t').should.equal('⇥');
+    });
+
+    it('returns a comma as-is', () => {
+      formatCSVDelimiter(',').should.equal(',');
+    });
+  });
+
   describe('formatCSVRow()', () => {
     it('returns a CSV string', () => {
       formatCSVRow(['1', '2']).should.eql('1,2');
@@ -226,6 +273,16 @@ describe('util/csv', () => {
 
     it('escapes quotes', () => {
       formatCSVRow(['1', '2"3', '4']).should.eql('1,"2""3",4');
+    });
+
+    describe('delimiter', () => {
+      it('uses the specified delimiter', () => {
+        formatCSVRow(['1', '2;3'], { delimiter: ';' }).should.equal('1;"2;3"');
+      });
+
+      it('uses ⇥ instead of tab', () => {
+        formatCSVRow(['1', '2\t3'], { delimiter: '\t' }).should.equal('1⇥"2⇥3"');
+      });
     });
 
     it('truncates the string if there are too many elements', () => {

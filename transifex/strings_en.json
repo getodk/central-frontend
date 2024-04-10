@@ -911,16 +911,16 @@
   "util": {
     "csv": {
       "readError": {
-        "string": "There was a problem reading your CSV file: {message}",
+        "string": "There was a problem reading your file: {message}",
         "developer_comment": "{message} is a description of the problem."
       },
       "rowError": {
-        "string": "There is a problem on row {row} of the CSV file: {message}",
+        "string": "There is a problem on row {row} of the file: {message}",
         "developer_comment": "{row} is a row number. {message} is a description of the problem."
       },
       "invalidQuotes": {
         "string": "A quoted field is invalid. Check the row to see if there are any unusual values.",
-        "developer_comment": "This is an error that is shown for a CSV file. The field may be any cell in the file."
+        "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
       },
       "emptyRow": {
         "string": "The row is empty."
@@ -1994,8 +1994,8 @@
         "blankLabel": {
           "string": "The label is missing."
         },
-        "noCSVData": {
-          "string": "Your CSV file does not contain any data."
+        "noData": {
+          "string": "Your file does not contain any data."
         }
       },
       "headersNote": {
@@ -2024,7 +2024,7 @@
           "developer_comment": "Suggestions to fix an error"
         },
         "invalidQuotes": {
-          "string": "A quoted field is invalid. Check the header row of your CSV file to see if there are any unusual values."
+          "string": "A quoted field is invalid. Check the header row of your file to see if there are any unusual values."
         },
         "missingLabel": {
           "string": "A {label} property is required. The label indicates the name to use for each Entity throughout Central and elsewhere.",
@@ -2037,7 +2037,10 @@
           "string": "It looks like two or more columns have the same header. Please make sure column headers are unique."
         },
         "emptyColumn": {
-          "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your CSV file."
+          "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your file."
+        },
+        "delimiterNotComma": {
+          "string": "It’s not clear what delimiter separates cells in a row from each other in your file. Based on analysis, {delimiter} was used as the best guess."
         }
       }
     },

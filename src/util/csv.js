@@ -34,7 +34,6 @@ const promiseParse = (i18n, file, signal = mockSignal(), papaOptions = {}) => {
     if (signal.aborted) return;
     let hasError = false;
     const fullOptions = {
-      delimiter: ',',
       // Called for a FileReader error.
       error: (error) => {
         if (signal.aborted) return;
@@ -78,17 +77,24 @@ const promiseParse = (i18n, file, signal = mockSignal(), papaOptions = {}) => {
 
 // `signal` is an AbortSignal.
 export const parseCSVHeader = async (i18n, file, signal = undefined) => {
-  const { data, errors } = await promiseParse(i18n, file, signal, {
+  const { data, errors, meta } = await promiseParse(i18n, file, signal, {
+    delimitersToGuess: [',', ';', '\t', '|'],
     preview: 1
   });
   const columns = data.length !== 0 ? data[0] : [];
-  if (errors.length === 0) {
+  const unhandledErrors = errors.filter(error =>
+    error.code !== 'UndetectableDelimiter');
+  if (unhandledErrors.length === 0) {
     // Trailing empty cells are not uncommon, so we remove them. But if there
     // was an error, we preserve the empty cells so that the user can be shown
     // something closer to the exact header as it is.
     while (columns.length !== 0 && last(columns) === '') columns.pop();
   }
-  return { columns, errors };
+  return {
+    columns,
+    errors: unhandledErrors,
+    meta: { delimiter: meta.delimiter }
+  };
 };
 
 // Each of these warning functions returns an object to check a CSV file for a
@@ -114,7 +120,7 @@ const raggedRowsWarning = (columns) => {
     get details() { return ragged; }
   };
 };
-const largeCellWarning = () => {
+const largeCellWarning = (delimiter) => {
   // The size and 0-indexed row number of the largest cell containing a comma or
   // newline
   const largestCell = { size: 0, row: -1 };
@@ -124,7 +130,8 @@ const largeCellWarning = () => {
     let rowSize = 0;
     for (const value of values) {
       rowSize += value.length;
-      if (value.length > largestCell.size && value.search(/[,\n\r]/) !== -1) {
+      if (value.length > largestCell.size &&
+        (value.includes(delimiter) || value.search(/[\n\r]/) !== -1)) {
         largestCell.size = value.length;
         largestCell.row = i;
       }
@@ -150,6 +157,7 @@ const largeCellWarning = () => {
 // `columns` is the CSV header as an array.
 export const parseCSV = async (i18n, file, columns, options = {}) => {
   const {
+    delimiter = ',',
     // Function to validate and transform the data of a row. If the function
     // throws an error, it will result in a rejected promise.
     transformRow = identity,
@@ -159,7 +167,7 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
 
   const data = [];
   let emptyRow = -1;
-  const warnings = [raggedRowsWarning(columns), largeCellWarning()];
+  const warnings = [raggedRowsWarning(columns), largeCellWarning(delimiter)];
 
   const processRow = (values, index) => {
     // Remove trailing empty cells.
@@ -193,6 +201,7 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
   let rowIndex = 0;
   try {
     await promiseParse(i18n, file, signal, {
+      delimiter,
       chunk: ({ data: chunkData, errors }) => {
         if (errors.length !== 0) {
           const error = errors[0];
@@ -237,6 +246,9 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
   return { data, warnings: warningDetails };
 };
 
+export const formatCSVDelimiter = (delimiter) =>
+  (delimiter === '\t' ? '⇥' : delimiter);
+
 // truncateRow() truncates an array of strings, returning a new array whose
 // number of elements and combined size do not exceed the maximum.
 const truncateRow = (values, { maxLength = 10000, maxSize = 10000 }) => {
@@ -261,5 +273,17 @@ const truncateRow = (values, { maxLength = 10000, maxSize = 10000 }) => {
 
 // formatCSVRow() formats an array of strings as a CSV row. It is intended for
 // display purposes only: the data may be truncated.
-export const formatCSVRow = (values, options = {}) =>
-  Papa.unparse([truncateRow(values, options)]);
+export const formatCSVRow = (values, options = {}) => {
+  const { maxLength, maxSize, ...papaOptions } = options;
+  const truncated = truncateRow(values, { maxLength, maxSize });
+
+  if (papaOptions.delimiter == null) papaOptions.delimiter = ',';
+  const formattedDelimiter = formatCSVDelimiter(papaOptions.delimiter);
+  if (formattedDelimiter !== papaOptions.delimiter) {
+    for (const [i, value] of truncated.entries())
+      truncated[i] = value.replaceAll(papaOptions.delimiter, formattedDelimiter);
+    papaOptions.delimiter = formattedDelimiter;
+  }
+
+  return Papa.unparse([truncated], papaOptions);
+};

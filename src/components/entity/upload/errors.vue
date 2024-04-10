@@ -35,6 +35,12 @@ except according to the terms contained in the LICENSE file.
         <p v-if="unknownProperty">{{ $t('suggestions.unknownProperty') }}</p>
         <p v-if="duplicateColumn">{{ $t('suggestions.duplicateColumn') }}</p>
         <p v-if="emptyColumn">{{ $t('suggestions.emptyColumn') }}</p>
+        <i18n-t v-if="delimiter !== ','" tag="p"
+          keypath="suggestions.delimiterNotComma">
+          <template #delimiter>
+            <code>{{ formattedDelimiter }}</code>
+          </template>
+        </i18n-t>
       </dd>
     </div>
   </dl>
@@ -43,6 +49,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, ref } from 'vue';
 
+import { formatCSVDelimiter, formatCSVRow } from '../../../util/csv';
 import { useRequestData } from '../../../request-data';
 
 defineOptions({
@@ -57,6 +64,11 @@ const props = defineProps({
     type: String,
     required: true
   },
+  delimiter: {
+    type: String,
+    required: true
+  },
+  // Props for specific errors
   invalidQuotes: Boolean,
   missingLabel: Boolean,
   missingProperty: Boolean,
@@ -71,7 +83,7 @@ const { dataset } = useRequestData();
 const expectedHeader = computed(() => {
   const columns = dataset.properties.map(({ name }) => name);
   columns.unshift('label');
-  return columns.join(',');
+  return formatCSVRow(columns, { delimiter: props.delimiter });
 });
 
 const headerElements = ref([]);
@@ -83,10 +95,11 @@ const scrollHeader = (event) => {
   }
 };
 
-// There isn't a suggestion for missing properties.
-const hasSuggestion = computed(() =>
+const hasSuggestion = computed(() => props.delimiter !== ',' ||
   Object.entries(props).some(([name, value]) =>
+    // There isn't a suggestion for missing properties.
     value === true && name !== 'missingProperty'));
+const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 </script>
 
 <style lang="scss">
@@ -114,6 +127,8 @@ const hasSuggestion = computed(() =>
   color: $color-danger;
 
   p:last-child { margin-bottom: 0; }
+
+  code { border: 1px solid $color-danger; }
 }
 
 #entity-upload-errors-label { font-family: $font-family-monospace; }
@@ -126,13 +141,14 @@ const hasSuggestion = computed(() =>
     "suggestions": {
       // Suggestions to fix an error
       "title": "Suggestions",
-      "invalidQuotes": "A quoted field is invalid. Check the header row of your CSV file to see if there are any unusual values.",
+      "invalidQuotes": "A quoted field is invalid. Check the header row of your file to see if there are any unusual values.",
       // {label} will have the text "label" and refers to the "label" property.
       // The name of the property is not translated.
       "missingLabel": "A {label} property is required. The label indicates the name to use for each Entity throughout Central and elsewhere.",
       "unknownProperty": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property.",
       "duplicateColumn": "It looks like two or more columns have the same header. Please make sure column headers are unique.",
-      "emptyColumn": "It looks like you have an empty cell in the header. Please remove any empty columns in your CSV file."
+      "emptyColumn": "It looks like you have an empty cell in the header. Please remove any empty columns in your file.",
+      "delimiterNotComma": "It’s not clear what delimiter separates cells in a row from each other in your file. Based on analysis, {delimiter} was used as the best guess."
     }
   }
 }

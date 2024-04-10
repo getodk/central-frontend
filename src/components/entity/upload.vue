@@ -171,7 +171,7 @@ const parsing = ref(false);
 let abortParse = noop;
 // Validates the column header of the CSV file, setting csvErrors if the header
 // is invalid. Returns `true` if the header is valid and `false` if not.
-const validateHeader = ({ columns, errors }, file) => {
+const validateHeader = ({ columns, errors, meta }, file) => {
   const details = {};
   // If there are errors from Papa Parse, just surface those and don't check for
   // other errors. If there are errors from Papa, then there is something pretty
@@ -201,7 +201,8 @@ const validateHeader = ({ columns, errors }, file) => {
   if (!Object.values(details).includes(true)) return true;
   csvErrors.value = {
     filename: file.name,
-    header: formatCSVRow(columns),
+    header: formatCSVRow(columns, { delimiter: meta.delimiter }),
+    delimiter: meta.delimiter,
     ...details
   };
   return false;
@@ -230,12 +231,13 @@ const rowToEntity = (values, columns) => {
   return obj;
 };
 const { i18n: globalI18n, alert } = inject('container');
-const parseEntities = async (file, columns, signal) => {
-  const { data } = await parseCSV(globalI18n, file, columns, {
+const parseEntities = async (file, headerResults, signal) => {
+  const { data } = await parseCSV(globalI18n, file, headerResults.columns, {
+    delimiter: headerResults.meta.delimiter,
     transformRow: rowToEntity,
     signal
   });
-  if (data.length === 0) throw new Error(t('alert.noCSVData'));
+  if (data.length === 0) throw new Error(t('alert.noData'));
   csvEntities.value = data;
   fileMetadata.value = { name: file.name, size: file.size };
 };
@@ -254,7 +256,7 @@ const selectFile = async (file) => {
   try {
     const headerResults = await parseCSVHeader(globalI18n, file, signal);
     if (validateHeader(headerResults, file))
-      await parseEntities(file, headerResults.columns, signal);
+      await parseEntities(file, headerResults, signal);
   } catch (error) {
     if (!signal.aborted) {
       alert.danger(error.message);
@@ -385,7 +387,7 @@ watch(() => props.state, (state) => {
     },
     "alert": {
       "blankLabel": "The label is missing.",
-      "noCSVData": "Your CSV file does not contain any data."
+      "noData": "Your file does not contain any data."
     }
   }
 }

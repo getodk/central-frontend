@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <i18n-t tag="div" keypath="text.full">
         <template #chooseOne>
           <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-          <input v-show="false" ref="input" type="file" accept=".csv"
+          <input v-show="false" ref="input" type="file" accept=".csv,.tsv"
             @change="changeInput">
           <button type="button" class="btn btn-primary" :aria-disabled="parsing"
             @click="input.click()">
