@@ -132,9 +132,6 @@ export abstract class InstanceNode<
 
 	abstract readonly currentState: InstanceNodeCurrentState<Spec, Child>;
 
-	// BaseNode: instance-global/shared
-	readonly engineConfig: InstanceConfig;
-
 	// BaseNode: structural
 	abstract readonly root: Root;
 
@@ -152,7 +149,7 @@ export abstract class InstanceNode<
 	abstract readonly contextNode: Element;
 
 	constructor(
-		engineConfig: InstanceConfig,
+		readonly engineConfig: InstanceConfig,
 		readonly parent: AnyParentNode | null,
 		readonly definition: Definition
 	) {
