@@ -16,6 +16,11 @@ describe('util/csv', () => {
       columns.should.eql(['a', 'b,c', 'd\ne']);
     });
 
+    it('returns an empty array for an empty file', async () => {
+      const { columns } = await parseCSVHeader(i18n, createCSV(''));
+      columns.should.eql([]);
+    });
+
     it('does not return trailing empty cells', async () => {
       const { columns } = await parseCSVHeader(i18n, createCSV('a,"",'));
       columns.should.eql(['a']);

@@ -81,7 +81,7 @@ export const parseCSVHeader = async (i18n, file, signal = undefined) => {
   const { data, errors } = await promiseParse(i18n, file, signal, {
     preview: 1
   });
-  const columns = data[0];
+  const columns = data.length !== 0 ? data[0] : [];
   if (errors.length === 0) {
     // Trailing empty cells are not uncommon, so we remove them. But if there
     // was an error, we preserve the empty cells so that the user can be shown
