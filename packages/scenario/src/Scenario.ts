@@ -11,8 +11,8 @@ import type {
 	RootNode,
 	SelectItem,
 	SelectNode,
+	StringDefinition,
 	StringNode,
-	SubtreeNode,
 } from '@odk-web-forms/xforms-engine';
 import { initializeForm } from '@odk-web-forms/xforms-engine';
 import type { Accessor, Signal } from 'solid-js';
@@ -28,18 +28,10 @@ import {
 import { afterEach, expect } from 'vitest';
 import { castToString } from './cast.ts';
 
-const isRootNode = (node: AnyNode): node is RootNode => {
-	return node.definition.type === 'root';
-};
-
-type AnyValueNode = Extract<
-	AnyNode,
-	{
-		readonly definition: {
-			readonly type: 'value-node';
-		};
-	}
->;
+// prettier-ignore
+type AnyValueNode =
+	| SelectNode
+	| StringNode;
 
 const isValueNode = (node: AnyNode): node is AnyValueNode => {
 	const { definition } = node;
@@ -47,20 +39,30 @@ const isValueNode = (node: AnyNode): node is AnyValueNode => {
 	return definition.type === 'value-node';
 };
 
+// TODO: this should also likely have an export from `StringNode`
+type StringInputBodyElement = Exclude<StringDefinition['bodyElement'], null>;
+
+// prettier-ignore
+type StringInputDefinition =
+	& StringDefinition
+	& { readonly bodyElement: StringInputBodyElement }
+
+// prettier-ignore
+type StringInputQuestion =
+	& StringNode
+	& { readonly definition: StringInputDefinition };
+
+const isStringInputQuestion = (node: AnyNode): node is StringInputQuestion => {
+	return node.definition.bodyElement != null;
+};
+
 // prettier-ignore
 type ControlQuestionNode =
-	& AnyValueNode
-	& {
-			readonly definition: {
-				readonly bodyElement: Exclude<
-					AnyValueNode['definition']['bodyElement'],
-					null
-				>;
-			};
-		};
+	| SelectNode
+	| StringInputQuestion;
 
 const isControlQuestionNode = (node: AnyNode): node is ControlQuestionNode => {
-	return isValueNode(node) && node.definition.bodyElement != null;
+	return node.nodeType === 'select' || isStringInputQuestion(node);
 };
 
 /**
@@ -83,7 +85,7 @@ type QuestionPositionState<Position extends QuestionPositon> =
 	Position extends 'BEGINNING_OF_FORM'
 		? null
 	: Position extends 'QUESTION'
-		? ControlQuestionNode
+		? SelectNode | StringInputQuestion
 	: Position extends 'GROUP'
 		? GroupNode
 	: Position extends 'REPEAT'
@@ -172,25 +174,6 @@ class QuestionSingletonMap extends UpsertableMap<string, AnyInstanceQuestionPosi
 
 const questionSingletons = new QuestionSingletonMap();
 
-const isStringControlNode = (node: AnyNode): node is StringNode => {
-	const { bodyElement } = node.definition;
-
-	// TODO: we're going to a lot of trouble not to have a `type` field on the
-	// client interface's node types, but having one would almost certainly going
-	// to be more stable than this kind of stuff...
-	return bodyElement == null || bodyElement.type === 'input';
-};
-
-const isSelectNode = (node: AnyNode): node is SelectNode => {
-	const { bodyElement } = node.definition;
-
-	if (bodyElement == null) {
-		return false;
-	}
-
-	return bodyElement.type === 'select' || bodyElement.type === 'select1';
-};
-
 class ControlQuestion extends Question<'QUESTION'> {
 	static createSingleton(node: ControlQuestionNode): ControlQuestion {
 		return questionSingletons.createSingleton('QUESTION', node, () => new this(node));
@@ -211,29 +194,19 @@ class ControlQuestion extends Question<'QUESTION'> {
 
 		const { node } = this;
 
-		if (isStringControlNode(node)) {
-			return node.currentState.value;
-		}
-
-		if (isSelectNode(node)) {
+		if (node.nodeType === 'select') {
 			return node.currentState.value.map((item) => item.value).join(' ');
 		}
 
-		throw new UnreachableError(node);
+		return node.currentState.value;
 	}
 
 	setValue(value: string): string {
 		const { node } = this;
 
-		if (isStringControlNode(node)) {
-			node.setValue(value);
-
-			return this.getValue({ untrack: true });
-		}
-
 		// TODO: most clients probably shouldn't be doing any of this, but **this
 		// client** has to if we don't expose it in the interface...
-		if (isSelectNode(node)) {
+		if (node.nodeType === 'select') {
 			const values = xmlXPathWhitespaceSeparatedList(value, {
 				ignoreEmpty: true,
 			});
@@ -275,19 +248,11 @@ class ControlQuestion extends Question<'QUESTION'> {
 			return this.getValue({ untrack: true });
 		}
 
-		throw new UnreachableError(node);
+		node.setValue(value);
+
+		return this.getValue({ untrack: true });
 	}
 }
-
-type ModelSubtreeNode = GroupNode | SubtreeNode;
-
-const isModelSubtreeNode = (node: AnyNode): node is ModelSubtreeNode => {
-	return node.definition.type === 'subtree';
-};
-
-const isGroupNode = (node: AnyNode): node is GroupNode => {
-	return isModelSubtreeNode(node) && node.definition.bodyElement != null;
-};
 
 class GroupQuestion extends Question<'GROUP'> {
 	static createSingleton(node: GroupNode): GroupQuestion {
@@ -301,10 +266,6 @@ class GroupQuestion extends Question<'GROUP'> {
 	}
 }
 
-const isRepeatInstanceNode = (node: AnyNode): node is RepeatInstanceNode => {
-	return !isRootNode(node) && isRepeatRangeNode(node.parent);
-};
-
 class RepeatInstanceQuestion extends Question<'REPEAT'> {
 	static createSingleton(node: RepeatInstanceNode): RepeatInstanceQuestion {
 		return questionSingletons.createSingleton('REPEAT', node, () => new this(node));
@@ -316,10 +277,6 @@ class RepeatInstanceQuestion extends Question<'REPEAT'> {
 		super();
 	}
 }
-
-const isRepeatRangeNode = (node: AnyNode): node is RepeatRangeNode => {
-	return node.definition.type === 'repeat-sequence';
-};
 
 class PromptNewRepeatQuestion extends Question<'PROMPT_NEW_REPEAT'> {
 	static createSingleton(node: RepeatRangeNode): PromptNewRepeatQuestion {
@@ -338,31 +295,33 @@ class PromptNewRepeatQuestion extends Question<'PROMPT_NEW_REPEAT'> {
 type AnyQuestionNode = Exclude<QuestionPositionState<QuestionPositon>, null>;
 
 const getQuestionNodes = (node: AnyNode): readonly AnyQuestionNode[] => {
-	if (isRootNode(node)) {
-		return node.currentState.children.flatMap(getQuestionNodes);
-	}
+	switch (node.nodeType) {
+		case 'root':
+			return node.currentState.children.flatMap(getQuestionNodes);
 
-	if (isRepeatRangeNode(node)) {
-		return [...node.currentState.children.flatMap(getQuestionNodes), node];
-	}
+		case 'repeat-range':
+			return [...node.currentState.children.flatMap(getQuestionNodes), node];
 
-	if (isRepeatInstanceNode(node) || isGroupNode(node)) {
-		return [node, ...node.currentState.children.flatMap(getQuestionNodes)];
-	}
+		case 'repeat-instance':
+		case 'group':
+			return [node, ...node.currentState.children.flatMap(getQuestionNodes)];
 
-	if (isModelSubtreeNode(node)) {
-		return node.currentState.children.flatMap(getQuestionNodes);
-	}
+		case 'subtree':
+			return node.currentState.children.flatMap(getQuestionNodes);
 
-	if (isControlQuestionNode(node)) {
-		return [node];
-	}
+		case 'select':
+			return [node];
 
-	if (node.definition.bodyElement != null) {
-		throw new Error('Question node or container not collected in Scenario question list');
-	}
+		case 'string':
+			if (isStringInputQuestion(node)) {
+				return [node];
+			}
 
-	return [];
+			return [];
+
+		default:
+			throw new UnreachableError(node);
+	}
 };
 
 type InstanceQuestion =
@@ -372,23 +331,23 @@ type InstanceQuestion =
 	| RepeatInstanceQuestion;
 
 const getQuestionNode = (node: AnyQuestionNode): InstanceQuestion => {
-	if (isRepeatInstanceNode(node)) {
-		return RepeatInstanceQuestion.createSingleton(node);
-	}
+	switch (node.nodeType) {
+		case 'repeat-instance':
+			return RepeatInstanceQuestion.createSingleton(node);
 
-	if (isRepeatRangeNode(node)) {
-		return PromptNewRepeatQuestion.createSingleton(node);
-	}
+		case 'repeat-range':
+			return PromptNewRepeatQuestion.createSingleton(node);
 
-	if (isGroupNode(node)) {
-		return GroupQuestion.createSingleton(node);
-	}
+		case 'group':
+			return GroupQuestion.createSingleton(node);
 
-	if (isControlQuestionNode(node)) {
-		return ControlQuestion.createSingleton(node);
-	}
+		case 'select':
+		case 'string':
+			return ControlQuestion.createSingleton(node);
 
-	throw new UnreachableError(node);
+		default:
+			throw new UnreachableError(node);
+	}
 };
 
 const getInstanceQuestions = (node: AnyNode): readonly InstanceQuestion[] => {
@@ -617,25 +576,27 @@ export class Scenario {
 		fromNode: AnyNode,
 		currentNode: AnyNode = fromNode
 	): RepeatRangeNode {
-		if (isRootNode(currentNode)) {
-			throw new Error(
-				`Failed to find closest repeat range to node with reference: ${fromNode.currentState.reference}`
-			);
-		}
+		switch (currentNode.nodeType) {
+			case 'root':
+				throw new Error(
+					`Failed to find closest repeat range to node with reference: ${fromNode.currentState.reference}`
+				);
 
-		if (isRepeatRangeNode(currentNode)) {
-			return currentNode;
-		}
+			case 'repeat-range':
+				return currentNode;
 
-		if (isRepeatInstanceNode(currentNode)) {
-			return currentNode.parent;
-		}
+			case 'repeat-instance':
+				return currentNode.parent;
 
-		if (isGroupNode(currentNode) || isModelSubtreeNode(currentNode) || isValueNode(currentNode)) {
-			return this.getClosestRepeatRange(currentNode.parent);
-		}
+			case 'group':
+			case 'subtree':
+			case 'string':
+			case 'select':
+				return this.getClosestRepeatRange(currentNode.parent);
 
-		throw new UnreachableError(currentNode);
+			default:
+				throw new UnreachableError(currentNode);
+		}
 	}
 
 	createNewRepeat(repeatNodeset: string): unknown {
