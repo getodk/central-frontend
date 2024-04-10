@@ -17,7 +17,7 @@ describe('EntityUploadPopup', () => {
   describe('clear button', () => {
     it('emits a clear event if it is clicked', async () => {
       const component = mountComponent();
-      await component.get('.close').trigger('click');
+      await component.get('.btn-link').trigger('click');
       component.emitted().clear.should.eql([[]]);
     });
 
@@ -25,7 +25,7 @@ describe('EntityUploadPopup', () => {
       const component = mountComponent({
         props: { awaitingResponse: true }
       });
-      component.get('.close').should.be.hidden();
+      component.get('.btn-link').should.be.hidden();
     });
   });
 

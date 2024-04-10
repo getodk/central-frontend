@@ -13,9 +13,9 @@ except according to the terms contained in the LICENSE file.
   <div id="entity-upload-popup">
     <div id="entity-upload-popup-heading">
       <div v-tooltip.text>{{ filename }}</div>
-      <button v-show="!awaitingResponse" type="button" class="close"
+      <button v-show="!awaitingResponse" type="button" class="btn btn-link"
         :aria-label="$t('action.clear')" @click="$emit('clear')">
-        <span aria-hidden="true">&times;</span>
+        <span class="icon-trash"></span>
       </button>
     </div>
     <div id="entity-upload-popup-count">{{ $tcn('rowCount', count) }}</div>
@@ -70,7 +70,7 @@ const status = computed(() => (props.progress < 1
 }
 
 #entity-upload-popup-heading {
-  align-items: baseline;
+  align-items: center;
   display: flex;
 
   > div {
@@ -79,12 +79,14 @@ const status = computed(() => (props.progress < 1
     font-weight: bold;
   }
 
-  .close {
+  .btn-link {
     flex-shrink: 0;
-    margin-left: 6px;
-    opacity: 0.5;
-
-    &:hover, &:focus { opacity: 0.2; }
+    margin-left: 9px;
+    padding: 0;
+  }
+  .icon-trash {
+    color: $color-danger;
+    margin-right: 0;
   }
 }
 

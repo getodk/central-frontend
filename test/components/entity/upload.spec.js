@@ -139,7 +139,7 @@ describe('EntityUpload', () => {
     it('resets after the clear button is clicked', async () => {
       const modal = await showModal();
       await selectFile(modal);
-      await modal.get('#entity-upload-popup .close').trigger('click');
+      await modal.get('#entity-upload-popup .btn-link').trigger('click');
       modal.findComponent(EntityUploadPopup).exists().should.be.false();
       modal.get('#entity-upload-file-select').should.be.visible();
       const button = modal.get('.modal-actions .btn-primary');
