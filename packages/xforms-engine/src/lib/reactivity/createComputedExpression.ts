@@ -80,11 +80,11 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 	const dependencyReferences = Array.from(dependentExpression.dependencyReferences);
 	const evaluateExpression = expressionEvaluator(evaluator, contextNode, resultType, expression);
 
-	if (isConstantExpression(expression)) {
-		return createMemo(evaluateExpression);
-	}
-
 	return scope.runTask(() => {
+		if (isConstantExpression(expression)) {
+			return createMemo(evaluateExpression);
+		}
+
 		const getReferencedDependencies = createMemo(() => {
 			return dependencyReferences.flatMap((reference) => {
 				return context.getSubscribableDependencyByReference(reference) ?? [];
