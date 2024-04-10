@@ -137,6 +137,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 <i18n lang="json5">
 {
   "en": {
+    // This refers to the header row of a spreadsheet.
     "expectedHeader": "Expected header",
     "suggestions": {
       // Suggestions to fix an error

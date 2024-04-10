@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
           </thead>
           <tbody v-if="entities != null && entities.length !== 0"
             :class="{ 'data-loading': awaitingResponse }">
-            <tr v-for="(entity, entityIndex) of entities" :key="entityIndex">
+            <tr v-for="(entity, entityIndex) in entities" :key="entityIndex">
               <td class="row-number">
                 {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
               </td>
@@ -78,8 +78,10 @@ const props = defineProps({
 // created.
 const { dataset } = useRequestData();
 
-// Prevent the table container from shrinking on the last page.
+// The table container
 const container = ref(null);
+
+// Prevent the table container from shrinking on the last page.
 const minHeight = ref('auto');
 // The page size and height of the last full page that was rendered
 const lastFullPage = { size: 0, height: 0 };

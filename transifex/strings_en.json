@@ -2016,7 +2016,8 @@
     },
     "EntityUploadErrors": {
       "expectedHeader": {
-        "string": "Expected header"
+        "string": "Expected header",
+        "developer_comment": "This refers to the header row of a spreadsheet."
       },
       "suggestions": {
         "title": {

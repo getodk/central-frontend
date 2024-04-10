@@ -41,7 +41,7 @@ const promiseParse = (i18n, file, signal = mockSignal(), papaOptions = {}) => {
         // I can't tell whether complete() will be called, so let's clean up
         // here.
         removeAbortListener();
-        reject(new Error(i18n.t('util.csv.readError', error)));
+        reject(new Error(i18n.t('util.csv.readError', { message: error.message })));
       },
       // Results are not passed in if streaming is used.
       complete: (maybeResults) => {

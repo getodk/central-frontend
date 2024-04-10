@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <div id="entity-upload-popup-count">{{ $tcn('rowCount', count) }}</div>
     <div v-show="awaitingResponse" id="entity-upload-popup-status">
-      <spinner :state="true" inline/><span>{{ status }}</span>
+      <spinner inline/><span>{{ status }}</span>
     </div>
   </div>
 </template>
