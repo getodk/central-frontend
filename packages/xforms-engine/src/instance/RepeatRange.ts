@@ -1,3 +1,4 @@
+import { insertAtIndex } from '@odk-web-forms/common/lib/array/insert.ts';
 import type { Accessor } from 'solid-js';
 import type { RepeatRangeNode } from '../client/RepeatRangeNode.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -152,15 +153,7 @@ export class RepeatRange
 			const initialIndex = afterIndex + 1;
 
 			this.childrenState.setChildren((currentInstances) => {
-				if (precedingInstance == null) {
-					return currentInstances.concat(newInstance);
-				}
-
-				return [
-					...currentInstances.slice(0, initialIndex),
-					newInstance,
-					...currentInstances.slice(initialIndex),
-				];
+				return insertAtIndex(currentInstances, initialIndex, newInstance);
 			});
 
 			if (count > 1) {
