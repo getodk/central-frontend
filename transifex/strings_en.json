@@ -2002,6 +2002,11 @@
         "string": "The first row in your data file must exactly match the table header you see above."
       }
     },
+    "EntityUploadDataError": {
+      "title": {
+        "string": "Data error"
+      }
+    },
     "EntityUploadDataTemplate": {
       "text": {
         "full": {

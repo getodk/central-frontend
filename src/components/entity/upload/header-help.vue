@@ -45,24 +45,14 @@ $border-radius: 3px;
 
 #entity-upload-header-help {
   margin-top: 1px;
-
-  &.panel-danger {
-    box-shadow: none;
-    margin-bottom: 0;
-    margin-top: 10px;
-  }
+  &.panel-danger { margin-top: 10px; }
 
   .panel-heading {
-    border-top-left-radius: $border-radius;
-    border-top-right-radius: $border-radius;
     padding-bottom: 4px;
     padding-top: 6px;
   }
 
   .panel-body {
-    border: none;
-    border-bottom-left-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
     padding-left: 0;
     padding-right: 0;
   }

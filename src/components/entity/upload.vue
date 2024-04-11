@@ -52,6 +52,8 @@ except according to the terms contained in the LICENSE file.
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
+          <entity-upload-data-error v-if="dataError != null"
+            :message="dataError"/>
         </entity-upload-file-select>
       </div>
       <div class="modal-actions">
@@ -77,6 +79,7 @@ except according to the terms contained in the LICENSE file.
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import EntityUploadDataError from './upload/data-error.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadHeaderHelp from './upload/header-help.vue';
 import EntityUploadPopup from './upload/popup.vue';
@@ -169,12 +172,8 @@ watch([() => serverPage.page, () => serverPage.size], () => {
 const csvEntities = shallowRef(null);
 // Metadata about the CSV file
 const fileMetadata = shallowRef(null);
-// If the CSV file is invalid, then either an alert is shown, or
-// EntityUploadErrors is rendered. If an alert is shown, then alertedAt is set,
-// allowing the alert to be hidden later. If EntityUploadErrors is rendered,
-// then csvErrors is set with props for the component.
-let alertedAt;
 const headerErrors = shallowRef(null);
+const dataError = ref(null);
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
@@ -250,31 +249,32 @@ const parseEntities = async (file, headerResults, signal) => {
   csvEntities.value = data;
   fileMetadata.value = { name: file.name, size: file.size };
 };
-const selectFile = async (file) => {
-  // Hide any previous errors.
-  if (alert.state && alert.at === alertedAt) {
-    alert.blank();
-    alertedAt = null;
-  }
+const selectFile = (file) => {
   headerErrors.value = null;
+  dataError.value = null;
 
-  parsing.value = true;
   const abortController = new AbortController();
   abortParse = () => { abortController.abort(); };
   const { signal } = abortController;
-  try {
-    const headerResults = await parseCSVHeader(globalI18n, file, signal);
-    if (validateHeader(headerResults, file))
-      await parseEntities(file, headerResults, signal);
-  } catch (error) {
-    if (!signal.aborted) {
-      alert.danger(error.message);
-      alertedAt = alert.at;
-    }
-  } finally {
-    parsing.value = false;
-    abortParse = noop;
-  }
+
+  parsing.value = true;
+  return parseCSVHeader(globalI18n, file, signal)
+    .catch(error => {
+      if (!signal.aborted) alert.danger(error.message);
+      throw error;
+    })
+    .then(headerResults => (validateHeader(headerResults, file)
+      ? parseEntities(file, headerResults, signal)
+        .catch(error => {
+          if (!signal.aborted) dataError.value = error.message;
+          throw error;
+        })
+      : Promise.resolve()))
+    .finally(() => {
+      parsing.value = false;
+      abortParse = noop;
+    })
+    .catch(noop);
 };
 const clearFile = () => {
   csvEntities.value = null;
@@ -285,8 +285,8 @@ watch(() => props.state, (state) => {
   abortParse();
   csvEntities.value = null;
   fileMetadata.value = null;
-  alertedAt = null;
   headerErrors.value = null;
+  dataError.value = null;
 });
 onBeforeUnmount(() => { abortParse(); });
 
@@ -387,6 +387,21 @@ watch(() => props.state, (state) => {
     margin-bottom: 10px;
     // The margin if the last element is Pagination
     &:has(tbody) { margin-bottom: 12px; }
+  }
+
+  .panel-danger {
+    box-shadow: none;
+    margin-bottom: 0;
+  }
+  $panel-danger-border-radius: 3px;
+  .panel-heading {
+    border-top-left-radius: $panel-danger-border-radius;
+    border-top-right-radius: $panel-danger-border-radius;
+  }
+  .panel-body {
+    border: none;
+    border-bottom-left-radius: $panel-danger-border-radius;
+    border-bottom-right-radius: $panel-danger-border-radius;
   }
 }
 </style>
