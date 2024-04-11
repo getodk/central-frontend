@@ -2,7 +2,6 @@ import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
-import type { TextRange } from '../../client/TextRange.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../model/DescendentNodeDefinition.ts';
@@ -15,15 +14,8 @@ import type { Root } from '../Root.ts';
 import type { AnyChildNode, GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
-import type { InstanceNodeState, InstanceNodeStateSpec } from './InstanceNode.ts';
+import type { InstanceNodeStateSpec } from './InstanceNode.ts';
 import { InstanceNode } from './InstanceNode.ts';
-
-interface DescendantNodeSharedState {
-	get reference(): string;
-	get readonly(): boolean;
-	get relevant(): boolean;
-	get required(): boolean;
-}
 
 export interface DescendantNodeSharedStateSpec {
 	readonly reference: Accessor<string>;
@@ -37,14 +29,6 @@ export type DescendantNodeStateSpec<Value = never> =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	& InstanceNodeStateSpec<Value>
 	& DescendantNodeSharedStateSpec;
-
-export interface DescendantNodeState extends DescendantNodeSharedState, InstanceNodeState {
-	get label(): TextRange<'label'> | null;
-	get hint(): TextRange<'hint'> | null;
-	get children(): readonly AnyChildNode[] | null;
-	get valueOptions(): unknown;
-	get value(): unknown;
-}
 
 // prettier-ignore
 export type DescendantNodeDefinition = Extract<

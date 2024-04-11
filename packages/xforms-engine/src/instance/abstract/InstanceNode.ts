@@ -1,7 +1,7 @@
 import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
-import type { BaseNode, BaseNodeState } from '../../client/BaseNode.ts';
+import type { BaseNode } from '../../client/BaseNode.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
 import type { TextRange } from '../../index.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -19,10 +19,6 @@ import { declareNodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
-
-export interface InstanceNodeState extends BaseNodeState {
-	get children(): readonly AnyChildNode[] | null;
-}
 
 export interface InstanceNodeStateSpec<Value = never> {
 	readonly reference: Accessor<string> | string;
