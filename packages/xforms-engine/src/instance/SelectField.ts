@@ -50,7 +50,6 @@ export class SelectField
 
 	// SelectNode
 	readonly nodeType = 'select';
-	readonly nodeVariant = null;
 
 	readonly currentState: CurrentState<SelectFieldStateSpec>;
 

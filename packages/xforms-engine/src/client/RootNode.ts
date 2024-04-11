@@ -21,7 +21,6 @@ export interface RootNodeState extends BaseNodeState {
 
 export interface RootNode extends BaseNode {
 	readonly nodeType: 'root';
-	readonly nodeVariant: null;
 	readonly definition: RootDefinition;
 	readonly root: RootNode;
 	readonly parent: null;

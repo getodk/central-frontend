@@ -26,7 +26,6 @@ export interface GroupDefinition extends SubtreeDefinition {
 // for context.
 export interface GroupNode extends BaseNode {
 	readonly nodeType: 'group';
-	readonly nodeVariant: null;
 	readonly definition: GroupDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

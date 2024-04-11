@@ -65,7 +65,6 @@ export class RepeatRange
 
 	// RepeatRangeNode
 	readonly nodeType = 'repeat-range';
-	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
 

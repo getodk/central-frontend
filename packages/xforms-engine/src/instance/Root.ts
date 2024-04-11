@@ -118,7 +118,6 @@ export class Root
 
 	// RootNode
 	readonly nodeType = 'root';
-	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 

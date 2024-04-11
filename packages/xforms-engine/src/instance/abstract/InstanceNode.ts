@@ -133,7 +133,6 @@ export abstract class InstanceNode<
 
 	// BaseNode: node types and variants (e.g. for narrowing)
 	abstract readonly nodeType: InstanceNodeType;
-	abstract readonly nodeVariant: null;
 
 	abstract readonly currentState: InstanceNodeCurrentState<Spec, Child>;
 

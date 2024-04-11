@@ -30,7 +30,6 @@ export interface StringDefinition extends ValueNodeDefinition {
  */
 export interface StringNode extends BaseNode {
 	readonly nodeType: 'string';
-	readonly nodeVariant: null;
 	readonly definition: StringDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

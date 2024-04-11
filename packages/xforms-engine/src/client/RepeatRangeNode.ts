@@ -89,7 +89,6 @@ export interface RepeatRangeNodeState extends BaseNodeState {
  */
 export interface RepeatRangeNode extends BaseNode {
 	readonly nodeType: 'repeat-range';
-	readonly nodeVariant: null;
 	readonly definition: RepeatSequenceDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

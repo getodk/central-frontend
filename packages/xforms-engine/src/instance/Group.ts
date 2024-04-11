@@ -41,7 +41,6 @@ export class Group
 	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
 
 	readonly nodeType = 'group';
-	readonly nodeVariant = null;
 
 	constructor(parent: GeneralParentNode, definition: GroupDefinition) {
 		super(parent, definition);

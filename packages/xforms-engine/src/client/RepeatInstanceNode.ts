@@ -24,7 +24,6 @@ export type RepeatDefinition =
 
 export interface RepeatInstanceNode extends BaseNode {
 	readonly nodeType: 'repeat-instance';
-	readonly nodeVariant: null;
 	readonly definition: RepeatDefinition;
 	readonly root: RootNode;
 

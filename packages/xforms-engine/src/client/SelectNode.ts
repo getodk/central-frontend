@@ -40,7 +40,6 @@ export interface SelectDefinition extends ValueNodeDefinition {
 
 export interface SelectNode extends BaseNode {
 	readonly nodeType: 'select';
-	readonly nodeVariant: null;
 	readonly definition: SelectDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

@@ -48,7 +48,6 @@ export class RepeatInstance
 
 	// RepeatInstanceNode
 	readonly nodeType = 'repeat-instance';
-	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<
 		CurrentState<RepeatInstanceStateSpec>,

@@ -116,13 +116,9 @@ type FormNodeID = string;
 export interface BaseNode {
 	/**
 	 * Specifies the node's general type. This can be useful for narrowing types,
-	 * e.g. those of children. Additional considerations for identifying and
-	 * narrowing {@link nodeVariant | node-specific variants} may also be present
-	 * on interfaces corresponding to a given node type.
+	 * e.g. those of children.
 	 */
 	readonly nodeType: InstanceNodeType;
-
-	readonly nodeVariant: string | null;
 
 	/**
 	 * Each node has a unique identifier. This identifier is stable throughout

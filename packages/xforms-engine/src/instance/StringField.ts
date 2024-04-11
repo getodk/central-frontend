@@ -42,7 +42,6 @@ export class StringField
 
 	// StringNode
 	readonly nodeType = 'string';
-	readonly nodeVariant = null;
 
 	readonly currentState: CurrentState<StringFieldStateSpec>;
 

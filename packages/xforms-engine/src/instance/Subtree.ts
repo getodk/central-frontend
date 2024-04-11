@@ -36,7 +36,6 @@ export class Subtree
 
 	// SubtreeNode
 	readonly nodeType = 'subtree';
-	readonly nodeVariant = null;
 
 	readonly currentState: MaterializedChildren<CurrentState<SubtreeStateSpec>, GeneralChildNode>;
 
