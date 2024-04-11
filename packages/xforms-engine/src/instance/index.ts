@@ -1,3 +1,4 @@
+import { identity } from '@odk-web-forms/common/lib/identity.ts';
 import { XFormDefinition } from '../XFormDefinition.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type {
@@ -13,8 +14,6 @@ import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 interface InitializeFormOptions extends BaseInitializeFormOptions {
 	readonly config: Partial<InstanceConfig>;
 }
-
-const identity = <T>(value: T): T => value;
 
 const buildInstanceConfig = (options: Partial<InstanceConfig> = {}): InstanceConfig => {
 	return {
