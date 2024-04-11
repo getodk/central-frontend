@@ -2014,7 +2014,22 @@
         }
       }
     },
-    "EntityUploadErrors": {
+    "EntityUploadFileSelect": {
+      "text": {
+        "full": {
+          "string": "Drag a .csv file here, or {chooseOne} to import.",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "choose one",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        }
+      },
+      "parsing": {
+        "string": "Reading data…"
+      }
+    },
+    "EntityUploadHeaderErrors": {
       "expectedHeader": {
         "string": "Expected header",
         "developer_comment": "This refers to the header row of a spreadsheet."
@@ -2043,21 +2058,6 @@
         "delimiterNotComma": {
           "string": "It’s not clear what delimiter separates cells in a row from each other in your file. Based on analysis, {delimiter} was used as the best guess."
         }
-      }
-    },
-    "EntityUploadFileSelect": {
-      "text": {
-        "full": {
-          "string": "Drag a .csv file here, or {chooseOne} to import.",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
-        },
-        "chooseOne": {
-          "string": "choose one",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
-        }
-      },
-      "parsing": {
-        "string": "Reading data…"
       }
     },
     "EntityUploadPopup": {

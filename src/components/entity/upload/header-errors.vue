@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <dl id="entity-upload-errors" class="dl-horizontal">
+  <dl id="entity-upload-header-errors" class="dl-horizontal">
     <div>
       <dt>{{ $t('expectedHeader') }}</dt>
       <dd :ref="setHeaderElement(0)" class="csv-header" @scroll="scrollHeader">
@@ -23,13 +23,13 @@ except according to the terms contained in the LICENSE file.
         {{ header }}
       </dd>
     </div>
-    <div v-if="hasSuggestion" id="entity-upload-errors-suggestions">
+    <div v-if="hasSuggestion" id="entity-upload-header-errors-suggestions">
       <dt>{{ $t('suggestions.title') }}</dt>
       <dd>
         <p v-if="invalidQuotes">{{ $t('suggestions.invalidQuotes') }}</p>
         <i18n-t v-if="missingLabel" tag="p" keypath="suggestions.missingLabel">
           <template #label>
-            <span id="entity-upload-errors-label">label</span>
+            <span class="text-monospace">label</span>
           </template>
         </i18n-t>
         <p v-if="unknownProperty">{{ $t('suggestions.unknownProperty') }}</p>
@@ -53,7 +53,7 @@ import { formatCSVDelimiter, formatCSVRow } from '../../../util/csv';
 import { useRequestData } from '../../../request-data';
 
 defineOptions({
-  name: 'EntityUploadErrors'
+  name: 'EntityUploadHeaderErrors'
 });
 const props = defineProps({
   filename: {
@@ -105,7 +105,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-#entity-upload-errors {
+#entity-upload-header-errors {
   margin-bottom: 0;
 
   div {
@@ -123,15 +123,13 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
   }
 }
 
-#entity-upload-errors-suggestions {
+#entity-upload-header-errors-suggestions {
   color: $color-danger;
 
   p:last-child { margin-bottom: 0; }
 
   code { border: 1px solid $color-danger; }
 }
-
-#entity-upload-errors-label { font-family: $font-family-monospace; }
 </style>
 
 <i18n lang="json5">

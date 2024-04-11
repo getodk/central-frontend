@@ -51,7 +51,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
-          <entity-upload-help :errors="csvErrors"/>
+          <entity-upload-header-help :errors="headerErrors"/>
         </entity-upload-file-select>
       </div>
       <div class="modal-actions">
@@ -78,7 +78,7 @@ import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef,
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadFileSelect from './upload/file-select.vue';
-import EntityUploadHelp from './upload/help.vue';
+import EntityUploadHeaderHelp from './upload/header-help.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
 import Loading from '../loading.vue';
@@ -174,12 +174,12 @@ const fileMetadata = shallowRef(null);
 // allowing the alert to be hidden later. If EntityUploadErrors is rendered,
 // then csvErrors is set with props for the component.
 let alertedAt;
-const csvErrors = shallowRef(null);
+const headerErrors = shallowRef(null);
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
-// Validates the column header of the CSV file, setting csvErrors if the header
-// is invalid. Returns `true` if the header is valid and `false` if not.
+// Validates the column header of the CSV file, setting headerErrors if the
+// header is invalid. Returns `true` if the header is valid and `false` if not.
 const validateHeader = ({ columns, errors, meta }, file) => {
   const details = {};
   // If there are errors from Papa Parse, just surface those and don't check for
@@ -208,7 +208,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
       (hasLabel ? 1 : 0);
   }
   if (!Object.values(details).includes(true)) return true;
-  csvErrors.value = {
+  headerErrors.value = {
     filename: file.name,
     header: formatCSVRow(columns, { delimiter: meta.delimiter }),
     delimiter: meta.delimiter,
@@ -256,7 +256,7 @@ const selectFile = async (file) => {
     alert.blank();
     alertedAt = null;
   }
-  csvErrors.value = null;
+  headerErrors.value = null;
 
   parsing.value = true;
   const abortController = new AbortController();
@@ -286,7 +286,7 @@ watch(() => props.state, (state) => {
   csvEntities.value = null;
   fileMetadata.value = null;
   alertedAt = null;
-  csvErrors.value = null;
+  headerErrors.value = null;
 });
 onBeforeUnmount(() => { abortParse(); });
 

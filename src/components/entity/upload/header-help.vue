@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="entity-upload-help"
+  <div id="entity-upload-header-help"
     :class="{ panel: hasError, 'panel-danger': hasError }">
     <div :class="{ 'panel-heading': hasError }">
       <span>{{ $t('headersNote') }}</span>
@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <entity-upload-data-template :error="hasError"/>
     </div>
     <div v-if="hasError" class="panel-body">
-      <entity-upload-errors v-bind="errors"/>
+      <entity-upload-header-errors v-bind="errors"/>
     </div>
   </div>
 </template>
@@ -27,11 +27,11 @@ except according to the terms contained in the LICENSE file.
 import { computed } from 'vue';
 
 import EntityUploadDataTemplate from './data-template.vue';
-import EntityUploadErrors from './errors.vue';
+import EntityUploadHeaderErrors from './header-errors.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
-  name: 'EntityUploadHelp'
+  name: 'EntityUploadHeaderHelp'
 });
 const props = defineProps({
   errors: Object
@@ -43,7 +43,7 @@ const hasError = computed(() => props.errors != null);
 <style lang="scss">
 $border-radius: 3px;
 
-#entity-upload-help {
+#entity-upload-header-help {
   margin-top: 1px;
 
   &.panel-danger {
