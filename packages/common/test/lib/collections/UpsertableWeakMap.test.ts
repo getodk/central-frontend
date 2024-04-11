@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { UpsertableWeakMap } from './UpsertableWeakMap.ts';
+import { UpsertableWeakMap } from '../../../src/lib/collections/UpsertableWeakMap.ts';
 
 describe('UpsertableWeakMap', () => {
 	class Key {

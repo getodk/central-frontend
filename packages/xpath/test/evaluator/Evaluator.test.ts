@@ -1,6 +1,6 @@
 import { xml } from '@odk-web-forms/common/test/factories/xml';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Evaluator } from './Evaluator.ts';
+import { Evaluator } from '../../src/evaluator/Evaluator.ts';
 
 describe('Evaluator convenience methods', () => {
 	let testDocument: XMLDocument;

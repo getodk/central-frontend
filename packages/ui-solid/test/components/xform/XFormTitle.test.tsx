@@ -1,6 +1,6 @@
 import { render } from 'solid-js/web';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { XFormTitle } from './XFormTitle.tsx';
+import { XFormTitle } from '../../../src/components/XForm/XFormTitle.tsx';
 
 describe('XFormTitle', () => {
 	let rootElement: Element;

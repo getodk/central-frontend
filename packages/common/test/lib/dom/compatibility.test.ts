@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ScopedElementLookup } from './compatibility.ts';
+import { ScopedElementLookup } from '../../../src/lib/dom/compatibility.ts';
 
 describe('DOM compatibility library functions', () => {
 	describe('querying direct children of an element', () => {

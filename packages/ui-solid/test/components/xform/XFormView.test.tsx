@@ -14,7 +14,7 @@ import type { RootNode } from '@odk-web-forms/xforms-engine';
 import { initializeForm } from '@odk-web-forms/xforms-engine';
 import { render } from 'solid-js/web';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { XFormView } from './XFormView.tsx';
+import { XFormView } from '../../../src/components/XForm/XFormView.tsx';
 
 describe('XFormView', () => {
 	const xform = html(

@@ -1,6 +1,6 @@
 import { xml } from '@odk-web-forms/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { NamespaceResolver, staticNamespaces } from './NamespaceResolver.ts';
+import { NamespaceResolver, staticNamespaces } from '../../src/evaluator/NamespaceResolver.ts';
 
 describe('NamespaceResolver', () => {
 	let resolver: NamespaceResolver;
