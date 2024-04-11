@@ -242,25 +242,23 @@ describe('Instance root', () => {
 			expect(state).toBe(expectedValue);
 		});
 
-		if (!invalidValue != null) {
-			it(`fails to set update the static state of "${stateKey}" to ${invalidValue}`, async () => {
-				const caught = await reactiveTestScope(async ({ mutable }) => {
-					const root = await createRootNode(mutable);
+		it(`fails to set update the read-only state (currentState) of "${stateKey}" to ${invalidValue}`, async () => {
+			const caught = await reactiveTestScope(async ({ mutable }) => {
+				const root = await createRootNode(mutable);
 
-					try {
-						// @ts-expect-error - intentionally ignore unsafe assignment to
-						// readonly property
-						root.currentState[stateKey] = invalidValue;
-					} catch (error) {
-						return error;
-					}
+				try {
+					// @ts-expect-error - intentionally ignore unsafe assignment to
+					// readonly property
+					root.currentState[stateKey] = invalidValue;
+				} catch (error) {
+					return error;
+				}
 
-					return null;
-				});
-
-				expect(caught).toBeInstanceOf(TypeError);
+				return null;
 			});
-		}
+
+			expect(caught).toBeInstanceOf(TypeError);
+		});
 	});
 
 	it("gets the root node's first child", async () => {
