@@ -4,10 +4,12 @@ import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
+import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../model/DescendentNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
 import type { RepeatInstanceDefinition } from '../../model/RepeatInstanceDefinition.ts';
 import type { ValueNodeDefinition } from '../../model/ValueNodeDefinition.ts';
+import type { RepeatInstance } from '../RepeatInstance.ts';
 import type { RepeatRange } from '../RepeatRange.ts';
 import type { Root } from '../Root.ts';
 import type { AnyChildNode, GeneralParentNode } from '../hierarchy.ts';
@@ -65,10 +67,6 @@ export type AnyDescendantNode = DescendantNode<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	any
 >;
-
-interface RemoveDescendantNodeOptions {
-	readonly isChildRemoval?: boolean;
-}
 
 export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
@@ -162,41 +160,36 @@ export abstract class DescendantNode<
 	}
 
 	/**
-	 * @package exposed internally for access across all descendant
-	 * nodes
-	 */
-	removePrimaryInstanceNode(): void {
-		this.contextNode.remove();
-	}
-
-	/**
-	 * To be called when:
+	 * @package
 	 *
-	 * - the node itself is removed
-	 * - a parent/ancestor has been removed(?)
+	 * Performs recursive removal, first of the node's descendants, then of the
+	 * node itself. For all {@link DescendantNode}s, removal involves **at least**
+	 * disposal of its {@link scope} ({@link ReactiveScope}).
 	 *
-	 * Implies, at least, a call to `this.scope.dispose()`; possibly make an
-	 * exception for repeat instances, which we might want to retain in case
-	 * they're re-added. This came up as a behavior of Collect/JavaRosa, and we
-	 * should investigate the details and ramifications of that, and whether it's
-	 * the desired behavior.
+	 * It is expected that the outermost node targeted for removal will always be
+	 * a {@link RepeatInstance}. @see {@link RepeatInstance.remove} for additional
+	 * details.
+	 *
+	 * It is also expected that upon that outermost node's removal, its parent
+	 * {@link RepeatRange} will perform a reactive update to its children state so
+	 * that:
+	 *
+	 * 1. Any downstream computations affected by the removal are updated.
+	 * 2. The client invoking removal is also reactively updated (where
+	 *    applicable).
+	 *
+	 * @see {@link RepeatInstance.remove} and {@link RepeatRange.removeInstances}
+	 * for additional details about their respective node-specific removal
+	 * behaviors and ordering.
+	 *
+	 * @todo Possibly retain removed repeat instances in memory. This came up as a
+	 * behavior of Collect/JavaRosa, and we should investigate the details and
+	 * ramifications of that, and whether it's the desired behavior.
 	 */
-	remove(this: AnyChildNode, options: RemoveDescendantNodeOptions = {}): void {
-		// No need to recursively remove all descendants from the DOM tree, when
-		// the whole subroot will be removed. (This logic might not be totally
-		// sound if the reactive scope disposal below is insufficient for cleaning
-		// up whatever remaining computations affect those descendants. But it
-		// will likely be a safe assumption if we can stop using a backing XML
-		// DOM store in the future.)
-		if (!options.isChildRemoval) {
-			this.removePrimaryInstanceNode();
-		}
-
+	remove(this: AnyChildNode): void {
 		this.scope.runTask(() => {
 			this.getChildren().forEach((child) => {
-				child.remove({
-					isChildRemoval: true,
-				});
+				child.remove();
 			});
 		});
 
