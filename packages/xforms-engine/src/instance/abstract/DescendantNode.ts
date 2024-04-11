@@ -193,7 +193,7 @@ export abstract class DescendantNode<
 		}
 
 		this.scope.runTask(() => {
-			this.getChildren()?.forEach((child) => {
+			this.getChildren().forEach((child) => {
 				child.remove({
 					isChildRemoval: true,
 				});
