@@ -1,3 +1,4 @@
+import { identity } from '@odk-web-forms/common/lib/identity.ts';
 import type { Accessor } from 'solid-js';
 import type { InputDefinition } from '../body/control/InputDefinition.ts';
 import type { StringNode } from '../client/StringNode.ts';
@@ -46,13 +47,9 @@ export class StringField
 	readonly currentState: CurrentState<StringFieldStateSpec>;
 
 	// ValueContext
-	readonly encodeValue = (runtimeValue: string): string => {
-		return runtimeValue;
-	};
+	readonly encodeValue = identity<string>;
 
-	readonly decodeValue = (instanceValue: string): string => {
-		return instanceValue;
-	};
+	readonly decodeValue = identity<string>;
 
 	constructor(parent: GeneralParentNode, definition: StringFieldDefinition) {
 		super(parent, definition);
