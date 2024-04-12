@@ -67,22 +67,31 @@ const container = ref(null);
 
 // Prevent the table container from shrinking on the last page.
 const minHeight = ref('auto');
-// The page size and height of the last full page that was rendered
-const lastFullPage = { size: 0, height: 0 };
-watch(() => props.entities, () => {
-  if (props.entities == null) {
+// The height of the last full page of the current size. Equals 0 when there is
+// no height to use.
+let previousHeight = 0;
+watch(
+  [() => props.entities, () => props.pageSize],
+  ([entities, newSize], [, oldSize]) => {
+    // Reset minHeight.
     minHeight.value = 'auto';
-    Object.assign(lastFullPage, { size: 0, height: 0 });
-  } else if (props.entities.length === props.pageSize) {
-    minHeight.value = 'auto';
-    nextTick(() => {
-      lastFullPage.size = props.pageSize;
-      lastFullPage.height = container.value.getBoundingClientRect().height;
-    });
-  } else if (props.pageSize === lastFullPage.size) {
-    minHeight.value = px(lastFullPage.height);
+
+    // If the page size has changed, reset previousHeight, as it is no longer
+    // useful. If entities == null without the page size changing, that means
+    // that there has been a change like the modal being hidden that should
+    // cause previousHeight to be reset.
+    if (newSize !== oldSize || entities == null) previousHeight = 0;
+
+    // Either set or attempt to use previousHeight.
+    if (entities != null && entities.length === newSize) {
+      nextTick(() => {
+        previousHeight = container.value.getBoundingClientRect().height;
+      });
+    } else if (previousHeight !== 0) {
+      minHeight.value = px(previousHeight);
+    }
   }
-});
+);
 
 const overlapsPopup = ref(false);
 const resizeLastColumn = () => {
