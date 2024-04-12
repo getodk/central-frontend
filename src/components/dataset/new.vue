@@ -39,13 +39,15 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div id="dataset-new-success" class="modal-introduction">
-          <p>
+        <div class="modal-introduction">
+          <div id="dataset-new-success">
             <span class="icon-check-circle"></span>
-            <strong>{{ $t('common.success') }}</strong>
-            <sentence-separator/>
-            <span>{{ $t('success[0]', createdDataset) }}</span>
-          </p>
+            <div>
+              <strong>{{ $t('common.success') }}</strong>
+              <sentence-separator/>
+              <span>{{ $t('success[0]', createdDataset) }}</span>
+            </div>
+          </div>
           <p>{{ $t('success[1]') }}</p>
         </div>
         <div class="modal-actions">
@@ -133,8 +135,19 @@ const hideOrComplete = () => {
 
 <style lang="scss">
 @import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #dataset-new-success {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+
+  > div {
+    @include text-block;
+    width: 80%;
+    margin-left: 3px;
+  }
+
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;
