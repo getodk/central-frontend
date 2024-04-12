@@ -87,7 +87,7 @@ const del = () => {
       "Are you sure you want to delete “{label}”?"
     ],
     "field": {
-      "noConfirm": "Don’t show this message again for this session"
+      "noConfirm": "Delete immediately without confirmation until I leave the page"
     }
   }
 }

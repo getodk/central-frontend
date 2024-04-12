@@ -1727,7 +1727,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "Don’t show this message again for this session",
+          "string": "Delete immediately without confirmation until I leave the page",
           "developer_comment": "This is the text of a form field."
         }
       }
