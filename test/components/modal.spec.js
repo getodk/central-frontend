@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import { nextTick } from 'vue';
 
 import Alert from '../../src/components/alert.vue';
@@ -127,40 +126,16 @@ describe('Modal', () => {
     });
   });
 
-  describe('height of the modal changes', () => {
-    it("updates the modal's position", async () => {
-      const modal = mountComponent({
-        slots: {
-          body: { template: '<div id="div" style="height: 10px;"></div>' }
-        },
-        attachTo: document.body
-      });
-      const bs = sinon.fake(modal.vm.bs);
-      modal.setData({ bs });
-
-      const div = modal.get('#div').element;
-      div.setAttribute('style', 'height: 20px;');
-      await nextTick();
-      bs.calledWith('handleUpdate').should.be.true();
-
-      // bs() should not called if the content of the modal changes, but its
-      // height stays the same.
-      div.textContent = 'Some text';
-      await nextTick();
-      bs.callCount.should.equal(1);
+  it('emits a resize event after the height of the modal changes', async () => {
+    const modal = mountComponent({
+      slots: {
+        body: { template: '<div id="div" style="height: 10px;"></div>' }
+      },
+      attachTo: document.body
     });
-
-    it('emits a resize event', async () => {
-      const modal = mountComponent({
-        slots: {
-          body: { template: '<div id="div" style="height: 10px;"></div>' }
-        },
-        attachTo: document.body
-      });
-      modal.get('#div').element.setAttribute('style', 'height: 20px;');
-      await nextTick();
-      modal.emitted().resize.should.eql([[40], [50]]);
-    });
+    modal.get('#div').element.setAttribute('style', 'height: 20px;');
+    await nextTick();
+    modal.emitted().resize.should.eql([[40], [50]]);
   });
 
   describe('size prop', () => {

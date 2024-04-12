@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
 may add the `in` class to the element, and the checkScroll() method may add the
 `has-scroll` class. -->
 <template>
-  <div class="modal" tabindex="-1"
+  <div ref="el" class="modal" tabindex="-1"
     :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
     role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
     @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
@@ -28,7 +28,7 @@ may add the `in` class to the element, and the checkScroll() method may add the
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
         <div ref="body" class="modal-body">
-          <alert/>
+          <Alert/>
           <slot name="body"></slot>
         </div>
       </div>
@@ -37,7 +37,10 @@ may add the `in` class to the element, and the checkScroll() method may add the
 </template>
 
 <script>
-import { inject, markRaw, watch, watchPostEffect } from 'vue';
+let id = 0;
+</script>
+<script setup>
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch, watchPostEffect } from 'vue';
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
@@ -58,179 +61,167 @@ We do this for two reasons:
   - It is needed to implement the `hideable` prop.
 */
 
-let id = 0;
+const props = defineProps({
+  state: Boolean,
+  // Indicates whether the user is able to hide the modal by clicking ×,
+  // pressing escape, or clicking outside the modal.
+  hideable: Boolean,
+  size: {
+    type: String,
+    default: 'normal'
+  },
+  backdrop: Boolean
+});
+const emit = defineEmits(['shown', 'hide', 'resize', 'mutate']);
 
-export default {
-  name: 'Modal',
-  components: { Alert },
-  inject: ['alert'],
-  props: {
-    state: Boolean,
-    // Indicates whether the user is able to hide the modal by clicking ×,
-    // pressing escape, or clicking outside the modal.
-    hideable: Boolean,
-    size: {
-      type: String,
-      default: 'normal'
-    },
-    backdrop: Boolean
-  },
-  emits: ['shown', 'hide', 'resize', 'mutate'],
-  setup(props) {
-    const alert = inject('alert');
-    let oldAlertAt;
-    watchPostEffect(() => { oldAlertAt = alert.at; });
-    watch(() => props.state, (state) => {
-      if (state || alert.at === oldAlertAt) alert.blank();
-    });
-  },
-  data() {
-    id += 1;
-    return {
-      id,
-      bodyHeight: 0,
-      // The modal() method of the Boostrap plugin
-      bs: null,
-      observer: markRaw(new MutationObserver(() => {
-        if (this.state) {
-          this.handleHeightChange();
-          this.$emit('mutate');
-        }
-      })),
-      mousedownOutsideDialog: false
-    };
-  },
-  computed: {
-    titleId() {
-      return `modal-title${this.id}`;
-    },
-    sizeClass() {
-      switch (this.size) {
-        case 'large': return 'modal-lg';
-        case 'full': return 'modal-full';
-        default: return null; // 'normal'
-      }
-    }
-  },
-  watch: {
-    state(state) {
-      if (state) {
-        // The DOM hasn't updated yet, but it should be OK to show the modal
-        // now: I think it will all happen in the same event loop.
-        this.show();
-      } else {
-        this.hide();
-      }
-    }
-  },
-  mounted() {
-    if (this.$el.closest('body') != null) {
-      const wrapper = $(this.$el);
-      this.bs = wrapper.modal.bind(wrapper);
-    } else {
-      // We do not call modal() if the component is not attached to the
-      // document, because modal() can have side effects on the document. Most
-      // tests do not attach the component to the document.
-      this.bs = noop;
-    }
+const el = ref(null);
+const body = ref(null);
 
-    if (this.state) this.show();
-  },
-  beforeUnmount() {
-    if (this.state) this.hide();
-  },
-  methods: {
-    // checkScroll() checks whether the modal vertically overflows the viewport,
-    // causing it to scroll. The method toggles the has-scroll class based on
-    // whether the modal overflows.
-    checkScroll() {
-      /* Before checking whether the modal overflows the viewport, we add the
-      has-scroll class. The default assumption is that the modal may
-      overflow. It's necessary to add the class, because if the modal currently
-      doesn't have the class, and its content has just changed, it could be that
-      its content doesn't overflow the viewport, yet does flow underneath
-      .modal-actions. In that case, once we add the class, .modal-actions will
-      be repositioned, and the content will start to overflow the viewport: the
-      modal will be allowed to scroll as it should. */
-      this.$el.classList.add('has-scroll');
-      if (this.$el.scrollHeight === this.$el.clientHeight)
-        this.$el.classList.remove('has-scroll');
-    },
-    handleHeightChange() {
-      // Call checkScroll() before measuring the height, as the has-scroll class
-      // can affect the height.
-      this.checkScroll();
-      const newHeight = this.$refs.body.getBoundingClientRect().height;
-      if (newHeight !== this.bodyHeight) {
-        this.bs('handleUpdate');
-        this.bodyHeight = newHeight;
-        this.$emit('resize', newHeight);
-      }
-    },
-    handleWindowResize() {
-      // Most of the time, a window resize won't affect the height of the modal.
-      // However, if this.size === 'full', it could.
-      if (this.size === 'full') this.handleHeightChange();
-    },
-    show() {
-      this.bs('show');
-      this.checkScroll();
-      this.bodyHeight = this.$refs.body.getBoundingClientRect().height;
-      this.$emit('resize', this.bodyHeight);
-      this.observer.observe(this.$refs.body, {
-        subtree: true,
-        childList: true,
-        attributes: true,
-        characterData: true
-      });
-      window.addEventListener('resize', this.handleWindowResize);
-      this.$emit('shown');
-    },
-    hide() {
-      this.observer.disconnect();
-      this.bs('hide');
-      this.$el.classList.remove('has-scroll');
-      this.bodyHeight = 0;
-      this.$emit('resize', 0);
-      window.removeEventListener('resize', this.handleWindowResize);
+// The modal() method of the Boostrap plugin
+let bs;
+onMounted(() => {
+  if (el.value.closest('body') != null) {
+    const wrapper = $(el.value);
+    bs = wrapper.modal.bind(wrapper);
+  } else {
+    // We do not call modal() if the component is not attached to the document,
+    // because modal() can have side effects on the document. Most tests do not
+    // attach the component to the document.
+    bs = noop;
+  }
+});
 
-      const selection = getSelection();
-      const { anchorNode } = selection;
-      if (anchorNode != null && this.$el.contains(anchorNode))
-        selection.removeAllRanges();
-    },
-    hideIfCan() {
-      if (this.hideable) this.$emit('hide');
-    },
-    modalMousedown(event) {
-      this.mousedownOutsideDialog = event.target === event.currentTarget;
-    },
-    modalClick(event) {
-      const mouseupOutsideDialog = event.target === event.currentTarget;
-      if (this.mousedownOutsideDialog && mouseupOutsideDialog) this.hideIfCan();
-    },
-    // Refocuses the modal if it has lost focus. This is needed so that the
-    // escape key still hides the modal.
-    refocus() {
-      /* As the user moves from one element in the modal to another, there may
-      be the briefest moment when neither element is focused. We should not
-      refocus the modal in that moment, because the second element will soon
-      receive focus, and focusing the .modal element would prevent that. Thus,
-      we use setTimeout() to give the second element time to receive focus.
-      (Using this.$nextTick() instead of setTimeout() didn't work.) */
-      setTimeout(() => {
-        // Do not focus the modal if it has lost focus because it is hidden.
-        if (!this.state) return;
-        // Do not focus the .modal element if it is already focused or if it
-        // contains the active element.
-        if (document.activeElement != null &&
-          document.activeElement.closest('.modal') === this.$el)
-          return;
-        this.$el.focus();
-      });
-    }
+const alert = inject('alert');
+let oldAlertAt;
+watchPostEffect(() => { oldAlertAt = alert.at; });
+watch(() => props.state, (state) => {
+  if (state || alert.at === oldAlertAt) alert.blank();
+});
+
+// checkScroll() checks whether the modal vertically overflows the viewport,
+// causing it to scroll. The function toggles the has-scroll class based on
+// whether the modal overflows.
+const checkScroll = () => {
+  /* Before checking whether the modal overflows the viewport, we add the
+  has-scroll class. The default assumption is that the modal may overflow. It's
+  necessary to add the class, because if the modal currently doesn't have the
+  class, and its content has just changed, it could be that its content doesn't
+  overflow the viewport, yet does flow underneath .modal-actions. In that case,
+  once we add the class, .modal-actions will be repositioned, and the content
+  will start to overflow the viewport: the modal will be allowed to scroll as it
+  should. */
+  el.value.classList.add('has-scroll');
+  if (el.value.scrollHeight === el.value.clientHeight)
+    el.value.classList.remove('has-scroll');
+};
+
+let bodyHeight = 0;
+const handleHeightChange = () => {
+  // Call checkScroll() before measuring the height, as the has-scroll class can
+  // affect the height.
+  checkScroll();
+  const newHeight = body.value.getBoundingClientRect().height;
+  if (newHeight !== bodyHeight) {
+    bs('handleUpdate');
+    bodyHeight = newHeight;
+    emit('resize', newHeight);
   }
 };
+const handleWindowResize = () => {
+  // Most of the time, a window resize won't affect the height of the modal.
+  // However, if props.size === 'full', it could.
+  if (props.state && props.size === 'full') handleHeightChange();
+};
+
+const observer = new MutationObserver(() => {
+  if (props.state) {
+    handleHeightChange();
+    emit('mutate');
+  }
+});
+const show = () => {
+  bs('show');
+  checkScroll();
+  bodyHeight = body.value.getBoundingClientRect().height;
+  emit('resize', bodyHeight);
+  observer.observe(body.value, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    characterData: true
+  });
+  window.addEventListener('resize', handleWindowResize);
+  emit('shown');
+};
+const removeSelection = () => {
+  const selection = getSelection();
+  const { anchorNode } = selection;
+  if (anchorNode != null && el.value.contains(anchorNode))
+    selection.removeAllRanges();
+};
+const hide = () => {
+  observer.disconnect();
+  bs('hide');
+  el.value.classList.remove('has-scroll');
+  bodyHeight = 0;
+  emit('resize', 0);
+  window.removeEventListener('resize', handleWindowResize);
+  removeSelection();
+};
+watch(() => props.state, (state) => {
+  if (state)
+    // The DOM hasn't updated yet, but it should be OK to show the modal now: I
+    // think it will all happen in the same event loop.
+    show();
+  else
+    hide();
+});
+onMounted(() => { if (props.state) show(); });
+onBeforeUnmount(() => { if (props.state) hide(); });
+
+const hideIfCan = () => { if (props.hideable) emit('hide'); };
+
+const sizeClass = computed(() => {
+  switch (props.size) {
+    case 'large': return 'modal-lg';
+    case 'full': return 'modal-full';
+    default: return null; // 'normal'
+  }
+});
+
+let mousedownOutsideDialog = false;
+const modalMousedown = (event) => {
+  mousedownOutsideDialog = event.target === event.currentTarget;
+};
+const modalClick = (event) => {
+  const mouseupOutsideDialog = event.target === event.currentTarget;
+  if (mousedownOutsideDialog && mouseupOutsideDialog) hideIfCan();
+};
+
+// Refocuses the modal if it has lost focus. This is needed so that the escape
+// key still hides the modal.
+const refocus = () => {
+  /* As the user moves from one element in the modal to another, there may be
+  the briefest moment when neither element is focused. We should not refocus the
+  modal in that moment, because the second element will soon receive focus, and
+  focusing the .modal element would prevent that. Thus, we use setTimeout() to
+  give the second element time to receive focus. (Using nextTick() instead of
+  setTimeout() didn't work.) */
+  setTimeout(() => {
+    // Do not focus the modal if it has lost focus after being hidden or
+    // unmounted.
+    if (!props.state || el.value == null) return;
+    // Do not focus the .modal element if it is already focused or if it
+    // contains the active element.
+    if (document.activeElement != null &&
+      document.activeElement.closest('.modal') === el.value)
+      return;
+    el.value.focus();
+  });
+};
+
+id += 1;
+const titleId = `modal-title${id}`;
 </script>
 
 <style lang="scss">
