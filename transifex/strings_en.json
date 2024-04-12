@@ -1424,6 +1424,11 @@
         "1": {
           "string": "You can get started with it by adding its data properties directly on this page, or by uploading Forms that use it. In this case, any properties the Form calls out will be automatically created when you publish the Form."
         }
+      },
+      "problem": {
+        "409_3": {
+          "string": "An Entity List already exists in this Project with the name of “{datasetName}”."
+        }
       }
     },
     "DatasetOverview": {

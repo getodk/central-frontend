@@ -60,6 +60,8 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { ref, watch } from 'vue';
+import { equals } from 'ramda';
+import { useI18n } from 'vue-i18n';
 
 import Modal from '../modal.vue';
 import DocLink from '../doc-link.vue';
@@ -94,11 +96,16 @@ watch(() => props.state, (state) => {
   if (!state) name.value = '';
 });
 
+const { t } = useI18n();
 const submit = () => {
   request({
     method: 'POST',
     url: apiPaths.datasets(project.id),
-    data: { name: name.value }
+    data: { name: name.value },
+    problemToAlert: ({ code, details }) =>
+      (code === 409.3 && equals(details.fields, ['name', 'projectId'])
+        ? t('problem.409_3', { datasetName: details.values[0] })
+        : null)
   })
     .then(({ data }) => {
       // Reset the form
@@ -149,6 +156,9 @@ const hideOrComplete = () => {
       "The Entity List “{name}” has been created.",
       "You can get started with it by adding its data properties directly on this page, or by uploading Forms that use it. In this case, any properties the Form calls out will be automatically created when you publish the Form."
     ],
+    "problem": {
+      "409_3": "An Entity List already exists in this Project with the name of “{datasetName}”."
+    },
   }
 }
 </i18n>
