@@ -42,6 +42,8 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
           <div class="panel-body">
+            <entity-upload-warnings v-if="warnings != null"
+              v-bind="warnings.details"/>
             <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
               :row-index="csvRow" :page-size="csvPage.size"/>
             <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
@@ -84,6 +86,7 @@ import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadHeaderHelp from './upload/header-help.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
+import EntityUploadWarnings from './upload/warnings.vue';
 import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import Pagination from '../pagination.vue';
@@ -174,6 +177,7 @@ const csvEntities = shallowRef(null);
 const fileMetadata = shallowRef(null);
 const headerErrors = shallowRef(null);
 const dataError = ref(null);
+const warnings = shallowRef(null);
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
@@ -240,18 +244,20 @@ const rowToEntity = (values, columns) => {
 };
 const { i18n: globalI18n, alert } = inject('container');
 const parseEntities = async (file, headerResults, signal) => {
-  const { data } = await parseCSV(globalI18n, file, headerResults.columns, {
+  const results = await parseCSV(globalI18n, file, headerResults.columns, {
     delimiter: headerResults.meta.delimiter,
     transformRow: rowToEntity,
     signal
   });
-  if (data.length === 0) throw new Error(t('alert.noData'));
-  csvEntities.value = data;
+  if (results.data.length === 0) throw new Error(t('alert.noData'));
+  csvEntities.value = results.data;
   fileMetadata.value = { name: file.name, size: file.size };
+  if (results.warnings.count !== 0) warnings.value = results.warnings;
 };
 const selectFile = (file) => {
   headerErrors.value = null;
   dataError.value = null;
+  warnings.value = null;
 
   const abortController = new AbortController();
   abortParse = () => { abortController.abort(); };
@@ -287,6 +293,7 @@ watch(() => props.state, (state) => {
   fileMetadata.value = null;
   headerErrors.value = null;
   dataError.value = null;
+  warnings.value = null;
 });
 onBeforeUnmount(() => { abortParse(); });
 
