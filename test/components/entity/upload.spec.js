@@ -67,15 +67,16 @@ describe('EntityUpload', () => {
     it('sends the correct request', () => {
       testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
       testData.extendedEntities.createPast(1);
-      return showModal().beforeEachResponse((_, { url }) => {
-        url.should.startWith('/v1/projects/1/datasets/%C3%A1.svc/Entities?');
-        const params = relativeUrl(url).searchParams;
-        const millis = parseFilterTime(params.get('$filter'));
-        (Date.now() - millis).should.be.below(2000);
-        params.get('$top').should.equal('5');
-        params.get('$skip').should.equal('0');
-        params.get('$count').should.equal('true');
-      });
+      return showModal().testRequests([{
+        url: (url, { searchParams: params }) => {
+          url.should.startWith('/v1/projects/1/datasets/%C3%A1.svc/Entities?');
+          const millis = parseFilterTime(params.get('$filter'));
+          (Date.now() - millis).should.be.below(2000);
+          params.get('$top').should.equal('5');
+          params.get('$skip').should.equal('0');
+          params.get('$count').should.equal('true');
+        }
+      }]);
     });
 
     it('does not send a request if there are no entities', () => {
@@ -97,13 +98,14 @@ describe('EntityUpload', () => {
           await modal.setProps({ state: true });
         })
         .respondWithData(() => testData.entityOData(5, 0, true))
-        .beforeEachResponse((_, { url }) => {
-          url.should.startWith('/v1/projects/1/datasets/trees.svc/Entities?');
-          const params = relativeUrl(url).searchParams;
-          const millis = parseFilterTime(params.get('$filter'));
-          millis.should.be.above(firstTime);
-          (Date.now() - millis).should.be.below(2000);
-        });
+        .testRequests([{
+          url: (url, { searchParams: params }) => {
+            url.should.startWith('/v1/projects/1/datasets/trees.svc/Entities?');
+            const millis = parseFilterTime(params.get('$filter'));
+            millis.should.be.above(firstTime);
+            (Date.now() - millis).should.be.below(2000);
+          }
+        }]);
     });
   });
 

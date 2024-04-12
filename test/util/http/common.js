@@ -3,6 +3,7 @@
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
+import { relativeUrl } from '../request';
 import { withAuth } from '../../../src/util/request';
 
 export function testRequests(expectedConfigs) {
@@ -18,7 +19,15 @@ export function testRequests(expectedConfigs) {
       if (i < expectedConfigs.length && expectedConfigs[i] != null) {
         const { extended = false, ...expectedConfig } = expectedConfigs[i];
         (config.method ?? 'GET').should.equal(expectedConfig.method ?? 'GET');
-        config.url.should.equal(expectedConfig.url);
+
+        if (typeof expectedConfig.url === 'function') {
+          expectedConfig.url.call(null, config.url, relativeUrl(config.url));
+          // Replace expectedConfig.url now that config.url has passed
+          // validation. This is needed because withAuth() expects the URL.
+          expectedConfig.url = config.url;
+        } else {
+          config.url.should.equal(expectedConfig.url);
+        }
 
         try {
           should(config.data).eql(expectedConfig.data);
