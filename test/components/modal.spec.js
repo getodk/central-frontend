@@ -38,7 +38,7 @@ describe('Modal', () => {
     mountComponent().findComponent(Alert).exists().should.be.true();
   });
 
-  describe('state prop is true', () => {
+  describe('state prop is initially true', () => {
     it('shows the modal', () => {
       mountComponent({
         props: { state: true },
@@ -65,7 +65,7 @@ describe('Modal', () => {
       document.body.classList.contains('modal-open').should.be.true();
     });
 
-    it('hides any alert', async () => {
+    it('hides the current alert', async () => {
       const modal = mountComponent({
         props: { state: false }
       });
@@ -136,6 +136,44 @@ describe('Modal', () => {
     modal.get('#div').element.setAttribute('style', 'height: 20px;');
     await nextTick();
     modal.emitted().resize.should.eql([[40], [50]]);
+  });
+
+  describe('mutation', () => {
+    it('emits a mutate event after .modal-body changes', async () => {
+      const modal = mountComponent({
+        slots: {
+          body: { template: '<div id="div" style="height: 10px;"></div>' }
+        }
+      });
+      modal.get('#div').element.setAttribute('style', 'height: 20px;');
+      await nextTick();
+      modal.emitted().mutate.should.eql([[]]);
+    });
+
+    it('does not a emit a second mutate event if mutate handler also mutates', async () => {
+      const Parent = {
+        template: `<modal :state="true" @mutate="setHeight(100)">
+          <template #title>Mutate Modal</template>
+          <template #body>
+            <div id="div" ref="div" style="height: 10px;"></div>
+          </template>
+        </modal>`,
+        components: { Modal },
+        methods: {
+          setHeight(height) {
+            this.$refs.div.setAttribute('style', `height: ${height}px;`);
+          }
+        }
+      };
+      const parent = mount(Parent);
+      parent.vm.setHeight(20);
+      await nextTick();
+      const modal = parent.getComponent(Modal);
+      modal.emitted().mutate.length.should.equal(1);
+      await wait();
+      modal.get('#div').attributes().style.should.equal('height: 100px;');
+      modal.emitted().mutate.length.should.equal(1);
+    });
   });
 
   describe('size prop', () => {

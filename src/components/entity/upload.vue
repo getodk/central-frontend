@@ -95,7 +95,7 @@ import useEventListener from '../../composables/event-listener';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { formatCSVRow, parseCSV, parseCSVHeader } from '../../util/csv';
-import { noop, throttle } from '../../util/util';
+import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 
@@ -322,7 +322,7 @@ const upload = () => {
 };
 
 const popupAnimating = ref(false);
-const animatePopup = (value) => { popupAnimating.value = value; };
+const animatePopup = (animating) => { popupAnimating.value = animating; };
 watch(csvEntities, (value) => {
   if (value == null) popupAnimating.value = false;
 });
@@ -333,11 +333,11 @@ const setTable = (i) => (el) => { tables[i] = el; };
 const resizeLastColumn = () => {
   for (const table of tables) table.resizeLastColumn();
 };
-watch(() => props.state, () => { nextTick(resizeLastColumn); });
-watch(popupAnimating, (value) => { if (!value) resizeLastColumn(); });
-const resizeColumnUnlessAnimating = throttle(() => {
+watch(popupAnimating, (animating) => { if (!animating) resizeLastColumn(); });
+watch(() => props.state, (state) => { if (!state) nextTick(resizeLastColumn); });
+const resizeColumnUnlessAnimating = () => {
   if (props.state && !popupAnimating.value) resizeLastColumn();
-});
+};
 useEventListener(window, 'resize', resizeColumnUnlessAnimating);
 
 watch(() => props.state, (state) => {

@@ -40,7 +40,7 @@ may add the `in` class to the element, and the checkScroll() method may add the
 let id = 0;
 </script>
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch, watchPostEffect } from 'vue';
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch, watchPostEffect } from 'vue';
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
@@ -133,12 +133,23 @@ const handleWindowResize = () => {
   if (props.state && props.size === 'full') handleHeightChange();
 };
 
+let ignoreMutation = false;
 const observer = new MutationObserver(() => {
-  if (props.state) {
-    handleHeightChange();
+  if (!props.state) return;
+  handleHeightChange();
+  if (!ignoreMutation) {
     emit('mutate');
+    // Ignore mutations for a tick, effectively ignoring any mutations that the
+    // `mutate` event handler just made. This helps prevent a loop such that a
+    // mutation causes a `mutate` event, which causes the `mutate` handler to
+    // make a mutation, which causes a `mutate` event, and so on.
+    ignoreMutation = true;
+    // The MutationObserver callback seems to be called in a microtask, so I
+    // think nextTick() is the right choice and not setTimeout().
+    nextTick(() => { ignoreMutation = false; });
   }
 });
+
 const show = () => {
   bs('show');
   checkScroll();
