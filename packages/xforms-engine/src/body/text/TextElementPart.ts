@@ -20,6 +20,7 @@ export abstract class TextElementPart<
 			semanticDependencies: {
 				translations: type !== 'static',
 			},
+			ignoreContextReference: true,
 		});
 	}
 }

@@ -37,17 +37,32 @@ const BROWSER_ENABLED = BROWSER_NAME != null;
 const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
 export default defineConfig(({ mode }) => {
+	const { VITE_BUILD_TARGET } = process.env;
+	const IS_SOLID_BUILD_TARGET = VITE_BUILD_TARGET === 'solid';
 	const isTest = mode === 'test';
-	const entries = ['./src/index.ts'];
+	const entry = './src/index.ts';
+	const entryKey = IS_SOLID_BUILD_TARGET ? 'solid' : 'index';
+	const libEntry = {
+		[entryKey]: entry,
+	};
 
-	// Mapping entry names with path-based keys gives a more predictable output
-	// which we control at the filesystem level, so the exports in package.json
-	// are stable along with their paths and this config.
-	const libEntry = Object.fromEntries(
-		entries.map((entry) => [entry.replaceAll(/^\.\/src\/|\.ts$/g, ''), entry])
-	);
+	const entries = Object.values(libEntry);
 
 	const external = ['@odk-web-forms/common'];
+
+	if (IS_SOLID_BUILD_TARGET) {
+		external.push('solid-js', 'solid-js/store');
+	}
+
+	const dtsPlugins = IS_SOLID_BUILD_TARGET
+		? []
+		: [
+				dts({
+					entryRoot: './src',
+					exclude: ['@odk-web-forms/common', 'test', 'vite-env.d.ts'],
+					include: ['src/**/*.ts'],
+				}),
+			];
 
 	return {
 		build: {
@@ -79,19 +94,15 @@ export default defineConfig(({ mode }) => {
 		},
 
 		optimizeDeps: {
+			esbuildOptions: {
+				target: 'esnext',
+			},
 			entries,
+			include: ['@odk-web-forms/xpath'],
 			force: true,
 		},
 
-		plugins: [
-			// Generate type definitions. This is somehow more reliable than directly
-			// calling tsc
-			dts({
-				entryRoot: './src',
-				exclude: ['@odk-web-forms/common', 'test', 'vite-env.d.ts'],
-				include: ['src/**/*.ts'],
-			}),
-		],
+		plugins: [...dtsPlugins],
 
 		resolve: {
 			alias: {
@@ -103,8 +114,8 @@ export default defineConfig(({ mode }) => {
 			conditions:
 				isTest
 					// Without this, anything using Solid reactivity fails inexplicably...
-					? ['development', 'browser']
-					: ['import', 'browser'],
+					? ['solid', 'development', 'browser']
+					: ['solid', 'import', 'browser'],
 		},
 
 		test: {

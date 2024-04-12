@@ -1,11 +1,11 @@
-import type { RepeatSequenceState } from '@odk-web-forms/xforms-engine';
+import type { RepeatRangeNode } from '@odk-web-forms/xforms-engine';
 import { Box, Stack } from '@suid/material';
 import { For, getOwner, runWithOwner } from 'solid-js';
 import { ThemeColorOutlineButton } from '../../styled/ThemeColorOutlineButton.tsx';
 import { XFormRepeatInstance } from './XFormRepeatInstance.tsx';
 
 interface XFormRepeatListProps {
-	readonly state: RepeatSequenceState;
+	readonly node: RepeatRangeNode;
 }
 
 export const XFormRepeatList = (props: XFormRepeatListProps) => {
@@ -13,16 +13,16 @@ export const XFormRepeatList = (props: XFormRepeatListProps) => {
 
 	return (
 		<Stack spacing={2}>
-			<For each={props.state.getInstances()}>
-				{(instance) => {
-					return <XFormRepeatInstance state={instance} />;
+			<For each={props.node.currentState.children}>
+				{(instance, index) => {
+					return <XFormRepeatInstance index={index()} instance={instance} />;
 				}}
 			</For>
 			<Box>
 				<ThemeColorOutlineButton
 					onClick={() => {
 						runWithOwner(owner, () => {
-							props.state.createInstance();
+							props.node.addInstances();
 						});
 					}}
 				>

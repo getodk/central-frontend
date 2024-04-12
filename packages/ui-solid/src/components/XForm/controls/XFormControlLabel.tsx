@@ -7,7 +7,7 @@ interface XFormControlLabelProps extends XFormLabelProps {}
 export const XFormControlLabel = (props: XFormControlLabelProps) => {
 	return (
 		<DefaultLabelParagraph>
-			<XFormLabel label={props.label} state={props.state} />
+			<XFormLabel label={props.label} node={props.node} />
 		</DefaultLabelParagraph>
 	);
 };

@@ -1,4 +1,4 @@
-import type { EntryState } from '@odk-web-forms/xforms-engine';
+import type { RootNode } from '@odk-web-forms/xforms-engine';
 import { GlobalStyles, Stack, useTheme } from '@suid/material';
 import type { JSX } from 'solid-js';
 import { PageContainer } from '../styled/PageContainer.tsx';
@@ -8,7 +8,7 @@ import { PageMain } from './PageMain.tsx';
 
 interface PageProps {
 	readonly children?: JSX.Element;
-	readonly entry: EntryState | null;
+	readonly root: RootNode | null;
 }
 
 export const Page = (props: PageProps) => {
@@ -38,7 +38,7 @@ export const Page = (props: PageProps) => {
 			/>
 			<PageContainer>
 				<Stack spacing={2}>
-					<PageHeader entry={props.entry} />
+					<PageHeader root={props.root} />
 					<PageMain elevation={2}>{props.children}</PageMain>
 					<PageFooter />
 				</Stack>

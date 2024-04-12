@@ -1,24 +1,22 @@
-import type { AnyDescendantNodeState, LabelDefinition } from '@odk-web-forms/xforms-engine';
+import type { AnyChildNode, TextRange } from '@odk-web-forms/xforms-engine';
 import { Show } from 'solid-js';
 import { DefaultLabel } from '../styled/DefaultLabel';
 import { DefaultLabelRequiredIndicator } from '../styled/DefaultLabelRequiredIndicator';
 
 export interface XFormLabelProps {
 	readonly as?: 'span';
-	readonly state: AnyDescendantNodeState;
-	readonly label: LabelDefinition;
+	readonly label: TextRange<'label'>;
+	readonly node: AnyChildNode;
 }
 
 export const XFormLabel = (props: XFormLabelProps) => {
-	const labelText = props.state.createTextEvaluation(props.label);
-
 	return (
 		<>
-			<Show when={props.state.isRequired()}>
+			<Show when={props.node.currentState.required}>
 				<DefaultLabelRequiredIndicator>* </DefaultLabelRequiredIndicator>
 			</Show>
-			<DefaultLabel as={props.as ?? 'label'} for={props.state.reference}>
-				{labelText()}
+			<DefaultLabel as={props.as ?? 'label'} for={props.node.nodeId}>
+				{props.label.asString}
 			</DefaultLabel>
 		</>
 	);

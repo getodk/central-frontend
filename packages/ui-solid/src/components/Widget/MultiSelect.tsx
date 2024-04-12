@@ -1,41 +1,49 @@
-import type { ValueNodeState } from '@odk-web-forms/xforms-engine';
+import type { SelectItem, SelectNode } from '@odk-web-forms/xforms-engine';
 import { Checkbox, FormControlLabel, FormGroup } from '@suid/material';
-import { createMemo, For, Show } from 'solid-js';
+import { For, Show, createMemo } from 'solid-js';
 import type { SelectNDefinition } from '../XForm/controls/SelectControl.tsx';
 import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 
+/**
+ * @todo This should have a variant type in the engine's client interface.
+ */
 export interface MultiSelectProps {
 	readonly control: SelectNDefinition;
-	readonly state: ValueNodeState;
+	readonly node: SelectNode;
 }
 
 export const MultiSelect = (props: MultiSelectProps) => {
-	const selectState = props.state.createSelect(props.control);
 	const isDisabled = createMemo(() => {
-		return props.state.isReadonly() === true || props.state.isRelevant() === false;
+		return props.node.currentState.readonly || !props.node.currentState.relevant;
 	});
+
+	const isSelected = (item: SelectItem) => {
+		return props.node.currentState.value.includes(item);
+	};
 
 	return (
 		<FormGroup role="group">
-			<Show when={props.control.label} keyed={true}>
+			<Show when={props.node.currentState.label} keyed={true}>
 				{(label) => {
-					return <XFormControlLabel state={props.state} label={label} />;
+					return <XFormControlLabel node={props.node} label={label} />;
 				}}
 			</Show>
-			<For each={selectState.items()}>
+			<For each={props.node.currentState.valueOptions}>
 				{(item) => {
+					const label = () => item.label?.asString ?? item.value;
+
 					return (
 						<FormControlLabel
-							label={item.label()}
+							label={label()}
 							disabled={isDisabled()}
 							control={
 								<Checkbox
-									checked={selectState.isSelected(item)}
+									checked={isSelected(item)}
 									onChange={(_, checked) => {
 										if (checked) {
-											selectState.select(item);
+											props.node.select(item);
 										} else {
-											selectState.deselect(item);
+											props.node.deselect(item);
 										}
 									}}
 								/>

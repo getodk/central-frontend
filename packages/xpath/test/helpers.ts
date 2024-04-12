@@ -3,7 +3,6 @@ import { Evaluator } from '../src/index.ts';
 import type { AnyParentNode } from '../src/lib/dom/types.ts';
 import type { XPathResultType } from '../src/shared/interface.ts';
 import { XFormsXPathEvaluator } from '../src/xforms/XFormsXPathEvaluator.ts';
-import { xpathParser } from './parser.ts';
 
 declare global {
 	// eslint-disable-next-line no-var
@@ -73,14 +72,14 @@ export class TestContext<XForms extends boolean = false> {
 		if (options.xforms) {
 			const rootNode = options.getRootNode?.(testDocument) ?? testDocument;
 
-			this.evaluator = new XFormsXPathEvaluator(xpathParser, {
+			this.evaluator = new XFormsXPathEvaluator({
 				...evaluatorOptions,
 				rootNode,
 			}) as TestContextEvaluator<XForms>;
 			this.defaultContextNode = rootNode;
 			this.namespaceResolver = options.namespaceResolver ?? rootNode;
 		} else {
-			this.evaluator = new Evaluator(xpathParser, evaluatorOptions) as TestContextEvaluator<XForms>;
+			this.evaluator = new Evaluator(evaluatorOptions) as TestContextEvaluator<XForms>;
 			this.defaultContextNode = testDocument;
 			this.namespaceResolver = options.namespaceResolver ?? namespaceResolver;
 		}

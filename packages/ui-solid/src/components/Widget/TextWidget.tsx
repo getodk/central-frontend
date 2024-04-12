@@ -1,37 +1,36 @@
-import type { InputDefinition, ValueNodeState } from '@odk-web-forms/xforms-engine';
+import type { StringNode } from '@odk-web-forms/xforms-engine';
 import { Show, createMemo } from 'solid-js';
 import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 import { DefaultTextField } from '../styled/DefaultTextField.tsx';
 import { DefaultTextFormControl } from '../styled/DefaultTextFormControl.tsx';
 
 export interface TextWidgetProps {
-	readonly control: InputDefinition;
-	readonly state: ValueNodeState;
+	readonly node: StringNode;
 }
 
 export const TextWidget = (props: TextWidgetProps) => {
 	const isDisabled = createMemo(() => {
-		return props.state.isReadonly() === true || props.state.isRelevant() === false;
+		return props.node.currentState.readonly || !props.node.currentState.relevant;
 	});
 
 	return (
 		<DefaultTextFormControl fullWidth={true}>
-			<Show when={props.control.label} keyed={true}>
+			<Show when={props.node.currentState.label} keyed={true}>
 				{(label) => {
-					return <XFormControlLabel state={props.state} label={label} />;
+					return <XFormControlLabel node={props.node} label={label} />;
 				}}
 			</Show>
 			<DefaultTextField
-				id={props.state.reference}
-				value={props.state.getValue()}
+				id={props.node.currentState.reference}
+				value={props.node.currentState.value}
 				onChange={(event) => {
-					props.state.setValue(event.target.value);
+					props.node.setValue(event.target.value);
 				}}
 				disabled={isDisabled()}
 				inputProps={{
 					disabled: isDisabled(),
 					readonly: isDisabled(),
-					required: props.state.isRequired() ?? false,
+					required: props.node.currentState.required ?? false,
 				}}
 			/>
 		</DefaultTextFormControl>

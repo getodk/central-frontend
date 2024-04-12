@@ -1,6 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill';
 import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
 import { EvaluationContext } from '../context/EvaluationContext.ts';
+import { expressionParser } from '../expressionParser.ts';
 import { fn } from '../functions/fn/index.ts';
 import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
 import type {
@@ -9,8 +10,7 @@ import type {
 	XPathNamespaceResolverObject,
 	XPathResultType,
 } from '../shared/index.ts';
-import type { BaseParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
-import { ExpressionParser } from '../static/grammar/ExpressionParser.ts';
+import type { ExpressionParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibraryCollection } from './functions/FunctionLibraryCollection.ts';
 import { ResultTypes } from './result/ResultType.ts';
@@ -66,12 +66,12 @@ export class Evaluator implements AnyXPathEvaluator {
 	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
 	readonly timeZone: Temporal.TimeZone;
 
-	constructor(parser: BaseParser, options: EvaluatorOptions = {}) {
+	constructor(options: EvaluatorOptions = {}) {
 		const { parseOptions = {}, rootNode, timeZoneId } = options;
 
 		this.functions = options.functions ?? functions;
 		this.parseOptions = parseOptions;
-		this.parser = ExpressionParser.from(parser);
+		this.parser = expressionParser;
 		this.rootNode = rootNode ?? null;
 
 		if (rootNode != null) {

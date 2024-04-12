@@ -29,9 +29,9 @@ interface XFormGroupLabelProps extends XFormLabelProps {
 export const XFormGroupLabel = (props: XFormGroupLabelProps) => {
 	return (
 		<PlainTextButton
-			disabled={!props.state.isRelevant()}
+			disabled={!props.node.currentState.relevant}
 			onClick={() => {
-				if (props.state.isRelevant()) {
+				if (props.node.currentState.relevant) {
 					props.setGroupVisible(!props.isGroupVisible);
 				}
 			}}
@@ -48,7 +48,7 @@ export const XFormGroupLabel = (props: XFormGroupLabelProps) => {
 					</Switch>
 				</ClippedGroupToggleIconContainer>
 
-				<XFormLabel as="span" state={props.state} label={props.label} />
+				<XFormLabel as="span" node={props.node} label={props.label} />
 			</GroupLabelStack>
 		</PlainTextButton>
 	);

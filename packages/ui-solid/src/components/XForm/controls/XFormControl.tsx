@@ -1,40 +1,36 @@
-import type {
-	AnySelectDefinition,
-	InputDefinition,
-	ValueNodeState,
-} from '@odk-web-forms/xforms-engine';
+import type { SelectNode, StringNode } from '@odk-web-forms/xforms-engine';
 import { Match, Switch, createMemo } from 'solid-js';
 import { XFormRelevanceGuard } from '../XFormRelevanceGuard.tsx';
 import { XFormUnknownControl } from '../debugging/XFormUnknownControl.tsx';
 import { SelectControl } from './SelectControl.tsx';
-import { XFormInputControl } from './XFormInputControl.tsx';
+import { XFormInputControl, type XFormInputControlProps } from './XFormInputControl.tsx';
+
+/**
+ * @todo see commentary on {@link XFormInputControlProps.node}
+ */
+// prettier-ignore
+type ControlNode =
+	| SelectNode
+	| XFormInputControlProps['node'];
 
 export interface XFormControlProps {
-	readonly state: ValueNodeState;
+	readonly node: ControlNode;
 }
 
-const inputContol = (props: XFormControlProps): InputDefinition | null => {
-	const { bodyElement } = props.state.definition;
-
-	if (bodyElement?.type === 'input') {
-		return bodyElement;
+/**
+ * @todo see commentary on {@link XFormInputControlProps.node}
+ */
+const stringInputNode = (node: ControlNode): StringNode | null => {
+	if (node.nodeType === 'string' && node.definition.bodyElement != null) {
+		return node;
 	}
 
 	return null;
 };
 
-const selectControl = (props: XFormControlProps): AnySelectDefinition | null => {
-	const { bodyElement } = props.state.definition;
-
-	if (bodyElement == null) {
-		return null;
-	}
-
-	switch (bodyElement.type) {
-		case 'rank':
-		case 'select':
-		case 'select1':
-			return bodyElement as AnySelectDefinition;
+const selectNode = (node: ControlNode): SelectNode | null => {
+	if (node.nodeType === 'select') {
+		return node;
 	}
 
 	return null;
@@ -42,20 +38,20 @@ const selectControl = (props: XFormControlProps): AnySelectDefinition | null => 
 
 export const XFormControl = (props: XFormControlProps) => {
 	const isRelevant = createMemo(() => {
-		return props.state.isRelevant();
+		return props.node.currentState.relevant;
 	});
 
 	return (
 		<XFormRelevanceGuard isRelevant={isRelevant()}>
 			<Switch fallback={<XFormUnknownControl {...props} />}>
-				<Match when={inputContol(props)} keyed={true}>
-					{(control) => {
-						return <XFormInputControl control={control} state={props.state} />;
+				<Match when={stringInputNode(props.node)} keyed={true}>
+					{(node) => {
+						return <XFormInputControl node={node} />;
 					}}
 				</Match>
-				<Match when={selectControl(props)} keyed={true}>
-					{(control) => {
-						return <SelectControl control={control} state={props.state} />;
+				<Match when={selectNode(props.node)} keyed={true}>
+					{(node) => {
+						return <SelectControl node={node} />;
 					}}
 				</Match>
 			</Switch>

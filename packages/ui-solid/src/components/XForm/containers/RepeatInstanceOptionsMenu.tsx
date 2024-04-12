@@ -1,12 +1,13 @@
 // TODO: quite a bit of this is very similar to FormLanguageMenu
-import type { RepeatInstanceState } from '@odk-web-forms/xforms-engine';
+import type { RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
 import Delete from '@suid/icons-material/Delete';
 import MoreVert from '@suid/icons-material/MoreVert';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@suid/material';
 import { createSignal } from 'solid-js';
 
 interface RepeatInstanceOptionsMenuProps {
-	readonly state: RepeatInstanceState;
+	readonly index: number;
+	readonly instance: RepeatInstanceNode;
 }
 
 export const RepeatInstanceOptionsMenu = (props: RepeatInstanceOptionsMenuProps) => {
@@ -16,8 +17,9 @@ export const RepeatInstanceOptionsMenu = (props: RepeatInstanceOptionsMenuProps)
 	const closeMenu = () => {
 		setIsOpen(false);
 	};
-	const buttonId = () => `repeat-instance-options-menu-button-${props.state.reference}`;
-	const menuId = () => `repeat-instance-options-menu-${props.state.reference}`;
+	const reference = () => props.instance.currentState.reference;
+	const buttonId = () => `repeat-instance-options-menu-button-${reference()}`;
+	const menuId = () => `repeat-instance-options-menu-${reference()}`;
 
 	return (
 		<>
@@ -54,7 +56,7 @@ export const RepeatInstanceOptionsMenu = (props: RepeatInstanceOptionsMenuProps)
 				<MenuItem
 					dense={true}
 					onClick={() => {
-						props.state.remove();
+						props.instance.parent.removeInstances(props.index);
 					}}
 				>
 					<ListItemIcon>

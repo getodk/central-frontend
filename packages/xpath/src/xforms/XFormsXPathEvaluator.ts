@@ -6,7 +6,6 @@ import { fn } from '../functions/fn/index.ts';
 import { jr } from '../functions/javarosa/index.ts';
 import { xf } from '../functions/xforms/index.ts';
 import type { AnyParentNode } from '../lib/dom/types.ts';
-import type { BaseParser } from '../static/grammar/ExpressionParser.ts';
 import { XFormsItextTranslations } from './XFormsItextTranslations.ts';
 
 // Note: order of `FunctionLibrary` items matters! `xf` overrides `fn`, and
@@ -33,8 +32,8 @@ export class XFormsXPathEvaluator extends Evaluator {
 
 	readonly translations: XFormsItextTranslations;
 
-	constructor(parser: BaseParser, options: XFormsXPathEvaluatorOptions) {
-		super(parser, {
+	constructor(options: XFormsXPathEvaluatorOptions) {
+		super({
 			functions,
 			...options,
 		});

@@ -151,13 +151,8 @@ const resolveWebAssemblyResource = async <T extends ResourceType>(
 };
 
 export interface WebAssemblyResourceSpecifiers {
-	readonly webTreeSitter?: string | undefined;
-
-	/**
-	 * @default '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm' (unbundled, expected to
-	 * be resolved by downstream environment)
-	 */
-	readonly xpathLanguage?: string | undefined;
+	readonly webTreeSitter: string;
+	readonly xpathLanguage: string;
 }
 
 interface WebTreeSitterInitOptions {
@@ -188,12 +183,9 @@ interface WebTreeSitterInitOptions {
  *    enketo-core, should we want to adopt this evaluator there).
  */
 export class TreeSitterXPathParser {
-	static async init(resources: WebAssemblyResourceSpecifiers = {}): Promise<TreeSitterXPathParser> {
-		const {
-			webTreeSitter: webTreeSitterResource,
-			xpathLanguage:
-				xpathLanguageResource = '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm',
-		} = resources;
+	static async init(resources: WebAssemblyResourceSpecifiers): Promise<TreeSitterXPathParser> {
+		const { webTreeSitter: webTreeSitterResource, xpathLanguage: xpathLanguageResource } =
+			resources;
 
 		let webTreeSitterInitOptions: WebTreeSitterInitOptions = {};
 

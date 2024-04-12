@@ -1,38 +1,67 @@
-import type { ValueNodeState } from '@odk-web-forms/xforms-engine';
+import type { SelectNode } from '@odk-web-forms/xforms-engine';
 import { FormControlLabel, Radio, RadioGroup } from '@suid/material';
 import type { ChangeEvent } from '@suid/types';
-import { createMemo, For, Show } from 'solid-js';
+import { For, Show, createMemo } from 'solid-js';
 import type { Select1Definition } from '../XForm/controls/SelectControl.tsx';
 import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 
+/**
+ * @todo This should have a variant type in the engine's client interface.
+ */
 export interface SingleSelectProps {
 	readonly control: Select1Definition;
-	readonly state: ValueNodeState;
+	readonly node: SelectNode;
 }
 
 export const SingleSelect = (props: SingleSelectProps) => {
-	const selectState = props.state.createSelect(props.control);
 	const isDisabled = createMemo(() => {
-		return props.state.isReadonly() === true || props.state.isRelevant() === false;
+		return props.node.currentState.readonly || !props.node.currentState.relevant;
 	});
+	const selectedItem = () => {
+		const [item] = props.node.currentState.value;
+
+		return item;
+	};
+	const getItem = (value: string) => {
+		return props.node.currentState.valueOptions.find((item) => {
+			return item.value === value;
+		});
+	};
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-		selectState.setValue(event.target.value);
+		const item = getItem(event.target.value);
+
+		if (item == null) {
+			const currentItem = selectedItem();
+
+			if (currentItem != null) {
+				props.node.deselect(currentItem);
+			}
+		} else {
+			props.node.select(item);
+		}
+	};
+	const value = () => {
+		const [item] = props.node.currentState.value;
+
+		return item?.value ?? null;
 	};
 
 	return (
-		<RadioGroup name={props.state.reference} value={props.state.getValue()} onChange={handleChange}>
-			<Show when={props.control.label} keyed={true}>
+		<RadioGroup name={props.node.currentState.reference} value={value()} onChange={handleChange}>
+			<Show when={props.node.currentState.label} keyed={true}>
 				{(label) => {
-					return <XFormControlLabel state={props.state} label={label} />;
+					return <XFormControlLabel node={props.node} label={label} />;
 				}}
 			</Show>
-			<For each={selectState.items()}>
+			<For each={props.node.currentState.valueOptions}>
 				{(item) => {
+					const label = () => item.label?.asString ?? item.value;
+
 					return (
 						<FormControlLabel
 							value={item.value}
 							control={<Radio />}
-							label={item.label()}
+							label={label()}
 							disabled={isDisabled()}
 						/>
 					);

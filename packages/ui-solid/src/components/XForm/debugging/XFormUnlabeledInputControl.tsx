@@ -1,9 +1,10 @@
-import type { ControlDefinition } from '@odk-web-forms/xforms-engine';
+import type { SelectNode, StringNode } from '@odk-web-forms/xforms-engine';
 import { XFormAlert } from './XFormAlert.tsx';
 
+type ControlNode = SelectNode | StringNode;
+
 interface XFormUnlabeledControlProps {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	readonly control: ControlDefinition<any>;
+	readonly node: ControlNode;
 }
 
 export const XFormUnlabeledControl = (props: XFormUnlabeledControlProps) => {
@@ -12,12 +13,12 @@ export const XFormUnlabeledControl = (props: XFormUnlabeledControlProps) => {
 			severity="warning"
 			title={
 				<>
-					Unlabeled <code>{props.control.type}</code> control
+					Unlabeled <code>{props.node.definition.bodyElement?.type}</code> control
 				</>
 			}
 			detailsSummary="Control"
 		>
-			<pre>{JSON.stringify(props, null, 2)}</pre>
+			<pre>{JSON.stringify(props.node.definition, null, 2)}</pre>
 		</XFormAlert>
 	);
 };

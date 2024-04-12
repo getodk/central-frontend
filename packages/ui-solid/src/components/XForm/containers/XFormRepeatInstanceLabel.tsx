@@ -36,9 +36,9 @@ interface XFormRepeatInstanceLabelProps extends XFormLabelProps {
 export const XFormRepeatInstanceLabel = (props: XFormRepeatInstanceLabelProps) => {
 	return (
 		<PlainTextButton
-			disabled={!props.state.isRelevant()}
+			disabled={!props.node.currentState.relevant}
 			onClick={() => {
-				if (props.state.isRelevant()) {
+				if (props.node.currentState.relevant) {
 					props.setRepeatInstanceVisible(!props.isRepeatInstanceVisible);
 				}
 			}}
@@ -55,7 +55,7 @@ export const XFormRepeatInstanceLabel = (props: XFormRepeatInstanceLabelProps) =
 					</Switch>
 				</ClippedRepeatInstanceToggleIconContainer>
 
-				<XFormLabel as="span" state={props.state} label={props.label} />
+				<XFormLabel as="span" node={props.node} label={props.label} />
 			</RepeatInstanceLabelStack>
 		</PlainTextButton>
 	);

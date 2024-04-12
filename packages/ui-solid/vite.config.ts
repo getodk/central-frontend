@@ -14,6 +14,7 @@ import GithubActionsReporter from 'vitest-github-actions-reporter';
 import { solidVitestNoNodeLoader } from './tools/vite/solid-vitest-no-node-loader';
 
 export default defineConfig(({ mode }) => {
+	const isDev = mode === 'development';
 	const isTest = mode === 'test';
 	const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
@@ -55,6 +56,14 @@ export default defineConfig(({ mode }) => {
 		timeZoneId = timeZoneId ?? TEST_TIME_ZONE;
 	}
 
+	let devAliases: Record<string, string> = {};
+
+	if (isDev) {
+		devAliases = {
+			'@odk-web-forms/xforms-engine': resolvePath(__dirname, '../xforms-engine/src/index.ts'),
+		};
+	}
+
 	return {
 		assetsInclude: ['assets/**/*', 'fixtures/**/*.xml'],
 		build: {
@@ -76,6 +85,7 @@ export default defineConfig(({ mode }) => {
 				target: 'esnext',
 			},
 			entries: ['./index.html'],
+			include: ['@odk-web-forms/xpath'],
 			force: true,
 		},
 		plugins: [
@@ -128,6 +138,11 @@ export default defineConfig(({ mode }) => {
 			alias: {
 				'@odk-web-forms/common/types': resolvePath(__dirname, '../common/types'),
 				'@odk-web-forms/common': resolvePath(__dirname, '../common/src'),
+
+				// For (temporary?) dev convenience, alias
+				// `@odk-web-forms/xforms-engine` to its source so changes to the engine
+				// can be watched in `@odk-web-forms/ui-solid` dev mode.
+				...devAliases,
 			},
 
 			conditions: ['solid', 'browser', 'development'],
@@ -149,6 +164,9 @@ export default defineConfig(({ mode }) => {
 
 			deps: {
 				optimizer: {
+					ssr: {
+						exclude: ['solid-js'],
+					},
 					web: {
 						// Prevent loading multiple instances of Solid. This deviates from
 						// most of the recommendations provided by Solid and related

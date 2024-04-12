@@ -1,12 +1,15 @@
 import type {
 	AnySelectDefinition,
 	SelectDefinition,
-	ValueNodeState,
+	SelectNode,
 } from '@odk-web-forms/xforms-engine';
 import { Match, Switch } from 'solid-js';
 import { MultiSelect } from '../../Widget/MultiSelect.tsx';
 import { SingleSelect } from '../../Widget/SingleSelect.tsx';
 
+/**
+ * @todo This should have a variant type in the engine's client interface.
+ */
 export type Select1Definition = SelectDefinition<'select1'>;
 
 const select1 = (control: AnySelectDefinition): Select1Definition | null => {
@@ -17,6 +20,9 @@ const select1 = (control: AnySelectDefinition): Select1Definition | null => {
 	return null;
 };
 
+/**
+ * @todo This should have a variant type in the engine's client interface.
+ */
 export type SelectNDefinition = SelectDefinition<'select'>;
 
 const selectN = (control: AnySelectDefinition): SelectNDefinition | null => {
@@ -28,18 +34,17 @@ const selectN = (control: AnySelectDefinition): SelectNDefinition | null => {
 };
 
 interface SelectControlProps {
-	readonly control: AnySelectDefinition;
-	readonly state: ValueNodeState;
+	readonly node: SelectNode;
 }
 
 export const SelectControl = (props: SelectControlProps) => {
 	return (
 		<Switch fallback={<p>!</p>}>
-			<Match when={select1(props.control)} keyed={true}>
-				{(control) => <SingleSelect control={control} state={props.state} />}
+			<Match when={select1(props.node.definition.bodyElement)} keyed={true}>
+				{(control) => <SingleSelect control={control} node={props.node} />}
 			</Match>
-			<Match when={selectN(props.control)} keyed={true}>
-				{(control) => <MultiSelect control={control} state={props.state} />}
+			<Match when={selectN(props.node.definition.bodyElement)} keyed={true}>
+				{(control) => <MultiSelect control={control} node={props.node} />}
 			</Match>
 		</Switch>
 	);

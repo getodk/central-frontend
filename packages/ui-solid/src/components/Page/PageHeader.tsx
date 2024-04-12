@@ -1,19 +1,19 @@
-import type { EntryState } from '@odk-web-forms/xforms-engine';
+import type { RootNode } from '@odk-web-forms/xforms-engine';
 import { Stack } from '@suid/material';
 import { Show } from 'solid-js';
 import { FormLanguageMenu } from '../FormLanguageMenu.tsx';
 
 interface PageHeaderProps {
-	readonly entry: EntryState | null;
+	readonly root: RootNode | null;
 }
 
 export const PageHeader = (props: PageHeaderProps) => {
 	return (
-		<Show when={props.entry?.translations} keyed={true}>
-			{(translations) => {
+		<Show when={props.root} keyed={true}>
+			{(root) => {
 				return (
 					<Stack direction="row" justifyContent="flex-end">
-						<FormLanguageMenu translations={translations} />
+						<FormLanguageMenu root={root} />
 					</Stack>
 				);
 			}}

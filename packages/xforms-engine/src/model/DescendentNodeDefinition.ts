@@ -51,3 +51,6 @@ export abstract class DescendentNodeDefinition<
 		]);
 	}
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyDescendantNodeDefinition = DescendentNodeDefinition<any, any>;

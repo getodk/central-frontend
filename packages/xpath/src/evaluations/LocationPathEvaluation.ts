@@ -1,5 +1,6 @@
 import type { Temporal } from '@js-temporal/polyfill';
 import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import { identity } from '@odk-web-forms/common/lib/identity.ts';
 import type { Context } from '../context/Context.ts';
 import type {
 	EvaluationContext,
@@ -46,8 +47,6 @@ const filterNamespace = filter(isNamespaceAttribute);
 const filterNonNamespace = filter((attr: Attr) => !isNamespaceAttribute(attr));
 
 const filterNonAttribute = filter((node: Node) => !isAttributeNode(node));
-
-const identity = <T>(value: T) => value;
 
 export enum AxisName {
 	ANCESTOR = 'ancestor',

@@ -1,4 +1,5 @@
 import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError';
+import { expressionParser } from '@odk-web-forms/xpath/expressionParser.js';
 import type {
 	AbsoluteLocationPathNode,
 	AnyBinaryExprNode,
@@ -10,7 +11,6 @@ import type {
 	UnprefixedNameNode,
 } from '@odk-web-forms/xpath/static/grammar/SyntaxNode.js';
 import type { AnyBinaryExprType } from '@odk-web-forms/xpath/static/grammar/type-names.js';
-import { xpathParser } from './parser';
 
 export type SingleChildNode = Extract<
 	AnySyntaxNode,
@@ -120,7 +120,7 @@ const isFunctionCalled = (localName: string, node: AnySyntaxNode): boolean => {
 };
 
 export const isItextFunctionCalled = (expression: string): boolean => {
-	const { rootNode } = xpathParser.parse(expression);
+	const { rootNode } = expressionParser.parse(expression);
 
 	return isFunctionCalled('itext', rootNode);
 };
@@ -215,7 +215,7 @@ export const getNodesetDependencies = (
 	expression: string,
 	options: GetNodesetDependenciesOptions = {}
 ): Set<string> => {
-	const { rootNode } = xpathParser.parse(expression);
+	const { rootNode } = expressionParser.parse(expression);
 	const subExpressionNodes = findLocationPathExprNodes(rootNode);
 	const {
 		contextReference = null,
