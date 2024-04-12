@@ -18,12 +18,7 @@ import OdkRepeatInstance from './OdkRepeatInstance.vue';
 
 const props = defineProps<{ question: RepeatRangeNode}>();
 
-// TODO/sk: RepeatRangeState.label is alway null
-const label = computed(() => 
-	// props.question.currentState.label?.asString ??
-  props.question.definition.bodyElement?.label?.children[0]?.stringValue ??
-  ''
-);
+const label = computed(() => props.question.currentState.label?.asString);
 
 </script>
 
