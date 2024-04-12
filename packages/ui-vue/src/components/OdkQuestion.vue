@@ -2,9 +2,9 @@
 
 <template>
 	<div class="flex flex-column gap-2">
-		<InputText v-if="isStringNode(question)" :question="question"></InputText>
+		<InputText v-if="isStringNode(question)" :question="question" />
 
-		<UnsupportedControl v-if="isUnsupportedNode(question)" :question="question"></UnsupportedControl>
+		<UnsupportedControl v-if="isUnsupportedNode(question)" :question="question" />
 	</div>
 </template>
 

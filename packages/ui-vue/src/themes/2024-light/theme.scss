@@ -23,8 +23,6 @@ $primary50: #d8ecf5;
 		margin: auto;
 		padding-top: 10px;
 
-
-
 		label span {
 			// it is required asterisk - be more specific
 			color: var(--red-500); // TODO maybe theme should export color of danger / error
@@ -38,9 +36,7 @@ $primary50: #d8ecf5;
 			}
 		}
 
-
 		.p-button.p-button-secondary {
-
 			&:enabled:focus,
 			&:enabled.p-focus {
 				background: var(--primary-100);
@@ -61,24 +57,24 @@ $primary50: #d8ecf5;
 			box-shadow: 0px 1px 3px 1px #00000026;
 		}
 
-		.form-questions>div>.p-panel {
+		.form-questions > div > .p-panel {
 			border-radius: 10px;
 			box-shadow: 0px 1px 3px 1px #00000026;
 			border-top: 15px solid $primary50;
 			margin-top: 20px;
 
 			&.with-title {
-				>.p-toggleable-content>.p-panel-content {
+				> .p-toggleable-content > .p-panel-content {
 					padding: 1rem;
 				}
 			}
 
 			&.no-title {
-				>.p-panel-header {
+				> .p-panel-header {
 					display: none;
 				}
 
-				>.p-toggleable-content>.p-panel-content {
+				> .p-toggleable-content > .p-panel-content {
 					padding: 1rem;
 				}
 			}
@@ -90,7 +86,7 @@ $primary50: #d8ecf5;
 				border-left: 5px solid var(--primary-50);
 				padding: 0 0 0 1rem;
 
-				>.p-panel-header {
+				> .p-panel-header {
 					padding: 0;
 					align-items: start;
 
@@ -103,7 +99,7 @@ $primary50: #d8ecf5;
 					}
 				}
 
-				>.p-toggleable-content>.p-panel-content {
+				> .p-toggleable-content > .p-panel-content {
 					padding: 1rem 0 0 0.5rem;
 				}
 			}
@@ -154,7 +150,6 @@ $primary50: #d8ecf5;
 			}
 
 			&.with-icon {
-
 				[class^='icon-'],
 				[class*=' icon-'] {
 					font-size: 22px;

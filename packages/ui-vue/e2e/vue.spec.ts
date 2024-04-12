@@ -7,30 +7,28 @@ declare global {
 }
 
 test('All forms are rendered and there is no console error', async ({ page, browserName }) => {
-
 	await page.goto('/');
 
 	await page.evaluate(() => {
 		globalThis.playwrightCapturedErrors = [];
 	});
 
-	const forms = await page.getByText('Show').all();	
+	const forms = await page.getByText('Show').all();
 
-	for(const form of forms){
+	for (const form of forms) {
 		await form.click();
 
 		// Traverse the form element by element
 		// if focused element is an editable textbox then fill it
 		// Exit the loop when focus is on the Send button
 		// eslint-disable-next-line no-constant-condition
-		while(true){
-			
+		while (true) {
 			const onSendButton = await page.evaluate(() => {
 				const activeElement = document.activeElement;
 				return activeElement?.tagName === 'BUTTON' && activeElement.textContent === 'Send';
 			});
-			
-			if(onSendButton) {
+
+			if (onSendButton) {
 				break;
 			}
 
@@ -38,10 +36,14 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 
 			const isEditableTextbox = await page.evaluate(() => {
 				const activeElement = document.activeElement;
-				return activeElement?.tagName === 'INPUT' && (activeElement as HTMLInputElement).type === 'text' && !activeElement.hasAttribute('readonly');
+				return (
+					activeElement?.tagName === 'INPUT' &&
+					(activeElement as HTMLInputElement).type === 'text' &&
+					!activeElement.hasAttribute('readonly')
+				);
 			});
 
-			if(isEditableTextbox){
+			if (isEditableTextbox) {
 				await page.keyboard.type(faker.internet.displayName());
 			}
 		}
@@ -55,5 +57,4 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 	});
 
 	expect(capturedErrors).toBe(0);
-
 });

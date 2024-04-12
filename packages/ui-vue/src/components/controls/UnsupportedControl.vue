@@ -1,7 +1,7 @@
 <template>
- <div v-if="isDev()">
-    Unsupported field {<strong>{{ question.nodeType }}</strong>} in the form definition.
-  </div>
+	<div v-if="isDev()">
+		Unsupported field {<strong>{{ question.nodeType }}</strong>} in the form definition.
+	</div>
 </template>
 
 <script setup lang="ts">

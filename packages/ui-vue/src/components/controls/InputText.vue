@@ -1,14 +1,14 @@
 <template>
-  <OdkControlLabel :question="question"></OdkControlLabel>
+	<OdkControlLabel :question="question" />
 
-  <InputText 
-			:id="question.nodeId" 
-			:required="question.currentState.required" 
-			:readonly="question.currentState.readonly" 
-			:value="question.currentState.value" 
-			variant="filled" 
-			@input="setValue" 
-		/>
+	<InputText 
+		:id="question.nodeId" 
+		:required="question.currentState.required" 
+		:readonly="question.currentState.readonly" 
+		:value="question.currentState.value" 
+		variant="filled" 
+		@input="setValue" 
+	/>
 </template>
 
 <script setup lang="ts">

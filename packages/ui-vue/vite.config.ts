@@ -9,17 +9,17 @@ import { defineConfig } from 'vite';
 // With that approach host applications rules override everything
 // So we are removing @layer at build/serve time here
 const removeCssLayer = () => {
-  return {
-    postcssPlugin: 'replace-john-with-jane',
-    Once(root: Root) {
-      root.walkAtRules((rule) => {
-        if (rule.name === 'layer') {
-          rule.parent!.append(rule.nodes);
-          rule.remove();
-        }
-      });
-		}
-  };
+	return {
+		postcssPlugin: 'replace-john-with-jane',
+		Once(root: Root) {
+			root.walkAtRules((rule) => {
+				if (rule.name === 'layer') {
+					rule.parent!.append(rule.nodes);
+					rule.remove();
+				}
+			});
+		},
+	};
 };
 removeCssLayer.postcss = true;
 
@@ -31,7 +31,9 @@ export default defineConfig({
 			'primevue/menuitem': 'primevue/menu',
 			// With following lines, fonts byte array are copied into css file
 			// Roboto fonts - don't want to copy those in our repository
-			'./fonts': resolve('../../node_modules/primevue-sass-theme/themes/material/material-light/standard/indigo/fonts'),
+			'./fonts': resolve(
+				'../../node_modules/primevue-sass-theme/themes/material/material-light/standard/indigo/fonts'
+			),
 			// Icomoon fonts
 			'/fonts': resolve('./src/assets/fonts'),
 		},
@@ -55,7 +57,7 @@ export default defineConfig({
 	},
 	css: {
 		postcss: {
-			plugins: [removeCssLayer()]
-		}
-	}
+			plugins: [removeCssLayer()],
+		},
+	},
 });

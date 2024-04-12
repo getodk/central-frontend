@@ -1,5 +1,5 @@
 <template>
-  <label :for="question.nodeId"><span v-if="question.currentState.required">*</span> {{ props.question.currentState.label?.asString }}</label>
+	<label :for="question.nodeId"><span v-if="question.currentState.required">*</span> {{ props.question.currentState.label?.asString }}</label>
 </template>
 
 <script setup lang="ts">
