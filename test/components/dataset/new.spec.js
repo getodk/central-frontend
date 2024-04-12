@@ -85,4 +85,25 @@ describe('DatasetPropertyNew', () => {
           app.vm.$route.path.should.equal('/projects/1/entity-lists/MyNewDataset');
         }));
   });
+
+  it('shows a custom message for a duplicate dataset name', () =>
+    mockHttp()
+      .mount(DatasetNew, mountOptions())
+      .request(async (component) => {
+        await component.get('input').setValue('myDataset');
+        return component.get('form').trigger('submit');
+      })
+      .respondWithProblem({
+        code: 409.3,
+        message: 'A resource already exists with name,projectId value(s) of myDataset,1.',
+        details: {
+          fields: ['name', 'projectId'],
+          values: ['myDataset', 1]
+        }
+      })
+      .afterResponse(modal => {
+        modal.should.alert('danger', (message) => {
+          message.should.startWith('An Entity List already exists in this Project with the name of “myDataset”.');
+        });
+      }));
 });
