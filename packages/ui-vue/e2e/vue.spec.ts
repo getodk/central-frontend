@@ -1,17 +1,18 @@
 import { faker } from '@faker-js/faker';
 import { expect, test } from '@playwright/test';
 
-test('All forms are rendered and there is no console error', async ({ page }) => {
+declare global {
+	// eslint-disable-next-line no-var
+	var playwrightCapturedErrors: Error[] | undefined;
+}
 
-	let consoleErrors = 0;
-
-	page.on('console', msg => {
-		if(msg.type() === 'error') {
-			consoleErrors++;
-		} 
-	});
+test('All forms are rendered and there is no console error', async ({ page, browserName }) => {
 
 	await page.goto('/');
+
+	await page.evaluate(() => {
+		globalThis.playwrightCapturedErrors = [];
+	});
 
 	const forms = await page.getByText('Show').all();	
 
@@ -33,7 +34,7 @@ test('All forms are rendered and there is no console error', async ({ page }) =>
 				break;
 			}
 
-			await page.keyboard.press('Tab');
+			await page.keyboard.press(browserName == 'webkit' ? 'Alt+Tab' : 'Tab');
 
 			const isEditableTextbox = await page.evaluate(() => {
 				const activeElement = document.activeElement;
@@ -48,7 +49,11 @@ test('All forms are rendered and there is no console error', async ({ page }) =>
 		await page.getByText('Back').click();
 	}
 
-  // Assert that there's no console errors
-	expect(consoleErrors).toBe(0);
+	// Assert that there's no captured errors
+	const capturedErrors = await page.evaluate(() => {
+		return globalThis.playwrightCapturedErrors?.length;
+	});
+
+	expect(capturedErrors).toBe(0);
 
 });

@@ -16,8 +16,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onErrorCaptured, ref } from 'vue';
 import OdkForm from './components/OdkForm.vue';
+
+declare global {
+	var playwrightCapturedErrors: Error[] | undefined;
+}
+onErrorCaptured((error) => {
+	globalThis.playwrightCapturedErrors?.push(error);
+});
 
 const formFixtureGlobImports = import.meta.glob('../../ui-solid/fixtures/xforms/**/*.xml', {
     query: '?raw',
