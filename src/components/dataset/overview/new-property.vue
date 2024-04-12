@@ -38,6 +38,8 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { inject, ref, watch } from 'vue';
+import { equals } from 'ramda';
+import { useI18n } from 'vue-i18n';
 
 import Modal from '../../modal.vue';
 import FormGroup from '../../form-group.vue';
@@ -70,11 +72,16 @@ watch(() => props.state, (state) => {
   if (!state) name.value = '';
 });
 
+const { t } = useI18n();
 const submit = () => {
   request({
     method: 'POST',
     url: apiPaths.datasetProperties(project.id, dataset.name),
-    data: { name: name.value }
+    data: { name: name.value },
+    problemToAlert: ({ code, details }) =>
+      (code === 409.3 && equals(details.fields, ['name', 'datasetId'])
+        ? t('problem.409_3', { propertyName: details.values[0] })
+        : null)
   })
     .then(() => {
       alert.blank();
@@ -93,7 +100,10 @@ const submit = () => {
       "To add an Entity property, choose a unique property name below.",
       "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
     ],
-    "newPropertyName": "New property name"
+    "newPropertyName": "New property name",
+    "problem": {
+      "409_3": "A property already exists in this Entity List with the name of “{propertyName}”."
+    },
   }
 }
 </i18n>
