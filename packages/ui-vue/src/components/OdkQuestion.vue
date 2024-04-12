@@ -2,31 +2,30 @@
 
 <template>
 	<div class="flex flex-column gap-2">
-		<label :for="question.nodeId"><span v-if="question.currentState.required">*</span> {{ props.question.currentState.label?.asString }}</label>
-		<InputText 
-			:id="question.nodeId" 
-			:required="question.currentState.required" 
-			:readonly="question.currentState.readonly" 
-			:value="question.currentState.value" 
-			variant="filled" 
-			@input="setValue" 
-		/>
+		<InputText v-if="isStringNode(question)" :question="question"></InputText>
+
+		<UnsupportedControl v-if="isUnsupportedNode(question)" :question="question"></UnsupportedControl>
 	</div>
 </template>
 
 <script setup lang="ts">
 import type { AnyLeafNode, StringNode } from '@odk-web-forms/xforms-engine';
-import InputText from 'primevue/inputtext';
+import InputText from './controls/InputText.vue';
+import UnsupportedControl from './controls/UnsupportedControl.vue';
+
+const supportedNodeTypes = ['string'];
 
 const props = defineProps<{question: AnyLeafNode}>();
 
-const setValue = (e:Event) => {
-	(props.question as StringNode).setValue((e.target as HTMLInputElement).value);
-}
+const isStringNode = (n: AnyLeafNode) : n is StringNode => n.nodeType === 'string';
+
+const isUnsupportedNode = (n: AnyLeafNode): n is AnyLeafNode => !supportedNodeTypes.includes(props.question.nodeType);
+
+
 </script>
 
 <style>
-input:read-only{
+input:read-only {
 	cursor: not-allowed;
 }
 </style>
