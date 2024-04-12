@@ -60,9 +60,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 
 import Spinner from './spinner.vue';
+
+import { useI18nUtils } from '../util/i18n';
 
 const props = defineProps({
   count: {
@@ -91,18 +93,12 @@ const pageModel = computed({
   get: () => props.page,
   set: (value) => { emit('update:page', value); }
 });
-const { i18n } = inject('container');
+const { formatRange } = useI18nUtils();
 // Returns the formatted range of rows associated with a page.
 const pageRange = (page) => {
   const start = page * props.size + 1;
   const end = page < lastPage.value ? start + props.size - 1 : props.count;
-  // `start` may equal `end` on the last page.
-  return start === end
-    ? i18n.n(start, 'default')
-    : i18n.t('punctuation.range', {
-      start: i18n.n(start, 'default'),
-      end: i18n.n(end, 'default')
-    });
+  return formatRange(start, end);
 };
 const options = computed(() => {
   const result = new Array(lastPage.value + 1);

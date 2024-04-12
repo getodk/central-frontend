@@ -764,12 +764,6 @@
       "string": "{count, plural, one {{count} conflict} other {{count} conflicts}}"
     }
   },
-  "punctuation": {
-    "range": {
-      "string": "{start}-{end}",
-      "developer_comment": "This is a range of numbers. {start} and {end} are numbers."
-    }
-  },
   "common": {
     "activity": {
       "string": "Activity",

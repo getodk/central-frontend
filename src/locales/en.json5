@@ -352,9 +352,7 @@
   },
   "punctuation": {
     // @transifexKey common.punctuations.comma
-    "comma": ",",
-    // This is a range of numbers. {start} and {end} are numbers.
-    "range": "{start}-{end}"
+    "comma": ","
   },
   "common": {
     // This is a title shown above a section of the page.
