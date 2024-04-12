@@ -58,6 +58,11 @@ except according to the terms contained in the LICENSE file.
             :message="dataError"/>
         </entity-upload-file-select>
       </div>
+      <entity-upload-popup v-if="csvEntities != null"
+        :filename="fileMetadata.name" :count="csvEntities.length"
+        :awaiting-response="uploading" :progress="uploadProgress"
+        @clear="clearFile" @animationstart="animatePopup(true)"
+        @animationend="animatePopup(false)"/>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
           :aria-disabled="csvEntities == null || uploading" @click="upload">
@@ -68,11 +73,6 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.cancel') }}
         </button>
       </div>
-      <entity-upload-popup v-if="csvEntities != null"
-        :filename="fileMetadata.name" :count="csvEntities.length"
-        :awaiting-response="uploading" :progress="uploadProgress"
-        @clear="clearFile" @animationstart="animatePopup(true)"
-        @animationend="animatePopup(false)"/>
     </template>
   </modal>
 </template>
