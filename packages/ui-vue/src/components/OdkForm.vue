@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { initializeForm, type OpaqueReactiveObject, type RootNode, type WrappedOpaqueReactiveObject } from '@odk-web-forms/xforms-engine';
+import { initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import { reactive, ref } from 'vue';
@@ -40,11 +40,9 @@ const odkForm = ref<RootNode>();
 
 const emit = defineEmits(['submit']);
 
-const stateFactory = reactive as <T extends OpaqueReactiveObject>(object: T) => WrappedOpaqueReactiveObject<T>;
-
 initializeForm(props.formXml, {
     config: {
-      stateFactory
+      stateFactory: reactive
     },
   }).then((f) => {
     odkForm.value = f;
