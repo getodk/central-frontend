@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 
 import Modal from '../../modal.vue';
 import FormGroup from '../../form-group.vue';
@@ -64,6 +64,7 @@ const nameGroup = ref(null);
 const name = ref('');
 
 const emit = defineEmits(['hide', 'success']);
+const alert = inject('alert');
 
 watch(() => props.state, (state) => {
   if (!state) name.value = '';
@@ -76,6 +77,7 @@ const submit = () => {
     data: { name: name.value }
   })
     .then(() => {
+      alert.blank();
       emit('success');
     })
     .catch(noop);
