@@ -199,20 +199,40 @@ describe('util/csv', () => {
     describe('warnings', () => {
       it('returns a count of zero if there are no warnings', async () => {
         const { warnings } = await parseCSV(i18n, createCSV('a\n1'), ['a']);
-        warnings.should.eql({ count: 0 });
+        warnings.should.eql({
+          count: 0,
+          details: {}
+        });
+      });
+
+      it('returns the delimiter if it is not a comma', async () => {
+        const csv = createCSV('a;b\n1;2');
+        const { warnings } = await parseCSV(i18n, csv, ['a', 'b'], {
+          delimiter: ';'
+        });
+        warnings.should.eql({
+          count: 1,
+          details: { delimiter: ';' }
+        });
       });
 
       describe('ragged row', () => {
         it('returns ragged rows if another row is padded', async () => {
           const csv = createCSV('a,b\n1\n2,""\n4');
           const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
-          warnings.should.eql({ count: 1, raggedRows: [1, 3] });
+          warnings.should.eql({
+            count: 1,
+            details: { raggedRows: [1, 3] }
+          });
         });
 
         it('does not return ragged rows if no row is padded', async () => {
           const csv = createCSV('a,b\n1\n2,3\n4');
           const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
-          warnings.should.eql({ count: 0 });
+          warnings.should.eql({
+            count: 0,
+            details: {}
+          });
         });
       });
 
@@ -220,7 +240,10 @@ describe('util/csv', () => {
         it('returns the row of a relatively large cell that contains a comma', async () => {
           const csv = createCSV('a\n1\n"12345,6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
-          warnings.should.eql({ count: 1, largeCell: 2 });
+          warnings.should.eql({
+            count: 1,
+            details: { largeCell: 2 }
+          });
         });
 
         it('returns row of a relatively large cell that contains specified delimiter', async () => {
@@ -228,25 +251,37 @@ describe('util/csv', () => {
           const { warnings } = await parseCSV(i18n, csv, ['a'], {
             delimiter: ';'
           });
-          warnings.should.eql({ count: 1, largeCell: 2 });
+          warnings.should.eql({
+            count: 2,
+            details: { delimiter: ';', largeCell: 2 }
+          });
         });
 
         it('returns the row of a relatively large cell that contains a newline', async () => {
           const csv = createCSV('a\n1\n"12345\n6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
-          warnings.should.eql({ count: 1, largeCell: 2 });
+          warnings.should.eql({
+            count: 1,
+            details: { largeCell: 2 }
+          });
         });
 
         it('ignores cells that do not contain a delimiter or newline', async () => {
           const csv = createCSV('a\n1\n"12345.6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
-          warnings.should.eql({ count: 0 });
+          warnings.should.eql({
+            count: 0,
+            details: {}
+          });
         });
 
         it('ignores cells that are not relatively large', async () => {
           const csv = createCSV('a,b\n1,2\n3,"12345,6789ab"');
           const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
-          warnings.should.eql({ count: 0 });
+          warnings.should.eql({
+            count: 0,
+            details: {}
+          });
         });
       });
     });

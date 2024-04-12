@@ -235,15 +235,22 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
     }));
   }
 
-  const warningDetails = { count: 0 };
+  const warningResults = {
+    count: 0,
+    details: {}
+  };
   for (const warning of warnings) {
     if (warning.hasWarning()) {
-      warningDetails.count += 1;
-      warningDetails[warning.type] = warning.details;
+      warningResults.count += 1;
+      warningResults.details[warning.type] = warning.details;
     }
   }
+  if (delimiter !== ',') {
+    warningResults.count += 1;
+    warningResults.details.delimiter = delimiter;
+  }
 
-  return { data, warnings: warningDetails };
+  return { data, warnings: warningResults };
 };
 
 export const formatCSVDelimiter = (delimiter) =>
