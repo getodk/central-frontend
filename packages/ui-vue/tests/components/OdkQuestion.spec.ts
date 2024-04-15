@@ -1,45 +1,49 @@
-import type { AnyLeafNode } from '@odk-web-forms/xforms-engine';
+import InputText from '@/components/controls/InputText.vue';
+import UnsupportedControl from '@/components/controls/UnsupportedControl.vue';
+import type { StringNode } from '@odk-web-forms/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assocPath } from 'ramda';
 import { describe, expect, it } from 'vitest';
 import OdkQuestion from '../../src/components/OdkQuestion.vue';
 
 const baseQuestion = {
+	nodeType: 'string',
 	currentState: {
 		required: true,
 		label: {
 			asString: 'First Name',
 		},
 	},
-} as any as AnyLeafNode; // eslint-disable-line @typescript-eslint/no-explicit-any -- don't want to set all fields of AnyLeafNode
+} as StringNode;
 
 describe('OdkQuestion', () => {
-	it('shows asterisk with field is required', () => {
+	it('shows InputText control for string nodes', () => {
 		const component = mount(OdkQuestion, {
 			props: {
 				question: baseQuestion,
 			},
 		});
 
-		const requireSpan = component.find('label span');
+		const inputText = component.findComponent(InputText);
 
-		expect(requireSpan.exists()).to.be.true;
-		expect(requireSpan.text()).to.be.eql('*');
+		expect(inputText.exists()).to.be.true;
 
 		expect(component.text()).to.be.eql('* First Name');
 	});
-
-	it('does not show asterisk when field is not required', () => {
+	
+	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
 		const component = mount(OdkQuestion, {
 			props: {
-				question: assocPath(['currentState', 'required'], false, baseQuestion),
+				question: assocPath(['nodeType'], 'select', baseQuestion),
 			},
 		});
 
-		const requireSpan = component.find('label span');
+		const unsupported = component.findComponent(UnsupportedControl);
 
-		expect(requireSpan.exists()).to.be.false;
+		expect(unsupported.exists()).to.be.true;
 
-		expect(component.text()).to.be.eql('First Name');
+		expect(component.text()).to.be.eql('Unsupported field {select} in the form definition.');
 	});
+
+
 });

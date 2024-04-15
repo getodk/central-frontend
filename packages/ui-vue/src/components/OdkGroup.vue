@@ -1,10 +1,4 @@
 <template>
-	<!-- TODO/sk: maybe pass label instead of asString
-			 asString can be computed as empty string which 
-			 will remove the UI Panel
-
-			 or have a separate prop to decide UI Panel render
-	-->
 	<OdkPanel :title="question.currentState.label?.asString" :no-ui="!question.currentState.label">
 		<OdkQuestionList :questions="question.currentState.children" />
 	</OdkPanel>
