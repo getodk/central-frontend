@@ -597,6 +597,10 @@
       "string": "Entity List",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entityLists": {
+      "string": "Entity Lists",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entities": {
       "string": "Entities",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -1401,6 +1405,33 @@
         "1": {
           "string": "Entities are created through form design and can be attached to any Form."
         }
+      },
+      "new": {
+        "string": "New",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+      }
+    },
+    "DatasetNew": {
+      "title": {
+        "string": "Create Entity List",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "entityListName": {
+        "string": "Entity List name",
+        "developer_comment": "This appears above a text input field for the name of an Entity List"
+      },
+      "success": {
+        "0": {
+          "string": "The Entity List “{name}” has been created."
+        },
+        "1": {
+          "string": "You can get started with it by adding its data properties directly on this page, or by uploading Forms that use it. In this case, any properties the Form calls out will be automatically created when you publish the Form."
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": "An Entity List already exists in this Project with the name of “{datasetName}”."
+        }
       }
     },
     "DatasetOverview": {
@@ -1411,6 +1442,10 @@
       "entityProperties": {
         "string": "Entity Properties",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "new": {
+        "string": "New",
+        "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
     "DatasetOverviewConnectionToForms": {
@@ -1422,12 +1457,33 @@
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "The Entities in this Entity List do not have any user-defined properties."
+      },
+      "none": {
+        "string": "(None)",
+        "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
         "string": "{count, plural, one {Form uses this Entity List} other {Forms use this Entity List}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewNewProperty": {
+      "title": {
+        "string": "Add Entity Property",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "To add an Entity property, choose a unique property name below."
+        },
+        "1": {
+          "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
+        }
+      },
+      "newPropertyName": {
+        "string": "New property name"
       }
     },
     "DatasetPendingSubmissions": {
@@ -1679,7 +1735,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "Don’t show this message again for this session",
+          "string": "Delete immediately without confirmation until I leave the page",
           "developer_comment": "This is the text of a form field."
         }
       }

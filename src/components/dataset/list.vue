@@ -11,6 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-list">
+    <page-section>
+      <template #heading>
+        <span>{{ $t('resource.entityLists') }}</span>
+        <button v-if="project.dataExists && project.permits('dataset.create')"
+          id="dataset-list-new-button" type="button" class="btn btn-primary"
+          @click="newDatasetModal.show()">
+          <span class="icon-plus-circle"></span>{{ $t('new') }}
+        </button>
+      </template>
+    </page-section>
     <div class="page-body-heading">
       <p>{{ $t('heading[0]') }}</p>
       <p>
@@ -25,16 +35,22 @@ except according to the terms contained in the LICENSE file.
     </div>
     <dataset-table/>
     <loading :state="datasets.initiallyLoading"/>
+    <dataset-new v-bind="newDatasetModal" @hide="newDatasetModal.hide()" @success="afterCreateDataset"/>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+import DatasetNew from './new.vue';
 import DatasetTable from './table.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import PageSection from '../page/section.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -48,12 +64,22 @@ const props = defineProps({
   }
 });
 
-const { datasets } = useRequestData();
+const { project, datasets } = useRequestData();
+const { datasetPath } = useRoutes();
+const router = useRouter();
+
 datasets.request({
   url: apiPaths.datasets(props.projectId),
   extended: true,
   resend: false
 }).catch(noop);
+
+const newDatasetModal = modalData();
+
+const afterCreateDataset = (dataset) => {
+  newDatasetModal.hide();
+  router.push(datasetPath(props.projectId, dataset.name));
+};
 </script>
 
 <i18n lang="json5">
@@ -63,7 +89,10 @@ datasets.request({
         // A brief introduction to Entities shown above Entity Lists for the current Project
         "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
         "Entities are created through form design and can be attached to any Form."
-      ]
+      ],
+      // This is the text of a button that is used to create a new Entity List.
+      // It is shown next to a heading whose text is "Entity Lists".
+      "new": "New"
     }
   }
 </i18n>

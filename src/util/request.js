@@ -158,6 +158,7 @@ export const apiPaths = {
   publicLinks: formPath('/public-links'),
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
+  datasetProperties: datasetPath('/properties'),
   entities: (projectId, datasetName, extension = '', query = undefined) => {
     const encodedName = encodeURIComponent(datasetName);
     const qs = queryString(query);

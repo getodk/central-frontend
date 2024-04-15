@@ -30,11 +30,19 @@ except according to the terms contained in the LICENSE file.
     <page-section id="dataset-overview-properties">
       <template #heading>
         <span>{{ $t('entityProperties') }}</span>
+        <button v-if="project.dataExists && project.permits('dataset.update')"
+          id="dataset-property-new-button" type="button" class="btn btn-primary"
+          @click="newDatasetPropertyModal.show()">
+          <span class="icon-plus-circle"></span>{{ $t('new') }}
+        </button>
       </template>
       <template #body>
         <dataset-properties :properties="dataset.properties" :project-id="projectId"/>
       </template>
     </page-section>
+    <dataset-property-new v-bind="newDatasetPropertyModal"
+      @hide="newDatasetPropertyModal.hide()"
+      @success="afterCreateProperty"/>
   </div>
 </template>
 
@@ -42,8 +50,10 @@ except according to the terms contained in the LICENSE file.
 import PageSection from '../page/section.vue';
 import ConnectionToForms from './overview/connection-to-forms.vue';
 import LinkedForms from './overview/linked-forms.vue';
+import DatasetPropertyNew from './overview/new-property.vue';
 import DatasetProperties from './overview/dataset-properties.vue';
 
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -60,9 +70,18 @@ defineProps({
   }
 });
 
+const emit = defineEmits(['fetch-dataset']);
+
 // The component does not assume that this data will exist when the component is
 // created.
-const { dataset } = useRequestData();
+const { project, dataset } = useRequestData();
+
+const newDatasetPropertyModal = modalData();
+
+const afterCreateProperty = () => {
+  newDatasetPropertyModal.hide();
+  emit('fetch-dataset', true);
+};
 </script>
 
 <style lang="scss">
@@ -77,7 +96,9 @@ const { dataset } = useRequestData();
     // This is a title shown above a section of the page.
     "connectionsToForms": "Connections to Forms",
     // This is a title shown above a section of the page.
-    "entityProperties" : "Entity Properties"
+    "entityProperties" : "Entity Properties",
+    // This is shown on a button for creating new Entity Properties
+    "new": "New",
   }
 }
 </i18n>

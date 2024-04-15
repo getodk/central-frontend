@@ -39,3 +39,9 @@ export const extendedDatasets = dataStore({
   }),
   sort: comparator((dataset1, dataset2) => dataset1.name < dataset2.name)
 });
+
+extendedDatasets.addProperty = (index, property) => {
+  const properties = [...extendedDatasets.get(index).properties, normalizeProperty({ name: property })];
+  extendedDatasets.update(index, { properties });
+  return extendedDatasets.get(index);
+};
