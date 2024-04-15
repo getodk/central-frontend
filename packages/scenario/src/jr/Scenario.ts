@@ -21,7 +21,7 @@ import type { ComparableAnswer } from '../answer/ComparableAnswer.ts';
 import { castToString } from '../cast.ts';
 import { answerOf } from '../client/answerOf.ts';
 import { initializeTestForm } from '../client/init.ts';
-import { getClosestRepeatRange } from '../client/traversal.ts';
+import { collectFlatNodeList, getClosestRepeatRange } from '../client/traversal.ts';
 
 // TODO: this should also likely have an export from `StringNode`
 type StringInputBodyElement = Exclude<StringDefinition['bodyElement'], null>;
@@ -274,34 +274,22 @@ class PromptNewRepeatQuestion extends Question<'PROMPT_NEW_REPEAT'> {
 
 type AnyQuestionNode = Exclude<QuestionPositionState<QuestionPositon>, null>;
 
-const getQuestionNodes = (node: AnyNode): readonly AnyQuestionNode[] => {
-	switch (node.nodeType) {
-		case 'root':
-			return node.currentState.children.flatMap(getQuestionNodes);
+const isAnyQuestionNode = (node: AnyNode): node is AnyQuestionNode => {
+	const { nodeType } = node;
 
-		case 'repeat-range':
-			return [...node.currentState.children.flatMap(getQuestionNodes), node];
-
-		case 'repeat-instance':
-		case 'group':
-			return [node, ...node.currentState.children.flatMap(getQuestionNodes)];
-
-		case 'subtree':
-			return node.currentState.children.flatMap(getQuestionNodes);
-
-		case 'select':
-			return [node];
-
-		case 'string':
-			if (isStringInputQuestion(node)) {
-				return [node];
-			}
-
-			return [];
-
-		default:
-			throw new UnreachableError(node);
+	if (nodeType === 'root') {
+		return false;
 	}
+
+	if (nodeType === 'string') {
+		return isStringInputQuestion(node);
+	}
+
+	return true;
+};
+
+const getQuestionNodes = (node: AnyNode): readonly AnyQuestionNode[] => {
+	return collectFlatNodeList(node).filter(isAnyQuestionNode);
 };
 
 type InstanceQuestion =
@@ -368,7 +356,7 @@ export class Scenario {
 	readonly formName: string;
 	readonly instanceRoot: RootNode;
 
-	private readonly questions: Accessor<Questions>;
+	private readonly getQuestions: Accessor<Questions>;
 	private readonly selectedQuestionIndex: Signal<number>;
 	private readonly selectedQuestion: Accessor<SelectedQuestion>;
 
@@ -382,14 +370,14 @@ export class Scenario {
 
 		this.selectedQuestionIndex = selectedQuestionIndex;
 
-		this.questions = createMemo(() => {
+		this.getQuestions = () => {
 			return collectQuestions(instanceRoot);
-		});
+		};
 
 		this.selectedQuestion = createMemo(() => {
 			const [selectedQuestion] = selectedQuestionIndex;
 			const index = selectedQuestion();
-			const question = this.questions()[index];
+			const question = this.getQuestions()[index];
 
 			if (question != null) {
 				return question;
@@ -495,7 +483,7 @@ export class Scenario {
 		const instances = repeatRange.currentState.children;
 		const instance = instances[instances.length - 1]!;
 		const instanceQuestion = RepeatInstanceQuestion.createSingleton(instance);
-		const index = this.questions().indexOf(instanceQuestion);
+		const index = this.getQuestions().indexOf(instanceQuestion);
 
 		this.setQuestionIndex(() => index, instance.currentState.reference);
 
