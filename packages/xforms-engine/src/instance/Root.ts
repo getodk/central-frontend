@@ -218,16 +218,8 @@ export class Root
 	 * use tests to validate this, by utilizing the synchronously returned `Root`
 	 * state from client-facing write interfaces).
 	 */
-	async formStateInitialized(): Promise<void> {
-		await new Promise<void>((resolve) => {
-			queueMicrotask(resolve);
-		});
-
-		if (!this.isStateInitialized()) {
-			throw new Error(
-				'Form state initialization failed to complete in a single frame. Has some aspect of reactive computation been made asynchronous by mistake?'
-			);
-		}
+	async formStateInitialized(): Promise<Error | null> {
+		return this.initializationFailure;
 	}
 
 	// InstanceNode
