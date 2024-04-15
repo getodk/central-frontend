@@ -59,7 +59,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { equals } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
@@ -91,6 +91,7 @@ const step = ref(0);
 const createdDataset = ref(null);
 
 const emit = defineEmits(['hide', 'success']);
+const alert = inject('alert');
 
 watch(() => props.state, (state) => {
   if (!state) name.value = '';
@@ -108,6 +109,8 @@ const submit = () => {
         : null)
   })
     .then(({ data }) => {
+      // Reset the alert
+      alert.blank();
       // Reset the form
       name.value = '';
       step.value = 1;

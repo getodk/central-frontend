@@ -105,4 +105,25 @@ describe('DatasetPropertyNew', () => {
       connections.find('.caption-cell').text().should.equal('1 of 2 properties');
     });
   });
+
+  it('shows a custom message for a duplicate property name', () =>
+    mockHttp()
+      .mount(DatasetPropertyNew, mountOptions())
+      .request(async (modal) => {
+        await modal.get('input').setValue('my_new_property');
+        return modal.get('form').trigger('submit');
+      })
+      .respondWithProblem({
+        code: 409.3,
+        message: 'A resource already exists with name,datasetId value(s) of my_new_property,1.',
+        details: {
+          fields: ['name', 'datasetId'],
+          values: ['my_new_property', 1]
+        }
+      })
+      .afterResponse(modal => {
+        modal.should.alert('danger', (message) => {
+          message.should.startWith('A property already exists in this Entity List with the name of “my_new_property”.');
+        });
+      }));
 });

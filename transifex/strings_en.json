@@ -1481,6 +1481,11 @@
       },
       "newPropertyName": {
         "string": "New property name"
+      },
+      "problem": {
+        "409_3": {
+          "string": "A property already exists in this Entity List with the name of “{propertyName}”."
+        }
       }
     },
     "DatasetPendingSubmissions": {
