@@ -39,14 +39,16 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div id="dataset-new-success" class="modal-introduction">
-          <p>
+        <div class="modal-introduction">
+          <div id="dataset-new-success">
             <span class="icon-check-circle"></span>
-            <strong>{{ $t('common.success') }}</strong>
-            <sentence-separator/>
-            <span>{{ $t('success[0]', createdDataset) }}</span>
-          </p>
-          <p>{{ $t('success[1]') }}</p>
+            <p>
+              <strong>{{ $t('common.success') }}</strong>
+              <sentence-separator/>
+              <span>{{ $t('success[0]', createdDataset) }}</span>
+            </p>
+          </div>
+          <div>{{ $t('success[1]') }}</div>
         </div>
         <div class="modal-actions">
           <button id="dataset-new-done-button" type="button" class="btn btn-primary" @click="complete">
@@ -113,6 +115,7 @@ const submit = () => {
       alert.blank();
       // Reset the form
       name.value = '';
+      // Show the next panel of the modal
       step.value = 1;
       createdDataset.value = data;
     })
@@ -133,13 +136,22 @@ const hideOrComplete = () => {
 
 <style lang="scss">
 @import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #dataset-new-success {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+
+  > p {
+    width: 80%;
+    margin-bottom: 0px;
+  }
+
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;
-    margin-right: 6px;
-    vertical-align: middle;
+    margin-right: 10px;
   }
 }
 </style>

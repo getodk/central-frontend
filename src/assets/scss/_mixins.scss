@@ -16,6 +16,7 @@
 @mixin text-block {
   // 15-17 words per line in English
   max-width: 77ch;
+  overflow-wrap: break-word;
   // 35 characters per line in Hiragino Kaku Gothic ProN
   &:lang(ja) { max-width: 54ch; }
 }
