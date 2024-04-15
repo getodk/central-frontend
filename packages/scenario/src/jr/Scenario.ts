@@ -5,6 +5,7 @@ import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
 import type { ComparableAnswer } from '../answer/ComparableAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
+import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
 import { getClosestRepeatRange } from '../client/traversal.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
@@ -15,15 +16,35 @@ import {
 	type NonTerminalPositionalEvent,
 	type PositionalEvents,
 } from './event/getPositionalEvents.ts';
+import type { PathResource } from './resource/PathResource.ts';
 
 interface ScenarioConstructorOptions {
 	readonly formName: string;
 	readonly instanceRoot: RootNode;
 }
 
+// prettier-ignore
+type ScenarioStaticInit =
+	| ((formName: string, form: XFormsElement) => Promise<Scenario>)
+	| ((resource: PathResource) => Promise<Scenario>);
+
 export class Scenario {
-	static async init(formName: string, form: XFormsElement): Promise<Scenario> {
-		const { owner, instanceRoot } = await initializeTestForm(form);
+	static async init(...args: Parameters<ScenarioStaticInit>): Promise<Scenario> {
+		let resource: TestFormResource;
+		let formName: string;
+
+		if (args.length === 1) {
+			const [pathResource] = args;
+			resource = pathResource;
+			formName = pathResource.formName;
+		} else {
+			const [name, form] = args;
+
+			formName = name;
+			resource = form;
+		}
+
+		const { owner, instanceRoot } = await initializeTestForm(resource);
 
 		return runWithOwner(owner, () => {
 			return new this({

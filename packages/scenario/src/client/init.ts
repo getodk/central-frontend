@@ -7,6 +7,7 @@ import {
 } from '@getodk/xforms-engine';
 import type { Owner } from 'solid-js';
 import { createRoot, getOwner, runWithOwner } from 'solid-js';
+import { PathResource } from '../jr/resource/PathResource.ts';
 
 /**
  * @todo It's anticipated that this will be expanded to support the various ways
@@ -15,7 +16,15 @@ import { createRoot, getOwner, runWithOwner } from 'solid-js';
  * file name (and various ambiguities that come with that, which we may want to
  * disambiguate as we port).
  */
-export type TestFormResource = XFormsElement;
+export type TestFormResource = PathResource | XFormsElement;
+
+const isPathResource = (resource: TestFormResource): resource is PathResource => {
+	return resource instanceof PathResource;
+};
+
+const isXFormsElement = (resource: TestFormResource): resource is XFormsElement => {
+	return typeof (resource as XFormsElement).asXml === 'function';
+};
 
 export const getFormResource = async (
 	testFormResource: TestFormResource
@@ -23,8 +32,11 @@ export const getFormResource = async (
 	// the `TestFormResource` type.
 	// eslint-disable-next-line @typescript-eslint/require-await
 ): Promise<FormResource> => {
-	// In-source DSL `XFormsElement`
-	if (typeof testFormResource.asXml === 'function') {
+	if (isPathResource(testFormResource)) {
+		return testFormResource.formXML;
+	}
+
+	if (isXFormsElement(testFormResource)) {
 		return testFormResource.asXml();
 	}
 
