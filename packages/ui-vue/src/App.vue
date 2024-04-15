@@ -26,12 +26,12 @@ onErrorCaptured((error) => {
 	globalThis.playwrightCapturedErrors?.push(error);
 });
 
-const formFixtureGlobImports = import.meta.glob('../../ui-solid/fixtures/xforms/**/*.xml', {
+const formFixtureGlobImports = import.meta.glob<true, 'raw', string>('../../ui-solid/fixtures/xforms/**/*.xml', {
     query: '?raw',
     import: 'default',
     eager: true,
 });
-const demoForms = Object.entries(formFixtureGlobImports) as Array<[string, string]>;
+const demoForms = Object.entries(formFixtureGlobImports);
 
 demoForms.forEach(f => {
     f[0] = f[0].replace('../../ui-solid/fixtures/xforms/', '')
