@@ -23,7 +23,3 @@ const setValue = (e:Event) => {
 }
 
 </script>
-
-<style scoped>
-
-</style>

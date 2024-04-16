@@ -17,24 +17,24 @@ const emit = defineEmits(['remove']);
 
 const isGroup = (child: GeneralChildNode) => {
 	return (
-			child.definition.bodyElement?.type === 'logical-group' ||
-			 child.definition.bodyElement?.type === 'presentation-group'
-		);	
+		child.definition.bodyElement?.type === 'logical-group' ||
+		child.definition.bodyElement?.type === 'presentation-group'
+	);	
 }
 
 const label = computed(() => {
 	// It has just one child and that is a group with label
 	// then we use label of that group
-  if( props.instance.currentState.children.length === 1 && 
-			isGroup(props.instance.currentState.children[0]) && 
-			props.instance.currentState.children[0].currentState.label
+	if( props.instance.currentState.children.length === 1 && 
+		isGroup(props.instance.currentState.children[0]) && 
+		props.instance.currentState.children[0].currentState.label
 	) {
 		return props.instance.currentState.children[0].currentState.label?.asString
 	}
 
 	// Use RepeatRangeNode label if it's there
 	// TODO/sk: use state.label.asString
-  if(props.instance.parent.definition.bodyElement.label?.children[0]?.stringValue){
+	if(props.instance.parent.definition.bodyElement.label?.children[0]?.stringValue){
 		return `${props.instance.parent.definition.bodyElement.label?.children[0].stringValue} ${props.instanceIndex + 1}`;
 	}
 
@@ -44,7 +44,7 @@ const label = computed(() => {
 const children = computed(() => {
 	// It has just one child and that is a group
 	// then we use its children - essentially coalesce RepeatInstance and Group into one.
-  if(props.instance.currentState.children.length === 1 && isGroup(props.instance.currentState.children[0])){
+	if(props.instance.currentState.children.length === 1 && isGroup(props.instance.currentState.children[0])){
 		return (props.instance.currentState.children[0] as GroupNode).currentState.children;
 	}
 	else{
@@ -57,7 +57,3 @@ const menuItems: MenuItem[] = [
 ];
 
 </script>
-
-<style scoped>
-
-</style>

@@ -41,13 +41,13 @@ const odkForm = ref<RootNode>();
 const emit = defineEmits(['submit']);
 
 initializeForm(props.formXml, {
-    config: {
-      stateFactory: reactive
-    },
-  }).then((f) => {
-    odkForm.value = f;
-		// TODO/sk: remove once dust settles
-		// eslint-disable-next-line -- temporary code
+	config: {
+		stateFactory: reactive
+	},
+}).then((f) => {
+	odkForm.value = f;
+	// TODO/sk: remove once dust settles
+	// eslint-disable-next-line -- temporary code
 		console.log((f as any).childrenState.getChildren()); 
   }).catch(() => {}); // eslint-disable-line -- noop
 
@@ -57,7 +57,3 @@ const handleSubmit = () => {
 	emit('submit', (odkForm as any).value.contextNode.outerHTML); // eslint-disable-line
 }
 </script>
-
-<style>
-
-</style>

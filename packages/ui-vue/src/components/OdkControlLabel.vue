@@ -6,7 +6,3 @@
 import type { AnyLeafNode } from '@odk-web-forms/xforms-engine';
 const props = defineProps<{question: AnyLeafNode}>();
 </script>
-
-<style scoped>
-
-</style>

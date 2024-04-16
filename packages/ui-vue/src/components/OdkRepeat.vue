@@ -20,7 +20,3 @@ const props = defineProps<{ question: RepeatRangeNode}>();
 const label = computed(() => props.question.currentState.label?.asString);
 
 </script>
-
-<style scoped>
-
-</style>

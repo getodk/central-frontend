@@ -13,7 +13,3 @@ const isDev = () => {
 	return import.meta.env.DEV;
 }
 </script>
-
-<style scoped>
-
-</style>

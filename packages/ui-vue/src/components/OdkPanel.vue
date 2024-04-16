@@ -37,8 +37,8 @@ const props = withDefaults(defineProps<{title?: string, menuItems?: MenuItem[], 
 });
 
 const panelClass = computed(() => [
-  'with-title',
-  props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menu',
+	'with-title',
+	props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menu',
 	props.class
 ]);
 
@@ -51,7 +51,7 @@ const toggle = () => {
 const menu = ref<Menu & MenuState>();
 
 const toggleMenu = (event:  Event) => {
-    menu.value?.toggle(event);
+	menu.value?.toggle(event);
 };
 
 </script>

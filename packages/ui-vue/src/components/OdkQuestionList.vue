@@ -27,7 +27,3 @@ const isRepeatRangeNode = (n: GeneralChildNode) : n is RepeatRangeNode => n.defi
 
 
 </script>
-
-<style scoped>
-
-</style>

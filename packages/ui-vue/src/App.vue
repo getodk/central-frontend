@@ -27,26 +27,21 @@ onErrorCaptured((error) => {
 });
 
 const formFixtureGlobImports = import.meta.glob<true, 'raw', string>('../../ui-solid/fixtures/xforms/**/*.xml', {
-    query: '?raw',
-    import: 'default',
-    eager: true,
+	query: '?raw',
+	import: 'default',
+	eager: true,
 });
 const demoForms = Object.entries(formFixtureGlobImports);
 
 demoForms.forEach(f => {
-    f[0] = f[0].replace('../../ui-solid/fixtures/xforms/', '')
+	f[0] = f[0].replace('../../ui-solid/fixtures/xforms/', '')
 })
 
 
 const selectForm = ref<[string, string] | null>(null);
 
 const handleSubmit = (data: string) => {
-    alert(`Submit button was pressed. Data: ${data}`); // eslint-disable-line no-undef -- alert is defined globally
+	alert(`Submit button was pressed. Data: ${data}`); // eslint-disable-line no-undef -- alert is defined globally
 } 
 
 </script>
-
-
-<style>
-
-</style>

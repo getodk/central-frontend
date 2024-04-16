@@ -13,7 +13,3 @@ defineProps<{ question: GroupNode }>();
 
 
 </script>
-
-<style scoped>
-
-</style>
