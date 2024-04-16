@@ -75,12 +75,13 @@ const defaultConfig = {
 interface InitializedTestForm {
 	readonly instanceRoot: RootNode;
 	readonly owner: Owner;
+	readonly dispose: VoidFunction;
 }
 
 export const initializeTestForm = async (
 	testForm: TestFormResource
 ): Promise<InitializedTestForm> => {
-	return createRoot(async () => {
+	return createRoot(async (dispose) => {
 		const owner = getOwner();
 
 		if (owner == null) {
@@ -95,8 +96,9 @@ export const initializeTestForm = async (
 		})!;
 
 		return {
-			owner,
 			instanceRoot,
+			owner,
+			dispose,
 		};
 	});
 };

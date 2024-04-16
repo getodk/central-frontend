@@ -20,6 +20,7 @@ import type { PathResource } from './resource/PathResource.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 
 interface ScenarioConstructorOptions {
+	readonly dispose: VoidFunction;
 	readonly formName: string;
 	readonly instanceRoot: RootNode;
 }
@@ -45,10 +46,15 @@ export class Scenario {
 			resource = form;
 		}
 
-		const { owner, instanceRoot } = await initializeTestForm(resource);
+		const { dispose, owner, instanceRoot } = await initializeTestForm(resource);
+
+		await new Promise((resolve) => {
+			setTimeout(resolve, 1);
+		});
 
 		return runWithOwner(owner, () => {
 			return new this({
+				dispose,
 				formName,
 				instanceRoot,
 			});
@@ -63,7 +69,7 @@ export class Scenario {
 	private readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
 
 	private constructor(options: ScenarioConstructorOptions) {
-		const { formName, instanceRoot } = options;
+		const { dispose, formName, instanceRoot } = options;
 
 		this.formName = formName;
 		this.instanceRoot = instanceRoot;
@@ -87,6 +93,7 @@ export class Scenario {
 
 		afterEach(() => {
 			PositionalEvent.cleanup();
+			dispose();
 		});
 	}
 
