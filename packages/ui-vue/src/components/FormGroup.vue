@@ -3,14 +3,14 @@ import type { GroupNode } from '@odk-web-forms/xforms-engine';
 import FormPanel from './FormPanel.vue';
 import QuestionList from './QuestionList.vue';
 
-defineProps<{ question: GroupNode }>();
+defineProps<{ node: GroupNode }>();
 
 
 </script>
 
 <template>
-	<FormPanel :title="question.currentState.label?.asString" :no-ui="!question.currentState.label" class="group">
-		<QuestionList :questions="question.currentState.children" />
+	<FormPanel :title="node.currentState.label?.asString" :no-ui="!node.currentState.label" class="group">
+		<QuestionList :nodes="node.currentState.children" />
 	</FormPanel>
 </template>
 

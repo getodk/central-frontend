@@ -23,7 +23,7 @@ const mountComponent = async (formName: string) => {
 
 	return mount(RepeatRange, {
 		props: {
-			question: xform.currentState.children[0] as RepeatRangeNode,
+			node: xform.currentState.children[0] as RepeatRangeNode,
 		},
 		global: {
 			plugins: [[PrimeVue, { ripple: false }]],

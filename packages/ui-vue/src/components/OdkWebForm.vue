@@ -43,7 +43,7 @@ const handleSubmit = () => {
 				<template #content>
 					<div class="form-questions">
 						<div class="flex flex-column gap-5">
-							<QuestionList :questions="odkForm.currentState.children" />
+							<QuestionList :nodes="odkForm.currentState.children" />
 						</div>
 					</div>
 				</template>

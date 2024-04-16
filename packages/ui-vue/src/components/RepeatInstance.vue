@@ -53,7 +53,7 @@ const menuItems: MenuItem[] = [
 </script>
 <template>
 	<FormPanel :title="label" :menu-items="menuItems" class="repeat">
-		<QuestionList :questions="children" />
+		<QuestionList :nodes="children" />
 	</FormPanel>
 </template>
 
