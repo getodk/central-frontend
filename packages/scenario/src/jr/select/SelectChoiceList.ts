@@ -28,4 +28,8 @@ export class SelectChoiceList implements Iterable<SelectChoice> {
 
 		return new SelectChoice(selectItem);
 	}
+
+	size(): number {
+		return this.node.currentState.valueOptions.length;
+	}
 }

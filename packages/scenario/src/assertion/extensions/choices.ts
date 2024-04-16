@@ -20,57 +20,52 @@ type ChoiceExtensionImplementations = {
 	[K in keyof ChoiceExtensionSignatures]: ExtensionImplementation;
 };
 
-class UnknownError extends Error {
-	constructor(readonly caughtNonError: unknown) {
-		super('Caught unknown non-error value');
-	}
-}
+type AssertItem<T> = (value: unknown) => asserts value is T;
 
-const asError = (caught: unknown): Error => {
-	if (caught instanceof Error) {
-		return caught;
-	}
+type AssertItems = <T>(
+	assertItem: AssertItem<T>,
+	items: readonly unknown[]
+) => asserts items is readonly T[];
 
-	return new UnknownError(caught);
+const assertItems: AssertItems = <T>(
+	assertItem: AssertItem<T>,
+	items: readonly unknown[]
+): asserts items is readonly T[] => {
+	for (const item of items) {
+		assertItem(item);
+	}
 };
 
-type AssertComparableChoicesArray = (
-	value: unknown
-) => asserts value is readonly ComparableChoice[];
+const assertComparableChoice = (value: unknown): asserts value is ComparableChoice => {
+	assertInstanceType(ComparableChoice, value);
+};
 
-const assertComparableChoicesArray: AssertComparableChoicesArray = (value) => {
-	if (!Array.isArray(value)) {
-		throw new Error('Not an array of choices');
+const toComparableChoicesArray = (value: unknown): readonly ComparableChoice[] => {
+	const maybeIterable = value as Iterable<unknown> | null | undefined;
+
+	if (maybeIterable == null || typeof maybeIterable[Symbol.iterator] !== 'function') {
+		throw new Error('Not an Iterable<ComparableChoice>');
 	}
 
-	for (const item of value) {
-		assertInstanceType(ComparableChoice, item);
-	}
+	const array = Array.from(maybeIterable);
+
+	assertItems(assertComparableChoice, array);
+
+	return array;
 };
 
 const choiceExtensions = {
 	toContainChoices: (actual: unknown, ...expected: unknown[]): CustomAssertionResult => {
-		try {
-			assertComparableChoicesArray(actual);
-			assertComparableChoicesArray(expected);
-		} catch (caught) {
-			const error = asError(caught);
-
-			return {
-				pass: false,
-				message: () => error.message,
-			};
-		}
-
-		const actualChoices = Array.from(actual);
+		const actualChoices = toComparableChoicesArray(actual);
 		const actualValues = actualChoices.map((choice) => {
 			return choice.selectItemValue;
 		});
+		const expectedChoices = toComparableChoicesArray(expected);
 
 		let previousIndex = -1;
 		let pass = true;
 
-		for (const choice of expected) {
+		for (const choice of expectedChoices) {
 			const currentIndex = actualValues.indexOf(choice.selectItemValue);
 
 			if (currentIndex === -1 || currentIndex < previousIndex) {
@@ -82,34 +77,23 @@ const choiceExtensions = {
 			previousIndex = currentIndex;
 		}
 
-		return new ChoicesMembershipAssertionResult(expected, actualChoices, pass, {
+		return new ChoicesMembershipAssertionResult(expectedChoices, actualChoices, pass, {
 			comparisonVerb: 'contain',
 		});
 	},
 
 	toContainChoicesInAnyOrder: (actual: unknown, ...expected: unknown[]): CustomAssertionResult => {
-		try {
-			assertComparableChoicesArray(actual);
-			assertComparableChoicesArray(expected);
-		} catch (caught) {
-			const error = asError(caught);
-
-			return {
-				pass: false,
-				message: () => error.message,
-			};
-		}
-
-		const actualChoices = Array.from(actual);
+		const actualChoices = toComparableChoicesArray(actual);
 		const actualValues = actualChoices.map((choice) => {
 			return choice.selectItemValue;
 		});
+		const expectedChoices = toComparableChoicesArray(expected);
 
-		const pass = Array.from(expected).every((choice) => {
+		const pass = expectedChoices.every((choice) => {
 			return actualValues.includes(choice.selectItemValue);
 		});
 
-		return new ChoicesMembershipAssertionResult(expected, actualChoices, pass, {
+		return new ChoicesMembershipAssertionResult(expectedChoices, actualChoices, pass, {
 			comparisonVerb: 'contain',
 			comparisonVerbQualifier: 'in any order',
 		});

@@ -128,6 +128,23 @@ describe.each<GetSelectFromRepeatFormOptions>([
 						);
 					});
 				});
+
+				describe('when repeat changed', () => {
+					it.fails('updates choices', async () => {
+						const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
+
+						scenario.answer('/data/repeat[1]/value', 'a');
+						scenario.answer('/data/repeat[1]/label', 'A');
+
+						expect(scenario.choicesOf('/data/select')).toContainChoices(choice('a', 'A'));
+
+						scenario.answer('/data/repeat[1]/value', 'c');
+						scenario.answer('/data/repeat[1]/label', 'C');
+
+						expect(scenario.choicesOf('/data/select')).toContainChoices(choice('c', 'C'));
+						expect(scenario.choicesOf('/data/select').size()).toBe(1);
+					});
+				});
 			});
 		});
 
