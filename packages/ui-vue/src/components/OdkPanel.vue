@@ -1,27 +1,3 @@
-<template>
-	<Panel v-if="!noUi" :class="panelClass" :toggleable="true" :collapsed="panelState">
-		<template #header>
-			<div class="panel-title" role="button" @click="toggle">
-				<h2>					
-					<span :class="panelState ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'" /> {{ title }}
-				</h2>
-			</div>
-		</template>
-		<template v-if="menuItems && menuItems.length > 0" #icons>
-			<Button severity="secondary" rounded class="btn-context" :class="{ 'p-focus': menu?.overlayVisible }" icon="icon-more_vert" aria-label="More" @click="toggleMenu" />
-			<Menu ref="menu" :model="menuItems" :popup="true" />
-		</template>
-		<template #default>
-			<div class="flex flex-column gap-5">
-				<slot />
-			</div>
-		</template>
-	</Panel>
-	<template v-else>
-		<slot />
-	</template>
-</template>
-
 <script setup lang="ts">
 import Button from 'primevue/button';
 import Menu, { type MenuState } from 'primevue/menu';
@@ -55,3 +31,27 @@ const toggleMenu = (event:  Event) => {
 };
 
 </script>
+<template>
+	<Panel v-if="!noUi" :class="panelClass" :toggleable="true" :collapsed="panelState">
+		<template #header>
+			<div class="panel-title" role="button" @click="toggle">
+				<h2>					
+					<span :class="panelState ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'" /> {{ title }}
+				</h2>
+			</div>
+		</template>
+		<template v-if="menuItems && menuItems.length > 0" #icons>
+			<Button severity="secondary" rounded class="btn-context" :class="{ 'p-focus': menu?.overlayVisible }" icon="icon-more_vert" aria-label="More" @click="toggleMenu" />
+			<Menu ref="menu" :model="menuItems" :popup="true" />
+		</template>
+		<template #default>
+			<div class="flex flex-column gap-5">
+				<slot />
+			</div>
+		</template>
+	</Panel>
+	<template v-else>
+		<slot />
+	</template>
+</template>
+

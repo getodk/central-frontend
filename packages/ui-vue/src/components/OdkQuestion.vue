@@ -1,13 +1,3 @@
-<!-- this renders all the leaf nodes -->
-
-<template>
-	<div class="flex flex-column gap-2">
-		<InputText v-if="isStringNode(question)" :question="question" />
-
-		<UnsupportedControl v-if="isUnsupportedNode(question)" :question="question" />
-	</div>
-</template>
-
 <script setup lang="ts">
 import type { AnyLeafNode, StringNode } from '@odk-web-forms/xforms-engine';
 import InputText from './controls/InputText.vue';
@@ -23,6 +13,14 @@ const isUnsupportedNode = (n: AnyLeafNode): n is AnyLeafNode => !supportedNodeTy
 
 
 </script>
+
+<template>
+	<div class="flex flex-column gap-2">
+		<InputText v-if="isStringNode(question)" :question="question" />
+
+		<UnsupportedControl v-if="isUnsupportedNode(question)" :question="question" />
+	</div>
+</template>
 
 <style>
 input:read-only {

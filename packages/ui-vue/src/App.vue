@@ -1,20 +1,3 @@
-<template>
-	<ul v-if="!selectForm">
-		<li v-for="form in demoForms" :key="form[0]">
-			{{ form[0] }}
-			<button @click="selectForm = form">
-				Show
-			</button>
-		</li>
-	</ul>
-	<div v-else>
-		<button @click="selectForm = null">
-			Back
-		</button>
-		<OdkForm v-if="selectForm" :form-xml="selectForm[1]" @submit="handleSubmit" />  
-	</div>
-</template>
-
 <script setup lang="ts">
 import { onErrorCaptured, ref } from 'vue';
 import OdkForm from './components/OdkForm.vue';
@@ -45,3 +28,21 @@ const handleSubmit = (data: string) => {
 } 
 
 </script>
+
+<template>
+	<ul v-if="!selectForm">
+		<li v-for="form in demoForms" :key="form[0]">
+			{{ form[0] }}
+			<button @click="selectForm = form">
+				Show
+			</button>
+		</li>
+	</ul>
+	<div v-else>
+		<button @click="selectForm = null">
+			Back
+		</button>
+		<OdkForm v-if="selectForm" :form-xml="selectForm[1]" @submit="handleSubmit" />  
+	</div>
+</template>
+

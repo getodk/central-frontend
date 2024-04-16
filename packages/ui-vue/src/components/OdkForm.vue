@@ -1,30 +1,3 @@
-<template>
-	<div v-if="odkForm" class="odk-form">
-		<div class="form-wrapper">
-			<FormMenuBar />
-
-			<!-- TODO/q: should the title be on the definition or definition.form be accessible instead of definition.bind.form -->
-			<OdkFormHeader :title="odkForm.definition.bind.form.title" />
-
-			<Card class="questions-card">
-				<template #content>
-					<div class="form-questions">
-						<div class="flex flex-column gap-5">
-							<OdkQuestionList :questions="odkForm.currentState.children" />
-						</div>
-					</div>
-				</template>
-			</Card>
-
-			<div class="footer flex justify-content-end flex-wrap gap-3">
-				<Button label="Save as draft" severity="secondary" rounded raised />
-				<!-- maybe current state is in odkForm.state.something -->
-				<Button label="Send" rounded raised @click="handleSubmit()" /> 
-			</div>
-		</div>		
-	</div>	
-</template>
-
 <script setup lang="ts">
 import { initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
 import Button from 'primevue/button';
@@ -57,3 +30,31 @@ const handleSubmit = () => {
 	emit('submit', (odkForm as any).value.contextNode.outerHTML); // eslint-disable-line
 }
 </script>
+
+<template>
+	<div v-if="odkForm" class="odk-form">
+		<div class="form-wrapper">
+			<FormMenuBar />
+
+			<!-- TODO/q: should the title be on the definition or definition.form be accessible instead of definition.bind.form -->
+			<OdkFormHeader :title="odkForm.definition.bind.form.title" />
+
+			<Card class="questions-card">
+				<template #content>
+					<div class="form-questions">
+						<div class="flex flex-column gap-5">
+							<OdkQuestionList :questions="odkForm.currentState.children" />
+						</div>
+					</div>
+				</template>
+			</Card>
+
+			<div class="footer flex justify-content-end flex-wrap gap-3">
+				<Button label="Save as draft" severity="secondary" rounded raised />
+				<!-- maybe current state is in odkForm.state.something -->
+				<Button label="Send" rounded raised @click="handleSubmit()" /> 
+			</div>
+		</div>		
+	</div>	
+</template>
+

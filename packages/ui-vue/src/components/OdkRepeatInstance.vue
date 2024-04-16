@@ -1,9 +1,3 @@
-<template>
-	<OdkPanel :title="label" :menu-items="menuItems" class="repeat">
-		<OdkQuestionList :questions="children" />
-	</OdkPanel>
-</template>
-
 <script setup lang="ts">
 import type { GeneralChildNode, GroupNode, RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
 import { type MenuItem } from 'primevue/menuitem';
@@ -57,3 +51,9 @@ const menuItems: MenuItem[] = [
 ];
 
 </script>
+<template>
+	<OdkPanel :title="label" :menu-items="menuItems" class="repeat">
+		<OdkQuestionList :questions="children" />
+	</OdkPanel>
+</template>
+

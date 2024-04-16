@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import Button from 'primevue/button';
+import Dropdown from 'primevue/dropdown';
+import { ref } from 'vue';
+
+const languages = [
+	{ name: 'English', code: 'en' },
+	{ name: 'French', code: 'fr' },
+]
+const selectedLanguage = ref(languages[0]);
+
+</script>
 <template>
 	<div class="odk-menu-bar flex justify-content-end flex-wrap gap-3">
 		<Button severity="secondary" rounded icon="icon-local_printshop" />
@@ -15,15 +27,3 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-import Button from 'primevue/button';
-import Dropdown from 'primevue/dropdown';
-import { ref } from 'vue';
-
-const languages = [
-	{ name: 'English', code: 'en' },
-	{ name: 'French', code: 'fr' },
-]
-const selectedLanguage = ref(languages[0]);
-
-</script>

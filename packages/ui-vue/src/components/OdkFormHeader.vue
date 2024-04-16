@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import Card from 'primevue/card';
+defineProps<{title: string}>();
+</script>
 <template>
 	<Card class="form-title">
 		<template #content>
@@ -7,7 +11,3 @@
 	</Card>
 </template>
 
-<script setup lang="ts">
-import Card from 'primevue/card';
-defineProps<{title: string}>();
-</script>
