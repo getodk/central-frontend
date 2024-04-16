@@ -145,6 +145,21 @@ describe.each<GetSelectFromRepeatFormOptions>([
 						expect(scenario.choicesOf('/data/select').size()).toBe(1);
 					});
 				});
+
+				describe('when repeat removed', () => {
+					it.fails('updates choices', async () => {
+						const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
+
+						scenario.answer('/data/repeat[1]/value', 'a');
+						scenario.answer('/data/repeat[1]/label', 'A');
+
+						expect(scenario.choicesOf('/data/select')).toContainChoices(choice('a', 'A'));
+
+						scenario.removeRepeat('/data/repeat[1]');
+
+						expect(scenario.choicesOf('/data/select').size()).toBe(0);
+					});
+				});
 			});
 		});
 

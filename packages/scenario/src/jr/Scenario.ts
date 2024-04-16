@@ -236,6 +236,48 @@ export class Scenario {
 		return;
 	}
 
+	/**
+	 * Per JavaRosa:
+	 *
+	 * Removes the repeat instance corresponding to the provided reference
+	 */
+	removeRepeat(repeatNodeset: string): Scenario {
+		const events = this.getPositionalEvents();
+		const index = events.findIndex(({ node }) => {
+			return node?.currentState.reference === repeatNodeset;
+		});
+
+		// TODO: should we inherit JavaRosa's messaging ("Please add some field
+		// and a form control")?
+		if (index === -1) {
+			throw new Error(
+				`Removing repeat instance with nodeset ${repeatNodeset} failed: could not locate repeat instance with that reference.`
+			);
+		}
+
+		const event = this.setNonTerminalEventPosition(() => index, repeatNodeset);
+
+		if (event.node.nodeType !== 'repeat-instance') {
+			throw new Error('Not a repeat instance');
+		}
+
+		const repeatRange = getClosestRepeatRange(repeatNodeset, event.node);
+
+		if (repeatRange == null) {
+			throw new Error('Cannot remove repeat instance, failed to find its parent repeat range');
+		}
+
+		const repeatIndex = repeatRange.currentState.children.indexOf(event.node);
+
+		if (repeatIndex === -1) {
+			throw new Error('Cannot remove repeat, not in range');
+		}
+
+		repeatRange.removeInstances(repeatIndex);
+
+		return this;
+	}
+
 	setLanguage(languageName: string): void {
 		const { instanceRoot } = this;
 
