@@ -160,6 +160,27 @@ describe.each<GetSelectFromRepeatFormOptions>([
 						expect(scenario.choicesOf('/data/select').size()).toBe(0);
 					});
 				});
+
+				describe('with predicate', () => {
+					describe('when predicate trigger changes', () => {
+						it.fails('updates choices', async () => {
+							const scenario = await Scenario.init(
+								'Select from repeat',
+								getSelectFromRepeatForm('starts-with(value,current()/../filter)')
+							);
+
+							scenario.answer('/data/repeat[1]/value', 'a');
+							scenario.answer('/data/repeat[1]/label', 'A');
+							scenario.answer('/data/filter', 'a');
+
+							expect(scenario.choicesOf('/data/select')).toContainChoices(choice('a', 'A'));
+
+							scenario.answer('/data/filter', 'b');
+
+							expect(scenario.choicesOf('/data/select').size()).toBe(0);
+						});
+					});
+				});
 			});
 		});
 
