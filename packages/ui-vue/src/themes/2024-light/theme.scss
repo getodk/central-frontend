@@ -53,15 +53,14 @@ $primary50: #d8ecf5;
 		}
 
 		.p-button.p-button-outlined {
-			box-shadow: inset 0 0 0 1px #CBCACC;
+			box-shadow: inset 0 0 0 1px #cbcacc;
 			// border: 2px solid #CBCACC;
 
 			&:hover {
 				background: var(--primary-100);
 			}
-
 		}
-		
+
 		.p-card {
 			border-radius: 10px;
 			border-top: 15px solid $primary50;
@@ -70,7 +69,6 @@ $primary50: #d8ecf5;
 
 		// first level
 		.form-questions > div > .p-panel {
-			
 			box-shadow: none;
 
 			&.repeat {

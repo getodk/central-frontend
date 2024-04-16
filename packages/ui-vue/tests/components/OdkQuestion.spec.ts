@@ -30,7 +30,7 @@ describe('OdkQuestion', () => {
 
 		expect(component.text()).to.be.eql('* First Name');
 	});
-	
+
 	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
 		const component = mount(OdkQuestion, {
 			props: {
@@ -44,6 +44,4 @@ describe('OdkQuestion', () => {
 
 		expect(component.text()).to.be.eql('Unsupported field {select} in the form definition.');
 	});
-
-
 });
