@@ -46,6 +46,11 @@
                     <repeat_without_parent_group>
                         <c_name />
                     </repeat_without_parent_group>
+                    <nested_group_1>
+                        <child_group_1_1>
+                            <d_name />
+                        </child_group_1_1>
+                    </nested_group_1>
                     <meta>
                         <instanceID />
                     </meta>
@@ -62,6 +67,7 @@
             <bind nodeset="/data/repeat_with_child_group_1/repeat_with_child_group_1_1/b_name"
                 type="string" />
             <bind nodeset="/data/repeat_without_parent_group/c_name" type="string" />
+            <bind nodeset="/data/nested_group_1/child_group_1_1/d_name" type="string" />
             <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
         </model>
     </h:head>
@@ -118,5 +124,15 @@
                 <label>C Name</label>
             </input>
         </repeat>
+
+        <group ref="/data/nested_group_1">
+            <label>Top group label</label>
+            <group ref="/data/nested_group_1/child_group_1_1">
+                <label>child group label</label>
+                <input ref="/data/nested_group_1/child_group_1_1/d_name">
+                    <label>D Name</label>
+                </input>
+            </group>
+        </group>
     </h:body>
 </h:html>

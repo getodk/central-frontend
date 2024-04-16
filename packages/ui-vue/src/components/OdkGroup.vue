@@ -1,5 +1,5 @@
 <template>
-	<OdkPanel :title="question.currentState.label?.asString" :no-ui="!question.currentState.label">
+	<OdkPanel :title="question.currentState.label?.asString" :no-ui="!question.currentState.label" class="group">
 		<OdkQuestionList :questions="question.currentState.children" />
 	</OdkPanel>
 </template>

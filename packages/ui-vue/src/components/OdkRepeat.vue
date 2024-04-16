@@ -1,9 +1,8 @@
 <template>
-	<!-- TODO/sk: pass !state.label -->
-	<OdkPanel :title="label" :no-ui="!label">
+	<OdkPanel :title="label" :no-ui="!label" class="repeat">
 		<OdkRepeatInstance v-for="(instance, index) in question.currentState.children" :key="index" :instance="instance" :instance-index="index" @remove="question.removeInstances(index)" />
     
-		<div class="flex justify-content-end flex-wrap">
+		<div class="flex justify-content-start flex-wrap">
 			<Button label="Add" rounded outlined class="w-2" @click="question.addInstances()" />
 		</div>
 	</OdkPanel>

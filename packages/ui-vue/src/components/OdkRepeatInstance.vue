@@ -1,5 +1,5 @@
 <template>
-	<OdkPanel :title="label" :more="true" :menu-items="menuItems">
+	<OdkPanel :title="label" :menu-items="menuItems" class="repeat">
 		<OdkQuestionList :questions="children" />
 	</OdkPanel>
 </template>
