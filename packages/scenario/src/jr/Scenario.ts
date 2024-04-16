@@ -161,6 +161,12 @@ export class Scenario {
 				return node?.currentState.reference === reference;
 			});
 
+			if (index === -1) {
+				throw new Error(
+					`Setting answer to ${reference} failed: could not locate question with that reference.`
+				);
+			}
+
 			event = this.setNonTerminalEventPosition(() => index, reference);
 
 			value = arg1;
