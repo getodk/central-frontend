@@ -4,7 +4,7 @@ import type { StringNode } from '@odk-web-forms/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assocPath } from 'ramda';
 import { describe, expect, it } from 'vitest';
-import OdkQuestion from '../../src/components/OdkQuestion.vue';
+import FormQuestion from '../../src/components/FormQuestion.vue';
 
 const baseQuestion = {
 	nodeType: 'string',
@@ -16,9 +16,9 @@ const baseQuestion = {
 	},
 } as StringNode;
 
-describe('OdkQuestion', () => {
+describe('FormQuestion', () => {
 	it('shows InputText control for string nodes', () => {
-		const component = mount(OdkQuestion, {
+		const component = mount(FormQuestion, {
 			props: {
 				question: baseQuestion,
 			},
@@ -32,7 +32,7 @@ describe('OdkQuestion', () => {
 	});
 
 	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
-		const component = mount(OdkQuestion, {
+		const component = mount(FormQuestion, {
 			props: {
 				question: assocPath(['nodeType'], 'select', baseQuestion),
 			},

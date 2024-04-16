@@ -1,11 +1,11 @@
-import OdkPanel from '@/components/OdkPanel.vue';
+import FormPanel from '@/components/FormPanel.vue';
 import { mount } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import { describe, expect, it } from 'vitest';
 
-describe('OdkPanel', () => {
+describe('FormPanel', () => {
 	it('does not render PrimeVue Panel if noUI is true', () => {
-		const component = mount(OdkPanel, {
+		const component = mount(FormPanel, {
 			props: {
 				noUi: true,
 			},
@@ -15,7 +15,7 @@ describe('OdkPanel', () => {
 	});
 
 	it('does not render context button if there is no menu items', () => {
-		const component = mount(OdkPanel, {
+		const component = mount(FormPanel, {
 			props: {
 				title: 'Test Panel',
 			},
@@ -25,7 +25,7 @@ describe('OdkPanel', () => {
 	});
 
 	it('shows title', () => {
-		const component = mount(OdkPanel, {
+		const component = mount(FormPanel, {
 			props: {
 				title: 'Test Panel',
 			},
@@ -35,7 +35,7 @@ describe('OdkPanel', () => {
 	});
 
 	it('shows provided menu items in context menu', async () => {
-		const component = mount(OdkPanel, {
+		const component = mount(FormPanel, {
 			props: {
 				title: 'Test Panel',
 				menuItems: [{ label: 'Remove', icon: 'icon-delete' }],

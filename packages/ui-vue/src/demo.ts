@@ -2,7 +2,7 @@ import type { Component } from 'vue';
 import { createApp } from 'vue';
 
 import PrimeVue from 'primevue/config';
-import App from './App.vue';
+import OdkWebFormDemo from './OdkWebFormDemo.vue';
 
 import './assets/css/icomoon.css';
 import './themes/2024-light/theme.scss';
@@ -11,6 +11,6 @@ import 'primeflex/primeflex.css';
 
 import './assets/css/style.scss';
 
-const app = createApp(App as Component);
+const app = createApp(OdkWebFormDemo as Component);
 app.use(PrimeVue, { ripple: false }); // Collect has no ripple
 app.mount('#app');

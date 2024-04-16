@@ -1,10 +1,10 @@
-import OdkFormHeader from '@/components/OdkFormHeader.vue';
+import FormHeader from '@/components/FormHeader.vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 
-describe('OdkFormHeader', () => {
+describe('FormHeader', () => {
 	it('shows form title', () => {
-		const component = mount(OdkFormHeader, {
+		const component = mount(FormHeader, {
 			props: {
 				title: 'Test Form',
 			},

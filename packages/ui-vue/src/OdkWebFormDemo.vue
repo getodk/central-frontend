@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onErrorCaptured, ref } from 'vue';
-import OdkForm from './components/OdkForm.vue';
+import OdkWebForm from './components/OdkWebForm.vue';
 
 declare global {
 	var playwrightCapturedErrors: Error[] | undefined;
@@ -42,7 +42,7 @@ const handleSubmit = (data: string) => {
 		<button @click="selectForm = null">
 			Back
 		</button>
-		<OdkForm v-if="selectForm" :form-xml="selectForm[1]" @submit="handleSubmit" />  
+		<OdkWebForm v-if="selectForm" :form-xml="selectForm[1]" @submit="handleSubmit" />  
 	</div>
 </template>
 

@@ -2,7 +2,7 @@ import type { StringNode } from '@odk-web-forms/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assocPath } from 'ramda';
 import { describe, expect, it } from 'vitest';
-import OdkControlLabel from '../../src/components/OdkControlLabel.vue';
+import ControlLabel from '../../src/components/ControlLabel.vue';
 
 const baseQuestion = {
 	nodeType: 'string',
@@ -14,9 +14,9 @@ const baseQuestion = {
 	},
 } as StringNode;
 
-describe('OdkControlLabel', () => {
+describe('ControlLabel', () => {
 	it('shows asterisk with field is required', () => {
-		const component = mount(OdkControlLabel, {
+		const component = mount(ControlLabel, {
 			props: {
 				question: baseQuestion,
 			},
@@ -31,7 +31,7 @@ describe('OdkControlLabel', () => {
 	});
 
 	it('does not show asterisk when field is not required', () => {
-		const component = mount(OdkControlLabel, {
+		const component = mount(ControlLabel, {
 			props: {
 				question: assocPath(['currentState', 'required'], false, baseQuestion),
 			},

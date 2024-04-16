@@ -1,10 +1,10 @@
 import PrimeVue from 'primevue/config';
 import { type App } from 'vue';
 
-const myPlugin = {
+const themePlugin = {
 	install(app: App) {
 		app.use(PrimeVue, { ripple: false });
 	},
 };
 
-export default myPlugin;
+export default themePlugin;

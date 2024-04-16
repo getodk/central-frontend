@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { StringNode } from '@odk-web-forms/xforms-engine';
 import InputText from 'primevue/inputtext';
-import OdkControlLabel from '../OdkControlLabel.vue';
+import ControlLabel from '../ControlLabel.vue';
 
 const props = defineProps<{question: StringNode}>();
 
@@ -12,7 +12,7 @@ const setValue = (e:Event) => {
 </script>
 
 <template>
-	<OdkControlLabel :question="question" />
+	<ControlLabel :question="question" />
 
 	<InputText 
 		:id="question.nodeId" 

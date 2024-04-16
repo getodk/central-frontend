@@ -3,9 +3,9 @@ import { initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import { reactive, ref } from 'vue';
-import OdkFormHeader from './OdkFormHeader.vue';
-import FormMenuBar from './OdkMenuBar.vue';
-import OdkQuestionList from './OdkQuestionList.vue';
+import FormHeader from './FormHeader.vue';
+import FormMenuBar from './MenuBar.vue';
+import QuestionList from './QuestionList.vue';
 
 const props = defineProps<{ formXml: string }>();
 
@@ -37,13 +37,13 @@ const handleSubmit = () => {
 			<FormMenuBar />
 
 			<!-- TODO/q: should the title be on the definition or definition.form be accessible instead of definition.bind.form -->
-			<OdkFormHeader :title="odkForm.definition.bind.form.title" />
+			<FormHeader :title="odkForm.definition.bind.form.title" />
 
 			<Card class="questions-card">
 				<template #content>
 					<div class="form-questions">
 						<div class="flex flex-column gap-5">
-							<OdkQuestionList :questions="odkForm.currentState.children" />
+							<QuestionList :questions="odkForm.currentState.children" />
 						</div>
 					</div>
 				</template>

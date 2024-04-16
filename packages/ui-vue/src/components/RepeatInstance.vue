@@ -2,8 +2,8 @@
 import type { GeneralChildNode, GroupNode, RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
 import { type MenuItem } from 'primevue/menuitem';
 import { computed } from 'vue';
-import OdkPanel from './OdkPanel.vue';
-import OdkQuestionList from './OdkQuestionList.vue';
+import FormPanel from './FormPanel.vue';
+import QuestionList from './QuestionList.vue';
 
 const props = defineProps<{ instance: RepeatInstanceNode, instanceIndex: number }>();
 
@@ -52,8 +52,8 @@ const menuItems: MenuItem[] = [
 
 </script>
 <template>
-	<OdkPanel :title="label" :menu-items="menuItems" class="repeat">
-		<OdkQuestionList :questions="children" />
-	</OdkPanel>
+	<FormPanel :title="label" :menu-items="menuItems" class="repeat">
+		<QuestionList :questions="children" />
+	</FormPanel>
 </template>
 
