@@ -121,8 +121,8 @@ const raggedRowsWarning = (columns) => {
   };
 };
 const largeCellWarning = (delimiter) => {
-  // The size and 0-indexed row number of the largest cell containing a comma or
-  // newline
+  // The size and 0-indexed row number of the largest cell containing a
+  // delimiter or newline
   const largestCell = { size: 0, row: -1 };
   // The sizes of the two largest rows (descending order)
   const maxRowSizes = [0, 0];

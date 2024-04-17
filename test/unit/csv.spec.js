@@ -284,6 +284,17 @@ describe('util/csv', () => {
           });
         });
       });
+
+      it('returns multiple warnings', async () => {
+        const csv = createCSV('a;b\n1\n"12345;6789ab";""');
+        const { warnings } = await parseCSV(i18n, csv, ['a', 'b'], {
+          delimiter: ';'
+        });
+        warnings.should.eql({
+          count: 3,
+          details: { delimiter: ';', raggedRows: [1], largeCell: 2 }
+        });
+      });
     });
   });
 

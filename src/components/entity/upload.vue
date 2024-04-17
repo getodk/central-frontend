@@ -299,7 +299,7 @@ onBeforeUnmount(() => { abortParse(); });
 
 const csvPage = reactive({ page: 0, size: defaultPageSize });
 const csvRow = computed(() =>
-  (csvEntities.value != null ? csvPage.page * csvPage.size : null));
+  (csvEntities.value != null ? csvPage.page * csvPage.size : -1));
 const csvSlice = computed(() => (csvEntities.value != null
   ? csvEntities.value.slice(csvRow.value, csvRow.value + csvPage.size)
   : null));
