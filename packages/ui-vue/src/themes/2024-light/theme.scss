@@ -24,9 +24,13 @@ $primary50: #d8ecf5;
 		padding-top: 10px;
 		padding-bottom: 20px;
 
-		label span {
+		label {
+			font-weight: 400;
+			
+			span {
 			// it is required asterisk - be more specific
 			color: var(--red-500); // TODO maybe theme should export color of danger / error
+			}
 		}
 
 		.footer {
