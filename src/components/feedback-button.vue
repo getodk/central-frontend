@@ -16,14 +16,25 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { queryString } from '../util/request';
+
 defineOptions({
   name: 'FeedbackButton'
 });
 
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+const route = useRoute();
 
-const surveyLink = computed(() => `https://data.getodk.cloud/-/single/JLdODTs84WWsgibw4JOh0krbDenObgi?st=9hflqGrodnpWyS8g69dbORJ3RD8jSQChTBMaf7zpE5gaPElyDtKgAjI79y$zqctG&d[/data/host]=${window.location.host}&d[/data/page]=${useRoute().name}`);
+const surveyLink = computed(() => {
+  const query = queryString({
+    'st': '9hflqGrodnpWyS8g69dbORJ3RD8jSQChTBMaf7zpE5gaPElyDtKgAjI79y$zqctG',
+    'd[/data/host]': window.location.host,
+    'd[/data/page]': route.name
+  });
+
+ return `https://data.getodk.cloud/-/single/JLdODTs84WWsgibw4JOh0krbDenObgi${query}`;
+});
 </script>
 
 <style lang="scss">

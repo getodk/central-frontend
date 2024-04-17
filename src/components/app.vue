@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     will affect how the navbar is rendered. -->
     <navbar v-show="routerReady"/>
     <alert id="app-alert"/>
-    <feedback-button v-if="loggedIn"/>
+    <feedback-button v-if="showsFeedbackButton"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
@@ -27,6 +27,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+
 import { START_LOCATION } from 'vue-router';
 
 import Alert from './alert.vue';
@@ -37,27 +39,28 @@ import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
+import { loadAsync } from '../util/load-async';
 
 export default {
   name: 'App',
-  components: { Alert, Navbar, FeedbackButton },
-  inject: ['alert'],
+  components: { Alert, Navbar, FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')) },
+  inject: ['alert', 'config'],
   setup() {
     useSessions();
     useDisabled();
 
-    const { centralVersion } = useRequestData();
+    const { centralVersion, currentUser } = useRequestData();
     const { callWait } = useCallWait();
-    return { centralVersion, callWait };
+    return { centralVersion, currentUser, callWait };
   },
   computed: {
     routerReady() {
       return this.$route !== START_LOCATION;
     },
 
-    loggedIn() {
-      return useRequestData().currentUser.dataExists && this.$route.path !== '/login';
-    }
+    showsFeedbackButton() {
+      return this.config.showsFeedbackButton && this.currentUser.dataExists && this.$route.path !== '/login'
+    },
   },
   created() {
     this.callWait('checkVersion', this.checkVersion, (tries) =>
