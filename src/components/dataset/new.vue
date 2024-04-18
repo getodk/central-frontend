@@ -173,7 +173,7 @@ const hideOrComplete = () => {
       // @transifexKey component.DatasetList.heading.0
       "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps."
     ],
-    // This is shown in the introduction as a usage note/warning when the proejct is encrypted.
+    // This is shown in the introduction as a usage note/warning when the project is encrypted.
     "encrypted": "This Project is encrypted. Forms and Submissions will not be able to modify any Entities in this List. Entities must be managed through Central or the API.",
     // This appears above a text input field for the name of an Entity List
     "entityListName": "Entity List name",

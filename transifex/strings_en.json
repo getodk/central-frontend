@@ -1415,7 +1415,7 @@
       },
       "encrypted": {
         "string": "This Project is encrypted. Forms and Submissions will not be able to modify any Entities in this List. Entities must be managed through Central or the API.",
-        "developer_comment": "This is shown in the introduction as a usage note/warning when the proejct is encrypted."
+        "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
       },
       "entityListName": {
         "string": "Entity List name",
