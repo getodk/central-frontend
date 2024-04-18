@@ -1,7 +1,7 @@
 import FormPanel from '@/components/FormPanel.vue';
 import { mount } from '@vue/test-utils';
-import PrimeVue from 'primevue/config';
 import { describe, expect, it } from 'vitest';
+import { globalMountOptions } from '../helpers';
 
 describe('FormPanel', () => {
 	it('does not render PrimeVue Panel if noUI is true', () => {
@@ -40,12 +40,7 @@ describe('FormPanel', () => {
 				title: 'Test Panel',
 				menuItems: [{ label: 'Remove', icon: 'icon-delete' }],
 			},
-			global: {
-				plugins: [[PrimeVue, { ripple: false }]],
-				stubs: {
-					teleport: true,
-				},
-			},
+			global: globalMountOptions,
 		});
 
 		await component.find('.btn-context').trigger('click');

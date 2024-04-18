@@ -38,17 +38,26 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 
 			await page.keyboard.press(browserName == 'webkit' ? 'Alt+Tab' : 'Tab');
 
-			const isEditableTextbox = await page.evaluate(() => {
-				const activeElement = document.activeElement;
-				return (
-					activeElement?.tagName === 'INPUT' &&
-					(activeElement as HTMLInputElement).type === 'text' &&
-					!activeElement.hasAttribute('readonly')
-				);
+			const inputType = await page.evaluate(() => {
+				const activeElement = document.activeElement as HTMLInputElement;
+
+				if (
+					activeElement?.tagName !== 'INPUT' ||
+					activeElement.hasAttribute('readonly') ||
+					activeElement.hasAttribute('disabled')
+				) {
+					return false;
+				}
+
+				return activeElement.type;
 			});
 
-			if (isEditableTextbox) {
+			if (inputType === 'text') {
 				await page.keyboard.type(faker.internet.displayName());
+			} else if (inputType === 'radio') {
+				await page.keyboard.press('ArrowDown');
+			} else if (inputType === 'checkbox') {
+				await page.keyboard.press('Space');
 			}
 		}
 
