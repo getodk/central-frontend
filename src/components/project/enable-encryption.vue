@@ -283,8 +283,8 @@ export default {
               // which is code and will not be translated.
               "To use the automatic Central encryption process on these Forms, remove the {base64RsaPublicKey} configuration."
             ],
-            "You will no longer be able to preview Submission data online.",
-            "You will no longer be able to connect to data over OData.",
+            "You will no longer be able to edit or view Submission data online.",
+            "You will no longer be able to analyze data via OData.",
             "You will no longer be able to edit Submissions in your web browser.",
             "New Submissions will no longer be processed into Entities."
           ],
