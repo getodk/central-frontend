@@ -3463,10 +3463,10 @@
                 }
               },
               "4": {
-                "string": "You will no longer be able to preview Submission data online."
+                "string": "You will no longer be able to edit or view Submission data online."
               },
               "5": {
-                "string": "You will no longer be able to connect to data over OData."
+                "string": "You will no longer be able to analyze data via OData."
               },
               "6": {
                 "string": "You will no longer be able to edit Submissions in your web browser."
