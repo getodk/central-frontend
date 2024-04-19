@@ -22,6 +22,9 @@ except according to the terms contained in the LICENSE file.
               <doc-link to="central-entities/">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
             </template>
           </i18n-t>
+          <p v-if="project.keyId">
+            <span class="icon-exclamation-triangle"></span>{{ $t('encrypted') }}
+          </p>
         </div>
         <form @submit.prevent="submit">
           <form-group ref="nameGroup" v-model.trim="name"
@@ -138,6 +141,11 @@ const hideOrComplete = () => {
 @import '../../assets/scss/variables';
 @import '../../assets/scss/mixins';
 
+.icon-exclamation-triangle {
+  color: $color-warning;
+  margin-right: $margin-right-icon;
+}
+
 #dataset-new-success {
   display: flex;
   align-items: center;
@@ -165,6 +173,8 @@ const hideOrComplete = () => {
       // @transifexKey component.DatasetList.heading.0
       "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps."
     ],
+    // This is shown in the introduction as a usage note/warning when the project is encrypted.
+    "encrypted": "This Project is encrypted. Forms and Submissions will not be able to modify any Entities in this List. Entities must be managed through Central or the API.",
     // This appears above a text input field for the name of an Entity List
     "entityListName": "Entity List name",
     "success": [
