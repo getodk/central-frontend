@@ -40,11 +40,9 @@ h1, .h1 {
 
 p { @include text-block; }
 
-dl div {
-  display: flex;
-  flex-direction: column-reverse;
-
+dl > div {
   border-bottom: 1px solid #ddd;
+  display: flex;
   padding-bottom: 10px;
   padding-top: 10px;
 
@@ -55,22 +53,45 @@ dl div {
     padding-bottom: 0;
   }
 }
+dl:not(.dl-horizontal) {
+  > div { flex-direction: column-reverse; }
 
-dt {
-  color: #666;
-  font-weight: normal;
+  dt {
+    color: #666;
+    font-weight: normal;
+  }
+
+  dd { font-size: 16px; }
 }
+.dl-horizontal {
+  dt {
+    @include text-overflow-ellipsis;
+    flex-shrink: 0;
+    width: 160px;
+  }
 
-dd { font-size: 16px; }
+  dd { margin-left: 20px; }
+}
 
 .dfn { border-bottom: 2px dotted #999; }
 
 pre {
   background-color: $color-subpanel-background;
   border-color: $color-subpanel-border;
-
-  code { white-space: pre; }
 }
+
+code {
+  padding: 2px 4px;
+  font-size: 90%;
+
+  pre & {
+    padding: 0;
+    font-size: inherit;
+    white-space: pre;
+  }
+}
+
+.text-monospace { font-family: $font-family-monospace; }
 
 em:lang(ja) {
   font-style: normal;
@@ -353,7 +374,7 @@ $form-group-padding-bottom: 15px;
 
   $form-control-z-index: 1;
   .form-control {
-    background: $color-input-background;
+    @include form-control-background;
     border: none;
     border-bottom: 1px solid $color-input-inactive;
     border-radius: 0;
@@ -576,6 +597,11 @@ tr.uncommitted-change { background-color: #ffef67; }
   }
 }
 
+.data-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .row-number {
   color: #999;
   font-size: 11px;
@@ -662,12 +688,6 @@ becomes more complicated.
       letter-spacing: -0.02em;
     }
   }
-
-  .panel-body {
-    .form-group .form-control {
-      background-color: $color-panel-input-background;
-    }
-  }
 }
 
 .panel-main {
@@ -729,16 +749,23 @@ becomes more complicated.
   }
 }
 
-.panel-hazard {
-  border-color: $color-danger;
+.panel-danger {
+  // This is needed in case a component adds a border radius to the bottom of
+  // .panel-body.
+  background-color: transparent;
 
   &> .panel-heading {
     color: white;
     background-color: $color-danger;
-    border-color: $color-danger;
+    border-bottom-color: $color-danger;
+
+    .btn-danger { border: 1px solid #fff; }
   }
+
   &> .panel-body {
+    background-color: #fff;
     border: 1px solid $color-danger;
+    border-top: none;
 
     &> .panel-footer {
       margin: 0 -15px -15px -15px;
@@ -746,7 +773,6 @@ becomes more complicated.
       color: white;
     }
   }
-  
 }
 
 .panel-dialog {

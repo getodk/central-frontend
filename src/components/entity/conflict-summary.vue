@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="entity-conflict-summary" class="panel panel-hazard">
+  <div id="entity-conflict-summary" class="panel panel-danger">
     <div class="panel-heading">
       <span class="icon-exclamation-circle"></span>
       <div>

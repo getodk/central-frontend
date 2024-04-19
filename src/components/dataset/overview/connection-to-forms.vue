@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
           <template #details>
             <span v-for="(property, index) in form.properties" :key="property" class="property-list">
               {{ property }}<template v-if="index < form.properties.length - 1">{{
-                $t('common.punctuations.comma')
+                $t('punctuation.comma')
               }}<sentence-separator/></template>
             </span>
             <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>

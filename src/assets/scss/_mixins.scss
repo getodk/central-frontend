@@ -28,6 +28,11 @@
   li { margin-bottom: 5px; }
 }
 
+@mixin form-control-background {
+  background-color: #eee;
+  .panel-body &, .modal-body & { background-color: #f7f7f7; }
+}
+
 @mixin clearfix {
   &::before, &::after {
     content: " ";

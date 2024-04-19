@@ -10,18 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <file-drop-zone id="entity-upload-file-select"
+  <file-drop-zone id="entity-upload-file-select" :disabled="parsing"
     @drop="$emit('change', $event.dataTransfer.files[0])">
-    <i18n-t tag="div" keypath="text.full">
-      <template #chooseOne>
-        <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-        <input v-show="false" ref="input" type="file" accept=".csv"
-          @change="changeInput">
-        <button type="button" class="btn btn-primary" @click="input.click()">
-          <span class="icon-folder-open"></span>{{ $t('text.chooseOne') }}
-        </button>
-      </template>
-    </i18n-t>
+    <div id="entity-upload-file-select-heading">
+      <i18n-t tag="div" keypath="text.full">
+        <template #chooseOne>
+          <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
+          <input v-show="false" ref="input" type="file" accept=".csv,.tsv"
+            @change="changeInput">
+          <button type="button" class="btn btn-primary" :aria-disabled="parsing"
+            @click="input.click()">
+            <span class="icon-folder-open"></span>{{ $t('text.chooseOne') }}
+          </button>
+        </template>
+      </i18n-t>
+      <div v-show="parsing"><spinner inline/>{{ $t('parsing') }}</div>
+    </div>
     <slot></slot>
   </file-drop-zone>
 </template>
@@ -30,9 +34,13 @@ except according to the terms contained in the LICENSE file.
 import { ref } from 'vue';
 
 import FileDropZone from '../../file-drop-zone.vue';
+import Spinner from '../../spinner.vue';
 
 defineOptions({
   name: 'EntityUploadFileSelect'
+});
+defineProps({
+  parsing: Boolean
 });
 const emit = defineEmits(['change']);
 
@@ -46,13 +54,31 @@ const changeInput = (event) => {
 <style lang="scss">
 #entity-upload-file-select {
   border-radius: 5px;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  margin-top: 27px;
   text-align: left;
 
-  > :first-child {
-    font-size: 16px;
-    margin-bottom: 1px;
+  &.disabled { opacity: 1; }
+
+  > :first-child { margin-top: -4px; }
+  > :last-child { margin-bottom: -4px; }
+}
+
+#entity-upload-file-select-heading {
+  font-size: 16px;
+  margin-bottom: 1px;
+  position: relative;
+
+  .disabled > & > :first-child { opacity: 0.09; }
+
+  > :nth-child(2) {
+    left: 0;
+    position: absolute;
+    top: 1px;
+  }
+
+  .spinner {
+    margin-right: 6px;
+    top: 1px;
   }
 }
 </style>
@@ -63,7 +89,8 @@ const changeInput = (event) => {
     "text": {
       "full": "Drag a .csv file here, or {chooseOne} to import.",
       "chooseOne": "choose one"
-    }
+    },
+    "parsing": "Reading data…"
   }
 }
 </i18n>

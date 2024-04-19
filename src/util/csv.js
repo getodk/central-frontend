@@ -34,7 +34,6 @@ const promiseParse = (i18n, file, signal = mockSignal(), papaOptions = {}) => {
     if (signal.aborted) return;
     let hasError = false;
     const fullOptions = {
-      delimiter: ',',
       // Called for a FileReader error.
       error: (error) => {
         if (signal.aborted) return;
@@ -42,7 +41,7 @@ const promiseParse = (i18n, file, signal = mockSignal(), papaOptions = {}) => {
         // I can't tell whether complete() will be called, so let's clean up
         // here.
         removeAbortListener();
-        reject(new Error(i18n.t('util.csv.readError', error)));
+        reject(new Error(i18n.t('util.csv.readError', { message: error.message })));
       },
       // Results are not passed in if streaming is used.
       complete: (maybeResults) => {
@@ -78,17 +77,24 @@ const promiseParse = (i18n, file, signal = mockSignal(), papaOptions = {}) => {
 
 // `signal` is an AbortSignal.
 export const parseCSVHeader = async (i18n, file, signal = undefined) => {
-  const { data, errors } = await promiseParse(i18n, file, signal, {
+  const { data, errors, meta } = await promiseParse(i18n, file, signal, {
+    delimitersToGuess: [',', ';', '\t', '|'],
     preview: 1
   });
-  const columns = data[0];
-  if (errors.length === 0) {
+  const columns = data.length !== 0 ? data[0] : [];
+  const unhandledErrors = errors.filter(error =>
+    error.code !== 'UndetectableDelimiter');
+  if (unhandledErrors.length === 0) {
     // Trailing empty cells are not uncommon, so we remove them. But if there
     // was an error, we preserve the empty cells so that the user can be shown
     // something closer to the exact header as it is.
     while (columns.length !== 0 && last(columns) === '') columns.pop();
   }
-  return { columns, errors };
+  return {
+    columns,
+    errors: unhandledErrors,
+    meta: { delimiter: meta.delimiter }
+  };
 };
 
 // Each of these warning functions returns an object to check a CSV file for a
@@ -114,9 +120,9 @@ const raggedRowsWarning = (columns) => {
     get details() { return ragged; }
   };
 };
-const largeCellWarning = () => {
-  // The size and 0-indexed row number of the largest cell containing a comma or
-  // newline
+const largeCellWarning = (delimiter) => {
+  // The size and 0-indexed row number of the largest cell containing a
+  // delimiter or newline
   const largestCell = { size: 0, row: -1 };
   // The sizes of the two largest rows (descending order)
   const maxRowSizes = [0, 0];
@@ -124,7 +130,8 @@ const largeCellWarning = () => {
     let rowSize = 0;
     for (const value of values) {
       rowSize += value.length;
-      if (value.length > largestCell.size && value.search(/[,\n\r]/) !== -1) {
+      if (value.length > largestCell.size &&
+        (value.includes(delimiter) || value.search(/[\n\r]/) !== -1)) {
         largestCell.size = value.length;
         largestCell.row = i;
       }
@@ -142,7 +149,7 @@ const largeCellWarning = () => {
   return {
     type: 'largeCell',
     pushRow,
-    hasWarning: () => largestCell.size > maxRowSizes[1],
+    hasWarning: () => largestCell.size > 10 * maxRowSizes[1],
     get details() { return largestCell.row; }
   };
 };
@@ -150,6 +157,7 @@ const largeCellWarning = () => {
 // `columns` is the CSV header as an array.
 export const parseCSV = async (i18n, file, columns, options = {}) => {
   const {
+    delimiter = ',',
     // Function to validate and transform the data of a row. If the function
     // throws an error, it will result in a rejected promise.
     transformRow = identity,
@@ -158,27 +166,42 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
   } = options;
 
   const data = [];
-  const warnings = [raggedRowsWarning(columns), largeCellWarning()];
+  let emptyRow = -1;
+  const warnings = [raggedRowsWarning(columns), largeCellWarning(delimiter)];
 
-  let rowIndex = 0;
-  const processRow = (values) => {
+  const processRow = (values, index) => {
     // Remove trailing empty cells.
     while (values.length > columns.length && last(values) === '') values.pop();
+
+    // Skip trailing empty rows and do not check them for warnings. Throw for an
+    // empty row that is not trailing.
+    if (values.every(value => value === '')) {
+      if (emptyRow === -1) emptyRow = index;
+      return;
+    }
+    if (emptyRow !== -1) {
+      const error = new Error(i18n.t('util.csv.emptyRow'));
+      error.row = emptyRow;
+      throw error;
+    }
+
+    // Throw if there are too many cells.
     if (values.length > columns.length) {
       const counts = {
         expected: i18n.n(columns.length, 'default'),
         actual: i18n.n(values.length, 'default')
       };
-      throw new Error(i18n.t('util.csv.dataWithoutHeader', counts, columns.length));
+      throw new Error(i18n.tc('util.csv.dataWithoutHeader', columns.length, counts));
     }
 
     data.push(transformRow(values, columns));
-    for (const warning of warnings) warning.pushRow(values, rowIndex, columns);
-    rowIndex += 1;
+    for (const warning of warnings) warning.pushRow(values, index, columns);
   };
 
+  let rowIndex = 0;
   try {
     await promiseParse(i18n, file, signal, {
+      delimiter,
       chunk: ({ data: chunkData, errors }) => {
         if (errors.length !== 0) {
           const error = errors[0];
@@ -198,7 +221,10 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
           rowIndex += 1;
         }
 
-        for (const values of chunkData) processRow(values);
+        for (const values of chunkData) {
+          processRow(values, rowIndex);
+          rowIndex += 1;
+        }
       },
       worker: true
     });
@@ -209,16 +235,26 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
     }));
   }
 
-  const warningDetails = { count: 0 };
+  const warningResults = {
+    count: 0,
+    details: {}
+  };
   for (const warning of warnings) {
     if (warning.hasWarning()) {
-      warningDetails.count += 1;
-      warningDetails[warning.type] = warning.details;
+      warningResults.count += 1;
+      warningResults.details[warning.type] = warning.details;
     }
   }
+  if (delimiter !== ',') {
+    warningResults.count += 1;
+    warningResults.details.delimiter = delimiter;
+  }
 
-  return { data, warnings: warningDetails };
+  return { data, warnings: warningResults };
 };
+
+export const formatCSVDelimiter = (delimiter) =>
+  (delimiter === '\t' ? '⇥' : delimiter);
 
 // truncateRow() truncates an array of strings, returning a new array whose
 // number of elements and combined size do not exceed the maximum.
@@ -244,5 +280,17 @@ const truncateRow = (values, { maxLength = 10000, maxSize = 10000 }) => {
 
 // formatCSVRow() formats an array of strings as a CSV row. It is intended for
 // display purposes only: the data may be truncated.
-export const formatCSVRow = (values, options = {}) =>
-  Papa.unparse([truncateRow(values, options)]);
+export const formatCSVRow = (values, options = {}) => {
+  const { maxLength, maxSize, ...papaOptions } = options;
+  const truncated = truncateRow(values, { maxLength, maxSize });
+
+  if (papaOptions.delimiter == null) papaOptions.delimiter = ',';
+  const formattedDelimiter = formatCSVDelimiter(papaOptions.delimiter);
+  if (formattedDelimiter !== papaOptions.delimiter) {
+    for (const [i, value] of truncated.entries())
+      truncated[i] = value.replaceAll(papaOptions.delimiter, formattedDelimiter);
+    papaOptions.delimiter = formattedDelimiter;
+  }
+
+  return Papa.unparse([truncated], papaOptions);
+};

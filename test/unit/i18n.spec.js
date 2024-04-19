@@ -1,7 +1,8 @@
 import createCentralI18n from '../../src/i18n';
-import { $tcn, loadLocale } from '../../src/util/i18n';
+import { $tcn, loadLocale, useI18nUtils } from '../../src/util/i18n';
 
 import createTestContainer from '../util/container';
+import { withSetup } from '../util/lifecycle';
 
 describe('util/i18n', () => {
   describe('loadLocale()', () => {
@@ -85,6 +86,48 @@ describe('util/i18n', () => {
     it('uses values', () => {
       const message = i18nProps.$tcn('parts', 3, { name: 'Gallia' });
       message.should.equal('Gallia est omnis divisa in partes 3.');
+    });
+  });
+
+  describe('useI18nUtils()', () => {
+    describe('formatRange()', () => {
+      it('returns a formatted range', () => {
+        const { formatRange } = withSetup(useI18nUtils);
+        formatRange(1000, 2000).should.equal('1,000–2,000');
+      });
+
+      it('returns a single number if start and end are the same', () => {
+        const { formatRange } = withSetup(useI18nUtils);
+        formatRange(1000, 1000).should.equal('1,000');
+      });
+
+      it('uses the locale', () => {
+        const container = createTestContainer();
+        const { formatRange } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        formatRange(1000, 2000).should.equal('1,000～2,000');
+      });
+
+      it('accepts a number format key', () => {
+        const { formatRange } = withSetup(useI18nUtils);
+        formatRange(0.1, 0.2, 'percent').should.equal('10% – 20%');
+      });
+    });
+
+    describe('formatList()', () => {
+      it('returns a formatted list', () => {
+        const { formatList } = withSetup(useI18nUtils);
+        formatList(['x', 'y']).should.equal('x, y');
+        formatList(['x', 'y', 'z']).should.equal('x, y, z');
+      });
+
+      it('uses the locale', () => {
+        const container = createTestContainer();
+        const { formatList } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        formatList(['x', 'y']).should.equal('x、y');
+        formatList(['x', 'y', 'z']).should.equal('x、y、z');
+      });
     });
   });
 });
