@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 import { formatCSVDelimiter, formatCSVRow } from '../../../util/csv';
 import { useRequestData } from '../../../request-data';
@@ -86,11 +86,11 @@ const expectedHeader = computed(() => {
   return formatCSVRow(columns, { delimiter: props.delimiter });
 });
 
-const headerElements = ref([]);
-const setHeaderElement = (i) => (el) => { headerElements.value[i] = el; };
+const headerElements = [];
+const setHeaderElement = (i) => (el) => { headerElements[i] = el; };
 const scrollHeader = (event) => {
   const { target } = event;
-  for (const header of headerElements.value) {
+  for (const header of headerElements) {
     if (header !== target) header.scroll(target.scrollLeft, 0);
   }
 };

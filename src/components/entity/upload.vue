@@ -257,7 +257,6 @@ const parseEntities = async (file, headerResults, signal) => {
 const selectFile = (file) => {
   headerErrors.value = null;
   dataError.value = null;
-  warnings.value = null;
 
   const abortController = new AbortController();
   abortParse = () => { abortController.abort(); };
@@ -285,6 +284,7 @@ const selectFile = (file) => {
 const clearFile = () => {
   csvEntities.value = null;
   fileMetadata.value = null;
+  warnings.value = null;
 };
 watch(() => props.state, (state) => {
   if (state) return;
@@ -399,16 +399,17 @@ watch(() => props.state, (state) => {
   .panel-danger {
     box-shadow: none;
     margin-bottom: 0;
-  }
-  $panel-danger-border-radius: 3px;
-  .panel-heading {
-    border-top-left-radius: $panel-danger-border-radius;
-    border-top-right-radius: $panel-danger-border-radius;
-  }
-  .panel-body {
-    border: none;
-    border-bottom-left-radius: $panel-danger-border-radius;
-    border-bottom-right-radius: $panel-danger-border-radius;
+
+    $panel-danger-border-radius: 3px;
+    .panel-heading {
+      border-top-left-radius: $panel-danger-border-radius;
+      border-top-right-radius: $panel-danger-border-radius;
+    }
+    .panel-body {
+      border: none;
+      border-bottom-left-radius: $panel-danger-border-radius;
+      border-bottom-right-radius: $panel-danger-border-radius;
+    }
   }
 }
 </style>

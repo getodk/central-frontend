@@ -53,6 +53,17 @@ describe('Modal', () => {
       });
       modal.emitted().shown.should.eql([[]]);
     });
+
+    it('emits a resize event', () => {
+      const modal = mountComponent({
+        props: { state: true },
+        slots: {
+          body: { template: '<div id="div" style="height: 10px;"></div>' }
+        },
+        attachTo: document.body
+      });
+      modal.emitted().resize.should.eql([[40]]);
+    });
   });
 
   describe('after the state prop changes to true', () => {
@@ -72,16 +83,6 @@ describe('Modal', () => {
       modal.vm.$container.alert.info('Some alert');
       await modal.setProps({ state: true });
       modal.should.not.alert();
-    });
-
-    it('emits a resize event', () => {
-      const modal = mountComponent({
-        slots: {
-          body: { template: '<div id="div" style="height: 10px;"></div>' }
-        },
-        attachTo: document.body
-      });
-      modal.emitted().resize.should.eql([[40]]);
     });
   });
 

@@ -68,14 +68,12 @@ const changeInput = (event) => {
   margin-bottom: 1px;
   position: relative;
 
-  .disabled > & {
-    > :first-child { opacity: 0.09; }
+  .disabled > & > :first-child { opacity: 0.09; }
 
-    > :nth-child(2) {
-      left: 0;
-      position: absolute;
-      top: 1px;
-    }
+  > :nth-child(2) {
+    left: 0;
+    position: absolute;
+    top: 1px;
   }
 
   .spinner {

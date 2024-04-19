@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
           <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
           <select v-if="lastPage > 0 && lastPage < 20" v-model="pageModel"
             class="form-control">
-            <option v-for="[value, text] of options" :key="value" :value="value">
+            <option v-for="[value, text] of pageOptions" :key="value" :value="value">
               {{ text }}
             </option>
           </select>
@@ -94,13 +94,13 @@ const pageModel = computed({
   set: (value) => { emit('update:page', value); }
 });
 const { formatRange } = useI18nUtils();
-// Returns the formatted range of rows associated with a page.
+// Returns the formatted range of rows shown on the specified page.
 const pageRange = (page) => {
   const start = page * props.size + 1;
   const end = page < lastPage.value ? start + props.size - 1 : props.count;
   return formatRange(start, end);
 };
-const options = computed(() => {
+const pageOptions = computed(() => {
   const result = new Array(lastPage.value + 1);
   for (let i = 0; i <= lastPage.value; i += 1) result[i] = [i, pageRange(i)];
   return result;

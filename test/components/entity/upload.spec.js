@@ -34,8 +34,6 @@ const parseFilterTime = (filter) => {
     : DateTime.fromISO(match[1]).toMillis();
 };
 const selectFile = async (modal, file = csv()) => {
-  if (modal.element.id !== 'entity-upload')
-    throw new Error('expected EntityUpload');
   await setFiles(modal.get('input'), [file]);
   return waitUntil(() => !modal.vm.parsing);
 };
