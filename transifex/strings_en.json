@@ -882,11 +882,6 @@
     "versionShort": {
       "string": "v{version}",
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
-    },
-    "punctuations": {
-      "comma": {
-        "string": ","
-      }
     }
   },
   "mixin": {

@@ -1,20 +1,12 @@
-/*
-Copyright 2023 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/getodk/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
-*/
 import { RouterLinkStub } from '@vue/test-utils';
-import { mount } from '../../../util/lifecycle';
+import { nextTick } from 'vue';
+
 import ConnectionToForm from '../../../../src/components/dataset/overview/connection-to-forms.vue';
 import ExpandableRow from '../../../../src/components/expandable-row.vue';
+
 import testData from '../../../data';
 import { mockRouter } from '../../../util/router';
+import { mount } from '../../../util/lifecycle';
 
 const mountComponent = () => mount(ConnectionToForm, {
   props: {
@@ -28,7 +20,7 @@ const mountComponent = () => mount(ConnectionToForm, {
 });
 
 describe('Connection to Forms', () => {
-  it('shows the creation forms with associated properties', () => {
+  it('shows the creation forms with associated properties', async () => {
     testData.extendedDatasets.createPast(1, {
       name: 'trees',
       properties: [
@@ -60,6 +52,9 @@ describe('Connection to Forms', () => {
       ]
     });
     const component = mountComponent();
+    // Wait for I18nList to finish rendering.
+    await nextTick();
+
     component.get('.summary-item-heading').text().should.be.equal('3');
 
     const rows = component.findAllComponents(ExpandableRow);

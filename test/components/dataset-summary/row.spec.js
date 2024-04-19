@@ -39,12 +39,14 @@ describe('Dataset summary row', () => {
       // check properties are not visible
       component.get('.property-list').should.be.visible();
 
-      component.findAll('.property-list > div > span').forEach((p, i) => {
+      const listElements = component.findAll('.i18n-list .element');
+      listElements.length.should.equal(inFormProperties.length);
+      for (const [i, p] of listElements.entries()) {
         // verify name of the properties
-        p.text().replace(',', '').should.be.equal(inFormProperties[i].name);
+        p.get('span').text().should.be.equal(inFormProperties[i].name);
         // check if there's plus icon for new properties
         p.find('.icon-plus-circle').exists().should.be.equal(inFormProperties[i].isNew);
-      });
+      }
     });
   });
 

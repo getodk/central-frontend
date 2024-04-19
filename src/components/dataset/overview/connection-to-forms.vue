@@ -28,11 +28,7 @@ except according to the terms contained in the LICENSE file.
             {{ $tcn('common.propertiesCount', totalProperties, { inform: $n(form.properties.length, 'default') }) }}
           </template>
           <template #details>
-            <span v-for="(property, index) in form.properties" :key="property" class="property-list">
-              {{ property }}<template v-if="index < form.properties.length - 1">{{
-                $t('punctuation.comma')
-              }}<sentence-separator/></template>
-            </span>
+            <i18n-list :list="form.properties" class="property-list"/>
             <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
           </template>
         </expandable-row>
@@ -42,18 +38,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import SummaryItem from '../../summary-item.vue';
 import ExpandableRow from '../../expandable-row.vue';
-import SentenceSeparator from '../../sentence-separator.vue';
+import I18nList from '../../i18n/list.vue';
+import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'ConnectionToForms',
   components: {
-    SentenceSeparator,
-    SummaryItem,
-    ExpandableRow
+    ExpandableRow,
+    I18nList,
+    SummaryItem
   },
   props: {
     properties: {
