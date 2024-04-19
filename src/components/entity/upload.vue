@@ -42,8 +42,8 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
           <div class="panel-body">
-            <entity-upload-warnings v-if="warnings != null"
-              v-bind="warnings.details"/>
+            <entity-upload-warnings v-if="warnings != null && warnings.count !== 0"
+              v-bind="warnings.details" @rows="showWarningRows"/>
             <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
               :row-index="csvRow" :page-size="csvPage.size"/>
             <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
@@ -60,8 +60,9 @@ except according to the terms contained in the LICENSE file.
       </div>
       <entity-upload-popup v-if="csvEntities != null"
         :filename="fileMetadata.name" :count="csvEntities.length"
-        :awaiting-response="uploading" :progress="uploadProgress"
-        @clear="clearFile" @animationstart="animatePopup(true)"
+        :warnings="warnings.count" :awaiting-response="uploading"
+        :progress="uploadProgress" @clear="clearFile"
+        @animationstart="animatePopup(true)"
         @animationend="animatePopup(false)"/>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
@@ -252,7 +253,7 @@ const parseEntities = async (file, headerResults, signal) => {
   if (results.data.length === 0) throw new Error(t('alert.noData'));
   csvEntities.value = results.data;
   fileMetadata.value = { name: file.name, size: file.size };
-  if (results.warnings.count !== 0) warnings.value = results.warnings;
+  warnings.value = results.warnings;
 };
 const selectFile = (file) => {
   headerErrors.value = null;
@@ -307,6 +308,16 @@ watch(csvEntities, (value) => {
   if (value == null) Object.assign(csvPage, { page: 0, size: defaultPageSize });
 });
 
+const tables = [null, null];
+const setTable = (i) => (el) => { tables[i] = el; };
+const showWarningRows = (range) => {
+  csvPage.page = Math.floor(range[0] / csvPage.size);
+  tables[1].highlightRows(range);
+};
+watch(csvEntities, (value) => {
+  if (value == null) tables[1].highlightRows([NaN, NaN]);
+});
+
 const { request, awaitingResponse: uploading } = useRequest();
 const uploadProgress = ref(0);
 const upload = () => {
@@ -328,8 +339,6 @@ watch(csvEntities, (value) => {
 });
 
 // Resize the last column of the tables.
-const tables = [null, null];
-const setTable = (i) => (el) => { tables[i] = el; };
 const resizeLastColumn = () => {
   for (const table of tables) table.resizeLastColumn();
 };

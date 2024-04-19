@@ -24,7 +24,8 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody v-if="entities != null && entities.length !== 0"
         :class="{ 'data-loading': awaitingResponse }">
-        <tr v-for="(entity, entityIndex) in entities" :key="entityIndex">
+        <tr v-for="(entity, entityIndex) in entities" :key="entityIndex"
+          :class="{ highlight: isHighlighted(rowIndex + entityIndex) }">
           <td class="row-number">
             {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
           </td>
@@ -39,7 +40,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue';
+import { nextTick, ref, shallowRef, watch } from 'vue';
 
 import { px } from '../../../util/dom';
 import { useRequestData } from '../../../request-data';
@@ -126,9 +127,14 @@ const resizeLastColumn = () => {
     th.style.width = 'auto';
 };
 
+const highlightedRange = shallowRef([NaN, NaN]);
+const highlightRows = (range) => { highlightedRange.value = range; };
+const isHighlighted = (index) =>
+  index >= highlightedRange.value[0] && index <= highlightedRange.value[1];
+
 const resetScroll = () => { container.value.scroll(0, 0); };
 
-defineExpose({ resizeLastColumn, resetScroll });
+defineExpose({ resizeLastColumn, highlightRows, resetScroll });
 </script>
 
 <style lang="scss">

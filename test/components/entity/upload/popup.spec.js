@@ -4,7 +4,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
   mount(EntityUploadPopup, mergeMountOptions(options, {
-    props: { filename: 'my_data.csv', count: 1, progress: 0 }
+    props: { filename: 'my_data.csv', count: 1, warnings: 0, progress: 0 }
   }));
 
 describe('EntityUploadPopup', () => {
@@ -14,19 +14,10 @@ describe('EntityUploadPopup', () => {
     await div.should.have.textTooltip();
   });
 
-  describe('clear button', () => {
-    it('emits a clear event if it is clicked', async () => {
-      const component = mountComponent();
-      await component.get('.btn-link').trigger('click');
-      component.emitted().clear.should.eql([[]]);
-    });
-
-    it('is hidden if the awaitingResponse prop is true', () => {
-      const component = mountComponent({
-        props: { awaitingResponse: true }
-      });
-      component.get('.btn-link').should.be.hidden();
-    });
+  it('emits a clear event if the clear button is clicked', async () => {
+    const component = mountComponent();
+    await component.get('.btn-link').trigger('click');
+    component.emitted().clear.should.eql([[]]);
   });
 
   it('shows the count', () => {
@@ -35,6 +26,29 @@ describe('EntityUploadPopup', () => {
     });
     const text = component.get('#entity-upload-popup-count').text();
     text.should.equal('1,000 data rows found');
+  });
+
+  describe('warnings', () => {
+    it('shows the count of warnings', () => {
+      const component = mountComponent({
+        props: { warnings: 5 }
+      });
+      const warnings = component.get('#entity-upload-popup-warnings');
+      warnings.should.be.visible();
+      warnings.text().should.equal('5 warnings');
+    });
+
+    it('does not show the count if it is 0', () => {
+      mountComponent().get('#entity-upload-popup-warnings').should.be.hidden();
+    });
+  });
+
+  it('hides elements during a request', () => {
+    const component = mountComponent({
+      props: { warnings: 1, awaitingResponse: true }
+    });
+    component.get('.btn-link').should.be.hidden();
+    component.get('#entity-upload-popup-warnings').should.be.hidden();
   });
 
   describe('request status', () => {
