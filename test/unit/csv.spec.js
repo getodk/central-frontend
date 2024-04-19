@@ -222,7 +222,31 @@ describe('util/csv', () => {
           const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
           warnings.should.eql({
             count: 1,
-            details: { raggedRows: [1, 3] }
+            details: { raggedRows: [[1, 1], [3, 3]] }
+          });
+        });
+
+        it('returns consecutive rows in a single range', async () => {
+          const csv = createCSV('a,b\n1\n2\n3,""\n5\n6');
+          const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
+          warnings.should.eql({
+            count: 1,
+            details: { raggedRows: [[1, 2], [4, 5]] }
+          });
+        });
+
+        it('returns NaN after 50 ranges', async () => {
+          const data = 'x,""\ny\n'.repeat(52);
+          const csv = createCSV(`a,b\n${data}`);
+          const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
+          const expectedRanges = new Array(50).fill(null).map((_, i) => {
+            const row = 2 * (i + 1);
+            return [row, row];
+          });
+          expectedRanges.push([NaN, NaN]);
+          warnings.should.eql({
+            count: 1,
+            details: { raggedRows: expectedRanges }
           });
         });
 
@@ -292,7 +316,7 @@ describe('util/csv', () => {
         });
         warnings.should.eql({
           count: 3,
-          details: { delimiter: ';', raggedRows: [1], largeCell: 2 }
+          details: { delimiter: ';', raggedRows: [[1, 1]], largeCell: 2 }
         });
       });
     });

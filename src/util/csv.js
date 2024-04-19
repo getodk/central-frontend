@@ -101,14 +101,22 @@ export const parseCSVHeader = async (i18n, file, signal = undefined) => {
 // particular warning. After the object is passed each row, it will indicate
 // whether the warning applies and return details about it.
 const raggedRowsWarning = (columns) => {
-  // 0-indexed row numbers of rows where commas are skipped when the last values
-  // are empty
+  // `ragged` stores the 0-indexed row numbers of ragged rows: rows where the
+  // delimiter is skipped when the last values are empty. Specifically, `ragged`
+  // is an array of row number ranges where each row in the range is ragged.
   const ragged = [];
-  // Is there a row where commas are present when the last values are empty?
+  // Is there a row where the delimiter is present when the last values are
+  // empty?
   let anyPadded = false;
   const pushRow = (values, i) => {
     if (values.length < columns.length) {
-      if (ragged.length <= 100) ragged.push(i);
+      const lastRange = last(ragged);
+      if (lastRange != null && i === lastRange[1] + 1)
+        lastRange[1] = i;
+      else if (ragged.length < 50)
+        ragged.push([i, i]);
+      else if (!Number.isNaN(lastRange[0]))
+        ragged.push([NaN, NaN]);
     } else if (values.length === columns.length && last(values) === '') {
       anyPadded = true;
     }
