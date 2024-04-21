@@ -132,6 +132,7 @@
     "continue": "Continua",
     "create": "Crea",
     "createSubmission": "Nuovo",
+    "delete": "Cancellare",
     "done": "Fatto",
     "download": "Scaricare",
     "edit": "Modificare",
@@ -156,7 +157,9 @@
     "showPreview": "Anteprima",
     "hidePreview": "Nascondi anteprima",
     "expand": "Espandere",
-    "collapse": "Chiudere"
+    "collapse": "Chiudere",
+    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
+    "upload": "Carica"
   },
   "field": {
     "comment": "Lascia un commento...",
@@ -210,6 +213,7 @@
     "appUsers": "Utenti dell'applicazione",
     "config": "Configurazione del Server",
     "entityList": "Lista Entità",
+    "entityLists": "Liste Entità",
     "entities": "Entità",
     "form": "Formulario",
     "forms": "Formulari",
@@ -287,7 +291,9 @@
     "loading": "Caricando...",
     "no": "No",
     "noResults": "Nessun risultato",
+    "noUndo": "Quest'azione non può essere annullata",
     "rightNow": "Adesso",
+    "rowNumber": "Riga",
     "success": "Successo!",
     "system": "Sistema",
     "yes": "Si",
@@ -297,9 +303,6 @@
     },
     "total": "Totale",
     "totalSubmissions": "Invii totali",
-    "punctuations": {
-      "comma": ","
-    },
     "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà",
     "new": "Novità!",
     "totalEntities": "Entità totali",
@@ -335,5 +338,8 @@
   },
   "router": {
     "unsavedChanges": "Sei sicuro di voler lasciare questa pagina? Le tue modifiche potrebbero non essere salvate."
+  },
+  "punctuation": {
+    "comma": ","
   }
 }

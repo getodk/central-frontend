@@ -156,7 +156,9 @@
     "showPreview": "Vista previa",
     "hidePreview": "Ocultar vista previa",
     "expand": "Expandir",
-    "collapse": "Contraer"
+    "collapse": "Contraer",
+    "reviewParallelUpdates": "Revisar actualizaciones paralelas",
+    "upload": "Subir"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -288,6 +290,7 @@
     "no": "No",
     "noResults": "Sin resultados",
     "rightNow": "Ahora mismo",
+    "rowNumber": "Fila",
     "success": "¡Éxito!",
     "system": "Sistema",
     "yes": "Sí",
@@ -297,9 +300,6 @@
     },
     "total": "Total",
     "totalSubmissions": "Envíos totales",
-    "punctuations": {
-      "comma": ","
-    },
     "propertiesCount": "{inform} de {count} propiedad | {inform} de {count} propiedades | {inform} de {count} propiedades",
     "new": "Nuevo!",
     "totalEntities": "Entidades totales",
@@ -335,5 +335,8 @@
   },
   "router": {
     "unsavedChanges": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
+  },
+  "punctuation": {
+    "comma": ","
   }
 }

@@ -197,6 +197,9 @@ const requestDelete = () => {
     "back": {
       "title": "Détail de l'entité",
       "back": "Retour à la table {datasetName}"
+    },
+    "alert": {
+      "delete": "L'Entité \"{label}\" a été supprimée."
     }
   },
   "it": {

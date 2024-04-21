@@ -357,7 +357,6 @@ export default {
       "chooseOne": "vyberte jeden"
     },
     "action": {
-      "upload": "Nahrát",
       "uploadAnyway": "Přesto nahrát"
     },
     "alert": {
@@ -405,7 +404,6 @@ export default {
       "chooseOne": "eine auswählen"
     },
     "action": {
-      "upload": "Hochladen",
       "uploadAnyway": "Trotzdem hochladen"
     },
     "alert": {
@@ -453,7 +451,6 @@ export default {
       "chooseOne": "elige uno"
     },
     "action": {
-      "upload": "Subir",
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
@@ -501,7 +498,6 @@ export default {
       "chooseOne": "Choisissez un"
     },
     "action": {
-      "upload": "Téléverser",
       "uploadAnyway": "Téléverser malgré tout"
     },
     "alert": {
@@ -548,7 +544,6 @@ export default {
       "chooseOne": "pilih satu"
     },
     "action": {
-      "upload": "Unggah",
       "uploadAnyway": "Lanjutkan unggah"
     },
     "alert": {
@@ -581,7 +576,6 @@ export default {
       "chooseOne": "scegli uno"
     },
     "action": {
-      "upload": "Carica",
       "uploadAnyway": "Carica comunque"
     },
     "alert": {
@@ -628,7 +622,6 @@ export default {
       "chooseOne": "１つ選択"
     },
     "action": {
-      "upload": "アップロード",
       "uploadAnyway": "ひとまず、アップロード"
     },
     "alert": {
@@ -661,7 +654,6 @@ export default {
       "chooseOne": "Chagua moja"
     },
     "action": {
-      "upload": "pakia",
       "uploadAnyway": "Pakia hata hivyo"
     },
     "alert": {

@@ -317,6 +317,10 @@
       "string": "Nuovo",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
     },
+    "delete": {
+      "string": "Cancellare",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "done": {
       "string": "Fatto",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -593,6 +597,10 @@
       "string": "Lista Entità",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entityLists": {
+      "string": "Liste Entità",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entities": {
       "string": "Entità",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -824,9 +832,16 @@
       "string": "Nessun risultato",
       "developer_comment": "This is shown if a search returned no results."
     },
+    "noUndo": {
+      "string": "Quest'azione non può essere annullata"
+    },
     "rightNow": {
       "string": "Adesso",
       "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
+    },
+    "rowNumber": {
+      "string": "Riga",
+      "developer_comment": "This is shown for the row number."
     },
     "success": {
       "string": "Successo!"
@@ -854,11 +869,6 @@
     "totalSubmissions": {
       "string": "Invii totali"
     },
-    "punctuations": {
-      "comma": {
-        "string": ","
-      }
-    },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} di {count} propietà} many {{inform} di {count} proprietà} other {{inform} di {count} proprietà}}",
       "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
@@ -872,6 +882,11 @@
     "versionShort": {
       "string": "v{version}",
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
+    },
+    "punctuations": {
+      "comma": {
+        "string": ","
+      }
     }
   },
   "mixin": {
@@ -892,6 +907,27 @@
     }
   },
   "util": {
+    "csv": {
+      "readError": {
+        "string": "",
+        "developer_comment": "{message} is a description of the problem."
+      },
+      "rowError": {
+        "string": "",
+        "developer_comment": "{row} is a row number. {message} is a description of the problem."
+      },
+      "invalidQuotes": {
+        "string": "",
+        "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
+      },
+      "emptyRow": {
+        "string": ""
+      },
+      "dataWithoutHeader": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This is an error that is shown for a data file. {expected} and {actual} are each a number of columns. The string will be pluralized based on {expected}."
+      }
+    },
     "request": {
       "noRequest": {
         "string": "Qualcosa è andato storto: non c'era nessuna request."
@@ -902,6 +938,12 @@
       "errorNotProblem": {
         "string": "Qualcosa è andato storto: codice error {status}.",
         "developer_comment": "{status} is an HTTP status code, for example, 404."
+      },
+      "problem": {
+        "404_1": {
+          "string": "",
+          "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        }
       }
     },
     "session": {
@@ -1224,19 +1266,19 @@
           "string": "Numero di aggiornamenti dell'entità"
         },
         "num_entity_updates_sub": {
-          "string": ""
+          "string": "Numero di aggiornamenti dell'entità tramite invii"
         },
         "num_entity_updates_api": {
-          "string": ""
+          "string": "Numero di aggiornamenti dell'entità tramite API"
         },
         "num_entities_updated": {
-          "string": ""
+          "string": "Numero di entità modificate"
         },
         "num_entity_conflicts": {
-          "string": ""
+          "string": "Numero di entità mai in conflitto"
         },
         "num_entity_conflicts_resolved": {
-          "string": ""
+          "string": "Numero di entità con conflitto ora contrassegnato come risolto"
         },
         "sso_enabled": {
           "string": "SSO abilitato sul server"
@@ -1347,6 +1389,13 @@
         }
       }
     },
+    "DatasetEntities": {
+      "alert": {
+        "upload": {
+          "string": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
+        }
+      }
+    },
     "DatasetList": {
       "heading": {
         "0": {
@@ -1355,6 +1404,37 @@
         },
         "1": {
           "string": "Le entità vengono create attraverso la progettazione dei formulari e possono essere allegate a qualsiasi formulario."
+        }
+      },
+      "new": {
+        "string": "Nuova",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+      }
+    },
+    "DatasetNew": {
+      "title": {
+        "string": "Crea la Lista Entità",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "encrypted": {
+        "string": "",
+        "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
+      },
+      "entityListName": {
+        "string": "Nome Lista Entità",
+        "developer_comment": "This appears above a text input field for the name of an Entity List"
+      },
+      "success": {
+        "0": {
+          "string": "La Lista Entità \"{name}\" è stato creata. "
+        },
+        "1": {
+          "string": ""
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
         }
       }
     },
@@ -1366,6 +1446,10 @@
       "entityProperties": {
         "string": "Proprietà della Entità",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "new": {
+        "string": "Nuova",
+        "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
     "DatasetOverviewConnectionToForms": {
@@ -1377,12 +1461,38 @@
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente."
+      },
+      "none": {
+        "string": "(Nessuna)",
+        "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
         "string": "{count, plural, one {Il formulario utilizza questo elenco di entità} many {I formulari utilizzano questo elenco di entità} other {I formulari utilizzano questo elenco di entità}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewNewProperty": {
+      "title": {
+        "string": "Aggiungi proprietà della Entità",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
+      },
+      "newPropertyName": {
+        "string": ""
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
+        }
       }
     },
     "DatasetPendingSubmissions": {
@@ -1518,10 +1628,26 @@
         }
       }
     },
+    "EntityActivity": {
+      "action": {
+        "delete": {
+          "string": "Elimina Entità",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "EntityBasicDetails": {
       "creatingSubmission": {
         "string": "Creando invio",
         "developer_comment": "This is shown above the Submission that created the Entity."
+      },
+      "creatingSource": {
+        "string": "",
+        "developer_comment": "This is shown above the source (e.g. a CSV file) that created the entity"
+      },
+      "upload": {
+        "string": "Carica",
+        "developer_comment": "This describes an \"upload\" being a generic source of an entity"
       },
       "submissionDeleted": {
         "string": "Questo invio è stato eliminato."
@@ -1603,6 +1729,24 @@
       "title": {
         "string": "Dati Entità",
         "developer_comment": "This is a title shown above a section of the page."
+      }
+    },
+    "EntityDelete": {
+      "title": {
+        "string": "Elimina {label}",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "introduction": {
+        "0": {
+          "string": "Sei sicuro di voler eliminare \"{label}\"?",
+          "developer_comment": "{label} is the label of an Entity."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
       }
     },
     "EntityDiff": {
@@ -1692,6 +1836,10 @@
             "api": {
               "string": "Entità {label} creata da {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            },
+            "bulkSource": {
+              "string": "",
+              "developer_comment": "This text is shown in a list of events. {name} is a filename, e.g. myfile.csv, and {actor} is a name/link to a Web User."
             }
           },
           "update_version": {
@@ -1764,6 +1912,11 @@
       "noMatching": {
         "string": "Non sono presenti Entità corrispondenti."
       },
+      "alert": {
+        "delete": {
+          "string": ""
+        }
+      },
       "action": {
         "download": {
           "unfiltered": {
@@ -1785,7 +1938,8 @@
     },
     "EntityMetadataRow": {
       "reviewParallelUpdates": {
-        "string": "Rivedi gli aggiornamenti paralleli"
+        "string": "Rivedi gli aggiornamenti paralleli",
+        "developer_comment": "This is the text for an action, for example, the text of a button."
       }
     },
     "EntityResolve": {
@@ -1875,6 +2029,116 @@
         }
       }
     },
+    "EntityUpload": {
+      "title": {
+        "string": "Importa Dati da File",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "table": {
+        "server": {
+          "string": "",
+          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
+        },
+        "file": {
+          "string": ""
+        }
+      },
+      "action": {
+        "append": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "blankLabel": {
+          "string": ""
+        },
+        "noData": {
+          "string": ""
+        }
+      },
+      "headersNote": {
+        "string": ""
+      }
+    },
+    "EntityUploadDataError": {
+      "title": {
+        "string": ""
+      }
+    },
+    "EntityUploadDataTemplate": {
+      "text": {
+        "full": {
+          "string": "Se non sei sicuro, puoi {downloadTemplate}",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+        },
+        "downloadTemplate": {
+          "string": "Scarica un modello di dati (.csv)",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+        }
+      }
+    },
+    "EntityUploadFileSelect": {
+      "text": {
+        "full": {
+          "string": "",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        }
+      },
+      "parsing": {
+        "string": ""
+      }
+    },
+    "EntityUploadHeaderErrors": {
+      "expectedHeader": {
+        "string": "",
+        "developer_comment": "This refers to the header row of a spreadsheet."
+      },
+      "suggestions": {
+        "title": {
+          "string": "",
+          "developer_comment": "Suggestions to fix an error"
+        },
+        "invalidQuotes": {
+          "string": ""
+        },
+        "missingLabel": {
+          "string": "",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "unknownProperty": {
+          "string": ""
+        },
+        "duplicateColumn": {
+          "string": ""
+        },
+        "emptyColumn": {
+          "string": ""
+        },
+        "delimiterNotComma": {
+          "string": ""
+        }
+      }
+    },
+    "EntityUploadPopup": {
+      "rowCount": {
+        "string": "{count, plural, one {} many {} other {}}"
+      },
+      "status": {
+        "sending": {
+          "string": "",
+          "developer_comment": "This text is shown while a file is being uploaded to the server."
+        },
+        "processing": {
+          "string": "Processando il file...",
+          "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
+        }
+      }
+    },
     "EntityVersionLink": {
       "submission": {
         "string": "Invio {instanceName}",
@@ -1883,6 +2147,10 @@
       "api": {
         "string": "Aggiornato da {name}",
         "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
+      },
+      "bulk": {
+        "string": "",
+        "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
     "FieldKeyList": {
@@ -2063,9 +2331,6 @@
         },
         "1": {
           "string": "Gli invii esistenti di questo utente rimarranno, ma chiunque faccia affidamento su questo utente dovrà crearne uno nuovo per continuare a scaricare i formulari o caricare invii."
-        },
-        "2": {
-          "string": "Questa operazione è irreversibile."
         }
       }
     },
@@ -2722,12 +2987,12 @@
         }
       },
       "action": {
-        "upload": {
-          "string": "Carica",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "uploadAnyway": {
           "string": "Carica comunque",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "upload": {
+          "string": "Carica",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -3186,6 +3451,36 @@
         }
       }
     },
+    "Pagination": {
+      "action": {
+        "first": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "previous": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "next": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "last": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "rows": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "field": {
+        "size": {
+          "string": "",
+          "developer_comment": "This is shown next to a field to select the number of rows to show on each page."
+        }
+      }
+    },
     "ProjectArchive": {
       "title": {
         "string": "Archiviando il Progetto",
@@ -3261,10 +3556,10 @@
                 }
               },
               "4": {
-                "string": "Non sarai più in grado di visualizzare in anteprima i dati di invio online."
+                "string": ""
               },
               "5": {
-                "string": "Non sarai più in grado di connetterti ai dati tramite OData. "
+                "string": ""
               },
               "6": {
                 "string": "Non sarai più in grado di modificare gli Invii nel tuo browser web."

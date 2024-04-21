@@ -304,13 +304,38 @@ defineExpose({ resize });
       "hardConflict": "Tato verze byla vytvořena paralelně s dalšími aktualizacemi, z nichž některé se snaží zapisovat do stejných vlastností jako tato aktualizace."
     }
   },
+  "de": {
+    "noConflicts": "Es gibt keine Konflikte anzuzeigen.",
+    "basedOn": {
+      "label": "Basierend auf",
+      "description": "Die Version dieses Objekts, die der Autor gesehen hat, als er seine Änderungen vorgenommen hat."
+    },
+    "source": {
+      "label": "Quelle",
+      "description": "Die Aktualisierung, die diese Version generiert hat."
+    },
+    "status": {
+      "historical": "Diese historische Version ist enthalten, weil ein kürzlich durchgeführtes paralleles Update auf dieser Version dieses Objekts basierte.",
+      "lastGoodVersion": "Dies ist die aktuellste Version in guter Übereinstimmung. Nach diesem Update wurden potenziell widersprüchliche Updates parallel durchgeführt.",
+      "softConflict": "Diese Version könnte auf alten Daten basieren.",
+      "hardConflict": "Diese Version wurde parallel zu anderen Updates erstellt, von denen einige versuchen, auf dieselben Eigenschaften wie dieses Update zu schreiben."
+    }
+  },
   "es": {
     "noConflicts": "No hay conflictos para mostrar.",
     "basedOn": {
-      "label": "Basado en"
+      "label": "Basado en",
+      "description": "La versión de esta Entidad que el autor vio cuando hizo sus cambios"
     },
     "source": {
-      "label": "Fuente"
+      "label": "Fuente",
+      "description": "La actualización que generó esta versión"
+    },
+    "status": {
+      "historical": "Esta versión histórica se incluye porque se realizó una actualización paralela reciente basada en esta versión de esta Entidad.",
+      "lastGoodVersion": "Esta es la versión más reciente en buen acuerdo. Después de esta actualización, se han realizado actualizaciones potencialmente conflictivas en paralelo.",
+      "softConflict": "Esta versión puede haber sido creada en base a datos antiguos.",
+      "hardConflict": "Esta versión se realizó en paralelo con otras actualizaciones, algunas de las cuales intentan escribir en las mismas propiedades que esta actualización."
     }
   },
   "fr": {

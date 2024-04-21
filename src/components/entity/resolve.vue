@@ -263,12 +263,17 @@ watch(() => props.entity, (entity) => {
       "Überprüfen Sie die Updates, nehmen Sie die erforderlichen Bearbeitungen vor, und wenn Sie sicher sind, dass die Entitätsdaten korrekt sind, drücken Sie 'Als behoben markieren', um diese Warnmeldung zu löschen."
     ],
     "action": {
+      "table": {
+        "show": "Zusammenfassungstabelle anzeigen",
+        "hide": "Zusammenfassungstabelle ausblenden"
+      },
       "seeMoreDetails": "Mehr Details anzeigen",
       "editEntity": "Entität bearbeiten",
       "markAsResolved": "Als gelöst markieren"
     },
     "successMessage": "Die Konfliktwarnung wurde von der Entität entfernt.",
     "problem": {
+      "400_32": "Ein anderer Benutzer hat den Konflikt bereits als gelöst markiert. Bitte aktualisieren Sie, um die aktualisierten Daten zu sehen.",
       "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
     }
   },
@@ -279,12 +284,17 @@ watch(() => props.entity, (entity) => {
       "Revise las actualizaciones, realice las modificaciones necesarias y, si está seguro de que los datos de esta entidad son correctos, presione \"Marcar como resuelto\" para borrar este mensaje de advertencia."
     ],
     "action": {
+      "table": {
+        "show": "Mostrar tabla de resumen",
+        "hide": "Ocultar tabla de resumen"
+      },
       "seeMoreDetails": "Ver más detalles",
       "editEntity": "Editar entidad",
       "markAsResolved": "Marcar como resuelto"
     },
     "successMessage": "El aviso de conflicto ha sido eliminado de la Entidad.",
     "problem": {
+      "400_32": "Otro usuario ya ha marcado el conflicto como resuelto. Por favor, actualice para ver los datos actualizados.",
       "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
     }
   },

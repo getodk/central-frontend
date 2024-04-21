@@ -156,7 +156,8 @@
     "showPreview": "Náhled",
     "hidePreview": "Skrýt náhled",
     "expand": "Rozbalit",
-    "collapse": "Sbalit"
+    "collapse": "Sbalit",
+    "upload": "Nahrát"
   },
   "field": {
     "comment": "Zanechat komentář…",
@@ -297,9 +298,6 @@
     },
     "total": "Celkem",
     "totalSubmissions": "Celkem odeslání",
-    "punctuations": {
-      "comma": ","
-    },
     "new": "Novinka!",
     "totalEntities": "Celkem entit",
     "versionShort": "v{version}",
@@ -334,5 +332,8 @@
   },
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
+  },
+  "punctuation": {
+    "comma": ","
   }
 }

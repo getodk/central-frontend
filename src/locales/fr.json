@@ -132,6 +132,7 @@
     "continue": "Continuer",
     "create": "Créer",
     "createSubmission": "Nouveau",
+    "delete": "Supprimer",
     "done": "Fait",
     "download": "Télécharger",
     "edit": "Éditer",
@@ -152,11 +153,13 @@
     "saveSettings": "Enregistrer les réglages",
     "sort": "Trier",
     "update": "Actualiser",
-    "yesProceed": "Oui, procéder",
+    "yesProceed": "Oui, continuer",
     "showPreview": "Aperçu",
     "hidePreview": "Cacher l'aperçu",
     "expand": "Déplier",
-    "collapse": "Replier"
+    "collapse": "Replier",
+    "reviewParallelUpdates": "Examiner les mises à jour parallèles",
+    "upload": "Téléverser"
   },
   "field": {
     "comment": "Ajouter un commentaire...",
@@ -210,6 +213,7 @@
     "appUsers": "Utilisateurs mobiles",
     "config": "Configuration du serveur",
     "entityList": "Liste d'entités",
+    "entityLists": "Listes d'Entités",
     "entities": "Entités",
     "form": "Formulaire",
     "forms": "Formulaires",
@@ -272,7 +276,7 @@
   "common": {
     "activity": "Activité",
     "anybody": "(n'importe qui)",
-    "areYouSure": "Êtes vous sûr de vouloir procéder ?",
+    "areYouSure": "Êtes vous sûr de vouloir continuer ?",
     "basicInfo": "Information de base",
     "conflict": "Conflit",
     "conflicts": "Conflits",
@@ -287,7 +291,9 @@
     "loading": "Chargement...",
     "no": "Non",
     "noResults": "Aucun résultat",
+    "noUndo": "Cette action ne pourra pas être annulée",
     "rightNow": "Présentement",
+    "rowNumber": "Ligne",
     "success": "Succès !",
     "system": "Système",
     "yes": "Oui",
@@ -297,9 +303,6 @@
     },
     "total": "Total",
     "totalSubmissions": "Nombre total de soumissions",
-    "punctuations": {
-      "comma": ","
-    },
     "propertiesCount": "{inform} de {count} propriété | {inform} de {count} propriétés | {inform} de {count} propriété(s)",
     "new": "Nouveau !",
     "totalEntities": "Nombre d'entités",
@@ -320,10 +323,17 @@
     }
   },
   "util": {
+    "csv": {
+      "invalidQuotes": "Un champ entre guillemets n'est pas valide. Vérifiez la ligne pour voir s'il n'y a pas de valeurs inhabituelles.",
+      "dataWithoutHeader": "{expected} colonne attendue, mais {actual} trouvée(s). | {expected} colonnes attendues, mais {actual} trouvée(s). | {expected} colonnes attendues, mais {actual} trouvée(s)."
+    },
     "request": {
       "noRequest": "Quelque-chose s'est mal passé : il n'y avait pas de requête.",
       "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",
-      "errorNotProblem": "Quelque-chose s'est mal passé : code d'erreur {status}."
+      "errorNotProblem": "Quelque-chose s'est mal passé : code d'erreur {status}.",
+      "problem": {
+        "404_1": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée."
+      }
     },
     "session": {
       "alert": {
@@ -335,5 +345,8 @@
   },
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
+  },
+  "punctuation": {
+    "comma": ","
   }
 }

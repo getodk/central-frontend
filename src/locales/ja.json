@@ -147,7 +147,8 @@
     "update": "更新",
     "yesProceed": "はい、続けます。",
     "showPreview": "プレビュー",
-    "hidePreview": "プレビューを隠す"
+    "hidePreview": "プレビューを隠す",
+    "upload": "アップロード"
   },
   "field": {
     "comment": "コメントを残す...",

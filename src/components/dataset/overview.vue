@@ -120,11 +120,13 @@ const afterCreateProperty = () => {
   },
   "fr": {
     "connectionsToForms": "Connexions aux formulaires",
-    "entityProperties": "Propriétés"
+    "entityProperties": "Propriétés",
+    "new": "Nouvelle"
   },
   "it": {
     "connectionsToForms": "Connessioni ai formulari",
-    "entityProperties": "Proprietà della Entità"
+    "entityProperties": "Proprietà della Entità",
+    "new": "Nuova"
   },
   "sw": {
     "connectionsToForms": "Viunganisho kwa Fomu",

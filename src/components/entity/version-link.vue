@@ -79,9 +79,18 @@ const text = computed(() => {
     "submission": "Odeslání {instanceName}",
     "api": "Aktualizace od {name}"
   },
+  "de": {
+    "submission": "Übermittlung {instanceName}",
+    "api": "Update von {name}"
+  },
+  "es": {
+    "submission": "Envío {instanceName}",
+    "api": "Actualizar por {name}"
+  },
   "fr": {
     "submission": "Soumission {instanceName}",
-    "api": "Mise à jour par {name}"
+    "api": "Mise à jour par {name}",
+    "bulk": "Envoi du fichier {filename} par {name}"
   },
   "it": {
     "submission": "Invio {instanceName}",
