@@ -118,10 +118,12 @@ const { publishedFormPath } = useRoutes();
     "emptyTable": "Las entidades de esta lista no tienen propiedades definidas por el usuario."
   },
   "fr": {
-    "emptyTable": "Les entités dans cette liste n'ont pas de propriétés définies par l'utilisateur"
+    "emptyTable": "Les entités dans cette liste n'ont pas de propriétés définies par l'utilisateur",
+    "none": "Aucun"
   },
   "it": {
-    "emptyTable": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente."
+    "emptyTable": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente.",
+    "none": "(Nessuna)"
   },
   "sw": {
     "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."

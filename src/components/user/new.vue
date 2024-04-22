@@ -137,7 +137,10 @@ export default {
     ],
     "oidcIntroduction": [
       "Benutzer auf Ihrem Anmeldeserver müssen über ein Central-Konto verfügen, um sich bei Central anzumelden. Sobald Sie dieses Konto erstellt haben, kann sich der Benutzer auf Ihrem Anmeldeserver mit der von Ihnen angegebenen E-Mail-Adresse bei Central anmelden."
-    ]
+    ],
+    "problem": {
+      "409_3": "Es sieht so aus, als hätte {email} bereits ein Konto. Bitte versuchen Sie eine andere Emailadresse."
+    }
   },
   "es": {
     "title": "Crear usuario web",
@@ -146,7 +149,10 @@ export default {
     ],
     "oidcIntroduction": [
       "Los usuarios de su servidor de inicio de sesión deben tener una cuenta de Central para iniciar sesión en Central. Una vez que cree esta cuenta, el usuario en su servidor de inicio de sesión con la dirección de correo electrónico que proporcione podrá iniciar sesión en Central."
-    ]
+    ],
+    "problem": {
+      "409_3": "Parece que {email} ya tiene una cuenta. Por favor, prueba con otra dirección de correo electrónico."
+    }
   },
   "fr": {
     "title": "Créer un utilisateur web",

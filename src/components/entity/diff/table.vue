@@ -146,6 +146,22 @@ const uuid = inject('uuid');
     "comparing": "Srovnání",
     "version": "{version} ({source})"
   },
+  "de": {
+    "header": {
+      "oldValue": "Alter Wert",
+      "newValue": "Neuer Wert"
+    },
+    "comparing": "Vergleichen",
+    "version": "{version} ({source})"
+  },
+  "es": {
+    "header": {
+      "oldValue": "Valor antiguo",
+      "newValue": "Nuevo valor"
+    },
+    "comparing": "Comparando",
+    "version": "{version} ({source})"
+  },
   "fr": {
     "header": {
       "oldValue": "Ancienne valeur",

@@ -103,6 +103,12 @@ $tabs-indent: 3px;
   "cs": {
     "noChange": "Nejsou žádné změny k zobrazení."
   },
+  "de": {
+    "noChange": "Es gibt keine Änderungen anzuzeigen."
+  },
+  "es": {
+    "noChange": "No hay cambios que mostrar."
+  },
   "fr": {
     "noChange": "Il n'y a pas de modification à montrer."
   },

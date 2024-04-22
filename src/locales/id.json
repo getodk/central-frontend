@@ -154,7 +154,8 @@
     "showPreview": "Pratinjau",
     "hidePreview": "Sembunyikan pratinjau",
     "expand": "Perluas",
-    "collapse": "Tutup"
+    "collapse": "Tutup",
+    "upload": "Unggah"
   },
   "field": {
     "comment": "Tinggalkan komentar",
@@ -287,9 +288,6 @@
     },
     "total": "Total",
     "totalSubmissions": "Total Kiriman",
-    "punctuations": {
-      "comma": ","
-    },
     "propertiesCount": "{inform} dari {count} properti",
     "status": "Status",
     "version": "Versi"
@@ -321,5 +319,8 @@
   },
   "router": {
     "unsavedChanges": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
+  },
+  "punctuation": {
+    "comma": ","
   }
 }

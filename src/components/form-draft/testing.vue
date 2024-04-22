@@ -200,7 +200,14 @@ export default {
       "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
       "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
     ],
-    "collectProjectName": "[Entwurf] {name}"
+    "collectProjectName": "[Entwurf] {name}",
+    "entitiesTesting": {
+      "title": "Dieses Formular kann Objekte aktualisieren.",
+      "body": [
+        "Objekte werden nur für veröffentlichte Formulare aktualisiert. In einer zukünftigen Version von Central können Sie die Funktionalität von Objekten im Entwurfsstatus testen.",
+        "Derzeit empfehlen wir, Ihre Formdefinition im Entwurfszustand zu überprüfen, um deren Logik zu überprüfen. Bevor Sie sie veröffentlichen, können Sie sicherstellen, dass sie alle gewünschten Eigenschaften aktualisiert."
+      ]
+    }
   },
   "es": {
     "title": "Prueba de borrador",
@@ -208,7 +215,14 @@ export default {
       "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
       "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
     ],
-    "collectProjectName": "borrador {name}"
+    "collectProjectName": "borrador {name}",
+    "entitiesTesting": {
+      "title": "Este Formulario puede actualizar Entidades",
+      "body": [
+        "Las entidades solo se actualizan para Formularios publicados. En una futura versión de Central, podrás probar la funcionalidad de Entidades en estado de Borrador.",
+        "Por ahora, recomendamos probar la definición de su Formulario en estado Borrador para verificar su lógica. Antes de publicar, puede verificar que actualice todas las propiedades deseadas."
+      ]
+    }
   },
   "fr": {
     "title": "Test de l'ébauche",
