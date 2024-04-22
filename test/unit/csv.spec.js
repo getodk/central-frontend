@@ -235,15 +235,14 @@ describe('util/csv', () => {
           });
         });
 
-        it('returns NaN after 50 ranges', async () => {
-          const data = 'x,""\ny\n'.repeat(52);
+        it('returns no more than 500 ranges', async () => {
+          const data = 'x,""\ny\n'.repeat(1000);
           const csv = createCSV(`a,b\n${data}`);
           const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
-          const expectedRanges = new Array(50).fill(null).map((_, i) => {
+          const expectedRanges = new Array(500).fill(null).map((_, i) => {
             const row = 2 * (i + 1);
             return [row, row];
           });
-          expectedRanges.push([NaN, NaN]);
           warnings.should.eql({
             count: 1,
             details: { raggedRows: expectedRanges }

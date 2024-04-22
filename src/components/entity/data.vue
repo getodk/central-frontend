@@ -65,10 +65,7 @@ const data = computed(() => entity.currentVersion.data);
   dt { @include text-overflow-ellipsis; }
 
   dd {
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    display: -webkit-box;
-    overflow: hidden;
+    @include line-clamp(3);
     overflow-wrap: break-word;
     white-space: break-spaces;
   }

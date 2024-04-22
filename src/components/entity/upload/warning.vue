@@ -18,11 +18,9 @@ except according to the terms contained in the LICENSE file.
     <template v-if="ranges != null">
       <span>&nbsp;</span>
       <i18n-list v-slot="{ value: [start, end] }" :list="ranges">
-        <a v-if="!Number.isNaN(start)" href="#"
-          @click.prevent="$emit('rows', [start - 1, end - 1])">
+        <a href="#" @click.prevent="$emit('rows', [start - 1, end - 1])">
           {{ formatRange(start, end) }}
         </a>
-        <template v-else>&hellip;</template>
       </i18n-list>
     </template>
   </div>
@@ -37,8 +35,7 @@ defineOptions({
   name: 'EntityUploadWarning'
 });
 defineProps({
-  ranges: Array,
-  overflow: Boolean
+  ranges: Array
 });
 defineEmits(['rows']);
 
@@ -46,7 +43,10 @@ const { formatRange } = useI18nUtils();
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+
 .entity-upload-warning {
+  @include line-clamp(2);
   background-color: #fff;
   font-weight: bold;
   padding: 4px 3px;

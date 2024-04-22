@@ -6,6 +6,14 @@
   white-space: nowrap;
 }
 
+// Truncates content after the specified number of lines.
+@mixin line-clamp($lines) {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
 @mixin text-link {
   &, &:hover, &:focus {
     color: inherit;

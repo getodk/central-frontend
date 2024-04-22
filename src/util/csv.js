@@ -113,10 +113,8 @@ const raggedRowsWarning = (columns) => {
       const lastRange = last(ragged);
       if (lastRange != null && i === lastRange[1] + 1)
         lastRange[1] = i;
-      else if (ragged.length < 50)
+      else if (ragged.length < 500)
         ragged.push([i, i]);
-      else if (!Number.isNaN(lastRange[0]))
-        ragged.push([NaN, NaN]);
     } else if (values.length === columns.length && last(values) === '') {
       anyPadded = true;
     }

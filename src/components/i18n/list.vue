@@ -55,7 +55,8 @@ const format = () => {
     if (part.type === 'literal') {
       literals.value[index] += part.value;
     } else {
-      if (part.value !== elements[index]) throw new Error('element mismatch');
+      if (index === elements.length || part.value !== elements[index])
+        throw new Error('element mismatch');
       index += 1;
     }
   }

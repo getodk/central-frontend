@@ -103,7 +103,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/variables';
+@import '../../../assets/scss/mixins';
 
 #entity-upload-header-errors {
   margin-bottom: 0;
@@ -114,11 +114,9 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
   }
 
   .csv-header {
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    display: -webkit-box;
+    @include line-clamp(3);
     font-family: $font-family-monospace;
-    overflow: auto hidden;
+    overflow-x: auto;
     white-space: break-spaces;
   }
 }

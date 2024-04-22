@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { nextTick, ref, shallowRef, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 
 import { px } from '../../../util/dom';
 import { useRequestData } from '../../../request-data';
@@ -56,7 +56,8 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  awaitingResponse: Boolean
+  awaitingResponse: Boolean,
+  highlighted: Array
 });
 
 // The component assumes that this data will exist when the component is
@@ -94,6 +95,9 @@ watch(
   }
 );
 
+const isHighlighted = (index) => props.highlighted != null &&
+  index >= props.highlighted[0] && index <= props.highlighted[1];
+
 const overlapsPopup = ref(false);
 const resizeLastColumn = () => {
   // Undo previous resizing.
@@ -127,14 +131,9 @@ const resizeLastColumn = () => {
     th.style.width = 'auto';
 };
 
-const highlightedRange = shallowRef([NaN, NaN]);
-const highlightRows = (range) => { highlightedRange.value = range; };
-const isHighlighted = (index) =>
-  index >= highlightedRange.value[0] && index <= highlightedRange.value[1];
-
 const resetScroll = () => { container.value.scroll(0, 0); };
 
-defineExpose({ resizeLastColumn, highlightRows, resetScroll });
+defineExpose({ resizeLastColumn, resetScroll });
 </script>
 
 <style lang="scss">

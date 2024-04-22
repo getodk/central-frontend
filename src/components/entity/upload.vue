@@ -45,7 +45,8 @@ except according to the terms contained in the LICENSE file.
             <entity-upload-warnings v-if="warnings != null && warnings.count !== 0"
               v-bind="warnings.details" @rows="showWarningRows"/>
             <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
-              :row-index="csvRow" :page-size="csvPage.size"/>
+              :row-index="csvRow" :page-size="csvPage.size"
+              :highlighted="warningRows"/>
             <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
               v-model:size="csvPage.size" :count="csvEntities.length"
               :size-options="pageSizeOptions"/>
@@ -308,15 +309,13 @@ watch(csvEntities, (value) => {
   if (value == null) Object.assign(csvPage, { page: 0, size: defaultPageSize });
 });
 
-const tables = [null, null];
-const setTable = (i) => (el) => { tables[i] = el; };
+// Rows of a warning that the user has selected to see
+const warningRows = shallowRef(null);
 const showWarningRows = (range) => {
   csvPage.page = Math.floor(range[0] / csvPage.size);
-  tables[1].highlightRows(range);
+  warningRows.value = range;
 };
-watch(csvEntities, (value) => {
-  if (value == null) tables[1].highlightRows([NaN, NaN]);
-});
+watch(csvEntities, (value) => { if (value == null) warningRows.value = null; });
 
 const { request, awaitingResponse: uploading } = useRequest();
 const uploadProgress = ref(0);
@@ -339,6 +338,8 @@ watch(csvEntities, (value) => {
 });
 
 // Resize the last column of the tables.
+const tables = [null, null];
+const setTable = (i) => (el) => { tables[i] = el; };
 const resizeLastColumn = () => {
   for (const table of tables) table.resizeLastColumn();
 };
