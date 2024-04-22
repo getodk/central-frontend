@@ -122,13 +122,15 @@ const afterCreateDataset = (dataset) => {
     "heading": [
       "Les entités vous permettent de partager de l'information entre vos formulaires. Vous pouvez ainsi collecter des données longitudinales, suivre des cas dans le temps, et créer d'autres processus à multiples étapes.",
       "Les entités sont créées dans vos définitions de formulaires et peuvent être jointes à n'importe quel formulaire."
-    ]
+    ],
+    "new": "Nouvelle"
   },
   "it": {
     "heading": [
       "Le entità consentono di condividere le informazioni tra i formulari per raccogliere dati longitudinali, gestire i casi nel tempo e rappresentare altri flussi di lavoro con più passaggi.",
       "Le entità vengono create attraverso la progettazione dei formulari e possono essere allegate a qualsiasi formulario."
-    ]
+    ],
+    "new": "Nuova"
   },
   "sw": {
     "heading": [

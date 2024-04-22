@@ -129,6 +129,8 @@ const { submissionPath } = useRoutes();
   },
   "fr": {
     "creatingSubmission": "Soumission à l'origine de l'entité",
+    "creatingSource": "Création de la source",
+    "upload": "Envoi",
     "submissionDeleted": "La Soumission a été supprimée."
   },
   "id": {
@@ -136,6 +138,7 @@ const { submissionPath } = useRoutes();
   },
   "it": {
     "creatingSubmission": "Creando invio",
+    "upload": "Carica",
     "submissionDeleted": "Questo invio è stato eliminato."
   },
   "sw": {

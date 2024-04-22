@@ -115,6 +115,12 @@ const newValue = name === 'label' ? entityVersion.label : entityVersion.data[nam
   "cs": {
     "conflictingProp": "Další aktualizace již zapsala do této vlastnosti."
   },
+  "de": {
+    "conflictingProp": "Ein weiteres Update hat bereits diese Eigenschaft geschrieben."
+  },
+  "es": {
+    "conflictingProp": "Otra actualización ya se escribió en esta propiedad."
+  },
   "fr": {
     "conflictingProp": "Une autre mise à jour a déjà écrit sur cette propriété."
   },

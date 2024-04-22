@@ -120,6 +120,9 @@ const submit = () => {
     "action": {
       "update": "Details aktualisieren"
     },
+    "problem": {
+      "409_3": "Sie können Ihre E-Mail-Adresse nicht in {email} ändern, da dieses Konto bereits existiert. Bitte versuchen Sie eine andere E-Mailadresse."
+    },
     "alert": {
       "success": "Benutzerinformationen gespeichert!"
     }
@@ -129,6 +132,9 @@ const submit = () => {
     "emailDisabled": "Su dirección de correo electrónico no se puede cambiar. Se utiliza entre Central y su servidor de inicio de sesión para garantizar su identidad.",
     "action": {
       "update": "Actualizar información"
+    },
+    "problem": {
+      "409_3": "No puede cambiar su correo electrónico a {email} porque esta cuenta ya existe. Por favor, intente con otra dirección de correo electrónico."
     },
     "alert": {
       "success": "Información de usuario guardada!"

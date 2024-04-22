@@ -156,7 +156,9 @@
     "showPreview": "Vorschau",
     "hidePreview": "Vorschau ausblenden",
     "expand": "Vergrössern",
-    "collapse": "Verkleinern"
+    "collapse": "Verkleinern",
+    "reviewParallelUpdates": "Parallele Updates überprüfen",
+    "upload": "Hochladen"
   },
   "field": {
     "comment": "Kommentieren...",
@@ -274,6 +276,7 @@
     "anybody": "(Jeder)",
     "areYouSure": "Wollen Sie wirklich fortfahren?",
     "basicInfo": "Basis-Informationen",
+    "conflict": "Konflikt",
     "conflicts": "Konflikte",
     "currentDraft": "Ihr aktueller Entwurf",
     "dangerZone": "Gefahrenbereich",
@@ -287,6 +290,7 @@
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "rightNow": "Aktuell",
+    "rowNumber": "Reihe",
     "success": "Das hat geklappt!",
     "system": "System",
     "yes": "Ja",
@@ -296,12 +300,10 @@
     },
     "total": "Total",
     "totalSubmissions": "Gesamtzahl der Übermittlungen",
-    "punctuations": {
-      "comma": ","
-    },
     "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
     "new": "Neu!",
     "totalEntities": "Entitäten insgesamt",
+    "versionShort": "v{version}",
     "status": "Status",
     "version": "Version"
   },
@@ -333,5 +335,8 @@
   },
   "router": {
     "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
+  },
+  "punctuation": {
+    "comma": ","
   }
 }

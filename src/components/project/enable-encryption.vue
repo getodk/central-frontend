@@ -343,11 +343,7 @@ export default {
             [
               "Formuláře nakonfigurované pomocí ručně {submission} klíčů budou tyto klíče nadále používat a musí být ručně dešifrovány.",
               "Chcete-li použít automatický proces centrálního šifrování na těchto formulářích, odeberte konfiguraci {base64RsaPublicKey}."
-            ],
-            "Již nebudete mít možnost zobrazit online náhled odeslaných údajů.",
-            "Již se nebudete moci připojit k datům přes OData.",
-            "Ve svém webovém prohlížeči již nebudete moci upravovat příspěvky.",
-            "Nová podání již nebudou zpracovávána do entit."
+            ]
           ],
           [
             "Kromě toho platí pro tuto verzi ODK Central následující:",
@@ -397,11 +393,7 @@ export default {
             [
               "Formulare, die mit manuellen {submission} Schlüsseln konfiguriert wurden, werden diese Schlüssel weiterhin verwenden und müssen manuell entschlüsselt werden.",
               "Um den automatischen Central-Verschlüsselungsprozess für diese Formulare zu nutzen, entfernen Sie die {base64RsaPublicKey} Konfiguration."
-            ],
-            "Sie werden zukünftig Übermittlungsdaten nicht mehr online als Vorschau sehen können.",
-            "Sie werden sich zukünftig nicht mehr über OData mit Daten verbinden können.",
-            "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten.",
-            "Neue Einreichungen werden nicht mehr zu Entitäten verarbeitet."
+            ]
           ],
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
@@ -451,11 +443,7 @@ export default {
             [
               "Los formularios configurados con claves {submission} manuales continuarán utilizando esas claves y deben ser descifrados manualmente.",
               "Para utilizar el proceso automático de encriptación de Central en estos formularios, remueva la configuración {base64RsaPublicKey}."
-            ],
-            "Ya no podrá obtener una vista previa de los datos de la presentación en línea",
-            "Ya no podrá conectarse a los datos a través de Odata.",
-            "Ya no podrá editar envíos en su navegador web.",
-            "Los Envíos nuevos ya no se procesarán en Entidades."
+            ]
           ],
           [
             "Además, lo siguiente es cierto en esta versión de ODK Central:",
@@ -505,11 +493,7 @@ export default {
             [
               "Les formulaires configurés avec des clés {submission} manuelles continueront à utiliser ces clés et devront être déchiffrés manuellement.",
               "Pour utiliser le chiffrement automatique de Central pour ce formulaire, supprimez la configuration {base64RsaPublicKey}."
-            ],
-            "Vous ne pourrez plus prévisualiser les données de soumission en ligne.",
-            "Vous ne pourrez plus vous connecter aux données via OData.",
-            "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur.",
-            "Les nouvelles Soumissions ne seront plus transformées en entités."
+            ]
           ],
           [
             "En outre, ce qui suit est vrai dans cette version d'ODK Central :",
@@ -522,7 +506,7 @@ export default {
             "Les soumissions de test des ébauches de formulaires existantes seront définitivement supprimées."
           ],
           {
-            "full": "Vous pouvez en apprendre plus sur le chiffrement en cliquant {here}. Si il vous semble être utile, cliquez sur Suivant pour procéder.",
+            "full": "Vous pouvez en apprendre plus à propos du chiffrement en cliquant {here}. Si cela vous semble être utile, cliquez sur Suivant pour continuer.",
             "here": "ici"
           }
         ]
@@ -559,10 +543,7 @@ export default {
             [
               "Formulir yang dikonfigurasi dengan kunci {submission} manual akan tetap menggunakan kunci-kunci tersebut dan harus didekripsi secara manual.",
               "Untuk menggunakan proses enkripsi otomatis Central pada formulir ini, hapus konfigurasi {base64RsaPublicKey}."
-            ],
-            "Anda tidak akan bisa melihat pratinjau kiriman data secara online.",
-            "Anda tidak akan bisa menghubungkan data lewat OData.",
-            "Anda tidak akan bisa lagi mengubah kiriman di situs web Anda."
+            ]
           ],
           [
             "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:",
@@ -602,11 +583,7 @@ export default {
             [
               "I formulari configurati con chiavi {submission} manuali continueranno a utilizzare tali chiavi e devono essere decrittografati manualmente.",
               "Per utilizzare il processo di crittografia centrale automatica su questi formulari, rimuovere la configurazione {base64RsaPublicKey}."
-            ],
-            "Non sarai più in grado di visualizzare in anteprima i dati di invio online.",
-            "Non sarai più in grado di connetterti ai dati tramite OData.",
-            "Non sarai più in grado di modificare gli Invii nel tuo browser web.",
-            "I nuovi invii non verranno più elaborati in Entità."
+            ]
           ],
           [
             "Inoltre, quanto segue è reale in questa versione di ODK Central:",
@@ -656,10 +633,7 @@ export default {
             [
               "手動で{submission}キーを設定したフォームでは、そのキーが引き続き使用されるため、手動で復号化する必要があります。",
               "これらのフォームでCentralの自動暗号化処理を使用するには、{base64RsaPublicKey}の設定を削除して下さい。"
-            ],
-            "オンラインで提出済フォームのデータをプレビューできなくなります。",
-            "OData経由でデータに接続できなくなります。",
-            "提出されたデータをWebブラウザで編集できなくなります。"
+            ]
           ],
           [
             "また、このバージョンのODK Centralでは以下のようになっています。",
@@ -702,11 +676,7 @@ export default {
             [
               "Fomu zilizosanidiwa kwa funguo za mwongozo za {submission} zitaendelea kutumia funguo hizo, na lazima zisimbuwe wewe mwenyewe",
               "li kutumia mchakato wa usimbaji fiche wa Kati kiotomatiki kwenye Fomu hizi, ondoa usanidi wa {base64RsaPublicKey}."
-            ],
-            "Hutaweza tena kuhakiki data ya Wasilisho mtandaoni.",
-            "Hutaweza tena kuunganisha kwa data kupitia OData.",
-            "Hutaweza tena kuhariri Mawasilisho katika kivinjari chako cha wavuti.",
-            "Mawasilisho Mapya hayatachakatwa tena kuwa Mashirika"
+            ]
           ],
           [
             "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:",

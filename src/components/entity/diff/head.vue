@@ -167,6 +167,34 @@ const change = (value) => {
       "updating": "(aktualizace {version})"
     }
   },
+  "de": {
+    "introduction": "Diese Aktualisierung der Übermittlung wurde auf Version {version} dieses Objekts angewendet, aber sie wurde basierend auf Version {baseVersion} erstellt.",
+    "hardConflict": {
+      "description": "Andere Updates wurden bereits in die gleichen Eigenschaften geschrieben."
+    },
+    "softConflict": {
+      "title": "Parallel Update"
+    },
+    "tab": {
+      "baseDiff": "Autoren-Ansicht",
+      "serverDiff": "Zentrale Ansicht",
+      "updating": "(aktualisiere {version})"
+    }
+  },
+  "es": {
+    "introduction": "Esta actualización de envío se aplicó a la versión {version} de esta entidad, pero se creó basándose en la versión {baseVersion}.",
+    "hardConflict": {
+      "description": "Otras actualizaciones ya habían sido escritas en las mismas propiedades."
+    },
+    "softConflict": {
+      "title": "Actualización Paralela"
+    },
+    "tab": {
+      "baseDiff": "Vista del autor",
+      "serverDiff": "Vista de Central",
+      "updating": "(actualizando {version})"
+    }
+  },
   "fr": {
     "introduction": "Cette Soumission de mise à jour a été appliquée à la version {version} de cette entité, mais elle a été créée sur la base de la version {baseVersion}.",
     "hardConflict": {

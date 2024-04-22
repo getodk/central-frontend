@@ -258,19 +258,32 @@ const markAsResolved = () => {
       "body": "Nachdem Sie die möglicherweise widersprüchlichen Aktualisierungen überprüft und alle erforderlichen Aktualisierungen vorgenommen haben, können Sie unten auf „Bestätigen“ klicken, um die Warnung zu parallelen Aktualisierungen zu löschen.",
       "confirm": "Bestätigen"
     },
+    "conflictResolved": "Der Konfliktwarnhinweis wurde aufgehoben.",
     "markAsResolved": "Als gelöst markieren",
     "problem": {
+      "400_32": "Ein anderer Benutzer hat den Konflikt bereits als gelöst markiert. Bitte aktualisieren Sie, um die aktualisierten Daten zu sehen.",
       "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
     }
   },
   "es": {
     "title": "Actualizaciones de datos en paralelo",
+    "subtitle": [
+      "Una o más actualizaciones se han realizado en base a datos que pueden haber estado desactualizados.",
+      "Por favor revise este resumen de las actualizaciones paralelas."
+    ],
+    "footer": [
+      "Si es necesario ajustar algún valor, puedes editar directamente los datos de la entidad.",
+      "Si todo parece estar bien, haz clic en \"Marcar como resuelto\" para descartar esta advertencia."
+    ],
     "confirmation": {
       "title": "¿Esta entidad está bien?",
+      "body": "Después de haber revisado las actualizaciones posiblemente conflictivas y haber realizado las actualizaciones necesarias, puedes hacer clic en Confirmar a continuación para eliminar la advertencia de actualización paralela.",
       "confirm": "Confirmar"
     },
+    "conflictResolved": "La advertencia de conflicto ha sido eliminada.",
     "markAsResolved": "Marcar como resuelto",
     "problem": {
+      "400_32": "Otro usuario ya ha marcado el conflicto como resuelto. Por favor, actualice para ver los datos actualizados.",
       "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
     }
   },

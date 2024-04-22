@@ -93,64 +93,56 @@ export default {
     "title": "Odebrat přístup uživatele",
     "introduction": [
       "Opravdu chcete odebrat přístup uživateli aplikace {displayName}?",
-      "Stávající příspěvky od tohoto uživatele zůstanou, ale kdokoli se na tohoto uživatele obrátí, bude muset vytvořit nové, aby pokračoval ve stahování formulářů nebo odesílání příspěvků.",
-      "Tuto akci nelze vrátit zpět."
+      "Stávající příspěvky od tohoto uživatele zůstanou, ale kdokoli se na tohoto uživatele obrátí, bude muset vytvořit nové, aby pokračoval ve stahování formulářů nebo odesílání příspěvků."
     ]
   },
   "de": {
     "title": "Zugriffsberechtigung entziehen",
     "introduction": [
       "Wollen Sie dem Benutzer {displayName} wirklich die Zugriffsberechtigung entziehen?",
-      "Bestehende Übermittlungen dieses Benutzers bleiben erhalten. Bei jedem Bezug auf diesen Benutzer muss ein neuer erstellt werden, um Formulare herunterzuladen oder Übermittlungen einzureichen.",
-      "Diese Aktion kann nicht rückgängig gemacht werden."
+      "Bestehende Übermittlungen dieses Benutzers bleiben erhalten. Bei jedem Bezug auf diesen Benutzer muss ein neuer erstellt werden, um Formulare herunterzuladen oder Übermittlungen einzureichen."
     ]
   },
   "es": {
     "title": "Revocar acceso de usuario",
     "introduction": [
       "¿Está seguro de que desea revocar el acceso del usuario móvil {displayName}?",
-      "Los envíos existentes de este usuario permanecerán, pero cualquiera que confíe en este usuario tendrá que crear uno nuevo para continuar descargando formularios o cargando envíos.",
-      "Esta acción no se puede deshacer."
+      "Los envíos existentes de este usuario permanecerán, pero cualquiera que confíe en este usuario tendrá que crear uno nuevo para continuar descargando formularios o cargando envíos."
     ]
   },
   "fr": {
     "title": "Révoquer l'accès des utilisateurs",
     "introduction": [
       "Êtes vous sûr de vouloir révoquer l'accès de l'utilisateur mobile {displayName}?",
-      "Les soumissions existantes de cet utilisateur seront conservées, mais toute personne s'appuyant sur cet utilisateur devra en créer une nouvelle pour continuer à télécharger des formulaires ou des soumissions.",
-      "Cette action ne peut être annulée."
+      "Les soumissions existantes de cet utilisateur seront conservées, mais toute personne s'appuyant sur cet utilisateur devra en créer une nouvelle pour continuer à télécharger des formulaires ou des soumissions."
     ]
   },
   "id": {
     "title": "Cabut Akses Pengguna",
     "introduction": [
       "Apakah Anda yakin ingin mencabut akses dari Pengguna Aplikasi {displayName}?",
-      "Kiriman data yang sudah ada dari Pengguna ini akan tetap ada, tetapi siapapun yang bergantung pada Pengguna ini harus membuat akun Pengguna baru untuk melanjutkan pengunduhan formulir atau pengunggahan kiriman data.",
-      "Tindakan ini tidak bisa dibatalkan/dikembalikan."
+      "Kiriman data yang sudah ada dari Pengguna ini akan tetap ada, tetapi siapapun yang bergantung pada Pengguna ini harus membuat akun Pengguna baru untuk melanjutkan pengunduhan formulir atau pengunggahan kiriman data."
     ]
   },
   "it": {
     "title": "Revoca l'accesso utente",
     "introduction": [
       "Sei sicuro di voler revocare l'accesso all'App User {displayName}?",
-      "Gli invii esistenti di questo utente rimarranno, ma chiunque faccia affidamento su questo utente dovrà crearne uno nuovo per continuare a scaricare i formulari o caricare invii.",
-      "Questa operazione è irreversibile."
+      "Gli invii esistenti di questo utente rimarranno, ma chiunque faccia affidamento su questo utente dovrà crearne uno nuovo per continuare a scaricare i formulari o caricare invii."
     ]
   },
   "ja": {
     "title": "アプリユーザーのアクセス権の取消",
     "introduction": [
       "アプリユーザー\"{displayName}\"のアクセス権を本当に取り消しますか？",
-      "このユーザーからこれまでに提出されたフォームは残りますが、このユーザーに依存している人は、フォームのダウンロードや提出フォームのアップロードを継続するために、新しいユーザーを作成する必要があります。",
-      "この操作は取り消しできません。"
+      "このユーザーからこれまでに提出されたフォームは残りますが、このユーザーに依存している人は、フォームのダウンロードや提出フォームのアップロードを継続するために、新しいユーザーを作成する必要があります。"
     ]
   },
   "sw": {
     "title": "Batilisha Ufikiaji wa Mtumiaji",
     "introduction": [
       "Je, una uhakika unataka kubatilisha ufikiaji kutoka kwa Mtumiaji wa Programu {displayName}?",
-      "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho",
-      "Kitendo hiki hakiwezi kutenduliwa"
+      "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho"
     ]
   }
 }

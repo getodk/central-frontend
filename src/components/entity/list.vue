@@ -393,7 +393,10 @@ export default {
   },
   "fr": {
     "noEntities": "Pas d'entités à montrer.",
-    "noMatching": "Il n'y a pas d'Entités correspondantes"
+    "noMatching": "Il n'y a pas d'Entités correspondantes",
+    "alert": {
+      "delete": "L'Entité \"{label}\" a été supprimée."
+    }
   },
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
