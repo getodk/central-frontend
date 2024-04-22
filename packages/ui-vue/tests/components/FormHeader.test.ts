@@ -10,6 +10,6 @@ describe('FormHeader', () => {
 			},
 		});
 
-		expect(component.text()).to.be.eql('Test Form');
+		expect(component.text()).toBe('Test Form');
 	});
 });

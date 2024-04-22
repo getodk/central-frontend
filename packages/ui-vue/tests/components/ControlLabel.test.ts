@@ -24,10 +24,10 @@ describe('ControlLabel', () => {
 
 		const requireSpan = component.find('label span');
 
-		expect(requireSpan.exists()).to.be.true;
-		expect(requireSpan.text()).to.be.eql('*');
+		expect(requireSpan.exists()).toBe(true);
+		expect(requireSpan.text()).toBe('*');
 
-		expect(component.text()).to.be.eql('* First Name');
+		expect(component.text()).toBe('* First Name');
 	});
 
 	it('does not show asterisk when field is not required', () => {
@@ -39,8 +39,8 @@ describe('ControlLabel', () => {
 
 		const requireSpan = component.find('label span');
 
-		expect(requireSpan.exists()).to.be.false;
+		expect(requireSpan.exists()).toBe(false);
 
-		expect(component.text()).to.be.eql('First Name');
+		expect(component.text()).toBe('First Name');
 	});
 });

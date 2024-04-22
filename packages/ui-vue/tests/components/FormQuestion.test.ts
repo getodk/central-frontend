@@ -26,9 +26,9 @@ describe('FormQuestion', () => {
 
 		const inputText = component.findComponent(InputText);
 
-		expect(inputText.exists()).to.be.true;
+		expect(inputText.exists()).toBe(true);
 
-		expect(component.text()).to.be.eql('* First Name');
+		expect(component.text()).toBe('* First Name');
 	});
 
 	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
@@ -40,8 +40,8 @@ describe('FormQuestion', () => {
 
 		const unsupported = component.findComponent(UnsupportedControl);
 
-		expect(unsupported.exists()).to.be.true;
+		expect(unsupported.exists()).toBe(true);
 
-		expect(component.text()).to.be.eql('Unsupported field {select} in the form definition.');
+		expect(component.text()).toBe('Unsupported field {select} in the form definition.');
 	});
 });

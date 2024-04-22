@@ -11,7 +11,7 @@ describe('FormPanel', () => {
 			},
 		});
 
-		expect(component.html()).to.be.empty;
+		expect(component.html()).toBe('');
 	});
 
 	it('does not render context button if there is no menu items', () => {
@@ -21,7 +21,7 @@ describe('FormPanel', () => {
 			},
 		});
 
-		expect(component.find('.btn-context').exists()).to.be.false;
+		expect(component.find('.btn-context').exists()).toBe(false);
 	});
 
 	it('shows title', () => {
@@ -31,7 +31,7 @@ describe('FormPanel', () => {
 			},
 		});
 
-		expect(component.find('.panel-title').text()).to.be.eql('Test Panel');
+		expect(component.find('.panel-title').text()).toBe('Test Panel');
 	});
 
 	it('shows provided menu items in context menu', async () => {
@@ -50,7 +50,7 @@ describe('FormPanel', () => {
 
 		await component.find('.btn-context').trigger('click');
 
-		expect(component.findAll('.p-menu.p-component li').length).to.be.eql(1);
-		expect(component.find('.p-menu.p-component').text()).to.be.eql('Remove');
+		expect(component.findAll('.p-menu.p-component li').length).toBe(1);
+		expect(component.find('.p-menu.p-component').text()).toBe('Remove');
 	});
 });

@@ -38,29 +38,29 @@ describe('RepeatRange', () => {
 	it('shows label of RepeatRange', async () => {
 		const component = await mountComponent('09-repeat-with-dynamic-label.xml');
 
-		expect(component.find('h2:first-of-type').text()).to.be.eql('Repeat label');
+		expect(component.find('h2:first-of-type').text()).toBe('Repeat label');
 	});
 
 	it('adds a new instance', async () => {
 		const component = await mountComponent('09-repeat-with-dynamic-label.xml');
 
-		expect(component.findAllComponents(RepeatInstance).length).to.be.eql(1);
+		expect(component.findAllComponents(RepeatInstance).length).toBe(1);
 
 		await component.find('button[aria-label="Add"]').trigger('click');
 
-		expect(component.findAllComponents(RepeatInstance).length).to.be.eql(2);
+		expect(component.findAllComponents(RepeatInstance).length).toBe(2);
 	});
 
 	it('removes an instance', async () => {
 		const component = await mountComponent('09-repeat-with-dynamic-label.xml');
 
-		expect(component.findAllComponents(RepeatInstance).length).to.be.eql(1);
+		expect(component.findAllComponents(RepeatInstance).length).toBe(1);
 
 		await component.find('button[aria-label="More"]').trigger('click');
 
 		await component.find('li[aria-label="Remove"] a').trigger('click');
 
-		expect(component.findAllComponents(RepeatInstance).length).to.be.eql(0);
+		expect(component.findAllComponents(RepeatInstance).length).toBe(0);
 	});
 
 	it('coalesces group if it is the only child', async () => {
@@ -68,7 +68,7 @@ describe('RepeatRange', () => {
 
 		const instance = component.findComponent(RepeatInstance);
 
-		expect(instance.findComponent(FormGroup).exists()).to.be.false;
+		expect(instance.findComponent(FormGroup).exists()).toBe(false);
 	});
 
 	it('does not coalesces group if there are other children', async () => {
@@ -76,6 +76,6 @@ describe('RepeatRange', () => {
 
 		const instance = component.findComponent(RepeatInstance);
 
-		expect(instance.findComponent(FormGroup).exists()).to.be.true;
+		expect(instance.findComponent(FormGroup).exists()).toBe(true);
 	});
 });
