@@ -27,6 +27,7 @@ const Parent = {
 };
 const mountComponent = async (options = undefined) => {
   const component = mount(Parent, options);
+  // Wait for the component to finish rendering.
   await nextTick();
   return component;
 };

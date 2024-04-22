@@ -5,20 +5,27 @@ import EntityUploadTable from '../../../../src/components/entity/upload/table.vu
 import testData from '../../../data';
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
-const mountComponent = (options) =>
-  mount(EntityUploadTable, mergeMountOptions(options, {
-    props: {
-      entities: testData.extendedEntities.size === 0
-        ? null
-        : testData.extendedEntities.sorted().reverse()
-          .map(entity => pick(['label', 'data'], entity.currentVersion)),
-      rowIndex: testData.extendedEntities.size === 0 ? -1 : 0,
-      pageSize: 5
-    },
+const mountComponent = (options = {}) => {
+  if (options.props?.entities != null)
+    throw new Error('entities prop not allowed. Use the rowIndex prop instead.');
+  const mergedOptions = mergeMountOptions(options, {
+    props: { pageSize: 5 },
     container: {
       requestData: { dataset: testData.extendedDatasets.last() }
     }
-  }));
+  });
+  const { props } = mergedOptions;
+  if (testData.extendedEntities.size !== 0) {
+    if (props.rowIndex == null) props.rowIndex = 0;
+    props.entities = testData.extendedEntities.sorted()
+      .reverse()
+      .slice(props.rowIndex, props.rowIndex + props.pageSize)
+      .map(entity => pick(['label', 'data'], entity.currentVersion));
+  } else {
+    props.rowIndex = -1;
+  }
+  return mount(EntityUploadTable, mergedOptions);
+};
 
 describe('EntityUploadTable', () => {
   it('shows a column header for each property', async () => {
@@ -53,10 +60,7 @@ describe('EntityUploadTable', () => {
     testData.extendedDatasets.createPast(1, { entities: 1001 });
     testData.extendedEntities.createPast(1001);
     const component = mountComponent({
-      props: {
-        entities: [testData.extendedEntities.last()],
-        rowIndex: 1000
-      }
+      props: { rowIndex: 1000 }
     });
     component.get('.row-number').text().should.equal('1001');
   });
@@ -78,5 +82,16 @@ describe('EntityUploadTable', () => {
     divs[0].text().should.equal('123456');
     divs[1].text().should.equal('999');
     await divs[0].should.have.textTooltip();
+  });
+
+  it('highlights rows in the highlighted range', () => {
+    testData.extendedDatasets.createPast(1, { entities: 10 });
+    testData.extendedEntities.createPast(10);
+    const component = mountComponent({
+      props: { rowIndex: 5, highlighted: [8, 10] }
+    });
+    const tr = component.findAll('tbody tr');
+    const highlighted = tr.map(wrapper => wrapper.classes('highlight'));
+    highlighted.should.eql([false, false, false, true, true]);
   });
 });

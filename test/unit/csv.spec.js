@@ -261,7 +261,7 @@ describe('util/csv', () => {
 
       describe('large cell', () => {
         it('returns the row of a relatively large cell that contains a comma', async () => {
-          const csv = createCSV('a\n1\n"12345,6789ab"');
+          const csv = createCSV('a\n1\n"12345,67890"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({
             count: 1,
@@ -270,7 +270,7 @@ describe('util/csv', () => {
         });
 
         it('returns row of a relatively large cell that contains specified delimiter', async () => {
-          const csv = createCSV('a\n1\n"12345;6789ab"');
+          const csv = createCSV('a\n1\n"12345;67890"');
           const { warnings } = await parseCSV(i18n, csv, ['a'], {
             delimiter: ';'
           });
@@ -281,7 +281,7 @@ describe('util/csv', () => {
         });
 
         it('returns the row of a relatively large cell that contains a newline', async () => {
-          const csv = createCSV('a\n1\n"12345\n6789ab"');
+          const csv = createCSV('a\n1\n"12345\n67890"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({
             count: 1,
@@ -290,7 +290,7 @@ describe('util/csv', () => {
         });
 
         it('ignores cells that do not contain a delimiter or newline', async () => {
-          const csv = createCSV('a\n1\n"12345.6789ab"');
+          const csv = createCSV('a\n1\n"12345.67890"');
           const { warnings } = await parseCSV(i18n, csv, ['a']);
           warnings.should.eql({
             count: 0,
@@ -299,7 +299,7 @@ describe('util/csv', () => {
         });
 
         it('ignores cells that are not relatively large', async () => {
-          const csv = createCSV('a,b\n1,2\n3,"12345,6789ab"');
+          const csv = createCSV('a,b\n1,2\n3,"12345,67890"');
           const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
           warnings.should.eql({
             count: 0,
@@ -309,7 +309,7 @@ describe('util/csv', () => {
       });
 
       it('returns multiple warnings', async () => {
-        const csv = createCSV('a;b\n1\n"12345;6789ab";""');
+        const csv = createCSV('a;b\n1\n"12345;67890";""');
         const { warnings } = await parseCSV(i18n, csv, ['a', 'b'], {
           delimiter: ';'
         });

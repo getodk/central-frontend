@@ -2,7 +2,10 @@ import { DateTime } from 'luxon';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
+import EntityUploadDataError from '../../../src/components/entity/upload/data-error.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
+import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
+import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
 import OdataLoadingMessage from '../../../src/components/odata-loading-message.vue';
 
 import { relativeUrl } from '../../util/request';
@@ -26,17 +29,18 @@ const showModal = () => {
       ? series.respondWithData(() => testData.entityOData(5, 0, true))
       : series));
 };
-const csv = (text = 'label\ndogwood') => new File([text], 'my_data.csv');
 const parseFilterTime = (filter) => {
   const match = filter.match(/^__system\/createdAt le (.+)/);
   return match == null
     ? NaN
     : DateTime.fromISO(match[1]).toMillis();
 };
-const selectFile = async (modal, file = csv()) => {
+const createCSV = (text = 'label\ndogwood') => new File([text], 'my_data.csv');
+const selectFile = async (modal, file = createCSV()) => {
   await setFiles(modal.get('input'), [file]);
   return waitUntil(() => !modal.vm.parsing);
 };
+const getTables = (modal) => modal.findAllComponents(EntityUploadTable);
 
 describe('EntityUpload', () => {
   it('toggles the modal', () => {
@@ -135,27 +139,111 @@ describe('EntityUpload', () => {
       await selectFile(modal);
       button.attributes('aria-disabled').should.equal('false');
     });
+  });
 
-    it('resets after the clear button is clicked', async () => {
+  describe('warnings', () => {
+    it('shows warnings', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }, { name: 'circumference' }]
+      });
       const modal = await showModal();
-      await selectFile(modal);
+      const csv = createCSV('label;height;circumference\nx\ny\n"12345;67890";"";""');
+      await selectFile(modal, csv);
+      modal.getComponent(EntityUploadWarnings).props().should.eql({
+        raggedRows: [[1, 2]],
+        largeCell: 3,
+        delimiter: ';'
+      });
+      modal.getComponent(EntityUploadPopup).props().warnings.should.equal(3);
+    });
+
+    it('does not show warnings if there is a data error', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+      const modal = await showModal();
+      await selectFile(modal, createCSV('label;height\n"";1'));
+      const error = modal.getComponent(EntityUploadDataError).props().message;
+      error.should.startWith('There is a problem on row 2');
+      modal.findComponent(EntityUploadWarnings).exists().should.be.false();
+    });
+
+    it('shows rows to which a warning applies after they are selected', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+      const modal = await showModal();
+      const data = [
+        ['1', ''],
+        ['2', '2'],
+        ['3', '3'],
+        ['4', '4'],
+        ['5', '5'],
+        ['6', '6'],
+        ['7', '7'],
+        ['8', '8'],
+        ['9'],
+        ['10'],
+        ['11'],
+        ['12', '12']
+      ];
+      const dataString = data.map(row => row.join(',')).join('\n');
+      await selectFile(modal, createCSV(`label,height\n${dataString}`));
+      const warnings = modal.getComponent(EntityUploadWarnings);
+      warnings.props().raggedRows.should.eql([[9, 11]]);
+      const table = getTables(modal)[1];
+      table.props().rowIndex.should.equal(0);
+      should.not.exist(table.props().highlighted);
+      const a = modal.get('.entity-upload-warning a');
+      a.text().should.equal('9–11');
+      await a.trigger('click');
+      table.props().rowIndex.should.equal(5);
+      table.props().highlighted.should.eql([8, 10]);
+    });
+
+    it('does not highlight rows after a new file is selected', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+      const modal = await showModal();
+      const csvString = 'label,height\nx\ny\nz,""';
+      await selectFile(modal, createCSV(csvString));
+      const a = modal.get('.entity-upload-warning a');
+      a.text().should.equal('1–2');
+      await a.trigger('click');
+      getTables(modal)[1].props().highlighted.should.eql([0, 1]);
       await modal.get('#entity-upload-popup .btn-link').trigger('click');
-      modal.findComponent(EntityUploadPopup).exists().should.be.false();
-      modal.get('#entity-upload-file-select').should.be.visible();
-      const button = modal.get('.modal-actions .btn-primary');
-      button.attributes('aria-disabled').should.equal('true');
+      await selectFile(modal, createCSV(csvString));
+      should.not.exist(getTables(modal)[1].props().highlighted);
     });
+  });
 
-    it('resets after the modal is hidden', async () => {
-      const modal = await showModal();
-      await selectFile(modal);
-      await modal.setProps({ state: false });
-      await modal.setProps({ state: true });
-      modal.findComponent(EntityUploadPopup).exists().should.be.false();
-      modal.get('#entity-upload-file-select').should.be.visible();
-      const button = modal.get('.modal-actions .btn-primary');
-      button.attributes('aria-disabled').should.equal('true');
-    });
+  it('resets after the clear button is clicked', async () => {
+    testData.extendedDatasets.createPast(1);
+    const modal = await showModal();
+    await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
+    const popup = modal.getComponent(EntityUploadPopup);
+    popup.props().warnings.should.equal(1);
+    await popup.get('.btn-link').trigger('click');
+    modal.findComponent(EntityUploadPopup).exists().should.be.false();
+    modal.findComponent(EntityUploadWarnings).exists().should.be.false();
+    modal.get('#entity-upload-file-select').should.be.visible();
+    const button = modal.get('.modal-actions .btn-primary');
+    button.attributes('aria-disabled').should.equal('true');
+  });
+
+  it('resets after the modal is hidden', async () => {
+    testData.extendedDatasets.createPast(1);
+    const modal = await showModal();
+    await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
+    modal.findComponent(EntityUploadWarnings).exists().should.be.true();
+    await modal.setProps({ state: false });
+    await modal.setProps({ state: true });
+    modal.findComponent(EntityUploadPopup).exists().should.be.false();
+    modal.findComponent(EntityUploadWarnings).exists().should.be.false();
+    modal.get('#entity-upload-file-select').should.be.visible();
+    const button = modal.get('.modal-actions .btn-primary');
+    button.attributes('aria-disabled').should.equal('true');
   });
 
   it('sends the correct upload request', () => {
