@@ -5,9 +5,9 @@ import ControlLabel from '../ControlLabel.vue';
 
 const props = defineProps<{question: StringNode}>();
 
-const setValue = (e:Event) => {
-	props.question.setValue((e.target as HTMLInputElement).value);
-}
+const setValue = (value: string) => {
+	props.question.setValue(value);
+};
 
 </script>
 
@@ -18,9 +18,9 @@ const setValue = (e:Event) => {
 		:id="question.nodeId" 
 		:required="question.currentState.required" 
 		:readonly="question.currentState.readonly" 
-		:value="question.currentState.value" 
 		variant="filled" 
-		@input="setValue" 
+		:model-value="question.currentState.value"
+		@update:model-value="setValue"
 	/>
 </template>
 
