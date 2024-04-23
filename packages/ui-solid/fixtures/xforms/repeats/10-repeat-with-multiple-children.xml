@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Groups and Repeats</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="groups_and_repeats" version="20240328181053">
+          <repeat_with_child_group_1 jr:template="">
+            <repeat_with_child_group_1_1>
+              <b_name />
+            </repeat_with_child_group_1_1>
+            <c_name />
+          </repeat_with_child_group_1>
+          <repeat_with_child_group_1>
+            <repeat_with_child_group_1_1>
+              <b_name />
+            </repeat_with_child_group_1_1>
+            <c_name />
+          </repeat_with_child_group_1>
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/repeat_with_child_group_1/repeat_with_child_group_1_1/b_name"
+        type="string" />
+        <bind nodeset="/data/repeat_with_child_group_1/c_name"
+        type="string" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/data/repeat_with_child_group_1">
+      <label>Repeat label</label>
+      <repeat nodeset="/data/repeat_with_child_group_1">
+        <group ref="/data/repeat_with_child_group_1/repeat_with_child_group_1_1">
+          <label>
+            <output value=" ../repeat_with_child_group_1_1/b_name " />
+          </label>
+          <input ref="/data/repeat_with_child_group_1/repeat_with_child_group_1_1/b_name">
+            <label>B Name</label>
+          </input>
+        </group>
+        <input ref="/data/repeat_with_child_group_1/c_name">
+          <label>C Name</label>
+        </input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

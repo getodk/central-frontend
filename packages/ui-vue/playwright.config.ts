@@ -99,11 +99,11 @@ export default defineConfig({
 	/* Run your local dev server before starting the tests */
 	webServer: {
 		/**
-		 * Use the dev server by default for faster feedback loop.
-		 * Use the preview server on CI for more realistic testing.
+		 * Always use the dev server because build output of this package is a library.
+		 * E2e tests are performed against demo application i.e. (index.html, OdkWebFormDemo.vue)
 		 * Playwright will re-use the local server if there is already a dev-server running.
 		 */
-		command: process.env.CI ? 'npx vite preview --port 5173' : 'npx vite dev',
+		command: 'npx vite dev',
 		port: 5173,
 		reuseExistingServer: !process.env.CI,
 	},
