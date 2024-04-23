@@ -22,15 +22,18 @@ const handleSubmit = (data: string) => {
 
 </script>
 
-<template>
-	<ul v-if="!selectForm">
-		<li v-for="form in demoForms" :key="form[0]">
-			{{ form[0] }}
-			<button @click="selectForm = form">
-				Show
-			</button>
-		</li>
-	</ul>
+<template>	
+	<div v-if="!selectForm">
+		<h1>Demo Forms</h1>
+		<ul>
+			<li v-for="form in demoForms" :key="form[0]">
+				{{ form[0] }}
+				<button @click="selectForm = form">
+					Show
+				</button>
+			</li>
+		</ul>
+	</div>
 	<div v-else>
 		<button @click="selectForm = null">
 			Back

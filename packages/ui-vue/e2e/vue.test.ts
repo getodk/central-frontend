@@ -2,18 +2,22 @@ import { faker } from '@faker-js/faker';
 import { expect, test } from '@playwright/test';
 
 test('All forms are rendered and there is no console error', async ({ page, browserName }) => {
-
 	let consoleErrors = 0;
 
-	page.on('console', msg => {
-		if(msg.type() === 'error') {
+	page.on('console', (msg) => {
+		if (msg.type() === 'error' || msg.type() === 'warning') {
 			consoleErrors++;
-		} 
+		}
 	});
 
 	await page.goto('/');
 
+	// this ensures that Vue application is loaded before proceeding forward.
+	await expect(page.getByText('Demo Forms')).toBeVisible();
+
 	const forms = await page.getByText('Show').all();
+
+	expect(forms.length).toBeGreaterThan(0);
 
 	for (const form of forms) {
 		await form.click();
@@ -51,7 +55,5 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 		await page.getByText('Back').click();
 	}
 
-  // Assert that there's no console errors
 	expect(consoleErrors).toBe(0);
-
 });
