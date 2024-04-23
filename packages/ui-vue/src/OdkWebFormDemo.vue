@@ -1,13 +1,6 @@
 <script setup lang="ts">
-import { onErrorCaptured, ref } from 'vue';
+import { ref } from 'vue';
 import OdkWebForm from './components/OdkWebForm.vue';
-
-declare global {
-	var playwrightCapturedErrors: Error[] | undefined;
-}
-onErrorCaptured((error) => {
-	globalThis.playwrightCapturedErrors?.push(error);
-});
 
 const formFixtureGlobImports = import.meta.glob<true, 'raw', string>('../../ui-solid/fixtures/xforms/**/*.xml', {
 	query: '?raw',

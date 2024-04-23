@@ -1,17 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { expect, test } from '@playwright/test';
 
-declare global {
-	// eslint-disable-next-line no-var
-	var playwrightCapturedErrors: Error[] | undefined;
-}
-
 test('All forms are rendered and there is no console error', async ({ page, browserName }) => {
-	await page.goto('/');
 
-	await page.evaluate(() => {
-		globalThis.playwrightCapturedErrors = [];
+	let consoleErrors = 0;
+
+	page.on('console', msg => {
+		if(msg.type() === 'error') {
+			consoleErrors++;
+		} 
 	});
+
+	await page.goto('/');
 
 	const forms = await page.getByText('Show').all();
 
@@ -51,10 +51,7 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 		await page.getByText('Back').click();
 	}
 
-	// Assert that there's no captured errors
-	const capturedErrors = await page.evaluate(() => {
-		return globalThis.playwrightCapturedErrors?.length;
-	});
+  // Assert that there's no console errors
+	expect(consoleErrors).toBe(0);
 
-	expect(capturedErrors).toBe(0);
 });
