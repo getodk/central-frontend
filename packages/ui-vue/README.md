@@ -13,6 +13,7 @@ To use this library in a Vue.js application:
 ```html
 <OdkWebForm :form-xml="formVersionXml.data" @submit="handleSubmit" />
 ```
+
 **Plugin:**
 
 Plugin is there to initialize PrimeVue, currently it exposes no options. In future, various configuration options might be added to the plugin.
