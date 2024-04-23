@@ -10,7 +10,6 @@ $primary50: #d8ecf5;
 // TODO maybe import icomoon here so if in future we can to introduce new theme with different iconset
 // Don't know how much future theme will be different from this??
 
-// this has to be outside the layer to override the generated value
 :root {
 	--primary-50: #{$primary50};
 }
