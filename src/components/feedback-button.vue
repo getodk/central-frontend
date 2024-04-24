@@ -28,12 +28,12 @@ const route = useRoute();
 
 const surveyLink = computed(() => {
   const query = queryString({
-    'st': '9hflqGrodnpWyS8g69dbORJ3RD8jSQChTBMaf7zpE5gaPElyDtKgAjI79y$zqctG',
+    st: '9hflqGrodnpWyS8g69dbORJ3RD8jSQChTBMaf7zpE5gaPElyDtKgAjI79y$zqctG',
     'd[/data/host]': window.location.host,
     'd[/data/page]': route.name
   });
 
- return `https://data.getodk.cloud/-/single/JLdODTs84WWsgibw4JOh0krbDenObgi${query}`;
+  return `https://data.getodk.cloud/-/single/JLdODTs84WWsgibw4JOh0krbDenObgi${query}`;
 });
 </script>
 

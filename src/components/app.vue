@@ -33,7 +33,6 @@ import { START_LOCATION } from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
-import FeedbackButton from './feedback-button.vue';
 
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';

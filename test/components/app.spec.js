@@ -230,7 +230,7 @@ describe('App', () => {
       };
       mockLogin();
 
-      const app = await load('/', { container })
+      const app = await load('/', { container });
       app.findComponent(FeedbackButton).exists().should.be.true();
     });
 
@@ -240,7 +240,7 @@ describe('App', () => {
       };
       mockLogin();
 
-      const app = await load('/', { container })
+      const app = await load('/', { container });
       app.findComponent(FeedbackButton).exists().should.be.false();
     });
 
@@ -249,8 +249,8 @@ describe('App', () => {
         config: { showsFeedbackButton: true }
       };
 
-      const app = await load('/', { container })
+      const app = await load('/', { container });
       app.findComponent(FeedbackButton).exists().should.be.false();
     });
-  })
+  });
 });
