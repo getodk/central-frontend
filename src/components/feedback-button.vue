@@ -65,7 +65,7 @@ const surveyLink = computed(() => {
 }
 
 #feedback-button span:hover,
-#feedback-button span:focus {
+#feedback-button:focus-within span {
   right: 10px;
 }
 </style>
