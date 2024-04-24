@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadDataError from '../../../src/components/entity/upload/data-error.vue';
+import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -138,6 +139,37 @@ describe('EntityUpload', () => {
       button.attributes('aria-disabled').should.equal('true');
       await selectFile(modal);
       button.attributes('aria-disabled').should.equal('false');
+    });
+  });
+
+  describe('header errors', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+    });
+
+    it('shows errors', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('foo,,foo\n1,2,3'));
+      modal.getComponent(EntityUploadHeaderErrors).props().should.eql({
+        filename: 'my_data.csv',
+        header: 'foo,,foo',
+        delimiter: ',',
+        invalidQuotes: false,
+        missingLabel: true,
+        missingProperty: true,
+        unknownProperty: true,
+        duplicateColumn: true,
+        emptyColumn: true
+      });
+    });
+
+    it('uses the delimiter from the file', async () => {
+      const modal = await showModal();
+      const csv = createCSV('label;height;circumference\ndogwood;1;2');
+      await selectFile(modal, csv);
+      modal.getComponent(EntityUploadHeaderErrors).props().delimiter.should.equal(';');
     });
   });
 
