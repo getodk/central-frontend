@@ -249,7 +249,7 @@ describe('App', () => {
         config: { showsFeedbackButton: true }
       };
 
-      const app = await load('/', { container });
+      const app = await load('/login', { container }).restoreSession(false);
       app.findComponent(FeedbackButton).exists().should.be.false();
     });
   });
