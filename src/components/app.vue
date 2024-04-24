@@ -45,20 +45,19 @@ export default {
   components: { Alert, Navbar, FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')) },
   inject: ['alert', 'config'],
   setup() {
-    useSessions();
+    const { visiblyLoggedIn } = useSessions();
     useDisabled();
 
-    const { centralVersion, currentUser } = useRequestData();
+    const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();
-    return { centralVersion, currentUser, callWait };
+    return { visiblyLoggedIn, centralVersion, callWait };
   },
   computed: {
     routerReady() {
       return this.$route !== START_LOCATION;
     },
-
     showsFeedbackButton() {
-      return this.config.showsFeedbackButton && this.currentUser.dataExists && this.$route.path !== '/login'
+      return this.config.showsFeedbackButton && this.visiblyLoggedIn;
     },
   },
   created() {

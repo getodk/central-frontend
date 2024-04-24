@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
           <router-link to="/" class="navbar-brand">ODK Central</router-link>
         </div>
         <div class="collapse navbar-collapse">
-          <navbar-links v-if="loggedIn"/>
+          <navbar-links v-if="visiblyLoggedIn"/>
           <div class="navbar-right">
             <a v-show="showsAnalyticsNotice" id="navbar-analytics-notice"
               href="#" @click.prevent="analyticsIntroduction.show()">
@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
             <ul class="nav navbar-nav">
               <navbar-help-dropdown/>
               <navbar-locale-dropdown/>
-              <navbar-actions :logged-in="loggedIn"/>
+              <navbar-actions/>
             </ul>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default {
     NavbarLinks,
     NavbarLocaleDropdown
   },
-  inject: ['config'],
+  inject: ['config', 'visiblyLoggedIn'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -81,16 +81,8 @@ export default {
     };
   },
   computed: {
-    // Usually once the user is logged in (either after their session has been
-    // restored or after they have submitted the login form), we render a fuller
-    // navbar. However, if after submitting the login form, the user is
-    // redirected to outside Frontend, they will remain on /login until they are
-    // redirected. In that case, we do not render the fuller navbar.
-    loggedIn() {
-      return this.currentUser.dataExists && this.$route.path !== '/login';
-    },
     showsAnalyticsNotice() {
-      return this.config.showsAnalytics && this.loggedIn &&
+      return this.config.showsAnalytics && this.visiblyLoggedIn &&
         this.canRoute('/system/analytics') && this.analyticsConfig.dataExists &&
         this.analyticsConfig.isEmpty() &&
         Date.now() - Date.parse(this.currentUser.createdAt) >= /* 14 days */ 1209600000;
