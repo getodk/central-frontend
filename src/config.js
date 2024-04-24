@@ -17,5 +17,5 @@ export default {
     body: null
   },
   oidcEnabled: process.env.VUE_APP_OIDC_ENABLED === 'true',
-  showsFeedbackButton: true
+  showsFeedbackButton: false
 };
