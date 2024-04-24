@@ -1283,6 +1283,12 @@
         "num_entity_conflicts_resolved": {
           "string": "Number of Entities with conflict now marked as resolved"
         },
+        "num_bulk_create_events": {
+          "string": "Number of bulk uploads"
+        },
+        "biggest_bulk_upload": {
+          "string": "Number of rows in biggest bulk upload"
+        },
         "sso_enabled": {
           "string": "SSO enabled on server"
         },
