@@ -3,6 +3,8 @@ import {
 	head,
 	html,
 	input,
+	instance,
+	item,
 	mainInstance,
 	model,
 	repeat,
@@ -188,6 +190,293 @@ describe('DynamicSelectUpdateTest.java', () => {
 			});
 		}
 	);
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * 1. JavaRosa's name for this test (`multilanguage`) has been replaced with a
+	 *    more idiomatic (BDD-ish) name suitable for a call to `it`.
+	 *
+	 * 2. The JavaRosa test implementation specifies itext ids for label text. Per
+	 *    discussion in Slack, we've updated the test to assert the expected label
+	 *    translation strings. The itext ids from the original test are currently
+	 *    preserved as inline comments.
+	 */
+	it('translates select choice labels', async () => {
+		const scenario = await Scenario.init(
+			'Multilingual dynamic select',
+			html(
+				head(
+					title('Multilingual dynamic select'),
+					model(
+						t(
+							'itext',
+							t(
+								"translation lang='fr'",
+								t("text id='choices-0'", t('value', 'A (fr)')),
+								t("text id='choices-1'", t('value', 'B (fr)')),
+								t("text id='choices-2'", t('value', 'C (fr)'))
+							),
+							t(
+								"translation lang='en'",
+								t("text id='choices-0'", t('value', 'A (en)')),
+								t("text id='choices-1'", t('value', 'B (en)')),
+								t("text id='choices-2'", t('value', 'C (en)'))
+							)
+						),
+						mainInstance(t("data id='multilingual-select'", t('select'))),
+
+						instance(
+							'choices',
+							t('item', t('itextId', 'choices-0'), t('name', 'a')),
+							t('item', t('itextId', 'choices-1'), t('name', 'b')),
+							t('item', t('itextId', 'choices-2'), t('name', 'c'))
+						)
+					)
+				),
+				body(
+					select1Dynamic(
+						'/data/select',
+						"instance('choices')/root/item",
+						'name',
+						'jr:itext(itextId)'
+					)
+				)
+			)
+		);
+
+		scenario.setLanguage('en');
+
+		expect(scenario.choicesOf('/data/select').size()).toBe(3);
+
+		expect(scenario.choicesOf('/data/select')).toContainChoicesInAnyOrder([
+			choice('a', /* choices-0 */ 'A (en)'),
+			choice('b', /* choices-1 */ 'B (en)'),
+			choice('c', /* choices-2 */ 'C (en)'),
+		]);
+	});
+
+	describe('Select with changed triggers', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * The last assertion is a reference check, which will always return true in
+		 * our {@link Scenario} implementation! This seems to be intended to
+		 * exercise an implementation detail to validate recomputation.
+		 *
+		 * An alternate implementation of the same test follows, exercising **two
+		 * recomputations:**
+		 *
+		 * 1. Applying a different filter, to assert recomputation by checking that
+		 *    the available choices changed.
+		 *
+		 * 2. Restoring the original fitler, to assert recomputation does restore
+		 *    the originally available choices. (This is still testing a slightly
+		 *    different case than the original JavaRosa test, but seems both worth
+		 *    testing and a bit closer to the original test's intent).
+		 */
+		it('recomputes [the] choice list', async () => {
+			const scenario = await Scenario.init(
+				'Select',
+				html(
+					head(
+						title('Select'),
+						model(
+							mainInstance(t("data id='select'", t('filter'), t('select'))),
+
+							instance(
+								'choices',
+								item('aa', 'A'),
+								item('aaa', 'AA'),
+								item('bb', 'B'),
+								item('bbb', 'BB')
+							)
+						)
+					),
+					body(
+						input('/data/filter'),
+						select1Dynamic(
+							'/data/select',
+							"instance('choices')/root/item[starts-with(value,/data/filter)]"
+						)
+					)
+				)
+			);
+
+			scenario.answer('/data/filter', 'a');
+
+			const choices = scenario.choicesOf('/data/select');
+
+			expect(choices).toContainChoicesInAnyOrder([choice('aa', 'A'), choice('aaa', 'AA')]);
+
+			scenario.answer('/data/filter', 'aa');
+
+			expect(choices).toContainChoicesInAnyOrder([choice('aa', 'A'), choice('aaa', 'AA')]);
+
+			// Even though the list happens to be unchanged, it should have been recomputed because the trigger value changed
+			expect(scenario.choicesOf('/data/select')).not.toBe(choices);
+		});
+
+		it('recomputes the choice list (alt)', async () => {
+			const scenario = await Scenario.init(
+				'Select',
+				html(
+					head(
+						title('Select'),
+						model(
+							mainInstance(t("data id='select'", t('filter'), t('select'))),
+
+							instance(
+								'choices',
+								item('aa', 'A'),
+								item('aaa', 'AA'),
+								item('bb', 'B'),
+								item('bbb', 'BB')
+							)
+						)
+					),
+					body(
+						input('/data/filter'),
+						select1Dynamic(
+							'/data/select',
+							"instance('choices')/root/item[starts-with(value,/data/filter)]"
+						)
+					)
+				)
+			);
+
+			scenario.answer('/data/filter', 'a');
+
+			let choices = scenario.choicesOf('/data/select');
+
+			expect(choices).toContainChoicesInAnyOrder([choice('aa', 'A'), choice('aaa', 'AA')]);
+
+			expect(choices).not.toContainChoicesInAnyOrder([choice('bb', 'B'), choice('bbb', 'BB')]);
+
+			scenario.answer('/data/filter', 'b');
+
+			choices = scenario.choicesOf('/data/select');
+
+			expect(choices).not.toContainChoicesInAnyOrder([choice('aa', 'A'), choice('aaa', 'AA')]);
+
+			expect(choices).toContainChoicesInAnyOrder([choice('bb', 'B'), choice('bbb', 'BB')]);
+
+			scenario.answer('/data/filter', 'a');
+
+			choices = scenario.choicesOf('/data/select');
+
+			expect(choices).toContainChoicesInAnyOrder([choice('aa', 'A'), choice('aaa', 'AA')]);
+
+			expect(choices).not.toContainChoicesInAnyOrder([choice('bb', 'B'), choice('bbb', 'BB')]);
+		});
+	});
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * This currently fails because repeat-based itemsets are broken more
+	 * generally. As with the above sub-suite, the last assertion is a reference
+	 * check and will always pass. Once repeat-based itemsets are fixed, we'll
+	 * want to consider whether this test should be implemented differently too.
+	 */
+	describe('select with repeat as trigger', () => {
+		it.fails('recomputes [the] choice list at every request', async () => {
+			const scenario = await Scenario.init(
+				'Select with repeat trigger',
+				html(
+					head(
+						title('Repeat trigger'),
+						model(
+							mainInstance(t("data id='repeat-trigger'", t('repeat', t('question')), t('select'))),
+
+							instance('choices', item('1', 'A'), item('2', 'AA'), item('3', 'B'), item('4', 'BB'))
+						)
+					),
+					body(
+						repeat('/data/repeat', input('/data/repeat/question')),
+						select1Dynamic(
+							'/data/select',
+							"instance('choices')/root/item[value>count(/data/repeat)]"
+						)
+					)
+				)
+			);
+
+			scenario.answer('/data/repeat[1]/question', 'a');
+
+			expect(scenario.choicesOf('/data/select').size()).toBe(3);
+
+			scenario.answer('/data/repeat[2]/question', 'b');
+
+			const choices = scenario.choicesOf('/data/select');
+
+			expect(choices.size()).toBe(2);
+
+			// Because of the repeat trigger in the count expression, choices should be recomputed every time they're requested
+			expect(scenario.choicesOf('/data/select')).not.toBe(choices);
+		});
+	});
+
+	//region Caching for selects in repeat
+	// When a dynamic select is in a repeat, the itemsets for all repeat instances are represented by the same ItemsetBinding.
+	describe('select in repeat', () => {
+		describe('with ref to repeat child in predicate', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * This test again asserts a reference check. It seems likely that the
+			 * test is otherwise valid without that check.
+			 *
+			 * Once again, the current failure is likely related to repeat-based
+			 * itemsets being broken in general.
+			 */
+			it.fails('evaluates [the] choice list for each repeat instance', async () => {
+				const scenario = await Scenario.init(
+					'Select in repeat',
+					html(
+						head(
+							title('Select in repeat'),
+							model(
+								mainInstance(t("data id='repeat-select'", t('repeat', t('filter'), t('select')))),
+
+								instance(
+									'choices',
+									item('a', 'A'),
+									item('aa', 'AA'),
+									item('b', 'B'),
+									item('bb', 'BB')
+								)
+							)
+						),
+						body(
+							repeat(
+								'/data/repeat',
+								input('filter'),
+								select1Dynamic(
+									'/data/repeat/select',
+									"instance('choices')/root/item[starts-with(value,current()/../filter)]"
+								)
+							)
+						)
+					)
+				);
+
+				scenario.answer('/data/repeat[1]/filter', 'a');
+				scenario.answer('/data/repeat[2]/filter', 'a');
+
+				const repeat0Choices = scenario.choicesOf('/data/repeat[1]/select');
+				const repeat1Choices = scenario.choicesOf('/data/repeat[2]/select');
+
+				// The trigger keys are /data/repeat[1]/filter and /data/repeat[2]/filter which means no caching between them
+				expect(repeat0Choices).not.toBe(repeat1Choices);
+
+				scenario.answer('/data/repeat[2]/filter', 'bb');
+
+				expect(scenario.choicesOf('/data/repeat[1]/select').size()).toBe(2);
+				expect(scenario.choicesOf('/data/repeat[2]/select').size()).toBe(1);
+			});
+		});
+	});
 });
 
 describe.todo('SelectOneChoiceFilterTest.java');
