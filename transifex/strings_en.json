@@ -2162,6 +2162,12 @@
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
+    "FeedbackButton": {
+      "feedback": {
+        "string": "Feedback",
+        "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
+      }
+    },
     "FieldKeyList": {
       "action": {
         "create": {

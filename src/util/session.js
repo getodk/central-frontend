@@ -65,7 +65,7 @@ hand-in-hand.
 */
 
 import { START_LOCATION } from 'vue-router';
-import { inject, onBeforeUnmount } from 'vue';
+import { computed, inject, onBeforeUnmount, provide } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
@@ -194,13 +194,28 @@ const logOutAfterStorageChange = (container) => (event) => {
 
 export const useSessions = () => {
   const container = inject('container');
-  const id = setInterval(logOutBeforeSessionExpires(container), 15000);
-  const handler = logOutAfterStorageChange(container);
-  window.addEventListener('storage', handler);
+  const intervalId = setInterval(logOutBeforeSessionExpires(container), 15000);
+  const storageHandler = logOutAfterStorageChange(container);
+  window.addEventListener('storage', storageHandler);
   onBeforeUnmount(() => {
-    clearInterval(id);
-    window.removeEventListener('storage', handler);
+    clearInterval(intervalId);
+    window.removeEventListener('storage', storageHandler);
   });
+
+  /* visiblyLoggedIn.value is `true` if the user not only has all the data from
+  login, but is also visibly logged in. An example of when the user has data,
+  but isn't visibly logged in is if the user has submitted the login form and is
+  being redirected to outside Frontend (which isn't instant). In that case, they
+  will remain on /login until the redirect is complete, and the navbar will not
+  change to reflect their login. */
+  const { router, requestData } = container;
+  const { currentUser } = requestData;
+  const visiblyLoggedIn = computed(() => currentUser.dataExists &&
+    router.currentRoute.value !== START_LOCATION &&
+    router.currentRoute.value.path !== '/login');
+  provide('visiblyLoggedIn', visiblyLoggedIn);
+
+  return { visiblyLoggedIn };
 };
 
 export const restoreSession = (session) =>
