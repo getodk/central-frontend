@@ -205,17 +205,6 @@ describe('util/csv', () => {
         });
       });
 
-      it('returns the delimiter if it is not a comma', async () => {
-        const csv = createCSV('a;b\n1;2');
-        const { warnings } = await parseCSV(i18n, csv, ['a', 'b'], {
-          delimiter: ';'
-        });
-        warnings.should.eql({
-          count: 1,
-          details: { delimiter: ';' }
-        });
-      });
-
       describe('ragged row', () => {
         it('returns ragged rows if another row is padded', async () => {
           const csv = createCSV('a,b\n1\n2,""\n4');
@@ -275,8 +264,8 @@ describe('util/csv', () => {
             delimiter: ';'
           });
           warnings.should.eql({
-            count: 2,
-            details: { delimiter: ';', largeCell: 2 }
+            count: 1,
+            details: { largeCell: 2 }
           });
         });
 
@@ -309,13 +298,11 @@ describe('util/csv', () => {
       });
 
       it('returns multiple warnings', async () => {
-        const csv = createCSV('a;b\n1\n"12345;67890";""');
-        const { warnings } = await parseCSV(i18n, csv, ['a', 'b'], {
-          delimiter: ';'
-        });
+        const csv = createCSV('a,b\n1\n"12345,67890",""');
+        const { warnings } = await parseCSV(i18n, csv, ['a', 'b']);
         warnings.should.eql({
-          count: 3,
-          details: { delimiter: ';', raggedRows: [[1, 1]], largeCell: 2 }
+          count: 2,
+          details: { raggedRows: [[1, 1]], largeCell: 2 }
         });
       });
     });

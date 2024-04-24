@@ -145,7 +145,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
       "unknownProperty": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property.",
       "duplicateColumn": "It looks like two or more columns have the same header. Please make sure column headers are unique.",
       "emptyColumn": "It looks like you have an empty cell in the header. Please remove any empty columns in your file.",
-      "delimiterNotComma": "It’s not clear what delimiter separates cells in a row from each other in your file. Based on analysis, {delimiter} was used as the best guess."
+      "delimiterNotComma": "This might be because we got the cell delimiter wrong. We used {delimiter}."
     }
   }
 }

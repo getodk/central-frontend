@@ -24,32 +24,15 @@ describe('EntityUploadWarnings', () => {
     warning.props().ranges.should.eql([[1, 1]]);
   });
 
-  describe('delimiter is not a comma', () => {
-    it('shows a warning', () => {
-      const component = mountComponent({
-        props: { delimiter: ';' }
-      });
-      const text = component.getComponent(EntityUploadWarning).text();
-      text.should.containEql('Based on analysis, ; was used');
-    });
-
-    it('shows ⇥ for tab', () => {
-      const component = mountComponent({
-        props: { delimiter: '\t' }
-      });
-      component.get('.entity-upload-warning code').text().should.equal('⇥');
-    });
-  });
-
   it('shows multiple warnings', () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], delimiter: ';' }
+      props: { raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadWarning);
     warnings.length.should.equal(2);
     const text = warnings.map(warning => warning.text());
     text[0].should.containEql('Fewer columns were found than expected');
-    text[1].should.containEql('Based on analysis, ; was used');
+    text[1].should.containEql('Some cells are abnormally large');
   });
 
   it('emits a rows event after a row range is clicked', async () => {

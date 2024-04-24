@@ -251,10 +251,6 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
       warningResults.details[warning.type] = warning.details;
     }
   }
-  if (delimiter !== ',') {
-    warningResults.count += 1;
-    warningResults.details.delimiter = delimiter;
-  }
 
   return { data, warnings: warningResults };
 };
