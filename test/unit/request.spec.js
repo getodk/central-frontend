@@ -631,6 +631,15 @@ describe('util/request', () => {
       message.should.equal('Something went wrong: error code 500.');
     });
 
+    it('returns a message about 413 error response that is not a Problem', () => {
+      const message = requestAlertMessage(i18n, mockAxiosError({
+        status: 413,
+        data: '<html><head><title>413 Request Entity Too Large</title></head>...',
+        config: { url: '/v1/projects/1/datasets/trees/entities' }
+      }));
+      message.should.equal('The data that you are trying to upload is too large.');
+    });
+
     it('returns the message of a Problem', () => {
       const message = requestAlertMessage(i18n, errorWithProblem());
       message.should.equal('Message from API');

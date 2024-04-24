@@ -421,7 +421,8 @@
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit."
+        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit.",
+        "entityTooLarge":  "The data that you are trying to upload is too large.",
       }
     }
   },
