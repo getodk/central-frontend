@@ -17,6 +17,15 @@ import type { Scenario } from '../jr/Scenario.ts';
 export abstract class ComparableAnswer {
 	abstract get stringValue(): string;
 
+	/**
+	 * Note: we currently return {@link stringValue} here, but this probably
+	 * won't last as we expand support for other data types. This is why the
+	 * return type is currently `unknown`.
+	 */
+	getValue(): unknown {
+		return this.stringValue;
+	}
+
 	inspectValue(): JSONValue {
 		return this.stringValue;
 	}

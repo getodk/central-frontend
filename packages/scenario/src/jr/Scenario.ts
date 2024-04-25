@@ -19,6 +19,7 @@ import {
 } from './event/getPositionalEvents.ts';
 import { TreeReference } from './instance/TreeReference.ts';
 import type { PathResource } from './resource/PathResource.ts';
+import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 
 interface ScenarioConstructorOptions {
@@ -27,17 +28,26 @@ interface ScenarioConstructorOptions {
 	readonly instanceRoot: RootNode;
 }
 
+type FormFileName = `${string}.xml`;
+
+const isFormFileName = (value: PathResource | string): value is FormFileName => {
+	return typeof value === 'string' && value.endsWith('.xml');
+};
+
 // prettier-ignore
-type ScenarioStaticInit =
-	| ((formName: string, form: XFormsElement) => Promise<Scenario>)
-	| ((resource: PathResource) => Promise<Scenario>);
+type ScenarioStaticInitParameters =
+	| readonly [formFileName: FormFileName]
+	| readonly [formName: string, form: XFormsElement]
+	| readonly [resource: PathResource];
 
 export class Scenario {
-	static async init(...args: Parameters<ScenarioStaticInit>): Promise<Scenario> {
+	static async init(...args: ScenarioStaticInitParameters): Promise<Scenario> {
 		let resource: TestFormResource;
 		let formName: string;
 
-		if (args.length === 1) {
+		if (isFormFileName(args[0])) {
+			return Scenario.init(r(args[0]));
+		} else if (args.length === 1) {
 			const [pathResource] = args;
 			resource = pathResource;
 			formName = pathResource.formName;
