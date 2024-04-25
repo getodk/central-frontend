@@ -2123,7 +2123,7 @@
           "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your file."
         },
         "delimiterNotComma": {
-          "string": "It’s not clear what delimiter separates cells in a row from each other in your file. Based on analysis, {delimiter} was used as the best guess."
+          "string": "This might be because we got the cell delimiter wrong. We used {delimiter}."
         }
       }
     },

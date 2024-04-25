@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadDataError from '../../../src/components/entity/upload/data-error.vue';
+import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -141,37 +142,64 @@ describe('EntityUpload', () => {
     });
   });
 
-  describe('warnings', () => {
-    it('shows warnings', async () => {
-      testData.extendedDatasets.createPast(1, {
-        properties: [{ name: 'height' }, { name: 'circumference' }]
-      });
-      const modal = await showModal();
-      const csv = createCSV('label;height;circumference\nx\ny\n"12345;67890";"";""');
-      await selectFile(modal, csv);
-      modal.getComponent(EntityUploadWarnings).props().should.eql({
-        raggedRows: [[1, 2]],
-        largeCell: 3,
-        delimiter: ';'
-      });
-      modal.getComponent(EntityUploadPopup).props().warnings.should.equal(3);
-    });
-
-    it('does not show warnings if there is a data error', async () => {
+  describe('header errors', () => {
+    beforeEach(() => {
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'height' }]
       });
+    });
+
+    it('shows errors', async () => {
       const modal = await showModal();
-      await selectFile(modal, createCSV('label;height\n"";1'));
+      await selectFile(modal, createCSV('foo,,foo\n1,2,3'));
+      modal.getComponent(EntityUploadHeaderErrors).props().should.eql({
+        filename: 'my_data.csv',
+        header: 'foo,,foo',
+        delimiter: ',',
+        invalidQuotes: false,
+        missingLabel: true,
+        missingProperty: true,
+        unknownProperty: true,
+        duplicateColumn: true,
+        emptyColumn: true
+      });
+    });
+
+    it('uses the delimiter from the file', async () => {
+      const modal = await showModal();
+      const csv = createCSV('label;height;circumference\ndogwood;1;2');
+      await selectFile(modal, csv);
+      modal.getComponent(EntityUploadHeaderErrors).props().delimiter.should.equal(';');
+    });
+  });
+
+  describe('warnings', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+    });
+
+    it('shows warnings', async () => {
+      const modal = await showModal();
+      const csv = createCSV('label,height\nx\ny\n"12345,67890",""');
+      await selectFile(modal, csv);
+      modal.getComponent(EntityUploadWarnings).props().should.eql({
+        raggedRows: [[1, 2]],
+        largeCell: 3
+      });
+      modal.getComponent(EntityUploadPopup).props().warnings.should.equal(2);
+    });
+
+    it('does not show warnings if there is a data error', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('label,height\nx\ny,""\n"",1'));
       const error = modal.getComponent(EntityUploadDataError).props().message;
-      error.should.startWith('There is a problem on row 2');
+      error.should.startWith('There is a problem on row 4');
       modal.findComponent(EntityUploadWarnings).exists().should.be.false();
     });
 
     it('shows rows to which a warning applies after they are selected', async () => {
-      testData.extendedDatasets.createPast(1, {
-        properties: [{ name: 'height' }]
-      });
       const modal = await showModal();
       const data = [
         ['1', ''],
@@ -202,9 +230,6 @@ describe('EntityUpload', () => {
     });
 
     it('does not highlight rows after a new file is selected', async () => {
-      testData.extendedDatasets.createPast(1, {
-        properties: [{ name: 'height' }]
-      });
       const modal = await showModal();
       const csvString = 'label,height\nx\ny\nz,""';
       await selectFile(modal, createCSV(csvString));
