@@ -578,6 +578,10 @@
     "submission": {
       "string": "{count, plural, one {{count} Submission} other {{count} Submissions}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "warning": {
+      "string": "{count, plural, one {{count} warning} other {{count} warnings}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
   "resource": {
@@ -883,10 +887,9 @@
       "string": "v{version}",
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
     },
-    "punctuations": {
-      "comma": {
-        "string": ","
-      }
+    "warning": {
+      "string": "Warning",
+      "developer_comment": "This text is shown on its own before details about a warning."
     }
   },
   "mixin": {
@@ -2129,7 +2132,7 @@
           "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your file."
         },
         "delimiterNotComma": {
-          "string": "It’s not clear what delimiter separates cells in a row from each other in your file. Based on analysis, {delimiter} was used as the best guess."
+          "string": "This might be because we got the cell delimiter wrong. We used {delimiter}."
         }
       }
     },
@@ -2145,6 +2148,18 @@
         "processing": {
           "string": "Processing file…",
           "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
+        }
+      }
+    },
+    "EntityUploadWarnings": {
+      "row": {
+        "raggedRows": {
+          "string": "Fewer columns were found than expected in some rows:",
+          "developer_comment": "This is a warning that is followed by a list of rows."
+        },
+        "largeCell": {
+          "string": "Some cells are abnormally large, which can indicate difficulties reading your file:",
+          "developer_comment": "This is a warning that is followed by a list of rows."
         }
       }
     },

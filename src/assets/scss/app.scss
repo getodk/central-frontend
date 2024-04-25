@@ -111,6 +111,7 @@ em:lang(ja) {
 }
 .tooltip-inner {
   border-radius: 2px;
+  max-height: 100vh;
   overflow-wrap: break-word;
   padding-bottom: 2px;
   // Allow the text to have line breaks.
@@ -123,6 +124,19 @@ em:lang(ja) {
 // ICONS
 
 [class^="icon-"] { vertical-align: -1px; }
+
+.btn, a, .label {
+  .caret { margin-left: 6px; }
+
+  > [class^="icon-"]:first-child {
+    // There should not be white space between an icon and text content that
+    // follows it. For a link in particular, the underlining will be off if
+    // there is white space.
+    margin-right: $margin-right-icon;
+
+    + .caret { margin-left: 0; }
+  }
+}
 
 /* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
 IcoMoon styles end up applying to it, because our IcoMoon selectors select on
@@ -146,27 +160,18 @@ class. */
   background-color: #888;
 }
 
-.title-icon{
+.title-icon {
   padding-left: 6px;
   font-size: 24px;
   color: #666;
 }
 
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
 
 .btn, a {
-  .caret { margin-left: 6px; }
-
-  > [class^="icon-"]:first-child {
-    // There should not be white space between an icon and text content that
-    // follows it. For a link in particular, the underlining will be off if
-    // there is white space.
-    margin-right: $margin-right-icon;
-
-    + .caret { margin-left: 0; }
-  }
-
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     cursor: not-allowed;
     opacity: 0.65;
@@ -595,6 +600,13 @@ tr.uncommitted-change { background-color: #ffef67; }
   > tbody > tr > td.info {
     background-color: $color-info-light;
   }
+
+  > thead > tr.highlight > th,
+  > thead > tr > th.highlight,
+  > tbody > tr.highlight > td,
+  > tbody > tr > td.highlight {
+    background-color: $color-highlight;
+  }
 }
 
 .data-loading {
@@ -620,9 +632,9 @@ tr.uncommitted-change { background-color: #ffef67; }
 ////////////////////////////////////////////////////////////////////////////////
 // LABELS
 
-.label-primary {
-  background-color: $color-action-background;
-}
+.label-default { background-color: #777; }
+.label-primary { background-color: $color-action-background; }
+.label-warning { background-color: $color-warning; }
 
 
 
@@ -878,7 +890,7 @@ becomes more complicated.
 ////////////////////////////////////////////////////////////////////////////////
 // markRowsChanged(), markRowsDeleted()
 
-[data-mark-rows-changed="true"] { background-color: #faf1cd; }
+[data-mark-rows-changed="true"] { background-color: $color-highlight; }
 [data-mark-rows-changed="false"] { transition: background-color 0.6s 6s; }
 
 [data-mark-rows-deleted="true"] {

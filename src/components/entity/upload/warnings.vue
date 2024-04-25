@@ -10,16 +10,46 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div></div>
+  <div id="entity-upload-warnings">
+    <entity-upload-warning v-if="raggedRows != null" :ranges="raggedRows"
+      @rows="$emit('rows', $event)">
+      {{ $t('row.raggedRows') }}
+    </entity-upload-warning>
+    <entity-upload-warning v-if="largeCell != null" :ranges="[[largeCell, largeCell]]"
+      @rows="$emit('rows', $event)">
+      {{ $t('row.largeCell') }}
+    </entity-upload-warning>
+  </div>
 </template>
 
 <script setup>
+import EntityUploadWarning from './warning.vue';
+
 defineOptions({
   name: 'EntityUploadWarnings'
 });
 defineProps({
-  delimiter: String,
   raggedRows: Array,
   largeCell: Number
 });
+defineEmits(['rows']);
 </script>
+
+<style lang="scss">
+#entity-upload-warnings {
+  background-color: #deedf3;
+  padding: 9px 6px;
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a warning that is followed by a list of rows.
+    "row": {
+      "raggedRows": "Fewer columns were found than expected in some rows:",
+      "largeCell": "Some cells are abnormally large, which can indicate difficulties reading your file:"
+    }
+  }
+}
+</i18n>

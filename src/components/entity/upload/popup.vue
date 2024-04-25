@@ -20,6 +20,10 @@ except according to the terms contained in the LICENSE file.
       </button>
     </div>
     <div id="entity-upload-popup-count">{{ $tcn('rowCount', count) }}</div>
+    <div v-show="warnings !== 0 && !awaitingResponse"
+      id="entity-upload-popup-warnings">
+      <span class="icon-warning"></span>{{ $tcn('count.warning', warnings) }}
+    </div>
     <div v-show="awaitingResponse" id="entity-upload-popup-status">
       <spinner inline/><span>{{ status }}</span>
     </div>
@@ -41,6 +45,10 @@ const props = defineProps({
     required: true
   },
   count: {
+    type: Number,
+    required: true
+  },
+  warnings: {
     type: Number,
     required: true
   },
@@ -80,6 +88,8 @@ const status = computed(() => (props.progress < 1
   position: absolute;
   right: 15px;
   width: 305px;
+
+  .icon-warning { margin-right: $margin-right-icon; }
 }
 
 #entity-upload-popup-heading {
@@ -101,6 +111,11 @@ const status = computed(() => (props.progress < 1
     color: $color-danger;
     margin-right: 0;
   }
+}
+
+#entity-upload-popup-warnings {
+  margin-bottom: 3px;
+  margin-top: 5px;
 }
 
 #entity-upload-popup-status {

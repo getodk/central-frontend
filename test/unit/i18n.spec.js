@@ -129,5 +129,27 @@ describe('util/i18n', () => {
         formatList(['x', 'y', 'z']).should.equal('x、y、z');
       });
     });
+
+    describe('formatListToParts()', () => {
+      it('returns a formatted list', () => {
+        const { formatListToParts } = withSetup(useI18nUtils);
+        formatListToParts(['x', 'y']).should.eql([
+          { type: 'element', value: 'x' },
+          { type: 'literal', value: ', ' },
+          { type: 'element', value: 'y' }
+        ]);
+      });
+
+      it('uses the locale', () => {
+        const container = createTestContainer();
+        const { formatListToParts } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        formatListToParts(['x', 'y']).should.eql([
+          { type: 'element', value: 'x' },
+          { type: 'literal', value: '、' },
+          { type: 'element', value: 'y' }
+        ]);
+      });
+    });
   });
 });

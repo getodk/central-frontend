@@ -94,7 +94,9 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
     formatRange: (start, end, key = 'default') => (start === end
       ? i18n.n(start, key)
       : getNumberFormat(key).formatRange(start, end)),
-    formatList: (list) => formats[i18n.locale].listFormat.format(list)
+    formatList: (list) => formats[i18n.locale].listFormat.format(list),
+    formatListToParts: (list) =>
+      formats[i18n.locale].listFormat.formatToParts(list)
   };
 });
 

@@ -37,25 +37,26 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <div v-show="expanded" class="property-list">
-      <span v-for="(property, index) in inFormProperties" :key="property.name">
+      <i18n-list v-slot="{ value: property }" :list="inFormProperties">
         <span>{{ property.name }}</span>
-        <span v-if="property.isNew" class="icon-plus-circle property-new" v-tooltip.sr-only></span>
-        <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
-        <template v-if="index < inFormProperties.length - 1">{{ $t('punctuation.comma') }}<sentence-separator/></template>
-      </span>
+        <span v-if="property.isNew">
+          <span class="icon-plus-circle property-new" v-tooltip.sr-only></span>
+          <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
+        </span>
+      </i18n-list>
       <span v-if="inFormProperties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import SentenceSeparator from '../../sentence-separator.vue';
+import I18nList from '../../i18n/list.vue';
 
 import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'DatasetSummaryRow',
-  components: { SentenceSeparator },
+  components: { I18nList },
   props: {
     dataset: {
       type: Object,
@@ -76,9 +77,6 @@ export default {
     };
   },
   computed: {
-    newProperties() {
-      return this.dataset.properties.filter(p => p.isNew);
-    },
     inFormProperties() {
       return this.dataset.properties.filter(p => p.inForm);
     }

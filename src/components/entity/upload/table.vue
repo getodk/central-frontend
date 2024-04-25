@@ -24,7 +24,8 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody v-if="entities != null && entities.length !== 0"
         :class="{ 'data-loading': awaitingResponse }">
-        <tr v-for="(entity, entityIndex) in entities" :key="entityIndex">
+        <tr v-for="(entity, entityIndex) in entities" :key="entityIndex"
+          :class="{ highlight: isHighlighted(rowIndex + entityIndex) }">
           <td class="row-number">
             {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
           </td>
@@ -55,7 +56,8 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  awaitingResponse: Boolean
+  awaitingResponse: Boolean,
+  highlighted: Array
 });
 
 // The component assumes that this data will exist when the component is
@@ -92,6 +94,9 @@ watch(
     }
   }
 );
+
+const isHighlighted = (index) => props.highlighted != null &&
+  index >= props.highlighted[0] && index <= props.highlighted[1];
 
 const overlapsPopup = ref(false);
 const resizeLastColumn = () => {
