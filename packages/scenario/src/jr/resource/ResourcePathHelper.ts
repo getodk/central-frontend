@@ -1,6 +1,6 @@
 import { PathResource } from './PathResource.ts';
 
-const resourcesByPath = import.meta.glob('../../resources/**/*.xml', {
+const resourcesByPath = import.meta.glob('../../../resources/**/*.xml', {
 	as: 'raw',
 	eager: true,
 });
