@@ -107,6 +107,10 @@ const { entityPath } = useRoutes();
   .action-cell {
     padding-top: 4px;
     padding-bottom: 4px;
+
+    // Ensure that the column is wide enough that the .btn-group does not wrap.
+    min-width: 170px;
+    &:lang(id) { min-width: 215px; }
   }
 
   .col-content {
