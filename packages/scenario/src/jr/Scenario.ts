@@ -9,6 +9,7 @@ import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
 import { getClosestRepeatRange } from '../client/traversal.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
+import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
 import { RepeatInstanceEvent } from './event/RepeatInstanceEvent.ts';
 import {
@@ -141,6 +142,10 @@ export class Scenario {
 		expect(question.node.currentState.reference).toBe(reference);
 	}
 
+	private assertEndOfForm(event: AnyPositionalEvent): asserts event is EndOfFormEvent {
+		expect(event.eventType).toBe('END_OF_FORM');
+	}
+
 	private setNonTerminalEventPosition(
 		callback: (current: number) => number,
 		expectReference: string
@@ -158,8 +163,31 @@ export class Scenario {
 		return event;
 	}
 
-	next(expectReference: string): NonTerminalPositionalEvent {
+	jumpToBeginningOfForm(): void {
+		this.setEventPosition(0);
+	}
+
+	/**
+	 * @param expectReference - `'END_OF_FORM'` may be passed if the call is
+	 * expected to advance the positional state to the end of the form. (This is
+	 * considered safe, albeit somewhat awkward, on the basis that it isn't
+	 * expected to be a valid XPath reference in any test fixtures.)
+	 *
+	 * @todo consider signature overload, conceptually similar to the one
+	 * introduced for {@link createNewRepeat}?
+	 */
+	next(expectReference: string): EndOfFormEvent | NonTerminalPositionalEvent {
 		const increment = (current: number): number => current + 1;
+
+		if (expectReference === 'END_OF_FORM') {
+			this.setEventPosition(increment);
+
+			const event = this.getSelectedPositionalEvent();
+
+			this.assertEndOfForm(event);
+
+			return event;
+		}
 
 		return this.setNonTerminalEventPosition(increment, expectReference);
 	}
