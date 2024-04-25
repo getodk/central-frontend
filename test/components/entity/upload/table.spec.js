@@ -85,8 +85,8 @@ describe('EntityUploadTable', () => {
   });
 
   it('highlights rows in the highlighted range', () => {
-    testData.extendedDatasets.createPast(1, { entities: 10 });
-    testData.extendedEntities.createPast(10);
+    testData.extendedDatasets.createPast(1, { entities: 12 });
+    testData.extendedEntities.createPast(12);
     const component = mountComponent({
       props: { rowIndex: 5, highlighted: [8, 10] }
     });

@@ -46,14 +46,15 @@ const { formatRange } = useI18nUtils();
 @import '../../../assets/scss/mixins';
 
 .entity-upload-warning {
-  @include line-clamp(2);
+  @include text-overflow-ellipsis;
   background-color: #fff;
   font-weight: bold;
-  padding: 4px 3px;
+  padding: 9px 3px;
 
   .label {
     font-size: inherit;
     margin-right: 10px;
+    padding: 7px 5px;
   }
 
   .i18n-list {

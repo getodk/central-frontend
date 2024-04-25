@@ -40,6 +40,14 @@ const props = defineProps({
   }
 });
 
+/* The broad approach here is to pass the values of props.list to slots, then to
+pass the resulting text of the slots to formatListToParts(). formatListToParts()
+will return text to insert between and around the slots (the list "literals").
+This component is unusual in that it is rendered in two steps. First, the slots
+are rendered, after which formatListToParts() is called. Next, the DOM is
+updated with the resulting literals. This means that the component will not be
+fully rendered until a tick after it is mounted. */
+
 const literals = shallowRef([]);
 const el = ref(null);
 const { formatListToParts } = useI18nUtils();
@@ -55,6 +63,10 @@ const format = () => {
     if (part.type === 'literal') {
       literals.value[index] += part.value;
     } else {
+      // Verify basic assumptions about `parts`. If these aren't true, then the
+      // approach described above won't work. Elements should appear in the same
+      // order in `parts` as they do in `elements`. A single element should not
+      // be broken into multiple parts.
       if (index === elements.length || part.value !== elements[index])
         throw new Error('element mismatch');
       index += 1;
@@ -65,7 +77,8 @@ let formatted = false;
 // Calls format() after a change to props.list or i18n.locale.
 watchPostEffect(() => {
   format();
-  // Prevent onUpdated() from calling format() a second time.
+  // Prevent onUpdated() from calling format() a second time. The onUpdated()
+  // callback seems to be called after the watch effect.
   formatted = true;
   nextTick(() => { formatted = false; });
 });

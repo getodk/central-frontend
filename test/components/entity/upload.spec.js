@@ -41,7 +41,11 @@ const selectFile = async (modal, file = createCSV()) => {
   await setFiles(modal.get('input'), [file]);
   return waitUntil(() => !modal.vm.parsing);
 };
-const getTables = (modal) => modal.findAllComponents(EntityUploadTable);
+const getTables = (modal) => {
+  const tables = modal.findAllComponents(EntityUploadTable);
+  tables.length.should.equal(2);
+  return tables;
+};
 
 describe('EntityUpload', () => {
   it('toggles the modal', () => {
