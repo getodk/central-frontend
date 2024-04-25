@@ -16,6 +16,7 @@ import { describe, expect, it } from 'vitest';
 import { choice } from '../src/choice/ExpectedChoice.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
+// Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('DynamicSelectUpdateTest.java', () => {
 	/**
 	 * @todo - per Slack discussion, we will update JavaRosa's corresponding tests
@@ -31,7 +32,6 @@ describe('DynamicSelectUpdateTest.java', () => {
 		readonly substituteAbsoluteBodyReferences: boolean;
 	}
 
-	// Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 	describe.each<GetSelectFromRepeatFormOptions>([
 		{ substituteAbsoluteBodyReferences: false },
 		{ substituteAbsoluteBodyReferences: true },
