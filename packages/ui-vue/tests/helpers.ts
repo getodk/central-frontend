@@ -1,9 +1,10 @@
-import { initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
+import { initializeForm, type AnyLeafNode, type RootNode } from '@odk-web-forms/xforms-engine';
+import type { MountingOptions } from '@vue/test-utils';
 // eslint-disable-next-line no-restricted-imports -- in test environemnt
 import { readFile } from 'fs/promises';
-import { reactive } from 'vue';
 import PrimeVue from 'primevue/config';
-import type { MountingOptions } from '@vue/test-utils';
+import { assocPath } from 'ramda';
+import { reactive } from 'vue';
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
 	const formXml = await readFile(`../ui-solid/fixtures/xforms/${formPath}`, 'utf8');
@@ -23,3 +24,5 @@ export const globalMountOptions: GlobalMountOptions = {
 		teleport: true,
 	},
 };
+
+export const getDummyLeafNode = () => assocPath(['nodeType'], 'dummy', {} as AnyLeafNode);

@@ -1,12 +1,11 @@
 import InputText from '@/components/controls/InputText.vue';
 import SelectControl from '@/components/controls/SelectControl.vue';
 import UnsupportedControl from '@/components/controls/UnsupportedControl.vue';
-import type { AnyLeafNode, SelectNode } from '@odk-web-forms/xforms-engine';
+import type { SelectNode } from '@odk-web-forms/xforms-engine';
 import { mount } from '@vue/test-utils';
-import { assocPath } from 'ramda';
 import { describe, expect, it } from 'vitest';
 import FormQuestion from '../../src/components/FormQuestion.vue';
-import { getReactiveForm, globalMountOptions } from '../helpers';
+import { getDummyLeafNode, getReactiveForm, globalMountOptions } from '../helpers';
 
 const mountComponent = async (formPath: string, questionNumber: number) => {
 	const xform = await getReactiveForm(formPath);
@@ -43,7 +42,7 @@ describe('FormQuestion', () => {
 	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
 		const component = mount(FormQuestion, {
 			props: {
-				question: assocPath(['nodeType'], 'dummy', {} as AnyLeafNode),
+				question: getDummyLeafNode(),
 			},
 		});
 
