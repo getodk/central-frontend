@@ -47,7 +47,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				expect(scenario.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(0));
 
 				scenario.next('/data/repeat');
-				scenario.createNewRepeat('/data/repeat');
+				scenario.createNewRepeat({ assertCurrentReference: '/data/repeat' });
 				scenario.next('/data/repeat[2]/inner1');
 
 				scenario.answer(1);
@@ -103,7 +103,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					);
 
 					scenario.next('/data/repeat');
-					scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat({ assertCurrentReference: '/data/repeat' });
 
 					scenario.next('/data/repeat[2]/concatenated');
 					expect(scenario.answerOf('/data/repeat[2]/concatenated')).toEqualAnswer(
@@ -142,7 +142,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					);
 
 					scenario.next('/data/repeat');
-					scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat({ assertCurrentReference: '/data/repeat' });
 
 					scenario.next('/data/repeat[2]/concatenated');
 					expect(scenario.answerOf('/data/repeat[2]/concatenated')).toEqualAnswer(

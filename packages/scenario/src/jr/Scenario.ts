@@ -40,6 +40,13 @@ type ScenarioStaticInitParameters =
 	| readonly [formName: string, form: XFormsElement]
 	| readonly [resource: PathResource];
 
+/**
+ * @see {@link Scenario.createNewRepeat} for details
+ */
+interface CreateNewRepeatAssertedReferenceOptions {
+	readonly assertCurrentReference: string;
+}
+
 export class Scenario {
 	static async init(...args: ScenarioStaticInitParameters): Promise<Scenario> {
 		let resource: TestFormResource;
@@ -157,6 +164,21 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(increment, expectReference);
 	}
 
+	private setPositionalStateToReference(reference: string): AnyPositionalEvent {
+		const events = this.getPositionalEvents();
+		const index = events.findIndex(({ node }) => {
+			return node?.currentState.reference === reference;
+		});
+
+		if (index === -1) {
+			throw new Error(
+				`Setting answer to ${reference} failed: could not locate question/positional event with that reference.`
+			);
+		}
+
+		return this.setNonTerminalEventPosition(() => index, reference);
+	}
+
 	answer(reference: string, value: unknown): unknown;
 	answer(value: unknown): unknown;
 	answer(...[arg0, arg1]: [reference: string, value: unknown] | [value: unknown]): unknown {
@@ -167,20 +189,9 @@ export class Scenario {
 			event = this.getSelectedPositionalEvent();
 			value = arg0;
 		} else if (typeof arg0 === 'string') {
-			const events = this.getPositionalEvents();
 			const reference = arg0;
-			const index = events.findIndex(({ node }) => {
-				return node?.currentState.reference === reference;
-			});
 
-			if (index === -1) {
-				throw new Error(
-					`Setting answer to ${reference} failed: could not locate question with that reference.`
-				);
-			}
-
-			event = this.setNonTerminalEventPosition(() => index, reference);
-
+			event = this.setPositionalStateToReference(reference);
 			value = arg1;
 		} else {
 			throw new Error('Unsupported `answer` overload call');
@@ -223,10 +234,59 @@ export class Scenario {
 		return new SelectChoiceList(node);
 	}
 
-	createNewRepeat(repeatNodeset: string): unknown {
-		const event = this.getSelectedPositionalEvent();
+	/**
+	 * Note: In JavaRosa, {@link Scenario.createNewRepeat} accepts either:
+	 *
+	 * - a nodeset reference, specifying where to create a new repeat instance
+	 *   (regardless of the current positional state within the form)
+	 * - no parameter, implicitly creating a repeat instance at the current form
+	 *   positional state (presumably resulting in test failure if the positional
+	 *   state does not allow this)
+	 *
+	 * When we began porting JavaRosa tests, we agreed to make certain aspects of
+	 * positional state more explicit, by passing the **expected** nodeset
+	 * reference as a parameter to methods which would either mutate that state,
+	 * or invoke any behavior which would be (implicitly) based on its current
+	 * positional state. The idea was that this would both improve clarity of
+	 * intent (inlining meta-information into a test's body about that test's
+	 * state as it progresses) and somewhat improve resilience against regressions
+	 * (by treating such reference parameters _as assertions_).
+	 *
+	 * We still consider these changes valuable, but it turned out that the way
+	 * they were originally conceived conflicts with (at least) the current
+	 * {@link Scenario.createNewRepeat} interface in JavaRosa. As such, that
+	 * method's interface is revised again so that:
+	 *
+	 * - JavaRosa tests which **already pass** a nodeset reference preserve the
+	 *   same semantics and behavior they currently have
+	 * - Web forms tests introducing the clarifying/current-state-asserting
+	 *   behavior need to be slightly more explicit, by passing an options object
+	 *   to disambiguate the reference nodeset's intent
+	 */
+	createNewRepeat(
+		assertionOptionsOrTargetReference: CreateNewRepeatAssertedReferenceOptions | string
+	): unknown {
+		let repeatReference: string;
+		let event: AnyPositionalEvent;
 
-		this.assertNodeset(event, repeatNodeset);
+		if (typeof assertionOptionsOrTargetReference === 'object') {
+			const options = assertionOptionsOrTargetReference;
+			const { assertCurrentReference } = options;
+
+			event = this.getSelectedPositionalEvent();
+
+			this.assertNodeset(event, assertCurrentReference);
+
+			repeatReference = assertCurrentReference;
+		} else {
+			repeatReference = assertionOptionsOrTargetReference;
+
+			event = this.setPositionalStateToReference(repeatReference);
+		}
+
+		if (event.eventType !== 'PROMPT_NEW_REPEAT') {
+			throw new Error('Cannot create new repeat, ');
+		}
 
 		const { node } = event;
 		const { reference } = node.currentState;
