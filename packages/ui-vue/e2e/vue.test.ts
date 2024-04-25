@@ -60,9 +60,16 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 
 			if (inputType === 'text') {
 				await page.keyboard.type(faker.internet.displayName());
-			} else if (inputType === 'radio') {
+			}
+			// Select the next option, if the last option is selected by default
+			// then browser selects the first one.
+			else if (inputType === 'radio') {
 				await page.keyboard.press('ArrowDown');
-			} else if (inputType === 'checkbox') {
+			}
+			// Tab behaviour for checkboxes is different, each Tab press moves the focus
+			// to the next option. Here we are toggling every checkbox option.
+			else if (inputType === 'checkbox') {
+				// Toggle the option
 				await page.keyboard.press('Space');
 			}
 		}
