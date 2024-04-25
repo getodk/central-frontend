@@ -10,9 +10,7 @@ export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
 
 	return await initializeForm(formXml, {
 		config: {
-			stateFactory: <T extends object>(o: T) => {
-				return reactive(o) as T;
-			},
+			stateFactory: reactive,
 		},
 	});
 };
