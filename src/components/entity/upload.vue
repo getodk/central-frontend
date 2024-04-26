@@ -65,7 +65,7 @@ except according to the terms contained in the LICENSE file.
         :progress="uploadProgress" @clear="clearFile"
         @animationstart="animatePopup(true)"
         @animationend="animatePopup(false)"/>
-      <div class="modal-actions">
+      <div ref="actions" class="modal-actions">
         <button type="button" class="btn btn-primary"
           :aria-disabled="csvEntities == null || uploading" @click="upload">
           {{ $t('action.append') }}
@@ -349,6 +349,11 @@ const resizeColumnUnlessAnimating = () => {
   if (props.state && !popupAnimating.value) resizeLastColumn();
 };
 useEventListener(window, 'resize', resizeColumnUnlessAnimating);
+
+const actions = ref(null);
+watch(csvEntities, (value) => {
+  if (value != null) nextTick(() => { actions.value.scrollIntoView(); });
+});
 
 watch(() => props.state, (state) => {
   if (!state) {
