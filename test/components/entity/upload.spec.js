@@ -177,6 +177,35 @@ describe('EntityUpload', () => {
     });
   });
 
+  describe('binary file', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1);
+    });
+
+    it('shows an alert for a null character in the header', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('f\0o'));
+      modal.should.alert('danger', 'The file “my_data.csv” is not a valid .csv file. It cannot be read.');
+      modal.findComponent(EntityUploadHeaderErrors).exists().should.be.false();
+    });
+
+    it('hides the alert after a valid file is selected', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('f\0o'));
+      await selectFile(modal);
+      modal.should.not.alert();
+      modal.findComponent(EntityUploadPopup).exists().should.be.true();
+    });
+
+    it('renders EntityUploadDataError for a null character after header', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('label\nf\0o'));
+      const { message } = modal.getComponent(EntityUploadDataError).props();
+      message.should.equal('The file “my_data.csv” is not a valid .csv file. It cannot be read.');
+      modal.should.not.alert();
+    });
+  });
+
   describe('warnings', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1, {
