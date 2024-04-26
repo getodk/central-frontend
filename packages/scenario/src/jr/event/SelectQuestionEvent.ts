@@ -3,11 +3,23 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import { SelectNodeAnswer } from '../../answer/SelectNodeAnswer.ts';
 import { UntypedAnswer } from '../../answer/UntypedAnswer.ts';
 import type { Scenario } from '../Scenario.ts';
+import { SelectChoice } from '../select/SelectChoice.ts';
 import { QuestionEvent } from './QuestionEvent.ts';
 
-export class SelectQuestionEvent extends QuestionEvent<SelectNode> {
+export class SelectQuestionEvent extends QuestionEvent<'select'> {
 	getAnswer(): SelectNodeAnswer {
 		return new SelectNodeAnswer(this.node);
+	}
+
+	getChoice(choiceIndex: number): SelectChoice {
+		const items = this.node.currentState.valueOptions;
+		const item = items[choiceIndex];
+
+		if (item == null) {
+			throw new Error(`No choice at index ${choiceIndex}`);
+		}
+
+		return new SelectChoice(item);
 	}
 
 	/**

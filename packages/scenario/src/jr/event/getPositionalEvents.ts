@@ -6,10 +6,14 @@ import { BeginningOfFormEvent } from './BeginningOfFormEvent.ts';
 import { EndOfFormEvent } from './EndOfFormEvent.ts';
 import { GroupEvent } from './GroupEvent.ts';
 import { PromptNewRepeatEvent } from './PromptNewRepeatEvent.ts';
-import type { AnyQuestionEvent } from './QuestionEvent.ts';
 import { RepeatInstanceEvent } from './RepeatInstanceEvent.ts';
 import { SelectQuestionEvent } from './SelectQuestionEvent.ts';
 import { StringInputQuestionEvent } from './StringQuestionEvent.ts';
+
+// prettier-ignore
+export type AnyQuestionEvent =
+	| SelectQuestionEvent
+	| StringInputQuestionEvent;
 
 // prettier-ignore
 export type NonTerminalPositionalEvent =

@@ -2,14 +2,21 @@ import type { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import type { PositionalEventNode } from './PositionalEvent.ts';
 import { PositionalEvent } from './PositionalEvent.ts';
 
-export type QuestionNode = PositionalEventNode<'QUESTION'>;
+type QuestionNode = PositionalEventNode<'QUESTION'>;
+
+export type QuestionNodeType = QuestionNode['nodeType'];
+
+export type TypedQuestionNode<Type extends QuestionNodeType> = Extract<
+	QuestionNode,
+	{ readonly nodeType: Type }
+>;
 
 export abstract class QuestionEvent<
-	Question extends QuestionNode,
+	Type extends QuestionNodeType,
 > extends PositionalEvent<'QUESTION'> {
 	readonly eventType = 'QUESTION';
 
-	constructor(override readonly node: Question) {
+	constructor(override readonly node: TypedQuestionNode<Type>) {
 		super(node);
 	}
 
@@ -18,4 +25,4 @@ export abstract class QuestionEvent<
 	abstract answerQuestion(answerValue: unknown): string;
 }
 
-export type AnyQuestionEvent = QuestionEvent<QuestionNode>;
+export type AnyQuestionEvent = QuestionEvent<QuestionNodeType>;

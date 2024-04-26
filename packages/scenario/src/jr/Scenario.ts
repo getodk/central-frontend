@@ -11,6 +11,7 @@ import { getClosestRepeatRange } from '../client/traversal.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
 import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
+import type { QuestionNodeType } from './event/QuestionEvent.ts';
 import { RepeatInstanceEvent } from './event/RepeatInstanceEvent.ts';
 import {
 	getPositionalEvents,
@@ -18,6 +19,7 @@ import {
 	type NonTerminalPositionalEvent,
 	type PositionalEvents,
 } from './event/getPositionalEvents.ts';
+import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
 import { TreeReference } from './instance/TreeReference.ts';
 import type { PathResource } from './resource/PathResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
@@ -47,6 +49,13 @@ type ScenarioStaticInitParameters =
 interface CreateNewRepeatAssertedReferenceOptions {
 	readonly assertCurrentReference: string;
 }
+
+// prettier-ignore
+type GetQuestionAtIndexParameters<
+	ExpectedQuestionType extends QuestionNodeType
+> = readonly [
+	expectedType?: ExpectedQuestionType | null
+];
 
 export class Scenario {
 	static async init(...args: ScenarioStaticInitParameters): Promise<Scenario> {
@@ -165,6 +174,18 @@ export class Scenario {
 
 	jumpToBeginningOfForm(): void {
 		this.setEventPosition(0);
+	}
+
+	getQuestionAtIndex<ExpectedQuestionType extends QuestionNodeType>(
+		...[expectedType = null]: GetQuestionAtIndexParameters<ExpectedQuestionType>
+	): TypedQuestionEvent<ExpectedQuestionType> {
+		const event = this.getSelectedPositionalEvent();
+
+		if (!isQuestionEventOfType(event, expectedType)) {
+			throw new Error(`Expected positional event of type ${expectedType}, got ${event.eventType}`);
+		}
+
+		return event;
 	}
 
 	/**
@@ -412,5 +433,15 @@ export class Scenario {
 	 */
 	serializeAndDeserializeForm(): Promise<Scenario> {
 		return Promise.reject(new UnclearApplicabilityError('serialization/deserialization'));
+	}
+
+	/**
+	 * @todo JavaRosa mutates the {@link Scenario} instance itself. Do we actually
+	 * want that? Deferred for now, at least until the porting process surfaces a
+	 * test which would exercise it without being expected to fail beforehand for
+	 * other reasons of unclear applicability.
+	 */
+	newInstance(): Promise<never> {
+		return Promise.reject(new UnclearApplicabilityError('Scenario instance statefulness'));
 	}
 }

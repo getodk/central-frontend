@@ -6,9 +6,11 @@ import {
 	input,
 	instance,
 	item,
+	label,
 	mainInstance,
 	model,
 	repeat,
+	select1,
 	select1Dynamic,
 	t,
 	title,
@@ -598,6 +600,44 @@ describe('SelectCachingTest.java', () => {
 		scenario.answer('/data/choice', 1);
 
 		expect(scenario.choicesOf('/data/select').size()).toBe(1);
+	});
+});
+
+describe('SelectChoiceTest.java', () => {
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * This test is select-specific, and comes from a select-specific JavaRosa
+	 * file (er "bag"/"vat" 😂 @lognaturel), but falls into the same category as
+	 * those from `FormDefSerializationTest.java` (also skipped in
+	 * {@link ./serialization.test.ts}).
+	 */
+	it.skip('value_should_continue_being_an_empty_string_after_deserialization', async () => {
+		const scenario = await Scenario.init(
+			'SelectChoice.getValue() regression test form',
+			html(
+				head(
+					title('SelectChoice.getValue() regression test form'),
+					model(
+						mainInstance(t('data id="some-form"', t('the-choice'))),
+						bind('/data/the-choice').type('string').required()
+					)
+				),
+				body(select1('/data/the-choice', label('Select one choice'), item('', 'Empty value')))
+			)
+		);
+
+		scenario.next('/data/the-choice');
+
+		expect(scenario.getQuestionAtIndex('select').getChoice(0).getValue()).toBe('');
+
+		const deserializedScenario = await scenario.serializeAndDeserializeForm();
+
+		await deserializedScenario.newInstance();
+
+		deserializedScenario.next('/data/the-choice');
+
+		expect(deserializedScenario.getQuestionAtIndex('select').getChoice(0).getValue()).toBe('');
 	});
 });
 
