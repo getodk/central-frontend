@@ -140,17 +140,31 @@ export const select1 = (ref: string, ...children: XFormsElement[]): XFormsElemen
 	return t(`select1 ref="${ref}"`, ...children);
 };
 
-interface select1Dynamic {
-	(ref: string, nodesetRef: string): XFormsElement;
-	(ref: string, nodesetRef: string, valueRef: string, labelRef: string): XFormsElement;
-}
+type Select1DynamicParameters =
+	| readonly [ref: string, nodesetRef: string]
+	| readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
+
+type select1Dynamic = (...args: Select1DynamicParameters) => XFormsElement;
 
 export const select1Dynamic: select1Dynamic = (
-	ref,
-	nodesetRef,
-	valueRef = 'value',
-	labelRef = 'label'
+	...[ref, nodesetRef, valueRef, labelRef]: Select1DynamicParameters
 ): XFormsElement => {
+	if (valueRef == null && labelRef == null) {
+		const value = t("value ref=\"value\"");
+		const label = t("label ref=\"label\"");
+
+		const itemsetAttributes = new Map<string, string>();
+
+		itemsetAttributes.set("nodeset", nodesetRef);
+
+		const itemset = new TagXFormsElement("itemset", itemsetAttributes, [value, label]);
+		const select1Attributes = new Map<string, string>();
+
+		select1Attributes.set("ref", ref);
+
+		return new TagXFormsElement("select1", select1Attributes, [itemset]);
+	}
+
 	return t(
 		`select1 ref="${ref}"`,
 		t(`itemset nodeset="${nodesetRef}"`, t(`value ref="${valueRef}"`), t(`label ref="${labelRef}"`))
