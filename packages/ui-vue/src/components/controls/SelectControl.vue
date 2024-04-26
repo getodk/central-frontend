@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { SelectItem, SelectNode } from '@odk-web-forms/xforms-engine';
 import PrimeVueCheckbox from 'primevue/checkbox';
-import PrimeVueRadioButton from 'primevue/radiobutton';
+import type { HTMLInputElementEvent } from 'primevue/events';
 
+import PrimeVueRadioButton from 'primevue/radiobutton';
 import { computed } from 'vue';
 import ControlLabel from '../ControlLabel.vue';
+
 
 const props = defineProps<{question: SelectNode}>();
 
@@ -12,8 +14,8 @@ const setSelect1Value = (item: SelectItem) => {
 	props.question.select(item);
 };
 
-const setSelectNValue = (e: Event, item: SelectItem) => {	
-	const checkbox = e.target as HTMLInputElement;
+const setSelectNValue = (e: HTMLInputElementEvent, item: SelectItem) => {	
+	const checkbox = e.target;
 
 	if(checkbox.checked) {
 		props.question.select(item);

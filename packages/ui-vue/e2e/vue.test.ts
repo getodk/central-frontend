@@ -39,21 +39,21 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 			await page.keyboard.press(browserName == 'webkit' ? 'Alt+Tab' : 'Tab');
 
 			const inputType = await page.evaluate(() => {
-        const isInputElement = (
-          activeElement: Element | null
-        ): activeElement is HTMLInputElement => {
-          return activeElement?.tagName === 'INPUT';
-        };
+				const isInputElement = (
+					activeElement: Element | null
+				): activeElement is HTMLInputElement => {
+					return activeElement?.tagName === 'INPUT';
+				};
 
-        const activeElement = document.activeElement;
+				const activeElement = document.activeElement;
 
-        if (
-          !isInputElement(activeElement) ||
-          activeElement.hasAttribute('readonly') ||
-          activeElement.hasAttribute('disabled')
-        ) {
-          return null;
-        }
+				if (
+					!isInputElement(activeElement) ||
+					activeElement.hasAttribute('readonly') ||
+					activeElement.hasAttribute('disabled')
+				) {
+					return null;
+				}
 
 				return activeElement.type;
 			});
