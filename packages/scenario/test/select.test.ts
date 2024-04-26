@@ -1,4 +1,5 @@
 import {
+	bind,
 	body,
 	head,
 	html,
@@ -476,6 +477,127 @@ describe('DynamicSelectUpdateTest.java', () => {
 				expect(scenario.choicesOf('/data/repeat[2]/select').size()).toBe(1);
 			});
 		});
+	});
+});
+
+/**
+ * **PORTING NOTES**
+ *
+ * Similar to `PredicateCachingTest.java`, for now we've skipped tests which
+ * only assert the expected number of evaluations, and we've ported the
+ * remaining tests which have apparent correctness concerns.
+ */
+describe('SelectCachingTest.java', () => {
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * I've done my best here to intuit the intent of the test name from JavaRosa.
+	 * It originally seemed that the test names may be back-referencing previous
+	 * tests in source order, but it now seems like the `and` and `or` parts of
+	 * the name reference the behavior of those operators in XPath expressions
+	 * under test.
+	 */
+	describe('`and` of two eq choice filters', () => {
+		it('is not confused with `or`', async () => {
+			const scenario = await Scenario.init(
+				'Some form',
+				html(
+					head(
+						title('Some form'),
+						model(
+							mainInstance(t('data id="some-form"', t('choice'), t('select1'), t('select2'))),
+							instance('instance', item('a', 'A'), item('b', 'B')),
+							bind('/data/choice').type('string'),
+							bind('/data/select1').type('string'),
+							bind('/data/select2').type('string')
+						)
+					),
+					body(
+						input('/data/choice'),
+						select1Dynamic(
+							'/data/select1',
+							"instance('instance')/root/item[value=/data/choice or value!=/data/choice]"
+						),
+						select1Dynamic(
+							'/data/select2',
+							"instance('instance')/root/item[value=/data/choice and value!=/data/choice]"
+						)
+					)
+				)
+			);
+
+			scenario.answer('/data/choice', 'a');
+
+			expect(scenario.choicesOf('/data/select1').size()).toBe(2);
+			expect(scenario.choicesOf('/data/select2').size()).toBe(0);
+		});
+	});
+
+	describe('nested predicates', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Rephrase?
+		 */
+		it('[is] are correct after form state changes', async () => {
+			const scenario = await Scenario.init(
+				'Some form',
+				html(
+					head(
+						title('Some form'),
+						model(
+							mainInstance(t('data id="some-form"', t('choice'), t('other_choice'), t('select'))),
+							instance('instance', item('a', 'A'), item('b', 'B')),
+							bind('/data/choice').type('string'),
+							bind('/data/other_choice').type('string'),
+							bind('/data/select').type('string')
+						)
+					),
+					body(
+						input('/data/choice'),
+						input('/data/other_choice'),
+						select1Dynamic(
+							'/data/select',
+							"instance('instance')/root/item[value=/data/choice][value=/data/other_choice]"
+						)
+					)
+				)
+			);
+
+			scenario.answer('/data/choice', 'a');
+			scenario.answer('/data/other_choice', 'a');
+
+			expect(scenario.choicesOf('/data/select').size()).toBe(1);
+
+			scenario.answer('/data/other_choice', 'b');
+
+			expect(scenario.choicesOf('/data/select').size()).toBe(0);
+		});
+	});
+
+	it('eq choice filters for ints work', async () => {
+		const scenario = await Scenario.init(
+			'Some form',
+			html(
+				head(
+					title('Some form'),
+					model(
+						mainInstance(t('data id="some-form"', t('choice'), t('select'))),
+						instance('instance', item('1', 'One'), item('2', 'Two')),
+						bind('/data/choice').type('int'),
+						bind('/data/select').type('string')
+					)
+				),
+				body(
+					input('/data/choice'),
+					select1Dynamic('/data/select', "instance('instance')/root/item[value=/data/choice]")
+				)
+			)
+		);
+
+		scenario.answer('/data/choice', 1);
+
+		expect(scenario.choicesOf('/data/select').size()).toBe(1);
 	});
 });
 
