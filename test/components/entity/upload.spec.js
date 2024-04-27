@@ -197,6 +197,9 @@ describe('EntityUpload', () => {
       modal.findComponent(EntityUploadPopup).exists().should.be.true();
     });
 
+    // This is not necessarily the ideal behavior. Showing an alert would be
+    // more consistent with what happens for a null character in the header.
+    // This test documents the current expected behavior.
     it('renders EntityUploadDataError for a null character after header', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('label\nf\0o'));

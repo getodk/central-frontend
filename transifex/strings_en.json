@@ -918,7 +918,7 @@
         "string": "There was a problem reading your file: {message}",
         "developer_comment": "{message} is a description of the problem."
       },
-      "nullChar": {
+      "invalidCSV": {
         "string": "The file “{name}” is not a valid .csv file. It cannot be read."
       },
       "rowError": {
