@@ -767,6 +767,110 @@ describe('SelectChoiceTest.java', () => {
 			);
 		});
 	});
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * It is already obvious at the outset that this API will fall into the same
+	 * category as `getChild` above. Minimal effort has gone into porting these.
+	 * Any further notes that might arise will come from further analysis when the
+	 * affected functionality is prioritized.
+	 */
+	describe('`getAdditionalChildren`', () => {
+		it.fails('returns children in order when choices are from secondary instance', async () => {
+			setUpSimpleReferenceManager(r('external-select-geojson.xml').getParent(), 'file');
+
+			const scenario = await Scenario.init('external-select-geojson.xml');
+
+			const firstNodeChildren = scenario.choicesOf('/data/q').get(0)?.getAdditionalChildren();
+
+			expect(firstNodeChildren?.size()).toBe(3);
+			expect(firstNodeChildren?.get(0)).toEqual(['geometry', '0.5 102 0 0']);
+			expect(firstNodeChildren?.get(1)).toEqual(['id', 'fs87b']);
+			expect(firstNodeChildren?.get(2)).toEqual(['foo', 'bar']);
+
+			const secondNodeChildren = scenario.choicesOf('/data/q').get(1)?.getAdditionalChildren();
+
+			expect(secondNodeChildren?.size()).toBe(4);
+			expect(secondNodeChildren?.get(0)).toEqual(['geometry', '0.5 104 0 0']);
+			expect(secondNodeChildren?.get(1)).toEqual(['id', '67']);
+			expect(secondNodeChildren?.get(2)).toEqual(['foo', 'quux']);
+			expect(secondNodeChildren?.get(3)).toEqual(['special-property', 'special value']);
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * The corresponding JavaRosa test name begins with `getChildren`, which seems
+		 * to be a typo (or surprising shorthand) for `getAdditionalChildren
+		 */
+		it.fails('updates when choices are from repeat', async () => {
+			const scenario = await Scenario.init(
+				'Select from repeat',
+				html(
+					head(
+						title('Select from repeat'),
+						model(
+							mainInstance(
+								t(
+									"data id='repeat-select'",
+									t('repeat', t('value'), t('label'), t('special-property')),
+									t('filter'),
+									t('select')
+								)
+							)
+						)
+					),
+					body(
+						repeat('/data/repeat', input('value'), input('label'), input('special-property')),
+						input('filter'),
+						select1Dynamic('/data/select', '../repeat')
+					)
+				)
+			);
+			scenario.answer('/data/repeat[0]/value', 'a');
+			scenario.answer('/data/repeat[0]/label', 'A');
+			scenario.answer('/data/repeat[0]/special-property', 'AA');
+
+			expect(scenario.choicesOf('/data/select').get(0)?.getValue()).toBe('a');
+
+			let children = scenario.choicesOf('/data/select').get(0)?.getAdditionalChildren();
+
+			expect(children?.size()).toBe(2);
+			expect(children?.get(0)).toEqual(['value', 'a']);
+			expect(children?.get(1)).toEqual(['special-property', 'AA']);
+
+			scenario.answer('/data/repeat[0]/special-property', 'changed');
+
+			children = scenario.choicesOf('/data/select').get(0)?.getAdditionalChildren();
+
+			expect(children?.get(1)).toEqual(['special-property', 'changed']);
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Like the inline (non-itemset) select test for `getChild`, this could be
+		 * made to pass, but was left failing with the rest of the sub-suite based
+		 * on the same reasoning.
+		 */
+		it.fails('returns empty when called on a choice from inline select', async () => {
+			const scenario = await Scenario.init(
+				'Static select',
+				html(
+					head(
+						title('Static select'),
+						model(mainInstance(t("data id='static-select'", t('select'))))
+					),
+					body(select1('/data/select', item('one', 'One'), item('two', 'Two')))
+				)
+			);
+
+			expect(scenario.choicesOf('/data/select').get(0)?.getAdditionalChildren().isEmpty()).toBe(
+				true
+			);
+		});
+	});
 });
 
 describe.todo('SelectOneChoiceFilterTest.java');

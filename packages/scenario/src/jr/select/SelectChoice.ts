@@ -1,6 +1,7 @@
 import type { SelectItem } from '@getodk/xforms-engine';
 import { ComparableChoice } from '../../choice/ComparableChoice.ts';
 import { UnclearApplicabilityError } from '../../error/UnclearApplicabilityError.ts';
+import type { SelectChoiceArbitraryChildList } from './SelectChoiceArbitraryChildList.ts';
 
 export class SelectChoice extends ComparableChoice {
 	get value(): string {
@@ -28,6 +29,12 @@ export class SelectChoice extends ComparableChoice {
 	getChild(_childName: string): string | null {
 		throw new UnclearApplicabilityError(
 			'select choice: getting arbitrary child of secondary instance nodes by name'
+		);
+	}
+
+	getAdditionalChildren(): SelectChoiceArbitraryChildList {
+		throw new UnclearApplicabilityError(
+			`select choice: getting arbitrary children of secondary instance nodes`
 		);
 	}
 

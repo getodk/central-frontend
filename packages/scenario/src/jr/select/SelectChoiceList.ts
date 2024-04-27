@@ -1,8 +1,8 @@
 import type { SelectNode } from '@getodk/xforms-engine';
+import type { JavaUtilList } from '../../java/util/List.ts';
 import { SelectChoice } from './SelectChoice.ts';
 
-// TODO: we may end up wanting a general `List` type. I sure hope not!
-export class SelectChoiceList implements Iterable<SelectChoice> {
+export class SelectChoiceList implements Iterable<SelectChoice>, JavaUtilList<SelectChoice> {
 	*[Symbol.iterator](): Iterator<SelectChoice> {
 		const { valueOptions } = this.node.currentState;
 
@@ -27,6 +27,10 @@ export class SelectChoiceList implements Iterable<SelectChoice> {
 		}
 
 		return new SelectChoice(selectItem);
+	}
+
+	isEmpty(): boolean {
+		return this.size() === 0;
 	}
 
 	size(): number {
