@@ -25,6 +25,8 @@ import { TreeReference } from './instance/TreeReference.ts';
 import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
+import type { ValidateOutcome } from './validation/ValidateOutcome.ts';
+import { ValidationImplementationPendingError } from './validation/ValidationImplementationPendingError.ts';
 
 interface ScenarioConstructorOptions {
 	readonly dispose: VoidFunction;
@@ -498,5 +500,32 @@ export class Scenario {
 	 */
 	newInstance(): Promise<never> {
 		return Promise.reject(new UnclearApplicabilityError('Scenario instance statefulness'));
+	}
+
+	/**
+	 * @todo
+	 */
+	getValidationOutcome(): ValidateOutcome {
+		throw new ValidationImplementationPendingError();
+	}
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * This currently deviates, intentionally, from JavaRosa interface, which
+	 * returns an instance of `FormIndex` (a concept not present in web forms, and
+	 * not currently anticipated). Since we already support JavaRosa's "event"
+	 * concepts, and since this is a reference lookup, we'll let that type be a
+	 * substitute for now.
+	 *
+	 * @todo This feels like a particular implementation detail we may want to
+	 * scrutinize after porting.
+	 */
+	indexOf(reference: string): AnyPositionalEvent | null {
+		return (
+			this.getPositionalEvents().find((event) => {
+				return event?.node?.currentState.reference === reference;
+			}) ?? null
+		);
 	}
 }

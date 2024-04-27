@@ -17,10 +17,13 @@ import {
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { answerText } from '../src/answer/ExpectedDisplayTextAnswer.ts';
+import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { choice } from '../src/choice/ExpectedChoice.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
 import { r } from '../src/jr/resource/ResourcePathHelper.ts';
+import type { SelectChoice } from '../src/jr/select/SelectChoice.ts';
+import { ANSWER_REQUIRED_BUT_EMPTY } from '../src/jr/validation/ValidateOutcome.ts';
 import { nullValue } from '../src/value/ExpectedNullValue.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
@@ -927,6 +930,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	describe('dependent levels in blank instance', () => {
 		it(`[has] have no choices`, () => {
 			// scenario.newInstance();
+
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
 		});
@@ -935,6 +939,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	describe('selecting value at level 1', () => {
 		it('filters choices at level 2', () => {
 			// scenario.newInstance();
+
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 
 			scenario.answer('/data/level1', 'a', 'b');
@@ -953,6 +958,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	describe('selecting values at levels 1 and 2', () => {
 		it('filters choices at level 3', () => {
 			// scenario.newInstance();
+
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
 
@@ -978,6 +984,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 		 */
 		it.fails('removes irrelevant answers at all levels, without changing order', () => {
 			// scenario.newInstance();
+
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
 
@@ -1006,6 +1013,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 
 		it('leaves answer unchanged if all selections still in choices', () => {
 			// scenario.newInstance();
+
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
 
@@ -1034,4 +1042,286 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	});
 });
 
-describe.todo('SelectOneChoiceFilterTest.java');
+/**
+ * **PORTING NOTES**
+ *
+ * At first glance, this looks like it will probably follow a very similar
+ * pattern to `SelectMultipleChoiceFilterTest.java` (unsurprising given the
+ * parallel naming).
+ *
+ * Similarly to that suite, where each test leads with a
+ * `scenario.newInstance()` call against the `scenario` uniformly defined in
+ * setup, that call will be commented out for now.
+ *
+ * - - -
+ *
+ * JR:
+ *
+ * When itemsets are dynamically generated, the choices available to a user in a
+ * select one question can change based on the answers given to other questions.
+ * These tests verify that when several select ones are chained in a cascading
+ * pattern, updating selections at root levels correctly updates the choices
+ * available in dependent selects all the way down the cascade. They also verify
+ * that if an answer that is no longer part of the available choices was
+ * previously selected, that answer is cleared.
+ */
+describe('SelectOneChoiceFilterTest.java', () => {
+	let scenario: Scenario;
+
+	beforeEach(async () => {
+		scenario = await Scenario.init('three-level-cascading-select.xml');
+	});
+
+	describe('dependent levels in blank instance', () => {
+		it('should have no choices', () => {
+			// scenario.newInstance();
+
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+		});
+	});
+
+	describe('selecting value at level 1', () => {
+		it('should filter choices at level 2', () => {
+			// scenario.newInstance();
+
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'b');
+
+			expect(scenario.choicesOf('/data/level2')).toContainChoicesInAnyOrder([
+				choice('ba'),
+				choice('bb'),
+				choice('bc'),
+			]);
+		});
+	});
+
+	describe('selecting values at levels 1 and 2', () => {
+		it('should filter choices at level 3', () => {
+			// scenario.newInstance();
+
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'b');
+			scenario.answer('/data/level2', 'ba');
+
+			expect(scenario.choicesOf('/data/level3')).toContainChoicesInAnyOrder([
+				choice('baa'),
+				choice('bab'),
+			]);
+		});
+	});
+
+	describe('clearing value at level 2', () => {
+		it('should clear choices at level 3', () => {
+			// scenario.newInstance();
+
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'a');
+			scenario.answer('/data/level2', 'aa');
+
+			expect(scenario.choicesOf('/data/level3')).toContainChoicesInAnyOrder([
+				choice('aaa'),
+				choice('aab'),
+			]);
+
+			scenario.answer('/data/level2', '');
+
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+		});
+	});
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * As with some prior tests, assertions that an answer will be a `nullValue()`
+	 * are treated as equivalent to asserting that the question's answer value is
+	 * blank/empty string.
+	 */
+	describe('clearing value at level 1', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Failure likely rooted in incomplete behavior, deferred to
+		 * {@link https://github.com/getodk/web-forms/issues/57}.
+		 *
+		 * @todo If we ultimately decide to restore selections under (some)
+		 * circumstances like those described in the linked issue, this may be a
+		 * good place to add a supplemental test exercising that.
+		 */
+		it.fails('should clear choices at levels 2 and 3', () => {
+			// scenario.newInstance();
+
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'a');
+			scenario.answer('/data/level2', 'aa');
+
+			expect(scenario.choicesOf('/data/level3')).toContainChoicesInAnyOrder([
+				choice('aaa'),
+				choice('aab'),
+			]);
+
+			scenario.answer('/data/level1', '');
+
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+
+			// this next assertion is only true because the one before called populateDynamic choices
+			// TODO (JR): make clearing out answers that are no longer available choices part of the form re-evaluation
+			// assertThat(scenario.answerOf("/data/level2"), nullValue());
+			expect(scenario.answerOf('/data/level2').getValue()).toBe('');
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * This test is clearly a valuable exercise of `required` validation logic,
+		 * but it seems tangential to the description.
+		 *
+		 * A supplemental test is added below, exercising the checks for cleared values independent of the validation checks.
+		 *
+		 * This test currently fails pending implementation of validation.
+		 */
+		it.fails('should clear [and validate] values at levels 2 and 3', () => {
+			// scenario.newInstance();
+
+			expect(scenario.answerOf('/data/level2').getValue()).toBe('');
+			expect(scenario.answerOf('/data/level3').getValue()).toBe('');
+
+			scenario.answer('/data/level1', 'a');
+			scenario.answer('/data/level2', 'aa');
+			scenario.answer('/data/level3', 'aab');
+
+			scenario.answer('/data/level1', '');
+
+			let validate = scenario.getValidationOutcome();
+
+			expect(validate.failedPrompt).toBe(scenario.indexOf('/data/level2'));
+			expect(validate.outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
+
+			// If we set level2 to "aa", form validation passes. Currently, clearing a choice only updates filter expressions
+			// that directly depend on it. With this form, we could force clearing the third level when the first level is cleared
+			// by making the level3 filter expression in the form definition reference level1 AND level2.
+			scenario.answer('/data/level1', 'b');
+			scenario.answer('/data/level2', 'bb');
+
+			validate = scenario.getValidationOutcome();
+
+			expect(validate.failedPrompt).toBe(scenario.indexOf('/data/level3'));
+			expect(validate.outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Meta-note: this test is **not** ported from JavaRosa, but supplemental to
+		 * the ported test above. While misleading, reusing the heading is expected
+		 * to be helpful in compiling notes for more comprehensive analysis,
+		 * discussion, planning and prioritization once porting is complete.
+		 *
+		 * Actual note: this failure is almost certainly rooted in incomplete
+		 * behavior, deferred to
+		 * {@link https://github.com/getodk/web-forms/issues/57}.
+		 */
+		it.fails(
+			'clears values at levels 2 and 3 [currently supplemental, see porting notes on previous teest]',
+			() => {
+				// scenario.newInstance();
+
+				expect(scenario.answerOf('/data/level2').getValue()).toBe('');
+				expect(scenario.answerOf('/data/level3').getValue()).toBe('');
+
+				scenario.answer('/data/level1', 'a');
+				scenario.answer('/data/level2', 'aa');
+				scenario.answer('/data/level3', 'aab');
+
+				scenario.answer('/data/level1', '');
+
+				expect(scenario.answerOf('/data/level2')).toEqualAnswer(stringAnswer(''));
+
+				scenario.answer('/data/level1', 'b');
+				scenario.answer('/data/level2', 'bb');
+
+				expect(scenario.answerOf('/data/level3')).toEqualAnswer(stringAnswer(''));
+			}
+		);
+	});
+
+	describe('changing value at level 2', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Failure likely rooted in incomplete behavior, deferred to
+		 * {@link https://github.com/getodk/web-forms/issues/57}.
+		 */
+		it.fails('should clear level 3 if choice no longer available', () => {
+			// scenario.newInstance();
+
+			scenario.answer('/data/level1_contains', 'a');
+			scenario.answer('/data/level2_contains', 'aa');
+
+			expect(scenario.choicesOf('/data/level3_contains')).toContainChoicesInAnyOrder([
+				choice('aaa'),
+				choice('aab'),
+				choice('baa'),
+			]);
+
+			scenario.answer('/data/level3_contains', 'aaa');
+			scenario.answer('/data/level2_contains', 'ab');
+
+			expect(scenario.choicesOf('/data/level3_contains')).toContainChoicesInAnyOrder([
+				choice('aab'),
+				choice('bab'),
+			]);
+
+			// this next assertion is only true because the one before called populateDynamicChoices
+			// TODO (JR): make clearing out answers that are no longer available choices part of the form re-evaluation
+			// assertThat(scenario.answerOf("/data/level3_contains"), nullValue());
+			expect(scenario.answerOf('/data/level3_contains').getValue()).toBe('');
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 *
+		 * Assertions calling {@link SelectChoice.getDisplayText} have been replaced
+		 * with calls to {@link SelectChoice.getValue}. It's highly doubtful that
+		 * they'd produce a meaningful difference, or that their semantic difference
+		 * would be important for the behavior under test. Those calls are currently
+		 * preserved (commented out) pending any further discussion on the topic.
+		 */
+		it('should not clear level 3 if choice still available', () => {
+			// scenario.newInstance();
+
+			scenario.answer('/data/level1_contains', 'a');
+			scenario.answer('/data/level2_contains', 'aa');
+
+			expect(scenario.choicesOf('/data/level3_contains')).toContainChoicesInAnyOrder([
+				choice('aaa'),
+				choice('aab'),
+				choice('baa'),
+			]);
+
+			scenario.answer('/data/level3_contains', 'aab');
+			scenario.answer('/data/level2_contains', 'ab');
+
+			// expect(scenario.answerOf('/data/level3_contains').getDisplayText()).toBe('aab');
+			expect(scenario.answerOf('/data/level3_contains').getValue()).toBe('aab');
+
+			// Since recomputing the choice list can change answers, verify it doesn't in this case
+			expect(scenario.choicesOf('/data/level3_contains')).toContainChoicesInAnyOrder([
+				choice('aab'),
+				choice('bab'),
+			]);
+
+			// expect(scenario.answerOf('/data/level3_contains').getDisplayText()).toBe('aab');
+			expect(scenario.answerOf('/data/level3_contains').getValue()).toBe('aab');
+		});
+	});
+});
