@@ -48,7 +48,12 @@ describe('util/csv', () => {
       });
     });
 
-    describe('error', () => {
+    it('returns a rejected promise if there is a null character', () => {
+      const promise = parseCSVHeader(i18n, createCSV('f\0o,bar'));
+      return promise.should.be.rejectedWith('The file “my_data.csv” is not a valid .csv file. It cannot be read.');
+    });
+
+    describe('Papa Parse error', () => {
       it('returns an error for a missing quote', async () => {
         const { errors } = await parseCSVHeader(i18n, createCSV('"a\n1'));
         errors.length.should.equal(1);
@@ -117,6 +122,11 @@ describe('util/csv', () => {
         const promise = parseCSV(i18n, createCSV('a\n"1"2"\n"3"4"'), ['a']);
         return promise.should.be.rejectedWith(/^There is a problem on row 2 /);
       });
+    });
+
+    it('returns a rejected promise if there is a null character', () => {
+      const promise = parseCSV(i18n, createCSV('a\nf\0o'), ['a']);
+      return promise.should.be.rejectedWith('The file “my_data.csv” is not a valid .csv file. It cannot be read.');
     });
 
     describe('number of cells', () => {

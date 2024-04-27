@@ -82,6 +82,12 @@ export const parseCSVHeader = async (i18n, file, signal = undefined) => {
     preview: 1
   });
   const columns = data.length !== 0 ? data[0] : [];
+  // Make a simple try at detecting a binary file by searching for a null
+  // character. We do that in order to avoid displaying unintelligible binary
+  // data to the user. Also, Backend would probably reject a null character
+  // that's sent to it.
+  if (columns.some(column => column.includes('\0')))
+    throw new Error(i18n.t('util.csv.invalidCSV', { name: file.name }));
   const unhandledErrors = errors.filter(error =>
     error.code !== 'UndetectableDelimiter');
   if (unhandledErrors.length === 0) {
@@ -200,6 +206,12 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
       throw new Error(i18n.tc('util.csv.dataWithoutHeader', columns.length, counts));
     }
 
+    if (values.some(value => value.includes('\0'))) {
+      const error = new Error(i18n.t('util.csv.invalidCSV', { name: file.name }));
+      error.row = NaN;
+      throw error;
+    }
+
     data.push(transformRow(values, columns));
     for (const warning of warnings) warning.pushRow(values, index, columns);
   };
@@ -235,6 +247,9 @@ export const parseCSV = async (i18n, file, columns, options = {}) => {
       worker: true
     });
   } catch (error) {
+    // Mention the row number in the error message unless the `row` property of
+    // the error has been set to NaN.
+    if (Number.isNaN(error.row)) throw error;
     throw new Error(i18n.t('util.csv.rowError', {
       message: error.message,
       row: i18n.n((error.row ?? rowIndex) + 1, 'default')

@@ -257,6 +257,7 @@ const parseEntities = async (file, headerResults, signal) => {
   warnings.value = results.warnings;
 };
 const selectFile = (file) => {
+  alert.blank();
   headerErrors.value = null;
   dataError.value = null;
 
