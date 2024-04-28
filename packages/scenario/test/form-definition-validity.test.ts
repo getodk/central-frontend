@@ -249,7 +249,8 @@ describe('TriggerableDagTest.java', () => {
 			 * **PORTING NOTES**
 			 *
 			 * It appears there are several tests of a similar shape, for each
-			 * applicable expression. We may want to condense them into a table test?
+			 * applicable expression. We may want to condense them into a
+			 * parameterized ("table") test?
 			 */
 			describe('by self reference in relevance', () => {
 				it('should fail', async () => {
@@ -450,6 +451,98 @@ describe('TriggerableDagTest.java', () => {
 					expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
 				}
 			);
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * 0. This describe block is also introduced without JavaRosa precedent, in
+		 *    this case to group several tests clearly exercising related
+		 *    functionality across multiple expressions. This may also be a good
+		 *    candidate for parameterized ("table") tests.
+		 *
+		 * 1. The trailing comment in each test body (preserved from JavaRosa,
+		 *    suggesting there should be additional assertions) seems questionable.
+		 *    Form initialization is the behavior under test. If there are
+		 *    additional behaviors to test for those forms, it would seem more
+		 *    appropriate to add them in separate tests (if those behaviors aren't
+		 *    already exercised in separate tests).
+		 *
+		 * 2. While each of these tests is currently ignored in JavaRosa, they're
+		 *    all passing here! The first test's _leading comment_ is also preserved
+		 *    from JavaRosa, which explains the reasoning behind the test and its
+		 *    current failure mode. Similar leading comments on the other tests in
+		 *    this sub-suite have been omitted here, as they're basically redundant
+		 *    and non-applicable.
+		 *
+		 * 3. It's highly likely that these tests would also have failed, prior to
+		 *    {@link https://github.com/getodk/web-forms/pull/67 | recent changes to rely more on reactivity for graph logic}.
+		 *    This is something we should keep in mind as we consider how we might
+		 *    address gaps in cycle detection.
+		 */
+		describe('"codependant" expressions', () => {
+			/**
+			 * JR:
+			 *
+			 * This test is here to represent a use case that might seem like it
+			 * has a cycle, but it doesn't.
+			 * <p>
+			 * This test is ignored because the current implementation incorrectly
+			 * detects a cycle given the relevance conditions we have used. Once
+			 * this is fixed, this test would be a regression test to ensure we
+			 * never rollback on the fix.
+			 * <p>
+			 * The relevance conditions used here a co-dependant(field a depends
+			 * on b, b depends on a), but they depend on the field's value, not on
+			 * the field's relevance expression. This is why there's no cycle here.
+			 * <p>
+			 * To have a cycle using relevance conditions exclusively, we would need
+			 * a isRelevant() xpath function that doesn't exist and change the revelance
+			 * expressions to:
+			 *
+			 * <code>
+			 * bind("/data/a").type("int").relevant("isRelevant(/data/b) > 0")
+			 * bind("/data/b").type("int").relevant("isRelevant(/data/a) > 0")
+			 * </code>
+			 */
+			it('supports codependant relevant conditions', async () => {
+				await Scenario.init(
+					'Some form',
+					buildFormForDagCyclesCheck(
+						bind('/data/a').type('int').relevant('/data/b > 0'),
+						bind('/data/b').type('int').relevant('/data/a > 0')
+					)
+				);
+
+				// TODO (JR) Complete the test adding some assertions that verify that the form works as we would expect
+				// TODO (web forms) Remove these comments?
+			});
+
+			it('supports codependant required conditions', async () => {
+				await Scenario.init(
+					'Some form',
+					buildFormForDagCyclesCheck(
+						bind('/data/a').type('int').required('/data/b > 0'),
+						bind('/data/b').type('int').required('/data/a > 0')
+					)
+				);
+
+				// TODO (JR) Complete the test adding some assertions that verify that the form works as we would expect
+				// TODO (web forms) Remove these comments?
+			});
+
+			it('supports codependant readonly conditions', async () => {
+				await Scenario.init(
+					'Some form',
+					buildFormForDagCyclesCheck(
+						bind('/data/a').type('int').readonly('/data/b > 0'),
+						bind('/data/b').type('int').readonly('/data/a > 0')
+					)
+				);
+
+				// TODO (JR) Complete the test adding some assertions that verify that the form works as we would expect
+				// TODO (web forms) Remove these comments?
+			});
 		});
 	});
 });
