@@ -12,6 +12,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
+import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
 /**
@@ -303,6 +304,152 @@ describe('TriggerableDagTest.java', () => {
 					await expect(init).rejects.toThrow();
 				});
 			});
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * In general, the `describe` and `it` descriptions have been intentionally
+		 * kept as close to JavaRosa's text as seems reasonable. This description is
+		 * added for clarity to group the directly ported test with supplemental
+		 * tests added with it.
+		 */
+		describe('cycles in `constraint`', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * It took some time to really grasp the intent _and behavior_ of this test.
+			 * Below captures my descent into madness as I came to understand it.
+			 *
+			 * It turns out that the test _is validating constraint behavior_—that
+			 * JavaRosa's constraint behavior blocks the assignment of
+			 * constraint-violating values, and preserves whatever previous value did
+			 * not violate the constraint. Briefly, I think:
+			 *
+			 * 1. The below commentary about breaking up the test still apply.
+			 * 2. This would also clarify, organizationally, where we might want to put
+			 *    an equivalent test focused only on the effect of constraint behavior
+			 *    on values.
+			 * 3. My initial instinct is that we should seriously reconsider the
+			 *    value-specific aspects of this behavior, at the very least to provide
+			 *    additional nuance to help users reconcile invalid values they might
+			 *    enter. It makes some sense that we'd want to help guide users not to
+			 *    produce invalid values in the first place. It's unclear that
+			 *    preserving a previously valid value, and completely discarding the
+			 *    invalid value entered later, would provide a good user experience.
+			 * 4. With that said, this is only a narrow slice into all of the potential
+			 *    state that might be set by the test's "act" steps. It's entirely
+			 *    possible that there are other nuances in how JavaRosa addresses the
+			 *    user experience around user provided constraint-violating values.
+			 * 5. Several observations below are clearly incorrect, in hindsight. I
+			 *    think there's value in preserving them, in all their incorrectness, as
+			 *    I think it might help inform discussion of what we actually want the
+			 *    engine's behavior to accomplish for scenarios like this.
+			 *
+			 * - - -
+			 *
+			 * - As with several other tests, the assertion that an answer will match
+			 *   `nullValue()` is commented out, and replaced with a blank value check.
+			 *
+			 * - 🚨🚨🚨 This is marked as failing, but it seems like some aspect of the
+			 *   test itself must be wrong! The aforementioned substitution of a blank
+			 *   value check in place of JavaRosa's `nullValue()` check... fails. **As
+			 *   it should!** The "act" step immediately preceding it sets the value to
+			 *   `5`, so it cannot be blank. It's entirely unclear how it anything about
+			 *   the question's "answer" (in JavaRosa `Scenario`/related semantics)
+			 *   could successfully match against `nullValue()`. This calls into
+			 *   question _every substitution_ of `assertThat(scenario.answerOf(...),
+			 *   is(nullValue()))` (or other logically equivalent variants; we should be
+			 *   cautious if we determine there should be some cross-cutting change to
+			 *   how we've ported this pattern, as a naive find in project will likely
+			 *   miss several cases).
+			 *
+			 * - 🚨🚨🚨🚨🚨🚨🚨🚨🚨 The last assertion also makes no sense at all. The
+			 *   expected value **should be** 5. Maybe this doesn't call into question
+			 *   any of the `nullValue()` answer substitutions at all! Is my
+			 *   understanding of these assertions correct (that the assertions
+			 *   themselves **must be wrong**), and somehow JavaRosa is just... not
+			 *   executing them? Swallowing their failures for some other reason?
+			 *
+			 * - This should likely be two tests:
+			 *
+			 *    1. Precisely what the test description says. This isn't actually
+			 *       asserted. Asserting it would look similar to the above, but not
+			 *       expecting initialization to fail/reject/throw. It's only implicitly
+			 *       checked by not producing an error in the rest of the test body.
+			 *    2. The rest of the test logic after init, which appears to exercise
+			 *       basic value assignment.
+			 *
+			 * Given all of the above [post hoc clarification: "all of the above" here
+			 * referred to everything following "- - -"], two supplementary/alternative
+			 * tests follow. The first should address the intent of this test's
+			 * description. The second, if it should exist at all, should probably go
+			 * somewhere else; and hopefully it can also serve at least to clarify what
+			 * we should do about `nullValue()` checks compared to answer lookups.
+			 */
+			it.fails('supports self references in constraints', async () => {
+				const scenario = await Scenario.init(
+					'Some form',
+					buildFormForDagCyclesCheck(bind('/data/count').type('int').constraint('. > 10'))
+				);
+
+				scenario.next('/data/count');
+				scenario.answer(5);
+
+				// assertThat(scenario.answerOf("/data/count"), is(nullValue()));
+				expect(scenario.answerOf('/data/count').getValue()).toBe('');
+
+				scenario.answer(20);
+
+				expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
+
+				scenario.answer(5);
+
+				expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
+			});
+
+			it('supports self references in constraints (supplemental/alternate #1)', async () => {
+				let caught: unknown = null;
+
+				try {
+					await Scenario.init(
+						'Some form',
+						buildFormForDagCyclesCheck(bind('/data/count').type('int').constraint('. > 10'))
+					);
+				} catch (error) {
+					caught = error;
+				}
+
+				expect(caught).toBeNull();
+			});
+
+			it.fails(
+				"supports self references in constraints [and subsequent value assignments, where permitted by the field's `constraint` expression] (supplemental/alternate #2)",
+				async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						buildFormForDagCyclesCheck(bind('/data/count').type('int').constraint('. > 10'))
+					);
+
+					scenario.next('/data/count');
+					scenario.answer(5);
+
+					// assertThat(scenario.answerOf("/data/count"), is(nullValue()));
+					// 🚨🚨🚨
+					expect(scenario.answerOf('/data/count').getValue()).toBe('');
+					// 🚨🚨🚨
+
+					expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(5));
+
+					scenario.answer(20);
+
+					expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
+
+					scenario.answer(5);
+
+					expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
+				}
+			);
 		});
 	});
 });
