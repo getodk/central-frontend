@@ -208,6 +208,7 @@ const hideOrComplete = () => {
   },
   "fr": {
     "title": "Créer une liste d'Entités",
+    "encrypted": "Ce projet est chiffré. Les soumissions de formulaires ne pourront pas modifier cette liste. Les entités doivent être gérées à partir de Central ou de l'interface de programmation (API).",
     "entityListName": "Nom de la Liste d'Entités",
     "success": [
       "La Liste d'Entités \"{name}\" a été créée.",

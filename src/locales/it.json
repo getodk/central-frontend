@@ -338,8 +338,5 @@
   },
   "router": {
     "unsavedChanges": "Sei sicuro di voler lasciare questa pagina? Le tue modifiche potrebbero non essere salvate."
-  },
-  "punctuation": {
-    "comma": ","
   }
 }

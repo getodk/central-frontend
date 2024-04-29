@@ -362,6 +362,8 @@ export default {
       "num_entities_updated": "Nombre d'Entités modifiées",
       "num_entity_conflicts": "Nombre d'Entités ayant déjà eu un conflit",
       "num_entity_conflicts_resolved": "Nombre d'Entités avec conflit désormais marqué comme résolu",
+      "num_bulk_create_events": "Nombre d'envois en masse",
+      "biggest_bulk_upload": "Nombre de lignes du plus gros envoi en masse",
       "sso_enabled": "Authentification unique (SSO) activée",
       "num_client_audit_attachments": "Nombre d'audit de client joints",
       "num_client_audit_attachments_failures": "Nombre d'échecs de traitement d'audit de client",

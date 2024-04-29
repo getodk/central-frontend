@@ -468,8 +468,16 @@ watch(() => props.state, (state) => {
   },
   "fr": {
     "title": "Importer des données depuis un fichier",
+    "table": {
+      "server": "{name} : données du serveur",
+      "file": "Données à importer"
+    },
     "action": {
       "append": "Ajouter des données"
+    },
+    "alert": {
+      "blankLabel": "Le label manque",
+      "noData": "Votre fichier ne contient aucune donnée"
     },
     "noEntities": "Pas d'entités à montrer."
   },

@@ -578,6 +578,10 @@
     "submission": {
       "string": "{count, plural, one {{count} Soumission} many {{count} Soumissions} other {{count} Soumissions}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "warning": {
+      "string": "{count, plural, one {{count} message d'avertissement} many {{count} messages d'avertissement} other {{count} messages d'avertissement}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
   "resource": {
@@ -883,10 +887,9 @@
       "string": "v {version}",
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
     },
-    "punctuations": {
-      "comma": {
-        "string": ","
-      }
+    "warning": {
+      "string": "Avertissement",
+      "developer_comment": "This text is shown on its own before details about a warning."
     }
   },
   "mixin": {
@@ -894,6 +897,9 @@
       "alert": {
         "fileSize": {
           "string": "Le fichier “{name}” que vous essayez de charger dépasse la limite des 100MB acceptés."
+        },
+        "entityTooLarge": {
+          "string": "Les données que vous essayez d'envoyer sont trop volumineuses."
         }
       }
     }
@@ -909,11 +915,14 @@
   "util": {
     "csv": {
       "readError": {
-        "string": "",
+        "string": "Il y a eu un problème à la lecture de votre fichier : {message}",
         "developer_comment": "{message} is a description of the problem."
       },
+      "invalidCSV": {
+        "string": "Le fichier \"{name}\" n'est pas un fichier .csv valide. Il ne peut pas être lu."
+      },
       "rowError": {
-        "string": "",
+        "string": "Il y a un problème à la {row} ligne du fichier : {message}",
         "developer_comment": "{row} is a row number. {message} is a description of the problem."
       },
       "invalidQuotes": {
@@ -921,7 +930,7 @@
         "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
       },
       "emptyRow": {
-        "string": ""
+        "string": "La ligne est vide."
       },
       "dataWithoutHeader": {
         "string": "{count, plural, one {{expected} colonne attendue, mais {actual} trouvée(s).} many {{expected} colonnes attendues, mais {actual} trouvée(s).} other {{expected} colonnes attendues, mais {actual} trouvée(s).}}",
@@ -1280,6 +1289,12 @@
         "num_entity_conflicts_resolved": {
           "string": "Nombre d'Entités avec conflit désormais marqué comme résolu"
         },
+        "num_bulk_create_events": {
+          "string": "Nombre d'envois en masse"
+        },
+        "biggest_bulk_upload": {
+          "string": "Nombre de lignes du plus gros envoi en masse"
+        },
         "sso_enabled": {
           "string": "Authentification unique (SSO) activée"
         },
@@ -1417,7 +1432,7 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "encrypted": {
-        "string": "",
+        "string": "Ce projet est chiffré. Les soumissions de formulaires ne pourront pas modifier cette liste. Les entités doivent être gérées à partir de Central ou de l'interface de programmation (API).",
         "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
       },
       "entityListName": {
@@ -1744,7 +1759,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "",
+          "string": "Supprimer immédiatement sans confirmation jusqu'à ce que je quitte la page",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -2036,11 +2051,11 @@
       },
       "table": {
         "server": {
-          "string": "",
+          "string": "{name} : données du serveur",
           "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
         },
         "file": {
-          "string": ""
+          "string": "Données à importer"
         }
       },
       "action": {
@@ -2051,10 +2066,10 @@
       },
       "alert": {
         "blankLabel": {
-          "string": ""
+          "string": "Le label manque"
         },
         "noData": {
-          "string": ""
+          "string": "Votre fichier ne contient aucune donnée"
         }
       },
       "headersNote": {
@@ -2063,7 +2078,7 @@
     },
     "EntityUploadDataError": {
       "title": {
-        "string": ""
+        "string": "Erreur de données"
       }
     },
     "EntityUploadDataTemplate": {
@@ -2090,37 +2105,37 @@
         }
       },
       "parsing": {
-        "string": ""
+        "string": "Lecture des données..."
       }
     },
     "EntityUploadHeaderErrors": {
       "expectedHeader": {
-        "string": "",
+        "string": "Entête attendu",
         "developer_comment": "This refers to the header row of a spreadsheet."
       },
       "suggestions": {
         "title": {
-          "string": "",
+          "string": "Suggestions",
           "developer_comment": "Suggestions to fix an error"
         },
         "invalidQuotes": {
-          "string": ""
+          "string": "Un champ entre guillemets est invalide. Vérifiez que l'entête de votre fichier ne contient pas une valeur inhabituelle."
         },
         "missingLabel": {
-          "string": "",
+          "string": "Une propriété {label} est requise. Le label indique le nom à utiliser pour chaque entité dans Central et ailleurs.",
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "unknownProperty": {
-          "string": ""
+          "string": "Si vous souhaitez ajouter des propriétés à cette liste d'entités, vous pouvez le faire dans la section Propriétés d'Entités de la page d'aperçu de cette liste d'entités, ou vous pouvez charger et publier un formulaire qui référence ces propriétés."
         },
         "duplicateColumn": {
-          "string": ""
+          "string": "Il semblerait que deux colonnes ou plus aient le même entête. Assurez vous que les entêtes de colonnes sont uniques."
         },
         "emptyColumn": {
-          "string": ""
+          "string": "Il semblerait que vous ayez une cellule vide dans la ligne d'entête. Merci de supprimer toutes les colonnes vides de votre fichier."
         },
         "delimiterNotComma": {
-          "string": ""
+          "string": "Ça pourrait être parce que nous avons mal déterminé le délimiteur. Nous avons utilisé {delimiter}."
         }
       }
     },
@@ -2139,6 +2154,18 @@
         }
       }
     },
+    "EntityUploadWarnings": {
+      "row": {
+        "raggedRows": {
+          "string": "Dans certaines lignes, il y a eu moins de colonnes détectées que prévu:",
+          "developer_comment": "This is a warning that is followed by a list of rows."
+        },
+        "largeCell": {
+          "string": "Certaines cellules sont anormalement larges, ce qui peut indiquer des difficultés à lire votre fichier:",
+          "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
     "EntityVersionLink": {
       "submission": {
         "string": "Soumission {instanceName}",
@@ -2151,6 +2178,12 @@
       "bulk": {
         "string": "Envoi du fichier {filename} par {name}",
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
+      }
+    },
+    "FeedbackButton": {
+      "feedback": {
+        "string": "Retour d'information",
+        "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
     "FieldKeyList": {
@@ -3454,29 +3487,29 @@
     "Pagination": {
       "action": {
         "first": {
-          "string": "",
+          "string": "Première page",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "previous": {
-          "string": "",
+          "string": "Page précédente",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "next": {
-          "string": "",
+          "string": "Prochaine page",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "last": {
-          "string": "",
+          "string": "Dernière page",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "rows": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Ligne {range} de {count}} many {Lignes {range} de {count}} other {Lignes {range} de {count}}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
       },
       "field": {
         "size": {
-          "string": "",
+          "string": "par page",
           "developer_comment": "This is shown next to a field to select the number of rows to show on each page."
         }
       }
@@ -3556,10 +3589,10 @@
                 }
               },
               "4": {
-                "string": ""
+                "string": "Vous ne pourrez plus éditer ou prévisualiser les données de soumission en ligne."
               },
               "5": {
-                "string": ""
+                "string": "Vous ne pourrez plus vous connecter aux données via OData."
               },
               "6": {
                 "string": "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur."

@@ -206,7 +206,8 @@
   "count": {
     "appUser": "{count} utilisateur mobile | {count} utilisateurs mobiles | {count} utilisateurs mobiles",
     "form": "{count} Formulaire | {count} Formulaires | {count} Formulaires",
-    "submission": "{count} Soumission | {count} Soumissions | {count} Soumissions"
+    "submission": "{count} Soumission | {count} Soumissions | {count} Soumissions",
+    "warning": "{count} message d'avertissement | {count} messages d'avertissement | {count} messages d'avertissement"
   },
   "resource": {
     "appUser": "Utilisateur mobile",
@@ -307,13 +308,15 @@
     "new": "Nouveau !",
     "totalEntities": "Nombre d'entités",
     "versionShort": "v {version}",
+    "warning": "Avertissement",
     "status": "Statut",
     "version": "Version"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Le fichier “{name}” que vous essayez de charger dépasse la limite des 100MB acceptés."
+        "fileSize": "Le fichier “{name}” que vous essayez de charger dépasse la limite des 100MB acceptés.",
+        "entityTooLarge": "Les données que vous essayez d'envoyer sont trop volumineuses."
       }
     }
   },
@@ -324,7 +327,11 @@
   },
   "util": {
     "csv": {
+      "readError": "Il y a eu un problème à la lecture de votre fichier : {message}",
+      "invalidCSV": "Le fichier \"{name}\" n'est pas un fichier .csv valide. Il ne peut pas être lu.",
+      "rowError": "Il y a un problème à la {row} ligne du fichier : {message}",
       "invalidQuotes": "Un champ entre guillemets n'est pas valide. Vérifiez la ligne pour voir s'il n'y a pas de valeurs inhabituelles.",
+      "emptyRow": "La ligne est vide.",
       "dataWithoutHeader": "{expected} colonne attendue, mais {actual} trouvée(s). | {expected} colonnes attendues, mais {actual} trouvée(s). | {expected} colonnes attendues, mais {actual} trouvée(s)."
     },
     "request": {
@@ -345,8 +352,5 @@
   },
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
-  },
-  "punctuation": {
-    "comma": ","
   }
 }

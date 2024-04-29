@@ -100,7 +100,10 @@ const del = () => {
     "title": "Supprimer {label}",
     "introduction": [
       "Êtes vous sûr de vouloir supprimer \"{label}\" ?"
-    ]
+    ],
+    "field": {
+      "noConfirm": "Supprimer immédiatement sans confirmation jusqu'à ce que je quitte la page"
+    }
   },
   "it": {
     "title": "Elimina {label}",
