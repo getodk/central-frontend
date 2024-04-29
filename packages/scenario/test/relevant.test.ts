@@ -5,8 +5,10 @@ import {
 	head,
 	html,
 	input,
+	item,
 	mainInstance,
 	model,
+	select1,
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
@@ -407,4 +409,167 @@ describe('Relevance - TriggerableDagTest.java', () => {
 			}
 		);
 	});
+
+	describe('non-relevant node values', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - Rephrase? Unclear how best to adapt this particular singular/plural,
+		 *   but "null" should probably be "blank".
+		 *
+		 * - There is currently a recomputation bug, causing the second-to-last
+		 *   assertion to fail.
+		 *
+		 * - The last assertion is incredibly surprising! It appears that JavaRosa
+		 *   not only **preserves** the node's non-relevant value, but continues to
+		 *   expose that value to callers... despite treating it as blank when
+		 *   referenced in XPath expressions, as expected (which is explicitly
+		 *   exercised in this test)
+		 */
+		it.fails('are always null regardless of their actual value', async () => {
+			const scenario = await Scenario.init(
+				'Some form',
+				html(
+					head(
+						title('Some form'),
+						model(
+							mainInstance(
+								t(
+									'data id="some-form"',
+									t('relevance-trigger', '1'),
+									t('result'),
+									t('some-field', '42')
+								)
+							),
+							bind('/data/relevance-trigger').type('boolean'),
+							bind('/data/result')
+								.type('int')
+								.calculate("if(/data/some-field != '', /data/some-field + 33, 33)"),
+							bind('/data/some-field').type('int').relevant('/data/relevance-trigger')
+						)
+					),
+					body(input('/data/relevance-trigger'))
+				)
+			);
+
+			expect(scenario.answerOf('/data/result')).toEqualAnswer(intAnswer(75));
+			expect(scenario.answerOf('/data/some-field')).toEqualAnswer(intAnswer(42));
+
+			scenario.answer('/data/relevance-trigger', false);
+
+			// JR:
+			// This shows how JavaRosa will ignore the actual values of non-relevant fields. The
+			// W3C XForm specs regard relevance a purely UI concern. No side effects on node values
+			// are described in the specs, which implies that a relevance change wouln't
+			// have any consequence on a node's value. This means that /data/result should keep having
+			// a 75 after making /data/some-field non-relevant.
+			expect(scenario.answerOf('/data/result')).toEqualAnswer(intAnswer(33));
+			expect(scenario.answerOf('/data/some-field')).toEqualAnswer(intAnswer(42));
+		});
+	});
+
+	interface SkipSurprisingAssertionOptions {
+		readonly skipSurprisingNonRelevantValueChecks: boolean;
+	}
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * - The `nullValue()` assertion is treated as a blank value check, consistent
+	 *   with other ported tests. To maximize consistency across tests with this
+	 *   adaptation, that assertion is checked against value returned by
+	 *   `getValue()`. This feels out of place with the other `toEqualAnswer`
+	 *   assertions. In general, it might be nice to do a pass making these
+	 *   similar assertions of differing style more consistent project-wide.
+	 *
+	 * - The test fails as ported, but only due to the above noted surprise that
+	 *   non-relevant values are not blank to callers (despite being blank when
+	 *   the same node is referenced in an XPath expression). To demonstrate this,
+	 *   the sub-suite is parameterized to toggle whether that specific assertion
+	 *   should run. When skipped, all of the other (less surprising) assertions
+	 *   pass as expected.
+	 *
+	 * - - -
+	 *
+	 * JR:
+	 *
+	 * This test was inspired by the issue reported at
+	 * https://code.google.com/archive/p/opendatakit/issues/888
+	 * <p>
+	 * We want to focus on the relationship between relevance and other
+	 * calculations because relevance can be defined for fields **and groups**,
+	 * which is a special case of expression evaluation in our DAG.
+	 */
+	describe.each<SkipSurprisingAssertionOptions>([
+		{ skipSurprisingNonRelevantValueChecks: false },
+		{ skipSurprisingNonRelevantValueChecks: true },
+	])(
+		'verify[ing] relation[ship] between calculate expressions and relevancy conditions (skip surprising non-relevant value checks: $skipSurprisingNonRelevantValueChecks)',
+		({ skipSurprisingNonRelevantValueChecks }) => {
+			let testFn: typeof it | typeof it.fails;
+
+			if (skipSurprisingNonRelevantValueChecks) {
+				testFn = it;
+			} else {
+				testFn = it.fails;
+			}
+
+			testFn('[has no clear BDD-ish description equivalent]', async () => {
+				const scenario = await Scenario.init(
+					'Some form',
+					html(
+						head(
+							title('Some form'),
+							model(
+								mainInstance(
+									t(
+										'data id="some-form"',
+										t('number1'),
+										t('continue'),
+										t('group', t('number1_x2'), t('number1_x2_x2'), t('number2'))
+									)
+								),
+								bind('/data/number1').type('int').constraint('. > 0').required(),
+								bind('/data/continue').type('string').required(),
+								bind('/data/group').relevant("/data/continue = '1'"),
+								bind('/data/group/number1_x2').type('int').calculate('/data/number1 * 2'),
+								bind('/data/group/number1_x2_x2')
+									.type('int')
+									.calculate('/data/group/number1_x2 * 2'),
+								bind('/data/group/number2')
+									.type('int')
+									.relevant('/data/group/number1_x2 > 0')
+									.required()
+							)
+						),
+						body(
+							input('/data/number1'),
+							select1('/data/continue', item(1, 'Yes'), item(0, 'No')),
+							group('/data/group', input('/data/group/number2'))
+						)
+					)
+				);
+
+				scenario.next('/data/number1');
+				scenario.answer(2);
+
+				if (!skipSurprisingNonRelevantValueChecks) {
+					expect(scenario.answerOf('/data/group/number1_x2')).toEqualAnswer(intAnswer(4));
+				}
+
+				// JR:
+				// The expected value is null because the calculate expression uses a non-relevant field.
+				// Values of non-relevant fields are always null.
+
+				// assertThat(scenario.answerOf("/data/group/number1_x2_x2"), is(nullValue()));
+				expect(scenario.answerOf('/data/group/number1_x2_x2').getValue()).toBe('');
+
+				scenario.next('/data/continue');
+				scenario.answer('1'); // Label: "yes"
+
+				expect(scenario.answerOf('/data/group/number1_x2')).toEqualAnswer(intAnswer(4));
+				expect(scenario.answerOf('/data/group/number1_x2_x2')).toEqualAnswer(intAnswer(8));
+			});
+		}
+	);
 });
