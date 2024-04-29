@@ -8,6 +8,7 @@ import {
 	item,
 	mainInstance,
 	model,
+	repeat,
 	select1,
 	t,
 	title,
@@ -572,4 +573,68 @@ describe('Relevance - TriggerableDagTest.java', () => {
 			});
 		}
 	);
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Deals with intersection of repeats and relevance. Organizing tests like
+	 * these is always going to be subjective, but I'll throw it out there now
+	 * that it might make sense to have more specific suites/modules
+	 * ("bags"/"vats" lol) rather than trying to lump them into one concern or the
+	 * other. If for no other reason than intersecting functionality being
+	 * particularly thorny in terms of essential complexity, which could make for
+	 * a good organizational principle for these sorts of tests.
+	 */
+	describe('when repeat and top-level node have [the] same relevance expression, and [the] expression evaluates to false', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Rephrase?
+		 *
+		 * - - -
+		 *
+		 * JR:
+		 *
+		 * Identical expressions in a form get collapsed to a single Triggerable and
+		 * the Triggerable's context becomes its targets' highest common parent (see
+		 * Triggerable.intersectContextWith). This makes evaluation in the context
+		 * of repeats hard to reason about. This test shows that relevance is
+		 * propagated as expected when a relevance expression is shared between a
+		 * repeat and non-repeat. See https://github.com/getodk/javarosa/issues/603.
+		 */
+		it('[omits the repeat range?] repeat prompt is skipped', async () => {
+			const scenario = await Scenario.init(
+				'Repeat relevance same as other',
+				html(
+					head(
+						title('Repeat relevance same as other'),
+						model(
+							mainInstance(
+								t(
+									'data id="repeat_relevance_same_as_other"',
+									t('selectYesNo', 'no'),
+									t('repeat1', t('q1')),
+									t('q0')
+								)
+							),
+							bind('/data/q0').relevant("/data/selectYesNo = 'yes'"),
+							bind('/data/repeat1').relevant("/data/selectYesNo = 'yes'")
+						)
+					),
+					body(
+						select1('/data/selectYesNo', item('yes', 'Yes'), item('no', 'No')),
+						repeat('/data/repeat1', input('/data/repeat1/q1'))
+					)
+				)
+			);
+
+			scenario.jumpToBeginningOfForm();
+			scenario.next('/data/selectYesNo');
+
+			const event = scenario.next('END_OF_FORM');
+
+			// assertThat(event, is(FormEntryController.EVENT_END_OF_FORM));
+			expect(event.eventType).toBe('END_OF_FORM');
+		});
+	});
 });
