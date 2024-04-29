@@ -3,11 +3,13 @@ import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XForm
 import {
 	bind,
 	body,
+	group,
 	head,
 	html,
 	input,
 	mainInstance,
 	model,
+	repeat,
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
@@ -542,6 +544,151 @@ describe('TriggerableDagTest.java', () => {
 
 				// TODO (JR) Complete the test adding some assertions that verify that the form works as we would expect
 				// TODO (web forms) Remove these comments?
+			});
+		});
+
+		/**
+		 * Sub-suite block has no JavaRosa precedent, added for improved grouping.
+		 */
+		describe('repeats', () => {
+			describe('parsing forms with cycles, involving fields inside and outside of repeat groups', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Same notes as previous (then surprising) failure of cycle detecction.
+				 * At least we have a pattern!
+				 */
+				it.fails('should fail', async () => {
+					// exceptionRule.expect(XFormParseException.class);
+					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
+
+					let caught: unknown = null;
+
+					try {
+						await Scenario.init(
+							'Some form',
+							html(
+								head(
+									title('Some form'),
+									model(
+										mainInstance(t('data id="some-form"', t('group', t('a', '1')), t('b', '1'))),
+										bind('/data/group/a').type('int').calculate('/data/b + 1'),
+										bind('/data/b').type('int').calculate('/data/group[position() = 1]/a + 1')
+									)
+								),
+								body(
+									group('/data/group', repeat('/data/group', input('/data/group/a'))),
+									input('/data/b')
+								)
+							)
+						);
+					} catch (error) {
+						caught = error;
+					}
+
+					expect(caught).toBeInstanceOf(Error);
+				});
+			});
+
+			describe('parsing forms with self reference cycles inf ields of repeat groups', () => {
+				it('should fail', async () => {
+					// exceptionRule.expect(XFormParseException.class);
+					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
+
+					const init = async () => {
+						return Scenario.init(
+							'Some form',
+							html(
+								head(
+									title('Some form'),
+									model(
+										mainInstance(t('data id="some-form"', t('group', t('a', '1')))),
+										bind('/data/group/a').type('int').calculate('../a + 1')
+									)
+								),
+								body(group('/data/group', repeat('/data/group', input('/data/group/a'))))
+							)
+						);
+					};
+
+					await expect(init).rejects.toThrow();
+				});
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * While ignored in JavaRosa, this passes with the web forms engine as
+			 * expected! Same caveats apply from other cycle tests ignored in JavaRosa
+			 * which pass here.
+			 *
+			 * - - -
+			 *
+			 * JR:
+			 *
+			 * This test fails to parse the form because it thinks there's a
+			 * self-reference cycle in /data/group/a, but this would be incorrect
+			 * because each it depends on the same field belonging to the previous
+			 * repeat instance, which wouldn't be a cycle, but an autoincremental
+			 * feature.
+			 */
+			it('supports self-reference dependency when targeting different repeat instance siblings', async () => {
+				await Scenario.init(
+					'Some form',
+					html(
+						head(
+							title('Some form'),
+							model(
+								mainInstance(t('data id="some-form"', t('group', t('a', '1')))),
+								bind('/data/group/a')
+									.type('int')
+									.calculate('/data/group[position() = (position(current()) - 1)]/a + 1')
+							)
+						),
+						body(group('/data/group', repeat('/data/group', input('/data/group/a'))))
+					)
+				);
+			});
+
+			describe('parsing forms with cycles between fields of the same repeat instance', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Same notes as previous (then surprising) failure of cycle detecction.
+				 * At least we have a pattern!
+				 */
+				it.fails('should fail', async () => {
+					// 	exceptionRule.expect(XFormParseException.class);
+					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
+
+					let caught: unknown = null;
+
+					try {
+						await Scenario.init(
+							'Some form',
+							html(
+								head(
+									title('Some form'),
+									model(
+										mainInstance(t('data id="some-form"', t('group', t('a', '1'), t('b', '1')))),
+										bind('/data/group/a').type('int').calculate('../b + 1'),
+										bind('/data/group/b').type('int').calculate('../a + 1')
+									)
+								),
+								body(
+									group(
+										'/data/group',
+										repeat('/data/group', input('/data/group/a'), input('/data/group/b'))
+									)
+								)
+							)
+						);
+					} catch (error) {
+						caught = error;
+					}
+
+					expect(caught).toBeInstanceOf(Error);
+				});
 			});
 		});
 	});
