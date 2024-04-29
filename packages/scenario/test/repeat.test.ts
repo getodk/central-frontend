@@ -17,6 +17,21 @@ import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
+/**
+ * This is **not** intended to be a general purpose `range` implementation.
+ * Insofar as we're going to reuse that aspect of JavaRosa test logic, it makes
+ * sense for now to keep it separate from any general purpose implementation we
+ * might want in the future (e.g. potentially including a `step` parameter,
+ * maybe producing an `Iterable`, etc.)
+ */
+const range = (startInclusive: number, endExclusive: number): readonly number[] => {
+	const length = endExclusive - startInclusive;
+
+	return Array.from({ length }, (_, i) => {
+		return i + startInclusive;
+	});
+};
+
 describe('Tests ported from JavaRosa - repeats', () => {
 	describe('TriggerableDagTest.java', () => {
 		describe('Adding or deleting repeats', () => {
@@ -150,6 +165,86 @@ describe('Tests ported from JavaRosa - repeats', () => {
 						scenario.next('/data/repeat[2]/concatenated');
 						expect(scenario.answerOf('/data/repeat[2]/concatenated')).toEqualAnswer(
 							stringAnswer('4-4')
+						);
+					});
+				});
+			});
+		});
+
+		describe('adding or removing repeat instance', () => {
+			describe('with calculated count outside repeat', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - The interaction between range logic and positional state can be
+				 *   pretty confusing. The latter is already confusing on its own,
+				 *   particularly around "repeat prompts", where the reference to a
+				 *   repeat range occurs after all of its instances (which likely
+				 *   corresponds to the concept of where an "add repeat" button will be
+				 *   in a typical form UI). I don't have an alternative suggestion at
+				 *   this time, but it's worth noting that the test did become a bit
+				 *   clearer by adding positional reference assertions, but only
+				 *   marginally so.
+				 *
+				 * - References to "dag events" have been commented out. Even if they
+				 *   weren't concerned with implementation details (which I'm fairly
+				 *   certain I recall that they are), they're not referenced in any
+				 *   assertions, and it doesn't seem from the rest of the test logic
+				 *   like they should affect its behavior.
+				 *
+				 * JR:
+				 *
+				 * Illustrates the second case in
+				 * TriggerableDAG.getTriggerablesAffectingAllInstances
+				 */
+				it('updates reference to count inside', async () => {
+					const scenario = await Scenario.init(
+						'Count outside repeat used inside',
+						html(
+							head(
+								title('Count outside repeat used inside'),
+								model(
+									mainInstance(
+										t(
+											'data id="outside-used-inside"',
+											t('count'),
+
+											t('repeat jr:template=""', t('question'), t('inner-count'))
+										)
+									),
+									bind('/data/count').type('int').calculate('count(/data/repeat)'),
+									bind('/data/repeat/inner-count').type('int').calculate('/data/count')
+								)
+							),
+
+							body(repeat('/data/repeat', input('/data/repeat/question')))
+						)
+					); /* .onDagEvent(dagEvents::add) */
+
+					// dagEvents.clear();
+
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/repeat');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/repeat',
+						});
+
+						expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(n));
+
+						scenario.next('/data/repeat[' + n + ']/question');
+					});
+
+					range(1, 6).forEach((n) => {
+						expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+							intAnswer(5)
+						);
+					});
+
+					scenario.removeRepeat('/data/repeat[5]');
+
+					range(1, 5).forEach((n) => {
+						expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+							intAnswer(4)
 						);
 					});
 				});
