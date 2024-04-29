@@ -490,6 +490,12 @@ describe('Relevance - TriggerableDagTest.java', () => {
 	 *   should run. When skipped, all of the other (less surprising) assertions
 	 *   pass as expected.
 	 *
+	 * - Followup: it seems pretty clear from Slack discussion that value
+	 *   assertions on non-relevant nodes should probably be regarded as testing
+	 *   implementation details. This test will remain parameterized to allow for
+	 *   further discussion in review, and further tests following a similar
+	 *   pattern may skip those assertions.
+	 *
 	 * - - -
 	 *
 	 * JR:
