@@ -332,8 +332,5 @@
   },
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
-  },
-  "punctuation": {
-    "comma": ","
   }
 }

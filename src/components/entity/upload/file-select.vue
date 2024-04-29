@@ -102,7 +102,8 @@ const changeInput = (event) => {
     "text": {
       "full": "Glissez un fichier .csv ici, ou {chooseOne} pour l'importer.",
       "chooseOne": "Choisissez en un"
-    }
+    },
+    "parsing": "Lecture des données..."
   }
 }
 </i18n>

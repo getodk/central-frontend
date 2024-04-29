@@ -493,7 +493,11 @@ export default {
             [
               "Les formulaires configurés avec des clés {submission} manuelles continueront à utiliser ces clés et devront être déchiffrés manuellement.",
               "Pour utiliser le chiffrement automatique de Central pour ce formulaire, supprimez la configuration {base64RsaPublicKey}."
-            ]
+            ],
+            "Vous ne pourrez plus éditer ou prévisualiser les données de soumission en ligne.",
+            "Vous ne pourrez plus vous connecter aux données via OData.",
+            "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur.",
+            "Les nouvelles Soumissions ne seront plus transformées en entités."
           ],
           [
             "En outre, ce qui suit est vrai dans cette version d'ODK Central :",
