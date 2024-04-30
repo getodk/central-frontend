@@ -672,6 +672,592 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				});
 			});
 		});
+
+		interface SubstituteAbsoluteBodyReferencesOptions {
+			readonly substituteAbsoluteBodyReferences: boolean;
+		}
+
+		describe('//region Deleting repeats', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Rephrase "repeat group" -> "repeat instance"?
+			 */
+			describe('[deleting] delete second repeat group', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Rephrase "triggerables"?
+				 *
+				 * - Any notion of "dag event" assertions is currently commented out, as
+				 *   concerned with JavaRosa implementation details. The test seems
+				 *   meaningful without those assertions.
+				 *
+				 * - Test fails with "act" phase's second `next` call. This is due to
+				 *   the ported fixture's use of a relative `<input ref>`. Test is
+				 *   parameterized to demonstrate the `next` call and its assertion
+				 *   passing with the reference updated to be absolute.
+				 *
+				 * - Final (non-"dag event") assertion deviates from other tests'
+				 *   treatment of `nullValue()` as a blank/empty string check. It is
+				 *   clearly intended here as an absence-of-node check, and ported to
+				 *   express that. There were several potential methods which could
+				 *   presumably produce a similar result, but most of them are currently
+				 *   unsuitable because they've been ported to run an internal assertion
+				 *   that the looked up node **is present** (and perhaps this is a
+				 *   deviation from JavaRosa, where we're being more strict and Java is
+				 *   nullable-by-default).
+				 */
+				describe.each<SubstituteAbsoluteBodyReferencesOptions>([
+					{ substituteAbsoluteBodyReferences: false },
+					{ substituteAbsoluteBodyReferences: true },
+				])(
+					'substitute absolute body references: $substituteAbsoluteBodyReferences',
+					({ substituteAbsoluteBodyReferences }) => {
+						let testFn: typeof it | typeof it.fails;
+
+						if (substituteAbsoluteBodyReferences) {
+							testFn = it;
+						} else {
+							testFn = it.fails;
+						}
+
+						testFn('evalutes triggerables dependent on preceding repeat group', async () => {
+							const scenario = await Scenario.init(
+								'Some form',
+								html(
+									head(
+										title('Some form'),
+										model(
+											mainInstance(
+												t('data id="some-form"', t('house jr:template=""', t('number')))
+											),
+											bind('/data/house/number').type('int').calculate('position(..)')
+										)
+									),
+									body(
+										group(
+											'/data/house',
+											repeat(
+												'/data/house',
+												input(substituteAbsoluteBodyReferences ? '/data/house/number' : 'number')
+											)
+										)
+									)
+								)
+							); /* .onDagEvent(dagEvents::add) */
+
+							range(1, 6).forEach((n) => {
+								scenario.next('/data/house');
+								scenario.createNewRepeat({
+									assertCurrentReference: '/data/house',
+								});
+								scenario.next('/data/house[' + n + ']/number');
+							});
+
+							expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
+							expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
+							expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
+							expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
+							expect(scenario.answerOf('/data/house[5]/number')).toEqualAnswer(intAnswer(5));
+
+							// Start recording DAG events now
+							// dagEvents.clear();
+
+							scenario.removeRepeat('/data/house[2]');
+
+							expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
+							expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
+							expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
+							expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
+
+							// assertThat(scenario.answerOf("/data/house[5]/number"), is(nullValue()));
+							expect(scenario.indexOf('/data/house[5]/number')).toBeNull();
+
+							// assertDagEvents(dagEvents,
+							//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0)",
+							//     "Processing 'Deleted: number [2_1]: 1 triggerables were fired.' for "
+							// );
+						});
+					}
+				);
+
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Like the test above, the `nullValue()` assertion is ported to its
+				 *   equivalent node-absence assertion.
+				 */
+				it('evaluates triggerables dependent on the parent position', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('house jr:template=""', t('number'), t('name'), t('name_and_number'))
+										)
+									),
+									bind('/data/house/number').type('int').calculate('position(..)'),
+									bind('/data/house/name').type('string').required(),
+									bind('/data/house/name_and_number')
+										.type('string')
+										.calculate('concat(../name, ../number)')
+								)
+							),
+							body(group('/data/house', repeat('/data/house', input('/data/house/name'))))
+						)
+					); /* .onDagEvent(dagEvents::add) */
+
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/house');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/house',
+						});
+						scenario.next('/data/house[' + n + ']/name');
+
+						scenario.answer(String.fromCharCode(64 + n));
+					});
+
+					expect(scenario.answerOf('/data/house[1]/name_and_number')).toEqualAnswer(
+						stringAnswer('A1')
+					);
+					expect(scenario.answerOf('/data/house[2]/name_and_number')).toEqualAnswer(
+						stringAnswer('B2')
+					);
+					expect(scenario.answerOf('/data/house[3]/name_and_number')).toEqualAnswer(
+						stringAnswer('C3')
+					);
+					expect(scenario.answerOf('/data/house[4]/name_and_number')).toEqualAnswer(
+						stringAnswer('D4')
+					);
+					expect(scenario.answerOf('/data/house[5]/name_and_number')).toEqualAnswer(
+						stringAnswer('E5')
+					);
+
+					// Start recording DAG events now
+					// dagEvents.clear();
+
+					scenario.removeRepeat('/data/house[2]');
+
+					expect(scenario.answerOf('/data/house[1]/name_and_number')).toEqualAnswer(
+						stringAnswer('A1')
+					);
+					expect(scenario.answerOf('/data/house[2]/name_and_number')).toEqualAnswer(
+						stringAnswer('C2')
+					);
+					expect(scenario.answerOf('/data/house[3]/name_and_number')).toEqualAnswer(
+						stringAnswer('D3')
+					);
+					expect(scenario.answerOf('/data/house[4]/name_and_number')).toEqualAnswer(
+						stringAnswer('E4')
+					);
+
+					// assertThat(scenario.answerOf('/data/house[5]/name_and_number'), is(nullValue()));
+					expect(scenario.indexOf('/data/house[5]/name_and_number')).toBeNull();
+
+					// assertDagEvents(dagEvents,
+					//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0)",
+					//     "Processing 'Recalculate' for name_and_number [1_1] (A1), name_and_number [2_1] (C2), name_and_number [3_1] (D3), name_and_number [4_1] (E4)",
+					//     "Processing 'Deleted: number [2_1]: 0 triggerables were fired.' for ",
+					//     "Processing 'Deleted: name [2_1]: 0 triggerables were fired.' for ",
+					//     "Processing 'Deleted: name_and_number [2_1]: 2 triggerables were fired.' for "
+					// );
+				});
+
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Same as previous.
+				 */
+				it('does not evaluate triggerables not dependent on the parent position', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('house jr:template=""', t('number'), t('name'), t('name_and_number'))
+										)
+									),
+									bind('/data/house/number').type('int').calculate('position(..)'),
+									bind('/data/house/name').type('string').required(),
+									bind('/data/house/name_and_number')
+										.type('string')
+										.calculate("concat(../name, 'X')")
+								)
+							),
+							body(group('/data/house', repeat('/data/house', input('/data/house/name'))))
+						)
+					); /* .onDagEvent(dagEvents::add) */
+
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/house');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/house',
+						});
+						scenario.next('/data/house[' + n + ']/name');
+						scenario.answer(String.fromCharCode(64 + n));
+					});
+
+					expect(scenario.answerOf('/data/house[1]/name_and_number')).toEqualAnswer(
+						stringAnswer('AX')
+					);
+					expect(scenario.answerOf('/data/house[2]/name_and_number')).toEqualAnswer(
+						stringAnswer('BX')
+					);
+					expect(scenario.answerOf('/data/house[3]/name_and_number')).toEqualAnswer(
+						stringAnswer('CX')
+					);
+					expect(scenario.answerOf('/data/house[4]/name_and_number')).toEqualAnswer(
+						stringAnswer('DX')
+					);
+					expect(scenario.answerOf('/data/house[5]/name_and_number')).toEqualAnswer(
+						stringAnswer('EX')
+					);
+
+					// Start recording DAG events now
+					// dagEvents.clear();
+
+					scenario.removeRepeat('/data/house[2]');
+
+					expect(scenario.answerOf('/data/house[1]/name_and_number')).toEqualAnswer(
+						stringAnswer('AX')
+					);
+					expect(scenario.answerOf('/data/house[2]/name_and_number')).toEqualAnswer(
+						stringAnswer('CX')
+					);
+					expect(scenario.answerOf('/data/house[3]/name_and_number')).toEqualAnswer(
+						stringAnswer('DX')
+					);
+					expect(scenario.answerOf('/data/house[4]/name_and_number')).toEqualAnswer(
+						stringAnswer('EX')
+					);
+
+					// assertThat(scenario.answerOf('/data/house[5]/name_and_number'), is(nullValue()));
+					expect(scenario.indexOf('/data/house[5]/name_and_number')).toBeNull();
+
+					// assertDagEvents(dagEvents,
+					//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0)",
+					//     "Processing 'Deleted: number [2_1]: 1 triggerables were fired.' for ",
+					//     "Processing 'Recalculate' for name_and_number [2_1] (CX)",
+					//     "Processing 'Deleted: name [2_1]: 1 triggerables were fired.' for ",
+					//     "Processing 'Deleted: name_and_number [2_1]: 1 triggerables were fired.' for "
+					// );
+				});
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Rephrase "repeat group" -> "repeat instance"?
+			 */
+			describe('[deleting] delete third repeat group', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Another failure caused by relative body reference, again
+				 *   parameterized to accommodate that.
+				 *
+				 * - Fails even when accounting for the relative body reference.
+				 *   Recomputation occurs, but produces invalid value (52 instead of
+				 *   45). Apparently the recomputation accounts for the removed repeat's
+				 *   number, but does not update the sum when the numbers in all of the
+				 *   following repeat instances are updated to account for their new
+				 *   position (which does work, so this appears to be an issue of
+				 *   ordering and reactive subscription mismatch).
+				 *
+				 * - `range(0, ...)` and asserting `n + 1` position feels awkard. Since
+				 *   many other `range` calls begin with 1, it seems maybe this one was
+				 *   missed in the 1-indexing PR because it doesn't reference the range
+				 *   number in JavaRosa (whereas it does here because we always assert
+				 *   the expected reference on `next`).
+				 */
+				describe.each<SubstituteAbsoluteBodyReferencesOptions>([
+					{ substituteAbsoluteBodyReferences: false },
+					{ substituteAbsoluteBodyReferences: true },
+				])(
+					'substitute absolute body references: $substituteAbsoluteBodyReferences',
+					({ substituteAbsoluteBodyReferences }) => {
+						it.fails("evaluates triggerables dependent on the repeat group's number", async () => {
+							const scenario = await Scenario.init(
+								'Some form',
+								html(
+									head(
+										title('Some form'),
+										model(
+											mainInstance(
+												t(
+													'data id="some-form"',
+													t('house jr:template=""', t('number')),
+													t('summary')
+												)
+											),
+											bind('/data/house/number').type('int').calculate('position(..)'),
+											bind('/data/summary').type('int').calculate('sum(/data/house/number)')
+										)
+									),
+									body(
+										group(
+											'/data/house',
+											repeat(
+												'/data/house',
+												input(substituteAbsoluteBodyReferences ? '/data/house/number' : 'number')
+											)
+										)
+									)
+								)
+							);
+
+							range(0, 10).forEach((n) => {
+								scenario.next('/data/house');
+								scenario.createNewRepeat({
+									assertCurrentReference: '/data/house',
+								});
+								scenario.next('/data/house[' + (n + 1) + ']/number');
+							});
+
+							expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(55));
+
+							scenario.removeRepeat('/data/house[3]');
+
+							expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(45));
+						});
+					}
+				);
+			});
+
+			describe('repeat instance deletion', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Test is more or less the same as the one(s) ported from
+				 *   `deleteThirdRepeatGroup_evaluatesTriggerables_dependentOnTheRepeatGroupsNumber`. The substantive difference is asserting "dag events". This is skipped for now, presumed an implementation detail.
+				 *
+				 * - If we do decide we want to exercise something like this, it will
+				 *   also have the same issue with a relative body reference.
+				 *
+				 * - - -
+				 *
+				 * JR:
+				 *
+				 * Verifies that the list of recalculations triggered by the repeat
+				 * instance deletion is minimal. In particular, calculations outside the
+				 * repeat should only be re-computed once.
+				 */
+				it.skip('triggers calculations outside the repeat exactly once', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t('data id="some-form"', t('house jr:template=""', t('number')), t('summary'))
+									),
+									bind('/data/house/number').type('int').calculate('position(..)'),
+									bind('/data/summary').type('int').calculate('sum(/data/house/number)')
+								)
+							),
+							body(group('/data/house', repeat('/data/house', input('number'))))
+						)
+					); /* .onDagEvent(dagEvents::add) */
+
+					range(1, 11).forEach((n) => {
+						scenario.next('/data/house');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/house',
+						});
+						scenario.next('/data/house[' + n + ']/number');
+					});
+
+					// Start recording DAG events now
+					// dagEvents.clear();
+
+					scenario.removeRepeat('/data/house[3]');
+
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(45));
+
+					// assertDagEvents(dagEvents,
+					//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0), number [5_1] (5.0), number [6_1] (6.0), number [7_1] (7.0), number [8_1] (8.0), number [9_1] (9.0)",
+					//     "Processing 'Recalculate' for summary [1] (45.0)",
+					//     "Processing 'Deleted: number [3_1]: 0 triggerables were fired.' for "
+					// );
+				});
+
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Also a "dag events" implementation detail test
+				 *
+				 * - **Not skipped** because it has a different form fixture shape, and
+				 *   again demonstrates the failure caused by relative body reference.
+				 */
+				describe.each<SubstituteAbsoluteBodyReferencesOptions>([
+					{ substituteAbsoluteBodyReferences: false },
+					{ substituteAbsoluteBodyReferences: true },
+				])(
+					'substitute absolute body references: $substituteAbsoluteBodyReferences',
+					({ substituteAbsoluteBodyReferences }) => {
+						let testFn: typeof it | typeof it.fails;
+
+						if (substituteAbsoluteBodyReferences) {
+							testFn = it;
+						} else {
+							testFn = it.fails;
+						}
+
+						testFn(
+							'repeatInstanceDeletion_withoutReferencesToRepeat_evaluatesNoTriggersInInstances',
+							async () => {
+								const scenario = await Scenario.init(
+									'Some form',
+									html(
+										head(
+											title('Some form'),
+											model(
+												mainInstance(
+													t(
+														'data id="some-form"',
+														t('repeat jr:template=""', t('number'), t('numberx2'), t('calc'))
+													)
+												),
+												bind('/data/repeat/number').type('int'),
+												bind('/data/repeat/numberx2').type('int').calculate('../number * 2'),
+												bind('/data/repeat/calc').type('int').calculate('2 * random()')
+											)
+										),
+										body(
+											group(
+												'/data/repeat',
+												repeat(
+													'/data/repeat',
+													input(substituteAbsoluteBodyReferences ? '/data/repeat/number' : 'number')
+												)
+											)
+										)
+									)
+								); /* .onDagEvent(dagEvents::add) */
+
+								range(1, 11).forEach((n) => {
+									scenario.next('/data/repeat');
+									scenario.createNewRepeat({
+										assertCurrentReference: '/data/repeat',
+									});
+									scenario.next('/data/repeat[' + n + ']/number');
+								});
+
+								// Start recording DAG events now
+								// dagEvents.clear();
+
+								scenario.removeRepeat('/data/repeat[3]');
+
+								// assertDagEvents(dagEvents,
+								//     "Processing 'Recalculate' for numberx2 [3_1] (NaN)",
+								//     "Processing 'Deleted: number [3_1]: 1 triggerables were fired.' for ",
+								//     "Processing 'Deleted: numberx2 [3_1]: 0 triggerables were fired.' for ",
+								//     "Processing 'Deleted: calc [3_1]: 0 triggerables were fired.' for "
+								// );
+							}
+						);
+					}
+				);
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * This sub-suite description is redundant to an earlier block. It's
+			 * separate here to preserve test order, specifically because several
+			 * other tests' porting notes reference their respective
+			 * immediately-preceding test. Consider reorganizing.
+			 */
+			describe('[deleting] delete third repeat group', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Rephrase "triggerable"?
+				 *
+				 * - Rephrase "repeat group" -> "repeat instance"?
+				 *
+				 * - Fails on first assertion, missing the last letter in the
+				 *   concatenation. Immedate cause is lack of internal reactive update
+				 *   until after a repeat instance is added (which is how all of the
+				 *   other letters are present).
+				 *
+				 * - Second assertion succeeds.
+				 *
+				 * - Both behaviors are likely explained by limiting reactive
+				 *   subscription lookups to a single node.
+				 *
+				 * - In any such case (whether mentioned in other tests' porting notes
+				 *   or forgotten in haste of bulk porting), it's highly likely that
+				 *   decoupling from browser/XML DOM will help address.
+				 *
+				 * - - -
+				 *
+				 * JR:
+				 *
+				 * Indirectly means that the calculation - `concat(/data/house/name)` -
+				 * does not take the `/data/house` nodeset (the repeat group) as an
+				 * argument but since it takes one of its children (`name` children),
+				 * the calculation must re-evaluated once after a repeat group deletion
+				 * because one of the children has been deleted along with its parent
+				 * (the repeat group instance).
+				 */
+				it.fails(
+					"evaluates triggerables indirectly dependent on the repeat group's number",
+					async () => {
+						const scenario = await Scenario.init(
+							'Some form',
+							html(
+								head(
+									title('Some form'),
+									model(
+										mainInstance(
+											t('data id="some-form"', t('house jr:template=""', t('name')), t('summary'))
+										),
+										bind('/data/house/name').type('string').required(),
+										bind('/data/summary').type('string').calculate('concat(/data/house/name)')
+									)
+								),
+								body(group('/data/house', repeat('/data/house', input('/data/house/name'))))
+							)
+						); /* .onDagEvent(dagEvents::add) */
+
+						range(1, 6).forEach((n) => {
+							scenario.next('/data/house');
+							scenario.createNewRepeat({
+								assertCurrentReference: '/data/house',
+							});
+							scenario.next('/data/house[' + n + ']/name');
+
+							scenario.answer(String.fromCharCode(64 + n));
+						});
+
+						expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABCDE'));
+
+						// Start recording DAG events now
+						// dagEvents.clear();
+
+						scenario.removeRepeat('/data/house[3]');
+
+						expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABDE'));
+
+						// assertDagEvents(dagEvents,
+						//     "Processing 'Recalculate' for summary [1] (ABDE)",
+						//         "Processing 'Deleted: name [3_1]: 1 triggerables were fired.' for "
+						// );
+					}
+				);
+			});
+		});
 	});
 
 	/**
