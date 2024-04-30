@@ -1,6 +1,7 @@
 import {
 	bind,
 	body,
+	group,
 	head,
 	html,
 	input,
@@ -34,7 +35,7 @@ const range = (startInclusive: number, endExclusive: number): readonly number[] 
 
 describe('Tests ported from JavaRosa - repeats', () => {
 	describe('TriggerableDagTest.java', () => {
-		describe('Adding or deleting repeats', () => {
+		describe('//region Adding or deleting repeats', () => {
 			describe('adding repeat instance', () => {
 				// https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/src/test/java/org/javarosa/core/model/TriggerableDagTest.java#L785
 				it('updates calculation cascade', async () => {
@@ -247,6 +248,427 @@ describe('Tests ported from JavaRosa - repeats', () => {
 							intAnswer(4)
 						);
 					});
+				});
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Note: reference to "repeat count" is not a reference to `jr:count`,
+			 *   but a reference to XPath `count()` of repeat instances.
+			 *
+			 * - Failure likely caused by reactive subscription logic resolving to a
+			 *   single (nullable) node, rather than the set of all nodes for the
+			 *   affected node-set.
+			 *
+			 * - - -
+			 *
+			 * JR:
+			 *
+			 * In this case, the count(/data/repeat) expression is represented by a
+			 * single triggerable. The expression gets evaluated once and it's the
+			 * expandReference call in Triggerable.apply which ensures the result is
+			 * updated for every repeat instance.
+			 */
+			it.fails('updates repeat count, inside and outside repeat', async () => {
+				const scenario = await Scenario.init(
+					'Count outside repeat used inside',
+					html(
+						head(
+							title('Count outside repeat used inside'),
+							model(
+								mainInstance(
+									t(
+										'data id="outside-used-inside"',
+										t('count'),
+
+										t('repeat jr:template=""', t('question'), t('inner-count'))
+									)
+								),
+								bind('/data/count').type('int').calculate('count(/data/repeat)'),
+								bind('/data/repeat/inner-count').type('int').calculate('count(/data/repeat)')
+							)
+						),
+
+						body(repeat('/data/repeat', input('/data/repeat/question')))
+					)
+				);
+
+				range(1, 6).forEach((n) => {
+					scenario.next('/data/repeat');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/repeat',
+					});
+
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(n)
+					);
+
+					scenario.next('/data/repeat[' + n + ']/question');
+				});
+
+				range(1, 6).forEach((n) => {
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(5)
+					);
+				});
+
+				scenario.removeRepeat('/data/repeat[5]');
+
+				range(1, 5).forEach((n) => {
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(4)
+					);
+				});
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - It seems like the comment below from JavaRosa describes a different
+			 *   scenario than the test actually exercises? I suspected this may have
+			 *   changed in the PR for 1-based indexing, but that doesn't reveal
+			 *   anything of interest. Perhaps worth delving deeper into the test's
+			 *   git history?
+			 *
+			 * - The assertions are identical to those above, which is unsurprising
+			 *   as the pertinent aspects of the form definition are too.
+			 *
+			 * - Presumably the same failure mode.
+			 *
+			 * - - -
+			 *
+			 * JR:
+			 *
+			 * In this case, /data/repeat in the count(/data/repeat) expression is
+			 * given the context of the current repeat so the count always evaluates
+			 * to 1. See contrast with
+			 * addingOrRemovingRepeatInstance_updatesRepeatCount_insideAndOutsideRepeat.
+			 */
+			it.fails('updates repeat count, inside repeat', async () => {
+				const scenario = await Scenario.init(
+					'Count outside repeat used inside',
+					html(
+						head(
+							title('Count outside repeat used inside'),
+							model(
+								mainInstance(
+									t(
+										'data id="outside-used-inside"',
+										t('repeat jr:template=""', t('question'), t('inner-count'))
+									)
+								),
+								bind('/data/repeat/inner-count').type('int').calculate('count(/data/repeat)')
+							)
+						),
+
+						body(repeat('/data/repeat', input('/data/repeat/question')))
+					)
+				);
+
+				range(1, 6).forEach((n) => {
+					scenario.next('/data/repeat');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/repeat',
+					});
+
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(n)
+					);
+
+					scenario.next('/data/repeat[' + n + ']/question');
+				});
+
+				range(1, 6).forEach((n) => {
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(5)
+					);
+				});
+
+				scenario.removeRepeat('/data/repeat[4]');
+
+				range(1, 5).forEach((n) => {
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(4)
+					);
+				});
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - It seems like the comment from JavaRosa on the above test may have
+			 *   been intended for this test? It seems to _almost describe_ this
+			 *   fixture. (Although to actually produce a consistent `count()` of 1, I
+			 *   think the `calculate` would need to be `count(..)`.)
+			 *
+			 * - Failure is an `InconsistentChildrenStateError`. Without diving into
+			 *   the cause, I've only ever seen this when experimenting with UI to
+			 *   exercise the engine API capability to add repeat instances at any
+			 *   index. It seemed pretty likely at the time that this was a Solid
+			 *   compilation bug, as it appeared that Solid's JSX transform triggered
+			 *   it. But this suggests that some (as yet undetermined) reactive
+			 *   property access may be implicated.
+			 *
+			 * - A likely quick turnaround remedy would be a somewhat more involved
+			 *   children state mapping, with actual `nodeId` lookup rather than the
+			 *   current cheat mode implementation.
+			 *
+			 * - A more "correct" solution would almost certainly involve
+			 *   understanding how any particular reactive access could cause these
+			 *   states to go out of sync in the first place. It would likely also
+			 *   involve some investigation into whether the discrepancy is temporary
+			 *   and resolves after yielding to the event loop; this would implicate
+			 *   some aspect of Solid's reactive scheduling, which most of our
+			 *   reactive internals currently bypass (naively, trading CPU time for
+			 *   testability of the reactive bridge implementation).
+			 */
+			it.fails('updates relative repeat count, inside repeat', async () => {
+				const scenario = await Scenario.init(
+					'Count outside repeat used inside',
+					html(
+						head(
+							title('Count outside repeat used inside'),
+							model(
+								mainInstance(
+									t(
+										'data id="outside-used-inside"',
+										t('repeat jr:template=""', t('question'), t('inner-count'))
+									)
+								),
+								bind('/data/repeat/inner-count').type('int').calculate('count(../../repeat)')
+							)
+						),
+
+						body(repeat('/data/repeat', input('/data/repeat/question')))
+					)
+				);
+
+				range(1, 6).forEach((n) => {
+					scenario.next('/data/repeat');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/repeat',
+					});
+
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(n)
+					);
+
+					scenario.next('/data/repeat[' + n + ']/question');
+				});
+
+				range(1, 6).forEach((n) => {
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(5)
+					);
+				});
+
+				scenario.removeRepeat('/data/repeat[4]');
+
+				range(1, 5).forEach((n) => {
+					expect(scenario.answerOf('/data/repeat[' + n + ']/inner-count')).toEqualAnswer(
+						intAnswer(4)
+					);
+				});
+			});
+
+			describe('with reference to repeat in repeat, and outer sum', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * The assertion with multiplication and division makes me nervous. It
+				 * clearly works as expected, but it _feels like_ it's tempting the
+				 * floating point rounding error fates.
+				 */
+				it('updates', async () => {
+					const scenario = await Scenario.init(
+						'Count outside repeat used inside',
+						html(
+							head(
+								title('Count outside repeat used inside'),
+								model(
+									mainInstance(
+										t(
+											'data id="outside-used-inside"',
+											t('sum'),
+
+											t('repeat jr:template=""', t('question'), t('position1'), t('position2'))
+										)
+									),
+									bind('/data/sum').type('int').calculate('sum(/data/repeat/position1)'),
+									bind('/data/repeat/position1').type('int').calculate('position(..)'),
+									bind('/data/repeat/position2').type('int').calculate('../position1')
+								)
+							),
+
+							body(repeat('/data/repeat', input('/data/repeat/position1')))
+						)
+					);
+
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/repeat');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/repeat',
+						});
+
+						expect(scenario.answerOf('/data/sum')).toEqualAnswer(intAnswer((n * (n + 1)) / 2));
+
+						scenario.next('/data/repeat[' + n + ']/position1');
+					});
+
+					range(1, 6).forEach((n) => {
+						expect(scenario.answerOf('/data/repeat[' + n + ']/position1')).toEqualAnswer(
+							intAnswer(n)
+						);
+					});
+
+					scenario.removeRepeat('/data/repeat[5]');
+
+					range(1, 5).forEach((n) => {
+						expect(scenario.answerOf('/data/repeat[' + n + ']/position2')).toEqualAnswer(
+							intAnswer(n)
+						);
+					});
+				});
+			});
+
+			describe('with reference to previous instance', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Another `InconsistentChildrenStateError`, another clue! This case is
+				 *   definitely triggered by the
+				 *   {@link Scenario.removeRepeat} call.
+				 * - Same thoughts on `nullValue()` -> blank/empty string check
+				 */
+				it.fails('updates that reference', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('group jr:template=""', t('prev-number'), t('number'))
+										)
+									),
+									bind('/data/group/prev-number')
+										.type('int')
+										.calculate('/data/group[position() = (position(current()/..) - 1)]/number'),
+									bind('/data/group/number').type('int').required()
+								)
+							),
+							body(group('/data/group', repeat('/data/group', input('/data/group/number'))))
+						)
+					);
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[1]/number');
+					scenario.answer(11);
+
+					// assertThat(scenario.answerOf("/data/group[1]/prev-number"), is(nullValue()));
+					expect(scenario.answerOf('/data/group[1]/prev-number').getValue()).toBe('');
+					expect(scenario.answerOf('/data/group[1]/number')).toEqualAnswer(intAnswer(11));
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[2]/number');
+					scenario.answer(22);
+
+					expect(scenario.answerOf('/data/group[1]/number')).toEqualAnswer(intAnswer(11));
+					expect(scenario.answerOf('/data/group[2]/number')).toEqualAnswer(intAnswer(22));
+
+					// assertThat(scenario.answerOf('/data/group[1]/prev-number'), is(nullValue()));
+					expect(scenario.answerOf('/data/group[1]/prev-number').getValue()).toBe('');
+					expect(scenario.answerOf('/data/group[2]/prev-number')).toEqualAnswer(intAnswer(11));
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[3]/number');
+					scenario.answer(33);
+
+					// assertThat(scenario.answerOf('/data/group[1]/prev-number'), is(nullValue()));
+					expect(scenario.answerOf('/data/group[1]/prev-number').getValue()).toBe('');
+					expect(scenario.answerOf('/data/group[2]/prev-number')).toEqualAnswer(intAnswer(11));
+					expect(scenario.answerOf('/data/group[3]/prev-number')).toEqualAnswer(intAnswer(22));
+
+					scenario.removeRepeat('/data/group[2]');
+
+					// assertThat(scenario.answerOf('/data/group[1]/prev-number'), is(nullValue()));
+					expect(scenario.answerOf('/data/group[1]/prev-number').getValue()).toBe('');
+					expect(scenario.answerOf('/data/group[2]/number')).toEqualAnswer(intAnswer(33));
+					expect(scenario.answerOf('/data/group[2]/prev-number')).toEqualAnswer(intAnswer(11));
+				});
+			});
+
+			describe('with relevance inside repeat depending on count', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - This failure is likely to be related to single-node resolution of
+				 *   subscription lookups.
+				 *
+				 * - A first pass on porting this test produced confusing results, which
+				 *   turned out to reveal a misunderstanding of Vitest's negated
+				 *   assertion logic. I had forgotten that there's a custom
+				 *   `toBeNonRelevant` assertion, and had written `.not.toBeRelevant()`.
+				 *   That should be totally valid (and would be preferable to paired
+				 *   custom affirmative/negative cases), and we ought to resolve it
+				 *   sooner rather than later. More detail is added in this commit at
+				 *   the point of confusing failure, in
+				 *   `expandSimpleExpectExtensionResult.ts`.
+				 */
+				it.fails('updates relevance for all instances', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('repeat jr:template=""', t('number'), t('group', t('in_group')))
+										)
+									),
+									bind('/data/repeat/number').type('int').required(),
+									bind('/data/repeat/group').relevant('count(../../repeat) mod 2 = 1')
+								)
+							),
+							body(
+								repeat(
+									'/data/repeat',
+									input('/data/repeat/number'),
+									group('/data/repeat/group', input('/data/repeat/group/in_group'))
+								)
+							)
+						)
+					);
+
+					scenario.next('/data/repeat');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/repeat',
+					});
+
+					expect(scenario.getAnswerNode('/data/repeat[1]/group/in_group')).toBeRelevant();
+
+					scenario.createNewRepeat('/data/repeat');
+
+					expect(scenario.getAnswerNode('/data/repeat[2]/group/in_group')).toBeNonRelevant();
+					expect(scenario.getAnswerNode('/data/repeat[1]/group/in_group')).toBeNonRelevant();
+
+					scenario.removeRepeat('/data/repeat[2]');
+
+					expect(scenario.getAnswerNode('/data/repeat[1]/group/in_group')).toBeRelevant();
 				});
 			});
 		});
