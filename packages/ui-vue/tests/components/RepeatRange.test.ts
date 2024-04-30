@@ -5,9 +5,9 @@ import { initializeForm, type RepeatRangeNode } from '@odk-web-forms/xforms-engi
 import { mount } from '@vue/test-utils';
 // eslint-disable-next-line no-restricted-imports -- in test environemnt
 import { readFile } from 'fs/promises';
-import PrimeVue from 'primevue/config';
 import { describe, expect, it } from 'vitest';
 import { reactive } from 'vue';
+import { globalMountOptions } from '../helpers';
 
 const mountComponent = async (formName: string) => {
 	// Can we move fixtures out of ui-solid?
@@ -25,12 +25,7 @@ const mountComponent = async (formName: string) => {
 		props: {
 			node: xform.currentState.children[0] as RepeatRangeNode,
 		},
-		global: {
-			plugins: [[PrimeVue, { ripple: false }]],
-			stubs: {
-				teleport: true,
-			},
-		},
+		global: globalMountOptions,
 	});
 };
 

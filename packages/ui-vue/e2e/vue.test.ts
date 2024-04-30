@@ -38,17 +38,39 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 
 			await page.keyboard.press(browserName == 'webkit' ? 'Alt+Tab' : 'Tab');
 
-			const isEditableTextbox = await page.evaluate(() => {
+			const inputType = await page.evaluate(() => {
+				const isInputElement = (
+					activeElement: Element | null
+				): activeElement is HTMLInputElement => {
+					return activeElement?.tagName === 'INPUT';
+				};
+
 				const activeElement = document.activeElement;
-				return (
-					activeElement?.tagName === 'INPUT' &&
-					(activeElement as HTMLInputElement).type === 'text' &&
-					!activeElement.hasAttribute('readonly')
-				);
+
+				if (
+					!isInputElement(activeElement) ||
+					activeElement.hasAttribute('readonly') ||
+					activeElement.hasAttribute('disabled')
+				) {
+					return null;
+				}
+
+				return activeElement.type;
 			});
 
-			if (isEditableTextbox) {
+			if (inputType === 'text') {
 				await page.keyboard.type(faker.internet.displayName());
+			}
+			// Select the next option, if the last option is selected by default
+			// then browser selects the first one.
+			else if (inputType === 'radio') {
+				await page.keyboard.press('ArrowDown');
+			}
+			// Tab behaviour for checkboxes is different, each Tab press moves the focus
+			// to the next option. Here we are toggling every checkbox option.
+			else if (inputType === 'checkbox') {
+				// Toggle the option
+				await page.keyboard.press('Space');
 			}
 		}
 
