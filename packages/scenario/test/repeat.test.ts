@@ -1257,6 +1257,75 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					}
 				);
 			});
+
+			describe('[deleting] delete last repeat', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Rephrase?
+				 */
+				it('evaluates triggerables', async () => {
+					const scenario = await Scenario.init(
+						'Delete last repeat instance',
+						html(
+							head(
+								title('Delete last repeat instance'),
+								model(
+									mainInstance(
+										t(
+											'data id="delete-last-repeat-instance"',
+											t('repeat-count'),
+
+											t('repeat', t('question')),
+											t('repeat', t('question')),
+											t('repeat', t('question'))
+										)
+									),
+									bind('/data/repeat-count').type('int').calculate('count(/data/repeat)')
+								)
+							),
+							body(repeat('/data/repeat', input('question')))
+						)
+					);
+
+					expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(3));
+
+					scenario.removeRepeat('/data/repeat[3]');
+
+					expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
+				});
+
+				it('evaluates triggerables, indirectly dependent on the deleted repeat', async () => {
+					const scenario = await Scenario.init(
+						'Delete last repeat instance',
+						html(
+							head(
+								title('Delete last repeat instance'),
+								model(
+									mainInstance(
+										t(
+											'data id="delete-last-repeat-instance"',
+											t('summary'),
+
+											t('repeat', t('question', 'a')),
+											t('repeat', t('question', 'b')),
+											t('repeat', t('question', 'c'))
+										)
+									),
+									bind('/data/summary').type('string').calculate('concat(/data/repeat/question)')
+								)
+							),
+							body(repeat('/data/repeat', input('question')))
+						)
+					);
+
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('abc'));
+
+					scenario.removeRepeat('/data/repeat[3]');
+
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ab'));
+				});
+			});
 		});
 	});
 
