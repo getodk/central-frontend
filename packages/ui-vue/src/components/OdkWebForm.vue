@@ -4,7 +4,7 @@ import Button from 'primevue/button';
 import Card from 'primevue/card';
 import { reactive, ref } from 'vue';
 import FormHeader from './FormHeader.vue';
-import FormMenuBar from './MenuBar.vue';
+import FormLanguageMenu from './FormLanguageMenu.vue';
 import QuestionList from './QuestionList.vue';
 
 const props = defineProps<{ formXml: string }>();
@@ -34,7 +34,10 @@ const handleSubmit = () => {
 <template>
 	<div v-if="odkForm" class="odk-form">
 		<div class="form-wrapper">
-			<FormMenuBar />
+			<div class="odk-menu-bar flex justify-content-end flex-wrap gap-3">
+				<Button severity="secondary" rounded icon="icon-local_printshop" />
+				<FormLanguageMenu :form="odkForm" />
+			</div>
 
 			<!-- TODO/q: should the title be on the definition or definition.form be accessible instead of definition.bind.form -->
 			<FormHeader :title="odkForm.definition.bind.form.title" />
