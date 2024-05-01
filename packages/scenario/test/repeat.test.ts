@@ -6,6 +6,7 @@ import {
 	html,
 	input,
 	item,
+	label,
 	mainInstance,
 	model,
 	repeat,
@@ -14,6 +15,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
+import { booleanAnswer } from '../src/answer/ExpectedBooleanAnswer.ts';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
@@ -1560,6 +1562,286 @@ describe('Tests ported from JavaRosa - repeats', () => {
 						);
 					}
 				);
+			});
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * All tests in this region are ignored in JavaRosa, with the note:
+		 *
+		 * > "Fails on v2.17.0 (before DAG simplification)"
+		 *
+		 * As I understand it:
+		 *
+		 * - Each of these tests deal with (re)computations which would be expected,
+		 *   per spec, in leading repeat instances (as in, those which precede the
+		 *   user's current positional state while filling a form instance).
+		 *
+		 * - These specific computations under test are deferred, again as I
+		 *   understand it, until submission.
+		 *
+		 * - Deferring such computations is a performance consideration, where
+		 *   certain aspects of state are treated as eventually spec-consistent to
+		 *   reduce the burden of those computations on filling later parts of a
+		 *   form (and as such, any inconsistent state would not typically be
+		 *   visible to a user).
+		 *
+		 * With those understandings, my intent in porting this region is to leave
+		 * all of the tests un-ignored for now (even if they also fail for reasons
+		 * specific to the _web forms engine_'s current correctness/completion
+		 * status), on the basis that we do not currently have any notion of
+		 * deferring any computations, and we should use these tests to better
+		 * understand how closely we align with expected spec behavior.
+		 */
+		describe("//region DAG limitations (cases that aren't correctly updated)", () => {
+			describe('adding repeat instance, with inner sum of question in repeat', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Current failure is an `InconsistentChildrenStateError`, likely with
+				 *   similar root cause as other cases around repeat instance removal.
+				 *
+				 * - - -
+				 *
+				 * JR:
+				 *
+				 * This case is where a particular field in a repeat makes an aggregate
+				 * computation over another field in the repeat. This should cause every
+				 * repeat instance to be updated. We could handle this by using a
+				 * strategy similar to getTriggerablesAffectingAllInstances but for
+				 * initializeTriggerables.
+				 */
+				it.fails('updates inner sum for all instances', async () => {
+					const scenario = await Scenario.init(
+						'Count outside repeat used inside',
+						html(
+							head(
+								title('Count outside repeat used inside'),
+								model(
+									mainInstance(
+										t(
+											'data id="outside-used-inside"',
+											t('repeat jr:template=""', t('question', '5'), t('inner-sum'))
+										)
+									),
+									bind('/data/repeat/inner-sum').type('int').calculate('sum(../../repeat/question)')
+								)
+							),
+
+							body(repeat('/data/repeat', input('/data/repeat/question')))
+						)
+					);
+
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/repeat');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/repeat',
+						});
+
+						expect(scenario.answerOf('/data/repeat[' + n + ']/inner-sum')).toEqualAnswer(
+							intAnswer(n * 5)
+						);
+
+						scenario.next('/data/repeat[' + n + ']/question');
+					});
+
+					range(1, 6).forEach((n) => {
+						expect(scenario.answerOf('/data/repeat[' + n + ']/inner-sum')).toEqualAnswer(
+							intAnswer(25)
+						);
+					});
+
+					scenario.removeRepeat('/data/repeat[4]');
+
+					range(1, 5).forEach((n) => {
+						expect(scenario.answerOf('/data/repeat[' + n + ']/inner-sum')).toEqualAnswer(
+							intAnswer(20)
+						);
+					});
+				});
+			});
+
+			describe('changing value in repeat, with reference to next instance', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Same general `nullValue()` -> blank/empty string conversion. It
+				 *   seems likely this is the expected semantic equivalent, but there's
+				 *   an off chance it really is a null check for the nodes. (Brain is
+				 *   tired. I'd rather leave the possibility open than leave a
+				 *   misleading note.)
+				 *
+				 * - Fails at the same point JavaRosa's comments indicate expected
+				 *   failure. Since we don't defer any computations, this is likely a
+				 *   bug (and quite likely in the same class of bugs where references
+				 *   into repeat descendant nodes don't update computations until a new
+				 *   repeat instance is added).
+				 *
+				 * - - -
+				 *
+				 * JR:
+				 *
+				 *
+				 * In this test, it's not the repeat addition that needs to trigger
+				 * recomputation across repeat instances, it's the setting of the number
+				 * value in a specific instance. There's currently no mechanism to do
+				 * that. When a repeat is added, it will trigger recomputation for
+				 * previous instances.
+				 */
+				it.fails('updates previous instance', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('group jr:template=""', t('number'), t('next-number'))
+										)
+									),
+									bind('/data/group/number').type('int').required(),
+									bind('/data/group/next-number')
+										.type('int')
+										.calculate('/data/group[position() = (position(current()/..) + 1)]/number')
+								)
+							),
+							body(group('/data/group', repeat('/data/group', input('/data/group/number'))))
+						)
+					);
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[1]/number');
+					scenario.answer(11);
+
+					// assertThat(scenario.answerOf("/data/group[1]/next-number"), is(nullValue()));
+					expect(scenario.answerOf('/data/group[1]/next-number').getValue()).toBe('');
+					expect(scenario.answerOf('/data/group[1]/number')).toEqualAnswer(intAnswer(11));
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[2]/number');
+					scenario.answer(22);
+
+					expect(scenario.answerOf('/data/group[1]/number')).toEqualAnswer(intAnswer(11));
+					expect(scenario.answerOf('/data/group[2]/number')).toEqualAnswer(intAnswer(22));
+
+					// JR: This assertion is false because setting the answer to 22 didn't trigger recomputation across repeat instances
+					expect(scenario.answerOf('/data/group[1]/next-number')).toEqualAnswer(intAnswer(22));
+					// assertThat(scenario.answerOf("/data/group[2]/next-number"), is(nullValue()));
+					expect(scenario.answerOf('/data/group[2]/next-number').getValue()).toBe('');
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[3]/number');
+					scenario.answer(33);
+
+					// JR: This assertion is true because adding a new repeat triggered recomputation across repeat instances
+					expect(scenario.answerOf('/data/group[1]/next-number')).toEqualAnswer(intAnswer(22));
+					// This assertion is false because setting the answer to 33 didn't trigger recomputation across repeat instances
+					expect(scenario.answerOf('/data/group[2]/next-number')).toEqualAnswer(intAnswer(33));
+					// assertThat(scenario.answerOf("/data/group[3]/next-number"), is(nullValue()));
+					expect(scenario.answerOf('/data/group[3]/next-number').getValue()).toBe('');
+				});
+			});
+
+			describe('(issue 119) target question', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - First assertion of boolean answer fails due to current (default)
+				 *   serialization behavior in engine (expression produces a boolean,
+				 *   which is serialized to the string representation of that boolean;
+				 *   my understanding is that it will be expected to serialze as `true`
+				 *   -> "1", `false` -> "0").
+				 *
+				 * - A quick check on whether other assertions pass without addressing
+				 *   the boolean serialization reveals another failure, on at least one
+				 *   relevance check. No further analysis has been performed thus far.
+				 */
+				it.fails('should be relevant', async () => {
+					// JR:
+					//
+					// This is a translation of the XML form in the issue to our DSL with
+					// some adaptations:
+					// - Explicit binds for all fields
+					// - Migrated the condition field to boolean, which should be easier
+					//   to understand
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('outer_trigger', 'D'),
+											t('inner_trigger'),
+											t('outer', t('inner', t('target_question')), t('inner_condition')),
+											t('end')
+										)
+									),
+									bind('/data/outer_trigger').type('string'),
+									bind('/data/inner_trigger').type('int'),
+									bind('/data/outer').relevant("/data/outer_trigger = 'D'"),
+									bind('/data/outer/inner_condition')
+										.type('boolean')
+										.calculate('/data/inner_trigger > 10'),
+									bind('/data/outer/inner').relevant('../inner_condition'),
+									bind('/data/outer/inner/target_question').type('string')
+								)
+							),
+							body(
+								input('inner_trigger', label('inner trigger (enter 5)')),
+								input('outer_trigger', label("outer trigger (enter 'D')")),
+								input(
+									'outer/inner/target_question',
+									label('target question: i am incorrectly skipped')
+								),
+								input('end', label('this is the end of the form'))
+							)
+						)
+					);
+
+					// Starting conditions (outer trigger is D, inner trigger is empty)
+					expect(scenario.getAnswerNode('/data/outer')).toBeRelevant();
+					expect(scenario.getAnswerNode('/data/outer/inner_condition')).toBeRelevant();
+					expect(scenario.answerOf('/data/outer/inner_condition')).toEqualAnswer(
+						booleanAnswer(false)
+					);
+					expect(scenario.getAnswerNode('/data/outer/inner')).toBeNonRelevant();
+					expect(scenario.getAnswerNode('/data/outer/inner/target_question')).toBeNonRelevant();
+
+					scenario.answer('/data/inner_trigger', 15);
+
+					expect(scenario.getAnswerNode('/data/outer')).toBeRelevant();
+					expect(scenario.getAnswerNode('/data/outer/inner_condition')).toBeRelevant();
+					expect(scenario.answerOf('/data/outer/inner_condition')).toEqualAnswer(
+						booleanAnswer(true)
+					);
+					expect(scenario.getAnswerNode('/data/outer/inner')).toBeRelevant();
+					expect(scenario.getAnswerNode('/data/outer/inner/target_question')).toBeRelevant();
+
+					scenario.answer('/data/outer_trigger', 'A');
+
+					expect(scenario.getAnswerNode('/data/outer')).toBeNonRelevant();
+					expect(scenario.getAnswerNode('/data/outer/inner_condition')).toBeNonRelevant();
+					expect(scenario.answerOf('/data/outer/inner_condition')).toEqualAnswer(
+						booleanAnswer(true)
+					);
+					expect(scenario.getAnswerNode('/data/outer/inner')).toBeNonRelevant();
+					expect(scenario.getAnswerNode('/data/outer/inner/target_question')).toBeRelevant();
+				});
 			});
 		});
 	});
