@@ -464,6 +464,30 @@
       "setIdx": 0,
       "setId": 4,
       "iconIdx": 903
+    },
+    {
+      "icon": {
+        "paths": [
+          "M726 726v-172h84v256h-512v128l-170-170 170-170v128h428zM298 298v172h-84v-256h512v-128l170 170-170 170v-128h-428z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": ["repeat"],
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "repeat",
+        "id": 35,
+        "order": 297,
+        "prevSize": 48,
+        "code": 59668,
+        "name": "repeat"
+      },
+      "setIdx": 0,
+      "setId": 4,
+      "iconIdx": 35
     }
   ],
   "height": 1024,

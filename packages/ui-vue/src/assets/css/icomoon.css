@@ -85,3 +85,6 @@
 .icon-calendar_today:before {
 	content: '\e913';
 }
+.icon-repeat:before {
+	content: '\e914';
+}

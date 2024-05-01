@@ -5,11 +5,22 @@ import { type MenuItem } from 'primevue/menuitem';
 import Panel from 'primevue/panel';
 import { computed, ref } from 'vue';
 
-const props = withDefaults(defineProps<{title?: string, menuItems?: MenuItem[], noUi?: boolean, class?: string}>(), {
+interface PanelProps {
+	title?: string;
+	menuItems?: MenuItem[];
+	noUi?: boolean;
+	class?: string;
+	labelIcon?: string;
+	labelNumber?: number;
+}
+
+const props = withDefaults(defineProps<PanelProps>(), {
 	title: undefined,
 	menuItems: undefined,
 	noUi: false,
-	class: undefined
+	class: undefined,
+	labelIcon: undefined,
+	labelNumber: undefined
 });
 
 const panelClass = computed(() => [
@@ -35,8 +46,11 @@ const toggleMenu = (event:  Event) => {
 	<Panel v-if="!noUi" :class="panelClass" :toggleable="true" :collapsed="panelState">
 		<template #header>
 			<div class="panel-title" role="button" @click="toggle">
-				<h2>					
-					<span :class="panelState ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'" /> {{ title }}
+				<h2>
+					<span :class="panelState ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'" /> 
+					<span v-if="labelNumber" class="label-number">{{ labelNumber }}</span>
+					<span>{{ title }}</span>
+					<span v-if="labelIcon" class="ml-2" :class="labelIcon" />
 				</h2>
 			</div>
 		</template>

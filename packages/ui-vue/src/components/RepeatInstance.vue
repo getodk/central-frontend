@@ -29,10 +29,10 @@ const label = computed(() => {
 	// Use RepeatRangeNode label if it's there
 	// TODO/sk: use state.label.asString
 	if(props.instance.parent.definition.bodyElement.label?.children[0]?.stringValue){
-		return `${props.instance.parent.definition.bodyElement.label?.children[0].stringValue} ${props.instanceIndex + 1}`;
+		return `${props.instance.parent.definition.bodyElement.label?.children[0].stringValue}`;
 	}
 
-	return `Repeats ${props.instanceIndex+1}`;
+	return `Repeat Item`;
 });
 
 const children = computed(() => {
@@ -52,7 +52,7 @@ const menuItems: MenuItem[] = [
 
 </script>
 <template>
-	<FormPanel :title="label" :menu-items="menuItems" class="repeat">
+	<FormPanel :title="label" :menu-items="menuItems" class="repeat" :label-number="instanceIndex + 1">
 		<QuestionList :nodes="children" />
 	</FormPanel>
 </template>

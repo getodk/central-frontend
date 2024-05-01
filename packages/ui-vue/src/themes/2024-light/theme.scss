@@ -70,76 +70,31 @@ $primary50: #d8ecf5;
 			box-shadow: 0px 1px 3px 1px #00000026;
 		}
 
-		// first level
-		.form-questions > div > .p-panel {
-			box-shadow: none;
-
-			&.repeat {
-				border-radius: 10px;
-				border: 2px solid var(--gray-200);
-				margin-top: 20px;
-			}
-
-			&.group {
-				border-left: 2px solid var(--gray-200);
-				border-radius: 0;
-				padding-top: 0;
-				padding-bottom: 0;
-
-				.p-panel-header {
-					padding-top: 0;
-				}
-
-				.p-panel-content {
-					padding-bottom: 0;
-				}
-			}
-
-			&.with-context-menu {
-				padding-top: 5px;
-				padding-bottom: 5px;
-			}
-
-			// child groups/repeats
-			.p-panel {
-				border-radius: 0;
-				box-shadow: none;
-				border-left: 2px solid var(--gray-200);
-				padding: 0 0 0 1rem;
-				margin-top: 1rem;
-
-				> .p-panel-header {
-					padding: 0;
-					align-items: start;
-
-					.btn-context {
-						margin-top: -10px;
-
-						.p-button-icon {
-							font-size: 1.5rem;
-						}
-					}
-				}
-
-				> .p-toggleable-content > .p-panel-content {
-					padding: 1rem 0 0 0.5rem;
-				}
-			}
+		.btn-add {
+			margin-left: 35px;
 		}
 
 		// for all panels
 		.p-panel {
 			background: var(--surface-0);
-			padding: 1rem;
+			box-shadow: none;
 
-			.p-panel-header {
-				background: transparent;
-				display: flex;
+			.p-panel {
+				margin-left: -10px;
 			}
 
-			.p-panel-content:last-child {
-				border-bottom-right-radius: 10px;
-				border-bottom-left-radius: 10px;
+			.p-panel-header {
+				display: flex;
+				padding: 0;
+				height: 40px;
+				align-items: start;
+			}
+
+			.p-panel-content {
+				border-left: 2px solid var(--gray-200);
+				margin-left: 10px;
+				border-radius: 0;
+				padding: 0 0 0 1.5rem;
 			}
 
 			.p-panel-toggler {
@@ -151,13 +106,33 @@ $primary50: #d8ecf5;
 
 				h2 {
 					margin: 0;
+					display: flex;
 				}
 			}
 
 			.btn-context {
+				margin-top: -10px;
+
 				.p-button-icon {
 					font-size: 1.5rem;
 				}
+			}
+
+			.btn-add {
+				margin-left: 25px;
+			}
+
+			.label-number {
+				display: inline-block;
+				margin: 2px 5px 0 17px;
+				padding-top: 4px;
+				width: 20px;
+				height: 20px;
+				font-weight: 400;
+				border-radius: 30px;
+				background-color: var(--gray-200);
+				font-size: 10px;
+				text-align: center;
 			}
 		}
 
@@ -243,6 +218,7 @@ $primary50: #d8ecf5;
 
 			label {
 				margin-left: 0.5rem;
+				margin-bottom: 0;
 				cursor: pointer;
 			}
 
