@@ -95,6 +95,29 @@ const message = computed(() => {
 
 </script>
 
+<style lang="scss">
+@import '../assets/scss/variables';
+
+#odata-loading-message {
+  margin-left: 28px;
+  padding-bottom: 38px;
+  position: relative;
+
+  #odata-loading-spinner-container {
+    margin-right: 8px;
+    position: absolute;
+    top: 8px;
+    width: 16px; // eventually probably better not to default spinner to center.
+  }
+
+  #odata-loading-message-text {
+    color: #555;
+    font-size: 12px;
+    padding-left: 24px;
+  }
+}
+</style>
+
 <i18n lang="json5">
   {
     "en": {
