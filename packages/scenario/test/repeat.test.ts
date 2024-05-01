@@ -1327,6 +1327,241 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				});
 			});
 		});
+
+		describe('//region Adding repeats', () => {
+			describe('adding repeat instance', () => {
+				interface PrimaryInstanceIdOptions {
+					readonly temporarilyIncludePrimaryInstanceId: boolean;
+				}
+
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Rephrase?
+				 *
+				 * - Fails without primary instance id: engine presently checks for one
+				 *   and fails fast without. Parameterized to demonstrate the test
+				 *   passes otherwise.
+				 *
+				 * - Spec language does not suggest this is optional, but there are a
+				 *   few other tests without. Unclear if we should support forms without
+				 *   a primary instance id (treat as a bug) or update JavaRosa tests. As
+				 *   such, parameterization is currently expressed as temporary.
+				 *
+				 * - - -
+				 *
+				 * JR:
+				 *
+				 * Excercises the triggerTriggerables call in createRepeatInstance.
+				 */
+				describe.each<PrimaryInstanceIdOptions>([
+					{ temporarilyIncludePrimaryInstanceId: false },
+					{ temporarilyIncludePrimaryInstanceId: true },
+				])(
+					'temporarily include primary instance id: $temporarilyIncludePrimaryInstanceId',
+					({ temporarilyIncludePrimaryInstanceId }) => {
+						let testFn: typeof it | typeof it.fails;
+
+						if (temporarilyIncludePrimaryInstanceId) {
+							testFn = it;
+						} else {
+							testFn = it.fails;
+						}
+
+						testFn(
+							'triggers triggerables outside repeat that reference repeat nodeset',
+							async () => {
+								const scenario = await Scenario.init(
+									'Form',
+									html(
+										head(
+											title('Form'),
+											model(
+												mainInstance(
+													t(
+														temporarilyIncludePrimaryInstanceId ? 'data id="temp-id"' : 'data',
+														t('count'),
+														t('repeat jr:template=""', t('string'))
+													)
+												),
+												bind('/data/count').type('int').calculate('count(/data/repeat)'),
+												bind('/data/repeat/string').type('string')
+											)
+										),
+										body(repeat('/data/repeat', input('/data/repeat/string')))
+									)
+								);
+
+								scenario.createNewRepeat('/data/repeat');
+								scenario.createNewRepeat('/data/repeat');
+
+								expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(2));
+							}
+						);
+
+						interface DemonstrateObservedTestIssueOptions {
+							readonly oneBasedPositionPredicates: boolean;
+							readonly awaitAsyncStateChangeBug: boolean;
+						}
+
+						/**
+						 * **PORTING NOTES**
+						 *
+						 * - Same notes (on primary instance id) as previous test.
+						 *
+						 * - Unclear how this passes in JavaRosa! It's still using 0-based
+						 *   indexes rather than 1-based XPath position predicates.
+						 *
+						 * - Still fails with 1-based position predicates. Behaves as
+						 *   expected when interacting with the form directly (at least with
+						 *   added primary instance id, and at least in `ui-solid`). A quick
+						 *   debugging seesion reveals the pertinent node's
+						 *   `currentState.relevant` is `true` when the repeat instance's
+						 *   subtree is added, then becomes `false` thereafter. This is
+						 *   clearly a timing issue, and it is likely a consequence of
+						 *   deferring certain aspects of computed state until
+						 *   initialization completes. It's somewhat surprising because that
+						 *   deferral is only intended to affect form load which, while
+						 *   asynchronous, is itself wrapped in a promise at the
+						 *   client-facing `initializeForm` call. This should definitely be
+						 *   considered a bug (as it should anywhere else we provide a
+						 *   synchronous interface which produces an expected state change
+						 *   that can't be observed synchronously).
+						 *
+						 * - To demonstrate all of these issues, test is further
+						 *   parameterized to...
+						 *
+						 *     - optionally update the assertions ported from JavaRosa to
+						 *       1-based position predicates
+						 *
+						 *     - optionally await a microtask tick before performing those
+						 *       assertions
+						 *
+						 *     All three parameters (these plus the outer temporary
+						 *     inclusion of a primary instance id) currently must be true
+						 *     for the test to pass.
+						 *
+						 * - - -
+						 *
+						 * JR:
+						 *
+						 * Excercises the initializeTriggerables call in
+						 * createRepeatInstance.
+						 */
+						describe.each<DemonstrateObservedTestIssueOptions>([
+							{
+								oneBasedPositionPredicates: false,
+								awaitAsyncStateChangeBug: false,
+							},
+							{
+								oneBasedPositionPredicates: true,
+								awaitAsyncStateChangeBug: true,
+							},
+						])(
+							'one-based position predicates: $oneBasedPositionPredicates, await async state change bug: $awaitAsyncStateChangeBug',
+							({ oneBasedPositionPredicates, awaitAsyncStateChangeBug }) => {
+								const tick = async () => {
+									await new Promise<void>((resolve) => {
+										queueMicrotask(resolve);
+									});
+								};
+
+								const isTestExpectedToPass =
+									temporarilyIncludePrimaryInstanceId &&
+									oneBasedPositionPredicates &&
+									awaitAsyncStateChangeBug;
+
+								if (isTestExpectedToPass) {
+									testFn = it;
+								} else {
+									testFn = it.fails;
+								}
+
+								testFn('triggers descendant node triggerables', async () => {
+									const scenario = await Scenario.init(
+										'Form',
+										html(
+											head(
+												title('Form'),
+												model(
+													mainInstance(
+														t(
+															temporarilyIncludePrimaryInstanceId ? 'data id="temp-id"' : 'data',
+															t('repeat jr:template=""', t('string'), t('group', t('int')))
+														)
+													),
+													bind('/data/repeat/string').type('string'),
+													bind('/data/repeat/group').relevant('0')
+												)
+											),
+											body(
+												repeat(
+													'/data/repeat',
+													input('/data/repeat/string'),
+													input('/data/repeat/group/int')
+												)
+											)
+										)
+									);
+
+									scenario.next('/data/repeat');
+									scenario.createNewRepeat({
+										assertCurrentReference: '/data/repeat',
+									});
+
+									if (awaitAsyncStateChangeBug) {
+										await tick();
+									}
+
+									scenario.next('/data/repeat[1]/string');
+									scenario.next('/data/repeat');
+
+									if (oneBasedPositionPredicates) {
+										expect(scenario.getAnswerNode('/data/repeat[1]/group/int')).toBeNonRelevant();
+									} else {
+										expect(scenario.getAnswerNode('/data/repeat[0]/group/int')).toBeNonRelevant();
+									}
+
+									scenario.createNewRepeat({
+										assertCurrentReference: '/data/repeat',
+									});
+
+									if (awaitAsyncStateChangeBug) {
+										await tick();
+									}
+
+									scenario.next('/data/repeat[2]/string');
+									scenario.next('/data/repeat');
+
+									if (oneBasedPositionPredicates) {
+										expect(scenario.getAnswerNode('/data/repeat[2]/group/int')).toBeNonRelevant();
+									} else {
+										expect(scenario.getAnswerNode('/data/repeat[1]/group/int')).toBeNonRelevant();
+									}
+
+									scenario.createNewRepeat({
+										assertCurrentReference: '/data/repeat',
+									});
+
+									if (awaitAsyncStateChangeBug) {
+										await tick();
+									}
+
+									scenario.next('/data/repeat[3]/string');
+									scenario.next('/data/repeat');
+
+									if (oneBasedPositionPredicates) {
+										expect(scenario.getAnswerNode('/data/repeat[3]/group/int')).toBeNonRelevant();
+									} else {
+										expect(scenario.getAnswerNode('/data/repeat[2]/group/int')).toBeNonRelevant();
+									}
+								});
+							}
+						);
+					}
+				);
+			});
+		});
 	});
 
 	/**
