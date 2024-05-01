@@ -43,6 +43,8 @@ const componentResponses = (map) => Object.entries(map)
   });
 
 const responsesByComponent = {
+  ConfigError: [],
+
   AccountLogin: [],
   AccountResetPassword: [],
   AccountClaim: [],

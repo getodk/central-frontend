@@ -13,7 +13,7 @@ import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
-import { canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
+import { beforeNextNavigation, canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
 import { createScrollBehavior } from './scroll-behavior';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
@@ -29,6 +29,7 @@ export default (container, {
   const routes = createRoutes(container);
   const router = createRouter({ history, routes, scrollBehavior });
   const { requestData, alert, unsavedChanges, config } = container;
+  const { session } = requestData;
 
 
 
@@ -62,38 +63,43 @@ router.afterEach(unlessFailure(to => {
   // During the initial navigation, the router sends requests for essential data
   // that is needed to render the app.
 
-  const { session } = requestData;
-  {
-    const requests = [
-      () => {
-        const storageLocale = localStore.getItem('locale');
-        const locale = storageLocale != null
-          ? storageLocale
-          : navigator.language.split('-', 1)[0];
-        return loadLocale(container, locale);
-      },
+  beforeNextNavigation(router, async (to) => {
+    // Implements the restoreSession meta field. A test can skip this request by
+    // setting the session before the initial navigation.
+    const needsLogin = to.meta.restoreSession && !session.dataExists;
+    const sessionPromise = needsLogin
+      ? restoreSession(session)
+      : Promise.resolve();
 
-      // Implements the restoreSession meta field. A test can skip this request
-      // by setting the session before the initial navigation.
-      async (to) => {
-        if (to.meta.restoreSession && !session.dataExists) {
-          await restoreSession(session);
-          // If this is the first time that the session has been restored since
-          // the most recent OIDC login, set sessionExpires in local storage. If
-          // sessionExpires is already set (for example, if the previous session
-          // expired), then it will be overwritten.
-          const newSession = config.oidcEnabled &&
-            Date.parse(session.expiresAt).toString() !== localStore.getItem('sessionExpires');
-          await logIn(container, newSession);
-        }
-      }
-    ];
+    // A test can skip this request by setting `config` before the initial
+    // navigation.
+    const configPromise = config.dataExists
+      ? Promise.resolve()
+      : config.request({ url: '/client-config.json', alert: false })
+        .catch(error => {
+          config.data = { loadError: error };
+          session.reset();
+        });
 
-    const removeGuard = router.beforeEach(async (to) => {
-      await Promise.allSettled(requests.map(request => request(to)));
-      removeGuard();
-    });
-  }
+    const localePromise = loadLocale(
+      container,
+      localStore.getItem('locale') ?? navigator.language.split('-', 1)[0]
+    );
+
+    await Promise.allSettled([sessionPromise, configPromise]);
+    if (needsLogin && session.dataExists) {
+      // If this is the first time that the session has been restored since
+      // the most recent OIDC login, set sessionExpires in local storage. If
+      // sessionExpires is already set (for example, if the previous session
+      // expired), then it will be overwritten.
+      const newSession = config.oidcEnabled &&
+        Date.parse(session.expiresAt).toString() !== localStore.getItem('sessionExpires');
+      await logIn(container, newSession).catch(noop);
+    }
+
+    await localePromise.catch(noop);
+    return config.loadError != null ? '/load-error' : true;
+  });
 
 
 

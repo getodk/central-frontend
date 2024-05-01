@@ -232,7 +232,7 @@ describe('util/session', () => {
         router: mockRouter(),
         requestData: { session: testData.sessions.createNew() }
       });
-      const { requestData } = container;
+      const { requestData, config } = container;
       const { session, currentUser, roles } = requestData;
       return mockHttp(container)
         .request(() => logIn(container, true))
@@ -249,6 +249,9 @@ describe('util/session', () => {
           session.dataExists.should.be.false();
           currentUser.dataExists.should.be.false();
           roles.dataExists.should.be.false();
+
+          // Some requestData should not be cleared.
+          config.dataExists.should.be.true();
         });
     });
 

@@ -206,11 +206,21 @@ const asyncRoute = (options) => {
   return config;
 };
 
-const conditionalRoutes = (condition, routes) => (condition ? routes : []);
-
 const { i18n, requestData, config } = container;
 const { currentUser, project, form, formDraft, attachments, dataset } = requestData;
 const routes = [
+  asyncRoute({
+    path: '/load-error',
+    component: 'ConfigError',
+    loading: 'page',
+    meta: {
+      requireLogin: false,
+      requireAnonymity: true,
+      title: () => [i18n.t('common.error')]
+    },
+    beforeEnter: () => (config.loadError == null ? '/' : true)
+  }),
+
   {
     path: '/login',
     name: 'AccountLogin',
@@ -221,29 +231,29 @@ const routes = [
       title: () => [i18n.t('action.logIn')]
     }
   },
-  ...conditionalRoutes(!config.oidcEnabled, [
-    asyncRoute({
-      path: '/reset-password',
-      component: 'AccountResetPassword',
-      loading: 'page',
-      meta: {
-        requireLogin: false,
-        requireAnonymity: true,
-        title: () => [i18n.t('title.resetPassword')]
-      }
-    }),
-    asyncRoute({
-      path: '/account/claim',
-      component: 'AccountClaim',
-      loading: 'page',
-      meta: {
-        restoreSession: false,
-        requireLogin: false,
-        requireAnonymity: true,
-        title: () => [i18n.t('title.setPassword')]
-      }
-    })
-  ]),
+  asyncRoute({
+    path: '/reset-password',
+    component: 'AccountResetPassword',
+    loading: 'page',
+    meta: {
+      requireLogin: false,
+      requireAnonymity: true,
+      title: () => [i18n.t('title.resetPassword')]
+    },
+    beforeEnter: () => (config.oidcEnabled ? '/404' : true)
+  }),
+  asyncRoute({
+    path: '/account/claim',
+    component: 'AccountClaim',
+    loading: 'page',
+    meta: {
+      restoreSession: false,
+      requireLogin: false,
+      requireAnonymity: true,
+      title: () => [i18n.t('title.setPassword')]
+    },
+    beforeEnter: () => (config.oidcEnabled ? '/404' : true)
+  }),
 
   asyncRoute({
     path: '/',
@@ -641,27 +651,26 @@ const routes = [
           fullWidth: true
         }
       }),
-      ...conditionalRoutes(config.showsAnalytics, [
-        asyncRoute({
-          path: 'analytics',
-          component: 'AnalyticsList',
-          loading: 'tab',
-          meta: {
-            validateData: {
-              currentUser: () => currentUser.can([
-                'config.read',
-                'config.set',
-                'analytics.read'
-              ])
-            },
-            title: () => [
-              i18n.t('systemHome.tab.analytics'),
-              i18n.t('systemHome.title')
-            ],
-            fullWidth: true
-          }
-        })
-      ])
+      asyncRoute({
+        path: 'analytics',
+        component: 'AnalyticsList',
+        loading: 'tab',
+        meta: {
+          validateData: {
+            currentUser: () => currentUser.can([
+              'config.read',
+              'config.set',
+              'analytics.read'
+            ])
+          },
+          title: () => [
+            i18n.t('systemHome.tab.analytics'),
+            i18n.t('systemHome.title')
+          ],
+          fullWidth: true
+        },
+        beforeEnter: () => (!config.showsAnalytics ? '/404' : true)
+      })
     ]
   }),
 
@@ -733,6 +742,7 @@ const routesByName = new Map();
   const alwaysPreserve = always([
     requestData.session,
     currentUser,
+    config,
     requestData.centralVersion,
     requestData.analyticsConfig,
     requestData.roles

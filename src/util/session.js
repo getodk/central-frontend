@@ -110,12 +110,13 @@ const requestLogout = ({ i18n, requestData, alert, http }) => {
     });
 };
 
+// Resets requestData, clearing data and canceling requests. Some general/system
+// resources are not reset.
 const resetRequestData = (requestData) => {
-  // We clear all data and cancel any requests. However, that isn't ideal for
-  // requestData.centralVersion, and we may need to revisit this logic in the
-  // future.
-  for (const resource of requestData.resources)
-    resource.reset();
+  const preserve = new Set([requestData.config, requestData.centralVersion]);
+  for (const resource of requestData.resources) {
+    if (!preserve.has(resource)) resource.reset();
+  }
 };
 
 export const logOut = (container, setNext) => {
