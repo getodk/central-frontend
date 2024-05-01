@@ -373,25 +373,6 @@ export default {
   margin-bottom: 10px;
   margin-left: auto;
 }
-
-#submission-list-message {
-  margin-left: 28px;
-  padding-bottom: 38px;
-  position: relative;
-
-  #submission-list-spinner-container {
-    margin-right: 8px;
-    position: absolute;
-    top: 8px;
-    width: 16px; // eventually probably better not to default spinner to center.
-  }
-
-  #submission-list-message-text {
-    color: #555;
-    font-size: 12px;
-    padding-left: 24px;
-  }
-}
 </style>
 
 <i18n lang="json5">
