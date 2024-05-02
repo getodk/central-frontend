@@ -560,6 +560,17 @@ export class Scenario {
 		return node.currentState.children.length;
 	}
 
+	/**
+	 * @todo It is really unclear whether this method should go below in the
+	 * "consider adapting tests" bag/vat. At least as encountered so far, it
+	 * doesn't seem to serve much purpose other than as a control flow helper.
+	 */
+	atTheEndOfForm(): boolean {
+		const event = this.getSelectedPositionalEvent();
+
+		return event.eventType === 'END_OF_FORM';
+	}
+
 	// TODO: consider adapting tests which use the following interfaces to use
 	// more portable concepts (either by using conceptually similar `Scenario`
 	// APIs, or by reframing the tests' logic to the same behavioral concerns with

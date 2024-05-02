@@ -15,6 +15,11 @@ import { describe, expect, it } from 'vitest';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
+import { r } from '../src/jr/resource/ResourcePathHelper.ts';
+
+interface PredicateOptions {
+	readonly oneBasedPositionPredicates: boolean;
+}
 
 /**
  * **PORTING NOTES**
@@ -372,6 +377,554 @@ describe('Actions/Events', () => {
 				await expect(init).rejects.toThrowError(
 					'An action was registered for unsupported events: odk-inftance-first-load, my-fake-event'
 				);
+			});
+		});
+	});
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * - Again, in general assertions of `getDisplayText` are ported as `getValue`
+	 *   (with the original assertion above/commented out) unless there's a clear
+	 *   reason they'd be expected to have a semantic difference.
+	 *
+	 * - It isn't clear whether the {@link r} helper has any purpose. It's a weird
+	 *   name, unclear in what its purpose _should be_ without following it back
+	 *   to its origin[s]. Can we consider... getting rid of it/moving the
+	 *   pertinent logic directly into an equivalent init function/static method?
+	 *   (Also hopefully with a distinct name, in place of the current equivalent
+	 *   signature overload?)
+	 *
+	 * - It seems helpful to include pertinent links to the spec, as the below
+	 *   comment preserved from JavaRosa does. Can we do this throughout? Besides
+	 *   being helpful _in general_, it could also help with organizational
+	 *   ambiguities when tests are concerned with the intersection of multiple
+	 *   aspects of the spec.
+	 *
+	 * - Speaking of which, all of these are of course concerned with repeats.
+	 *   It's really kind of a toss up IMO whether it makes more sense to have a
+	 *   general actions/events organization, or to organize action/event tests
+	 *   alongside other features they intersect.
+	 *
+	 * - - -
+	 *
+	 * JR:
+	 *
+	 * Specification:
+	 * https://getodk.github.io/xforms-spec/#the-odk-new-repeat-event.
+	 */
+	describe('OdkNewRepeatEventTest.java', () => {
+		describe('[`setvalue`] set value on repeat insert[?] in body', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Fails as ported: 0-based index predicate
+			 *
+			 * - Still fails with 1-based position predicate correction: current lack
+			 *   of support for actions/events
+			 */
+			describe.each<PredicateOptions>([
+				{ oneBasedPositionPredicates: false },
+				{ oneBasedPositionPredicates: true },
+			])(
+				'one-based position predicates: $oneBasedPositionPredicates',
+				({ oneBasedPositionPredicates }) => {
+					it.fails('sets [the] value in [the] repeat', async () => {
+						const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+						expect(scenario.countRepeatInstancesOf('/data/my-repeat')).toBe(0);
+
+						scenario.createNewRepeat('/data/my-repeat');
+
+						expect(scenario.countRepeatInstancesOf('/data/my-repeat')).toBe(1);
+
+						// assertThat(scenario.answerOf("/data/my-repeat[0]/defaults-to-position").getDisplayText(), is("1"));
+						if (oneBasedPositionPredicates) {
+							expect(scenario.answerOf('/data/my-repeat[1]/defaults-to-position').getValue()).toBe(
+								'1'
+							);
+						} else {
+							expect(scenario.answerOf('/data/my-repeat[0]/defaults-to-position').getValue()).toBe(
+								'1'
+							);
+						}
+					});
+				}
+			);
+		});
+
+		describe('adding repeat [instance]', () => {
+			it.fails('does not change [the] value set for [the] previous repeat [instance]', async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+				scenario.createNewRepeat('/data/my-repeat');
+
+				// assertThat(scenario.answerOf("/data/my-repeat[1]/defaults-to-position").getDisplayText(), is("1"));
+				expect(scenario.answerOf('/data/my-repeat[1]/defaults-to-position').getValue()).toBe('1');
+
+				scenario.createNewRepeat('/data/my-repeat');
+
+				// assertThat(scenario.answerOf("/data/my-repeat[2]/defaults-to-position").getDisplayText(), is("2"));
+				expect(scenario.answerOf('/data/my-repeat[2]/defaults-to-position').getValue()).toBe('2');
+
+				// assertThat(scenario.answerOf("/data/my-repeat[1]/defaults-to-position").getDisplayText(), is("1"));
+				expect(scenario.answerOf('/data/my-repeat[1]/defaults-to-position').getValue()).toBe('1');
+			});
+		});
+
+		describe('[`setvalue`] set value on repeat in body', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Fails as ported: 0-based index predicate
+			 *
+			 * - Still fails with 1-based position predicate correction: current lack
+			 *   of support for actions/events
+			 */
+			describe.each<PredicateOptions>([
+				{ oneBasedPositionPredicates: false },
+				{ oneBasedPositionPredicates: true },
+			])(
+				'one-based position predicates: $oneBasedPositionPredicates',
+				({ oneBasedPositionPredicates }) => {
+					it.fails('uses [the] current context for relative references', async () => {
+						const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+						scenario.answer('/data/my-toplevel-value', '12');
+
+						scenario.createNewRepeat('/data/my-repeat');
+
+						// assertThat(scenario.answerOf("/data/my-repeat[0]/defaults-to-toplevel").getDisplayText(), is("14"));
+						if (oneBasedPositionPredicates) {
+							expect(scenario.answerOf('/data/my-repeat[1]/defaults-to-toplevel').getValue()).toBe(
+								'14'
+							);
+						} else {
+							expect(scenario.answerOf('/data/my-repeat[0]/defaults-to-toplevel').getValue()).toBe(
+								'14'
+							);
+						}
+					});
+				}
+			);
+		});
+
+		describe('[`setvalue`] set value on repeat with count', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Typical `getDisplayText` commentary
+			 *
+			 * - Fails on current lack of support for both actions/events and
+			 *   `jr:count`
+			 *
+			 * - The `while` loops, ported directly, don't adapt well to our addition
+			 *   of an asserted/expected node-set reference to the
+			 *   {@link Scenario.next} signature. A best effort is made to preserve
+			 *   the apparent intent, but it may be worth considering adopting a
+			 *   `range`-based approach similar to many tests in `repeat.test.ts`. On
+			 *   the other hand, it's not clear if there's any value in these
+			 *   {@link Scenario.next} calls, which isn't redundant given the other
+			 *   assertions?
+			 */
+			it.fails('sets [the] value for each repeat [instance]', async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+				scenario.answer('/data/repeat-count', 4);
+
+				let expectedRepeatPosition = 0;
+				while (!scenario.atTheEndOfForm()) {
+					// WAS:
+					//
+					// scenario.next();
+
+					expectedRepeatPosition += 1;
+
+					scenario.next(`/data/my-jr-count-repeat[${expectedRepeatPosition}]`);
+					scenario.next(
+						`/data/my-jr-count-repeat[${expectedRepeatPosition}]/defaults-to-position-again`
+					);
+				}
+
+				expect(scenario.countRepeatInstancesOf('/data/my-jr-count-repeat')).toBe(4);
+
+				// assertThat(scenario.answerOf("/data/my-jr-count-repeat[1]/defaults-to-position-again").getDisplayText(), is("1"));
+				expect(
+					scenario.answerOf('/data/my-jr-count-repeat[1]/defaults-to-position-again').getValue()
+				).toBe('1');
+
+				// assertThat(scenario.answerOf("/data/my-jr-count-repeat[2]/defaults-to-position-again").getDisplayText(), is("2"));
+				expect(
+					scenario.answerOf('/data/my-jr-count-repeat[2]/defaults-to-position-again').getValue()
+				).toBe('2');
+
+				// assertThat(scenario.answerOf("/data/my-jr-count-repeat[3]/defaults-to-position-again").getDisplayText(), is("3"));
+				expect(
+					scenario.answerOf('/data/my-jr-count-repeat[3]/defaults-to-position-again').getValue()
+				).toBe('3');
+
+				// assertThat(scenario.answerOf("/data/my-jr-count-repeat[4]/defaults-to-position-again").getDisplayText(), is("4"));
+				expect(
+					scenario.answerOf('/data/my-jr-count-repeat[4]/defaults-to-position-again').getValue()
+				).toBe('4');
+
+				// Adding repeats should trigger odk-new-repeat for those new nodes
+				scenario.answer('/data/repeat-count', 6);
+
+				scenario.jumpToBeginningOfForm();
+
+				expectedRepeatPosition = 0;
+
+				while (!scenario.atTheEndOfForm()) {
+					// WAS:
+					//
+					// scenario.next();
+
+					if (expectedRepeatPosition === 0) {
+						scenario.next('/data/my-toplevel-value');
+						scenario.next('/data/repeat-count');
+					}
+
+					expectedRepeatPosition += 1;
+					scenario.next(`/data/my-jr-count-repeat[${expectedRepeatPosition}]`);
+				}
+
+				expect(scenario.countRepeatInstancesOf('/data/my-jr-count-repeat')).toBe(6);
+
+				// assertThat(scenario.answerOf("/data/my-jr-count-repeat[6]/defaults-to-position-again").getDisplayText(), is("6"));
+				expect(
+					scenario.answerOf('/data/my-jr-count-repeat[6]/defaults-to-position-again').getValue()
+				).toBe('6');
+			});
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * 1. None of this test feels like it has anything to do with
+		 *    actions/events, `odk-new-repeat` specifically, or really anything in
+		 *    this module/suite/bag/vat other than loading the same fixture.
+		 *    Options...
+		 *
+		 * - Move to `repeat.test.js`? Presumably organized with other tests
+		 *   exercising `jr:count`? But the actual **point of the test** seems to
+		 *   have little to do with `jr:count` except as a side effect (or as a
+		 *   regression test?). It's really more concerned with casting, so...
+		 *
+		 * - Move to somewhere concerned with casting? As yet undiscovered, may or
+		 *   may not already exist, though there are a bunch of notes already about
+		 *   casting concerns, as well as at least one newish issue referencing
+		 *   those concerns.
+		 *
+		 * 2. How much of this is even an engine test, versus a {@link Scenario} API
+		 *    test? (And is the answer to that the same in web forms as it is for
+		 *    the same test in JavaRosa?)
+		 *
+		 * 3. Rephrase?
+		 *
+		 * 4. JavaRosa's test exercises each of integer-as-string, decimal (float?),
+		 *    and long. The closest we'll get is integer-as-string, float, bigint.
+		 *    But it's also worth calling out that we generally don't distinguish
+		 *    between integer/fractional-number types (or number types at all except
+		 *    as a precaution), so the semantics of this test wouldn't quite line up
+		 *    no matter how we slice it.
+		 *
+		 * 5. No further attempt is made to handle the `while`/`next` pattern. It
+		 *    doesn't seem pertinent. Those are commented out in case we want to
+		 *    revisit this assumption.
+		 *
+		 * 6. Unsurprisingly fails on current lack of support for `jr:count`. But a
+		 *    few alternate tests follow only asserting the cast of the value, since
+		 *    that's the apparent focus of the test. Even though most should pass
+		 *    (the fractional value likely won't yet), they will currently only
+		 *    exercise the casting logic here in the `scenario` client's
+		 *    {@link Scenario.answer} implementation.
+		 */
+		describe('set [value other than integer] other than integer value, on repeat with count', () => {
+			it.fails('converts [the count-setting]', async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+				// String
+				scenario.answer('/data/repeat-count', '1');
+
+				// while (!scenario.atTheEndOfForm()) {
+				//     scenario.next();
+				// }
+
+				expect(scenario.countRepeatInstancesOf('/data/my-jr-count-repeat')).toBe(0);
+
+				// Decimal
+				scenario.jumpToBeginningOfForm();
+				scenario.answer('/data/repeat-count', 2.5);
+				// while (!scenario.atTheEndOfForm()) {
+				//     scenario.next();
+				// }
+
+				expect(scenario.countRepeatInstancesOf('/data/my-jr-count-repeat')).toBe(2);
+
+				// JR: Long
+				// Web forms: bigint
+				scenario.jumpToBeginningOfForm();
+				scenario.answer('/data/repeat-count', BigInt(3));
+
+				// while (!scenario.atTheEndOfForm()) {
+				//     scenario.next();
+				// }
+
+				expect(scenario.countRepeatInstancesOf('/data/my-jr-count-repeat')).toBe(3);
+			});
+
+			it("(alternate) casts an integer-as-string value to an integer [which controls a repeat's `jr:count`]", async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+				scenario.answer('/data/repeat-count', '1');
+
+				expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(1));
+			});
+
+			/**
+			 * **PORTING NOTES** (alternate)
+			 *
+			 * As expected, this fails. It could be made to pass by updating the
+			 * pertinent {@link Scenario.answer} casting logic, but that just feels
+			 * like cheating.
+			 */
+			it.fails(
+				"(alternate) casts a decimal/fractional value to an integer [which controls a repeat's `jr:count`]",
+				async () => {
+					const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+					scenario.answer('/data/repeat-count', 2.5);
+
+					expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
+				}
+			);
+
+			it("(alternate) assigns a non-fractional integer-as-float-number [which controls a repeat's `jr:count`]", async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+				scenario.answer('/data/repeat-count', 2);
+
+				expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
+			});
+
+			it("(alternate) casts and/or assigns bigint [which controls a repeat's `jr:count`]", async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+				scenario.answer('/data/repeat-count', 3n);
+
+				expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(3));
+			});
+		});
+
+		describe('repeat in form def instance', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Typical `nullValue()` -> blank/empty string check.
+			 *
+			 * - First assertions pass as expected, but now we can use the test to
+			 *   help us keep it that way when we implement this feature to make the
+			 *   last one pass.
+			 */
+			it.fails('never fires [an odk-new-repeat] new repeat event', async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+
+				// assertThat(scenario.answerOf("/data/my-repeat-without-template[1]/my-value"), is(nullValue()));
+				expect(scenario.answerOf('/data/my-repeat-without-template[1]/my-value').getValue()).toBe(
+					''
+				);
+
+				// assertThat(scenario.answerOf("/data/my-repeat-without-template[2]/my-value"), is(nullValue()));
+				expect(scenario.answerOf('/data/my-repeat-without-template[2]/my-value').getValue()).toBe(
+					''
+				);
+
+				scenario.createNewRepeat('/data/my-repeat-without-template');
+
+				// assertThat(scenario.answerOf("/data/my-repeat-without-template[3]/my-value").getDisplayText(), is("2"));
+				expect(scenario.answerOf('/data/my-repeat-without-template[3]/my-value').getValue()).toBe(
+					'2'
+				);
+			});
+		});
+
+		describe('new repeat instance', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Test description suggests assertion of something not being affected,
+			 * but the actual assertions are about different action/event outcomes.
+			 * Both seem like valid things to test (separately), but the current
+			 * description and test body conflate the two.
+			 */
+			it.fails(
+				'does not trigger [the] action[/event] on [an] unrelated repeat [instance]',
+				async () => {
+					const scenario = await Scenario.init(
+						'Parallel repeats',
+						html(
+							head(
+								title('Parallel repeats'),
+								model(
+									mainInstance(
+										t(
+											'data id="parallel-repeats"',
+											t('repeat1', t('q1')),
+
+											t('repeat2', t('q1'))
+										)
+									)
+								)
+							),
+							body(
+								repeat(
+									'/data/repeat1',
+									setvalue('odk-new-repeat', '/data/repeat1/q1', "concat('foo','bar')"),
+									input('/data/repeat1/q1')
+								),
+								repeat(
+									'/data/repeat2',
+									setvalue('odk-new-repeat', '/data/repeat2/q1', "concat('bar','baz')"),
+									input('/data/repeat2/q1')
+								)
+							)
+						)
+					);
+
+					scenario.createNewRepeat('/data/repeat1');
+					scenario.createNewRepeat('/data/repeat1');
+
+					scenario.createNewRepeat('/data/repeat2');
+					scenario.createNewRepeat('/data/repeat2');
+
+					// assertThat(scenario.answerOf("/data/repeat1[2]/q1").getDisplayText(), is("foobar"));
+					expect(scenario.answerOf('/data/repeat1[2]/q1').getValue()).toBe('foobar');
+
+					// assertThat(scenario.answerOf("/data/repeat1[3]/q1").getDisplayText(), is("foobar"));
+					expect(scenario.answerOf('/data/repeat1[3]/q1').getValue()).toBe('foobar');
+
+					// assertThat(scenario.answerOf("/data/repeat2[2]/q1").getDisplayText(), is("barbaz"));
+					expect(scenario.answerOf('/data/repeat2[2]/q1').getValue()).toBe('barbaz');
+
+					// assertThat(scenario.answerOf("/data/repeat2[3]/q1").getDisplayText(), is("barbaz"));
+					expect(scenario.answerOf('/data/repeat2[3]/q1').getValue()).toBe('barbaz');
+				}
+			);
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * This test fails, which was already expected due to current lack of
+			 * support for actions/events. But it's unclear how it passes in JavaRosa!
+			 * The test was only partially updated to use 1-based positional
+			 * predicates. It seems like **at least** the first assertion should fail
+			 * there too.
+			 */
+			describe.each<PredicateOptions>([
+				{ oneBasedPositionPredicates: false },
+				{ oneBasedPositionPredicates: true },
+			])(
+				'one-based position predicates: $one-based-position-predicates',
+				({ oneBasedPositionPredicates }) => {
+					it.fails('can use [the] previous instance as [a] default', async () => {
+						const scenario = await Scenario.init(
+							'Default from prior instance',
+							html(
+								head(
+									title('Default from prior instance'),
+									model(
+										mainInstance(t('data id="default-from-prior-instance"', t('repeat', t('q')))),
+										bind('/data/repeat/q').type('integer')
+									)
+								),
+								body(
+									repeat(
+										'/data/repeat',
+										setvalue(
+											'odk-new-repeat',
+											'/data/repeat/q',
+											'/data/repeat[position()=position(current()/..)-1]/q'
+										),
+										input('/data/repeat/q')
+									)
+								)
+							)
+						);
+
+						scenario.next('/data/repeat[1]');
+						scenario.next('/data/repeat[1]/q');
+						scenario.answer(7);
+
+						if (oneBasedPositionPredicates) {
+							expect(scenario.answerOf('/data/repeat[1]/q')).toEqualAnswer(intAnswer(7));
+						} else {
+							expect(scenario.answerOf('/data/repeat[0]/q')).toEqualAnswer(intAnswer(7));
+						}
+
+						scenario.next('/data/repeat');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/repeat',
+						});
+
+						scenario.next('/data/repeat[2]/q');
+
+						if (oneBasedPositionPredicates) {
+							expect(scenario.answerOf('/data/repeat[2]/q')).toEqualAnswer(intAnswer(7));
+						} else {
+							expect(scenario.answerOf('/data/repeat[1]/q')).toEqualAnswer(intAnswer(7));
+						}
+
+						scenario.answer(8); // override the default
+
+						scenario.next('/data/repeat');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/repeat',
+						});
+
+						/**
+						 * **PORTING NOTES**
+						 *
+						 * Does this... do anything??
+						 */
+						scenario.next('/data/repeat[3]/q');
+
+						/**
+						 * **PORTING NOTES**
+						 *
+						 * These were already updated (hence lack of branch on their references)
+						 */
+						expect(scenario.answerOf('/data/repeat[1]/q')).toEqualAnswer(intAnswer(7));
+						expect(scenario.answerOf('/data/repeat[2]/q')).toEqualAnswer(intAnswer(8));
+						expect(scenario.answerOf('/data/repeat[3]/q')).toEqualAnswer(intAnswer(8));
+					});
+				}
+			);
+		});
+
+		describe('[`setvalue`] set value on repeat insert[?] in model', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - New-to-me expected failure pattern (as decorator), commented to preserve/show intent
+			 *
+			 * - Adapted to our own alternate approach to this, because it otherwise hangs indefinitely as some other checks for error conditions
+			 */
+			// JR:
+			// @Test(expected = XFormParseException.class)
+			it.fails('[is] not allowed', async () => {
+				// JR (equivalent):
+				// await Scenario.init(r("event-odk-new-repeat-model.xml"));
+
+				let caught: unknown = null;
+
+				try {
+					await Scenario.init(r('event-odk-new-repeat-model.xml'));
+				} catch (error) {
+					caught = error;
+				}
+
+				expect(caught).toBeInstanceOf(Error);
 			});
 		});
 	});
