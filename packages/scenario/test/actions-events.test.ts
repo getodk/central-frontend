@@ -1034,5 +1034,61 @@ describe('Actions/Events', () => {
 				expect(listener.getQuality()).toBe('foo');
 			});
 		});
+
+		describe('target reference in repeat', () => {
+			it.fails('is contextualized', async () => {
+				const listener = new CapturingRecordAudioActionListener();
+				RecordAudioActions.setRecordAudioListener(listener);
+
+				await Scenario.init(
+					'Record audio form',
+					html(
+						head(
+							title('Record audio form'),
+							model(
+								mainInstance(t('data id="record-audio-form"', t('repeat', t('recording'), t('q1'))))
+							)
+						),
+						body(
+							repeat(
+								'/data/repeat',
+								t('odk:recordaudio event="odk-instance-load" ref="/data/repeat/recording"'),
+								input('/data/repeat/q1')
+							)
+						)
+					)
+				);
+
+				expect(listener.getAbsoluteTargetRef()).toEqual(getRef('/data/repeat[1]/recording'));
+			});
+		});
+
+		describe('serialization and deserialization', () => {
+			it.fails('maintains fields', async () => {
+				const scenario = await Scenario.init(
+					'Record audio form',
+					html(
+						head(
+							title('Record audio form'),
+							model(
+								mainInstance(t('data id="record-audio-form"', t('recording'), t('q1'))),
+								t(
+									'odk:recordaudio event="odk-instance-load" ref="/data/recording" odk:quality="foo"'
+								)
+							)
+						),
+						body(input('/data/q1'))
+					)
+				);
+
+				const listener = new CapturingRecordAudioActionListener();
+				RecordAudioActions.setRecordAudioListener(listener);
+
+				await scenario.serializeAndDeserializeForm();
+
+				expect(listener.getAbsoluteTargetRef()).toEqual(getRef('/data/recording'));
+				expect(listener.getQuality()).toBe('foo');
+			});
+		});
 	});
 });
