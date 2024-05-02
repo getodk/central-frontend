@@ -1844,6 +1844,223 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				});
 			});
 		});
+
+		describe('//region Repeat misc', () => {
+			describe('(issue 135) verify that counts in inner repeats work as expected', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Fails on second `next` call's node-set reference assertion
+				 *   (resolving to the outer repeat's "prompt" event, i.e. the repeat
+				 *   range itself). This is currently to be expected, as we don't yet
+				 *   support `jr:count`.
+				 *
+				 * @todo The asserted node-set references are best guess (cross
+				 * referencing `getPositionalEvents` and `collectFlatNodeList`) in hopes
+				 * it will match the intent of the original test once we do support
+				 * `jr:count`. We can verify when we work on that feature.
+				 */
+				it.fails('[updates the count]', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('outer-count', '0'),
+											t(
+												'outer jr:template=""',
+												t('inner-count', '0'),
+												t('inner jr:template=""', t('some-field'))
+											)
+										)
+									),
+									bind('/data/outer-count').type('int'),
+									bind('/data/outer/inner-count').type('int'),
+									bind('/data/outer/inner/some-field').type('string')
+								)
+							),
+							body(
+								input('/data/outer-count'),
+								group(
+									'/data/outer',
+									repeat(
+										'/data/outer',
+										'/data/outer-count',
+										input('/data/outer/inner-count'),
+										group(
+											'/data/outer/inner',
+											repeat(
+												'/data/outer/inner',
+												'../inner-count',
+												input('/data/outer/inner/some-field')
+											)
+										)
+									)
+								)
+							)
+						)
+					);
+
+					scenario.next('/data/outer-count');
+					scenario.answer(2);
+					scenario.next('/data/outer[1]');
+					scenario.next('/data/outer[1]/inner-count');
+					scenario.answer(3);
+					scenario.next('/data/outer[1]/inner[1]');
+					scenario.next('/data/outer[1]/inner[1]/some-field');
+					scenario.answer('Some field 0-0');
+					scenario.next('/data/outer[1]/inner[2]');
+					scenario.next('/data/outer[1]/inner[2]/some-field');
+					scenario.answer('Some field 0-1');
+					scenario.next('/data/outer[1]/inner[3]');
+					scenario.next('/data/outer[1]/inner[3]/some-field');
+					scenario.answer('Some field 0-2');
+					scenario.next('/data/outer[2]');
+					scenario.next('/data/outer[2]/inner-count');
+					scenario.answer(2);
+					scenario.next('/data/outer[2]/inner[1]');
+					scenario.next('/data/outer[2]/inner[1]/some-field');
+					scenario.answer('Some field 1-0');
+					scenario.next('/data/outer[2]/inner[1]');
+					scenario.next('/data/outer[2]/inner[1]/some-field');
+					scenario.answer('Some field 1-1');
+					scenario.next('END_OF_FORM');
+
+					expect(scenario.countRepeatInstancesOf('/data/outer[1]/inner')).toBe(3);
+					expect(scenario.countRepeatInstancesOf('/data/outer[2]/inner')).toBe(2);
+				});
+			});
+
+			describe('adding nested repeat instance', () => {
+				it('updates expression triggered by generic ref, for all repeat instances', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t(
+												'outer jr:template=""',
+												t('inner jr:template=""', t('count'), t('some-field')),
+												t('some-field')
+											)
+										)
+									),
+									bind('/data/outer/inner/count').type('int').calculate('count(../../inner)')
+								)
+							),
+							body(
+								group(
+									'/data/outer',
+									repeat(
+										'/data/outer',
+										input('/data/outer/some-field'),
+										group(
+											'/data/outer/inner',
+											repeat('/data/outer/inner', input('/data/outer/inner/some-field'))
+										)
+									)
+								)
+							)
+						)
+					);
+
+					scenario.createNewRepeat('/data/outer');
+					scenario.createNewRepeat('/data/outer[1]/inner');
+					scenario.createNewRepeat('/data/outer[1]/inner');
+					scenario.createNewRepeat('/data/outer[1]/inner');
+					scenario.createNewRepeat('/data/outer');
+					scenario.createNewRepeat('/data/outer[2]/inner');
+					scenario.createNewRepeat('/data/outer[2]/inner');
+
+					expect(scenario.answerOf('/data/outer[1]/inner[1]/count')).toEqualAnswer(intAnswer(3));
+					expect(scenario.answerOf('/data/outer[1]/inner[2]/count')).toEqualAnswer(intAnswer(3));
+					expect(scenario.answerOf('/data/outer[1]/inner[3]/count')).toEqualAnswer(intAnswer(3));
+					expect(scenario.answerOf('/data/outer[2]/inner[1]/count')).toEqualAnswer(intAnswer(2));
+					expect(scenario.answerOf('/data/outer[2]/inner[2]/count')).toEqualAnswer(intAnswer(2));
+				});
+			});
+
+			describe('adding repeat instance', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Failure likely due **in part** to general class of bugs where
+				 *   reactive updates don't occur until a new repeat instance is added.
+				 *
+				 * - Addressing that would only solve part of the problem (although
+				 *   would probably make this test pass), as `position()` itself does
+				 *   not yet contribute to reactive subscriptions.
+				 *
+				 * - `position()` and other sub-expressions which should update
+				 *   computations but don't directly reference a node-set notably
+				 *   **probably do not** fall into the category of "likely improved by
+				 *   decoupling from browser/XML DOM", at least without specific
+				 *   consideration.
+				 */
+				it.fails('updates reference to last instance, using position predicate', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('group jr:template=""', t('number')),
+											t('count'),
+											t('result_1'),
+											t('result_2')
+										)
+									),
+									bind('/data/group/number').type('int').required(),
+									bind('/data/count').type('int').calculate('count(/data/group)'),
+									bind('/data/result_1')
+										.type('int')
+										.calculate('10 + /data/group[position() = /data/count]/number'),
+									bind('/data/result_2')
+										.type('int')
+										.calculate('10 + /data/group[position() = count(../group)]/number')
+								)
+							),
+							body(group('/data/group', repeat('/data/group', input('/data/group/number'))))
+						)
+					);
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[1]/number');
+					scenario.answer(10);
+
+					expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(1));
+					expect(scenario.answerOf('/data/result_1')).toEqualAnswer(intAnswer(20));
+					expect(scenario.answerOf('/data/result_2')).toEqualAnswer(intAnswer(20));
+
+					scenario.next('/data/group');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/group',
+					});
+					scenario.next('/data/group[2]/number');
+					scenario.answer(20);
+
+					expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(2));
+					expect(scenario.answerOf('/data/result_1')).toEqualAnswer(intAnswer(30));
+
+					// This would fail with count(/data/group) because the absolute ref would get a multiplicity
+					expect(scenario.answerOf('/data/result_2')).toEqualAnswer(intAnswer(30));
+				});
+			});
+		});
 	});
 
 	/**

@@ -550,6 +550,16 @@ export class Scenario {
 		);
 	}
 
+	countRepeatInstancesOf(reference: string): number {
+		const node = this.getAnswerNode(reference);
+
+		if (node.nodeType !== 'repeat-range') {
+			return -1;
+		}
+
+		return node.currentState.children.length;
+	}
+
 	// TODO: consider adapting tests which use the following interfaces to use
 	// more portable concepts (either by using conceptually similar `Scenario`
 	// APIs, or by reframing the tests' logic to the same behavioral concerns with
