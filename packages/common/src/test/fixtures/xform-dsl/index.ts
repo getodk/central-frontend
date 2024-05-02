@@ -196,7 +196,7 @@ export const repeat: repeat = (ref, ...rest): XFormsElement => {
 		}
 	}
 
-	return t(`repeat nodeset="${ref}${countAttribute}"`, ...children);
+	return t(`repeat nodeset="${ref}"${countAttribute}`, ...children);
 };
 
 export const label = (innerHtml: string): XFormsElement => {
