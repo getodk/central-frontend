@@ -10,6 +10,7 @@ import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
 import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
+import type { BeginningOfFormEvent } from './event/BeginningOfFormEvent.ts';
 import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
 import type { QuestionNodeType } from './event/QuestionEvent.ts';
@@ -191,8 +192,19 @@ export class Scenario {
 		expect(question.node.currentState.reference).toBe(reference);
 	}
 
-	private assertEndOfForm(event: AnyPositionalEvent): asserts event is EndOfFormEvent {
-		expect(event.eventType).toBe('END_OF_FORM');
+	private assertTerminalEvent(
+		event: AnyPositionalEvent,
+		eventType: 'BEGINNING_OF_FORM'
+	): asserts event is BeginningOfFormEvent;
+	private assertTerminalEvent(
+		event: AnyPositionalEvent,
+		eventType: 'END_OF_FORM'
+	): asserts event is EndOfFormEvent;
+	private assertTerminalEvent(
+		event: AnyPositionalEvent,
+		eventType: 'BEGINNING_OF_FORM' | 'END_OF_FORM'
+	) {
+		expect(event.eventType).toBe(eventType);
 	}
 
 	private setNonTerminalEventPosition(
@@ -229,6 +241,31 @@ export class Scenario {
 	}
 
 	/**
+	 * @param expectReference - `'BEGINNING_OF_FORM'` may be passed if the call is
+	 * expected to advance the positional state to the beginning of the form.
+	 * (This is considered safe, albeit somewhat awkward, on the basis that it
+	 * isn't expected to be a valid XPath reference in any test fixtures.)
+	 *
+	 * @todo consider signature overload, conceptually similar to the one
+	 * introduced for {@link createNewRepeat}?
+	 */
+	prev(expectReference: string): BeginningOfFormEvent | NonTerminalPositionalEvent {
+		const decrement = (current: number): number => current - 1;
+
+		if (expectReference === 'BEGINNING_OF_FORM') {
+			this.setEventPosition(decrement);
+
+			const event = this.getSelectedPositionalEvent();
+
+			this.assertTerminalEvent(event, 'BEGINNING_OF_FORM');
+
+			return event;
+		}
+
+		return this.setNonTerminalEventPosition(decrement, expectReference);
+	}
+
+	/**
 	 * @param expectReference - `'END_OF_FORM'` may be passed if the call is
 	 * expected to advance the positional state to the end of the form. (This is
 	 * considered safe, albeit somewhat awkward, on the basis that it isn't
@@ -245,7 +282,7 @@ export class Scenario {
 
 			const event = this.getSelectedPositionalEvent();
 
-			this.assertEndOfForm(event);
+			this.assertTerminalEvent(event, 'END_OF_FORM');
 
 			return event;
 		}

@@ -1,6 +1,7 @@
 import {
 	bind,
 	body,
+	group,
 	head,
 	html,
 	input,
@@ -8,6 +9,7 @@ import {
 	model,
 	repeat,
 	setvalue,
+	setvalueLiteral,
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
@@ -1234,6 +1236,846 @@ describe('Actions/Events', () => {
 				// assertThat(deserializedAction.getName(), is(originalAction.getName()));
 				// assertThat(deserializedAction.getTargetReference(), equalTo(originalAction.getTargetReference()));
 				// Files.delete(ser);
+			});
+		});
+	});
+
+	describe('SetValueActionTest.java', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - Rephrase?
+		 *
+		 * - Typical `nullValue()` -> blank/empty string check
+		 */
+		describe('when trigger node is updated', () => {
+			it.fails("[evaluates the target node's `calculate`] calculation is evaluated", async () => {
+				const scenario = await Scenario.init(
+					'Nested setvalue action',
+					html(
+						head(
+							title('Nested setvalue action'),
+							model(
+								mainInstance(t('data id="nested-setvalue"', t('source'), t('destination'))),
+								bind('/data/source').type('int'),
+								bind('/data/destination').type('int')
+							)
+						),
+						body(
+							input('/data/source', setvalue('xforms-value-changed', '/data/destination', '4*4'))
+						)
+					)
+				);
+
+				// assertThat(scenario.answerOf("/data/destination"), is(nullValue()));
+				expect(scenario.answerOf('/data/destination').getValue()).toBe('');
+
+				scenario.next('/data/source');
+				scenario.answer(22);
+
+				expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(16));
+			});
+
+			describe('with the same value', () => {
+				it.fails(
+					"[does not evaluate the target node's `calculate`] target node calculation is not evaluated",
+					async () => {
+						const scenario = await Scenario.init(
+							'Nested setvalue action',
+							html(
+								head(
+									title('Nested setvalue action'),
+									model(
+										mainInstance(
+											t('data id="nested-setvalue"', t('source'), t('destination'), t('some-field'))
+										),
+										bind('/data/destination').type('string')
+									)
+								),
+								body(
+									input(
+										'/data/source',
+										setvalue(
+											'xforms-value-changed',
+											'/data/destination',
+											"concat('foo',/data/some-field)"
+										)
+									),
+									input('/data/some-field')
+								)
+							)
+						);
+
+						// assertThat(scenario.answerOf("/data/destination"), is(nullValue()));
+						expect(scenario.answerOf('/data/destination').getValue()).toBe('');
+
+						scenario.next('/data/source');
+						scenario.answer(22);
+
+						expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer('foo'));
+
+						scenario.next('/data/some-field');
+						scenario.answer('bar');
+
+						scenario.prev('/data/source');
+						scenario.answer(22);
+
+						expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer('foo'));
+
+						scenario.answer(23);
+
+						expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer('foobar'));
+					}
+				);
+			});
+		});
+
+		describe('`setvalue`', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Typical `nullValue()` -> blank/empty string check
+			 *
+			 * Reiterating/building on notes from previous tests:
+			 *
+			 * - Consider splitting serialization and deserialization tests. In this
+			 *   case, it's probably immaterial what the serialization is, as long as
+			 *   the deserialization produces what's expected?
+			 *
+			 * - Consider a non-stateful/value-returning alternative to serde methods.
+			 *   It's easy to miss the part of the test that's actually _under test_,
+			 *   because the assertions appear to be about `setvalue` behavior per se.
+			 */
+			it.fails('is serialized and deserialized', async () => {
+				const scenario = await Scenario.init(
+					'Nested setvalue action',
+					html(
+						head(
+							title('Nested setvalue action'),
+							model(
+								mainInstance(t('data id="nested-setvalue"', t('source'), t('destination'))),
+								bind('/data/destination').type('int')
+							)
+						),
+						body(
+							input('/data/source', setvalue('xforms-value-changed', '/data/destination', '4*4'))
+						)
+					)
+				);
+
+				await scenario.serializeAndDeserializeForm();
+
+				expect(scenario.answerOf('/data/destination').getValue()).toBe('');
+
+				scenario.next('/data/source');
+				scenario.answer(22);
+
+				expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(16));
+			});
+		});
+
+		describe('//region groups', () => {
+			describe('`setvalue` in group', () => {
+				it.fails('sets value outside of group', async () => {
+					const scenario = await Scenario.init(
+						'Setvalue',
+						html(
+							head(
+								title('Setvalue'),
+								model(
+									mainInstance(t('data id="setvalue"', t('g', t('source')), t('destination'))),
+									bind('/data/g/source').type('int'),
+									bind('/data/destination').type('int')
+								)
+							),
+							body(
+								group(
+									'/data/g',
+									input(
+										'/data/g/source',
+										setvalueLiteral('xforms-value-changed', '/data/destination', '7')
+									)
+								)
+							)
+						)
+					);
+
+					scenario.answer('/data/g/source', 'foo');
+
+					expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(7));
+				});
+			});
+
+			describe('`setvalue` outside group', () => {
+				it.fails('sets value in group', async () => {
+					const scenario = await Scenario.init(
+						'Setvalue',
+						html(
+							head(
+								title('Setvalue'),
+								model(
+									mainInstance(t('data id="setvalue"', t('source'), t('g', t('destination')))),
+									bind('/data/source').type('int'),
+									bind('/data/g/destination').type('int')
+								)
+							),
+							body(
+								input(
+									'/data/source',
+									setvalueLiteral('xforms-value-changed', '/data/g/destination', '7')
+								)
+							)
+						)
+					);
+
+					scenario.answer('/data/source', 'foo');
+
+					expect(scenario.answerOf('/data/g/destination')).toEqualAnswer(intAnswer(7));
+				});
+			});
+		});
+
+		describe('//region repeats', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Rephrase?
+			 *
+			 * - It seems helpful that earlier tests reference `setvalue` directly in
+			 *   their description. "Source" is pretty vague by contrast.
+			 *
+			 * - "Destination" -> "ref"? Less clear, it's tough to balance the value
+			 *   of precise reference to spec concepts against the value of plain
+			 *   language descriptions of a feature or aspect of its functionality.
+			 *
+			 * Typical `nullValue()` -> blank/empty string check.
+			 */
+			describe('[`setvalue`] source in repeat', () => {
+				it.fails('updates dest[ination? `ref`?] in [the] same repeat instance', async () => {
+					const scenario = await Scenario.init(
+						'Nested setvalue action with repeats',
+						html(
+							head(
+								title('Nested setvalue action with repeats'),
+								model(
+									mainInstance(
+										t(
+											'data id="nested-setvalue-repeats"',
+											t('repeat', t('source'), t('destination'))
+										)
+									),
+									bind('/data/repeat/destination').type('int')
+								)
+							),
+							body(
+								repeat(
+									'/data/repeat',
+									input(
+										'/data/repeat/source',
+										setvalue('xforms-value-changed', '/data/repeat/destination', '4*position(..)')
+									)
+								)
+							)
+						)
+					);
+
+					const REPEAT_COUNT = 5;
+
+					for (let i = 1; i <= REPEAT_COUNT; i++) {
+						scenario.createNewRepeat('/data/repeat');
+
+						// assertThat(scenario.answerOf("/data/repeat[" + i + "]/destination"), is(nullValue()));
+						expect(scenario.answerOf('/data/repeat[' + i + ']/destination').getValue()).toBe('');
+					}
+
+					for (let i = 1; i <= REPEAT_COUNT; i++) {
+						scenario.answer('/data/repeat[' + i + ']/source', 7);
+					}
+
+					for (let i = 1; i <= REPEAT_COUNT; i++) {
+						expect(scenario.answerOf('/data/repeat[' + i + ']/destination')).toEqualAnswer(
+							intAnswer(4 * i)
+						);
+					}
+				});
+			});
+
+			describe('`setvalue` at root', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - `getDisplayText` -> `getValue`
+				 *
+				 * This test's description and "act" phase are quite confusing!
+				 *
+				 * - Should adding multiple repeats have an effect on the first repeat?
+				 *   It doesn't seem like it from the form definition. It seems like the
+				 *   test is concerned with correct application of the predicate in the
+				 *   `<setvalue ref>` expression.
+				 *
+				 * - Should the same question in each subsequent repeat instance have a
+				 *   blank value assertion? That seems to be the intent, both from the
+				 *   test description and the predicate in the `<setvalue ref>`
+				 *   expression.
+				 *
+				 * Alternate test follows which seems more clear to me (which also fails
+				 * pending feature support).
+				 */
+				it.fails('sets value of node in first repeat instance', async () => {
+					const scenario = await Scenario.init(
+						'Setvalue into repeat',
+						html(
+							head(
+								title('Setvalue into repeat'),
+								model(
+									mainInstance(
+										t('data id="setvalue-into-repeat"', t('source'), t('repeat', t('destination')))
+									)
+								)
+							),
+							body(
+								input(
+									'/data/source',
+									setvalue(
+										'xforms-value-changed',
+										'/data/repeat[position()=1]/destination',
+										'/data/source'
+									)
+								),
+								repeat('/data/repeat', input('/data/repeat/destination'))
+							)
+						)
+					);
+
+					scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat('/data/repeat');
+
+					scenario.answer('/data/source', 'foo');
+
+					// assertThat(scenario.answerOf("/data/repeat[1]/destination").getDisplayText(), is("foo"));
+					expect(scenario.answerOf('/data/repeat[1]/destination').getValue()).toBe('foo');
+				});
+
+				it.fails(
+					"(alternate) sets value of node in first repeat instance, as specified in the action's predicate",
+					async () => {
+						const scenario = await Scenario.init(
+							'Setvalue into first repeat instance',
+							html(
+								head(
+									title('Setvalue into first repeat instance'),
+									model(
+										mainInstance(
+											t(
+												'data id="setvalue-into-first-repeat-instance"',
+												t('source'),
+												t('repeat', t('destination'))
+											)
+										)
+									)
+								),
+								body(
+									input(
+										'/data/source',
+										setvalue(
+											'xforms-value-changed',
+											'/data/repeat[position()=1]/destination',
+											'/data/source'
+										)
+									),
+									repeat('/data/repeat', input('/data/repeat/destination'))
+								)
+							)
+						);
+
+						scenario.createNewRepeat('/data/repeat');
+						scenario.createNewRepeat('/data/repeat');
+						scenario.createNewRepeat('/data/repeat');
+
+						expect(scenario.answerOf('/data/repeat[1]/destination').getValue()).toBe('');
+						expect(scenario.answerOf('/data/repeat[2]/destination').getValue()).toBe('');
+						expect(scenario.answerOf('/data/repeat[3]/destination').getValue()).toBe('');
+
+						scenario.answer('/data/source', 'foo');
+
+						expect(scenario.answerOf('/data/repeat[1]/destination').getValue()).toBe('foo');
+						expect(scenario.answerOf('/data/repeat[2]/destination').getValue()).toBe('');
+						expect(scenario.answerOf('/data/repeat[3]/destination').getValue()).toBe('');
+					}
+				);
+
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - `getDisplayText` -> `getValue`
+				 *
+				 * - Test is ignored in JavaRosa, with message "TODO: verifyActions
+				 *   seems like it may be overzealous". Appears to pass? Recommend
+				 *   removing the `@Ignore` flag?
+				 *
+				 * - - -
+				 *
+				 * **TODO** (notes to self, entirely meta to itself)...
+				 *
+				 *    - File issue about TODOs: potentially add TODO aging lint rule
+				 *      (for comments); investigate possibility of similar rule for
+				 *      `.todo` Vitest APIs.
+				 *
+				 *    - Issue and/or discussion: can we establish part of (my, team)
+				 *      routine/cadence to include focus on TODOs, bug bashing, general
+				 *      dedicated time for coming back to things that get put aside?
+				 */
+				it.fails('sets value of node in repeat instance added after form load', async () => {
+					const scenario = await Scenario.init(
+						'Setvalue into repeat',
+						html(
+							head(
+								title('Setvalue into repeat'),
+								model(
+									mainInstance(
+										t('data id="setvalue-into-repeat"', t('source'), t('repeat', t('destination')))
+									)
+								)
+							),
+							body(
+								input(
+									'/data/source',
+									setvalue(
+										'xforms-value-changed',
+										'/data/repeat[position()=2]/destination',
+										'/data/source'
+									)
+								),
+								repeat('/data/repeat', input('/data/repeat/destination'))
+							)
+						)
+					);
+
+					scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat('/data/repeat');
+
+					scenario.answer('/data/source', 'foo');
+
+					// assertThat(scenario.answerOf("/data/repeat[2]/destination").getDisplayText(), is("foo"));
+					expect(scenario.answerOf('/data/repeat[2]/destination').getValue()).toBe('foo');
+				});
+
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Rephrase?
+				 *
+				 * - "Produces an error" seems to better fit the anticipated use of
+				 *   Result types for fallible aspects of the engine/client interface
+				 *
+				 * - JavaRosa description references "expression" where it seems to have
+				 *   meant "exception"?
+				 */
+				it.fails(
+					'[produces an error?] throws [s/]expression[/exception/ ?] when target is [an] unbound reference',
+					async () => {
+						const scenario = await Scenario.init(
+							'Setvalue into repeat',
+							html(
+								head(
+									title('Setvalue into repeat'),
+									model(
+										mainInstance(
+											t(
+												'data id="setvalue-into-repeat"',
+												t('source'),
+												t('repeat', t('destination'))
+											)
+										)
+									)
+								),
+								body(
+									input(
+										'/data/source',
+										setvalue('xforms-value-changed', '/data/repeat/destination', '/data/source')
+									),
+									repeat('/data/repeat', input('/data/repeat/destination'))
+								)
+							)
+						);
+
+						scenario.createNewRepeat('/data/repeat');
+						scenario.createNewRepeat('/data/repeat');
+						scenario.createNewRepeat('/data/repeat');
+
+						const answer = () => {
+							scenario.answer('/data/source', 'foo');
+
+							expect.fail('Expected multiple node target to fail');
+						};
+
+						expect(answer).toThrowError('has more than one node');
+					}
+				);
+			});
+
+			describe('`setvalue` in repeat', () => {
+				it.fails('sets value outside of repeat', async () => {
+					const scenario = await Scenario.init(
+						'Nested setvalue action with repeats',
+						html(
+							head(
+								title('Nested setvalue action with repeats'),
+								model(
+									mainInstance(
+										t(
+											'data id="nested-setvalue-repeats"',
+											t('destination', '0'),
+											t('repeat', t('source'))
+										)
+									),
+									bind('/data/destination').type('int')
+								)
+							),
+							body(
+								repeat(
+									'/data/repeat',
+									input(
+										'/data/repeat/source',
+										setvalue('xforms-value-changed', '/data/destination', '.+1')
+									)
+								)
+							)
+						)
+					);
+
+					const REPEAT_COUNT = 5;
+
+					for (let i = 1; i <= REPEAT_COUNT; i++) {
+						scenario.createNewRepeat('/data/repeat');
+
+						expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(0));
+					}
+
+					for (let i = 1; i <= REPEAT_COUNT; i++) {
+						scenario.answer('/data/repeat[' + i + ']/source', 7);
+
+						expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(i));
+					}
+				});
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - `getDisplayText` -> `getValue`
+			 *
+			 * - Parameterized to use 1-based position predicates. Fails regardless,
+			 *   pending feature support.
+			 */
+			describe('`setvalue` in outer repeat', () => {
+				describe.each<PredicateOptions>([
+					{ oneBasedPositionPredicates: false },
+					{ oneBasedPositionPredicates: true },
+				])(
+					'one-based position predicates: $oneBasedPositionPredicates',
+					({ oneBasedPositionPredicates }) => {
+						it.fails('sets inner repeat value', async () => {
+							const scenario = await Scenario.init(
+								'Nested repeats',
+								html(
+									head(
+										title('Nested repeats'),
+										model(
+											mainInstance(
+												t(
+													'data id="nested-repeats"',
+													t('repeat1', t('source'), t('repeat2', t('destination')))
+												)
+											)
+										)
+									),
+									body(
+										repeat(
+											'/data/repeat1',
+											input(
+												'/data/repeat1/source',
+												setvalue(
+													'xforms-value-changed',
+													'/data/repeat1/repeat2/destination',
+													'../../source'
+												)
+											),
+											repeat('/data/repeat1/repeat2', input('/data/repeat1/repeat2/destination'))
+										)
+									)
+								)
+							);
+
+							if (oneBasedPositionPredicates) {
+								scenario.answer('/data/repeat1[1]/source', 'foo');
+
+								// assertThat(scenario.answerOf("/data/repeat1[1]/repeat2[1]/destination").getDisplayText(), is("foo"));
+								expect(
+									scenario.answerOf('/data/repeat1[1]/repeat2[1]/destination').getValue()
+								).toBe('foo');
+							} else {
+								scenario.answer('/data/repeat1[0]/source', 'foo');
+
+								// assertThat(scenario.answerOf("/data/repeat1[0]/repeat2[0]/destination").getDisplayText(), is("foo"));
+								expect(
+									scenario.answerOf('/data/repeat1[0]/repeat2[0]/destination').getValue()
+								).toBe('foo');
+							}
+						});
+					}
+				);
+			});
+		});
+
+		describe('`setvalue`', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Favor reference to `readonly` expression (vs treating it as two
+			 *   words)?
+			 *
+			 * This is captured from a Slack discussion regarding the below comments
+			 * about interactions between `setvalue`/`readonly` from JavaRosa:
+			 *
+			 * > [...JR comment...]
+			 *
+			 * I think this is wrong? I mean, the conclusion is right, actions should
+			 * be able to affect a `readonly` field's value (just as `calculate` can).
+			 * But from my understanding reading the spec, I really don't think
+			 * `readonly` is a display-only concern:
+			 *
+			 * - ODK spec defers entirely to W3C
+			 *
+			 * - W3C specifically details non-display write restrictions, and _then_
+			 *   calls out display implications as a display/UI hint ("in
+			 *   addition...")
+			 *
+			 * - The basis for `calculate` is pretty much implicit in the spec text,
+			 *   but the intent is clear. I think that could be a more reasonable
+			 *   basis to explain that `setvalue` (or actions generally) can write to
+			 *   a `readonly` field?
+			 *
+			 * - - -
+			 *
+			 * JR:
+			 *
+			 * Read-only is a display-only concern so it should be possible to use an
+			 * action to modify the value of a read-only field.
+			 */
+			it.fails('sets value of [`readonly`] read-only field', async () => {
+				const scenario = await Scenario.init(
+					'Setvalue readonly',
+					html(
+						head(
+							title('Setvalue readonly'),
+							model(
+								mainInstance(t('data id="setvalue-readonly"', t('readonly-field'))),
+								bind('/data/readonly-field').readonly('1').type('int'),
+								setvalue('odk-instance-first-load', '/data/readonly-field', '4*4')
+							)
+						),
+						body(input('/data/readonly-field'))
+					)
+				);
+
+				expect(scenario.answerOf('/data/readonly-field')).toEqualAnswer(intAnswer(16));
+			});
+
+			describe('with inner empty string', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Rephrase?
+				 *
+				 * - Typical `nullValue()` -> blank/empty string check.
+				 */
+				it.fails('clears [the `ref`] target', async () => {
+					const scenario = await Scenario.init(
+						'Setvalue empty string',
+						html(
+							head(
+								title('Setvalue empty string'),
+								model(
+									mainInstance(t('data id="setvalue-empty-string"', t('a-field', '12'))),
+									bind('/data/a-field').type('int'),
+									setvalue('odk-instance-first-load', '/data/a-field')
+								)
+							),
+							body(input('/data/a-field'))
+						)
+					);
+
+					// assertThat(scenario.answerOf("/data/a-field"), is(nullValue()));
+					expect(scenario.answerOf('/data/a-field').getValue()).toBe('');
+				});
+			});
+
+			describe('with empty string `value` [attribute]', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Rephrase?
+				 *
+				 * - Typical `nullValue()` -> blank/empty string check.
+				 */
+				it.fails('clears [the `ref`] target', async () => {
+					const scenario = await Scenario.init(
+						'Setvalue empty string',
+						html(
+							head(
+								title('Setvalue empty string'),
+								model(
+									mainInstance(t('data id="setvalue-empty-string"', t('a-field', '12'))),
+									bind('/data/a-field').type('int'),
+									setvalue('odk-instance-first-load', '/data/a-field', '')
+								)
+							),
+							body(input('/data/a-field'))
+						)
+					);
+
+					// assertThat(scenario.answerOf("/data/a-field"), is(nullValue()));
+					expect(scenario.answerOf('/data/a-field').getValue()).toBe('');
+				});
+			});
+
+			it.fails('sets [the] value of multiple fields', async () => {
+				const scenario = await Scenario.init(
+					'Setvalue multiple destinations',
+					html(
+						head(
+							title('Setvalue multiple destinations'),
+							model(
+								mainInstance(
+									t(
+										'data id="setvalue-multiple"',
+										t('source'),
+										t('destination1'),
+										t('destination2')
+									)
+								),
+								bind('/data/destination1').type('int'),
+								bind('/data/destination2').type('int')
+							)
+						),
+						body(
+							input(
+								'/data/source',
+								setvalueLiteral('xforms-value-changed', '/data/destination1', '7'),
+								setvalueLiteral('xforms-value-changed', '/data/destination2', '11')
+							)
+						)
+					)
+				);
+
+				scenario.answer('/data/source', 'foo');
+
+				expect(scenario.answerOf('/data/destination1')).toEqualAnswer(intAnswer(7));
+				expect(scenario.answerOf('/data/destination2')).toEqualAnswer(intAnswer(11));
+			});
+		});
+
+		describe('`xforms-value-changed`', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Rephrase?
+			 */
+			it.fails('[is] triggered after a [value change] recompute', async () => {
+				const scenario = await Scenario.init(
+					'xforms-value-changed-event',
+					html(
+						head(
+							title('Value changed event'),
+							model(
+								mainInstance(
+									t(
+										'data id="xforms-value-changed-event"',
+										t('source'),
+										t('calculate'),
+										t('destination')
+									)
+								),
+								bind('/data/calculate').type('int').calculate('/data/source * 2'),
+								bind('/data/destination').type('int')
+							)
+						),
+						body(
+							input(
+								'/data/source',
+								setvalue('xforms-value-changed', '/data/destination', '/data/calculate')
+							)
+						)
+					)
+				);
+
+				scenario.answer('/data/source', 12);
+
+				expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(24));
+			});
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - While it might make sense to merge these with the earlier `setvalue`
+		 *   sub-suite, they're both concerned with attribute bindings. Perhaps
+		 *   better to rephrase the grouping to make that fact more prominent?
+		 *
+		 * - Note that these are expected to fail both on current lack of support
+		 *   for actions/events, **as well** as current lack of support for
+		 *   attribute bindings more generally. (In fact, the first presently fails
+		 *   for the latter reason, before it can check the affected node's value.)
+		 *
+		 * - Typical `getDisplayText` -> `getValue`
+		 */
+		describe('`setvalue`', () => {
+			it.fails('sets [the] value of [a bound] attribute', async () => {
+				const scenario = await Scenario.init(
+					'Setvalue attribute',
+					html(
+						head(
+							title('Setvalue attribute'),
+							model(
+								mainInstance(t('data id="setvalue-attribute"', t('element attr=""'))),
+								setvalue('odk-instance-first-load', '/data/element/@attr', '7')
+							)
+						),
+						body(input('/data/element'))
+					)
+				);
+
+				// assertThat(scenario.answerOf("/data/element/@attr").getDisplayText(), is("7"));
+				expect(scenario.answerOf('/data/element/@attr').getValue()).toBe('7');
+			});
+
+			it.fails('sets [the] value of [a bound] attribute, after deserializatin', async () => {
+				const scenario = await Scenario.init(
+					'Setvalue attribute',
+					html(
+						head(
+							title('Setvalue attribute'),
+							model(
+								mainInstance(t('data id="setvalue-attribute"', t('element attr=""'))),
+								setvalue('odk-instance-first-load', '/data/element/@attr', '7')
+							)
+						),
+						body(input('/data/element'))
+					)
+				);
+
+				// assertThat(scenario.answerOf("/data/element/@attr").getDisplayText(), is("7"));
+				expect(scenario.answerOf('/data/element/@attr').getValue()).toBe('7');
+
+				const cached = await scenario.serializeAndDeserializeForm();
+
+				await cached.newInstance();
+
+				// assertThat(cached.answerOf("/data/element/@attr").getDisplayText(), is("7"));
+				expect(cached.answerOf('/data/element/@attr').getValue()).toBe('7');
 			});
 		});
 	});
