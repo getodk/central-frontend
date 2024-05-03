@@ -23,6 +23,7 @@ import {
 } from './event/getPositionalEvents.ts';
 import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
 import { JRFormDef } from './form/JRFormDef.ts';
+import { JRFormIndex } from './form/JRFormIndex.ts';
 import { TreeReference } from './instance/TreeReference.ts';
 import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
@@ -305,7 +306,7 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(() => index, reference);
 	}
 
-	private answerSelect(reference: string, ...selectionValues: string[]): unknown {
+	private answerSelect(reference: string, ...selectionValues: string[]): ComparableAnswer {
 		const event = this.setPositionalStateToReference(reference);
 
 		if (!isQuestionEventOfType(event, 'select')) {
@@ -355,9 +356,7 @@ export class Scenario {
 			throw new Error(`Cannot answer question of type ${event.node.definition.type}`);
 		}
 
-		event.answerQuestion(value);
-
-		return;
+		return event.answerQuestion(value);
 	}
 
 	answerOf(reference: string): ComparableAnswer {
@@ -634,6 +633,20 @@ export class Scenario {
 	expandSingle(_treeReference: JRTreeReference): JRTreeReference {
 		throw new UnclearApplicabilityError('XPath internals');
 	}
+
+	/**
+	 * @todo Mark deprecated?
+	 */
+	getCurrentIndex(): JRFormIndex {
+		return new JRFormIndex(this.getSelectedPositionalEvent());
+	}
+
+	/**
+	 * @todo Mark deprecated?
+	 */
+	async serializeAndDeserializeInstance(form: XFormsElement): Promise<Scenario> {
+		return Scenario.init(form.getName(), form);
+	}
 }
 
 /**
@@ -645,3 +658,13 @@ export class Scenario {
 export const getRef = (xpathReference: string): JRTreeReference => {
 	return new JRTreeReference(xpathReference);
 };
+
+const ANSWER_RESULT_OK = 'OK';
+const ANSWER_RESULT_REQUIRED_BUT_EMPTY = 'REQUIRED_BUT_EMPTY';
+const ANSWER_RESULT_CONSTRAINT_VIOLATED = 'CONSTRAINT_VIOLATED';
+
+export enum AnswerResult {
+	OK = ANSWER_RESULT_OK,
+	REQUIRED_BUT_EMPTY = ANSWER_RESULT_REQUIRED_BUT_EMPTY,
+	CONSTRAINT_VIOLATED = ANSWER_RESULT_CONSTRAINT_VIOLATED,
+}

@@ -1,6 +1,13 @@
 import { FormDefinitionResource } from './FormDefinitionResource.ts';
 
-const resourcesByPath = import.meta.glob('../../../resources/**/*.xml', {
+/**
+ * **PORTING NOTES**
+ *
+ * One fixture has a `.xhtml` suffix. From discussion, it seems there's no
+ * meaning behind this. We should consider renaming it (in both JavaRosa and web
+ * forms) to have a `.xml` suffix for consistency with other form fixtures.
+ */
+const resourcesByPath = import.meta.glob('../../../resources/**/*.{xhtml,xml}', {
 	as: 'raw',
 	eager: true,
 });

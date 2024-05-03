@@ -22,7 +22,7 @@ export abstract class QuestionEvent<
 
 	abstract getAnswer(): ComparableAnswer;
 
-	abstract answerQuestion(answerValue: unknown): string;
+	abstract answerQuestion(answerValue: unknown): ComparableAnswer;
 }
 
 export type AnyQuestionEvent = QuestionEvent<QuestionNodeType>;
