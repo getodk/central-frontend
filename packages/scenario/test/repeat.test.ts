@@ -19,6 +19,7 @@ import { booleanAnswer } from '../src/answer/ExpectedBooleanAnswer.ts';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
+import type { JRFormDef } from '../src/jr/form/JRFormDef.ts';
 
 /**
  * This is **not** intended to be a general purpose `range` implementation.
@@ -2184,5 +2185,117 @@ describe('Tests ported from JavaRosa - repeats', () => {
 		 * repeat. We currently maintain this behavior for legacy purposes.
 		 */
 		describe.skip('absoluteSingleNodePaths_areQualified_forLegacyPurposes');
+	});
+
+	describe('FormDefTest.java', () => {
+		describe('`canCreateRepeat`', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Fails on call to {@link JRFormDef.deleteRepeat}, as we don't
+			 *   anticipate support for an equivalent interface. An alternate approach
+			 *   to this test follows (which will also fail initially, as we neither
+			 *   support `jr:count` nor provide an API for determining whether
+			 *   creating an instance of a particular repeat range, as invoked by a
+			 *   client, is permitted).
+			 *
+			 * - Not specific to this test, in fact probably applicable to a majority
+			 *   of tests: we should really consider doing a pass to better align form
+			 *   fixtures' titles/primary instance ids with some aspect of the test
+			 *   itself. In most cases, the fixtures' title/id are just not very
+			 *   useful (I see 120 hits for "Some form" as I write this). In a few,
+			 *   like this one, the title/id is clearly a product of copypasta from a
+			 *   test of very different functionality. The latter is worth correcting
+			 *   in its own right; the former would be worth correcting if/as we
+			 *   consider how we might automate making the `scenario` package's test
+			 *   fixtures available in a UI client (or other interactive, inspectable,
+			 *   and/or debuggable scenarios).
+			 */
+			it.fails(
+				'returns false when repeat count [is defined] set, but the group it belongs to does not exist',
+				async () => {
+					const scenario = await Scenario.init(
+						'Nested repeat relevance',
+						html(
+							head(
+								title('Nested repeat relevance'),
+								model(
+									mainInstance(
+										t(
+											'data id="nested-repeat-relevance"',
+											t('outer', t('inner_count'), t('inner', t('question')))
+										)
+									),
+									bind('/data/outer/inner_count').type('string').calculate('5')
+								)
+							),
+							body(
+								repeat(
+									'/data/outer',
+									repeat(
+										'/data/outer/inner',
+										'/data/outer/inner_count',
+										input('/data/outer/inner/question')
+									)
+								)
+							)
+						)
+					);
+
+					scenario.next('/data/outer[1]');
+
+					const outerGroupIndex = scenario.getCurrentIndex();
+
+					scenario.next('/data/outer[1]/inner[1]');
+
+					const innerGroupRef = scenario.refAtIndex();
+					const index = scenario.getCurrentIndex();
+
+					const formDef = scenario.getFormDef();
+
+					formDef.deleteRepeat(outerGroupIndex);
+
+					expect(formDef.canCreateRepeat(innerGroupRef, index)).toBe(false);
+				}
+			);
+
+			it.fails(
+				'does not permit creating a repeat instance of a repeat range which does not exist (alternate)',
+				async () => {
+					const scenario = await Scenario.init(
+						'Nested repeat relevance',
+						html(
+							head(
+								title('Nested repeat relevance'),
+								model(
+									mainInstance(
+										t(
+											'data id="nested-repeat-relevance"',
+											t('outer', t('inner_count'), t('inner', t('question')))
+										)
+									),
+									bind('/data/outer/inner_count').type('string').calculate('5')
+								)
+							),
+							body(
+								repeat(
+									'/data/outer',
+									repeat(
+										'/data/outer/inner',
+										'/data/outer/inner_count',
+										input('/data/outer/inner/question')
+									)
+								)
+							)
+						)
+					);
+
+					scenario.next('/data/outer[1]');
+					scenario.removeRepeat('/data/outer[1]');
+
+					expect(scenario.proposed_canCreateNewRepeat('/data/outer[1]/inner')).toBe(false);
+				}
+			);
+		});
 	});
 });

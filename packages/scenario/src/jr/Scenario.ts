@@ -9,6 +9,7 @@ import { answerOf } from '../client/answerOf.ts';
 import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
 import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
+import { ImplementationPendingError } from '../error/ImplementationPendingError.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
 import type { BeginningOfFormEvent } from './event/BeginningOfFormEvent.ts';
 import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
@@ -604,6 +605,30 @@ export class Scenario {
 		const event = this.getSelectedPositionalEvent();
 
 		return event.eventType === 'END_OF_FORM';
+	}
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * This method is proposed as an alternative to
+	 * {@link JRFormDef.canCreateRepeat}, intended to be roughly equivalent in
+	 * semantics without reliance on several aspects of JavaRosa internal APIs.
+	 * The intent is that we might share test logic with JavaRosa exercising the
+	 * question "can I create a repeat instance in this specified
+	 * range/sequence/series?"
+	 */
+	proposed_canCreateNewRepeat(repeatRangeReference: string): boolean {
+		const node = getNodeForReference(this.instanceRoot, repeatRangeReference);
+
+		if (node != null && node.nodeType !== 'repeat-range') {
+			throw new Error(
+				`Expected a repeat range with reference ${repeatRangeReference}, found a node of type ${node.nodeType}`
+			);
+		}
+
+		throw new ImplementationPendingError(
+			'determining whether or not a repeat range supports client-invoked addition of repeat instances'
+		);
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use
