@@ -514,5 +514,48 @@ describe('Interaction between `<repeat>` and `relevant`', () => {
 				expect(scenario.refAtIndex()).toEqualTreeReference(getRef('/data/outer[1]/inner[1]'));
 			});
 		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - Rephrase?
+		 *
+		 * - This seems to be testing implementation detail of the `FormDef`
+		 *   interface itself. We do not have an equivalent for determining
+		 *   [non-]relevance of a node that doesn't even exist. It's unclear
+		 *   whether/why we would want to implement that.
+		 */
+		describe('inner repeat [~~]group[~~]', () => {
+			it.fails(
+				'is [non-relevant] irrelevant when its parent repeat [~~]group[~~] does not exist',
+				async () => {
+					const scenario = await Scenario.init(
+						'Nested repeat relevance',
+						html(
+							head(
+								title('Nested repeat relevance'),
+								model(
+									mainInstance(
+										t('data id="nested-repeat-relevance"', t('outer', t('inner', t('q1'))))
+									)
+								)
+							),
+							body(
+								repeat('/data/outer', repeat('/data/outer/inner', input('/data/outer/inner/q1')))
+							)
+						)
+					);
+
+					const formDef = scenario.getFormDef();
+
+					// JR:
+					//
+					// outer[2] does not exist at this moment, we only have outer[1].
+					// Checking if its inner repeat group is relevant should be possible
+					// and return false.
+					expect(formDef.isRepeatRelevant(getRef('/data/outer[2]/inner[1]'))).toBe(false);
+				}
+			);
+		});
 	});
 });
