@@ -203,6 +203,27 @@ export const label = (innerHtml: string): XFormsElement => {
 	return new StringLiteralXFormsElement('label', emptyMap(), innerHtml);
 };
 
+/**
+ * **PORTING NOTES**
+ *
+ * Since:
+ *
+ * 1. {@link label} does not support a `ref` attribute in its ported signature
+ * 2. I'm reticent to add new cases of signature overloading
+ * 3. I do not see any test cases in JavaRosa using both the form definition DSL
+ *    with a structure like `<input><label ref="jr:itext(...)"/></input>`
+ * 4. I'm adding an alternate approach to an existing test which I believe
+ *    **should** use that structure...
+ *
+ * This is a proposed addition to the DSL. Its name is intended to invoke the
+ * resulting structure (keeping it relatively close to the XML it produces),
+ * without introducing ambiguity about whether its {@link ref} parameter should
+ * fully specify the contents of a label's `ref` attribute (it should).
+ */
+export const labelRef = (ref: string) => {
+	return new TagXFormsElement('label', new Map([['ref', ref]]), []);
+}
+
 export const item = (value: Int | string, label: string): XFormsElement => {
 	return t('item', t('label', label), t('value', String(value)));
 };
