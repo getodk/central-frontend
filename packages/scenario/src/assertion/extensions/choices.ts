@@ -1,6 +1,6 @@
 import type {
+	CustomInspectable,
 	DeriveStaticVitestExpectExtension,
-	Inspectable,
 } from '@getodk/common/test/assertions/helpers.ts';
 import {
 	AsymmetricTypedExpectExtension,
@@ -27,7 +27,7 @@ const mapChoices = <Key extends keyof ComparableChoice>(
 	return Array.from(choices).map((choice) => choice[key]);
 };
 
-class InspectableChoices implements Inspectable {
+class InspectableChoices implements CustomInspectable {
 	readonly choices: readonly ComparableChoice[];
 
 	constructor(choices: SelectChoices) {

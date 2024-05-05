@@ -1,3 +1,4 @@
+import { inspect } from './inspect.ts';
 import type { Inspectable } from './shared-extension-types.ts';
 
 interface InspectableComparisonErrorOptions {
@@ -25,10 +26,10 @@ export class InspectableComparisonError extends Error {
 
 		const messageParts = [
 			'Expected',
-			JSON.stringify(actual.inspectValue()),
+			inspect(actual),
 			'to',
 			comparisonVerb,
-			JSON.stringify(expected.inspectValue()),
+			inspect(expected),
 			comparisonQualifier,
 			details,
 		].filter((value): value is string => typeof value === 'string');

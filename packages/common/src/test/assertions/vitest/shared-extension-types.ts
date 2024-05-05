@@ -1,12 +1,15 @@
 import type { SyncExpectationResult } from 'vitest';
 import type { JSONValue } from '../../../../types/JSONValue.ts';
+import type { Primitive } from '../../../../types/Primitive.ts';
 import type { AsymmetricTypedExpectExtension } from './AsymmetricTypedExpectExtension.ts';
 import type { StaticConditionExpectExtension } from './StaticConditionExpectExtension.ts';
 import type { SymmetricTypedExpectExtension } from './SymmetricTypedExpectExtension.ts';
 
-export interface Inspectable {
+export interface CustomInspectable {
 	inspectValue(): JSONValue;
 }
+
+export type Inspectable = CustomInspectable | Primitive;
 
 export interface ErrorLike {
 	readonly message: string;

@@ -1,11 +1,11 @@
-import type { Inspectable } from '@getodk/common/test/assertions/helpers.ts';
+import type { CustomInspectable } from '@getodk/common/test/assertions/helpers.ts';
 import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
 
 /**
  * @todo Hopefully we can keep this interface extremely minimal. It currently
  * exists only to allow tests calling into it to type check.
  */
-export class JRTreeReference implements Inspectable {
+export class JRTreeReference implements CustomInspectable {
 	constructor(readonly xpathReference: string) {}
 
 	inspectValue(): JSONValue {

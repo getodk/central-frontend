@@ -1,4 +1,5 @@
 import type { JSONValue } from '../../../../types/JSONValue.ts';
+import { inspect } from './inspect.ts';
 import type { Inspectable } from './shared-extension-types.ts';
 
 interface InspectableStaticConditionErrorOptions {
@@ -15,7 +16,7 @@ export class InspectableStaticConditionError extends Error {
 
 		const messageParts = [
 			'Expected',
-			JSON.stringify(actual.inspectValue()),
+			inspect(actual),
 			'to equal',
 			JSON.stringify(expectedCondition),
 			details,

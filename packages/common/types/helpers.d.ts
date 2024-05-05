@@ -37,3 +37,9 @@ export type ShallowMutable<T extends object> = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ConstructorOf<T> = abstract new (...args: any[]) => T;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyConstructor = ConstructorOf<any>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyFunction = (this: any, ...args: any[]) => any;
