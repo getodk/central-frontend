@@ -1,10 +1,11 @@
 import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
 import {
 	AsymmetricTypedExpectExtension,
-	extendExpect,
 	InspectableComparisonError,
-	instanceAssertion,
 	SymmetricTypedExpectExtension,
+	extendExpect,
+	instanceAssertion,
+	typeofAssertion,
 } from '@getodk/common/test/assertions/helpers.ts';
 import { expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
@@ -12,6 +13,8 @@ import { AnswerResult } from '../../jr/Scenario.ts';
 import { ValidationImplementationPendingError } from '../../jr/validation/ValidationImplementationPendingError.ts';
 
 const assertComparableAnswer = instanceAssertion(ComparableAnswer);
+
+const assertString = typeofAssertion('string');
 
 type AssertAnswerResult = (value: unknown) => asserts value is AnswerResult;
 
@@ -54,6 +57,30 @@ const answerExtensions = extendExpect(expect, {
 		assertAnswerResult,
 		(_actual, _expected) => {
 			return new ValidationImplementationPendingError();
+		}
+	),
+
+	/**
+	 * Asserts that the `actual` {@link ComparableAnswer} has a string value which
+	 * starts with the `expected` string.
+	 *
+	 * **PORTING NOTES**
+	 *
+	 * Consider other names? This is specifically concerned with asserting that
+	 * the string value of an answer starts with the provided string. The name
+	 * suggests something more general. Any answer-specific naming I could think
+	 * of felt more awkward at the call site.
+	 *
+	 * We could also consider making this a more general string comparison
+	 * assertion (I was surprised one didn't already exist!).
+	 */
+	toStartWith: new AsymmetricTypedExpectExtension(
+		assertComparableAnswer,
+		assertString,
+		(actual, expected) => {
+			const pass = actual.toString().startsWith(expected);
+
+			return pass || new InspectableComparisonError(actual, expected, 'start with');
 		}
 	),
 });
