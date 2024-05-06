@@ -2425,4 +2425,444 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			expect(scenario.answerOf('/data/some-group/last-value')).toEqualAnswer(intAnswer(33));
 		});
 	});
+
+	describe('TriggersForRelativeRefsTest.java (regression tests)', () => {
+		describe('indefinite repeat `jr:count` expression', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Rephrase?
+			 *
+			 *     - The word "single" here seems to be referencing depth, not total
+			 *       count of repeat instnaces.
+			 *
+			 *     - The phrase "until condition met" is confusing: the condition is
+			 *       an `if` predicate in the `jr:count` expression. It's not clear
+			 *       how this could be better conveyed in a test description, but my
+			 *       main concern is that I'd probably find it difficult to discover
+			 *       this test if I were looking.
+			 *
+			 * - Test fails pending `jr:count` feature support.
+			 *
+			 * - When we do get around to repeat count functionality, it seems highly
+			 *   likely our positional event filtering will need to skip
+			 *   count-controlled repeat "prompts", given the sequence of `next` calls
+			 *   and the apparent references they should correspond to.
+			 */
+			describe('in single[-depth] repeat', () => {
+				it.fails('adds repeats until condition met', async () => {
+					const scenario = await Scenario.init(
+						'indefinite repeat',
+						html(
+							head(
+								title('Indefinite repeat'),
+								model(
+									mainInstance(
+										t(
+											'data id="indefinite-repeat"',
+											t('count'),
+											t('target_count'),
+											t('repeat', t('add_more'))
+										)
+									),
+									bind('/data/count').type('int').calculate('count(/data/repeat)'),
+									bind('/data/target_count')
+										.type('int')
+										.calculate(
+											"if(/data/count = 0 or /data/repeat[position()=/data/count]/add_more = 'yes', /data/count + 1, /data/count)"
+										),
+									bind('/data/repeat/add_more').type('string')
+								)
+							),
+							body(repeat('/data/repeat', '/data/target_count', input('/data/repeat/add_more')))
+						)
+					);
+
+					scenario.next('/data/repeat[1]');
+					scenario.next('/data/repeat[1]/add_more');
+					scenario.answer('yes');
+					scenario.next('/data/repeat[2]');
+					scenario.next('/data/repeat[2]/add_more');
+					scenario.answer('yes');
+					scenario.next('/data/repeat[3]');
+					scenario.next('/data/repeat[3]/add_more');
+					scenario.answer('no');
+					scenario.next('END_OF_FORM');
+
+					expect(scenario.atTheEndOfForm()).toBe(true);
+				});
+			});
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * All of the same notes from the previous (single-depth) test apply to
+			 * these, other than commentary about "single" phrasing.
+			 */
+			describe('in nested repeat', () => {
+				it.fails('adds repeats until condition met', async () => {
+					const scenario = await Scenario.init(
+						'nested indefinite repeat',
+						html(
+							head(
+								title('Indefinite repeat in nested repeat'),
+								model(
+									mainInstance(
+										t(
+											'data id="indefinite-nested-repeat"',
+											t(
+												'outer_repeat',
+												t('inner_count'),
+												t('target_count'),
+												t('inner_repeat', t('add_more'))
+											)
+										)
+									),
+									bind('/data/outer_repeat/inner_count')
+										.type('int')
+										.calculate('count(/data/outer_repeat/inner_repeat)'),
+									bind('/data/outer_repeat/target_count')
+										.type('int')
+										.calculate(
+											'if(/data/outer_repeat/inner_count = 0' +
+												"or /data/outer_repeat/inner_repeat[position() = /data/outer_repeat/inner_count]/add_more = 'yes', " +
+												'/data/outer_repeat/inner_count + 1, /data/outer_repeat/inner_count)'
+										)
+								)
+							),
+							body(
+								repeat(
+									'/data/outer_repeat',
+									repeat(
+										'/data/outer_repeat/inner_repeat',
+										'target_count',
+										input('/data/outer_repeat/inner_repeat/add_more')
+									)
+								)
+							)
+						)
+					);
+
+					scenario.next('/data/outer_repeat[1]');
+					scenario.next('/data/outer_repeat[1]/inner_repeat[1]');
+					scenario.next('/data/outer_repeat[1]/inner_repeat[1]/add_more');
+					scenario.answer('yes');
+					scenario.next('/data/outer_repeat[1]/inner_repeat[2]');
+					scenario.next('/data/outer_repeat[1]/inner_repeat[2]/add_more');
+					scenario.answer('yes');
+					scenario.next('/data/outer_repeat[1]/inner_repeat[3]');
+					scenario.next('/data/outer_repeat[1]/inner_repeat[3]/add_more');
+					scenario.answer('no');
+					scenario.next('/data/outer_repeat');
+					scenario.createNewRepeat({
+						assertCurrentReference: '/data/outer_repeat',
+					});
+					scenario.next('/data/outer_repeat[2]/inner_repeat[1]');
+					scenario.next('/data/outer_repeat[2]/inner_repeat[1]/add_more');
+					scenario.answer('yes');
+					scenario.next('/data/outer_repeat[2]/inner_repeat[2]');
+					scenario.next('/data/outer_repeat[2]/inner_repeat[2]/add_more');
+					scenario.answer('no');
+					scenario.next('/data/outer_repeat');
+					scenario.next('END_OF_FORM');
+
+					expect(scenario.atTheEndOfForm()).toBe(true);
+				});
+
+				describe('with relative paths', () => {
+					it.fails('adds repeats until condition met', async () => {
+						const scenario = await Scenario.init(
+							'nested indefinite repeat',
+							html(
+								head(
+									title('Indefinite repeat in nested repeat'),
+									model(
+										mainInstance(
+											t(
+												'data id="indefinite-nested-repeat"',
+												t(
+													'outer_repeat',
+													t('inner_count'),
+													t('target_count'),
+													t('inner_repeat', t('add_more'))
+												)
+											)
+										),
+										bind('/data/outer_repeat/inner_count')
+											.type('int')
+											.calculate('count(../inner_repeat)'),
+										bind('/data/outer_repeat/target_count')
+											.type('int')
+											.calculate(
+												'if(../inner_count = 0' +
+													"or ../inner_repeat[position() = ../inner_count]/add_more = 'yes', " +
+													'../inner_count + 1, ../inner_count)'
+											)
+									)
+								),
+								body(
+									repeat(
+										'/data/outer_repeat',
+										repeat(
+											'/data/outer_repeat/inner_repeat',
+											'target_count',
+											input('/data/outer_repeat/inner_repeat/add_more')
+										)
+									)
+								)
+							)
+						);
+
+						scenario.next('/data/outer_repeat[1]');
+						scenario.next('/data/outer_repeat[1]/inner_repeat[1]');
+						scenario.next('/data/outer_repeat[1]/inner_repeat[1]/add_more');
+						scenario.answer('yes');
+						scenario.next('/data/outer_repeat[1]/inner_repeat[2]');
+						scenario.next('/data/outer_repeat[1]/inner_repeat[2]/add_more');
+						scenario.answer('yes');
+						scenario.next('/data/outer_repeat[1]/inner_repeat[3]');
+						scenario.next('/data/outer_repeat[1]/inner_repeat[3]/add_more');
+						scenario.answer('no');
+						scenario.next('/data/outer_repeat');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/outer_repeat',
+						});
+						scenario.next('/data/outer_repeat[2]/inner_repeat[1]');
+						scenario.next('/data/outer_repeat[2]/inner_repeat[1]/add_more');
+						scenario.answer('yes');
+						scenario.next('/data/outer_repeat[2]/inner_repeat[2]');
+						scenario.next('/data/outer_repeat[2]/inner_repeat[2]/add_more');
+						scenario.answer('no');
+						scenario.next('/data/outer_repeat');
+						scenario.next('END_OF_FORM');
+
+						expect(scenario.atTheEndOfForm()).toBe(true);
+					});
+				});
+			});
+		});
+
+		interface RepeatPositionOptions {
+			readonly addExplicitRepeatPositionPredicate: boolean;
+		}
+
+		describe('predicate with relative path expression', () => {
+			describe.each<RepeatPositionOptions>([
+				{ addExplicitRepeatPositionPredicate: false },
+				{ addExplicitRepeatPositionPredicate: true },
+			])(
+				'add explicit repeat position predicate: $addExplicitRepeatPositionPredicate',
+				({ addExplicitRepeatPositionPredicate }) => {
+					/**
+					 * **PORTING NOTES**
+					 *
+					 * - Fails in direct port due to lack of position predicates in each
+					 *   reference to `outer_repeat`
+					 *
+					 * - Fails with parameterized option to make the position explicit, on
+					 *   assertion of `0` value: current implementation of XPath `sum`
+					 *   produces `NaN` when applied to an empty node-set (which is a bug).
+					 */
+					it.fails('[is] reevaluated when trigger[dependency?] changes', async () => {
+						const scenario = await Scenario.init(
+							'Predicate trigger',
+							html(
+								head(
+									title('Predicate trigger'),
+									model(
+										mainInstance(
+											t(
+												'data id="predicate-trigger"',
+												t(
+													'outer_repeat',
+													t('cutoff_number'),
+													t('inner_repeat', t('number', '1')),
+													t('inner_repeat', t('number', '2')),
+													t('inner_repeat', t('number', '3')),
+													t('inner_repeat', t('number', '4')),
+													t('inner_repeat', t('number', '5')),
+													t('inner_repeat', t('number', '6')),
+													t('sum')
+												)
+											)
+										),
+										bind('/data/outer_repeat/cutoff_number').type('int'),
+										bind('/data/outer_repeat/inner_repeat/number').type('int'),
+										bind('/data/outer_repeat/sum')
+											.type('int')
+											.calculate('sum(../inner_repeat[number > ../cutoff_number]/number)')
+									)
+								),
+								body(
+									repeat(
+										'/data/outer_repeat',
+										input('/data/outer_repeat/cutoff_number'),
+										repeat(
+											'/data/outer_repeat/inner_repeat',
+											input('/data/outer_repeat/inner_repeat/number')
+										)
+									)
+								)
+							)
+						);
+
+						if (addExplicitRepeatPositionPredicate) {
+							scenario.answer('/data/outer_repeat[1]/cutoff_number', 3);
+						} else {
+							scenario.answer('/data/outer_repeat/cutoff_number', 3);
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							expect(scenario.answerOf('/data/outer_repeat[1]/sum')).toEqualAnswer(intAnswer(15));
+						} else {
+							expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(15));
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							scenario.answer('/data/outer_repeat[1]/cutoff_number', 7);
+						} else {
+							scenario.answer('/data/outer_repeat/cutoff_number', 7);
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							expect(scenario.answerOf('/data/outer_repeat[1]/sum')).toEqualAnswer(intAnswer(0));
+						} else {
+							expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(0));
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							scenario.answer('/data/outer_repeat[1]/cutoff_number', -11);
+						} else {
+							scenario.answer('/data/outer_repeat/cutoff_number', -11);
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							expect(scenario.answerOf('/data/outer_repeat[1]/sum')).toEqualAnswer(intAnswer(21));
+						} else {
+							expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(21));
+						}
+					});
+				}
+			);
+		});
+
+		describe('predicate with `current()` path expression', () => {
+			describe.each<RepeatPositionOptions>([
+				{ addExplicitRepeatPositionPredicate: false },
+				{ addExplicitRepeatPositionPredicate: true },
+			])(
+				'add explicit repeat position predicate: $addExplicitRepeatPositionPredicate',
+				({ addExplicitRepeatPositionPredicate }) => {
+					/**
+					 * **PORTING NOTES**
+					 *
+					 * - Fails in direct port due to lack of position predicates in each
+					 *   reference to `outer_repeat` and `inner_repeat`
+					 *
+					 * - Fails with parameterized option to make the positions explicit,
+					 *   likely due to failure to handle `current()` in dependency analysis.
+					 *   The `calculate` expression behaves as expected with whatever
+					 *   initial value is present, but doesn't reactively update afterward.
+					 */
+					it.fails('[is] reevaluated when trigger[dependency?] changes', async () => {
+						const scenario = await Scenario.init(
+							'Predicate trigger',
+							html(
+								head(
+									title('Predicate trigger'),
+									model(
+										mainInstance(
+											t(
+												'data id="predicate-trigger"',
+												t(
+													'outer_repeat',
+													t('cutoff_number'),
+
+													t('inner_repeat', t('foo'), t('join'))
+												)
+											)
+										),
+										t(
+											'instance id="dataset"',
+											t(
+												'root',
+												t('item', t('name', 'Item1'), t('value', '1')),
+												t('item', t('name', 'Item2'), t('value', '2')),
+												t('item', t('name', 'Item3'), t('value', '3')),
+												t('item', t('name', 'Item4'), t('value', '4')),
+												t('item', t('name', 'Item5'), t('value', '5'))
+											)
+										),
+										bind('/data/outer_repeat/cutoff_number').type('int'),
+										bind('/data/outer_repeat/inner_repeat/join')
+											.type('string')
+											.calculate(
+												"join(', ', instance('dataset')/root/item[value > current()/../../cutoff_number]/name)"
+											)
+									)
+								),
+								body(
+									repeat(
+										'/data/outer_repeat',
+										input('/data/outer_repeat/cutoff_number'),
+										repeat(
+											'/data/outer_repeat/inner_repeat',
+											input('/data/outer_repeat/inner_repeat/foo')
+										)
+									)
+								)
+							)
+						);
+
+						if (addExplicitRepeatPositionPredicate) {
+							scenario.answer('/data/outer_repeat[1]/cutoff_number', 3);
+						} else {
+							scenario.answer('/data/outer_repeat/cutoff_number', 3);
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							expect(scenario.answerOf('/data/outer_repeat[1]/inner_repeat[1]/join')).toEqualAnswer(
+								stringAnswer('Item4, Item5')
+							);
+						} else {
+							expect(scenario.answerOf('/data/outer_repeat/inner_repeat/join')).toEqualAnswer(
+								stringAnswer('Item4, Item5')
+							);
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							scenario.answer('/data/outer_repeat[1]/cutoff_number', 7);
+						} else {
+							scenario.answer('/data/outer_repeat/cutoff_number', 7);
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							expect(
+								scenario.answerOf('/data/outer_repeat[1]/inner_repeat[1]/join').getValue()
+							).toBe('');
+						} else {
+							// assertThat(scenario.answerOf("/data/outer_repeat/inner_repeat/join"), is(nullValue()));
+							expect(scenario.answerOf('/data/outer_repeat/inner_repeat/join')).toBe('');
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							scenario.answer('/data/outer_repeat[1]/cutoff_number', 4);
+						} else {
+							scenario.answer('/data/outer_repeat/cutoff_number', 4);
+						}
+
+						if (addExplicitRepeatPositionPredicate) {
+							expect(scenario.answerOf('/data/outer_repeat[1]/inner_repeat[1]/join')).toEqualAnswer(
+								stringAnswer('Item5')
+							);
+						} else {
+							expect(scenario.answerOf('/data/outer_repeat/inner_repeat/join')).toEqualAnswer(
+								stringAnswer('Item5')
+							);
+						}
+					});
+				}
+			);
+		});
+	});
 });
