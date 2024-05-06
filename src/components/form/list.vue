@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('title') }}</span>
         <button v-if="project.dataExists && project.permits('form.create')"
           id="form-list-create-button" type="button" class="btn btn-primary"
-          @click="showModal('newForm')">
+          @click="createModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
         <form-sort v-model="sortMode"/>
@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
         </p>
       </template>
     </page-section>
-    <form-new v-bind="newForm" @hide="hideModal('newForm')"
+    <form-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
   </div>
 </template>
@@ -43,15 +43,14 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import FormSort from './sort.vue';
 
-import modal from '../../mixins/modal';
 import sortFunctions from '../../util/sort';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormList',
   components: { FormTable, FormNew, FormSort, Loading, PageSection },
-  mixins: [modal()],
   inject: ['alert'],
   setup() {
     // The component does not assume that this data will exist when the
@@ -62,9 +61,7 @@ export default {
   },
   data() {
     return {
-      newForm: {
-        state: false
-      },
+      createModal: modalData(),
       sortMode: 'alphabetical'
     };
   },

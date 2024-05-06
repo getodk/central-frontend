@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     :styled="false" @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
-        @click="showModal('uploadFilesModal')">
+        @click="uploadFilesModal.show()">
         <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}&hellip;
       </button>
       <p>{{ $t('heading[0]') }}</p>
@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
           :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments" :data-name="attachment.name"
           :linkable="attachment.type === 'file' && !!dsHashset && dsHashset.has(attachment.name.replace(/\.[^.]+$/i, ''))"
-          @link="showLinkDatasetModal($event)"/>
+          @link="linkDatasetModal.show({ attachment: $event })"/>
       </tbody>
     </table>
     <form-attachment-popups
@@ -67,12 +67,12 @@ except according to the terms contained in the LICENSE file.
       @confirm="uploadFiles" @cancel="cancelUploads"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
-      @hide="hideModal('uploadFilesModal')" @select="afterFileInputSelection"/>
-    <form-attachment-name-mismatch :state="nameMismatch.state"
-      :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
+      @hide="uploadFilesModal.hide()" @select="afterFileInputSelection"/>
+    <form-attachment-name-mismatch v-bind="nameMismatch"
+      :planned-uploads="plannedUploads" @hide="nameMismatch.hide()"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
-    <form-attachment-link-dataset v-bind="linkDatasetModal" @hide="hideModal('linkDatasetModal')"
-      @success="afterLinkDataset"/>
+    <form-attachment-link-dataset v-bind="linkDatasetModal"
+      @hide="linkDatasetModal.hide()" @success="afterLinkDataset"/>
   </file-drop-zone>
 </template>
 
@@ -88,9 +88,9 @@ import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import modal from '../../mixins/modal';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -106,7 +106,6 @@ export default {
     FormAttachmentUploadFiles,
     SentenceSeparator
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -165,16 +164,9 @@ export default {
       },
       updatedAttachments: new Set(),
       // Modals
-      uploadFilesModal: {
-        state: false
-      },
-      nameMismatch: {
-        state: false
-      },
-      linkDatasetModal: {
-        state: false,
-        attachmentName: ''
-      }
+      uploadFilesModal: modalData(),
+      nameMismatch: modalData(),
+      linkDatasetModal: modalData()
     };
   },
   computed: {
@@ -203,7 +195,7 @@ export default {
     // FILE INPUT
 
     afterFileInputSelection(files) {
-      this.hideModal('uploadFilesModal');
+      this.uploadFilesModal.hide();
       this.updatedAttachments.clear();
       this.matchFilesToAttachments(files);
     },
@@ -247,7 +239,7 @@ export default {
         if (upload.file.name === upload.attachment.name)
           this.uploadFiles();
         else
-          this.showModal('nameMismatch');
+          this.nameMismatch.show();
       } else {
         // The else case can be reached even if this.countOfFilesOverDropZone
         // was 1, if the drop was not over a row.
@@ -367,24 +359,19 @@ export default {
         resend: false
       }).catch(noop);
     },
-    showLinkDatasetModal({ name, blobExists }) {
-      this.linkDatasetModal.attachmentName = name;
-      this.linkDatasetModal.blobExists = blobExists;
-      this.showModal('linkDatasetModal');
-    },
     afterLinkDataset() {
+      const { attachment } = this.linkDatasetModal;
+      this.linkDatasetModal.hide();
+
       this.alert.success(this.$t('alert.link', {
-        attachmentName: this.linkDatasetModal.attachmentName
+        attachmentName: attachment.name
       }));
 
       this.attachments.patch(() => {
-        const attachment = this.attachments.get(this.linkDatasetModal.attachmentName);
         attachment.datasetExists = true;
         attachment.blobExists = false;
         attachment.exists = true;
       });
-
-      this.hideModal('linkDatasetModal');
     }
   }
 };

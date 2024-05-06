@@ -12,8 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="public-link-list">
     <div class="heading-with-button">
-      <button type="button" class="btn btn-primary"
-        @click="showModal('create')">
+      <button type="button" class="btn btn-primary" @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <p>
@@ -31,23 +30,24 @@ except according to the terms contained in the LICENSE file.
       </p>
       <i18n-t tag="p" keypath="heading[1].full">
         <template #clickHere>
-          <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
+          <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
         </template>
       </i18n-t>
     </div>
 
-    <public-link-table :highlighted="highlighted" @revoke="showRevoke"/>
+    <public-link-table :highlighted="highlighted"
+      @revoke="revokeModal.show({ publicLink: $event })"/>
     <loading :state="publicLinks.initiallyLoading"/>
     <p v-if="publicLinks.dataExists && publicLinks.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
 
-    <public-link-create v-bind="create" @hide="hideModal('create')"
+    <public-link-create v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
     <project-submission-options v-bind="submissionOptions"
-      @hide="hideModal('submissionOptions')"/>
-    <public-link-revoke v-bind="revoke" @hide="hideRevoke"
+      @hide="submissionOptions.hide()"/>
+    <public-link-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
       @success="afterRevoke"/>
   </div>
 </template>
@@ -61,9 +61,9 @@ import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -78,7 +78,6 @@ export default {
     PublicLinkTable,
     SentenceSeparator
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -100,16 +99,9 @@ export default {
       // The id of the highlighted public link
       highlighted: null,
       // Modals
-      create: {
-        state: false
-      },
-      submissionOptions: {
-        state: false
-      },
-      revoke: {
-        state: false,
-        publicLink: null
-      }
+      createModal: modalData(),
+      submissionOptions: modalData(),
+      revokeModal: modalData()
     };
   },
   created() {
@@ -123,23 +115,15 @@ export default {
       }).catch(noop);
       this.highlighted = null;
     },
-    showRevoke(publicLink) {
-      this.revoke.publicLink = publicLink;
-      this.showModal('revoke');
-    },
-    hideRevoke() {
-      this.hideModal('revoke');
-      this.revoke.publicLink = null;
-    },
     afterCreate(publicLink) {
       this.fetchData(true);
-      this.hideModal('create');
+      this.createModal.hide();
       this.alert.success(this.$t('alert.create'));
       this.highlighted = publicLink.id;
     },
     afterRevoke(publicLink) {
       this.fetchData(true);
-      this.hideRevoke();
+      this.revokeModal.hide();
       this.alert.success(this.$t('alert.revoke', publicLink));
     }
   }
