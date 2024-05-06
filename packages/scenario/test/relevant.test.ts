@@ -644,3 +644,88 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		});
 	});
 });
+
+describe('FormEntryModelTest.java', () => {
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Test body is copied verbatim and commented out. This seems to be more of a
+	 * unit test. It's likely at least **conceptually redundant** to other tests exercising inheritance of `relevant` state. But to the extent there might be something novel here, an alternate test follows which exercises the same form logic and relevance assertions using {@link Scenario}-oriented APIs.
+	 */
+	describe('[~~]`isIndexRelevant`[~~]', () => {
+		it.skip('[inherits] respects relevance of outermost group', async () => {
+			// Scenario scenario = Scenario.init("Nested relevance", html(
+			// 		head(
+			// 				title("Nested relevance"),
+			// 				model(
+			// 						mainInstance(t("data id=\"nested_relevance\"",
+			// 								t("outer",
+			// 										t("inner",
+			// 												t("q1"))),
+			// 								t("innerYesNo", "no"),
+			// 								t("outerYesNo", "no")
+			// 								)),
+			// 						bind("/data/outer").relevant("/data/outerYesNo = 'yes'"),
+			// 						bind("/data/outer/inner").relevant("/data/innerYesNo = 'yes'")
+			// 				)),
+			// 		body(
+			// 				group("/data/outer",
+			// 						group("/data/outer/inner",
+			// 								input("/data/outer/inner/q1")
+			// 						)
+			// 				),
+			// 				input("/data/outerYesNo"),
+			// 				input("/data/innerYesNo")
+			// 		)));
+			// FormDef formDef = scenario.getFormDef();
+			// FormEntryModel formEntryModel = new FormEntryModel(formDef);
+			// FormIndex q1Index = scenario.indexOf("/data/outer/inner/q1");
+			// assertThat(formEntryModel.isIndexRelevant(q1Index), is(false));
+			// scenario.answer("/data/innerYesNo", "yes");
+			// assertThat(formEntryModel.isIndexRelevant(q1Index), is(false));
+			// scenario.answer("/data/outerYesNo", "yes");
+			// assertThat(formEntryModel.isIndexRelevant(q1Index), is(true));
+		});
+
+		it('inherits relevance of the outermost group (alternate)', async () => {
+			const scenario = await Scenario.init(
+				'Nested relevance',
+				html(
+					head(
+						title('Nested relevance'),
+						model(
+							mainInstance(
+								t(
+									'data id="nested_relevance"',
+									t('outer', t('inner', t('q1'))),
+
+									t('innerYesNo', 'no'),
+									t('outerYesNo', 'no')
+								)
+							),
+							bind('/data/outer').relevant("/data/outerYesNo = 'yes'"),
+							bind('/data/outer/inner').relevant("/data/innerYesNo = 'yes'")
+						)
+					),
+					body(
+						group('/data/outer', group('/data/outer/inner', input('/data/outer/inner/q1'))),
+						input('/data/outerYesNo'),
+						input('/data/innerYesNo')
+					)
+				)
+			);
+
+			const q1Node = scenario.getAnswerNode('/data/outer/inner/q1');
+
+			expect(q1Node).toBeNonRelevant();
+
+			scenario.answer('/data/innerYesNo', 'yes');
+
+			expect(q1Node).toBeNonRelevant();
+
+			scenario.answer('/data/outerYesNo', 'yes');
+
+			expect(q1Node).toBeRelevant();
+		});
+	});
+});
