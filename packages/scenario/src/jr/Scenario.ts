@@ -1,5 +1,5 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
-import type { AnyNode, RootNode } from '@getodk/xforms-engine';
+import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
@@ -17,6 +17,7 @@ import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
 import type { QuestionNodeType } from './event/QuestionEvent.ts';
 import { RepeatInstanceEvent } from './event/RepeatInstanceEvent.ts';
+import type { SelectQuestionEvent } from './event/SelectQuestionEvent.ts';
 import {
 	getPositionalEvents,
 	type AnyPositionalEvent,
@@ -653,6 +654,73 @@ export class Scenario {
 		}
 
 		return label;
+	}
+
+	private getCurrentSelectNode(options: AssertCurrentReferenceOptions): SelectNode {
+		const { assertCurrentReference } = options;
+		const event = this.getSelectedPositionalEvent();
+
+		this.assertReference(event, assertCurrentReference);
+
+		if (event.eventType !== 'QUESTION') {
+			throw new Error(`Expected a question event, got ${event.eventType}`);
+		}
+
+		const { node } = event;
+		const { currentState, nodeType } = node;
+
+		if (nodeType !== 'select') {
+			throw new Error(`Expected node at ${currentState.reference} to be a select, got ${nodeType}`);
+		}
+
+		return node;
+	}
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Proposed as a close semantic equivalent to JavaRosa's
+	 * `FormEntryPrompt.getAnswerText`, as used in a testing context.
+	 *
+	 * This method is expected to be called when the current positional state is a
+	 * reference to a {@link SelectQuestionEvent}, and will assert that based on
+	 * the provided {@link AssertCurrentReferenceOptions.assertCurrentReference}
+	 * option.
+	 *
+	 * The method's return value will be an array of strings, mapping each
+	 * **selected item** (items included in the question node's
+	 * `currentState.value`) to that item's label, as a serialized string.
+	 *
+	 * @todo At present, this maps the selected items their labels **if they have
+	 * one**, otherwise falling back to their value. This is understood to be the
+	 * intent for form display, but it's treated as a client concern. It may be
+	 * something we want the engine to handle in the future, for greater
+	 * inter-client consistency and to reduce the amount of test surface area
+	 * that's effectively testing {@link Scenario}'s own behavior as a client.
+	 */
+	proposed_getSelectedOptionLabelsAsText(
+		options: AssertCurrentReferenceOptions
+	): readonly string[] {
+		const node = this.getCurrentSelectNode(options);
+
+		return node.currentState.value.map((item) => {
+			return item.label?.asString ?? item.value;
+		});
+	}
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Used in supplemental tests, added to check **all** of a select's
+	 * item/option labels, corresponding to tests calling
+	 * {@link proposed_getSelectedOptionLabelsAsText}.
+	 */
+	proposed_getAvailableOptionLabels(options: AssertCurrentReferenceOptions): readonly string[] {
+		const node = this.getCurrentSelectNode(options);
+
+		return node.currentState.valueOptions.map((item) => {
+			return item.label?.asString ?? item.value;
+		});
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use

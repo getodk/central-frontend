@@ -20,6 +20,7 @@ import { answerText } from '../src/answer/ExpectedDisplayTextAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { choice } from '../src/choice/ExpectedChoice.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
+import type { PositionalEvent } from '../src/jr/event/PositionalEvent.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
 import { r } from '../src/jr/resource/ResourcePathHelper.ts';
 import type { SelectChoice } from '../src/jr/select/SelectChoice.ts';
@@ -1322,6 +1323,441 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
 			// expect(scenario.answerOf('/data/level3_contains').getDisplayText()).toBe('aab');
 			expect(scenario.answerOf('/data/level3_contains').getValue()).toBe('aab');
+		});
+	});
+});
+
+/**
+ * **PORTING NOTES**
+ *
+ * These tests are concerned with select item (choice) labels, as described by
+ * their leading `//region` comment in JavaRosa. Having clarified the intent of
+ * the tests in a Slack discussion, it feels important to capture that here: the
+ * (JavaRosa) APIs under test are specifically concerned with capturing the
+ * label text corresponding to a select question's selected value; these APIs
+ * are used for summary purposes, i.e. to show the human-readable text of an
+ * answer, where that answer's value is associated with a select's item(s).
+ * These APIs are also conceptually related to the `getDisplayText` method,
+ * called by many other JavaRosa tests.
+ *
+ * In many _other cases_, tests calling that `getDisplayText` method are clearly
+ * concerned with the respective questions' _value state_. In this case, the
+ * tests are concerned both with the value state _and the label text
+ * corresponding to that value_. As such, these tests are ported to preserve
+ * that semantic distinction (rather than the general porting convention of
+ * mapping such assertions to check the answers' values directly).
+ *
+ * Also from that Slack discussion, it is my belief at this point in the porting
+ * effort that there may be a gap in coverage around select item/option labels
+ * _more generally_. As such, each test in this "vat" is accompanied by a
+ * supplemental test asserting **all of the available select items' labels**.
+ *
+ * In both cases, we introduce proposed API additions to {@link Scenario} (or
+ * other APIs which we've treated as directly related to that interface, such as
+ * {@link PositionalEvent} and its subclasses). These proposed additions either:
+ *
+ * - stand in for ported assertions (here preserved but commented out) with
+ *   similar-but-internals-dependent semantics, or
+ *
+ * - provide additional semantics for supplemental tests where there isn't a
+ *   known {@link Scenario}/related API equivalent.
+ */
+describe('FormEntryPromptTest.java', () => {
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Rephrase?
+	 */
+	describe('//region Binding of select choice values to labels', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Unwrap? This references a `FormEntryPrompt` method which is not otherwise
+		 * referenced in the ported tests. It doesn't seem to provide much value
+		 * other than what it'd provide by establishing that conceptual connection
+		 * where it exists in JavaRosa.
+		 */
+		describe('`getSelectItemText`', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Rephrase? The term "selection" here refers to the _selected option_,
+			 * and its value-as-represented-by-option-label. The name appears to be a
+			 * reference to JavaRosa's internal `Selection` type, which deals with
+			 * more than just the concept as it's referenced here. This may actually
+			 * be a good colloquialism to adopt in common references to this concept!
+			 * But it definitely feels like a term we should use with some intention,
+			 * if so.
+			 */
+			describe('on selection[?] from dynamic[?] select', () => {
+				describe('without translations', () => {
+					/**
+					 * **PORTING NOTES**
+					 *
+					 * Rephrase/clarify? It seems that "inner" text is a reference to the
+					 * direct text content of a `<label>` (as opposed to a label's text as
+					 * computed by `<label ref>`, typically with `jr:itext`). But:
+					 *
+					 * 1. This terminology is oddly XML/DOM-specific in its phrasing.
+					 *
+					 * 2. It's unclear if/how this concept of "inner text" interacts with
+					 *    `<output>` as a potential child node within such a non-`ref`
+					 *    label element.
+					 *
+					 * 3. The intent of the test seems to be the same, at least at first
+					 *    blush, with the less specific "text". Ultimately that's what
+					 *    this specific test is exercising. We'll want more nuance around
+					 *    **formatted** labels/hints, but otherwise it seems pretty likely
+					 *    we'll always want to test the actual text as produced
+					 *    (regardless of its form definition structure).
+					 */
+					it('[gets?] returns label [~~]inner[~~] text', async () => {
+						const scenario = await Scenario.init(
+							'Select',
+							html(
+								head(
+									title('Select'),
+									model(
+										mainInstance(t("data id='select'", t('filter'), t('select', 'a'))),
+
+										instance(
+											'choices',
+											item('a', 'A'),
+											item('aa', 'AA'),
+											item('b', 'B'),
+											item('bb', 'BB')
+										)
+									)
+								),
+								body(
+									input('/data/filter'),
+									select1Dynamic(
+										'/data/select',
+										"instance('choices')/root/item[starts-with(value,/data/filter)]"
+									)
+								)
+							)
+						);
+
+						scenario.next('/data/filter');
+						scenario.answer('a');
+
+						scenario.next('/data/select');
+
+						// FormEntryPrompt questionPrompt = scenario.getFormEntryPromptAtIndex();
+						// assertThat(questionPrompt.getAnswerText(), is("A"));
+						expect(
+							scenario.proposed_getSelectedOptionLabelsAsText({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['A']);
+					});
+
+					it("gets the available select items' labels (supplemental)", async () => {
+						const scenario = await Scenario.init(
+							'Select',
+							html(
+								head(
+									title('Select'),
+									model(
+										mainInstance(t("data id='select'", t('filter'), t('select', 'a'))),
+
+										instance(
+											'choices',
+											item('a', 'A'),
+											item('aa', 'AA'),
+											item('b', 'B'),
+											item('bb', 'BB')
+										)
+									)
+								),
+								body(
+									input('/data/filter'),
+									select1Dynamic(
+										'/data/select',
+										"instance('choices')/root/item[starts-with(value,/data/filter)]"
+									)
+								)
+							)
+						);
+
+						scenario.next('/data/filter');
+						scenario.next('/data/select');
+
+						expect(
+							scenario.proposed_getAvailableOptionLabels({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['A', 'AA', 'B', 'BB']);
+
+						/**
+						 * @todo possibly split into yet another supplemental test
+						 */
+						scenario.answer('/data/filter', 'a');
+						scenario.next('/data/select');
+
+						expect(
+							scenario.proposed_getAvailableOptionLabels({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['A', 'AA']);
+					});
+				});
+
+				describe('with translations', () => {
+					/**
+					 * **PORTING NOTES**
+					 *
+					 * Rephrase?
+					 *
+					 * - Every test is presumably concerned with the correct behavior.
+					 *
+					 * - Unclear if the more verbose description is valuable, but IMO it
+					 *   better completes the BDD-ish format.
+					 */
+					it('[gets?] returns [~~]correct[~~] [the translated label text] translation', async () => {
+						const scenario = await Scenario.init(
+							'Multilingual dynamic select',
+							html(
+								head(
+									title('Multilingual dynamic select'),
+									model(
+										t(
+											'itext',
+											t(
+												"translation lang='fr'",
+												t("text id='choices-0'", t('value', 'A (fr)')),
+												t("text id='choices-1'", t('value', 'B (fr)')),
+												t("text id='choices-2'", t('value', 'C (fr)'))
+											),
+											t(
+												"translation lang='en'",
+												t("text id='choices-0'", t('value', 'A (en)')),
+												t("text id='choices-1'", t('value', 'B (en)')),
+												t("text id='choices-2'", t('value', 'C (en)'))
+											)
+										),
+										mainInstance(t("data id='multilingual-select'", t('select', 'b'))),
+
+										instance(
+											'choices',
+											t('item', t('itextId', 'choices-0'), t('name', 'a')),
+											t('item', t('itextId', 'choices-1'), t('name', 'b')),
+											t('item', t('itextId', 'choices-2'), t('name', 'c'))
+										)
+									)
+								),
+								body(
+									select1Dynamic(
+										'/data/select',
+										"instance('choices')/root/item",
+										'name',
+										'jr:itext(itextId)'
+									)
+								)
+							)
+						);
+
+						scenario.setLanguage('en');
+
+						scenario.next('/data/select');
+
+						// FormEntryPrompt questionPrompt = scenario.getFormEntryPromptAtIndex();
+						// assertThat(questionPrompt.getAnswerText(), is("B (en)"));
+						expect(
+							scenario.proposed_getSelectedOptionLabelsAsText({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['B (en)']);
+
+						scenario.setLanguage('fr');
+
+						// assertThat(questionPrompt.getAnswerText(), is("B (fr)"));
+						expect(
+							scenario.proposed_getSelectedOptionLabelsAsText({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['B (fr)']);
+					});
+
+					it("gets the available select items' labels (supplemental)", async () => {
+						const scenario = await Scenario.init(
+							'Multilingual dynamic select',
+							html(
+								head(
+									title('Multilingual dynamic select'),
+									model(
+										t(
+											'itext',
+											t(
+												"translation lang='fr'",
+												t("text id='choices-0'", t('value', 'A (fr)')),
+												t("text id='choices-1'", t('value', 'B (fr)')),
+												t("text id='choices-2'", t('value', 'C (fr)'))
+											),
+											t(
+												"translation lang='en'",
+												t("text id='choices-0'", t('value', 'A (en)')),
+												t("text id='choices-1'", t('value', 'B (en)')),
+												t("text id='choices-2'", t('value', 'C (en)'))
+											)
+										),
+										mainInstance(t("data id='multilingual-select'", t('select', 'b'))),
+
+										instance(
+											'choices',
+											t('item', t('itextId', 'choices-0'), t('name', 'a')),
+											t('item', t('itextId', 'choices-1'), t('name', 'b')),
+											t('item', t('itextId', 'choices-2'), t('name', 'c'))
+										)
+									)
+								),
+								body(
+									select1Dynamic(
+										'/data/select',
+										"instance('choices')/root/item",
+										'name',
+										'jr:itext(itextId)'
+									)
+								)
+							)
+						);
+
+						scenario.setLanguage('en');
+
+						scenario.next('/data/select');
+
+						expect(
+							scenario.proposed_getAvailableOptionLabels({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['A (en)', 'B (en)', 'C (en)']);
+
+						scenario.setLanguage('fr');
+
+						expect(
+							scenario.proposed_getAvailableOptionLabels({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['A (fr)', 'B (fr)', 'C (fr)']);
+					});
+				});
+			});
+
+			describe('on selections[?] in repeat instances', () => {
+				it('[gets?] returns [the label text] label inner text', async () => {
+					const scenario = await Scenario.init(
+						'Select',
+						html(
+							head(
+								title('Select'),
+								model(
+									mainInstance(
+										t(
+											"data id='select-repeat'",
+											t('repeat', t('select', 'a')),
+											t('repeat', t('select', 'a'))
+										)
+									),
+
+									instance(
+										'choices',
+										item('a', 'A'),
+										item('aa', 'AA'),
+										item('b', 'B'),
+										item('bb', 'BB')
+									)
+								)
+							),
+							body(
+								repeat(
+									'/data/repeat',
+									select1Dynamic('/data/repeat/select', "instance('choices')/root/item")
+								)
+							)
+						)
+					);
+
+					scenario.next('/data/repeat[1]');
+					scenario.next('/data/repeat[1]/select');
+
+					// FormEntryPrompt questionPrompt = scenario.getFormEntryPromptAtIndex();
+					// assertThat(questionPrompt.getAnswerText(), is("A"));
+					expect(
+						scenario.proposed_getSelectedOptionLabelsAsText({
+							assertCurrentReference: '/data/repeat[1]/select',
+						})
+					).toEqual(['A']);
+
+					// JR:
+					//
+					// Prior to https://github.com/getodk/javarosa/issues/642 being addressed, the selected choice for a select in a
+					// repeat instance with the same choice list as the prior repeat instance's select would not be bound to its label
+					scenario.next('/data/repeat[2]');
+					scenario.next('/data/repeat[2]/select');
+
+					// questionPrompt = scenario.getFormEntryPromptAtIndex();
+					// assertThat(questionPrompt.getAnswerText(), is("A"));
+
+					expect(
+						scenario.proposed_getSelectedOptionLabelsAsText({
+							assertCurrentReference: '/data/repeat[2]/select',
+						})
+					).toEqual(['A']);
+				});
+
+				it("gets the available select items' labels (supplemental)", async () => {
+					const scenario = await Scenario.init(
+						'Select',
+						html(
+							head(
+								title('Select'),
+								model(
+									mainInstance(
+										t(
+											"data id='select-repeat'",
+											t('repeat', t('select', 'a')),
+											t('repeat', t('select', 'a'))
+										)
+									),
+
+									instance(
+										'choices',
+										item('a', 'A'),
+										item('aa', 'AA'),
+										item('b', 'B'),
+										item('bb', 'BB')
+									)
+								)
+							),
+							body(
+								repeat(
+									'/data/repeat',
+									select1Dynamic('/data/repeat/select', "instance('choices')/root/item")
+								)
+							)
+						)
+					);
+
+					scenario.next('/data/repeat[1]');
+					scenario.next('/data/repeat[1]/select');
+
+					expect(
+						scenario.proposed_getAvailableOptionLabels({
+							assertCurrentReference: '/data/repeat[1]/select',
+						})
+					).toEqual(['A', 'AA', 'B', 'BB']);
+
+					scenario.next('/data/repeat[2]');
+					scenario.next('/data/repeat[2]/select');
+
+					expect(
+						scenario.proposed_getAvailableOptionLabels({
+							assertCurrentReference: '/data/repeat[2]/select',
+						})
+					).toEqual(['A', 'AA', 'B', 'BB']);
+				});
+			});
 		});
 	});
 });
