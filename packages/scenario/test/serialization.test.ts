@@ -10,7 +10,10 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
+import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
+import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
+import { r } from '../src/jr/resource/ResourcePathHelper.ts';
 import { nullValue } from '../src/value/ExpectedNullValue.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
@@ -72,5 +75,44 @@ describe('Serialization', () => {
 				it.skip('instanceName_forFormDefMainInstance_isAlwaysNull');
 			});
 		});
+	});
+});
+
+describe('SameRefDifferentInstancesIssue449Test.java (regression tests)', () => {
+	describe('form with same ref in different instances', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - Fails before call to {@link Scenario.serializeAndDeserializeForm}.
+		 *   Pending support for external secondary instances.
+		 *
+		 * - Test may not be pertinent, see notes on `FormDefSerializationTest.java`
+		 *   suite. Logic was already ported before I looked up and remembered that!
+		 *
+		 * - If we determine this test is pertinent... rephrase?
+		 *   "Successfully" in a test description is implied, like "correct". Prefer
+		 *   to describe actual behavior under test, which is vague here.
+		 */
+		it.fails('is [~~]successfully[~~] deserialized', async () => {
+			const formFile = r('issue_449.xml');
+			setUpSimpleReferenceManager(formFile.getParent(), 'file');
+
+			const scenario = await Scenario.init(formFile);
+
+			scenario.answer('/data/new-part', 'c');
+
+			expect(scenario.answerOf('/data/aggregated')).toEqualAnswer(stringAnswer('a b c'));
+
+			const deserialized = await scenario.serializeAndDeserializeForm();
+
+			expect(deserialized.answerOf('/data/new-part[0]')).toEqualAnswer(stringAnswer('c'));
+			expect(deserialized.answerOf('/data/aggregated[0]')).toEqualAnswer(stringAnswer('a b c'));
+
+			deserialized.answer('/data/new-part', 'c2');
+
+			expect(deserialized.answerOf('/data/aggregated[0]')).toEqualAnswer(stringAnswer('a b c2'));
+		});
+
+		it.skip('[applies constraints] constraints are correctly applied after deserialization');
 	});
 });
