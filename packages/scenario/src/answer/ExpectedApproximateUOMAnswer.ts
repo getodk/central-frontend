@@ -87,6 +87,15 @@ export class ExpectedApproximateUOMAnswer<
 		return this.uomValue.inspectValue(this.errorTolerance);
 	}
 
+	/**
+	 * @todo Given that several comparisons ported form JavaRosa fail with a
+	 * difference exceedingly close to the provided {@link errorTolerance},
+	 * consider whether those failures are rooted in this implementation. However,
+	 * a quick glance at the
+	 * {@link https://github.com/hamcrest/JavaHamcrest/blob/master/hamcrest/src/main/java/org/hamcrest/number/IsCloseTo.java | equivalent Hamcrest logic}
+	 * suggests that our logic is basically the same. (And a quick spike to use
+	 * the exact same formulation of the same logic produces the same result.)
+	 */
 	isCloseTo(actual: ComparableAnswer): boolean {
 		const actualValue = this.uomValue.constructor.fromAnswer(actual).unitValue;
 
@@ -121,6 +130,24 @@ export const expectedArea = (
 	errorTolerance: number
 ): ExpectedApproximateUOMAnswer => {
 	const value = new AreaValue(area);
+
+	return new ExpectedApproximateUOMAnswer(value, errorTolerance);
+};
+
+type Meter = number;
+
+class DistanceValue extends UOMValue {
+	readonly uom = 'm';
+}
+
+/**
+ * @see {@link ExpectedApproximateUOMAnswer.errorTolerance}
+ */
+export const expectedDistance = (
+	distance: Meter,
+	errorTolerance: number
+): ExpectedApproximateUOMAnswer => {
+	const value = new DistanceValue(distance);
 
 	return new ExpectedApproximateUOMAnswer(value, errorTolerance);
 };
