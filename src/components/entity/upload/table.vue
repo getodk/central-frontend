@@ -112,7 +112,9 @@ const resizeLastColumn = () => {
   // Check whether the column is obscured by the pop-up.
   const popup = container.value.closest('.modal-body')
     .querySelector('#entity-upload-popup');
-  if (popup != null) {
+  if (popup == null) {
+    overlapsPopup.value = false;
+  } else {
     const popupRect = popup.getBoundingClientRect();
     const containerRect = container.value.getBoundingClientRect();
     overlapsPopup.value = popupRect.top < containerRect.bottom;
