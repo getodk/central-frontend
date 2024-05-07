@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
-    backdrop @hide="$emit('hide')" @mutate="resizeColumnUnlessAnimating">
+    backdrop @hide="$emit('hide')" @mutate="resizeLastColumn">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
@@ -63,8 +63,7 @@ except according to the terms contained in the LICENSE file.
         :filename="fileMetadata.name" :count="csvEntities.length"
         :warnings="warnings.count" :awaiting-response="uploading"
         :progress="uploadProgress" @clear="clearFile"
-        @animationstart="animatePopup(true)"
-        @animationend="animatePopup(false)"/>
+        @animationend="endAnimation"/>
       <div ref="actions" class="modal-actions">
         <button type="button" class="btn btn-primary"
           :aria-disabled="csvEntities == null || uploading" @click="upload">
@@ -332,24 +331,24 @@ const upload = () => {
     .catch(noop);
 };
 
-const popupAnimating = ref(false);
-const animatePopup = (animating) => { popupAnimating.value = animating; };
-watch(csvEntities, (value) => {
-  if (value == null) popupAnimating.value = false;
-});
-
 // Resize the last column of the tables.
 const tables = [null, null];
 const setTable = (i) => (el) => { tables[i] = el; };
-const resizeLastColumn = () => {
-  for (const table of tables) table.resizeLastColumn();
+let popupAnimating = false;
+const resizeLastColumn = (force = false) => {
+  if ((props.state && !popupAnimating) || force) {
+    for (const table of tables) table.resizeLastColumn();
+  }
 };
-watch(popupAnimating, (animating) => { if (!animating) resizeLastColumn(); });
-watch(() => props.state, (state) => { if (!state) nextTick(resizeLastColumn); });
-const resizeColumnUnlessAnimating = () => {
-  if (props.state && !popupAnimating.value) resizeLastColumn();
+watch(csvEntities, (value) => { popupAnimating = value != null; });
+const endAnimation = () => {
+  popupAnimating = false;
+  resizeLastColumn();
 };
-useEventListener(window, 'resize', resizeColumnUnlessAnimating);
+useEventListener(window, 'resize', resizeLastColumn);
+watch(() => props.state, (state) => {
+  if (!state) nextTick(() => { resizeLastColumn(true); });
+});
 
 const actions = ref(null);
 watch(csvEntities, (value) => {
