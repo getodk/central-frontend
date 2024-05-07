@@ -69,31 +69,30 @@ const container = ref(null);
 
 // Prevent the table container from shrinking on the last page.
 const minHeight = ref('auto');
-// The height of the last full page of the current size. Equals 0 when there is
-// no height to use.
-let previousHeight = 0;
-watch(
-  [() => props.entities, () => props.pageSize],
-  ([entities, newSize], [, oldSize]) => {
-    // Reset minHeight.
-    minHeight.value = 'auto';
+// The last full page that was rendered
+const lastFullPage = { size: 0, height: 0 };
+watch(() => props.entities, (entities) => {
+  // Reset minHeight.
+  minHeight.value = 'auto';
 
-    // If the page size has changed, reset previousHeight, as it is no longer
-    // useful. If entities == null without the page size changing, that means
-    // that there has been a change like the modal being hidden that should
-    // cause previousHeight to be reset.
-    if (newSize !== oldSize || entities == null) previousHeight = 0;
+  // If the page size has changed, reset lastFullPage, as it is no longer
+  // useful. If entities == null without the page size changing, that means that
+  // there has been a change like the modal being hidden that should cause
+  // lastFullPage to be reset.
+  if (lastFullPage.size !== 0 &&
+    (props.pageSize !== lastFullPage.size || entities == null))
+    Object.assign(lastFullPage, { size: 0, height: 0 });
 
-    // Either set or attempt to use previousHeight.
-    if (entities != null && entities.length === newSize) {
-      nextTick(() => {
-        previousHeight = container.value.getBoundingClientRect().height;
-      });
-    } else if (previousHeight !== 0) {
-      minHeight.value = px(previousHeight);
-    }
+  // Either set or attempt to use lastFullPage.height.
+  if (entities != null && entities.length === props.pageSize) {
+    nextTick(() => {
+      lastFullPage.size = props.pageSize;
+      lastFullPage.height = container.value.getBoundingClientRect().height;
+    });
+  } else if (lastFullPage.height !== 0) {
+    minHeight.value = px(lastFullPage.height);
   }
-);
+});
 
 const isHighlighted = (index) => props.highlighted != null &&
   index >= props.highlighted[0] && index <= props.highlighted[1];
