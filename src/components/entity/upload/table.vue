@@ -100,14 +100,19 @@ const isHighlighted = (index) => props.highlighted != null &&
 
 const overlapsPopup = ref(false);
 const resizeLastColumn = () => {
-  // Undo previous resizing.
+  // Reset when the modal is hidden.
   const th = container.value.querySelector('th:last-child');
-  th.style.width = '';
-
   if (container.value.clientWidth === 0) {
+    th.style.width = '';
     overlapsPopup.value = false;
     return;
   }
+
+  // Reset the column to its initial width, undoing previous resizing. Because
+  // this may affect the scroll position, we save the current position to
+  // restore it later.
+  const { scrollLeft } = container.value;
+  th.style.width = '';
 
   // Check whether the column is obscured by the pop-up.
   const popup = container.value.closest('.modal-body')
@@ -131,6 +136,9 @@ const resizeLastColumn = () => {
   // columns.
   if (container.value.scrollWidth === container.value.clientWidth)
     th.style.width = 'auto';
+
+  // Restore the scroll position.
+  container.value.scroll(scrollLeft, 0);
 };
 
 const resetScroll = () => { container.value.scroll(0, 0); };
