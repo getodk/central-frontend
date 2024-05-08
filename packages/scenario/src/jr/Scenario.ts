@@ -597,6 +597,12 @@ export class Scenario {
 		return node.currentState.children.length;
 	}
 
+	atQuestion(): boolean {
+		const event = this.getSelectedPositionalEvent();
+
+		return event.eventType === 'QUESTION';
+	}
+
 	/**
 	 * @todo It is really unclear whether this method should go below in the
 	 * "consider adapting tests" bag/vat. At least as encountered so far, it

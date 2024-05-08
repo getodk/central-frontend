@@ -151,3 +151,18 @@ export const expectedDistance = (
 
 	return new ExpectedApproximateUOMAnswer(value, errorTolerance);
 };
+
+type FractionalDay = number;
+
+class FractioanlDayValue extends UOMValue {
+	readonly uom = 'day';
+}
+
+export const expectedFractionalDays = (
+	factionalDays: FractionalDay,
+	errorTolerance: number
+): ExpectedApproximateUOMAnswer => {
+	const value = new FractioanlDayValue(factionalDays);
+
+	return new ExpectedApproximateUOMAnswer(value, errorTolerance);
+};
