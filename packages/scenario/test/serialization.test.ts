@@ -9,6 +9,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+import type { EngineConfig, InitializeFormOptions } from '@getodk/xforms-engine';
 import { describe, expect, it } from 'vitest';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
@@ -114,5 +115,123 @@ describe('SameRefDifferentInstancesIssue449Test.java (regression tests)', () => 
 		});
 
 		it.skip('[applies constraints] constraints are correctly applied after deserialization');
+	});
+});
+
+describe('ExternalSecondaryInstanceParseTest.java', () => {
+	describe('form with external secondary XML instance', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * If porting this test becomes a priority, note that all of the
+		 * functionality under test currently exercies implementation details of
+		 * {@link FormParserHelper}. There's currently no analogue to that in the
+		 * engine/client interface, and it isn't anticipated that we'd introduce one
+		 * in the foreseeable future.
+		 */
+		it.skip('should serialize and deserialize');
+	});
+
+	describe('deserialized form [~~]def[~~] created from a form with external secondary XML instance', () => {
+		it.skip('should contain that external instance');
+	});
+
+	describe('//region Missing external file', () => {
+		it.skip(
+			'realInstanceIsResolved_whenFormIsDeserialized_afterPlaceholderInstanceUsed_andFileNowExists'
+		);
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * It sounds (from the JavaRosa comment, preserved below) like the
+		 * conceptual model here is:
+		 *
+		 * 0. Given a form with external instance reference, and given an initial
+		 *    inability to retrieve the resource for it
+		 * 1. JavaRosa will produce a "placeholder" (empty instance representation)
+		 *    for the unavailable resource
+		 * 2. A client (Collect) may at some point serialize the form state
+		 * 3. The client may then attempt to deserialize that serialization, calling
+		 *    into JavaRosa to do so
+		 * 4. Because(?) JavaRosa used a "placeholder" prior to that serialization,
+		 *    upon deserialization it will once again attempt to retrieve the
+		 *    external instance resource
+		 * 5. While parsing will produce a "placeholder" for an unretrievable
+		 *    external instance resource, deserialization will produce an error
+		 *    instead.
+		 * 6. It is expected that a client will resolve this error condition by
+		 *    bypassing deserialization (and potentially discarding the serialized
+		 *    state?), by re-parsing the form... thereby allowing JavaRosa to once
+		 *    again produce a "placeholder".
+		 *
+		 * It's unclear if any of this is pertinent to web forms, but it's hard not
+		 * to ask... if this mental model is roughly correct:
+		 *
+		 * - Is this ceremony something essential to the distinction between "parse"
+		 *   and "deserialize"? Is there additional mental model to help make the
+		 *   distinction more clear?
+		 *
+		 * - Insofar as we may find ourselves implementing similar logic (albeit
+		 *   serving other purposes), how can we establish a clear interface
+		 *   contract around behaviors like this? Should it be more consistent? Does
+		 *   our current {@link EngineConfig.fetchResource} option—configurable in
+		 *   {@link InitializeFormOptions}—provide enough informational surface area
+		 *   to communicate such intent (and allow both clients and engine alike to
+		 *   have clarity of that intent at call/handling sites)?
+		 *
+		 * - - -
+		 *
+		 * JR:
+		 *
+		 * Clients would typically catch this exception and try parsing the form
+		 * again which would succeed by using the placeholder.
+		 */
+		it.skip(
+			'fileNotFoundException_whenFormIsDeserialized_afterPlaceholderInstanceUsed_andFileStillMissing'
+		);
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Expanding on the mental model we're trying to form in the skipped test
+		 * directly above...
+		 *
+		 * - If this produces an error condition, why is it deferred to _accessing a
+		 *   select's available itemset choices_?
+		 *
+		 * - The JavaRosa comment, preserved below, suggests that the error should
+		 *   occur "when making a choice". That makes it sound like the intent is:
+		 *
+		 *     0. Parsing fails to resolve an external instance resource, producing
+		 *        a "placeholder" representation.
+		 *
+		 *     1. Deserialization resolves that resource.
+		 *
+		 *     2. This is considered an inconsistent state, which cannot be
+		 *        reconciled on the deserialized state.
+		 *
+		 *     3. An allowance is made for operating on form state with this
+		 *        inconsistency **so long as the inconsistency isn't consulted in a
+		 *        subsequent state change**.
+		 *
+		 *     If that's the case... why isn't the error produced on a write call,
+		 *     rather than when attempting to read the options? Wouldn't this
+		 *     produce an error by simply proceeding through the deserialized form
+		 *     state without making any state change at all?
+		 *
+		 * - - -
+		 *
+		 * JR:
+		 *
+		 * It would be possible for a formdef to be serialized without access to the
+		 * external secondary instance and then deserialized with access. In that
+		 * case, there's nothing to validate that the value and label references for
+		 * a dynamic select correspond to real nodes in the secondary instance so
+		 * there's a runtime exception when making a choice.
+		 */
+		it.skip(
+			'exceptionFromChoiceSelection_whenFormIsDeserialized_afterPlaceholderInstanceUsed_andFileMissingColumns'
+		);
 	});
 });

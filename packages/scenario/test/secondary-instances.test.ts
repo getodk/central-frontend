@@ -10,11 +10,15 @@ import {
 	mainInstance,
 	model,
 	repeat,
+	select1Dynamic,
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';
+import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
+import { r } from '../src/jr/resource/ResourcePathHelper.ts';
+import type { SelectChoice } from '../src/jr/select/SelectChoice.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('Secondary instances', () => {
@@ -416,6 +420,306 @@ describe('Secondary instances', () => {
 				scenario.answer('/data/repeat[1]/age', '70');
 
 				expect(scenario.answerOf('/data/result').getValue()).toBe('70');
+			});
+		});
+	});
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 *-  Some of these tests are likely concerned with implementation details of
+	 *   JavaRosa's parsing-specific APIs. We don't expose any parsing related
+	 *   APIs directly in the engine/client interface. As such, tests of that
+	 *   nature will be skipped. Tests which exercise pertinent engine/client
+	 *   interface behavior (i.e. currently only those exercising form state) will
+	 *   be included.
+	 *
+	 * - Some tests are concerned with XPath functionality. In general, the
+	 *   `xpath` package is theoretically prepared to support external secondary
+	 *   instances _depending on how we design that functionality in the engine_.
+	 *   If we take an approach similar to that of Enketo—i.e. the resources are
+	 *   retrieved on form init/when their presence in a form definition is known;
+	 *   once retried, the resources are parsed and converted to a structure
+	 *   suitable for evaluation as if they were "internal" secondary
+	 *   instances—all of the XPath-specific work is already implemented.
+	 *
+	 * - We should consider creating alternate **integration tests** for each of
+	 *   the parsing/XPath-specific tests. This effort is deferred for now, to
+	 *   keep the porting effort moving along; it may be moot if equivalent tests
+	 *   come up as that process concludes.
+	 *
+	 * - Each parsing/XPath-specific case will be marked {@link it.todo} with
+	 *   the note: "Potentially test elsewhere and/or as integration test."
+	 */
+	describe('ExternalSecondaryInstanceParseTest.java', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * This is setting up retrieval logic for external resource URLs. Getting
+		 * it to do the expected setup may mostly involve completing the port of
+		 * {@link setUpSimpleReferenceManager} (as this is just a call to that
+		 * with pre-defined arguments). We may want to use more idiomatic setup
+		 * and teardown (though that would be less portable).
+		 *
+		 * A naive first pass on this included the note "what other way would we
+		 * configure it?" Evidently we will also be porting
+		 * {@link configureReferenceManagerIncorrectly}. Makes sense! We'll also
+		 * be testing behavior when resource retrieval fails.
+		 *
+		 * We may want to consider a single
+		 *
+		 * - - -
+		 *
+		 * JR:
+		 *
+		 * All external secondary instances and forms are in the same folder.
+		 * Configure the ReferenceManager to resolve URIs to that folder.
+		 */
+		const configureReferenceManagerCorrectly = () => {
+			setUpSimpleReferenceManager(r('external-select-csv.xml').getParent(), 'file-csv', 'file');
+		};
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Consider a single setup function, with its "correctness" parameterized?
+		 *
+		 * - - -
+		 *
+		 * JR:
+		 *
+		 * Configure the ReferenceManager to resolve URIs to a folder that does
+		 * not exist.
+		 */
+
+		const configureReferenceManagerIncorrectly = () => {
+			setUpSimpleReferenceManager(r('external-select-csv.xml'), 'file-csv', 'file');
+		};
+
+		describe('//region Parsing of different file types into external secondary instances', () => {
+			describe('items from external secondary GeoJSON instance', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Potentially test elsewhere and/or as integration test.
+				 *
+				 * - References form title (presumably as a sanity check that parsing
+				 *   worked at all?). This prompted creation of `form.test.ts` so we have
+				 *   some coverage of form titles when that functionality is implemented.
+				 */
+				it.todo('itemsFromExternalSecondaryXMLInstance_ShouldBeAvailableToXPathParser');
+
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Potentially test elsewhere and/or as integration test.
+				 */
+				it.todo('itemsFromExternalSecondaryGeoJsonInstance_ShouldBeAvailableToXPathParser');
+
+				describe('with integer ids', () => {
+					/**
+					 * **PORTING NOTES**
+					 *
+					 * - Test is expected to fail pending support for external secondary
+					 *   instances generally, and for GeoJSON specifically.
+					 *
+					 * - Given the current expected failure, it may mask any failure
+					 *   around the call to {@link Scenario.answer} with a
+					 *   {@link SelectChoice}. At a glance, I don't think this is
+					 *   supported yet. We can address that when those pending features
+					 *   make the test viable (or if any other test exercises that
+					 *   signature sooner).
+					 *
+					 * - While it makes perfect sense that one might want to call
+					 *   {@link Scenario.answer} this way, I really can't help but
+					 *   reiterate previous concerns about overloaded signatures. Let's
+					 *   really consider whether we might refine the {@link Scenario} API
+					 *   to have more usage-specific methods, hopefully with less
+					 *   complexity in their signatures.
+					 *
+					 * - It may be superfluous, but since external resource/secondary
+					 *   instance/GeoJSON support is all pending, an assertion has been
+					 *   added to check that the {@link SelectChoice} used to set the
+					 *   question's value is not null. This may or may not be repeated in
+					 *   subsequent test ports, but felt like a good strawman here to talk
+					 *   about whether it's an appropriate check.
+					 *
+					 * - Typical `getDisplayText` -> `getValue`
+					 */
+					it.fails('can be selected', async () => {
+						configureReferenceManagerCorrectly();
+
+						const scenario = await Scenario.init(r('external-select-geojson.xml'));
+						const choiceWithIntId = scenario.choicesOf('/data/q').get(1);
+
+						expect(choiceWithIntId).not.toBeNull();
+
+						scenario.next('/data/q');
+						scenario.answer(choiceWithIntId);
+
+						// assertThat(scenario.answerOf("/data/q").getDisplayText(), is("67"));
+						expect(scenario.answerOf('/data/q').getValue()).toBe('67');
+					});
+				});
+			});
+
+			describe('items from external secondary CSV instance', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Potentially test elsewhere and/or as integration test.
+				 */
+				it.todo('itemsFromExternalSecondaryCSVInstance_ShouldBeAvailableToXPathParser');
+
+				/**
+				 * **PORTING NOTES** (speculative addition)
+				 */
+				it.todo('can select itemset values');
+			});
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Rephrase to be less specific about failure mode?
+		 */
+		describe('[failure] xformParseException', () => {
+			describe('when itemset configures value or label not in external instance', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * - Looking for... some BDD-ish description to fit the format here.
+				 *
+				 * - Fails because this doesn't currently produce an error condition.
+				 *
+				 * - Assertion of the error's instance type is not preserved. We should
+				 *   discuss a more portable concept, and keep in mind our goal for
+				 *   engine-produced errors to come in the form of a Result type.
+				 */
+				it.fails('[produces an error | fails to load | ?]', async () => {
+					configureReferenceManagerCorrectly();
+
+					const init = async () => {
+						return Scenario.init(
+							'Some form',
+							html(
+								head(
+									title('Some form'),
+									model(
+										mainInstance(t('data id="some-form"', t('first'))),
+
+										t('instance id="external-csv" src="jr://file-csv/external-data.csv"'),
+
+										bind('/data/first').type('string')
+									)
+								),
+								body(
+									// Define a select using value and label references that don't exist in the secondary instance
+									select1Dynamic('/data/first', "instance('external-csv')/root/item", 'foo', 'bar')
+								)
+							)
+						);
+
+						// JR:
+						//
+						// fail("Expected XFormParseException because itemset references don't exist in external instance");
+					};
+
+					// JR: } catch (XFormParseException e) {
+					//	// pass
+
+					await expect(init).rejects.toThrowError();
+				});
+			});
+		});
+
+		describe('CSV secondary instance with header only', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Should probably fail pending feature support. Currently passes because
+			 * this is the expected behavior:
+			 *
+			 * - Without support for external secondary instances (and CSV)
+			 *
+			 * - Without producing an error in their absence
+			 */
+			it('parses without error', async () => {
+				configureReferenceManagerCorrectly();
+
+				const scenario = await Scenario.init(
+					'Some form',
+					html(
+						head(
+							title('Some form'),
+							model(
+								mainInstance(t('data id="some-form"', t('first'))),
+
+								t('instance id="external-csv" src="jr://file-csv/header_only.csv"'),
+
+								bind('/data/first').type('string')
+							)
+						),
+						body(select1Dynamic('/data/first', "instance('external-csv')/root/item"))
+					)
+				);
+
+				expect(scenario.choicesOf('/data/first').size()).toBe(0);
+			});
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * These tests exercise JavaRosa's internal `FormParseInit`. It's unclear if
+		 * there's an appropriate way to test these details, or if the functionality
+		 * would be applicable outside of hypothetical Collect integration.
+		 *
+		 * - - -
+		 *
+		 * JR:
+		 *
+		 * ODK Collect has CSV-parsing features that bypass XPath and use databases.
+		 * This test verifies that if a secondary instance is declared but not
+		 * referenced in an instance() call, it is ignored by JavaRosa.
+		 */
+		describe.skip('//region ODK Collect database-driven external file features', () => {
+			it.skip('externalInstanceDeclaration_ShouldBeIgnored_WhenNotReferenced');
+			it.skip(
+				'externalInstanceDeclaration_ShouldBeIgnored_WhenNotReferenced_AfterParsingFormWithReference'
+			);
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Potentially test elsewhere and/or as integration test.
+		 *
+		 * - - -
+		 *
+		 * JR:
+		 *
+		 * See https://github.com/getodk/javarosa/issues/451
+		 */
+		it.todo('dummyNodesInExternalInstanceDeclaration_ShouldBeIgnored');
+
+		describe('//region Missing external file', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Should probably fail pending feature support. Currently passes because
+			 * this is the expected behavior:
+			 *
+			 * - Without support for external secondary instances (and CSV)
+			 *
+			 * - Without producing an error in their absence
+			 */
+			it('[uses an] empty placeholder [~~]is used[~~] when [referenced] external instance [is] not found', async () => {
+				configureReferenceManagerIncorrectly();
+
+				const scenario = await Scenario.init('external-select-csv.xml');
+
+				expect(scenario.choicesOf('/data/first').size()).toBe(0);
 			});
 		});
 	});
