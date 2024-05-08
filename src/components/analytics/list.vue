@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
-      <analytics-form @preview="showModal('preview')"/>
+      <analytics-form @preview="previewModal.show()"/>
       <page-section v-if="audits.length !== 0">
         <template #heading>
           <span>{{ $t('auditsTitle') }}</span>
@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </page-section>
     </template>
-    <analytics-preview v-bind="preview" @hide="hideModal('preview')"/>
+    <analytics-preview v-bind="previewModal" @hide="previewModal.hide()"/>
   </div>
 </template>
 
@@ -43,8 +43,8 @@ import AuditTable from '../audit/table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
-import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -56,19 +56,12 @@ export default {
     Loading,
     PageSection
   },
-  mixins: [modal()],
   setup() {
     const { analyticsConfig, createResource, resourceStates } = useRequestData();
     const audits = createResource('audits');
     return {
-      analyticsConfig, audits, ...resourceStates([analyticsConfig, audits])
-    };
-  },
-  data() {
-    return {
-      preview: {
-        state: false
-      }
+      analyticsConfig, audits, ...resourceStates([analyticsConfig, audits]),
+      previewModal: modalData()
     };
   },
   created() {

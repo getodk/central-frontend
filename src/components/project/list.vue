@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('resource.projects') }}</span>
         <button v-if="currentUser.can('project.create')"
           id="project-list-new-button" type="button" class="btn btn-primary"
-          @click="showModal('newProject')">
+          @click="createModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
         <project-sort v-model="sortMode"/>
@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </template>
     </page-section>
-    <project-new v-bind="newProject" @hide="hideModal('newProject')"
+    <project-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
   </div>
 </template>
@@ -73,12 +73,12 @@ import ProjectHomeBlock from './home-block.vue';
 import ProjectSort from './sort.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import modal from '../../mixins/modal';
 import sortFunctions from '../../util/sort';
 import useChunkyArray from '../../composables/chunky-array';
 import useRoutes from '../../composables/routes';
-import { useRequestData } from '../../request-data';
+import { modalData } from '../../util/reactivity';
 import { sumUnderThreshold } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectList',
@@ -91,7 +91,6 @@ export default {
     ProjectSort,
     SentenceSeparator
   },
-  mixins: [modal()],
   inject: ['alert'],
   setup() {
     const { currentUser, projects } = useRequestData();
@@ -113,14 +112,8 @@ export default {
       currentUser, projects,
       sortMode, sortFunction,
       activeProjects, chunkyProjects,
+      createModal: modalData(),
       projectPath
-    };
-  },
-  data() {
-    return {
-      newProject: {
-        state: false
-      }
     };
   },
   computed: {

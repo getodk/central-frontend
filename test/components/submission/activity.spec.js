@@ -62,7 +62,7 @@ describe('SubmissionActivity', () => {
       return load('/projects/1/forms/f/submissions/s', { root: false })
         .testModalToggles({
           modal: SubmissionUpdateReviewState,
-          show: '#submission-activity-update-review-state-button',
+          show: '#submission-activity-review-button',
           hide: '.btn-link'
         });
     });
@@ -73,7 +73,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-update-review-state-button').exists().should.be.false();
+      component.find('#submission-activity-review-button').exists().should.be.false();
     });
 
     describe('after a successful response', () => {
@@ -88,7 +88,7 @@ describe('SubmissionActivity', () => {
         return load('/projects/1/forms/a%20b/submissions/c%20d', { root: false })
           .complete()
           .request(async (component) => {
-            const button = component.get('#submission-activity-update-review-state-button');
+            const button = component.get('#submission-activity-review-button');
             await button.trigger('click');
             const modal = component.getComponent(SubmissionUpdateReviewState);
             await modal.get('input[value="hasIssues"]').setValue(true);

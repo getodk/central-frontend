@@ -26,15 +26,14 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="col-xs-8">
           <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
-            :instance-id="instanceId"
-            @update-review-state="showModal('updateReviewState')"
+            :instance-id="instanceId" @review="reviewModal.show()"
             @comment="fetchActivityData"/>
         </div>
       </div>
     </page-body>
-    <submission-update-review-state :state="updateReviewState.state"
-      :project-id="projectId" :xml-form-id="xmlFormId" :submission="submission"
-      @hide="hideModal('updateReviewState')" @success="afterUpdateReviewState"/>
+    <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
+      :xml-form-id="xmlFormId" :submission="submission"
+      @hide="reviewModal.hide()" @success="afterReview"/>
   </div>
 </template>
 
@@ -49,12 +48,11 @@ import SubmissionActivity from './activity.vue';
 import SubmissionBasicDetails from './basic-details.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
-import modal from '../../mixins/modal';
 import useFields from '../../request-data/fields';
 import useRoutes from '../../composables/routes';
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
-import { setDocumentTitle } from '../../util/reactivity';
+import { modalData, setDocumentTitle } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -68,7 +66,6 @@ export default {
     SubmissionBasicDetails,
     SubmissionUpdateReviewState
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -98,14 +95,8 @@ export default {
     return {
       project, submission, submissionVersion, audits, comments, diffs, fields,
       ...resourceStates([project, submission]),
+      reviewModal: modalData(),
       formPath
-    };
-  },
-  data() {
-    return {
-      updateReviewState: {
-        state: false
-      }
     };
   },
   created() {
@@ -170,9 +161,9 @@ export default {
       ]);
       this.fetchActivityData();
     },
-    afterUpdateReviewState(submission, reviewState) {
+    afterReview(submission, reviewState) {
       this.fetchActivityData();
-      this.hideModal('updateReviewState');
+      this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));
       this.submission.__system.reviewState = reviewState;
     }

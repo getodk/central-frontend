@@ -20,14 +20,14 @@ except according to the terms contained in the LICENSE file.
         </enketo-fill>
         <odata-data-access :analyze-disabled="analyzeDisabled"
           :analyze-disabled-message="analyzeDisabledMessage"
-          @analyze="showModal('analyze')"/>
+          @analyze="analyzeModal.show()"/>
       </template>
       <template #body>
         <submission-list :project-id="projectId" :xml-form-id="xmlFormId" @fetch-keys="fetchData"/>
       </template>
     </page-section>
-    <odata-analyze v-bind="analyze" :odata-url="odataUrl"
-      @hide="hideModal('analyze')"/>
+    <odata-analyze v-bind="analyzeModal" :odata-url="odataUrl"
+      @hide="analyzeModal.hide()"/>
   </div>
 </template>
 
@@ -39,8 +39,8 @@ import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 
-import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -54,7 +54,6 @@ export default {
     OdataDataAccess,
     SubmissionList
   },
-  mixins: [modal()],
   props: {
     projectId: {
       type: String,
@@ -68,14 +67,7 @@ export default {
   setup() {
     const { project, form, createResource } = useRequestData();
     const keys = createResource('keys');
-    return { project, form, keys };
-  },
-  data() {
-    return {
-      analyze: {
-        state: false
-      }
-    };
+    return { project, form, keys, analyzeModal: modalData() };
   },
   computed: {
     rendersEnketoFill() {

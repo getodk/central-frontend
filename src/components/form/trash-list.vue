@@ -22,10 +22,11 @@ except according to the terms contained in the LICENSE file.
     <table id="form-trash-list-table" class="table">
       <tbody>
         <form-trash-row v-for="form of sortedDeletedForms" :key="form.id" :form="form"
-          @start-restore="showRestore"/>
+          @start-restore="restoreForm.show({ form: $event })"/>
       </tbody>
     </table>
-    <form-restore :state="restoreForm.state" :form="restoreForm.form" @hide="hideRestore" @success="afterRestore"/>
+    <form-restore v-bind="restoreForm" @hide="restoreForm.hide()"
+      @success="afterRestore"/>
   </div>
 </template>
 
@@ -35,30 +36,21 @@ import { ascend, sortWith } from 'ramda';
 import FormTrashRow from './trash-row.vue';
 import FormRestore from './restore.vue';
 
-import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormTrashList',
   components: { FormTrashRow, FormRestore },
-  mixins: [modal()],
   inject: ['alert'],
   emits: ['restore'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { project, deletedForms } = useRequestData();
-    return { project, deletedForms };
-  },
-  data() {
-    return {
-      restoreForm: {
-        state: false,
-        form: null
-      }
-    };
+    return { project, deletedForms, restoreForm: modalData() };
   },
   computed: {
     count() {
@@ -80,17 +72,9 @@ export default {
         resend
       }).catch(noop);
     },
-    showRestore(form) {
-      this.restoreForm.form = form;
-      this.showModal('restoreForm');
-    },
-    hideRestore() {
-      this.hideModal('restoreForm');
-    },
     afterRestore() {
-      this.hideRestore();
       this.alert.success(this.$t('alert.restore', { name: this.restoreForm.form.name }));
-      this.restoreForm.form = null;
+      this.restoreForm.hide();
 
       // refresh trashed forms list
       this.fetchDeletedForms(true);

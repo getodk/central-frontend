@@ -117,10 +117,6 @@ Most components are named according to the combination of a resource and an acti
 * `Edit` or `Update`. A component used to update an existing resource of a particular type.
 * `Delete`. A modal used to delete an existing resource of a particular type.
 
-### Vue Mixins
-
-Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
-
 ### Composables
 
 Each component may use one or more of the composables in [`/src/composables/`](/src/composables/). Most composables will reside in that directory, but if it makes sense to group a composable with other functionality, it may be defined elsewhere. For example, the `useSessions()` composable is defined in [`/src/util/session.js`](/src/util/session.js).

@@ -17,7 +17,7 @@ either is an Administrator or has no role. -->
   <div>
     <div class="heading-with-button">
       <button id="user-list-new-button" type="button" class="btn btn-primary"
-        @click="showModal('newUser')">
+        @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <i18n-t tag="p" keypath="heading[0]">
@@ -38,17 +38,19 @@ either is an Administrator or has no role. -->
       <tbody v-if="dataExists">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :admin="adminIds.has(user.id)" :highlighted="highlighted"
-          @assigned-role="afterAssignRole" @reset-password="showResetPassword"
-          @retire="showRetire"/>
+          @assigned-role="afterAssignRole"
+          @reset-password="resetPassword.show({ user: $event })"
+          @retire="retireModal.show({ user: $event })"/>
       </tbody>
     </table>
     <loading :state="initiallyLoading"/>
 
-    <user-new v-bind="newUser" @hide="hideModal('newUser')"
+    <user-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
-    <user-reset-password v-if="!config.oidcEnabled" v-bind="resetPassword" @hide="hideResetPassword"
-      @success="afterResetPassword"/>
-    <user-retire v-bind="retire" @hide="hideRetire" @success="afterRetire"/>
+    <user-reset-password v-if="!config.oidcEnabled" v-bind="resetPassword"
+      @hide="resetPassword.hide()" @success="afterResetPassword"/>
+    <user-retire v-bind="retireModal" @hide="retireModal.hide()"
+      @success="afterRetire"/>
   </div>
 </template>
 
@@ -60,7 +62,7 @@ import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
 import UserRow from './row.vue';
 
-import modal from '../../mixins/modal';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -73,7 +75,6 @@ export default {
     UserRetire,
     UserRow
   },
-  mixins: [modal()],
   inject: ['alert', 'config'],
   setup() {
     const { createResource, resourceStates } = useRequestData();
@@ -89,17 +90,9 @@ export default {
       // The id of the highlighted user
       highlighted: null,
       // Modals
-      newUser: {
-        state: false
-      },
-      resetPassword: {
-        state: false,
-        user: null
-      },
-      retire: {
-        state: false,
-        user: null
-      }
+      createModal: modalData(),
+      resetPassword: modalData(),
+      retireModal: modalData()
     };
   },
   created() {
@@ -114,7 +107,7 @@ export default {
     },
     afterCreate(user) {
       this.fetchData();
-      this.hideModal('newUser');
+      this.createModal.hide();
       this.alert.success(this.$t('alert.create', user));
       this.highlighted = user.id;
     },
@@ -148,30 +141,13 @@ export default {
         }
       }
     },
-    showResetPassword(user) {
-      this.resetPassword.user = user;
-      this.showModal('resetPassword');
-    },
-    hideResetPassword() {
-      this.hideModal('resetPassword');
-      this.resetPassword.user = null;
-    },
     afterResetPassword(user) {
-      this.hideResetPassword();
-      this.hideModal('resetPassword');
+      this.resetPassword.hide();
       this.alert.success(this.$t('alert.resetPassword', user));
-    },
-    showRetire(user) {
-      this.retire.user = user;
-      this.showModal('retire');
-    },
-    hideRetire() {
-      this.hideModal('retire');
-      this.retire.user = null;
     },
     afterRetire(user) {
       this.fetchData();
-      this.hideRetire();
+      this.retireModal.hide();
       this.alert.success(this.$t('alert.retire', user));
       this.highlighted = null;
     }
