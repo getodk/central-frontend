@@ -20,13 +20,12 @@ except according to the terms contained in the LICENSE file.
   </page-section>
 </template>
 
-<script>
+<script setup>
 import PageSection from '../page/section.vue';
 
-export default {
-  name: 'HomeNews',
-  components: { PageSection }
-};
+defineOptions({
+  name: 'HomeNews'
+});
 </script>
 
 <style lang="scss">
@@ -36,6 +35,7 @@ export default {
   iframe {
     border-width: 0;
     height: 40px;
+    width: calc(100% - 35px);
   }
 }
 </style>
@@ -63,6 +63,9 @@ export default {
   },
   "fr": {
     "title": "Nouvelles"
+  },
+  "id": {
+    "title": "Berita"
   },
   "it": {
     "title": "Novità"

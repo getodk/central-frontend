@@ -10,19 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <multiselect id="submission-filters-review-state" :model-value="selectValue"
-    :options="options" :label="$t('field.reviewState')"
+  <multiselect id="submission-filters-review-state" :model-value="modelValue"
+    :options="options" default-to-all :label="$t('field.reviewState')"
     :placeholder="placeholder" :all="$t('action.select.all')"
-    :none="$t('action.select.none')" @update:model-value="update"/>
+    :none="$t('action.select.none')"
+    @update:model-value="$emit('update:modelValue', $event)"/>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionFiltersReviewState'
-};
-</script>
 <script setup>
-import { inject, nextTick, ref, watch } from 'vue';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Multiselect from '../../multiselect.vue';
@@ -30,13 +26,16 @@ import Multiselect from '../../multiselect.vue';
 import useReviewState from '../../../composables/review-state';
 import { odataLiteral } from '../../../util/odata';
 
-const props = defineProps({
+defineOptions({
+  name: 'SubmissionFiltersReviewState'
+});
+defineProps({
   modelValue: {
     type: Array,
     required: true
   }
 });
-const emit = defineEmits(['update:modelValue']);
+defineEmits(['update:modelValue']);
 
 const { reviewStates } = useReviewState();
 const { i18n: globalI18n } = inject('container');
@@ -44,27 +43,6 @@ const options = reviewStates.map(reviewState => ({
   value: odataLiteral(reviewState),
   text: globalI18n.t(`reviewState.${reviewState}`)
 }));
-
-const selectValue = ref(props.modelValue);
-watch(() => props.modelValue, (value) => { selectValue.value = value; });
-const update = (value) => {
-  if (value.length !== 0) {
-    emit('update:modelValue', value);
-  } else {
-    // If no review states are selected, then the selection falls back to all
-    // review states. If that's not the selection already, then we emit all
-    // review states. Otherwise, there's no change to emit, but we still need to
-    // make a temporary change to selectValue in order to force the Multiselect
-    // to recheck the checkboxes.
-    const all = options.map(option => option.value);
-    if (props.modelValue.length !== all.length) {
-      emit('update:modelValue', all);
-    } else {
-      selectValue.value = value;
-      nextTick(() => { selectValue.value = all; });
-    }
-  }
-};
 
 const { t } = useI18n();
 const placeholder = (counts) => t('placeholder', counts);
@@ -137,6 +115,15 @@ const placeholder = (counts) => t('placeholder', counts);
       "select": {
         "all": "Tous",
         "none": "Aucun"
+      }
+    }
+  },
+  "id": {
+    "placeholder": "{selected} dari {total}",
+    "action": {
+      "select": {
+        "all": "Semua",
+        "none": "Tidak Ada"
       }
     }
   },

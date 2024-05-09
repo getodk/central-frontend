@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <feed-entry :iso="entry.loggedAt ?? entry.createdAt"
-    :wrap-title="entry.action === 'entity.create'"
+    :wrap-title="entry.action === 'entity.create' || entry.action === 'entity.update.version'"
     class="submission-feed-entry">
     <template #title>
       <template v-if="entry.action === 'submission.create'">
@@ -35,21 +35,42 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link :to="entityPath(projectId, entityDataset(entry), entityUuid(entry))">
-              {{ entityLabel(entry) }}
+            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
+              {{ entry.details.entity.currentVersion.label }}
             </router-link>
+            <template v-else>
+              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
+            </template>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entityDataset(entry))">
-              {{ entityDataset(entry) }}
+            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
+              {{ entry.details.entity.dataset }}
             </router-link>
           </template>
         </i18n-t>
       </template>
-      <template v-else-if="entry.action === 'entity.create.error'">
+      <template v-else-if="entry.action === 'entity.update.version'">
+        <span class="icon-magic-wand entity-icon"></span>
+        <i18n-t keypath="title.entity.update">
+          <template #label>
+            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
+              {{ entry.details.entity.currentVersion.label }}
+            </router-link>
+            <template v-else>
+              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
+            </template>
+          </template>
+          <template #dataset>
+            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
+              {{ entry.details.entity.dataset }}
+            </router-link>
+          </template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'entity.error'">
         <span class="icon-warning"></span>
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
-        <span class="entity-error-message" v-tooltip.text>{{ entityProblem(entry) }}</span>
+        <span class="entity-error-message" v-tooltip.text>{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</span>
       </template>
       <template v-else>
         <span class="icon-comment"></span>
@@ -154,35 +175,6 @@ export default {
       if (deprecatedIdDiff == null) return null;
       return deprecatedIdDiff.new;
     }
-  },
-  methods: {
-    entityLabel(entry) {
-      // This is probably always true in production, but it wasn't always the
-      // case during the development of v2022.3.
-      if ('entity' in entry.details)
-        return entry.details.entity.label;
-      return '';
-    },
-    entityDataset(entry) {
-      if ('entity' in entry.details)
-        return entry.details.entity.dataset;
-      return '';
-    },
-    entityUuid(entry) {
-      if ('entity' in entry.details)
-        return entry.details.entity.uuid;
-      return '';
-    },
-    entityProblem(entry) {
-      if ('problem' in entry.details &&
-        'problemDetails' in entry.details.problem &&
-        'reason' in entry.details.problem.problemDetails)
-        return entry.details.problem.problemDetails.reason;
-      if ('problem' in entry.details &&
-        'errorMessage' in entry.details)
-        return entry.details.errorMessage;
-      return '';
-    }
   }
 };
 </script>
@@ -207,6 +199,7 @@ export default {
     &.approved { color: $color-success; }
     &.rejected { color: $color-danger; }
   }
+  .entity-label { font-weight: normal; }
 }
 </style>
 
@@ -229,8 +222,9 @@ export default {
       */
       "create": "Submitted by {name}",
       "entity": {
-        "create": "Created Entity {label} in {dataset} Dataset",
-        "error": "Problem creating Entity",
+        "create": "Created Entity {label} in {dataset} Entity List",
+        "update": "Updated Entity {label} in {dataset} Entity List",
+        "error": "Problem processing Entity",
       },
       "updateReviewState": {
         "null": {
@@ -344,10 +338,6 @@ export default {
   "cs": {
     "title": {
       "create": "Odesláno od {name}",
-      "entity": {
-        "create": "Vytvořená entita {label} v datové sadě {dataset}",
-        "error": "Problém s vytvořením entity"
-      },
       "updateReviewState": {
         "null": {
           "full": "{reviewState} u {name}",
@@ -377,7 +367,8 @@ export default {
     "title": {
       "create": "Übermittelt von {name}",
       "entity": {
-        "create": "Geschaffene Entität {label} in {dataset} Datensatz",
+        "create": "Entität {label} in {dataset} Entitätsliste erzeugt",
+        "update": "Entität {label} in {dataset} Entitätsliste aktualisiert",
         "error": "Problem beim Erstellen einer Entität"
       },
       "updateReviewState": {
@@ -409,8 +400,9 @@ export default {
     "title": {
       "create": "Enviado por {name}",
       "entity": {
-        "create": "Entidad creada {label} en {dataset} Conjunto de datos",
-        "error": "Problema creando Entidad"
+        "create": "Entidad creada {label} en {dataset} Lista de entidades",
+        "update": "Entidad Actualizada {label} en {dataset} Lista de entidades",
+        "error": "Problema procesando la Entidad"
       },
       "updateReviewState": {
         "null": {
@@ -441,8 +433,9 @@ export default {
     "title": {
       "create": "Soumis par {name}",
       "entity": {
-        "create": "Création de l'Entité {label} dans le Dataset {dataset}",
-        "error": "Problème lors de la création de l'entité"
+        "create": "Création de l'entité {label} dans la liste {dataset}",
+        "update": "{label} Entité mise à jour dans {dataset} Listes d'Entités",
+        "error": "Problème lors du traitement de l'Entité"
       },
       "updateReviewState": {
         "null": {
@@ -471,15 +464,39 @@ export default {
   },
   "id": {
     "title": {
-      "create": "Terkirim oleh {name}"
+      "create": "Terkirim oleh {name}",
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Diterima"
+        },
+        "hasIssues": {
+          "full": "{reviewState} per {name}",
+          "reviewState": "Memiliki masalah"
+        },
+        "edited": {
+          "full": "{reviewState} oleh {name}",
+          "reviewState": "Diubah"
+        },
+        "approved": {
+          "full": "{reviewState} oleh {name}",
+          "reviewState": "Disetujui"
+        },
+        "rejected": {
+          "full": "{reviewState} oleh {name}",
+          "reviewState": "Ditolak"
+        }
+      },
+      "comment": "Komentar oleh {name}"
     }
   },
   "it": {
     "title": {
       "create": "Inviato da {name}",
       "entity": {
-        "create": "Entità creata {label} in {dataset} set di dati",
-        "error": "Problema durante la creazione dell'Entità"
+        "create": "Entità creata {label} in {dataset} Lista Entità",
+        "update": "Entità aggiornata {label} in {dataset} Lista Entità",
+        "error": "Problema durante la elaborazione dell'Entità"
       },
       "updateReviewState": {
         "null": {
@@ -538,8 +555,9 @@ export default {
     "title": {
       "create": "Imewasilishwa na {name}",
       "entity": {
-        "create": "Imeunda huluki {label} katika {dataset} seti ya data",
-        "error": "Tatizo limetokea wakati wa kuunda Huluki"
+        "create": "Imeunda Huluki {label} katika {dataset} Orodha ya Huluki",
+        "update": "Imesasisha Huluki {label} katika {dataset} Orodha ya Huluki",
+        "error": "Tatizo la kuchakata Huluki"
       },
       "updateReviewState": {
         "null": {

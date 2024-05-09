@@ -1,11 +1,13 @@
 import { clone } from 'ramda';
+
 import ChecklistStep from '../../../src/components/checklist-step.vue';
+import FileDropZone from '../../../src/components/file-drop-zone.vue';
 import FormNew from '../../../src/components/form/new.vue';
 import FormRow from '../../../src/components/form/row.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
-import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/trigger';
+import { dragAndDrop, setFiles } from '../../util/trigger';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
@@ -120,11 +122,11 @@ describe('FormNew', () => {
       modal.should.not.alert();
     });
 
-    describe('after the file is selected using the file input', () => {
-      it('sets the file data property', async () => {
+    describe('after a file is selected using the file input', () => {
+      it('shows the filename', async () => {
         const modal = mount(FormNew, mountOptions());
         await setFiles(modal.get('input'), [xlsForm()]);
-        modal.vm.file.name.should.equal('my_form.xlsx');
+        modal.get('#form-new-filename').text().should.equal('my_form.xlsx');
       });
 
       it('resets the input', async () => {
@@ -134,45 +136,41 @@ describe('FormNew', () => {
       });
     });
 
-    describe('drag and drop', () => {
-      it('adds a class to drop zone while file is dragged', async () => {
-        const modal = mount(FormNew, mountOptions());
-        const dropZone = modal.get('#form-new-drop-zone');
-        await dropZone.trigger('dragenter', {
-          dataTransfer: fileDataTransfer([xlsForm()])
-        });
-        dropZone.classes('form-new-dragover').should.be.true();
-      });
-
-      it('sets the file data property after the file is dropped', async () => {
-        const modal = mount(FormNew, mountOptions());
-        await dragAndDrop(modal.get('#form-new-drop-zone'), [xlsForm()]);
-        modal.vm.file.name.should.equal('my_form.xlsx');
-      });
+    it('shows the filename after a file is dropped', async () => {
+      const modal = mount(FormNew, mountOptions());
+      await dragAndDrop(modal.getComponent(FileDropZone), [xlsForm()]);
+      modal.get('#form-new-filename').text().should.equal('my_form.xlsx');
     });
   });
 
-  describe('request URL', () => {
+  describe('request', () => {
     beforeEach(mockLogin);
 
-    it('sends a request to .../forms when creating a form', () => {
+    it('sends the correct request when creating a form', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
         .mount(FormNew, mountOptions())
         .request(upload)
-        .beforeEachResponse((_, { url }) => {
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms');
+          data.should.be.an.instanceof(File);
+          data.name.should.equal('my_form.xlsx');
+          // We test request headers separately below.
         })
         .respondWithProblem();
     });
 
-    it('sends a request to .../draft when uploading a new definition', () => {
+    it('sends the correct request when uploading a new definition', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return mockHttp()
         .mount(FormNew, mountOptions())
         .request(upload)
-        .beforeEachResponse((_, { url }) => {
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/draft');
+          data.should.be.an.instanceof(File);
+          data.name.should.equal('my_form.xlsx');
         })
         .respondWithProblem();
     });
@@ -249,9 +247,8 @@ describe('FormNew', () => {
       .mount(FormNew, mountOptions())
       .request(upload)
       .beforeEachResponse(modal => {
-        modal.vm.disabled.should.be.true();
-        const dropZone = modal.get('#form-new-drop-zone');
-        dropZone.classes('form-new-disabled').should.be.true();
+        const dropZone = modal.getComponent(FileDropZone);
+        dropZone.props().disabled.should.be.true();
         const button = dropZone.get('.btn-primary');
         button.attributes('aria-disabled').should.equal('true');
       })

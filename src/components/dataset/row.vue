@@ -20,6 +20,16 @@ except according to the terms contained in the LICENSE file.
     <td>
       <span> <date-time :iso="dataset.lastEntity"/> </span>
     </td>
+    <td class="conflicts">
+      <span v-if="dataset.conflicts > 0">
+        <router-link :to="datasetPath(dataset.projectId, dataset.name, 'entities?conflict=true')">
+          <span class="wrap-circle">
+            <span class="icon-warning"></span>
+          </span>
+          {{ $tcn('possibleConflictsCount', dataset.conflicts) }}
+        </router-link>
+      </span>
+    </td>
     <td>
       <a class="btn btn-primary" :href="href">
         <span class="icon-download"></span>{{ $t('action.download') }}
@@ -49,7 +59,7 @@ export default {
   },
   computed: {
     href() {
-      return apiPaths.entities(this.dataset.projectId, this.dataset.name);
+      return apiPaths.entities(this.dataset.projectId, this.dataset.name, '.csv');
     },
     datasetOverviewPage() {
       return this.datasetPath(this.dataset.projectId, this.dataset.name);
@@ -70,6 +80,21 @@ export default {
     text-align: right;
     padding-right: 10%;
   }
+  .wrap-circle {
+    width: 22px;
+    display: inline-block;
+    background: $color-danger;
+    height: 22px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+
+    margin-right: 3px;
+  }
+  .icon-warning { font-size: 12px; }
+  .conflicts a {
+    color: $color-danger;
+  }
 }
 </style>
 
@@ -78,7 +103,8 @@ export default {
   "en": {
     "action": {
       "download": "Download data (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} possible conflict | {count} possible conflicts"
   }
 }
 </i18n>
@@ -94,22 +120,26 @@ export default {
   "de": {
     "action": {
       "download": "Daten herunterladen (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} möglicher Konflikt | {count} mögliche Konflikte"
   },
   "es": {
     "action": {
       "download": "Descargar datos (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} posible conflicto | {count} posibles conflictos | {count} posibles conflictos"
   },
   "fr": {
     "action": {
       "download": "Télécharger les données (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} conflit possible | {count} conflits possibles | {count} conflits possibles"
   },
   "it": {
     "action": {
       "download": "Scarica dati (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} possibile conflitto | {count} possibili conflitti | {count} possibili conflitti"
   },
   "sw": {
     "action": {

@@ -131,7 +131,7 @@ const responsesByComponent = {
     dataset: true,
     audits: () => testData.extendedAudits.sorted()
       .filter(({ action }) => action.startsWith('entity.')),
-    diffs: () => []
+    entityVersions: () => testData.extendedEntityVersions.sorted()
   }),
 
   UserHome: [],

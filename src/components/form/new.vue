@@ -27,7 +27,7 @@ definition for an existing form -->
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.xlsFormWarnings">
-{{ removeLearnMore(warning) }}
+              {{ removeLearnMore(warning) }}
               <template v-if="hasLearnMoreLink(warning)">
                 <sentence-separator/>
                 <a :href="getLearnMoreLink(warning)" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
@@ -77,11 +77,13 @@ definition for an existing form -->
         </p>
         <p v-if="!formDraft.dataExists">{{ $t('introduction[2]') }}</p>
       </div>
-      <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
+      <file-drop-zone :disabled="awaitingResponse"
+        @drop="afterFileSelection($event.dataTransfer.files[0])">
         <i18n-t tag="div" keypath="dropZone.full">
           <template #chooseOne>
             <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml" @change="afterChange">
+            <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml"
+              @change="afterInputChange">
             <button type="button" class="btn btn-primary"
               :aria-disabled="awaitingResponse" @click="$refs.input.click()">
               <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
@@ -91,7 +93,7 @@ definition for an existing form -->
         <div v-show="file != null" id="form-new-filename">
           {{ file != null ? file.name : '' }}
         </div>
-      </div>
+      </file-drop-zone>
       <div class="modal-actions">
         <button id="form-new-upload-button" type="button"
           class="btn btn-primary" :aria-disabled="awaitingResponse"
@@ -109,19 +111,18 @@ definition for an existing form -->
 
 <script>
 import DocLink from '../doc-link.vue';
+import FileDropZone from '../file-drop-zone.vue';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import dropZone from '../../mixins/drop-zone';
 import useRequest from '../../composables/request';
 import { apiPaths, isProblem } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormNew',
-  components: { DocLink, Modal, SentenceSeparator, Spinner },
-  mixins: [dropZone()],
+  components: { DocLink, FileDropZone, Modal, SentenceSeparator, Spinner },
   inject: ['alert'],
   props: {
     state: {
@@ -141,7 +142,6 @@ export default {
   },
   data() {
     return {
-      dragDepth: 0,
       file: null,
       warnings: null,
       documentLinks: {
@@ -151,15 +151,6 @@ export default {
     };
   },
   computed: {
-    disabled() {
-      return this.awaitingResponse;
-    },
-    dropZoneClass() {
-      return {
-        'form-new-disabled': this.awaitingResponse,
-        'form-new-dragover': this.fileIsOverDropZone
-      };
-    },
     // Returns the inferred content type of the file based on its extension. (We
     // first tried using this.file.type rather than inferring the content type,
     // but that didn't work in Edge.)
@@ -185,12 +176,9 @@ export default {
       this.file = file;
       this.warnings = null;
     },
-    afterChange(event) {
+    afterInputChange(event) {
       this.afterFileSelection(event.target.files[0]);
       this.$refs.input.value = '';
-    },
-    ondrop(jQueryEvent) {
-      this.afterFileSelection(jQueryEvent.originalEvent.dataTransfer.files[0]);
     },
     upload(ignoreWarnings) {
       if (this.file == null) {
@@ -264,36 +252,26 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-$drop-zone-vpadding: 15px;
-
-#form-new .modal-warnings ul {
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  margin-top: 10px;
-}
-
-#form-new-drop-zone {
-  background-color: $color-panel-input-background;
-  border: 1px dashed $color-subpanel-border;
-  padding-bottom: $drop-zone-vpadding;
-  padding-top: $drop-zone-vpadding;
-  text-align: center;
-
-  &.form-new-dragover {
-    opacity: 0.65;
+#form-new {
+  .modal-warnings ul {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    margin-top: 10px;
   }
 
-  &.form-new-disabled {
-    cursor: not-allowed;
-    opacity: 0.65;
+  .file-drop-zone {
+    // Zero out the horizontal padding so that the border above the filename
+    // stretches across the entire width of the drop zone.
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
 #form-new-filename {
-  background-color: $color-input-background;
+  background-color: #eee;
   border-top: 1px solid #ddd;
   font-family: $font-family-monospace;
-  margin-bottom: -$drop-zone-vpadding;
+  margin-bottom: -$padding-file-drop-zone;
   margin-top: 10px;
   padding: 6px 0;
 }
@@ -324,7 +302,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "choose one"
     },
     "action": {
-      "upload": "Upload",
       "uploadAnyway": "Upload anyway"
     },
     "alert": {
@@ -380,7 +357,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "vyberte jeden"
     },
     "action": {
-      "upload": "Nahrát",
       "uploadAnyway": "Přesto nahrát"
     },
     "alert": {
@@ -428,7 +404,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "eine auswählen"
     },
     "action": {
-      "upload": "Hochladen",
       "uploadAnyway": "Trotzdem hochladen"
     },
     "alert": {
@@ -476,7 +451,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "elige uno"
     },
     "action": {
-      "upload": "Subir",
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
@@ -524,7 +498,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "Choisissez un"
     },
     "action": {
-      "upload": "Téléverser",
       "uploadAnyway": "Téléverser malgré tout"
     },
     "alert": {
@@ -571,7 +544,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "pilih satu"
     },
     "action": {
-      "upload": "Unggah",
       "uploadAnyway": "Lanjutkan unggah"
     },
     "alert": {
@@ -604,7 +576,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "scegli uno"
     },
     "action": {
-      "upload": "Carica",
       "uploadAnyway": "Carica comunque"
     },
     "alert": {
@@ -651,7 +622,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "１つ選択"
     },
     "action": {
-      "upload": "アップロード",
       "uploadAnyway": "ひとまず、アップロード"
     },
     "alert": {
@@ -684,7 +654,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "Chagua moja"
     },
     "action": {
-      "upload": "pakia",
       "uploadAnyway": "Pakia hata hivyo"
     },
     "alert": {

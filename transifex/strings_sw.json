@@ -46,13 +46,12 @@
     },
     "draftNav": {
       "tab": {
-        "status": {
-          "string": "Hali",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "testing": {
           "string": " Upimaji",
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "status": {
+          "string": "Hali"
         }
       }
     }
@@ -154,7 +153,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "dataset": {
-        "string": "Vitendo vya Seti ya Data",
+        "string": "Vitendo vya Orodha ya Huluki",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "field_key": {
@@ -206,11 +205,11 @@
       "dataset": {
         "update": {
           "string": "Sasisha",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "update_publish": {
           "string": "Kuchapisha",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "field_key": {
@@ -306,6 +305,10 @@
       "string": "Maoni",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "continue": {
+      "string": "Endelea",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "create": {
       "string": "Unda",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -313,6 +316,10 @@
     "createSubmission": {
       "string": "Mpya",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+    },
+    "delete": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "done": {
       "string": "Imekamilika",
@@ -502,8 +509,16 @@
       "string": "uwasilishaji wa hivi karibuni",
       "developer_comment": "This is the text of a table column header."
     },
+    "recentActivity": {
+      "string": "Shughuli ya Hivi Karibuni",
+      "developer_comment": "This is the text of a table column header."
+    },
     "name": {
       "string": "Jina",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "listName": {
+      "string": "Jina la Orodha",
       "developer_comment": "This is the text of a table column header."
     },
     "submitterName": {
@@ -524,7 +539,7 @@
     },
     "entities": {
       "string": "Jumla ya Mashirika",
-      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the Entity List"
     },
     "lastEntity": {
       "string": "huluki karibuni",
@@ -563,6 +578,10 @@
     "submission": {
       "string": "{count, plural, one {{count} wasilisho} other {{count} Mawasilisho}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "warning": {
+      "string": "{count, plural, one {} other {}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
   "resource": {
@@ -578,12 +597,12 @@
       "string": "usanidi wa seva",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "dataset": {
-      "string": "Seti ya data",
+    "entityList": {
+      "string": "Orodha ya Huluki",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "datasets": {
-      "string": "Seti za data",
+    "entityLists": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
@@ -611,7 +630,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "property": {
-      "string": "",
+      "string": "Mali",
       "developer_comment": "This is a data property of an Entity."
     },
     "publicLink": {
@@ -652,7 +671,7 @@
       "string": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10."
     },
     "updateEntity": {
-      "string": ""
+      "string": "Huluki imesasishwa!"
     },
     "updateReviewState": {
       "string": "Kagua Jimbo limehifadhiwa!"
@@ -737,11 +756,20 @@
       "developer_comment": "This is the label of an Entity."
     },
     "entityLabel": {
-      "string": ""
+      "string": "Lebo ya Huluki"
     },
     "entityId": {
       "string": "Kitambulisho cha huluki",
       "developer_comment": "This is the UUID of an Entity."
+    },
+    "noProperties": {
+      "string": "Fomu hii huweka \"lebo\" pekee."
+    },
+    "noEntity": {
+      "string": "(hakuna)"
+    },
+    "conflictsCount": {
+      "string": "{count, plural, one {{count} mzozo} other {{count} migogoro}}"
     }
   },
   "common": {
@@ -760,6 +788,12 @@
     "basicInfo": {
       "string": "Taarifa za Msingi",
       "developer_comment": "This is a title shown above a section of the page."
+    },
+    "conflict": {
+      "string": ""
+    },
+    "conflicts": {
+      "string": "migogoro"
     },
     "currentDraft": {
       "string": "Rasimu Yako ya Sasa",
@@ -802,9 +836,16 @@
       "string": "Hakuna majibu",
       "developer_comment": "This is shown if a search returned no results."
     },
+    "noUndo": {
+      "string": ""
+    },
     "rightNow": {
       "string": "Sasaivi",
       "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
+    },
+    "rowNumber": {
+      "string": "",
+      "developer_comment": "This is shown for the row number."
     },
     "success": {
       "string": "Mafanikio!"
@@ -832,14 +873,23 @@
     "totalSubmissions": {
       "string": "Jumla ya Mawasilisho"
     },
-    "punctuations": {
-      "comma": {
-        "string": ","
-      }
-    },
     "propertiesCount": {
       "string": "{count, plural, one {{inform} ya sifa za {count}} other {{inform} ya sifa za {count}}}",
-      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
+    },
+    "new": {
+      "string": "Mpya!"
+    },
+    "totalEntities": {
+      "string": "Jumla ya Mashirika"
+    },
+    "versionShort": {
+      "string": "",
+      "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
+    },
+    "warning": {
+      "string": "",
+      "developer_comment": "This text is shown on its own before details about a warning."
     }
   },
   "mixin": {
@@ -847,6 +897,9 @@
       "alert": {
         "fileSize": {
           "string": "faili \"{name}\" ambayo unajaribu kupakia ni kubwa kuliko kikomo cha MB 100"
+        },
+        "entityTooLarge": {
+          "string": ""
         }
       }
     }
@@ -860,6 +913,30 @@
     }
   },
   "util": {
+    "csv": {
+      "readError": {
+        "string": "",
+        "developer_comment": "{message} is a description of the problem."
+      },
+      "invalidCSV": {
+        "string": ""
+      },
+      "rowError": {
+        "string": "",
+        "developer_comment": "{row} is a row number. {message} is a description of the problem."
+      },
+      "invalidQuotes": {
+        "string": "",
+        "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
+      },
+      "emptyRow": {
+        "string": ""
+      },
+      "dataWithoutHeader": {
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "This is an error that is shown for a data file. {expected} and {actual} are each a number of columns. The string will be pluralized based on {expected}."
+      }
+    },
     "request": {
       "noRequest": {
         "string": "Hitilafu fulani imetokea: hakukuwa na ombi."
@@ -870,6 +947,12 @@
       "errorNotProblem": {
         "string": "Hitilafu fulani imetokea: msimbo wa hitilafu {status}.",
         "developer_comment": "{status} is an HTTP status code, for example, 404."
+      },
+      "problem": {
+        "404_1": {
+          "string": "",
+          "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        }
       }
     },
     "session": {
@@ -919,6 +1002,25 @@
         },
         "changePassword": {
           "string": "Nenosiri lako ni fupi kuliko vibambo 10. Ili kulinda akaunti yako, tafadhali badilisha nenosiri lako ili kuifanya iwe ndefu."
+        }
+      },
+      "oidc": {
+        "body": {
+          "string": "Bofya Endelea ili kuendelea na ukurasa wa kuingia."
+        },
+        "error": {
+          "auth-ok-user-not-found": {
+            "string": "Hakuna akaunti ya Kati inayohusishwa na anwani yako ya barua pepe. Tafadhali muulize msimamizi wako Mkuu akufungulie akaunti ili uendelee."
+          },
+          "email-not-verified": {
+            "string": "Anwani yako ya barua pepe haijathibitishwa na seva yako ya kuingia. Tafadhali wasiliana na msimamizi wa seva yako."
+          },
+          "email-claim-not-provided": {
+            "string": "Central haikuweza kufikia anwani ya barua pepe inayohusishwa na akaunti yako. Hii inaweza kuwa kwa sababu msimamizi wa seva yako amesanidi kitu vibaya, au hajaweka anwani ya barua pepe kwa akaunti yako. Inaweza pia kuwa matokeo ya chaguzi za faragha ambazo unaweza kuchagua wakati wa mchakato wa kuingia. Ikiwa ndivyo, tafadhali jaribu tena na uhakikishe kuwa barua pepe yako inashirikiwa."
+          },
+          "internal-server-error": {
+            "string": "Hitilafu fulani imetokea wakati wa kuingia. Tafadhali wasiliana na msimamizi wa seva yako."
+          }
         }
       },
       "problem": {
@@ -1158,19 +1260,61 @@
           "string": "Idadi ya Mali"
         },
         "num_creation_forms": {
-          "string": "Idadi ya Fomu zinazosasisha Seti ya Data"
+          "string": "Idadi ya Fomu zinazosasisha Orodha ya Huluki"
         },
         "num_followup_forms": {
-          "string": "Idadi ya Fomu zinazotumia Hifadhidata"
+          "string": "Idadi ya Fomu zinazotumia Orodha ya Huluki"
         },
         "num_entities": {
-          "string": "Idadi ya Huluki katika Seti ya Data"
+          "string": "Idadi ya Huluki katika Orodha ya Huluki"
         },
         "num_failed_entities": {
           "string": "Idadi ya hitilafu za kuunda Huluki"
         },
         "num_entity_updates": {
+          "string": "Idadi ya masasisho ya Huluki"
+        },
+        "num_entity_updates_sub": {
           "string": ""
+        },
+        "num_entity_updates_api": {
+          "string": ""
+        },
+        "num_entities_updated": {
+          "string": ""
+        },
+        "num_entity_conflicts": {
+          "string": ""
+        },
+        "num_entity_conflicts_resolved": {
+          "string": ""
+        },
+        "num_bulk_create_events": {
+          "string": ""
+        },
+        "biggest_bulk_upload": {
+          "string": ""
+        },
+        "sso_enabled": {
+          "string": "SSO imewashwa kwenye seva"
+        },
+        "num_client_audit_attachments": {
+          "string": "Idadi ya Viambatisho vya Ukaguzi wa Mteja"
+        },
+        "num_client_audit_attachments_failures": {
+          "string": "Idadi ya hitilafu za uchakataji wa Ukaguzi wa Wateja"
+        },
+        "num_client_audit_rows": {
+          "string": "Idadi ya safu mlalo za Ukaguzi wa Wateja"
+        },
+        "num_audits_failed": {
+          "string": "Idadi ya Matukio ya Kumbukumbu ya Ukaguzi ambayo hayakufaulu angalau mara moja"
+        },
+        "num_audits_failed5": {
+          "string": "Idadi ya Matukio ya Kumbukumbu ya Ukaguzi ambayo hayakufaulu kabisa"
+        },
+        "num_audits_unprocessed": {
+          "string": "Idadi ya Matukio ya Rekodi za Ukaguzi ambayo uchakataji wake umecheleweshwa"
         }
       }
     },
@@ -1203,13 +1347,13 @@
         "string": "Nchi za Uwasilishaji",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
-      "datasets": {
+      "entities": {
         "title": {
-          "string": "Seti ya Data na Muhtasari wa Huluki",
-          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
+          "string": "Muhtasari wa Vyombo",
+          "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one {(Inaonyesha Seti ya Data inayotumika zaidi ya Seti ya Data ya {count})} other {(Inaonyesha Seti ya Data inayotumika zaidi ya Seti za Data za {count})}}"
+          "string": "{count, plural, one {(Inaonyesha Orodha ya Huluki inayotumika zaidi  {count} ya Orodha ya Huluki)} other {(Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha za Huluki)}}"
         }
       },
       "other": {
@@ -1260,46 +1404,53 @@
         }
       }
     },
-    "DatasetIntroduction": {
-      "title": {
-        "string": ""
+    "DatasetEntities": {
+      "alert": {
+        "upload": {
+          "string": ""
+        }
+      }
+    },
+    "DatasetList": {
+      "heading": {
+        "0": {
+          "string": "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi.",
+          "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
+        },
+        "1": {
+          "string": "Mashirika huundwa kupitia muundo wa fomu na yanaweza kuambatishwa kwa Fomu yoyote."
+        }
       },
-      "body": {
+      "new": {
+        "string": "",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+      }
+    },
+    "DatasetNew": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "encrypted": {
+        "string": "",
+        "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
+      },
+      "entityListName": {
+        "string": "",
+        "developer_comment": "This appears above a text input field for the name of an Entity List"
+      },
+      "success": {
         "0": {
           "string": ""
         },
         "1": {
-          "string": "",
-          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "2": {
-          "string": "",
-          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "3": {
-          "string": "",
-          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
-        },
-        "4": {
-          "string": "",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
-        },
-        "5": {
           "string": ""
         }
       },
-      "getStarted": {
-        "full": {
-          "string": "Kwa maelezo zaidi kuhusu jinsi ya kuanza, {clickHere}.",
-          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
-        },
-        "clickHere": {
-          "string": "Bonyeza hapa",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
+      "problem": {
+        "409_3": {
+          "string": ""
         }
-      },
-      "datasetsWorkflow": {
-        "string": "Mtiririko wa kazi wa seti za data"
       }
     },
     "DatasetOverview": {
@@ -1307,67 +1458,97 @@
         "string": "Viunganisho kwa Fomu",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "datasetProperties": {
-        "string": "Sifa za Seti ya Data",
+      "entityProperties": {
+        "string": "Sifa za Mashirika",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "new": {
+        "string": "",
+        "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
     "DatasetOverviewConnectionToForms": {
-      "formsCreateEntities": {
-        "string": "{count, plural, one {Fomu huunda Huluki katika Seti hizi za Data} other {Fomu huunda Huluki katika Seti hii ya Data}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+      "formsUpdateEntities": {
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "The number of Form(s) is shown separately above this text."
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "Hakuna Sifa katika Seti hii ya Data"
+        "string": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
+      },
+      "none": {
+        "string": "",
+        "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
       }
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Fomu hutumia data kutoka kwa Hifadhidata hii} other {Fomu hutumia data kutoka kwa Hifadhidata hii}}",
+        "string": "{count, plural, one {Fomu hutumia Orodha hii ya Huluki} other {Fomu hutumia Orodha hii ya Huluki}}",
         "developer_comment": "Number of form(s) is shown separately above this text"
+      }
+    },
+    "DatasetOverviewNewProperty": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
+      },
+      "newPropertyName": {
+        "string": ""
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
+        }
       }
     },
     "DatasetPendingSubmissions": {
       "title": {
-        "string": ""
+        "string": "Mawasilisho Yanayosubiri"
       },
       "action": {
         "changeSetting": {
-          "string": "",
+          "string": "Badilisha mpangilio",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "explanation": {
         "userAction": {
-          "string": ""
+          "string": "Unaweka uundaji wa Huluki ufanyike wakati Mawasilisho yanapokewa kwa mara ya kwanza na Central."
         },
         "implication": {
           "full": {
-            "string": "{count, plural, one {} other {}}",
+            "string": "{count, plural, one {Hili likianza kutekelezwa, Huluki hazitazalishwa tena Mawasilisho yanapowekwa alama kuwa Yameidhinishwa, ikijumuisha {records} tumegundua kuwa hayajaalamishwa kama Yameidhinishwa wala Yamekataliwa.} other {Hili likianza kutumika, Huluki hazitatolewa tena Mawasilisho yanapowekwa alama kuwa Yameidhinishwa, ikijumuisha {records} tumegundua kuwa hayajaalamishwa kama Yameidhinishwa wala Yamekataliwa.}}",
             "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
           },
           "records": {
-            "string": "{count, plural, one {} other {}}",
+            "string": "{count, plural, one {{count} Kumbukumbu} other {{count} kumbukumbu}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nOnce this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected."
           }
         }
       },
       "dontConvert": {
         "label": {
-          "string": ""
+          "string": "Ninaelewa na hii sio shida kwangu."
         },
         "description": {
-          "string": "{count, plural, one {} other {}}"
+          "string": "{count, plural, one {Badilisha mpangilio na usifanye chochote na Wasilisho linalosubiri.} other {Badilisha mpangilio na usifanye chochote na Mawasilisho yanayosubiri.}}"
         }
       },
       "convert": {
         "label": {
-          "string": ""
+          "string": "Badilisha Mawasilisho yote yanayosubiri kuwa Huluki sasa."
         },
         "description": {
-          "string": "{count, plural, one {} other {}}"
+          "string": "{count, plural, one {Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika.} other {Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika.}}"
         }
       }
     },
@@ -1377,56 +1558,64 @@
           "string": "Pakua data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "possibleConflictsCount": {
+        "string": "{count, plural, one {} other {}}"
       }
     },
     "DatasetSettings": {
       "entityWorkflow": {
-        "string": "",
+        "string": "Mtiririko wa Kazi wa Huluki",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "onReceipt": {
         "label": {
-          "string": ""
+          "string": "Unda Huluki mara tu Mawasilisho yanapopokelewa na Central"
         },
         "description": {
-          "string": ""
+          "string": "Hutakuwa na nafasi ya kukagua au kurekebisha data kabla ya Huluki kuundwa."
         },
         "successMessage": {
-          "string": ""
+          "string": "Huluki zitaundwa mara tu Mawasilisho yatakapopokelewa na Central."
         }
       },
       "onApproval": {
         "label": {
-          "string": ""
+          "string": "Unda Huluki wakati Mawasilisho yametiwa alama kuwa Yameidhinishwa"
         },
         "description": {
-          "string": ""
+          "string": "Data ya huluki haitasasishwa hadi mtu aikague data. Marekebisho yanaweza kufanywa ikiwa ni lazima."
         },
         "successMessage": {
-          "string": ""
+          "string": "Huluki zitaundwa Mawasilisho yanapotiwa alama kuwa Yameidhinishwa."
         }
       }
     },
     "DatasetShow": {
       "back": {
-        "string": "Rudi kwenye Hifadhidata za Mradi",
+        "string": "Rudi kwenye vyombo vya Mradi",
         "developer_comment": "This is shown at the top of the page."
       }
     },
     "DatasetSummary": {
       "datasetUpdates": {
-        "string": "{count, plural, one {Seti ya data inasasishwa na Fomu hii:} other {Seti za data zinasasishwa na Fomu hii:}}",
-        "developer_comment": "Number of dataset(s) is shown separately above this text"
+        "string": "{count, plural, one {Orodha za Mashirika husasishwa na Fomu hii:} other {Orodha za Mashirika husasishwa na Fomu hii:}}",
+        "developer_comment": "Number of Entity List(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
       "new": {
         "string": "mpya!",
-        "developer_comment": "This is shown when a dataset is new"
+        "developer_comment": "This is shown when an Entity List is new"
       },
       "addedByThisDraft": {
         "string": "Imeongezwa na Rasimu hii",
-        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Entity Property"
+      }
+    },
+    "DatasetTable": {
+      "emptyTable": {
+        "string": "Bado hakuna Huluki ambazo zimeundwa kwa ajili ya Mradi huu."
       }
     },
     "Download": {
@@ -1454,13 +1643,101 @@
         }
       }
     },
+    "EntityActivity": {
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "EntityBasicDetails": {
       "creatingSubmission": {
         "string": "Kuunda Uwasilishaji",
         "developer_comment": "This is shown above the Submission that created the Entity."
       },
+      "creatingSource": {
+        "string": "",
+        "developer_comment": "This is shown above the source (e.g. a CSV file) that created the entity"
+      },
+      "upload": {
+        "string": "",
+        "developer_comment": "This describes an \"upload\" being a generic source of an entity"
+      },
       "submissionDeleted": {
+        "string": "Wasilisho hili limefutwa."
+      }
+    },
+    "EntityConflictSummary": {
+      "title": {
+        "string": "Masasisho ya data inafanyika sambamba"
+      },
+      "subtitle": {
+        "0": {
+          "string": "Sasisho moja au zaidi yamefanywa kulingana na data ambayo huenda ilikuwa imepitwa na wakati."
+        },
+        "1": {
+          "string": "Tafadhali kagua muhtasari huu wa masasisho sambamba."
+        }
+      },
+      "footer": {
+        "0": {
+          "string": "Ikiwa thamani zozote zinahitaji kurekebishwa, unaweza kuhariri data ya Huluki moja kwa moja."
+        },
+        "1": {
+          "string": "Ikiwa kila kitu kiko sawa, bofya \"Weka alama kuwa imetatuliwa\" ili kuondoa onyo hili."
+        }
+      },
+      "confirmation": {
+        "title": {
+          "string": "Je! huluki hiki ni sawa?"
+        },
+        "body": {
+          "string": "Baada ya kukagua masasisho yanayoweza kukinzana na kufanya masasisho yoyote unayohitaji, unaweza kubofya Thibitisha hapa chini ili kufuta onyo sambamba la sasisho."
+        },
+        "confirm": {
+          "string": "Thibitisha"
+        }
+      },
+      "conflictResolved": {
         "string": ""
+      }
+    },
+    "EntityConflictTable": {
+      "noConflicts": {
+        "string": "",
+        "developer_comment": "This is shown if all conflicts between versions have been resolved for an Entity."
+      },
+      "basedOn": {
+        "label": {
+          "string": "",
+          "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the author saw when they made their changes."
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "source": {
+        "label": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "status": {
+        "historical": {
+          "string": ""
+        },
+        "lastGoodVersion": {
+          "string": ""
+        },
+        "softConflict": {
+          "string": ""
+        },
+        "hardConflict": {
+          "string": ""
+        }
       }
     },
     "EntityData": {
@@ -1469,21 +1746,101 @@
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
+    "EntityDelete": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "introduction": {
+        "0": {
+          "string": "",
+          "developer_comment": "{label} is the label of an Entity."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "EntityDiff": {
+      "noChange": {
+        "string": ""
+      }
+    },
+    "EntityDiffHead": {
+      "introduction": {
+        "string": "",
+        "developer_comment": "{version} and {baseVersion} are version numbers."
+      },
+      "hardConflict": {
+        "description": {
+          "string": ""
+        }
+      },
+      "softConflict": {
+        "title": {
+          "string": "",
+          "developer_comment": "An update to an Entity that was made at the same time as another update"
+        }
+      },
+      "tab": {
+        "baseDiff": {
+          "string": "",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the data collector (the author)"
+        },
+        "serverDiff": {
+          "string": "",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the Central server"
+        },
+        "updating": {
+          "string": "",
+          "developer_comment": "This text is shown for an update to an Entity. {version} is a short version identifier, for example, \"v3\". It is the version that the update was applied to."
+        }
+      }
+    },
+    "EntityDiffRow": {
+      "conflictingProp": {
+        "string": "",
+        "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity."
+      }
+    },
+    "EntityDiffTable": {
+      "header": {
+        "oldValue": {
+          "string": "",
+          "developer_comment": "The value of an Entity property in an older version of the Entity"
+        },
+        "newValue": {
+          "string": "",
+          "developer_comment": "The value of an Entity property in a newer version of the Entity"
+        }
+      },
+      "comparing": {
+        "string": "",
+        "developer_comment": "This is shown when Central displays a comparison of two versions of an Entity."
+      },
+      "version": {
+        "string": "",
+        "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      }
+    },
     "EntityFeedEntry": {
       "title": {
         "submission": {
           "create": {
             "notDeleted": {
-              "string": "",
+              "string": "Wasilisho {instanceName} limepakiwa na {submitter}",
               "developer_comment": "This text is shown in a list of events. {submitter} is the name of a user, a team of users, or a Public Access Link."
             },
             "deleted": {
               "full": {
-                "string": "",
+                "string": "{deletedSubmission} imepakiwa na {name}",
                 "developer_comment": "This text is shown in a list of events. {name} is the name of a user, a team of users, or a Public Access Link.\n\n{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
               },
               "deletedSubmission": {
-                "string": "",
+                "string": "(Wasilisho limefutwa {id})",
                 "developer_comment": "This text is shown in a list of events. {id} is the Submission instance ID.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\n{deletedSubmission} uploaded by {name}"
               }
             }
@@ -1492,31 +1849,158 @@
         "entity": {
           "create": {
             "api": {
+              "string": "Huluki {label} iliyoundwa na {name}",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            },
+            "bulkSource": {
               "string": "",
-              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
+              "developer_comment": "This text is shown in a list of events. {name} is a filename, e.g. myfile.csv, and {actor} is a name/link to a Web User."
             }
           },
           "update_version": {
+            "submission": {
+              "notDeleted": {
+                "string": "Data imesasishwa na Uwasilishaji {instanceName}"
+              },
+              "deleted": {
+                "full": {
+                  "string": "Data imesasishwa na {deletedSubmission}",
+                  "developer_comment": "{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+                },
+                "deletedSubmission": {
+                  "string": "(Wasilisho limefutwa {id})",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\nData updated by {deletedSubmission}"
+                }
+              }
+            },
             "api": {
-              "string": "",
+              "string": "Data iliyosasishwa na {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             }
+          },
+          "update_resolve": {
+            "string": "Onyo la migogoro limetatuliwa kwa {name}",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          }
+        }
+      }
+    },
+    "EntityFiltersConflict": {
+      "conflict": {
+        "true": {
+          "string": "Mzozo unaowezekana",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        },
+        "false": {
+          "string": "Hakuna mgongano",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        }
+      },
+      "field": {
+        "conflict": {
+          "string": "Hali ya migogoro",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "string": "{selected} kati ya {total}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
+      },
+      "action": {
+        "select": {
+          "all": {
+            "string": "Wote",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+          },
+          "none": {
+            "string": "Hakuna",
+            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
       }
     },
     "EntityList": {
+      "noEntities": {
+        "string": "Hakuna Fomu za kuonyesha.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      },
+      "noMatching": {
+        "string": "Hakuna Huluki zinazolingana."
+      },
+      "alert": {
+        "delete": {
+          "string": ""
+        }
+      },
       "action": {
         "download": {
           "unfiltered": {
             "string": "{count, plural, one {Pakua shirika {count}} other {Pakua Mashirika {count}}}",
-            "developer_comment": "This is the text of a button shown when the count of Entities is known."
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withCount": {
+              "string": "{count, plural, one {Pakua Huluki {count} inayolingana} other {Pakua huluki  {count} zinazolingana}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            },
+            "withoutCount": {
+              "string": "Pakua Huluki zinazolingana",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
+            }
           }
         }
+      }
+    },
+    "EntityMetadataRow": {
+      "reviewParallelUpdates": {
+        "string": "Kagua masasisho sambamba",
+        "developer_comment": "This is the text for an action, for example, the text of a button."
+      }
+    },
+    "EntityResolve": {
+      "title": {
+        "string": "Masasisho sambamba ya “{label}”",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "noEntities": {
-        "string": "Hakuna Fomu za kuonyesha.",
-        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      "instructions": {
+        "0": {
+          "string": "Masasisho yalifanywa kwa “{label}”  kwa sambamba. Hii inamaanisha kuwa mabadiliko yanaweza kuwa yanakinzana, kwa vile yaliandikwa dhidi ya data ya zamani kuliko yalivyotumiwa na Central."
+        },
+        "1": {
+          "string": "Kagua masasisho, fanya mabadiliko yoyote unayohitaji, na ikiwa una uhakika kwamba data hii ya Huluki ni sahihi bonyeza“Mark as resolved” ili kufuta ujumbe huu wa onyo."
+        }
+      },
+      "action": {
+        "table": {
+          "show": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "hide": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "seeMoreDetails": {
+          "string": "Tazama maelezo zaidi",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "editEntity": {
+          "string": "Hariri Huluki",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "markAsResolved": {
+          "string": "Tia alama kuwa imesuluhishwa",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "successMessage": {
+        "string": "Onyo la migogoro limeondolewa kwenye Shirika."
+      },
+      "problem": {
+        "400_32": {
+          "string": ""
+        }
       }
     },
     "EntityShow": {
@@ -1534,25 +2018,172 @@
     "EntityTable": {
       "header": {
         "updatedAtAndActions": {
-          "string": "",
+          "string": "Ilisasishwa Mwisho / Vitendo",
           "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
         }
       }
     },
     "EntityUpdate": {
       "title": {
-        "string": "",
+        "string": "Sasisha {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "header": {
         "currentValue": {
-          "string": "",
+          "string": "Thamani ya Sasa",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         },
         "updatedValue": {
-          "string": "",
+          "string": "Thamani Iliyosasishwa",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "problem": {
+        "409_15": {
+          "string": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
+        }
+      }
+    },
+    "EntityUpload": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "table": {
+        "server": {
+          "string": "",
+          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
+        },
+        "file": {
+          "string": ""
+        }
+      },
+      "action": {
+        "append": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "blankLabel": {
+          "string": ""
+        },
+        "noData": {
+          "string": ""
+        }
+      },
+      "headersNote": {
+        "string": ""
+      }
+    },
+    "EntityUploadDataError": {
+      "title": {
+        "string": ""
+      }
+    },
+    "EntityUploadDataTemplate": {
+      "text": {
+        "full": {
+          "string": "",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+        },
+        "downloadTemplate": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+        }
+      }
+    },
+    "EntityUploadFileSelect": {
+      "text": {
+        "full": {
+          "string": "",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        }
+      },
+      "parsing": {
+        "string": ""
+      }
+    },
+    "EntityUploadHeaderErrors": {
+      "expectedHeader": {
+        "string": "",
+        "developer_comment": "This refers to the header row of a spreadsheet."
+      },
+      "suggestions": {
+        "title": {
+          "string": "",
+          "developer_comment": "Suggestions to fix an error"
+        },
+        "invalidQuotes": {
+          "string": ""
+        },
+        "missingLabel": {
+          "string": "",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "unknownProperty": {
+          "string": ""
+        },
+        "duplicateColumn": {
+          "string": ""
+        },
+        "emptyColumn": {
+          "string": ""
+        },
+        "delimiterNotComma": {
+          "string": ""
+        }
+      }
+    },
+    "EntityUploadPopup": {
+      "rowCount": {
+        "string": "{count, plural, one {} other {}}"
+      },
+      "status": {
+        "sending": {
+          "string": "",
+          "developer_comment": "This text is shown while a file is being uploaded to the server."
+        },
+        "processing": {
+          "string": "",
+          "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
+        }
+      }
+    },
+    "EntityUploadWarnings": {
+      "row": {
+        "raggedRows": {
+          "string": "",
+          "developer_comment": "This is a warning that is followed by a list of rows."
+        },
+        "largeCell": {
+          "string": "",
+          "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityVersionLink": {
+      "submission": {
+        "string": "",
+        "developer_comment": "This text is shown for a Submission. {instanceName} is the instance name of the Submission."
+      },
+      "api": {
+        "string": "",
+        "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
+      },
+      "bulk": {
+        "string": "",
+        "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
+      }
+    },
+    "FeedbackButton": {
+      "feedback": {
+        "string": "",
+        "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
     "FieldKeyList": {
@@ -1733,9 +2364,6 @@
         },
         "1": {
           "string": "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho"
-        },
-        "2": {
-          "string": "Kitendo hiki hakiwezi kutenduliwa"
         }
       }
     },
@@ -1757,12 +2385,12 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "Kiungo Dataset",
+        "string": "Orodha ya Huluki",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Je, una uhakika unataka kuunganisha Seti ya Data?"
+          "string": "Je, una uhakika unataka kuunganisha Orodha ya Huluki?"
         },
         "1": {
           "string": "Faili uliyopakia itafutwa. Unaweza kuipakia tena baadaye."
@@ -1811,16 +2439,16 @@
           "string": "{count, plural, one {faili {count} imepakiwa.} other {faili {count} zimepakiwa.}}"
         },
         "link": {
-          "string": "Seti ya data imeunganishwa"
+          "string": "Orodha ya Huluki imeunganishwa."
         }
       },
       "datasetsPreview": {
         "title": {
-          "string": ""
+          "string": "Vyombo vya Kujaribu"
         },
         "body": {
           "0": {
-            "string": "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Seti ya Data. Kwa chaguo-msingi, hizo zimeunganishwa na Seti za Data. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe na Seti za Data pindi tu utakapothibitisha mantiki ya fomu yako."
+            "string": "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Orodha ya Huluki. Kwa chaguomsingi, hizo zimeunganishwa kwenye Orodha za Huluki. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe kwenye Orodha za Huluki mara tu utakapothibitisha mantiki ya fomu yako."
           }
         }
       }
@@ -1939,28 +2567,28 @@
       "notUploaded": {
         "text": {
           "string": "Bado haijapakiwa",
-          "developer_comment": "This is shown for a Media File that has not been uploaded."
+          "developer_comment": "This is shown for a Form Attachment that has not been uploaded."
         },
         "title": {
           "string": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
         }
       },
       "linkedToDataset": {
-        "string": "Imeunganishwa kwenye Seti ya Data {datasetName}",
-        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
+        "string": "Imeunganishwa kwenye Orodha ya Huluki {datasetName}",
+        "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
         "string": "Pakia faili ili kubatilisha"
       },
       "action": {
         "linkDataset": {
-          "string": "Unganisha Seti ya Data {datasetName}",
+          "string": "Unganisha Orodha ya Huluki {datasetName}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "override": {
         "string": "Batilisha",
-        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
@@ -2186,12 +2814,6 @@
           "string": "Je, ungependa kuendelea?"
         }
       },
-      "field": {
-        "version": {
-          "string": "Toleo",
-          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
-        }
-      },
       "problem": {
         "409_6": {
           "string": "Jina la toleo la Rasimu hii linakinzana na toleo la awali la Fomu hii au Fomu iliyofutwa. Tafadhali tumia sehemu iliyo hapa chini ili kuibadilisha hadi kitu kipya au kupakia ufafanuzi mpya wa Fomu"
@@ -2209,10 +2831,10 @@
           }
         },
         "newDataset": {
-          "string": "Seti mpya ya Data {datasetName} itaundwa"
+          "string": "Orodha mpya ya Huluki {datasetName} itaundwa."
         },
         "newProperty": {
-          "string": "Katika Seti ya Data {datasetName}, sifa mpya ya {propertyName} itaundwa"
+          "string": "Katika Orodha ya Huluki {datasetName}, sifa mpya ya {propertyName} itaundwa."
         }
       }
     },
@@ -2298,7 +2920,7 @@
             "string": ""
           },
           "1": {
-            "string": ""
+            "string": "Kwa sasa, tunapendekeza ujaribu ufafanuzi wa Fomu yako katika hali ya Rasimu ili kuthibitisha mantiki yake. Kabla ya kuchapisha, unaweza kuthibitisha kuwa inasasisha vipengele vyote unavyotaka."
           }
         }
       }
@@ -2398,12 +3020,12 @@
         }
       },
       "action": {
-        "upload": {
-          "string": "pakia",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "uploadAnyway": {
           "string": "Pakia hata hivyo",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "upload": {
+          "string": "pakia",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2785,7 +3407,7 @@
       },
       "version": {
         "string": "Toleo",
-        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
+        "developer_comment": "An identifier of a particular version of something (of Central, of a Form, of an Entity)"
       }
     },
     "NavbarLinks": {
@@ -2814,6 +3436,81 @@
         "analyze": {
           "string": "Changanua kupitia OData",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "OdataLoadingMessage": {
+      "entity": {
+        "withoutCount": {
+          "string": "Inapakia Huluki...",
+          "developer_comment": "This text is shown when the number of Entities loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {Inapakia Shirika {count}...} other {Inapakia Huluki {count}...}}"
+        },
+        "first": {
+          "string": "{count, plural, one {Inapakia {top} ya kwanza kati ya {count} Huluki...} other {Inapakia {top} ya kwanza kati ya Mashirika {count}...}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, one {Inapakia {top} zaidi ya Huluki {count} iliyosalia...} other {Inapakia {top} zaidi ya Mashirika {count} yaliyosalia...}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {Inapakia Huluki {count} ya mwisho...} other {Inapakia Huluki {count} za mwisho...}}"
+          },
+          "one": {
+            "string": "Inapakia Huluki ya mwisho..."
+          }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "Inapakia Huluki zinazolingana...",
+            "developer_comment": "This text is shown when the number of Entities loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {Inapakia {top} zaidi ya Huluki {count} iliyosalia inayolingana...} other {Inapakia {top} zaidi ya Mashirika {count} yaliyosalia yanayolingana...}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {Inapakia Huluki {count} ya mwisho inayolingana...} other {Inapakia Huluki {count} za mwisho zinazolingana...}}"
+            },
+            "one": {
+              "string": "Inapakia Huluki ya mwisho inayolingana..."
+            }
+          }
+        }
+      }
+    },
+    "Pagination": {
+      "action": {
+        "first": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "previous": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "next": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "last": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "rows": {
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "field": {
+        "size": {
+          "string": "",
+          "developer_comment": "This is shown next to a field to select the number of rows to show on each page."
         }
       }
     },
@@ -2892,10 +3589,10 @@
                 }
               },
               "4": {
-                "string": "Hutaweza tena kuhakiki data ya Wasilisho mtandaoni."
+                "string": ""
               },
               "5": {
-                "string": "Hutaweza tena kuunganisha kwa data kupitia OData."
+                "string": ""
               },
               "6": {
                 "string": "Hutaweza tena kuhariri Mawasilisho katika kivinjari chako cha wavuti."
@@ -2906,23 +3603,21 @@
             },
             "1": {
               "0": {
-                "string": "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:"
+                "string": "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:",
+                "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
                 "0": {
                   "string": "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa."
-                },
-                "1": {
-                  "string": "katika toleo la baadaye, utakuwa na chaguo la kusimba data iliyopo"
                 }
               },
               "2": {
                 "0": {
                   "string": "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa"
-                },
-                "1": {
-                  "string": "Katika toleo la baadaye, utaweza kuzima usimbaji fiche, ambao utaondoa usimbaji fiche wa data yako. Hii itakuwa kweli hata ukiwezesha usimbaji fiche sasa."
                 }
+              },
+              "3": {
+                "string": "Mawasilisho ya Jaribio kwa Fomu zilizopo Rasimu yataondolewa kabisa."
               }
             },
             "2": {
@@ -3076,12 +3771,24 @@
         "string": "Mradi huu unatumia usimbaji fiche unaodhibitiwa."
       },
       "showMore": {
-        "string": "Onyesha jumla ya {count}",
+        "string": "{count, plural, one {Onyesha Jumla ya Fomu {count}} other {Onyesha Jumla ya Fomu {count}}}",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
+      "showMoreDatasets": {
+        "string": "{count, plural, one {Onyesha Orodha {count} jumla ya Huluki} other {Onyesha Orodha {count} jumla ya Huluki}}",
+        "developer_comment": "This clickable text is shown below a table of entity lists where only a few out of the total number (\"count\") of entity lists is shown."
+      },
       "showFewer": {
-        "string": "Onyesha idadi ndogo ya jumla ya {count}",
+        "string": "{count, plural, one {Onyesha idadi ndogo ya Fomu {count} jumla} other {Onyesha Jumla ya Fomu {count} chache}}",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
+      },
+      "showFewerDatasets": {
+        "string": "{count, plural, one {Onyesha idadi ndogo ya Orodha ya Huluki chache kati ya {count}} other {Onyesha chini ya Orodha {count} jumla ya Huluki}}",
+        "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
+      },
+      "hidden": {
+        "string": "Fiche",
+        "developer_comment": "Static text shown besides hidden Entity Lists with number of conflicts on the Homepage"
       }
     },
     "ProjectList": {
@@ -3269,12 +3976,12 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data",
+            "string": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu na Huluki katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
             "string": "Watazamaji wa Mradi",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data"
           }
         },
         "3": {
@@ -3661,10 +4368,13 @@
         },
         "entity": {
           "create": {
-            "string": "Imeunda huluki {label} katika {dataset} seti ya data"
+            "string": "Imeunda Huluki {label} katika {dataset} Orodha ya Huluki"
+          },
+          "update": {
+            "string": "Imesasisha Huluki {label} katika {dataset} Orodha ya Huluki"
           },
           "error": {
-            "string": "Tatizo limetokea wakati wa kuunda Huluki"
+            "string": "Tatizo la kuchakata Huluki"
           }
         },
         "updateReviewState": {
@@ -3814,6 +4524,9 @@
       }
     },
     "SubmissionList": {
+      "noMatching": {
+        "string": "Hakuna Mawasilisho yanayolingana."
+      },
       "loading": {
         "withoutCount": {
           "string": "Inapakia Mawasilisho...",
@@ -3856,9 +4569,6 @@
             }
           }
         }
-      },
-      "noMatching": {
-        "string": "Hakuna Mawasilisho yanayolingana."
       }
     },
     "SubmissionShow": {
@@ -3904,10 +4614,18 @@
         "string": "Maelezo ya Msingi",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "emailDisabled": {
+        "string": "Anwani yako ya barua pepe haiwezi kubadilishwa. Inatumika kati ya Central na seva yako ya kuingia ili kuhakikisha utambulisho wako."
+      },
       "action": {
         "update": {
           "string": "Sasisha maelezo",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
         }
       },
       "alert": {
@@ -3920,6 +4638,9 @@
       "title": {
         "string": "Badilisha neno la siri",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "oidcBody": {
+        "string": "Seva hii ya Kati haidhibiti manenosiri yoyote ya kuingia."
       },
       "action": {
         "change": {
@@ -3943,20 +4664,6 @@
       "title": {
         "string": "Mipangilio ya Mtumiaji",
         "developer_comment": "This is shown as the title at the top of the page."
-      },
-      "tab": {
-        "users": {
-          "string": "Watumiaji wa Mtandao",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "roles": {
-          "string": "Mipangilio ya Wajibu",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        }
-      },
-      "comingSoon": {
-        "string": "(inakuja hivi karibuni)",
-        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
       }
     },
     "UserList": {
@@ -4001,6 +4708,16 @@
       "introduction": {
         "0": {
           "string": "Ukishafungua akaunti hii, barua pepe utakayotoa itatumiwa maelekezo ya jinsi ya kuweka nenosiri na kuendelea."
+        }
+      },
+      "oidcIntroduction": {
+        "0": {
+          "string": "Watumiaji kwenye seva yako ya kuingia lazima wawe na akaunti ya Kati ili kuingia Kati. Mara tu unapofungua akaunti hii, mtumiaji kwenye seva yako ya kuingia na anwani ya barua pepe unayotoa ataweza kuingia kwenye Central."
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
         }
       }
     },

@@ -24,7 +24,7 @@ const mountComponent = () => {
         entity,
         audits: testData.extendedAudits.sorted()
       }),
-      router: mockRouter(`/projects/1/datasets/trees/entities/${entity.uuid}`)
+      router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`)
     }
   });
 };
@@ -47,20 +47,18 @@ describe('EntityBasicDetails', () => {
       const submission = testData.extendedSubmissions
         .createPast(1, { instanceId: 's', ...submissionOptions })
         .last();
-      const submissionCreate = testData.extendedAudits
-        .createPast(1, {
-          action: 'submission.create',
-          details: { instanceId: submission.instanceId }
-        })
-        .last();
-
       testData.extendedEntities.createPast(1, { uuid: 'e' });
       const details = {
         entity: { uuid: 'e' },
-        submissionCreate
+        source: {}
       };
       if (!submissionDeleted)
-        details.submission = { ...submission, xmlFormId: 'f' };
+        details.source = { submission: { ...submission, xmlFormId: 'f' } }; // Use entire submission, augmented with form id
+      else {
+        // If submission is deleted, these are the only fields we pass through in the audit log
+        const { instanceId, submitter, createdAt } = submission;
+        details.source = { submission: { instanceId, submitter, createdAt } };
+      }
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
         details
@@ -126,7 +124,7 @@ describe('EntityBasicDetails', () => {
 
     it('does not remove creating submission while activity feed is being refreshed', () => {
       createEntityFromSubmission();
-      return load('/projects/1/datasets/trees/entities/e', { root: false })
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
         .afterResponses(component => {
           const dd = component.get('#entity-basic-details-creating-submission');
           dd.text().should.equal('s');
@@ -142,21 +140,35 @@ describe('EntityBasicDetails', () => {
           dd.text().should.equal('s');
         })
         .respondWithData(() => {
-          const { currentVersion } = testData.extendedEntities.last();
-          testData.extendedEntities.update(-1, {
-            currentVersion: { ...currentVersion, label: 'Updated Entity' }
+          testData.extendedEntityVersions.createNew({
+            label: 'Updated Entity'
           });
           testData.extendedAudits.createPast(1, {
-            action: 'entity.update.version'
+            action: 'entity.update.version',
+            details: { source: {} }
           });
           return testData.standardEntities.last();
         })
         .respondWithData(() => testData.extendedAudits.sorted())
-        .respondWithData(() => [])
+        .respondWithData(() => testData.extendedEntityVersions.sorted())
         .afterResponses(component => {
           const dd = component.get('#entity-basic-details-creating-submission');
           dd.text().should.equal('s');
         });
+    });
+  });
+
+  describe('entity created using single entity API', () => {
+    it('does not show any block about entity creation', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {
+          entity: { uuid: 'e' }
+        }
+      });
+      const component = mountComponent();
+      component.findAll('dd').length.should.equal(3);
     });
 
     it('does not show creating submission for entity created using API', () => {
@@ -170,6 +182,21 @@ describe('EntityBasicDetails', () => {
       const component = mountComponent();
       const dd = component.find('#entity-basic-details-creating-submission');
       dd.exists().should.be.false();
+    });
+  });
+
+  describe('entity created using bulk upload', () => {
+    it('shows the creating source as the word upload', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {
+          source: { name: 'my_file.csv' }
+        }
+      });
+      const component = mountComponent();
+      const dd = component.find('#entity-basic-details-creating-source');
+      dd.text().should.equal('Upload');
     });
   });
 

@@ -14,3 +14,5 @@ export const enketoBasePath = '/-';
 
 export const noop = () => {};
 export const noargs = (f) => () => f();
+
+export const sumUnderThreshold = (list, threshold) => list.reduce((acc, i) => acc + Math.min(i, threshold), 0);

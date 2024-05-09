@@ -24,11 +24,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Home'
-};
-</script>
 <script setup>
 import { defineAsyncComponent, inject } from 'vue';
 
@@ -41,10 +36,14 @@ import useProjects from '../request-data/projects';
 import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
+defineOptions({
+  name: 'Home'
+});
+
 const HomeConfigSection = defineAsyncComponent(loadAsync('HomeConfigSection'));
 
 const projects = useProjects();
-projects.request({ url: '/v1/projects?forms=true' }).catch(noop);
+projects.request({ url: '/v1/projects?forms=true&datasets=true' }).catch(noop);
 
 const config = inject('config');
 </script>
@@ -100,6 +99,11 @@ const config = inject('config');
   "fr": {
     "heading": [
       "Bienvenue sur Central"
+    ]
+  },
+  "id": {
+    "heading": [
+      "Selamat datang di Central."
     ]
   },
   "it": {

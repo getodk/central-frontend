@@ -4,19 +4,21 @@
   "private": true,
   "scripts": {
     "dev": "nf start",
+    "dev:oidc": "VUE_APP_OIDC_ENABLED=true npm run dev",
     "build": "vue-cli-service build",
     "lint": "eslint --cache --no-fix --max-warnings 0 --ext .js,.vue src/ bin/ test/ *.js",
+    "lint:fix": "vue-cli-service lint --fix --max-warnings 0 src/ bin/ test/ *.js",
     "test": "./test/run.sh"
   },
   "volta": {
-    "node": "16.19.1"
+    "node": "20.10.0"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
-    "axios": "^0.22.0",
+    "axios": "^1.6.2",
     "bootstrap": "~3",
     "dompurify": "~2",
     "flatpickr": "~4.6",
@@ -24,6 +26,7 @@
     "luxon": "~1",
     "marked": "~4",
     "pako": "~1.0",
+    "papaparse": "^5.4.1",
     "pinia": "^2.0.23",
     "qrcode-generator": "~1",
     "ramda": "~0.27",
@@ -38,7 +41,7 @@
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "~3",
     "@vue/eslint-config-airbnb": "^7.0.0",
-    "@vue/test-utils": "~2",
+    "@vue/test-utils": "^2.4.1",
     "comment-json": "~4",
     "eslint": "^8.28.0",
     "eslint-plugin-import": "~2",
@@ -61,7 +64,7 @@
     "vue-cli-plugin-i18n": "~2"
   },
   "engines": {
-    "node": "16",
-    "npm": "8"
+    "node": "20",
+    "npm": "10"
   }
 }

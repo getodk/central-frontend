@@ -23,30 +23,34 @@ except according to the terms contained in the LICENSE file.
       <div v-show="entity.dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
-          <entity-data @update="update.state = true"/>
+          <entity-data @update="updateModal.show()"/>
         </div>
         <div class="col-xs-8">
-          <entity-activity/>
+          <entity-activity @delete="deleteModal.show()"
+            @resolve="fetchActivityData"/>
         </div>
       </div>
     </page-body>
-    <entity-update v-bind="update"
-      :entity="entity.dataExists ? entity.data : null"
-      @hide="update.state = false" @success="afterUpdate"/>
+
+    <entity-update v-bind="updateModal"
+      :entity="entity.dataExists ? entity.data : null" @hide="updateModal.hide()"
+      @success="afterUpdate"/>
+    <entity-delete v-bind="deleteModal"
+      :label="entity.dataExists ? entity.currentVersion.label : ''"
+      :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
+      @delete="requestDelete"/>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'EntityShow'
-};
-</script>
 <script setup>
-import { inject, provide, reactive } from 'vue';
+import { inject, provide } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
 import EntityData from './data.vue';
+import EntityDelete from './delete.vue';
 import EntityUpdate from './update.vue';
 import Loading from '../loading.vue';
 import PageBack from '../page/back.vue';
@@ -54,11 +58,17 @@ import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
 import useEntity from '../../request-data/entity';
+import useEntityVersions from '../../request-data/entity-versions';
+import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
-import { setDocumentTitle } from '../../util/reactivity';
+import { modalData, setDocumentTitle } from '../../util/reactivity';
+import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'EntityShow'
+});
 const props = defineProps({
   projectId: {
     type: String,
@@ -75,9 +85,11 @@ const props = defineProps({
 });
 provide('projectId', props.projectId);
 provide('datasetName', props.datasetName);
+provide('uuid', props.uuid);
 
 const { project, dataset } = useRequestData();
-const { entity, audits, diffs } = useEntity();
+const { entity, audits } = useEntity();
+const entityVersions = useEntityVersions();
 
 Promise.allSettled([
   entity.request({
@@ -98,29 +110,49 @@ const fetchActivityData = () => Promise.allSettled([
   audits.request({
     url: apiPaths.entityAudits(props.projectId, props.datasetName, props.uuid)
   }),
-  diffs.request({
-    url: apiPaths.entityDiffs(props.projectId, props.datasetName, props.uuid)
+  entityVersions.request({
+    url: apiPaths.entityVersions(props.projectId, props.datasetName, props.uuid),
+    extended: true
   })
 ]);
 fetchActivityData();
 
 setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null]);
 
-const update = reactive({ state: false });
+const updateModal = modalData();
 const { i18n, alert } = inject('container');
-const afterUpdate = (updated) => {
+const afterUpdate = (updatedEntity) => {
   fetchActivityData();
-  update.state = false;
+  updateModal.hide();
   alert.success(i18n.t('alert.updateEntity'));
   entity.patch(() => {
     // entity.currentVersion will no longer have extended metadata, but we don't
     // need it to.
-    entity.currentVersion = updated.currentVersion;
-    entity.updatedAt = updated.updatedAt;
+    entity.currentVersion = updatedEntity.currentVersion;
+    entity.updatedAt = updatedEntity.updatedAt;
+    // Update entity.conflict in case a conflict has been resolved by another
+    // user or in another tab.
+    entity.conflict = updatedEntity.conflict;
   });
 };
 
+const deleteModal = modalData();
+const { request, awaitingResponse } = useRequest();
+const router = useRouter();
 const { datasetPath } = useRoutes();
+const { t } = useI18n();
+const requestDelete = () => {
+  request({
+    method: 'DELETE',
+    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid)
+  })
+    .then(() => {
+      const { label } = entity.currentVersion;
+      return router.push(datasetPath('entities'))
+        .then(() => { alert.success(t('alert.delete', { label })); });
+    })
+    .catch(noop);
+};
 </script>
 
 <i18n lang="json5">
@@ -131,6 +163,10 @@ const { datasetPath } = useRoutes();
       "title": "Entity Detail",
       // This is shown at the top of the page. The user can click it to go back.
       "back": "Back to {datasetName} Table"
+    },
+    "alert": {
+      // @transifexKey component.EntityList.alert.delete
+      "delete": "Entity “{label}” has been deleted."
     }
   }
 }
@@ -139,6 +175,12 @@ const { datasetPath } = useRoutes();
 <!-- Autogenerated by destructure.js -->
 <i18n>
 {
+  "cs": {
+    "back": {
+      "title": "Detail entity",
+      "back": "Zpět na tabulku {datasetName}"
+    }
+  },
   "de": {
     "back": {
       "title": "Entitätsdetail",
@@ -155,6 +197,9 @@ const { datasetPath } = useRoutes();
     "back": {
       "title": "Détail de l'entité",
       "back": "Retour à la table {datasetName}"
+    },
+    "alert": {
+      "delete": "L'Entité \"{label}\" a été supprimée."
     }
   },
   "it": {

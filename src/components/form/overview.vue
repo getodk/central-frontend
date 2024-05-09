@@ -14,8 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <loading :state="initiallyLoading"/>
-        <form-overview-right-now v-if="dataExists"
-          @view-xml="showModal('viewXml')"/>
+        <form-overview-right-now v-if="dataExists" @view-xml="viewXml.show()"/>
       </div>
       <div v-if="formDraft.dataExists" id="form-overview-draft" class="col-xs-6">
         <page-section v-if="formDraft.isDefined()">
@@ -35,7 +34,7 @@ except according to the terms contained in the LICENSE file.
                 </i18n-t>
                 <div>
                   <form-version-standard-buttons :version="formDraft.get()"
-                    @view-xml="showModal('viewXml')"/>
+                    @view-xml="viewXml.show()"/>
                 </div>
               </template>
             </summary-item>
@@ -52,7 +51,7 @@ except according to the terms contained in the LICENSE file.
         </page-section>
       </div>
     </div>
-    <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
+    <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
   </div>
 </template>
 
@@ -67,11 +66,11 @@ import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
 import Loading from '../loading.vue';
 
-import modal from '../../mixins/modal';
-import { loadAsync } from '../../util/load-async';
-import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/load-async';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormOverview',
@@ -85,7 +84,6 @@ export default {
     SummaryItem,
     Loading
   },
-  mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   props: {
     projectId: {
       type: String,
@@ -102,10 +100,7 @@ export default {
   },
   data() {
     return {
-      // Modals
-      viewXml: {
-        state: false
-      }
+      viewXml: modalData('FormVersionViewXml')
     };
   },
   created() {

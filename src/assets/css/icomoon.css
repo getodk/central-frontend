@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('/fonts/icomoon.ttf?nszpez') format('truetype'),
-    url('/fonts/icomoon.woff?nszpez') format('woff'),
-    url('/fonts/icomoon.svg?nszpez#icomoon') format('svg');
+    url('/fonts/icomoon.ttf?z7okxk') format('truetype'),
+    url('/fonts/icomoon.woff?z7okxk') format('woff'),
+    url('/fonts/icomoon.svg?z7okxk#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -232,8 +232,32 @@
   content: "\f0d9";
 }
 .icon-caret-down:before {
-  content: "\e900";
+  content: "\e901";
 }
 .icon-cube:before {
-  content: "\e901";
+  content: "\e902";
+}
+.icon-file:before {
+  content: "\e900";
+}
+.icon-info-circle:before {
+  content: "\f05a";
+}
+.icon-exclamation-circle:before {
+  content: "\f06a";
+}
+.icon-random:before {
+  content: "\f074";
+}
+.icon-external-link-square:before {
+  content: "\f14c";
+}
+.icon-angle-double-left:before {
+  content: "\f100";
+}
+.icon-angle-double-right:before {
+  content: "\f101";
+}
+.icon-angle-left:before {
+  content: "\f104";
 }

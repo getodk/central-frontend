@@ -112,9 +112,9 @@ describe('FormOverviewRightNow', () => {
       const item = findItem(mountComponent(), 'linked-datasets');
       const rows = item.findAll('tr');
       rows[0].text().should.be.equal('people');
-      rows[0].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/datasets/people');
+      rows[0].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/entity-lists/people');
       rows[1].text().should.be.equal('trees');
-      rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/datasets/trees');
+      rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/entity-lists/trees');
     });
   });
 });

@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span id="odata-data-access">
+  <span v-if="!oidcEnabled" id="odata-data-access">
     <a class="btn btn-default"
-      href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
+      href="https://docs.getodk.org/central-api-odata-endpoints/"
       target="_blank" rel="noopener">
       <span class="icon-plug"></span>{{ $t('action.apiAccess') }}
     </a>
@@ -25,15 +25,19 @@ except according to the terms contained in the LICENSE file.
   </span>
 </template>
 
-<script>
-export default {
-  name: 'OdataDataAccess',
-  props: {
-    analyzeDisabled: Boolean,
-    analyzeDisabledMessage: String
-  },
-  emits: ['analyze']
-};
+<script setup>
+import { inject } from 'vue';
+
+defineOptions({
+  name: 'OdataDataAccess'
+});
+defineProps({
+  analyzeDisabled: Boolean,
+  analyzeDisabledMessage: String
+});
+defineEmits(['analyze']);
+
+const { oidcEnabled } = inject('config');
 </script>
 
 <style lang="scss">
@@ -76,6 +80,12 @@ export default {
     "action": {
       "apiAccess": "Accès via l'API",
       "analyze": "Analyser via OData"
+    }
+  },
+  "id": {
+    "action": {
+      "apiAccess": "Akses API",
+      "analyze": "Analisis melalui OData"
     }
   },
   "it": {

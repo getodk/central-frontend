@@ -158,12 +158,17 @@ export const apiPaths = {
   publicLinks: formPath('/public-links'),
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
-  entities: datasetPath('/entities.csv'),
+  datasetProperties: datasetPath('/properties'),
+  entities: (projectId, datasetName, extension = '', query = undefined) => {
+    const encodedName = encodeURIComponent(datasetName);
+    const qs = queryString(query);
+    return `/v1/projects/${projectId}/datasets/${encodedName}/entities${extension}${qs}`;
+  },
   odataEntitiesSvc: datasetPath('.svc'),
   odataEntities: datasetPath('.svc/Entities'),
   entity: entityPath(''),
   entityAudits: entityPath('/audits'),
-  entityDiffs: entityPath('/diffs'),
+  entityVersions: entityPath('/versions'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
@@ -221,13 +226,17 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
   if (axiosError.request == null) return i18n.t('util.request.noRequest');
   const { response } = axiosError;
   if (response == null) return i18n.t('util.request.noResponse');
-  if (!(axiosError.config.url.startsWith('/v1/') && isProblem(response.data)))
+  if (!(axiosError.config.url.startsWith('/v1/') && isProblem(response.data))) {
+    if (response.status === 413)
+      return i18n.t('mixin.request.alert.entityTooLarge');
     return i18n.t('util.request.errorNotProblem', response);
+  }
 
   const problem = response.data;
   if (problemToAlert != null) {
     const message = problemToAlert(problem);
-    return message != null ? message : problem.message;
+    if (message != null) return message;
   }
+  if (problem.code === 404.1) return i18n.t('util.request.problem.404_1');
   return problem.message;
 };

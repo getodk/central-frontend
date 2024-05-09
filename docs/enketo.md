@@ -4,10 +4,19 @@ Enketo provides a web-based form submission UI, which is used in ODK Central for
 
 Enketo runs as a Node.js server and caches intermediate representations of forms in Redis. ODK Central Backend stores information for managing and launching Enketo forms from ODK Central Frontend, so all three must be configured together.
 
-- Clone [enketo-express](https://github.com/enketo/enketo-express) and read the [Manual Installation Instructions](https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#manually). Specifically:
-    * Install Redis. (Node.js will already be installed to run ODK Central Frontend and Backend.) Enketo will expect Redis on the default port of `6379`.
-    * Install dependencies with `npm install`.
-- Configure Enketo. A minimal `config/config.json` for Enketo looks like:
+### Get Enketo Express and dependencies
+
+Clone [enketo](https://github.com/enketo/enketo), which is the monorepo containing the `enketo-express` service.
+
+Read the [Development setup and local usage](https://github.com/enketo/enketo?tab=readme-ov-file#development-setup-and-local-usage) section, specifically:
+- Get Node 18 or 20 (should be installed to run ODK Central Frontend and Backend already).
+- Get Yarn.
+- possibly get Volta.
+* Install and run Redis. Enketo will expect Redis on the default port of `6379`.
+* Install and build Enketo with `yarn install` and `yarn build`.
+
+### Configure Enketo
+Create a `config` directory in the project root and add a config file at `config/config.json`. A minimal config/config.json` for Enketo looks like:
 
 ```
 {
@@ -29,7 +38,7 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
 }
 ```
 
-- Configure ODK Central Backend. Add the following to `config/default.json`.
+ODK Central Backend is already configured to connect with Enketo. The following should already be present in `config/default.json`.
 
 ```
     "enketo": {
@@ -38,16 +47,7 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
     },
 ```
 
-- Run the Enketo server via `npm start` (from the [Enketo Documentation](https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#how-to-run)).
-
-- There will be three services running:
-    * ODK Central Frontend (via Nginx) on port `8989`
-    * ODK Central Backend on port `8383`
-    * Enketo server on port `8005`
-
-
-### Notes on existing Central Frontend configuration
-- The following lines have already been added to [`main.nginx.conf`](../main.nginx.conf). They create a reverse proxy for the Enketo server in the same way as the reverse proxy to the ODK Central Backend server.
+ODK Central Frontend is also already configured for Enketo as well. The following lines should already be in [`main.nginx.conf`](../main.nginx.conf) to create a reverse proxy to Enketo.
 
 ```
     location /- {
@@ -56,6 +56,25 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
       proxy_set_header Host $host;
     }
 ```
+
+### Run the Enketo Express service
+
+Run the following from the Enketo project root (from the [Enketo Documentation](https://github.com/enketo/enketo?tab=readme-ov-file#running-development-tasks)):
+
+```
+yarn workspace enketo-express start
+```
+
+
+The final set of services running should look something like this:
+
+- ODK Central Frontend (via Nginx) on port `8989`
+- ODK Central Backend on port `8383`
+	-  Postgres running on its default port
+-  Enketo server on port `8005`
+	- Redis running on its default port
+
+
 
 
 ### Notes on error messages

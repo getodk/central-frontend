@@ -11,6 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="project-form-row">
+    <td class="col-icon">
+      <span v-if="showIcon" class="icon-file"></span>
+    </td>
     <td class="form-name">
       <template v-if="canLinkToFormOverview">
         <router-link :to="primaryFormPath(form)">{{ form.nameOrId }}</router-link>
@@ -107,6 +110,12 @@ export default {
     },
     project: {
       type: Object,
+      required: true
+    },
+    // Whether to show the Form icon or not
+    // We show it only for the first row
+    showIcon: {
+      type: Boolean,
       required: true
     }
   },

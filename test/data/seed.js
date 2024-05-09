@@ -17,6 +17,7 @@ export default () => {
         'backup.run',
         'config.read',
         'config.set',
+        'dataset.create',
         'dataset.list',
         'dataset.read',
         'dataset.update',
@@ -65,6 +66,7 @@ export default () => {
         'assignment.create',
         'assignment.list',
         'assignment.delete',
+        'dataset.create',
         'dataset.list',
         'dataset.read',
         'dataset.update',
@@ -109,7 +111,7 @@ export default () => {
       name: 'Data Collector',
       system: 'formfill',
       verbs: [
-        'form.list',
+        'open_form.list',
         'form.read',
         'submission.create'
       ]

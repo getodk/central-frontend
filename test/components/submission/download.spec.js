@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 
+import Modal from '../../../src/components/modal.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
 
 import useFields from '../../../src/request-data/fields';
@@ -61,6 +62,20 @@ describe('SubmissionDownload', () => {
     });
   });
 
+  describe('modal size', () => {
+    it('is normal size if the form is not encrypted', () => {
+      testData.extendedForms.createPast(1);
+      mountComponent().getComponent(Modal).props().size.should.equal('normal');
+    });
+
+    it('is large if there is a managed key', () => {
+      testData.extendedForms.createPast(1, {
+        key: testData.standardKeys.createPast(1, { managed: true }).last()
+      });
+      mountComponent().getComponent(Modal).props().size.should.equal('large');
+    });
+  });
+
   describe('splitSelectMultiples checkbox', () => {
     it('enables the checkbox if the form has a select_multiple field', async () => {
       testData.extendedForms.createPast(1, {
@@ -109,7 +124,7 @@ describe('SubmissionDownload', () => {
       const a = modal.findAll('a');
       for (const url of a.map(aUrl))
         url.searchParams.get('splitSelectMultiples').should.equal('false');
-      await modal.get('input[type="checkbox"]').setChecked();
+      await modal.get('input[type="checkbox"]').setValue(true);
       for (const url of a.map(aUrl))
         url.searchParams.get('splitSelectMultiples').should.equal('true');
     });
@@ -121,7 +136,7 @@ describe('SubmissionDownload', () => {
     const a = modal.findAll('a');
     for (const url of a.map(aUrl))
       url.searchParams.get('groupPaths').should.equal('true');
-    await modal.findAll('input[type="checkbox"]')[1].setChecked();
+    await modal.findAll('input[type="checkbox"]')[1].setValue(true);
     for (const url of a.map(aUrl))
       url.searchParams.get('groupPaths').should.equal('false');
   });
@@ -133,7 +148,7 @@ describe('SubmissionDownload', () => {
       const a = modal.findAll('a');
       for (const url of a.map(aUrl))
         url.searchParams.get('deletedFields').should.equal('false');
-      await modal.findAll('input[type="checkbox"]')[2].setChecked();
+      await modal.findAll('input[type="checkbox"]')[2].setValue(true);
       for (const url of a.map(aUrl))
         url.searchParams.get('deletedFields').should.equal('true');
     });
@@ -217,7 +232,7 @@ describe('SubmissionDownload', () => {
     const modal = mountComponent();
     const checkboxes = modal.findAll('input[type="checkbox"]');
     for (const checkbox of checkboxes)
-      await checkbox.setChecked();
+      await checkbox.setValue(true);
     const passphrase = modal.get('input[type="password"]');
     await passphrase.setValue('supersecret');
     await modal.setProps({ state: false });

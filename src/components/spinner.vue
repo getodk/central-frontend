@@ -9,26 +9,27 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
-<!-- `Spinner` toggles a spinner according to its `state` prop. `Spinner` is
-positioned absolutely, so you may need to set the position of an ancestor
-element. -->
 <template>
-  <div :class="{ spinner: true, active: state }">
+  <div class="spinner" :class="{ inline, active: state }">
     <div class="spinner-glyph"></div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Spinner',
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
+<script setup>
+defineProps({
+  // Determines whether the spinner is shown or not.
+  state: {
+    type: Boolean,
+    default: true
+  },
+  /* By default, a spinner is positioned in the center of its closest positioned
+  ancestor. However, in some cases, a spinner should not be positioned and
+  should be rendered inline. A spinner is sometimes rendered inline
+  automatically, for example, if the spinner is after a <select> element. You
+  can force a spinner to be rendered inline by specifying `true` for the
+  `inline` prop. */
+  inline: Boolean
+});
 </script>
 
 <style lang="scss">
@@ -45,7 +46,6 @@ $spinner-width: 3px;
 
 .spinner {
   $adjusted-position: calc(50% - #{math.div($spinner-size, 2)});
-  display: block;
   left: $adjusted-position;
   opacity: 0;
   pointer-events: none;
@@ -61,6 +61,15 @@ $spinner-width: 3px;
     opacity: 1;
     transition-delay: 0.15s;
   }
+
+  select + &, &.inline {
+    display: inline-block;
+    left: 0;
+    position: relative;
+    top: 0;
+    vertical-align: text-top;
+  }
+  select + & { margin-left: 7px; }
 }
 .spinner-glyph {
   height: $spinner-size;

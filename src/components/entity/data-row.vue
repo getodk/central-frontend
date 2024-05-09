@@ -19,12 +19,10 @@ except according to the terms contained in the LICENSE file.
   </tr>
 </template>
 
-<script>
-export default {
-  name: 'EntityDataRow'
-};
-</script>
 <script setup>
+defineOptions({
+  name: 'EntityDataRow'
+});
 defineProps({
   entity: {
     type: Object,

@@ -59,6 +59,9 @@ export default {
   "fr": {
     "blank": "(vierge)"
   },
+  "id": {
+    "blank": "(kosong)"
+  },
   "it": {
     "blank": "(vuoto)"
   },

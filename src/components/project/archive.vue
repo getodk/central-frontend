@@ -37,11 +37,6 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
-export default {
-  name: 'ProjectArchive'
-};
-</script>
 <script setup>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -50,6 +45,9 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'ProjectArchive'
+});
 defineProps({
   state: {
     type: Boolean,

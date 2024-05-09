@@ -1,5 +1,6 @@
 import Spinner from '../../../src/components/spinner.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
+import SubmissionDownload from '../../../src/components/submission/download.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 
@@ -108,16 +109,33 @@ describe('SubmissionList', () => {
           .request(component =>
             component.get('#submission-list-refresh-button').trigger('click'))
           .beforeEachResponse(component => {
-            component.get('#submission-list-message').should.be.hidden();
+            component.get('#odata-loading-message').should.be.hidden();
           })
           .respondWithData(testData.submissionOData);
+      });
+
+      it('should show correct row number after refresh', () => {
+        testData.extendedSubmissions.createPast(1);
+        return loadSubmissionList()
+          .complete()
+          .request(component =>
+            component.get('#submission-list-refresh-button').trigger('click'))
+          .beforeEachResponse(component => {
+            testData.extendedSubmissions.createPast(1);
+            component.get('#odata-loading-message').should.be.hidden();
+          })
+          .respondWithData(testData.submissionOData)
+          .afterResponse(component => {
+            component.findAllComponents(SubmissionMetadataRow).forEach((r, i) => {
+              r.props().rowNumber.should.be.equal(2 - i);
+            });
+          });
       });
     });
 
     describe('load by chunk', () => {
-      const checkTopSkip = ({ url }, top, skip) => {
+      const checkTop = ({ url }, top) => {
         url.should.match(new RegExp(`[?&]%24top=${top}(&|$)`));
-        url.should.match(new RegExp(`[?&]%24skip=${skip}(&|$)`));
       };
       const checkIds = (component, count, offset = 0) => {
         const rows = component.findAllComponents(SubmissionDataRow);
@@ -130,12 +148,12 @@ describe('SubmissionList', () => {
         }
       };
       const checkMessage = (component, text) => {
-        const message = component.get('#submission-list-message');
+        const message = component.get('#odata-loading-message');
         if (text == null) {
           message.should.be.hidden();
         } else {
           message.should.not.be.hidden();
-          message.get('#submission-list-message-text').text().should.equal(text);
+          message.get('#odata-loading-message-text').text().should.equal(text);
 
           const spinner = component.findAllComponents(Spinner).find(wrapper =>
             message.element.contains(wrapper.element));
@@ -169,7 +187,7 @@ describe('SubmissionList', () => {
           .beforeEachResponse((component, config) => {
             if (config.url.includes('.svc/Submissions')) {
               checkMessage(component, 'Loading the first 2 of 3 Submissions…');
-              checkTopSkip(config, 2, 0);
+              checkTop(config, 2);
             }
           })
           .afterResponses(component => {
@@ -186,7 +204,7 @@ describe('SubmissionList', () => {
           .request(component =>
             component.get('#submission-list-refresh-button').trigger('click'))
           .beforeEachResponse((_, config) => {
-            checkTopSkip(config, 2, 0);
+            checkTop(config, 2, 0);
           })
           .respondWithData(() => testData.submissionOData(2, 0))
           .afterResponse(component => {
@@ -199,7 +217,7 @@ describe('SubmissionList', () => {
           createSubmissions(12);
           // Chunk 1
           return loadSubmissionList({
-            props: { top: (skip) => (skip < 8 ? 2 : 3) }
+            props: { top: (loaded) => (loaded < 8 ? 2 : 3) }
           })
             .beforeEachResponse((component, { url }) => {
               if (url.includes('.svc/Submissions'))
@@ -211,7 +229,7 @@ describe('SubmissionList', () => {
             // Chunk 2
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 2);
+              checkTop(config, 2);
               checkMessage(component, 'Loading 2 more of 10 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 2))
@@ -222,7 +240,7 @@ describe('SubmissionList', () => {
             // Chunk 3
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 4);
+              checkTop(config, 2, 4);
               checkMessage(component, 'Loading 2 more of 8 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 4))
@@ -233,7 +251,7 @@ describe('SubmissionList', () => {
             // Chunk 4 (last small chunk)
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 6);
+              checkTop(config, 2, 6);
               checkMessage(component, 'Loading 2 more of 6 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(2, 6))
@@ -244,7 +262,7 @@ describe('SubmissionList', () => {
             // Chunk 5
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 3, 8);
+              checkTop(config, 3, 8);
               checkMessage(component, 'Loading 3 more of 4 remaining Submissions…');
             })
             .respondWithData(() => testData.submissionOData(3, 8))
@@ -255,7 +273,7 @@ describe('SubmissionList', () => {
             // Chunk 6
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 3, 11);
+              checkTop(config, 3, 11);
               checkMessage(component, 'Loading the last Submission…');
             })
             .respondWithData(() => testData.submissionOData(3, 11))
@@ -313,7 +331,7 @@ describe('SubmissionList', () => {
             .request(component =>
               component.get('#submission-list-refresh-button').trigger('click'))
             .beforeEachResponse((_, config) => {
-              checkTopSkip(config, 2, 0);
+              checkTop(config, 2, 0);
             })
             .respondWithData(() => testData.submissionOData(2, 0))
             .afterResponse(component => {
@@ -321,7 +339,7 @@ describe('SubmissionList', () => {
             })
             .request(scroll)
             .beforeEachResponse((_, config) => {
-              checkTopSkip(config, 2, 2);
+              checkTop(config, 2, 2);
             })
             .respondWithData(() => testData.submissionOData(2, 2));
         });
@@ -357,6 +375,83 @@ describe('SubmissionList', () => {
         });
       });
 
+      describe('refreshing keys', () => {
+        it('opens modal with encrpytion password after refreshing keys', () => {
+          // create project with managed encryption, form, and 0 submissions to start
+          testData.extendedProjects.createPast(1, {
+            key: testData.standardKeys.createPast(1, { managed: true }).last()
+          });
+          testData.extendedForms.createPast(1);
+          return load('/projects/1/forms/f/submissions', { root: false }, {
+            keys: () => [] // if there are 0 submissions, backend returns empty key array
+          })
+            .complete()
+            .request(async (app) => {
+              await app.get('#submission-download-button').trigger('click');
+              const modal = app.getComponent(SubmissionDownload);
+              await modal.find('input[type="password"]').exists().should.be.false();
+              return app.get('#submission-list-refresh-button').trigger('click');
+            })
+            .beforeAnyResponse(() => {
+              testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+            })
+            .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.standardKeys.sorted())
+            .complete()
+            .request(async (app) => {
+              await app.get('#submission-download-button').trigger('click');
+              const modal = app.getComponent(SubmissionDownload);
+              await modal.find('input[type="password"]').exists().should.be.true();
+            });
+        });
+
+        it('sends request for encryption keys on draft/testing submission refresh', () => {
+          // create project with managed encryption, form, and 0 submissions to start
+          testData.extendedProjects.createPast(1, {
+            key: testData.standardKeys.createPast(1, { managed: true }).last()
+          });
+          testData.extendedForms.createPast(1, { xmlFormId: 'e', draft: true });
+          return load('/projects/1/forms/e/draft/testing', { root: false }, {
+            keys: () => [] // if there are 0 submissions, backend returns empty key array
+          })
+            .complete()
+            .request(component =>
+              component.get('#submission-list-refresh-button').trigger('click'))
+            .beforeAnyResponse(() => {
+              testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+            })
+            .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.standardKeys.sorted())
+            .testRequests([
+              null,
+              { url: '/v1/projects/1/forms/e/draft/submissions/keys' }
+            ]);
+        });
+
+        it('sends request for encryption keys on published submission refresh', () => {
+          // create project with managed encryption, form, and 0 submissions to start
+          testData.extendedProjects.createPast(1, {
+            key: testData.standardKeys.createPast(1, { managed: true }).last()
+          });
+          testData.extendedForms.createPast(1);
+          return load('/projects/1/forms/f/submissions', { root: false }, {
+            keys: () => [] // if there are 0 submissions, backend returns empty key array
+          })
+            .complete()
+            .request(component =>
+              component.get('#submission-list-refresh-button').trigger('click'))
+            .beforeAnyResponse(() => {
+              testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+            })
+            .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.standardKeys.sorted())
+            .testRequests([
+              null,
+              { url: '/v1/projects/1/forms/f/submissions/keys' }
+            ]);
+        });
+      });
+
       describe('count update', () => {
         it.skip('scrolling to the bottom continues to fetch the next chunk', () => {
           createSubmissions(4);
@@ -366,7 +461,7 @@ describe('SubmissionList', () => {
           })
             .beforeEachResponse((component, config) => {
               if (config.url.includes('.svc/Submissions')) {
-                checkTopSkip(config, 2, 0);
+                checkTop(config, 2, 0);
                 checkMessage(component, 'Loading the first 2 of 4 Submissions…');
               }
             })
@@ -375,7 +470,7 @@ describe('SubmissionList', () => {
             // request $top=2, $skip=2.
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 2);
+              checkTop(config, 2, 2);
               checkMessage(component, 'Loading the last 2 Submissions…');
             })
             .respondWithData(() => {
@@ -390,7 +485,7 @@ describe('SubmissionList', () => {
             // 8 submissions exist. About to request $top=2, $skip=4.
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 4);
+              checkTop(config, 2, 4);
               checkMessage(component, 'Loading the last 2 Submissions…');
             })
             // Returns the 2 submissions that are already shown in the table.
@@ -402,7 +497,7 @@ describe('SubmissionList', () => {
             // 8 submissions exist. About to request $top=2, $skip=6.
             .request(scroll)
             .beforeEachResponse((component, config) => {
-              checkTopSkip(config, 2, 6);
+              checkTop(config, 2, 6);
               checkMessage(component, 'Loading the last 2 Submissions…');
             })
             // Returns the last 2 submissions.

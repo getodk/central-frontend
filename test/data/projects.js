@@ -46,7 +46,9 @@ export const extendedProjects = dataStore({
       : extendedUsers.createPast(1).last(),
     // The current user's role on the project
     role = 'none',
-    formList = []
+    formList = [],
+    datasetList = [],
+    lastEntity
   }) => ({
     id,
     name,
@@ -63,7 +65,9 @@ export const extendedProjects = dataStore({
     datasets,
     appUsers,
     verbs: verbsForUserAndRole(currentUser, role),
-    formList
+    formList,
+    datasetList,
+    lastEntity
   }),
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });

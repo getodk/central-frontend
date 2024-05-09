@@ -21,7 +21,10 @@ except according to the terms contained in the LICENSE file.
     <tbody>
       <tr v-for="(value, name) in metrics" :key="name">
         <td>{{ $t(`fields.${name}`) }}</td>
-        <template v-if="value.recent != null">
+        <template v-if="value == null">
+          <td colspan="2" class="metric-value"></td>
+        </template>
+        <template v-else-if="value.recent != null">
           <td class="metric-value">{{ $n(value.recent) }}</td>
           <td class="metric-value">{{ $n(value.total) }}</td>
         </template>
@@ -106,11 +109,25 @@ export default {
       "has_description": "Project has a description",
       "description_length": "Length of the Project description",
       "num_properties": "Number of Properties",
-      "num_creation_forms": "Number of Forms that update the Dataset",
-      "num_followup_forms": "Number of Forms that use the Dataset",
-      "num_entities": "Number of Entities in the Dataset",
+      "num_creation_forms": "Number of Forms that update the Entity List",
+      "num_followup_forms": "Number of Forms that use the Entity List",
+      "num_entities": "Number of Entities in the Entity List",
       "num_failed_entities": "Number of Entity creation errors",
-      "num_entity_updates": "Number of Entity updates"
+      "num_entity_updates": "Number of Entity updates",
+      "num_entity_updates_sub": "Number of Entity updates via Submissions",
+      "num_entity_updates_api": "Number of Entity updates via API",
+      "num_entities_updated": "Number of modified Entities",
+      "num_entity_conflicts": "Number of Entities ever with conflict",
+      "num_entity_conflicts_resolved": "Number of Entities with conflict now marked as resolved",
+      "num_bulk_create_events": "Number of bulk uploads",
+      "biggest_bulk_upload": "Number of rows in biggest bulk upload",
+      "sso_enabled": "SSO enabled on server",
+      "num_client_audit_attachments": "Number of Client Audit Attachments",
+      "num_client_audit_attachments_failures": "Number of Client Audit processing failures",
+      "num_client_audit_rows": "Number of Client Audit rows",
+      "num_audits_failed": "Number of Audit Log Events that failed at least once",
+      "num_audits_failed5": "Number of Audit Log Events that failed completely",
+      "num_audits_unprocessed": "Number of Audit Log Events whose processing has been delayed",
     }
   }
 }
@@ -160,10 +177,18 @@ export default {
       "has_description": "Projekt má popis",
       "description_length": "Délka popisu projektu",
       "num_properties": "Počet vlastností",
-      "num_creation_forms": "Počet formulářů, které aktualizují datovou sadu",
-      "num_followup_forms": "Počet formulářů, které používají datovou sadu",
-      "num_entities": "Počet subjektů v datovém souboru",
-      "num_failed_entities": "Počet chyb při vytváření subjektu"
+      "num_creation_forms": "Počet formulářů, které aktualizují seznam subjektů",
+      "num_followup_forms": "Počet formulářů, které používají seznam subjektů",
+      "num_entities": "Počet subjektů v seznamu subjektů",
+      "num_failed_entities": "Počet chyb při vytváření subjektu",
+      "num_entity_updates": "Počet aktualizací entity",
+      "sso_enabled": "SSO povoleno na serveru",
+      "num_client_audit_attachments": "Počet příloh auditu klienta",
+      "num_client_audit_attachments_failures": "Počet selhání zpracování auditu klienta",
+      "num_client_audit_rows": "Počet řádků auditu klienta",
+      "num_audits_failed": "Počet událostí protokolu auditů, které selhaly alespoň jednou",
+      "num_audits_failed5": "Počet událostí protokolu auditů, které zcela selhaly",
+      "num_audits_unprocessed": "Počet událostí protokolu auditů, jejichž zpracování bylo odloženo"
     }
   },
   "de": {
@@ -207,10 +232,23 @@ export default {
       "has_description": "Das Projekt hat eine Beschreibung",
       "description_length": "Länge der Projektbeschreibung",
       "num_properties": "Anzahl der Eigenschaften",
-      "num_creation_forms": "Anzahl der Formulare, die das Dataset aktualisieren",
-      "num_followup_forms": "Anzahl der Formulare, die das Dataset verwenden",
-      "num_entities": "Anzahl der Entitäten im Datensatz",
-      "num_failed_entities": "Anzahl der Fehler bei der Entitätserstellung"
+      "num_creation_forms": "Anzahl der Formulare, die die Entitätsliste aktualisieren",
+      "num_followup_forms": "Anzahl der Formulare, die die Entitätsliste verwenden",
+      "num_entities": "Anzahl der Entitäten in der Entitätsliste",
+      "num_failed_entities": "Anzahl der Fehler bei der Entitätserstellung",
+      "num_entity_updates": "Anzahl der Objekterneuerungen",
+      "num_entity_updates_sub": "Anzahl der Objektaktualisierungen über Übermittlungen",
+      "num_entity_updates_api": "Anzahl der Objektaktualisierungen über API",
+      "num_entities_updated": "Anzahl der modifizierten Objekte",
+      "num_entity_conflicts": "Anzahl der Objekte, die jemals einen Konflikt hatten",
+      "num_entity_conflicts_resolved": "Anzahl der Objekte mit Konflikt jetzt als gelöst markiert",
+      "sso_enabled": "SSO auf dem Server aktiviert",
+      "num_client_audit_attachments": "Anzahl an Client-Audit-Anhängen",
+      "num_client_audit_attachments_failures": "Anzahl an Client-Audit-Verarbeitungsfehler",
+      "num_client_audit_rows": "Anzahl von Client-Audit-Zeilen",
+      "num_audits_failed": "Anzahl der Audit-Log-Events, die mindestens einmal fehlgeschlagen sind",
+      "num_audits_failed5": "Anzahl der Audit-Log-Events, die komplett fehlgeschlagen sind",
+      "num_audits_unprocessed": "Anzahl der Audit-Log-Events, deren Verarbeitung verzögert wurde"
     }
   },
   "es": {
@@ -254,10 +292,23 @@ export default {
       "has_description": "El proyecto tiene una descripción",
       "description_length": "Longitud de la descripción del proyecto",
       "num_properties": "Número de Propiedades",
-      "num_creation_forms": "Número de formularios que actualizan el conjunto de datos",
-      "num_followup_forms": "Número de formularios que utilizan el conjunto de datos",
-      "num_entities": "Número de entidades en el conjunto de datos",
-      "num_failed_entities": "Número de errores de creación de entidad"
+      "num_creation_forms": "Número de formularios que actualizan la lista de entidades",
+      "num_followup_forms": "Número de formularios que utilizan la lista de entidades",
+      "num_entities": "Número de entidades en la lista de entidades",
+      "num_failed_entities": "Número de errores de creación de entidad",
+      "num_entity_updates": "Número de actualizaciones de la entidad",
+      "num_entity_updates_sub": "Número de actualizaciones de entidades a través de envíos",
+      "num_entity_updates_api": "Número de actualizaciones de entidades a través de la API",
+      "num_entities_updated": "Número de Entidades modificadas",
+      "num_entity_conflicts": "Número de entidades que han tenido conflictos en algún momento",
+      "num_entity_conflicts_resolved": "Número de entidades con conflicto ahora marcadas como resueltas",
+      "sso_enabled": "SSO habilitado en el servidor",
+      "num_client_audit_attachments": "Número de archivos adjuntos de auditoría del cliente",
+      "num_client_audit_attachments_failures": "Número de fallas en el procesamiento de auditoría de clientes",
+      "num_client_audit_rows": "Número de filas de auditoría de cliente",
+      "num_audits_failed": "Número de eventos del registro de auditoría que fallaron al menos una vez",
+      "num_audits_failed5": "Número de eventos del registro de auditoría que fallaron por completo",
+      "num_audits_unprocessed": "Número de eventos del registro de auditoría cuyo procesamiento se ha retrasado"
     }
   },
   "fr": {
@@ -266,7 +317,7 @@ export default {
       "num_admins": "Nombre d'administrateurs",
       "num_projects_encryption": "Nombre de projets avec le chiffrement activé",
       "num_questions_biggest_form": "Nombre de question dans le plus gros formulaire",
-      "num_audit_log_entries": "Nombre d'entrées dans le log d'audit",
+      "num_audit_log_entries": "Nombre d'entrées dans le journal d'audit",
       "num_archived_projects": "Nombre de projets archivés",
       "num_unique_managers": "Nombre de gestionnaires de projets uniques",
       "num_unique_viewers": "Nombre de lecteurs de projets uniques",
@@ -301,15 +352,38 @@ export default {
       "has_description": "Le projet a une description",
       "description_length": "Longueur de la description du Projet",
       "num_properties": "Nombre de propriétés",
-      "num_creation_forms": "Nombre de formulaires qui mettent à jour le Dataset",
-      "num_followup_forms": "Nombre de formulaires qui utilisent le Dataset",
-      "num_entities": "Nombre d'Entités du Dataset",
-      "num_failed_entities": "Nombre d'erreurs de création d'Entité"
+      "num_creation_forms": "Nombre de formulaires qui mettent à jour la liste d'entités",
+      "num_followup_forms": "Nombre de formulaires qui utilisent la liste d'entités",
+      "num_entities": "Nombre d'entités dans la liste",
+      "num_failed_entities": "Nombre d'erreurs de création d'Entité",
+      "num_entity_updates": "Nombre de mises à jour de l'entité",
+      "num_entity_updates_sub": "Nombre de mises à jour d'Entités par Soumissions.",
+      "num_entity_updates_api": "Nombre de mises à jour d'Entités via l'API",
+      "num_entities_updated": "Nombre d'Entités modifiées",
+      "num_entity_conflicts": "Nombre d'Entités ayant déjà eu un conflit",
+      "num_entity_conflicts_resolved": "Nombre d'Entités avec conflit désormais marqué comme résolu",
+      "num_bulk_create_events": "Nombre d'envois en masse",
+      "biggest_bulk_upload": "Nombre de lignes du plus gros envoi en masse",
+      "sso_enabled": "Authentification unique (SSO) activée",
+      "num_client_audit_attachments": "Nombre d'audit de client joints",
+      "num_client_audit_attachments_failures": "Nombre d'échecs de traitement d'audit de client",
+      "num_client_audit_rows": "Nombre de rangées d'audit de client",
+      "num_audits_failed": "Nombre d'événements du journal d'audit qui ont échoué au moins une fois",
+      "num_audits_failed5": "Nombre d'événements du journal d'audit qui ont entièrement échoué",
+      "num_audits_unprocessed": "Nombre d'événements du journal d'audit qui ont été traités à retardement"
     }
   },
   "id": {
+    "recent": "dalam 45 hari terakhir",
     "fields": {
+      "num_admins": "Jumlah Administrator",
+      "num_unique_viewers": "Jumlah Pemerhati Proyek unik",
+      "num_unique_collectors": "Jumlah Pengumpul Data unik",
       "database_size": "Ukuran database sistem",
+      "uses_external_db": "Server menggunakan database eksternal",
+      "num_managers": "Jumlah Manajer Proyek",
+      "num_viewers": "Jumlah Pemerhati Proyek",
+      "num_data_collectors": "Jumlah Pengumpul Data",
       "num_app_users": "Jumlah Pengguna Aplikasi",
       "num_forms": "Jumlah Formulir",
       "num_forms_with_repeats": "Jumlah Formulir dengan ulangan",
@@ -319,7 +393,8 @@ export default {
       "num_submissions_edited": "Jumlah Kiriman - Diubah",
       "num_submissions_with_edits": "Jumlah Kiriman yang diubah",
       "num_submissions_from_app_users": "Jumlah Kiriman dari Pengguna Aplikasi",
-      "num_submissions_from_web_users": "Jumlah Kiriman dari Pengguna Web"
+      "num_submissions_from_web_users": "Jumlah Kiriman dari Pengguna Web",
+      "num_failed_entities": "Jumlah error pembuatan entitas"
     }
   },
   "it": {
@@ -363,10 +438,23 @@ export default {
       "has_description": "Il Progetto ha una descrizione",
       "description_length": "Lunghezza della descrizione del progetto",
       "num_properties": "Numero di proprietà",
-      "num_creation_forms": "Numero di formulari che aggiornano il set di dati",
-      "num_followup_forms": "Numero di formulari che usano il set di dati",
-      "num_entities": "Numero di Entità nel set di dati",
-      "num_failed_entities": "Numero di errori nella creazione dell'entità"
+      "num_creation_forms": "Numero di formulari che aggiornano la Lista di Entità",
+      "num_followup_forms": "Numero di formulari che usano Lista di Entità",
+      "num_entities": "Numero di Entità nella lista di Entità",
+      "num_failed_entities": "Numero di errori nella creazione dell'entità",
+      "num_entity_updates": "Numero di aggiornamenti dell'entità",
+      "num_entity_updates_sub": "Numero di aggiornamenti dell'entità tramite invii",
+      "num_entity_updates_api": "Numero di aggiornamenti dell'entità tramite API",
+      "num_entities_updated": "Numero di entità modificate",
+      "num_entity_conflicts": "Numero di entità mai in conflitto",
+      "num_entity_conflicts_resolved": "Numero di entità con conflitto ora contrassegnato come risolto",
+      "sso_enabled": "SSO abilitato sul server",
+      "num_client_audit_attachments": "Numero di allegati di audit del client",
+      "num_client_audit_attachments_failures": "Numero di errori di elaborazione dell'audit del client",
+      "num_client_audit_rows": "Numero di righe di audit client",
+      "num_audits_failed": "Numero di eventi del registro di controllo che non sono riusciti almeno una volta",
+      "num_audits_failed5": "Numero di eventi del registro di controllo completamente non riusciti",
+      "num_audits_unprocessed": "Numero di eventi del registro di controllo la cui elaborazione è stata ritardata"
     }
   },
   "ja": {
@@ -446,10 +534,18 @@ export default {
       "has_description": "Mradi una maelezo",
       "description_length": "Urefu wa maelezo ya Mradi",
       "num_properties": "Idadi ya Mali",
-      "num_creation_forms": "Idadi ya Fomu zinazosasisha Seti ya Data",
-      "num_followup_forms": "Idadi ya Fomu zinazotumia Hifadhidata",
-      "num_entities": "Idadi ya Huluki katika Seti ya Data",
-      "num_failed_entities": "Idadi ya hitilafu za kuunda Huluki"
+      "num_creation_forms": "Idadi ya Fomu zinazosasisha Orodha ya Huluki",
+      "num_followup_forms": "Idadi ya Fomu zinazotumia Orodha ya Huluki",
+      "num_entities": "Idadi ya Huluki katika Orodha ya Huluki",
+      "num_failed_entities": "Idadi ya hitilafu za kuunda Huluki",
+      "num_entity_updates": "Idadi ya masasisho ya Huluki",
+      "sso_enabled": "SSO imewashwa kwenye seva",
+      "num_client_audit_attachments": "Idadi ya Viambatisho vya Ukaguzi wa Mteja",
+      "num_client_audit_attachments_failures": "Idadi ya hitilafu za uchakataji wa Ukaguzi wa Wateja",
+      "num_client_audit_rows": "Idadi ya safu mlalo za Ukaguzi wa Wateja",
+      "num_audits_failed": "Idadi ya Matukio ya Kumbukumbu ya Ukaguzi ambayo hayakufaulu angalau mara moja",
+      "num_audits_failed5": "Idadi ya Matukio ya Kumbukumbu ya Ukaguzi ambayo hayakufaulu kabisa",
+      "num_audits_unprocessed": "Idadi ya Matukio ya Rekodi za Ukaguzi ambayo uchakataji wake umecheleweshwa"
     }
   }
 }

@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
-          :placeholder="$t('field.version')" required autocomplete="off"/>
+          :placeholder="$t('common.version')" required autocomplete="off"/>
         <p>{{ $t('introduction[3]') }}</p>
         <!-- We specify two nearly identical .modal-actions, because here we
         want the Proceed button to be a submit button (which means that browsers
@@ -257,11 +257,6 @@ export default {
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"
     ],
-    "field": {
-      // This is the text of a form field. It is used to specify a unique
-      // version name for the version of the Form that is about to be published.
-      "version": "Version"
-    },
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     },
@@ -270,8 +265,8 @@ export default {
         "full": "{inAddition} publishing this Form definition will make the following changes to this Project:",
         "inAddition": "In addition,"
       },
-      "newDataset": "A new Dataset {datasetName} will be created.",
-      "newProperty": "In Dataset {datasetName}, a new property {propertyName} will be created."
+      "newDataset": "A new Entity List {datasetName} will be created.",
+      "newProperty": "In Entity List {datasetName}, a new property {propertyName} will be created."
     }
   }
 }
@@ -298,9 +293,6 @@ export default {
       "Každá verze formuláře vyžaduje jedinečný název verze. Váš pracovní formulář má nyní stejný název verze jako dříve publikovaná verze. Nový můžete nastavit tak, že nahrajete definici formuláře s požadovaným jménem, nebo můžete napsat nový a server jej za vás změní.",
       "Chcete pokračovat?"
     ],
-    "field": {
-      "version": "Verze"
-    },
     "problem": {
       "409_6": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
     },
@@ -308,9 +300,7 @@ export default {
       "introduction": {
         "full": "{inAddition} zveřejněním této definice formuláře dojde k následujícím změnám v tomto projektu:",
         "inAddition": "Navíc,"
-      },
-      "newDataset": "Bude vytvořena nová datová sada {datasetName}.",
-      "newProperty": "V Datové sadě {datasetName}, bude vytvořena nová vlastnost {propertyName}."
+      }
     }
   },
   "de": {
@@ -331,9 +321,6 @@ export default {
       "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen.",
       "Möchten Sie fortfahren?"
     ],
-    "field": {
-      "version": "Version"
-    },
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
     },
@@ -342,8 +329,8 @@ export default {
         "full": "{inAddition} durch die Veröffentlichung dieser Formulardefinition werden die folgenden Änderungen an diesem Projekt vorgenommen:",
         "inAddition": "Zusätzlich,"
       },
-      "newDataset": "Ein neuer Datensatz {datasetName} wird erstellt.",
-      "newProperty": "Im Datensatz {datasetName} wird eine neue Eigenschaft {propertyName} erstellt."
+      "newDataset": "Eine neue Entitätsliste {datasetName} wird erstellt.",
+      "newProperty": "In der Entitätsliste {datasetName} wird eine neue Eigenschaft {propertyName} erstellt."
     }
   },
   "es": {
@@ -364,9 +351,6 @@ export default {
       "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted.",
       "¿Le gustaría continuar?"
     ],
-    "field": {
-      "version": "Versión"
-    },
     "problem": {
       "409_6": "El nombre de la versión de este borrador entra en conflicto con una versión anterior de este formulario o un formulario eliminado. Utilice el campo a continuación para cambiarlo a algo nuevo o cargar una nueva definición de formulario."
     },
@@ -375,8 +359,8 @@ export default {
         "full": "{inAddition} publicar esta definición de Formulario hará los siguientes cambios a este Proyecto:",
         "inAddition": "Además,"
       },
-      "newDataset": "Se creará un nuevo conjunto de datos {datasetName}.",
-      "newProperty": "En el conjunto de datos {datasetName}, se creará una nueva propiedad {propertyName}."
+      "newDataset": "Se creará una nueva lista de entidades {datasetName}.",
+      "newProperty": "En la lista de entidades {datasetName}, se creará una nueva propiedad {propertyName}."
     }
   },
   "fr": {
@@ -395,11 +379,8 @@ export default {
       "Vous êtes sur le point de faire de cette ébauche la publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers joints.",
       "Les données existantes pour le formulaire finalisé ne seront pas affectées, mais toutes les données de test de cette ébauche seront supprimées.",
       "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous.",
-      "Voulez vous procéder ?"
+      "Voulez vous continuer ?"
     ],
-    "field": {
-      "version": "Version"
-    },
     "problem": {
       "409_6": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé. Merci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
     },
@@ -408,15 +389,12 @@ export default {
         "full": "{inAddition} publier cette Définition du formualire apportera les changements suivants au Projet :",
         "inAddition": "De plus,"
       },
-      "newDataset": "Un nouveau Dataset {datasetName} va être créé.",
-      "newProperty": "Dans le Dataset {datasetName}, une nouvelle propriété {propertyName} sera créée."
+      "newDataset": "Une nouvelle liste d'entités {datasetName} va être créée.",
+      "newProperty": "Dans la liste d'entités {datasetName}, une nouvelle propriété {propertyName} sera créée."
     }
   },
   "id": {
-    "title": "Terbitkan Draf",
-    "field": {
-      "version": "Versi"
-    }
+    "title": "Terbitkan Draf"
   },
   "it": {
     "title": "Pubblica bozza",
@@ -436,9 +414,6 @@ export default {
       "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te.",
       "Vuoi procedere?"
     ],
-    "field": {
-      "version": "Versione"
-    },
     "problem": {
       "409_6": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
     },
@@ -447,8 +422,8 @@ export default {
         "full": "{inAddition} la pubblicazione di questa definizione del formulario apporterà le seguenti modifiche a questo progetto:",
         "inAddition": "Inoltre,"
       },
-      "newDataset": "Un nuovo set di dati {datasetName} sarà creato.",
-      "newProperty": "Nel set di dati {datasetName}, una nuova proprietà {propertyName} sarà creata."
+      "newDataset": "Una nuova Lista Entità {datasetName} sarà creata.",
+      "newProperty": "Nella Lista Entità {datasetName}, una nuova proprietà {propertyName} sarà creata."
     }
   },
   "ja": {
@@ -458,9 +433,6 @@ export default {
         "full": "まだテストフォームのアップロードにより、{tested}していません。これは必須ではありませんが、強く推奨します。",
         "tested": "このフォームをテスト"
       }
-    },
-    "field": {
-      "version": "バージョン"
     },
     "problem": {
       "409_6": "バージョン名が以前の下書き、または削除されたフォームと競合しています。以下の入力項目から新しいものに変更するか、もしくは新しい定義フォームをアップロードしてください。"
@@ -484,9 +456,6 @@ export default {
       "Kila toleo la Fomu linahitaji jina la toleo la kipekee. Kwa sasa, Rasimu ya Fomu yako ina jina la toleo sawa na toleo lililochapishwa hapo awali. Unaweza kuweka mpya kwa kupakia ufafanuzi wa Fomu kwa jina unalotaka, au unaweza kuandika mpya hapa chini na seva itakubadilisha.",
       "Je, ungependa kuendelea?"
     ],
-    "field": {
-      "version": "Toleo"
-    },
     "problem": {
       "409_6": "Jina la toleo la Rasimu hii linakinzana na toleo la awali la Fomu hii au Fomu iliyofutwa. Tafadhali tumia sehemu iliyo hapa chini ili kuibadilisha hadi kitu kipya au kupakia ufafanuzi mpya wa Fomu"
     },
@@ -495,8 +464,8 @@ export default {
         "full": "{inAddition} kuchapisha ufafanuzi huu wa Fomu kutafanya mabadiliko yafuatayo kwenye Mradi huu:",
         "inAddition": "Zaidi ya hayo,"
       },
-      "newDataset": "Seti mpya ya Data {datasetName} itaundwa",
-      "newProperty": "Katika Seti ya Data {datasetName}, sifa mpya ya {propertyName} itaundwa"
+      "newDataset": "Orodha mpya ya Huluki {datasetName} itaundwa.",
+      "newProperty": "Katika Orodha ya Huluki {datasetName}, sifa mpya ya {propertyName} itaundwa."
     }
   }
 }

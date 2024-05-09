@@ -41,6 +41,14 @@ except according to the terms contained in the LICENSE file.
               </i18n-t>
             </div>
             <div class="info-item">
+              <span class="icon-circle-o"></span>
+              <p>{{ $t('steps[0].introduction[1][1][0]') }}</p>
+            </div>
+            <div class="info-item">
+              <span class="icon-circle-o"></span>
+              <p>{{ $t('steps[0].introduction[1][3]') }} </p>
+            </div>
+            <div class="info-item">
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[0][4]') }}</p>
             </div>
@@ -56,18 +64,9 @@ except according to the terms contained in the LICENSE file.
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[0][7]') }}</p>
             </div>
-          </div>
-          <div class="info-block">
-            <p>{{ $t('steps[0].introduction[1][0]') }}</p>
-            <div class="info-item">
-              <span class="icon-circle-o"></span>
-              <p>{{ $t('steps[0].introduction[1][1][0]') }}</p>
-              <p>{{ $t('steps[0].introduction[1][1][1]') }}</p>
-            </div>
             <div class="info-item">
               <span class="icon-close"></span>
               <p>{{ $t('steps[0].introduction[1][2][0]') }}</p>
-              <p>{{ $t('steps[0].introduction[1][2][1]') }}</p>
             </div>
           </div>
           <i18n-t tag="p" keypath="steps[0].introduction[2].full">
@@ -284,21 +283,21 @@ export default {
               // which is code and will not be translated.
               "To use the automatic Central encryption process on these Forms, remove the {base64RsaPublicKey} configuration."
             ],
-            "You will no longer be able to preview Submission data online.",
-            "You will no longer be able to connect to data over OData.",
+            "You will no longer be able to edit or view Submission data online.",
+            "You will no longer be able to analyze data via OData.",
             "You will no longer be able to edit Submissions in your web browser.",
             "New Submissions will no longer be processed into Entities."
           ],
           [
+            // don't translate this sentence, it is not used anywhere
             "In addition, the following are true in this version of ODK Central:",
             [
-              "Existing Submissions will remain unencrypted.",
-              "In a future version, you will have the option to encrypt existing data."
+              "Existing Submissions will remain unencrypted."
             ],
             [
-              "Encryption cannot be turned off once enabled.",
-              "In a future version, you will be able to disable encryption, which will decrypt your data. This will be true even if you enable encryption now."
-            ]
+              "Encryption cannot be turned off once enabled."
+            ],
+            "Test Submissions to existing Draft Forms will be permanently removed."
           ],
           {
             "full": "You can learn more about encryption {here}. If this sounds like something you want, press Next to proceed.",
@@ -344,22 +343,17 @@ export default {
             [
               "Formuláře nakonfigurované pomocí ručně {submission} klíčů budou tyto klíče nadále používat a musí být ručně dešifrovány.",
               "Chcete-li použít automatický proces centrálního šifrování na těchto formulářích, odeberte konfiguraci {base64RsaPublicKey}."
-            ],
-            "Již nebudete mít možnost zobrazit online náhled odeslaných údajů.",
-            "Již se nebudete moci připojit k datům přes OData.",
-            "Ve svém webovém prohlížeči již nebudete moci upravovat příspěvky.",
-            "Nová podání již nebudou zpracovávána do entit."
+            ]
           ],
           [
             "Kromě toho platí pro tuto verzi ODK Central následující:",
             [
-              "Stávající příspěvky zůstanou nezašifrované.",
-              "V budoucí verzi budete mít možnost šifrovat stávající data."
+              "Stávající příspěvky zůstanou nezašifrované."
             ],
             [
-              "Po aktivaci nelze šifrování vypnout.",
-              "V budoucí verzi budete moci zakázat šifrování, které dešifruje vaše data. To bude platit, i když nyní povolíte šifrování."
-            ]
+              "Po aktivaci nelze šifrování vypnout."
+            ],
+            "Testovací odeslání ke stávajícím návrhům formulářů budou trvale odstraněna."
           ],
           {
             "full": "{here} se dozvíte více o šifrování. Pokud to zní jako něco, co chcete, pokračujte stisknutím tlačítka Další.",
@@ -399,22 +393,17 @@ export default {
             [
               "Formulare, die mit manuellen {submission} Schlüsseln konfiguriert wurden, werden diese Schlüssel weiterhin verwenden und müssen manuell entschlüsselt werden.",
               "Um den automatischen Central-Verschlüsselungsprozess für diese Formulare zu nutzen, entfernen Sie die {base64RsaPublicKey} Konfiguration."
-            ],
-            "Sie werden zukünftig Übermittlungsdaten nicht mehr online als Vorschau sehen können.",
-            "Sie werden sich zukünftig nicht mehr über OData mit Daten verbinden können.",
-            "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten.",
-            "Neue Einreichungen werden nicht mehr zu Entitäten verarbeitet."
+            ]
           ],
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
             [
-              "Existierende Übermittlungen bleiben unverschlüsselt.",
-              "In einer zukünftigen Version werden Sie die Option haben existierende Daten zu verschlüsseln."
+              "Existierende Übermittlungen bleiben unverschlüsselt."
             ],
             [
-              "Verschlüsselung kann nicht deaktiviert werden, nachdem es einmal aktiviert wurde.",
-              "In einer zukünftigen Version werden Sie Verschlüsselung deaktivieren können, was ihre Daten entschlüsseln wird. Dies trifft auch zu, wenn Sie Verschlüsselung jetzt aktivieren."
-            ]
+              "Verschlüsselung kann nicht deaktiviert werden, nachdem es einmal aktiviert wurde."
+            ],
+            "Testeinsendungen zu bestehenden Formularentwürfen werden dauerhaft entfernt."
           ],
           {
             "full": "Sie können {here} mehr über Verschlüsselung erfahren. Wenn sich das wollen, klicken Sie auf Weiter, um fortzufahren.",
@@ -454,22 +443,17 @@ export default {
             [
               "Los formularios configurados con claves {submission} manuales continuarán utilizando esas claves y deben ser descifrados manualmente.",
               "Para utilizar el proceso automático de encriptación de Central en estos formularios, remueva la configuración {base64RsaPublicKey}."
-            ],
-            "Ya no podrá obtener una vista previa de los datos de la presentación en línea",
-            "Ya no podrá conectarse a los datos a través de Odata.",
-            "Ya no podrá editar envíos en su navegador web.",
-            "Los Envíos nuevos ya no se procesarán en Entidades."
+            ]
           ],
           [
             "Además, lo siguiente es cierto en esta versión de ODK Central:",
             [
-              "Los envíos existentes permanecerán sin cifrar.",
-              "En una futura versión, tendrá la opción de cifrar los datos existentes."
+              "Los envíos existentes permanecerán sin cifrar."
             ],
             [
-              "El cifrado no podrá ser desactivado una vez activado.",
-              "En una versión futura, usted podrá desactivar el cifrado, que permitirá descifrar sus datos. Esto será efectivo incluso si habilita el cifrado ahora."
-            ]
+              "El cifrado no podrá ser desactivado una vez activado."
+            ],
+            "Los envíos de prueba a los borradores de formularios existentes se eliminarán de forma permanente."
           ],
           {
             "full": "Puede obtener más información sobre el cifrado {here}. Si esto suena como algo que desea hacer, presione siguiente para continuar.",
@@ -510,7 +494,7 @@ export default {
               "Les formulaires configurés avec des clés {submission} manuelles continueront à utiliser ces clés et devront être déchiffrés manuellement.",
               "Pour utiliser le chiffrement automatique de Central pour ce formulaire, supprimez la configuration {base64RsaPublicKey}."
             ],
-            "Vous ne pourrez plus prévisualiser les données de soumission en ligne.",
+            "Vous ne pourrez plus éditer ou prévisualiser les données de soumission en ligne.",
             "Vous ne pourrez plus vous connecter aux données via OData.",
             "Vous ne serez plus en mesure d'éditer les soumissions dans votre navigateur.",
             "Les nouvelles Soumissions ne seront plus transformées en entités."
@@ -518,16 +502,15 @@ export default {
           [
             "En outre, ce qui suit est vrai dans cette version d'ODK Central :",
             [
-              "Les soumissions existantes resteront non chiffrées.",
-              "Dans une prochaine version, vous aurez la possibilité de chiffrer les données existantes."
+              "Les soumissions existantes resteront non chiffrées."
             ],
             [
-              "Le chiffrement ne peut pas être désactivé une fois qu'il est activé.",
-              "Dans une prochaine version, vous pourrez désactiver le chiffrement, ce qui permettra de déchiffrer vos données. Ce sera le cas même si vous activez le chiffrement maintenant."
-            ]
+              "Le chiffrement ne peut pas être désactivé une fois qu'il est activé."
+            ],
+            "Les soumissions de test des ébauches de formulaires existantes seront définitivement supprimées."
           ],
           {
-            "full": "Vous pouvez en apprendre plus sur le chiffrement en cliquant {here}. Si il vous semble être utile, cliquez sur Suivant pour procéder.",
+            "full": "Vous pouvez en apprendre plus à propos du chiffrement en cliquant {here}. Si cela vous semble être utile, cliquez sur Suivant pour continuer.",
             "here": "ici"
           }
         ]
@@ -564,20 +547,15 @@ export default {
             [
               "Formulir yang dikonfigurasi dengan kunci {submission} manual akan tetap menggunakan kunci-kunci tersebut dan harus didekripsi secara manual.",
               "Untuk menggunakan proses enkripsi otomatis Central pada formulir ini, hapus konfigurasi {base64RsaPublicKey}."
-            ],
-            "Anda tidak akan bisa melihat pratinjau kiriman data secara online.",
-            "Anda tidak akan bisa menghubungkan data lewat OData.",
-            "Anda tidak akan bisa lagi mengubah kiriman di situs web Anda."
+            ]
           ],
           [
             "Sebagai tambahan, berikut adalah yang benar ada pada versi ODK Central ini:",
             [
-              "Kiriman data yang sudah ada akan tetap tidak terenkripsi.",
-              "Pada versi yang akan datang, Anda akan memiliki pilihan untuk mengenkripsi data yang sudah ada."
+              "Kiriman data yang sudah ada akan tetap tidak terenkripsi."
             ],
             [
-              "Enkripsi tidak dapat dimatikan setelah diizinkan.",
-              "Pada versi yang akan datang, Anda akan bisa menonaktifkan enkripsi, yang mana akan mendekripsi data Anda. Ini akan terjadi bahkan apabila Anda mengizinkan enkripsi sekarang."
+              "Enkripsi tidak dapat dimatikan setelah diizinkan."
             ]
           ],
           {
@@ -609,22 +587,17 @@ export default {
             [
               "I formulari configurati con chiavi {submission} manuali continueranno a utilizzare tali chiavi e devono essere decrittografati manualmente.",
               "Per utilizzare il processo di crittografia centrale automatica su questi formulari, rimuovere la configurazione {base64RsaPublicKey}."
-            ],
-            "Non sarai più in grado di visualizzare in anteprima i dati di invio online.",
-            "Non sarai più in grado di connetterti ai dati tramite OData.",
-            "Non sarai più in grado di modificare gli Invii nel tuo browser web.",
-            "I nuovi invii non verranno più elaborati in Entità."
+            ]
           ],
           [
             "Inoltre, quanto segue è reale in questa versione di ODK Central:",
             [
-              "Gli invii esistenti rimarranno non crittografati.",
-              "In una versione futura, avrai la possibilità di crittografare i dati esistenti."
+              "Gli invii esistenti rimarranno non crittografati."
             ],
             [
-              "La crittografia non può essere disattivata una volta abilitata.",
-              "In una versione futura, sarai in grado di disabilitare la crittografia, che decrittograferà i tuoi dati. Questo sarà possibile anche se abiliti la crittografia ora."
-            ]
+              "La crittografia non può essere disattivata una volta abilitata."
+            ],
+            "Gli invii di prova ai moduli bozza esistenti verranno rimossi definitivamente."
           ],
           {
             "full": "Puoi imparare di più sulla crittografia {here}. Se questo è quello che desideri, premi Avanti per procedere.",
@@ -664,20 +637,15 @@ export default {
             [
               "手動で{submission}キーを設定したフォームでは、そのキーが引き続き使用されるため、手動で復号化する必要があります。",
               "これらのフォームでCentralの自動暗号化処理を使用するには、{base64RsaPublicKey}の設定を削除して下さい。"
-            ],
-            "オンラインで提出済フォームのデータをプレビューできなくなります。",
-            "OData経由でデータに接続できなくなります。",
-            "提出されたデータをWebブラウザで編集できなくなります。"
+            ]
           ],
           [
             "また、このバージョンのODK Centralでは以下のようになっています。",
             [
-              "既存の提出されたフォームは暗号化されずに残ります。",
-              "今後のバージョンでは、既存のデータを暗号化するオプションが追加される予定です。"
+              "既存の提出されたフォームは暗号化されずに残ります。"
             ],
             [
-              "一度有効にされた暗号化を無効にすることはできません。",
-              "今後のバージョンでは、暗号化を無効にするとデータが復号化されます。これは現時点で暗号化を有効にしていても同様です。"
+              "一度有効にされた暗号化を無効にすることはできません。"
             ]
           ],
           {
@@ -712,22 +680,17 @@ export default {
             [
               "Fomu zilizosanidiwa kwa funguo za mwongozo za {submission} zitaendelea kutumia funguo hizo, na lazima zisimbuwe wewe mwenyewe",
               "li kutumia mchakato wa usimbaji fiche wa Kati kiotomatiki kwenye Fomu hizi, ondoa usanidi wa {base64RsaPublicKey}."
-            ],
-            "Hutaweza tena kuhakiki data ya Wasilisho mtandaoni.",
-            "Hutaweza tena kuunganisha kwa data kupitia OData.",
-            "Hutaweza tena kuhariri Mawasilisho katika kivinjari chako cha wavuti.",
-            "Mawasilisho Mapya hayatachakatwa tena kuwa Mashirika"
+            ]
           ],
           [
             "kwa kuongeza, yafuatayo ni kweli katika toleo hili la ODK Central:",
             [
-              "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa.",
-              "katika toleo la baadaye, utakuwa na chaguo la kusimba data iliyopo"
+              "Mawasilisho yaliyopo yatasalia kuwa hayajasimbwa."
             ],
             [
-              "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa",
-              "Katika toleo la baadaye, utaweza kuzima usimbaji fiche, ambao utaondoa usimbaji fiche wa data yako. Hii itakuwa kweli hata ukiwezesha usimbaji fiche sasa."
-            ]
+              "Usimbaji fiche hauwezi kuzimwa baada ya kuwezeshwa"
+            ],
+            "Mawasilisho ya Jaribio kwa Fomu zilizopo Rasimu yataondolewa kabisa."
           ],
           {
             "full": "Unaweza kupata maelezo zaidi kuhusu usimbaji fiche {here}. Ikiwa hii inaonekana kama kitu unachotaka, bonyeza Ifuatayo ili kuendelea.",

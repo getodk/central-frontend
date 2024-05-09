@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
 
     <loading :state="keys.initiallyLoading"/>
     <submission-list v-show="keys.dataExists" :project-id="projectId"
-      :xml-form-id="xmlFormId" draft/>
+      :xml-form-id="xmlFormId" draft @fetch-keys="fetchData"/>
   </div>
 </template>
 
@@ -166,9 +166,9 @@ export default {
     "collectProjectName": "[Draft] {name}",
     // @transifexKey component.FormDraftTesting.datasetsPreview
     "entitiesTesting": {
-      "title": "This Form can create Entities",
+      "title": "This Form can update Entities",
       "body": [
-        "Entities are only created for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state.",
+        "Entities are only updated for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state.",
         "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
       ]
     }
@@ -185,7 +185,14 @@ export default {
       "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče.",
       "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
     ],
-    "collectProjectName": "[Návrh] {name}"
+    "collectProjectName": "[Návrh] {name}",
+    "entitiesTesting": {
+      "title": "Tento formulář může aktualizovat entity.",
+      "body": [
+        "Entity jsou aktualizovány pouze pro publikované formuláře. V budoucí verzi Central budete moci testovat funkčnost Entity ve stavu Koncept.",
+        "Prozatím doporučujeme vyzkoušet definici formuláře ve stavu Návrh a ověřit její logiku. Před publikováním můžete ověřit, zda aktualizuje všechny požadované vlastnosti."
+      ]
+    }
   },
   "de": {
     "title": "Entwurfs-Test",
@@ -193,7 +200,14 @@ export default {
       "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
       "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
     ],
-    "collectProjectName": "[Entwurf] {name}"
+    "collectProjectName": "[Entwurf] {name}",
+    "entitiesTesting": {
+      "title": "Dieses Formular kann Objekte aktualisieren.",
+      "body": [
+        "Objekte werden nur für veröffentlichte Formulare aktualisiert. In einer zukünftigen Version von Central können Sie die Funktionalität von Objekten im Entwurfsstatus testen.",
+        "Derzeit empfehlen wir, Ihre Formdefinition im Entwurfszustand zu überprüfen, um deren Logik zu überprüfen. Bevor Sie sie veröffentlichen, können Sie sicherstellen, dass sie alle gewünschten Eigenschaften aktualisiert."
+      ]
+    }
   },
   "es": {
     "title": "Prueba de borrador",
@@ -201,7 +215,14 @@ export default {
       "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
       "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
     ],
-    "collectProjectName": "borrador {name}"
+    "collectProjectName": "borrador {name}",
+    "entitiesTesting": {
+      "title": "Este Formulario puede actualizar Entidades",
+      "body": [
+        "Las entidades solo se actualizan para Formularios publicados. En una futura versión de Central, podrás probar la funcionalidad de Entidades en estado de Borrador.",
+        "Por ahora, recomendamos probar la definición de su Formulario en estado Borrador para verificar su lógica. Antes de publicar, puede verificar que actualice todas las propiedades deseadas."
+      ]
+    }
   },
   "fr": {
     "title": "Test de l'ébauche",
@@ -209,7 +230,14 @@ export default {
       "Vous pouvez utiliser le code de configuration à droite pour configurer un appareil mobile afin de télécharger cette ébauche. Vous pouvez aussi cliquer le bouton Nouveau ci-dessus pour créer une nouvelle soumission depuis votre navigateur.",
       "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées."
     ],
-    "collectProjectName": "[Brouillon] {name}"
+    "collectProjectName": "[Brouillon] {name}",
+    "entitiesTesting": {
+      "title": "Ce formulaire peut mettre à jour des Entités.",
+      "body": [
+        "Les entités ne peuvent être mises à jour qu'avec des formulaires publiés. Dans une future version de Central, vous pourrez tester la mise à jour des entités avec des ébauches de formulaires.",
+        "Pour le moment, nous vous conseillons de tester la définition de votre formulaire à l'état d'ébauche pour vérifier sa logique. Avant de le publier, vous pouvez vérifier qu'il met à jour les propriétés désirées."
+      ]
+    }
   },
   "id": {
     "title": "Pengujian Draf",
@@ -227,9 +255,9 @@ export default {
     ],
     "collectProjectName": "[Draft] {name}",
     "entitiesTesting": {
-      "title": "Questo Formulario può creare Entità",
+      "title": "Questo Formulario può aggiornare Entità",
       "body": [
-        "Le entità vengono create solo per i formulari pubblicati. In una versione futura di Central, sarai in grado di testare la funzionalità dell'entità in uno stato bozza.",
+        "Le entità vengono aggiornate solo per i Moduli pubblicati. In una futura versione di Central, sarà possibile testare la funzionalità delle entità in uno stato di bozza.",
         "Per ora, ti consigliamo di provare la definizione del formulario nello stato Bozza per verificarne la logica. Prima della pubblicazione, puoi verificare che aggiorni tutte le proprietà desiderate."
       ]
     }

@@ -72,8 +72,8 @@ export default {
 <i18n lang="json5">
   {
     "en": {
-      // Number of dataset(s) is shown separately above this text
-      "datasetUpdates":"Dataset is updated by this Form: | Datasets are updated by this Form:"
+      // Number of Entity List(s) is shown separately above this text
+      "datasetUpdates":"Entity List is updated by this Form: | Entity Lists are updated by this Form:"
     }
   }
   </i18n>
@@ -82,19 +82,19 @@ export default {
 <i18n>
 {
   "de": {
-    "datasetUpdates": "Datensatz wird durch dieses Formular aktualisiert: | Datensätze werden durch dieses Formular aktualisiert:"
+    "datasetUpdates": "Entitätsliste wird durch dieses Formular aktualisiert: | Entitätslisten werden durch dieses Formular aktualisiert:"
   },
   "es": {
-    "datasetUpdates": "El conjunto de datos se actualiza mediante este formulario: | Los conjuntos de datos se actualizan mediante este formulario: | Los conjuntos de datos se actualizan mediante este formulario:"
+    "datasetUpdates": "La lista de entidades se actualiza mediante este formulario: | Las listas de entidades se actualizan mediante este formulario: | Las listas de entidades se actualizan mediante este formulario:"
   },
   "fr": {
-    "datasetUpdates": "Ce Dataset est mis à jour par ce formulaire : | Ces Datasets sont mis à jour par ce formulaire : | Ces Datasets sont mis à jour par ce formulaire :"
+    "datasetUpdates": "Liste d'entités est mise à jour par ce formulaire: | Listes d'entités sont mises à jour par ce formulaire: | Listes d'entités sont mises à jour par ce formulaire:"
   },
   "it": {
-    "datasetUpdates": "Il set di dati è aggiornato da questo formulario: | I set di dati vengono aggiornati da questo formulario: | I set di dati vengono aggiornati da questo formulario:"
+    "datasetUpdates": "L' elenco delle entità è aggiornato da questo formulario: | Gli elenchi delle entità sono aggiornati da questo formulario: | Gli elenchi delle entità sono aggiornati da questo formulario:"
   },
   "sw": {
-    "datasetUpdates": "Seti ya data inasasishwa na Fomu hii: | Seti za data zinasasishwa na Fomu hii:"
+    "datasetUpdates": "Orodha za Mashirika husasishwa na Fomu hii: | Orodha za Mashirika husasishwa na Fomu hii:"
   }
 }
 </i18n>

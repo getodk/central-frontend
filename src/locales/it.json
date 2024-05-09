@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Stato",
         "testing": "Testare"
       }
     }
@@ -58,7 +57,7 @@
       "user": "Azioni utente web",
       "project": "Azioni di progetto",
       "form": "Azioni del form",
-      "dataset": "Azioni del set di dati",
+      "dataset": "Azioni dell'elenco delle entità",
       "field_key": "Azioni utente applicazione",
       "public_link": "Azioni del link di accesso pubblico",
       "config": "Azioni di configurazione del server",
@@ -130,8 +129,10 @@
     "clear": "Cancella",
     "close": "Chiudere",
     "comment": "Aggiungere un commento",
+    "continue": "Continua",
     "create": "Crea",
     "createSubmission": "Nuovo",
+    "delete": "Cancellare",
     "done": "Fatto",
     "download": "Scaricare",
     "edit": "Modificare",
@@ -156,7 +157,9 @@
     "showPreview": "Anteprima",
     "hidePreview": "Nascondi anteprima",
     "expand": "Espandere",
-    "collapse": "Chiudere"
+    "collapse": "Chiudere",
+    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
+    "upload": "Carica"
   },
   "field": {
     "comment": "Lascia un commento...",
@@ -182,7 +185,9 @@
     "email": "Indirizzo email",
     "instanceId": "ID della istanza",
     "lastSubmission": "Ultimo invio",
+    "recentActivity": "Attività recente",
     "name": "Nome",
+    "listName": "Nome dell'elenco",
     "submitterName": "Inviato da",
     "submissionDate": "Inviato alle",
     "time": "Tempo",
@@ -207,8 +212,8 @@
     "appUser": "Utente dell'applicazione",
     "appUsers": "Utenti dell'applicazione",
     "config": "Configurazione del Server",
-    "dataset": "Set di dati",
-    "datasets": "Set di dati",
+    "entityList": "Lista Entità",
+    "entityLists": "Liste Entità",
     "entities": "Entità",
     "form": "Formulario",
     "forms": "Formulari",
@@ -263,13 +268,18 @@
   "entity": {
     "label": "Label",
     "entityLabel": "Etichetta dell'entità",
-    "entityId": "ID dell'Entità"
+    "entityId": "ID dell'Entità",
+    "noProperties": "Questo formulario imposta solo l'\"etichetta\".",
+    "noEntity": "(nessuno)",
+    "conflictsCount": "{count} conflitto | {count} conflitti | {count} conflitti"
   },
   "common": {
     "activity": "Attività",
     "anybody": "(Chiunque)",
     "areYouSure": "Sei sicuro di voler procedere?",
     "basicInfo": "Informazioni di base",
+    "conflict": "Conflitto",
+    "conflicts": "Conflitti",
     "currentDraft": "La tua bozza attuale",
     "dangerZone": "Zona pericolo",
     "data": "Dati",
@@ -281,7 +291,9 @@
     "loading": "Caricando...",
     "no": "No",
     "noResults": "Nessun risultato",
+    "noUndo": "Quest'azione non può essere annullata",
     "rightNow": "Adesso",
+    "rowNumber": "Riga",
     "success": "Successo!",
     "system": "Sistema",
     "yes": "Si",
@@ -291,10 +303,12 @@
     },
     "total": "Totale",
     "totalSubmissions": "Invii totali",
-    "punctuations": {
-      "comma": ","
-    },
-    "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà"
+    "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà",
+    "new": "Novità!",
+    "totalEntities": "Entità totali",
+    "versionShort": "v{version}",
+    "status": "Stato",
+    "version": "Versione"
   },
   "mixin": {
     "request": {

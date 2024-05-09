@@ -1,23 +1,19 @@
 import { RouterLinkStub } from '@vue/test-utils';
 
-import Navbar from '../../../src/components/navbar.vue';
 import NavbarLinks from '../../../src/components/navbar/links.vue';
 
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 describe('NavbarLinks', () => {
-  it('does not render the links before login', () => {
-    const navbar = mount(Navbar, {
-      container: { router: mockRouter('/login') },
-      global: {
-        // Stubbing AnalyticsIntroduction because of its custom <router-link>
-        stubs: { AnalyticsIntroduction: true }
-      }
-    });
-    navbar.findComponent(NavbarLinks).exists().should.be.false();
-  });
+  it('does not render the links before login', () =>
+    load('/login')
+      .restoreSession(false)
+      .afterResponses(app => {
+        app.findComponent(NavbarLinks).exists().should.be.false();
+      }));
 
   it('renders the correct links for a sitewide administrator', () => {
     mockLogin();

@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
         </template>
         <template v-else-if="linkable && !attachment.datasetExists">
           <button type="button" class="btn btn-primary btn-link-dataset"
-            @click="$emit('link', { name: attachment.name, blobExists: attachment.blobExists })">
+            @click="$emit('link', attachment)">
             <span class="icon-link"></span>
             <i18n-t keypath="action.linkDataset">
               <template #datasetName>{{ datasetName }}</template>
@@ -210,17 +210,17 @@ export default {
     // if the selected files were uploaded.
     "replace": "Replace",
     "notUploaded": {
-      // This is shown for a Media File that has not been uploaded.
+      // This is shown for a Form Attachment that has not been uploaded.
       "text": "Not yet uploaded",
       "title": "To upload files, drag and drop one or more files onto this page"
     },
-    // This is shown for a Form Attachment that is linked to a Dataset
-    "linkedToDataset": "Linked to Dataset {datasetName}",
+    // This is shown for a Form Attachment that is linked to an Entity List
+    "linkedToDataset": "Linked to Entity List {datasetName}",
     "uploadToOverride": "Upload a file to override.",
     "action": {
-      "linkDataset": "Link Dataset {datasetName}"
+      "linkDataset": "Link Entity List {datasetName}"
     },
-    // This is a label that is shown next to a Form Attachment that is linked to a Dataset,
+    // This is a label that is shown next to a Form Attachment that is linked to an Entity List,
     // which would be overriden if the selected files were uploaded.
     "override": "Override"
   }
@@ -242,11 +242,7 @@ export default {
       "text": "Nebyl nahrán",
       "title": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na tuto stránku"
     },
-    "linkedToDataset": "Propojeno s datovou sadou {datasetName}",
     "uploadToOverride": "Nahrajte soubor, který chcete přepsat.",
-    "action": {
-      "linkDataset": "Odkaz Datové sady {datasetName}"
-    },
     "override": "Přepsat"
   },
   "de": {
@@ -261,10 +257,10 @@ export default {
       "text": "Noch nicht hochgeladen",
       "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
     },
-    "linkedToDataset": "Mit Datensatz verknüpft {datasetName}",
+    "linkedToDataset": "Mit Entitätsliste {datasetName} verknüpft",
     "uploadToOverride": "Laden Sie eine zu überschreibende Datei hoch.",
     "action": {
-      "linkDataset": "Datensatz verknüpfen {datasetName}"
+      "linkDataset": "Mit Entitätsliste {datasetName} verknüpfen"
     },
     "override": "Überschreiben"
   },
@@ -280,10 +276,10 @@ export default {
       "text": "Aún no cargado",
       "title": "Para cargar archivos, arrastre y suelte uno o más archivos en esta página."
     },
-    "linkedToDataset": "Vinculado al conjunto de datos {datasetName}",
+    "linkedToDataset": "Vinculado a la lista de entidades {datasetName}",
     "uploadToOverride": "Cargue un archivo para anular.",
     "action": {
-      "linkDataset": "Vincular conjunto de datos {datasetName}"
+      "linkDataset": "Vincular la lista de entidades {datasetName}"
     },
     "override": "Invalidar"
   },
@@ -299,10 +295,10 @@ export default {
       "text": "Non encore téléversé",
       "title": "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur le tableau de cette page."
     },
-    "linkedToDataset": "Lié au Dataset {datasetName}",
+    "linkedToDataset": "Lié à la liste d'entités {datasetName}",
     "uploadToOverride": "Envoyer un fichier pour écraser.",
     "action": {
-      "linkDataset": "Lier le Dataset {datasetName}"
+      "linkDataset": "Lier la liste d'entités {datasetName}"
     },
     "override": "Écraser"
   },
@@ -331,10 +327,10 @@ export default {
       "text": "Non ancora caricato",
       "title": "Per caricare file, trascina e rilascia uno o più file su questa pagina"
     },
-    "linkedToDataset": "Collegato al set di dati {datasetName}",
+    "linkedToDataset": "Collegato a Lista Entità {datasetName}",
     "uploadToOverride": "Carica un file da sovrascrivere.",
     "action": {
-      "linkDataset": "Collega set di dati {datasetName}"
+      "linkDataset": "Collega Lista Entità {datasetName}"
     },
     "override": "Sovrascrivere"
   },
@@ -363,10 +359,10 @@ export default {
       "text": "Bado haijapakiwa",
       "title": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
     },
-    "linkedToDataset": "Imeunganishwa kwenye Seti ya Data {datasetName}",
+    "linkedToDataset": "Imeunganishwa kwenye Orodha ya Huluki {datasetName}",
     "uploadToOverride": "Pakia faili ili kubatilisha",
     "action": {
-      "linkDataset": "Unganisha Seti ya Data {datasetName}"
+      "linkDataset": "Unganisha Orodha ya Huluki {datasetName}"
     },
     "override": "Batilisha"
   }

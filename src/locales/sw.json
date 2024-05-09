@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Hali",
         "testing": "Upimaji"
       }
     }
@@ -58,7 +57,7 @@
       "user": "vitendo vya mtumiaji wa wavuti",
       "project": "hatua za mradi",
       "form": "Vitendo vya fomu",
-      "dataset": "Vitendo vya Seti ya Data",
+      "dataset": "Vitendo vya Orodha ya Huluki",
       "field_key": "Vitendo vya mtumiaji wa programu",
       "public_link": "vitendo vya kiungo cha ufikiaji wa umma",
       "config": "vitendo vya usanidi wa seva",
@@ -130,6 +129,7 @@
     "clear": "Safisha",
     "close": "Funga",
     "comment": "Maoni",
+    "continue": "Endelea",
     "create": "Unda",
     "createSubmission": "Mpya",
     "done": "Imekamilika",
@@ -156,7 +156,9 @@
     "showPreview": "Hakiki",
     "hidePreview": "Ficha hakiki",
     "expand": "Panua",
-    "collapse": "Punguza"
+    "collapse": "Punguza",
+    "reviewParallelUpdates": "Kagua masasisho sambamba",
+    "upload": "pakia"
   },
   "field": {
     "comment": "Acha Maoni",
@@ -182,7 +184,9 @@
     "email": "Barua pepe",
     "instanceId": "Kitambulisho cha Mfano",
     "lastSubmission": "uwasilishaji wa hivi karibuni",
+    "recentActivity": "Shughuli ya Hivi Karibuni",
     "name": "Jina",
+    "listName": "Jina la Orodha",
     "submitterName": "iliyowasilishwa na",
     "submissionDate": "imewasilishwa kwa",
     "time": "Muda",
@@ -207,14 +211,14 @@
     "appUser": "mtumiaji wa programu",
     "appUsers": "watumiaji wa programu",
     "config": "usanidi wa seva",
-    "dataset": "Seti ya data",
-    "datasets": "Seti za data",
+    "entityList": "Orodha ya Huluki",
     "entities": "vyombo",
     "form": "Fomu",
     "forms": "fomu",
     "formAttachments": "Viambatisho vya Fomu",
     "project": "Mradi",
     "projects": "miradi",
+    "property": "Mali",
     "publicLink": "Kiungo cha ufikiaji wa umma",
     "user": "mtumiaji",
     "users": "Watumiaji",
@@ -226,6 +230,7 @@
   },
   "alert": {
     "passwordTooShort": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10.",
+    "updateEntity": "Huluki imesasishwa!",
     "updateReviewState": "Kagua Jimbo limehifadhiwa!",
     "versionChange": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka tabia isiyotabirika."
   },
@@ -260,13 +265,18 @@
   },
   "entity": {
     "label": "Label",
-    "entityId": "Kitambulisho cha huluki"
+    "entityLabel": "Lebo ya Huluki",
+    "entityId": "Kitambulisho cha huluki",
+    "noProperties": "Fomu hii huweka \"lebo\" pekee.",
+    "noEntity": "(hakuna)",
+    "conflictsCount": "{count} mzozo | {count} migogoro"
   },
   "common": {
     "activity": "shughuli",
     "anybody": "(Mtu yeyote)",
     "areYouSure": "Je, una uhakika ungependa kuendelea?",
     "basicInfo": "Taarifa za Msingi",
+    "conflicts": "migogoro",
     "currentDraft": "Rasimu Yako ya Sasa",
     "dangerZone": "Eneo la Hatari",
     "data": "Data",
@@ -288,10 +298,11 @@
     },
     "total": "jumla",
     "totalSubmissions": "Jumla ya Mawasilisho",
-    "punctuations": {
-      "comma": ","
-    },
-    "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}"
+    "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}",
+    "new": "Mpya!",
+    "totalEntities": "Jumla ya Mashirika",
+    "status": "Hali",
+    "version": "Toleo"
   },
   "mixin": {
     "request": {

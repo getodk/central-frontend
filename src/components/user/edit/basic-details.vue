@@ -17,7 +17,10 @@ except according to the terms contained in the LICENSE file.
     <div class="panel-body">
       <form @submit.prevent="submit">
         <form-group v-model.trim="email" type="email"
-          :placeholder="$t('field.email')" required autocomplete="off"/>
+          :placeholder="$t('field.email')" required
+          :aria-disabled="emailDisabled"
+          :tooltip="emailDisabled ? $t('emailDisabled') : null"
+          autocomplete="off"/>
         <form-group v-model.trim="displayName" type="text"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
         <button type="submit" class="btn btn-primary"
@@ -29,13 +32,9 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'UserEditBasicDetails'
-};
-</script>
 <script setup>
-import { inject, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
+import { equals } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import FormGroup from '../../form-group.vue';
@@ -45,13 +44,21 @@ import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { useRequestData } from '../../../request-data';
 
+defineOptions({
+  name: 'UserEditBasicDetails'
+});
+
 // The component assumes that this data will exist when the component is
 // created.
-const { user } = useRequestData();
+const { currentUser, user } = useRequestData();
 const { awaitingResponse } = user.toRefs();
 
 const email = ref(user.email);
 const displayName = ref(user.displayName);
+
+const config = inject('config');
+const emailDisabled = computed(() =>
+  config.oidcEnabled && !currentUser.can('user.update'));
 
 const { t } = useI18n();
 const alert = inject('alert');
@@ -64,7 +71,11 @@ const submit = () => {
       user.email = data.email;
       user.displayName = data.displayName;
       user.updatedAt = data.updatedAt;
-    }
+    },
+    problemToAlert: ({ code, details }) =>
+      (code === 409.3 && equals(details.fields, ['email', 'deleted'])
+        ? t('problem.409_3', { email: details.values[0] })
+        : null)
   })
     .then(() => { alert.success(t('alert.success')); })
     .catch(noop);
@@ -76,8 +87,12 @@ const submit = () => {
   "en": {
     // This is a title shown above a section of the page.
     "title": "Basic Details",
+    "emailDisabled": "Your email address cannot be changed. It is used between Central and your login server to ensure your identity.",
     "action": {
       "update": "Update details"
+    },
+    "problem": {
+      "409_3": "You cannot change your email to {email} because this account already exists. Please try another email address."
     },
     "alert": {
       "success": "User details saved!"
@@ -91,6 +106,7 @@ const submit = () => {
 {
   "cs": {
     "title": "Základní podrobnosti",
+    "emailDisabled": "Vaši e-mailovou adresu nelze změnit. Používá se mezi serverem Central a přihlašovacím serverem k zajištění vaší identity.",
     "action": {
       "update": "Aktualizovat podrobnosti"
     },
@@ -100,8 +116,12 @@ const submit = () => {
   },
   "de": {
     "title": "Basisinformationen",
+    "emailDisabled": "Ihre E-Mail-Adresse kann nicht geändert werden. Sie wird zwischen Central und Ihrem Anmeldeserver verwendet, um Ihre Identität sicherzustellen.",
     "action": {
       "update": "Details aktualisieren"
+    },
+    "problem": {
+      "409_3": "Sie können Ihre E-Mail-Adresse nicht in {email} ändern, da dieses Konto bereits existiert. Bitte versuchen Sie eine andere E-Mailadresse."
     },
     "alert": {
       "success": "Benutzerinformationen gespeichert!"
@@ -109,8 +129,12 @@ const submit = () => {
   },
   "es": {
     "title": "Información básica",
+    "emailDisabled": "Su dirección de correo electrónico no se puede cambiar. Se utiliza entre Central y su servidor de inicio de sesión para garantizar su identidad.",
     "action": {
       "update": "Actualizar información"
+    },
+    "problem": {
+      "409_3": "No puede cambiar su correo electrónico a {email} porque esta cuenta ya existe. Por favor, intente con otra dirección de correo electrónico."
     },
     "alert": {
       "success": "Información de usuario guardada!"
@@ -118,8 +142,12 @@ const submit = () => {
   },
   "fr": {
     "title": "Détails de base",
+    "emailDisabled": "Votre adresse de courriel ne peut être changée. Elle est utilisée entre Central et votre serveur de connexion pour vérifier votre identité.",
     "action": {
       "update": "Mettre à jour les détails"
+    },
+    "problem": {
+      "409_3": "Vous ne pouvez pas changer votre adresse de courriel pour {email} car ce compte existe déjà. Merci d'essayer une autre adresse."
     },
     "alert": {
       "success": "Détails de l'utilisateur sauvegardées !"
@@ -136,8 +164,12 @@ const submit = () => {
   },
   "it": {
     "title": "Dettagli di base",
+    "emailDisabled": "L'indirizzo e-mail non può essere modificato. Viene utilizzato tra Central e il server di login per garantire l'identità dell'utente.",
     "action": {
       "update": "Aggiornare dettagli"
+    },
+    "problem": {
+      "409_3": "Non puoi cambiare la tua email in {email} perché questo account esiste già. Per favore, prova un altro indirizzo email."
     },
     "alert": {
       "success": "Dettagli utente salvati!"
@@ -154,6 +186,7 @@ const submit = () => {
   },
   "sw": {
     "title": "Maelezo ya Msingi",
+    "emailDisabled": "Anwani yako ya barua pepe haiwezi kubadilishwa. Inatumika kati ya Central na seva yako ya kuingia ili kuhakikisha utambulisho wako.",
     "action": {
       "update": "Sasisha maelezo"
     },

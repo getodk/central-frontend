@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
         "testing": "Uji Coba"
       }
     }
@@ -41,7 +40,8 @@
   "formState": {
     "open": "Buka",
     "closing": "Menutup",
-    "closed": "Tutup"
+    "closed": "Tutup",
+    "unpublished": "Belum diterbitkan"
   },
   "reviewState": {
     "received": "Diterima",
@@ -74,6 +74,8 @@
         "set": "Set"
       },
       "dataset": {
+        "update": "Perbarui",
+        "update_publish": "Terbitkan",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -89,6 +91,8 @@
         "update_draft_delete": "Buang Draf",
         "attachment_update": "Perbarui Lampiran",
         "submission_export": "Unduh kiriman",
+        "restore": "Pulihkan",
+        "purge": "Hapus",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -130,6 +134,7 @@
     "download": "Unduh",
     "edit": "Ubah",
     "editProfile": "Ubah Profil",
+    "finish": "Selesai",
     "logIn": "Masuk",
     "looksGood": "Terlihat bagus, lanjutkan",
     "more": "Lebih banyak",
@@ -143,10 +148,14 @@
     "review": "Tinjau",
     "save": "Simpan",
     "saveSettings": "Simpan pengaturan",
+    "sort": "Sortir",
     "update": "Memperbarui",
     "yesProceed": "Ya, lanjutkan",
     "showPreview": "Pratinjau",
-    "hidePreview": "Sembunyikan pratinjau"
+    "hidePreview": "Sembunyikan pratinjau",
+    "expand": "Perluas",
+    "collapse": "Tutup",
+    "upload": "Unggah"
   },
   "field": {
     "comment": "Tinggalkan komentar",
@@ -166,6 +175,8 @@
     "actions": "Tindakan",
     "created": "Dibuat",
     "createdBy": "Dibuat oleh",
+    "createdAt": "Dibuat pada",
+    "updatedBy": "Diperbarui oleh",
     "displayName": "Nama tampilan",
     "email": "Alamat Email",
     "instanceId": "ID Instansi",
@@ -174,13 +185,16 @@
     "submitterName": "Terkirim oleh",
     "submissionDate": "Terkirim pada",
     "time": "Waktu",
-    "type": "Tipe"
+    "type": "Tipe",
+    "entities": "Total Entitas",
+    "lastEntity": "Entitas Terbaru"
   },
   "plural": {
     "appUser": "Pengguna Aplikasi",
     "form": "Formulir",
     "project": "Proyek",
     "submission": "Kiriman",
+    "user": "Pengguna",
     "webUser": "Pengguna Web"
   },
   "count": {
@@ -192,10 +206,13 @@
     "appUser": "Pengguna Aplikasi",
     "appUsers": "Pengguna Aplikasi",
     "config": "Konfigurasi server",
+    "entities": "Entitas",
     "form": "Formulir",
     "forms": "Formulir",
+    "formAttachments": "Lampiran Formulir",
     "project": "Proyek",
     "projects": "Proyek",
+    "property": "Properti",
     "publicLink": "Tautan Akses Publik",
     "user": "Pengguna",
     "users": "Pengguna",
@@ -206,7 +223,10 @@
     "projectRoles": "Peran Proyek"
   },
   "alert": {
-    "updateReviewState": "Status Ulasan disimpan!"
+    "passwordTooShort": "Silahkan masukan password minimal 10 karakter.",
+    "updateEntity": "Entitas telah diperbarui!",
+    "updateReviewState": "Status Ulasan disimpan!",
+    "versionChange": "Server telah diperbarui. Harap segarkan halaman untuk menghindari tindakan yang tidak terduga."
   },
   "moreInfo": {
     "clickHere": {
@@ -227,12 +247,20 @@
     }
   },
   "submission": {
+    "missingAttachment": "Kehilangan Lampiran",
     "action": {
       "edit": "Ubah ({count})"
     },
     "editDisabled": "Anda tidak dapat mengubah kiriman terenkripsi",
     "binaryLinkTitle": "Berkas telah dikirim. Klik untuk mengunduh.",
-    "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi"
+    "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi",
+    "noSubmission": "(tidak ada)",
+    "emptyTable": "Belum ada kiriman data."
+  },
+  "entity": {
+    "label": "Label",
+    "entityLabel": "Label Entitas",
+    "entityId": "ID Entitas"
   },
   "common": {
     "activity": "Aktivitas",
@@ -241,7 +269,13 @@
     "basicInfo": "Informasi dasar",
     "currentDraft": "Draf Anda Saat Ini",
     "dangerZone": "Zona Bahaya",
+    "data": "Data",
+    "docs": "Dokumentasi",
+    "emptyValue": "(kosong)",
+    "error": "Error",
     "filter": "Filter",
+    "forum": "Forum",
+    "loading": "Memuat...",
     "no": "Tidak",
     "noResults": "Tidak ada hasil",
     "rightNow": "Sekarang Juga",
@@ -252,7 +286,18 @@
       "settings": "Pengaturan",
       "overview": "Gambaran"
     },
-    "total": "Total"
+    "total": "Total",
+    "totalSubmissions": "Total Kiriman",
+    "propertiesCount": "{inform} dari {count} properti",
+    "status": "Status",
+    "version": "Versi"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "File \"{name}\" yang anda coba unggah lebih besar dari batas 100 MB."
+      }
+    }
   },
   "presenter": {
     "Project": {
@@ -262,7 +307,8 @@
   "util": {
     "request": {
       "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
-      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda"
+      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda",
+      "errorNotProblem": "Terjadi kesalahan: kode error {status}."
     },
     "session": {
       "alert": {

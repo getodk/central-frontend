@@ -9,12 +9,16 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- This component should not use v-bind:class on the .modal element. Bootstrap
+may add the `in` class to the element, and the checkScroll() method may add the
+`has-scroll` class. -->
 <template>
-  <div class="modal" tabindex="-1" :data-backdrop="backdrop ? 'static' : 'false'"
-    data-keyboard="false" role="dialog" :aria-labelledby="titleId"
-    @mousedown="modalMousedown" @click="modalClick" @keydown.esc="hideIfCan"
-    @focusout="refocus">
-    <div class="modal-dialog" :class="{ 'modal-lg': large }" role="document">
+  <div ref="el" class="modal" tabindex="-1"
+    :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
+    role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
+    @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
+    <div class="modal-dialog" :class="sizeClass" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" :aria-disabled="!hideable"
@@ -24,7 +28,7 @@ except according to the terms contained in the LICENSE file.
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
         <div ref="body" class="modal-body">
-          <alert/>
+          <Alert/>
           <slot name="body"></slot>
         </div>
       </div>
@@ -33,7 +37,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { inject, markRaw, watch, watchPostEffect } from 'vue';
+let id = 0;
+</script>
+<script setup>
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch, watchPostEffect } from 'vue';
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
@@ -54,125 +61,178 @@ We do this for two reasons:
   - It is needed to implement the `hideable` prop.
 */
 
-let id = 0;
+const props = defineProps({
+  state: Boolean,
+  // Indicates whether the user is able to hide the modal by clicking ×,
+  // pressing escape, or clicking outside the modal.
+  hideable: Boolean,
+  size: {
+    type: String,
+    default: 'normal'
+  },
+  backdrop: Boolean
+});
+const emit = defineEmits(['shown', 'hide', 'resize', 'mutate']);
 
-export default {
-  name: 'Modal',
-  components: { Alert },
-  inject: ['alert'],
-  props: {
-    state: Boolean,
-    // Indicates whether the user is able to hide the modal by clicking ×,
-    // pressing escape, or clicking outside the modal.
-    hideable: Boolean,
-    backdrop: Boolean,
-    large: Boolean
-  },
-  emits: ['shown', 'hide'],
-  setup(props) {
-    const alert = inject('alert');
-    let oldAlertAt;
-    watchPostEffect(() => { oldAlertAt = alert.at; });
-    watch(() => props.state, (state) => {
-      if (state || alert.at === oldAlertAt) alert.blank();
-    });
-  },
-  data() {
-    id += 1;
-    return {
-      id,
-      // The modal() method of the Boostrap plugin
-      bs: null,
-      observer: markRaw(new MutationObserver(() => {
-        if (this.state) this.bs('handleUpdate');
-      })),
-      mousedownOutsideDialog: false
-    };
-  },
-  computed: {
-    titleId() {
-      return `modal-title${this.id}`;
-    }
-  },
-  watch: {
-    state(state) {
-      if (state) {
-        // The DOM hasn't updated yet, but it should be OK to show the modal
-        // now: I think it will all happen in the same event loop.
-        this.show();
-      } else {
-        this.hide();
-      }
-    }
-  },
-  mounted() {
-    if (this.$el.closest('body') != null) {
-      const wrapper = $(this.$el);
-      this.bs = wrapper.modal.bind(wrapper);
-    } else {
-      // We do not call modal() if the component is not attached to the
-      // document, because modal() can have side effects on the document. Most
-      // tests do not attach the component to the document.
-      this.bs = noop;
-    }
+const el = ref(null);
+const body = ref(null);
 
-    if (this.state) this.show();
-  },
-  beforeUnmount() {
-    if (this.state) this.hide();
-  },
-  methods: {
-    show() {
-      this.bs('show');
-      this.observer.observe(this.$refs.body, {
-        subtree: true,
-        childList: true,
-        attributes: true,
-        characterData: true
-      });
-      this.$emit('shown');
-    },
-    hide() {
-      this.bs('hide');
-      this.observer.disconnect();
+// The modal() method of the Boostrap plugin
+let bs;
+onMounted(() => {
+  if (el.value.closest('body') != null) {
+    const wrapper = $(el.value);
+    bs = wrapper.modal.bind(wrapper);
+  } else {
+    // We do not call modal() if the component is not attached to the document,
+    // because modal() can have side effects on the document. Most tests do not
+    // attach the component to the document.
+    bs = noop;
+  }
+});
 
-      const selection = getSelection();
-      const { anchorNode } = selection;
-      if (anchorNode != null && this.$el.contains(anchorNode))
-        selection.removeAllRanges();
-    },
-    hideIfCan() {
-      if (this.hideable) this.$emit('hide');
-    },
-    modalMousedown(event) {
-      this.mousedownOutsideDialog = event.target === event.currentTarget;
-    },
-    modalClick(event) {
-      const mouseupOutsideDialog = event.target === event.currentTarget;
-      if (this.mousedownOutsideDialog && mouseupOutsideDialog) this.hideIfCan();
-    },
-    // Refocuses the modal if it has lost focus. This is needed so that the
-    // escape key still hides the modal.
-    refocus() {
-      /* As the user moves from one element in the modal to another, there may
-      be the briefest moment when neither element is focused. We should not
-      refocus the modal in that moment, because the second element will soon
-      receive focus, and focusing the .modal element would prevent that. Thus,
-      we use setTimeout() to give the second element time to receive focus.
-      (Using this.$nextTick() instead of setTimeout() didn't work.) */
-      setTimeout(() => {
-        // Do not focus the modal if it has lost focus because it is hidden.
-        if (!this.state) return;
-        // Do not focus the .modal element if it is already focused or if it
-        // contains the active element.
-        if (document.activeElement != null &&
-          document.activeElement.closest('.modal') === this.$el)
-          return;
-        this.$el.focus();
-      });
-    }
+const alert = inject('alert');
+let oldAlertAt;
+watchPostEffect(() => { oldAlertAt = alert.at; });
+watch(() => props.state, (state) => {
+  if (state || alert.at === oldAlertAt) alert.blank();
+});
+
+// checkScroll() checks whether the modal vertically overflows the viewport,
+// causing it to scroll. The function toggles the has-scroll class based on
+// whether the modal overflows.
+const checkScroll = () => {
+  /* Before checking whether the modal overflows the viewport, we add the
+  has-scroll class. The default assumption is that the modal may overflow. It's
+  necessary to add the class, because if the modal currently doesn't have the
+  class, and its content has just changed, it could be that its content doesn't
+  overflow the viewport, yet does flow underneath .modal-actions. In that case,
+  once we add the class, .modal-actions will be repositioned, and the content
+  will start to overflow the viewport: the modal will be allowed to scroll as it
+  should. */
+  el.value.classList.add('has-scroll');
+  if (el.value.scrollHeight === el.value.clientHeight)
+    el.value.classList.remove('has-scroll');
+};
+
+let bodyHeight = 0;
+const handleHeightChange = () => {
+  // Call checkScroll() before measuring the height, as the has-scroll class can
+  // affect the height.
+  checkScroll();
+  const newHeight = body.value.getBoundingClientRect().height;
+  if (newHeight !== bodyHeight) {
+    bs('handleUpdate');
+    bodyHeight = newHeight;
+    emit('resize', newHeight);
   }
 };
+const handleWindowResize = () => {
+  // Most of the time, a window resize won't affect the height of the modal.
+  // However, if props.size === 'full', it could.
+  if (props.state && props.size === 'full') handleHeightChange();
+};
+
+let ignoreMutation = false;
+const observer = new MutationObserver(() => {
+  if (!props.state) return;
+  handleHeightChange();
+  if (!ignoreMutation) {
+    emit('mutate');
+    // Ignore mutations for a tick, effectively ignoring any mutations that the
+    // `mutate` event handler just made. This helps prevent a loop such that a
+    // mutation causes a `mutate` event, which causes the `mutate` handler to
+    // make a mutation, which causes a `mutate` event, and so on.
+    ignoreMutation = true;
+    // The MutationObserver callback seems to be called in a microtask, so I
+    // think nextTick() is the right choice and not setTimeout().
+    nextTick(() => { ignoreMutation = false; });
+  }
+});
+
+const show = () => {
+  bs('show');
+  checkScroll();
+  bodyHeight = body.value.getBoundingClientRect().height;
+  emit('resize', bodyHeight);
+  observer.observe(body.value, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    characterData: true
+  });
+  window.addEventListener('resize', handleWindowResize);
+  emit('shown');
+};
+const removeSelection = () => {
+  const selection = getSelection();
+  const { anchorNode } = selection;
+  if (anchorNode != null && el.value.contains(anchorNode))
+    selection.removeAllRanges();
+};
+const hide = () => {
+  observer.disconnect();
+  bs('hide');
+  el.value.classList.remove('has-scroll');
+  bodyHeight = 0;
+  emit('resize', 0);
+  window.removeEventListener('resize', handleWindowResize);
+  removeSelection();
+};
+watch(() => props.state, (state) => {
+  if (state)
+    // The DOM hasn't updated yet, but it should be OK to show the modal now: I
+    // think it will all happen in the same event loop.
+    show();
+  else
+    hide();
+});
+onMounted(() => { if (props.state) show(); });
+onBeforeUnmount(() => { if (props.state) hide(); });
+
+const hideIfCan = () => { if (props.hideable) emit('hide'); };
+
+const sizeClass = computed(() => {
+  switch (props.size) {
+    case 'large': return 'modal-lg';
+    case 'full': return 'modal-full';
+    default: return null; // 'normal'
+  }
+});
+
+let mousedownOutsideDialog = false;
+const modalMousedown = (event) => {
+  mousedownOutsideDialog = event.target === event.currentTarget;
+};
+const modalClick = (event) => {
+  const mouseupOutsideDialog = event.target === event.currentTarget;
+  if (mousedownOutsideDialog && mouseupOutsideDialog) hideIfCan();
+};
+
+// Refocuses the modal if it has lost focus. This is needed so that the escape
+// key still hides the modal.
+const refocus = () => {
+  /* As the user moves from one element in the modal to another, there may be
+  the briefest moment when neither element is focused. We should not refocus the
+  modal in that moment, because the second element will soon receive focus, and
+  focusing the .modal element would prevent that. Thus, we use setTimeout() to
+  give the second element time to receive focus. (Using nextTick() instead of
+  setTimeout() didn't work.) */
+  setTimeout(() => {
+    // Do not focus the modal if it has lost focus after being hidden or
+    // unmounted.
+    if (!props.state || el.value == null) return;
+    // Do not focus the .modal element if it is already focused or if it
+    // contains the active element.
+    if (document.activeElement != null &&
+      document.activeElement.closest('.modal') === el.value)
+      return;
+    el.value.focus();
+  });
+};
+
+id += 1;
+const titleId = `modal-title${id}`;
 </script>
 
 <style lang="scss">
@@ -209,22 +269,40 @@ export default {
         letter-spacing: -0.02em;
       }
     }
+  }
+}
 
-    .modal-body {
-      padding: $padding-modal-body;
+.modal-body { padding: $padding-modal-body; }
 
-      .form-group .form-control {
-        background-color: $color-panel-input-background;
-      }
+.modal-actions {
+  background: $color-subpanel-background;
+  border-top: 1px solid $color-subpanel-border;
+  margin: -$padding-modal-body;
+  margin-top: 20px;
+  padding: 10px $padding-modal-body;
+}
 
-      .modal-actions {
-        background: $color-subpanel-background;
-        border-top: 1px solid $color-subpanel-border;
-        margin: -15px;
-        margin-top: 20px;
-        padding: 10px 15px;
-      }
-    }
+.modal-full {
+  $margin: 15px;
+  // Because we set margin-left and width, we don't need to set margin-right.
+  margin: $margin 0 $margin $margin;
+  // Subtract 10px so that there is space between the modal and the scrollbar.
+  width: calc(100vw - #{2 * $margin + 10px});
+
+  // 50px is the approximate height of .modal-header.
+  .modal-body { min-height: calc(100vh - #{2 * $margin + 50px}); }
+
+  // If .modal-body has so much content that it causes the modal to scroll, then
+  // .modal-actions will naturally appear at the bottom of the modal as it
+  // usually does. However, if the min height of the .modal-body is greater than
+  // the height of its content, such that the modal doesn't scroll, then we need
+  // to position .modal-actions at the bottom of the modal ourselves.
+  .modal:not(.has-scroll) & .modal-actions {
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    position: absolute;
+    width: 100%;
   }
 }
 

@@ -23,8 +23,9 @@ body {
   color: $color-text;
   min-height: 100vh;
 
-  // Always show the scrollbar in order to prevent content shifting to the left.
-  overflow-y: scroll;
+  // Always show the scrollbar so that content doesn't shift to the left if/when
+  // the scrollbar happens to appear.
+  overflow: hidden scroll;
   &.modal-open { overflow-y: hidden; }
 
   &:lang(ja) { font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; }
@@ -39,11 +40,9 @@ h1, .h1 {
 
 p { @include text-block; }
 
-dl div {
-  display: flex;
-  flex-direction: column-reverse;
-
+dl > div {
   border-bottom: 1px solid #ddd;
+  display: flex;
   padding-bottom: 10px;
   padding-top: 10px;
 
@@ -54,20 +53,45 @@ dl div {
     padding-bottom: 0;
   }
 }
+dl:not(.dl-horizontal) {
+  > div { flex-direction: column-reverse; }
 
-dt {
-  color: #666;
-  font-weight: normal;
+  dt {
+    color: #666;
+    font-weight: normal;
+  }
+
+  dd { font-size: 16px; }
+}
+.dl-horizontal {
+  dt {
+    @include text-overflow-ellipsis;
+    flex-shrink: 0;
+    width: 160px;
+  }
+
+  dd { margin-left: 20px; }
 }
 
-dd { font-size: 16px; }
+.dfn { border-bottom: 2px dotted #999; }
 
 pre {
   background-color: $color-subpanel-background;
   border-color: $color-subpanel-border;
-
-  code { white-space: pre; }
 }
+
+code {
+  padding: 2px 4px;
+  font-size: 90%;
+
+  pre & {
+    padding: 0;
+    font-size: inherit;
+    white-space: pre;
+  }
+}
+
+.text-monospace { font-family: $font-family-monospace; }
 
 em:lang(ja) {
   font-style: normal;
@@ -87,6 +111,7 @@ em:lang(ja) {
 }
 .tooltip-inner {
   border-radius: 2px;
+  max-height: 100vh;
   overflow-wrap: break-word;
   padding-bottom: 2px;
   // Allow the text to have line breaks.
@@ -99,6 +124,19 @@ em:lang(ja) {
 // ICONS
 
 [class^="icon-"] { vertical-align: -1px; }
+
+.btn, a, .label {
+  .caret { margin-left: 6px; }
+
+  > [class^="icon-"]:first-child {
+    // There should not be white space between an icon and text content that
+    // follows it. For a link in particular, the underlining will be off if
+    // there is white space.
+    margin-right: $margin-right-icon;
+
+    + .caret { margin-left: 0; }
+  }
+}
 
 /* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
 IcoMoon styles end up applying to it, because our IcoMoon selectors select on
@@ -122,27 +160,18 @@ class. */
   background-color: #888;
 }
 
-.title-icon{
+.title-icon {
   padding-left: 6px;
   font-size: 24px;
   color: #666;
 }
 
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
 
 .btn, a {
-  .caret { margin-left: 6px; }
-
-  > [class^="icon-"]:first-child {
-    // There should not be white space between an icon and text content that
-    // follows it. For a link in particular, the underlining will be off if
-    // there is white space.
-    margin-right: $margin-right-icon;
-
-    + .caret { margin-left: 0; }
-  }
-
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     cursor: not-allowed;
     opacity: 0.65;
@@ -204,8 +233,19 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 }
 
 a, .btn-link {
+  &:hover, &.disabled, &[aria-disabled="true"], fieldset[disabled] & {
+    text-decoration: none;
+  }
+
+  > [class^="icon-"]:first-child {
+    // Using inline-block so that the icon is not underlined even when the link
+    // has `text-decoration: underline`.
+    display: inline-block;
+  }
+}
+
+a:not(.btn), .btn-link {
   &, &:hover { color: $color-action-foreground; }
-  &:hover { text-decoration: none; }
 
   &:focus {
     background-color: transparentize(#000, 0.94);
@@ -213,20 +253,10 @@ a, .btn-link {
     text-decoration: underline;
   }
 
-  &.disabled, &[aria-disabled="true"], fieldset[disabled] & {
-    color: #888;
-    text-decoration: none;
-  }
+  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: #888; }
 }
 
 a {
-  &.disabled, fieldset[disabled] & {
-    // Not specifying pointer-events so that the cursor and any tooltip is
-    // shown.
-
-    &.btn { color: #fff; }
-  }
-
   &:focus { outline: none; }
 
   &, &:visited {
@@ -235,15 +265,12 @@ a {
     }
   }
 
-  > [class^="icon-"]:first-child {
-    // Using inline-block so that the icon is not underlined even when the link
-    // has `text-decoration: underline`.
-    display: inline-block;
-  }
-
   > .icon-angle-right:last-child:not(:first-child) {
     color: $color-accent-primary;
   }
+
+  // Not specifying pointer-events if the link is disabled so that the cursor
+  // and any tooltip are shown.
 }
 
 .btn-link {
@@ -352,7 +379,7 @@ $form-group-padding-bottom: 15px;
 
   $form-control-z-index: 1;
   .form-control {
-    background: $color-input-background;
+    @include form-control-background;
     border: none;
     border-bottom: 1px solid $color-input-inactive;
     border-radius: 0;
@@ -553,7 +580,7 @@ tr.uncommitted-change { background-color: #ffef67; }
   }
 
   > tbody {
-    > tr > td {
+    > tr > th, > tr > td {
       border-top: $border-top-table-data;
       padding: $padding-top-table-data $padding-right-table-data
                $padding-bottom-table-data $padding-left-table-data;
@@ -573,6 +600,26 @@ tr.uncommitted-change { background-color: #ffef67; }
   > tbody > tr > td.info {
     background-color: $color-info-light;
   }
+
+  > thead > tr.highlight > th,
+  > thead > tr > th.highlight,
+  > tbody > tr.highlight > td,
+  > tbody > tr > td.highlight {
+    background-color: $color-highlight;
+  }
+}
+
+.data-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.row-number {
+  color: #999;
+  font-size: 11px;
+  padding-top: 11px;
+  text-align: right;
+  vertical-align: middle;
 }
 
 .empty-table-message {
@@ -585,9 +632,9 @@ tr.uncommitted-change { background-color: #ffef67; }
 ////////////////////////////////////////////////////////////////////////////////
 // LABELS
 
-.label-primary {
-  background-color: $color-action-background;
-}
+.label-default { background-color: #777; }
+.label-primary { background-color: $color-action-background; }
+.label-warning { background-color: $color-warning; }
 
 
 
@@ -653,12 +700,6 @@ becomes more complicated.
       letter-spacing: -0.02em;
     }
   }
-
-  .panel-body {
-    .form-group .form-control {
-      background-color: $color-panel-input-background;
-    }
-  }
 }
 
 .panel-main {
@@ -720,6 +761,32 @@ becomes more complicated.
   }
 }
 
+.panel-danger {
+  // This is needed in case a component adds a border radius to the bottom of
+  // .panel-body.
+  background-color: transparent;
+
+  &> .panel-heading {
+    color: white;
+    background-color: $color-danger;
+    border-bottom-color: $color-danger;
+
+    .btn-danger { border: 1px solid #fff; }
+  }
+
+  &> .panel-body {
+    background-color: #fff;
+    border: 1px solid $color-danger;
+    border-top: none;
+
+    &> .panel-footer {
+      margin: 0 -15px -15px -15px;
+      background-color: #585858;
+      color: white;
+    }
+  }
+}
+
 .panel-dialog {
   border: 2px solid $color-accent-primary;
   border-radius: 5px;
@@ -760,7 +827,7 @@ becomes more complicated.
         border-bottom: 2px solid transparent;
         border-radius: 0;
         color: $color-text;
-        padding: 7px 8px 6px;
+        padding: 7px $hpadding-nav-tab 6px;
       }
 
       &:focus {
@@ -808,20 +875,28 @@ becomes more complicated.
 }
 
 .chip {
-  border: 1px solid $color-accent-primary;
-  font-size: 12px;
+  font-size: 10px;
   top: -2px;
   position: relative;
-  color: $color-accent-primary;
-  padding: 2px 7px 2px;
-  margin-left: 10px;
-  border-radius: 8px;
+  color: white;
+  padding: 4px 7px;
+  margin-left: 2px;
+  background: $color-accent-primary;
+  border-radius: 5px;
 }
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// markRowsChanged()
+// markRowsChanged(), markRowsDeleted()
 
+[data-mark-rows-changed="true"] { background-color: $color-highlight; }
 [data-mark-rows-changed="false"] { transition: background-color 0.6s 6s; }
-[data-mark-rows-changed="true"] { background-color: #faf1cd; }
+
+[data-mark-rows-deleted="true"] {
+  opacity: 0;
+  // If these numbers change, then markRowsDeleted() will need to change as
+  // well.
+  transition: opacity 0.6s 0.15s;
+}
+[data-mark-rows-deleted="false"] { display: none; }

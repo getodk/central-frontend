@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Stav",
         "testing": "Testování"
       }
     }
@@ -58,7 +57,7 @@
       "user": "Akce webového uživatele",
       "project": "Akce projektu",
       "form": "Akce formuláře",
-      "dataset": "Akce datové sady",
+      "dataset": "Seznam akcí entit",
       "field_key": "Akce uživatelů aplikace",
       "public_link": "Akce s veřejným přístupem",
       "config": "Akce konfigurace serveru",
@@ -130,6 +129,7 @@
     "clear": "Vymazat",
     "close": "Zavřít",
     "comment": "Komentář",
+    "continue": "Pokračovat",
     "create": "Vytvořit",
     "createSubmission": "Nový",
     "done": "Hotovo",
@@ -156,7 +156,8 @@
     "showPreview": "Náhled",
     "hidePreview": "Skrýt náhled",
     "expand": "Rozbalit",
-    "collapse": "Sbalit"
+    "collapse": "Sbalit",
+    "upload": "Nahrát"
   },
   "field": {
     "comment": "Zanechat komentář…",
@@ -182,7 +183,9 @@
     "email": "E-mailová adresa",
     "instanceId": "Instance ID",
     "lastSubmission": "Poslední podání",
+    "recentActivity": "Nedávná aktivita",
     "name": "Jméno",
+    "listName": "Název seznamu",
     "submitterName": "Odesláno od",
     "submissionDate": "Odesláno v",
     "time": "Čas",
@@ -207,14 +210,14 @@
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
     "config": "Konfigurace serveru",
-    "dataset": "Datová sada",
-    "datasets": "Datové sady",
+    "entityList": "Seznam entit",
     "entities": "Subjekty",
     "form": "Formulář",
     "forms": "Formuláře",
     "formAttachments": "Přílohy formuláře",
     "project": "Projekt",
     "projects": "Projekty",
+    "property": "Vlastnost",
     "publicLink": "Veřejný odkaz",
     "user": "Uživatel",
     "users": "Uživatelé",
@@ -226,6 +229,7 @@
   },
   "alert": {
     "passwordTooShort": "Zadejte heslo dlouhé alespoň 10 znaků.",
+    "updateEntity": "Entita byla aktualizována!",
     "updateReviewState": "Stav kontroly uložen!",
     "versionChange": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
   },
@@ -260,13 +264,19 @@
   },
   "entity": {
     "label": "Štítek",
-    "entityId": "ID subjektu"
+    "entityLabel": "Štítek Entity",
+    "entityId": "ID subjektu",
+    "noProperties": "Tento formulář nastavuje pouze \"štítek\".",
+    "noEntity": "(žádný)",
+    "conflictsCount": "{count} konflikt | {count} konflikty | {count} konfliktů | {count} konfliktů"
   },
   "common": {
     "activity": "Aktivita",
     "anybody": "(Kdokoli)",
     "areYouSure": "Opravdu chcete pokračovat?",
     "basicInfo": "Základní informace",
+    "conflict": "Konflikt",
+    "conflicts": "Konflikty",
     "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
     "data": "Data",
@@ -288,9 +298,11 @@
     },
     "total": "Celkem",
     "totalSubmissions": "Celkem odeslání",
-    "punctuations": {
-      "comma": ","
-    }
+    "new": "Novinka!",
+    "totalEntities": "Celkem entit",
+    "versionShort": "v{version}",
+    "status": "Stav",
+    "version": "Verze"
   },
   "mixin": {
     "request": {

@@ -23,11 +23,6 @@ except according to the terms contained in the LICENSE file.
   </multiselect>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionFieldDropdown'
-};
-</script>
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -35,6 +30,9 @@ import { useI18n } from 'vue-i18n';
 import Multiselect from '../multiselect.vue';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'SubmissionFieldDropdown'
+});
 defineProps({
   modelValue: {
     type: Array,

@@ -14,6 +14,7 @@ import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
 import { canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
+import { createScrollBehavior } from './scroll-behavior';
 import { loadAsync } from './util/load-async';
 import { loadLocale } from './util/i18n';
 import { localStore } from './util/storage';
@@ -21,9 +22,13 @@ import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 import { setDocumentTitle } from './util/reactivity';
 
-export default (container, history = createWebHashHistory()) => {
-  const router = createRouter({ history, routes: createRoutes(container) });
-  const { requestData, alert, unsavedChanges } = container;
+export default (container, {
+  history = createWebHashHistory(),
+  scrollBehavior = createScrollBehavior()
+} = {}) => {
+  const routes = createRoutes(container);
+  const router = createRouter({ history, routes, scrollBehavior });
+  const { requestData, alert, unsavedChanges, config } = container;
 
 
 
@@ -73,7 +78,13 @@ router.afterEach(unlessFailure(to => {
       async (to) => {
         if (to.meta.restoreSession && !session.dataExists) {
           await restoreSession(session);
-          await logIn(container, false);
+          // If this is the first time that the session has been restored since
+          // the most recent OIDC login, set sessionExpires in local storage. If
+          // sessionExpires is already set (for example, if the previous session
+          // expired), then it will be overwritten.
+          const newSession = config.oidcEnabled &&
+            Date.parse(session.expiresAt).toString() !== localStore.getItem('sessionExpires');
+          await logIn(container, newSession);
         }
       }
     ];

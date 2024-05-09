@@ -35,7 +35,7 @@ describe('PublicLinkCreate', () => {
   it('resets the form after the modal is hidden', async () => {
     const modal = mount(PublicLinkCreate, mountOptions());
     await modal.get('input').setValue('My Public Link');
-    await modal.get('input[type="checkbox"]').setChecked();
+    await modal.get('input[type="checkbox"]').setValue(true);
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
     modal.get('input').element.value.should.equal('');
@@ -62,7 +62,7 @@ describe('PublicLinkCreate', () => {
         .mount(PublicLinkCreate, mountOptions())
         .request(async (modal) => {
           await modal.get('input').setValue('My Public Link');
-          await modal.get('input[type="checkbox"]').setChecked();
+          await modal.get('input[type="checkbox"]').setValue(true);
           return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { data }) => {

@@ -87,7 +87,8 @@ export const forceReplace = ({ router, unsavedChanges }, location) => {
 // Returns the resources that would be preserved after navigating from the
 // `from` route to the `to` route.
 export const preservedData = (to, from, requestData) => {
-  if (from === START_LOCATION) return requestData.resources;
+  if (from === START_LOCATION || to.path === from.path)
+    return requestData.resources;
   const results = [];
   for (const f of to.meta.preserveData) {
     const result = f(to, from);

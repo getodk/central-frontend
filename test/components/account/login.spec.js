@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { NavigationFailureType, isNavigationFailure } from 'vue-router';
 
 import AccountLogin from '../../../src/components/account/login.vue';
 
@@ -14,6 +15,9 @@ const submit = async (component) => {
   await form.get('input[type="password"]').setValue('foo');
   return form.trigger('submit');
 };
+const oidcContainer = {
+  config: { oidcEnabled: true }
+};
 
 describe('AccountLogin', () => {
   it('focuses the first input', () => {
@@ -22,17 +26,6 @@ describe('AccountLogin', () => {
       attachTo: document.body
     });
     component.get('input[type="email"]').should.be.focused();
-  });
-
-  it('shows an info alert if there is an existing session', async () => {
-    const component = mount(AccountLogin, {
-      container: { router: mockRouter('/account/login') }
-    });
-    localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
-    await submit(component);
-    component.should.alert('info', (message) => {
-      message.should.startWith('A user is already logged in.');
-    });
   });
 
   it('sends the correct request', () =>
@@ -86,6 +79,23 @@ describe('AccountLogin', () => {
         requestData.session.dataExists.should.be.true();
         requestData.currentUser.dataExists.should.be.true();
       });
+  });
+
+  it('aborts navigation during login', () => {
+    testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+    return load('/login')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .beforeEachResponse(async (app, _, i) => {
+        if (i < 2) {
+          const result = await app.vm.$router.push('/not-found');
+          isNavigationFailure(result, NavigationFailureType.aborted).should.be.true();
+        }
+      })
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => testData.extendedUsers.first())
+      .respondFor('/', { users: false });
   });
 
   it('shows an info alert if the password is too short', () => {
@@ -231,6 +241,152 @@ describe('AccountLogin', () => {
           app.get('#account-login .btn-primary').attributes('aria-disabled').should.equal('true');
           app.get('#account-login .btn-link').attributes('aria-disabled').should.equal('true');
         });
+    });
+  });
+
+  describe('OIDC is enabled', () => {
+    it('renders a link to OIDC login', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      component.get('a').attributes('href').should.equal('/v1/oidc/login');
+    });
+
+    it('does not render the form', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      component.find('form').exists().should.be.false();
+    });
+
+    it('disables the link after it is clicked', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      const a = component.get('a');
+      a.element.addEventListener('click', (event) => {
+        event.preventDefault();
+      });
+      await a.trigger('click');
+      a.classes('disabled').should.be.true();
+    });
+
+    it('aborts navigation after the link is clicked', async () => {
+      const app = await load('/login', { container: oidcContainer })
+        .restoreSession(false);
+      const a = app.get('#account-login a');
+      a.element.addEventListener('click', (event) => {
+        event.preventDefault();
+      });
+      await a.trigger('click');
+      const result = await app.vm.$router.push('/not-found');
+      isNavigationFailure(result, NavigationFailureType.aborted).should.be.true();
+    });
+  });
+
+  describe('next query parameter if OIDC is enabled', () => {
+    it('appends ?next to the link', async () => {
+      const component = await load('/login?next=%2Fusers', {
+        container: oidcContainer,
+        root: false
+      });
+      const href = component.get('a').attributes('href');
+      href.should.equal('/v1/oidc/login?next=%2Fusers');
+    });
+
+    it('does not append ?next if it was specified twice', async () => {
+      const component = await load('/login?next=%2Fusers&next=%2Faccount%2Fedit', {
+        container: oidcContainer,
+        root: false
+      });
+      component.get('a').attributes('href').should.equal('/v1/oidc/login');
+    });
+
+    it('does not append ?next if it has no value', async () => {
+      const component = await load('/login?next', {
+        container: oidcContainer,
+        root: false
+      });
+      component.get('a').attributes('href').should.equal('/v1/oidc/login');
+    });
+  });
+
+  describe('OIDC error', () => {
+    const alerts = [
+      ['oidcError=auth-ok-user-not-found', 'There is no Central account associated with your email address.'],
+      ['oidcError=email-claim-not-provided', 'Central could not access the email address associated with your account.'],
+      ['oidcError=email-not-verified', 'Your email address has not been verified by your login server.'],
+      ['oidcError=internal-server-error', 'Something went wrong during login.']
+    ];
+    for (const [query, expectedMessage] of alerts) {
+      it(`shows an alert for ?${query}`, async () => {
+        const app = await load(`/login?${query}`, { container: oidcContainer })
+          .restoreSession(false);
+        app.should.alert('danger', (actualMessage) => {
+          actualMessage.should.startWith(expectedMessage);
+        });
+      });
+    }
+
+    const noAlerts = [
+      'oidcError=auth-ok-user-not-found&oidcError=email-claim-not-provided',
+      'oidcError',
+      'oidcError=.',
+      'oidcError=unknown'
+    ];
+    for (const query of noAlerts) {
+      it(`does not show an alert for ?${query}`, async () => {
+        const app = await load(`/login?${query}`, { container: oidcContainer })
+          .restoreSession(false);
+        app.should.not.alert();
+      });
+    }
+
+    it('removes the query parameter from the path', async () => {
+      const app = await load('/login?oidcError=auth-ok-user-not-found&next=%2Fusers', {
+        container: oidcContainer
+      }).restoreSession(false);
+      app.vm.$route.query.should.eql({ next: '/users' });
+    });
+  });
+
+  describe('existing session', () => {
+    it('shows an info alert if OIDC is not enabled', async () => {
+      const component = await load('/login', { root: false });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      await submit(component);
+      component.should.alert('info', (message) => {
+        message.should.startWith('A user is already logged in.');
+      });
+    });
+
+    it('shows an info alert if OIDC is enabled', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      await component.get('a[href^="/v1/oidc/login"]').trigger('click');
+      component.should.alert('info', (message) => {
+        message.should.startWith('A user is already logged in.');
+      });
+    });
+
+    it('does not redirect to OIDC login', async () => {
+      const component = await load('/login', {
+        container: oidcContainer,
+        root: false
+      });
+      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      const a = component.get('a[href^="/v1/oidc/login"]');
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true
+      });
+      a.element.dispatchEvent(event).should.be.false();
     });
   });
 });

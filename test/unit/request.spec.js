@@ -301,9 +301,25 @@ describe('util/request', () => {
       apiPaths.dataset(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b');
     });
 
-    it('entities', () => {
-      const path = apiPaths.entities(1, 'á');
-      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+    it('datasetProperties', () => {
+      apiPaths.datasetProperties(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b/properties');
+    });
+
+    describe('entities', () => {
+      it('returns the correct path', () => {
+        const path = apiPaths.entities(1, 'á');
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities');
+      });
+
+      it('appends a file extension', () => {
+        const path = apiPaths.entities(1, 'á', '.csv');
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+      });
+
+      it('returns a query string', () => {
+        const path = apiPaths.entities(1, 'á', '.csv', { $filter: 'true' });
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv?%24filter=true');
+      });
     });
 
     it('odataEntitiesSvc', () => {
@@ -333,9 +349,9 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/audits');
     });
 
-    it('entityDiffs', () => {
-      const path = apiPaths.entityDiffs(1, 'á', 'e');
-      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/diffs');
+    it('entityVersions', () => {
+      const path = apiPaths.entityVersions(1, 'á', 'e');
+      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/versions');
     });
 
     it('fieldKeys', () => {
@@ -615,9 +631,25 @@ describe('util/request', () => {
       message.should.equal('Something went wrong: error code 500.');
     });
 
+    it('returns a message about 413 error response that is not a Problem', () => {
+      const message = requestAlertMessage(i18n, mockAxiosError({
+        status: 413,
+        data: '<html><head><title>413 Request Entity Too Large</title></head>...',
+        config: { url: '/v1/projects/1/datasets/trees/entities' }
+      }));
+      message.should.equal('The data that you are trying to upload is too large.');
+    });
+
     it('returns the message of a Problem', () => {
       const message = requestAlertMessage(i18n, errorWithProblem());
       message.should.equal('Message from API');
+    });
+
+    describe('custom messages for specific Problems', () => {
+      it('returns a message for a 404.1', () => {
+        const message = requestAlertMessage(i18n, errorWithProblem(404.1));
+        message.should.equal('The resource you are looking for cannot be found. The resource may have been deleted.');
+      });
     });
 
     describe('problemToAlert', () => {
@@ -631,7 +663,7 @@ describe('util/request', () => {
         message.should.equal('Message from problemToAlert: Message from API (500.1)');
       });
 
-      it('returns the Problem message if the function returns null', () => {
+      it('falls back to default message if function returns a nullish value', () => {
         const message = requestAlertMessage(
           i18n,
           errorWithProblem(),

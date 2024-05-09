@@ -17,7 +17,7 @@ We want ODK Central Frontend to be easy to use, yet flexible for a wide variety 
 
 If you are looking for help, please take a look at the [Documentation Website](https://docs.getodk.org/central-intro/). If that doesn't solve your problem, please head over to the [ODK Forum](https://forum.getodk.org/) and do a search to see if anybody else has had the same problem. If you've identified a new problem, please post on the forum. We prefer forum posts to GitHub issues because more of the community is on the forum.
 
-If you have suggestions about how to improve ODK Central, please share them with us on the [Features board](https://forum.getodk.org/c/features) of the ODK Forum.
+If you have suggestions about how to improve ODK Central, please share them with us on the [Ideas board](https://forum.getodk.org/c/ideas) of the ODK Forum.
 
 If you are looking for help on how ODK Central works internally or how to update its code, the ODK [developer Slack](https://slack.getodk.org/) is for you.
 
@@ -117,10 +117,6 @@ Most components are named according to the combination of a resource and an acti
 * `Edit` or `Update`. A component used to update an existing resource of a particular type.
 * `Delete`. A modal used to delete an existing resource of a particular type.
 
-### Vue Mixins
-
-Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
-
 ### Composables
 
 Each component may use one or more of the composables in [`/src/composables/`](/src/composables/). Most composables will reside in that directory, but if it makes sense to group a composable with other functionality, it may be defined elsewhere. For example, the `useSessions()` composable is defined in [`/src/util/session.js`](/src/util/session.js).
@@ -203,7 +199,11 @@ Also note about comments:
 - `restructure.js` will automatically generate comments for any message whose path ends with `.full`, because such messages are used for component interpolation.
 - Use JSON with comments, but do not use other features of JSON5, which our workflow might not support.
 
-Before each release, we download all translations from Transifex and save them in [`/transifex/`](/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. On the website, Transifex allows the translations to be downloaded "to translate" for an individual locale, but not all locales at once. To download all locales at once, use the Transifex client, specifying `translator` as the mode.
+Before each release, we download all translations from Transifex and save them in [`/transifex/`](/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. On the website, Transifex allows the translations to be downloaded "to translate" for an individual locale, but not all locales at once. To download all locales at once, run the Transifex CLI in the root directory of the repository:
+
+```bash
+tx pull --mode translator --force
+```
 
 Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/src/locales/` other than `en.json5`.
 

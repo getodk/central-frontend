@@ -178,7 +178,11 @@ export default {
 
 #submission-table {
   .int-field, .decimal-field { text-align: right; }
-  .geopoint-field { max-width: 500px; }
+
+  // Geopoint width should always have enough room to show full data.
+  // This neeeds an extra CSS selector to not be overwritten by
+  // max-width:250px in submission/table.vue
+  .table-freeze-scrolling .geopoint-field { max-width: 500px; }
 
   .binary-field { text-align: center; }
   .binary-link {

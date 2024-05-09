@@ -88,7 +88,7 @@ describe('Dataset Properties', () => {
 
     rows.length.should.be.eql(1);
     rows[0].findAll('td')[0].text().should.be.eql('height');
-    rows[0].findAll('td')[1].text().should.be.eql('');
+    rows[0].findAll('td')[1].text().should.be.eql('(None)');
   });
 
   it('shows empty message when there is no properties', () => {
@@ -96,6 +96,6 @@ describe('Dataset Properties', () => {
       name: 'trees', properties: []
     });
     const component = mountComponent();
-    component.text().should.be.eql('There are no Properties in this Dataset.');
+    component.text().should.be.eql('The Entities in this Entity List do not have any user-defined properties.');
   });
 });

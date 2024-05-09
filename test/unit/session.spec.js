@@ -7,94 +7,65 @@ import createTestContainer from '../util/container';
 import testData from '../data';
 import { load, mockHttp } from '../util/http';
 import { mockLogin } from '../util/session';
-import { mockRouter } from '../util/router';
+import { mockRouter, testRouter } from '../util/router';
 import { setRequestData } from '../util/request-data';
 import { withSetup } from '../util/lifecycle';
 
 describe('util/session', () => {
   describe('session restore', () => {
-    describe('session is not expired', () => {
-      beforeEach(() => {
-        const millis = Date.now() + 300000;
-        testData.sessions.createPast(1, {
-          expiresAt: new Date(millis).toISOString()
-        });
-        localStorage.setItem('sessionExpires', millis.toString());
+    beforeEach(() => {
+      const millis = Date.now() + 300000;
+      testData.sessions.createPast(1, {
+        expiresAt: new Date(millis).toISOString()
       });
-
-      it('sends the correct request', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .request(() => restoreSession(session))
-          .beforeEachResponse((_, { method, url }) => {
-            method.should.equal('GET');
-            url.should.equal('/v1/sessions/restore');
-          })
-          .respondWithData(() => testData.sessions.last());
-      });
-
-      it('saves the session', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .request(() => restoreSession(session))
-          .respondWithData(() => testData.sessions.last())
-          .afterResponse(() => {
-            session.dataExists.should.be.true();
-          });
-      });
-
-      it('does not set sessionExpires in local storage', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        const setItem = sinon.fake();
-        sinon.replace(Storage.prototype, 'setItem', setItem);
-        return mockHttp(container)
-          .request(() => restoreSession(session))
-          .respondWithData(() => testData.sessions.last())
-          .afterResponse(() => {
-            setItem.called.should.be.false();
-          });
-      });
-
-      it('removes sessionExpires from local storage after a 404', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .request(() => restoreSession(session).catch(noop))
-          .respondWithProblem(404.1)
-          .afterResponse(() => {
-            should.not.exist(localStorage.getItem('sessionExpires'));
-          });
-      });
+      localStorage.setItem('sessionExpires', millis.toString());
     });
 
-    describe('session is expired', () => {
-      beforeEach(() => {
-        localStorage.setItem('sessionExpires', '0');
-      });
-
-      it('does not send a request', () => {
-        const container = createTestContainer();
-        const { session } = container.requestData;
-        return mockHttp(container)
-          .testNoRequest(() => restoreSession(session).catch(noop));
-      });
-
-      it('returns a rejected promise', () => {
-        const { requestData } = createTestContainer();
-        return restoreSession(requestData.session).should.be.rejected();
-      });
-    });
-
-    it('sends a request if sessionExpires is not in local storage', () => {
-      testData.sessions.createPast(1);
+    it('sends the correct request', () => {
       const container = createTestContainer();
       const { session } = container.requestData;
       return mockHttp(container)
         .request(() => restoreSession(session))
+        .beforeEachResponse((_, { method, url }) => {
+          method.should.equal('GET');
+          url.should.equal('/v1/sessions/restore');
+        })
         .respondWithData(() => testData.sessions.last());
+    });
+
+    it('saves the session', () => {
+      const container = createTestContainer();
+      const { session } = container.requestData;
+      return mockHttp(container)
+        .request(() => restoreSession(session))
+        .respondWithData(() => testData.sessions.last())
+        .afterResponse(() => {
+          session.dataExists.should.be.true();
+        });
+    });
+
+    it('does not set sessionExpires in local storage', () => {
+      const container = createTestContainer();
+      const { session } = container.requestData;
+      const setItem = sinon.fake();
+      sinon.replace(Storage.prototype, 'setItem', setItem);
+      return mockHttp(container)
+        .request(() => restoreSession(session))
+        .respondWithData(() => testData.sessions.last())
+        .afterResponse(() => {
+          setItem.called.should.be.false();
+        });
+    });
+
+    it('removes sessionExpires from local storage after a 404', () => {
+      const container = createTestContainer();
+      const { session } = container.requestData;
+      return mockHttp(container)
+        .request(() => restoreSession(session).catch(noop))
+        .respondWithProblem(404.1)
+        .afterResponse(() => {
+          should.not.exist(localStorage.getItem('sessionExpires'));
+        });
     });
   });
 
@@ -899,6 +870,55 @@ describe('util/session', () => {
             url: window.location.href
           }));
         });
+    });
+  });
+
+  describe('visiblyLoggedIn', () => {
+    it('equals true after navigation from /login', () => {
+      const user = testData.extendedUsers.createPast(1).last();
+      const container = {
+        // Prevent a request for the analytics config.
+        config: { showsAnalytics: false }
+      };
+      let correctBeforeNavigation = false;
+      return load('/login', { container })
+        .restoreSession(false)
+        .afterResponses(app => {
+          app.vm.visiblyLoggedIn.should.be.false();
+        })
+        .request(async (app) => {
+          const form = app.get('#account-login form');
+          await form.get('input[type="email"]').setValue('alice@getodk.org');
+          await form.get('input[type="password"]').setValue('foo');
+          app.vm.$router.beforeEach(() => {
+            const { currentUser } = app.vm.$container.requestData;
+            // Even though data exists from login, the user shouldn't be visibly
+            // logged in until after the navigation.
+            correctBeforeNavigation = currentUser.dataExists && !app.vm.visiblyLoggedIn;
+          });
+          return form.trigger('submit');
+        })
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => user)
+        .respondFor('/')
+        .afterResponses(app => {
+          correctBeforeNavigation.should.be.true();
+          app.vm.visiblyLoggedIn.should.be.true();
+        });
+    });
+
+    it('equals false during the initial navigation', async () => {
+      mockLogin();
+      const container = createTestContainer({ router: testRouter() });
+      const { visiblyLoggedIn } = withSetup(useSessions, { container });
+      const { router, requestData: { currentUser } } = container;
+      let correctBeforeNavigation = false;
+      router.beforeEach(() => {
+        correctBeforeNavigation = currentUser.dataExists && !visiblyLoggedIn.value;
+      });
+      await router.push('/');
+      correctBeforeNavigation.should.be.true();
+      visiblyLoggedIn.value.should.be.true();
     });
   });
 });

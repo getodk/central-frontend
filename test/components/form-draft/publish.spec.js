@@ -409,9 +409,9 @@ describe('FormDraftPublish', () => {
           testData.extendedDatasets.createPast(1);
         })
         .complete()
-        .load('/projects/1/datasets', { project: false })
+        .load('/projects/1/entity-lists', { project: false })
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/datasets');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists');
         }));
   });
 
@@ -427,11 +427,11 @@ describe('FormDraftPublish', () => {
     let liCounter = -1;
     testData.formDraftDatasetDiffs.sorted().forEach(ds => {
       if (ds.isNew) {
-        delta[liCounter += 1].text().should.match(/A new Dataset \w+ will be created./);
+        delta[liCounter += 1].text().should.match(/A new Entity List \w+ will be created./);
       }
       ds.properties.forEach(p => {
         if (p.isNew) {
-          delta[liCounter += 1].text().should.match(/In Dataset \w+, a new property \w+ will be created./);
+          delta[liCounter += 1].text().should.match(/In Entity List \w+, a new property \w+ will be created./);
         }
       });
     });

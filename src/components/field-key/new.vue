@@ -32,13 +32,15 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div id="field-key-new-success" class="modal-introduction">
-          <p>
+        <div class="modal-introduction">
+          <div id="field-key-new-success">
             <span class="icon-check-circle"></span>
-            <strong>{{ $t('common.success') }}</strong>
-            <sentence-separator/>
-            <span>{{ $t('success[0]', created) }}</span>
-          </p>
+            <p>
+              <strong>{{ $t('common.success') }}</strong>
+              <sentence-separator/>
+              <span>{{ $t('success[0]', created) }}</span>
+            </p>
+          </div>
           <field-key-qr-panel :field-key="created" :managed="managed"/>
           <p>{{ $t('success[1]', created) }}</p>
           <i18n-t tag="p" keypath="success[2].full">
@@ -167,17 +169,24 @@ export default {
 @import '../../assets/scss/variables';
 
 #field-key-new-success {
+  display: flex;
+  align-items: center;
+
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;
-    margin-right: 6px;
-    vertical-align: middle;
+    margin-right: 10px;
   }
 
-  .field-key-qr-panel {
-    box-shadow: $box-shadow-popover;
-    margin: 15px auto 30px;
+  > p {
+    width: 80%;
+    margin-bottom: 0px;
   }
+}
+
+.field-key-qr-panel {
+  box-shadow: $box-shadow-popover;
+  margin: 15px auto 30px;
 }
 </style>
 

@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" hideable :large="managedKey != null" backdrop
-    @hide="$emit('hide')"
+  <modal :state="state" hideable :size="managedKey == null ? 'normal' : 'large'"
+    backdrop @hide="$emit('hide')"
     @shown="$refs.form.querySelector('input:not([disabled])').focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -153,6 +153,8 @@ export default {
     };
   },
   computed: {
+    // At the moment, there can only be a single managed key at most: once
+    // encrypted, a project cannot be decrypted.
     managedKey() {
       return this.keys.dataExists ? this.keys.find(key => key.managed) : null;
     },
@@ -525,10 +527,17 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     }
   },
   "id": {
+    "exportOptions": "Opsi Ekspor",
     "introduction": [
       "Untuk mengunduh data ini, Anda harus menyediakan frasa sandi. Frasa sandi hanya akan digunakan untuk mendekripsi data anda untuk diunduh, dan akan terhapus dari server setelahnya."
     ],
     "hint": "Petunjuk: {hint}",
+    "noRepeat": "Formulir ini tidak memiliki pengulangan.",
+    "action": {
+      "download": {
+        "mainTable": "Tabel data utama (tanpa pengulangan)"
+      }
+    },
     "alert": {
       "submit": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
     }

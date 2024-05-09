@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { comparator, omit } from 'ramda';
+import { comparator, omit, pick } from 'ramda';
 
 import { dataStore, view } from './data-store';
 import { extendedAudits } from './audits';
@@ -10,69 +10,239 @@ import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
 
+// This will be the entities store. We define it immediately to prevent an
+// ESLint error.
+let entities;
+
+const diffVersions = (dataReceived, previousVersion) => {
+  if (previousVersion == null) return [];
+  const diff = Object.keys(dataReceived).filter(name =>
+    name !== 'label' && dataReceived[name] !== previousVersion.data[name]);
+  if (dataReceived.label != null && dataReceived.label !== previousVersion.label)
+    diff.unshift('label');
+  return diff;
+};
+
+const entityVersions = dataStore({
+  factory: ({
+    inPast,
+    lastCreatedAt,
+
+    // If no UUID is specified, defaults to the last entity.
+    uuid = undefined,
+    baseVersion: baseVersionOption = undefined,
+    label = undefined,
+    data = {},
+    conflictingProperties = undefined,
+    source = {},
+    creator = extendedUsers.first(),
+
+    // Internal option for the `entities` store. This is an entity that is in
+    // the process of being created.
+    _entity = undefined
+  }) => {
+    // Get the entity.
+    if (entities.size === 0 && _entity == null)
+      throw new Error('there is no entity for which to create a new version');
+    const entityIndex = _entity != null
+      ? null
+      : (uuid != null
+        ? entities.findIndex(entity => entity.uuid === uuid)
+        : entities.size - 1);
+    if (entityIndex === -1) throw new Error('entity not found');
+    const entity = _entity ?? entities.get(entityIndex);
+
+    // Find the last version (i.e., the current/server version) and the base
+    // version.
+    let lastVersionIndex;
+    let baseVersionIndex;
+    for (const [i, version] of entityVersions.entries()) {
+      if (version.uuid === entity.uuid) {
+        lastVersionIndex = i;
+        if (version.version === baseVersionOption) baseVersionIndex = i;
+      }
+    }
+    const lastVersion = entityVersions.get(lastVersionIndex);
+    if (baseVersionOption != null) {
+      if (baseVersionIndex == null) throw new Error('base version not found');
+    } else {
+      baseVersionIndex = lastVersionIndex;
+    }
+    const baseVersion = entityVersions.get(baseVersionIndex);
+
+    // Update the last version and the base version.
+    if (lastVersion != null) {
+      const updates = { current: false };
+      if (lastVersion.lastGoodVersion) {
+        if (baseVersion === lastVersion)
+          updates.lastGoodVersion = false;
+        else
+          updates.relevantToConflict = true;
+      }
+      entityVersions.update(lastVersionIndex, updates);
+    }
+    if (baseVersion !== lastVersion && !baseVersion.relevantToConflict)
+      entityVersions.update(baseVersionIndex, { relevantToConflict: true });
+
+    // Timestamps
+    const createdAt = lastVersion == null
+      ? entity.createdAt
+      : (!inPast
+        ? new Date().toISOString()
+        : fakePastDate([lastCreatedAt, creator.createdAt]));
+    if (lastVersion != null) {
+      if (_entity != null)
+        entity.updatedAt = createdAt;
+      else
+        entities.update(entityIndex, { updatedAt: createdAt });
+    }
+
+    const dataReceived = { ...data };
+    if (label != null) dataReceived.label = label;
+    const lastGoodVersion = (lastVersion == null || lastVersion.lastGoodVersion) &&
+      baseVersion === lastVersion;
+    return {
+      uuid: entity.uuid,
+      version: lastVersion == null ? 1 : lastVersion.version + 1,
+      baseVersion: baseVersion == null ? null : baseVersion.version,
+      current: true,
+      label: label ?? lastVersion.label,
+      data: { ...lastVersion?.data, ...data },
+      dataReceived,
+      conflict: baseVersion === lastVersion
+        ? null
+        : (conflictingProperties != null && conflictingProperties.length !== 0
+          ? 'hard'
+          : 'soft'),
+      conflictingProperties: baseVersion === lastVersion
+        ? null
+        : conflictingProperties ?? [],
+      baseDiff: diffVersions(dataReceived, baseVersion),
+      serverDiff: diffVersions(dataReceived, lastVersion),
+      resolved: false,
+      lastGoodVersion,
+      relevantToConflict: !lastGoodVersion,
+      source,
+      creatorId: creator.id,
+      creator: toActor(creator),
+      createdAt
+    };
+  }
+});
+
+export const extendedEntityVersions = view(entityVersions, omit(['uuid']));
+
 const randomData = (properties) => {
   const data = {};
   for (const { name } of properties) data[name] = faker.random.word();
   return data;
 };
 
-export const extendedEntities = dataStore({
+entities = dataStore({
   factory: ({
     inPast,
     lastCreatedAt,
 
+    dataset: datasetOption = undefined,
     uuid = faker.random.uuid(),
+    version = 1,
     label = faker.random.word(),
-    updates = 0,
-    updatedAt = null,
-    ...options
+    data = undefined,
+    source = undefined,
+    creator: creatorOption = undefined
   }) => {
     if (extendedDatasets.size === 0) {
-      const properties = options.data != null
-        ? Object.keys(options.data).map(name => ({ name, forms: [] }))
+      const properties = data != null
+        ? Object.keys(data).map(name => ({ name, forms: [] }))
         : [];
       extendedDatasets.createPast(1, { properties, entities: 1 });
     }
-    const dataset = options.dataset ?? extendedDatasets.first();
-    const data = options.data ?? randomData(dataset.properties);
-    const creator = options.creator ?? extendedUsers.first();
+    const dataset = datasetOption ?? extendedDatasets.first();
+
+    const creator = creatorOption ?? extendedUsers.first();
     const createdAt = !inPast
       ? new Date().toISOString()
       : fakePastDate([
         lastCreatedAt,
         creator.createdAt
       ]);
-    return {
+    const entity = {
       uuid,
-      currentVersion: { label, data, current: true },
-      updates,
       creatorId: creator.id,
       creator: toActor(creator),
       createdAt,
-      updatedAt
+      updatedAt: null
     };
+
+    const createVersion = inPast
+      ? (options) => entityVersions.createPast(1, options)
+      : (options) => entityVersions.createNew(options);
+    createVersion({
+      _entity: entity,
+      label,
+      data: data ?? randomData(dataset.properties),
+      source,
+      creator
+    });
+    for (let i = 2; i <= version; i += 1)
+      createVersion({ _entity: entity, creator });
+
+    return entity;
   },
   sort: comparator((entity1, entity2) =>
     isBefore(entity2.createdAt, entity1.createdAt))
 });
 
-export const standardEntities = view(extendedEntities, omit(['creator']));
+const combineEntityWithVersions = (entity) => {
+  const currentVersion = entityVersions.findLast(version =>
+    version.uuid === entity.uuid);
+
+  const conflicts = currentVersion.version === 1
+    ? []
+    : entityVersions.filter(version =>
+      version.uuid === entity.uuid && version.conflict != null && !version.resolved);
+  const conflict = conflicts.length === 0
+    ? null
+    : (conflicts.some(version => version.conflict === 'hard') ? 'hard' : 'soft');
+
+  return {
+    ...entity,
+    // Add just the properties of currentVersion that are needed. That way, we
+    // don't have to think about extended metadata.
+    currentVersion: pick(
+      ['version', 'label', 'data', 'current'],
+      currentVersion
+    ),
+    conflict,
+    updates: currentVersion.version - 1
+  };
+};
+export const extendedEntities = view(entities, combineEntityWithVersions);
+export const standardEntities = view(entities, (entity) =>
+  omit(['creator'], combineEntityWithVersions(entity)));
 
 // Converts entity response objects to OData.
-export const entityOData = (top = 250, skip = 0) => {
+export const entityOData = (top = 250, skip = 0, asc = false) => {
   if (extendedDatasets.size === 0) throw new Error('dataset not found');
   // There needs to be exactly one dataset for us to be able to identify the
   // correct one.
   if (extendedDatasets.size > 1) throw new Error('too many datasets');
+
+  const sorted = extendedEntities.sorted();
+  if (asc) sorted.reverse();
+
   const { properties } = extendedDatasets.last();
   return {
     '@odata.count': extendedEntities.size,
-    value: extendedEntities.sorted().slice(skip, skip + top).map(entity => {
+    '@odata.nextLink': top > 0 && (top + skip < extendedEntities.size) ? `https://test/Entities?$top=${top}&$skipToken=thetoken` : undefined,
+    value: sorted.slice(skip, skip + top).map(entity => {
       const result = {
         label: entity.currentVersion.label,
         __id: entity.uuid,
         __system: {
+          version: entity.currentVersion.version,
           updates: entity.updates,
+          conflict: entity.conflict,
           creatorId: entity.creator.id.toString(),
           creatorName: entity.creator.displayName,
           createdAt: entity.createdAt,
@@ -91,28 +261,30 @@ export const entityOData = (top = 250, skip = 0) => {
 };
 
 // Creates a source submission along with submission audit log events.
-extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}) => {
-  const submission = extendedSubmissions
+extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}, deleted = false) => {
+  const fullSubmission = extendedSubmissions
     .createPast(1, submissionOptions)
     .last();
   const formVersion = submissionOptions.formVersion ?? extendedForms.first();
-  const submissionWithFormId = {
-    ...submission,
-    xmlFormId: formVersion.xmlFormId
-  };
+  const submission = (!deleted)
+    ? { ...fullSubmission, xmlFormId: formVersion.xmlFormId }
+    : {
+      instanceId: fullSubmission.instanceId,
+      submitter: fullSubmission.submitter,
+      createdAt: fullSubmission.createdAt
+    };
 
   const auditOptions = {
     actor: submission.submitter,
     actee: formVersion,
     details: { instanceId: submission.instanceId }
   };
-  const submissionCreate = extendedAudits
+  extendedAudits
     .createPast(1, {
       action: 'submission.create',
       loggedAt: submission.createdAt,
       ...auditOptions
-    })
-    .last();
+    });
   if (sourceAction === 'submission.update') {
     extendedSubmissions.update(-1, { reviewState: 'approved' });
     extendedAudits.createPast(1, {
@@ -128,7 +300,28 @@ extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {})
   } else if (sourceAction !== 'submission.create') {
     throw new Error('invalid action');
   }
-  const sourceEvent = extendedAudits.last();
+  const event = extendedAudits.last();
 
-  return { submission: submissionWithFormId, submissionCreate, sourceEvent };
+  return { submission, event };
+};
+
+extendedEntities.resolve = (index) => {
+  const entity = entities.get(index);
+  if (entity == null) throw new Error('entity not found');
+
+  const lastIndex = entityVersions.findLastIndex(version =>
+    version.uuid === entity.uuid);
+  for (const [i, version] of entityVersions.entries()) {
+    // eslint-disable-next-line no-continue
+    if (version.uuid !== entity.uuid) continue;
+    const updates = {};
+    if (version.conflict != null && !version.resolved) updates.resolved = true;
+    if (version.lastGoodVersion) updates.lastGoodVersion = false;
+    if (i === lastIndex) updates.lastGoodVersion = true;
+    if (version.relevantToConflict) updates.relevantToConflict = false;
+    if (Object.keys(updates).length !== 0) entityVersions.update(i, updates);
+  }
+
+  // Update updatedAt.
+  entities.update(index);
 };

@@ -12,9 +12,9 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <div id="dataset-show">
-    <page-back v-show="dataExists" :to="[projectPath(), projectPath('datasets')]">
+    <page-back v-show="dataExists" :to="[projectPath(), projectPath('entity-lists')]">
       <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.datasets') }}</template>
+      <template #back>{{ $t('resource.entities') }}</template>
     </page-back>
     <page-head v-show="dataExists">
       <template #title>
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
-      <router-view v-show="dataExists"/>
+      <router-view v-show="dataExists" @fetch-dataset="fetchDataset"/>
     </page-body>
   </div>
 </template>
@@ -117,7 +117,7 @@ export default {
 {
   "en": {
     // This is shown at the top of the page.
-    "back": "Back to Project Datasets"
+    "back": "Back to Project Entities"
   }
 }
 </i18n>
@@ -126,22 +126,22 @@ export default {
 <i18n>
 {
   "cs": {
-    "back": "Zpět na datové sady projektu"
+    "back": "Zpět na projektové entity"
   },
   "de": {
-    "back": "Zurück zu den Projektdatensätzen"
+    "back": "Zurück zu den Projekteinheiten"
   },
   "es": {
-    "back": "Volver a conjuntos de datos del proyecto"
+    "back": "Back to Project Entities"
   },
   "fr": {
-    "back": "Retour aux Dataset du Projet"
+    "back": "Retour aux entités du projet"
   },
   "it": {
-    "back": "Torna ai set di dati del progetto"
+    "back": "Torna alle Entità del progetto"
   },
   "sw": {
-    "back": "Rudi kwenye Hifadhidata za Mradi"
+    "back": "Rudi kwenye vyombo vya Mradi"
   }
 }
 </i18n>

@@ -28,22 +28,18 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
+<script setup>
 import Linkable from './linkable.vue';
 
-export default {
-  name: 'SummaryItem',
-  components: { Linkable },
-  props: {
-    to: String,
-    clickable: Boolean,
-    icon: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['click']
-};
+defineProps({
+  to: String,
+  clickable: Boolean,
+  icon: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['click']);
 </script>
 
 <style lang="scss">

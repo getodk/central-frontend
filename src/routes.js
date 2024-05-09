@@ -206,6 +206,8 @@ const asyncRoute = (options) => {
   return config;
 };
 
+const conditionalRoutes = (condition, routes) => (condition ? routes : []);
+
 const { i18n, requestData, config } = container;
 const { currentUser, project, form, formDraft, attachments, dataset } = requestData;
 const routes = [
@@ -219,27 +221,29 @@ const routes = [
       title: () => [i18n.t('action.logIn')]
     }
   },
-  asyncRoute({
-    path: '/reset-password',
-    component: 'AccountResetPassword',
-    loading: 'page',
-    meta: {
-      requireLogin: false,
-      requireAnonymity: true,
-      title: () => [i18n.t('title.resetPassword')]
-    }
-  }),
-  asyncRoute({
-    path: '/account/claim',
-    component: 'AccountClaim',
-    loading: 'page',
-    meta: {
-      restoreSession: false,
-      requireLogin: false,
-      requireAnonymity: true,
-      title: () => [i18n.t('title.setPassword')]
-    }
-  }),
+  ...conditionalRoutes(!config.oidcEnabled, [
+    asyncRoute({
+      path: '/reset-password',
+      component: 'AccountResetPassword',
+      loading: 'page',
+      meta: {
+        requireLogin: false,
+        requireAnonymity: true,
+        title: () => [i18n.t('title.resetPassword')]
+      }
+    }),
+    asyncRoute({
+      path: '/account/claim',
+      component: 'AccountClaim',
+      loading: 'page',
+      meta: {
+        restoreSession: false,
+        requireLogin: false,
+        requireAnonymity: true,
+        title: () => [i18n.t('title.setPassword')]
+      }
+    })
+  ]),
 
   asyncRoute({
     path: '/',
@@ -263,7 +267,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: () => project.permits('form.list')
+            project: () => project.permits('form.list') || project.permits('open_form.list')
           },
           title: () => [project.name]
         }
@@ -322,7 +326,7 @@ const routes = [
         }
       }),
       asyncRoute({
-        path: 'datasets',
+        path: 'entity-lists',
         component: 'DatasetList',
         props: true,
         loading: 'tab',
@@ -330,7 +334,7 @@ const routes = [
           validateData: {
             project: () => project.permits(['dataset.list', 'entity.list'])
           },
-          title: () => [i18n.t('resource.datasets'), project.name]
+          title: () => [i18n.t('resource.entities'), project.name]
         }
       }),
       asyncRoute({
@@ -454,7 +458,7 @@ const routes = [
             ]),
             formDraft: () => formDraft.isDefined()
           },
-          title: () => [i18n.t('formHead.draftNav.tab.status'), form.nameOrId]
+          title: () => [i18n.t('common.status'), form.nameOrId]
         }
       }),
       asyncRoute({
@@ -511,12 +515,12 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName',
+    path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName',
     component: 'DatasetShow',
     props: true,
     loading: 'page',
     key: ({ projectId, datasetName }) =>
-      `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`,
+      `/projects/${projectId}/entity-lists/${encodeURIComponent(datasetName)}`,
     children: [
       asyncRoute({
         path: '',
@@ -561,7 +565,7 @@ const routes = [
     // We don't validate that :uuid is a valid UUID (and it isn't in tests), but
     // we do validate that it doesn't need to be URL-encoded (for example, in
     // requests to Backend).
-    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName/entities/:uuid([0-9a-f-]+)',
+    path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName/entities/:uuid([0-9a-f-]+)',
     component: 'EntityShow',
     props: true,
     loading: 'page',
@@ -637,26 +641,27 @@ const routes = [
           fullWidth: true
         }
       }),
-      asyncRoute({
-        path: 'analytics',
-        component: 'AnalyticsList',
-        loading: 'tab',
-        meta: {
-          validateData: {
-            currentUser: () => currentUser.can([
-              'config.read',
-              'config.set',
-              'analytics.read'
-            ])
-          },
-          title: () => [
-            i18n.t('systemHome.tab.analytics'),
-            i18n.t('systemHome.title')
-          ],
-          fullWidth: true
-        },
-        beforeEnter: () => (config.showsAnalytics ? true : '/')
-      })
+      ...conditionalRoutes(config.showsAnalytics, [
+        asyncRoute({
+          path: 'analytics',
+          component: 'AnalyticsList',
+          loading: 'tab',
+          meta: {
+            validateData: {
+              currentUser: () => currentUser.can([
+                'config.read',
+                'config.set',
+                'analytics.read'
+              ])
+            },
+            title: () => [
+              i18n.t('systemHome.tab.analytics'),
+              i18n.t('systemHome.title')
+            ],
+            fullWidth: true
+          }
+        })
+      ])
     ]
   }),
 

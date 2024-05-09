@@ -242,6 +242,79 @@ describe('Multiselect', () => {
     assertChecked(component, [true, true]);
   });
 
+  describe('defaultToAll prop is true', () => {
+    describe('some (not all) options were checked, then were unchecked', () => {
+      it('emits all option values', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.get('input[type="checkbox"]').setValue(false);
+        await toggle(component);
+        component.emitted('update:modelValue').should.eql([[[0, 1]]]);
+      });
+
+      it('checks all checkboxes again', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.get('input[type="checkbox"]').setValue(false);
+        await toggle(component);
+        await component.setProps({ modelValue: [0, 1] });
+        await toggle(component);
+        assertChecked(component, [true, true]);
+      });
+    });
+
+    describe('all options were checked, then were unchecked', () => {
+      it('does not emit an event', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0, 1],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        const inputs = component.findAll('input[type="checkbox"]');
+        await inputs[0].setValue(false);
+        await inputs[1].setValue(false);
+        await toggle(component);
+        should.not.exist(component.emitted('update:modelValue'));
+      });
+
+      it('checks all checkboxes again', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0, 1],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        const inputs = component.findAll('input[type="checkbox"]');
+        await inputs[0].setValue(false);
+        await inputs[1].setValue(false);
+        await toggle(component);
+        await toggle(component);
+        assertChecked(component, [true, true]);
+      });
+    });
+  });
+
   describe('search', () => {
     const users = [
       { value: 1, text: 'Alice', description: 'Has a role of admin.' },

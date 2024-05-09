@@ -29,6 +29,7 @@ except according to the terms contained in the LICENSE file.
             <router-link v-if="property.forms.length > 0" :to="publishedFormPath(projectId, property.forms[0].xmlFormId)" v-tooltip.text>
               {{ property.forms[0].name }}
             </router-link>
+            <div v-else class="empty-update-form">{{ $t('none') }}</div>
           </td>
         </tr>
         <template v-for="(form, index) in property.forms" :key="form.xmlFormId">
@@ -47,26 +48,24 @@ except according to the terms contained in the LICENSE file.
     </p>
 </template>
 
-<script>
+<script setup>
 import useRoutes from '../../../composables/routes';
 
-export default {
-  name: 'DatasetProperties',
-  props: {
-    properties: {
-      type: Array,
-      required: true
-    },
-    projectId: {
-      type: String,
-      required: true
-    }
+defineOptions({
+  name: 'DatasetProperties'
+});
+defineProps({
+  properties: {
+    type: Array,
+    required: true
   },
-  setup() {
-    const { publishedFormPath } = useRoutes();
-    return { publishedFormPath };
+  projectId: {
+    type: String,
+    required: true
   }
-};
+});
+
+const { publishedFormPath } = useRoutes();
 </script>
 
 <style lang="scss">
@@ -89,13 +88,19 @@ export default {
     }
   }
 
+  .empty-update-form {
+    color: #888;
+    font-style: italic;
+  }
 }
 </style>
 
 <i18n lang="json5">
   {
     "en": {
-      "emptyTable": "There are no Properties in this Dataset."
+      "emptyTable": "The Entities in this Entity List do not have any user-defined properties.",
+      // This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms.
+      "none": "(None)"
     }
   }
   </i18n>
@@ -104,22 +109,24 @@ export default {
 <i18n>
 {
   "cs": {
-    "emptyTable": "V této datové sadě nejsou žádné vlastnosti."
+    "emptyTable": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti."
   },
   "de": {
-    "emptyTable": "Es gibt keine Eigenschaften in diesem Datensatz."
+    "emptyTable": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften."
   },
   "es": {
-    "emptyTable": "No hay propiedades en este conjunto de datos."
+    "emptyTable": "Las entidades de esta lista no tienen propiedades definidas por el usuario."
   },
   "fr": {
-    "emptyTable": "Il n'y a pas de propriété dans ce Dataset"
+    "emptyTable": "Les entités dans cette liste n'ont pas de propriétés définies par l'utilisateur",
+    "none": "Aucun"
   },
   "it": {
-    "emptyTable": "Non ci sono Proprietà in questo set di dati."
+    "emptyTable": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente.",
+    "none": "(Nessuna)"
   },
   "sw": {
-    "emptyTable": "Hakuna Sifa katika Seti hii ya Data"
+    "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
   }
 }
 </i18n>

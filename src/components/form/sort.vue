@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="form-sort">
     <form class="form-inline" @submit.prevent>
-      <span id="form-sort-label">{{ $t('action.sort') }}</span>
       <label class="form-group">
+        <span id="form-sort-label">{{ $t('action.sort') }}</span>
         <select :value="modelValue" class="form-control"
           @change="$emit('update:modelValue', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
@@ -25,31 +25,28 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-
-export default {
-  name: 'FormSort',
-  components: {},
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue']
-};
+<script setup>
+defineOptions({
+  name: 'FormSort'
+});
+defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['update:modelValue']);
 </script>
 
 <style lang="scss">
-
 #form-sort {
   float: right;
 
   #form-sort-label {
     font-size: 14px;
     padding-right: 8px;
+    vertical-align: middle;
   }
-
 }
 </style>
 
@@ -90,6 +87,11 @@ export default {
     "sortOptions": {
       "alphabetical": "Alphabétique",
       "newest": "Plus récent"
+    }
+  },
+  "id": {
+    "sortOptions": {
+      "newest": "Terbaru"
     }
   },
   "it": {

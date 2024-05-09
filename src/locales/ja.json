@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "ステータス",
         "testing": "テスト"
       }
     }
@@ -148,7 +147,8 @@
     "update": "更新",
     "yesProceed": "はい、続けます。",
     "showPreview": "プレビュー",
-    "hidePreview": "プレビューを隠す"
+    "hidePreview": "プレビューを隠す",
+    "upload": "アップロード"
   },
   "field": {
     "comment": "コメントを残す...",
@@ -255,7 +255,9 @@
       "settings": "設定",
       "overview": "概要"
     },
-    "total": "全期間"
+    "total": "全期間",
+    "status": "ステータス",
+    "version": "バージョン"
   },
   "mixin": {
     "request": {

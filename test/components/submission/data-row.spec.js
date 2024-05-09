@@ -15,6 +15,7 @@ const mountComponent = (props = undefined) => {
   const draft = props != null && props.draft === true;
   const container = createTestContainer({
     requestData: testRequestData([useFields, useSubmissions], {
+      project: testData.extendedProjects.last(),
       fields: testData.extendedForms.last()._fields,
       odata: {
         status: 200,

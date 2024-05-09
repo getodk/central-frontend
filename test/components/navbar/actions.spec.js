@@ -1,35 +1,25 @@
 import sinon from 'sinon';
 
-import Navbar from '../../../src/components/navbar.vue';
 import NavbarActions from '../../../src/components/navbar/actions.vue';
 
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { mockRouter } from '../../util/router';
-import { mount } from '../../util/lifecycle';
 
 describe('NavbarActions', () => {
-  it('indicates if the user is not logged in', () => {
-    const navbar = mount(Navbar, {
-      container: { router: mockRouter('/login') },
-      global: {
-        // Stubbing AnalyticsIntroduction because of its custom <router-link>
-        stubs: { AnalyticsIntroduction: true }
-      }
-    });
-    const text = navbar.getComponent(NavbarActions).get('a').text();
-    text.should.equal('Not logged in');
-  });
+  it('indicates if the user is not logged in', () =>
+    load('/login')
+      .restoreSession(false)
+      .afterResponses(app => {
+        const text = app.getComponent(NavbarActions).get('a').text();
+        text.should.equal('Not logged in');
+      }));
 
-  it("shows the user's display name", () => {
-    mockLogin({ displayName: 'Alice' });
-    const navbar = mount(Navbar, {
-      container: { router: mockRouter('/') },
-      global: {
-        stubs: { AnalyticsIntroduction: true }
-      }
-    });
-    navbar.getComponent(NavbarActions).get('a').text().should.equal('Alice');
+  it("shows the user's display name", async () => {
+    mockLogin({ displayName: 'Alice Allison' });
+    const app = await load('/');
+    const a = app.getComponent(NavbarActions).get('a');
+    a.text().should.equal('Alice Allison');
+    await a.get('span:nth-child(2)').should.have.textTooltip();
   });
 
   describe('after the user clicks "Log out"', () => {

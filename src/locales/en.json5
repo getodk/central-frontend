@@ -25,7 +25,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
         "testing": "Testing"
       }
     }
@@ -77,7 +76,7 @@
       "user": "Web User Actions",
       "project": "Project Actions",
       "form": "Form Actions",
-      "dataset": "Dataset Actions",
+      "dataset": "Entity List Actions",
       "field_key": "App User Actions",
       "public_link": "Public Access Link Actions",
       "config": "Server Configuration Actions",
@@ -100,7 +99,7 @@
         "set": "Set"
       },
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Dataset.
+      // type of action that can be taken on an Entity List.
       "dataset": {
         "create": "@:audit.action.default.create",
         "update": "Update",
@@ -168,10 +167,12 @@
     "clear": "Clear",
     "close": "Close",
     "comment": "Comment",
+    "continue": "Continue",
     "create": "Create",
     // This is the text of a button that is used to fill out a new Submission.
     // It is shown next to a heading whose text is "Submissions".
     "createSubmission": "New",
+    "delete": "Delete",
     "done": "Done",
     "download": "Download",
     "edit": "Edit",
@@ -189,11 +190,15 @@
     "refresh": "Refresh",
     "resetPassword": "Reset password",
     "review": "Review",
+    // @transifexKey component.EntityMetadataRow.reviewParallelUpdates
+    "reviewParallelUpdates": "Review parallel updates",
     "save": "Save",
     "saveSettings": "Save settings",
     // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
     "sort": "Sort",
     "update": "Update",
+    // @transifexKey component.FormNew.action.upload
+    "upload": "Upload",
     "yesProceed": "Yes, proceed",
     // This text is shown on a button that the user clicks to show a preview of something
     "showPreview": "Preview",
@@ -234,7 +239,9 @@
     "email": "Email Address",
     "instanceId": "Instance ID",
     "lastSubmission": "Latest Submission",
+    "recentActivity": "Recent Activity",
     "name": "Name",
+    "listName": "List Name",
     // This is the text of a table column header. The column shows the user or
     // Public Access Link that submitted each Submission.
     "submitterName": "Submitted by",
@@ -246,7 +253,7 @@
     "time": "Time",
     "type": "Type",
     // This is the text of a table column header. The column shows the number of entities
-    // for the dataset
+    // for the Entity List
     "entities": "Total Entities",
     // This is the text of a table column header. The column shows the date and time of the 
     // newest entity
@@ -264,7 +271,8 @@
   "count": {
     "appUser": "{count} App User | {count} App Users",
     "form": "{count} Form | {count} Forms",
-    "submission": "{count} Submission | {count} Submissions"
+    "submission": "{count} Submission | {count} Submissions",
+    "warning": "{count} warning | {count} warnings"
   },
   // This text appears on its own and is not part of a longer sentence. It may
   // be shown as a title, for example, at the top of the page.
@@ -272,8 +280,8 @@
     "appUser": "App User",
     "appUsers": "App Users",
     "config": "Server Configuration",
-    "dataset": "Dataset",
-    "datasets": "Datasets",
+    "entityList": "Entity List",
+    "entityLists": "Entity Lists",
     "entities": "Entities",
     "form": "Form",
     "forms": "Forms",
@@ -339,7 +347,10 @@
     "label": "Label",
     "entityLabel": "Entity Label",
     // This is the UUID of an Entity.
-    "entityId": "Entity ID"
+    "entityId": "Entity ID",
+    "noProperties": "This Form only sets the “label”.",
+    "noEntity": "(none)",
+    "conflictsCount": "{count} conflict | {count} conflicts"
   },
   "common": {
     // This is a title shown above a section of the page.
@@ -352,6 +363,8 @@
     "areYouSure": "Are you sure you wish to proceed?",
     // This is a title shown above a section of the page.
     "basicInfo": "Basic Information",
+    "conflict": "Conflict",
+    "conflicts": "Conflicts",
     // This is a title shown above a section of the page.
     "currentDraft": "Your Current Draft",
     // This is a title shown above a section of the page.
@@ -371,8 +384,13 @@
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
+    "noUndo": "This action cannot be undone.",
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
+    // This is shown for the row number.
+    "rowNumber": "Row",
+    // @transifexKey formHead.draftNav.tab.status
+    "status": "Status",
     "success": "Success!",
     // "System" refers to the server and how it is configured. It may be shown
     // as a title, for example, at the top of the page.
@@ -384,18 +402,26 @@
     },
     "total": "Total",
     "totalSubmissions": "Total Submissions",
-    "punctuations": {
-      "comma": ","
-    },
-    // {inform} is the number of dataset properties defined by the form.
-    // {count} is the total number of properties. The string will be pluralized based on {count}.
+    // {inform} is the number of Entity Properties defined by the form.
+    // {count} is the total number of Properties. The string will be pluralized based on {count}.
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
-    "new": "New"
+    "new": "New!",
+    "totalEntities": "Total Entities",
+    // @transifexKey component.NavbarHelpDropdown.version
+    // An identifier of a particular version of something (of Central, of a
+    // Form, of an Entity)
+    "version": "Version",
+    // A short identifier of an Entity version. "v" is short for "version".
+    // {version} is a version number.
+    "versionShort": "v{version}",
+    // This text is shown on its own before details about a warning.
+    "warning": "Warning"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit."
+        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit.",
+        "entityTooLarge":  "The data that you are trying to upload is too large.",
       }
     }
   },
@@ -407,11 +433,31 @@
     }
   },
   "util": {
+    "csv": {
+      // {message} is a description of the problem.
+      "readError": "There was a problem reading your file: {message}",
+      "invalidCSV": "The file “{name}” is not a valid .csv file. It cannot be read.",
+      // {row} is a row number. {message} is a description of the problem.
+      "rowError": "There is a problem on row {row} of the file: {message}",
+      // This is an error that is shown for a spreadsheet. The field may be any
+      // cell in the spreadsheet.
+      "invalidQuotes": "A quoted field is invalid. Check the row to see if there are any unusual values.",
+      "emptyRow": "The row is empty.",
+      // This is an error that is shown for a data file. {expected} and {actual}
+      // are each a number of columns. The string will be pluralized based on
+      // {expected}.
+      "dataWithoutHeader": "Expected {expected} column, but found {actual}. | Expected {expected} columns, but found {actual}."
+    },
     "request": {
       "noRequest": "Something went wrong: there was no request.",
       "noResponse": "Something went wrong: there was no response to your request.",
       // {status} is an HTTP status code, for example, 404.
-      "errorNotProblem": "Something went wrong: error code {status}."
+      "errorNotProblem": "Something went wrong: error code {status}.",
+      "problem": {
+        // A "resource" is a generic term for something in Central, for example,
+        // a Project, a Web User, or a Form.
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
+      }
     },
     "session": {
       "alert": {

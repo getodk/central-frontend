@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <li v-if="!loggedIn" id="navbar-actions">
+  <li v-if="!visiblyLoggedIn" id="navbar-actions">
     <a href="#" @click.prevent>
       <span class="icon-user-circle-o"></span>{{ $t('notLoggedIn') }}
     </a>
@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
       aria-haspopup="true" aria-expanded="false">
       <span class="icon-user-circle-o"></span>
-      <span>{{ currentUser.displayName }}</span>
+      <span v-tooltip.text>{{ currentUser.displayName }}</span>
       <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
@@ -44,13 +44,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'NavbarActions',
-  inject: ['container', 'alert', 'unsavedChanges'],
-  props: {
-    loggedIn: {
-      type: Boolean,
-      default: false
-    }
-  },
+  inject: ['container', 'alert', 'unsavedChanges', 'visiblyLoggedIn'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -70,6 +64,19 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/mixins';
+
+#navbar-actions {
+  .dropdown-toggle .icon-user-circle-o + span {
+    @include text-overflow-ellipsis;
+    display: inline-block;
+    max-width: 275px;
+    vertical-align: top;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {

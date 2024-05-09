@@ -30,8 +30,7 @@ export const setFiles = (wrapper, files) => {
 };
 
 export const dragAndDrop = async (wrapper, files) => {
-  const dataTransfer = fileDataTransfer(files);
-  await wrapper.trigger('dragenter', { dataTransfer });
-  await wrapper.trigger('dragover', { dataTransfer });
-  return wrapper.trigger('drop', { dataTransfer });
+  await wrapper.trigger('dragenter', { dataTransfer: fileDataTransfer(files) });
+  await wrapper.trigger('dragover', { dataTransfer: fileDataTransfer(files) });
+  return wrapper.trigger('drop', { dataTransfer: fileDataTransfer(files) });
 };

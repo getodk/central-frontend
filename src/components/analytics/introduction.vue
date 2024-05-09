@@ -46,22 +46,20 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
 import Modal from '../modal.vue';
 
-export default {
-  name: 'AnalyticsIntroduction',
-  components: { Modal },
-  props: {
-    state: Boolean
-  },
-  emits: ['hide'],
-  methods: {
-    hideAndNavigate(navigate, event) {
-      this.$emit('hide');
-      navigate(event);
-    }
-  }
+defineOptions({
+  name: 'AnalyticsIntroduction'
+});
+defineProps({
+  state: Boolean
+});
+const emit = defineEmits(['hide']);
+
+const hideAndNavigate = (navigate, event) => {
+  emit('hide');
+  navigate(event);
 };
 </script>
 
@@ -137,6 +135,12 @@ export default {
     ],
     "action": {
       "improveCentral": "Améliorer Central"
+    }
+  },
+  "id": {
+    "title": "Bantu Tingkatkan Central!",
+    "action": {
+      "improveCentral": "Tingkatkan Central"
     }
   },
   "it": {

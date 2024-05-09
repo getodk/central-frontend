@@ -24,10 +24,10 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
+defineOptions({
   name: 'NotFound'
-};
+});
 </script>
 
 <i18n lang="json5">

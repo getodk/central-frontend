@@ -58,7 +58,7 @@ const typeByCategory = {
   user: 'resource.user',
   project: 'resource.project',
   form: 'resource.form',
-  dataset: 'resource.dataset',
+  dataset: 'resource.entityList',
   public_link: 'resource.publicLink',
   field_key: 'resource.appUser',
   config: 'resource.config',

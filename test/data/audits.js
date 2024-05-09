@@ -10,7 +10,9 @@ import { toActor } from './actors';
 const actionsWithDefaultActor = new Set([
   'config.set',
   'entity.create',
+  'entity.bulk.create',
   'entity.update.version',
+  'entity.update.resolve',
   'submission.create',
   'submission.update',
   'submission.update.version',
@@ -20,7 +22,8 @@ const defaultActor = (action) =>
   (actionsWithDefaultActor.has(action) ? extendedUsers.first() : null);
 
 const defaultActee = (action) => {
-  if (action === 'entity.create' || action === 'entity.update.version')
+  if (action === 'entity.create' || action === 'entity.update.version' ||
+    action === 'entity.update.resolve')
     return extendedDatasets.last();
   if (action === 'submission.create' || action === 'submission.update' ||
     action === 'submission.update.version')

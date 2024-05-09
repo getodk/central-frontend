@@ -30,31 +30,26 @@ except according to the terms contained in the LICENSE file.
   </summary-item>
 </template>
 
-<script>
+<script setup>
 import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
 
-export default {
-  name: 'LinkedForms',
-  components: {
-    SummaryItem
+defineOptions({
+  name: 'LinkedForms'
+});
+defineProps({
+  linkedForms: {
+    type: Array,
+    required: true
   },
-  props: {
-    linkedForms: {
-      type: Array,
-      required: true
-    },
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    const { publishedFormPath } = useRoutes();
-    return { publishedFormPath };
+  projectId: {
+    type: String,
+    required: true
   }
-};
+});
+
+const { publishedFormPath } = useRoutes();
 </script>
 
 <style lang="scss">
@@ -85,7 +80,7 @@ export default {
 {
   "en": {
     // Number of form(s) is shown separately above this text
-    "formsConsumeData": "Form consumes data from this Dataset | Forms consume data from this Dataset",
+    "formsConsumeData": "Form uses this Entity List | Forms use this Entity List",
   }
 }
 </i18n>
@@ -94,19 +89,19 @@ export default {
 <i18n>
 {
   "de": {
-    "formsConsumeData": "Formular verbraucht Daten aus diesem Datensatz | Formulare verbrauchen Daten aus diesem Datensatz"
+    "formsConsumeData": "Formular verwendet diese Entitätsliste | Formulare verwenden diese Entitätsliste"
   },
   "es": {
-    "formsConsumeData": "El formulario consume datos de este conjunto de datos | Los formularios consumen datos de este conjunto de datos | Los formularios consumen datos de este conjunto de datos"
+    "formsConsumeData": "El formulario utilizan esta lista de entidades | Los formularios utilizan esta lista de entidades | Los formularios utilizan esta lista de entidades"
   },
   "fr": {
-    "formsConsumeData": "Formulaire utilisant des données de ce Dataset | Formulaires utilisant des données de ce Dataset | Formulaires utilisant des données de ce Dataset"
+    "formsConsumeData": "Formulaire utilise cette liste d'entités | Formulaires utilisent cette liste d'entités | Formulaires utilisent cette liste d'entités"
   },
   "it": {
-    "formsConsumeData": "Il formulario consuma dati da questo set di dati | I formulari consumano dati da questo set di dati | I formulari consumano dati da questo set di dati"
+    "formsConsumeData": "Il formulario utilizza questo elenco di entità | I formulari utilizzano questo elenco di entità | I formulari utilizzano questo elenco di entità"
   },
   "sw": {
-    "formsConsumeData": "Fomu hutumia data kutoka kwa Hifadhidata hii | Fomu hutumia data kutoka kwa Hifadhidata hii"
+    "formsConsumeData": "Fomu hutumia Orodha hii ya Huluki | Fomu hutumia Orodha hii ya Huluki"
   }
 }
 </i18n>

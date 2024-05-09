@@ -14,9 +14,12 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6 dataset-name-wrap">
         <div class="dataset-name text-overflow-ellipsis" v-tooltip.text>
-          <router-link :to="datasetPath(projectId, dataset.name)" v-tooltip.text>
+          <router-link v-if="!dataset.isNew" :to="datasetPath(projectId, dataset.name)" v-tooltip.text>
             {{ dataset.name }}
           </router-link>
+          <template v-else>
+            {{ dataset.name }}
+          </template>
         </div>
         <div v-if="dataset.isNew" class="dataset-new">
           <span class="icon-plus-circle"></span>
@@ -34,24 +37,26 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <div v-show="expanded" class="property-list">
-      <span v-for="(property, index) in inFormProperties" :key="property.name">
+      <i18n-list v-slot="{ value: property }" :list="inFormProperties">
         <span>{{ property.name }}</span>
-        <span v-if="property.isNew" class="icon-plus-circle property-new" v-tooltip.sr-only></span>
-        <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
-        <template v-if="index < inFormProperties.length - 1">{{ $t('common.punctuations.comma') }}<sentence-separator/></template>
-      </span>
+        <span v-if="property.isNew">
+          <span class="icon-plus-circle property-new" v-tooltip.sr-only></span>
+          <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
+        </span>
+      </i18n-list>
+      <span v-if="inFormProperties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import SentenceSeparator from '../../sentence-separator.vue';
+import I18nList from '../../i18n/list.vue';
 
 import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'DatasetSummaryRow',
-  components: { SentenceSeparator },
+  components: { I18nList },
   props: {
     dataset: {
       type: Object,
@@ -72,9 +77,6 @@ export default {
     };
   },
   computed: {
-    newProperties() {
-      return this.dataset.properties.filter(p => p.isNew);
-    },
     inFormProperties() {
       return this.dataset.properties.filter(p => p.inForm);
     }
@@ -141,6 +143,10 @@ export default {
     .property-list {
       hyphens: auto;
       overflow-wrap: break-word;
+
+      .no-properties {
+        font-style: italic;
+      }
     }
 }
 
@@ -149,9 +155,9 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is shown when a dataset is new
+    // This is shown when an Entity List is new
     "new": "new!",
-    // This is shown when mouse hovers over plus icon of new Dataset Property
+    // This is shown when mouse hovers over plus icon of new Entity Property
     "addedByThisDraft": "Added by this Draft"
   }
 }
@@ -175,6 +181,9 @@ export default {
   "fr": {
     "new": "nouveau !",
     "addedByThisDraft": "Ajouté par cette ébauche"
+  },
+  "id": {
+    "new": "baru!"
   },
   "it": {
     "new": "nuovo!",

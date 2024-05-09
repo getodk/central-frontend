@@ -15,13 +15,12 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PageBody'
-};
-</script>
 <script setup>
 import { computed, inject } from 'vue';
+
+defineOptions({
+  name: 'PageBody'
+});
 
 const { router } = inject('container');
 const htmlClass = computed(() => ({

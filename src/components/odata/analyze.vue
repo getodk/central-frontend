@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="odata-analyze" :state="state" hideable backdrop
+  <modal v-if="!config.oidcEnabled" id="odata-analyze" :state="state" hideable backdrop
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -71,7 +71,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
         <i18n-t v-else-if="tool === 'other'" tag="p" keypath="help.other.full">
           <template #article>
-            <a href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints/" target="_blank" rel="noopener">{{ $t('help.other.article') }}</a>
+            <a href="https://docs.getodk.org/central-api-odata-endpoints/" target="_blank" rel="noopener">{{ $t('help.other.article') }}</a>
           </template>
         </i18n-t>
       </div>
@@ -93,6 +93,7 @@ import Selectable from '../selectable.vue';
 export default {
   name: 'OdataAnalyze',
   components: { Modal, Selectable },
+  inject: ['config'],
   props: {
     state: Boolean,
     odataUrl: String
@@ -297,6 +298,7 @@ export default {
   "id": {
     "title": "Menggunakan OData",
     "tab": {
+      "microsoft": "Power BI atau Excel",
       "other": "Lainnya"
     },
     "help": {

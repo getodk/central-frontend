@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
         "testing": "Testen"
       }
     }
@@ -58,7 +57,7 @@
       "user": "Webnutzer-Aktionen",
       "project": "Projekt-Aktionen",
       "form": "Formular-Aktionen",
-      "dataset": "Dataset-Aktionen",
+      "dataset": "Entitätslistenaktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
       "config": "Server-Konfigurationsaktionen",
@@ -130,6 +129,7 @@
     "clear": "Löschen",
     "close": "Schließen",
     "comment": "Kommentieren",
+    "continue": "Weitermachen",
     "create": "Anlegen",
     "createSubmission": "Neu",
     "done": "Fertig",
@@ -156,7 +156,9 @@
     "showPreview": "Vorschau",
     "hidePreview": "Vorschau ausblenden",
     "expand": "Vergrössern",
-    "collapse": "Verkleinern"
+    "collapse": "Verkleinern",
+    "reviewParallelUpdates": "Parallele Updates überprüfen",
+    "upload": "Hochladen"
   },
   "field": {
     "comment": "Kommentieren...",
@@ -182,7 +184,9 @@
     "email": "E-Mail-Adresse",
     "instanceId": "Instanz-ID",
     "lastSubmission": "Letzte Übermittlung",
+    "recentActivity": "Letzte Aktivität",
     "name": "Name",
+    "listName": "Name der Liste",
     "submitterName": "Übermittelt von",
     "submissionDate": "Übermittelt um",
     "time": "Zeit",
@@ -207,14 +211,14 @@
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
     "config": "Server-Konfiguration",
-    "dataset": "Datensatz",
-    "datasets": "Datensätze",
+    "entityList": "Entitätsliste",
     "entities": "Entitäten",
     "form": "Formular",
     "forms": "Formulare",
     "formAttachments": "Formularanhänge",
     "project": "Projekt",
     "projects": "Projekte",
+    "property": "Eigenschaft",
     "publicLink": "Öffentlicher Zugangslink",
     "user": "Benutzer",
     "users": "Benutzer",
@@ -226,6 +230,7 @@
   },
   "alert": {
     "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
+    "updateEntity": "Das Objekt wurde aktualisiert!",
     "updateReviewState": "Überprüfungsstatus gespeichert!",
     "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden."
   },
@@ -260,13 +265,19 @@
   },
   "entity": {
     "label": "Etikett",
-    "entityId": "Entitäts-ID"
+    "entityLabel": "Objektbezeichnung",
+    "entityId": "Entitäts-ID",
+    "noProperties": "Dieses Formular legt nur das \"Label“ fest.",
+    "noEntity": "(keine)",
+    "conflictsCount": "{count} Konflikt | {count} Konflikte"
   },
   "common": {
     "activity": "Aktivität",
     "anybody": "(Jeder)",
     "areYouSure": "Wollen Sie wirklich fortfahren?",
     "basicInfo": "Basis-Informationen",
+    "conflict": "Konflikt",
+    "conflicts": "Konflikte",
     "currentDraft": "Ihr aktueller Entwurf",
     "dangerZone": "Gefahrenbereich",
     "data": "Daten",
@@ -279,6 +290,7 @@
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "rightNow": "Aktuell",
+    "rowNumber": "Reihe",
     "success": "Das hat geklappt!",
     "system": "System",
     "yes": "Ja",
@@ -288,10 +300,12 @@
     },
     "total": "Total",
     "totalSubmissions": "Gesamtzahl der Übermittlungen",
-    "punctuations": {
-      "comma": ","
-    },
-    "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften"
+    "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
+    "new": "Neu!",
+    "totalEntities": "Entitäten insgesamt",
+    "versionShort": "v{version}",
+    "status": "Status",
+    "version": "Version"
   },
   "mixin": {
     "request": {

@@ -65,7 +65,7 @@ hand-in-hand.
 */
 
 import { START_LOCATION } from 'vue-router';
-import { inject, onBeforeUnmount } from 'vue';
+import { computed, inject, onBeforeUnmount, provide } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
@@ -194,42 +194,49 @@ const logOutAfterStorageChange = (container) => (event) => {
 
 export const useSessions = () => {
   const container = inject('container');
-  const id = setInterval(logOutBeforeSessionExpires(container), 15000);
-  const handler = logOutAfterStorageChange(container);
-  window.addEventListener('storage', handler);
+  const intervalId = setInterval(logOutBeforeSessionExpires(container), 15000);
+  const storageHandler = logOutAfterStorageChange(container);
+  window.addEventListener('storage', storageHandler);
   onBeforeUnmount(() => {
-    clearInterval(id);
-    window.removeEventListener('storage', handler);
+    clearInterval(intervalId);
+    window.removeEventListener('storage', storageHandler);
   });
+
+  /* visiblyLoggedIn.value is `true` if the user not only has all the data from
+  login, but is also visibly logged in. An example of when the user has data,
+  but isn't visibly logged in is if the user has submitted the login form and is
+  being redirected to outside Frontend (which isn't instant). In that case, they
+  will remain on /login until the redirect is complete, and the navbar will not
+  change to reflect their login. */
+  const { router, requestData } = container;
+  const { currentUser } = requestData;
+  const visiblyLoggedIn = computed(() => currentUser.dataExists &&
+    router.currentRoute.value !== START_LOCATION &&
+    router.currentRoute.value.path !== '/login');
+  provide('visiblyLoggedIn', visiblyLoggedIn);
+
+  return { visiblyLoggedIn };
 };
 
-export const restoreSession = (session) => {
-  const sessionExpires = localStore.getItem('sessionExpires');
-  // We send a request if sessionExpires == null, partly in case there was a
-  // logout error.
-  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
-    return Promise.reject();
+export const restoreSession = (session) =>
   // There is a chance that the user's session will be restored almost
   // immediately before the session expires, such that the session expires
   // before logOutBeforeSessionExpires() logs out the user. However, that case
   // is unlikely, and the worst case should be that the user sees 401 messages.
-  return session.request({ url: '/v1/sessions/restore', alert: false })
+  session.request({ url: '/v1/sessions/restore', alert: false })
     .catch(error => {
-      // The user's session may be removed without the user logging out, for
+      // The user's session may be deleted without the user logging out, for
       // example, if a backup is restored. In that case, the request will result
-      // in a 404. sessionExpires may need to be removed from local storage in
-      // order for the user to log in again.
-      if (sessionExpires != null) {
-        const { response } = error;
-        if (response != null && isProblem(response.data) &&
-          response.data.code === 404.1) {
-          removeSessionFromStorage();
-        }
+      // in a 404. We remove sessionExpires from local storage so that
+      // AccountLogin doesn't prevent the user from logging in.
+      const { response } = error;
+      if (response != null && isProblem(response.data) &&
+        response.data.code === 404.1) {
+        removeSessionFromStorage();
       }
 
       throw error;
     });
-};
 
 /* requestData.session must be set before logIn() is called, meaning that
 logIn() will be preceded by either the request to restore the session or a
@@ -241,12 +248,18 @@ export const logIn = (container, newSession) => {
   const { requestData, config } = container;
   const { session, currentUser, analyticsConfig } = requestData;
   if (newSession) {
-    /* If two tabs submit the login form at the same time, then both will end up
+    /*
+    If two tabs submit the login form at the same time, then both will end up
     logged out: the first tab to log in will set sessionExpires; then the second
     tab will set sessionExpires, logging out the first tab; which will remove
     sessionExpires, logging out the second tab. That will be true even in the
     (very unlikely) case that the two sessions have the same expiration date,
-    because sessionExpires is removed before it is set. */
+    because sessionExpires is removed before it is set.
+
+    Similarly, if two tabs log in via OIDC at the same time, then both will end
+    up logged out. However, that won't be the case if the two sessions have the
+    same expiration date.
+    */
     localStore.removeItem('sessionExpires');
     localStore.setItem('sessionExpires', Date.parse(session.expiresAt).toString());
   }
