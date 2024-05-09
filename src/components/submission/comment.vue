@@ -99,7 +99,6 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/variables';
-@import '../../assets/scss/mixins';
 
 #submission-comment {
   margin-bottom: 15px;
@@ -113,21 +112,6 @@ export default {
     .icon-pencil { margin-right: 10px; }
   }
 }
-
-#submission-comment-actions {
-  @include clearfix;
-  animation-duration: 0.4s;
-  animation-iteration-count: 1;
-  animation-name: expand;
-  animation-timing-function: $ease-extreme-out;
-  margin-top: 5px;
-}
-
-@keyframes expand {
-  0% { margin-bottom: -12px; }
-  100% { margin-bottom: 0; }
-}
-
 </style>
 
 <i18n lang="json5">
