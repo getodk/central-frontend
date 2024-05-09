@@ -61,7 +61,8 @@
     "should": "~13.2",
     "sinon": "~9",
     "util": "^0.12.5",
-    "vue-cli-plugin-i18n": "~2"
+    "vue-cli-plugin-i18n": "~2",
+    "yorkie": "^2.0.0"
   },
   "engines": {
     "node": "20",
