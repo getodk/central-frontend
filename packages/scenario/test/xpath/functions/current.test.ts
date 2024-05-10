@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../../../src/answer/ExpectedStringAnswer.ts';
+import { choice } from '../../../src/choice/ExpectedChoice.ts';
 import { Scenario } from '../../../src/jr/Scenario.ts';
 
 /**
@@ -85,6 +86,95 @@ describe('XPath function support: `current`', () => {
 					expect(scenario.countRepeatInstancesOf('/data/my_group')).toBe(3);
 				}
 			);
+		});
+	});
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Insofar as these tests deal with `calculate` and/or other `<bind>`
+	 * expressions, it is likely we'll want to move them to suites more
+	 * appropriate for that functionality. They're here out of... sheer laziness
+	 * so near the end of this porting process.
+	 */
+	describe('CurrentTest.java', () => {
+		let scenario: Scenario;
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - Fixture is shared across multiple tests in this case.
+		 *
+		 * - To the extent the repeat functionality in this not tested elsewhere,
+		 *   we should consider adding a couple repeat-specific tests too.
+		 */
+		beforeEach(async () => {
+			scenario = await Scenario.init('relative-current-ref.xml');
+		});
+
+		describe('`current()` as `calculate` root', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - Rephrase? Understanding is that `current()` should reference the
+			 *   specific context node, not necessarily the bound `nodeset`, e.g. in
+			 *   the case of repeat instances and their descendants.
+			 *
+			 * - Test likely fails, at least, on present failure to include
+			 *   `current()` in dependency analysis.
+			 *
+			 * JR:
+			 *
+			 * current() in a calculate should refer to the node it is in (in this
+			 * case, /data/my_group/name_relative). This means that to refer to a
+			 * sibling node, the path should be current()/../<name of sibling node>.
+			 * This is verified by changing the value of the node that the calculate
+			 * is supposed to refer to (/data/my_group/name) and seeing that the
+			 * dependent calculate is updated accordingly.
+			 */
+			it.fails('should refer to [the bound node] its bound `nodeset`', () => {
+				scenario.answer('/data/my_group/name', 'Bob');
+
+				// JR:
+				//
+				// The binding of /data/my_group/name_relative is:
+				//   <bind calculate="current()/../name" nodeset="/data/my_group/name_relative" type="string"/>
+				// That will copy the value of our previous answer to /data/my_group/name
+				expect(scenario.answerOf('/data/my_group/name_relative')).toEqualAnswer(
+					scenario.answerOf('/data/my_group/name')
+				);
+			});
+		});
+
+		describe('`current()` as itemset choice filter root', () => {
+			/**
+			 * Test likely fails, at least, on present failure to include `current()`
+			 * in dependency analysis.
+			 *
+			 * JR:
+			 *
+			 * current() in a choice filter should refer to the select node the choice
+			 * filter is called from, NOT the expression it is in. See
+			 * https://developer.mozilla.org/en-US/docs/Web/XPath/Functions/current --
+			 * this is the difference between current() and .
+			 * <p>
+			 * The behavior of current() in a choice filter is verified by selecting a
+			 * value for a first, static select and then using that value to filter a
+			 * second, dynamic select.
+			 */
+			it.fails('should refer to the select node', () => {
+				scenario.answer('/data/fruit', 'blueberry');
+
+				const choices = scenario.choicesOf('/data/variety');
+				// The itemset for /data/variety is instance('variety')/root/item[fruit = current()/../fruit]
+				// and the "variety" instance has three items for blueberry: blueray,
+				// collins, and duke
+				expect(choices).toContainChoicesInAnyOrder([
+					choice('blueray'),
+					choice('collins'),
+					choice('duke'),
+				]);
+			});
 		});
 	});
 });
