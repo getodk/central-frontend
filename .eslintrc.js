@@ -1,15 +1,12 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: 2020
+    ecmaVersion: 'latest'
   },
   extends: [
     'plugin:vue/vue3-recommended',
     '@vue/airbnb'
   ],
-  env: {
-    node: true
-  },
   globals: {
     $: 'readonly',
     alert: 'readonly',
