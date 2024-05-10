@@ -13,6 +13,7 @@ import './assertions';
 
 window.beforeAll = before; // eslint-disable-line no-undef
 window.afterAll = after; // eslint-disable-line no-undef
+window.test = it;
 
 
 
