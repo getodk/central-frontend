@@ -11,7 +11,7 @@ import { mockResponse } from './util/axios';
 
 describe('createCentralRouter()', () => {
   describe('i18n', () => {
-    before(() => {
+    beforeAll(() => {
       const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
       has.should.be.false();
     });

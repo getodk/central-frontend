@@ -198,10 +198,10 @@ describe('App', () => {
     beforeEach(mockLogin);
 
     const preventDefault = (event) => { event.preventDefault(); };
-    before(() => {
+    beforeAll(() => {
       document.addEventListener('click', preventDefault);
     });
-    after(() => {
+    afterAll(() => {
       document.removeEventListener('click', preventDefault);
     });
 
