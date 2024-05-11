@@ -1,3 +1,4 @@
+import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
 import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
@@ -89,27 +90,47 @@ const createSelectItemsetItemLabel = (
 	return createTextRange(context, 'label', label);
 };
 
-// TODO: this is begging for caching.
+interface ItemsetItem {
+	label(): TextRange<'label'>;
+	value(): string;
+}
+
+const createItemsetItems = (
+	selectField: SelectField,
+	itemset: ItemsetDefinition
+): Accessor<readonly ItemsetItem[]> => {
+	return selectField.scope.runTask(() => {
+		const itemNodes = createComputedExpression(selectField, itemset.nodes);
+		const itemsCache = new UpsertableMap<Node, ItemsetItem>();
+
+		return createMemo(() => {
+			return itemNodes().map((itemNode) => {
+				return itemsCache.upsert(itemNode, () => {
+					const context = new ItemsetItemEvaluationContext(selectField, itemNode);
+					const value = createComputedExpression(context, itemset.value);
+					const label = createSelectItemsetItemLabel(context, itemset, value);
+
+					return {
+						label,
+						value,
+					};
+				});
+			});
+		});
+	});
+};
+
 const createItemset = (
 	selectField: SelectField,
 	itemset: ItemsetDefinition
 ): Accessor<readonly SelectItem[]> => {
-	const { nodes: itemNodesExpression } = itemset;
-	const itemNodes = createComputedExpression(selectField, itemNodesExpression);
+	const itemsetItems = createItemsetItems(selectField, itemset);
 
 	return createMemo(() => {
-		return itemNodes().map((itemNode) => {
-			const context = new ItemsetItemEvaluationContext(selectField, itemNode);
-			const value = createComputedExpression(context, itemset.value);
-			const label = createSelectItemsetItemLabel(context, itemset, value);
-
+		return itemsetItems().map((item) => {
 			return {
-				get label() {
-					return label();
-				},
-				get value() {
-					return value();
-				},
+				label: item.label(),
+				value: item.value(),
 			};
 		});
 	});
