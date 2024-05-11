@@ -27,21 +27,23 @@ const createSelectItemLabel = (
 	});
 };
 
-const buildStaticSelectItems = (
+const createTranslatedStaticSelectItems = (
 	selectField: SelectField,
 	items: readonly ItemDefinition[]
-): readonly SelectItem[] => {
+): Accessor<readonly SelectItem[]> => {
 	return selectField.scope.runTask(() => {
-		return items.map((item) => {
+		const labeledItems = items.map((item) => {
 			const { value } = item;
 			const label = createSelectItemLabel(selectField, item);
 
-			return {
+			return () => ({
 				value,
-				get label() {
-					return label();
-				},
-			};
+				label: label(),
+			});
+		});
+
+		return createMemo(() => {
+			return labeledItems.map((item) => item());
 		});
 	});
 };
@@ -153,9 +155,7 @@ export const createSelectItems = (selectField: SelectField): Accessor<readonly S
 		const { items, itemset } = selectField.definition.bodyElement;
 
 		if (itemset == null) {
-			const staticItems = buildStaticSelectItems(selectField, items);
-
-			return () => staticItems;
+			return createTranslatedStaticSelectItems(selectField, items);
 		}
 
 		return createItemset(selectField, itemset);
