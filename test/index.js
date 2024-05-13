@@ -11,6 +11,10 @@ import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
 import './assertions';
 
+window.beforeAll = before; // eslint-disable-line no-undef
+window.afterAll = after; // eslint-disable-line no-undef
+window.test = it;
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +22,7 @@ import './assertions';
 
 // Even if a route is lazy-loaded, load() will need synchronous access to the
 // async components associated with the route.
-before(loadAsyncRouteComponents);
+beforeAll(loadAsyncRouteComponents);
 
 beforeEach(testData.seed);
 

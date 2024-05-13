@@ -49,7 +49,7 @@ describe('util/i18n', () => {
     for (const [locale, [path, casesForLocale]] of Object.entries(cases)) {
       describe(locale, () => {
         const container = createTestContainer();
-        before(() => loadLocale(container, locale));
+        beforeAll(() => loadLocale(container, locale));
 
         const { i18n } = container;
         for (const [count, form] of casesForLocale) {

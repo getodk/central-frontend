@@ -27,8 +27,8 @@ describe('useDisabled()', () => {
     for (const type of ['click', 'beforeinput', 'mousedown', 'keydown'])
       document[method](type, storeEvent, true);
   };
-  before(() => { toggleEventListeners(true); });
-  after(() => { toggleEventListeners(false); });
+  beforeAll(() => { toggleEventListeners(true); });
+  afterAll(() => { toggleEventListeners(false); });
 
   it('disables a button that has the attribute aria-disabled="true"', () => {
     const [component, handler] = mountComponent(`<div>

@@ -95,7 +95,7 @@ describe('FormGroup', () => {
     children[2].textContent.should.equal('Some span text');
   });
 
-  specify('focus() focuses the input', () => {
+  test('focus() focuses the input', () => {
     const formGroup = mountComponent({ attachTo: document.body });
     formGroup.vm.focus();
     formGroup.get('input').should.be.focused();
