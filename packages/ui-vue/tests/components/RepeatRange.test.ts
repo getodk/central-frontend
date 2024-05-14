@@ -1,25 +1,14 @@
 import FormGroup from '@/components/FormGroup.vue';
 import RepeatInstance from '@/components/RepeatInstance.vue';
 import RepeatRange from '@/components/RepeatRange.vue';
-import { initializeForm, type RepeatRangeNode } from '@odk-web-forms/xforms-engine';
+import { type RepeatRangeNode } from '@odk-web-forms/xforms-engine';
 import { mount } from '@vue/test-utils';
-// eslint-disable-next-line no-restricted-imports -- in test environemnt
-import { readFile } from 'fs/promises';
+
 import { describe, expect, it } from 'vitest';
-import { reactive } from 'vue';
-import { globalMountOptions } from '../helpers';
+import { getReactiveForm, globalMountOptions } from '../helpers';
 
 const mountComponent = async (formName: string) => {
-	// Can we move fixtures out of ui-solid?
-	const formXml = await readFile(`../ui-solid/fixtures/xforms/repeats/${formName}`, 'utf8');
-
-	const xform = await initializeForm(formXml, {
-		config: {
-			stateFactory: <T extends object>(o: T) => {
-				return reactive(o) as T;
-			},
-		},
-	});
+	const xform = await getReactiveForm(`repeats/${formName}`);
 
 	return mount(RepeatRange, {
 		props: {

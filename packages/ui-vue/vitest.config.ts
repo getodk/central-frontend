@@ -1,12 +1,44 @@
+import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
 import { fileURLToPath } from 'node:url';
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config';
 import viteConfig from './vite.config';
+
+const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
+
+type SupportedBrowser = CollectionValues<typeof supportedBrowsers>;
+
+const isSupportedBrowser = (browserName: string): browserName is SupportedBrowser =>
+	supportedBrowsers.has(browserName as SupportedBrowser);
+
+const BROWSER_NAME = (() => {
+	const envBrowserName = process.env.BROWSER_NAME;
+
+	if (envBrowserName == null) {
+		return null;
+	}
+
+	if (isSupportedBrowser(envBrowserName)) {
+		return envBrowserName;
+	}
+
+	throw new Error(`Unsupported browser: ${envBrowserName}`);
+})();
+
+const BROWSER_ENABLED = BROWSER_NAME != null;
+
+const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
 export default mergeConfig(
 	viteConfig,
 	defineConfig({
 		test: {
-			environment: 'jsdom',
+			browser: {
+				enabled: BROWSER_ENABLED,
+				name: BROWSER_NAME!,
+				provider: 'playwright',
+				headless: true,
+			},
+			environment: TEST_ENVIRONMENT,
 			exclude: [...configDefaults.exclude, 'e2e/*'],
 			root: fileURLToPath(new URL('./', import.meta.url)),
 			// Suppress the console error log about parsing CSS stylesheet

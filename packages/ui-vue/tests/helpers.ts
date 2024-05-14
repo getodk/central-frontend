@@ -1,13 +1,20 @@
 import { initializeForm, type AnyLeafNode, type RootNode } from '@odk-web-forms/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
-// eslint-disable-next-line no-restricted-imports -- in test environemnt
-import { readFile } from 'fs/promises';
 import PrimeVue from 'primevue/config';
 import { assocPath } from 'ramda';
 import { reactive } from 'vue';
 
+const formFixtures = import.meta.glob<true, 'raw', string>(
+	'../../ui-solid/fixtures/xforms/**/*.xml',
+	{
+		query: '?raw',
+		import: 'default',
+		eager: true,
+	}
+);
+
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
-	const formXml = await readFile(`../ui-solid/fixtures/xforms/${formPath}`, 'utf8');
+	const formXml: string = formFixtures[`../../ui-solid/fixtures/xforms/${formPath}`];
 
 	return await initializeForm(formXml, {
 		config: {
