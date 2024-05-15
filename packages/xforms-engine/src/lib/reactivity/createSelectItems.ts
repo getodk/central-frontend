@@ -1,3 +1,4 @@
+import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
 import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
@@ -26,21 +27,23 @@ const createSelectItemLabel = (
 	});
 };
 
-const buildStaticSelectItems = (
+const createTranslatedStaticSelectItems = (
 	selectField: SelectField,
 	items: readonly ItemDefinition[]
-): readonly SelectItem[] => {
+): Accessor<readonly SelectItem[]> => {
 	return selectField.scope.runTask(() => {
-		return items.map((item) => {
+		const labeledItems = items.map((item) => {
 			const { value } = item;
 			const label = createSelectItemLabel(selectField, item);
 
-			return {
+			return () => ({
 				value,
-				get label() {
-					return label();
-				},
-			};
+				label: label(),
+			});
+		});
+
+		return createMemo(() => {
+			return labeledItems.map((item) => item());
 		});
 	});
 };
@@ -89,28 +92,50 @@ const createSelectItemsetItemLabel = (
 	return createTextRange(context, 'label', label);
 };
 
-// TODO: this is begging for caching.
+interface ItemsetItem {
+	label(): TextRange<'label'>;
+	value(): string;
+}
+
+const createItemsetItems = (
+	selectField: SelectField,
+	itemset: ItemsetDefinition
+): Accessor<readonly ItemsetItem[]> => {
+	return selectField.scope.runTask(() => {
+		const itemNodes = createComputedExpression(selectField, itemset.nodes);
+		const itemsCache = new UpsertableMap<Node, ItemsetItem>();
+
+		return createMemo(() => {
+			return itemNodes().map((itemNode) => {
+				return itemsCache.upsert(itemNode, () => {
+					const context = new ItemsetItemEvaluationContext(selectField, itemNode);
+					const value = createComputedExpression(context, itemset.value);
+					const label = createSelectItemsetItemLabel(context, itemset, value);
+
+					return {
+						label,
+						value,
+					};
+				});
+			});
+		});
+	});
+};
+
 const createItemset = (
 	selectField: SelectField,
 	itemset: ItemsetDefinition
 ): Accessor<readonly SelectItem[]> => {
-	const { nodes: itemNodesExpression } = itemset;
-	const itemNodes = createComputedExpression(selectField, itemNodesExpression);
+	return selectField.scope.runTask(() => {
+		const itemsetItems = createItemsetItems(selectField, itemset);
 
-	return createMemo(() => {
-		return itemNodes().map((itemNode) => {
-			const context = new ItemsetItemEvaluationContext(selectField, itemNode);
-			const value = createComputedExpression(context, itemset.value);
-			const label = createSelectItemsetItemLabel(context, itemset, value);
-
-			return {
-				get label() {
-					return label();
-				},
-				get value() {
-					return value();
-				},
-			};
+		return createMemo(() => {
+			return itemsetItems().map((item) => {
+				return {
+					label: item.label(),
+					value: item.value(),
+				};
+			});
 		});
 	});
 };
@@ -128,15 +153,11 @@ const createItemset = (
  *   referencing a form's `itext` translations, etc).
  */
 export const createSelectItems = (selectField: SelectField): Accessor<readonly SelectItem[]> => {
-	return selectField.scope.runTask(() => {
-		const { items, itemset } = selectField.definition.bodyElement;
+	const { items, itemset } = selectField.definition.bodyElement;
 
-		if (itemset == null) {
-			const staticItems = buildStaticSelectItems(selectField, items);
+	if (itemset == null) {
+		return createTranslatedStaticSelectItems(selectField, items);
+	}
 
-			return () => staticItems;
-		}
-
-		return createItemset(selectField, itemset);
-	});
+	return createItemset(selectField, itemset);
 };
