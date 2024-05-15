@@ -61,9 +61,7 @@ const fetchResourceStub: typeof fetch = () => {
  * expansion of the JavaRosa test suite to _also_ test reactivity. In local
  * testing during the migration to the new client interface, no additional
  * changes were necessary to make that change. For now this non-reactive factory
- * is supplied as a validation that reactivity is in fact optional (despite the
- * fact that we're kind of observing the internal reactivity with a couple of
- * memos below).
+ * is supplied as a validation that reactivity is in fact optional.
  */
 const nonReactiveIdentityStateFactory = <T extends object>(value: T): T => value;
 
