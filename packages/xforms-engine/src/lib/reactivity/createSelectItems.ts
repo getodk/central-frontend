@@ -126,14 +126,16 @@ const createItemset = (
 	selectField: SelectField,
 	itemset: ItemsetDefinition
 ): Accessor<readonly SelectItem[]> => {
-	const itemsetItems = createItemsetItems(selectField, itemset);
+	return selectField.scope.runTask(() => {
+		const itemsetItems = createItemsetItems(selectField, itemset);
 
-	return createMemo(() => {
-		return itemsetItems().map((item) => {
-			return {
-				label: item.label(),
-				value: item.value(),
-			};
+		return createMemo(() => {
+			return itemsetItems().map((item) => {
+				return {
+					label: item.label(),
+					value: item.value(),
+				};
+			});
 		});
 	});
 };
@@ -151,13 +153,11 @@ const createItemset = (
  *   referencing a form's `itext` translations, etc).
  */
 export const createSelectItems = (selectField: SelectField): Accessor<readonly SelectItem[]> => {
-	return selectField.scope.runTask(() => {
-		const { items, itemset } = selectField.definition.bodyElement;
+	const { items, itemset } = selectField.definition.bodyElement;
 
-		if (itemset == null) {
-			return createTranslatedStaticSelectItems(selectField, items);
-		}
+	if (itemset == null) {
+		return createTranslatedStaticSelectItems(selectField, items);
+	}
 
-		return createItemset(selectField, itemset);
-	});
+	return createItemset(selectField, itemset);
 };
