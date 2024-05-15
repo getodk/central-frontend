@@ -128,10 +128,6 @@ export class Scenario {
 
 		const { dispose, owner, instanceRoot } = await initializeTestForm(resource);
 
-		await new Promise((resolve) => {
-			setTimeout(resolve, 1);
-		});
-
 		return runWithOwner(owner, () => {
 			return new this({
 				dispose,
