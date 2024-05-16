@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AnyLeafNode } from '@odk-web-forms/xforms-engine';
+import type { AnyLeafNode } from '@getodk/xforms-engine';
 
 defineProps<{question: AnyLeafNode}>();
 

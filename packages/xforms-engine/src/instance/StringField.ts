@@ -1,4 +1,4 @@
-import { identity } from '@odk-web-forms/common/lib/identity.ts';
+import { identity } from '@getodk/common/lib/identity.ts';
 import type { Accessor } from 'solid-js';
 import type { InputDefinition } from '../body/control/InputDefinition.ts';
 import type { StringNode } from '../client/StringNode.ts';

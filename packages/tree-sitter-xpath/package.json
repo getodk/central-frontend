@@ -1,5 +1,5 @@
 {
-  "name": "@odk-web-forms/tree-sitter-xpath",
+  "name": "@getodk/tree-sitter-xpath",
   "version": "1.0.0-alpha.0",
   "description": "XPath grammar for tree-sitter",
   "type": "commonjs",

@@ -7,7 +7,7 @@ import {
 	model,
 	t,
 	title,
-} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../../src/XFormDefinition.ts';
 

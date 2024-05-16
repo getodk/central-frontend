@@ -1,8 +1,8 @@
 {
-  "name": "@odk-web-forms/scenario",
+  "name": "@getodk/scenario",
   "private": true,
   "version": "0.0.0",
-  "description": "@odk-web-forms/scenario",
+  "description": "@getodk/scenario",
   "type": "module",
   "author": "getodk",
   "repository": {
@@ -42,7 +42,7 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
-    "@odk-web-forms/xforms-engine": "1.0.0-alpha.0",
+    "@getodk/xforms-engine": "1.0.0-alpha.0",
     "@vitest/browser": "^1.3.1",
     "jsdom": "^24.0.0",
     "solid-js": "^1.8.3",

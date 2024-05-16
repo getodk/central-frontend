@@ -1,5 +1,5 @@
 {
-  "name": "@odk-web-forms/xpath",
+  "name": "@getodk/xpath",
   "version": "1.0.0-alpha.0",
   "description": "ODK XPath",
   "type": "module",
@@ -52,13 +52,13 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
-    "@odk-web-forms/common": "0.0.0",
+    "@getodk/common": "0.0.0",
     "crypto-js": "^4.1.1",
     "itertools-ts": "^1.23.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
-    "@odk-web-forms/tree-sitter-xpath": "1.0.0-alpha.0",
+    "@getodk/tree-sitter-xpath": "1.0.0-alpha.0",
     "@playwright/test": "^1.42.1",
     "@types/crypto-js": "^4.1.2",
     "@vitest/browser": "^1.3.1",

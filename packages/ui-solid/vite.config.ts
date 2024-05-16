@@ -3,7 +3,7 @@
 
 // TODO: share Vite config where makes sense
 
-import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
+import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import suidPlugin from '@suid/vite-plugin';
 import { resolve as resolvePath } from 'node:path';
 import unpluginFonts from 'unplugin-fonts/vite';
@@ -46,7 +46,7 @@ export default defineConfig(({ mode }) => {
 	const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
 	/**
-	 * @see notes on the same variable in the config for @odk-web-forms/xpath
+	 * @see notes on the same variable in the config for @getodk/xpath
 	 */
 	const TEST_TIME_ZONE = 'America/Phoenix';
 
@@ -60,7 +60,7 @@ export default defineConfig(({ mode }) => {
 
 	if (isDev) {
 		devAliases = {
-			'@odk-web-forms/xforms-engine': resolvePath(__dirname, '../xforms-engine/src/index.ts'),
+			'@getodk/xforms-engine': resolvePath(__dirname, '../xforms-engine/src/index.ts'),
 		};
 	}
 
@@ -85,7 +85,7 @@ export default defineConfig(({ mode }) => {
 				target: 'esnext',
 			},
 			entries: ['./index.html'],
-			include: ['@odk-web-forms/xpath'],
+			include: ['@getodk/xpath'],
 			force: true,
 		},
 		plugins: [
@@ -126,8 +126,8 @@ export default defineConfig(({ mode }) => {
 			solidVitestNoNodeLoader,
 
 			// Generate type definitions. This turned out to be more reliable in
-			// @odk-web-forms/xpath. TODO: revisit in case it makes sense to use tsc
-			// directly in this package
+			// @getodk/xpath. TODO: revisit in case it makes sense to use tsc directly
+			// in this package
 			dts({
 				exclude: ['test', 'tools', 'vite-env.d.ts'],
 				entryRoot: './src',
@@ -136,12 +136,12 @@ export default defineConfig(({ mode }) => {
 
 		resolve: {
 			alias: {
-				'@odk-web-forms/common/types': resolvePath(__dirname, '../common/types'),
-				'@odk-web-forms/common': resolvePath(__dirname, '../common/src'),
+				'@getodk/common/types': resolvePath(__dirname, '../common/types'),
+				'@getodk/common': resolvePath(__dirname, '../common/src'),
 
-				// For (temporary?) dev convenience, alias
-				// `@odk-web-forms/xforms-engine` to its source so changes to the engine
-				// can be watched in `@odk-web-forms/ui-solid` dev mode.
+				// For (temporary?) dev convenience, alias `@getodk/xforms-engine` to
+				// its source so changes to the engine can be watched in
+				// `@getodk/ui-solid` dev mode.
 				...devAliases,
 			},
 

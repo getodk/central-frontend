@@ -1,4 +1,4 @@
-import type { SelectNode, StringNode } from '@odk-web-forms/xforms-engine';
+import type { SelectNode, StringNode } from '@getodk/xforms-engine';
 import { Match, Switch, createMemo } from 'solid-js';
 import { XFormRelevanceGuard } from '../XFormRelevanceGuard.tsx';
 import { XFormUnknownControl } from '../debugging/XFormUnknownControl.tsx';

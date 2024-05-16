@@ -1,5 +1,5 @@
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
-import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type {

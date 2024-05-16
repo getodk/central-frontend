@@ -1,4 +1,4 @@
-import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
+import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { createMemo, type Accessor } from 'solid-js';
 import type {
 	TextElementChild,

@@ -1,4 +1,4 @@
-import { JAVAROSA_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns';
+import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns';
 import { FunctionLibrary } from '../../evaluator/functions/FunctionLibrary';
 import * as string from './string.ts';
 

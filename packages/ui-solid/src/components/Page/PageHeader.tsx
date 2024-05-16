@@ -1,4 +1,4 @@
-import type { RootNode } from '@odk-web-forms/xforms-engine';
+import type { RootNode } from '@getodk/xforms-engine';
 import { Stack } from '@suid/material';
 import { Show } from 'solid-js';
 import { FormLanguageMenu } from '../FormLanguageMenu.tsx';

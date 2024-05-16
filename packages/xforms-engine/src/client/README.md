@@ -1,9 +1,9 @@
-# @odk-web-forms/xforms-engine: Client interface
+# @getodk/xforms-engine: Client interface
 
 The modules in this directory define the explicit interface between:
 
 - an ODK web forms client (typically, but not necessarily, providing a user interface), henceforth "client"; and,
-- `@odk-web-forms/xforms-engine`; henceforth "the engine"
+- `@getodk/xforms-engine`; henceforth "the engine"
 
 The interface is defined as TypeScript type definitions, with a work-in-progress effort to provide browsable documentation of the same.
 

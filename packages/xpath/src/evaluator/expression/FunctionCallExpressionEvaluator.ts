@@ -1,4 +1,4 @@
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type { FunctionCallNode } from '../../static/grammar/SyntaxNode.ts';

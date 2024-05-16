@@ -1,5 +1,5 @@
 {
-  "name": "@odk-web-forms/ui-solid",
+  "name": "@getodk/ui-solid",
   "version": "1.0.0-alpha.0",
   "description": "Solid UI client for ODK Web Forms",
   "type": "module",
@@ -45,8 +45,8 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.8",
-    "@odk-web-forms/common": "0.0.0",
-    "@odk-web-forms/xforms-engine": "1.0.0-alpha.0",
+    "@getodk/common": "0.0.0",
+    "@getodk/xforms-engine": "1.0.0-alpha.0",
     "@solidjs/router": "^0.8.3",
     "@suid/icons-material": "^0.6.11",
     "@suid/material": "^0.15.1",

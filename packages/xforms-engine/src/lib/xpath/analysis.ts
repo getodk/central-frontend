@@ -1,5 +1,5 @@
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError';
-import { expressionParser } from '@odk-web-forms/xpath/expressionParser.js';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError';
+import { expressionParser } from '@getodk/xpath/expressionParser.js';
 import type {
 	AbsoluteLocationPathNode,
 	AnyBinaryExprNode,
@@ -9,8 +9,8 @@ import type {
 	PrefixedNameNode,
 	RelativeLocationPathNode,
 	UnprefixedNameNode,
-} from '@odk-web-forms/xpath/static/grammar/SyntaxNode.js';
-import type { AnyBinaryExprType } from '@odk-web-forms/xpath/static/grammar/type-names.js';
+} from '@getodk/xpath/static/grammar/SyntaxNode.js';
+import type { AnyBinaryExprType } from '@getodk/xpath/static/grammar/type-names.js';
 
 export type SingleChildNode = Extract<
 	AnySyntaxNode,

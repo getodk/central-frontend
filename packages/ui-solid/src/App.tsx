@@ -1,4 +1,4 @@
-import type { RootNode } from '@odk-web-forms/xforms-engine';
+import type { RootNode } from '@getodk/xforms-engine';
 import { Divider, Stack } from '@suid/material';
 import { Show, type JSX } from 'solid-js';
 import { Page } from './components/Page/Page.tsx';

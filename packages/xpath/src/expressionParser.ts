@@ -1,4 +1,4 @@
-import xpathLanguage from '@odk-web-forms/tree-sitter-xpath/tree-sitter-xpath.wasm?url';
+import xpathLanguage from '@getodk/tree-sitter-xpath/tree-sitter-xpath.wasm?url';
 import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
 import { ExpressionParser } from './static/grammar/ExpressionParser.ts';
 

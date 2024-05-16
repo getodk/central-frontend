@@ -1,8 +1,8 @@
-import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
-import { xmlXPathWhitespaceSeparatedList } from '@odk-web-forms/common/lib/string/whitespace';
-import type { XFormsElement } from '@odk-web-forms/common/test/fixtures/xform-dsl/XFormsElement.ts';
-import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
+import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/whitespace';
+import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
+import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import type {
 	AnyNode,
 	GroupNode,
@@ -13,8 +13,8 @@ import type {
 	SelectNode,
 	StringDefinition,
 	StringNode,
-} from '@odk-web-forms/xforms-engine';
-import { initializeForm } from '@odk-web-forms/xforms-engine';
+} from '@getodk/xforms-engine';
+import { initializeForm } from '@getodk/xforms-engine';
 import type { Accessor, Signal } from 'solid-js';
 import {
 	batch,

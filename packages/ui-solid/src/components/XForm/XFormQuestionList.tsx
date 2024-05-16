@@ -1,4 +1,4 @@
-import type { GeneralParentNode } from '@odk-web-forms/xforms-engine';
+import type { GeneralParentNode } from '@getodk/xforms-engine';
 import { For } from 'solid-js';
 import { XFormBodyElement } from './XFormBodyElement.tsx';
 import { XFormControlStack } from './XFormControlStack.tsx';

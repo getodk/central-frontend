@@ -4,7 +4,7 @@ import type {
 	RepeatRangeNode,
 	SelectNode,
 	StringNode,
-} from '@odk-web-forms/xforms-engine';
+} from '@getodk/xforms-engine';
 import { Match, Show, Switch } from 'solid-js';
 import { XFormGroup } from './containers/XFormGroup.tsx';
 import { XFormControl } from './controls/XFormControl.tsx';

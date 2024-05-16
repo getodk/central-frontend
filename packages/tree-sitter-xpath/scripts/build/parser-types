@@ -19,7 +19,7 @@ const correctedTypes = baseGeneratedTypes.replaceAll(
 );
 
 const wrappedTypes = [
-	"declare module '@odk-web-forms/tree-sitter-xpath/parser' {",
+	"declare module '@getodk/tree-sitter-xpath/parser' {",
 	correctedTypes,
 	'}',
 	'',

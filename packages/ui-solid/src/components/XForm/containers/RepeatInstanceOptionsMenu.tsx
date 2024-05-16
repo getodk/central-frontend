@@ -1,5 +1,5 @@
 // TODO: quite a bit of this is very similar to FormLanguageMenu
-import type { RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
+import type { RepeatInstanceNode } from '@getodk/xforms-engine';
 import Delete from '@suid/icons-material/Delete';
 import MoreVert from '@suid/icons-material/MoreVert';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@suid/material';

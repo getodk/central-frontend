@@ -1,8 +1,8 @@
+import SelectControl from '@/components/controls/SelectControl.vue';
+import type { SelectNode } from '@getodk/xforms-engine';
 import { DOMWrapper, mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import SelectControl from '@/components/controls/SelectControl.vue';
 import { getReactiveForm, globalMountOptions } from '../helpers';
-import type { SelectNode } from '@odk-web-forms/xforms-engine';
 
 const mountComponent = async (questionNumber: number) => {
 	const xform = await getReactiveForm('select/1-static-selects.xml');

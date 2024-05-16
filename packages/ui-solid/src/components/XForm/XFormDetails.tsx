@@ -1,4 +1,4 @@
-import type { AnyNode, RootNode } from '@odk-web-forms/xforms-engine';
+import type { AnyNode, RootNode } from '@getodk/xforms-engine';
 import { styled } from '@suid/material';
 import { Show, createMemo, createSignal } from 'solid-js';
 

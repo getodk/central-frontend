@@ -1,7 +1,7 @@
 import FormGroup from '@/components/FormGroup.vue';
 import RepeatInstance from '@/components/RepeatInstance.vue';
 import RepeatRange from '@/components/RepeatRange.vue';
-import { type RepeatRangeNode } from '@odk-web-forms/xforms-engine';
+import { type RepeatRangeNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 
 import { describe, expect, it } from 'vitest';

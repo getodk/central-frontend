@@ -1,4 +1,4 @@
-import { JAVAROSA_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
+import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BodyElementDefinitionArray } from './BodyDefinition.ts';
 import { BodyElementDefinition } from './BodyElementDefinition.ts';

@@ -1,4 +1,4 @@
-import { xmlXPathWhitespaceSeparatedList } from '@odk-web-forms/common/lib/string/whitespace.ts';
+import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/whitespace.ts';
 import type { Accessor } from 'solid-js';
 import { untrack } from 'solid-js';
 import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';

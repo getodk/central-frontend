@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GroupNode } from '@odk-web-forms/xforms-engine';
+import type { GroupNode } from '@getodk/xforms-engine';
 import FormPanel from './FormPanel.vue';
 import QuestionList from './QuestionList.vue';
 

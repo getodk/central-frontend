@@ -64,9 +64,9 @@ const WEB_ASSEMBLY_DATA_URL_PREFIX = 'data:application/wasm;base64,';
 
 /**
  * Node-specific: convert a `data:` URL resource to binary data. This will be
- * encountered when `@odk-web-forms/xpath` is built/bundled, and downstream
- * packages (like `@odk-web-forms/xforms-engine` and its clients) initialize
- * a tree-sitter {@link Parser}.
+ * encountered when `@getodk/xpath` is built/bundled, and downstream packages
+ * (like `@getodk/xforms-engine` and its clients) initialize a tree-sitter
+ * {@link Parser}.
  */
 const resolveWebAssemblyDataURL = (resource: string): Uint8Array | null => {
 	const base64 = resource.replace(WEB_ASSEMBLY_DATA_URL_PREFIX, '');
@@ -83,8 +83,8 @@ const resolveWebAssemblyDataURL = (resource: string): Uint8Array | null => {
 };
 
 /**
- * Resolves tree-sitter and @odk-web-forms/tree-sitter-xpath WASM resources in
- * all supported environments. The following cases are handled:
+ * Resolves tree-sitter and @getodk/tree-sitter-xpath WASM resources in all
+ * supported environments. The following cases are handled:
  *
  * - web-tree-sitter `Parser.init` expects its WASM resource to be specified by
  *   URL in a web environment, but it expects a file system path in a Node
@@ -98,17 +98,17 @@ const resolveWebAssemblyDataURL = (resource: string): Uint8Array | null => {
  *
  * - `resource` is a URL (likely a path relative to the server host), as
  *   provided by Vite in an import like `package-name/file-name.wasm?url`
- *   (typically `@odk-web-forms/xpath` test mode)
+ *   (typically `@getodk/xpath` test mode)
  *
  * - `resource` is a `data:` URL which may be provided by a bundled build, which
  *   in turn is:
  *
  *     - Converted to a `Uint8Array` (Node)
  *     - pre-fetched and stored as a `blob:` object URL for fetching the
- *       @odk-web-forms/tree-sitter-xpath language WASM asset (Browser)
+ *       @getodk/tree-sitter-xpath language WASM asset (Browser)
  *
  * - `resource` is an arbitrary URL, as provided by a downstream user of
- *   @odk-web-forms/xpath as a library.
+ *   @getodk/xpath as a library.
  */
 const resolveWebAssemblyResource = async <T extends ResourceType>(
 	resource: string,
@@ -160,10 +160,10 @@ interface WebTreeSitterInitOptions {
 }
 
 /**
- * `TreeSitterXPathParser` is a separate entry provided by @odk-web-forms/xpath
- * as a simpler means to handle various conditions where the tree-sitter and
- * @odk-web-forms/tree-sitter-xpath WASM resources need to be loaded before we
- * can begin parsing XPath expressions.
+ * `TreeSitterXPathParser` is a separate entry provided by @getodk/xpath as a
+ * simpler means to handle various conditions where the tree-sitter and
+ * @getodk/tree-sitter-xpath WASM resources need to be loaded before we can
+ * begin parsing XPath expressions.
  *
  * Note: Loading these resources is (for now) inherently asynchronous, as they
  * are expected to be loaded with either file system or network calls. This has
@@ -177,10 +177,10 @@ interface WebTreeSitterInitOptions {
  *    its returned Promise, likely use cases (such as our own) will need to
  *    perform this async initialization upfront before (otherwise synchronous)
  *    XPath evaluation may proceed. This is more or less a solved problem for
- *    e.g. @odk-web-forms/xforms-engine, which uses ESM in environments
- *    supporting top-level `await`. But it will require extra consideration in
- *    environments which currently initialize synchronously (such as
- *    enketo-core, should we want to adopt this evaluator there).
+ *    e.g. @getodk/xforms-engine, which uses ESM in environments supporting
+ *    top-level `await`. But it will require extra consideration in environments
+ *    which currently initialize synchronously (such as enketo-core, should we
+ *    want to adopt this evaluator there).
  */
 export class TreeSitterXPathParser {
 	static async init(resources: WebAssemblyResourceSpecifiers): Promise<TreeSitterXPathParser> {

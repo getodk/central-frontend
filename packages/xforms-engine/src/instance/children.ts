@@ -1,4 +1,4 @@
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { SelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';

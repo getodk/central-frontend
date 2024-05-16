@@ -1,4 +1,4 @@
-import { initializeForm, type AnyLeafNode, type RootNode } from '@odk-web-forms/xforms-engine';
+import { initializeForm, type AnyLeafNode, type RootNode } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import { assocPath } from 'ramda';

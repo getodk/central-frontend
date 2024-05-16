@@ -1,5 +1,5 @@
-import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
-import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
+import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
+import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { ItemDefinition } from '../../body/control/select/ItemDefinition.ts';

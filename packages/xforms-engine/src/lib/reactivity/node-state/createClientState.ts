@@ -1,5 +1,5 @@
-import { getPropertyKeys } from '@odk-web-forms/common/lib/objects/structure.ts';
-import type { ShallowMutable } from '@odk-web-forms/common/types/helpers.js';
+import { getPropertyKeys } from '@getodk/common/lib/objects/structure.ts';
+import type { ShallowMutable } from '@getodk/common/types/helpers.js';
 import { createComputed, untrack } from 'solid-js';
 import type { OpaqueReactiveObjectFactory } from '../../../index.ts';
 import type { ReactiveScope } from '../scope.ts';

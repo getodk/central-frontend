@@ -1,4 +1,4 @@
-import { insertAtIndex } from '@odk-web-forms/common/lib/array/insert.ts';
+import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import type { Accessor } from 'solid-js';
 import type { RepeatRangeNode } from '../client/RepeatRangeNode.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';

@@ -1,6 +1,6 @@
-# @odk-web-forms/ui-solid
+# @getodk/ui-solid
 
-A [Solid](https://www.solidjs.com/) UI for ODK web forms; currently a reference client of [`@odk-web-forms/xforms-engine`][vue-client].
+A [Solid](https://www.solidjs.com/) UI for ODK web forms; currently a reference client of [`@getodk/xforms-engine`][xforms-engine].
 
 > [!NOTE]
 > The future of this package is unclear! Its current state reflects an early spike/prototyping effort to explore viability of the ODK web forms project. As development of the project proceeds overall, it is likely that the [Vue client](../ui-vue/) will be be more mature and actively developed.
@@ -10,7 +10,7 @@ A [Solid](https://www.solidjs.com/) UI for ODK web forms; currently a reference 
 Install with `npm` (or the equivalent command for your preferred package manager):
 
 ```sh
-npm install @odk-web-forms/ui-solid
+npm install @getodk/ui-solid
 ```
 
 ## Development
@@ -21,23 +21,23 @@ npm install @odk-web-forms/ui-solid
 To run in development mode:
 
 ```sh
-yarn workspace @odk-web-forms/ui-solid dev
+yarn workspace @getodk/ui-solid dev
 ```
 
 Test commands:
 
 ```sh
 # Single run
-yarn workspace @odk-web-forms/ui-solid test-node:jsdom
-yarn workspace @odk-web-forms/ui-solid test-browser:chromium
-yarn workspace @odk-web-forms/ui-solid test-browser:firefox
-yarn workspace @odk-web-forms/ui-solid test-browser:webkit
+yarn workspace @getodk/ui-solid test-node:jsdom
+yarn workspace @getodk/ui-solid test-browser:chromium
+yarn workspace @getodk/ui-solid test-browser:firefox
+yarn workspace @getodk/ui-solid test-browser:webkit
 
 # Watch mode (convenient during development)
-yarn workspace @odk-web-forms/ui-solid test-watch:jsdom
-yarn workspace @odk-web-forms/ui-solid test-watch:chromium
-yarn workspace @odk-web-forms/ui-solid test-watch:firefox
-yarn workspace @odk-web-forms/ui-solid test-watch:webkit
+yarn workspace @getodk/ui-solid test-watch:jsdom
+yarn workspace @getodk/ui-solid test-watch:chromium
+yarn workspace @getodk/ui-solid test-watch:firefox
+yarn workspace @getodk/ui-solid test-watch:webkit
 ```
 
 ## Component structure
@@ -60,4 +60,5 @@ This structure is mostly an aspirational attempt at conveying a sense of where a
 - Non-browser runtimes with a DOM compatibility environement:
   - Node (current/LTS; tested with [jsdom](https://github.com/jsdom/jsdom)). Server-side rendering of forms is not presently supported or targeted beyond testing, though it may be considered in the future. Inclusion of Node in the automated test suites helps us to keep this option open.
 
+[xforms-engine]: ../xforms-engine/
 [vue-client]: ../ui-vue/

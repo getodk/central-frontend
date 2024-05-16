@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues';
+import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
 import { resolve as resolvePath } from 'node:path';
 import type { UserConfig } from 'vite';
 import { defineConfig } from 'vite';
@@ -48,7 +48,7 @@ export default defineConfig(({ mode }) => {
 
 	const entries = Object.values(libEntry);
 
-	const external = ['@odk-web-forms/common'];
+	const external = ['@getodk/common'];
 
 	if (IS_SOLID_BUILD_TARGET) {
 		external.push('solid-js', 'solid-js/store');
@@ -59,7 +59,7 @@ export default defineConfig(({ mode }) => {
 		: [
 				dts({
 					entryRoot: './src',
-					exclude: ['@odk-web-forms/common', 'test', 'vite-env.d.ts'],
+					exclude: ['@getodk/common', 'test', 'vite-env.d.ts'],
 					include: ['src/**/*.ts'],
 				}),
 			];
@@ -75,7 +75,7 @@ export default defineConfig(({ mode }) => {
 			lib: {
 				entry: libEntry,
 				formats: ['es'],
-				name: '@odk-web-forms/xforms-engine',
+				name: '@getodk/xforms-engine',
 				fileName(_, entryName) {
 					if (entryName in libEntry) {
 						return `${entryName}.js`;
@@ -98,7 +98,7 @@ export default defineConfig(({ mode }) => {
 				target: 'esnext',
 			},
 			entries,
-			include: ['@odk-web-forms/xpath'],
+			include: ['@getodk/xpath'],
 			force: true,
 		},
 
@@ -106,8 +106,8 @@ export default defineConfig(({ mode }) => {
 
 		resolve: {
 			alias: {
-				'@odk-web-forms/common/types': resolvePath(__dirname, '../common/types'),
-				'@odk-web-forms/common': resolvePath(__dirname, '../common/src'),
+				'@getodk/common/types': resolvePath(__dirname, '../common/types'),
+				'@getodk/common': resolvePath(__dirname, '../common/src'),
 			},
 
 			// prettier-ignore

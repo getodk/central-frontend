@@ -1,6 +1,8 @@
-# @odk-web-forms/scenario (private package)
+# @getodk/scenario (private package)
 
-This package implements a client of [`@odk-web-forms/xforms-engine`](../xforms-engine/), and a suite of tests against that engine. These tests are either:
+This package implements a client of
+[`@getodk/xforms-engine`](../xforms-engine/), and a suite of tests against that
+engine. These tests are either:
 
 - Directly ported from [JavaRosa](https://github.com/getodk/javarosa)
 - Derived from those ported tests, where some environment-specific adaptation is necessary/appropriate
@@ -14,12 +16,16 @@ Currently, very few of JavaRosa's tests have been ported. But our goal in settin
 
 ## Usage and development
 
-As with [`@odk-web-forms/common`](../common/), this internal package is not intended to be built. Unlike that package, this one is also not intended to be used as a dependency in other packages. Usage should consist entirely of running the test suite. These tests will be run automatically in CI along with tests throughout [web-forms monorepo](../../).
+As with [`@getodk/common`](../common/), this internal package is not intended to
+be built. Unlike that package, this one is also not intended to be used as a
+dependency in other packages. Usage should consist entirely of running the test
+suite. These tests will be run automatically in CI along with tests throughout
+[web-forms monorepo](../../).
 
 To run in development, run this command at the monorepo root:
 
 ```sh
-yarn workspace @odk-web-forms/scenario test
+yarn workspace @getodk/scenario test
 ```
 
 Individual test environments, and their corresponding watch modes, also have separate commands which can be found in [`package.json`](./package.json).

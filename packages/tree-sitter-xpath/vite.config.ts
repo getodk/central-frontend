@@ -6,7 +6,7 @@ export default defineConfig({
 			entry: './grammar.ts',
 			fileName: 'grammar',
 			formats: ['cjs'],
-			name: '@odk-web-forms/tree-sitter-xpath',
+			name: '@getodk/tree-sitter-xpath',
 		},
 
 		emptyOutDir: false,

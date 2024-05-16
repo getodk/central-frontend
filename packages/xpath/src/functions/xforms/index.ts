@@ -1,4 +1,4 @@
-import { XFORMS_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
+import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { FunctionLibrary } from '../../evaluator/functions/FunctionLibrary.ts';
 import * as boolean from './boolean.ts';
 import * as datetime from './datetime.ts';

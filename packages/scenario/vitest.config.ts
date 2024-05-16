@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
-import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
+import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { resolve } from 'path';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
 import { defineConfig } from 'vitest/config';
@@ -43,12 +43,12 @@ export default defineConfig(() => {
 			esbuildOptions: {
 				target: 'esnext',
 			},
-			exclude: ['@odk-web-forms/xforms-engine'],
+			exclude: ['@getodk/xforms-engine'],
 			force: true,
 		},
 		resolve: {
 			alias: {
-				'@odk-web-forms/xforms-engine': resolve(__dirname, '../xforms-engine/src/index.ts'),
+				'@getodk/xforms-engine': resolve(__dirname, '../xforms-engine/src/index.ts'),
 			},
 			conditions: ['solid', 'browser', 'development'],
 		},

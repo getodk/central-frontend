@@ -1,4 +1,4 @@
-import type { ShallowMutable } from '@odk-web-forms/common/types/helpers.js';
+import type { ShallowMutable } from '@getodk/common/types/helpers.js';
 
 const ENGINE_REPRESENTATION = Symbol('ENGINE_REPRESENTATION');
 type ENGINE_REPRESENTATION = typeof ENGINE_REPRESENTATION;

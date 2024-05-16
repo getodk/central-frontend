@@ -1,4 +1,4 @@
-import { getPropertyKeys } from '@odk-web-forms/common/lib/objects/structure.ts';
+import { getPropertyKeys } from '@getodk/common/lib/objects/structure.ts';
 import type { OpaqueReactiveObjectFactory } from '../../../index.ts';
 import type { ReactiveScope } from '../scope.ts';
 import type { ClientState, SpecifiedClientStateFactory } from './createClientState.ts';

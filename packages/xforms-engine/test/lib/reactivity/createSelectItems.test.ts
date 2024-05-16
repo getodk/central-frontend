@@ -1,5 +1,5 @@
-import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
-import type { HtmlXFormsElement } from '@odk-web-forms/common/test/fixtures/xform-dsl/HtmlXFormsElement.ts';
+import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
+import type { HtmlXFormsElement } from '@getodk/common/test/fixtures/xform-dsl/HtmlXFormsElement.ts';
 import {
 	body,
 	head,
@@ -11,7 +11,7 @@ import {
 	select1Dynamic,
 	t,
 	title,
-} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { initializeForm } from '../../../src/index.ts';
 import type { SelectField } from '../../../src/instance/SelectField.ts';

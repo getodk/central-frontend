@@ -1,3 +1,3 @@
-# @odk-web-forms/tree-sitter-xpath
+# @getodk/tree-sitter-xpath
 
 ...

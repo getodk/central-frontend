@@ -1,6 +1,6 @@
-import { UpsertableWeakMap } from '@odk-web-forms/common/lib/collections/UpsertableWeakMap.ts';
-import { ScopedElementLookup } from '@odk-web-forms/common/lib/dom/compatibility.ts';
-import type { LocalNamedElement } from '@odk-web-forms/common/types/dom.ts';
+import { UpsertableWeakMap } from '@getodk/common/lib/collections/UpsertableWeakMap.ts';
+import { ScopedElementLookup } from '@getodk/common/lib/dom/compatibility.ts';
+import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
