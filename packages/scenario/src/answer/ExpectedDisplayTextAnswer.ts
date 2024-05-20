@@ -19,7 +19,7 @@ import { ComparableAnswer } from './ComparableAnswer.ts';
  * items.
  *
  * Other cases may be handled as they're encountered while porting. Otherwise,
- * we want to may consider a variety of changes in naming, expressed test
+ * we may want to consider a variety of changes in naming, expressed test
  * semantics, or other means of making the ported usage less awkward.
  *
  * ### 2. Select item/choice ordering in assertions/comparisons
