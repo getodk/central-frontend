@@ -39,10 +39,7 @@ export const getNodeForReference = (instanceRoot: RootNode, reference: string): 
 	return result ?? null;
 };
 
-export const getClosestRepeatRange = (
-	fromReference: string,
-	currentNode: AnyNode
-): RepeatRangeNode | null => {
+export const getClosestRepeatRange = (currentNode: AnyNode): RepeatRangeNode | null => {
 	switch (currentNode.nodeType) {
 		case 'root':
 			return null;
@@ -57,7 +54,7 @@ export const getClosestRepeatRange = (
 		case 'subtree':
 		case 'string':
 		case 'select':
-			return getClosestRepeatRange(fromReference, currentNode.parent);
+			return getClosestRepeatRange(currentNode.parent);
 
 		default:
 			throw new UnreachableError(currentNode);

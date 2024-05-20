@@ -450,7 +450,7 @@ export class Scenario {
 
 		const { node } = event;
 		const { reference } = node.currentState;
-		const repeatRange = getClosestRepeatRange(reference, node);
+		const repeatRange = getClosestRepeatRange(node);
 
 		if (repeatRange == null) {
 			throw new Error(`Failed to find closest repeat range to node with reference: ${reference}`);
@@ -493,7 +493,7 @@ export class Scenario {
 			throw new Error('Not a repeat instance');
 		}
 
-		const repeatRange = getClosestRepeatRange(repeatNodeset, event.node);
+		const repeatRange = getClosestRepeatRange(event.node);
 
 		if (repeatRange == null) {
 			throw new Error('Cannot remove repeat instance, failed to find its parent repeat range');
