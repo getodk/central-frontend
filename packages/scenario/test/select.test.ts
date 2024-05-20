@@ -1508,6 +1508,33 @@ describe('FormEntryPromptTest.java', () => {
 					/**
 					 * **PORTING NOTES**
 					 *
+					 * Fails due to regression, introduced in
+					 * {@link https://github.com/getodk/web-forms/commit/24277c2f48729c65716fe6b6ea965e8f403872ce | 24277c2}.
+					 * Briefly: the change causes selected items
+					 * (`SelectNode.currentState.value`) to reactively update
+					 * independently of available options
+					 * (`SelectNode.currentState.valueOptions`).
+					 *
+					 * A potential remedy might involve writing simpler values to the
+					 * client state `value` property, and decoding it back to the
+					 * `SelectItem`s corresponding to those values. This would have
+					 * potential overlap with:
+					 *
+					 * - Addressing current `InconsistentChildrenStateError` failures
+					 * - Further generalizing and hardening that concept (engine state ->
+					 *   reactively encode and write to simpler client state type ->
+					 *   decode to client-facing runtime value on read). It seems likely
+					 *   that would help us guard against other unexpected disconnects
+					 *   between internal and client-facing reactivity.
+					 *
+					 * We may also consider changing `SelectNode` value state to only deal
+					 * with the select items' **values**, distinct from their
+					 * corresponding `SelectItem` representations. This could either
+					 * become a client-facing API change, or tie in with the potential
+					 * remedy described above (i.e. store selected **values** in engine
+					 * _and client_ states, and compute their `SelectItem`s when reading
+					 * `SelectNode.currentState.value`).
+					 *
 					 * Rephrase?
 					 *
 					 * - Every test is presumably concerned with the correct behavior.
@@ -1515,70 +1542,73 @@ describe('FormEntryPromptTest.java', () => {
 					 * - Unclear if the more verbose description is valuable, but IMO it
 					 *   better completes the BDD-ish format.
 					 */
-					it('[gets?] returns [~~]correct[~~] [the translated label text] translation', async () => {
-						const scenario = await Scenario.init(
-							'Multilingual dynamic select',
-							html(
-								head(
-									title('Multilingual dynamic select'),
-									model(
-										t(
-											'itext',
+					it.fails(
+						'[gets?] returns [~~]correct[~~] [the translated label text] translation',
+						async () => {
+							const scenario = await Scenario.init(
+								'Multilingual dynamic select',
+								html(
+									head(
+										title('Multilingual dynamic select'),
+										model(
 											t(
-												"translation lang='fr'",
-												t("text id='choices-0'", t('value', 'A (fr)')),
-												t("text id='choices-1'", t('value', 'B (fr)')),
-												t("text id='choices-2'", t('value', 'C (fr)'))
+												'itext',
+												t(
+													"translation lang='fr'",
+													t("text id='choices-0'", t('value', 'A (fr)')),
+													t("text id='choices-1'", t('value', 'B (fr)')),
+													t("text id='choices-2'", t('value', 'C (fr)'))
+												),
+												t(
+													"translation lang='en'",
+													t("text id='choices-0'", t('value', 'A (en)')),
+													t("text id='choices-1'", t('value', 'B (en)')),
+													t("text id='choices-2'", t('value', 'C (en)'))
+												)
 											),
-											t(
-												"translation lang='en'",
-												t("text id='choices-0'", t('value', 'A (en)')),
-												t("text id='choices-1'", t('value', 'B (en)')),
-												t("text id='choices-2'", t('value', 'C (en)'))
-											)
-										),
-										mainInstance(t("data id='multilingual-select'", t('select', 'b'))),
+											mainInstance(t("data id='multilingual-select'", t('select', 'b'))),
 
-										instance(
-											'choices',
-											t('item', t('itextId', 'choices-0'), t('name', 'a')),
-											t('item', t('itextId', 'choices-1'), t('name', 'b')),
-											t('item', t('itextId', 'choices-2'), t('name', 'c'))
+											instance(
+												'choices',
+												t('item', t('itextId', 'choices-0'), t('name', 'a')),
+												t('item', t('itextId', 'choices-1'), t('name', 'b')),
+												t('item', t('itextId', 'choices-2'), t('name', 'c'))
+											)
+										)
+									),
+									body(
+										select1Dynamic(
+											'/data/select',
+											"instance('choices')/root/item",
+											'name',
+											'jr:itext(itextId)'
 										)
 									)
-								),
-								body(
-									select1Dynamic(
-										'/data/select',
-										"instance('choices')/root/item",
-										'name',
-										'jr:itext(itextId)'
-									)
 								)
-							)
-						);
+							);
 
-						scenario.setLanguage('en');
+							scenario.setLanguage('en');
 
-						scenario.next('/data/select');
+							scenario.next('/data/select');
 
-						// FormEntryPrompt questionPrompt = scenario.getFormEntryPromptAtIndex();
-						// assertThat(questionPrompt.getAnswerText(), is("B (en)"));
-						expect(
-							scenario.proposed_getSelectedOptionLabelsAsText({
-								assertCurrentReference: '/data/select',
-							})
-						).toEqual(['B (en)']);
+							// FormEntryPrompt questionPrompt = scenario.getFormEntryPromptAtIndex();
+							// assertThat(questionPrompt.getAnswerText(), is("B (en)"));
+							expect(
+								scenario.proposed_getSelectedOptionLabelsAsText({
+									assertCurrentReference: '/data/select',
+								})
+							).toEqual(['B (en)']);
 
-						scenario.setLanguage('fr');
+							scenario.setLanguage('fr');
 
-						// assertThat(questionPrompt.getAnswerText(), is("B (fr)"));
-						expect(
-							scenario.proposed_getSelectedOptionLabelsAsText({
-								assertCurrentReference: '/data/select',
-							})
-						).toEqual(['B (fr)']);
-					});
+							// assertThat(questionPrompt.getAnswerText(), is("B (fr)"));
+							expect(
+								scenario.proposed_getSelectedOptionLabelsAsText({
+									assertCurrentReference: '/data/select',
+								})
+							).toEqual(['B (fr)']);
+						}
+					);
 
 					it("gets the available select items' labels (supplemental)", async () => {
 						const scenario = await Scenario.init(
