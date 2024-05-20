@@ -159,10 +159,10 @@ class FractioanlDayValue extends UOMValue {
 }
 
 export const expectedFractionalDays = (
-	factionalDays: FractionalDay,
+	fractionalDays: FractionalDay,
 	errorTolerance: number
 ): ExpectedApproximateUOMAnswer => {
-	const value = new FractioanlDayValue(factionalDays);
+	const value = new FractioanlDayValue(fractionalDays);
 
 	return new ExpectedApproximateUOMAnswer(value, errorTolerance);
 };
