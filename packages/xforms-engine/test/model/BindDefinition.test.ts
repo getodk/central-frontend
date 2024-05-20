@@ -48,7 +48,7 @@ describe('BindDefinition', () => {
 		const xformDefinition = new XFormDefinition(xform.asXml());
 		const bindDefinition = xformDefinition.model.binds.get('/root/first-question');
 
-		expect(bindDefinition!.dataType).to.equal(expected);
+		expect(bindDefinition!.dataType).toEqual(expected);
 	});
 
 	it.each([
@@ -93,6 +93,6 @@ describe('BindDefinition', () => {
 		const xformDefinition = new XFormDefinition(xform.asXml());
 		const bindDefinition = xformDefinition.model.binds.get('/root/first-question');
 
-		expect(bindDefinition![computation]?.toString() ?? null).to.equal(expression);
+		expect(bindDefinition![computation]?.toString() ?? null).toEqual(expression);
 	});
 });

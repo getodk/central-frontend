@@ -21,13 +21,13 @@ describe('SelectControl', () => {
 		const cherry: DOMWrapper<HTMLInputElement> = component.find('input[value="cherry"]');
 		const mango: DOMWrapper<HTMLInputElement> = component.find('input[value="mango"]');
 
-		expect(cherry.element.type).to.be.eql('radio');
-		expect(cherry.element.checked).to.be.true;
+		expect(cherry.element.type).toEqual('radio');
+		expect(cherry.element.checked).toBe(true);
 
 		await mango.trigger('click');
 
-		expect(cherry.element.checked).to.be.false;
-		expect(mango.element.checked).to.be.true;
+		expect(cherry.element.checked).toBe(false);
+		expect(mango.element.checked).toBe(true);
 	});
 
 	it('shows checkboxes for select many', async () => {
@@ -36,14 +36,14 @@ describe('SelectControl', () => {
 		const watermelon: DOMWrapper<HTMLInputElement> = component.find('input[value="watermelon"]');
 		const peach: DOMWrapper<HTMLInputElement> = component.find('input[value="peach"]');
 
-		expect(watermelon.element.type).to.be.eql('checkbox');
-		expect(watermelon.element.checked).to.be.false;
-		expect(peach.element.checked).to.be.true;
+		expect(watermelon.element.type).toEqual('checkbox');
+		expect(watermelon.element.checked).toBe(false);
+		expect(peach.element.checked).toBe(true);
 
 		await watermelon.trigger('click');
 		await peach.trigger('click');
 
-		expect(watermelon.element.checked).to.be.true;
-		expect(peach.element.checked).to.be.false;
+		expect(watermelon.element.checked).toBe(true);
+		expect(peach.element.checked).toBe(false);
 	});
 });

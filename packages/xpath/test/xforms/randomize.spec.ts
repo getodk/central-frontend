@@ -60,9 +60,9 @@ describe('randomize()', () => {
 				const nodes = testContext.evaluateUnorderedNodeSet(expression);
 				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
 
-				expect(nodes.length).to.equal(6);
-				expect(text.length).to.equal(6);
-				expect(text).not.to.equal('ABCDEF');
+				expect(nodes.length).toEqual(6);
+				expect(text.length).toEqual(6);
+				expect(text).not.toEqual('ABCDEF');
 			},
 			{ retry: 5 }
 		);
@@ -83,7 +83,7 @@ describe('randomize()', () => {
 				const nodes = testContext.evaluateUnorderedNodeSet(expression);
 				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
 
-				expect(text).to.equal(expected);
+				expect(text).toEqual(expected);
 			});
 		});
 	});
@@ -146,7 +146,7 @@ describe('randomize()', () => {
 		const expression = 'randomize(/model/instance[@id="crop_list"]/root/item)';
 		const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
 
-		expect(result.resultType).to.equal(XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
-		expect(result.snapshotLength).to.equal(6);
+		expect(result.resultType).toEqual(XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+		expect(result.snapshotLength).toEqual(6);
 	});
 });

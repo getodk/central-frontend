@@ -250,7 +250,7 @@ describe('native nodeset functions', () => {
 				XPathResult.STRING_TYPE
 			);
 
-			expect(stringValue.toLowerCase()).to.equal(expected);
+			expect(stringValue.toLowerCase()).toEqual(expected);
 		});
 	});
 

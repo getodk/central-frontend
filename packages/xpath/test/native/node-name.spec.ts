@@ -87,7 +87,7 @@ describe('node name for', () => {
 			(attr) => attr.localName === 'attrib3'
 		);
 
-		expect(attribute).not.to.be.null;
+		expect(attribute).not.toBeNull();
 		testContext.assertNodeSet('attribute::attrib3', [attribute!], {
 			contextNode,
 		});

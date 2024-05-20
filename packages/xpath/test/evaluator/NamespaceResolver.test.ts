@@ -32,7 +32,7 @@ describe('NamespaceResolver', () => {
 	});
 
 	it('resolves the default namespace of the document', () => {
-		expect(resolver.lookupNamespaceURI(null)).to.equal(ROOT_NAMESPACE_DEFAULT);
+		expect(resolver.lookupNamespaceURI(null)).toEqual(ROOT_NAMESPACE_DEFAULT);
 	});
 
 	const rootCases = [
@@ -43,7 +43,7 @@ describe('NamespaceResolver', () => {
 	it.each(rootCases)(
 		'resolves $prefix defined on the root element to $expected',
 		({ prefix, expected }) => {
-			expect(resolver.lookupNamespaceURI(prefix)).to.eq(expected);
+			expect(resolver.lookupNamespaceURI(prefix)).toEqual(expected);
 		}
 	);
 
@@ -58,7 +58,7 @@ describe('NamespaceResolver', () => {
 		it.each(cases)(
 			'resolves the default prefix $prefix to its static namespace $namespaceURI',
 			({ prefix, namespaceURI }) => {
-				expect(resolver.lookupNamespaceURI(prefix)).to.equal(namespaceURI);
+				expect(resolver.lookupNamespaceURI(prefix)).toEqual(namespaceURI);
 			}
 		);
 	});
@@ -76,7 +76,7 @@ describe('NamespaceResolver', () => {
 		it.each(nestedCases)(
 			'resolves prefix $prefix defined on a nested element to $expected',
 			({ prefix, expected }) => {
-				expect(resolver.lookupNamespaceURI(prefix)).to.equal(expected);
+				expect(resolver.lookupNamespaceURI(prefix)).toEqual(expected);
 			}
 		);
 
@@ -85,8 +85,8 @@ describe('NamespaceResolver', () => {
 			const actual = resolver.lookupNamespaceURI('xf');
 			const staticDefault = staticNamespaces.get('xf');
 
-			expect(actual).to.equal(expected);
-			expect(actual).not.to.equal(staticDefault);
+			expect(actual).toEqual(expected);
+			expect(actual).not.toEqual(staticDefault);
 		});
 	});
 });

@@ -67,7 +67,7 @@ describe('XPath expression evaluation', () => {
 				nodeType: 8,
 			}, // Comment
 		].forEach(({ expression, contextNode, nodeType }) => {
-			expect(contextNode.nodeType).to.equal(nodeType);
+			expect(contextNode.nodeType).toEqual(nodeType);
 
 			const result = testContext.evaluate(
 				expression,
@@ -75,7 +75,7 @@ describe('XPath expression evaluation', () => {
 				XPathResult.ANY_UNORDERED_NODE_TYPE
 			);
 
-			expect(result.singleNodeValue).to.equal(contextNode);
+			expect(result.singleNodeValue).toEqual(contextNode);
 		});
 	});
 
@@ -88,7 +88,7 @@ describe('XPath expression evaluation', () => {
 
 		const item = result.singleNodeValue;
 
-		expect(item).not.to.be.null;
+		expect(item).not.toBeNull();
 
 		//TODO chrome/firefox do not support namespace:node()
 		// assert.equal(item.nodeType, 13);
@@ -96,7 +96,7 @@ describe('XPath expression evaluation', () => {
 		// use namespacenode as a context node
 		result = testContext.evaluate('.', item, XPathResult.ANY_UNORDERED_NODE_TYPE);
 
-		expect(result.singleNodeValue).to.equal(item);
+		expect(result.singleNodeValue).toEqual(item);
 	});
 
 	it.fails('fails if the context is document fragment', () => {
@@ -125,14 +125,14 @@ describe('XPath expression evaluation3', () => {
 		let expression = `/model/instance[1]/nested_repeats/kids/has_kids='1'`;
 		let result = testContext.evaluate(expression, null, XPathResult.BOOLEAN_TYPE);
 
-		expect(result.resultType).to.equal(3);
-		expect(result.booleanValue).to.equal(true);
+		expect(result.resultType).toEqual(3);
+		expect(result.booleanValue).toEqual(true);
 
 		expression = `/model/instance[1]/nested_repeats/kids/has_kids='2'`;
 		result = testContext.evaluate(expression, null, 3);
 
-		expect(result.resultType).to.equal(3);
-		expect(result.booleanValue).to.equal(false);
+		expect(result.resultType).toEqual(3);
+		expect(result.booleanValue).toEqual(false);
 	});
 });
 
@@ -154,8 +154,8 @@ describe('XPath expression evaluation4', () => {
 		it('returns correct result type', () => {
 			const res = testContext.evaluate(expression, null, XPathResult.BOOLEAN_TYPE);
 
-			expect(res.resultType).to.equal(3);
-			expect(res.booleanValue).to.equal(expected);
+			expect(res.resultType).toEqual(3);
+			expect(res.booleanValue).toEqual(expected);
 		});
 	});
 });
@@ -189,7 +189,7 @@ describe('XPath expression evaluation5', () => {
 
 		const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
 
-		expect(result.resultType).to.equal(7);
-		expect(result.snapshotLength).to.equal(0);
+		expect(result.resultType).toEqual(7);
+		expect(result.snapshotLength).toEqual(0);
 	});
 });

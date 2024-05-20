@@ -274,7 +274,7 @@ describe('some complex examples', () => {
 						XPathResult.FIRST_ORDERED_NODE_TYPE
 					);
 
-					expect(predicate(singleNodeValue)).to.equal(true);
+					expect(predicate(singleNodeValue)).toEqual(true);
 
 					return;
 				}

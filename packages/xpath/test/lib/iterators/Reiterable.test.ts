@@ -52,7 +52,7 @@ describe('Reiterable', () => {
 				results.push(item);
 			}
 
-			expect(results).to.deep.equal(['a', 'b', 'c']);
+			expect(results).toEqual(['a', 'b', 'c']);
 		});
 
 		it("is iterable over a source iterable's values", () => {
@@ -65,7 +65,7 @@ describe('Reiterable', () => {
 				results.push(item);
 			}
 
-			expect(results).to.deep.equal(['a', 'b', 'c']);
+			expect(results).toEqual(['a', 'b', 'c']);
 		});
 
 		it("is iterable over a source iterator's values", () => {
@@ -78,7 +78,7 @@ describe('Reiterable', () => {
 				results.push(item);
 			}
 
-			expect(results).to.deep.equal(['a', 'b', 'c']);
+			expect(results).toEqual(['a', 'b', 'c']);
 		});
 	});
 
@@ -96,7 +96,7 @@ describe('Reiterable', () => {
 				results.push(next.value);
 			}
 
-			expect(results).to.deep.equal(['a', 'b', 'c']);
+			expect(results).toEqual(['a', 'b', 'c']);
 		});
 
 		it("is an iterator of a source iterable's values", () => {
@@ -112,7 +112,7 @@ describe('Reiterable', () => {
 				results.push(next.value);
 			}
 
-			expect(results).to.deep.equal(['a', 'b', 'c']);
+			expect(results).toEqual(['a', 'b', 'c']);
 		});
 
 		it("is an iterator of a source iterator's values", () => {
@@ -128,7 +128,7 @@ describe('Reiterable', () => {
 				results.push(next.value);
 			}
 
-			expect(results).to.deep.equal(['a', 'b', 'c']);
+			expect(results).toEqual(['a', 'b', 'c']);
 		});
 	});
 
@@ -172,7 +172,7 @@ describe('Reiterable', () => {
 					results.push(item);
 				}
 
-				expect(results).to.deep.equal(['a', 'b', 'c']);
+				expect(results).toEqual(['a', 'b', 'c']);
 			}
 		});
 
@@ -192,7 +192,7 @@ describe('Reiterable', () => {
 						results.push(next.value);
 					}
 
-					expect(results).to.deep.equal(['a', 'b', 'c']);
+					expect(results).toEqual(['a', 'b', 'c']);
 				}
 			}
 		);
@@ -202,10 +202,10 @@ describe('Reiterable', () => {
 
 			for (const item of reiterable) {
 				count += 1;
-				expect(item).to.be.a('string');
+				expect(typeof item).toBe('string');
 			}
 
-			expect(count).to.equal(3);
+			expect(count).toEqual(3);
 		};
 
 		const exhaustIterator = (reiterable: Reiterable<SourceItem>) => {
@@ -216,10 +216,10 @@ describe('Reiterable', () => {
 
 			while (!(next = iterator.next()).done) {
 				count += 1;
-				expect(next.value).to.be.a('string');
+				expect(typeof next.value).toBe('string');
 			}
 
-			expect(count).to.equal(3);
+			expect(count).toEqual(3);
 		};
 
 		describe('first value', () => {
@@ -227,7 +227,7 @@ describe('Reiterable', () => {
 				const reiterable = Reiterable.from(source());
 				const first = reiterable.first();
 
-				expect(first).to.equal('a');
+				expect(first).toEqual('a');
 			});
 
 			it.each(cases)('gets the first value after exhausting all iterable values', ({ source }) => {
@@ -237,7 +237,7 @@ describe('Reiterable', () => {
 
 				const first = reiterable.first();
 
-				expect(first).to.equal('a');
+				expect(first).toEqual('a');
 			});
 
 			it.each(cases)('gets the first value after exhausting as an iterator', ({ source }) => {
@@ -247,7 +247,7 @@ describe('Reiterable', () => {
 
 				const first = reiterable.first();
 
-				expect(first).to.equal('a');
+				expect(first).toEqual('a');
 			});
 		});
 
@@ -279,7 +279,7 @@ describe('Reiterable', () => {
 					before: (reiterable) => {
 						const first = reiterable.first();
 
-						expect(first).to.equal('a');
+						expect(first).toEqual('a');
 					},
 				},
 			];
@@ -300,7 +300,7 @@ describe('Reiterable', () => {
 					results.push({ key, value });
 				}
 
-				expect(results).to.deep.equal([
+				expect(results).toEqual([
 					{ key: 0, value: 'a' },
 					{ key: 1, value: 'b' },
 					{ key: 2, value: 'c' },
@@ -318,7 +318,7 @@ describe('Reiterable', () => {
 					results.push(key);
 				}
 
-				expect(results).to.deep.equal([0, 1, 2]);
+				expect(results).toEqual([0, 1, 2]);
 			});
 
 			it.each(beforeCases)('gets the values $beforeDescription', ({ before }) => {
@@ -332,7 +332,7 @@ describe('Reiterable', () => {
 					results.push(value);
 				}
 
-				expect(results).to.deep.equal(['a', 'b', 'c']);
+				expect(results).toEqual(['a', 'b', 'c']);
 			});
 		});
 
@@ -360,7 +360,7 @@ describe('Reiterable', () => {
 
 					const result = reiterable.some((value) => value === predicateExpected);
 
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 				}
 			);
 
@@ -373,7 +373,7 @@ describe('Reiterable', () => {
 
 					const result = reiterable.some((value) => value === predicateExpected);
 
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 				}
 			);
 
@@ -386,7 +386,7 @@ describe('Reiterable', () => {
 
 					const result = reiterable.some((value) => value === predicateExpected);
 
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 				}
 			);
 
@@ -396,11 +396,11 @@ describe('Reiterable', () => {
 					const reiterable = Reiterable.from(source());
 					const first = reiterable.first();
 
-					expect(first).to.equal('a');
+					expect(first).toEqual('a');
 
 					const result = reiterable.some((value) => value === predicateExpected);
 
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 				}
 			);
 
@@ -412,23 +412,23 @@ describe('Reiterable', () => {
 					reiterable.first();
 
 					let result = reiterable.some((value) => value === predicateExpected);
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 
 					exhaustIterator(reiterable);
 
 					result = reiterable.some((value) => value === predicateExpected);
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 
 					exhaustIterables(reiterable);
 
 					result = reiterable.some((value) => value === predicateExpected);
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 
 					exhaustIterables(reiterable);
 					exhaustIterator(reiterable);
 
 					result = reiterable.some((value) => value === predicateExpected);
-					expect(result).to.equal(expected);
+					expect(result).toEqual(expected);
 				}
 			);
 		});
@@ -441,9 +441,9 @@ describe('Reiterable', () => {
 				const someB = reiterable.some((value) => value === 'b');
 				const someC = reiterable.some((value) => value === 'c');
 
-				expect(someA).to.equal(true);
-				expect(someB).to.equal(true);
-				expect(someC).to.equal(true);
+				expect(someA).toEqual(true);
+				expect(someB).toEqual(true);
+				expect(someC).toEqual(true);
 			});
 		});
 	});

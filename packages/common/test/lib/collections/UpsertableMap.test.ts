@@ -28,7 +28,7 @@ describe('UpsertableMap', () => {
 		it('gets a value which is already present', () => {
 			const actual = testMap?.get(initialKey);
 
-			expect(actual).to.equal(initialValue);
+			expect(actual).toEqual(initialValue);
 		});
 
 		it('assigns a value to an unassigned key', () => {
@@ -39,7 +39,7 @@ describe('UpsertableMap', () => {
 
 			const actual = testMap?.get(key);
 
-			expect(actual).to.equal(value);
+			expect(actual).toEqual(value);
 		});
 
 		it('assigns a new value to an existing key', () => {
@@ -49,7 +49,7 @@ describe('UpsertableMap', () => {
 
 			const actual = testMap?.get(initialKey);
 
-			expect(actual).to.equal(value);
+			expect(actual).toEqual(value);
 		});
 	});
 
@@ -62,7 +62,7 @@ describe('UpsertableMap', () => {
 
 			const actual = testMap?.get(key);
 
-			expect(actual).to.equal(value);
+			expect(actual).toEqual(value);
 		});
 
 		it('returns the value which was upserted', () => {
@@ -71,7 +71,7 @@ describe('UpsertableMap', () => {
 
 			const actual = testMap?.upsert(key, () => value);
 
-			expect(actual).to.equal(value);
+			expect(actual).toEqual(value);
 		});
 
 		it('produces an upserted value from the key being assigned', () => {
@@ -83,7 +83,7 @@ describe('UpsertableMap', () => {
 				return new Value(uppsercase);
 			});
 
-			expect(actual?.value).to.equal('UPSERTING');
+			expect(actual?.value).toEqual('UPSERTING');
 		});
 
 		it('preserves a value which was already set', () => {
@@ -93,7 +93,7 @@ describe('UpsertableMap', () => {
 
 			const actual = testMap?.get(initialKey);
 
-			expect(actual).to.equal(initialValue);
+			expect(actual).toEqual(initialValue);
 		});
 
 		it('returns the previously set value when upserting to key which is already set', () => {
@@ -101,7 +101,7 @@ describe('UpsertableMap', () => {
 
 			const actual = testMap?.upsert(initialKey, () => unassignedValue);
 
-			expect(actual).to.equal(initialValue);
+			expect(actual).toEqual(initialValue);
 		});
 	});
 
@@ -129,7 +129,7 @@ describe('UpsertableMap', () => {
 		it('gets a null value', () => {
 			const actual = nullishTestMap?.get(initialNullValueKey);
 
-			expect(actual).to.be.null;
+			expect(actual).toBeNull();
 		});
 
 		it('sets a null value', () => {
@@ -137,13 +137,13 @@ describe('UpsertableMap', () => {
 
 			const actual = nullishTestMap?.get(initialKey);
 
-			expect(actual).to.be.null;
+			expect(actual).toBeNull();
 		});
 
 		it('gets an undefined value', () => {
 			const actual = nullishTestMap?.get(initialUndefinedValueKey);
 
-			expect(actual).to.be.undefined;
+			expect(actual).toBeUndefined();
 		});
 
 		it('sets an undefined value', () => {
@@ -151,7 +151,7 @@ describe('UpsertableMap', () => {
 
 			const actual = nullishTestMap?.get(initialKey);
 
-			expect(actual).to.be.undefined;
+			expect(actual).toBeUndefined();
 		});
 
 		it('preserves an existing null value', () => {
@@ -161,7 +161,7 @@ describe('UpsertableMap', () => {
 			const actual = nullishTestMap?.get(initialNullValueKey);
 
 			expect(upserted).toBe(actual);
-			expect(actual).to.be.null;
+			expect(actual).toBeNull();
 		});
 
 		it('preserves an existing undefined value', () => {
@@ -171,7 +171,7 @@ describe('UpsertableMap', () => {
 			const actual = nullishTestMap?.get(initialUndefinedValueKey);
 
 			expect(upserted).toBe(actual);
-			expect(actual).to.be.undefined;
+			expect(actual).toBeUndefined();
 		});
 	});
 });

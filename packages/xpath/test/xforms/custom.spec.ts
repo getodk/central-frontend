@@ -31,7 +31,7 @@ describe.skip('custom XPath functions', () => {
 				args: [{ t: 'string' }, { t: 'number' }, { t: 'boolean' }, { t: 'dog' }],
 				ret: 'number',
 			});
-		}).to.throw(`Unsupported arg type(s): 'dog'`);
+		}).toThrow(`Unsupported arg type(s): 'dog'`);
 	});
 
 	it('should not allow unexpected return types', () => {
@@ -43,7 +43,7 @@ describe.skip('custom XPath functions', () => {
 				args: [],
 				ret: 'fish',
 			});
-		}).to.throw(`Unsupported return type: 'fish'`);
+		}).toThrow(`Unsupported return type: 'fish'`);
 	});
 
 	const customNoopFunction = {
@@ -57,7 +57,7 @@ describe.skip('custom XPath functions', () => {
 	it('should not allow overriding existing functions', () => {
 		expect(() => {
 			testContext.evaluator.customXPathFunction?.add('cos', customNoopFunction);
-		}).to.throw(`There is already a function with the name: 'cos'`);
+		}).toThrow(`There is already a function with the name: 'cos'`);
 	});
 
 	it('should not allow overriding existing custom functions', () => {
@@ -66,7 +66,7 @@ describe.skip('custom XPath functions', () => {
 
 		expect(() => {
 			testContext.evaluator.customXPathFunction?.add('f', customNoopFunction);
-		}).to.throw(`There is already a function with the name: 'f'`);
+		}).toThrow(`There is already a function with the name: 'f'`);
 	});
 
 	describe('pad2()', () => {

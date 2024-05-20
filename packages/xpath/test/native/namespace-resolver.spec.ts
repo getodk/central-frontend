@@ -48,20 +48,20 @@ describe.skip('namespace resolver', () => {
 		// check type
 		//TODO assert.instanceOf(resolver, XPathNSResolver);
 		// eslint-disable-next-line @typescript-eslint/unbound-method
-		expect(resolver.lookupNamespaceURI).to.be.a('function');
+		expect(resolver.lookupNamespaceURI).toBeInstanceOf(Function);
 
 		// check preconfigured namespaces
-		expect(resolver.lookupNamespaceURI('xml')).to.equal('http://www.w3.org/XML/1998/namespace');
+		expect(resolver.lookupNamespaceURI('xml')).toEqual('http://www.w3.org/XML/1998/namespace');
 		//TODO assert.equal(resolver.lookupNamespaceURI('xmlns'), 'http://www.w3.org/2000/xmlns/');
 
 		// check namespaces on current element
-		expect(resolver.lookupNamespaceURI('xforms')).to.equal('http://www.w3.org/2002/xforms');
-		expect(resolver.lookupNamespaceURI('nsnotexists')).to.be.null;
+		expect(resolver.lookupNamespaceURI('xforms')).toEqual('http://www.w3.org/2002/xforms');
+		expect(resolver.lookupNamespaceURI('nsnotexists')).toBeNull();
 
 		// check default namespace
 		resolver = document.createNSResolver(contextNode.firstElementChild!);
 
-		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/TR/REC-html40');
+		expect(resolver.lookupNamespaceURI('')).toEqual('http://www.w3.org/TR/REC-html40');
 		//Y.Assert.areSame('http://www.w3.org/TR/REC-html40', resolver.lookupNamespaceURI(''));
 	});
 
@@ -70,8 +70,8 @@ describe.skip('namespace resolver', () => {
 
 		// assert.instanceOf(resolver, XPathNSResolver);
 		// eslint-disable-next-line @typescript-eslint/unbound-method
-		expect(resolver.lookupNamespaceURI).to.be.a('function');
-		expect(resolver.lookupNamespaceURI('ev')).to.equal('http://some-namespace.com/nss');
+		expect(resolver.lookupNamespaceURI).toBeInstanceOf(Function);
+		expect(resolver.lookupNamespaceURI('ev')).toEqual('http://some-namespace.com/nss');
 	});
 
 	it('looks up the namespaceURIDocumentElement', () => {
@@ -80,10 +80,10 @@ describe.skip('namespace resolver', () => {
 
 		// assert.instanceOf(resolver, XPathNSResolver);
 		// eslint-disable-next-line @typescript-eslint/unbound-method
-		expect(resolver.lookupNamespaceURI).to.be.a('function');
+		expect(resolver.lookupNamespaceURI).toBeInstanceOf(Function);
 
-		expect(resolver.lookupNamespaceURI('ev')).to.equal('http://some-namespace.com/nss');
-		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/1999/xhtml');
+		expect(resolver.lookupNamespaceURI('ev')).toEqual('http://some-namespace.com/nss');
+		expect(resolver.lookupNamespaceURI('')).toEqual('http://www.w3.org/1999/xhtml');
 
 		// TODO: all of these namespace-related mutations probably fail in Firefox!
 		// Make sure default xhtml namespace is correct
@@ -101,7 +101,7 @@ describe.skip('namespace resolver', () => {
 			'http://www.w3.org/1999/xhtml'
 		);
 
-		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/1999/xhtml');
+		expect(resolver.lookupNamespaceURI('')).toEqual('http://www.w3.org/1999/xhtml');
 	});
 
 	it('looks up the namespaceURIAttribute', () => {
@@ -123,11 +123,11 @@ describe.skip('namespace resolver', () => {
 		//   }
 		// }
 
-		expect(attribute).not.to.be.null;
+		expect(attribute).not.toBeNull();
 
 		let resolver = document.createNSResolver(attribute!);
 
-		expect(resolver.lookupNamespaceURI('ev')).to.equal('http://some-namespace.com/nss');
+		expect(resolver.lookupNamespaceURI('ev')).toEqual('http://some-namespace.com/nss');
 
 		// Check parent nodes for default namespace declaration
 		contextNode = document.getElementById('testXPathNSResolverNode')!;
@@ -140,17 +140,17 @@ describe.skip('namespace resolver', () => {
 		//   }
 		// }
 
-		expect(attribute).not.to.be.null;
+		expect(attribute).not.toBeNull();
 		resolver = document.createNSResolver(attribute!);
 
-		expect(resolver.lookupNamespaceURI('xforms')).to.equal('http://www.w3.org/2002/xforms');
+		expect(resolver.lookupNamespaceURI('xforms')).toEqual('http://www.w3.org/2002/xforms');
 	});
 
 	it('looks up namespaceURIs that have changed', () => {
 		const contextNode = document.getElementById('testXPathNSResolverNode')!.firstElementChild!;
 		const resolver = document.createNSResolver(contextNode);
 
-		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/TR/REC-html40');
+		expect(resolver.lookupNamespaceURI('')).toEqual('http://www.w3.org/TR/REC-html40');
 
 		// TODO: all of these namespace-related mutations probably fail in Firefox!
 		// Remove default namespace
@@ -172,7 +172,7 @@ describe.skip('namespace resolver', () => {
 			'http://www.w3.org/TR/REC-html40'
 		);
 
-		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/TR/REC-html40');
+		expect(resolver.lookupNamespaceURI('')).toEqual('http://www.w3.org/TR/REC-html40');
 	});
 
 	it('looks up a hierarchical namespaceURI', () => {
@@ -180,12 +180,12 @@ describe.skip('namespace resolver', () => {
 		let resolver = document.createNSResolver(contextNode);
 
 		// check prefix in parents
-		expect(resolver.lookupNamespaceURI('ev')).to.equal('http://some-namespace.com/nss');
+		expect(resolver.lookupNamespaceURI('ev')).toEqual('http://some-namespace.com/nss');
 
 		// check default prefix in parents
-		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/1999/xhtml');
+		expect(resolver.lookupNamespaceURI('')).toEqual('http://www.w3.org/1999/xhtml');
 
 		resolver = document.createNSResolver(contextNode.firstElementChild!.firstElementChild!);
-		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/TR/REC-html40');
+		expect(resolver.lookupNamespaceURI('')).toEqual('http://www.w3.org/TR/REC-html40');
 	});
 });

@@ -74,7 +74,7 @@ describe('#round()', () => {
 				{ number: '23.7825', digits: -1, expected: 20 },
 				{ number: '2.15', digits: -1, expected: 0 },
 				{ number: '2.149', digits: -1, expected: 0 },
-				{ number: '-1.475', digits: -2, expected: 0 },
+				{ number: '-1.475', digits: -2, expected: -0 },
 				{ number: '21.5', digits: -1, expected: 20 },
 				{ number: '626.3', digits: -3, expected: 1000 },
 				{ number: '1.98', digits: -1, expected: 0 },

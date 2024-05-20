@@ -26,7 +26,7 @@ describe('#now()', () => {
 		// when
 		const result = testContext.evaluate('now()', null, XPathResult.STRING_TYPE).stringValue;
 
-		expect(result.split('T')[0]).to.equal(today);
+		expect(result.split('T')[0]).toEqual(today);
 
 		// assert timezone is included
 		expect(result).toMatch(/-07:00$/);

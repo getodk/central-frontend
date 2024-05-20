@@ -21,12 +21,12 @@ describe('#random()', () => {
 			})
 			.filter((numberValue: unknown): asserts numberValue is number => {
 				// then
-				expect(numberValue).to.be.a('number');
+				expect(typeof numberValue).toEqual('number');
 			});
 		const uniqueNumberValues = Array.from(new Set(numberValues));
 
 		// check the numbers are a bit random
-		expect(numberValues).to.deep.equal(uniqueNumberValues);
+		expect(numberValues).toEqual(uniqueNumberValues);
 	});
 
 	it('random()', () => {

@@ -96,7 +96,7 @@ describe("Specifying an Evaluator's root node", () => {
 					XPathResult.STRING_TYPE
 				);
 
-				expect(stringValue).to.equal(expected);
+				expect(stringValue).toEqual(expected);
 			}
 		);
 
@@ -156,7 +156,7 @@ describe("Specifying an Evaluator's root node", () => {
 				const expected =
 					expectedNodeSelector == null ? null : testDocument.querySelector(expectedNodeSelector)!;
 
-				expect(actual).to.equal(expected);
+				expect(actual).toEqual(expected);
 			}
 		);
 	});
@@ -199,7 +199,7 @@ describe("Specifying an Evaluator's root node", () => {
 		const binds = Array.from(xformDocument.querySelectorAll('bind'));
 
 		it('tests 3 binds (check setup assumptions)', () => {
-			expect(binds.length).to.equal(3);
+			expect(binds.length).toEqual(3);
 		});
 
 		const bindCases = binds.map((bind, index) => ({
@@ -244,7 +244,7 @@ describe("Specifying an Evaluator's root node", () => {
 					throw new Error(`Invalid test case for bind ${bind.outerHTML}`);
 				}
 
-				expect(actual).to.equal(expected);
+				expect(actual).toEqual(expected);
 			}
 		);
 	});

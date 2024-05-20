@@ -154,7 +154,7 @@ export class TestContext<XForms extends boolean = false> {
 
 		const { message } = options;
 
-		expect(booleanValue, message).to.equal(expected);
+		expect(booleanValue, message).toEqual(expected);
 	}
 
 	assertNodeSet(
@@ -164,7 +164,7 @@ export class TestContext<XForms extends boolean = false> {
 	) {
 		const nodes = this.evaluateNodeSet(expression, options.contextNode);
 
-		expect(nodes).to.deep.equal(expected);
+		expect(nodes).toEqual(expected);
 	}
 
 	assertUnorderedNodeSet(
@@ -175,7 +175,7 @@ export class TestContext<XForms extends boolean = false> {
 		const expectedSet = new Set(expected);
 		const actual = new Set(this.evaluateUnorderedNodeSet(expression, options.contextNode));
 
-		expect(actual.size).to.equal(expectedSet.size);
+		expect(actual.size).toEqual(expectedSet.size);
 		expect(expected.every((node) => actual.has(node)));
 	}
 
@@ -194,9 +194,9 @@ export class TestContext<XForms extends boolean = false> {
 		const { message } = options;
 
 		if (Number.isNaN(expected)) {
-			expect(numberValue, message).to.be.NaN;
+			expect(numberValue, message).toBeNaN();
 		} else {
-			expect(numberValue, message).to.equal(expected);
+			expect(numberValue, message).toBe(expected);
 		}
 	}
 
@@ -215,7 +215,7 @@ export class TestContext<XForms extends boolean = false> {
 
 		const { message } = options;
 
-		expect(Math.round(numberValue * factor) / factor, message).to.equal(expected);
+		expect(Math.round(numberValue * factor) / factor, message).toEqual(expected);
 	}
 
 	assertStringValue(
@@ -232,7 +232,7 @@ export class TestContext<XForms extends boolean = false> {
 
 		const { message } = options;
 
-		expect(stringValue, message).to.equal(expected);
+		expect(stringValue, message).toEqual(expected);
 	}
 
 	assertStringLength(
@@ -247,7 +247,7 @@ export class TestContext<XForms extends boolean = false> {
 			options.namespaceResolver
 		);
 
-		expect(stringValue.length).to.equal(expected);
+		expect(stringValue.length).toEqual(expected);
 	}
 
 	assertStringMatches(
@@ -264,7 +264,7 @@ export class TestContext<XForms extends boolean = false> {
 
 		const { message } = options;
 
-		expect(stringValue, message).to.match(pattern);
+		expect(stringValue, message).toMatch(pattern);
 	}
 
 	assertThrows(): never {

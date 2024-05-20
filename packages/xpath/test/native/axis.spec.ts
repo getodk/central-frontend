@@ -5,7 +5,7 @@ import { createTestContext, getNonNamespaceAttributes, namespaceResolver } from 
 const getTestElement = (document: XMLDocument, id: string): Element => {
 	const element = document.getElementById(id);
 
-	expect(element, `Could not find test element with id: ${id}`).not.to.be.null;
+	expect(element, `Could not find test element with id: ${id}`).not.toBeNull();
 
 	return element!;
 };
@@ -18,7 +18,7 @@ const getTestAttribute = (document: XMLDocument): Attr => {
 	const element = getTestAttributeElement(document);
 	const attribute = element.attributes[0];
 
-	expect(attribute).not.to.be.undefined;
+	expect(attribute).not.toBeUndefined();
 
 	return attribute!;
 };
