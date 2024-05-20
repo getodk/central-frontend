@@ -73,7 +73,7 @@ export class UntypedAnswer extends ComparableAnswer {
 	}
 
 	get stringValue(): string {
-		const { unknownValue: unknownValue } = this;
+		const { unknownValue } = this;
 
 		if (unknownValue instanceof ComparableAnswer) {
 			return unknownValue.stringValue;
