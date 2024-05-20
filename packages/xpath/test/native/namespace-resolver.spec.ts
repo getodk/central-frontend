@@ -147,7 +147,7 @@ describe.skip('namespace resolver', () => {
 	});
 
 	it('looks up namespaceURIs that have changed', () => {
-		const contextNode = document.getElementById('testXPathNSResolverNode')?.firstElementChild!;
+		const contextNode = document.getElementById('testXPathNSResolverNode')!.firstElementChild!;
 		const resolver = document.createNSResolver(contextNode);
 
 		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/TR/REC-html40');
@@ -185,7 +185,7 @@ describe.skip('namespace resolver', () => {
 		// check default prefix in parents
 		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/1999/xhtml');
 
-		resolver = document.createNSResolver(contextNode?.firstElementChild!.firstElementChild!);
+		resolver = document.createNSResolver(contextNode.firstElementChild!.firstElementChild!);
 		expect(resolver.lookupNamespaceURI('')).to.equal('http://www.w3.org/TR/REC-html40');
 	});
 });

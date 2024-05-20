@@ -43,12 +43,12 @@ describe('Comparison operator', () => {
 			{ expression: `${lhs} != ${rhs}`, expected: expected[1] },
 		];
 
-		cases.forEach(({ expression, expected }) => {
-			it(`evaluates ${expression} to ${expected}${contextSuffix}`, () => {
+		cases.forEach(({ expression, expected: expectedResult }) => {
+			it(`evaluates ${expression} to ${expectedResult}${contextSuffix}`, () => {
 				const contextNode =
 					id == null ? testContext.document : testContext.document.getElementById(id);
 
-				testContext.assertBooleanValue(expression, expected, {
+				testContext.assertBooleanValue(expression, expectedResult, {
 					contextNode,
 				});
 			});
@@ -109,12 +109,12 @@ describe('Comparison operator', () => {
 			{ expression: `${lhs} >= ${rhs}`, expected: expected[3] },
 		];
 
-		cases.forEach(({ expression, expected }) => {
-			it(`evaluates ${expression} to ${expected}${contextSuffix}`, () => {
+		cases.forEach(({ expression, expected: expectedResult }) => {
+			it(`evaluates ${expression} to ${expectedResult}${contextSuffix}`, () => {
 				const contextNode =
 					id == null ? testContext.document : testContext.document.getElementById(id);
 
-				testContext.assertBooleanValue(expression, expected, {
+				testContext.assertBooleanValue(expression, expectedResult, {
 					contextNode,
 				});
 			});
@@ -153,7 +153,7 @@ describe('Comparison operator', () => {
 			document = testContext.document;
 		});
 
-		const equalityCases: readonly EqualityCase[] = [
+		const equalityWithNodesCases: readonly EqualityCase[] = [
 			// assertOps1(doc,
 			//   "id('ComparisonOperatorCaseNodesetNegative5to5')/*",
 			//   "id('ComparisonOperatorCaseNodesetEmpty')/*", [false, false]);
@@ -205,25 +205,25 @@ describe('Comparison operator', () => {
 			{ lhs: "''", rhs: '*', id: 'ComparisonOperatorCaseNodesetStrings', expected: [false, true] },
 		];
 
-		equalityCases.forEach(({ lhs, rhs, id, expected }) => {
+		equalityWithNodesCases.forEach(({ lhs, rhs, id, expected }) => {
 			const contextSuffix = id == null ? '' : ` (with context #${id})`;
 			const cases = [
 				{ expression: `${lhs} = ${rhs}`, expected: expected[0] },
 				{ expression: `${lhs} != ${rhs}`, expected: expected[1] },
 			];
 
-			cases.forEach(({ expression, expected }) => {
-				it(`evaluates ${expression} to ${expected}${contextSuffix}`, () => {
+			cases.forEach(({ expression, expected: expectedResult }) => {
+				it(`evaluates ${expression} to ${expectedResult}${contextSuffix}`, () => {
 					const contextNode = id == null ? document : document.getElementById(id);
 
-					testContext.assertBooleanValue(expression, expected, {
+					testContext.assertBooleanValue(expression, expectedResult, {
 						contextNode,
 					});
 				});
 			});
 		});
 
-		const relativeCases: readonly RelativeCase[] = [
+		const relativeWithNodesCases: readonly RelativeCase[] = [
 			// assertOps2(doc,
 			//   "id('ComparisonOperatorCaseNodesetNegative5to5')/*",
 			//   "id('ComparisonOperatorCaseNodesetEmpty')/*",
@@ -385,7 +385,7 @@ describe('Comparison operator', () => {
 			},
 		];
 
-		relativeCases.forEach(({ lhs, rhs, id, expected }) => {
+		relativeWithNodesCases.forEach(({ lhs, rhs, id, expected }) => {
 			const contextSuffix = id == null ? '' : ` (with context #${id})`;
 			const cases = [
 				{ expression: `${lhs} < ${rhs}`, expected: expected[0] },
@@ -394,12 +394,12 @@ describe('Comparison operator', () => {
 				{ expression: `${lhs} >= ${rhs}`, expected: expected[3] },
 			];
 
-			cases.forEach(({ expression, expected }) => {
-				it(`evaluates ${expression} to ${expected}${contextSuffix}`, () => {
+			cases.forEach(({ expression, expected: expectedResult }) => {
+				it(`evaluates ${expression} to ${expectedResult}${contextSuffix}`, () => {
 					const contextNode =
 						id == null ? testContext.document : testContext.document.getElementById(id);
 
-					testContext.assertBooleanValue(expression, expected, {
+					testContext.assertBooleanValue(expression, expectedResult, {
 						contextNode,
 					});
 				});

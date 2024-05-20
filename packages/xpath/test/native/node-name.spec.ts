@@ -84,7 +84,7 @@ describe('node name for', () => {
 	it('attribute with a specific name', () => {
 		const contextNode = document.getElementById('StepNodeTestCaseNameTestAttribute')!;
 		const attribute = getNonNamespaceAttributes(contextNode).find(
-			(attribute) => attribute.localName === 'attrib3'
+			(attr) => attr.localName === 'attrib3'
 		);
 
 		expect(attribute).not.to.be.null;

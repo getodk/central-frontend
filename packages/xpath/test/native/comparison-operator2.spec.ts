@@ -161,12 +161,12 @@ describe('Comparison operator (2)', () => {
 	});
 
 	describe('<, <=, >, >=', () => {
-		interface TestCaseInput {
+		interface RelationalExprTestCaseInput {
 			readonly operands: readonly [lhs: string, rhs: string];
 			readonly expected: readonly [lt: boolean, lte: boolean, gt: boolean, gte: boolean];
 		}
 
-		const input: readonly TestCaseInput[] = [
+		const cases: readonly RelationalExprTestCaseInput[] = [
 			{ operands: ['1', '2'], expected: [true, true, false, false] },
 			{ operands: ['1', '1'], expected: [false, true, false, true] },
 			{ operands: ['1', '0'], expected: [false, false, true, true] },
@@ -204,7 +204,7 @@ describe('Comparison operator (2)', () => {
 			// [[ "''", "'0'" ], [ false, false, false, false ]],
 		];
 
-		input.forEach(({ operands, expected }) => {
+		cases.forEach(({ operands, expected }) => {
 			const [lhs, rhs] = operands;
 
 			['<', '<=', '>', '>='].forEach((operator, index) => {
@@ -219,13 +219,13 @@ describe('Comparison operator (2)', () => {
 	});
 
 	describe('with nodes', () => {
-		interface TestCaseInput {
+		interface WithNodesTestCaseInput {
 			readonly operands: readonly [lhs: string, rhs: string];
 			readonly id?: string;
 			readonly expected: readonly [lt: boolean, lte: boolean, gt: boolean, gte: boolean];
 		}
 
-		const input: readonly TestCaseInput[] = [
+		const cases: readonly WithNodesTestCaseInput[] = [
 			{
 				operands: ['true()', '*'],
 				expected: [true, true, true, true],
@@ -369,7 +369,7 @@ describe('Comparison operator (2)', () => {
 			},
 		];
 
-		input.forEach(({ operands, id, expected }) => {
+		cases.forEach(({ operands, id, expected }) => {
 			const [operand0, operand1] = operands;
 
 			['<', '<=', '>', '>='].forEach((operator, index) => {
