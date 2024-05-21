@@ -182,11 +182,14 @@ export default {
     width: 80%;
     margin-bottom: 0px;
   }
+
+  + .field-key-qr-panel {
+    margin: 15px auto 30px;
+  }
 }
 
 .field-key-qr-panel {
   box-shadow: $box-shadow-popover;
-  margin: 15px auto 30px;
 }
 </style>
 
