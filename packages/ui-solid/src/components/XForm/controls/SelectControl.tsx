@@ -1,8 +1,4 @@
-import type {
-	AnySelectDefinition,
-	SelectDefinition,
-	SelectNode,
-} from '@odk-web-forms/xforms-engine';
+import type { AnySelectDefinition, SelectDefinition, SelectNode } from '@getodk/xforms-engine';
 import { Match, Switch } from 'solid-js';
 import { MultiSelect } from '../../Widget/MultiSelect.tsx';
 import { SingleSelect } from '../../Widget/SingleSelect.tsx';

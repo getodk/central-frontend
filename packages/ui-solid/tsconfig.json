@@ -10,8 +10,8 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "paths": {
-      "@odk-web-forms/common/types/*": ["../common/types/*"],
-      "@odk-web-forms/common/*": ["../common/src/*"]
+      "@getodk/common/types/*": ["../common/types/*"],
+      "@getodk/common/*": ["../common/src/*"]
     }
   }
 }

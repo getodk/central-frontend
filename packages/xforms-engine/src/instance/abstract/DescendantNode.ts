@@ -1,4 +1,4 @@
-import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
+import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';

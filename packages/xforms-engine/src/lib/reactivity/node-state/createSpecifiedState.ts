@@ -1,4 +1,4 @@
-import { getPropertyKeys } from '@odk-web-forms/common/lib/objects/structure.ts';
+import { getPropertyKeys } from '@getodk/common/lib/objects/structure.ts';
 import type { Accessor, Signal } from 'solid-js';
 import type { SimpleAtomicState } from '../types.ts';
 import type { SpecifiedPropertyDescriptor } from './createSpecifiedPropertyDescriptor.ts';

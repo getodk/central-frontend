@@ -1,4 +1,4 @@
-import type { StringNode } from '@odk-web-forms/xforms-engine';
+import type { StringNode } from '@getodk/xforms-engine';
 import { Show, createMemo } from 'solid-js';
 import { XFormControlLabel } from '../XForm/controls/XFormControlLabel.tsx';
 import { DefaultTextField } from '../styled/DefaultTextField.tsx';

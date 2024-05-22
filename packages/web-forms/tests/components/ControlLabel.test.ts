@@ -1,4 +1,4 @@
-import type { StringNode } from '@odk-web-forms/xforms-engine';
+import type { StringNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assocPath } from 'ramda';
 import { describe, expect, it } from 'vitest';

@@ -18,8 +18,8 @@ import {
 	XML_PREFIX,
 	XMLNS_NAMESPACE_URI,
 	XMLNS_PREFIX,
-} from '@odk-web-forms/common/constants/xmlns.ts';
-import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
+} from '@getodk/common/constants/xmlns.ts';
+import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { ContextParentNode } from '../lib/dom/types.ts';
 import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 

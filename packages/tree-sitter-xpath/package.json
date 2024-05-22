@@ -1,6 +1,7 @@
 {
-  "name": "@odk-web-forms/tree-sitter-xpath",
-  "version": "1.0.0-alpha.0",
+  "name": "@getodk/tree-sitter-xpath",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
   "description": "XPath grammar for tree-sitter",
   "type": "commonjs",
   "author": "getodk",

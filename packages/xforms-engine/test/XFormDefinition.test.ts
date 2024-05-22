@@ -9,7 +9,7 @@ import {
 	model,
 	t,
 	title,
-} from '@odk-web-forms/common/test/fixtures/xform-dsl';
+} from '@getodk/common/test/fixtures/xform-dsl';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../src/XFormDefinition.ts';
 import { BodyDefinition } from '../src/body/BodyDefinition.ts';

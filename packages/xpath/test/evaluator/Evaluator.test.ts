@@ -1,4 +1,4 @@
-import { xml } from '@odk-web-forms/common/test/factories/xml';
+import { xml } from '@getodk/common/test/factories/xml';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Evaluator } from '../../src/evaluator/Evaluator.ts';
 

@@ -1,16 +1,16 @@
-# @odk-web-forms/xforms-engine
+# @getodk/xforms-engine
 
-Implementation of the [ODK XForms specification](https://getodk.github.io/xforms-spec/)'s data model and computation logic. This package does not handle presentation or user interaction. Those aspects of web forms are meant to be handled by a client. Presently, those clients are:
+Implementation of the [ODK XForms specification](https://getodk.github.io/xforms-spec/)'s data model and computation logic. This package does not handle presentation or user interaction. Those aspects of forms are meant to be handled by a client. Presently, those clients are:
 
-- [`@odk-web-forms/ui-vue`](../ui-vue)
-- [`@odk-web-forms/ui-solid`](../ui-solid)
+- [`@getodk/web-forms`](../web-forms)
+- [`@getodk/ui-solid`](../ui-solid)
 
 ## Install
 
 Install with `npm` (or the equivalent command for your preferred package manager):
 
 ```sh
-npm install @odk-web-forms/xforms-engine
+npm install @getodk/xforms-engine
 ```
 
 ## Development
@@ -22,16 +22,16 @@ Test commands:
 
 ```sh
 # Single run
-yarn workspace @odk-web-forms/xforms-engine test-node:jsdom
-yarn workspace @odk-web-forms/xforms-engine test-browser:chromium
-yarn workspace @odk-web-forms/xforms-engine test-browser:firefox
-yarn workspace @odk-web-forms/xforms-engine test-browser:webkit
+yarn workspace @getodk/xforms-engine test-node:jsdom
+yarn workspace @getodk/xforms-engine test-browser:chromium
+yarn workspace @getodk/xforms-engine test-browser:firefox
+yarn workspace @getodk/xforms-engine test-browser:webkit
 
 # Watch mode (convenient during development)
-yarn workspace @odk-web-forms/xforms-engine test-watch:jsdom
-yarn workspace @odk-web-forms/xforms-engine test-watch:chromium
-yarn workspace @odk-web-forms/xforms-engine test-watch:firefox
-yarn workspace @odk-web-forms/xforms-engine test-watch:webkit
+yarn workspace @getodk/xforms-engine test-watch:jsdom
+yarn workspace @getodk/xforms-engine test-watch:chromium
+yarn workspace @getodk/xforms-engine test-watch:firefox
+yarn workspace @getodk/xforms-engine test-watch:webkit
 ```
 
 ## Supported/tested environments

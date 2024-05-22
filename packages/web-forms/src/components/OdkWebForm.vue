@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { initializeForm, type RootNode } from '@odk-web-forms/xforms-engine';
+import { initializeForm, type RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import { reactive, ref } from 'vue';
@@ -21,7 +21,7 @@ initializeForm(props.formXml, {
 	odkForm.value = f;
 	// TODO/sk: remove once dust settles
 	// eslint-disable-next-line -- temporary code
-		console.log((f as any).childrenState.getChildren()); 
+		console.log((f as any).childrenState.getChildren());
   }).catch(() => {}); // eslint-disable-line -- noop
 
 const handleSubmit = () => {
@@ -54,9 +54,9 @@ const print = () => window.print();
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
 				<!-- maybe current state is in odkForm.state.something -->
-				<Button label="Send" rounded raised @click="handleSubmit()" /> 
+				<Button label="Send" rounded raised @click="handleSubmit()" />
 			</div>
-		</div>		
-	</div>	
+		</div>
+	</div>
 </template>
 

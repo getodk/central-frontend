@@ -1,1 +1,1 @@
-throw new Error('Do not import from @odk-web-forms/scenario!');
+throw new Error('Do not import from @getodk/scenario!');

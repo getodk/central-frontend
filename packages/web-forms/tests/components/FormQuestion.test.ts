@@ -1,7 +1,7 @@
 import InputText from '@/components/controls/InputText.vue';
 import SelectControl from '@/components/controls/SelectControl.vue';
 import UnsupportedControl from '@/components/controls/UnsupportedControl.vue';
-import type { SelectNode } from '@odk-web-forms/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import FormQuestion from '../../src/components/FormQuestion.vue';

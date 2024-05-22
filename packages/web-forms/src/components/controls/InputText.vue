@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StringNode } from '@odk-web-forms/xforms-engine';
+import type { StringNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
 import ControlLabel from '../ControlLabel.vue';
 
@@ -14,11 +14,11 @@ const setValue = (value: string) => {
 <template>
 	<ControlLabel :question="question" />
 
-	<InputText 
-		:id="question.nodeId" 
-		:required="question.currentState.required" 
-		:readonly="question.currentState.readonly" 
-		variant="filled" 
+	<InputText
+		:id="question.nodeId"
+		:required="question.currentState.required"
+		:readonly="question.currentState.readonly"
+		variant="filled"
 		:model-value="question.currentState.value"
 		@update:model-value="setValue"
 	/>

@@ -1,4 +1,4 @@
-import { FN_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
+import { FN_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { FunctionLibrary } from '../../evaluator/functions/FunctionLibrary.ts';
 import * as boolean from './boolean.ts';
 import * as nodeset from './node-set.ts';

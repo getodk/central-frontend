@@ -1,4 +1,4 @@
-import type { SyntaxType, UnnamedType } from '@odk-web-forms/tree-sitter-xpath';
+import type { SyntaxType, UnnamedType } from '@getodk/tree-sitter-xpath';
 import { assertType, type Exact } from '../../type-safety';
 
 /*

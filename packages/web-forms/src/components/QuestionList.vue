@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AnyLeafNode, GeneralChildNode, GroupNode, RepeatRangeNode } from '@odk-web-forms/xforms-engine';
+import type { AnyLeafNode, GeneralChildNode, GroupNode, RepeatRangeNode } from '@getodk/xforms-engine';
 import FormGroup from './FormGroup.vue';
 import FormQuestion from './FormQuestion.vue';
 import RepeatRange from './RepeatRange.vue';
@@ -18,7 +18,7 @@ const isRepeatRangeNode = (n: GeneralChildNode) : n is RepeatRangeNode => n.defi
 		<template v-if="node.definition.bodyElement && node.currentState.relevant">
 			<!-- Render leaf nodes like string, select, etc -->
 			<FormQuestion v-if="isLeafNode(node)" :question="node" />
-							
+
 			<!-- Render group nodes -->
 			<FormGroup v-if="isGroupNode(node)" :node="node" />
 

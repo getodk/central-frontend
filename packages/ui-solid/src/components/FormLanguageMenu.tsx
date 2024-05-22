@@ -1,6 +1,6 @@
 // TODO: lots of this should get broken out
 
-import type { FormLanguage, RootNode } from '@odk-web-forms/xforms-engine';
+import type { FormLanguage, RootNode } from '@getodk/xforms-engine';
 import Check from '@suid/icons-material/Check';
 import ExpandMore from '@suid/icons-material/ExpandMore';
 import Language from '@suid/icons-material/Language';

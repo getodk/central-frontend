@@ -8,9 +8,9 @@ import {
 	model,
 	t,
 	title,
-} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
-import type { FormLanguage, RootNode } from '@odk-web-forms/xforms-engine';
-import { initializeForm } from '@odk-web-forms/xforms-engine';
+} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+import type { FormLanguage, RootNode } from '@getodk/xforms-engine';
+import { initializeForm } from '@getodk/xforms-engine';
 import { createMutable } from 'solid-js/store';
 import { render } from 'solid-js/web';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';

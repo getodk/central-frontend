@@ -1,4 +1,4 @@
-import type { ExpandUnion } from '@odk-web-forms/common/types/helpers.d.ts';
+import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { GroupNode } from './GroupNode.ts';
 import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
 import type { RepeatRangeNode } from './RepeatRangeNode.ts';

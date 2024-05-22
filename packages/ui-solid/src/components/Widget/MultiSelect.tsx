@@ -1,4 +1,4 @@
-import type { SelectItem, SelectNode } from '@odk-web-forms/xforms-engine';
+import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import { Checkbox, FormControlLabel, FormGroup } from '@suid/material';
 import { For, Show, createMemo } from 'solid-js';
 import type { SelectNDefinition } from '../XForm/controls/SelectControl.tsx';

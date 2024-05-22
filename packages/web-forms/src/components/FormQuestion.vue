@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AnyLeafNode, SelectNode, StringNode } from '@odk-web-forms/xforms-engine';
+import type { AnyLeafNode, SelectNode, StringNode } from '@getodk/xforms-engine';
 import InputText from './controls/InputText.vue';
 import SelectControl from './controls/SelectControl.vue';
 import UnsupportedControl from './controls/UnsupportedControl.vue';
@@ -17,7 +17,7 @@ const isSelectNode = (n: AnyLeafNode) : n is SelectNode => n.nodeType === 'selec
 		<InputText v-if="isStringNode(question)" :question="question" />
 
 		<SelectControl v-else-if="isSelectNode(question)" :question="question" />
-		
+
 		<UnsupportedControl v-else :question="question" />
 	</div>
 </template>

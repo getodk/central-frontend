@@ -1,4 +1,4 @@
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';

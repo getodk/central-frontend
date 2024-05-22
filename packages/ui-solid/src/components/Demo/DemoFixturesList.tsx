@@ -1,4 +1,4 @@
-import { XHTML_NAMESPACE_URI } from '@odk-web-forms/common/constants/xmlns.ts';
+import { XHTML_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import Assignment from '@suid/icons-material/Assignment';
 import ChevronLeft from '@suid/icons-material/ChevronLeft';
 import {

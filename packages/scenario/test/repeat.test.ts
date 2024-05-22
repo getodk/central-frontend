@@ -9,7 +9,7 @@ import {
 	repeat,
 	t,
 	title,
-} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, it } from 'vitest';
 import { Scenario } from '../src/Scenario.ts';
 import { CoreMatchers, assertThat, intAnswer, stringAnswer } from '../src/assert.ts';

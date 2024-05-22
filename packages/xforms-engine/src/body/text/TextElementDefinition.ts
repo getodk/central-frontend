@@ -1,8 +1,4 @@
-import {
-	isCommentNode,
-	isElementNode,
-	isTextNode,
-} from '@odk-web-forms/common/lib/dom/predicates.ts';
+import { isCommentNode, isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { type AnyDependentExpression } from '../../expression/DependentExpression.ts';
 import type { AnyGroupElementDefinition } from '../BodyDefinition.ts';

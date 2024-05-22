@@ -1,4 +1,4 @@
-import type { SelectNode, StringNode } from '@odk-web-forms/xforms-engine';
+import type { SelectNode, StringNode } from '@getodk/xforms-engine';
 import { Box } from '@suid/material';
 import { XFormAlert } from './XFormAlert.tsx';
 

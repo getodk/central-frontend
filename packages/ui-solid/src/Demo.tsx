@@ -1,4 +1,4 @@
-import { initializeForm } from '@odk-web-forms/xforms-engine';
+import { initializeForm } from '@getodk/xforms-engine';
 import { createEffect, createMemo, createResource, createSignal, on } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 import { App } from './App.tsx';

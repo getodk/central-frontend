@@ -1,4 +1,4 @@
-# @odk-web-forms/xpath
+# @getodk/xpath
 
 An XPath evaluator, with intent to support:
 
@@ -15,15 +15,18 @@ An XPath evaluator, with intent to support:
 Install this package and its required peer dependencies with `npm` (or the equivalent command for your preferred package manager):
 
 ```sh
-npm install @odk-web-forms/tree-sitter-xpath @odk-web-forms/xpath web-tree-sitter
+npm install @getodk/tree-sitter-xpath @getodk/xpath web-tree-sitter
 ```
 
 ## Usage
 
-To use `@odk-web-forms/xpath` at runtime, first create an `XFormsXPathEvaluator` instance, specifying the XForm `rootNode`. Usage from that point is API-compatible with the standard DOM [`evaluate` method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
+To use `@getodk/xpath` at runtime, first create an `XFormsXPathEvaluator`
+instance, specifying the XForm `rootNode`. Usage from that point is
+API-compatible with the standard DOM [`evaluate`
+method](https://developer.mozilla.org/en-US/docs/Web/API/XPathEvaluator/evaluate).
 
 ```ts
-import { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
+import { XFormsXPathEvaluator } from '@getodk/xpath';
 
 // Given an XForms DOM document...
 declare const xform: XMLDocument;
@@ -46,7 +49,7 @@ For typical XForms usage, `rootNode` will be either an XForm `XMLDocument` or it
 For XPath 1.0 functionality without XForms extension functions, you may use `Evaluator` the same way, and `rootNode` is optional:
 
 ```ts
-import { Evaluator } from '@odk-web-forms/xpath';
+import { Evaluator } from '@getodk/xpath';
 
 const evaluator = new Evaluator();
 

@@ -1,4 +1,4 @@
-import type { GroupNode, RepeatRangeNode } from '@odk-web-forms/xforms-engine';
+import type { GroupNode, RepeatRangeNode } from '@getodk/xforms-engine';
 import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
 import { NestedGroupBox } from '../../styled/NestedGroupBox.tsx';
 import { XFormQuestionList } from '../XFormQuestionList.tsx';

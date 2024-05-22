@@ -1,4 +1,4 @@
-import type { RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
+import type { RepeatInstanceNode } from '@getodk/xforms-engine';
 import { Box, Stack, styled } from '@suid/material';
 import { Show, createSignal } from 'solid-js';
 import { TopLevelRepeatInstance } from '../../styled/TopLevelRepeatInstance.tsx';

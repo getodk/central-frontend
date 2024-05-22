@@ -1,5 +1,5 @@
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
-import { getBlobText } from '@odk-web-forms/common/lib/web-compat/blob.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import type { FetchResource, FetchResourceResponse } from '../client/EngineConfig.ts';
 import type { FormResource } from '../client/index.ts';
 

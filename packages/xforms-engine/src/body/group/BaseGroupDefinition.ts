@@ -1,4 +1,4 @@
-import { UpsertableMap } from '@odk-web-forms/common/lib/collections/UpsertableMap.ts';
+import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { XFormDOM } from '../../XFormDOM.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { getLabelElement, getRepeatElement } from '../../lib/dom/query.ts';

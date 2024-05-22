@@ -1,4 +1,4 @@
-import type { AnyChildNode, TextRange } from '@odk-web-forms/xforms-engine';
+import type { AnyChildNode, TextRange } from '@getodk/xforms-engine';
 import { Show } from 'solid-js';
 import { DefaultLabel } from '../styled/DefaultLabel';
 import { DefaultLabelRequiredIndicator } from '../styled/DefaultLabelRequiredIndicator';

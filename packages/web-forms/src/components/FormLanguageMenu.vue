@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormLanguage, RootNode } from '@odk-web-forms/xforms-engine';
+import type { FormLanguage, RootNode } from '@getodk/xforms-engine';
 import Dropdown, { type DropdownChangeEvent } from 'primevue/dropdown';
 
 const props = defineProps<{ form: RootNode }>();
@@ -16,16 +16,16 @@ const handleLanguageChange = (event: LanguageDropdownChangeEvent) => {
 
 </script>
 <template>
-	<Dropdown 
-		v-if="languages.length > 0" 
-		:model-value="form.currentState.activeLanguage" 
+	<Dropdown
+		v-if="languages.length > 0"
+		:model-value="form.currentState.activeLanguage"
 		:options="languages"
 		option-label="language"
-		class="flex align-items-center rounded with-icon" 
+		class="flex align-items-center rounded with-icon"
 		aria-label="change language"
 		@change="handleLanguageChange"
 	>
-		<template #value="slotProps">				
+		<template #value="slotProps">
 			<span class="icon-language" />
 			<span>
 				{{ slotProps.value.language }}

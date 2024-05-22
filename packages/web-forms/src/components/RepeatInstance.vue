@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GeneralChildNode, GroupNode, RepeatInstanceNode } from '@odk-web-forms/xforms-engine';
+import type { GeneralChildNode, GroupNode, RepeatInstanceNode } from '@getodk/xforms-engine';
 import { type MenuItem } from 'primevue/menuitem';
 import { computed } from 'vue';
 import FormPanel from './FormPanel.vue';
@@ -13,14 +13,14 @@ const isGroup = (child: GeneralChildNode) => {
 	return (
 		child.definition.bodyElement?.type === 'logical-group' ||
 		child.definition.bodyElement?.type === 'presentation-group'
-	);	
+	);
 }
 
 const label = computed(() => {
 	// It has just one child and that is a group with label
 	// then we use label of that group
-	if( props.instance.currentState.children.length === 1 && 
-		isGroup(props.instance.currentState.children[0]) && 
+	if( props.instance.currentState.children.length === 1 &&
+		isGroup(props.instance.currentState.children[0]) &&
 		props.instance.currentState.children[0].currentState.label
 	) {
 		return props.instance.currentState.children[0].currentState.label?.asString

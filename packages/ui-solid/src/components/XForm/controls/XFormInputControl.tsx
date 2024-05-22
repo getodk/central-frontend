@@ -1,4 +1,4 @@
-import type { StringNode } from '@odk-web-forms/xforms-engine';
+import type { StringNode } from '@getodk/xforms-engine';
 import { Show } from 'solid-js';
 import { TextWidget } from '../../Widget/TextWidget.tsx';
 import { XFormUnlabeledControl } from '../debugging/XFormUnlabeledInputControl.tsx';

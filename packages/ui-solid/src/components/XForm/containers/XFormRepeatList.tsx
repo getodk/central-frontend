@@ -1,4 +1,4 @@
-import type { RepeatRangeNode } from '@odk-web-forms/xforms-engine';
+import type { RepeatRangeNode } from '@getodk/xforms-engine';
 import { Box, Stack } from '@suid/material';
 import { For, getOwner, runWithOwner } from 'solid-js';
 import { ThemeColorOutlineButton } from '../../styled/ThemeColorOutlineButton.tsx';

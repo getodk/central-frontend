@@ -7,7 +7,7 @@ import {
 	model,
 	t,
 	title,
-} from '@odk-web-forms/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { createRoot } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';

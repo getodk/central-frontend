@@ -7,8 +7,8 @@
 // - Type hints -> anything?
 // - TS types for arity -> expression nullishness?
 
-import { UnreachableError } from '@odk-web-forms/common/lib/error/UnreachableError.ts';
-import type { IterableReadonlyTuple } from '@odk-web-forms/common/types/collections/IterableReadonlyTuple.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { IterableReadonlyTuple } from '@getodk/common/types/collections/IterableReadonlyTuple.ts';
 import type { Context } from '../../context/Context.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type { EvaluationType } from '../../evaluations/EvaluationType.ts';

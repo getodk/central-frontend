@@ -1,4 +1,4 @@
-import type { CollectionValues } from '@odk-web-forms/common/types/collections/CollectionValues.ts';
+import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { fileURLToPath } from 'node:url';
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config';
 import viteConfig from './vite.config';

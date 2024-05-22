@@ -1,4 +1,4 @@
-import type { RootNode } from '@odk-web-forms/xforms-engine';
+import type { RootNode } from '@getodk/xforms-engine';
 import { Box } from '@suid/material';
 import { XFormQuestionList } from './XFormQuestionList.tsx';
 import { XFormTitle } from './XFormTitle.tsx';

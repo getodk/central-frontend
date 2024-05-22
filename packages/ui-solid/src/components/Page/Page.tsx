@@ -1,4 +1,4 @@
-import type { RootNode } from '@odk-web-forms/xforms-engine';
+import type { RootNode } from '@getodk/xforms-engine';
 import { GlobalStyles, Stack, useTheme } from '@suid/material';
 import type { JSX } from 'solid-js';
 import { PageContainer } from '../styled/PageContainer.tsx';

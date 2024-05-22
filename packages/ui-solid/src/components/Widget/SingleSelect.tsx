@@ -1,4 +1,4 @@
-import type { SelectNode } from '@odk-web-forms/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import { FormControlLabel, Radio, RadioGroup } from '@suid/material';
 import type { ChangeEvent } from '@suid/types';
 import { For, Show, createMemo } from 'solid-js';

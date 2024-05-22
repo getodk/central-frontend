@@ -1,4 +1,4 @@
-import { identity } from '@odk-web-forms/common/lib/identity.ts';
+import { identity } from '@getodk/common/lib/identity.ts';
 import { XFormDefinition } from '../XFormDefinition.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type {

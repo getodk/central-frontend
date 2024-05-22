@@ -1,8 +1,8 @@
-import { ScopedElementLookup } from '@odk-web-forms/common/lib/dom/compatibility.ts';
+import { ScopedElementLookup } from '@getodk/common/lib/dom/compatibility.ts';
 import type {
 	KnownAttributeLocalNamedElement,
 	LocalNamedElement,
-} from '@odk-web-forms/common/types/dom.ts';
+} from '@getodk/common/types/dom.ts';
 import type { SelectElement } from '../../body/control/select/SelectDefinition';
 
 const hintLookup = new ScopedElementLookup(':scope > hint', 'hint');

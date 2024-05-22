@@ -1,4 +1,4 @@
-import type { XFormsXPathEvaluator } from '@odk-web-forms/xpath';
+import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { DependentExpression } from '../../expression/DependentExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SubscribableDependency } from './SubscribableDependency.ts';
