@@ -1,4 +1,4 @@
-# @getodk/ui-vue
+# @getodk/web-forms
 
 This is a Vue component library that uses [`@getodk/xforms-engine`](../xforms-engine/) to render ODK XForms.
 
@@ -6,7 +6,7 @@ This is a Vue component library that uses [`@getodk/xforms-engine`](../xforms-en
 
 To use this library in a Vue.js application:
 
-1. Import `@getodk/ui-vue` as a dependency in the application
+1. Import `@getodk/web-forms` as a dependency in the application
 2. Install the exported plugin by adding app.use(WebFormsPlugin) in entry component (usually App.vue)
 3. Add the exported component anywhere in the application:
 
@@ -28,7 +28,7 @@ Plugin is there to initialize PrimeVue, currently it exposes no options. In futu
 To run in development, run this command at the monorepo root:
 
 ```sh
-yarn workspace @getodk/ui-vue dev
+yarn workspace @getodk/web-forms dev
 ```
 
 Individual test environments, and their corresponding watch modes, also have separate commands which can be found in [`package.json`](./package.json).

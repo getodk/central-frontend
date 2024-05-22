@@ -24,10 +24,11 @@ export type {
 } from './client/hierarchy.ts';
 export type * from './client/index.ts';
 
-// TODO: notwithstanding potential conflicts with parallel work on `ui-vue`,
-// these are the last remaining references **outside of `xforms-engine`** to
-// anything besides /client/* and the `initializeForm` entrypoint
-// implementation. We'll refine the various `definition` types in due time.
+// TODO: notwithstanding potential conflicts with parallel work on `web-forms`
+// (former `ui-vue`), these are the last remaining references **outside of
+// `xforms-engine`** to anything besides /client/* and the `initializeForm`
+// entrypoint implementation. We'll refine the various `definition` types in due
+// time.
 export type {
 	AnySelectDefinition,
 	SelectDefinition,

@@ -1,12 +1,12 @@
 {
-  "name": "@getodk/ui-vue",
+  "name": "@getodk/web-forms",
   "version": "0.1.0-alpha.0",
   "description": "Currently a stub/strawman project, reflecting potential naming and structure discussed in https://github.com/getodk/web-forms/issues/40",
   "author": "getodk",
   "repository": {
     "type": "git",
     "url": "https://github.com/getodk/web-forms",
-    "directory": "packages/ui-vue"
+    "directory": "packages/web-forms"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
   "homepage": "https://getodk.org/",

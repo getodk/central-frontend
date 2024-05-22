@@ -3,7 +3,7 @@
 A [Solid](https://www.solidjs.com/) UI for ODK web forms; currently a reference client of [`@getodk/xforms-engine`][xforms-engine].
 
 > [!NOTE]
-> The future of this package is unclear! Its current state reflects an early spike/prototyping effort to explore viability of the ODK web forms project. As development of the project proceeds overall, it is likely that the [Vue client](../ui-vue/) will be be more mature and actively developed.
+> The future of this package is unclear! Its current state reflects an early spike/prototyping effort to explore viability of the ODK web forms project. As development of the project proceeds overall, it is likely that the [Vue client](../web-forms/) will be be more mature and actively developed.
 
 ## Install
 
@@ -61,4 +61,4 @@ This structure is mostly an aspirational attempt at conveying a sense of where a
   - Node (current/LTS; tested with [jsdom](https://github.com/jsdom/jsdom)). Server-side rendering of forms is not presently supported or targeted beyond testing, though it may be considered in the future. Inclusion of Node in the automated test suites helps us to keep this option open.
 
 [xforms-engine]: ../xforms-engine/
-[vue-client]: ../ui-vue/
+[vue-client]: ../web-forms/
