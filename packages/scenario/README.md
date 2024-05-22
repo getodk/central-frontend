@@ -12,7 +12,7 @@ The client's name is taken from JavaRosa's [`Scenario`](https://github.com/getod
 
 ## Status
 
-Currently, very few of JavaRosa's tests have been ported. But our goal in setting up this package is to rapidly port all of the remaining tests that are appropriate for the ODK web-forms engine.
+Currently, very few of JavaRosa's tests have been ported. But our goal in setting up this package is to rapidly port all of the remaining tests that are appropriate for the ODK Web Forms engine.
 
 ## Usage and development
 
@@ -20,7 +20,7 @@ As with [`@getodk/common`](../common/), this internal package is not intended to
 be built. Unlike that package, this one is also not intended to be used as a
 dependency in other packages. Usage should consist entirely of running the test
 suite. These tests will be run automatically in CI along with tests throughout
-[web-forms monorepo](../../).
+[ODK Web Forms monorepo](../../).
 
 To run in development, run this command at the monorepo root:
 

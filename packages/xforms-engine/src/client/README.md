@@ -2,7 +2,7 @@
 
 The modules in this directory define the explicit interface between:
 
-- an ODK web forms client (typically, but not necessarily, providing a user interface), henceforth "client"; and,
+- an ODK Web Forms client (typically, but not necessarily, providing a user interface), henceforth "client"; and,
 - `@getodk/xforms-engine`; henceforth "the engine"
 
 The interface is defined as TypeScript type definitions, with a work-in-progress effort to provide browsable documentation of the same.

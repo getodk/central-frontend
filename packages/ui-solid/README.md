@@ -1,9 +1,9 @@
 # @getodk/ui-solid
 
-A [Solid](https://www.solidjs.com/) UI for ODK web forms; currently a reference client of [`@getodk/xforms-engine`][xforms-engine].
+A [Solid](https://www.solidjs.com/) UI for ODK Web Forms; currently a reference client of [`@getodk/xforms-engine`][xforms-engine].
 
 > [!NOTE]
-> The future of this package is unclear! Its current state reflects an early spike/prototyping effort to explore viability of the ODK web forms project. As development of the project proceeds overall, it is likely that the [Vue client](../web-forms/) will be be more mature and actively developed.
+> The future of this package is unclear! Its current state reflects an early spike/prototyping effort to explore viability of the ODK Web Forms project. As development of the project proceeds overall, it is likely that the [Vue client](../web-forms/) will be be more mature and actively developed.
 
 ## Install
 
