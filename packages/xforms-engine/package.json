@@ -1,8 +1,8 @@
 {
   "name": "@getodk/xforms-engine",
   "version": "0.1.0",
-  "description": "ODK Web forms",
   "license": "Apache-2.0",
+  "description": "XForms engine for ODK Web Forms",
   "type": "module",
   "author": "getodk",
   "repository": {
