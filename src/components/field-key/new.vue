@@ -185,12 +185,10 @@ export default {
 
   + .field-key-qr-panel {
     margin: 15px auto 30px;
+    box-shadow: $box-shadow-popover;
   }
 }
 
-.field-key-qr-panel {
-  box-shadow: $box-shadow-popover;
-}
 </style>
 
 <i18n lang="json5">
