@@ -182,12 +182,13 @@ export default {
     width: 80%;
     margin-bottom: 0px;
   }
+
+  + .field-key-qr-panel {
+    margin: 15px auto 30px;
+    box-shadow: $box-shadow-popover;
+  }
 }
 
-.field-key-qr-panel {
-  box-shadow: $box-shadow-popover;
-  margin: 15px auto 30px;
-}
 </style>
 
 <i18n lang="json5">
