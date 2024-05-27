@@ -4,6 +4,7 @@ import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
 import type { ComparableAnswer } from '../answer/ComparableAnswer.ts';
+import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
 import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
@@ -57,6 +58,40 @@ type GetQuestionAtIndexParameters<
 	expectedType?: ExpectedQuestionType | null
 ];
 
+type AnswerSelectParameters = readonly [reference: string, ...selectionValues: string[]];
+
+// prettier-ignore
+type AnswerParameters =
+	| AnswerSelectParameters
+	| readonly [reference: string, value: unknown]
+	| readonly [value: unknown];
+
+const isAnswerSelectParams = (args: AnswerParameters): args is AnswerSelectParameters => {
+	return args.length > 2 && args.every((arg) => typeof arg === 'string');
+};
+
+/**
+ * **PORTING NOTES**
+ *
+ * At this point I think I'm far enough along in the porting process to make
+ * some general, global/cross-cutting observations. This is where I'll put them
+ * as they come up.
+ *
+ * _Wishlist_
+ *
+ * 0. If I could wave a magic wand and instantly change any one thing about the
+ *    JavaRosa tests, it would be to eliminate method/function signature
+ *    overloading. Not only does it translate poorly to TypeScript (which does
+ *    support overloading at the type level, but **does not** have any special
+ *    runtime facility for dispatch based on distinct signatures), it makes
+ *    reasoning about differently shaped calls to the same method/function
+ *    really difficult! In some cases, these overloads kind of fall into a
+ *    common pattern with trailing optional parameters. That's idiomatic in both
+ *    environments (and at least transferrible to any language I can think of).
+ *    But some signatures are so disparate that they're almost begging to be
+ *    distinct routines with distinct names, or named options, or some other way
+ *    to clarify their branchiness at both call and implementation sites.
+ */
 export class Scenario {
 	static async init(...args: ScenarioStaticInitParameters): Promise<Scenario> {
 		let resource: TestFormResource;
@@ -228,9 +263,29 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(() => index, reference);
 	}
 
-	answer(reference: string, value: unknown): unknown;
-	answer(value: unknown): unknown;
-	answer(...[arg0, arg1]: [reference: string, value: unknown] | [value: unknown]): unknown {
+	private answerSelect(reference: string, ...selectionValues: string[]): unknown {
+		const event = this.setPositionalStateToReference(reference);
+
+		if (!isQuestionEventOfType(event, 'select')) {
+			throw new Error(
+				`Cannot set selection values for reference ${reference}: event is type ${event.eventType}, node is type ${event.node?.nodeType}`
+			);
+		}
+
+		return event.answerQuestion(new SelectValuesAnswer(selectionValues));
+	}
+
+	answer(...args: AnswerParameters): unknown {
+		if (isAnswerSelectParams(args)) {
+			return this.answerSelect(...args);
+		}
+
+		const [arg0, arg1, ...rest] = args;
+
+		if (rest.length > 0) {
+			throw new Error('Unexpected `answer` call of arity > 2');
+		}
+
 		let event: AnyPositionalEvent;
 		let value: unknown;
 

@@ -12,10 +12,11 @@ import {
 import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
 import { expect } from 'vitest';
 import { ComparableChoice } from '../../choice/ComparableChoice.ts';
+import { ExpectedChoice } from '../../choice/ExpectedChoice.ts';
 import { SelectChoiceList } from '../../jr/select/SelectChoiceList.ts';
 
 const assertSelectList = instanceAssertion(SelectChoiceList);
-const assertChoicesArray = instanceArrayAssertion(ComparableChoice);
+const assertExpectedChoicesArray = instanceArrayAssertion(ExpectedChoice);
 
 type SelectChoices = Iterable<ComparableChoice>;
 
@@ -38,74 +39,111 @@ class InspectableChoices implements Inspectable {
 	}
 }
 
+interface GetContainsChoicesResultOptions {
+	readonly inAnyOrder: boolean;
+}
+
+const getContainsChoicesResult = (
+	actual: SelectChoiceList,
+	expected: readonly ExpectedChoice[],
+	options: GetContainsChoicesResultOptions
+): InspectableComparisonError | true => {
+	const actualChoices = Array.from(actual);
+	const actualIndexes = expected.map((expectedChoice) => {
+		return actualChoices.findIndex((actualChoice) => {
+			return expectedChoice.checkEquality(actualChoice).pass;
+		});
+	});
+	const missingChoices = actualIndexes.flatMap((actualIndex, expectedIndex) => {
+		if (actualIndex === -1) {
+			return expected[expectedIndex]!;
+		}
+
+		return [];
+	});
+
+	const { inAnyOrder } = options;
+	const baseErrorOptions = inAnyOrder ? { comparisonQualifier: 'in any order' } : {};
+
+	let error: InspectableComparisonError | null = null;
+
+	if (missingChoices.length > 0) {
+		const missing = mapChoices(missingChoices, 'comparableValue');
+
+		error = new InspectableComparisonError(
+			new InspectableChoices(actual),
+			new InspectableChoices(expected),
+			'contain',
+			{
+				...baseErrorOptions,
+				details: `Missing choices: ${JSON.stringify(missing)}`,
+			}
+		);
+	} else if (!inAnyOrder) {
+		const isExpectedOrder = actualIndexes.every((actualIndex, i) => {
+			const previousIndex = actualIndexes[i - 1];
+
+			return previousIndex == null || actualIndex > previousIndex;
+		});
+
+		if (!isExpectedOrder) {
+			error = new InspectableComparisonError(
+				new InspectableChoices(actual),
+				new InspectableChoices(expected),
+				'contain',
+				{
+					...baseErrorOptions,
+					details: `Choices match in unexpected order: ${JSON.stringify(actualIndexes)}`,
+				}
+			);
+		}
+	}
+
+	return error == null || error;
+};
+
 const choiceExtensions = extendExpect(expect, {
 	toContainChoices: new AsymmetricTypedExpectExtension(
 		assertSelectList,
-		assertChoicesArray,
+		assertExpectedChoicesArray,
 		(actual, expected) => {
-			const actualChoices = mapChoices(actual, 'comparableValue');
-			const expectedChoices = mapChoices(expected, 'comparableValue');
-			const missing: string[] = [];
-			const outOfOrder: string[] = [];
-
-			let previousIndex = -1;
-
-			for (const value of expectedChoices) {
-				const valueIndex = actualChoices.indexOf(value);
-
-				if (valueIndex === -1) {
-					missing.push(value);
-					continue;
-				} else if (valueIndex < previousIndex) {
-					outOfOrder.push(value);
-				}
-
-				previousIndex = valueIndex;
-			}
-
-			const pass = missing.length === 0 && outOfOrder.length === 0;
-
-			return (
-				pass ||
-				new InspectableComparisonError(
-					new InspectableChoices(actual),
-					new InspectableChoices(expected),
-					'contain',
-					{
-						details: `Missing choices: ${JSON.stringify(missing)}\nChoices out of order: ${JSON.stringify(outOfOrder)}`,
-					}
-				)
-			);
+			return getContainsChoicesResult(actual, expected, {
+				inAnyOrder: false,
+			});
 		}
 	),
+
+	/**
+	 * **NOTE FOR REVIEWERS**
+	 *
+	 * This could really go on any of the custom assertion extensions. But it's
+	 * going here, because here is where I experienced the wonder that prompted me
+	 * to write it.
+	 *
+	 * The general approach to custom assertion extensions felt a bit
+	 * overengineered as I was working on it. It simplifies and clarifies a few
+	 * things that felt confusing without a more purposeful abstraction, but it
+	 * could have been plenty good enough to just reference the docs, talk about
+	 * it, otherwise build a shared understanding of the Vitest extension API's
+	 * inherent complexities.
+	 *
+	 * I realized today that, entirely by lucky accident, this solution is so much
+	 * better than that. And I realized it because, again entirely by lucky
+	 * accident, I discovered that command-clicking (or otherwise using IDE
+	 * navigation) from an actual call to the assertion in any random test...
+	 * comes right back to this implementation. In hindsight, of course it does.
+	 * But that's a thing we'd give up without a little bit of extra abstraction
+	 * on top of Vitest, and it's a thing I think we'll find quite valuable if we
+	 * also find custom domain-specific assertions valuable for their
+	 * expressiveness in tests.
+	 */
 	toContainChoicesInAnyOrder: new AsymmetricTypedExpectExtension(
 		assertSelectList,
-		assertChoicesArray,
+		assertExpectedChoicesArray,
 		(actual, expected) => {
-			const actualValues = mapChoices(actual, 'comparableValue');
-			const expectedValues = mapChoices(expected, 'comparableValue');
-			const missingValues: string[] = [];
-
-			for (const value of expectedValues) {
-				if (!actualValues.includes(value)) {
-					missingValues.push(value);
-				}
-			}
-
-			const pass = missingValues.length === 0;
-
-			return (
-				pass ||
-				new InspectableComparisonError(
-					new InspectableChoices(actual),
-					new InspectableChoices(expected),
-					'contain',
-					{
-						comparisonQualifier: 'in any order',
-						details: `Missing choices: ${JSON.stringify(missingValues)}`,
-					}
-				)
-			);
+			return getContainsChoicesResult(actual, expected, {
+				inAnyOrder: true,
+			});
 		}
 	),
 });

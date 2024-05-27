@@ -15,7 +15,8 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { answerText } from '../src/answer/ExpectedDisplayTextAnswer.ts';
 import { choice } from '../src/choice/ExpectedChoice.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
@@ -873,5 +874,164 @@ describe('SelectChoiceTest.java', () => {
 	});
 });
 
+/**
+ * **PORTING NOTES**
+ *
+ * As in JavaRosa, this test suite creates a new {@link Scenario} instance as
+ * setup before each test. In JavaRosa, each test then begins by calling
+ * {@link Scenario.newInstance | `scenario.newInstance`}. It isn't clear whether
+ * those calls are superfluous **there**, but they would be here (if we
+ * supported that `Scenario` method, which we have currently deferred). They're
+ * commented out here, called out for review discussion, in case some nuance is
+ * missed by omitting the calls.
+ *
+ * - - -
+ *
+ * Subjective preference note, also for review discussion: I'm generally in
+ * favor of breaking out shared test setup/teardown steps. I was actually
+ * surprised that this is the first case of it I've encountered working through
+ * the JavaRosa test ports! It's also notable, however, that this setup is only
+ * doing one thing... and then each test seems to be doing a redundant thing to
+ * that setup. It strikes me that this is more verbose, less clear. Adding the
+ * typical downsides of indirection-in-tests, I'd almost certainly favor just
+ * inlining the setup at the beginning of each test body.
+ *
+ * My only real hesitation is that it's nice to see a few tests that are **not**
+ * `async`! It's made me a tiny bit nervous with each test before this suite, as
+ * I'm still generally cautious about having any asynchronous aspect of the
+ * engine's APIs, particularly any aspect which might infect asynchrony up to
+ * entire routines (as it does for tests which perform their own setup).
+ *
+ * - - -
+ *
+ * JR:
+ *
+ * When itemsets are dynamically generated, the choices available to a user in a
+ * select multiple question can change based on the answers given to other
+ * questions. These tests verify that when several select multiples are chained
+ * in a cascading pattern, updating selections at root levels correctly updates
+ * the choices available in dependent selects all the way down the cascade. They
+ * also verify that if an answer that is no longer part of the available choices
+ * was previously selected, that selection is removed from the answer.
+ *
+ * Select ones use the same code paths so see also
+ * {@link SelectOneChoiceFilterTest} for more explicit cases at each level.
+ */
+describe('SelectMultipleChoiceFilterTest.java', () => {
+	let scenario: Scenario;
+
+	beforeEach(async () => {
+		scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+	});
+
+	describe('dependent levels in blank instance', () => {
+		it(`[has] have no choices`, () => {
+			// scenario.newInstance();
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+		});
+	});
+
+	describe('selecting value at level 1', () => {
+		it('filters choices at level 2', () => {
+			// scenario.newInstance();
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'a', 'b');
+
+			expect(scenario.choicesOf('/data/level2')).toContainChoicesInAnyOrder([
+				choice('aa'),
+				choice('ab'),
+				choice('ac'),
+				choice('ba'),
+				choice('bb'),
+				choice('bc'),
+			]);
+		});
+	});
+
+	describe('selecting values at levels 1 and 2', () => {
+		it('filters choices at level 3', () => {
+			// scenario.newInstance();
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'a', 'b');
+			scenario.answer('/data/level2', 'aa', 'ba');
+
+			expect(scenario.choicesOf('/data/level3')).toContainChoicesInAnyOrder([
+				choice('aaa'),
+				choice('aab'),
+				choice('baa'),
+				choice('bab'),
+			]);
+		});
+	});
+
+	describe('new choice filter evaluation', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - Rephrase "irrelevant" -> "filtered", some other phrasing indicating select items not present based on itemset filter expression results? The current naming suggests this is a test about the XForms **`relevant`** bind expression, but the test fixture has no `relevant` expressions at all.
+		 *
+		 * - Failure appears to be a bug where selection state is (partially) lost when changing an itemset filter updates the select's available items. Similar behavior can be observed on simpler forms, including at least one fixture previously derived from Enketo. This also appears to be at least partly related to deferring a decision on the appropriate behavior for the effect itemset filtering should have on selection state **when it is changed and then reverted** ({@link https://github.com/getodk/web-forms/issues/57}).
+		 */
+		it.fails('removes irrelevant answers at all levels, without changing order', () => {
+			// scenario.newInstance();
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'a', 'b', 'c');
+			scenario.answer('/data/level2', 'aa', 'ba', 'ca');
+			scenario.answer('/data/level3', 'aab', 'baa', 'aaa');
+
+			// Remove b from the level1 answer; this should filter out b-related answers and choices at levels 2 and 3
+			scenario.answer('/data/level1', 'a', 'c');
+
+			// Force populateDynamicChoices to run again which is what filters out irrelevant answers
+			scenario.choicesOf('/data/level2');
+
+			expect(scenario.answerOf('/data/level2')).toEqualAnswer(answerText('aa, ca'));
+
+			// This also runs populateDynamicChoices and filters out irrelevant answers
+			expect(scenario.choicesOf('/data/level3')).toContainChoices([
+				choice('aaa'),
+				choice('aab'),
+				choice('caa'),
+				choice('cab'),
+			]);
+
+			expect(scenario.answerOf('/data/level3')).toEqualAnswer(answerText('aab, aaa'));
+		});
+
+		it('leaves answer unchanged if all selections still in choices', () => {
+			// scenario.newInstance();
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+
+			scenario.answer('/data/level1', 'a', 'b', 'c');
+			scenario.answer('/data/level2', 'aa', 'ba', 'bb', 'ab');
+			scenario.answer('/data/level3', 'aab', 'baa', 'aaa');
+
+			// Remove c from the level1 answer; this should have no effect on levels 2 and 3
+			scenario.answer('/data/level1', 'a', 'b');
+
+			// Force populateDynamicChoices to run again which is what filters out irrelevant answers
+			scenario.choicesOf('/data/level2');
+
+			expect(scenario.answerOf('/data/level2')).toEqualAnswer(answerText('aa, ba, bb, ab'));
+
+			// This also runs populateDynamicChoices and filters out irrelevant answers
+			expect(scenario.choicesOf('/data/level3')).toContainChoicesInAnyOrder([
+				choice('aaa'),
+				choice('aab'),
+				choice('baa'),
+				choice('bab'),
+			]);
+
+			expect(scenario.answerOf('/data/level3')).toEqualAnswer(answerText('aab, baa, aaa'));
+		});
+	});
+});
+
 describe.todo('SelectOneChoiceFilterTest.java');
-describe.todo('SelectMultipleChoiceFilterTest.java');
