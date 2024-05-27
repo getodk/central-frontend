@@ -17,6 +17,7 @@ import {
 	type PositionalEvents,
 } from './event/getPositionalEvents.ts';
 import type { PathResource } from './resource/PathResource.ts';
+import { SelectChoiceList } from './select/SelectChoiceList.ts';
 
 interface ScenarioConstructorOptions {
 	readonly formName: string;
@@ -137,8 +138,28 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(increment, expectReference);
 	}
 
-	answer(value: unknown): unknown {
-		const event = this.getSelectedPositionalEvent();
+	answer(reference: string, value: unknown): unknown;
+	answer(value: unknown): unknown;
+	answer(...[arg0, arg1]: [reference: string, value: unknown] | [value: unknown]): unknown {
+		let event: AnyPositionalEvent;
+		let value: unknown;
+
+		if (arg1 === undefined) {
+			event = this.getSelectedPositionalEvent();
+			value = arg0;
+		} else if (typeof arg0 === 'string') {
+			const events = this.getPositionalEvents();
+			const reference = arg0;
+			const index = events.findIndex(({ node }) => {
+				return node?.currentState.reference === reference;
+			});
+
+			event = this.setNonTerminalEventPosition(() => index, reference);
+
+			value = arg1;
+		} else {
+			throw new Error('Unsupported `answer` overload call');
+		}
 
 		if (event.eventType === 'BEGINNING_OF_FORM') {
 			throw new Error('Cannot answer question, beginning of form is selected');
@@ -159,6 +180,22 @@ export class Scenario {
 
 	answerOf(reference: string): ComparableAnswer {
 		return answerOf(this.instanceRoot, reference);
+	}
+
+	choicesOf(reference: string): SelectChoiceList {
+		const events = this.getPositionalEvents();
+		// TODO: generalize more lookups...
+		const event = events.find(({ node }) => {
+			return node?.currentState.reference === reference;
+		});
+
+		if (event == null || event.eventType !== 'QUESTION' || event.node.nodeType !== 'select') {
+			throw new Error(`No choices for reference: ${reference}`);
+		}
+
+		const { node } = event;
+
+		return new SelectChoiceList(node);
 	}
 
 	createNewRepeat(repeatNodeset: string): unknown {
@@ -184,5 +221,19 @@ export class Scenario {
 		this.setNonTerminalEventPosition(() => index, instance.currentState.reference);
 
 		return;
+	}
+
+	setLanguage(languageName: string): void {
+		const { instanceRoot } = this;
+
+		const language = instanceRoot.languages.find((formLanguage) => {
+			return formLanguage.language === languageName;
+		});
+
+		if (language == null || language.isSyntheticDefault) {
+			throw new Error(`Form does not support language: ${languageName}`);
+		}
+
+		this.instanceRoot.setLanguage(language);
 	}
 }
