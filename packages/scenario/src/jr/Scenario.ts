@@ -106,12 +106,15 @@ const isAnswerSelectParams = (args: AnswerParameters): args is AnswerSelectParam
  *    to clarify their branchiness at both call and implementation sites.
  */
 export class Scenario {
-	static async init(...args: ScenarioStaticInitParameters): Promise<Scenario> {
+	static async init<This extends typeof Scenario>(
+		this: This,
+		...args: ScenarioStaticInitParameters
+	): Promise<This['prototype']> {
 		let resource: TestFormResource;
 		let formName: string;
 
 		if (isFormFileName(args[0])) {
-			return Scenario.init(r(args[0]));
+			return this.init(r(args[0]));
 		} else if (args.length === 1) {
 			const [pathResource] = args;
 			resource = pathResource;
@@ -143,9 +146,10 @@ export class Scenario {
 
 	private readonly getPositionalEvents: Accessor<PositionalEvents>;
 	private readonly setEventPosition: Setter<number>;
-	private readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
 
-	private constructor(options: ScenarioConstructorOptions) {
+	protected readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
+
+	protected constructor(options: ScenarioConstructorOptions) {
 		const { dispose, formName, instanceRoot } = options;
 
 		this.formName = formName;

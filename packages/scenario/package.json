@@ -47,6 +47,7 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
+    "@js-joda/core": "^5.6.2",
     "@getodk/xforms-engine": "0.1.1",
     "@vitest/browser": "^1.6.0",
     "jsdom": "^24.0.0",
