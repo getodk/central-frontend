@@ -11,8 +11,8 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, it } from 'vitest';
-import { Scenario } from '../src/Scenario.ts';
 import { CoreMatchers, assertThat, intAnswer, stringAnswer } from '../src/assert.ts';
+import { Scenario } from '../src/jr/Scenario.ts';
 
 describe('Tests ported from JavaRosa - repeats', () => {
 	describe('Adding or deleting repeats', () => {

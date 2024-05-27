@@ -26,7 +26,7 @@ import {
 	untrack,
 } from 'solid-js';
 import { afterEach, expect } from 'vitest';
-import { castToString } from './cast.ts';
+import { castToString } from '../cast.ts';
 
 // prettier-ignore
 type AnyValueNode =
