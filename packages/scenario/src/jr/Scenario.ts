@@ -723,6 +723,10 @@ export class Scenario {
 		});
 	}
 
+	proposed_serializeInstance(): string {
+		throw new ImplementationPendingError('instance serialization');
+	}
+
 	// TODO: consider adapting tests which use the following interfaces to use
 	// more portable concepts (either by using conceptually similar `Scenario`
 	// APIs, or by reframing the tests' logic to the same behavioral concerns with
