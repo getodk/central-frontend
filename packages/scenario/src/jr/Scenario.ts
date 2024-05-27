@@ -21,12 +21,15 @@ import {
 	type PositionalEvents,
 } from './event/getPositionalEvents.ts';
 import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
+import { JRFormDef } from './form/JRFormDef.ts';
 import { TreeReference } from './instance/TreeReference.ts';
 import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 import type { ValidateOutcome } from './validation/ValidateOutcome.ts';
 import { ValidationImplementationPendingError } from './validation/ValidationImplementationPendingError.ts';
+import { JREvaluationContext } from './xpath/JREvaluationContext.ts';
+import { JRTreeReference } from './xpath/JRTreeReference.ts';
 
 interface ScenarioConstructorOptions {
 	readonly dispose: VoidFunction;
@@ -546,4 +549,41 @@ export class Scenario {
 			}) ?? null
 		);
 	}
+
+	// TODO: consider adapting tests which use the following interfaces to use
+	// more portable concepts (either by using conceptually similar `Scenario`
+	// APIs, or by reframing the tests' logic to the same behavioral concerns with
+	// better supported APIs)
+
+	/**
+	 * @todo Mark deprecated?
+	 */
+	getFormDef(): JRFormDef {
+		return new JRFormDef(this.instanceRoot);
+	}
+
+	/**
+	 * @see {@link JREvaluationContext}
+	 * @todo Mark deprecated?
+	 */
+	getEvaluationContext(): JREvaluationContext {
+		return new JREvaluationContext();
+	}
+
+	/**
+	 * @todo Mark deprecated?
+	 */
+	expandSingle(_treeReference: JRTreeReference): JRTreeReference {
+		throw new UnclearApplicabilityError('XPath internals');
+	}
 }
+
+/**
+ * JavaRosa exposes this as a static method on {@link Scenario}, but we expose
+ * it as a named export as that is its typical usage in ported tests.
+ *
+ * @todo Mark deprecated?
+ */
+export const getRef = (xpathReference: string): JRTreeReference => {
+	return new JRTreeReference(xpathReference);
+};
