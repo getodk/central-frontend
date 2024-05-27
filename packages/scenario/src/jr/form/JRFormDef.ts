@@ -1,15 +1,18 @@
 import type { RootNode } from '@getodk/xforms-engine';
+import { expect } from 'vitest';
 import { UnclearApplicabilityError } from '../../error/UnclearApplicabilityError.ts';
+import type { Scenario } from '../Scenario.ts';
+import type { JRTreeReference } from '../xpath/JRTreeReference.ts';
 
 /**
  * @todo Hopefully we can keep this interface extremely minimal. It currently
  * exists only to allow tests calling into it to type check.
  */
 export class JRFormDef {
-	constructor(readonly instanceRoot: RootNode) {}
+	constructor(readonly scenario: Scenario) {}
 
 	getMainInstance(): RootNode {
-		return this.instanceRoot;
+		return this.scenario.instanceRoot;
 	}
 
 	/**
@@ -24,5 +27,13 @@ export class JRFormDef {
 	 */
 	hasAction(_actionName: string): boolean {
 		throw new UnclearApplicabilityError("JavaRosa's `FormDef.hasAction`");
+	}
+
+	isRepeatRelevant(treeReference: JRTreeReference): boolean {
+		const node = this.scenario.getAnswerNode(treeReference.xpathReference);
+
+		expect(node.nodeType).toBe('repeat-instance');
+
+		return node.currentState.relevant;
 	}
 }

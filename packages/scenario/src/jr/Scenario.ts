@@ -616,7 +616,7 @@ export class Scenario {
 	 * @todo Mark deprecated?
 	 */
 	getFormDef(): JRFormDef {
-		return new JRFormDef(this.instanceRoot);
+		return new JRFormDef(this);
 	}
 
 	/**
