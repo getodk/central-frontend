@@ -9,10 +9,13 @@ import {
 } from '@getodk/common/test/assertions/helpers.ts';
 import { expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
+import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
 import { AnswerResult } from '../../jr/Scenario.ts';
 import { ValidationImplementationPendingError } from '../../jr/validation/ValidationImplementationPendingError.ts';
 
 const assertComparableAnswer = instanceAssertion(ComparableAnswer);
+
+const assertExpectedApproximateUOMAnswer = instanceAssertion(ExpectedApproximateUOMAnswer);
 
 const assertString = typeofAssertion('string');
 
@@ -34,6 +37,16 @@ const answerExtensions = extendExpect(expect, {
 
 		return pass || new InspectableComparisonError(actual, expected, 'equal');
 	}),
+
+	toHaveAnswerCloseTo: new AsymmetricTypedExpectExtension(
+		assertComparableAnswer,
+		assertExpectedApproximateUOMAnswer,
+		(actual, expected) => {
+			const pass = expected.isCloseTo(actual);
+
+			return pass || new InspectableComparisonError(actual, expected, 'close to');
+		}
+	),
 
 	/**
 	 * **PORTING NOTES**
