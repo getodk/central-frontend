@@ -2079,4 +2079,20 @@ describe('Actions/Events', () => {
 			});
 		});
 	});
+
+	describe('XFormParserTest.java', () => {
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * - `getValue().getValue().toString()` -> `currentState.value`
+		 *
+		 * - Fails pending feature support
+		 */
+		it.fails('sets [default] value[s] [~~]with strings[~~]', async () => {
+			const scenario = await Scenario.init('default_test.xml');
+
+			expect(scenario.getAnswerNode('/data/string_val').currentState.value).toBe('string-value');
+			expect(scenario.getAnswerNode('/data/inline_val').currentState.value).toBe('inline-value');
+		});
+	});
 });

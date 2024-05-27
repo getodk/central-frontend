@@ -2865,4 +2865,59 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			);
 		});
 	});
+
+	describe('XFormParserTest.java', () => {
+		describe('form with `count-non-empty` func[tion]', () => {
+			interface NamespaceOptions {
+				readonly includeCommonNamespaces: boolean;
+			}
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * - It's not clear if this belongs here. It's fundamentally a test of the
+			 *   XPath `count-non-empty` function, but appears to depend on repeat
+			 *   instances as part of exercising the functionality. Otherwise, it
+			 *   would probably be best to make the `xpath` package is exercising all
+			 *   functionality under test in this form.
+			 *
+			 * - Fails with directly ported form fixture, which is missing (at least)
+			 *   the `xf` namespace declaration. Unclear whether we should:
+			 *
+			 *     - Produce an initialization error (form is technically invalid)
+			 *
+			 *     - Detect the condition and handle silently
+			 *
+			 *     - Detect the condition and handle gracefully, perhaps with a
+			 *       warning
+			 *
+			 *     If we do handle it, we should probably do a sanity check that the
+			 *     form doesn't have a namespace collision on the `xf` prefix.
+			 *
+			 * - Parameterized to use an alternate fixture with common namespaces
+			 *   present, to demonstrate the test otherwise passe.
+			 */
+			describe.each<NamespaceOptions>([
+				{ includeCommonNamespaces: false },
+				{ includeCommonNamespaces: true },
+			])('include common namespaces: $includeCommonNamespaces', ({ includeCommonNamespaces }) => {
+				let testFn: typeof it | typeof it.fails;
+
+				if (includeCommonNamespaces) {
+					testFn = it;
+				} else {
+					testFn = it.fails;
+				}
+
+				testFn('[calculates the count of non-empty nodes]', async () => {
+					const scenario = await Scenario.init(
+						includeCommonNamespaces ? 'countNonEmptyForm-alt.xml' : 'countNonEmptyForm.xml'
+					);
+
+					expect(scenario.answerOf('/test/count_value')).toEqualAnswer(intAnswer(4));
+					expect(scenario.answerOf('/test/count_non_empty_value')).toEqualAnswer(intAnswer(2));
+				});
+			});
+		});
+	});
 });
