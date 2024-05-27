@@ -11,6 +11,7 @@ import { initializeTestForm } from '../client/init.ts';
 import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
 import { ImplementationPendingError } from '../error/ImplementationPendingError.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
+import type { JRFormEntryCaption } from './caption/JRFormEntryCaption.ts';
 import type { BeginningOfFormEvent } from './event/BeginningOfFormEvent.ts';
 import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
@@ -50,6 +51,10 @@ type ScenarioStaticInitParameters =
 	| readonly [formFileName: FormFileName]
 	| readonly [formName: string, form: XFormsElement]
 	| readonly [resource: FormDefinitionResource];
+
+interface AssertCurrentReferenceOptions {
+	readonly assertCurrentReference: string;
+}
 
 /**
  * @see {@link Scenario.createNewRepeat} for details
@@ -173,15 +178,6 @@ export class Scenario {
 	): asserts event is NonTerminalPositionalEvent {
 		expect(event.eventType).not.toBe('BEGINNING_OF_FORM');
 		expect(event.eventType).not.toBe('END_OF_FORM');
-	}
-
-	private assertNodeset(
-		event: AnyPositionalEvent,
-		nodeset: string
-	): asserts event is NonTerminalPositionalEvent {
-		this.assertNonTerminalEventSelected(event);
-
-		expect(event.node.definition.nodeset).toBe(nodeset);
 	}
 
 	private assertReference(
@@ -438,7 +434,7 @@ export class Scenario {
 
 			event = this.getSelectedPositionalEvent();
 
-			this.assertNodeset(event, assertCurrentReference);
+			this.assertReference(event, assertCurrentReference);
 
 			repeatReference = assertCurrentReference;
 		} else {
@@ -629,6 +625,34 @@ export class Scenario {
 		throw new ImplementationPendingError(
 			'determining whether or not a repeat range supports client-invoked addition of repeat instances'
 		);
+	}
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * This method is proposed as an alternative to
+	 * {@link JRFormEntryCaption.getQuestionText}, intended to:
+	 *
+	 * - intended to be roughly equivalent in semantics without reliance on that
+	 *   class, viewed as an aspect of JavaRosa internal APIs
+	 *
+	 * - Provide similar positional semantics to other existing {@link Scenario}
+	 *   methods/web forms extensions thereof, where the call site expresses the
+	 *   expected XPath reference of the node at the current positional state.
+	 */
+	proposed_getQuestionLabelText(options: AssertCurrentReferenceOptions): string {
+		const event = this.getSelectedPositionalEvent();
+
+		this.assertReference(event, options.assertCurrentReference);
+
+		const { currentState } = event.node;
+		const label = currentState.label?.asString;
+
+		if (label == null) {
+			throw new Error(`Question node with reference ${currentState.reference} has no label`);
+		}
+
+		return label;
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use
