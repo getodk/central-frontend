@@ -24,7 +24,6 @@ import {
 import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
 import { JRFormDef } from './form/JRFormDef.ts';
 import { JRFormIndex } from './form/JRFormIndex.ts';
-import { TreeReference } from './instance/TreeReference.ts';
 import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
@@ -527,7 +526,7 @@ export class Scenario {
 		this.instanceRoot.setLanguage(language);
 	}
 
-	refAtIndex(): TreeReference {
+	refAtIndex(): JRTreeReference {
 		const event = this.getSelectedPositionalEvent();
 
 		let treeReferenceNode: AnyNode;
@@ -538,7 +537,7 @@ export class Scenario {
 			treeReferenceNode = event.node;
 		}
 
-		return new TreeReference(treeReferenceNode);
+		return new JRTreeReference(treeReferenceNode.currentState.reference);
 	}
 
 	/**
