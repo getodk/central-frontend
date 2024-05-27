@@ -1,5 +1,5 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
-import type { RootNode } from '@getodk/xforms-engine';
+import type { AnyNode, RootNode } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
@@ -8,6 +8,7 @@ import { answerOf } from '../client/answerOf.ts';
 import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
 import { getClosestRepeatRange } from '../client/traversal.ts';
+import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
 import { RepeatInstanceEvent } from './event/RepeatInstanceEvent.ts';
 import {
@@ -16,6 +17,7 @@ import {
 	type NonTerminalPositionalEvent,
 	type PositionalEvents,
 } from './event/getPositionalEvents.ts';
+import { TreeReference } from './instance/TreeReference.ts';
 import type { PathResource } from './resource/PathResource.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 
@@ -290,5 +292,27 @@ export class Scenario {
 		}
 
 		this.instanceRoot.setLanguage(language);
+	}
+
+	refAtIndex(): TreeReference {
+		const event = this.getSelectedPositionalEvent();
+
+		let treeReferenceNode: AnyNode;
+
+		if (event.eventType === 'END_OF_FORM') {
+			treeReferenceNode = this.instanceRoot;
+		} else {
+			treeReferenceNode = event.node;
+		}
+
+		return new TreeReference(treeReferenceNode);
+	}
+
+	/**
+	 * @todo it is not clear if/how we'll use similar logic in web forms. It
+	 * seems most likely to be applicable to offline capabilities.
+	 */
+	serializeAndDeserializeForm(): Promise<Scenario> {
+		return Promise.reject(new UnclearApplicabilityError('serialization/deserialization'));
 	}
 }
