@@ -8,7 +8,7 @@ import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
 import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
-import { getClosestRepeatRange } from '../client/traversal.ts';
+import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
 import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
@@ -322,6 +322,24 @@ export class Scenario {
 
 	answerOf(reference: string): ComparableAnswer {
 		return answerOf(this.instanceRoot, reference);
+	}
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Should we consider a more general name for this? It returns any node type,
+	 * not just nodes which may be considered an "answer" to a "question". For
+	 * instance, the first assertion in the first test ported test calling it
+	 * checks the relevance of a group.
+	 */
+	getAnswerNode(reference: string): AnyNode {
+		const node = getNodeForReference(this.instanceRoot, reference);
+
+		if (node == null) {
+			throw new Error(`No "answer" node for reference: ${reference}`);
+		}
+
+		return node;
 	}
 
 	choicesOf(reference: string): SelectChoiceList {
