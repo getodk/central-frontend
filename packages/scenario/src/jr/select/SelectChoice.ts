@@ -2,15 +2,19 @@ import type { SelectItem } from '@getodk/xforms-engine';
 import { ComparableChoice } from '../../choice/ComparableChoice.ts';
 
 export class SelectChoice extends ComparableChoice {
-	readonly selectItemValue: string;
+	get value(): string {
+		return this.selectItem.value;
+	}
+
+	get label(): string | null {
+		return this.selectItem.label?.asString ?? null;
+	}
 
 	constructor(protected readonly selectItem: SelectItem) {
 		super();
-
-		this.selectItemValue = selectItem.value;
 	}
 
 	getValue(): string {
-		return this.selectItemValue;
+		return this.value;
 	}
 }

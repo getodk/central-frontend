@@ -1,114 +1,120 @@
-import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
+import type {
+	DeriveStaticVitestExpectExtension,
+	Inspectable,
+} from '@getodk/common/test/assertions/helpers.ts';
+import {
+	AsymmetricTypedExpectExtension,
+	InspectableComparisonError,
+	extendExpect,
+	instanceArrayAssertion,
+	instanceAssertion,
+} from '@getodk/common/test/assertions/helpers.ts';
+import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
 import { expect } from 'vitest';
 import { ComparableChoice } from '../../choice/ComparableChoice.ts';
-import { ChoicesMembershipAssertionResult } from '../ChoicesMembershipAssertionResult.ts';
-import type { CustomAssertionResult } from '../CustomAssertionResult.ts';
+import { SelectChoiceList } from '../../jr/select/SelectChoiceList.ts';
 
-type ExtensionImplementation = (actual: unknown, expected: unknown) => CustomAssertionResult;
+const assertSelectList = instanceAssertion(SelectChoiceList);
+const assertChoicesArray = instanceArrayAssertion(ComparableChoice);
 
-type MultipleChoiceMembershipComparison = (
-	expected: Iterable<ComparableChoice>,
-	actual: Iterable<ComparableChoice>
-) => ChoicesMembershipAssertionResult;
+type SelectChoices = Iterable<ComparableChoice>;
 
-interface ChoiceExtensionSignatures {
-	readonly toContainChoices: MultipleChoiceMembershipComparison;
-	readonly toContainChoicesInAnyOrder: MultipleChoiceMembershipComparison;
+const mapChoices = <Key extends keyof ComparableChoice>(
+	choices: SelectChoices,
+	key: Key
+): ReadonlyArray<ComparableChoice[Key]> => {
+	return Array.from(choices).map((choice) => choice[key]);
+};
+
+class InspectableChoices implements Inspectable {
+	readonly choices: readonly ComparableChoice[];
+
+	constructor(choices: SelectChoices) {
+		this.choices = Array.from(choices);
+	}
+
+	inspectValue(): JSONValue {
+		return this.choices.map((choice) => choice.inspectValue());
+	}
 }
 
-type ChoiceExtensionImplementations = {
-	[K in keyof ChoiceExtensionSignatures]: ExtensionImplementation;
-};
+const choiceExtensions = extendExpect(expect, {
+	toContainChoices: new AsymmetricTypedExpectExtension(
+		assertSelectList,
+		assertChoicesArray,
+		(actual, expected) => {
+			const actualChoices = mapChoices(actual, 'comparableValue');
+			const expectedChoices = mapChoices(expected, 'comparableValue');
+			const missing: string[] = [];
+			const outOfOrder: string[] = [];
 
-type AssertItem<T> = (value: unknown) => asserts value is T;
+			let previousIndex = -1;
 
-type AssertItems = <T>(
-	assertItem: AssertItem<T>,
-	items: readonly unknown[]
-) => asserts items is readonly T[];
+			for (const value of expectedChoices) {
+				const valueIndex = actualChoices.indexOf(value);
 
-const assertItems: AssertItems = <T>(
-	assertItem: AssertItem<T>,
-	items: readonly unknown[]
-): asserts items is readonly T[] => {
-	for (const item of items) {
-		assertItem(item);
-	}
-};
+				if (valueIndex === -1) {
+					missing.push(value);
+					continue;
+				} else if (valueIndex < previousIndex) {
+					outOfOrder.push(value);
+				}
 
-const assertComparableChoice = (value: unknown): asserts value is ComparableChoice => {
-	assertInstanceType(ComparableChoice, value);
-};
-
-const toComparableChoicesArray = (value: unknown): readonly ComparableChoice[] => {
-	const maybeIterable = value as Iterable<unknown> | null | undefined;
-
-	if (maybeIterable == null || typeof maybeIterable[Symbol.iterator] !== 'function') {
-		throw new Error('Not an Iterable<ComparableChoice>');
-	}
-
-	const array = Array.from(maybeIterable);
-
-	assertItems(assertComparableChoice, array);
-
-	return array;
-};
-
-const choiceExtensions = {
-	toContainChoices: (actual: unknown, ...expected: unknown[]): CustomAssertionResult => {
-		const actualChoices = toComparableChoicesArray(actual);
-		const actualValues = actualChoices.map((choice) => {
-			return choice.selectItemValue;
-		});
-		const expectedChoices = toComparableChoicesArray(expected);
-
-		let previousIndex = -1;
-		let pass = true;
-
-		for (const choice of expectedChoices) {
-			const currentIndex = actualValues.indexOf(choice.selectItemValue);
-
-			if (currentIndex === -1 || currentIndex < previousIndex) {
-				pass = false;
-
-				break;
+				previousIndex = valueIndex;
 			}
 
-			previousIndex = currentIndex;
+			const pass = missing.length === 0 && outOfOrder.length === 0;
+
+			return (
+				pass ||
+				new InspectableComparisonError(
+					new InspectableChoices(actual),
+					new InspectableChoices(expected),
+					'contain',
+					{
+						details: `Missing choices: ${JSON.stringify(missing)}\nChoices out of order: ${JSON.stringify(outOfOrder)}`,
+					}
+				)
+			);
 		}
+	),
+	toContainChoicesInAnyOrder: new AsymmetricTypedExpectExtension(
+		assertSelectList,
+		assertChoicesArray,
+		(actual, expected) => {
+			const actualValues = mapChoices(actual, 'comparableValue');
+			const expectedValues = mapChoices(expected, 'comparableValue');
+			const missingValues: string[] = [];
 
-		return new ChoicesMembershipAssertionResult(expectedChoices, actualChoices, pass, {
-			comparisonVerb: 'contain',
-		});
-	},
+			for (const value of expectedValues) {
+				if (!actualValues.includes(value)) {
+					missingValues.push(value);
+				}
+			}
 
-	toContainChoicesInAnyOrder: (actual: unknown, ...expected: unknown[]): CustomAssertionResult => {
-		const actualChoices = toComparableChoicesArray(actual);
-		const actualValues = actualChoices.map((choice) => {
-			return choice.selectItemValue;
-		});
-		const expectedChoices = toComparableChoicesArray(expected);
+			const pass = missingValues.length === 0;
 
-		const pass = expectedChoices.every((choice) => {
-			return actualValues.includes(choice.selectItemValue);
-		});
+			return (
+				pass ||
+				new InspectableComparisonError(
+					new InspectableChoices(actual),
+					new InspectableChoices(expected),
+					'contain',
+					{
+						comparisonQualifier: 'in any order',
+						details: `Missing choices: ${JSON.stringify(missingValues)}`,
+					}
+				)
+			);
+		}
+	),
+});
 
-		return new ChoicesMembershipAssertionResult(expectedChoices, actualChoices, pass, {
-			comparisonVerb: 'contain',
-			comparisonVerbQualifier: 'in any order',
-		});
-	},
-} as const satisfies ChoiceExtensionImplementations;
-
-interface ChoiceExtensions<R = unknown> {
-	readonly toContainChoices: (...choices: ComparableChoice[]) => R;
-	readonly toContainChoicesInAnyOrder: (...choices: ComparableChoice[]) => R;
-}
-
-expect.extend(choiceExtensions);
+type ChoiceExtensions = typeof choiceExtensions;
 
 declare module 'vitest' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	interface Assertion<T = any> extends ChoiceExtensions<T> {}
-	interface AsymmetricMatchersContaining extends ChoiceExtensions {}
+	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<ChoiceExtensions, T> {}
+	interface AsymmetricMatchersContaining
+		extends DeriveStaticVitestExpectExtension<ChoiceExtensions> {}
 }

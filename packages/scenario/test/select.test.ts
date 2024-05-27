@@ -118,14 +118,14 @@ describe.each<GetSelectFromRepeatFormOptions>([
 
 						scenario.answer('/data/repeat[1]/value', 'a');
 						scenario.answer('/data/repeat[1]/label', 'A');
-						expect(scenario.choicesOf('/data/select')).toContainChoices(choice('a', 'A'));
+						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
 						scenario.answer('/data/repeat[2]/value', 'b');
 						scenario.answer('/data/repeat[2]/label', 'B');
-						expect(scenario.choicesOf('/data/select')).toContainChoicesInAnyOrder(
+						expect(scenario.choicesOf('/data/select')).toContainChoicesInAnyOrder([
 							choice('a', 'A'),
-							choice('b', 'B')
-						);
+							choice('b', 'B'),
+						]);
 					});
 				});
 
@@ -136,12 +136,12 @@ describe.each<GetSelectFromRepeatFormOptions>([
 						scenario.answer('/data/repeat[1]/value', 'a');
 						scenario.answer('/data/repeat[1]/label', 'A');
 
-						expect(scenario.choicesOf('/data/select')).toContainChoices(choice('a', 'A'));
+						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
 						scenario.answer('/data/repeat[1]/value', 'c');
 						scenario.answer('/data/repeat[1]/label', 'C');
 
-						expect(scenario.choicesOf('/data/select')).toContainChoices(choice('c', 'C'));
+						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('c', 'C')]);
 						expect(scenario.choicesOf('/data/select').size()).toBe(1);
 					});
 				});
@@ -153,7 +153,7 @@ describe.each<GetSelectFromRepeatFormOptions>([
 						scenario.answer('/data/repeat[1]/value', 'a');
 						scenario.answer('/data/repeat[1]/label', 'A');
 
-						expect(scenario.choicesOf('/data/select')).toContainChoices(choice('a', 'A'));
+						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
 						scenario.removeRepeat('/data/repeat[1]');
 
@@ -173,7 +173,7 @@ describe.each<GetSelectFromRepeatFormOptions>([
 							scenario.answer('/data/repeat[1]/label', 'A');
 							scenario.answer('/data/filter', 'a');
 
-							expect(scenario.choicesOf('/data/select')).toContainChoices(choice('a', 'A'));
+							expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
 							scenario.answer('/data/filter', 'b');
 

@@ -1,11 +1,18 @@
 import { ComparableChoice } from './ComparableChoice.ts';
 
 export class ExpectedChoice extends ComparableChoice {
-	constructor(readonly selectItemValue: string) {
+	get label(): string | null {
+		return this.labelOrId;
+	}
+
+	constructor(
+		readonly value: string,
+		protected readonly labelOrId: string | null = null
+	) {
 		super();
 	}
 }
 
-export const choice = (value: string, _labelOrId?: string): ExpectedChoice => {
-	return new ExpectedChoice(value);
+export const choice = (value: string, labelOrId?: string): ExpectedChoice => {
+	return new ExpectedChoice(value, labelOrId ?? null);
 };

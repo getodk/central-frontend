@@ -1,13 +1,24 @@
 import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
 
 export abstract class ComparableChoice {
-	abstract selectItemValue: string;
+	abstract get value(): string;
+	abstract get label(): string | null;
+
+	get comparableValue(): string {
+		return JSON.stringify(this.inspectValue());
+	}
 
 	inspectValue(): JSONValue {
-		return this.selectItemValue;
+		const { label, value } = this;
+
+		if (label == null) {
+			return { value };
+		}
+
+		return { label, value };
 	}
 
 	toString(): string {
-		return this.selectItemValue;
+		return this.value;
 	}
 }
