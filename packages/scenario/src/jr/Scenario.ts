@@ -733,6 +733,10 @@ export class Scenario {
 		});
 	}
 
+	proposed_getTitle(): string {
+		throw new ImplementationPendingError('form title');
+	}
+
 	proposed_serializeInstance(): string {
 		throw new ImplementationPendingError('instance serialization');
 	}
