@@ -14,19 +14,11 @@ import type {
 	StringDefinition,
 	StringNode,
 } from '@getodk/xforms-engine';
-import { initializeForm } from '@getodk/xforms-engine';
 import type { Accessor, Signal } from 'solid-js';
-import {
-	batch,
-	createMemo,
-	createRoot,
-	createSignal,
-	getOwner,
-	runWithOwner,
-	untrack,
-} from 'solid-js';
+import { batch, createMemo, createSignal, runWithOwner, untrack } from 'solid-js';
 import { afterEach, expect } from 'vitest';
 import { castToString } from '../cast.ts';
+import { initializeTestForm } from '../client/init.ts';
 import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
 
 // prettier-ignore
@@ -374,49 +366,16 @@ interface ScenarioConstructorOptions {
 	readonly instanceRoot: RootNode;
 }
 
-/**
- * Satisfies the xforms-engine client `stateFactory` option. Currently this is
- * intentionally **not** reactive, as the current scenario tests (as
- * ported/derived from JavaRosa's test suite) do not explicitly exercise any
- * reactive aspects of the client interface.
- *
- * @todo It **is possible** to use Solid's `createMutable`, which would enable
- * expansion of the JavaRosa test suite to _also_ test reactivity. In local
- * testing during the migration to the new client interface, no additional
- * changes were necessary to make that change. For now this non-reactive factory
- * is supplied as a validation that reactivity is in fact optional (despite the
- * fact that we're kind of observing the internal reactivity with a couple of
- * memos below).
- */
-const nonReactiveIdentityStateFactory = <T extends object>(value: T): T => value;
-
-/**
- * @todo Currently we stub resource fetching. We can address this as needed
- * while we port existing tests and/or add new ones which require it.
- */
-const fetchResourceStub: typeof fetch = () => {
-	throw new Error('TODO: resource fetching not implemented');
-};
-
 export class Scenario {
 	static async init(formName: string, form: XFormsElement): Promise<Scenario> {
-		return createRoot(async () => {
-			const owner = getOwner()!;
+		const { owner, instanceRoot } = await initializeTestForm(form);
 
-			const instanceRoot = await initializeForm(form.asXml(), {
-				config: {
-					fetchResource: fetchResourceStub,
-					stateFactory: nonReactiveIdentityStateFactory,
-				},
+		return runWithOwner(owner, () => {
+			return new this({
+				formName,
+				instanceRoot,
 			});
-
-			return runWithOwner(owner, () => {
-				return new this({
-					formName,
-					instanceRoot,
-				});
-			})!;
-		});
+		})!;
 	}
 
 	readonly formName: string;
