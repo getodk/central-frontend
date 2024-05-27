@@ -89,6 +89,7 @@ export default defineConfig(({ mode }) => {
 			},
 			environment: TEST_ENVIRONMENT,
 			globals: false,
+			setupFiles: ['./src/vitest/setup.ts'],
 
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
 		},

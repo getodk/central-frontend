@@ -10,8 +10,9 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { describe, it } from 'vitest';
-import { CoreMatchers, assertThat, intAnswer, stringAnswer } from '../src/assert.ts';
+import { describe, expect, it } from 'vitest';
+import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
+import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
 describe('Tests ported from JavaRosa - repeats', () => {
@@ -42,8 +43,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				scenario.next('/data/repeat[1]/inner1');
 				scenario.answer(0);
 
-				assertThat(scenario.answerOf('/data/repeat[1]/inner2'), CoreMatchers.is(intAnswer(0)));
-				assertThat(scenario.answerOf('/data/repeat[1]/inner3'), CoreMatchers.is(intAnswer(0)));
+				expect(scenario.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(0));
+				expect(scenario.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(0));
 
 				scenario.next('/data/repeat');
 				scenario.createNewRepeat('/data/repeat');
@@ -51,8 +52,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
 				scenario.answer(1);
 
-				assertThat(scenario.answerOf('/data/repeat[2]/inner2'), CoreMatchers.is(intAnswer(2)));
-				assertThat(scenario.answerOf('/data/repeat[2]/inner3'), CoreMatchers.is(intAnswer(4)));
+				expect(scenario.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(2));
+				expect(scenario.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(4));
 			});
 
 			describe('updates inner calculations with multiple dependencies', () => {
@@ -97,18 +98,16 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
 					scenario.next('/data/repeat[1]');
 					scenario.next('/data/repeat[1]/concatenated');
-					assertThat(
-						scenario.answerOf('/data/repeat[1]/concatenated'),
-						CoreMatchers.is(stringAnswer('2-4'))
+					expect(scenario.answerOf('/data/repeat[1]/concatenated')).toEqualAnswer(
+						stringAnswer('2-4')
 					);
 
 					scenario.next('/data/repeat');
 					scenario.createNewRepeat('/data/repeat');
 
 					scenario.next('/data/repeat[2]/concatenated');
-					assertThat(
-						scenario.answerOf('/data/repeat[2]/concatenated'),
-						CoreMatchers.is(stringAnswer('4-4'))
+					expect(scenario.answerOf('/data/repeat[2]/concatenated')).toEqualAnswer(
+						stringAnswer('4-4')
 					);
 				});
 
@@ -138,18 +137,16 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
 					scenario.next('/data/repeat[1]');
 					scenario.next('/data/repeat[1]/concatenated');
-					assertThat(
-						scenario.answerOf('/data/repeat[1]/concatenated'),
-						CoreMatchers.is(stringAnswer('2-4'))
+					expect(scenario.answerOf('/data/repeat[1]/concatenated')).toEqualAnswer(
+						stringAnswer('2-4')
 					);
 
 					scenario.next('/data/repeat');
 					scenario.createNewRepeat('/data/repeat');
 
 					scenario.next('/data/repeat[2]/concatenated');
-					assertThat(
-						scenario.answerOf('/data/repeat[2]/concatenated'),
-						CoreMatchers.is(stringAnswer('4-4'))
+					expect(scenario.answerOf('/data/repeat[2]/concatenated')).toEqualAnswer(
+						stringAnswer('4-4')
 					);
 				});
 			});

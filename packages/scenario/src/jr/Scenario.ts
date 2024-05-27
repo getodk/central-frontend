@@ -17,20 +17,11 @@ import type {
 import type { Accessor, Signal } from 'solid-js';
 import { batch, createMemo, createSignal, runWithOwner, untrack } from 'solid-js';
 import { afterEach, expect } from 'vitest';
+import type { ComparableAnswer } from '../answer/ComparableAnswer.ts';
 import { castToString } from '../cast.ts';
+import { answerOf } from '../client/answerOf.ts';
 import { initializeTestForm } from '../client/init.ts';
-import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
-
-// prettier-ignore
-type AnyValueNode =
-	| SelectNode
-	| StringNode;
-
-const isValueNode = (node: AnyNode): node is AnyValueNode => {
-	const { definition } = node;
-
-	return definition.type === 'value-node';
-};
+import { getClosestRepeatRange } from '../client/traversal.ts';
 
 // TODO: this should also likely have an export from `StringNode`
 type StringInputBodyElement = Exclude<StringDefinition['bodyElement'], null>;
@@ -53,10 +44,6 @@ const isStringInputQuestion = (node: AnyNode): node is StringInputQuestion => {
 type ControlQuestionNode =
 	| SelectNode
 	| StringInputQuestion;
-
-const isControlQuestionNode = (node: AnyNode): node is ControlQuestionNode => {
-	return node.nodeType === 'select' || isStringInputQuestion(node);
-};
 
 /**
  * Based on the static members on JavaRosa's `FormEntryController` (there
@@ -486,25 +473,8 @@ export class Scenario {
 		return;
 	}
 
-	answerOf(reference: string): string {
-		const node = getNodeForReference(this.instanceRoot, reference);
-
-		if (node == null || !isValueNode(node)) {
-			throw new Error(`Node for reference ${reference} is not a question`);
-		}
-
-		// If node has a control, for now we defer to the `ControlQuestion` wrapper
-		// to produce a consistent string value for test assertions.
-		if (isControlQuestionNode(node)) {
-			const question = ControlQuestion.createSingleton(node);
-
-			return question.getValue();
-		}
-
-		// Currently a node at this point will be a model-only `StringNode`. This
-		// will likely change as we introduce other data types, as those types may
-		// also be assigned to model-only nodes.
-		return node.currentState.value;
+	answerOf(reference: string): ComparableAnswer {
+		return answerOf(this.instanceRoot, reference);
 	}
 
 	createNewRepeat(repeatNodeset: string): unknown {
