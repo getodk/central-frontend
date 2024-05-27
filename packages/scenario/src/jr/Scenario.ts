@@ -27,6 +27,7 @@ import {
 } from 'solid-js';
 import { afterEach, expect } from 'vitest';
 import { castToString } from '../cast.ts';
+import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
 
 // prettier-ignore
 type AnyValueNode =
@@ -526,33 +527,8 @@ export class Scenario {
 		return;
 	}
 
-	private getNodeForReference<QuestionNode extends AnyNode = AnyNode>(
-		reference: string,
-		currentNode: AnyNode = this.instanceRoot
-	): QuestionNode | null {
-		if (currentNode.currentState.reference === reference) {
-			return currentNode as QuestionNode;
-		}
-
-		const { children } = currentNode.currentState;
-
-		if (children == null) {
-			return null;
-		}
-
-		for (const child of children) {
-			const question = this.getNodeForReference<QuestionNode>(reference, child);
-
-			if (question != null) {
-				return question;
-			}
-		}
-
-		return null;
-	}
-
 	answerOf(reference: string): string {
-		const node = this.getNodeForReference(reference);
+		const node = getNodeForReference(this.instanceRoot, reference);
 
 		if (node == null || !isValueNode(node)) {
 			throw new Error(`Node for reference ${reference} is not a question`);
@@ -572,39 +548,18 @@ export class Scenario {
 		return node.currentState.value;
 	}
 
-	private getClosestRepeatRange(
-		fromNode: AnyNode,
-		currentNode: AnyNode = fromNode
-	): RepeatRangeNode {
-		switch (currentNode.nodeType) {
-			case 'root':
-				throw new Error(
-					`Failed to find closest repeat range to node with reference: ${fromNode.currentState.reference}`
-				);
-
-			case 'repeat-range':
-				return currentNode;
-
-			case 'repeat-instance':
-				return currentNode.parent;
-
-			case 'group':
-			case 'subtree':
-			case 'string':
-			case 'select':
-				return this.getClosestRepeatRange(currentNode.parent);
-
-			default:
-				throw new UnreachableError(currentNode);
-		}
-	}
-
 	createNewRepeat(repeatNodeset: string): unknown {
 		const question = this.selectedQuestion();
 
 		this.assertNodeset(question, repeatNodeset);
 
-		const repeatRange = this.getClosestRepeatRange(question.node);
+		const { node } = question;
+		const { reference } = node.currentState;
+		const repeatRange = getClosestRepeatRange(reference, node);
+
+		if (repeatRange == null) {
+			throw new Error(`Failed to find closest repeat range to node with reference: ${reference}`);
+		}
 
 		repeatRange.addInstances();
 
