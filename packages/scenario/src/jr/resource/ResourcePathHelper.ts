@@ -1,4 +1,4 @@
-import { PathResource } from './PathResource.ts';
+import { FormDefinitionResource } from './FormDefinitionResource.ts';
 
 const resourcesByPath = import.meta.glob('../../../resources/**/*.xml', {
 	as: 'raw',
@@ -10,7 +10,7 @@ const resourceEntries = Object.entries(resourcesByPath);
  * Exposed as a plain function; addresses the semantic intent of JavaRosa's
  * same-named static method on the `ResourcePathHelper` class.
  */
-export const r = (fileName: string): PathResource => {
+export const r = (fileName: string): FormDefinitionResource => {
 	// TODO: this logic is equivalent to the same logic in JavaRosa's static
 	// method of the same name. Note that the `endsWith` call is theoretically
 	// error prone, i.e. it would return a resource `foo-bar.xml` where the
@@ -25,5 +25,5 @@ export const r = (fileName: string): PathResource => {
 
 	const [path, formXML] = formEntry;
 
-	return new PathResource(path, formXML);
+	return new FormDefinitionResource(path, formXML);
 };

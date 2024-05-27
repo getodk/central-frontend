@@ -18,6 +18,9 @@ import {
 import { describe, expect, it } from 'vitest';
 import { choice } from '../src/choice/ExpectedChoice.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
+import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
+import { r } from '../src/jr/resource/ResourcePathHelper.ts';
+import { nullValue } from '../src/value/ExpectedNullValue.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('DynamicSelectUpdateTest.java', () => {
@@ -638,6 +641,131 @@ describe('SelectChoiceTest.java', () => {
 		deserializedScenario.next('/data/the-choice');
 
 		expect(deserializedScenario.getQuestionAtIndex('select').getChoice(0).getValue()).toBe('');
+	});
+
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * The tests in this sub-suite are currently blocked by several absent features:
+	 *
+	 * 1. Retrieving external secondary instance resources
+	 * 2. Support for external secondary instance resources when evaluating
+	 *    XPath expressions referencing them
+	 * 3. Any notion of engine API access to the well-known GeoJSON `geometry`
+	 *    property, or any other arbitrary named child nodes present in any
+	 *    secondary instance (whether external or otherwise)
+	 */
+	describe('`getChild`', () => {
+		it.fails('returns named child when choices are from secondary instance', async () => {
+			setUpSimpleReferenceManager(r('external-select-geojson.xml').getParent(), 'file');
+
+			const scenario = await Scenario.init('external-select-geojson.xml');
+
+			expect(scenario.choicesOf('/data/q').get(1)?.getChild('geometry')).toBe('0.5 104 0 0');
+			expect(scenario.choicesOf('/data/q').get(1)?.getChild('special-property')).toBe(
+				'special value'
+			);
+		});
+
+		it.fails(
+			'returns null when choices are from secondary instance and requested child does not exist',
+			async () => {
+				setUpSimpleReferenceManager(r('external-select-geojson.xml').getParent(), 'file');
+
+				const scenario = await Scenario.init('external-select-geojson.xml');
+
+				expect(scenario.choicesOf('/data/q').get(1)?.getChild('non-existent')).toBe(null);
+			}
+		);
+
+		it.fails(
+			'returns empty string when choices are from secondary instance and requested child has no value',
+			async () => {
+				const scenario = await Scenario.init(
+					'Select with empty value',
+					html(
+						head(
+							title('Select with empty value'),
+							model(
+								mainInstance(t("data id='select-empty'", t('select'))),
+								instance('choices', t('item', t('label', 'Item'), t('property', '')))
+							)
+						),
+						body(select1Dynamic('/data/select', "instance('choices')/root/item", 'name', 'label'))
+					)
+				);
+
+				expect(scenario.choicesOf('/data/select').get(0)?.getChild('property')).toBe('');
+			}
+		);
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * This test is also blocked on lack of support for repeat-based itemsets.
+		 */
+		it.fails('updates when choices are from repeat', async () => {
+			const scenario = await Scenario.init(
+				'Select from repeat',
+				html(
+					head(
+						title('Select from repeat'),
+						model(
+							mainInstance(
+								t(
+									"data id='repeat-select'",
+									t('repeat', t('value'), t('label'), t('special-property')),
+									t('filter'),
+									t('select')
+								)
+							)
+						)
+					),
+					body(
+						repeat('/data/repeat', input('value'), input('label'), input('special-property')),
+						input('filter'),
+						select1Dynamic('/data/select', '../repeat')
+					)
+				)
+			);
+			scenario.answer('/data/repeat[0]/value', 'a');
+			scenario.answer('/data/repeat[0]/label', 'A');
+			scenario.answer('/data/repeat[0]/special-property', 'AA');
+
+			expect(scenario.choicesOf('/data/select').get(0)?.getValue()).toBe('a');
+			expect(scenario.choicesOf('/data/select').get(0)?.getChild('special-property')).toBe('AA');
+
+			scenario.answer('/data/repeat[0]/special-property', 'changed');
+
+			expect(scenario.choicesOf('/data/select').get(0)?.getChild('special-property')).toBe(
+				'changed'
+			);
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * In theory, this could be made to pass! It makes more sense to fail it
+		 * with the same error as the others above, as it is also subject to the
+		 * same API design considerations. It also may be moot depending on our
+		 * posture towards inline select items generally.
+		 */
+		it.fails('returns null when called on a choice from [an] inline select', async () => {
+			const scenario = await Scenario.init(
+				'Static select',
+				html(
+					head(
+						title('Static select'),
+						model(mainInstance(t("data id='static-select'", t('select'))))
+					),
+					body(select1('/data/select', item('one', 'One'), item('two', 'Two')))
+				)
+			);
+
+			expect(scenario.choicesOf('/data/select').get(0)?.getChild('invalid-property')).toBe(
+				nullValue()
+			);
+		});
 	});
 });
 

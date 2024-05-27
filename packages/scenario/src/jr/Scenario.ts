@@ -21,7 +21,7 @@ import {
 } from './event/getPositionalEvents.ts';
 import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
 import { TreeReference } from './instance/TreeReference.ts';
-import type { PathResource } from './resource/PathResource.ts';
+import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 
@@ -33,7 +33,7 @@ interface ScenarioConstructorOptions {
 
 type FormFileName = `${string}.xml`;
 
-const isFormFileName = (value: PathResource | string): value is FormFileName => {
+const isFormFileName = (value: FormDefinitionResource | string): value is FormFileName => {
 	return typeof value === 'string' && value.endsWith('.xml');
 };
 
@@ -41,7 +41,7 @@ const isFormFileName = (value: PathResource | string): value is FormFileName => 
 type ScenarioStaticInitParameters =
 	| readonly [formFileName: FormFileName]
 	| readonly [formName: string, form: XFormsElement]
-	| readonly [resource: PathResource];
+	| readonly [resource: FormDefinitionResource];
 
 /**
  * @see {@link Scenario.createNewRepeat} for details

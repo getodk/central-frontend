@@ -7,7 +7,7 @@ import {
 } from '@getodk/xforms-engine';
 import type { Owner } from 'solid-js';
 import { createRoot, getOwner, runWithOwner } from 'solid-js';
-import { PathResource } from '../jr/resource/PathResource.ts';
+import { FormDefinitionResource } from '../jr/resource/FormDefinitionResource.ts';
 
 /**
  * @todo It's anticipated that this will be expanded to support the various ways
@@ -16,10 +16,10 @@ import { PathResource } from '../jr/resource/PathResource.ts';
  * file name (and various ambiguities that come with that, which we may want to
  * disambiguate as we port).
  */
-export type TestFormResource = PathResource | XFormsElement;
+export type TestFormResource = FormDefinitionResource | XFormsElement;
 
-const isPathResource = (resource: TestFormResource): resource is PathResource => {
-	return resource instanceof PathResource;
+const isPathResource = (resource: TestFormResource): resource is FormDefinitionResource => {
+	return resource instanceof FormDefinitionResource;
 };
 
 const isXFormsElement = (resource: TestFormResource): resource is XFormsElement => {
@@ -33,7 +33,7 @@ export const getFormResource = async (
 	// eslint-disable-next-line @typescript-eslint/require-await
 ): Promise<FormResource> => {
 	if (isPathResource(testFormResource)) {
-		return testFormResource.formXML;
+		return testFormResource.textContents;
 	}
 
 	if (isXFormsElement(testFormResource)) {
