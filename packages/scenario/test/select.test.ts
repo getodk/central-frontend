@@ -957,39 +957,48 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * - Rephrase "irrelevant" -> "filtered", some other phrasing indicating select items not present based on itemset filter expression results? The current naming suggests this is a test about the XForms **`relevant`** bind expression, but the test fixture has no `relevant` expressions at all.
-		 *
-		 * - Failure appears to be a bug where selection state is (partially) lost when changing an itemset filter updates the select's available items. Similar behavior can be observed on simpler forms, including at least one fixture previously derived from Enketo. This also appears to be at least partly related to deferring a decision on the appropriate behavior for the effect itemset filtering should have on selection state **when it is changed and then reverted** ({@link https://github.com/getodk/web-forms/issues/57}).
+		 * Failure appears to be a bug where selection state is (partially) lost
+		 * when changing an itemset filter updates the select's available items.
+		 * Similar behavior can be observed on simpler forms, including at least one
+		 * fixture previously derived from Enketo. This also appears to be at least
+		 * partly related to deferring a decision on the appropriate behavior for
+		 * the effect itemset filtering should have on selection state **when it is
+		 * changed and then reverted**
+		 * ({@link https://github.com/getodk/web-forms/issues/57}).
 		 */
-		it.fails('removes irrelevant answers at all levels, without changing order', async () => {
-			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
-			// scenario.newInstance();
+		// JR: removesIrrelevantAnswersAtAllLevels_withoutChangingOrder
+		it.fails(
+			'removes predicate-filtered answers at all levels, without changing order',
+			async () => {
+				const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+				// scenario.newInstance();
 
-			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
-			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+				expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+				expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
 
-			scenario.answer('/data/level1', 'a', 'b', 'c');
-			scenario.answer('/data/level2', 'aa', 'ba', 'ca');
-			scenario.answer('/data/level3', 'aab', 'baa', 'aaa');
+				scenario.answer('/data/level1', 'a', 'b', 'c');
+				scenario.answer('/data/level2', 'aa', 'ba', 'ca');
+				scenario.answer('/data/level3', 'aab', 'baa', 'aaa');
 
-			// Remove b from the level1 answer; this should filter out b-related answers and choices at levels 2 and 3
-			scenario.answer('/data/level1', 'a', 'c');
+				// Remove b from the level1 answer; this should filter out b-related answers and choices at levels 2 and 3
+				scenario.answer('/data/level1', 'a', 'c');
 
-			// Force populateDynamicChoices to run again which is what filters out irrelevant answers
-			scenario.choicesOf('/data/level2');
+				// Force populateDynamicChoices to run again which is what filters out irrelevant answers
+				scenario.choicesOf('/data/level2');
 
-			expect(scenario.answerOf('/data/level2')).toEqualAnswer(answerText('aa, ca'));
+				expect(scenario.answerOf('/data/level2')).toEqualAnswer(answerText('aa, ca'));
 
-			// This also runs populateDynamicChoices and filters out irrelevant answers
-			expect(scenario.choicesOf('/data/level3')).toContainChoices([
-				choice('aaa'),
-				choice('aab'),
-				choice('caa'),
-				choice('cab'),
-			]);
+				// This also runs populateDynamicChoices and filters out irrelevant answers
+				expect(scenario.choicesOf('/data/level3')).toContainChoices([
+					choice('aaa'),
+					choice('aab'),
+					choice('caa'),
+					choice('cab'),
+				]);
 
-			expect(scenario.answerOf('/data/level3')).toEqualAnswer(answerText('aab, aaa'));
-		});
+				expect(scenario.answerOf('/data/level3')).toEqualAnswer(answerText('aab, aaa'));
+			}
+		);
 
 		it('leaves answer unchanged if all selections still in choices', async () => {
 			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
