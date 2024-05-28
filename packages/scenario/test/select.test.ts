@@ -81,6 +81,33 @@ describe('DynamicSelectUpdateTest.java', () => {
 			};
 
 			/**
+			 * **PORTING NOTES**
+			 *
+			 * 1. The below reference to `XPathFuncExprRandomizeTest` in JavaRosa is
+			 *    meant to reference `RandomizeTest`.
+			 *
+			 * 2. Despite accommodating relative body `ref` attributes, this test
+			 *    still fails. A brief side quest to investigate the nature of the
+			 *    failure revealed that:
+			 *
+			 *    - Even without supporting relative `ref`s on controls, we'll need to
+			 *      do so for `<itemset>` and its `<value>` child (presumably its
+			 *      `<label>` child as well). The concern is so general we probably
+			 *      might as well actually just support them all.
+			 *
+			 *    - Even resolving **all** of these relative references, the reactive
+			 *      subscriptions don't propagate updates until after a new repeat
+			 *      instance is added. A similar (but differently presenting) bug was
+			 *      observed in @sadiqkhoja's demo earlier today. Both (for different
+			 *      reasons) _at least partially_ implicate the need to resolve
+			 *      multiple nodes in `getSubscribableDependencyByReference` (or
+			 *      whatever may evolve in its place/to support its current use
+			 *      cases).
+			 *
+			 * - - -
+			 *
+			 * JR:
+			 *
 			 * Integration tests to verify that the choice lists for "dynamic selects"
 			 * (selects with itemsets rather than inline items) are updated when
 			 * dependent values change.
@@ -92,28 +119,6 @@ describe('DynamicSelectUpdateTest.java', () => {
 			 * - {@see XPathFuncExprRandomizeTest} for coverage of choice list updates
 			 *   when randomization is specified
 			 *
-			 * **PORTING NOTES**
-			 *
-			 * 1. The above reference to `XPathFuncExprRandomizeTest` doesn't resolve to
-			 *    anything here, but it evidently doesn't resolve to anything in
-			 *    JavaRosa (anymore?) either.
-			 *
-			 * 2. Despite accommodating relative body `ref` attributes, this test still
-			 *    fails. A brief side quest to investigate the nature of the failure
-			 *    revealed that:
-			 *
-			 *    - Even without supporting relative `ref`s on controls, we'll need to
-			 *      do so for `<itemset>` and its `<value>` child (presumably its
-			 *      `<label>` child as well). The concern is so general we probably
-			 *      might as well actually just support them all.
-			 *
-			 *    - Even resolving **all** of these relative references, the reactive
-			 *      subscriptions don't propagate updates until after a new repeat
-			 *      instance is added. A similar (but differently presenting) bug was
-			 *      observed in @sadiqkhoja's demo earlier today. Both (for different
-			 *      reasons) _at least partially_ implicate the need to resolve multiple
-			 *      nodes in `getSubscribableDependencyByReference` (or whatever may
-			 *      evolve in its place/to support its current use cases).
 			 */
 			describe('select from repeat', () => {
 				describe('when repeat added', () => {
