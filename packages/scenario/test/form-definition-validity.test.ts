@@ -270,13 +270,7 @@ describe('TriggerableDagTest.java', () => {
 				});
 			});
 
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * Rephrase? This is a reference to the `readonly` expression, per spec.
-			 * Is there a colloquial reason to prefer referring to it as two words?
-			 */
-			describe('by self reference in [readonly] read only condition', () => {
+			describe('by self reference in `readonly` condition', () => {
 				it('should fail', async () => {
 					// exceptionRule.expect(XFormParseException.class);
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
