@@ -875,30 +875,17 @@ describe('SelectChoiceTest.java', () => {
 /**
  * **PORTING NOTES**
  *
- * As in JavaRosa, this test suite creates a new {@link Scenario} instance as
- * setup before each test. In JavaRosa, each test then begins by calling
+ * In JavaRosa, the corresponding test "vat" creates a new {@link Scenario}
+ * instance as setup before each test. Per discussion in review, we have inlined
+ * that setup at the start of each affected test, as the setup usage was an
+ * unnecessary indirection.
+ *
+ * Also in JavaRosa, each test then begins by calling
  * {@link Scenario.newInstance | `scenario.newInstance`}. It isn't clear whether
  * those calls are superfluous **there**, but they would be here (if we
  * supported that `Scenario` method, which we have currently deferred). They're
  * commented out here, called out for review discussion, in case some nuance is
  * missed by omitting the calls.
- *
- * - - -
- *
- * Subjective preference note, also for review discussion: I'm generally in
- * favor of breaking out shared test setup/teardown steps. I was actually
- * surprised that this is the first case of it I've encountered working through
- * the JavaRosa test ports! It's also notable, however, that this setup is only
- * doing one thing... and then each test seems to be doing a redundant thing to
- * that setup. It strikes me that this is more verbose, less clear. Adding the
- * typical downsides of indirection-in-tests, I'd almost certainly favor just
- * inlining the setup at the beginning of each test body.
- *
- * My only real hesitation is that it's nice to see a few tests that are **not**
- * `async`! It's made me a tiny bit nervous with each test before this suite, as
- * I'm still generally cautious about having any asynchronous aspect of the
- * engine's APIs, particularly any aspect which might infect asynchrony up to
- * entire routines (as it does for tests which perform their own setup).
  *
  * - - -
  *
@@ -916,14 +903,9 @@ describe('SelectChoiceTest.java', () => {
  * {@link SelectOneChoiceFilterTest} for more explicit cases at each level.
  */
 describe('SelectMultipleChoiceFilterTest.java', () => {
-	let scenario: Scenario;
-
-	beforeEach(async () => {
-		scenario = await Scenario.init('three-level-cascading-multi-select.xml');
-	});
-
 	describe('dependent levels in blank instance', () => {
-		it(`[has] have no choices`, () => {
+		it(`[has] have no choices`, async () => {
+			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
 			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
@@ -932,7 +914,8 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	});
 
 	describe('selecting value at level 1', () => {
-		it('filters choices at level 2', () => {
+		it('filters choices at level 2', async () => {
+			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
 			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
@@ -951,7 +934,8 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	});
 
 	describe('selecting values at levels 1 and 2', () => {
-		it('filters choices at level 3', () => {
+		it('filters choices at level 3', async () => {
+			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
 			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
@@ -977,7 +961,8 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 		 *
 		 * - Failure appears to be a bug where selection state is (partially) lost when changing an itemset filter updates the select's available items. Similar behavior can be observed on simpler forms, including at least one fixture previously derived from Enketo. This also appears to be at least partly related to deferring a decision on the appropriate behavior for the effect itemset filtering should have on selection state **when it is changed and then reverted** ({@link https://github.com/getodk/web-forms/issues/57}).
 		 */
-		it.fails('removes irrelevant answers at all levels, without changing order', () => {
+		it.fails('removes irrelevant answers at all levels, without changing order', async () => {
+			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
 			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
@@ -1006,7 +991,8 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 			expect(scenario.answerOf('/data/level3')).toEqualAnswer(answerText('aab, aaa'));
 		});
 
-		it('leaves answer unchanged if all selections still in choices', () => {
+		it('leaves answer unchanged if all selections still in choices', async () => {
+			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
 			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
