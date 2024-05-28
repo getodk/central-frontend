@@ -49,17 +49,6 @@ describe('DynamicSelectUpdateTest.java', () => {
 	])(
 		'substituting absolute body references: $substituteAbsoluteBodyReferences',
 		({ substituteAbsoluteBodyReferences }) => {
-			// // TODO: didn't need this for the first test, but it's here in case there
-			// // are subsequent tests which would use it. REMOVE THIS if it isn't used in
-			// // any tests submitted in the bulk test port PR.
-			// const relativeBodyRefTest = {
-			// 	/**
-			// 	 * Use for tests which fail **because** the form fixture uses relative
-			// 	 * body references.
-			// 	 */
-			// 	it: substituteAbsoluteBodyReferences ? it : it.fails,
-			// } as const;
-
 			const getSelectFromRepeatForm = (predicate = '') => {
 				const repeatValueInputRef = substituteAbsoluteBodyReferences
 					? '/data/repeat/value'
