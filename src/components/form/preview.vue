@@ -14,6 +14,7 @@
 
 <script setup>
 import { ref, createApp, getCurrentInstance } from 'vue';
+/* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
 import useForm from '../../request-data/form';
 import { apiPaths } from '../../util/request';

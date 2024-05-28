@@ -24,7 +24,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { ref } from 'vue';
 import EnketoPreview from '../enketo/preview.vue';
 import FormVersionDefDropdown from './def-dropdown.vue';
 import useRoutes from '../../composables/routes';
