@@ -553,8 +553,19 @@ export class Scenario {
 	}
 
 	/**
-	 * @todo it is not clear if/how we'll use similar logic in web forms. It
-	 * seems most likely to be applicable to offline capabilities.
+	 * **PORTING NOTES**
+	 *
+	 * From
+	 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1610546665 | this review comment}:
+	 *
+	 * > [JavaRosa] defines a compact format of its in-memory form representation.
+	 * > Collect writes that out to disk after initial form parse and then always
+	 * > reads form definitions from their serialized representation. This
+	 * > improved performance greatly on older hardware and now only leads to
+	 * > notable performance improvements on certain forms.
+	 *
+	 * @todo it is not clear if/how we'll use similar logic in web forms. It seems
+	 * most likely to be applicable to offline capabilities.
 	 */
 	serializeAndDeserializeForm(): Promise<Scenario> {
 		return Promise.reject(new UnclearApplicabilityError('serialization/deserialization'));
