@@ -71,13 +71,17 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 			);
 
 			scenario.setLanguage('English (en)');
-			// TODO: why does test fail if value is not set to choice3 again? Does changing language not trigger recomputation?
+			// TODO (web-forms): per @lognaturel,
+			// https://github.com/getodk/javarosa/issues/737 is pertinent.
+			//
+			// TODO (JR): why does test fail if value is not set to choice3 again?
+			// Does changing language not trigger recomputation?
 			scenario.answer('/jr-choice-name/select_one_outside', 'choice3');
 			expect(scenario.answerOf('/jr-choice-name/select_one_name_outside')).toEqualAnswer(
 				stringAnswer('Choice 3')
 			);
 
-			// TODO: why does test fail if value is not set to choice4 again? Does changing language not trigger recomputation?
+			// TODO (JR): why does test fail if value is not set to choice4 again? Does changing language not trigger recomputation?
 			scenario.answer('/jr-choice-name/my-repeat[1]/select_one', 'choice4');
 			expect(scenario.answerOf('/jr-choice-name/my-repeat[1]/select_one_name')).toEqualAnswer(
 				stringAnswer('Choice 4')
