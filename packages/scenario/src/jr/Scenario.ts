@@ -479,10 +479,24 @@ export class Scenario {
 			return node?.currentState.reference === repeatNodeset;
 		});
 
-		// TODO: should we inherit JavaRosa's messaging ("Please add some field
-		// and a form control")?
 		if (index === -1) {
 			throw new Error(
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * > I think the JR message is specifically related to the case where
+				 * > you define a repeat in a form but don't put any children in it. I
+				 * > think it was introduced in reaction to doing that accidentally and
+				 * > being confused. I think it's specific because (in JR) adding a
+				 * > child in the instance isn't enough, there also needs to be an
+				 * > associated form control.
+				 *
+				 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1610523187}
+				 *
+				 * - - -
+				 *
+				 * JR: "Please add some field and a form control"
+				 */
 				`Removing repeat instance with nodeset ${repeatNodeset} failed: could not locate repeat instance with that reference.`
 			);
 		}
