@@ -5,7 +5,6 @@
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { defineConfig } from 'vite';
-import GithubActionsReporter from 'vitest-github-actions-reporter';
 
 export default defineConfig(() => {
 	const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
@@ -68,7 +67,7 @@ export default defineConfig(() => {
 			transformMode: { web: [/\.[jt]sx?$/] },
 
 			exclude: ['e2e/**/*'],
-			reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',
+			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
 		},
 	};
 });

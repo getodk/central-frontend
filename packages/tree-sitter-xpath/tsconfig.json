@@ -1,10 +1,12 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["grammar.ts", "test/**/*.test.ts"],
+  "include": ["grammar.ts", "scripts/**/*.mjs", "test/**/*.test.ts"],
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",
     "emitDeclarationOnly": false,
-    "noEmit": true
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node"]
   }
 }

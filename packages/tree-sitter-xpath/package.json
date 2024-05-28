@@ -1,6 +1,6 @@
 {
   "name": "@getodk/tree-sitter-xpath",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "Apache-2.0",
   "description": "XPath grammar for tree-sitter",
   "type": "commonjs",
@@ -20,16 +20,17 @@
     "tree-sitter-xpath.wasm"
   ],
   "engines": {
-    "node": "^18.19.1 || ^20.11.1",
+    "node": "^18.20.3 || ^20.13.1 || ^22.2.0",
     "yarn": "1.22.19"
   },
   "scripts": {
-    "build": "yarn build:clean && yarn build:js && yarn build:node && yarn build:parser-types && yarn build:wasm",
-    "build:clean": "./scripts/build/clean",
+    "build": "yarn build:clean && yarn build:js && yarn build:node && yarn build:parser-types && yarn build:wasm && yarn build:post",
+    "build:clean": "node ./scripts/build/pre.mjs",
+    "build:post": "node ./scripts/build/post.mjs",
     "build:node": "tree-sitter generate && node-gyp rebuild",
     "build:js": "vite build",
-    "build:parser-types": "./scripts/build/parser-types",
-    "build:wasm": "tree-sitter build-wasm",
+    "build:parser-types": "node ./scripts/build/parser-types.mjs",
+    "build:wasm": "tree-sitter build --wasm",
     "install": "true # Prevent invoking `node-gyp rebuild` on `yarn install`",
     "test": "npm-run-all -nl test:*",
     "test:grammar": "tree-sitter test",
@@ -38,19 +39,18 @@
   },
   "devDependencies": {
     "@asgerf/dts-tree-sitter": "^0.1.0",
-    "nan": "^2.17.0",
-    "node-gyp": "^9.4.0",
-    "tree-sitter": "^0.20.5",
-    "tree-sitter-cli": "^0.20.8",
-    "vite": "^5.1.5",
-    "web-tree-sitter": "0.21.0"
+    "nan": "^2.19.0",
+    "node-gyp": "10.1.0",
+    "tree-sitter": "0.21.1",
+    "tree-sitter-cli": "0.22.6",
+    "vite": "^5.2.11",
+    "web-tree-sitter": "0.22.6"
   },
   "peerDependencies": {
-    "web-tree-sitter": "0.21.0"
+    "web-tree-sitter": "0.22.6"
   },
   "resolutions": {
-    "**/tree-sitter": "^0.20.5",
-    "@asgerf/dts-tree-sitter/tree-sitter": "^0.20.5"
-  },
-  "main": "bindings/node"
+    "**/tree-sitter": "0.21.1",
+    "@asgerf/dts-tree-sitter/tree-sitter": "0.21.1"
+  }
 }

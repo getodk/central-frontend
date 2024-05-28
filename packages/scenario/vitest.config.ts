@@ -3,7 +3,6 @@
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { resolve } from 'path';
-import GithubActionsReporter from 'vitest-github-actions-reporter';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig(() => {
@@ -75,7 +74,7 @@ export default defineConfig(() => {
 			environment: TEST_ENVIRONMENT,
 			globals: false,
 
-			reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',
+			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
 		},
 	};
 });

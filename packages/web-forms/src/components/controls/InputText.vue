@@ -5,7 +5,7 @@ import ControlLabel from '../ControlLabel.vue';
 
 const props = defineProps<{question: StringNode}>();
 
-const setValue = (value: string) => {
+const setValue = (value = '') => {
 	props.question.setValue(value);
 };
 

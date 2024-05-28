@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-for artifact in ./{bindings,build,src/tree_sitter,src/grammar.json,src/node-types.json,src/parser.c,target,types/tree-sitter-xpath-parser.d.ts,binding.gyp,Cargo.lock,Cargo.toml,grammar.js,grammar.js.map}; do
-	[ -d "$artifact" ] && rm -r "$artifact" 2> /dev/null
-	[ -f "$artifact" ] && rm "$artifact" 2> /dev/null
-done;
-unset artifact;

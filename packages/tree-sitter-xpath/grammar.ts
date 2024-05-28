@@ -30,8 +30,8 @@ const NAME_CHAR_ADDITIONS = /[-.\u{B7}0-9\u{0300}-\u{036F}\u{203F}-\u{2040}]/u;
 
 // The above subpatterns are spec-defined. They're combined here so tree-sitter
 // matches the full pattern without error.
-// eslint-disable-next-line no-misleading-character-class
 const NC_NAME = new RegExp(
+	// eslint-disable-next-line no-misleading-character-class
 	[
 		UNQUALIFIED_NAME_START_CHAR.source,
 		'(?:',

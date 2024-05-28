@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src", "test/**/*.ts", "test/**/*.tsx", "tools/**/*.ts", "vite-env.d.ts"],
+  "include": ["src", "test/**/*.ts", "test/**/*.tsx", "vite-env.d.ts"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
     "declarationDir": "./dist",

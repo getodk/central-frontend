@@ -98,7 +98,7 @@ export class ExpressionParser {
 			// number value with an exponent. If that's to be explicitly supported, it
 			// might be more appropriate to handle it in parse error recovery than
 			// with non-standard special cases in the grammar itself.
-			if (rootNode.hasError()) {
+			if (rootNode.hasError) {
 				if (options.attemptErrorRecovery) {
 					// TODO
 				}

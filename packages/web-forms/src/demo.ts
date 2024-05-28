@@ -4,12 +4,19 @@ import { createApp } from 'vue';
 import OdkWebFormDemo from './OdkWebFormDemo.vue';
 import { webFormsPlugin } from './WebFormsPlugin';
 
-import './assets/css/icomoon.css';
-import './themes/2024-light/theme.scss';
+import icomoon from './assets/css/icomoon.css?inline';
+import theme from './themes/2024-light/theme.scss?inline';
 // TODO/sk: Purge it - postcss-purgecss
-import 'primeflex/primeflex.css';
+import primeflex from 'primeflex/primeflex.css?inline';
 
-import './assets/css/style.scss';
+import demoStyles from './assets/css/style.scss?inline';
+
+const styles = [icomoon, theme, primeflex, demoStyles].join('\n\n');
+const stylesheet = new CSSStyleSheet();
+
+stylesheet.replaceSync(styles);
+
+document.adoptedStyleSheets.push(stylesheet);
 
 const app = createApp(OdkWebFormDemo as Component);
 app.use(webFormsPlugin);

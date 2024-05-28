@@ -10,8 +10,6 @@ import unpluginFonts from 'unplugin-fonts/vite';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import solidPlugin from 'vite-plugin-solid';
-import GithubActionsReporter from 'vitest-github-actions-reporter';
-import { solidVitestNoNodeLoader } from './tools/vite/solid-vitest-no-node-loader';
 
 export default defineConfig(({ mode }) => {
 	const isDev = mode === 'development';
@@ -122,15 +120,13 @@ export default defineConfig(({ mode }) => {
 				},
 			}),
 
-			// See JSDoc notes on plugin
-			solidVitestNoNodeLoader,
-
 			// Generate type definitions. This turned out to be more reliable in
 			// @getodk/xpath. TODO: revisit in case it makes sense to use tsc directly
 			// in this package
 			dts({
-				exclude: ['test', 'tools', 'vite-env.d.ts'],
+				exclude: ['test'],
 				entryRoot: './src',
+				tsconfigPath: './tsconfig.json',
 			}),
 		],
 
@@ -181,7 +177,7 @@ export default defineConfig(({ mode }) => {
 			globals: false,
 			transformMode: { web: [/\.[jt]sx?$/] },
 			exclude: ['e2e/**/*'],
-			reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',
+			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
 		},
 	};
 });

@@ -5,7 +5,6 @@ import { resolve as resolvePath } from 'node:path';
 import type { UserConfig } from 'vite';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import GithubActionsReporter from 'vitest-github-actions-reporter';
 import type { UserConfig as VitestConfig } from 'vitest/config';
 
 // TODO: this will hopefully be unnecessary when we update Vite/Vitest.
@@ -130,7 +129,7 @@ export default defineConfig(({ mode }) => {
 			globals: false,
 			include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
 			exclude: ['src/**/*.tsx', 'test/**/*.tsx'],
-			reporters: process.env.GITHUB_ACTIONS ? ['default', new GithubActionsReporter()] : 'default',
+			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
 		},
 	} satisfies ViteConfig;
 });

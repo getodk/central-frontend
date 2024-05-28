@@ -1,4 +1,4 @@
-# @getodk/xforms-engine
+# @getodk/scenario
 
 ## 0.1.1
 

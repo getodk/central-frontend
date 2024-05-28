@@ -44,7 +44,7 @@ export const DemoFixturesList = (props: DemoFixturesListProps) => {
 
 		const entries = baseEntries.map(([key, xml]): readonly [string, SelectedDemoFixture] => {
 			const name = key.replace(/^.*\/([^/]+)$/, '$1');
-			const url = import.meta.resolve(key, import.meta.url);
+			const url = new URL(key, import.meta.url).pathname;
 			const parsed: XMLDocument = domParser.parseFromString(xml, 'text/xml');
 			const title =
 				parsed.getElementsByTagNameNS(XHTML_NAMESPACE_URI, 'title')[0]?.textContent ?? name;

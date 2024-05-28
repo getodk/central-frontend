@@ -25,7 +25,6 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 		// Traverse the form element by element
 		// if focused element is an editable textbox then fill it
 		// Exit the loop when focus is on the Send button
-		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			const onSendButton = await page.evaluate(() => {
 				const activeElement = document.activeElement;

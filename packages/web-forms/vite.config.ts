@@ -2,26 +2,7 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { fileURLToPath, URL } from 'node:url';
 import { resolve } from 'path';
-import type { Root } from 'postcss';
 import { defineConfig } from 'vite';
-
-// PrimeVue-Sass-Theme defines all rules under @layer primevue
-// With that approach host applications rules override everything
-// So we are removing @layer at build/serve time here
-const removeCssLayer = () => {
-	return {
-		postcssPlugin: 'replace-john-with-jane',
-		Once(root: Root) {
-			root.walkAtRules((rule) => {
-				if (rule.name === 'layer') {
-					rule.parent!.append(rule.nodes);
-					rule.remove();
-				}
-			});
-		},
-	};
-};
-removeCssLayer.postcss = true;
 
 export default defineConfig({
 	plugins: [vue(), vueJsx()],
@@ -57,7 +38,30 @@ export default defineConfig({
 	},
 	css: {
 		postcss: {
-			plugins: [removeCssLayer()],
+			plugins: [
+				/**
+				 * primevue-sass-theme defines styles within a `@layer primevue { ...
+				 * }`. With that approach, host applications rules have higher
+				 * precedence, which could potentially override Web Forms styles in
+				 * unpredictable ways. This plugin unwraps that `@layer`, replacing it
+				 * with the style rules it contains.
+				 */
+				{
+					postcssPlugin: 'unwrap-at-layer-rules',
+					Once(root) {
+						root.walkAtRules((rule) => {
+							if (rule.name === 'layer') {
+								if (rule.parent == null) {
+									throw new Error('Failed to unwrap @layer: rule has no parent');
+								}
+
+								rule.parent.append(rule.nodes);
+								rule.remove();
+							}
+						});
+					},
+				},
+			],
 		},
 	},
 });
