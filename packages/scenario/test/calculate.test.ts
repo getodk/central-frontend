@@ -16,14 +16,8 @@ import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
 describe('TriggerableDagTest.java', () => {
-	/**
-	 * **PORTING NOTES**
-	 *
-	 * Rephrase? While DAG ordering is certainly under test, and while it's an
-	 * explicit spec concern, there's also more specific computation logic under
-	 * test which is worth describing as the functionality under test.
-	 */
-	it('[recomputes `calculate` expressions when their dependencies are updated] order of the DAG is ensured', async () => {
+	// order_of_the_DAG_is_ensured
+	it('recomputes `calculate` expressions when their dependencies are updated', async () => {
 		const scenario = await Scenario.init(
 			'Some form',
 			html(
