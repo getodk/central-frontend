@@ -515,6 +515,23 @@ const routes = [
     }
   }),
   asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/preview',
+    component: 'FormPreview',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      validateData: {
+        project: () => project.permits([
+          'form.read',
+          'form.update',
+          'form.delete'
+        ])
+      },
+      title: () => ['Form Preview', form.nameOrId]
+    }
+  }),
+  asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName',
     component: 'DatasetShow',
     props: true,
