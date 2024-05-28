@@ -77,33 +77,40 @@ describe('Secondary instances', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * 1. Rephrase?
+			 * 1. This description has been rephrased. Others like it will be
+			 *    rephrased as we work on them.
+			 *
 			 * 2. The original JavaRosa test's second assertion checks for the answer
 			 *    (`answerOf` return value) to be `equalTo(null)`. It seems likely
 			 *    given the form's shape that the intent is to check that the field is
 			 *    present and its value is blank, at that point in time.
+			 *
 			 * 3. (HUNCH ONLY!) I'm betting this failure is related to the form's
 			 *    `current()` sub-expression (which I doubt is being accounted for in
 			 *    dependency analysis, and is therefore failing to establish a
 			 *    reactive subscription within the engine).
 			 */
-			it.fails('[does] do not get confused', async () => {
-				const scenario = await Scenario.init('repeat-secondary-instance.xml');
+			// JR: `doNotGetConfused`
+			it.fails(
+				"[re]computes separately within each respective repeat instance, when the predicate's dependencies affecting that node change",
+				async () => {
+					const scenario = await Scenario.init('repeat-secondary-instance.xml');
 
-				scenario.createNewRepeat('/data/repeat');
-				scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat('/data/repeat');
+					scenario.createNewRepeat('/data/repeat');
 
-				scenario.answer('/data/repeat[1]/choice', 'a');
+					scenario.answer('/data/repeat[1]/choice', 'a');
 
-				expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
-				// assertThat(scenario.answerOf('/data/repeat[2]/calculate'), equalTo(null));
-				expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('');
+					expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
+					// assertThat(scenario.answerOf('/data/repeat[2]/calculate'), equalTo(null));
+					expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('');
 
-				scenario.answer('/data/repeat[2]/choice', 'b');
+					scenario.answer('/data/repeat[2]/choice', 'b');
 
-				expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
-				expect(scenario.answerOf('/data/repeat[2]/calculate').getValue()).toBe('B');
-			});
+					expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
+					expect(scenario.answerOf('/data/repeat[2]/calculate').getValue()).toBe('B');
+				}
+			);
 		});
 
 		describe('predicates on different child names', () => {
