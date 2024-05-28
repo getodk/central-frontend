@@ -275,7 +275,7 @@ describe('DynamicSelectUpdateTest.java', () => {
 		 * 1. Applying a different filter, to assert recomputation by checking that
 		 *    the available choices changed.
 		 *
-		 * 2. Restoring the original fitler, to assert recomputation does restore
+		 * 2. Restoring the original filter, to assert recomputation does restore
 		 *    the originally available choices. (This is still testing a slightly
 		 *    different case than the original JavaRosa test, but seems both worth
 		 *    testing and a bit closer to the original test's intent).
