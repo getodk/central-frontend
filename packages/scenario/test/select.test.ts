@@ -15,7 +15,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { answerText } from '../src/answer/ExpectedDisplayTextAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { choice } from '../src/choice/ExpectedChoice.ts';
@@ -883,9 +883,8 @@ describe('SelectChoiceTest.java', () => {
  * Also in JavaRosa, each test then begins by calling
  * {@link Scenario.newInstance | `scenario.newInstance`}. It isn't clear whether
  * those calls are superfluous **there**, but they would be here (if we
- * supported that `Scenario` method, which we have currently deferred). They're
- * commented out here, called out for review discussion, in case some nuance is
- * missed by omitting the calls.
+ * supported that `Scenario` method, which we have currently deferred). Per PR
+ * discussion, those calls have been removed.
  *
  * - - -
  *
@@ -906,7 +905,6 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	describe('dependent levels in blank instance', () => {
 		it(`[has] have no choices`, async () => {
 			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
-			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -916,7 +914,6 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	describe('selecting value at level 1', () => {
 		it('filters choices at level 2', async () => {
 			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
-			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 
@@ -936,7 +933,6 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	describe('selecting values at levels 1 and 2', () => {
 		it('filters choices at level 3', async () => {
 			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
-			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -971,7 +967,6 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 			'removes predicate-filtered answers at all levels, without changing order',
 			async () => {
 				const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
-				// scenario.newInstance();
 
 				expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 				expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1002,7 +997,6 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 
 		it('leaves answer unchanged if all selections still in choices', async () => {
 			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
-			// scenario.newInstance();
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1039,9 +1033,8 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
  * pattern to `SelectMultipleChoiceFilterTest.java` (unsurprising given the
  * parallel naming).
  *
- * Similarly to that suite, where each test leads with a
- * `scenario.newInstance()` call against the `scenario` uniformly defined in
- * setup, that call will be commented out for now.
+ * Similarly to that suite, each `Scenario` setup has been inlined and each
+ * call to `newInstance` has been removed.
  *
  * - - -
  *
@@ -1056,15 +1049,9 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
  * previously selected, that answer is cleared.
  */
 describe('SelectOneChoiceFilterTest.java', () => {
-	let scenario: Scenario;
-
-	beforeEach(async () => {
-		scenario = await Scenario.init('three-level-cascading-select.xml');
-	});
-
 	describe('dependent levels in blank instance', () => {
-		it('should have no choices', () => {
-			// scenario.newInstance();
+		it('should have no choices', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1072,8 +1059,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 	});
 
 	describe('selecting value at level 1', () => {
-		it('should filter choices at level 2', () => {
-			// scenario.newInstance();
+		it('should filter choices at level 2', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 
@@ -1088,8 +1075,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 	});
 
 	describe('selecting values at levels 1 and 2', () => {
-		it('should filter choices at level 3', () => {
-			// scenario.newInstance();
+		it('should filter choices at level 3', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1105,8 +1092,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 	});
 
 	describe('clearing value at level 2', () => {
-		it('should clear choices at level 3', () => {
-			// scenario.newInstance();
+		it('should clear choices at level 3', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1143,8 +1130,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		 * circumstances like those described in the linked issue, this may be a
 		 * good place to add a supplemental test exercising that.
 		 */
-		it.fails('should clear choices at levels 2 and 3', () => {
-			// scenario.newInstance();
+		it.fails('should clear choices at levels 2 and 3', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1178,8 +1165,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		 *
 		 * This test currently fails pending implementation of validation.
 		 */
-		it.fails('should clear [and validate] values at levels 2 and 3', () => {
-			// scenario.newInstance();
+		it.fails('should clear [and validate] values at levels 2 and 3', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			expect(scenario.answerOf('/data/level2').getValue()).toBe('');
 			expect(scenario.answerOf('/data/level3').getValue()).toBe('');
@@ -1221,8 +1208,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		 */
 		it.fails(
 			'clears values at levels 2 and 3 [currently supplemental, see porting notes on previous teest]',
-			() => {
-				// scenario.newInstance();
+			async () => {
+				const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 				expect(scenario.answerOf('/data/level2').getValue()).toBe('');
 				expect(scenario.answerOf('/data/level3').getValue()).toBe('');
@@ -1250,8 +1237,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		 * Failure likely rooted in incomplete behavior, deferred to
 		 * {@link https://github.com/getodk/web-forms/issues/57}.
 		 */
-		it.fails('should clear level 3 if choice no longer available', () => {
-			// scenario.newInstance();
+		it.fails('should clear level 3 if choice no longer available', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			scenario.answer('/data/level1_contains', 'a');
 			scenario.answer('/data/level2_contains', 'aa');
@@ -1286,8 +1273,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		 * would be important for the behavior under test. Those calls are currently
 		 * preserved (commented out) pending any further discussion on the topic.
 		 */
-		it('should not clear level 3 if choice still available', () => {
-			// scenario.newInstance();
+		it('should not clear level 3 if choice still available', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			scenario.answer('/data/level1_contains', 'a');
 			scenario.answer('/data/level2_contains', 'aa');
