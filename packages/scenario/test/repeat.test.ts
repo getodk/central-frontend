@@ -985,11 +985,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *   position (which does work, so this appears to be an issue of
 				 *   ordering and reactive subscription mismatch).
 				 *
-				 * - `range(0, ...)` and asserting `n + 1` position feels awkard. Since
-				 *   many other `range` calls begin with 1, it seems maybe this one was
-				 *   missed in the 1-indexing PR because it doesn't reference the range
-				 *   number in JavaRosa (whereas it does here because we always assert
-				 *   the expected reference on `next`).
+				 * - `range(0, ...)` and asserting `n + 1` position felt awkard.
+				 *   Updated to `range(1, ...)` per PR feedback.
 				 */
 				describe.each<SubstituteAbsoluteBodyReferencesOptions>([
 					{ substituteAbsoluteBodyReferences: false },
@@ -1027,12 +1024,12 @@ describe('Tests ported from JavaRosa - repeats', () => {
 								)
 							);
 
-							range(0, 10).forEach((n) => {
+							range(1, 11).forEach((n) => {
 								scenario.next('/data/house');
 								scenario.createNewRepeat({
 									assertCurrentReference: '/data/house',
 								});
-								scenario.next('/data/house[' + (n + 1) + ']/number');
+								scenario.next('/data/house[' + n + ']/number');
 							});
 
 							expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(55));
