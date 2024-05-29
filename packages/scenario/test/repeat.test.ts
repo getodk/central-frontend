@@ -327,16 +327,20 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - It seems like the comment below from JavaRosa describes a different
-				 *   scenario than the test actually exercises? I suspected this may have
-				 *   changed in the PR for 1-based indexing, but that doesn't reveal
-				 *   anything of interest. Perhaps worth delving deeper into the test's
-				 *   git history?
+				 * This test exercises JavaRosa behavior which deviates from standard
+				 * XPath semantics, wherein absolute expressions referencing repeat
+				 * instances (and their descendants), from those instances (or from
+				 * their descendants) are implicitly contextualized to that repeat
+				 * instance. Per
+				 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612334986 | this PR comment}:
 				 *
-				 * - The assertions are identical to those above, which is unsurprising
-				 *   as the pertinent aspects of the form definition are too.
+				 * > In JR, I believe it's interpreted as
+				 * > `count(/data/repeat[position(current()/..)])` which is why the
+				 * > count is always 1.
 				 *
-				 * - Presumably the same failure mode.
+				 * As I understand it, this is not a behavior we intend to align on. But
+				 * there's value in keeping the known failure around as a point of
+				 * reference for this difference in behavior.
 				 *
 				 * - - -
 				 *
@@ -399,10 +403,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - It seems like the comment from JavaRosa on the above test may have
-				 *   been intended for this test? It seems to _almost describe_ this
-				 *   fixture. (Although to actually produce a consistent `count()` of 1,
-				 *   I think the `calculate` would need to be `count(..)`.)
+				 * - ~~It seems like the comment from JavaRosa on the above test may
+				 *   have been intended for this test?~~
+				 *   {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612338717 | Nope!}
 				 *
 				 * - Failure is an `InconsistentChildrenStateError`. ~~Without diving
 				 *   into the cause, I've only ever seen this when experimenting with UI
