@@ -690,16 +690,10 @@ describe('Tests ported from JavaRosa - repeats', () => {
 		}
 
 		describe('//region Deleting repeats', () => {
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * - Rephrase "repeat group" -> "repeat instance"?
-			 */
-			describe('[deleting] delete second repeat group', () => {
+			// JR: deleteSecondRepeatGroup_*
+			describe('deleting second repeat instance', () => {
 				/**
 				 * **PORTING NOTES**
-				 *
-				 * - Rephrase "triggerables"?
 				 *
 				 * - Any notion of "dag event" assertions is currently commented out, as
 				 *   concerned with JavaRosa implementation details. The test seems
@@ -734,63 +728,67 @@ describe('Tests ported from JavaRosa - repeats', () => {
 							testFn = it.fails;
 						}
 
-						testFn('evalutes triggerables dependent on preceding repeat group', async () => {
-							const scenario = await Scenario.init(
-								'Some form',
-								html(
-									head(
-										title('Some form'),
-										model(
-											mainInstance(
-												t('data id="some-form"', t('house jr:template=""', t('number')))
-											),
-											bind('/data/house/number').type('int').calculate('position(..)')
-										)
-									),
-									body(
-										group(
-											'/data/house',
-											repeat(
+						// JR: ..._evaluatesTriggerables_dependentOnPrecedingRepeatGroupSiblings
+						testFn(
+							'evalutes computations dependent on preceding repeat instance siblings',
+							async () => {
+								const scenario = await Scenario.init(
+									'Some form',
+									html(
+										head(
+											title('Some form'),
+											model(
+												mainInstance(
+													t('data id="some-form"', t('house jr:template=""', t('number')))
+												),
+												bind('/data/house/number').type('int').calculate('position(..)')
+											)
+										),
+										body(
+											group(
 												'/data/house',
-												input(substituteAbsoluteBodyReferences ? '/data/house/number' : 'number')
+												repeat(
+													'/data/house',
+													input(substituteAbsoluteBodyReferences ? '/data/house/number' : 'number')
+												)
 											)
 										)
 									)
-								)
-							); /* .onDagEvent(dagEvents::add) */
+								); /* .onDagEvent(dagEvents::add) */
 
-							range(1, 6).forEach((n) => {
-								scenario.next('/data/house');
-								scenario.createNewRepeat({
-									assertCurrentReference: '/data/house',
+								range(1, 6).forEach((n) => {
+									scenario.next('/data/house');
+									scenario.createNewRepeat({
+										assertCurrentReference: '/data/house',
+									});
+									scenario.next('/data/house[' + n + ']/number');
 								});
-								scenario.next('/data/house[' + n + ']/number');
-							});
 
-							expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
-							expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
-							expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
-							expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
-							expect(scenario.answerOf('/data/house[5]/number')).toEqualAnswer(intAnswer(5));
+								expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
+								expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
+								expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
+								expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
+								expect(scenario.answerOf('/data/house[5]/number')).toEqualAnswer(intAnswer(5));
 
-							// Start recording DAG events now
-							// dagEvents.clear();
+								// Start recording DAG events now
+								// dagEvents.clear();
 
-							scenario.removeRepeat('/data/house[2]');
+								scenario.removeRepeat('/data/house[2]');
 
-							expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
-							expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
-							expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
-							expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
+								expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
+								expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
+								expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
+								expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
 
-							// assertThat(scenario.answerOf("/data/house[5]/number"), is(nullValue()));
-							expect(scenario.indexOf('/data/house[5]/number')).toBeNull();
+								// assertThat(scenario.answerOf("/data/house[5]/number"), is(nullValue()));
+								expect(scenario.indexOf('/data/house[5]/number')).toBeNull();
 
-							// assertDagEvents(dagEvents,
-							//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0)",
-							//     "Processing 'Deleted: number [2_1]: 1 triggerables were fired.' for "
-							// );
-						});
+								// assertDagEvents(dagEvents,
+								//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0)",
+								//     "Processing 'Deleted: number [2_1]: 1 triggerables were fired.' for "
+								// );
+							}
+						);
 					}
 				);
 
@@ -800,7 +798,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * - Like the test above, the `nullValue()` assertion is ported to its
 				 *   equivalent node-absence assertion.
 				 */
-				it('evaluates triggerables dependent on the parent position', async () => {
+				// JR: ..._evaluatesTriggerables_dependentOnTheParentPosition
+				it('evaluates computations dependent on the parent position', async () => {
 					const scenario = await Scenario.init(
 						'Some form',
 						html(
@@ -885,7 +884,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *
 				 * Same as previous.
 				 */
-				it('does not evaluate triggerables not dependent on the parent position', async () => {
+				// JR: ..._doesNotEvaluateTriggerables_notDependentOnTheParentPosition
+				it('does not evaluate computations not dependent on the parent position', async () => {
 					const scenario = await Scenario.init(
 						'Some form',
 						html(
