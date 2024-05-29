@@ -114,7 +114,7 @@ describe('WHO VA fixture(s): smoketests', () => {
 				 * expected relevance state.
 				 */
 				expect(
-					scenario.getAnswerNode('/data/consented/illhistory/illdur/Id10120_0')
+					scenario.getInstanceNode('/data/consented/illhistory/illdur/Id10120_0')
 				).toBeNonRelevant();
 			});
 		});
@@ -564,7 +564,7 @@ describe('WHO VA fixture(s): smoketests', () => {
 							if (scenario.atQuestion()) {
 								if (
 									skipWritesToApparentReadonlyFields &&
-									scenario.getAnswerNode(expectedReference).currentState.readonly
+									scenario.getInstanceNode(expectedReference).currentState.readonly
 								) {
 									return;
 								}

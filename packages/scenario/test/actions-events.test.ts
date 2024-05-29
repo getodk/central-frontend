@@ -2091,8 +2091,8 @@ describe('Actions/Events', () => {
 		it.fails('sets [default] value[s] [~~]with strings[~~]', async () => {
 			const scenario = await Scenario.init('default_test.xml');
 
-			expect(scenario.getAnswerNode('/data/string_val').currentState.value).toBe('string-value');
-			expect(scenario.getAnswerNode('/data/inline_val').currentState.value).toBe('inline-value');
+			expect(scenario.getInstanceNode('/data/string_val').currentState.value).toBe('string-value');
+			expect(scenario.getInstanceNode('/data/inline_val').currentState.value).toBe('inline-value');
 		});
 	});
 });

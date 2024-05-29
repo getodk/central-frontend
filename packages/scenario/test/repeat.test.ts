@@ -667,16 +667,16 @@ describe('Tests ported from JavaRosa - repeats', () => {
 							assertCurrentReference: '/data/repeat',
 						});
 
-						expect(scenario.getAnswerNode('/data/repeat[1]/group/in_group')).toBeRelevant();
+						expect(scenario.getInstanceNode('/data/repeat[1]/group/in_group')).toBeRelevant();
 
 						scenario.createNewRepeat('/data/repeat');
 
-						expect(scenario.getAnswerNode('/data/repeat[2]/group/in_group')).toBeNonRelevant();
-						expect(scenario.getAnswerNode('/data/repeat[1]/group/in_group')).toBeNonRelevant();
+						expect(scenario.getInstanceNode('/data/repeat[2]/group/in_group')).toBeNonRelevant();
+						expect(scenario.getInstanceNode('/data/repeat[1]/group/in_group')).toBeNonRelevant();
 
 						scenario.removeRepeat('/data/repeat[2]');
 
-						expect(scenario.getAnswerNode('/data/repeat[1]/group/in_group')).toBeRelevant();
+						expect(scenario.getInstanceNode('/data/repeat[1]/group/in_group')).toBeRelevant();
 					});
 				});
 			});
@@ -1526,9 +1526,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
 									scenario.next('/data/repeat');
 
 									if (oneBasedPositionPredicates) {
-										expect(scenario.getAnswerNode('/data/repeat[1]/group/int')).toBeNonRelevant();
+										expect(scenario.getInstanceNode('/data/repeat[1]/group/int')).toBeNonRelevant();
 									} else {
-										expect(scenario.getAnswerNode('/data/repeat[0]/group/int')).toBeNonRelevant();
+										expect(scenario.getInstanceNode('/data/repeat[0]/group/int')).toBeNonRelevant();
 									}
 
 									scenario.createNewRepeat({
@@ -1543,9 +1543,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
 									scenario.next('/data/repeat');
 
 									if (oneBasedPositionPredicates) {
-										expect(scenario.getAnswerNode('/data/repeat[2]/group/int')).toBeNonRelevant();
+										expect(scenario.getInstanceNode('/data/repeat[2]/group/int')).toBeNonRelevant();
 									} else {
-										expect(scenario.getAnswerNode('/data/repeat[1]/group/int')).toBeNonRelevant();
+										expect(scenario.getInstanceNode('/data/repeat[1]/group/int')).toBeNonRelevant();
 									}
 
 									scenario.createNewRepeat({
@@ -1560,9 +1560,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
 									scenario.next('/data/repeat');
 
 									if (oneBasedPositionPredicates) {
-										expect(scenario.getAnswerNode('/data/repeat[3]/group/int')).toBeNonRelevant();
+										expect(scenario.getInstanceNode('/data/repeat[3]/group/int')).toBeNonRelevant();
 									} else {
-										expect(scenario.getAnswerNode('/data/repeat[2]/group/int')).toBeNonRelevant();
+										expect(scenario.getInstanceNode('/data/repeat[2]/group/int')).toBeNonRelevant();
 									}
 								});
 							}
@@ -1824,33 +1824,33 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					);
 
 					// Starting conditions (outer trigger is D, inner trigger is empty)
-					expect(scenario.getAnswerNode('/data/outer')).toBeRelevant();
-					expect(scenario.getAnswerNode('/data/outer/inner_condition')).toBeRelevant();
+					expect(scenario.getInstanceNode('/data/outer')).toBeRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner_condition')).toBeRelevant();
 					expect(scenario.answerOf('/data/outer/inner_condition')).toEqualAnswer(
 						booleanAnswer(false)
 					);
-					expect(scenario.getAnswerNode('/data/outer/inner')).toBeNonRelevant();
-					expect(scenario.getAnswerNode('/data/outer/inner/target_question')).toBeNonRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner')).toBeNonRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner/target_question')).toBeNonRelevant();
 
 					scenario.answer('/data/inner_trigger', 15);
 
-					expect(scenario.getAnswerNode('/data/outer')).toBeRelevant();
-					expect(scenario.getAnswerNode('/data/outer/inner_condition')).toBeRelevant();
+					expect(scenario.getInstanceNode('/data/outer')).toBeRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner_condition')).toBeRelevant();
 					expect(scenario.answerOf('/data/outer/inner_condition')).toEqualAnswer(
 						booleanAnswer(true)
 					);
-					expect(scenario.getAnswerNode('/data/outer/inner')).toBeRelevant();
-					expect(scenario.getAnswerNode('/data/outer/inner/target_question')).toBeRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner')).toBeRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner/target_question')).toBeRelevant();
 
 					scenario.answer('/data/outer_trigger', 'A');
 
-					expect(scenario.getAnswerNode('/data/outer')).toBeNonRelevant();
-					expect(scenario.getAnswerNode('/data/outer/inner_condition')).toBeNonRelevant();
+					expect(scenario.getInstanceNode('/data/outer')).toBeNonRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner_condition')).toBeNonRelevant();
 					expect(scenario.answerOf('/data/outer/inner_condition')).toEqualAnswer(
 						booleanAnswer(true)
 					);
-					expect(scenario.getAnswerNode('/data/outer/inner')).toBeNonRelevant();
-					expect(scenario.getAnswerNode('/data/outer/inner/target_question')).toBeRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner')).toBeNonRelevant();
+					expect(scenario.getInstanceNode('/data/outer/inner/target_question')).toBeRelevant();
 				});
 			});
 		});

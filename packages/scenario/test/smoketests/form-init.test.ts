@@ -670,7 +670,7 @@ describe('Form initialization smoke tests', () => {
 
 			expectNoInitializationErrors(scenario);
 
-			expect(scenario.getAnswerNode('/data/R1[1]/G2')).toMatchObject({
+			expect(scenario.getInstanceNode('/data/R1[1]/G2')).toMatchObject({
 				nodeType: 'group',
 			});
 
@@ -702,10 +702,10 @@ describe('Form initialization smoke tests', () => {
 
 			expectNoInitializationErrors(scenario);
 
-			expect(scenario.getAnswerNode('/data/G1')).toMatchObject({
+			expect(scenario.getInstanceNode('/data/G1')).toMatchObject({
 				nodeType: 'group',
 			});
-			expect(scenario.getAnswerNode('/data/G1/G3')).toMatchObject({
+			expect(scenario.getInstanceNode('/data/G1/G3')).toMatchObject({
 				nodeType: 'group',
 			});
 

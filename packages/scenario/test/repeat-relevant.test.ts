@@ -104,11 +104,11 @@ describe('Interaction between `<repeat>` and `relevant`', () => {
 					)
 				);
 
-				expect(scenario.getAnswerNode('/data/repeat1[1]')).toBeNonRelevant();
+				expect(scenario.getInstanceNode('/data/repeat1[1]')).toBeNonRelevant();
 
 				scenario.answer('/data/selectYesNo', 'yes');
 
-				expect(scenario.getAnswerNode('/data/repeat1[1]')).toBeRelevant();
+				expect(scenario.getInstanceNode('/data/repeat1[1]')).toBeRelevant();
 			});
 		});
 
@@ -191,7 +191,7 @@ describe('Interaction between `<repeat>` and `relevant`', () => {
 						)
 					);
 
-					expect(scenario.getAnswerNode('/data/repeat1[1]')).toBeNonRelevant();
+					expect(scenario.getInstanceNode('/data/repeat1[1]')).toBeNonRelevant();
 				});
 			});
 
@@ -296,11 +296,11 @@ describe('Interaction between `<repeat>` and `relevant`', () => {
 							)
 						);
 
-						expect(scenario.getAnswerNode('/data/outer/inner/repeat1[1]')).toBeNonRelevant();
+						expect(scenario.getInstanceNode('/data/outer/inner/repeat1[1]')).toBeNonRelevant();
 
 						scenario.answer('/data/selectYesNo', 'yes');
 
-						expect(scenario.getAnswerNode('/data/outer/inner/repeat1[1]')).toBeRelevant();
+						expect(scenario.getInstanceNode('/data/outer/inner/repeat1[1]')).toBeRelevant();
 					});
 				});
 			});
@@ -386,7 +386,7 @@ describe('Interaction between `<repeat>` and `relevant`', () => {
 							)
 						);
 
-						expect(scenario.getAnswerNode('/data/outer/inner/repeat1[1]')).toBeNonRelevant();
+						expect(scenario.getInstanceNode('/data/outer/inner/repeat1[1]')).toBeNonRelevant();
 					});
 				});
 			});

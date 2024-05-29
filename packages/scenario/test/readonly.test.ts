@@ -94,32 +94,32 @@ describe('TriggerableDagTest.java', () => {
 				);
 
 				// Form initialization evaluates all triggerables, which makes the field editable (not read-only)
-				expect(scenario.getAnswerNode('/data/outer')).toBeEnabled();
-				expect(scenario.getAnswerNode('/data/outer/inner')).toBeEnabled();
-				expect(scenario.getAnswerNode('/data/outer/inner/field')).toBeEnabled();
+				expect(scenario.getInstanceNode('/data/outer')).toBeEnabled();
+				expect(scenario.getInstanceNode('/data/outer/inner')).toBeEnabled();
+				expect(scenario.getInstanceNode('/data/outer/inner/field')).toBeEnabled();
 
 				// Make the outer group read-only
 				scenario.answer('/data/is-outer-readonly', true);
 
-				expect(scenario.getAnswerNode('/data/outer')).toBeReadonly();
-				expect(scenario.getAnswerNode('/data/outer/inner')).toBeReadonly();
-				expect(scenario.getAnswerNode('/data/outer/inner/field')).toBeReadonly();
+				expect(scenario.getInstanceNode('/data/outer')).toBeReadonly();
+				expect(scenario.getInstanceNode('/data/outer/inner')).toBeReadonly();
+				expect(scenario.getInstanceNode('/data/outer/inner/field')).toBeReadonly();
 
 				// Make the inner group read-only
 				scenario.answer('/data/is-outer-readonly', false);
 				scenario.answer('/data/is-inner-readonly', true);
 
-				expect(scenario.getAnswerNode('/data/outer')).toBeEnabled();
-				expect(scenario.getAnswerNode('/data/outer/inner')).toBeReadonly();
-				expect(scenario.getAnswerNode('/data/outer/inner/field')).toBeReadonly();
+				expect(scenario.getInstanceNode('/data/outer')).toBeEnabled();
+				expect(scenario.getInstanceNode('/data/outer/inner')).toBeReadonly();
+				expect(scenario.getInstanceNode('/data/outer/inner/field')).toBeReadonly();
 
 				// Make the field read-only
 				scenario.answer('/data/is-inner-readonly', false);
 				scenario.answer('/data/is-field-readonly', true);
 
-				expect(scenario.getAnswerNode('/data/outer')).toBeEnabled();
-				expect(scenario.getAnswerNode('/data/outer/inner')).toBeEnabled();
-				expect(scenario.getAnswerNode('/data/outer/inner/field')).toBeReadonly();
+				expect(scenario.getInstanceNode('/data/outer')).toBeEnabled();
+				expect(scenario.getInstanceNode('/data/outer/inner')).toBeEnabled();
+				expect(scenario.getInstanceNode('/data/outer/inner/field')).toBeReadonly();
 			});
 		}
 	);

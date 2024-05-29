@@ -363,12 +363,11 @@ export class Scenario {
 	/**
 	 * **PORTING NOTES**
 	 *
-	 * Should we consider a more general name for this? It returns any node type,
-	 * not just nodes which may be considered an "answer" to a "question". For
-	 * instance, the first assertion in the first test ported test calling it
-	 * checks the relevance of a group.
+	 * In JavaRosa, this method is named `getAnswerNode`. A previous iteration of
+	 * this note discussed giving it a more general name, and we landed on this in
+	 * review. This note should be removed if JavaRosa is updated to match.
 	 */
-	getAnswerNode(reference: string): AnyNode {
+	getInstanceNode(reference: string): AnyNode {
 		const node = getNodeForReference(this.instanceRoot, reference);
 
 		if (node == null) {
@@ -609,7 +608,7 @@ export class Scenario {
 	}
 
 	countRepeatInstancesOf(reference: string): number {
-		const node = this.getAnswerNode(reference);
+		const node = this.getInstanceNode(reference);
 
 		if (node.nodeType !== 'repeat-range') {
 			return -1;

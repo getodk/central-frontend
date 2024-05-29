@@ -31,7 +31,7 @@ export class JRFormDef {
 	}
 
 	isRepeatRelevant(treeReference: JRTreeReference): boolean {
-		const node = this.scenario.getAnswerNode(treeReference.xpathReference);
+		const node = this.scenario.getInstanceNode(treeReference.xpathReference);
 
 		expect(node.nodeType).toBe('repeat-instance');
 

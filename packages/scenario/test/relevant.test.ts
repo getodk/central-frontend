@@ -79,23 +79,23 @@ describe('Relevance - TriggerableDagTest.java', () => {
 
 			// Form initialization evaluates all triggerables, which makes the group and
 			//field non-relevants because their relevance expressions are not satisfied
-			expect(scenario.getAnswerNode('/data/group')).toBeNonRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeNonRelevant();
 
 			// Now we make both relevant
 			scenario.answer('/data/is-group-relevant', true);
 			scenario.answer('/data/is-field-relevant', true);
 
-			expect(scenario.getAnswerNode('/data/group')).toBeRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeRelevant();
 
 			// Now we make the group non-relevant, which makes the field non-relevant
 			// regardless of its local relevance expression, which would be satisfied
 			// in this case
 			scenario.answer('/data/is-group-relevant', false);
 
-			expect(scenario.getAnswerNode('/data/group')).toBeNonRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeNonRelevant();
 		});
 
 		/**
@@ -149,23 +149,23 @@ describe('Relevance - TriggerableDagTest.java', () => {
 
 			// Form initialization evaluates all triggerables, which makes the group and
 			//field non-relevants because their relevance expressions are not satisfied
-			expect(scenario.getAnswerNode('/data/group')).toBeNonRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeNonRelevant();
 
 			// Now we make both relevant
 			scenario.answer('/data/is-group-relevant', true);
 			scenario.answer('/data/is-field-relevant', true);
 
-			expect(scenario.getAnswerNode('/data/group')).toBeRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeRelevant();
 
 			// Now we make the group non-relevant, which makes the field non-relevant
 			// regardless of its local relevance expression, which would be satisfied
 			// in this case
 			scenario.answer('/data/is-group-relevant', false);
 
-			expect(scenario.getAnswerNode('/data/group')).toBeNonRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeNonRelevant();
 		});
 
 		/**
@@ -208,23 +208,23 @@ describe('Relevance - TriggerableDagTest.java', () => {
 
 			// Form initialization evaluates all triggerables, which makes the group and
 			//field non-relevants because their relevance expressions are not satisfied
-			expect(scenario.getAnswerNode('/data/group')).toBeNonRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeNonRelevant();
 
 			// Now we make both relevant
 			scenario.answer('/data/is-group-relevant', true);
 			scenario.answer('/data/is-field-relevant', true);
 
-			expect(scenario.getAnswerNode('/data/group')).toBeRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeRelevant();
 
 			// Now we make the group non-relevant, which makes the field non-relevant
 			// regardless of its local relevance expression, which would be satisfied
 			// in this case
 			scenario.answer('/data/is-group-relevant', false);
 
-			expect(scenario.getAnswerNode('/data/group')).toBeNonRelevant();
-			expect(scenario.getAnswerNode('/data/group/field')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group/field')).toBeNonRelevant();
 		});
 	});
 
@@ -250,9 +250,9 @@ describe('Relevance - TriggerableDagTest.java', () => {
 				)
 			);
 
-			expect(scenario.getAnswerNode('/data/group')).toBeNonRelevant();
-			expect(scenario.getAnswerNode('/data/outernode')).toBeRelevant();
-			expect(scenario.getAnswerNode('/data/group/innernode')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/group')).toBeNonRelevant();
+			expect(scenario.getInstanceNode('/data/outernode')).toBeRelevant();
+			expect(scenario.getInstanceNode('/data/group/innernode')).toBeNonRelevant();
 		});
 	});
 
@@ -715,7 +715,7 @@ describe('FormEntryModelTest.java', () => {
 				)
 			);
 
-			const q1Node = scenario.getAnswerNode('/data/outer/inner/q1');
+			const q1Node = scenario.getInstanceNode('/data/outer/inner/q1');
 
 			expect(q1Node).toBeNonRelevant();
 
