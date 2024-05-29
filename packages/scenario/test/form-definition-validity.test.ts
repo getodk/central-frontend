@@ -575,7 +575,7 @@ describe('TriggerableDagTest.java', () => {
 				});
 			});
 
-			describe('parsing forms with self reference cycles inf ields of repeat groups', () => {
+			describe('parsing forms with self reference cycles in fields of repeat groups', () => {
 				it('should fail', async () => {
 					// exceptionRule.expect(XFormParseException.class);
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
