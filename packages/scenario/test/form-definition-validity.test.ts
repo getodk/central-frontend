@@ -509,9 +509,6 @@ describe('TriggerableDagTest.java', () => {
 						bind('/data/b').type('int').relevant('/data/a > 0')
 					)
 				);
-
-				// TODO (JR) Complete the test adding some assertions that verify that the form works as we would expect
-				// TODO (web forms) Remove these comments?
 			});
 
 			it('supports codependant required conditions', async () => {
@@ -522,9 +519,6 @@ describe('TriggerableDagTest.java', () => {
 						bind('/data/b').type('int').required('/data/a > 0')
 					)
 				);
-
-				// TODO (JR) Complete the test adding some assertions that verify that the form works as we would expect
-				// TODO (web forms) Remove these comments?
 			});
 
 			it('supports codependant readonly conditions', async () => {
@@ -535,9 +529,6 @@ describe('TriggerableDagTest.java', () => {
 						bind('/data/b').type('int').readonly('/data/a > 0')
 					)
 				);
-
-				// TODO (JR) Complete the test adding some assertions that verify that the form works as we would expect
-				// TODO (web forms) Remove these comments?
 			});
 		});
 
