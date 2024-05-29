@@ -194,6 +194,23 @@ describe('ExternalSecondaryInstanceParseTest.java', () => {
 		/**
 		 * **PORTING NOTES**
 		 *
+		 * The original notes below were answered with
+		 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1614139373 | this excellent explanation}:
+		 *
+		 * > This is the result of a bunch of implementation details/decisions in JR
+		 * > and Collect. As you've noted in some earlier tests, lists of select
+		 * > options are not part of the DAG/recomputation model. Choice lists are
+		 * > only computed when they need to be displayed. In some cases, this can
+		 * > result in a significant perf improvement.
+		 * >
+		 * > So the choicesOf call computes the choices. And that's fine even if the
+		 * > references for label and name don't exist because that just returns the
+		 * > entirety of every choice item. It's only when a selection is made that
+		 * > there's an attempt to use the specified references and that causes a
+		 * > crash.
+		 *
+		 * - - -
+		 *
 		 * Expanding on the mental model we're trying to form in the skipped test
 		 * directly above...
 		 *
