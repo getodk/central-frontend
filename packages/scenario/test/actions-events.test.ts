@@ -190,10 +190,12 @@ describe('Actions/Events', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * To the extent we will have a conceptual equivalent to "second load",
-			 * this test does imply that we would probably have reasons besides
-			 * offline to consider form serialization (or otherwise we'll want to
-			 * rethink this test's "act" phase).
+			 * To the extent we will have a conceptual equivalent to "second load"
+			 * (per
+			 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612380765 | PR feedback},
+			 * this would include edits), this test does imply that we would probably
+			 * have reasons besides offline to consider form serialization (or
+			 * otherwise we'll want to rethink this test's "act" phase).
 			 */
 			it.fails('does not fire on second load', async () => {
 				const scenario = await Scenario.init(
