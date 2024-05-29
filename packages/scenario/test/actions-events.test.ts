@@ -623,9 +623,13 @@ describe('Actions/Events', () => {
 		 *   casting concerns, as well as at least one newish issue referencing
 		 *   those concerns.
 		 *
-		 * 2. How much of this is even an engine test, versus a {@link Scenario} API
-		 *    test? (And is the answer to that the same in web forms as it is for
-		 *    the same test in JavaRosa?)
+		 * 2. Q: How much of this is even an engine test, versus a {@link Scenario}
+		 *    API test? (And is the answer to that the same in web forms as it is
+		 *    for the same test in JavaRosa?)
+		 *
+		 *    > A: It's an engine test. In a real form, those bad values would be
+		 *    > set in the form def.
+		 *    > {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612400634}
 		 *
 		 * 3. Rephrase?
 		 *
@@ -646,6 +650,14 @@ describe('Actions/Events', () => {
 		 *    (the fractional value likely won't yet), they will currently only
 		 *    exercise the casting logic here in the `scenario` client's
 		 *    {@link Scenario.answer} implementation.
+		 *
+		 * - - -
+		 *
+		 * Understanding now that this is
+		 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612400634 | intended}
+		 * to exercise values that would be present in the form definition itself,
+		 * we may want to follow up by adding a set of derived tests in
+		 * form-definition-validity.test.ts.
 		 */
 		describe('set [value other than integer] other than integer value, on repeat with count', () => {
 			it.fails('converts [the count-setting]', async () => {
