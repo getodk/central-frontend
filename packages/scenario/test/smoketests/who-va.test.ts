@@ -101,6 +101,8 @@ describe('WHO VA fixture(s): smoketests', () => {
 				// endregion
 
 				/*
+				 * JR:
+				 *
 				 * Regression happens here: we changed FormInstanceParser to add all descendants of a group as targets
 				 * of a relevance condition defined in that group.
 				 *
