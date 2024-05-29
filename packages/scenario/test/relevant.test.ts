@@ -269,9 +269,10 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		 *
 		 * 2. This exact form structure is not presently supported by the engine! It
 		 *    fails because there is a check for same-name/same-parent nodes which
-		 *    don't correspond to a repeat (range). It's worth discussing whether
-		 *    this is a form structure we expect to support, and what sorts of form
-		 *    design would produce a form with a similar shape.
+		 *    don't correspond to a repeat (range). Per review feedback, however,
+		 *    it seems likely the intent was to test with repeats. An alternate
+		 *    test follows with the same assertions against the fixture modified
+		 *    to define a repeat.
 		 *
 		 * 3. Regardless of whether we intend to support forms of a similar shape,
 		 *    it's also important to observe the semantics of the `relevant`
@@ -308,7 +309,74 @@ describe('Relevance - TriggerableDagTest.java', () => {
 							bind('/data/node/value').type('int')
 						)
 					),
-					body(group('/data/node', input('/data/node/value')))
+					body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
+				)
+			);
+
+			// The XPathPathExprEval is used when evaluating the nodesets that the
+			// xpath functions declared in triggerable expressions need to operate
+			// upon. This assertion shows that non-relevant nodes are not included
+			// in the resulting nodesets
+			expect(
+				new XPathPathExprEval()
+					.eval(getRef('/data/node'), scenario.getEvaluationContext())
+					.getReferences()
+					.size()
+			).toBe(3);
+
+			// The method XPathPathExpr.getRefValue is what ultimately is used by
+			// triggerable expressions to extract the values they need to operate
+			// upon. The following assertion shows how extrating values from
+			// non-relevant nodes returns `null` values instead of the actual values
+			// they're holding
+			expect(
+				XPathPathExpr.getRefValue(
+					scenario.getFormDef().getMainInstance(),
+					scenario.getEvaluationContext(),
+					scenario.expandSingle(getRef('/data/node[2]/value'))
+				)
+			).toBe('');
+
+			// ... as opposed to the value that we can get by resolving the same
+			// reference with the main instance, which has the expected `2` value
+			expect(scenario.answerOf('/data/node[2]/value')).toEqualAnswer(intAnswer(2));
+		});
+
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * Alternate to the direct port above, incorporating the feedback that the
+		 * test fixture was likely meant to be defined with a repeat. When
+		 * JavaRosa's test is updated, this one can be updated to match it, and will
+		 * presumably replace the test above.
+		 *
+		 * Fails on test of internals. **Another**, supplemental test follows which
+		 * exercises non-relevant-exclusion semantics by asserting that the
+		 * non-relevant values are blank in downstream `calculate`s.
+		 */
+		it.fails('[is] are excluded from nodeset evaluation (alt: repeat)', async () => {
+			const scenario = await Scenario.init(
+				'Some form',
+				html(
+					head(
+						title('Some form'),
+						model(
+							mainInstance(
+								t(
+									'data id="some-form"',
+									// position() is one-based
+									t('node', t('value', '1')), // non-relevant
+									t('node', t('value', '2')), // non-relevant
+									t('node', t('value', '3')), // relevant
+									t('node', t('value', '4')), // relevant
+									t('node', t('value', '5')) // relevant
+								)
+							),
+							bind('/data/node').relevant('position() > 2'),
+							bind('/data/node/value').type('int')
+						)
+					),
+					body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
 				)
 			);
 
@@ -356,57 +424,56 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		 * 2. Before relevance is computed for those nodes
 		 * 3. Finally, failing to recompute the `calculate` once those nodes'
 		 *    non-relevance is established
+		 *
+		 * - - -
+		 *
+		 * The original iteration of this supplemental test had an entirely
+		 * different form shape. Since we determined in review that the intent was
+		 * to test with repeats, it was much easier to adapt the fixture to
+		 * demonstrate the same supplemental/alternate approach.
+		 *
+		 * - - -
+		 *
+		 * A very brief spike revealed that fixing this will be trivial. It also
+		 * revealed that it's highly likely this currently affects _only_ form
+		 * default values. As such, the current description reflects that.
+		 *
+		 * I believe this is probably a valuable test in its own right, given that
+		 * understanding of the bug's likely scope, and that we may want to increase
+		 * coverage of initial state conditions generally. **This will also probably
+		 * be something to consider when we work on support for editing.**
 		 */
 		it.fails(
-			'is excluded from producing values in an evaluation (supplemental to previous test)',
+			'is excluded from producing default values in an evaluation (supplemental to two previous tests)',
 			async () => {
 				const scenario = await Scenario.init(
 					'Some form',
 					html(
 						head(
-							title('exclusion of non-relevant values'),
+							title('Some form'),
 							model(
 								mainInstance(
 									t(
-										'data id="exclusion-of-non-relevant-values"',
-										t('is-node-a-relevant', 'no'),
-										t('is-node-b-relevant', 'no'),
-										t('is-node-c-relevant', 'yes'),
-										t('is-node-d-relevant', 'yes'),
-										t('is-node-e-relevant', 'yes'),
+										'data id="some-form"',
 										// position() is one-based
-										t('node-a', t('value', '1')), // non-relevant
-										t('node-b', t('value', '2')), // non-relevant
-										t('node-c', t('value', '3')), // relevant
-										t('node-d', t('value', '4')), // relevant
-										t('node-e', t('value', '5')), // relevant,
-										t('node-x-concat') // calculates a concatenation of node-a through node-e
+										t('node', t('value', '1')), // non-relevant
+										t('node', t('value', '2')), // non-relevant
+										t('node', t('value', '3')), // relevant
+										t('node', t('value', '4')), // relevant
+										t('node', t('value', '5')), // relevant
+										t('node-values')
 									)
 								),
-								bind('/data/node-a').relevant("/data/is-node-a-relevant = 'yes'"),
-								bind('/data/node-b').relevant("/data/is-node-b-relevant = 'yes'"),
-								bind('/data/node-c').relevant("/data/is-node-c-relevant = 'yes'"),
-								bind('/data/node-d').relevant("/data/is-node-d-relevant = 'yes'"),
-								bind('/data/node-e').relevant("/data/is-node-e-relevant = 'yes'"),
-								bind('/data/node-x-concat').calculate(
-									'concat(/data/node-a, /data/node-b, /data/node-c, /data/node-d, /data/node-e)'
-								),
-								bind('/data/node/value').type('int')
+								bind('/data/node').relevant('position() > 2'),
+								bind('/data/node/value').type('int'),
+								bind('/data/node-values').calculate('concat(/data/node/value)')
 							)
 						),
-
-						body(
-							group('/data/node-a', input('/data/node-a/value')),
-							group('/data/node-b', input('/data/node-b/value')),
-							group('/data/node-c', input('/data/node-c/value')),
-							group('/data/node-d', input('/data/node-d/value')),
-							group('/data/node-e', input('/data/node-e/value')),
-							input('/data/node-x-concat')
-						)
+						body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
 					)
 				);
 
-				expect(scenario.answerOf('/data/node-x-concat')).toEqualAnswer(stringAnswer('345'));
+				expect(scenario.answerOf('/data/node-values')).toEqualAnswer(stringAnswer('345'));
 			}
 		);
 	});
