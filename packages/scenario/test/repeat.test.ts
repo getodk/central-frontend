@@ -1676,11 +1676,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - Same general `nullValue()` -> blank/empty string conversion. It
-				 *   seems likely this is the expected semantic equivalent, but there's
-				 *   an off chance it really is a null check for the nodes. (Brain is
-				 *   tired. I'd rather leave the possibility open than leave a
-				 *   misleading note.)
+				 * - Typical `nullValue()` -> blank/empty string check
 				 *
 				 * - Fails at the same point JavaRosa's comments indicate expected
 				 *   failure. Since we don't defer any computations, this is likely a
