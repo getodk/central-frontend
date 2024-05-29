@@ -328,6 +328,15 @@ describe('Form initialization smoke tests', () => {
 		 * We do not currently produce an error when a `<select>` or `<select1>` has
 		 * no options/items.
 		 *
+		 * Original notes included a couple open questions (preserved below for
+		 * context). Answer
+		 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1614153820 | from review}:
+		 *
+		 * > This is for the very specific case where a select has no inline choices
+		 * > and no valid reference to a secondary instance.
+		 *
+		 * - - -
+		 *
 		 * Open questions:
 		 *
 		 * - Does this expectation apply to `<itemset>`s?
