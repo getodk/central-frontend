@@ -147,32 +147,30 @@ describe('Interaction between `<repeat>` and `relevant`', () => {
 							testFn = it.fails;
 						}
 
-						testFn(
-							'is [non-relevant] irrelevant when [`relevant`] relevance [is a static `false()` expression] set to false',
-							async () => {
-								const scenario = await Scenario.init(
-									'Repeat relevance - false()',
-									html(
-										head(
-											title('Repeat relevance - false()'),
-											model(
-												mainInstance(t('data id="repeat_relevance_false"', t('repeat1', t('q1')))),
-												bind('/data/repeat1').relevant('false()')
-											)
-										),
-										body(repeat('/data/repeat1', input('/data/repeat1/q1')))
-									)
-								);
+						// JR: repeatIsIrrelevant_whenRelevanceSetToFalse
+						testFn('is non-relevant when `relevant` is a static `false()` expression', async () => {
+							const scenario = await Scenario.init(
+								'Repeat relevance - false()',
+								html(
+									head(
+										title('Repeat relevance - false()'),
+										model(
+											mainInstance(t('data id="repeat_relevance_false"', t('repeat1', t('q1')))),
+											bind('/data/repeat1').relevant('false()')
+										)
+									),
+									body(repeat('/data/repeat1', input('/data/repeat1/q1')))
+								)
+							);
 
-								const formDef = scenario.getFormDef();
+							const formDef = scenario.getFormDef();
 
-								if (oneBasedPositionPredicates) {
-									expect(formDef.isRepeatRelevant(getRef('/data/repeat1[1]'))).toBe(false);
-								} else {
-									expect(formDef.isRepeatRelevant(getRef('/data/repeat1[0]'))).toBe(false);
-								}
+							if (oneBasedPositionPredicates) {
+								expect(formDef.isRepeatRelevant(getRef('/data/repeat1[1]'))).toBe(false);
+							} else {
+								expect(formDef.isRepeatRelevant(getRef('/data/repeat1[0]'))).toBe(false);
 							}
-						);
+						});
 					}
 				);
 
