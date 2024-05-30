@@ -140,17 +140,31 @@ export const select1 = (ref: string, ...children: XFormsElement[]): XFormsElemen
 	return t(`select1 ref="${ref}"`, ...children);
 };
 
-interface select1Dynamic {
-	(ref: string, nodesetRef: string): XFormsElement;
-	(ref: string, nodesetRef: string, valueRef: string, labelRef: string): XFormsElement;
-}
+type Select1DynamicParameters =
+	| readonly [ref: string, nodesetRef: string]
+	| readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
+
+type select1Dynamic = (...args: Select1DynamicParameters) => XFormsElement;
 
 export const select1Dynamic: select1Dynamic = (
-	ref,
-	nodesetRef,
-	valueRef = 'value',
-	labelRef = 'label'
+	...[ref, nodesetRef, valueRef, labelRef]: Select1DynamicParameters
 ): XFormsElement => {
+	if (valueRef == null && labelRef == null) {
+		const value = t("value ref=\"value\"");
+		const label = t("label ref=\"label\"");
+
+		const itemsetAttributes = new Map<string, string>();
+
+		itemsetAttributes.set("nodeset", nodesetRef);
+
+		const itemset = new TagXFormsElement("itemset", itemsetAttributes, [value, label]);
+		const select1Attributes = new Map<string, string>();
+
+		select1Attributes.set("ref", ref);
+
+		return new TagXFormsElement("select1", select1Attributes, [itemset]);
+	}
+
 	return t(
 		`select1 ref="${ref}"`,
 		t(`itemset nodeset="${nodesetRef}"`, t(`value ref="${valueRef}"`), t(`label ref="${labelRef}"`))
@@ -182,12 +196,33 @@ export const repeat: repeat = (ref, ...rest): XFormsElement => {
 		}
 	}
 
-	return t(`repeat nodeset="${ref}${countAttribute}"`, ...children);
+	return t(`repeat nodeset="${ref}"${countAttribute}`, ...children);
 };
 
 export const label = (innerHtml: string): XFormsElement => {
 	return new StringLiteralXFormsElement('label', emptyMap(), innerHtml);
 };
+
+/**
+ * **PORTING NOTES**
+ *
+ * Since:
+ *
+ * 1. {@link label} does not support a `ref` attribute in its ported signature
+ * 2. I'm reticent to add new cases of signature overloading
+ * 3. I do not see any test cases in JavaRosa using both the form definition DSL
+ *    with a structure like `<input><label ref="jr:itext(...)"/></input>`
+ * 4. I'm adding an alternate approach to an existing test which I believe
+ *    **should** use that structure...
+ *
+ * This is a proposed addition to the DSL. Its name is intended to invoke the
+ * resulting structure (keeping it relatively close to the XML it produces),
+ * without introducing ambiguity about whether its {@link ref} parameter should
+ * fully specify the contents of a label's `ref` attribute (it should).
+ */
+export const labelRef = (ref: string) => {
+	return new TagXFormsElement('label', new Map([['ref', ref]]), []);
+}
 
 export const item = (value: Int | string, label: string): XFormsElement => {
 	return t('item', t('label', label), t('value', String(value)));

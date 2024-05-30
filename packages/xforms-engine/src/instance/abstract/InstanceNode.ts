@@ -70,6 +70,7 @@ export abstract class InstanceNode<
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
 	protected readonly isStateInitialized: Accessor<boolean>;
+	protected readonly initializationFailure: Promise<Error | null>;
 
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
@@ -163,12 +164,15 @@ export abstract class InstanceNode<
 
 		this.isStateInitialized = isStateInitialized;
 
-		queueMicrotask(() => {
-			if (checkStateInitialized()) {
-				setStateInitialized(true);
-			} else {
-				throw new Error('Node state was never initialized');
-			}
+		this.initializationFailure = new Promise<Error | null>((resolve) => {
+			queueMicrotask(() => {
+				if (checkStateInitialized()) {
+					setStateInitialized(true);
+					resolve(null);
+				} else {
+					resolve(new Error('Node state was never initialized'));
+				}
+			});
 		});
 	}
 

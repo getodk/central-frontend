@@ -30,7 +30,12 @@
     "yarn": "1.22.19"
   },
   "scripts": {
-    "test": "npm-run-all --print-name --print-label test-node:* test-browser:*",
+    "benchmark": "npm-run-all --print-name --print-label benchmark-node:* benchmark-browser:*",
+    "benchmark-node:jsdom": "vitest bench --run",
+    "benchmark-browser:chromium": "BROWSER_NAME=chromium vitest bench --run",
+    "benchmark-browser:firefox": "BROWSER_NAME=firefox vitest bench --run",
+    "benchmark-browser:webkit": "BROWSER_NAME=webkit vitest bench --run",
+    "test": "npm-run-all --print-name --print-label test-node:* test-browser:* test:*",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
     "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
@@ -42,6 +47,7 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
+    "@js-joda/core": "^5.6.2",
     "@getodk/xforms-engine": "0.1.1",
     "@vitest/browser": "^1.6.0",
     "jsdom": "^24.0.0",

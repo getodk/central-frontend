@@ -5,7 +5,20 @@ import type { CollectionValues } from '@getodk/common/types/collections/Collecti
 import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+	let include: string[];
+	let exclude: string[];
+
+	const isBenchmark = mode === 'benchmark';
+
+	if (isBenchmark) {
+		include = ['./benchmark/**/*.bench.ts'];
+		exclude = ['./src/**/*', './test/**/*'];
+	} else {
+		include = ['./test/**/*.test.ts'];
+		exclude = ['./src/**/*', './benchmark/**/*'];
+	}
+
 	const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
 	type SupportedBrowser = CollectionValues<typeof supportedBrowsers>;
@@ -59,6 +72,9 @@ export default defineConfig(() => {
 				headless: true,
 			},
 
+			include,
+			exclude,
+
 			deps: {
 				optimizer: {
 					web: {
@@ -73,6 +89,7 @@ export default defineConfig(() => {
 			},
 			environment: TEST_ENVIRONMENT,
 			globals: false,
+			setupFiles: ['./src/vitest/setup.ts'],
 
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
 		},

@@ -31,6 +31,15 @@ export type ExpandUnion<T> = Exclude<T, never>;
  * SUITABLE** for producing mutable versions of built-in collections like
  * `readonly T[]` -> `T[]` or `ReadonlyMap<T>` -> `Map<T>`.
  */
-type ShallowMutable<T extends object> = {
+export type ShallowMutable<T extends object> = {
 	-readonly [K in keyof T]: T[K];
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ConstructorOf<T> = abstract new (...args: any[]) => T;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyConstructor = ConstructorOf<any>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyFunction = (this: any, ...args: any[]) => any;

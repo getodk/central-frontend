@@ -74,6 +74,8 @@ class BindBuilderXFormsElement implements XFormsElement {
 	}
 }
 
+export type { BindBuilderXFormsElement };
+
 export const bind = (nodeset: string): BindBuilderXFormsElement => {
 	return new BindBuilderXFormsElement(nodeset);
 };
