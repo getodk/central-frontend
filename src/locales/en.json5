@@ -204,6 +204,8 @@
     "showPreview": "Preview",
     // This text is shown on a button that the user clicks to hide a preview of something
     "hidePreview": "Hide preview",
+    // This text is show on a button that the user clicks to see the Form preview in the new Web Forms component
+    "newPreview": "New Preview",
     "expand": "Expand",
     "collapse": "Collapse"
   },
@@ -298,6 +300,7 @@
     "session": "Session",
     "submissions": "Submissions",
     "projectRoles": "Project Roles",
+    "formPreview": "Form Preview"
   },
   "alert": {
     "passwordTooShort": "Please input a password at least 10 characters long.",

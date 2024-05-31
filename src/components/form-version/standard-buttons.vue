@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <enketo-preview :form-version="version"/>
     <RouterLink class="btn btn-default btn-web-form" :to="formPath('preview')" target="_blank">
       <span class="icon-eye"></span>
-      New Preview
+      {{ $t('action.newPreview') }}
     </RouterLink>
     <form-version-def-dropdown :version="version"
       @view-xml="$emit('view-xml')"/>

@@ -521,7 +521,7 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
-      title: () => ['Form Preview', form.nameOrId]
+      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId]
     }
   }),
   asyncRoute({

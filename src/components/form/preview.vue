@@ -5,9 +5,9 @@
 
       <modal id="owf-submission-preview" :state="previewState" hideable backdrop
           @hide="previewState = false">
-          <template #title>ODK Web Forms Preview</template>
+          <template #title>{{ $t('webFormPreview.submissionModal.title') }}</template>
           <template #body>
-            This is the preview of new ODK Web Forms, currently you can only view your forms with it.
+            {{ $t('webFormPreview.submissionModal.body') }}
           </template>
       </modal>
 </template>
@@ -78,3 +78,18 @@ html, body {
   background-color: var(--gray-200);
 }
 </style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "webFormPreview":{
+        "submissionModal": {
+          // This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms.
+          "title": "ODK Web Forms Preview",
+          // This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms.
+          "body": "This is the preview of new ODK Web Forms, currently you can only view your forms with it."
+        }
+      }
+    }
+  }
+</i18n>
