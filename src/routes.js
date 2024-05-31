@@ -521,13 +521,6 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
-      validateData: {
-        project: () => project.permits([
-          'form.read',
-          'form.update',
-          'form.delete'
-        ])
-      },
       title: () => ['Form Preview', form.nameOrId]
     }
   }),
