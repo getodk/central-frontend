@@ -35,7 +35,7 @@ const print = () => window.print();
 	<div v-if="odkForm" class="odk-form">
 		<div class="form-wrapper">
 			<div class="odk-menu-bar flex justify-content-end flex-wrap gap-3">
-				<Button severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+				<Button class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
 				<FormLanguageMenu :form="odkForm" />
 			</div>
 
@@ -60,3 +60,46 @@ const print = () => window.print();
 	</div>
 </template>
 
+<style scoped lang="scss">
+.odk-form {
+	width: 100%;
+
+	.form-wrapper {
+		max-width: 800px;
+		margin: auto;
+		padding-top: 10px;
+		padding-bottom: 20px;
+
+		.questions-card {
+			border-radius: 10px;
+			box-shadow: 0px 1px 3px 1px #00000026;
+			border-top: none;
+			margin-top: 20px;
+
+			:deep(.p-card-content) {
+				padding: 1rem;
+			}
+		}
+	}
+
+	.print-button.p-button {
+		height: 2rem;
+		width: 2rem;
+	}
+
+	.footer {
+		margin-top: 20px;
+
+		button {
+			min-width: 160px;
+		}
+	}
+
+}
+
+	
+
+
+
+
+</style>

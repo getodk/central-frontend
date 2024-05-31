@@ -37,3 +37,26 @@ const handleLanguageChange = (event: LanguageDropdownChangeEvent) => {
 	</Dropdown>
 </template>
 
+<style scoped lang="scss">
+.p-dropdown.rounded {
+	border-radius: 30px;
+	border: none;
+	width: 160px;
+	color: #424242;
+
+	&.p-focus {
+		box-shadow: inset 0 0 0 1px var(--primary-500);
+	}
+
+	:deep(.p-dropdown-label) {
+		padding: 5px 16px;
+		span {
+			vertical-align: middle;
+		}
+	}
+
+	.icon-language {
+		margin-right: 10px;
+	}
+}
+</style>

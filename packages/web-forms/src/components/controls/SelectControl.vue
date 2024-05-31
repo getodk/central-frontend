@@ -71,3 +71,24 @@ const value = computed(() => {
 		</div>
 	</template>
 </template>
+
+<style scoped lang="scss">
+
+.select1,
+.selectN {
+	display: flex;
+	align-items: center;
+
+	label {
+		padding-left: 0.5rem;
+		margin-left: 0;
+		margin-bottom: 0;
+		cursor: pointer;
+	}
+
+	&.disabled,
+	&.disabled label {
+		cursor: not-allowed;
+	}
+}
+</style>

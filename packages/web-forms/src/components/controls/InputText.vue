@@ -16,11 +16,22 @@ const setValue = (value = '') => {
 
 	<InputText
 		:id="question.nodeId"
-		:required="question.currentState.required"
-		:readonly="question.currentState.readonly"
+		:required="question.currentState.required" 
+		:disabled="question.currentState.readonly"
 		variant="filled"
 		:model-value="question.currentState.value"
 		@update:model-value="setValue"
 	/>
 </template>
 
+<style scoped lang="scss">
+input.p-inputtext {
+		&:read-only {
+			cursor: not-allowed;
+		}
+
+		&.p-variant-filled:enabled:focus {
+			background-color: var(--surface-100);
+		}
+	}
+</style>

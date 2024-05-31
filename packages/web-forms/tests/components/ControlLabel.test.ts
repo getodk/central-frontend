@@ -22,7 +22,7 @@ describe('ControlLabel', () => {
 			},
 		});
 
-		const requireSpan = component.find('label span');
+		const requireSpan = component.find('span.required');
 
 		expect(requireSpan.exists()).toBe(true);
 		expect(requireSpan.text()).toBe('*');
@@ -37,7 +37,7 @@ describe('ControlLabel', () => {
 			},
 		});
 
-		const requireSpan = component.find('label span');
+		const requireSpan = component.find('span.required');
 
 		expect(requireSpan.exists()).toBe(false);
 

@@ -24,7 +24,6 @@ const props = withDefaults(defineProps<PanelProps>(), {
 });
 
 const panelClass = computed(() => [
-	'with-title',
 	props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menu',
 	props.class
 ]);
@@ -69,3 +68,64 @@ const toggleMenu = (event:  Event) => {
 	</template>
 </template>
 
+<style scoped lang="scss">
+h2 {
+	font-size: 1.2rem;
+	font-weight: 500;
+	margin: 0;
+	display: flex;
+}
+
+.label-number {
+	display: inline-block;
+	margin: 2px 5px 0 17px;
+	padding-top: 4px;
+	width: 20px;
+	height: 20px;
+	font-weight: 400;
+	border-radius: 30px;
+	background-color: var(--gray-200);
+	font-size: 10px;
+	text-align: center;
+}
+
+.panel-title {
+	cursor: pointer;
+}
+
+.btn-context {
+	margin-top: -10px;
+
+	.p-button-icon {
+		font-size: 1.5rem;
+	}
+}
+
+.p-panel.p-panel-toggleable {	
+	background: var(--surface-0);
+	box-shadow: none;
+
+	.p-panel {
+		margin-left: -10px;
+	}
+
+	:deep(.p-panel-header) {
+		display: flex;
+		padding: 0;
+		height: 40px;
+		align-items: start;
+	}
+
+	:deep(.p-panel-content) {
+		border-left: 2px solid var(--gray-200);
+		margin-left: 10px;
+		border-radius: 0;
+		padding: 0 0 0 1.5rem;
+	}
+
+	:deep(.p-panel-toggler){
+		display: none;
+	}
+	
+}
+</style>

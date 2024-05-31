@@ -20,3 +20,20 @@ const label = computed(() => props.node.currentState.label?.asString);
 	</FormPanel>
 </template>
 
+<style scoped lang="scss">
+
+.p-button.p-button-outlined.btn-add {
+	box-shadow: inset 0 0 0 1px #cbcacc;
+	margin-left: 36px;
+
+	&:hover {
+		background: var(--primary-100);
+	}
+}
+
+.repeat {
+	.p-button.p-button-outlined.btn-add {
+		margin-left: 25px;
+	}
+}
+</style>
