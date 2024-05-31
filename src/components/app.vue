@@ -18,8 +18,10 @@ except according to the terms contained in the LICENSE file.
     <feedback-button v-if="showsFeedbackButton"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
+    <!-- v-document-color: Using this directive to add background color to the html tag;
+    this is done to avoid magenta splash on standalone routes such as FormPreview   -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div v-if="!$route.meta.standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
+    <div v-if="routerReady && !$route.meta.standalone" v-document-color class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
     <template v-if="$route.meta.standalone">
@@ -47,6 +49,13 @@ import { loadAsync } from '../util/load-async';
 export default {
   name: 'App',
   components: { Alert, Navbar, FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')) },
+  directives: {
+    documentColor: {
+      mounted: () => {
+        document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
+      }
+    }
+  },
   inject: ['alert', 'config'],
   setup() {
     const { visiblyLoggedIn } = useSessions();
