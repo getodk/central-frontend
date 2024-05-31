@@ -35,16 +35,18 @@ export default function useFeatureFlags() {
   const keyupEventHandler = (e) => updateCheatKeys(e, false);
 
   onMounted(() => {
-    // eslint-disable-next-line no-console
-    console.log(
-      '%c ODK Central Alpha Features: \n\n%c- Press and hold the %cW and F %ckeyboard keys on a screen with a form preview button to access the new %cWeb Forms%c preview.\n\n',
-      'background-color: #009ecc; font-size: 18px; color: white',
-      ';',
-      'font-weight: bold; font-size: 14px;',
-      '',
-      'font-weight: bold; font-size: 14px;',
-      '',
-    );
+    if (process.env.NODE_ENV !== 'test') {
+      // eslint-disable-next-line no-console
+      console.log(
+        '%c ODK Central Alpha Features: \n\n%c- Press and hold the %cW and F %ckeyboard keys on a screen with a form preview button to access the new %cWeb Forms%c preview.\n\n',
+        'background-color: #009ecc; font-size: 18px; color: white',
+        '',
+        'font-weight: bold; font-size: 14px;',
+        '',
+        'font-weight: bold; font-size: 14px;',
+        '',
+      );
+    }
     document.addEventListener('keydown', keydownEventHandler);
     document.addEventListener('keyup', keyupEventHandler);
     document.addEventListener('focusout', reset);
