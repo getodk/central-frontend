@@ -1,4 +1,5 @@
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import useEventListener from './event-listener';
 
 export default function useFeatureFlags() {
   const features = ref({
@@ -34,6 +35,10 @@ export default function useFeatureFlags() {
   const keydownEventHandler = (e) => updateCheatKeys(e, true);
   const keyupEventHandler = (e) => updateCheatKeys(e, false);
 
+  useEventListener(document, 'keydown', keydownEventHandler);
+  useEventListener(document, 'keyup', keyupEventHandler);
+  useEventListener(document, 'focusout', reset);
+
   onMounted(() => {
     if (process.env.NODE_ENV !== 'test') {
       // eslint-disable-next-line no-console
@@ -47,15 +52,6 @@ export default function useFeatureFlags() {
         '',
       );
     }
-    document.addEventListener('keydown', keydownEventHandler);
-    document.addEventListener('keyup', keyupEventHandler);
-    document.addEventListener('focusout', reset);
-  });
-
-  onUnmounted(() => {
-    document.removeEventListener('keydown', keydownEventHandler);
-    document.removeEventListener('keyup', keyupEventHandler);
-    document.removeEventListener('focusout', reset);
   });
 
   return { features };
