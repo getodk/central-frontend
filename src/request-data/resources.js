@@ -9,8 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { mergeDeepLeft } from 'ramda';
 import { reactive, shallowReactive, watchSyncEffect } from 'vue';
 
+import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
 
@@ -28,6 +30,9 @@ export default ({ i18n }, createResource) => {
   }));
 
   // Resources related to the system
+  createResource('config', () => ({
+    transformResponse: ({ data }) => mergeDeepLeft(data, configDefaults)
+  }));
   createResource('centralVersion');
   createResource('analyticsConfig', noargs(setupOption));
   createResource('roles', (roles) => ({

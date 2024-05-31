@@ -54,7 +54,7 @@ export function testRequests(expectedConfigs) {
     })
     .afterResponses(() => {
       if (count !== expectedConfigs.length)
-        throw new Error('unexpected number of requests');
+        throw new Error(`${count} requests were sent, but ${expectedConfigs.length} were expected`);
     });
 }
 

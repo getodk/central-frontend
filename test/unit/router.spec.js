@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 
-import { afterNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
+import { beforeNextNavigation, afterNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
@@ -73,6 +73,51 @@ describe('util/router', () => {
     it('returns the result of a function passed as props', () => {
       const props = routeProps(route, (r) => ({ x: 1, y: 2, ...r.params }));
       props.should.eql({ x: 1, y: 2, projectId: '1' });
+    });
+  });
+
+  describe('beforeNextNavigation()', () => {
+    beforeEach(mockLogin);
+
+    it('runs the callback before the next navigation', () => {
+      const callback = sinon.fake();
+      return load('/')
+        .afterResponses(app => {
+          beforeNextNavigation(app.vm.$router, callback);
+        })
+        .load('/users')
+        .afterResponses(() => {
+          callback.called.should.be.true();
+          const args = callback.args[0];
+          args[0].path.should.equal('/users');
+          args[1].path.should.equal('/');
+        });
+    });
+
+    it('returns the return value of the callback to the router', () => {
+      const callback = sinon.fake.returns(false);
+      return load('/')
+        .afterResponses(app => {
+          beforeNextNavigation(app.vm.$router, callback);
+        })
+        .route('/users')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        });
+    });
+
+    it('does not run the callback after a later navigation', () => {
+      const callback = sinon.fake();
+      return load('/')
+        .afterResponses(app => {
+          beforeNextNavigation(app.vm.$router, callback);
+        })
+        .load('/users')
+        .complete()
+        .load('/account/edit')
+        .afterResponses(() => {
+          callback.callCount.should.equal(1);
+        });
     });
   });
 

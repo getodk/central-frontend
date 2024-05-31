@@ -57,7 +57,7 @@ export default {
       return this.$route !== START_LOCATION;
     },
     showsFeedbackButton() {
-      return this.config.showsFeedbackButton && this.visiblyLoggedIn;
+      return this.visiblyLoggedIn && this.config.showsFeedbackButton;
     },
   },
   created() {

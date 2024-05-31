@@ -1205,6 +1205,16 @@ describe('createCentralRouter()', () => {
   });
 
   describe('title meta field - logged out', () => {
+    it('shows correct title for /load-error', () => {
+      const container = { config: false };
+      return load('/login', { container })
+        .restoreSession(false)
+        .respond(() => ({ status: 502 }))
+        .afterResponses(() => {
+          document.title.should.equal('Error | ODK Central');
+        });
+    });
+
     it('shows page title on login screen', () =>
       load('/login')
         .restoreSession(false)
@@ -1214,15 +1224,105 @@ describe('createCentralRouter()', () => {
   });
 
   describe('config', () => {
+    describe('request', () => {
+      it('requests the config', () => {
+        // Using a role of 'none' in order to prevent some requests.
+        const user = testData.extendedUsers
+          .createPast(1, { role: 'none' })
+          .first();
+        const session = testData.sessions.createPast(1).last();
+        const container = { config: false };
+        return load('/', { container }, false)
+          .respondWithData(() => session)
+          .respondWithData(() => ({}))
+          .respondWithData(() => user)
+          .respondFor('/', { users: false })
+          .testRequests([
+            { url: '/v1/sessions/restore' },
+            { url: '/client-config.json' },
+            { url: '/v1/users/current', extended: true },
+            { url: '/v1/projects?forms=true&datasets=true' }
+          ]);
+      });
+
+      it('merges the config response with the defaults', () => {
+        const container = { config: false };
+        return load('/login', { container })
+          .restoreSession(false)
+          .respondWithData(() => ({
+            home: { title: 'Some Title' }
+          }))
+          .beforeAnyResponse(app => {
+            app.vm.$container.config.dataExists.should.be.false();
+          })
+          .afterResponses(app => {
+            app.vm.$container.config.data.should.containEql({
+              oidcEnabled: false,
+              home: { title: 'Some Title', body: null }
+            });
+          });
+      });
+    });
+
+    describe('error loading config', () => {
+      it('redirects to /load-error', () => {
+        const container = { config: false };
+        return load('/login', { container })
+          .restoreSession(false)
+          .respond(() => ({ status: 502 })) // config
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/load-error');
+          });
+      });
+
+      it('does not request the current user', () => {
+        testData.extendedUsers.createPast(1);
+        const session = testData.sessions.createPast(1).last();
+        const container = { config: false };
+        return load('/login', { container })
+          .respondWithData(() => session)
+          .respond(() => ({ status: 502 }))
+          .testRequests([
+            { url: '/v1/sessions/restore' },
+            { url: '/client-config.json' },
+          ]);
+      });
+
+      it('clears the session', () => {
+        testData.extendedUsers.createPast(1);
+        const session = testData.sessions.createPast(1).last();
+        const container = { config: false };
+        return load('/login', { container })
+          .respondWithData(() => session)
+          .respond(() => ({ status: 502 }))
+          .beforeEachResponse((app, config, i) => {
+            if (i === 1)
+              app.vm.$container.requestData.session.dataExists.should.be.true();
+          })
+          .afterResponses(app => {
+            app.vm.$container.requestData.session.dataExists.should.be.false();
+          });
+      });
+
+      it('redirects from /load-error if there was not an error', () =>
+        load('/load-error')
+          .restoreSession(false)
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/login');
+          }));
+    });
+
     describe('OIDC is enabled', () => {
       const container = {
         config: { oidcEnabled: true }
       };
 
-      it('renders NotFound for /reset-password', async () => {
-        const app = await load('/reset-password', { container });
-        app.findComponent(NotFound).exists().should.be.true();
-      });
+      it('renders NotFound for /reset-password', () =>
+        load('/reset-password', { container })
+          .restoreSession(false)
+          .afterResponses(app => {
+            app.findComponent(NotFound).exists().should.be.true();
+          }));
 
       it('renders NotFound for /account/claim', async () => {
         const app = await load(`/account/claim?token=${'a'.repeat(64)}`, {
