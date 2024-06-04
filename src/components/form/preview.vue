@@ -8,6 +8,11 @@
           <template #title>{{ $t('webFormPreview.submissionModal.title') }}</template>
           <template #body>
             {{ $t('webFormPreview.submissionModal.body') }}
+            <div class="modal-actions">
+              <button type="button" class="btn btn-primary" @click="closeModal()">
+                {{ $t('action.close') }}
+              </button>
+            </div>
           </template>
       </modal>
 </template>
@@ -30,6 +35,9 @@ const inst = getCurrentInstance();
 // webFormsPlugin just adds config property to the appContext
 inst.appContext.config = app._context.config;
 
+defineOptions({
+  name: 'FormPreview'
+});
 
 const props = defineProps({
   projectId: {
@@ -67,6 +75,10 @@ fetchForm();
 
 const handleSubmit = () => {
   previewState.value = true;
+};
+
+const closeModal = () => {
+  previewState.value = false;
 };
 </script>
 
