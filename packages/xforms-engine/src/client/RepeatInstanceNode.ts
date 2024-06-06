@@ -1,6 +1,7 @@
 import type { RepeatInstanceDefinition } from '../model/RepeatInstanceDefinition.ts';
 import type { RepeatTemplateDefinition } from '../model/RepeatTemplateDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RepeatRangeNode } from './RepeatRangeNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
@@ -22,8 +23,11 @@ export type RepeatDefinition =
 	| RepeatInstanceDefinition
 	| RepeatTemplateDefinition;
 
+export type RepeatInstanceNodeAppearances = NodeAppearances<RepeatDefinition>;
+
 export interface RepeatInstanceNode extends BaseNode {
 	readonly nodeType: 'repeat-instance';
+	readonly appearances: RepeatInstanceNodeAppearances;
 	readonly definition: RepeatDefinition;
 	readonly root: RootNode;
 

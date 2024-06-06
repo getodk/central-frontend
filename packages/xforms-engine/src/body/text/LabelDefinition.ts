@@ -1,9 +1,10 @@
-import { getLabelElement } from '../../lib/dom/query.ts';
+import { getLabelElement, getRepeatGroupLabelElement } from '../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import type { AnyControlDefinition } from '../control/ControlDefinition.ts';
 import type { ItemDefinition } from '../control/select/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../control/select/ItemsetDefinition.ts';
 import type { BaseGroupDefinition } from '../group/BaseGroupDefinition.ts';
+import type { RepeatElementDefinition } from '../RepeatElementDefinition.ts';
 import type { TextElement, TextElementOwner } from './TextElementDefinition.ts';
 import { TextElementDefinition } from './TextElementDefinition.ts';
 
@@ -29,6 +30,19 @@ export class LabelDefinition extends TextElementDefinition<'label'> {
 
 	static forControl(form: XFormDefinition, control: AnyControlDefinition): LabelDefinition | null {
 		return this.staticDefinition(form, control);
+	}
+
+	static forRepeatGroup(
+		form: XFormDefinition,
+		repeat: RepeatElementDefinition
+	): LabelDefinition | null {
+		const repeatGroupLabel = getRepeatGroupLabelElement(repeat.element);
+
+		if (repeatGroupLabel == null) {
+			return null;
+		}
+
+		return new this(form, repeat, repeatGroupLabel);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -28,7 +28,7 @@ const groupNode = (node: GroupNode | RepeatRangeNode): GroupNode | null => {
 
 export const XFormGroup = (props: XFormGroupProps) => {
 	const groupLabel = () => {
-		if (props.node.definition.type === 'repeat-sequence') {
+		if (props.node.nodeType === 'repeat-range') {
 			return null;
 		}
 

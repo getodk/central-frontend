@@ -3,14 +3,21 @@ import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
 import { getItemElements, getItemsetElement } from '../../../lib/dom/query.ts';
 import type { AnyBodyElementDefinition, BodyElementParentContext } from '../../BodyDefinition.ts';
+import type { SelectAppearanceDefinition } from '../../appearance/selectAppearanceParser.ts';
+import { selectAppearanceParser } from '../../appearance/selectAppearanceParser.ts';
 import { ControlDefinition } from '../ControlDefinition.ts';
 import { ItemDefinition } from './ItemDefinition.ts';
 import { ItemsetDefinition } from './ItemsetDefinition.ts';
 
-// TODO: `<trigger>` is *almost* reasonable to support here too. The main
-// hesitation is that its single, implicit "item" does not have a distinct
-// <label>, and presumably has different UX **and translation** considerations.
-const selectLocalNames = new Set(['rank', 'select', 'select1'] as const);
+/**
+ * @todo We were previously a bit overzealous about introducing `<rank>` support
+ * here. It'll likely still fit, but we should approach it with more intention.
+ *
+ * @todo `<trigger>` is *almost* reasonable to support here too. The main
+ * hesitation is that its single, implicit "item" does not have a distinct
+ * <label>, and presumably has different UX **and translation** considerations.
+ */
+const selectLocalNames = new Set([/* 'rank', */ 'select', 'select1'] as const);
 
 export type SelectType = CollectionValues<typeof selectLocalNames>;
 
@@ -34,6 +41,7 @@ export class SelectDefinition<Type extends SelectType> extends ControlDefinition
 
 	override readonly type: Type;
 	override readonly element: SelectElement;
+	readonly appearances: SelectAppearanceDefinition;
 
 	readonly itemset: ItemsetDefinition | null;
 	readonly items: readonly ItemDefinition[];
@@ -45,8 +53,9 @@ export class SelectDefinition<Type extends SelectType> extends ControlDefinition
 
 		super(form, parent, element);
 
-		this.element = element;
 		this.type = element.localName as Type;
+		this.element = element;
+		this.appearances = selectAppearanceParser.parseFrom(element, 'appearance');
 
 		const itemsetElement = getItemsetElement(element);
 		const itemElements = getItemElements(element);

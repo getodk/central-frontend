@@ -405,13 +405,13 @@ describe('BodyDefinition', () => {
 		});
 	});
 
-	describe('repeats/repeat-group', () => {
-		it('defines a repeat group for a <group> containing a <repeat> with the same `ref`/`nodeset`', () => {
-			const repeatGroup = bodyDefinition.elements[6];
+	describe('repeats', () => {
+		it('defines a repeat for a <group> containing a <repeat> with the same `ref`/`nodeset`', () => {
+			const repeatDefinition = bodyDefinition.elements[6];
 
-			expect(repeatGroup).toMatchObject({
+			expect(repeatDefinition).toMatchObject({
 				category: 'structure',
-				type: 'repeat-group',
+				type: 'repeat',
 				reference: '/root/rep1',
 				label: {
 					category: 'support',
@@ -421,66 +421,47 @@ describe('BodyDefinition', () => {
 			});
 		});
 
-		it("defines a repeat-group's repeat, distinct from general `children`", () => {
-			const repeatGroup = bodyDefinition.elements[6];
-
-			expect(repeatGroup).toMatchObject({
-				children: [],
-				repeat: {
-					category: 'structure',
-					type: 'repeat',
-				},
-			});
-		});
-
 		it("defines the repeat's children", () => {
-			const repeatGroup = bodyDefinition.elements[6];
+			const repeatDefinition = bodyDefinition.elements[6];
 
-			expect(repeatGroup).toMatchObject({
-				repeat: {
-					children: [
-						{
-							category: 'control',
-							type: 'input',
-							reference: '/root/rep1/r1-1',
-							label: null,
+			expect(repeatDefinition).toMatchObject({
+				children: [
+					{
+						category: 'control',
+						type: 'input',
+						reference: '/root/rep1/r1-1',
+						label: null,
+					},
+					{
+						category: 'control',
+						type: 'input',
+						reference: '/root/rep1/r1-2',
+						label: {
+							category: 'support',
+							type: 'label',
+							children: [{ expression: '"Repeat 1 input 2"' }],
 						},
-						{
-							category: 'control',
-							type: 'input',
-							reference: '/root/rep1/r1-2',
-							label: {
-								category: 'support',
-								type: 'label',
-								children: [{ expression: '"Repeat 1 input 2"' }],
-							},
-						},
-					],
-				},
+					},
+				],
 			});
 		});
 
-		it('defines a repeat group for a <repeat> without an explicit containing <group>, for API consistency', () => {
-			const inferredRepeatGroup = bodyDefinition.elements[7];
+		it('defines a repeat for a <repeat> without an explicit containing <group>, for API consistency', () => {
+			const repeatDefinition = bodyDefinition.elements[7];
 
-			expect(inferredRepeatGroup).toMatchObject({
+			expect(repeatDefinition).toMatchObject({
 				category: 'structure',
-				type: 'repeat-group',
+				type: 'repeat',
 				reference: '/root/rep2',
 				label: null,
-				children: [],
-				repeat: {
-					category: 'structure',
-					type: 'repeat',
-					children: [
-						{
-							category: 'control',
-							type: 'input',
-							reference: '/root/rep2/r2-1',
-							label: null,
-						},
-					],
-				},
+				children: [
+					{
+						category: 'control',
+						type: 'input',
+						reference: '/root/rep2/r2-1',
+						label: null,
+					},
+				],
 			});
 		});
 

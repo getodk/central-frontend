@@ -5,19 +5,17 @@ import {
 	SymmetricTypedExpectExtension,
 	extendExpect,
 	instanceAssertion,
-	typeofAssertion,
 } from '@getodk/common/test/assertions/helpers.ts';
 import { expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
 import { AnswerResult } from '../../jr/Scenario.ts';
 import { ValidationImplementationPendingError } from '../../jr/validation/ValidationImplementationPendingError.ts';
+import { assertString } from './shared-type-assertions.ts';
 
 const assertComparableAnswer = instanceAssertion(ComparableAnswer);
 
 const assertExpectedApproximateUOMAnswer = instanceAssertion(ExpectedApproximateUOMAnswer);
-
-const assertString = typeofAssertion('string');
 
 type AssertAnswerResult = (value: unknown) => asserts value is AnswerResult;
 

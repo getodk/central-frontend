@@ -1,6 +1,7 @@
 import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
 import type { StringNode } from './StringNode.ts';
 import type { TextRange } from './TextRange.ts';
@@ -38,8 +39,11 @@ export interface SelectDefinition extends ValueNodeDefinition {
 	readonly bodyElement: AnySelectDefinition;
 }
 
+export type SelectNodeAppearances = NodeAppearances<SelectDefinition>;
+
 export interface SelectNode extends BaseNode {
 	readonly nodeType: 'select';
+	readonly appearances: SelectNodeAppearances;
 	readonly definition: SelectDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

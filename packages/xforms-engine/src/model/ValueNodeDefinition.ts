@@ -1,11 +1,10 @@
-import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
-import type { AnyControlDefinition } from '../body/control/ControlDefinition.ts';
+import type { AnyBodyElementDefinition, ControlElementDefinition } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 
 export class ValueNodeDefinition
-	extends DescendentNodeDefinition<'value-node', AnyControlDefinition | null>
+	extends DescendentNodeDefinition<'value-node', ControlElementDefinition | null>
 	implements NodeDefinition<'value-node'>
 {
 	readonly type = 'value-node';

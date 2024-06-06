@@ -1,4 +1,4 @@
-import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import { XHTML_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { HtmlXFormsElement } from '@getodk/common/test/fixtures/xform-dsl/HtmlXFormsElement.ts';
 import {
 	body,
@@ -25,6 +25,10 @@ describe('XFormDOM', () => {
 					mainInstance(
 						// prettier-ignore
 						t('root id="bind-types"',
+						  t('grp',
+								// prettier-ignore
+								t('g1')
+							),
 							t('rep',
 								// prettier-ignore
 								t('a'),
@@ -61,11 +65,16 @@ describe('XFormDOM', () => {
 			),
 			body(
 				t(
-					'group id="group-nodeset" nodeset="/root/rep" group-containing-repeat=""',
+					'group id="group-nodeset" nodeset="/root/grp"',
+					// prettier-ignore
+					t('input id="input-nodeset" nodeset="/root/grp/g1"')
+				),
+				t(
+					'group id="repeat-group" nodeset="/root/rep" group-containing-repeat=""',
 					t(
 						'repeat id="repeat-ref" ref="/root/rep" repeat-contained-by-group=""',
 						// prettier-ignore
-						t('input id="input-nodeset" nodeset="/root/rep/a" grouped-repeat-child=""'),
+						t('input nodeset="/root/rep/a" grouped-repeat-child=""'),
 						t(
 							'select1 id="select-nodeset" nodeset="/root/rep/b" grouped-repeat-child=""',
 							t(
@@ -101,7 +110,7 @@ describe('XFormDOM', () => {
 			id: 'group-nodeset',
 			expected: {
 				nodeset: null,
-				ref: '/root/rep',
+				ref: '/root/grp',
 			},
 		},
 		{
@@ -119,7 +128,7 @@ describe('XFormDOM', () => {
 			id: 'input-nodeset',
 			expected: {
 				nodeset: null,
-				ref: '/root/rep/a',
+				ref: '/root/grp/g1',
 			},
 		},
 		{
@@ -147,23 +156,40 @@ describe('XFormDOM', () => {
 		expect(element.getAttribute('ref')).toBe(expected.ref);
 	});
 
-	it('wraps an ungrouped <repeat> with a <group> with the same nodeset reference', () => {
+	it('unwraps a <group ref><repeat nodeset> pair', () => {
+		const repeatElement = xformDOM.xformDocument.getElementById('repeat-ref')!;
+
+		expect(repeatElement).not.toBeNull();
+
+		const parent = repeatElement.parentElement!;
+
+		expect(parent.namespaceURI).toBe(XHTML_NAMESPACE_URI);
+		expect(parent.localName).toBe('body');
+
+		const repeatGroup = xformDOM.xformDocument.getElementById('repeat-group');
+
+		expect(repeatGroup).toBeNull();
+	});
+
+	it('does not unwrap an ungrouped <repeat> with a <group> with the same nodeset reference', () => {
 		const repeat = xformDOM.xformDocument.getElementById('ungrouped-repeat')!;
 		const parent = repeat.parentElement!;
 
-		expect(parent.namespaceURI).toBe(XFORMS_NAMESPACE_URI);
-		expect(parent.localName).toBe('group');
-		expect(parent.getAttribute('ref')).toBe(repeat.getAttribute('nodeset'));
+		expect(parent.namespaceURI).toBe(XHTML_NAMESPACE_URI);
+		expect(parent.localName).toBe('body');
 	});
 
-	it('wraps a <repeat> within a <group> referencing a different nodeset into a new <group> with its own nodeset reference', () => {
+	it('normalizes a <repeat ref> to use a `nodeset` attribute', () => {
+		const repeat = xformDOM.xformDocument.getElementById('repeat-ref')!;
+
+		expect(repeat.getAttribute('ref')).toBeNull();
+		expect(repeat.getAttribute('nodeset')).toBe('/root/rep');
+	});
+
+	it('does not unwrap a <repeat> within a <group> referencing a different nodeset', () => {
 		const unrelatedGroup = xformDOM.xformDocument.getElementById('unrelated-group')!;
 		const repeat = xformDOM.xformDocument.getElementById('unrelated-grouped-repeat')!;
-		const parent = repeat.parentElement!;
 
-		expect(parent.namespaceURI).toBe(XFORMS_NAMESPACE_URI);
-		expect(parent.localName).toBe('group');
-		expect(parent.getAttribute('ref')).toBe(repeat.getAttribute('nodeset'));
-		expect(parent.parentElement).toBe(unrelatedGroup);
+		expect(repeat.parentElement).toBe(unrelatedGroup);
 	});
 });

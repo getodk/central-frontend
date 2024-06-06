@@ -1,11 +1,12 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import { SelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../model/SubtreeDefinition.ts';
 import { Group } from './Group.ts';
 import { RepeatRange } from './RepeatRange.ts';
-import { SelectField, type SelectFieldDefinition } from './SelectField.ts';
+import type { SelectFieldDefinition } from './SelectField.ts';
+import { SelectField } from './SelectField.ts';
+import type { StringFieldDefinition } from './StringField.ts';
 import { StringField } from './StringField.ts';
 import { Subtree } from './Subtree.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
@@ -32,16 +33,25 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 				return new Group(parent, child as GroupDefinition);
 			}
 
-			case 'repeat-sequence': {
+			case 'repeat-range': {
 				return new RepeatRange(parent, child);
 			}
 
 			case 'value-node': {
-				if (child.bodyElement instanceof SelectDefinition) {
-					return new SelectField(parent, child as SelectFieldDefinition);
-				}
+				// TODO: this sort of awkwardness might go away if we embrace a
+				// proliferation of node types throughout.
+				switch (child.bodyElement?.type) {
+					case 'select':
+					case 'select1':
+						return new SelectField(parent, child as SelectFieldDefinition);
 
-				return new StringField(parent, child);
+					case 'input':
+					case undefined:
+						return new StringField(parent, child as StringFieldDefinition);
+
+					default:
+						throw new UnreachableError(child.bodyElement);
+				}
 			}
 
 			default: {

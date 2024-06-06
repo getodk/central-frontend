@@ -1,8 +1,8 @@
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
-import type { RepeatDefinition } from '../body/RepeatDefinition.ts';
+import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import type { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
-import type { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
+import type { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import type { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 import type { SubtreeDefinition } from './SubtreeDefinition.ts';
@@ -17,13 +17,13 @@ import type { ValueNodeDefinition } from './ValueNodeDefinition.ts';
 export type RootNodeType = 'root';
 
 /**
- * Corresponds to a sequence of model/entry DOM subtrees which in turn
+ * Corresponds to a range/sequence of model/entry DOM subtrees which in turn
  * corresponds to a <repeat> in the form body definition.
  */
-export type RepeatSequenceType = 'repeat-sequence';
+export type RepeatRangeType = 'repeat-range';
 
 /**
- * Corresponds to a template definition for a repeat sequence, which either has
+ * Corresponds to a template definition for a repeat range, which either has
  * an explicit `jr:template=""` attribute in the form definition or is inferred
  * as a template from the form's first element matched by a <repeat nodeset>.
  */
@@ -32,7 +32,7 @@ export type RepeatTemplateType = 'repeat-template';
 /**
  * Corresponds to a single instance of a model/entry DOM subtree which
  * in turn corresponds to a <repeat> in the form body definition, and a
- * 'repeat-sequence' definition.
+ * 'repeat-range' definition.
  */
 export type RepeatInstanceType = 'repeat-instance';
 
@@ -55,7 +55,7 @@ export type ValueNodeType = 'value-node';
 export type NodeDefinitionType =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootNodeType
-	| RepeatSequenceType
+	| RepeatRangeType
 	| RepeatTemplateType
 	| RepeatInstanceType
 	| SubtreeNodeType
@@ -71,7 +71,7 @@ export type ParentNodeDefinition =
 
 // prettier-ignore
 export type ChildNodeDefinition =
-	| RepeatSequenceDefinition
+	| RepeatRangeDefinition
 	| SubtreeDefinition
 	| ValueNodeDefinition;
 
@@ -91,7 +91,7 @@ export type NodeChildren<Type extends NodeDefinitionType> =
 
 // prettier-ignore
 export type NodeInstances<Type extends NodeDefinitionType> =
-	Type extends 'repeat-sequence'
+	Type extends 'repeat-range'
 		? readonly RepeatInstanceDefinition[]
 		: null;
 
@@ -104,7 +104,7 @@ export type NodeParent<Type extends NodeDefinitionType> =
 // TODO: value-node may be Attr
 // prettier-ignore
 export type ModelNode<Type extends NodeDefinitionType> =
-	Type extends 'repeat-sequence'
+	Type extends 'repeat-range'
 		? null
 		: Element;
 
@@ -120,7 +120,7 @@ export interface NodeDefinition<Type extends NodeDefinitionType> {
 	readonly bind: BindDefinition;
 	readonly nodeset: string;
 	readonly nodeName: string;
-	readonly bodyElement: AnyBodyElementDefinition | RepeatDefinition | null;
+	readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
 
 	readonly isTranslated: boolean;
 	readonly dependencyExpressions: ReadonlySet<string>;
@@ -137,7 +137,7 @@ export interface NodeDefinition<Type extends NodeDefinitionType> {
 export type AnyNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootDefinition
-	| RepeatSequenceDefinition
+	| RepeatRangeDefinition
 	| RepeatTemplateDefinition
 	| RepeatInstanceDefinition
 	| SubtreeDefinition

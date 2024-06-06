@@ -1,6 +1,7 @@
 import type { InputDefinition } from '../body/control/InputDefinition.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 
@@ -21,6 +22,8 @@ export interface StringDefinition extends ValueNodeDefinition {
 	readonly bodyElement: InputDefinition | null;
 }
 
+export type StringNodeAppearances = NodeAppearances<StringDefinition>;
+
 /**
  * A node which can be assigned a string/text value. A string node **MAY**
  * correspond to form field defined as an XForms `<input>`, which a user-facing
@@ -30,6 +33,7 @@ export interface StringDefinition extends ValueNodeDefinition {
  */
 export interface StringNode extends BaseNode {
 	readonly nodeType: 'string';
+	readonly appearances: StringNodeAppearances;
 	readonly definition: StringDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

@@ -8,7 +8,7 @@ export class ModelDefinition {
 
 	constructor(readonly form: XFormDefinition) {
 		this.binds = ModelBindMap.fromModel(this);
-		this.root = new RootDefinition(form, this);
+		this.root = new RootDefinition(form, this, form.body.classes);
 	}
 
 	toJSON() {

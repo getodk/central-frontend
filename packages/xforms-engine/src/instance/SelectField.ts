@@ -2,7 +2,7 @@ import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/white
 import type { Accessor } from 'solid-js';
 import { untrack } from 'solid-js';
 import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
-import type { SelectItem, SelectNode } from '../client/SelectNode.ts';
+import type { SelectItem, SelectNode, SelectNodeAppearances } from '../client/SelectNode.ts';
 import type { TextRange } from '../index.ts';
 import { createSelectItems } from '../lib/reactivity/createSelectItems.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
@@ -50,7 +50,7 @@ export class SelectField
 
 	// SelectNode
 	readonly nodeType = 'select';
-
+	readonly appearances: SelectNodeAppearances;
 	readonly currentState: CurrentState<SelectFieldStateSpec>;
 
 	// ValueContext
@@ -83,6 +83,7 @@ export class SelectField
 	constructor(parent: GeneralParentNode, definition: SelectFieldDefinition) {
 		super(parent, definition);
 
+		this.appearances = definition.bodyElement.appearances;
 		this.selectExclusive = definition.bodyElement.type === 'select1';
 
 		const valueOptions = createSelectItems(this);

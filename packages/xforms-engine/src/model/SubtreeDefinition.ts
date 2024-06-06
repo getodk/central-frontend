@@ -1,6 +1,6 @@
 import type {
 	AnyBodyElementDefinition,
-	NonRepeatGroupElementDefinition,
+	AnyGroupElementDefinition,
 } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
@@ -11,7 +11,7 @@ import type {
 } from './NodeDefinition.ts';
 
 export class SubtreeDefinition
-	extends DescendentNodeDefinition<'subtree', NonRepeatGroupElementDefinition | null>
+	extends DescendentNodeDefinition<'subtree', AnyGroupElementDefinition | null>
 	implements NodeDefinition<'subtree'>
 {
 	readonly type = 'subtree';
@@ -29,7 +29,7 @@ export class SubtreeDefinition
 	) {
 		if (
 			bodyElement != null &&
-			(bodyElement.category !== 'structure' || bodyElement.type === 'repeat-group')
+			(bodyElement.category !== 'structure' || bodyElement.type === 'repeat')
 		) {
 			throw new Error(`Unexpected body element for nodeset ${bind.nodeset}`);
 		}

@@ -1,6 +1,6 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import type { Accessor } from 'solid-js';
-import type { RepeatRangeNode } from '../client/RepeatRangeNode.ts';
+import type { RepeatRangeNode, RepeatRangeNodeAppearances } from '../client/RepeatRangeNode.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -10,7 +10,7 @@ import type { EngineState } from '../lib/reactivity/node-state/createEngineState
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
-import type { RepeatSequenceDefinition } from '../model/RepeatSequenceDefinition.ts';
+import type { RepeatRangeDefinition } from '../model/RepeatRangeDefinition.ts';
 import type { RepeatDefinition } from './RepeatInstance.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
 import type { Root } from './Root.ts';
@@ -31,7 +31,7 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 }
 
 export class RepeatRange
-	extends DescendantNode<RepeatSequenceDefinition, RepeatRangeStateSpec, RepeatInstance>
+	extends DescendantNode<RepeatRangeDefinition, RepeatRangeStateSpec, RepeatInstance>
 	implements RepeatRangeNode, EvaluationContext, SubscribableDependency
 {
 	/**
@@ -67,10 +67,47 @@ export class RepeatRange
 	// RepeatRangeNode
 	readonly nodeType = 'repeat-range';
 
+	/**
+	 * @todo RepeatRange*, RepeatInstance* (and RepeatTemplate*) all share the
+	 * same body element, and thus all share the same definition `bodyElement`. As
+	 * such, they also all share the same `appearances`. At time of writing,
+	 * `web-forms` (Vue UI package) treats a `RepeatRangeNode`...
+	 *
+	 * - ... as a group, if the node has a label (i.e.
+	 *   `<group><label/><repeat/></group>`)
+	 * - ... effectively as a fragment containing only its instances, otherwise
+	 *
+	 * We now collapse `<group><repeat>` into `<repeat>`, and no longer treat
+	 * "repeat group" as a concept (after parsing). According to the spec, these
+	 * appearances **are supposed to** come from that "repeat group" in the form
+	 * definition. In practice, many forms do define appearances directly on a
+	 * repeat element. The engine currently produces an error if both are defined
+	 * simultaneously, but otherwise makes no distinction between appearances in
+	 * these form definition shapes:
+	 *
+	 * ```xml
+	 * <group ref="/data/rep1" appearance="...">
+	 *   <repeat nodeset="/data/rep1"/>
+	 * </group>
+	 *
+	 * <group ref="/data/rep1">
+	 *   <repeat nodeset="/data/rep1"/ appearance="...">
+	 * </group>
+	 *
+	 * <repeat nodeset="/data/rep1"/ appearance="...">
+	 * ```
+	 *
+	 * All of the above creates considerable ambiguity about where "repeat
+	 * appearances" should apply, under which circumstances.
+	 */
+	readonly appearances: RepeatRangeNodeAppearances;
+
 	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
 
-	constructor(parent: GeneralParentNode, definition: RepeatSequenceDefinition) {
+	constructor(parent: GeneralParentNode, definition: RepeatRangeDefinition) {
 		super(parent, definition);
+
+		this.appearances = definition.bodyElement.appearances;
 
 		const childrenState = createChildrenState<RepeatRange, RepeatInstance>(this);
 

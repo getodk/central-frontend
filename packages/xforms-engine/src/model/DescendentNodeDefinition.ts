@@ -1,5 +1,4 @@
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
-import type { RepeatDefinition } from '../body/RepeatDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import type {
 	ModelNode,
@@ -14,7 +13,7 @@ import type { RootDefinition } from './RootDefinition.ts';
 
 export type DescendentNodeType = Exclude<NodeDefinitionType, 'root'>;
 
-type DescendentNodeBodyElement = AnyBodyElementDefinition | RepeatDefinition;
+type DescendentNodeBodyElement = AnyBodyElementDefinition;
 
 export abstract class DescendentNodeDefinition<
 	Type extends DescendentNodeType,

@@ -18,7 +18,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../../src/XFormDefinition.ts';
 import { BindDefinition } from '../../src/model/BindDefinition.ts';
 import { ModelDefinition } from '../../src/model/ModelDefinition.ts';
-import type { RepeatSequenceDefinition } from '../../src/model/RepeatSequenceDefinition.ts';
+import type { RepeatRangeDefinition } from '../../src/model/RepeatRangeDefinition.ts';
 import type { ValueNodeDefinition } from '../../src/model/ValueNodeDefinition.ts';
 
 describe('ModelDefinition', () => {
@@ -320,10 +320,10 @@ describe('ModelDefinition', () => {
 			{
 				index: 0,
 				expected: {
-					type: 'repeat-sequence',
+					type: 'repeat-range',
 					bind: { nodeset: '/root/rep' },
 					bodyElement: {
-						type: 'repeat-group',
+						type: 'repeat',
 					},
 					instances: [
 						{
@@ -350,10 +350,10 @@ describe('ModelDefinition', () => {
 			{
 				index: 1,
 				expected: {
-					type: 'repeat-sequence',
+					type: 'repeat-range',
 					bind: { nodeset: '/root/rep2' },
 					bodyElement: {
-						type: 'repeat-group',
+						type: 'repeat',
 					},
 					instances: [
 						{
@@ -392,26 +392,26 @@ describe('ModelDefinition', () => {
 		);
 
 		describe('templates', () => {
-			const expectRepeatTemplate = (definition: RepeatSequenceDefinition, expectedXML: string) => {
+			const expectRepeatTemplate = (definition: RepeatRangeDefinition, expectedXML: string) => {
 				const expected = xformsElement`${expectedXML}`;
 
 				expectEqualNode(definition.template.node, expected);
 			};
 
 			it('defines an explicit repeat template', () => {
-				const definition = modelDefinition.root.children[0] as RepeatSequenceDefinition;
+				const definition = modelDefinition.root.children[0] as RepeatRangeDefinition;
 
 				expectRepeatTemplate(definition, /* xml */ `<rep><a>a default</a><b>b default</b></rep>`);
 			});
 
 			it('derives a repeat template from a non-template instance in the form definition', () => {
-				const definition = modelDefinition.root.children[1] as RepeatSequenceDefinition;
+				const definition = modelDefinition.root.children[1] as RepeatRangeDefinition;
 
 				expectRepeatTemplate(definition, /* xml */ `<rep2><c /><d /></rep2>`);
 			});
 
 			it('clears default values from a derived template', () => {
-				const definition = modelDefinition.root.children[4] as RepeatSequenceDefinition;
+				const definition = modelDefinition.root.children[4] as RepeatRangeDefinition;
 
 				expectRepeatTemplate(definition, /* xml */ `<rep5><g /></rep5>`);
 			});
@@ -422,7 +422,7 @@ describe('ModelDefinition', () => {
 			])(
 				'defines $expected default instances from nodes in the form definition when a repeat template is implicitly derived',
 				({ index, expected }) => {
-					const definition = modelDefinition.root.children[index] as RepeatSequenceDefinition;
+					const definition = modelDefinition.root.children[index] as RepeatRangeDefinition;
 
 					expect(definition.instances.length).toBe(expected);
 				}
@@ -505,9 +505,9 @@ describe('ModelDefinition', () => {
 					expected: 3,
 				},
 			])('defines $expected default instances ($nodeset)', ({ index, nodeset, expected }) => {
-				const definition = modelDefinition.root.children[index] as RepeatSequenceDefinition;
+				const definition = modelDefinition.root.children[index] as RepeatRangeDefinition;
 
-				// Ensure we're testing the right sequence in the first place
+				// Ensure we're testing the right range in the first place
 				expect(definition.nodeset).toBe(nodeset);
 
 				expect(definition.instances.length).toBe(expected);
@@ -516,30 +516,28 @@ describe('ModelDefinition', () => {
 			it.each([
 				{
 					nodeset: '/root/rep4',
-					sequenceIndex: 3,
+					rangeIndex: 3,
 					instanceIndex: 0,
 					expectedXML: /* xml */ `<rep4><f>default instance f 0</f></rep4>`,
 				},
 				{
 					nodeset: '/root/rep4',
-					sequenceIndex: 3,
+					rangeIndex: 3,
 					instanceIndex: 1,
 					expectedXML: /* xml */ `<rep4><f /></rep4>`,
 				},
 				{
 					nodeset: '/root/rep4',
-					sequenceIndex: 3,
+					rangeIndex: 3,
 					instanceIndex: 2,
 					expectedXML: /* xml */ `<rep4><f>default instance f 2</f></rep4>`,
 				},
 			])(
 				'defines the default instance for nodeset $nodeset at index $instanceIndex with default values (xml: $expectedXML)',
-				({ nodeset, sequenceIndex, instanceIndex, expectedXML }) => {
-					const definition = modelDefinition.root.children[
-						sequenceIndex
-					] as RepeatSequenceDefinition;
+				({ nodeset, rangeIndex, instanceIndex, expectedXML }) => {
+					const definition = modelDefinition.root.children[rangeIndex] as RepeatRangeDefinition;
 
-					// Ensure we're testing the right sequence in the first place
+					// Ensure we're testing the right range in the first place
 					expect(definition.nodeset).toBe(nodeset);
 
 					const instance = definition.instances[instanceIndex]!;

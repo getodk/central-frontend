@@ -2,6 +2,7 @@ import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { XFormDOM } from '../XFormDOM.ts';
+import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -118,7 +119,8 @@ export class Root
 
 	// RootNode
 	readonly nodeType = 'root';
-
+	readonly appearances = null;
+	readonly classes: BodyClassList;
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 
 	protected readonly instanceDOM: XFormDOM;
@@ -153,6 +155,8 @@ export class Root
 		engineConfig: InstanceConfig
 	) {
 		super(engineConfig, null, definition);
+
+		this.classes = definition.classes;
 
 		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 

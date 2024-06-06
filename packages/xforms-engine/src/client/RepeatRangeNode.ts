@@ -1,5 +1,6 @@
-import type { RepeatSequenceDefinition } from '../model/RepeatSequenceDefinition.ts';
+import type { RepeatRangeDefinition } from '../model/RepeatRangeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
@@ -22,6 +23,8 @@ export interface RepeatRangeNodeState extends BaseNodeState {
 	get valueOptions(): null;
 	get value(): null;
 }
+
+export type RepeatRangeNodeAppearances = NodeAppearances<RepeatRangeDefinition>;
 
 /**
  * Represents a contiguous set of zero or more {@link RepeatInstanceNode}s
@@ -89,7 +92,8 @@ export interface RepeatRangeNodeState extends BaseNodeState {
  */
 export interface RepeatRangeNode extends BaseNode {
 	readonly nodeType: 'repeat-range';
-	readonly definition: RepeatSequenceDefinition;
+	readonly appearances: RepeatRangeNodeAppearances;
+	readonly definition: RepeatRangeDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: RepeatRangeNodeState;

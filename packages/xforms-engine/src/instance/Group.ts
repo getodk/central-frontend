@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import type { GroupDefinition, GroupNode } from '../client/GroupNode.ts';
+import type { GroupDefinition, GroupNode, GroupNodeAppearances } from '../client/GroupNode.ts';
 import type { TextRange } from '../index.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -38,12 +38,14 @@ export class Group
 	protected override engineState: EngineState<GroupStateSpec>;
 
 	// GroupNode
-	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
-
 	readonly nodeType = 'group';
+	readonly appearances: GroupNodeAppearances;
+	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
 
 	constructor(parent: GeneralParentNode, definition: GroupDefinition) {
 		super(parent, definition);
+
+		this.appearances = definition.bodyElement.appearances;
 
 		const childrenState = createChildrenState<Group, GeneralChildNode>(this);
 

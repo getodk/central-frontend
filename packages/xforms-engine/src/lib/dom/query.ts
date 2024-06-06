@@ -9,6 +9,10 @@ const hintLookup = new ScopedElementLookup(':scope > hint', 'hint');
 const itemLookup = new ScopedElementLookup(':scope > item', 'item');
 const itemsetLookup = new ScopedElementLookup(':scope > itemset[nodeset]', 'itemset[nodeset]');
 const labelLookup = new ScopedElementLookup(':scope > label', 'label');
+const repeatGroupLabelLookup = new ScopedElementLookup(
+	':scope > label[form-definition-source="repeat-group"]',
+	'label[form-definition-source="repeat-group"]'
+);
 const repeatLookup = new ScopedElementLookup(':scope > repeat[nodeset]', 'repeat[nodeset]');
 const valueLookup = new ScopedElementLookup(':scope > value', 'value');
 
@@ -19,6 +23,11 @@ export interface ItemElement extends LocalNamedElement<'item'> {}
 export interface ItemsetElement extends KnownAttributeLocalNamedElement<'itemset', 'nodeset'> {}
 
 export interface LabelElement extends LocalNamedElement<'label'> {}
+
+export interface RepeatGroupLabelElement extends LabelElement {
+	getAttribute(name: 'form-definition-source'): 'repeat-group';
+	getAttribute(name: string): string;
+}
 
 export interface RepeatElement extends KnownAttributeLocalNamedElement<'repeat', 'nodeset'> {}
 
@@ -38,6 +47,10 @@ export const getItemsetElement = (parent: Element): ItemsetElement | null => {
 
 export const getLabelElement = (parent: Element): LabelElement | null => {
 	return labelLookup.getElement<LabelElement>(parent);
+};
+
+export const getRepeatGroupLabelElement = (parent: Element): RepeatGroupLabelElement | null => {
+	return repeatGroupLabelLookup.getElement<RepeatGroupLabelElement>(parent);
 };
 
 export const getRepeatElement = (parent: Element): RepeatElement | null => {

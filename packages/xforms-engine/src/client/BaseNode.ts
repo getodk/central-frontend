@@ -1,7 +1,9 @@
+import type { TokenListParser } from '../lib/TokenListParser.ts';
 import type { AnyNodeDefinition } from '../model/NodeDefinition.ts';
-import type { InstanceNodeType } from './node-types.js';
+import type { NodeAppearances } from './NodeAppearances.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';
+import type { InstanceNodeType } from './node-types.ts';
 
 export interface BaseNodeState {
 	/**
@@ -125,6 +127,12 @@ export interface BaseNode {
 	 * the lifetime of an active session filling a form.
 	 */
 	readonly nodeId: FormNodeID;
+
+	/**
+	 * @see {@link TokenListParser} for details.
+	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	readonly appearances: NodeAppearances<any> | null;
 
 	/**
 	 * Each node has a definition which specifies aspects of the node defined in

@@ -1,9 +1,9 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import type { RepeatDefinition } from '../body/RepeatDefinition.ts';
+import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { ChildNodeDefinition, NodeDefinition } from './NodeDefinition.ts';
-import type { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
+import type { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 
 const repeatTemplates = new WeakMap<BindDefinition, RepeatTemplateDefinition>();
 
@@ -73,14 +73,14 @@ interface ParsedRepeatNodes {
 }
 
 export class RepeatTemplateDefinition
-	extends DescendentNodeDefinition<'repeat-template', RepeatDefinition>
+	extends DescendentNodeDefinition<'repeat-template', RepeatElementDefinition>
 	implements NodeDefinition<'repeat-template'>
 {
 	static parseModelNodes(
-		sequence: RepeatSequenceDefinition,
+		range: RepeatRangeDefinition,
 		modelNodes: readonly [Element, ...Element[]]
 	): ParsedRepeatNodes {
-		const { bind } = sequence;
+		const { bind } = range;
 
 		let template = repeatTemplates.get(bind);
 		let instanceNodes: readonly Element[];
@@ -89,7 +89,7 @@ export class RepeatTemplateDefinition
 			const [templateNode, ...rest] = splitInstanceNodes(modelNodes);
 
 			instanceNodes = rest;
-			template = new this(sequence, templateNode);
+			template = new this(range, templateNode);
 		} else {
 			// TODO: this is under the assumption that for any depth > 1, if a
 			// template has already been defined for the given form definition, any
@@ -121,17 +121,12 @@ export class RepeatTemplateDefinition
 	readonly defaultValue = null;
 
 	protected constructor(
-		protected readonly sequence: RepeatSequenceDefinition,
+		range: RepeatRangeDefinition,
 		protected readonly templateNode: ExplicitRepeatTemplateElement
 	) {
-		const {
-			bind,
-			bodyElement: repeatGroupBodyElement,
-			parent: repeatSequenceParent,
-			root,
-		} = sequence;
+		const { bind, bodyElement, parent, root } = range;
 
-		super(repeatSequenceParent, bind, repeatGroupBodyElement.repeat);
+		super(parent, bind, bodyElement);
 
 		const node = templateNode.cloneNode(true) as Element;
 
@@ -143,7 +138,7 @@ export class RepeatTemplateDefinition
 	}
 
 	toJSON() {
-		const { bind, bodyElement, parent, root, sequence, ...rest } = this;
+		const { bind, bodyElement, parent, root, ...rest } = this;
 
 		return rest;
 	}

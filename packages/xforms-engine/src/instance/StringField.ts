@@ -1,7 +1,7 @@
 import { identity } from '@getodk/common/lib/identity.ts';
 import type { Accessor } from 'solid-js';
 import type { InputDefinition } from '../body/control/InputDefinition.ts';
-import type { StringNode } from '../client/StringNode.ts';
+import type { StringNode, StringNodeAppearances } from '../client/StringNode.ts';
 import type { TextRange } from '../index.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -43,7 +43,7 @@ export class StringField
 
 	// StringNode
 	readonly nodeType = 'string';
-
+	readonly appearances: StringNodeAppearances;
 	readonly currentState: CurrentState<StringFieldStateSpec>;
 
 	// ValueContext
@@ -53,6 +53,8 @@ export class StringField
 
 	constructor(parent: GeneralParentNode, definition: StringFieldDefinition) {
 		super(parent, definition);
+
+		this.appearances = (definition.bodyElement?.appearances ?? null) as StringNodeAppearances;
 
 		const state = createSharedNodeState(
 			this.scope,

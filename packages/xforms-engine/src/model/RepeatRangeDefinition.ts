@@ -1,13 +1,13 @@
-import { RepeatGroupDefinition } from '../body/group/RepeatGroupDefinition.ts';
+import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 import { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
 import { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
 
-export class RepeatSequenceDefinition
-	extends DescendentNodeDefinition<'repeat-sequence', RepeatGroupDefinition>
-	implements NodeDefinition<'repeat-sequence'>
+export class RepeatRangeDefinition
+	extends DescendentNodeDefinition<'repeat-range', RepeatElementDefinition>
+	implements NodeDefinition<'repeat-range'>
 {
 	// TODO: if an implicit template is derived from an instance in a form
 	// definition, should its default values (if any) be cleared? Probably!
@@ -19,7 +19,7 @@ export class RepeatSequenceDefinition
 		return templateElement.cloneNode(true) as Element;
 	}
 
-	readonly type = 'repeat-sequence';
+	readonly type = 'repeat-range';
 
 	readonly template: RepeatTemplateDefinition;
 	readonly children = null;
@@ -32,7 +32,7 @@ export class RepeatSequenceDefinition
 	constructor(
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
-		bodyElement: RepeatGroupDefinition,
+		bodyElement: RepeatElementDefinition,
 		modelNodes: readonly [Element, ...Element[]]
 	) {
 		super(parent, bind, bodyElement);

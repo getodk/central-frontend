@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import type { AnyLeafNode, GeneralChildNode, GroupNode, RepeatRangeNode } from '@getodk/xforms-engine';
+import type { AnyLeafNode, GeneralChildNode, GroupNode, RepeatRangeNode, StringNode } from '@getodk/xforms-engine';
 import FormGroup from './FormGroup.vue';
 import FormQuestion from './FormQuestion.vue';
 import RepeatRange from './RepeatRange.vue';
 
 defineProps<{ nodes: readonly GeneralChildNode[]}>();
 
-const isLeafNode = (n: GeneralChildNode) : n is AnyLeafNode => n.definition.type === 'value-node';
-const isGroupNode = (n: GeneralChildNode) : n is GroupNode => n.definition.type === 'subtree';
-const isRepeatRangeNode = (n: GeneralChildNode) : n is RepeatRangeNode => n.definition.type === 'repeat-sequence';
+/**
+ * @todo This has been updated to most closely match the expected API use for
+ * what was previously expressed. It was not updated to be correct (it should
+ * filter out {@link StringNode}s with no body element.) This can be addressed
+ * too, but is deferred to keep a lighter touch pending review.
+ */
+const isLeafNode = (node: GeneralChildNode): node is AnyLeafNode => {
+	return node.nodeType === 'string' || node.nodeType === 'select';
+};
 
+const isGroupNode = (node: GeneralChildNode): node is GroupNode => {
+	return node.nodeType === 'group';
+};
 
+const isRepeatRangeNode = (node: GeneralChildNode): node is RepeatRangeNode => {
+	return node.nodeType === 'repeat-range';
+};
 </script>
 
 <template>

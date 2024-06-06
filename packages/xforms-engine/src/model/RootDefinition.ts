@@ -1,5 +1,5 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { RepeatGroupDefinition } from '../body/group/RepeatGroupDefinition.ts';
+import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 import type {
@@ -7,7 +7,7 @@ import type {
 	NodeDefinition,
 	ParentNodeDefinition,
 } from './NodeDefinition.ts';
-import { RepeatSequenceDefinition } from './RepeatSequenceDefinition.ts';
+import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
 import { ValueNodeDefinition } from './ValueNodeDefinition.ts';
 
@@ -29,7 +29,8 @@ export class RootDefinition implements NodeDefinition<'root'> {
 
 	constructor(
 		protected readonly form: XFormDefinition,
-		protected readonly model: ModelDefinition
+		protected readonly model: ModelDefinition,
+		readonly classes: BodyClassList
 	) {
 		// TODO: theoretically the pertinent step in the bind's `nodeset` *could* be
 		// namespaced. It also may make more sense to determine the root nodeset
@@ -86,16 +87,9 @@ export class RootDefinition implements NodeDefinition<'root'> {
 			const bind = binds.getOrCreateBindDefinition(nodeset);
 			const bodyElement = body.getBodyElement(nodeset);
 			const [firstChild, ...restChildren] = children;
-			const repeatGroup = body.getRepeatGroup(nodeset);
 
-			if (repeatGroup != null) {
-				const repeatDefinition = (bodyElement as RepeatGroupDefinition).repeat;
-
-				if (repeatDefinition == null) {
-					throw 'TODO: this is why I have hesitated to pick an "is repeat" predicate direction';
-				}
-
-				return new RepeatSequenceDefinition(parent, bind, repeatGroup, children);
+			if (bodyElement?.type === 'repeat') {
+				return new RepeatRangeDefinition(parent, bind, bodyElement, children);
 			}
 
 			if (restChildren.length) {

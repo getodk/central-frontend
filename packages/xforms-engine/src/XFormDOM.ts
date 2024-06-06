@@ -1,4 +1,4 @@
-import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import { XFORMS_NAMESPACE_URI, XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { XFormsXPathEvaluator } from '@getodk/xpath';
 
 const domParser = new DOMParser();
@@ -41,7 +41,83 @@ const normalizeBodyRefNodesetAttributes = (body: Element): void => {
 	}
 };
 
-const normalizeRepeatGroups = (xformDocument: XMLDocument, body: Element): void => {
+const normalizeRepeatGroupAttributes = (group: Element, repeat: Element): void => {
+	for (const groupAttribute of group.attributes) {
+		const { localName, namespaceURI, nodeName, value } = groupAttribute;
+
+		if (
+			// Don't propagate namespace declarations (which appear as attributes in
+			// the browser/XML DOM, either named `xmlns` or with an `xmlns` prefix,
+			// always in the XMLNS namespace).
+			namespaceURI === XMLNS_NAMESPACE_URI ||
+			// Don't propagate `ref`, it has been normalized as `nodeset` on the
+			// repeat element.
+			localName === 'ref' ||
+			// TODO: this accommodates tests of this normalization process, where
+			// certain nodes of interest are given an `id` attribute, and looked up
+			// for the purpose of asserting what was normalized about them. It's
+			// unclear if there's a generally expected behavior around the attribute.
+			localName === 'id'
+		) {
+			continue;
+		}
+
+		// TODO: The `appearance` attribute is propagated from
+		// `<group appearance><repeat>` to `<repeat appearance>`. But we presently
+		// bail if both elements define the attribute.
+		//
+		// The spec is clear that the attribute is only supported on `<group>` and
+		// control elements, which would suggest it should not be present on a
+		// `<repeat>` element directly. But many form fixtures (in e.g. Enketo)
+		// do have `<repeat apperance>`.
+		//
+		// It may be reasonable to relax this by:
+		//
+		// - Detecting if they share the same appearances, treated as a no-op.
+		//
+		// - Assume they're both meant to apply, and concatenate.
+		if (
+			localName === 'appearance' &&
+			namespaceURI === XFORMS_NAMESPACE_URI &&
+			repeat.hasAttribute(localName)
+		) {
+			const ref = group.getAttribute('ref');
+
+			throw new Error(
+				`Failed to normalize conflicting "appearances" attribute of group/repeat "${ref}"`
+			);
+		}
+
+		repeat.setAttributeNS(namespaceURI, nodeName, value);
+	}
+};
+
+const normalizeRepeatGroupLabel = (group: Element, repeat: Element): void => {
+	const groupLabel = Array.from(group.children).find((child) => {
+		return child.localName === 'label';
+	});
+
+	if (groupLabel == null) {
+		return;
+	}
+
+	const repeatLabel = groupLabel.cloneNode(true) as Element;
+
+	repeatLabel.setAttribute('form-definition-source', 'repeat-group');
+
+	repeat.prepend(repeatLabel);
+
+	groupLabel.remove();
+};
+
+const unwrapRepeatGroup = (group: Element, repeat: Element): void => {
+	normalizeRepeatGroupAttributes(group, repeat);
+	normalizeRepeatGroupLabel(group, repeat);
+
+	group.replaceWith(repeat);
+};
+
+const normalizeRepeatGroups = (body: Element): void => {
 	const repeats = body.querySelectorAll('repeat');
 
 	for (const repeat of repeats) {
@@ -63,11 +139,8 @@ const normalizeRepeatGroups = (xformDocument: XMLDocument, body: Element): void 
 			}
 		}
 
-		if (group == null) {
-			group = xformDocument.createElementNS(XFORMS_NAMESPACE_URI, 'group');
-			group.setAttribute('ref', repeatNodeset);
-			repeat.before(group);
-			group.append(repeat);
+		if (group != null) {
+			unwrapRepeatGroup(group, repeat);
 		}
 	}
 };
@@ -113,7 +186,7 @@ const parseNormalizedXForm = (
 		normalizedXML = sourceXML;
 	} else {
 		normalizeBodyRefNodesetAttributes(body);
-		normalizeRepeatGroups(xformDocument, body);
+		normalizeRepeatGroups(body);
 
 		normalizedXML = html.outerHTML;
 	}

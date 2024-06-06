@@ -1,6 +1,10 @@
 import type { Accessor } from 'solid-js';
 import { createComputed, createSignal, on } from 'solid-js';
-import type { RepeatDefinition, RepeatInstanceNode } from '../client/RepeatInstanceNode.ts';
+import type {
+	RepeatDefinition,
+	RepeatInstanceNode,
+	RepeatInstanceNodeAppearances,
+} from '../client/RepeatInstanceNode.ts';
 import type { TextRange } from '../index.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -49,6 +53,11 @@ export class RepeatInstance
 	// RepeatInstanceNode
 	readonly nodeType = 'repeat-instance';
 
+	/**
+	 * @see {@link RepeatRange.appearances}
+	 */
+	readonly appearances: RepeatInstanceNodeAppearances;
+
 	readonly currentState: MaterializedChildren<
 		CurrentState<RepeatInstanceStateSpec>,
 		GeneralChildNode
@@ -60,6 +69,8 @@ export class RepeatInstance
 		options: RepeatInstanceOptions
 	) {
 		super(parent, definition);
+
+		this.appearances = definition.bodyElement.appearances;
 
 		const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
 
@@ -79,6 +90,7 @@ export class RepeatInstance
 			{
 				...this.buildSharedStateSpec(parent, definition),
 
+				// TODO: only-child <group><label>
 				label: createNodeLabel(this, definition),
 				hint: null,
 				children: childrenState.childIds,

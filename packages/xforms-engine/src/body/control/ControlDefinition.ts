@@ -1,4 +1,5 @@
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import type { ParsedTokenList } from '../../lib/TokenListParser.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
 import { HintDefinition } from '../text/HintDefinition.ts';
@@ -22,6 +23,9 @@ export abstract class ControlDefinition<
 	override readonly reference: string;
 	override readonly label: LabelDefinition | null;
 	override readonly hint: HintDefinition | null;
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	abstract readonly appearances: ParsedTokenList<any>;
 
 	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
 		super(form, parent, element);
