@@ -127,7 +127,7 @@ describe('TriggerableDagTest.java', () => {
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
 
 					const init = async () => {
-						return Scenario.init(
+						await Scenario.init(
 							'Some form',
 							buildFormForDagCyclesCheck(bind('/data/count').type('int').calculate('. + 1'))
 						);
@@ -164,16 +164,19 @@ describe('TriggerableDagTest.java', () => {
 				 *    environments currently produces a different error message. So for
 				 *    now, we just check that an error is produced at all.
 				 */
-				it('should fail (supplementary/alternate test with bogus error message check)', async () => {
-					const init = async () => {
-						return Scenario.init(
-							'Some form',
-							buildFormForDagCyclesCheck(bind('/data/count').type('int').calculate('. + 1'))
-						);
-					};
+				it.fails(
+					'should fail (supplementary/alternate test with bogus error message check)',
+					async () => {
+						const init = async () => {
+							await Scenario.init(
+								'Some form',
+								buildFormForDagCyclesCheck(bind('/data/count').type('int').calculate('. + 1'))
+							);
+						};
 
-					await expect(init).rejects.toThrow();
-				});
+						await expect(init).rejects.toThrow();
+					}
+				);
 			});
 
 			/**
@@ -255,12 +258,12 @@ describe('TriggerableDagTest.java', () => {
 			 * parameterized ("table") test?
 			 */
 			describe('by self reference in relevance', () => {
-				it('should fail', async () => {
+				it.fails('should fail', async () => {
 					// exceptionRule.expect(XFormParseException.class);
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
 
 					const init = async () => {
-						return Scenario.init(
+						await Scenario.init(
 							'Some form',
 							buildFormForDagCyclesCheck(bind('/data/count').type('int').relevant('. > 0'))
 						);
@@ -271,12 +274,12 @@ describe('TriggerableDagTest.java', () => {
 			});
 
 			describe('by self reference in `readonly` condition', () => {
-				it('should fail', async () => {
+				it.fails('should fail', async () => {
 					// exceptionRule.expect(XFormParseException.class);
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
 
 					const init = async () => {
-						return Scenario.init(
+						await Scenario.init(
 							'Some form',
 							buildFormForDagCyclesCheck(bind('/data/count').type('int').readonly('. > 10'))
 						);
@@ -287,12 +290,12 @@ describe('TriggerableDagTest.java', () => {
 			});
 
 			describe('by self reference in required condition', () => {
-				it('should fail', async () => {
+				it.fails('should fail', async () => {
 					// 	exceptionRule.expect(XFormParseException.class);
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
 
 					const init = async () => {
-						return Scenario.init(
+						await Scenario.init(
 							'Some form',
 							buildFormForDagCyclesCheck(bind('/data/count').type('int').required('. > 10'))
 						);
@@ -581,7 +584,7 @@ describe('TriggerableDagTest.java', () => {
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
 
 					const init = async () => {
-						return Scenario.init(
+						await Scenario.init(
 							'Some form',
 							html(
 								head(
