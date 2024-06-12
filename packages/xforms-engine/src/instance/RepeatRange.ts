@@ -136,7 +136,11 @@ export class RepeatRange
 
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
+		this.currentState = materializeCurrentStateChildren(
+			this.scope,
+			state.currentState,
+			childrenState
+		);
 
 		definition.instances.forEach((instanceDefinition, index) => {
 			const afterIndex = index - 1;

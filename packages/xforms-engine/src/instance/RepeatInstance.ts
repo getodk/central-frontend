@@ -104,7 +104,11 @@ export class RepeatInstance
 
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
+		this.currentState = materializeCurrentStateChildren(
+			this.scope,
+			state.currentState,
+			childrenState
+		);
 
 		// Maintain current index state, updating as the parent range's children
 		// state is changed. Notable Solid reactivity nuances:

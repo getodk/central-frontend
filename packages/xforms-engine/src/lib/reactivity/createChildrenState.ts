@@ -1,4 +1,5 @@
-import { createMemo, createSignal, type Accessor, type Setter, type Signal } from 'solid-js';
+import type { Accessor, Setter, Signal } from 'solid-js';
+import { createSignal } from 'solid-js';
 import type { OpaqueReactiveObjectFactory } from '../../index.ts';
 import type { AnyChildNode, AnyParentNode } from '../../instance/hierarchy.ts';
 import type { NodeID } from '../../instance/identity.ts';
@@ -44,11 +45,55 @@ export const createChildrenState = <Parent extends AnyParentNode, Child extends 
 	parent: Parent
 ): ChildrenState<Child> => {
 	return parent.scope.runTask(() => {
-		const children = createSignal<readonly Child[]>([]);
-		const [getChildren, setChildren] = children;
-		const childIds = createMemo((): readonly NodeID[] => {
-			return getChildren().map((child) => child.nodeId);
-		});
+		const baseState = createSignal<readonly Child[]>([]);
+		const [getChildren, baseSetChildren] = baseState;
+
+		/**
+		 * Note: this is clearly derived state. It would be obvious to use
+		 * `createMemo`, which is exactly what a previous iteration did. This caused
+		 * mysterious issues when clients:
+		 *
+		 * - Also used Solid-based reactivity
+		 * - Accessed node children state within their own `createMemo` calls
+		 *
+		 * It's quite likely that there's a more robust and general solution, which
+		 * may be applicable if we also generalize this approach to
+		 * encode/materialize shared structured state (e.g. it may be applicable for
+		 * select values, form language, probably much more in coming features).
+		 *
+		 * In the meantime, while this approach is marginally more complex, it is
+		 * likely also slightly more efficient. We can revisit the tradeoff if/when
+		 * those hypothetical generalizations become a priority.
+		 */
+		const ids = createSignal<readonly NodeID[]>([]);
+		const [childIds, setChildIds] = ids;
+
+		type ChildrenSetterCallback = (prev: readonly Child[]) => readonly Child[];
+		type ChildrenOrSetterCallback = ChildrenSetterCallback | readonly Child[];
+
+		const setChildren: Setter<readonly Child[]> = (
+			valueOrSetterCallback: ChildrenOrSetterCallback
+		) => {
+			let setterCallback: ChildrenSetterCallback;
+
+			if (typeof valueOrSetterCallback === 'function') {
+				setterCallback = valueOrSetterCallback;
+			} else {
+				setterCallback = (_) => valueOrSetterCallback;
+			}
+
+			return baseSetChildren((prev) => {
+				const result = setterCallback(prev);
+
+				setChildIds(() => {
+					return result.map((child) => child.nodeId);
+				});
+
+				return result;
+			});
+		};
+
+		const children: Signal<readonly Child[]> = [getChildren, setChildren];
 
 		return {
 			children,

@@ -191,7 +191,11 @@ export class Root
 
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
+		this.currentState = materializeCurrentStateChildren(
+			this.scope,
+			state.currentState,
+			childrenState
+		);
 
 		const contextNode = instanceDOM.xformDocument.createElement(definition.nodeName);
 

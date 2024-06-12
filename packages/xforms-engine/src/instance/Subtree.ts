@@ -64,7 +64,11 @@ export class Subtree
 
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
+		this.currentState = materializeCurrentStateChildren(
+			this.scope,
+			state.currentState,
+			childrenState
+		);
 
 		childrenState.setChildren(buildChildren(this));
 	}

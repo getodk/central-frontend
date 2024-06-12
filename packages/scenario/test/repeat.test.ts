@@ -400,39 +400,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					});
 				});
 
-				/**
-				 * **PORTING NOTES**
-				 *
-				 * - ~~It seems like the comment from JavaRosa on the above test may
-				 *   have been intended for this test?~~
-				 *   {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612338717 | Nope!}
-				 *
-				 * - Failure is an `InconsistentChildrenStateError`. ~~Without diving
-				 *   into the cause, I've only ever seen this when experimenting with UI
-				 *   to exercise the engine API capability to add repeat instances at
-				 *   any index. It seemed pretty likely at the time that this was a
-				 *   Solid compilation bug, as it appeared that Solid's JSX transform
-				 *   triggered it. But this suggests that some (as yet undetermined)
-				 *   reactive property access may be implicated.~~ This error goes away
-				 *   if we unwrap the
-				 *   {@link https://github.com/getodk/web-forms/blob/d40bd88ed8959bbe7fae5d28efc840c16ca50a72/packages/scenario/src/jr/Scenario.ts#L163-L173 | `createMemo` call}
-				 *   in Scenario.ts. That's a pretty (er) solid clue as to where the
-				 *   apparent bug must be.
-				 *
-				 * - A likely quick turnaround remedy would be a somewhat more involved
-				 *   children state mapping, with actual `nodeId` lookup rather than the
-				 *   current cheat mode implementation.
-				 *
-				 * - A more "correct" solution would almost certainly involve
-				 *   understanding how any particular reactive access could cause these
-				 *   states to go out of sync in the first place. It would likely also
-				 *   involve some investigation into whether the discrepancy is
-				 *   temporary and resolves after yielding to the event loop; this would
-				 *   implicate some aspect of Solid's reactive scheduling, which most of
-				 *   our reactive internals currently bypass (naively, trading CPU time
-				 *   for testability of the reactive bridge implementation).
-				 */
-				it.fails('updates relative repeat count, inside repeat', async () => {
+				it('updates relative repeat count, inside repeat', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(
@@ -545,14 +513,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					/**
 					 * **PORTING NOTES**
 					 *
-					 * - Another `InconsistentChildrenStateError`, another clue! ~~This
-					 *   case is definitely triggered by the {@link Scenario.removeRepeat}
-					 *   call.~~ This error goes away if we unwrap the
-					 *   {@link https://github.com/getodk/web-forms/blob/d40bd88ed8959bbe7fae5d28efc840c16ca50a72/packages/scenario/src/jr/Scenario.ts#L163-L173 | `createMemo` call}
-					 *   in Scenario.ts.
-					 * - Same thoughts on `nullValue()` -> blank/empty string check
+					 * Same thoughts on `nullValue()` -> blank/empty string check
 					 */
-					it.fails('updates that reference', async () => {
+					it('updates that reference', async () => {
 						const scenario = await Scenario.init(
 							'Some form',
 							html(
@@ -994,7 +957,15 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				])(
 					'substitute absolute body references: $substituteAbsoluteBodyReferences',
 					({ substituteAbsoluteBodyReferences }) => {
-						it.fails("evaluates triggerables dependent on the repeat group's number", async () => {
+						let testFn: typeof it | typeof it.fails;
+
+						if (substituteAbsoluteBodyReferences) {
+							testFn = it;
+						} else {
+							testFn = it.fails;
+						}
+
+						testFn("evaluates triggerables dependent on the repeat group's number", async () => {
 							const scenario = await Scenario.init(
 								'Some form',
 								html(
@@ -1604,15 +1575,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 		describe("//region DAG limitations (cases that aren't correctly updated)", () => {
 			describe('adding repeat instance, with inner sum of question in repeat', () => {
 				/**
-				 * **PORTING NOTES**
-				 *
-				 * - Current failure is an `InconsistentChildrenStateError` ~~, likely
-				 *   with similar root cause as other cases around repeat instance
-				 *   removal.~~ This error goes away if we unwrap the
-				 *   {@link https://github.com/getodk/web-forms/blob/d40bd88ed8959bbe7fae5d28efc840c16ca50a72/packages/scenario/src/jr/Scenario.ts#L163-L173 | `createMemo` call}
-				 *   in Scenario.ts.
-				 *
-				 * - - -
 				 *
 				 * JR:
 				 *
@@ -1622,7 +1584,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * strategy similar to getTriggerablesAffectingAllInstances but for
 				 * initializeTriggerables.
 				 */
-				it.fails('updates inner sum for all instances', async () => {
+				it('updates inner sum for all instances', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(
