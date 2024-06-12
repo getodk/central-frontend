@@ -87,7 +87,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 
 		const getReferencedDependencies = createMemo(() => {
 			return dependencyReferences.flatMap((reference) => {
-				return context.getSubscribableDependencyByReference(reference) ?? [];
+				return context.getSubscribableDependenciesByReference(reference) ?? [];
 			});
 		});
 

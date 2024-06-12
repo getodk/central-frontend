@@ -101,10 +101,10 @@ describe('Instance root', () => {
 		});
 
 		it('gets a node by reference', async () => {
-			const q1 = await reactiveTestScope(async ({ mutable }) => {
+			const [q1] = await reactiveTestScope(async ({ mutable }) => {
 				const root = await createRoot(mutable);
 
-				return root.getSubscribableDependencyByReference('/data/q1');
+				return root.getSubscribableDependenciesByReference('/data/q1');
 			});
 
 			expect(q1).toBeInstanceOf(InstanceNode);

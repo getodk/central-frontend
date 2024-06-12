@@ -32,10 +32,8 @@ export interface EvaluationContext {
 	readonly contextNode: Node;
 
 	/**
-	 * Resolves a nodeset reference, possibly relative to the
-	 * {@link EvaluationContext.contextNode}.
+	 * Resolves nodes corresponding to the provided node-set reference, possibly
+	 * relative to the {@link EvaluationContext.contextNode}.
 	 */
-	readonly getSubscribableDependencyByReference: (
-		reference: string
-	) => SubscribableDependency | null;
+	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[];
 }

@@ -66,8 +66,8 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 		this.root = selectField.root;
 	}
 
-	getSubscribableDependencyByReference(reference: string): SubscribableDependency | null {
-		return this.selectField.getSubscribableDependencyByReference(reference);
+	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {
+		return this.selectField.getSubscribableDependenciesByReference(reference);
 	}
 }
 

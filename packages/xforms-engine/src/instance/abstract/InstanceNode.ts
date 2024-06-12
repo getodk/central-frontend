@@ -196,13 +196,13 @@ export abstract class InstanceNode<
 		definition: Definition
 	): string;
 
-	getNodeByReference(
+	getNodesByReference(
 		this: AnyNode,
 		visited: WeakSet<AnyNode>,
 		dependencyReference: string
-	): SubscribableDependency | null {
+	): readonly SubscribableDependency[] {
 		if (visited.has(this)) {
-			return null;
+			return [];
 		}
 
 		visited.add(this);
@@ -210,39 +210,37 @@ export abstract class InstanceNode<
 		const { nodeset } = this.definition;
 
 		if (dependencyReference === nodeset) {
-			return this;
+			if (this.nodeType === 'repeat-instance') {
+				return [this.parent];
+			}
+
+			return [this];
 		}
 
 		if (
 			dependencyReference.startsWith(`${nodeset}/`) ||
 			dependencyReference.startsWith(`${nodeset}[`)
 		) {
-			const children = this.getChildren();
-
-			if (children == null) {
-				return null;
-			}
-
-			for (const child of children) {
-				const dependency = child.getNodeByReference(visited, dependencyReference);
-
-				if (dependency != null) {
-					return dependency;
-				}
-			}
+			return this.getChildren().flatMap((child) => {
+				return child.getNodesByReference(visited, dependencyReference);
+			});
 		}
 
-		return this.parent?.getNodeByReference(visited, dependencyReference) ?? null;
+		return this.parent?.getNodesByReference(visited, dependencyReference) ?? [];
 	}
 
 	// EvaluationContext: node-relative
-	getSubscribableDependencyByReference(
+	getSubscribableDependenciesByReference(
 		this: AnyNode,
 		reference: string
-	): SubscribableDependency | null {
-		const visited = new WeakSet<SubscribableDependency>();
+	): readonly SubscribableDependency[] {
+		if (this.nodeType === 'root') {
+			const visited = new WeakSet<AnyNode>();
 
-		return this.getNodeByReference(visited, reference);
+			return this.getNodesByReference(visited, reference);
+		}
+
+		return this.root.getSubscribableDependenciesByReference(reference);
 	}
 
 	// SubscribableDependency

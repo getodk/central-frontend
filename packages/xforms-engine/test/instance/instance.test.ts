@@ -60,7 +60,9 @@ describe('Form instance state', () => {
 	let testForm: IntializedTestForm;
 
 	const getNodeByReference = <T extends AnyNode = AnyNode>(reference: string): T | null => {
-		return testForm.internalRoot.getNodeByReference(new WeakSet(), reference) as T | null;
+		const [node] = testForm.internalRoot.getNodesByReference(new WeakSet(), reference);
+
+		return (node ?? null) as T | null;
 	};
 
 	const getStringNode = (reference: string): StringNode => {

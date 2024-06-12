@@ -272,7 +272,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * expandReference call in Triggerable.apply which ensures the result is
 				 * updated for every repeat instance.
 				 */
-				it.fails('updates repeat count, inside and outside repeat', async () => {
+				it('updates repeat count, inside and outside repeat', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(
@@ -351,7 +351,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * to 1. See contrast with
 				 * addingOrRemovingRepeatInstance_updatesRepeatCount_insideAndOutsideRepeat.
 				 */
-				it.fails('updates repeat count, inside repeat', async () => {
+				it('updates repeat count, inside repeat', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(
@@ -1166,20 +1166,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *
 				 * - Rephrase "repeat group" -> "repeat instance"?
 				 *
-				 * - Fails on first assertion, missing the last letter in the
-				 *   concatenation. Immedate cause is lack of internal reactive update
-				 *   until after a repeat instance is added (which is how all of the
-				 *   other letters are present).
-				 *
-				 * - Second assertion succeeds.
-				 *
-				 * - Both behaviors are likely explained by limiting reactive
-				 *   subscription lookups to a single node.
-				 *
-				 * - In any such case (whether mentioned in other tests' porting notes
-				 *   or forgotten in haste of bulk porting), it's highly likely that
-				 *   decoupling from browser/XML DOM will help address.
-				 *
 				 * - - -
 				 *
 				 * JR:
@@ -1191,51 +1177,48 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * because one of the children has been deleted along with its parent
 				 * (the repeat group instance).
 				 */
-				it.fails(
-					"evaluates triggerables indirectly dependent on the repeat group's number",
-					async () => {
-						const scenario = await Scenario.init(
-							'Some form',
-							html(
-								head(
-									title('Some form'),
-									model(
-										mainInstance(
-											t('data id="some-form"', t('house jr:template=""', t('name')), t('summary'))
-										),
-										bind('/data/house/name').type('string').required(),
-										bind('/data/summary').type('string').calculate('concat(/data/house/name)')
-									)
-								),
-								body(group('/data/house', repeat('/data/house', input('/data/house/name'))))
-							)
-						); /* .onDagEvent(dagEvents::add) */
+				it("evaluates triggerables indirectly dependent on the repeat group's number", async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t('data id="some-form"', t('house jr:template=""', t('name')), t('summary'))
+									),
+									bind('/data/house/name').type('string').required(),
+									bind('/data/summary').type('string').calculate('concat(/data/house/name)')
+								)
+							),
+							body(group('/data/house', repeat('/data/house', input('/data/house/name'))))
+						)
+					); /* .onDagEvent(dagEvents::add) */
 
-						range(1, 6).forEach((n) => {
-							scenario.next('/data/house');
-							scenario.createNewRepeat({
-								assertCurrentReference: '/data/house',
-							});
-							scenario.next('/data/house[' + n + ']/name');
-
-							scenario.answer(String.fromCharCode(64 + n));
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/house');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/house',
 						});
+						scenario.next('/data/house[' + n + ']/name');
 
-						expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABCDE'));
+						scenario.answer(String.fromCharCode(64 + n));
+					});
 
-						// Start recording DAG events now
-						// dagEvents.clear();
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABCDE'));
 
-						scenario.removeRepeat('/data/house[3]');
+					// Start recording DAG events now
+					// dagEvents.clear();
 
-						expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABDE'));
+					scenario.removeRepeat('/data/house[3]');
 
-						// assertDagEvents(dagEvents,
-						//     "Processing 'Recalculate' for summary [1] (ABDE)",
-						//         "Processing 'Deleted: name [3_1]: 1 triggerables were fired.' for "
-						// );
-					}
-				);
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABDE'));
+
+					// assertDagEvents(dagEvents,
+					//     "Processing 'Recalculate' for summary [1] (ABDE)",
+					//         "Processing 'Deleted: name [3_1]: 1 triggerables were fired.' for "
+					// );
+				});
 			});
 
 			describe('[deleting] delete last repeat', () => {
