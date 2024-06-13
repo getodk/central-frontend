@@ -72,9 +72,9 @@ describe('Instance root', () => {
 	// boilerplate across tests. Most tests should use `createRootNode` below.
 	// Tests concerned with some aspects of internals may use this function
 	// directly, with caution.
-	const createRoot = async (stateFactory: OpaqueReactiveObjectFactory): Promise<Root> => {
+	const createRoot = (stateFactory: OpaqueReactiveObjectFactory): Root => {
 		return scope.runTask(() => {
-			return Root.initialize(xformDefinition.xformDOM, xformDefinition.model.root, {
+			return new Root(xformDefinition.xformDOM, xformDefinition.model.root, {
 				createUniqueId,
 				fetchResource,
 				stateFactory,
@@ -83,8 +83,8 @@ describe('Instance root', () => {
 	};
 
 	describe('internals', () => {
-		it('exposes a context node for XPath evaluation purposes', async () => {
-			const { contextNode } = await reactiveTestScope(({ mutable }) => {
+		it('exposes a context node for XPath evaluation purposes', () => {
+			const { contextNode } = reactiveTestScope(({ mutable }) => {
 				return createRoot(mutable);
 			});
 
@@ -92,9 +92,9 @@ describe('Instance root', () => {
 			expect(contextNode.nodeName).toBe('data');
 		});
 
-		it("produces instance root's the static nodeset reference", async () => {
-			const rootReference = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRoot(mutable);
+		it("produces instance root's the static nodeset reference", () => {
+			const rootReference = reactiveTestScope(({ mutable }) => {
+				const root = createRoot(mutable);
 
 				return root.contextReference();
 			});
@@ -102,9 +102,9 @@ describe('Instance root', () => {
 			expect(rootReference).toBe('/data');
 		});
 
-		it('gets a node by reference', async () => {
-			const [q1] = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRoot(mutable);
+		it('gets a node by reference', () => {
+			const [q1] = reactiveTestScope(({ mutable }) => {
+				const root = createRoot(mutable);
 
 				return root.getSubscribableDependenciesByReference('/data/q1');
 			});
@@ -119,12 +119,12 @@ describe('Instance root', () => {
 	// with graph computations), but the majority of tests should be focused on
 	// client-facing functionality. Those tests should use this convenience
 	// function if possible.
-	const createRootNode = (stateFactory: OpaqueReactiveObjectFactory): Promise<RootNode> => {
+	const createRootNode = (stateFactory: OpaqueReactiveObjectFactory): RootNode => {
 		return createRoot(stateFactory);
 	};
 
-	it('creates a Root instance', async () => {
-		const root = await reactiveTestScope(({ mutable }) => {
+	it('creates a Root instance', () => {
+		const root = reactiveTestScope(({ mutable }) => {
 			return createRootNode(mutable);
 		});
 
@@ -132,9 +132,9 @@ describe('Instance root', () => {
 	});
 
 	describe('translation languages', () => {
-		it("gets the form's available languages", async () => {
-			const languages = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRootNode(mutable);
+		it("gets the form's available languages", () => {
+			const languages = reactiveTestScope(({ mutable }) => {
+				const root = createRootNode(mutable);
 
 				return root.languages;
 			});
@@ -149,9 +149,9 @@ describe('Instance root', () => {
 			]);
 		});
 
-		it('gets the initial active language', async () => {
-			const activeLanguage = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRootNode(mutable);
+		it('gets the initial active language', () => {
+			const activeLanguage = reactiveTestScope(({ mutable }) => {
+				const root = createRootNode(mutable);
 
 				return root.currentState.activeLanguage;
 			});
@@ -161,9 +161,9 @@ describe('Instance root', () => {
 			});
 		});
 
-		it('sets the active language', async () => {
-			const { activeLanguage } = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRootNode(mutable);
+		it('sets the active language', () => {
+			const { activeLanguage } = reactiveTestScope(({ mutable }) => {
+				const root = createRootNode(mutable);
 
 				root.setLanguage({
 					language: 'Spanish',
@@ -177,9 +177,9 @@ describe('Instance root', () => {
 			});
 		});
 
-		it('fails to set a language not supported by the form', async () => {
-			const caught = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRootNode(mutable);
+		it('fails to set a language not supported by the form', () => {
+			const caught = reactiveTestScope(({ mutable }) => {
+				const root = createRootNode(mutable);
 
 				try {
 					root.setLanguage({ language: 'Not supported' });
@@ -193,12 +193,12 @@ describe('Instance root', () => {
 			expect(caught).toBeInstanceOf(Error);
 		});
 
-		it('updates reactive client state on language change', async () => {
+		it('updates reactive client state on language change', () => {
 			expect.assertions(2);
 
-			const lastObservedClientLanguage = await reactiveTestScope(
-				async ({ mutable, effect }): Promise<ActiveLanguage | null> => {
-					const root = await createRootNode(mutable);
+			const lastObservedClientLanguage = reactiveTestScope(
+				({ mutable, effect }): ActiveLanguage | null => {
+					const root = createRootNode(mutable);
 
 					let observedClientLanguage: ActiveLanguage | null = null;
 
@@ -234,9 +234,9 @@ describe('Instance root', () => {
 		{ stateKey: 'valueOptions', expectedValue: null },
 		{ stateKey: 'value', expectedValue: null },
 	] as const)('$stateKey state', ({ stateKey, expectedValue, invalidValue }) => {
-		it(`gets the initial, static state of ${stateKey}`, async () => {
-			const state = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRootNode(mutable);
+		it(`gets the initial, static state of ${stateKey}`, () => {
+			const state = reactiveTestScope(({ mutable }) => {
+				const root = createRootNode(mutable);
 
 				return root.currentState[stateKey];
 			});
@@ -244,9 +244,9 @@ describe('Instance root', () => {
 			expect(state).toBe(expectedValue);
 		});
 
-		it(`fails to set update the read-only state (currentState) of "${stateKey}" to ${invalidValue}`, async () => {
-			const caught = await reactiveTestScope(async ({ mutable }) => {
-				const root = await createRootNode(mutable);
+		it(`fails to set update the read-only state (currentState) of "${stateKey}" to ${invalidValue}`, () => {
+			const caught = reactiveTestScope(({ mutable }) => {
+				const root = createRootNode(mutable);
 
 				try {
 					// @ts-expect-error - intentionally ignore unsafe assignment to
@@ -263,9 +263,9 @@ describe('Instance root', () => {
 		});
 	});
 
-	it("gets the root node's first child", async () => {
-		const firstChild = await reactiveTestScope(async ({ mutable }) => {
-			const root = await createRootNode(mutable);
+	it("gets the root node's first child", () => {
+		const firstChild = reactiveTestScope(({ mutable }) => {
+			const root = createRootNode(mutable);
 
 			return root.currentState.children[0];
 		});

@@ -99,18 +99,6 @@ export class Root
 		SubscribableDependency,
 		TranslationContext
 {
-	static async initialize(
-		xformDOM: XFormDOM,
-		definition: RootDefinition,
-		engineConfig: InstanceConfig
-	): Promise<Root> {
-		const instance = new Root(xformDOM, definition, engineConfig);
-
-		await instance.formStateInitialized();
-
-		return instance;
-	}
-
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
 	// InstanceNode
@@ -147,11 +135,7 @@ export class Root
 		return this.engineState.activeLanguage;
 	}
 
-	protected constructor(
-		xformDOM: XFormDOM,
-		definition: RootDefinition,
-		engineConfig: InstanceConfig
-	) {
+	constructor(xformDOM: XFormDOM, definition: RootDefinition, engineConfig: InstanceConfig) {
 		const reference = definition.nodeset;
 
 		super(engineConfig, null, definition, {
@@ -205,27 +189,6 @@ export class Root
 		this.languages = languages;
 
 		childrenState.setChildren(buildChildren(this));
-	}
-
-	/**
-	 * Waits until form state is fully initialized.
-	 *
-	 * As much as possible, all instance state computations are implemented so
-	 * that they complete synchronously.
-	 *
-	 * There is currently one exception: because instance nodes may form
-	 * computation dependencies into their descendants as well as their ancestors,
-	 * there is an allowance **during form initialization only** to account for
-	 * this chicken/egg scenario. Note that this allowance is intentionally,
-	 * strictly limited: if form state initialization is not resolved within a
-	 * single microtask tick we throw/reject.
-	 *
-	 * All subsequent computations are always performed synchronously (and we will
-	 * use tests to validate this, by utilizing the synchronously returned `Root`
-	 * state from client-facing write interfaces).
-	 */
-	async formStateInitialized(): Promise<Error | null> {
-		return this.initializationFailure;
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

@@ -1,6 +1,5 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
-import { createSignal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
@@ -81,9 +80,6 @@ export abstract class InstanceNode<
 	>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
-	protected readonly isStateInitialized: Accessor<boolean>;
-	protected readonly initializationFailure: Promise<Error | null>;
-
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
 
@@ -164,22 +160,6 @@ export abstract class InstanceNode<
 		this.engineConfig = engineConfig;
 		this.nodeId = declareNodeID(engineConfig.createUniqueId());
 		this.definition = definition;
-
-		const checkStateInitialized = () => this.engineState != null;
-		const [isStateInitialized, setStateInitialized] = createSignal(checkStateInitialized());
-
-		this.isStateInitialized = isStateInitialized;
-
-		this.initializationFailure = new Promise<Error | null>((resolve) => {
-			queueMicrotask(() => {
-				if (checkStateInitialized()) {
-					setStateInitialized(true);
-					resolve(null);
-				} else {
-					resolve(new Error('Node state was never initialized'));
-				}
-			});
-		});
 	}
 
 	/**
