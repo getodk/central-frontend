@@ -68,7 +68,18 @@ export class RepeatInstance
 		definition: RepeatDefinition,
 		options: RepeatInstanceOptions
 	) {
-		super(parent, definition);
+		const { precedingInstance } = options;
+		const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
+		const initialIndex = precedingIndex() + 1;
+		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
+
+		super(parent, definition, {
+			computeReference: (): string => {
+				const currentPosition = currentIndex() + 1;
+
+				return `${parent.contextReference}[${currentPosition}]`;
+			},
+		});
 
 		this.appearances = definition.bodyElement.appearances;
 
@@ -77,11 +88,6 @@ export class RepeatInstance
 		this.childrenState = childrenState;
 
 		options.precedingPrimaryInstanceNode.after(this.contextNode);
-
-		const { precedingInstance } = options;
-		const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
-		const initialIndex = precedingIndex() + 1;
-		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
 
 		this.currentIndex = currentIndex;
 
@@ -132,12 +138,6 @@ export class RepeatInstance
 		});
 
 		childrenState.setChildren(buildChildren(this));
-	}
-
-	protected computeReference(parent: RepeatRange): string {
-		const currentPosition = this.currentIndex() + 1;
-
-		return `${parent.contextReference}[${currentPosition}]`;
 	}
 
 	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {

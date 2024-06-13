@@ -78,10 +78,6 @@ export class Group
 		childrenState.setChildren(buildChildren(this));
 	}
 
-	protected computeReference(parent: GeneralParentNode): string {
-		return this.computeChildStepReference(parent);
-	}
-
 	getChildren(): readonly GeneralChildNode[] {
 		return this.childrenState.getChildren();
 	}

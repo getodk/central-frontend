@@ -52,6 +52,10 @@ export type AnyDescendantNode = DescendantNode<
 	any
 >;
 
+interface DescendantNodeOptions {
+	readonly computeReference?: Accessor<string>;
+}
+
 export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,9 +71,10 @@ export abstract class DescendantNode<
 
 	constructor(
 		override readonly parent: DescendantNodeParent<Definition>,
-		override readonly definition: Definition
+		override readonly definition: Definition,
+		options?: DescendantNodeOptions
 	) {
-		super(parent.engineConfig, parent, definition);
+		super(parent.engineConfig, parent, definition, options);
 
 		const { evaluator, root } = parent;
 
@@ -77,15 +82,6 @@ export abstract class DescendantNode<
 		this.evaluator = evaluator;
 		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
 	}
-
-	protected computeChildStepReference(parent: DescendantNodeParent<Definition>): string {
-		return `${parent.contextReference}/${this.definition.nodeName}`;
-	}
-
-	protected abstract override computeReference(
-		parent: DescendantNodeParent<Definition>,
-		definition: Definition
-	): string;
 
 	protected buildSharedStateSpec(
 		parent: DescendantNodeParent<Definition>,

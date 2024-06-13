@@ -131,12 +131,6 @@ export class Root
 	// EvaluationContext
 	readonly evaluator: XFormsXPathEvaluator;
 
-	private readonly rootReference: string;
-
-	override get contextReference(): string {
-		return this.rootReference;
-	}
-
 	readonly contextNode: Element;
 
 	// RootNode
@@ -154,17 +148,17 @@ export class Root
 		definition: RootDefinition,
 		engineConfig: InstanceConfig
 	) {
-		super(engineConfig, null, definition);
+		const reference = definition.nodeset;
+
+		super(engineConfig, null, definition, {
+			computeReference: () => reference,
+		});
 
 		this.classes = definition.classes;
 
 		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 
 		this.childrenState = childrenState;
-
-		const reference = definition.nodeset;
-
-		this.rootReference = reference;
 
 		const instanceDOM = xformDOM.createInstance();
 		const evaluator = instanceDOM.primaryInstanceEvaluator;
@@ -228,11 +222,6 @@ export class Root
 	 */
 	async formStateInitialized(): Promise<Error | null> {
 		return this.initializationFailure;
-	}
-
-	// InstanceNode
-	protected computeReference(_parent: null, definition: RootDefinition): string {
-		return definition.nodeset;
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

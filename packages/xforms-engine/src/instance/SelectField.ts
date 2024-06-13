@@ -121,10 +121,6 @@ export class SelectField
 		);
 	}
 
-	protected computeReference(parent: GeneralParentNode): string {
-		return this.computeChildStepReference(parent);
-	}
-
 	protected updateSelectedItemValues(values: readonly string[]) {
 		const itemsByValue = untrack(() => this.getSelectItemsByValue());
 

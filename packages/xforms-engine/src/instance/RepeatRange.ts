@@ -157,10 +157,6 @@ export class RepeatRange
 		return parentContextNode;
 	}
 
-	protected computeReference(parent: GeneralParentNode): string {
-		return this.computeChildStepReference(parent);
-	}
-
 	getInstanceIndex(instance: RepeatInstance): number {
 		return this.engineState.children.indexOf(instance.nodeId);
 	}

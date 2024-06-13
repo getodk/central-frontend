@@ -62,6 +62,21 @@ export type InstanceNodeCurrentState<
 				: null;
 		};
 
+interface ComputableReferenceNode {
+	readonly parent: AnyParentNode | null;
+	readonly definition: AnyNodeDefinition;
+}
+
+type ComputeInstanceNodeReference = <This extends ComputableReferenceNode>(
+	this: This,
+	parent: This['parent'],
+	definition: This['definition']
+) => string;
+
+export interface InstanceNodeOptions {
+	readonly computeReference?: () => string;
+}
+
 export abstract class InstanceNode<
 		Definition extends AnyNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -145,6 +160,21 @@ export abstract class InstanceNode<
 	// EvaluationContext *and* Subscribable: node-specific
 	readonly scope: ReactiveScope;
 
+	readonly computeReference: ComputeInstanceNodeReference;
+
+	protected readonly computeChildStepReference: ComputeInstanceNodeReference = (
+		parent,
+		definition
+	): string => {
+		if (parent == null) {
+			throw new Error(
+				'Cannot compute child step reference of node without parent (was this called from `Root`?)'
+			);
+		}
+
+		return `${parent.contextReference}/${definition.nodeName}`;
+	};
+
 	// EvaluationContext: node-specific
 	get contextReference(): string {
 		return this.computeReference(this.parent, this.definition);
@@ -155,8 +185,11 @@ export abstract class InstanceNode<
 	constructor(
 		readonly engineConfig: InstanceConfig,
 		readonly parent: AnyParentNode | null,
-		readonly definition: Definition
+		readonly definition: Definition,
+		options?: InstanceNodeOptions
 	) {
+		this.computeReference = options?.computeReference ?? this.computeChildStepReference;
+
 		this.scope = createReactiveScope();
 		this.engineConfig = engineConfig;
 		this.nodeId = declareNodeID(engineConfig.createUniqueId());
@@ -190,11 +223,6 @@ export abstract class InstanceNode<
 	 * interface for those internal uses.
 	 */
 	abstract getChildren(this: AnyInstanceNode): readonly AnyChildNode[];
-
-	protected abstract computeReference(
-		parent: AnyInstanceNode | null,
-		definition: Definition
-	): string;
 
 	getNodesByReference(
 		this: AnyNode,

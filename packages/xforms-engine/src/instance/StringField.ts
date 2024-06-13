@@ -77,10 +77,6 @@ export class StringField
 		this.currentState = state.currentState;
 	}
 
-	protected computeReference(parent: GeneralParentNode): string {
-		return this.computeChildStepReference(parent);
-	}
-
 	// InstanceNode
 	getChildren(): readonly [] {
 		return [];
