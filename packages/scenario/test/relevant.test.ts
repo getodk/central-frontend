@@ -410,38 +410,51 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		});
 
 		/**
-		 * **PORTING NOTES** (supplemental to test above)
+		 * **PORTING NOTES** (supplemental: 1 of 3)
 		 *
-		 * This test exercises different semantics than the test above ported from
-		 * JavaRosa, but would also serve to exercise the concept that non-relevance
-		 * excludes a node from evaluation: specifically by virtue of its value
-		 * being blank.
+		 * - This test extends the fixture above by adding a `calculate` of the
+		 *   affected nodes. This allows exercising non-relevant value exclusion
+		 *   without asserting implementation details as in the original test as
+		 *   ported from JavaRosa.
 		 *
-		 * Unfortunately, it also reveals a bug in the engine's relevance
-		 * computation logic! At a glance, it appears that:
+		 * - A previous iteration of this alternate test had a substantially
+		 *   different form fixture shape, without many of the hallmarks of the
+		 *   original test. This alternate was then updated to more closely align
+		 *   with the intent of the original. Unfortunately that caused the test's
+		 *   failure mode to diverge from details in the PORTING NOTES.
 		 *
-		 * 1. The `calculate` is evaluated against the nodes' default values
-		 * 2. Before relevance is computed for those nodes
-		 * 3. Finally, failing to recompute the `calculate` once those nodes'
-		 *    non-relevance is established
+		 * - There are actually three failure modes **in this test, as it stands**:
 		 *
-		 * - - -
+		 *     1. A bug where `relevant` is applied after the nodes' initial value
+		 *        is set, and fails to cause those nodes to be cleared when that
+		 *        relevance state is finally computed.
 		 *
-		 * The original iteration of this supplemental test had an entirely
-		 * different form shape. Since we determined in review that the intent was
-		 * to test with repeats, it was much easier to adapt the fixture to
-		 * demonstrate the same supplemental/alternate approach.
+		 *     2. A bug where `relevant` conditions which should affect each repeat
+		 *        instance independently, also causes the repeat *range* to be
+		 *        treated as non-relevant. This then cascades as inherited
+		 *        non-relevance, effectively making all repeat instances
+		 *        non-relevant if any of them are.
 		 *
-		 * - - -
+		 *     3. An apparent discrepancy between JavaRosa and Web Forms semantics
+		 *        when `position()` is called without an argument, with the repeat
+		 *        instance as its context. As I understand the
+		 *        {@link https://getodk.github.io/xforms-spec/#fn:position | `position` spec},
+		 *        JavaRosa's behavior is roughly consistent with the 1-arity
+		 *        extension (e.g. as if the function had been called as
+		 *        `position(current())`).
 		 *
-		 * A very brief spike revealed that fixing this will be trivial. It also
-		 * revealed that it's highly likely this currently affects _only_ form
-		 * default values. As such, the current description reflects that.
+		 * - Given these three failure modes, two **additional** supplemental tests
+		 *   are added below, eliminating consideration of (3) and then (2)
+		 *   respectively (in that order to keep the least divergent fixtures
+		 *   closest together). This test will remain intact as an exercise of all
+		 *   three failure modes. This will allow us to fix the first two bugs
+		 *   separately, and then address the discrepancy in (3) after we have a
+		 *   chance to discuss whether it's expected behavior.
 		 *
-		 * I believe this is probably a valuable test in its own right, given that
-		 * understanding of the bug's likely scope, and that we may want to increase
-		 * coverage of initial state conditions generally. **This will also probably
-		 * be something to consider when we work on support for editing.**
+		 * - My instinct is that JavaRosa's behavior per (3) above **is expected**,
+		 *   despite deviation from the apparent letter of the spec. This instinct
+		 *   is largely based in tracking the behavior back to
+		 *   {@link https://github.com/getodk/javarosa/blame/980a36b99680c4dccff3cb634f984ed9f93df800/src/org/javarosa/xpath/expr/XPathFuncExpr.java#L282-L286 | JavaRosa's first commit ("added trig functions" 🙃)}.
 		 */
 		it.fails(
 			'is excluded from producing default values in an evaluation (supplemental to two previous tests)',
@@ -476,6 +489,142 @@ describe('Relevance - TriggerableDagTest.java', () => {
 				expect(scenario.answerOf('/data/node-values')).toEqualAnswer(stringAnswer('345'));
 			}
 		);
+
+		/**
+		 * **PORTING NOTES** (supplemental: 2 of 3)
+		 *
+		 * Per discussion of the test above, this test is effectively the same as
+		 * that one, except that it eliminates the ambiguity of 0-arity `position()`
+		 * called with a repeat instance context.
+		 *
+		 * This exercises the other two bugs found porting the above tests:
+		 *
+		 * - Incorrect `relevant` inheritance from any single repeat instance ->
+		 *   that single repeat instance's repeat range parent -> all of that parent
+		 *   repeat range's repeat instance children.
+		 *
+		 * - Incorrectly preserving form default values on non-relevant nodes.
+		 */
+		it.fails(
+			'is excluded from producing default values in an evaluation (supplemental to two previous tests)',
+			async () => {
+				const scenario = await Scenario.init(
+					'Some form',
+					html(
+						head(
+							title('Some form'),
+							model(
+								mainInstance(
+									t(
+										'data id="some-form"',
+										// position() is one-based
+										t('node', t('value', '1')), // non-relevant
+										t('node', t('value', '2')), // non-relevant
+										t('node', t('value', '3')), // relevant
+										t('node', t('value', '4')), // relevant
+										t('node', t('value', '5')), // relevant
+										t('node-values')
+									)
+								),
+								bind('/data/node').relevant('position(current()) > 2'),
+								bind('/data/node/value').type('int'),
+								bind('/data/node-values').calculate('concat(/data/node/value)')
+							)
+						),
+						body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
+					)
+				);
+
+				expect(scenario.answerOf('/data/node-values')).toEqualAnswer(stringAnswer('345'));
+			}
+		);
+
+		/**
+		 * **PORTING NOTES** (supplemental: 3 of 3)
+		 *
+		 * This test restores a supplemental/alternate test which was originally
+		 * introduced when porting the JavaRosa test suite. It exercises only one
+		 * of the bugs discussed in the tests above:
+		 *
+		 * - Incorrectly preserving form default values on non-relevant nodes.
+		 *
+		 * Original porting notes follow.
+		 *
+		 * - - -
+		 *
+		 * This test exercises different semantics than the test above ported from
+		 * JavaRosa, but would also serve to exercise the concept that non-relevance
+		 * excludes a node from evaluation: specifically by virtue of its value
+		 * being blank.
+		 *
+		 * Unfortunately, it also reveals a bug in the engine's relevance
+		 * computation logic! At a glance, it appears that:
+		 *
+		 * 1. The `calculate` is evaluated against the nodes' default values
+		 * 2. Before relevance is computed for those nodes
+		 * 3. Finally, failing to recompute the `calculate` once those nodes'
+		 *    non-relevance is established
+		 *
+		 * - - -
+		 *
+		 * A very brief spike revealed that fixing this will be trivial. It also
+		 * revealed that it's highly likely this currently affects _only_ form
+		 * default values. As such, the current description reflects that.
+		 *
+		 * I believe this is probably a valuable test in its own right, given that
+		 * understanding of the bug's likely scope, and that we may want to increase
+		 * coverage of initial state conditions generally. **This will also probably
+		 * be something to consider when we work on support for editing.**
+		 */
+		it.fails('excludes default values on nodes which are non-relevant on init', async () => {
+			const scenario = await Scenario.init(
+				'Some form',
+				html(
+					head(
+						title('exclusion of non-relevant default values'),
+						model(
+							mainInstance(
+								t(
+									'data id="exclusion-of-non-relevant-default-values"',
+									t('is-node-a-relevant', 'no'),
+									t('is-node-b-relevant', 'no'),
+									t('is-node-c-relevant', 'yes'),
+									t('is-node-d-relevant', 'yes'),
+									t('is-node-e-relevant', 'yes'),
+									// position() is one-based
+									t('node-a', t('value', '1')), // non-relevant
+									t('node-b', t('value', '2')), // non-relevant
+									t('node-c', t('value', '3')), // relevant
+									t('node-d', t('value', '4')), // relevant
+									t('node-e', t('value', '5')), // relevant,
+									t('node-x-concat') // calculates a concatenation of node-a through node-e
+								)
+							),
+							bind('/data/node-a').relevant("/data/is-node-a-relevant = 'yes'"),
+							bind('/data/node-b').relevant("/data/is-node-b-relevant = 'yes'"),
+							bind('/data/node-c').relevant("/data/is-node-c-relevant = 'yes'"),
+							bind('/data/node-d').relevant("/data/is-node-d-relevant = 'yes'"),
+							bind('/data/node-e').relevant("/data/is-node-e-relevant = 'yes'"),
+							bind('/data/node-x-concat').calculate(
+								'concat(/data/node-a, /data/node-b, /data/node-c, /data/node-d, /data/node-e)'
+							),
+							bind('/data/node/value').type('int')
+						)
+					),
+
+					body(
+						group('/data/node-a', input('/data/node-a/value')),
+						group('/data/node-b', input('/data/node-b/value')),
+						group('/data/node-c', input('/data/node-c/value')),
+						group('/data/node-d', input('/data/node-d/value')),
+						group('/data/node-e', input('/data/node-e/value')),
+						input('/data/node-x-concat')
+					)
+				)
+			);
+
+			expect(scenario.answerOf('/data/node-x-concat')).toEqualAnswer(stringAnswer('345'));
+		});
 	});
 
 	describe('non-relevant node values', () => {
