@@ -72,7 +72,7 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
 
 		const persistedValueState = createSignal<PersistedValueState>(
 			{
-				isRelevant: context.isRelevant,
+				isRelevant: context.isRelevant(),
 				value: initialValue,
 			},
 			{
@@ -91,7 +91,7 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
 		const [persistedValue, setValueForPersistence] = persistedValueState;
 
 		createComputed(() => {
-			const isRelevant = context.isRelevant;
+			const isRelevant = context.isRelevant();
 
 			setValueForPersistence((persisted) => {
 				return {
@@ -122,7 +122,7 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
 		const setPrimaryInstanceValue: SimpleAtomicStateSetter<string> = (value) => {
 			// TODO: Check (error?) for non-relevant value change?
 			const persisted = setValueForPersistence({
-				isRelevant: context.isRelevant,
+				isRelevant: context.isRelevant(),
 				value,
 			});
 
@@ -189,8 +189,8 @@ const guardDownstreamReadonlyWrites = <RuntimeValue>(
 	const [getValue, baseSetValue] = baseState;
 
 	const setValue: SimpleAtomicStateSetter<RuntimeValue> = (value) => {
-		if (context.isReadonly) {
-			const reference = untrack(() => context.contextReference);
+		if (context.isReadonly()) {
+			const reference = untrack(() => context.contextReference());
 
 			throw new Error(`Cannot write to readonly field: ${reference}`);
 		}
@@ -215,7 +215,7 @@ const createCalculation = <RuntimeValue>(
 		const calculate = createComputedExpression(context, calculateDefinition);
 
 		createComputed(() => {
-			if (context.isRelevant) {
+			if (context.isRelevant()) {
 				const calculated = calculate();
 				const value = context.decodeValue(calculated);
 

@@ -588,20 +588,18 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					/**
 					 * **PORTING NOTES**
 					 *
-					 * - This failure is likely to be related to single-node resolution of
-					 *   subscription lookups.
-					 *
-					 * - A first pass on porting this test produced confusing results, which
-					 *   turned out to reveal a misunderstanding of Vitest's negated
-					 *   assertion logic. I had forgotten that there's a custom
-					 *   `toBeNonRelevant` assertion, and had written `.not.toBeRelevant()`.
-					 *   That should be totally valid (and would be preferable to paired
-					 *   custom affirmative/negative cases), and we ought to resolve it
-					 *   sooner rather than later. More detail is added in this commit at
-					 *   the point of confusing failure, in
-					 *   `expandSimpleExpectExtensionResult.ts`.
+					 * A first pass on porting this test produced confusing results, which
+					 * turned out to reveal a misunderstanding of Vitest's negated
+					 * assertion logic. I had forgotten that there's a custom
+					 * `toBeNonRelevant` assertion, and had written `.not.toBeRelevant()`.
+					 * That should be totally valid (and would be preferable to paired
+					 * custom affirmative/negative cases), and we ought to resolve it
+					 * sooner rather than later. More detail is added in
+					 * {@link https://github.com/getodk/web-forms/commit/0eda13f81d9901f72c08ffa40a2ab7113888bbb7 | the commit introducing this note: 0eda13f}
+					 * at the point of confusing failure, in
+					 * `expandSimpleExpectExtensionResult.ts`.
 					 */
-					it.fails('updates relevance for all instances', async () => {
+					it('updates relevance for all instances', async () => {
 						const scenario = await Scenario.init(
 							'Some form',
 							html(

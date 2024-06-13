@@ -93,11 +93,13 @@ describe('Instance root', () => {
 		});
 
 		it("produces instance root's the static nodeset reference", async () => {
-			const { contextReference } = await reactiveTestScope(({ mutable }) => {
-				return createRoot(mutable);
+			const rootReference = await reactiveTestScope(async ({ mutable }) => {
+				const root = await createRoot(mutable);
+
+				return root.contextReference();
 			});
 
-			expect(contextReference).toBe('/data');
+			expect(rootReference).toBe('/data');
 		});
 
 		it('gets a node by reference', async () => {

@@ -114,6 +114,10 @@ export class Root
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
 	// InstanceNode
+	readonly hasReadonlyAncestor = () => false;
+	readonly isReadonly = () => false;
+	readonly hasNonRelevantAncestor = () => false;
+	readonly isRelevant = () => true;
 	protected readonly state: SharedNodeState<RootStateSpec>;
 	protected readonly engineState: EngineState<RootStateSpec>;
 

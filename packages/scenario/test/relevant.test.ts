@@ -540,43 +540,10 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		);
 
 		/**
-		 * **PORTING NOTES** (supplemental: 3 of 3)
-		 *
-		 * This test restores a supplemental/alternate test which was originally
-		 * introduced when porting the JavaRosa test suite. It exercises only one
-		 * of the bugs discussed in the tests above:
-		 *
-		 * - Incorrectly preserving form default values on non-relevant nodes.
-		 *
-		 * Original porting notes follow.
-		 *
-		 * - - -
-		 *
-		 * This test exercises different semantics than the test above ported from
-		 * JavaRosa, but would also serve to exercise the concept that non-relevance
-		 * excludes a node from evaluation: specifically by virtue of its value
-		 * being blank.
-		 *
-		 * Unfortunately, it also reveals a bug in the engine's relevance
-		 * computation logic! At a glance, it appears that:
-		 *
-		 * 1. The `calculate` is evaluated against the nodes' default values
-		 * 2. Before relevance is computed for those nodes
-		 * 3. Finally, failing to recompute the `calculate` once those nodes'
-		 *    non-relevance is established
-		 *
-		 * - - -
-		 *
-		 * A very brief spike revealed that fixing this will be trivial. It also
-		 * revealed that it's highly likely this currently affects _only_ form
-		 * default values. As such, the current description reflects that.
-		 *
-		 * I believe this is probably a valuable test in its own right, given that
-		 * understanding of the bug's likely scope, and that we may want to increase
-		 * coverage of initial state conditions generally. **This will also probably
-		 * be something to consider when we work on support for editing.**
+		 * **PORTING NOTES** (supplemental: 3 of 3; see commit history for
+		 * additional context and commentary)
 		 */
-		it.fails('excludes default values on nodes which are non-relevant on init', async () => {
+		it('excludes default values on nodes which are non-relevant on init', async () => {
 			const scenario = await Scenario.init(
 				'Some form',
 				html(

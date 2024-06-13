@@ -93,7 +93,10 @@ export class SelectField
 		const state = createSharedNodeState(
 			this.scope,
 			{
-				...this.buildSharedStateSpec(parent, definition),
+				reference: this.contextReference,
+				readonly: this.isReadonly,
+				relevant: this.isRelevant,
+				required: this.isRequired,
 
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),

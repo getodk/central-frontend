@@ -1,4 +1,5 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
+import type { Accessor } from 'solid-js';
 import type { DependentExpression } from '../../expression/DependentExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SubscribableDependency } from './SubscribableDependency.ts';
@@ -27,7 +28,7 @@ export interface EvaluationContext {
 	 * Produces the current absolute reference to the {@link contextNode}, where
 	 * the absolute `/` resolves to the active form state's primary instance root.
 	 */
-	get contextReference(): string;
+	readonly contextReference: Accessor<string>;
 
 	readonly contextNode: Node;
 
