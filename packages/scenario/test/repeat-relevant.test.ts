@@ -394,64 +394,18 @@ describe('Interaction between `<repeat>` and `relevant`', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * 1. Liberty was taken to omit a position predicate on a non-repeat node
-			 *    in one of the ported assertions. While JavaRosa has a notion of
-			 *    normalizing expressions (e.g. comparing
-			 *    `/data/repeat[1]/non-repeat[1]` as equivalent to
-			 *    `/data/repeat[1]/non-repeat`), the web forms engine interface does
-			 *    not expose any such notion. This doesn't seem like an issue that
-			 *    most clients should be concerned with, so it seems most reasonable
-			 *    to port the assertion without requiring such a normalization. If
-			 *    that assumption turns out to be wrong, we can revisit in the future.
-			 *    The orignal assertion is commented directly above.
-			 *
-			 * 2. Failure anlaysis in some depth follows...
-			 *
-			 * - - -
-			 *
-			 * Fails with observed behavior that the second repeat instance's
-			 * descendants never become relevant. As such, only the assertions before
-			 * the value change fail.
-			 *
-			 * To keep the porting effort's momentum, I've generally tried to defer
-			 * investigating any failure more deeply than gaining an understanding of
-			 * the test case itself and hypothesizing the nature of the failure based
-			 * on my understanding of engine behavior. However, this test was
-			 * confusing enough (on first read) and its behavior surprising enough
-			 * that I did a quick spike. Here's what I found (and some commentary):
-			 *
-			 * - The apparent root cause is that we are incorrectly evaluating repeat
-			 *   instance `relevant` expressions in the context of both the repeat
-			 *   instance itself (as expected) and its parent element (by mistake).
-			 *
-			 * - In a sense, this is a straightforward bug. It involves a clear (in
-			 *   hindsight) logical error. It can be fixed with a relatively
-			 *   straightforward special case.
-			 *
-			 * - In another sense, this is a symptom of a design flaw. There are
-			 *   likely several very similar issues lurking with essentially the same
-			 *   logical error (with at least one other which is clearly present in
-			 *   exactly the same method, just for another bind expression).
-			 *   Fundamentally, this bug (and others like it) are able to happen
-			 *   because of the impedance mismatch between the engine's structural
-			 *   model (wherein a "repeat range" is a thing that exists, and is
-			 *   treated as a node with the same hierarchical qualities as any other)
-			 *   and the engine's use of browser/XML DOM as an implementation of that.
-			 *
-			 * - This is an excellent example of the correctness implications of that
-			 *   latter implementation detail, and a good one to consider as we think
-			 *   about prioritization of an effort to move away from it.
-			 *
-			 * Note that even addressing the bug found above, this test would fail for
-			 * another reason: we don't currently have a notion of determining
-			 * relevance of a "repeat range" (and thus whether it should present a
-			 * "prompt" event in JavaRosa/Scenario terms) by the relevance of its
-			 * instances. There are other tests addressing this concern more directly,
-			 * so it's likely we'll be able to target that issue with those. This is
-			 * mostly meant as an observation that the two concerns intersect in this
-			 * test even though it's not explicit.
+			 * Liberty was taken to omit a position predicate on a non-repeat node
+			 * in one of the ported assertions. While JavaRosa has a notion of
+			 * normalizing expressions (e.g. comparing
+			 * `/data/repeat[1]/non-repeat[1]` as equivalent to
+			 * `/data/repeat[1]/non-repeat`), the web forms engine interface does
+			 * not expose any such notion. This doesn't seem like an issue that
+			 * most clients should be concerned with, so it seems most reasonable
+			 * to port the assertion without requiring such a normalization. If
+			 * that assumption turns out to be wrong, we can revisit in the future.
+			 * The orignal assertion is commented directly above.
 			 */
-			it.fails('updates based on parent position', async () => {
+			it('updates based on parent position', async () => {
 				const scenario = await Scenario.init(
 					'Nested repeat relevance',
 					html(

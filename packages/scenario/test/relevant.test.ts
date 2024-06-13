@@ -491,53 +491,39 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		);
 
 		/**
-		 * **PORTING NOTES** (supplemental: 2 of 3)
-		 *
-		 * Per discussion of the test above, this test is effectively the same as
-		 * that one, except that it eliminates the ambiguity of 0-arity `position()`
-		 * called with a repeat instance context.
-		 *
-		 * This exercises the other two bugs found porting the above tests:
-		 *
-		 * - Incorrect `relevant` inheritance from any single repeat instance ->
-		 *   that single repeat instance's repeat range parent -> all of that parent
-		 *   repeat range's repeat instance children.
-		 *
-		 * - Incorrectly preserving form default values on non-relevant nodes.
+		 * **PORTING NOTES** (supplemental: 2 of 3; see commit history for
+		 * additional context and commentary)
 		 */
-		it.fails(
-			'is excluded from producing default values in an evaluation (supplemental to two previous tests)',
-			async () => {
-				const scenario = await Scenario.init(
-					'Some form',
-					html(
-						head(
-							title('Some form'),
-							model(
-								mainInstance(
-									t(
-										'data id="some-form"',
-										// position() is one-based
-										t('node', t('value', '1')), // non-relevant
-										t('node', t('value', '2')), // non-relevant
-										t('node', t('value', '3')), // relevant
-										t('node', t('value', '4')), // relevant
-										t('node', t('value', '5')), // relevant
-										t('node-values')
-									)
-								),
-								bind('/data/node').relevant('position(current()) > 2'),
-								bind('/data/node/value').type('int'),
-								bind('/data/node-values').calculate('concat(/data/node/value)')
-							)
-						),
-						body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
-					)
-				);
+		it('is excluded from producing default values in an evaluation (supplemental to two previous tests)', async () => {
+			const scenario = await Scenario.init(
+				'Some form',
+				html(
+					head(
+						title('Some form'),
+						model(
+							mainInstance(
+								t(
+									'data id="some-form"',
+									// position() is one-based
+									t('node', t('value', '1')), // non-relevant
+									t('node', t('value', '2')), // non-relevant
+									t('node', t('value', '3')), // relevant
+									t('node', t('value', '4')), // relevant
+									t('node', t('value', '5')), // relevant
+									t('node-values')
+								)
+							),
+							bind('/data/node').relevant('position(current()) > 2'),
+							bind('/data/node/value').type('int'),
+							bind('/data/node-values').calculate('concat(/data/node/value)')
+						)
+					),
+					body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
+				)
+			);
 
-				expect(scenario.answerOf('/data/node-values')).toEqualAnswer(stringAnswer('345'));
-			}
-		);
+			expect(scenario.answerOf('/data/node-values')).toEqualAnswer(stringAnswer('345'));
+		});
 
 		/**
 		 * **PORTING NOTES** (supplemental: 3 of 3; see commit history for

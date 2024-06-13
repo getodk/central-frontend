@@ -50,6 +50,31 @@ export class RepeatInstance
 	protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
 	protected override engineState: EngineState<RepeatInstanceStateSpec>;
 
+	/**
+	 * @todo Should we special case repeat `readonly` inheritance the same way
+	 * we do for `relevant`?
+	 *
+	 * @see {@link hasNonRelevantAncestor}
+	 */
+	declare readonly hasReadonlyAncestor: Accessor<boolean>;
+
+	/**
+	 * A repeat instance can inherit non-relevance, just like any other node. That
+	 * inheritance is derived from the repeat instance's parent node in the
+	 * primary instance XML/DOM tree (and would be semantically expected to do so
+	 * even if we move away from that implementation detail).
+	 *
+	 * Since {@link RepeatInstance.parent} is a {@link RepeatRange}, which is a
+	 * runtime data model fiction that does not exist in that hierarchy, we pass
+	 * this call through, allowing the {@link RepeatRange} to check the actual
+	 * primary instance parent node's relevance state.
+	 *
+	 * @todo Should we apply similar reasoning in {@link hasReadonlyAncestor}?
+	 */
+	override readonly hasNonRelevantAncestor: Accessor<boolean> = () => {
+		return this.parent.hasNonRelevantAncestor();
+	};
+
 	// RepeatInstanceNode
 	readonly nodeType = 'repeat-instance';
 
