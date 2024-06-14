@@ -1360,9 +1360,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 							}
 						);
 
-						interface DemonstrateObservedTestIssueOptions {
+						interface PredicateOptions {
 							readonly oneBasedPositionPredicates: boolean;
-							readonly awaitAsyncStateChangeBug: boolean;
 						}
 
 						/**
@@ -1370,37 +1369,17 @@ describe('Tests ported from JavaRosa - repeats', () => {
 						 *
 						 * - Same notes (on primary instance id) as previous test.
 						 *
-						 * - Unclear how this passes in JavaRosa! It's still using 0-based
-						 *   indexes rather than 1-based XPath position predicates.
+						 * - ~~Unclear how this passes in JavaRosa! It's still using 0-based
+						 *   indexes rather than 1-based XPath position predicates.~~
+						 *   {@link https://github.com/getodk/web-forms/pull/110/files#r1612356033}
 						 *
-						 * - Still fails with 1-based position predicates. Behaves as
-						 *   expected when interacting with the form directly (at least with
-						 *   added primary instance id, and at least in `ui-solid`). A quick
-						 *   debugging seesion reveals the pertinent node's
-						 *   `currentState.relevant` is `true` when the repeat instance's
-						 *   subtree is added, then becomes `false` thereafter. This is
-						 *   clearly a timing issue, and it is likely a consequence of
-						 *   deferring certain aspects of computed state until
-						 *   initialization completes. It's somewhat surprising because that
-						 *   deferral is only intended to affect form load which, while
-						 *   asynchronous, is itself wrapped in a promise at the
-						 *   client-facing `initializeForm` call. This should definitely be
-						 *   considered a bug (as it should anywhere else we provide a
-						 *   synchronous interface which produces an expected state change
-						 *   that can't be observed synchronously).
+						 * - To demonstrate both of these issues, test is further
+						 *   parameterized to optionally update the assertions ported from
+						 *   JavaRosa to 1-based position predicates
 						 *
-						 * - To demonstrate all of these issues, test is further
-						 *   parameterized to...
-						 *
-						 *     - optionally update the assertions ported from JavaRosa to
-						 *       1-based position predicates
-						 *
-						 *     - optionally await a microtask tick before performing those
-						 *       assertions
-						 *
-						 *     All three parameters (these plus the outer temporary
-						 *     inclusion of a primary instance id) currently must be true
-						 *     for the test to pass.
+						 *     Both parameters (1-based position predicates plus the outer
+						 *     temporary inclusion of a primary instance id) currently must
+						 *     be true for the test to pass.
 						 *
 						 * - - -
 						 *
@@ -1409,30 +1388,13 @@ describe('Tests ported from JavaRosa - repeats', () => {
 						 * Excercises the initializeTriggerables call in
 						 * createRepeatInstance.
 						 */
-						describe.each<DemonstrateObservedTestIssueOptions>([
-							{
-								oneBasedPositionPredicates: false,
-								awaitAsyncStateChangeBug: false,
-							},
-							{
-								oneBasedPositionPredicates: true,
-								awaitAsyncStateChangeBug: true,
-							},
+						describe.each<PredicateOptions>([
+							{ oneBasedPositionPredicates: false },
+							{ oneBasedPositionPredicates: true },
 						])(
-							'one-based position predicates: $oneBasedPositionPredicates, await async state change bug: $awaitAsyncStateChangeBug',
-							({ oneBasedPositionPredicates, awaitAsyncStateChangeBug }) => {
-								const tick = async () => {
-									await new Promise<void>((resolve) => {
-										queueMicrotask(resolve);
-									});
-								};
-
-								const isTestExpectedToPass =
-									temporarilyIncludePrimaryInstanceId &&
-									oneBasedPositionPredicates &&
-									awaitAsyncStateChangeBug;
-
-								if (isTestExpectedToPass) {
+							'one-based position predicates: $oneBasedPositionPredicates',
+							({ oneBasedPositionPredicates }) => {
+								if (temporarilyIncludePrimaryInstanceId && oneBasedPositionPredicates) {
 									testFn = it;
 								} else {
 									testFn = it.fails;
@@ -1470,10 +1432,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 										assertCurrentReference: '/data/repeat',
 									});
 
-									if (awaitAsyncStateChangeBug) {
-										await tick();
-									}
-
 									scenario.next('/data/repeat[1]/string');
 									scenario.next('/data/repeat');
 
@@ -1487,10 +1445,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 										assertCurrentReference: '/data/repeat',
 									});
 
-									if (awaitAsyncStateChangeBug) {
-										await tick();
-									}
-
 									scenario.next('/data/repeat[2]/string');
 									scenario.next('/data/repeat');
 
@@ -1503,10 +1457,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 									scenario.createNewRepeat({
 										assertCurrentReference: '/data/repeat',
 									});
-
-									if (awaitAsyncStateChangeBug) {
-										await tick();
-									}
 
 									scenario.next('/data/repeat[3]/string');
 									scenario.next('/data/repeat');
