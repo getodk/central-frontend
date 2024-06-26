@@ -1,9 +1,19 @@
-$primaryColor: #3e9fcc;
+// As called by Designer
+$odkBlue: #3e9fcc;
+$lightBlue: #e9f8ff;
+$lightGray: #cbcacc;
+$textColour: #1b1b1f;
+$hintText: #6d6d6d;
+$errorText: #b3261e;
+$errorLight: #ffedea;
+
+// Override theme colors
+$primaryColor: $odkBlue;
 $primaryTextColor: #ffffff;
 $accentColor: #ffffff;
 $accentTextColor: #424242;
-
-$primary50: #d8ecf5;
+$primary50: $lightBlue;
+$emphasis-high: $textColour;
 
 @import 'primevue-sass-theme/themes/material/material-light/standard/indigo/theme.scss';
 
@@ -12,4 +22,6 @@ $primary50: #d8ecf5;
 
 :root {
 	--primary-50: #{$primary50};
+	--text-color: #{$textColour};
+	--light-elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
 }

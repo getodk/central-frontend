@@ -1,29 +1,22 @@
 <script setup lang="ts">
-import type { FormLanguage, RootNode } from '@getodk/xforms-engine';
-import Dropdown, { type DropdownChangeEvent } from 'primevue/dropdown';
+import type { ActiveLanguage, FormLanguage } from '@getodk/xforms-engine';
+import Dropdown from 'primevue/dropdown';
 
-const props = defineProps<{ form: RootNode }>();
+defineProps<{ languages: FormLanguage[], activeLanguage: ActiveLanguage }>();
 
-const languages = props.form.languages.filter(language => !language.isSyntheticDefault);
-
-interface LanguageDropdownChangeEvent extends DropdownChangeEvent {
-	readonly value: FormLanguage;
-}
-
-const handleLanguageChange = (event: LanguageDropdownChangeEvent) => {
-	props.form.setLanguage(event.value);
-};
+defineEmits(['update:activeLanguage'])
 
 </script>
+
 <template>
 	<Dropdown
 		v-if="languages.length > 0"
-		:model-value="form.currentState.activeLanguage"
+		:model-value="activeLanguage"
 		:options="languages"
 		option-label="language"
-		class="flex align-items-center rounded with-icon"
+		class="flex align-items-center rounded with-icon language-changer"
 		aria-label="change language"
-		@change="handleLanguageChange"
+		@update:model-value="$emit('update:activeLanguage', $event)"
 	>
 		<template #value="slotProps">
 			<span class="icon-language" />
@@ -57,6 +50,16 @@ const handleLanguageChange = (event: LanguageDropdownChangeEvent) => {
 
 	.icon-language {
 		margin-right: 10px;
+		font-size: 1.5rem;
+	}
+}
+</style>
+
+<style>
+
+@media print {
+	.p-menu {
+		display: none;
 	}
 }
 </style>

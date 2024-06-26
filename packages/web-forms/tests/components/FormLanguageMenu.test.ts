@@ -1,15 +1,22 @@
 import FormLanguageMenu from '@/components/FormLanguageMenu.vue';
+import type { FormLanguage, SyntheticDefaultLanguage } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../helpers';
+
+const isFormLanguage = (lang: FormLanguage | SyntheticDefaultLanguage): lang is FormLanguage => {
+	return !lang.isSyntheticDefault;
+};
 
 const mountComponent = async (formPath: string) => {
 	const xform = await getReactiveForm(formPath);
 
 	const component = mount(FormLanguageMenu, {
 		props: {
-			form: xform,
+			activeLanguage: xform.currentState.activeLanguage,
+			languages: xform.languages.filter(isFormLanguage),
 		},
+		emit: {},
 		global: globalMountOptions,
 	});
 
@@ -23,6 +30,7 @@ describe('LanguageChanger', () => {
 		);
 
 		expect(xform.currentState.activeLanguage.isSyntheticDefault).toBe(true);
+		expect(xform.languages.filter(isFormLanguage).length).toBe(0);
 
 		expect(component.text()).toBe('');
 	});
@@ -37,7 +45,10 @@ describe('LanguageChanger', () => {
 
 		await component.find('li[aria-posinset="2"]').trigger('click');
 
-		expect(component.find('.p-dropdown-label').text()).toEqual('Español');
+		xform.setLanguage(component.emitted<FormLanguage[]>('update:activeLanguage')![0][0]);
 		expect(xform.currentState.activeLanguage.language).toEqual('Español');
+
+		await component.setProps({ activeLanguage: xform.currentState.activeLanguage });
+		expect(component.find('.p-dropdown-label').text()).toEqual('Español');
 	});
 });

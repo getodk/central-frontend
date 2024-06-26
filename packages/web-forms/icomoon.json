@@ -488,10 +488,34 @@
       "setIdx": 0,
       "setId": 4,
       "iconIdx": 35
+    },
+    {
+      "icon": {
+        "paths": ["M128 256h768v86h-768v-86zM128 554v-84h768v84h-768zM128 768v-86h768v86h-768z"],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": ["menu"],
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "menu",
+        "id": 600,
+        "order": 299,
+        "prevSize": 48,
+        "code": 59670,
+        "name": "menu"
+      },
+      "setIdx": 0,
+      "setId": 4,
+      "iconIdx": 600
     }
   ],
   "height": 1024,
-  "metadata": { "name": "icomoon" },
+  "metadata": {
+    "name": "icomoon"
+  },
   "preferences": {
     "showGlyphs": true,
     "showQuickUse": true,
@@ -499,8 +523,16 @@
     "showSVGs": true,
     "fontPref": {
       "prefix": "icon-",
-      "metadata": { "fontFamily": "icomoon", "majorVersion": 1, "minorVersion": 0 },
-      "metrics": { "emSize": 1024, "baseline": 6.25, "whitespace": 50 },
+      "metadata": {
+        "fontFamily": "icomoon",
+        "majorVersion": 1,
+        "minorVersion": 0
+      },
+      "metrics": {
+        "emSize": 1024,
+        "baseline": 6.25,
+        "whitespace": 50
+      },
       "embed": false,
       "showSelector": true,
       "showMetrics": true,
