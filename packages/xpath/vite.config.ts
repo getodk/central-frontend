@@ -126,7 +126,7 @@ export default defineConfig(({ mode }) => {
 
 			environment: TEST_ENVIRONMENT,
 			globals: false,
-			include: ['test/**/*.test.ts', 'test/native/index.ts', 'test/xforms/index.ts'],
+			include: ['test/**/*.test.ts'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
 		} satisfies VitestTestConfig,
 	};
