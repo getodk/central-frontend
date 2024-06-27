@@ -256,12 +256,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - Note: reference to "repeat count" is not a reference to `jr:count`,
-				 *   but a reference to XPath `count()` of repeat instances.
-				 *
-				 * - Failure likely caused by reactive subscription logic resolving to a
-				 *   single (nullable) node, rather than the set of all nodes for the
-				 *   affected node-set.
+				 * Note: reference to "repeat count" is not a reference to `jr:count`,
+				 * but a reference to XPath `count()` of repeat instances.
 				 *
 				 * - - -
 				 *
