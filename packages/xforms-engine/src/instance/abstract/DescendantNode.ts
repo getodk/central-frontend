@@ -1,6 +1,5 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
-import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
@@ -52,6 +51,10 @@ export type AnyDescendantNode = DescendantNode<
 	any
 >;
 
+interface DescendantNodeOptions {
+	readonly computeReference?: Accessor<string>;
+}
+
 export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,63 +64,62 @@ export abstract class DescendantNode<
 	extends InstanceNode<Definition, Spec, Child>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
+	readonly hasReadonlyAncestor: Accessor<boolean> = () => {
+		const { parent } = this;
+
+		return parent.hasReadonlyAncestor() || parent.isReadonly();
+	};
+
+	readonly isSelfReadonly: Accessor<boolean>;
+
+	readonly isReadonly: Accessor<boolean> = () => {
+		if (this.hasReadonlyAncestor()) {
+			return true;
+		}
+
+		return this.isSelfReadonly();
+	};
+
+	readonly hasNonRelevantAncestor: Accessor<boolean> = () => {
+		const { parent } = this;
+
+		return parent.hasNonRelevantAncestor() || !parent.isRelevant();
+	};
+
+	readonly isSelfRelevant: Accessor<boolean>;
+
+	readonly isRelevant: Accessor<boolean> = () => {
+		if (this.hasNonRelevantAncestor()) {
+			return false;
+		}
+
+		return this.isSelfRelevant();
+	};
+
+	protected readonly isRequired: Accessor<boolean>;
+
 	readonly root: Root;
 	readonly evaluator: XFormsXPathEvaluator;
 	readonly contextNode: Element;
 
 	constructor(
 		override readonly parent: DescendantNodeParent<Definition>,
-		override readonly definition: Definition
+		override readonly definition: Definition,
+		options?: DescendantNodeOptions
 	) {
-		super(parent.engineConfig, parent, definition);
+		super(parent.engineConfig, parent, definition, options);
 
 		const { evaluator, root } = parent;
 
 		this.root = root;
 		this.evaluator = evaluator;
 		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
-	}
 
-	protected computeChildStepReference(parent: DescendantNodeParent<Definition>): string {
-		return `${parent.contextReference}/${this.definition.nodeName}`;
-	}
+		const { readonly, relevant, required } = definition.bind;
 
-	protected abstract override computeReference(
-		parent: DescendantNodeParent<Definition>,
-		definition: Definition
-	): string;
-
-	protected buildSharedStateSpec(
-		parent: DescendantNodeParent<Definition>,
-		definition: Definition
-	): DescendantNodeSharedStateSpec {
-		return this.scope.runTask(() => {
-			const reference = createMemo(() => this.contextReference);
-			const { bind } = definition;
-
-			// TODO: we can likely short-circuit `readonly` computation when a node
-			// is non-relevant.
-			const selfReadonly = createComputedExpression(this, bind.readonly);
-			const readonly = createMemo(() => {
-				return parent.isReadonly || selfReadonly();
-			});
-
-			const selfRelevant = createComputedExpression(this, bind.relevant);
-			const relevant = createMemo(() => {
-				return parent.isRelevant && selfRelevant();
-			});
-
-			// TODO: we can likely short-circuit `required` computation when a node
-			// is non-relevant.
-			const required = createComputedExpression(this, bind.required);
-
-			return {
-				reference,
-				readonly,
-				relevant,
-				required,
-			};
-		});
+		this.isSelfReadonly = createComputedExpression(this, readonly);
+		this.isSelfRelevant = createComputedExpression(this, relevant);
+		this.isRequired = createComputedExpression(this, required);
 	}
 
 	protected createContextNode(parentContextNode: Element, nodeName: string): Element {

@@ -52,10 +52,7 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 	readonly scope: ReactiveScope;
 	readonly evaluator: XFormsXPathEvaluator;
 	readonly root: EvaluationContextRoot;
-
-	get contextReference(): string {
-		return this.selectField.contextReference;
-	}
+	readonly contextReference: Accessor<string>;
 
 	constructor(
 		private readonly selectField: SelectField,
@@ -64,10 +61,11 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 		this.scope = selectField.scope;
 		this.evaluator = selectField.evaluator;
 		this.root = selectField.root;
+		this.contextReference = selectField.contextReference;
 	}
 
-	getSubscribableDependencyByReference(reference: string): SubscribableDependency | null {
-		return this.selectField.getSubscribableDependencyByReference(reference);
+	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {
+		return this.selectField.getSubscribableDependenciesByReference(reference);
 	}
 }
 

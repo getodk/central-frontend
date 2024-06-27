@@ -3,6 +3,7 @@ import type { NodeID } from '../../instance/identity.ts';
 import type { ChildrenState, createChildrenState } from './createChildrenState.ts';
 import type { ClientState } from './node-state/createClientState.ts';
 import type { CurrentState } from './node-state/createCurrentState.ts';
+import type { ReactiveScope } from './scope.ts';
 
 interface InconsistentChildrenStateDetails {
 	readonly missingIds: readonly NodeID[];
@@ -96,6 +97,7 @@ export const materializeCurrentStateChildren = <
 	Child extends AnyChildNode,
 	ParentState extends EncodedParentState,
 >(
+	scope: ReactiveScope,
 	currentState: ParentState,
 	childrenState: ChildrenState<Child>
 ): MaterializedChildren<ParentState, Child> => {
@@ -105,7 +107,7 @@ export const materializeCurrentStateChildren = <
 	return new Proxy(proxyTarget, {
 		get(_, key) {
 			if (key === 'children') {
-				const expectedChildIDs = currentState.children;
+				const expectedChildIDs = scope.runTask(() => currentState.children);
 				const children = childrenState.getChildren();
 
 				if (import.meta.env.DEV) {

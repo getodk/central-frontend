@@ -50,6 +50,31 @@ export class RepeatInstance
 	protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
 	protected override engineState: EngineState<RepeatInstanceStateSpec>;
 
+	/**
+	 * @todo Should we special case repeat `readonly` inheritance the same way
+	 * we do for `relevant`?
+	 *
+	 * @see {@link hasNonRelevantAncestor}
+	 */
+	declare readonly hasReadonlyAncestor: Accessor<boolean>;
+
+	/**
+	 * A repeat instance can inherit non-relevance, just like any other node. That
+	 * inheritance is derived from the repeat instance's parent node in the
+	 * primary instance XML/DOM tree (and would be semantically expected to do so
+	 * even if we move away from that implementation detail).
+	 *
+	 * Since {@link RepeatInstance.parent} is a {@link RepeatRange}, which is a
+	 * runtime data model fiction that does not exist in that hierarchy, we pass
+	 * this call through, allowing the {@link RepeatRange} to check the actual
+	 * primary instance parent node's relevance state.
+	 *
+	 * @todo Should we apply similar reasoning in {@link hasReadonlyAncestor}?
+	 */
+	override readonly hasNonRelevantAncestor: Accessor<boolean> = () => {
+		return this.parent.hasNonRelevantAncestor();
+	};
+
 	// RepeatInstanceNode
 	readonly nodeType = 'repeat-instance';
 
@@ -68,7 +93,18 @@ export class RepeatInstance
 		definition: RepeatDefinition,
 		options: RepeatInstanceOptions
 	) {
-		super(parent, definition);
+		const { precedingInstance } = options;
+		const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
+		const initialIndex = precedingIndex() + 1;
+		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
+
+		super(parent, definition, {
+			computeReference: (): string => {
+				const currentPosition = currentIndex() + 1;
+
+				return `${parent.contextReference()}[${currentPosition}]`;
+			},
+		});
 
 		this.appearances = definition.bodyElement.appearances;
 
@@ -78,17 +114,15 @@ export class RepeatInstance
 
 		options.precedingPrimaryInstanceNode.after(this.contextNode);
 
-		const { precedingInstance } = options;
-		const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
-		const initialIndex = precedingIndex() + 1;
-		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
-
 		this.currentIndex = currentIndex;
 
 		const state = createSharedNodeState(
 			this.scope,
 			{
-				...this.buildSharedStateSpec(parent, definition),
+				reference: this.contextReference,
+				readonly: this.isReadonly,
+				relevant: this.isRelevant,
+				required: this.isRequired,
 
 				// TODO: only-child <group><label>
 				label: createNodeLabel(this, definition),
@@ -104,7 +138,11 @@ export class RepeatInstance
 
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
+		this.currentState = materializeCurrentStateChildren(
+			this.scope,
+			state.currentState,
+			childrenState
+		);
 
 		// Maintain current index state, updating as the parent range's children
 		// state is changed. Notable Solid reactivity nuances:
@@ -128,12 +166,6 @@ export class RepeatInstance
 		});
 
 		childrenState.setChildren(buildChildren(this));
-	}
-
-	protected computeReference(parent: RepeatRange): string {
-		const currentPosition = this.currentIndex() + 1;
-
-		return `${parent.contextReference}[${currentPosition}]`;
 	}
 
 	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {

@@ -59,7 +59,10 @@ export class StringField
 		const state = createSharedNodeState(
 			this.scope,
 			{
-				...this.buildSharedStateSpec(parent, definition),
+				reference: this.contextReference,
+				readonly: this.isReadonly,
+				relevant: this.isRelevant,
+				required: this.isRequired,
 
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
@@ -75,10 +78,6 @@ export class StringField
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
-	}
-
-	protected computeReference(parent: GeneralParentNode): string {
-		return this.computeChildStepReference(parent);
 	}
 
 	// InstanceNode

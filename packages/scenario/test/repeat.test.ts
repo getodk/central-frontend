@@ -256,12 +256,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - Note: reference to "repeat count" is not a reference to `jr:count`,
-				 *   but a reference to XPath `count()` of repeat instances.
-				 *
-				 * - Failure likely caused by reactive subscription logic resolving to a
-				 *   single (nullable) node, rather than the set of all nodes for the
-				 *   affected node-set.
+				 * Note: reference to "repeat count" is not a reference to `jr:count`,
+				 * but a reference to XPath `count()` of repeat instances.
 				 *
 				 * - - -
 				 *
@@ -272,7 +268,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * expandReference call in Triggerable.apply which ensures the result is
 				 * updated for every repeat instance.
 				 */
-				it.fails('updates repeat count, inside and outside repeat', async () => {
+				it('updates repeat count, inside and outside repeat', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(
@@ -351,7 +347,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * to 1. See contrast with
 				 * addingOrRemovingRepeatInstance_updatesRepeatCount_insideAndOutsideRepeat.
 				 */
-				it.fails('updates repeat count, inside repeat', async () => {
+				it('updates repeat count, inside repeat', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(
@@ -400,39 +396,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					});
 				});
 
-				/**
-				 * **PORTING NOTES**
-				 *
-				 * - ~~It seems like the comment from JavaRosa on the above test may
-				 *   have been intended for this test?~~
-				 *   {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612338717 | Nope!}
-				 *
-				 * - Failure is an `InconsistentChildrenStateError`. ~~Without diving
-				 *   into the cause, I've only ever seen this when experimenting with UI
-				 *   to exercise the engine API capability to add repeat instances at
-				 *   any index. It seemed pretty likely at the time that this was a
-				 *   Solid compilation bug, as it appeared that Solid's JSX transform
-				 *   triggered it. But this suggests that some (as yet undetermined)
-				 *   reactive property access may be implicated.~~ This error goes away
-				 *   if we unwrap the
-				 *   {@link https://github.com/getodk/web-forms/blob/d40bd88ed8959bbe7fae5d28efc840c16ca50a72/packages/scenario/src/jr/Scenario.ts#L163-L173 | `createMemo` call}
-				 *   in Scenario.ts. That's a pretty (er) solid clue as to where the
-				 *   apparent bug must be.
-				 *
-				 * - A likely quick turnaround remedy would be a somewhat more involved
-				 *   children state mapping, with actual `nodeId` lookup rather than the
-				 *   current cheat mode implementation.
-				 *
-				 * - A more "correct" solution would almost certainly involve
-				 *   understanding how any particular reactive access could cause these
-				 *   states to go out of sync in the first place. It would likely also
-				 *   involve some investigation into whether the discrepancy is
-				 *   temporary and resolves after yielding to the event loop; this would
-				 *   implicate some aspect of Solid's reactive scheduling, which most of
-				 *   our reactive internals currently bypass (naively, trading CPU time
-				 *   for testability of the reactive bridge implementation).
-				 */
-				it.fails('updates relative repeat count, inside repeat', async () => {
+				it('updates relative repeat count, inside repeat', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(
@@ -545,14 +509,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					/**
 					 * **PORTING NOTES**
 					 *
-					 * - Another `InconsistentChildrenStateError`, another clue! ~~This
-					 *   case is definitely triggered by the {@link Scenario.removeRepeat}
-					 *   call.~~ This error goes away if we unwrap the
-					 *   {@link https://github.com/getodk/web-forms/blob/d40bd88ed8959bbe7fae5d28efc840c16ca50a72/packages/scenario/src/jr/Scenario.ts#L163-L173 | `createMemo` call}
-					 *   in Scenario.ts.
-					 * - Same thoughts on `nullValue()` -> blank/empty string check
+					 * Same thoughts on `nullValue()` -> blank/empty string check
 					 */
-					it.fails('updates that reference', async () => {
+					it('updates that reference', async () => {
 						const scenario = await Scenario.init(
 							'Some form',
 							html(
@@ -625,20 +584,18 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					/**
 					 * **PORTING NOTES**
 					 *
-					 * - This failure is likely to be related to single-node resolution of
-					 *   subscription lookups.
-					 *
-					 * - A first pass on porting this test produced confusing results, which
-					 *   turned out to reveal a misunderstanding of Vitest's negated
-					 *   assertion logic. I had forgotten that there's a custom
-					 *   `toBeNonRelevant` assertion, and had written `.not.toBeRelevant()`.
-					 *   That should be totally valid (and would be preferable to paired
-					 *   custom affirmative/negative cases), and we ought to resolve it
-					 *   sooner rather than later. More detail is added in this commit at
-					 *   the point of confusing failure, in
-					 *   `expandSimpleExpectExtensionResult.ts`.
+					 * A first pass on porting this test produced confusing results, which
+					 * turned out to reveal a misunderstanding of Vitest's negated
+					 * assertion logic. I had forgotten that there's a custom
+					 * `toBeNonRelevant` assertion, and had written `.not.toBeRelevant()`.
+					 * That should be totally valid (and would be preferable to paired
+					 * custom affirmative/negative cases), and we ought to resolve it
+					 * sooner rather than later. More detail is added in
+					 * {@link https://github.com/getodk/web-forms/commit/0eda13f81d9901f72c08ffa40a2ab7113888bbb7 | the commit introducing this note: 0eda13f}
+					 * at the point of confusing failure, in
+					 * `expandSimpleExpectExtensionResult.ts`.
 					 */
-					it.fails('updates relevance for all instances', async () => {
+					it('updates relevance for all instances', async () => {
 						const scenario = await Scenario.init(
 							'Some form',
 							html(
@@ -994,7 +951,15 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				])(
 					'substitute absolute body references: $substituteAbsoluteBodyReferences',
 					({ substituteAbsoluteBodyReferences }) => {
-						it.fails("evaluates triggerables dependent on the repeat group's number", async () => {
+						let testFn: typeof it | typeof it.fails;
+
+						if (substituteAbsoluteBodyReferences) {
+							testFn = it;
+						} else {
+							testFn = it.fails;
+						}
+
+						testFn("evaluates triggerables dependent on the repeat group's number", async () => {
 							const scenario = await Scenario.init(
 								'Some form',
 								html(
@@ -1195,20 +1160,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *
 				 * - Rephrase "repeat group" -> "repeat instance"?
 				 *
-				 * - Fails on first assertion, missing the last letter in the
-				 *   concatenation. Immedate cause is lack of internal reactive update
-				 *   until after a repeat instance is added (which is how all of the
-				 *   other letters are present).
-				 *
-				 * - Second assertion succeeds.
-				 *
-				 * - Both behaviors are likely explained by limiting reactive
-				 *   subscription lookups to a single node.
-				 *
-				 * - In any such case (whether mentioned in other tests' porting notes
-				 *   or forgotten in haste of bulk porting), it's highly likely that
-				 *   decoupling from browser/XML DOM will help address.
-				 *
 				 * - - -
 				 *
 				 * JR:
@@ -1220,51 +1171,48 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * because one of the children has been deleted along with its parent
 				 * (the repeat group instance).
 				 */
-				it.fails(
-					"evaluates triggerables indirectly dependent on the repeat group's number",
-					async () => {
-						const scenario = await Scenario.init(
-							'Some form',
-							html(
-								head(
-									title('Some form'),
-									model(
-										mainInstance(
-											t('data id="some-form"', t('house jr:template=""', t('name')), t('summary'))
-										),
-										bind('/data/house/name').type('string').required(),
-										bind('/data/summary').type('string').calculate('concat(/data/house/name)')
-									)
-								),
-								body(group('/data/house', repeat('/data/house', input('/data/house/name'))))
-							)
-						); /* .onDagEvent(dagEvents::add) */
+				it("evaluates triggerables indirectly dependent on the repeat group's number", async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t('data id="some-form"', t('house jr:template=""', t('name')), t('summary'))
+									),
+									bind('/data/house/name').type('string').required(),
+									bind('/data/summary').type('string').calculate('concat(/data/house/name)')
+								)
+							),
+							body(group('/data/house', repeat('/data/house', input('/data/house/name'))))
+						)
+					); /* .onDagEvent(dagEvents::add) */
 
-						range(1, 6).forEach((n) => {
-							scenario.next('/data/house');
-							scenario.createNewRepeat({
-								assertCurrentReference: '/data/house',
-							});
-							scenario.next('/data/house[' + n + ']/name');
-
-							scenario.answer(String.fromCharCode(64 + n));
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/house');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/house',
 						});
+						scenario.next('/data/house[' + n + ']/name');
 
-						expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABCDE'));
+						scenario.answer(String.fromCharCode(64 + n));
+					});
 
-						// Start recording DAG events now
-						// dagEvents.clear();
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABCDE'));
 
-						scenario.removeRepeat('/data/house[3]');
+					// Start recording DAG events now
+					// dagEvents.clear();
 
-						expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABDE'));
+					scenario.removeRepeat('/data/house[3]');
 
-						// assertDagEvents(dagEvents,
-						//     "Processing 'Recalculate' for summary [1] (ABDE)",
-						//         "Processing 'Deleted: name [3_1]: 1 triggerables were fired.' for "
-						// );
-					}
-				);
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(stringAnswer('ABDE'));
+
+					// assertDagEvents(dagEvents,
+					//     "Processing 'Recalculate' for summary [1] (ABDE)",
+					//         "Processing 'Deleted: name [3_1]: 1 triggerables were fired.' for "
+					// );
+				});
 			});
 
 			describe('[deleting] delete last repeat', () => {
@@ -1408,9 +1356,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
 							}
 						);
 
-						interface DemonstrateObservedTestIssueOptions {
+						interface PredicateOptions {
 							readonly oneBasedPositionPredicates: boolean;
-							readonly awaitAsyncStateChangeBug: boolean;
 						}
 
 						/**
@@ -1418,37 +1365,17 @@ describe('Tests ported from JavaRosa - repeats', () => {
 						 *
 						 * - Same notes (on primary instance id) as previous test.
 						 *
-						 * - Unclear how this passes in JavaRosa! It's still using 0-based
-						 *   indexes rather than 1-based XPath position predicates.
+						 * - ~~Unclear how this passes in JavaRosa! It's still using 0-based
+						 *   indexes rather than 1-based XPath position predicates.~~
+						 *   {@link https://github.com/getodk/web-forms/pull/110/files#r1612356033}
 						 *
-						 * - Still fails with 1-based position predicates. Behaves as
-						 *   expected when interacting with the form directly (at least with
-						 *   added primary instance id, and at least in `ui-solid`). A quick
-						 *   debugging seesion reveals the pertinent node's
-						 *   `currentState.relevant` is `true` when the repeat instance's
-						 *   subtree is added, then becomes `false` thereafter. This is
-						 *   clearly a timing issue, and it is likely a consequence of
-						 *   deferring certain aspects of computed state until
-						 *   initialization completes. It's somewhat surprising because that
-						 *   deferral is only intended to affect form load which, while
-						 *   asynchronous, is itself wrapped in a promise at the
-						 *   client-facing `initializeForm` call. This should definitely be
-						 *   considered a bug (as it should anywhere else we provide a
-						 *   synchronous interface which produces an expected state change
-						 *   that can't be observed synchronously).
+						 * - To demonstrate both of these issues, test is further
+						 *   parameterized to optionally update the assertions ported from
+						 *   JavaRosa to 1-based position predicates
 						 *
-						 * - To demonstrate all of these issues, test is further
-						 *   parameterized to...
-						 *
-						 *     - optionally update the assertions ported from JavaRosa to
-						 *       1-based position predicates
-						 *
-						 *     - optionally await a microtask tick before performing those
-						 *       assertions
-						 *
-						 *     All three parameters (these plus the outer temporary
-						 *     inclusion of a primary instance id) currently must be true
-						 *     for the test to pass.
+						 *     Both parameters (1-based position predicates plus the outer
+						 *     temporary inclusion of a primary instance id) currently must
+						 *     be true for the test to pass.
 						 *
 						 * - - -
 						 *
@@ -1457,30 +1384,13 @@ describe('Tests ported from JavaRosa - repeats', () => {
 						 * Excercises the initializeTriggerables call in
 						 * createRepeatInstance.
 						 */
-						describe.each<DemonstrateObservedTestIssueOptions>([
-							{
-								oneBasedPositionPredicates: false,
-								awaitAsyncStateChangeBug: false,
-							},
-							{
-								oneBasedPositionPredicates: true,
-								awaitAsyncStateChangeBug: true,
-							},
+						describe.each<PredicateOptions>([
+							{ oneBasedPositionPredicates: false },
+							{ oneBasedPositionPredicates: true },
 						])(
-							'one-based position predicates: $oneBasedPositionPredicates, await async state change bug: $awaitAsyncStateChangeBug',
-							({ oneBasedPositionPredicates, awaitAsyncStateChangeBug }) => {
-								const tick = async () => {
-									await new Promise<void>((resolve) => {
-										queueMicrotask(resolve);
-									});
-								};
-
-								const isTestExpectedToPass =
-									temporarilyIncludePrimaryInstanceId &&
-									oneBasedPositionPredicates &&
-									awaitAsyncStateChangeBug;
-
-								if (isTestExpectedToPass) {
+							'one-based position predicates: $oneBasedPositionPredicates',
+							({ oneBasedPositionPredicates }) => {
+								if (temporarilyIncludePrimaryInstanceId && oneBasedPositionPredicates) {
 									testFn = it;
 								} else {
 									testFn = it.fails;
@@ -1518,10 +1428,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 										assertCurrentReference: '/data/repeat',
 									});
 
-									if (awaitAsyncStateChangeBug) {
-										await tick();
-									}
-
 									scenario.next('/data/repeat[1]/string');
 									scenario.next('/data/repeat');
 
@@ -1535,10 +1441,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 										assertCurrentReference: '/data/repeat',
 									});
 
-									if (awaitAsyncStateChangeBug) {
-										await tick();
-									}
-
 									scenario.next('/data/repeat[2]/string');
 									scenario.next('/data/repeat');
 
@@ -1551,10 +1453,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 									scenario.createNewRepeat({
 										assertCurrentReference: '/data/repeat',
 									});
-
-									if (awaitAsyncStateChangeBug) {
-										await tick();
-									}
 
 									scenario.next('/data/repeat[3]/string');
 									scenario.next('/data/repeat');
@@ -1604,15 +1502,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 		describe("//region DAG limitations (cases that aren't correctly updated)", () => {
 			describe('adding repeat instance, with inner sum of question in repeat', () => {
 				/**
-				 * **PORTING NOTES**
-				 *
-				 * - Current failure is an `InconsistentChildrenStateError` ~~, likely
-				 *   with similar root cause as other cases around repeat instance
-				 *   removal.~~ This error goes away if we unwrap the
-				 *   {@link https://github.com/getodk/web-forms/blob/d40bd88ed8959bbe7fae5d28efc840c16ca50a72/packages/scenario/src/jr/Scenario.ts#L163-L173 | `createMemo` call}
-				 *   in Scenario.ts.
-				 *
-				 * - - -
 				 *
 				 * JR:
 				 *
@@ -1622,7 +1511,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * strategy similar to getTriggerablesAffectingAllInstances but for
 				 * initializeTriggerables.
 				 */
-				it.fails('updates inner sum for all instances', async () => {
+				it('updates inner sum for all instances', async () => {
 					const scenario = await Scenario.init(
 						'Count outside repeat used inside',
 						html(

@@ -54,7 +54,10 @@ export class Group
 		const state = createSharedNodeState(
 			this.scope,
 			{
-				...this.buildSharedStateSpec(parent, definition),
+				reference: this.contextReference,
+				readonly: this.isReadonly,
+				relevant: this.isRelevant,
+				required: this.isRequired,
 
 				label: createNodeLabel(this, definition),
 				hint: null,
@@ -69,13 +72,13 @@ export class Group
 
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
+		this.currentState = materializeCurrentStateChildren(
+			this.scope,
+			state.currentState,
+			childrenState
+		);
 
 		childrenState.setChildren(buildChildren(this));
-	}
-
-	protected computeReference(parent: GeneralParentNode): string {
-		return this.computeChildStepReference(parent);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

@@ -549,7 +549,33 @@ describe('ChildVaccinationTest.java', () => {
 	});
 
 	it.fails('[smoke test]', async () => {
-		const scenario = await Scenario.init('child_vaccination_VOL_tool_v12.xml');
+		let scenario: Scenario | null = null;
+
+		try {
+			scenario = await Scenario.init('child_vaccination_VOL_tool_v12.xml');
+
+			expect.fail('Update `child-vaccination.test.ts`, known failure mode has changed');
+		} catch (error) {
+			expect(error).toBeInstanceOf(Error);
+
+			// Failure of this assertion likely means that we've implemented the
+			// `indexed-repeat` XPath function. When that occurs, these error
+			// condition assertions should be removed, and the `Scenario.init` call
+			// should be treated normally.
+			//
+			// If a new failure occurs after that point, and that failure cannot be
+			// addressed by updating the test to be more complete (e.g. by specifying
+			// more of the expected references in `scenario.next` calls, or
+			// implementing other aspects of the test which are currently deferred),
+			// consider adding a similar function/assertion/comment to this effect,
+			// asserting that new known failure condition and prompting the test to be
+			// updated again once it is resolved.
+			expect((error as Error).message).toContain('function not defined: indexed-repeat');
+		}
+
+		if (scenario == null) {
+			return;
+		}
 
 		scenario.next('/data/building_type');
 
@@ -557,16 +583,6 @@ describe('ChildVaccinationTest.java', () => {
 			scenario.answer('multi');
 		};
 
-		// Failure of this assertion likely means that we've implemented the
-		// `indexed-repeat` XPath function. When that occurs, this assertion and the
-		// `currentExpectedPointOfFailure` function should both be removed. If a new
-		// failure occurs after that point, and that failure cannot be addressed by
-		// updating the test to be more complete (e.g. by specifying more of the
-		// expected references in `scenario.next` calls, or implementing other
-		// aspects of the test which are currently defferred), consider adding a
-		// similar function/assertion/comment to this effect, asserting that new
-		// known failure condition and prompting the test to be updated again once
-		// it is resolved.
 		try {
 			expect(currentExpectedPointOfFailure).toThrowError('function not defined: indexed-repeat');
 
@@ -578,7 +594,7 @@ describe('ChildVaccinationTest.java', () => {
 				return;
 			}
 		} catch {
-			throw new Error('Update `child-vaccination.test.ts`, known failure mode has changed');
+			throw new Error();
 		}
 
 		scenario.answer('multi');

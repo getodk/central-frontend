@@ -99,21 +99,13 @@ export class Root
 		SubscribableDependency,
 		TranslationContext
 {
-	static async initialize(
-		xformDOM: XFormDOM,
-		definition: RootDefinition,
-		engineConfig: InstanceConfig
-	): Promise<Root> {
-		const instance = new Root(xformDOM, definition, engineConfig);
-
-		await instance.formStateInitialized();
-
-		return instance;
-	}
-
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
 	// InstanceNode
+	readonly hasReadonlyAncestor = () => false;
+	readonly isReadonly = () => false;
+	readonly hasNonRelevantAncestor = () => false;
+	readonly isRelevant = () => true;
 	protected readonly state: SharedNodeState<RootStateSpec>;
 	protected readonly engineState: EngineState<RootStateSpec>;
 
@@ -131,12 +123,6 @@ export class Root
 	// EvaluationContext
 	readonly evaluator: XFormsXPathEvaluator;
 
-	private readonly rootReference: string;
-
-	override get contextReference(): string {
-		return this.rootReference;
-	}
-
 	readonly contextNode: Element;
 
 	// RootNode
@@ -149,22 +135,18 @@ export class Root
 		return this.engineState.activeLanguage;
 	}
 
-	protected constructor(
-		xformDOM: XFormDOM,
-		definition: RootDefinition,
-		engineConfig: InstanceConfig
-	) {
-		super(engineConfig, null, definition);
+	constructor(xformDOM: XFormDOM, definition: RootDefinition, engineConfig: InstanceConfig) {
+		const reference = definition.nodeset;
+
+		super(engineConfig, null, definition, {
+			computeReference: () => reference,
+		});
 
 		this.classes = definition.classes;
 
 		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 
 		this.childrenState = childrenState;
-
-		const reference = definition.nodeset;
-
-		this.rootReference = reference;
 
 		const instanceDOM = xformDOM.createInstance();
 		const evaluator = instanceDOM.primaryInstanceEvaluator;
@@ -191,7 +173,11 @@ export class Root
 
 		this.state = state;
 		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(state.currentState, childrenState);
+		this.currentState = materializeCurrentStateChildren(
+			this.scope,
+			state.currentState,
+			childrenState
+		);
 
 		const contextNode = instanceDOM.xformDocument.createElement(definition.nodeName);
 
@@ -203,32 +189,6 @@ export class Root
 		this.languages = languages;
 
 		childrenState.setChildren(buildChildren(this));
-	}
-
-	/**
-	 * Waits until form state is fully initialized.
-	 *
-	 * As much as possible, all instance state computations are implemented so
-	 * that they complete synchronously.
-	 *
-	 * There is currently one exception: because instance nodes may form
-	 * computation dependencies into their descendants as well as their ancestors,
-	 * there is an allowance **during form initialization only** to account for
-	 * this chicken/egg scenario. Note that this allowance is intentionally,
-	 * strictly limited: if form state initialization is not resolved within a
-	 * single microtask tick we throw/reject.
-	 *
-	 * All subsequent computations are always performed synchronously (and we will
-	 * use tests to validate this, by utilizing the synchronously returned `Root`
-	 * state from client-facing write interfaces).
-	 */
-	async formStateInitialized(): Promise<Error | null> {
-		return this.initializationFailure;
-	}
-
-	// InstanceNode
-	protected computeReference(_parent: null, definition: RootDefinition): string {
-		return definition.nodeset;
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

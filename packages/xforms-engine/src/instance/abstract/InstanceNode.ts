@@ -1,6 +1,5 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
-import { createSignal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
@@ -41,10 +40,6 @@ type AnyInstanceNode = InstanceNode<
 	any
 >;
 
-interface InitializedStateOptions<T, K extends keyof T> {
-	readonly uninitializedFallback: T[K];
-}
-
 /**
  * This type has the same effect as {@link MaterializedChildren}, but abstractly
  * handles leaf node types as well.
@@ -62,6 +57,21 @@ export type InstanceNodeCurrentState<
 				: null;
 		};
 
+interface ComputableReferenceNode {
+	readonly parent: AnyParentNode | null;
+	readonly definition: AnyNodeDefinition;
+}
+
+type ComputeInstanceNodeReference = <This extends ComputableReferenceNode>(
+	this: This,
+	parent: This['parent'],
+	definition: This['definition']
+) => string;
+
+export interface InstanceNodeOptions {
+	readonly computeReference?: () => string;
+}
+
 export abstract class InstanceNode<
 		Definition extends AnyNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,61 +80,32 @@ export abstract class InstanceNode<
 	>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
-	protected readonly isStateInitialized: Accessor<boolean>;
-	protected readonly initializationFailure: Promise<Error | null>;
-
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
 
 	/**
-	 * Provides a generalized mechanism for accessing a reactive state value
-	 * during a node's construction, while {@link engineState} is still being
-	 * defined and thus isn't assigned.
-	 *
-	 * The fallback value specified in {@link options} will be returned on access
-	 * until {@link isStateInitialized} returns true. This ensures:
-	 *
-	 * - a value of the expected type will be available
-	 * - any read access will become reactive to the actual state, once it has
-	 *   been initialized and {@link engineState} is assigned
-	 *
-	 * @todo This is one among several chicken/egg problems encountered trying to
-	 * support state initialization in which some aspects of the state derive from
-	 * other aspects of it. It would be nice to dispense with this entirely. But
-	 * if it must persist, we should also consider replacing the method with a
-	 * direct accessor once state initialization completes, so the initialized
-	 * check is only called until it becomes impertinent.
+	 * @package Exposed on every node type to facilitate inheritance, as well as
+	 * conditional behavior for value nodes.
 	 */
-	protected getInitializedState<K extends keyof EngineState<Spec>>(
-		key: K,
-		options: InitializedStateOptions<EngineState<Spec>, K>
-	): EngineState<Spec>[K] {
-		if (this.isStateInitialized()) {
-			return this.engineState[key];
-		}
-
-		return options.uninitializedFallback;
-	}
+	abstract readonly hasReadonlyAncestor: Accessor<boolean>;
 
 	/**
 	 * @package Exposed on every node type to facilitate inheritance, as well as
 	 * conditional behavior for value nodes.
 	 */
-	get isReadonly(): boolean {
-		return (this as AnyInstanceNode).getInitializedState('readonly', {
-			uninitializedFallback: false,
-		});
-	}
+	abstract readonly isReadonly: Accessor<boolean>;
 
 	/**
 	 * @package Exposed on every node type to facilitate inheritance, as well as
 	 * conditional behavior for value nodes.
 	 */
-	get isRelevant(): boolean {
-		return (this as AnyInstanceNode).getInitializedState('relevant', {
-			uninitializedFallback: true,
-		});
-	}
+	abstract readonly hasNonRelevantAncestor: Accessor<boolean>;
+
+	/**
+	 * @package Exposed on every node type to facilitate inheritance, as well as
+	 * conditional behavior for value nodes.
+	 */
+	abstract readonly isRelevant: Accessor<boolean>;
 
 	// BaseNode: identity
 	readonly nodeId: NodeID;
@@ -145,38 +126,40 @@ export abstract class InstanceNode<
 	// EvaluationContext *and* Subscribable: node-specific
 	readonly scope: ReactiveScope;
 
+	readonly computeReference: ComputeInstanceNodeReference;
+
+	protected readonly computeChildStepReference: ComputeInstanceNodeReference = (
+		parent,
+		definition
+	): string => {
+		if (parent == null) {
+			throw new Error(
+				'Cannot compute child step reference of node without parent (was this called from `Root`?)'
+			);
+		}
+
+		return `${parent.contextReference()}/${definition.nodeName}`;
+	};
+
 	// EvaluationContext: node-specific
-	get contextReference(): string {
+	readonly contextReference = (): string => {
 		return this.computeReference(this.parent, this.definition);
-	}
+	};
 
 	abstract readonly contextNode: Element;
 
 	constructor(
 		readonly engineConfig: InstanceConfig,
 		readonly parent: AnyParentNode | null,
-		readonly definition: Definition
+		readonly definition: Definition,
+		options?: InstanceNodeOptions
 	) {
+		this.computeReference = options?.computeReference ?? this.computeChildStepReference;
+
 		this.scope = createReactiveScope();
 		this.engineConfig = engineConfig;
 		this.nodeId = declareNodeID(engineConfig.createUniqueId());
 		this.definition = definition;
-
-		const checkStateInitialized = () => this.engineState != null;
-		const [isStateInitialized, setStateInitialized] = createSignal(checkStateInitialized());
-
-		this.isStateInitialized = isStateInitialized;
-
-		this.initializationFailure = new Promise<Error | null>((resolve) => {
-			queueMicrotask(() => {
-				if (checkStateInitialized()) {
-					setStateInitialized(true);
-					resolve(null);
-				} else {
-					resolve(new Error('Node state was never initialized'));
-				}
-			});
-		});
 	}
 
 	/**
@@ -191,18 +174,13 @@ export abstract class InstanceNode<
 	 */
 	abstract getChildren(this: AnyInstanceNode): readonly AnyChildNode[];
 
-	protected abstract computeReference(
-		parent: AnyInstanceNode | null,
-		definition: Definition
-	): string;
-
-	getNodeByReference(
+	getNodesByReference(
 		this: AnyNode,
 		visited: WeakSet<AnyNode>,
 		dependencyReference: string
-	): SubscribableDependency | null {
+	): readonly SubscribableDependency[] {
 		if (visited.has(this)) {
-			return null;
+			return [];
 		}
 
 		visited.add(this);
@@ -210,39 +188,37 @@ export abstract class InstanceNode<
 		const { nodeset } = this.definition;
 
 		if (dependencyReference === nodeset) {
-			return this;
+			if (this.nodeType === 'repeat-instance') {
+				return [this.parent];
+			}
+
+			return [this];
 		}
 
 		if (
 			dependencyReference.startsWith(`${nodeset}/`) ||
 			dependencyReference.startsWith(`${nodeset}[`)
 		) {
-			const children = this.getChildren();
-
-			if (children == null) {
-				return null;
-			}
-
-			for (const child of children) {
-				const dependency = child.getNodeByReference(visited, dependencyReference);
-
-				if (dependency != null) {
-					return dependency;
-				}
-			}
+			return this.getChildren().flatMap((child) => {
+				return child.getNodesByReference(visited, dependencyReference);
+			});
 		}
 
-		return this.parent?.getNodeByReference(visited, dependencyReference) ?? null;
+		return this.parent?.getNodesByReference(visited, dependencyReference) ?? [];
 	}
 
 	// EvaluationContext: node-relative
-	getSubscribableDependencyByReference(
+	getSubscribableDependenciesByReference(
 		this: AnyNode,
 		reference: string
-	): SubscribableDependency | null {
-		const visited = new WeakSet<SubscribableDependency>();
+	): readonly SubscribableDependency[] {
+		if (this.nodeType === 'root') {
+			const visited = new WeakSet<AnyNode>();
 
-		return this.getNodeByReference(visited, reference);
+			return this.getNodesByReference(visited, reference);
+		}
+
+		return this.root.getSubscribableDependenciesByReference(reference);
 	}
 
 	// SubscribableDependency
