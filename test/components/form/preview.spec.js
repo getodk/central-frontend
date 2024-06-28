@@ -22,7 +22,7 @@ describe('FormPreview', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
     return load('/projects/1/forms/a/preview').testRequests([
       { url: '/v1/projects/1/forms/a', extended: true },
-      { url: '/v1/projects/1/forms/a/versions/v1.xml' }
+      { url: '/v1/projects/1/forms/a.xml' }
     ]);
   });
 
@@ -51,6 +51,6 @@ describe('FormPreview', () => {
 
     const app = await load('/projects/1/forms/a/preview').complete();
 
-    should(app.findComponent({ name: 'Navbar' })).not.be.null();
+    app.findComponent({ name: 'Navbar' }).exists().should.be.false();
   });
 });

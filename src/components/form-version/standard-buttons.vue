@@ -14,10 +14,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <span class="form-version-standard-buttons">
     <enketo-preview :form-version="version"/>
-    <RouterLink class="btn btn-default btn-web-form" :to="formPath('preview')" target="_blank">
-      <span class="icon-eye"></span>
-      {{ $t('action.newPreview') }}
-    </RouterLink>
+    <router-link
+      class="btn btn-default btn-web-form"
+      :to="version.publishedAt != null ? formPath('preview') : formPath('draft/preview')"
+      target="_blank">
+      <span class="icon-eye"></span>{{ $t('action.newPreview') }}
+    </router-link>
     <form-version-def-dropdown :version="version"
       @view-xml="$emit('view-xml')"/>
   </span>

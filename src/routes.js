@@ -517,11 +517,28 @@ const routes = [
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/preview',
     component: 'FormPreview',
-    props: true,
+    props: (route) => ({
+      ...route.params,
+      draft: false
+    }),
     loading: 'page',
     meta: {
       standalone: true,
       title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId]
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/preview',
+    name: 'DraftFormPreview',
+    component: 'FormPreview',
+    props: (route) => ({
+      ...route.params,
+      draft: true
+    }),
+    loading: 'page',
+    meta: {
+      standalone: true,
+      title: () => [`✨ ${i18n.t('resource.formPreview')}`, `${form.nameOrId} (${i18n.t('resource.draft')})`]
     }
   }),
   asyncRoute({

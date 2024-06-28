@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
     <div v-if="routerReady && !$route.meta.standalone" v-document-color class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
-    <template v-if="$route.meta.standalone">
+    <template v-else-if="$route.meta.standalone">
       <router-view/>
     </template>
     <div id="tooltips"></div>

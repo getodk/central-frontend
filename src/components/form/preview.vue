@@ -1,10 +1,21 @@
+<!--
+Copyright 2024 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+
 <template>
       <template v-if="formVersionXml.dataExists">
         <OdkWebForm :form-xml="formVersionXml.data" @submit="handleSubmit"/>
       </template>
 
-      <modal id="owf-submission-preview" :state="previewState" hideable backdrop
-          @hide="previewState = false">
+      <modal v-bind="previewModal" hideable backdrop @hide="previewModal.hide()">
           <template #title>{{ $t('webFormPreview.submissionModal.title') }}</template>
           <template #body>
             {{ $t('webFormPreview.submissionModal.body') }}
@@ -18,13 +29,14 @@
 </template>
 
 <script setup>
-import { ref, createApp, getCurrentInstance } from 'vue';
+import { createApp, getCurrentInstance } from 'vue';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
 import useForm from '../../request-data/form';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import Modal from '../modal.vue';
+import { modalData } from '../../util/reactivity';
 
 // Install WebFormsPlugin in the component instead of installing it at the
 // application level so that @getodk/web-forms package is not loaded for every
@@ -47,38 +59,31 @@ const props = defineProps({
   xmlFormId: {
     type: String,
     required: true
+  },
+  draft: {
+    type: Boolean,
+    required: true
   }
 });
 
 const { form, formVersionXml } = useForm();
 
-const previewState = ref(false);
-
-const defPath = (extension) => {
-  const { projectId, xmlFormId, publishedAt } = form;
-
-  return publishedAt != null
-    ? apiPaths.formVersionDef(projectId, xmlFormId, form.version, extension)
-    : apiPaths.formDraftDef(projectId, xmlFormId, extension);
-};
+const previewModal = modalData();
 
 const fetchForm = () => {
-  const url = apiPaths.form(props.projectId, props.xmlFormId);
-  form.request({ url, extended: true })
-    .then(() => {
-      formVersionXml.request({ url: defPath('.xml') });
-    })
+  form.request({ url: apiPaths.form(props.projectId, props.xmlFormId), extended: true })
+    .then(() => formVersionXml.request({ url: apiPaths.formXml(props.projectId, props.xmlFormId, props.draft) }))
     .catch(noop);
 };
 
 fetchForm();
 
 const handleSubmit = () => {
-  previewState.value = true;
+  previewModal.show();
 };
 
 const closeModal = () => {
-  previewState.value = false;
+  previewModal.hide();
 };
 </script>
 
