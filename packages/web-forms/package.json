@@ -61,6 +61,7 @@
     "ramda": "^0.30.0",
     "sass": "^1.77.2",
     "vite": "^5.2.11",
+    "vite-plugin-css-injected-by-js": "^3.5.1",
     "vitest": "^1.6.0",
     "vue": "3.3.4"
   },
