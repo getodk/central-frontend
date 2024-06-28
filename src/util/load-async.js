@@ -123,6 +123,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-submissions" */
     '../components/form/submissions.vue'
   )))
+  .set('FormPreview', loader(() => import(
+    /* webpackChunkName: "component-form-preview" */
+    '../components/form/preview.vue'
+  )))
   .set('FormVersionList', loader(() => import(
     /* webpackChunkName: "component-form-version-list" */
     '../components/form-version/list.vue'

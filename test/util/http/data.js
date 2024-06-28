@@ -6,6 +6,7 @@ import useDatasets from '../../../src/request-data/datasets';
 
 import testData from '../../data';
 import { mockResponse } from '../axios';
+import simpleXml from '../../data/simple';
 
 // The names of the following properties correspond to requestData resources.
 const responseDefaults = {
@@ -80,6 +81,10 @@ const responsesByComponent = {
   }),
   FormOverview: componentResponses({
     publishedAttachments: () => testData.standardFormAttachments.sorted()
+  }),
+  FormPreview: componentResponses({
+    form: () => testData.extendedForms.last(),
+    xml: () => mockResponse.of(simpleXml)
   }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormSubmissions: componentResponses({
