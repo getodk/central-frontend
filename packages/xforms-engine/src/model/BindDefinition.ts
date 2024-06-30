@@ -3,6 +3,7 @@ import { bindDataType } from '../XFormDataType.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import { DependencyContext } from '../expression/DependencyContext.ts';
 import type { DependentExpression } from '../expression/DependentExpression.ts';
+import { MessageDefinition } from '../parse/text/MessageDefinition.ts';
 import { BindComputation } from './BindComputation.ts';
 import type { BindElement } from './BindElement.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
@@ -25,15 +26,16 @@ export class BindDefinition extends DependencyContext {
 	/**
 	 * Diverges from {@link https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/dag.md | JavaRosa's}, which excludes `constraint` expressions. We compute `constraint` dependencies like the other <bind> computation expressions, but explicitly ignore self-references (this is currently handled by {@link BindComputation}, via its {@link DependentExpression} parent class).
 	 */
-	readonly constraint: BindComputation<'constraint'> & DependentExpression<'boolean'>;
+	readonly constraint: BindComputation<'constraint'>;
+
+	readonly constraintMsg: MessageDefinition<'constraintMsg'> | null;
+	readonly requiredMsg: MessageDefinition<'requiredMsg'> | null;
 
 	// TODO: it is unclear whether this will need to be supported.
 	// https://github.com/getodk/collect/issues/3758 mentions deprecation.
 	readonly saveIncomplete: BindComputation<'saveIncomplete'>;
 
-	// TODO: these are deferred just to put off sharing namespace stuff
-	// readonly requiredMsg: string | null;
-	// readonly constraintMsg: string | null;
+	// TODO: these are deferred until prioritized
 	// readonly preload: string | null;
 	// readonly preloadParams: string | null;
 	// readonly 'max-pixels': string | null;
@@ -88,9 +90,9 @@ export class BindDefinition extends DependencyContext {
 		this.required = BindComputation.forExpression(this, 'required');
 		this.constraint = BindComputation.forExpression(this, 'constraint');
 		this.saveIncomplete = BindComputation.forExpression(this, 'saveIncomplete');
+		this.constraintMsg = MessageDefinition.from(this, 'constraintMsg');
+		this.requiredMsg = MessageDefinition.from(this, 'requiredMsg');
 
-		// this.requiredMsg = BindComputation.forExpression(this, 'requiredMsg');
-		// this.constraintMsg = BindComputation.forExpression(this, 'constraintMsg');
 		// this.preload = BindComputation.forExpression(this, 'preload');
 		// this.preloadParams = BindComputation.forExpression(this, 'preloadParams');
 		// this['max-pixels'] = BindComputation.forExpression(this, 'max-pixels');
