@@ -1,6 +1,7 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import type { Accessor } from 'solid-js';
 import type { RepeatRangeNode, RepeatRangeNodeAppearances } from '../client/RepeatRangeNode.ts';
+import type { TextRange } from '../client/TextRange.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createComputedExpression } from '../lib/reactivity/createComputedExpression.ts';
@@ -21,7 +22,6 @@ import type { GeneralParentNode } from './hierarchy.ts';
 import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
-import type { TextRange } from './text/TextRange.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;

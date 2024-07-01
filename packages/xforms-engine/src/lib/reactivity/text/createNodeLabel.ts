@@ -1,6 +1,6 @@
 import { type Accessor } from 'solid-js';
+import type { TextRange } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
-import { TextRange } from '../../../instance/text/TextRange.ts';
 import type { AnyNodeDefinition } from '../../../model/NodeDefinition.ts';
 import { createTextRange } from './createTextRange.ts';
 
@@ -10,7 +10,9 @@ export const createNodeLabel = (
 ): Accessor<TextRange<'label'> | null> => {
 	const labelDefinition = definition.bodyElement?.label ?? null;
 
-	return createTextRange(context, 'label', labelDefinition, {
-		fallbackValue: null,
-	});
+	if (labelDefinition == null) {
+		return () => null;
+	}
+
+	return createTextRange(context, 'label', labelDefinition);
 };

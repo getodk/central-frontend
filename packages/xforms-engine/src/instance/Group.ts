@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { GroupDefinition, GroupNode, GroupNodeAppearances } from '../client/GroupNode.ts';
-import type { TextRange } from '../index.ts';
+import type { TextRange } from '../client/TextRange.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';

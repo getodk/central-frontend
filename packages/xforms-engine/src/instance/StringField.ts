@@ -2,7 +2,7 @@ import { identity } from '@getodk/common/lib/identity.ts';
 import type { Accessor } from 'solid-js';
 import type { InputDefinition } from '../body/control/InputDefinition.ts';
 import type { StringNode, StringNodeAppearances } from '../client/StringNode.ts';
-import type { TextRange } from '../index.ts';
+import type { TextRange } from '../client/TextRange.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';

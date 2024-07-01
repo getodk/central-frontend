@@ -5,7 +5,7 @@ import type {
 	RepeatInstanceNode,
 	RepeatInstanceNodeAppearances,
 } from '../client/RepeatInstanceNode.ts';
-import type { TextRange } from '../index.ts';
+import type { TextRange } from '../client/TextRange.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
