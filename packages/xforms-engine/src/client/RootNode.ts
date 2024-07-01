@@ -3,6 +3,7 @@ import type { RootDefinition } from '../model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
+import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
 	/**
@@ -47,6 +48,7 @@ export interface RootNode extends BaseNode {
 	readonly root: RootNode;
 	readonly parent: null;
 	readonly currentState: RootNodeState;
+	readonly validationState: AncestorNodeValidationState;
 
 	/**
 	 * @todo as with {@link RootNodeState.activeLanguage}, this is the most
