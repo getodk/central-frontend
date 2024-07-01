@@ -1,8 +1,9 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import { DependencyContext } from '../expression/DependencyContext.ts';
+import type { HintDefinition } from '../parse/text/HintDefinition.ts';
+import type { ItemLabelDefinition } from '../parse/text/ItemLabelDefinition.ts';
+import type { LabelDefinition } from '../parse/text/LabelDefinition.ts';
 import type { BodyElementParentContext } from './BodyDefinition.ts';
-import type { HintDefinition } from './text/HintDefinition.ts';
-import type { LabelDefinition } from './text/LabelDefinition.ts';
 
 /**
  * These category names roughly correspond to each of the ODK XForms spec's
@@ -22,7 +23,7 @@ export abstract class BodyElementDefinition<Type extends string> extends Depende
 	abstract readonly category: BodyElementCategory;
 	abstract readonly type: Type;
 	readonly hint: HintDefinition | null = null;
-	readonly label: LabelDefinition | null = null;
+	readonly label: ItemLabelDefinition | LabelDefinition | null = null;
 
 	readonly reference: string | null = null;
 	readonly parentReference: string | null;

@@ -103,7 +103,9 @@ describe('ModelDefinition', () => {
 			index: 0,
 			expected: {
 				type: 'input',
-				label: { children: [expect.anything()] },
+				label: {
+					role: 'label',
+				},
 			},
 		},
 		{

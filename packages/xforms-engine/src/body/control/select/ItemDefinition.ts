@@ -1,14 +1,14 @@
 import { getValueElement, type ItemElement } from '../../../lib/dom/query.ts';
+import { ItemLabelDefinition } from '../../../parse/text/ItemLabelDefinition.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
 import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
-import { LabelDefinition } from '../../text/LabelDefinition.ts';
 import type { AnySelectDefinition } from './SelectDefinition.ts';
 
 export class ItemDefinition extends BodyElementDefinition<'item'> {
 	override readonly category = 'support';
 	override readonly type = 'item';
 
-	override readonly label: LabelDefinition | null;
+	override readonly label: ItemLabelDefinition | null;
 	readonly value: string;
 
 	constructor(
@@ -25,7 +25,7 @@ export class ItemDefinition extends BodyElementDefinition<'item'> {
 
 		super(form, parent, element);
 
-		this.label = LabelDefinition.forItem(form, this);
+		this.label = ItemLabelDefinition.from(form, this);
 		this.value = value;
 	}
 }

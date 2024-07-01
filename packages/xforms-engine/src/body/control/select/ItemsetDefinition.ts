@@ -1,7 +1,7 @@
 import { getValueElement, type ItemsetElement } from '../../../lib/dom/query.ts';
+import { ItemLabelDefinition } from '../../../parse/text/ItemLabelDefinition.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
 import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
-import { LabelDefinition } from '../../text/LabelDefinition.ts';
 import { ItemsetNodesetExpression } from './ItemsetNodesetExpression.ts';
 import { ItemsetValueExpression } from './ItemsetValueExpression.ts';
 import type { AnySelectDefinition } from './SelectDefinition.ts';
@@ -11,7 +11,7 @@ export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 	readonly type = 'itemset';
 
 	override readonly reference: string;
-	override readonly label: LabelDefinition | null;
+	override readonly label: ItemLabelDefinition | null;
 
 	readonly nodes: ItemsetNodesetExpression;
 	readonly value: ItemsetValueExpression;
@@ -31,6 +31,6 @@ export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 		this.reference = nodesetExpression;
 		this.nodes = new ItemsetNodesetExpression(this, nodesetExpression);
 		this.value = new ItemsetValueExpression(this, valueExpression);
-		this.label = LabelDefinition.forItemset(form, this);
+		this.label = ItemLabelDefinition.from(form, this);
 	}
 }

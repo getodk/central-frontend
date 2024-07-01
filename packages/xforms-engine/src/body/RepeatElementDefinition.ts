@@ -1,11 +1,11 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { LabelDefinition } from '../parse/text/LabelDefinition.ts';
 import type { BodyElementDefinitionArray, BodyElementParentContext } from './BodyDefinition.ts';
 import { BodyDefinition } from './BodyDefinition.ts';
 import { BodyElementDefinition } from './BodyElementDefinition.ts';
 import type { StructureElementAppearanceDefinition } from './appearance/structureElementAppearanceParser.ts';
 import { structureElementAppearanceParser } from './appearance/structureElementAppearanceParser.ts';
-import { LabelDefinition } from './text/LabelDefinition.ts';
 
 export class RepeatElementDefinition extends BodyElementDefinition<'repeat'> {
 	static override isCompatible(localName: string): boolean {
