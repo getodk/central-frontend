@@ -1161,9 +1161,18 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		 * This test is clearly a valuable exercise of `required` validation logic,
 		 * but it seems tangential to the description.
 		 *
-		 * A supplemental test is added below, exercising the checks for cleared values independent of the validation checks.
+		 * A supplemental test is added below, exercising the checks for cleared
+		 * values independent of the validation checks.
 		 *
-		 * This test currently fails pending implementation of validation.
+		 * This test currently fails pending full support for updating select nodes'
+		 * selection values when their itemset options are filtered.
+		 *
+		 * The validation assertions have been (temporarily?) refined to check only
+		 * the **reference** of expected invalid nodes, rather than comparing to the
+		 * full node object. This is necessary to prevent slow and expensive logging
+		 * of the full node structure (really the full instance tree, as the nodes
+		 * reference `root`) on assertion failure. The original assertions are left
+		 * commented out, so they can be restored when the test passes.
 		 */
 		it.fails('should clear [and validate] values at levels 2 and 3', async () => {
 			const scenario = await Scenario.init('three-level-cascading-select.xml');
@@ -1179,7 +1188,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
 			let validate = scenario.getValidationOutcome();
 
-			expect(validate.failedPrompt).toBe(scenario.indexOf('/data/level2'));
+			// expect(validate.failedPrompt).toBe(scenario.indexOf('/data/level2'));
+			expect(validate.failedPrompt?.node?.currentState.reference).toBe('/data/level2');
 			expect(validate.outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
 
 			// If we set level2 to "aa", form validation passes. Currently, clearing a choice only updates filter expressions
@@ -1190,7 +1200,8 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
 			validate = scenario.getValidationOutcome();
 
-			expect(validate.failedPrompt).toBe(scenario.indexOf('/data/level3'));
+			// expect(validate.failedPrompt).toBe(scenario.indexOf('/data/level3'));
+			expect(validate.failedPrompt?.node?.currentState.reference).toBe('/data/level3');
 			expect(validate.outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
 		});
 

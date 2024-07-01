@@ -36,7 +36,7 @@ import {
 describe('TriggerableDagTest.java', () => {
 	describe('//region Required and constraint', () => {
 		describe('constraints of fields that are empty', () => {
-			it.fails('[is] are always satisfied', async () => {
+			it('[is] are always satisfied', async () => {
 				const scenario = await Scenario.init(
 					'Some form',
 					html(
@@ -62,7 +62,7 @@ describe('TriggerableDagTest.java', () => {
 		});
 
 		describe('empty required fields', () => {
-			it.fails('make[s] form validation fail', async () => {
+			it('make[s] form validation fail', async () => {
 				const scenario = await Scenario.init(
 					'Some form',
 					html(
@@ -86,7 +86,7 @@ describe('TriggerableDagTest.java', () => {
 		});
 
 		describe('constraint violations and form finalization', () => {
-			it.fails('[has no clear BDD-ish description equivalent]', async () => {
+			it('[has no clear BDD-ish description equivalent]', async () => {
 				const scenario = await Scenario.init(
 					'Some form',
 					html(
@@ -144,29 +144,50 @@ describe('TriggerableDagTest.java', () => {
  */
 describe('`constraint`', () => {
 	describe('FormDefTest.java', () => {
+		interface PrimaryInstanceIdOptions {
+			readonly temporarilyIncludePrimaryInstanceId: boolean;
+		}
+
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * - From Slack discussion, there's probably no meaning to this fixture
-		 *   having a `.xhtml` suffix. Rename to `.xml` for consistency? (Would be
-		 *   helpful for find-in-project filtering).
-		 *
-		 * - Currently fails on form init, as the primary instance does not have an
-		 *   `id` attribute. Deferring accommodation of that as the test is also
-		 *   expected to fail pending `constraint` feature support.
+		 * Fails on form init, as the primary instance does not have an `id`
+		 * attribute. Parameterized to demonstrate test is now passing otherwise.
 		 */
-		it.fails('enforces `constraint`s defined [on] in a field', async () => {
-			const scenario = await Scenario.init(r('ImageSelectTester.xhtml'));
+		describe.each<PrimaryInstanceIdOptions>([
+			{ temporarilyIncludePrimaryInstanceId: false },
+			{ temporarilyIncludePrimaryInstanceId: true },
+		])(
+			'temporarily include primary instance id: $temporarilyIncludePrimaryInstanceId',
+			({ temporarilyIncludePrimaryInstanceId }) => {
+				let testFn: typeof it | typeof it.fails;
 
-			scenario.next('/icons/id');
-			scenario.next('/icons/name');
-			scenario.next('/icons/find-mirc');
-			scenario.next('/icons/non-local');
-			scenario.next('/icons/consTest');
+				if (temporarilyIncludePrimaryInstanceId) {
+					testFn = it;
+				} else {
+					testFn = it.fails;
+				}
 
-			expect(scenario.answer('10')).toHaveValidityStatus(AnswerResult.CONSTRAINT_VIOLATED);
-			expect(scenario.answer('13')).toHaveValidityStatus(AnswerResult.OK);
-		});
+				testFn('enforces `constraint`s defined [on] in a field', async () => {
+					const scenario = await Scenario.init(
+						r(
+							temporarilyIncludePrimaryInstanceId
+								? 'ImageSelectTester-alt.xml'
+								: 'ImageSelectTester.xml'
+						)
+					);
+
+					scenario.next('/icons/id');
+					scenario.next('/icons/name');
+					scenario.next('/icons/find-mirc');
+					scenario.next('/icons/non-local');
+					scenario.next('/icons/consTest');
+
+					expect(scenario.answer('10')).toHaveValidityStatus(AnswerResult.CONSTRAINT_VIOLATED);
+					expect(scenario.answer('13')).toHaveValidityStatus(AnswerResult.OK);
+				});
+			}
+		);
 	});
 
 	/**
@@ -193,6 +214,11 @@ describe('`constraint`', () => {
 	 *   mechanism for the assertion as-ported. (It still has an `unknown` return
 	 *   type, which we can make more specific if we agree to introduce such a
 	 *   substantial difference in the {@link Scenario} API.)
+	 *
+	 * - Test exercises (de)serialization (which we do not support), as well as
+	 *   validation. The former is the nature of failure as ported. An alternate
+	 *   test has been added below demonstrating that validation otherwise works
+	 *   as expected.
 	 */
 	it.fails('enforces `constraint`s when [an] instance is deserialized', async () => {
 		const formDef = html(
@@ -227,6 +253,35 @@ describe('`constraint`', () => {
 		expect(restored.answerOf('/data/a')).toEqualAnswer(stringAnswer('0000000000'));
 
 		result = restored.answer('00000');
+
+		expect(result).toHaveValidityStatus(AnswerResult.CONSTRAINT_VIOLATED);
+	});
+
+	it('enforces an arbitrary regex `constraint` expression (alternate to test above)', async () => {
+		const formDef = html(
+			head(
+				title('Some form'),
+				model(
+					mainInstance(t('data id="some-form"', t('a'))),
+					bind('/data/a').type('string').constraint("regex(.,'[0-9]{10}')")
+				)
+			),
+			body(input('/data/a'))
+		);
+
+		const scenario = await Scenario.init('Some form', formDef);
+
+		scenario.next('/data/a');
+
+		let result = scenario.answer('00000');
+
+		expect(result).toHaveValidityStatus(AnswerResult.CONSTRAINT_VIOLATED);
+
+		result = scenario.answer('0000000000');
+
+		expect(result).toHaveValidityStatus(AnswerResult.OK);
+
+		result = scenario.answer('00000');
 
 		expect(result).toHaveValidityStatus(AnswerResult.CONSTRAINT_VIOLATED);
 	});

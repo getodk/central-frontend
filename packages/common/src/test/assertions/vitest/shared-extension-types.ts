@@ -1,6 +1,7 @@
 import type { SyncExpectationResult } from 'vitest';
 import type { JSONValue } from '../../../../types/JSONValue.ts';
 import type { Primitive } from '../../../../types/Primitive.ts';
+import type { ArbitraryConditionExpectExtension } from './ArbitraryConditionExpectExtension.ts';
 import type { AsymmetricTypedExpectExtension } from './AsymmetricTypedExpectExtension.ts';
 import type { StaticConditionExpectExtension } from './StaticConditionExpectExtension.ts';
 import type { SymmetricTypedExpectExtension } from './SymmetricTypedExpectExtension.ts';
@@ -67,7 +68,10 @@ export type DeriveStaticVitestExpectExtension<
 > = {
 	[K in keyof Implementation]:
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		Implementation[K] extends StaticConditionExpectExtension<any, any>
+		Implementation[K] extends ArbitraryConditionExpectExtension<any>
+			? () => VitestParameterizedReturn
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		: Implementation[K] extends StaticConditionExpectExtension<any, any>
 			? () => VitestParameterizedReturn
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		: Implementation[K] extends TypedExpectExtension<any, infer Expected>

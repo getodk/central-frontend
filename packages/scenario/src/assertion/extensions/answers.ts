@@ -1,3 +1,4 @@
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
 import {
 	AsymmetricTypedExpectExtension,
@@ -9,11 +10,14 @@ import {
 import { expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
+import type { ValueNode } from '../../answer/ValueNodeAnswer.ts';
+import { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { AnswerResult } from '../../jr/Scenario.ts';
-import { ValidationImplementationPendingError } from '../../jr/validation/ValidationImplementationPendingError.ts';
 import { assertString } from './shared-type-assertions.ts';
 
 const assertComparableAnswer = instanceAssertion(ComparableAnswer);
+
+const assertValueNodeAnswer = instanceAssertion<ValueNodeAnswer<ValueNode>>(ValueNodeAnswer);
 
 const assertExpectedApproximateUOMAnswer = instanceAssertion(ExpectedApproximateUOMAnswer);
 
@@ -64,10 +68,30 @@ const answerExtensions = extendExpect(expect, {
 	 *   the spec.
 	 */
 	toHaveValidityStatus: new AsymmetricTypedExpectExtension(
-		assertComparableAnswer,
+		assertValueNodeAnswer,
 		assertAnswerResult,
-		(_actual, _expected) => {
-			return new ValidationImplementationPendingError();
+		(actual, expected) => {
+			const { condition } = actual.node.validationState.violation ?? {};
+			let pass: boolean;
+
+			switch (expected) {
+				case AnswerResult.CONSTRAINT_VIOLATED:
+					pass = condition === 'constraint';
+					break;
+
+				case AnswerResult.REQUIRED_BUT_EMPTY:
+					pass = condition === 'required';
+					break;
+
+				case AnswerResult.OK:
+					pass = condition == null;
+					break;
+
+				default:
+					return new UnreachableError(expected);
+			}
+
+			return pass || new InspectableComparisonError(condition, expected, 'be');
 		}
 	),
 
