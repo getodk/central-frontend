@@ -28,8 +28,8 @@ const label = computed(() => {
 
 	// Use RepeatRangeNode label if it's there
 	// TODO/sk: use state.label.asString
-	if(props.instance.parent.definition.bodyElement.label?.children[0]?.stringValue){
-		return `${props.instance.parent.definition.bodyElement.label?.children[0].stringValue}`;
+	if(props.instance.parent.definition.bodyElement.label?.chunks[0]?.stringValue){
+		return `${props.instance.parent.definition.bodyElement.label?.chunks[0].stringValue}`;
 	}
 
 	return `Repeat Item`;
