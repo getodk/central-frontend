@@ -16,7 +16,6 @@ import {
 import { describe, expect, it } from 'vitest';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
-import type { UntypedAnswer } from '../src/answer/UntypedAnswer.ts';
 import { Scenario, getRef } from '../src/jr/Scenario.ts';
 import { XPathPathExpr } from '../src/jr/xpath/XPathPathExpr.ts';
 import { XPathPathExprEval } from '../src/jr/xpath/XPathPathExprEval.ts';
@@ -29,26 +28,7 @@ describe('Relevance - TriggerableDagTest.java', () => {
 	 */
 
 	describe('non-relevance', () => {
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * - This fails because the `relevant` expressions produce node-sets, which
-		 *   will always evaluate to `true` when those nodes are present (which they
-		 *   always are in this test).
-		 *
-		 * - Those node-sets evaluate to nodes which are bound with `<bind
-		 *   type="boolean" />`, which strongly suggests that a bind's data type
-		 *   should influence casting semantics in expressions like `relevant`, and
-		 *   perhaps more generally.
-		 *
-		 * - There are some unaddressed casting considerations which **might be**
-		 *   implied by this, discussed in greater detail in porting notes on
-		 *   {@link UntypedAnswer}.
-		 *
-		 * Two additional variants of this test are added immediately following this
-		 * one, both briefly exploring some of the contours of the current failure.
-		 */
-		it.fails('is inherited from ancestors', async () => {
+		it('is inherited from ancestors', async () => {
 			const scenario = await Scenario.init(
 				'Some form',
 				html(
@@ -102,23 +82,13 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		 * **PORTING NOTES** (first variant of ported test above)
 		 *
 		 * This test is identical to the test above, except that both `relevant`
-		 * expressions are wrapped in a `string()` XPath call. The test still fails,
-		 * but notably the failing assertion comes later:
-		 *
-		 * In the original test, the first assertion fails because a `node-set`
-		 * expression which resolves to any node will always cast to `true`. When
-		 * the value is cast to a string, the node's text value is consulted in
-		 * casting, producing `false` when empty.
-		 *
-		 * Ultimately, the test fails when checking restoration of the `false`
-		 * state. This is because the `false` value is presently being persisted to
-		 * the primary instance as the string `"0"` (which, as I recall, is the
-		 * expected serialization of boolean `false`). Since the `relevant`
-		 * expression itself produces a string value, and with the engine still
-		 * following strict XPath casting semantics, the value `"0"` is also cast to
-		 * boolean `true` (again, consistent with XPath semantics).
+		 * expressions are wrapped in a `string()` XPath call. This test was
+		 * originally introduced to demonstrate different behavior of boolean
+		 * casting logic depending on the expression's result type. This distinction
+		 * no longer exists, but the alternate test is preserved to help us catch
+		 * potential regressions in boolean casting logic.
 		 */
-		it.fails('is inherited from ancestors (variant #1: node-set semantics -> string)', async () => {
+		it('is inherited from ancestors (variant #1: node-set semantics -> string)', async () => {
 			const scenario = await Scenario.init(
 				'Some form',
 				html(
@@ -172,10 +142,10 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		 * **PORTING NOTES** (second variant)
 		 *
 		 * This variant of the ported JavaRosa test again casts the `relevant`
-		 * expressions, this time to `number`. Here we see the test passes! This
-		 * variant is included because it demonstrates all of the findings above, by
-		 * showing how strict XPath casting semantics interact with the test form's
-		 * expected XForms semantics.
+		 * expressions, this time to `number`. Like the previous variant, this test
+		 * was originally introduced to demonstrate differences in casting behavior
+		 * depending on the expression's result type. It is likewise preserved to
+		 * help us avoid casting-related regressions in the future.
 		 */
 		it('is inherited from ancestors (variant #2: node-set semantics -> number)', async () => {
 			const scenario = await Scenario.init(
