@@ -1,5 +1,6 @@
 import { type Accessor } from 'solid-js';
 import type { SubtreeDefinition, SubtreeNode } from '../client/SubtreeNode.ts';
+import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -8,6 +9,7 @@ import type { CurrentState } from '../lib/reactivity/node-state/createCurrentSta
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
@@ -38,6 +40,7 @@ export class Subtree
 	readonly nodeType = 'subtree';
 	readonly appearances = null;
 	readonly currentState: MaterializedChildren<CurrentState<SubtreeStateSpec>, GeneralChildNode>;
+	readonly validationState: AncestorNodeValidationState;
 
 	constructor(parent: GeneralParentNode, definition: SubtreeDefinition) {
 		super(parent, definition);
@@ -74,6 +77,7 @@ export class Subtree
 		);
 
 		childrenState.setChildren(buildChildren(this));
+		this.validationState = createAggregatedViolations(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

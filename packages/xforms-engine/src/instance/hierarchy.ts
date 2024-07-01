@@ -52,3 +52,9 @@ export type GeneralChildNode =
 	| RepeatRange
 	| StringField
 	| SelectField;
+
+// prettier-ignore
+export type AnyValueNode =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| StringField
+	| SelectField;

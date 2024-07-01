@@ -1,6 +1,7 @@
 import type { Accessor } from 'solid-js';
 import type { GroupDefinition, GroupNode, GroupNodeAppearances } from '../client/GroupNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
+import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -10,6 +11,7 @@ import type { EngineState } from '../lib/reactivity/node-state/createEngineState
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
+import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
@@ -41,6 +43,7 @@ export class Group
 	readonly nodeType = 'group';
 	readonly appearances: GroupNodeAppearances;
 	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
+	readonly validationState: AncestorNodeValidationState;
 
 	constructor(parent: GeneralParentNode, definition: GroupDefinition) {
 		super(parent, definition);
@@ -79,6 +82,7 @@ export class Group
 		);
 
 		childrenState.setChildren(buildChildren(this));
+		this.validationState = createAggregatedViolations(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

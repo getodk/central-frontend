@@ -5,6 +5,7 @@ import type { XFormDOM } from '../XFormDOM.ts';
 import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -13,6 +14,7 @@ import type { CurrentState } from '../lib/reactivity/node-state/createCurrentSta
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { RootDefinition } from '../model/RootDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
@@ -114,6 +116,7 @@ export class Root
 	readonly appearances = null;
 	readonly classes: BodyClassList;
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
+	readonly validationState: AncestorNodeValidationState;
 
 	protected readonly instanceDOM: XFormDOM;
 
@@ -189,6 +192,7 @@ export class Root
 		this.languages = languages;
 
 		childrenState.setChildren(buildChildren(this));
+		this.validationState = createAggregatedViolations(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

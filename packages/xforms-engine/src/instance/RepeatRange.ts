@@ -2,6 +2,7 @@ import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import type { Accessor } from 'solid-js';
 import type { RepeatRangeNode, RepeatRangeNodeAppearances } from '../client/RepeatRangeNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
+import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createComputedExpression } from '../lib/reactivity/createComputedExpression.ts';
@@ -12,6 +13,7 @@ import type { EngineState } from '../lib/reactivity/node-state/createEngineState
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
+import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { RepeatRangeDefinition } from '../model/RepeatRangeDefinition.ts';
 import type { RepeatDefinition } from './RepeatInstance.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
@@ -164,6 +166,7 @@ export class RepeatRange
 	readonly appearances: RepeatRangeNodeAppearances;
 
 	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
+	readonly validationState: AncestorNodeValidationState;
 
 	constructor(parent: GeneralParentNode, definition: RepeatRangeDefinition) {
 		super(parent, definition);
@@ -228,6 +231,7 @@ export class RepeatRange
 
 			this.addInstances(afterIndex, 1, instanceDefinition);
 		});
+		this.validationState = createAggregatedViolations(this);
 	}
 
 	private getLastIndex(): number {

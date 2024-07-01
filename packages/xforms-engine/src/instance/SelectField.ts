@@ -4,7 +4,7 @@ import { untrack } from 'solid-js';
 import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { SelectItem, SelectNode, SelectNodeAppearances } from '../client/SelectNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
-import type { LeafNodeValidationState } from '../client/validation.ts';
+import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
 import { createSelectItems } from '../lib/reactivity/createSelectItems.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -125,6 +125,15 @@ export class SelectField
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
+	}
+
+	getViolation(): AnyViolation | null {
+		// Read engine state to ensure reactivity in engine, Solid-based clients
+		this.validation.engineState.violation;
+
+		// Read/return client state to ensure client reactivity, regardless of
+		// client's reactive implementation
+		return this.validationState.violation;
 	}
 
 	protected getSelectItemsByValue(
