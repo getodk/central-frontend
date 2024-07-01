@@ -3,6 +3,7 @@ import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
+import type { NodeValidationState } from '../../client/validation.ts';
 import type { TextRange } from '../../index.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
@@ -116,6 +117,8 @@ export abstract class InstanceNode<
 	abstract readonly appearances: NodeAppearances<Definition>;
 
 	abstract readonly currentState: InstanceNodeCurrentState<Spec, Child>;
+
+	abstract readonly validationState: NodeValidationState;
 
 	// BaseNode: structural
 	abstract readonly root: Root;

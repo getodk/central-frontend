@@ -4,6 +4,7 @@ import { untrack } from 'solid-js';
 import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { SelectItem, SelectNode, SelectNodeAppearances } from '../client/SelectNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
+import type { LeafNodeValidationState } from '../client/validation.ts';
 import { createSelectItems } from '../lib/reactivity/createSelectItems.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -13,6 +14,8 @@ import { createSharedNodeState } from '../lib/reactivity/node-state/createShared
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
+import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
+import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
@@ -20,6 +23,7 @@ import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
+import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
 
 export interface SelectFieldDefinition extends ValueNodeDefinition {
@@ -40,9 +44,11 @@ export class SelectField
 		SelectNode,
 		EvaluationContext,
 		SubscribableDependency,
+		ValidationContext,
 		ValueContext<readonly SelectItem[]>
 {
 	private readonly selectExclusive: boolean;
+	private readonly validation: SharedValidationState;
 
 	// InstanceNode
 	protected readonly state: SharedNodeState<SelectFieldStateSpec>;
@@ -52,6 +58,10 @@ export class SelectField
 	readonly nodeType = 'select';
 	readonly appearances: SelectNodeAppearances;
 	readonly currentState: CurrentState<SelectFieldStateSpec>;
+
+	get validationState(): LeafNodeValidationState {
+		return this.validation.currentState;
+	}
 
 	// ValueContext
 	readonly encodeValue = (runtimeValue: readonly SelectItem[]): string => {
@@ -90,6 +100,10 @@ export class SelectField
 
 		this.getValueOptions = valueOptions;
 
+		const sharedStateOptions = {
+			clientStateFactory: this.engineConfig.stateFactory,
+		};
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -104,14 +118,13 @@ export class SelectField
 				value: createValueState(this),
 				valueOptions,
 			},
-			{
-				clientStateFactory: this.engineConfig.stateFactory,
-			}
+			sharedStateOptions
 		);
 
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
+		this.validation = createValidationState(this, sharedStateOptions);
 	}
 
 	protected getSelectItemsByValue(
@@ -200,5 +213,10 @@ export class SelectField
 	// InstanceNode
 	getChildren(): readonly [] {
 		return [];
+	}
+
+	// ValidationContext
+	isBlank(): boolean {
+		return this.engineState.value.length === 0;
 	}
 }

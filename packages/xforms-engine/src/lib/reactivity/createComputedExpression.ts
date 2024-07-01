@@ -71,9 +71,14 @@ type ComputedExpression<Type extends DependentExpressionResultType> = Accessor<
 	EvaluatedExpression<Type>
 >;
 
+interface CreateComputedExpressionOptions {
+	readonly arbitraryDependencies?: readonly SubscribableDependency[];
+}
+
 export const createComputedExpression = <Type extends DependentExpressionResultType>(
 	context: EvaluationContext,
-	dependentExpression: DependentExpression<Type>
+	dependentExpression: DependentExpression<Type>,
+	options: CreateComputedExpressionOptions = {}
 ): ComputedExpression<Type> => {
 	const { contextNode, evaluator, root, scope } = context;
 	const { expression, isTranslated, resultType } = dependentExpression;
@@ -85,26 +90,24 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 			return createMemo(evaluateExpression);
 		}
 
+		const { arbitraryDependencies = [] } = options;
+
 		const getReferencedDependencies = createMemo(() => {
 			return dependencyReferences.flatMap((reference) => {
 				return context.getSubscribableDependenciesByReference(reference) ?? [];
 			});
 		});
 
-		let getDependencies: Accessor<readonly SubscribableDependency[]>;
-
-		if (isTranslated) {
-			getDependencies = createMemo(() => {
-				return [root, ...getReferencedDependencies()];
-			});
-		} else {
-			getDependencies = getReferencedDependencies;
-		}
-
 		return createMemo(() => {
-			const dependencies = getDependencies();
+			if (isTranslated) {
+				root.subscribe();
+			}
 
-			dependencies.forEach((dependency) => {
+			arbitraryDependencies.forEach((dependency) => {
+				dependency.subscribe();
+			});
+
+			getReferencedDependencies().forEach((dependency) => {
 				dependency.subscribe();
 			});
 
