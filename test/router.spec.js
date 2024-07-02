@@ -1241,4 +1241,11 @@ describe('createCentralRouter()', () => {
       app.findComponent(NotFound).exists().should.be.true();
     });
   });
+
+  describe('standalone field', () => {
+    it('adds a background color if standalone is false', async () => {
+      await load('/login').restoreSession(false);
+      document.documentElement.style.backgroundColor.should.equal('var(--color-accent-secondary)');
+    });
+  });
 });

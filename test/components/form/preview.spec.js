@@ -33,7 +33,7 @@ describe('FormPreview', () => {
 
     const webForm = app.findComponent('.odk-form');
 
-    webForm.should.not.be.null();
+    webForm.exists().should.be.true();
   });
 
   it('shows preview modal', async () => {

@@ -11,6 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
+      <loading :state="formVersionXml.initiallyLoading"/>
+
       <template v-if="formVersionXml.dataExists">
         <OdkWebForm :form-xml="formVersionXml.data" @submit="handleSubmit"/>
       </template>
@@ -20,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <template #body>
             {{ $t('webFormPreview.submissionModal.body') }}
             <div class="modal-actions">
-              <button type="button" class="btn btn-primary" @click="closeModal()">
+              <button type="button" class="btn btn-primary" @click="previewModal.hide()">
                 {{ $t('action.close') }}
               </button>
             </div>
@@ -34,8 +36,8 @@ import { createApp, getCurrentInstance } from 'vue';
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
 import useForm from '../../request-data/form';
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
 import Modal from '../modal.vue';
+import Loading from '../loading.vue';
 import { modalData } from '../../util/reactivity';
 
 // Install WebFormsPlugin in the component instead of installing it at the
@@ -71,19 +73,16 @@ const { form, formVersionXml } = useForm();
 const previewModal = modalData();
 
 const fetchForm = () => {
-  form.request({ url: apiPaths.form(props.projectId, props.xmlFormId), extended: true })
-    .then(() => formVersionXml.request({ url: apiPaths.formXml(props.projectId, props.xmlFormId, props.draft) }))
-    .catch(noop);
+  Promise.allSettled([
+    form.request({ url: apiPaths.form(props.projectId, props.xmlFormId), extended: true, alert: false }),
+    formVersionXml.request({ url: apiPaths.formXml(props.projectId, props.xmlFormId, props.draft) })
+  ]);
 };
 
 fetchForm();
 
 const handleSubmit = () => {
   previewModal.show();
-};
-
-const closeModal = () => {
-  previewModal.hide();
 };
 </script>
 
@@ -104,7 +103,7 @@ html, body {
           // This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms.
           "title": "ODK Web Forms Preview",
           // This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms.
-          "body": "This is the preview of new ODK Web Forms, currently you can only view your forms with it."
+          "body": "You have completed the Form using an early version of the new ODK Web Forms. The Submission was not sent: currently, you can only view your Forms in ODK Web Forms."
         }
       }
     }

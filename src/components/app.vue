@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <!-- v-document-color: Using this directive to add background color to the html tag;
     this is done to avoid magenta splash on standalone routes such as FormPreview   -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div v-if="routerReady && !$route.meta.standalone" v-document-color class="container-fluid" @click.capture="hideAlertAfterClick">
+    <div v-if="routerReady && !$route.meta.standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
     <template v-else-if="$route.meta.standalone">
@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { defineAsyncComponent } from 'vue';
 
-import { START_LOCATION } from 'vue-router';
+import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
@@ -49,17 +49,19 @@ import { loadAsync } from '../util/load-async';
 export default {
   name: 'App',
   components: { Alert, Navbar, FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')) },
-  directives: {
-    documentColor: {
-      mounted: () => {
-        document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
-      }
-    }
-  },
   inject: ['alert', 'config'],
   setup() {
     const { visiblyLoggedIn } = useSessions();
     useDisabled();
+
+    const router = useRouter();
+    const route = useRoute();
+    router.isReady()
+      .then(() => {
+        if (!route.meta.standalone)
+          document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
+      });
+
     const { features } = useFeatureFlags();
 
     const { centralVersion } = useRequestData();
@@ -77,6 +79,10 @@ export default {
   created() {
     this.callWait('checkVersion', this.checkVersion, (tries) =>
       (tries === 0 ? 15000 : 60000));
+  },
+  // Reset backgroundColor after each test.
+  beforeUnmount() {
+    document.documentElement.style.backgroundColor = '';
   },
   methods: {
     checkVersion() {

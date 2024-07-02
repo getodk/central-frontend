@@ -159,6 +159,9 @@ The following meta fields are supported for bottom-level routes:
   - fullWidth (default: false). If fullWidth is `true`, and the route renders a
     PageBody component, then the PageBody will use the full width of the page.
     By default, PageBody has a max width.
+
+  - standalone (default: false): If standalone is `true` then application layout
+    elements like navigation bar, background color, etc are not rendered.
 */
 
 /*
@@ -524,7 +527,7 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
-      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId]
+      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId ?? '']
     }
   }),
   asyncRoute({
@@ -538,7 +541,7 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
-      title: () => [`✨ ${i18n.t('resource.formPreview')}`, `${form.nameOrId} (${i18n.t('resource.draft')})`]
+      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId ? `${form.nameOrId} (${i18n.t('resource.draft')})` : '']
     }
   }),
   asyncRoute({
@@ -728,6 +731,7 @@ const routesByName = new Map();
     requireAnonymity: false,
     preserveData: [],
     fullWidth: false,
+    standalone: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
       ? []

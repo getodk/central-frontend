@@ -621,10 +621,6 @@
       "string": "Forms",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "draft": {
-      "string": "Draft",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
     "formAttachments": {
       "string": "Form Attachments",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -2953,15 +2949,15 @@
         }
       },
       "draftNav": {
-        "title": {
-          "string": "Draft",
-          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
-        },
         "action": {
           "create": {
             "string": "Create a new Draft",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        },
+        "title": {
+          "string": "Draft",
+          "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
         }
       }
     },
@@ -3163,7 +3159,7 @@
             "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           },
           "body": {
-            "string": "This is the preview of new ODK Web Forms, currently you can only view your forms with it.",
+            "string": "You have completed the Form using an early version of the new ODK Web Forms. The Submission was not sent: currently, you can only view your Forms in ODK Web Forms.",
             "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           }
         }
