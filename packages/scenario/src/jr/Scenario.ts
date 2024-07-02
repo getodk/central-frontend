@@ -3,7 +3,6 @@ import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
-import type { ComparableAnswer } from '../answer/ComparableAnswer.ts';
 import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
@@ -313,7 +312,7 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(() => index, reference);
 	}
 
-	private answerSelect(reference: string, ...selectionValues: string[]): ComparableAnswer {
+	private answerSelect(reference: string, ...selectionValues: string[]): ValueNodeAnswer {
 		const event = this.setPositionalStateToReference(reference);
 
 		if (!isQuestionEventOfType(event, 'select')) {
@@ -325,7 +324,7 @@ export class Scenario {
 		return event.answerQuestion(new SelectValuesAnswer(selectionValues));
 	}
 
-	answer(...args: AnswerParameters): unknown {
+	answer(...args: AnswerParameters): ValueNodeAnswer {
 		if (isAnswerSelectParams(args)) {
 			return this.answerSelect(...args);
 		}

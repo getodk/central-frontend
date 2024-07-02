@@ -61,7 +61,7 @@ interface TypeofTypes {
 
 type TypeofType<T extends Typeof> = TypeofTypes[T];
 
-type TypeofAssertion<T extends Typeof> = <U>(
+export type TypeofAssertion<T extends Typeof> = <U>(
 	value: U
 ) => asserts value is Extract<TypeofType<T>, U>;
 

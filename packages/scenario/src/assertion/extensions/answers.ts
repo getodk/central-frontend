@@ -3,17 +3,19 @@ import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/asse
 import {
 	AsymmetricTypedExpectExtension,
 	InspectableComparisonError,
+	StaticConditionExpectExtension,
 	SymmetricTypedExpectExtension,
 	extendExpect,
 	instanceAssertion,
 } from '@getodk/common/test/assertions/helpers.ts';
+import { constants, type ValidationCondition } from '@getodk/xforms-engine';
 import { expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
 import type { ValueNode } from '../../answer/ValueNodeAnswer.ts';
 import { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { AnswerResult } from '../../jr/Scenario.ts';
-import { assertString } from './shared-type-assertions.ts';
+import { assertNullableString, assertString } from './shared-type-assertions.ts';
 
 const assertComparableAnswer = instanceAssertion(ComparableAnswer);
 
@@ -31,6 +33,31 @@ const assertAnswerResult: AssertAnswerResult = (value) => {
 			`Expected assertion of an AnswerResult (an expected result of \`constraint\` or \`required\` status check). Got ${String(value)}`
 		);
 	}
+};
+
+const matchDefaultMessage = (condition: ValidationCondition) => {
+	const expectedMessage = constants.VALIDATION_TEXT[`${condition}Msg`];
+
+	return {
+		node: {
+			validationState: {
+				[condition]: {
+					valid: false,
+					message: {
+						origin: 'engine',
+						asString: expectedMessage,
+					},
+				},
+				violation: {
+					condition,
+					message: {
+						origin: 'engine',
+						asString: expectedMessage,
+					},
+				},
+			},
+		},
+	};
 };
 
 const answerExtensions = extendExpect(expect, {
@@ -93,6 +120,49 @@ const answerExtensions = extendExpect(expect, {
 
 			return pass || new InspectableComparisonError(condition, expected, 'be');
 		}
+	),
+
+	toHaveConstraintMessage: new AsymmetricTypedExpectExtension(
+		assertValueNodeAnswer,
+		assertNullableString,
+		(actual, expected) => {
+			const { asString = null } = actual.node.validationState.constraint?.message ?? {};
+			const pass = asString === expected;
+
+			return pass || new InspectableComparisonError(asString, expected, 'to be message');
+		}
+	),
+
+	toHaveRequiredMessage: new AsymmetricTypedExpectExtension(
+		assertValueNodeAnswer,
+		assertNullableString,
+		(actual, expected) => {
+			const { asString = null } = actual.node.validationState.required?.message ?? {};
+			const pass = asString === expected;
+
+			return pass || new InspectableComparisonError(asString, expected, 'to be message');
+		}
+	),
+
+	toHaveValidityMessage: new AsymmetricTypedExpectExtension(
+		assertValueNodeAnswer,
+		assertNullableString,
+		(actual, expected) => {
+			const { asString = null } = actual.node.validationState.violation?.message ?? {};
+			const pass = asString === expected;
+
+			return pass || new InspectableComparisonError(asString, expected, 'to be message');
+		}
+	),
+
+	toHaveDefaultConstraintMessage: new StaticConditionExpectExtension(
+		assertValueNodeAnswer,
+		matchDefaultMessage('constraint')
+	),
+
+	toHaveDefaultRequiredMessage: new StaticConditionExpectExtension(
+		assertValueNodeAnswer,
+		matchDefaultMessage('required')
 	),
 
 	/**

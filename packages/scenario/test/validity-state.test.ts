@@ -286,3 +286,135 @@ describe('`constraint`', () => {
 		expect(result).toHaveValidityStatus(AnswerResult.CONSTRAINT_VIOLATED);
 	});
 });
+
+describe('Validity messages', () => {
+	interface ValidationMessageOptions {
+		readonly constraintMsg?: string;
+		readonly requiredMsg?: string;
+	}
+
+	const initValidationFixture = async (
+		options: ValidationMessageOptions = {}
+	): Promise<Scenario> => {
+		const { constraintMsg, requiredMsg } = options;
+
+		let bindConstrainedInput = bind('/data/constrained-input').constraint("regex(.,'[0-9]{10}')");
+
+		if (constraintMsg != null) {
+			bindConstrainedInput = bindConstrainedInput.withAttribute(
+				'jr',
+				'constraintMsg',
+				constraintMsg
+			);
+		}
+
+		let bindRequiredInput = bind('/data/required-input').required();
+
+		if (requiredMsg != null) {
+			bindRequiredInput = bindRequiredInput.withAttribute('jr', 'requiredMsg', requiredMsg);
+		}
+
+		return Scenario.init(
+			'Validation fixture',
+			html(
+				head(
+					title('Validation fixture'),
+					model(
+						mainInstance(
+							t('data id="validation-fixture"', t('constrained-input'), t('required-input'))
+						),
+						bindConstrainedInput,
+						bindRequiredInput
+					)
+				),
+				body(input('/data/constrained-input'), input('/data/required-input'))
+			)
+		);
+	};
+
+	it('provides a form-defined message on constraint validation failure', async () => {
+		const constraintMsg = 'Must be ten digits';
+		const scenario = await initValidationFixture({ constraintMsg });
+
+		let result = scenario.answer('/data/constrained-input', '00000');
+
+		expect(result).toHaveConstraintMessage(constraintMsg);
+		expect(result).toHaveRequiredMessage(null);
+		expect(result).toHaveValidityMessage(constraintMsg);
+
+		result = scenario.answer('/data/constrained-input', '0000000000');
+
+		expect(result).toHaveConstraintMessage(null);
+		expect(result).toHaveRequiredMessage(null);
+		expect(result).toHaveValidityMessage(null);
+
+		result = scenario.answer('/data/constrained-input', '00000');
+
+		expect(result).toHaveConstraintMessage(constraintMsg);
+		expect(result).toHaveRequiredMessage(null);
+		expect(result).toHaveValidityMessage(constraintMsg);
+	});
+
+	it('provides an engine-defined message on constraint validation failure', async () => {
+		const scenario = await initValidationFixture();
+
+		let result = scenario.answer('/data/constrained-input', '00000');
+
+		expect(result).toHaveDefaultConstraintMessage();
+		expect(result).toHaveRequiredMessage(null);
+
+		result = scenario.answer('/data/constrained-input', '0000000000');
+
+		expect(result).toHaveConstraintMessage(null);
+		expect(result).toHaveRequiredMessage(null);
+		expect(result).toHaveValidityMessage(null);
+
+		result = scenario.answer('/data/constrained-input', '00000');
+
+		expect(result).toHaveDefaultConstraintMessage();
+		expect(result).toHaveRequiredMessage(null);
+	});
+
+	it('provides a form-defined message on required validation failure', async () => {
+		const requiredMsg = 'Must provide an answer!!';
+		const scenario = await initValidationFixture({ requiredMsg });
+
+		let result = scenario.answerOf('/data/required-input');
+
+		expect(result).toHaveConstraintMessage(null);
+		expect(result).toHaveRequiredMessage(requiredMsg);
+		expect(result).toHaveValidityMessage(requiredMsg);
+
+		result = scenario.answer('/data/required-input', '0000000000');
+
+		expect(result).toHaveConstraintMessage(null);
+		expect(result).toHaveRequiredMessage(null);
+		expect(result).toHaveValidityMessage(null);
+
+		result = scenario.answer('/data/required-input', '');
+
+		expect(result).toHaveConstraintMessage(null);
+		expect(result).toHaveRequiredMessage(requiredMsg);
+		expect(result).toHaveValidityMessage(requiredMsg);
+	});
+
+	it('provides an engine-defined message on required validation failure', async () => {
+		const scenario = await initValidationFixture();
+
+		let result = scenario.answerOf('/data/required-input');
+
+		expect(result).toHaveDefaultRequiredMessage();
+		expect(result).toHaveConstraintMessage(null);
+
+		result = scenario.answer('/data/required-input', '0000000000');
+
+		expect(result).toHaveConstraintMessage(null);
+		expect(result).toHaveRequiredMessage(null);
+		expect(result).toHaveValidityMessage(null);
+
+		result = scenario.answer('/data/required-input', '');
+
+		expect(result).toHaveDefaultRequiredMessage();
+		expect(result).toHaveConstraintMessage(null);
+	});
+});
