@@ -38,10 +38,12 @@ export default function useFeatureFlags() {
     }
   }
 
-  function reset() {
-    cheatKeys.w = false;
-    cheatKeys.f = false;
-    features.value['new-web-forms'] = false;
+  function reset(event) {
+    if (event.target.classList.contains('btn-web-form')) {
+      cheatKeys.w = false;
+      cheatKeys.f = false;
+      features.value['new-web-forms'] = false;
+    }
   }
 
   const keydownEventHandler = (e) => updateCheatKeys(e, true);
