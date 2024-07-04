@@ -63,6 +63,10 @@ interface CreateNewRepeatAssertedReferenceOptions {
 	readonly assertCurrentReference: string;
 }
 
+export interface ExplicitRepeatCreationOptions {
+	readonly explicitRepeatCreation: boolean;
+}
+
 // prettier-ignore
 type GetQuestionAtIndexParameters<
 	ExpectedQuestionType extends QuestionNodeType
@@ -304,6 +308,8 @@ export class Scenario {
 		});
 
 		if (index === -1) {
+			this.logMissingRepeatAncestor(reference);
+
 			throw new Error(
 				`Setting answer to ${reference} failed: could not locate question/positional event with that reference.`
 			);
@@ -653,6 +659,84 @@ export class Scenario {
 		const event = this.getSelectedPositionalEvent();
 
 		return event.eventType === 'END_OF_FORM';
+	}
+
+	private suppressMissingRepeatAncestorLogs = false;
+
+	private logMissingRepeatAncestor(reference: string): void {
+		if (this.suppressMissingRepeatAncestorLogs) {
+			return;
+		}
+
+		const [, positionPredicatedReference, positionExpression] =
+			reference.match(/^(.*\/[^/[]+)\[(\d+)\]\/[^[]+$/) ?? [];
+
+		if (positionPredicatedReference == null || positionExpression == null) {
+			return;
+		}
+
+		if (/\[\d+\]/.test(positionPredicatedReference)) {
+			this.logMissingRepeatAncestor(positionPredicatedReference);
+		}
+
+		const position = parseInt(positionExpression, 10);
+
+		if (Number.isNaN(position) || position < 1) {
+			throw new Error(
+				`Cannot log missing repeat ancestor for reference (invalid position predicate): ${reference} (repeatRangeReference: ${positionPredicatedReference}, positionExpression: ${positionExpression})`
+			);
+		}
+
+		try {
+			const ancestorNode = this.getInstanceNode(positionPredicatedReference);
+
+			if (ancestorNode.nodeType !== 'repeat-range') {
+				// eslint-disable-next-line no-console
+				console.trace(
+					'Unexpected position predicate for ancestor reference:',
+					positionPredicatedReference,
+					'position:',
+					position
+				);
+
+				return;
+			}
+
+			const index = position - 1;
+			const repeatInstances = ancestorNode.currentState.children;
+
+			if (repeatInstances[index] == null) {
+				// eslint-disable-next-line no-console
+				console.trace(
+					'Missing repeat in range:',
+					positionPredicatedReference,
+					'position:',
+					position,
+					'index:',
+					index,
+					'actual instances present:',
+					repeatInstances.length
+				);
+			}
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error(error);
+
+			return;
+		}
+	}
+
+	proposed_addExplicitCreateNewRepeatCallHere(
+		reference: string,
+		options: ExplicitRepeatCreationOptions
+	): unknown {
+		if (options.explicitRepeatCreation) {
+			return this.createNewRepeat(reference);
+		}
+
+		this.suppressMissingRepeatAncestorLogs = true;
+
+		return;
 	}
 
 	/**

@@ -19,6 +19,7 @@ import { describe, expect, it } from 'vitest';
 import { answerText } from '../src/answer/ExpectedDisplayTextAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { choice } from '../src/choice/ExpectedChoice.ts';
+import type { ExplicitRepeatCreationOptions } from '../src/jr/Scenario.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import type { PositionalEvent } from '../src/jr/event/PositionalEvent.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
@@ -376,49 +377,66 @@ describe('DynamicSelectUpdateTest.java', () => {
 		});
 	});
 
-	/**
-	 * **PORTING NOTES**
-	 *
-	 * This currently fails because repeat-based itemsets are broken more
-	 * generally. As with the above sub-suite, the last assertion is a reference
-	 * check and will always pass. Once repeat-based itemsets are fixed, we'll
-	 * want to consider whether this test should be implemented differently too.
-	 */
 	describe('select with repeat as trigger', () => {
-		it.fails('recomputes [the] choice list at every request', async () => {
-			const scenario = await Scenario.init(
-				'Select with repeat trigger',
-				html(
-					head(
-						title('Repeat trigger'),
-						model(
-							mainInstance(t("data id='repeat-trigger'", t('repeat', t('question')), t('select'))),
+		describe.each<ExplicitRepeatCreationOptions>([
+			{ explicitRepeatCreation: false },
+			{ explicitRepeatCreation: true },
+		])('explicit repeat creation: $explicitRepeatCreation', ({ explicitRepeatCreation }) => {
+			let testFn: typeof it | typeof it.fails;
 
-							instance('choices', item('1', 'A'), item('2', 'AA'), item('3', 'B'), item('4', 'BB'))
-						)
-					),
-					body(
-						repeat('/data/repeat', input('/data/repeat/question')),
-						select1Dynamic(
-							'/data/select',
-							"instance('choices')/root/item[value>count(/data/repeat)]"
+			if (explicitRepeatCreation) {
+				testFn = it;
+			} else {
+				testFn = it.fails;
+			}
+
+			testFn('recomputes [the] choice list at every request', async () => {
+				const scenario = await Scenario.init(
+					'Select with repeat trigger',
+					html(
+						head(
+							title('Repeat trigger'),
+							model(
+								mainInstance(
+									t("data id='repeat-trigger'", t('repeat', t('question')), t('select'))
+								),
+
+								instance(
+									'choices',
+									item('1', 'A'),
+									item('2', 'AA'),
+									item('3', 'B'),
+									item('4', 'BB')
+								)
+							)
+						),
+						body(
+							repeat('/data/repeat', input('/data/repeat/question')),
+							select1Dynamic(
+								'/data/select',
+								"instance('choices')/root/item[value>count(/data/repeat)]"
+							)
 						)
 					)
-				)
-			);
+				);
 
-			scenario.answer('/data/repeat[1]/question', 'a');
+				scenario.answer('/data/repeat[1]/question', 'a');
 
-			expect(scenario.choicesOf('/data/select').size()).toBe(3);
+				expect(scenario.choicesOf('/data/select').size()).toBe(3);
 
-			scenario.answer('/data/repeat[2]/question', 'b');
+				scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/repeat', {
+					explicitRepeatCreation,
+				});
 
-			const choices = scenario.choicesOf('/data/select');
+				scenario.answer('/data/repeat[2]/question', 'b');
 
-			expect(choices.size()).toBe(2);
+				const choices = scenario.choicesOf('/data/select');
 
-			// Because of the repeat trigger in the count expression, choices should be recomputed every time they're requested
-			expect(scenario.choicesOf('/data/select')).not.toBe(choices);
+				expect(choices.size()).toBe(2);
+
+				// Because of the repeat trigger in the count expression, choices should be recomputed every time they're requested
+				expect(scenario.choicesOf('/data/select')).not.toBe(choices);
+			});
 		});
 	});
 
