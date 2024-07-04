@@ -10,18 +10,23 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div :class="features">
     <!-- If the user's session is restored during the initial navigation, that
     will affect how the navbar is rendered. -->
-    <navbar v-show="routerReady"/>
+    <navbar v-if="!$route.meta.standalone" v-show="routerReady"/>
     <alert id="app-alert"/>
     <feedback-button v-if="showsFeedbackButton"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
+    <!-- v-document-color: Using this directive to add background color to the html tag;
+    this is done to avoid magenta splash on standalone routes such as FormPreview   -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div class="container-fluid" @click.capture="hideAlertAfterClick">
+    <div v-if="routerReady && !$route.meta.standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
+    <template v-else-if="$route.meta.standalone">
+      <router-view/>
+    </template>
     <div id="tooltips"></div>
   </div>
 </template>
@@ -29,13 +34,14 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { defineAsyncComponent } from 'vue';
 
-import { START_LOCATION } from 'vue-router';
+import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
+import useFeatureFlags from '../composables/feature-flags';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
 import { loadAsync } from '../util/load-async';
@@ -48,9 +54,19 @@ export default {
     const { visiblyLoggedIn } = useSessions();
     useDisabled();
 
+    const router = useRouter();
+    const route = useRoute();
+    router.isReady()
+      .then(() => {
+        if (!route.meta.standalone)
+          document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
+      });
+
+    const { features } = useFeatureFlags();
+
     const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();
-    return { visiblyLoggedIn, centralVersion, callWait };
+    return { visiblyLoggedIn, centralVersion, callWait, features };
   },
   computed: {
     routerReady() {
@@ -63,6 +79,10 @@ export default {
   created() {
     this.callWait('checkVersion', this.checkVersion, (tries) =>
       (tries === 0 ? 15000 : 60000));
+  },
+  // Reset backgroundColor after each test.
+  beforeUnmount() {
+    document.documentElement.style.backgroundColor = '';
   },
   methods: {
     checkVersion() {

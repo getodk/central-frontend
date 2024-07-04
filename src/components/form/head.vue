@@ -234,8 +234,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "These functions will become available once you publish your Draft Form"
     },
     "draftNav": {
-      // This is shown above the navigation tabs for the Form Draft.
-      "title": "Draft",
       "action": {
         "create": "Create a new Draft"
       },

@@ -413,6 +413,10 @@
       "string": "Hide preview",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
+    "newPreview": {
+      "string": "New Preview",
+      "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
+    },
     "expand": {
       "string": "Expand",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -663,6 +667,10 @@
     },
     "projectRoles": {
       "string": "Project Roles",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "formPreview": {
+      "string": "Form Preview",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -2941,15 +2949,15 @@
         }
       },
       "draftNav": {
-        "title": {
-          "string": "Draft",
-          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
-        },
         "action": {
           "create": {
             "string": "Create a new Draft",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        },
+        "title": {
+          "string": "Draft",
+          "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
         }
       }
     },
@@ -3141,6 +3149,20 @@
       "datasetsLinked": {
         "string": "{count, plural, one {Dataset attached to this Form:} other {Datasets attached to this Form:}}",
         "developer_comment": "The count of Dataset(s) is shown separately above this text."
+      }
+    },
+    "FormPreview": {
+      "webFormPreview": {
+        "submissionModal": {
+          "title": {
+            "string": "ODK Web Forms Preview",
+            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
+          },
+          "body": {
+            "string": "You have completed the Form using an early version of the new ODK Web Forms. The Submission was not sent: currently, you can only view your Forms in ODK Web Forms.",
+            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
+          }
+        }
       }
     },
     "FormRestore": {
