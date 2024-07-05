@@ -311,7 +311,7 @@ describe('FormRow', () => {
       mockLogin({ role: 'admin' });
       testData.extendedForms.createPast(1, { state: 'open' });
       const row = mountComponent();
-      row.getComponent(EnketoPreview).should.be.visible();
+      row.get('.enketo-preview').should.be.visible();
       row.findComponent(EnketoFill).exists().should.be.false();
     });
 

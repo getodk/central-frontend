@@ -11,16 +11,22 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <a v-if="disabledDescription == null" class="enketo-preview btn btn-default"
-    :href="href" target="_blank">
+    :href="enketoPath" target="_blank">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </a>
   <button v-else type="button" class="enketo-preview btn btn-default" aria-disabled="true"
     v-tooltip.aria-describedby="disabledDescription">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </button>
+
+  <router-link class="btn btn-default btn-web-form" :to="webFormsPath"
+    target="_blank">
+    <span class="icon-eye"></span>{{ $t('action.newPreview') }}
+  </router-link>
 </template>
 
 <script>
+import useRoutes from '../../composables/routes';
 import { enketoBasePath } from '../../util/util';
 
 export default {
@@ -31,6 +37,10 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { formPath } = useRoutes();
+    return { formPath };
+  },
   computed: {
     disabledDescription() {
       if (this.formVersion.publishedAt != null &&
@@ -40,15 +50,40 @@ export default {
         return this.$t('disabled.processing');
       return null;
     },
-    href() {
+    enketoPath() {
       // enketoId probably doesn't need to be encoded, but there is also little
       // harm.
       const encodedId = encodeURIComponent(this.formVersion.enketoId);
       return `${enketoBasePath}/preview/${encodedId}`;
+    },
+    webFormsPath() {
+      return this.formPath(
+        this.formVersion.projectId,
+        this.formVersion.xmlFormId,
+        this.formVersion.publishedAt != null ? 'preview' : 'draft/preview'
+      );
     }
   }
 };
 </script>
+
+<style lang="scss">
+.btn-web-form {
+  display: none;
+}
+
+// `new-web-forms` class is added to the root of App component when the
+// new web form feature is enabled.
+.new-web-forms {
+  .enketo-preview {
+    display: none;
+  }
+
+  .btn-web-form {
+    display: inline-block;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {
