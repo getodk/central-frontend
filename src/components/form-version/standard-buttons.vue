@@ -14,12 +14,6 @@ except according to the terms contained in the LICENSE file.
 <template>
   <span class="form-version-standard-buttons">
     <enketo-preview :form-version="version"/>
-    <router-link
-      class="btn btn-default btn-web-form"
-      :to="version.publishedAt != null ? formPath('preview') : formPath('draft/preview')"
-      target="_blank">
-      <span class="icon-eye"></span>{{ $t('action.newPreview') }}
-    </router-link>
     <form-version-def-dropdown :version="version"
       @view-xml="$emit('view-xml')"/>
   </span>
@@ -28,7 +22,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import EnketoPreview from '../enketo/preview.vue';
 import FormVersionDefDropdown from './def-dropdown.vue';
-import useRoutes from '../../composables/routes';
 
 export default {
   name: 'FormVersionStandardButtons',
@@ -39,36 +32,12 @@ export default {
       required: true
     }
   },
-  emits: ['view-xml'],
-  setup() {
-    const { formPath } = useRoutes();
-    return { formPath };
-  }
+  emits: ['view-xml']
 };
 </script>
 
 <style lang="scss">
 .form-version-standard-buttons {
-  .enketo-preview {
-    margin-right: 5px;
-  }
-  .btn-web-form {
-    display: none;
-  }
+  > :not(:last-child) { margin-right: 5px; }
 }
-
-// `new-web-forms` class is added to the root of App component when the
-// new web form feature is enabled.
-.new-web-forms {
-  .form-version-standard-buttons {
-    .enketo-preview {
-      display: none;
-    }
-    .btn-web-form {
-      margin-right: 5px;
-      display: inline-block;
-    }
-  }
-}
-
 </style>
