@@ -199,7 +199,10 @@ export default {
   }
 
   .actions {
-    width: 100px,
+    width: 100px;
+    // Make sure there is enough width for .btn-web-form so that toggling Web
+    // Forms does not change the width of the column.
+    &:has(.enketo-preview) { min-width: 127px; }
   }
 
   .last-submission{
