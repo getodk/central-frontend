@@ -76,9 +76,12 @@ datasets.request({
 
 const newDatasetModal = modalData();
 
-const afterCreateDataset = (dataset) => {
+const afterCreateDataset = async (dataset) => {
   newDatasetModal.hide();
-  router.push(datasetPath(props.projectId, dataset.name));
+  await router.push(datasetPath(props.projectId, dataset.name));
+  // Increment the count so that if the user returns to a project page, they
+  // will see the new count.
+  project.datasets += 1;
 };
 </script>
 

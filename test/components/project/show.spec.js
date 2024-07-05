@@ -5,6 +5,7 @@ import ProjectOverview from '../../../src/components/project/overview.vue';
 import { loadLocale } from '../../../src/util/i18n';
 
 import testData from '../../data';
+import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -141,7 +142,7 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
         'Overview',
-        'Entities',
+        'Entities 1',
         'Project Roles',
         'App Users',
         'Form Access',
@@ -166,7 +167,7 @@ describe('ProjectShow', () => {
         });
         const li = app.findAll('#page-head-tabs li');
         const text = li.map(wrapper => wrapper.get('a').text());
-        text.should.eql(['Overview', 'Entities']);
+        text.should.eql(['Overview', 'Entities 1']);
         li[0].should.be.visible(true);
       });
     });
@@ -180,6 +181,13 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.length.should.equal(1);
       li[0].should.be.hidden(true);
+    });
+
+    it('shows the count of entity lists', async () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { datasets: 1000 });
+      const app = await load('/projects/1');
+      findTab(app, 'Entities').get('.badge').text().should.equal('1,000');
     });
   });
 

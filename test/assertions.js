@@ -2,9 +2,16 @@ import should from 'should';
 
 import { wait } from './util/util';
 
-const unwrapElement = (elementOrWrapper) => (elementOrWrapper instanceof HTMLElement
-  ? elementOrWrapper
-  : elementOrWrapper.element);
+// Takes an object that is either a native HTMLElement or a Vue Test Utils
+// wrapper, then consistently returns an HTMLElement. If the object is a
+// wrapper, its HTMLElement is returned.
+const unwrapElement = (elementOrWrapper) => {
+  if (elementOrWrapper instanceof HTMLElement) return elementOrWrapper;
+  // If elementOrWrapper isn't an element, then it's a wrapper.
+  const wrapper = elementOrWrapper;
+  wrapper.exists().should.be.true();
+  return wrapper.element;
+};
 
 // Assertion.addSync() is like Assertion.add(), but the specified function can
 // be async.

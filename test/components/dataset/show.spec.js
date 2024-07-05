@@ -1,9 +1,10 @@
+import DatasetOverview from '../../../src/components/dataset/overview.vue';
+import PageBack from '../../../src/components/page/back.vue';
+
+import testData from '../../data';
+import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-
-import PageBack from '../../../src/components/page/back.vue';
-import DatasetOverview from '../../../src/components/dataset/overview.vue';
-import testData from '../../data';
 
 describe('DatasetShow', () => {
   beforeEach(mockLogin);
@@ -73,7 +74,7 @@ describe('DatasetShow', () => {
       testData.extendedDatasets.createPast(1);
       const app = await load('/projects/1/entity-lists/trees', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
-      li.map(wrapper => wrapper.get('a').text()).should.eql(['Overview', 'Data', 'Settings']);
+      li.map(wrapper => wrapper.get('a').text()).should.eql(['Overview', 'Data 0', 'Settings']);
       li[0].should.be.visible(true);
     });
 
@@ -87,8 +88,14 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
       const text = li.map(wrapper => wrapper.get('a').text());
-      text.should.eql(['Overview', 'Data']);
+      text.should.eql(['Overview', 'Data 0']);
       li[0].should.be.visible(true);
+    });
+
+    it('shows the count of entities', async () => {
+      testData.extendedDatasets.createPast(1, { entities: 1000 });
+      const app = await load('/projects/1/entity-lists/trees');
+      findTab(app, 'Data').get('.badge').text().should.equal('1,000');
     });
   });
 });
