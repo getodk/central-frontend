@@ -71,7 +71,7 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div v-if="rendersDraftNav" id="form-head-draft-nav"
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
-            <span id="form-head-draft-nav-title">{{ $t('draftNav.title') }}</span>
+            <span id="form-head-draft-nav-title">{{ $t('resource.draft') }}</span>
             <button v-show="formDraft.isEmpty()"
               id="form-head-create-draft-button" type="button"
               class="btn btn-primary" @click="$emit('create-draft')">
