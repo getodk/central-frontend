@@ -17,13 +17,13 @@ describe('util/sort', () => {
       testData.extendedForms.createPast(1, { name: 'C', lastSubmission: ago({ days: 15 }).toISO() });
       testData.extendedForms.createPast(1, { name: 'D', lastSubmission: ago({ days: 20 }).toISO() });
       testData.extendedForms.createPast(1, { name: 'E', lastSubmission: ago({ days: 10 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'F', lastSubmission: ago({ days: 10 }).toISO(), lastEntity: ago({ days: 5 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'G', lastSubmission: ago({ days: 12 }).toISO(), lastEntity: ago({ days: 20 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'F', lastSubmission: ago({ days: 5 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'G', lastSubmission: ago({ days: 12 }).toISO() });
       testData.extendedForms.createPast(1, { name: 'A' });
       testData.extendedForms.createPast(1, { name: 'B' });
     });
 
-    it('can sort forms by latest activity including breaking ties (null submissions/enitities) alphabetically', () => {
+    it('can sort forms by latest activity including breaking ties (null submissions) alphabetically', () => {
       const forms = testData.extendedForms.sorted();
       forms.sort(sortFunctions.latest);
       forms.map((form) => form.name).should.eql(['F', 'E', 'G', 'C', 'D', 'A', 'B']);

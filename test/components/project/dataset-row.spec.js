@@ -58,9 +58,8 @@ describe('ProjectDatasetRow', () => {
   });
 
   it('shows the correct icon for timestamp', () => {
-    setLuxon({ defaultZoneName: 'UTC' });
     const lastEntity = '2023-01-01T00:00:00Z';
-    testData.extendedDatasets.createPast(1, { name: 'people', lastEntity, entities: 0 });
+    testData.extendedDatasets.createPast(1, { name: 'people', lastEntity });
     const cell = mountComponent().get('.last-entity');
     cell.find('.icon-clock-o').exists().should.be.true();
   });
@@ -73,9 +72,8 @@ describe('ProjectDatasetRow', () => {
   });
 
   it('last entity has the correct links', () => {
-    setLuxon({ defaultZoneName: 'UTC' });
     const lastEntity = '2023-01-01T00:00:00Z';
-    testData.extendedDatasets.createPast(1, { name: 'people', lastEntity, entities: 0 });
+    testData.extendedDatasets.createPast(1, { name: 'people', lastEntity });
     const link = mountComponent().getComponent('.last-entity a');
     link.props().to.should.equal('/projects/1/entity-lists/people/entities');
   });
