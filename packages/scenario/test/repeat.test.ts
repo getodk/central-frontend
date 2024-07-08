@@ -2153,43 +2153,40 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				}
 			);
 
-			it.fails(
-				'does not permit creating a repeat instance of a repeat range which does not exist (alternate)',
-				async () => {
-					const scenario = await Scenario.init(
-						'Nested repeat relevance',
-						html(
-							head(
-								title('Nested repeat relevance'),
-								model(
-									mainInstance(
-										t(
-											'data id="nested-repeat-relevance"',
-											t('outer', t('inner_count'), t('inner', t('question')))
-										)
-									),
-									bind('/data/outer/inner_count').type('string').calculate('5')
-								)
-							),
-							body(
-								repeat(
-									'/data/outer',
-									repeat(
-										'/data/outer/inner',
-										'/data/outer/inner_count',
-										input('/data/outer/inner/question')
+			it('does not permit creating a repeat instance of a repeat range which does not exist (alternate)', async () => {
+				const scenario = await Scenario.init(
+					'Nested repeat relevance',
+					html(
+						head(
+							title('Nested repeat relevance'),
+							model(
+								mainInstance(
+									t(
+										'data id="nested-repeat-relevance"',
+										t('outer', t('inner_count'), t('inner', t('question')))
 									)
+								),
+								bind('/data/outer/inner_count').type('string').calculate('5')
+							)
+						),
+						body(
+							repeat(
+								'/data/outer',
+								repeat(
+									'/data/outer/inner',
+									'/data/outer/inner_count',
+									input('/data/outer/inner/question')
 								)
 							)
 						)
-					);
+					)
+				);
 
-					scenario.next('/data/outer[1]');
-					scenario.removeRepeat('/data/outer[1]');
+				scenario.next('/data/outer[1]');
+				scenario.removeRepeat('/data/outer[1]');
 
-					expect(scenario.proposed_canCreateNewRepeat('/data/outer[1]/inner')).toBe(false);
-				}
-			);
+				expect(scenario.proposed_canCreateNewRepeat('/data/outer[1]/inner')).toBe(false);
+			});
 		});
 	});
 
