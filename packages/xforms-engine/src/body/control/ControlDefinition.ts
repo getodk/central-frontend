@@ -2,6 +2,7 @@ import type { XFormDefinition } from '../../XFormDefinition.ts';
 import type { ParsedTokenList } from '../../lib/TokenListParser.ts';
 import { HintDefinition } from '../../parse/text/HintDefinition.ts';
 import { LabelDefinition } from '../../parse/text/LabelDefinition.ts';
+import { parseNodesetReference } from '../../parse/xpath/reference-parsing.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
 
@@ -30,7 +31,7 @@ export abstract class ControlDefinition<
 	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
 		super(form, parent, element);
 
-		const reference = element.getAttribute('ref');
+		const reference = parseNodesetReference(parent, element, 'ref');
 
 		if (reference == null) {
 			throw new Error(`Invalid control: missing ref attribute`);

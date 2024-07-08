@@ -38,7 +38,7 @@ export class MessageDefinition<
 		super(bind.form, bind, null);
 
 		const chunk: MessageChunk =
-			TranslationChunkDefinition.from(this, message) ??
+			TranslationChunkDefinition.fromMessage(this, message) ??
 			StaticTextChunkDefinition.from(this, message);
 
 		this.chunks = [chunk];

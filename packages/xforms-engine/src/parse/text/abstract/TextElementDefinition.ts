@@ -1,8 +1,11 @@
 import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
+import type { ItemDefinition } from '../../../body/control/select/ItemDefinition.ts';
 import type { ElementTextRole } from '../../../client/TextRange.ts';
+import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
 import type { HintDefinition } from '../HintDefinition.ts';
-import type { ItemLabelOwner } from '../ItemLabelDefinition.ts';
+import type { ItemLabelDefinition } from '../ItemLabelDefinition.ts';
+import type { ItemsetLabelDefinition } from '../ItemsetLabelDefinition.ts';
 import type { LabelDefinition, LabelOwner } from '../LabelDefinition.ts';
 import { OutputChunkDefinition } from '../OutputChunkDefinition.ts';
 import { ReferenceChunkDefinition } from '../ReferenceChunkDefinition.ts';
@@ -12,7 +15,7 @@ import type { TextSourceNode } from './TextRangeDefinition.ts';
 import { TextRangeDefinition } from './TextRangeDefinition.ts';
 
 // prettier-ignore
-type RefAttributeChunk =
+export type RefAttributeChunk =
 	| ReferenceChunkDefinition
 	| TranslationChunkDefinition;
 
@@ -26,7 +29,7 @@ type TextElementChunks =
 	| readonly [RefAttributeChunk]
 	| readonly TextElementChildChunk[];
 
-type TextElementOwner = ItemLabelOwner | LabelOwner;
+type TextElementOwner = ItemDefinition | LabelOwner;
 
 export abstract class TextElementDefinition<
 	Role extends ElementTextRole,
@@ -37,7 +40,7 @@ export abstract class TextElementDefinition<
 		super(form, owner, sourceNode);
 
 		const context = this as AnyTextElementDefinition;
-		const refExpression = sourceNode.getAttribute('ref');
+		const refExpression = parseNodesetReference(owner, sourceNode, 'ref');
 
 		if (refExpression == null) {
 			this.chunks = Array.from(sourceNode.childNodes).flatMap((childNode) => {
@@ -63,4 +66,6 @@ export abstract class TextElementDefinition<
 // prettier-ignore
 export type AnyTextElementDefinition =
 	| HintDefinition
+	| ItemLabelDefinition
+	| ItemsetLabelDefinition
 	| LabelDefinition;

@@ -2,6 +2,7 @@ import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { getLabelElement } from '../../lib/dom/query.ts';
 import { LabelDefinition } from '../../parse/text/LabelDefinition.ts';
+import { parseNodesetReference } from '../../parse/xpath/reference-parsing.ts';
 import {
 	BodyDefinition,
 	type BodyElementDefinitionArray,
@@ -81,7 +82,7 @@ export abstract class BaseGroupDefinition<
 		super(form, parent, element);
 
 		this.children = children ?? this.getChildren(element);
-		this.reference = element.getAttribute('ref');
+		this.reference = parseNodesetReference(parent, element, 'ref');
 		this.appearances = structureElementAppearanceParser.parseFrom(element, 'appearance');
 		this.label = LabelDefinition.forGroup(form, this);
 	}
