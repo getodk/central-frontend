@@ -1,5 +1,6 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
-import { getNodesetDependencies, isItextFunctionCalled } from '../lib/xpath/analysis.ts';
+import { resolveDependencyNodesets } from '../parse/xpath/dependency-analysis.ts';
+import { isTranslationExpression } from '../parse/xpath/semantic-analysis.ts';
 import type { DependencyContext } from './DependencyContext.ts';
 
 const evaluatorMethodsByResultType = {
@@ -67,11 +68,10 @@ export class DependentExpression<Type extends DependentExpressionResultType> {
 			},
 		} = options;
 
-		const dependencyReferences = new Set<string>(
-			getNodesetDependencies(expression, {
-				contextReference: context.reference,
-				ignoreContextReference,
-				ignoreNullExpressions,
+		const dependencyReferences = new Set(
+			resolveDependencyNodesets(context.reference, expression, {
+				ignoreReferenceToContextPath: ignoreContextReference,
+				simulateNullKeyword: ignoreNullExpressions,
 			})
 		);
 
@@ -83,7 +83,7 @@ export class DependentExpression<Type extends DependentExpressionResultType> {
 
 		this.dependencyReferences = dependencyReferences;
 
-		const isTranslated = semanticDependencies.translations && isItextFunctionCalled(expression);
+		const isTranslated = semanticDependencies.translations && isTranslationExpression(expression);
 
 		if (isTranslated) {
 			this.isTranslated = true;
