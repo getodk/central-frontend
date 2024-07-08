@@ -1,5 +1,5 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
-import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
+import type { AnyNode, RepeatRangeNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
@@ -463,6 +463,16 @@ export class Scenario {
 		}
 
 		const { node } = event;
+
+		// TODO: we should probably remove this when we add support for `jr:count`
+		// and `jr:noAddRemove`. There will likely be other, engine/client API-level
+		// restrictions which address this. For now, this is intended to ensure that
+		// we don't mistakenly introduce new explicit repeat creation calls where
+		// the repeat under test is count/fixed.
+		if (!this.proposed_canCreateNewRepeat(repeatReference)) {
+			throw new Error(`Repeat is/will be engine controlled: ${repeatReference}`);
+		}
+
 		const { reference } = node.currentState;
 		const repeatRange = getClosestRepeatRange(node);
 
@@ -525,6 +535,10 @@ export class Scenario {
 
 		if (repeatRange == null) {
 			throw new Error('Cannot remove repeat instance, failed to find its parent repeat range');
+		}
+
+		if (!this.isClientControlled(repeatRange)) {
+			throw new Error('Cannot remove repeat instance: repeat range is engine controlled');
 		}
 
 		const repeatIndex = repeatRange.currentState.children.indexOf(event.node);
@@ -702,6 +716,10 @@ export class Scenario {
 				return;
 			}
 
+			if (!this.proposed_canCreateNewRepeat(positionPredicatedReference)) {
+				return;
+			}
+
 			const index = position - 1;
 			const repeatInstances = ancestorNode.currentState.children;
 
@@ -739,6 +757,20 @@ export class Scenario {
 		return;
 	}
 
+	/** @todo this should change when we support `jr:count` */
+	private isCountControlled(node: RepeatRangeNode): boolean {
+		return node.definition.bodyElement.countExpression != null;
+	}
+
+	/** @todo this should change when we support `jr:noAddRemove` */
+	private isFixedCount(node: RepeatRangeNode): boolean {
+		return node.definition.bodyElement.isFixedCount;
+	}
+
+	private isClientControlled(node: RepeatRangeNode): boolean {
+		return !this.isCountControlled(node) && !this.isFixedCount(node);
+	}
+
 	/**
 	 * **PORTING NOTES**
 	 *
@@ -752,15 +784,17 @@ export class Scenario {
 	proposed_canCreateNewRepeat(repeatRangeReference: string): boolean {
 		const node = getNodeForReference(this.instanceRoot, repeatRangeReference);
 
-		if (node != null && node.nodeType !== 'repeat-range') {
+		if (node == null) {
+			return false;
+		}
+
+		if (node.nodeType !== 'repeat-range') {
 			throw new Error(
 				`Expected a repeat range with reference ${repeatRangeReference}, found a node of type ${node.nodeType}`
 			);
 		}
 
-		throw new ImplementationPendingError(
-			'determining whether or not a repeat range supports client-invoked addition of repeat instances'
-		);
+		return this.isClientControlled(node);
 	}
 
 	/**
