@@ -116,12 +116,9 @@ describe('XPath function support: `current`', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * - Rephrase? Understanding is that `current()` should reference the
-			 *   specific context node, not necessarily the bound `nodeset`, e.g. in
-			 *   the case of repeat instances and their descendants.
-			 *
-			 * - Test likely fails, at least, on present failure to include
-			 *   `current()` in dependency analysis.
+			 * Rephrase? Understanding is that `current()` should reference the
+			 * specific context node, not necessarily the bound `nodeset`, e.g. in the
+			 * case of repeat instances and their descendants.
 			 *
 			 * JR:
 			 *
@@ -132,7 +129,7 @@ describe('XPath function support: `current`', () => {
 			 * is supposed to refer to (/data/my_group/name) and seeing that the
 			 * dependent calculate is updated accordingly.
 			 */
-			it.fails('should refer to [the bound node] its bound `nodeset`', () => {
+			it('should refer to [the bound node] its bound `nodeset`', () => {
 				scenario.answer('/data/my_group/name', 'Bob');
 
 				// JR:
@@ -148,9 +145,6 @@ describe('XPath function support: `current`', () => {
 
 		describe('`current()` as itemset choice filter root', () => {
 			/**
-			 * Test likely fails, at least, on present failure to include `current()`
-			 * in dependency analysis.
-			 *
 			 * JR:
 			 *
 			 * current() in a choice filter should refer to the select node the choice
@@ -162,7 +156,7 @@ describe('XPath function support: `current`', () => {
 			 * value for a first, static select and then using that value to filter a
 			 * second, dynamic select.
 			 */
-			it.fails('should refer to the select node', () => {
+			it('should refer to the select node', () => {
 				scenario.answer('/data/fruit', 'blueberry');
 
 				const choices = scenario.choicesOf('/data/variety');
