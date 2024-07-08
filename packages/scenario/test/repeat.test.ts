@@ -1467,12 +1467,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *
 				 * - Typical `nullValue()` -> blank/empty string check
 				 *
-				 * - Fails at the same point JavaRosa's comments indicate expected
-				 *   failure. Since we don't defer any computations, this is likely a
-				 *   bug (and quite likely in the same class of bugs where references
-				 *   into repeat descendant nodes don't update computations until a new
-				 *   repeat instance is added).
-				 *
 				 * - - -
 				 *
 				 * JR:
@@ -1484,7 +1478,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * that. When a repeat is added, it will trigger recomputation for
 				 * previous instances.
 				 */
-				it.fails('updates previous instance', async () => {
+				it('updates previous instance', async () => {
 					const scenario = await Scenario.init(
 						'Some form',
 						html(
@@ -1784,23 +1778,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			});
 
 			describe('adding repeat instance', () => {
-				/**
-				 * **PORTING NOTES**
-				 *
-				 * - Failure likely due **in part** to general class of bugs where
-				 *   reactive updates don't occur until a new repeat instance is added.
-				 *
-				 * - Addressing that would only solve part of the problem (although
-				 *   would probably make this test pass), as `position()` itself does
-				 *   not yet contribute to reactive subscriptions.
-				 *
-				 * - `position()` and other sub-expressions which should update
-				 *   computations but don't directly reference a node-set notably
-				 *   **probably do not** fall into the category of "likely improved by
-				 *   decoupling from browser/XML DOM", at least without specific
-				 *   consideration.
-				 */
-				it.fails('updates reference to last instance, using position predicate', async () => {
+				it('updates reference to last instance, using position predicate', async () => {
 					const scenario = await Scenario.init(
 						'Some form',
 						html(
@@ -2544,18 +2522,22 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			])(
 				'add explicit repeat position predicate: $addExplicitRepeatPositionPredicate',
 				({ addExplicitRepeatPositionPredicate }) => {
+					let testFn: typeof it | typeof it.fails;
+
+					if (addExplicitRepeatPositionPredicate) {
+						testFn = it;
+					} else {
+						testFn = it.fails;
+					}
+
 					/**
 					 * **PORTING NOTES**
 					 *
-					 * - Fails in direct port due to lack of position predicates in each
-					 *   reference to `outer_repeat` and `inner_repeat`
-					 *
-					 * - Fails with parameterized option to make the positions explicit,
-					 *   likely due to failure to handle `current()` in dependency analysis.
-					 *   The `calculate` expression behaves as expected with whatever
-					 *   initial value is present, but doesn't reactively update afterward.
+					 * Fails in direct port due to lack of position predicates in each
+					 * reference to `outer_repeat` and `inner_repeat`. Parameterized
+					 * option to make the positions explicit.
 					 */
-					it.fails('[is] reevaluated when trigger[dependency?] changes', async () => {
+					testFn('[is] reevaluated when trigger[dependency?] changes', async () => {
 						const scenario = await Scenario.init(
 							'Predicate trigger',
 							html(
