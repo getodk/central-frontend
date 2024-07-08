@@ -113,7 +113,7 @@ describe('DynamicSelectUpdateTest.java', () => {
 		});
 
 		describe('when repeat changed', () => {
-			it.fails('updates choices', async () => {
+			it('updates choices', async () => {
 				const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
 
 				scenario.answer('/data/repeat[1]/value', 'a');
@@ -130,7 +130,7 @@ describe('DynamicSelectUpdateTest.java', () => {
 		});
 
 		describe('when repeat removed', () => {
-			it.fails('updates choices', async () => {
+			it('updates choices', async () => {
 				const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
 
 				scenario.answer('/data/repeat[1]/value', 'a');
@@ -146,7 +146,7 @@ describe('DynamicSelectUpdateTest.java', () => {
 
 		describe('with predicate', () => {
 			describe('when predicate trigger changes', () => {
-				it.fails('updates choices', async () => {
+				it('updates choices', async () => {
 					const scenario = await Scenario.init(
 						'Select from repeat',
 						getSelectFromRepeatForm('starts-with(value,current()/../filter)')
