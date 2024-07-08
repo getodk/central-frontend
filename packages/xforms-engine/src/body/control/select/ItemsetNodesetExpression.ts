@@ -3,6 +3,6 @@ import type { ItemsetDefinition } from './ItemsetDefinition.ts';
 
 export class ItemsetNodesetExpression extends DependentExpression<'nodes'> {
 	constructor(itemset: ItemsetDefinition, nodesetExpression: string) {
-		super(itemset, 'nodes', nodesetExpression);
+		super(itemset.parent, 'nodes', nodesetExpression);
 	}
 }
