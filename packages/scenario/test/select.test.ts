@@ -56,25 +56,8 @@ describe('DynamicSelectUpdateTest.java', () => {
 	/**
 	 * **PORTING NOTES**
 	 *
-	 * 1. The below reference to `XPathFuncExprRandomizeTest` in JavaRosa is meant
-	 *    to reference `RandomizeTest`.
-	 *
-	 * 2. ~~Despite accommodating relative body `ref` attributes,~~ this test
-	 *    still fails. A brief side quest to investigate the nature of the failure
-	 *    revealed that:
-	 *
-	 *    - Even without supporting relative `ref`s on controls, we'll need to do
-	 *      so for `<itemset>` and its `<value>` child (presumably its `<label>`
-	 *      child as well). The concern is so general we probably might as well
-	 *      actually just support them all.
-	 *
-	 *    - Even resolving **all** of these relative references, the reactive
-	 *      subscriptions don't propagate updates until after a new repeat
-	 *      instance is added. A similar (but differently presenting) bug was
-	 *      observed in @sadiqkhoja's demo earlier today. Both (for different
-	 *      reasons) _at least partially_ implicate the need to resolve multiple
-	 *      nodes in `getSubscribableDependencyByReference` (or whatever may
-	 *      evolve in its place/to support its current use cases).
+	 * The below reference to `XPathFuncExprRandomizeTest` in JavaRosa is meant
+	 * to reference `RandomizeTest`.
 	 *
 	 * - - -
 	 *
@@ -96,12 +79,16 @@ describe('DynamicSelectUpdateTest.java', () => {
 		describe('when repeat added', () => {
 			// Unlike static secondary instances, repeats are dynamic. Repeat instances (items) can be added or removed. The
 			// contents of those instances (item values, labels) can also change.
-			it.fails('updates choices', async () => {
+			it('updates choices', async () => {
 				const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
 
 				scenario.answer('/data/repeat[1]/value', 'a');
 				scenario.answer('/data/repeat[1]/label', 'A');
 				expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
+
+				scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/repeat', {
+					explicitRepeatCreation: true,
+				});
 
 				scenario.answer('/data/repeat[2]/value', 'b');
 				scenario.answer('/data/repeat[2]/label', 'B');
@@ -413,16 +400,7 @@ describe('DynamicSelectUpdateTest.java', () => {
 	// When a dynamic select is in a repeat, the itemsets for all repeat instances are represented by the same ItemsetBinding.
 	describe('select in repeat', () => {
 		describe('with ref to repeat child in predicate', () => {
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * This test again asserts a reference check. It seems likely that the
-			 * test is otherwise valid without that check.
-			 *
-			 * Once again, the current failure is likely related to repeat-based
-			 * itemsets being broken in general.
-			 */
-			it.fails('evaluates [the] choice list for each repeat instance', async () => {
+			it('evaluates [the] choice list for each repeat instance', async () => {
 				const scenario = await Scenario.init(
 					'Select in repeat',
 					html(
@@ -454,6 +432,11 @@ describe('DynamicSelectUpdateTest.java', () => {
 				);
 
 				scenario.answer('/data/repeat[1]/filter', 'a');
+
+				scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/repeat', {
+					explicitRepeatCreation: true,
+				});
+
 				scenario.answer('/data/repeat[2]/filter', 'a');
 
 				const repeat0Choices = scenario.choicesOf('/data/repeat[1]/select');
