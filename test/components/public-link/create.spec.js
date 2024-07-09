@@ -87,7 +87,7 @@ describe('PublicLinkCreate', () => {
   describe('after a successful response', () => {
     const submit = () => {
       testData.standardPublicLinks.createPast(1);
-      return load('/projects/1/forms/f/public-links', { root: false })
+      return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
           await app.get('.heading-with-button .btn-primary').trigger('click');
@@ -119,6 +119,11 @@ describe('PublicLinkCreate', () => {
     it('highlights the new public link', async () => {
       const app = await submit();
       app.get('.public-link-row').classes('success').should.be.true();
+    });
+
+    it('updates the count in the tab', async () => {
+      const app = await submit();
+      app.get('#form-head .nav-tabs li.active .badge').text().should.equal('2');
     });
   });
 });

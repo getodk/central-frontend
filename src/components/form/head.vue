@@ -51,6 +51,9 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('submissions')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('resource.submissions') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $n(form.submissions, 'default') }}
+                  </span>
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
@@ -58,6 +61,9 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('public-links')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('formHead.tab.publicAccess') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $n(form.publicLinks, 'default') }}
+                  </span>
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
@@ -65,6 +71,9 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('settings')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('common.tab.settings') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $t(`formState.${form.state}`) }}
+                  </span>
                 </router-link>
               </li>
             </ul>

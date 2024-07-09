@@ -1,6 +1,7 @@
 import DatasetNew from '../../../src/components/dataset/new.vue';
 
 import testData from '../../data';
+import { findTab } from '../../util/dom';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
@@ -16,7 +17,7 @@ const mountOptions = (options = undefined) => mergeMountOptions(options, {
   }
 });
 
-describe('DatasetPropertyNew', () => {
+describe('DatasetNew', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedProjects.createPast(1);
@@ -96,6 +97,17 @@ describe('DatasetPropertyNew', () => {
         .complete()
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/entity-lists/MyNewDataset');
+        }));
+
+    it('increments the count of entity lists', () =>
+      submit('MyNewDataset')
+        .complete()
+        .request(app => app.get('#dataset-new-done-button').trigger('click'))
+        .respondWithData(() => testData.extendedDatasets.last())
+        .complete()
+        .load('/projects/1', { project: false })
+        .afterResponses(app => {
+          findTab(app, 'Entities').get('.badge').text().should.equal('1');
         }));
   });
 

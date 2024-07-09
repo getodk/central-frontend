@@ -63,13 +63,15 @@ describe('EntityList', () => {
       })
       .beforeAnyResponse(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(1);
-        const text = app.get('#entity-download-button').text();
-        text.should.equal('Download 1 Entity');
+        app.get('#page-head-tabs li.active .badge').text().should.equal('1');
+        const button = app.get('#entity-download-button');
+        button.text().should.equal('Download 1 Entity');
       })
       .afterResponse(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(2);
-        const text = app.get('#entity-download-button').text();
-        text.should.equal('Download 2 Entities');
+        app.get('#page-head-tabs li.active .badge').text().should.equal('2');
+        const button = app.get('#entity-download-button');
+        button.text().should.equal('Download 2 Entities');
       });
   });
 

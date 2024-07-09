@@ -5,6 +5,7 @@ import Loading from '../../../src/components/loading.vue';
 import PageBack from '../../../src/components/page/back.vue';
 
 import testData from '../../data';
+import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -67,9 +68,9 @@ describe('FormHead', () => {
         tabs.map(tab => tab.text()).should.eql([
           'Overview',
           'Versions',
-          'Submissions',
-          'Public Access',
-          'Settings',
+          'Submissions 0',
+          'Public Access 0',
+          'Settings Open',
           'Status',
           'Form Attachments 1',
           'Testing'
@@ -85,7 +86,7 @@ describe('FormHead', () => {
       return load('/projects/1/forms/f/draft/testing').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
         const text = tabs.map(tab => tab.text());
-        text.should.eql(['Versions', 'Submissions', 'Testing']);
+        text.should.eql(['Versions', 'Submissions 0', 'Testing']);
       });
     });
 
@@ -117,6 +118,27 @@ describe('FormHead', () => {
         await a.should.not.have.tooltip();
       }
     });
+
+    it('shows the count of submissions', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { submissions: 1000 });
+      const app = await load('/projects/1/forms/f');
+      findTab(app, 'Submissions').get('.badge').text().should.equal('1,000');
+    });
+
+    it('shows the count of public links', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { publicLinks: 1000 });
+      const app = await load('/projects/1/forms/f');
+      findTab(app, 'Public Access').get('.badge').text().should.equal('1,000');
+    });
+
+    it('shows the form state', async () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { state: 'closing' });
+      const app = await load('/projects/1/forms/f');
+      findTab(app, 'Settings').get('.badge').text().should.equal('Closing');
+    });
   });
 
   describe('Form Attachments tab', () => {
@@ -125,19 +147,15 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1, { draft: true });
     });
 
-    it('is not shown if there are no form attachments', () =>
-      load('/projects/1/forms/f/draft').then(app => {
-        const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
-        tabs.map(tab => tab.text()).should.eql(['Status', 'Testing']);
-      }));
+    it('is not shown if there are no form attachments', async () => {
+      const app = await load('/projects/1/forms/f/draft');
+      findTab(app, 'Form Attachments').exists().should.be.false();
+    });
 
-    it('is shown if there are form attachments', () => {
+    it('is shown if there are form attachments', async () => {
       testData.standardFormAttachments.createPast(2, { blobExists: false });
-      return load('/projects/1/forms/f/draft').then(app => {
-        const tabs = app.findAll('#form-head-draft-nav .nav-tabs a');
-        const text = tabs.map(tab => tab.text());
-        text.should.eql(['Status', 'Form Attachments 2', 'Testing']);
-      });
+      const app = await load('/projects/1/forms/f/draft');
+      findTab(app, 'Form Attachments').exists().should.be.true();
     });
 
     describe('badge', () => {
