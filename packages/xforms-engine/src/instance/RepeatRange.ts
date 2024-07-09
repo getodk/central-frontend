@@ -199,6 +199,10 @@ export class RepeatRange
 			definition.bind.relevant
 		);
 
+		const sharedStateOptions = {
+			clientStateFactory: this.engineConfig.stateFactory,
+		};
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -213,9 +217,7 @@ export class RepeatRange
 				valueOptions: null,
 				value: null,
 			},
-			{
-				clientStateFactory: this.engineConfig.stateFactory,
-			}
+			sharedStateOptions
 		);
 
 		this.state = state;
@@ -231,7 +233,7 @@ export class RepeatRange
 
 			this.addInstances(afterIndex, 1, instanceDefinition);
 		});
-		this.validationState = createAggregatedViolations(this);
+		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 	}
 
 	private getLastIndex(): number {

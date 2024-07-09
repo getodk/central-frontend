@@ -155,6 +155,10 @@ export class Root
 		const evaluator = instanceDOM.primaryInstanceEvaluator;
 		const { translations } = evaluator;
 		const { defaultLanguage, languages } = getInitialLanguageState(translations);
+		const sharedStateOptions = {
+			clientStateFactory: this.engineConfig.stateFactory,
+		};
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -169,9 +173,7 @@ export class Root
 				value: null,
 				children: childrenState.childIds,
 			},
-			{
-				clientStateFactory: engineConfig.stateFactory,
-			}
+			sharedStateOptions
 		);
 
 		this.state = state;
@@ -192,7 +194,7 @@ export class Root
 		this.languages = languages;
 
 		childrenState.setChildren(buildChildren(this));
-		this.validationState = createAggregatedViolations(this);
+		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

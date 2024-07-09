@@ -98,12 +98,7 @@ export class StringField
 	}
 
 	getViolation(): AnyViolation | null {
-		// Read engine state to ensure reactivity in engine, Solid-based clients
-		this.validation.engineState.violation;
-
-		// Read/return client state to ensure client reactivity, regardless of
-		// client's reactive implementation
-		return this.validationState.violation;
+		return this.validation.engineState.violation;
 	}
 
 	// ValidationContext

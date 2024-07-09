@@ -49,6 +49,10 @@ export class Subtree
 
 		this.childrenState = childrenState;
 
+		const sharedStateOptions = {
+			clientStateFactory: this.engineConfig.stateFactory,
+		};
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -63,9 +67,7 @@ export class Subtree
 				valueOptions: null,
 				value: null,
 			},
-			{
-				clientStateFactory: this.engineConfig.stateFactory,
-			}
+			sharedStateOptions
 		);
 
 		this.state = state;
@@ -77,7 +79,7 @@ export class Subtree
 		);
 
 		childrenState.setChildren(buildChildren(this));
-		this.validationState = createAggregatedViolations(this);
+		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

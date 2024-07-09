@@ -119,6 +119,10 @@ export class RepeatInstance
 
 		this.currentIndex = currentIndex;
 
+		const sharedStateOptions = {
+			clientStateFactory: this.engineConfig.stateFactory,
+		};
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -134,9 +138,7 @@ export class RepeatInstance
 				valueOptions: null,
 				value: null,
 			},
-			{
-				clientStateFactory: this.engineConfig.stateFactory,
-			}
+			sharedStateOptions
 		);
 
 		this.state = state;
@@ -169,7 +171,7 @@ export class RepeatInstance
 		});
 
 		childrenState.setChildren(buildChildren(this));
-		this.validationState = createAggregatedViolations(this);
+		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 	}
 
 	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {
