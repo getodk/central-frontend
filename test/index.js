@@ -9,6 +9,7 @@ import '../src/bootstrap';
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
+import { setupLanguages } from './util/i18n';
 import './assertions';
 
 window.beforeAll = before; // eslint-disable-line no-undef
@@ -45,6 +46,7 @@ afterEach(() => {
   testData.reset();
   mockLogin.reset();
 });
+setupLanguages(afterEach);
 
 
 

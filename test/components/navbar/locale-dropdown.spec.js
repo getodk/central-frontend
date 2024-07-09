@@ -1,5 +1,6 @@
 import NavbarLocaleDropdown from '../../../src/components/navbar/locale-dropdown.vue';
 
+import createTestContainer from '../../util/container';
 import { load } from '../../util/http';
 import { mount } from '../../util/lifecycle';
 import { wait } from '../../util/util';
@@ -9,6 +10,13 @@ describe('NavbarLocaleDropdown', () => {
     const toggle = mount(NavbarLocaleDropdown).get('.dropdown-toggle');
     toggle.text().should.equal('en');
     toggle.attributes('aria-label').should.equal('English');
+  });
+
+  it('only shows the language subtag', () => {
+    const container = createTestContainer();
+    container.i18n.locale = 'zh-Hant';
+    const dropdown = mount(NavbarLocaleDropdown, { container });
+    dropdown.get('.dropdown-toggle').text().should.equal('zh');
   });
 
   it('shows a menu item for each locale', () => {

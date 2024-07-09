@@ -10,10 +10,28 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import { useI18n } from 'vue-i18n';
-import { watchSyncEffect } from 'vue';
+import { computed, watchSyncEffect } from 'vue';
 
+import { localStore } from './storage';
 import { locales } from '../i18n';
 import { memoizeForContainer } from './composable';
+
+// Returns the user's locale based on their previous selection and their browser
+// settings. Returns `null` if there is no matching locale.
+export const userLocale = () => {
+  const storageLocale = localStore.getItem('locale');
+  if (storageLocale != null && locales.has(storageLocale)) return storageLocale;
+
+  // Match on the language subtag, ignoring script and region.
+  const byLanguage = new Map();
+  for (const locale of locales.keys())
+    byLanguage.set(new Intl.Locale(locale).language, locale);
+  for (const locale of navigator.languages) {
+    const match = byLanguage.get(new Intl.Locale(locale).language);
+    if (match != null) return match;
+  }
+  return null;
+};
 
 
 
@@ -90,13 +108,19 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
     numberFormats[key] = numberFormat;
     return numberFormat;
   };
+
+  const sentenceSeparator = computed(() =>
+    locales.get(i18n.locale).sentenceSeparator);
+
   return {
     formatRange: (start, end, key = 'default') => (start === end
       ? i18n.n(start, key)
       : getNumberFormat(key).formatRange(start, end)),
     formatList: (list) => formats[i18n.locale].listFormat.format(list),
     formatListToParts: (list) =>
-      formats[i18n.locale].listFormat.formatToParts(list)
+      formats[i18n.locale].listFormat.formatToParts(list),
+
+    sentenceSeparator
   };
 });
 

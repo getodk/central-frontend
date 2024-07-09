@@ -1,0 +1,12 @@
+export const setupLanguages = (afterEach) => {
+  // Check that it's safe to set and delete navigator.languages.
+  Object.prototype.hasOwnProperty.call(navigator, 'languages').should.be.false();
+  afterEach(() => { delete navigator.languages; });
+};
+
+export const setLanguages = (locales) => {
+  Object.defineProperty(navigator, 'languages', {
+    value: locales,
+    configurable: true
+  });
+};

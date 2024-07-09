@@ -16,7 +16,7 @@ import createRoutes from './routes';
 import { canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
 import { createScrollBehavior } from './scroll-behavior';
 import { loadAsync } from './util/load-async';
-import { loadLocale } from './util/i18n';
+import { loadLocale, userLocale } from './util/i18n';
 import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
@@ -65,12 +65,9 @@ router.afterEach(unlessFailure(to => {
   const { session } = requestData;
   {
     const requests = [
-      () => {
-        const storageLocale = localStore.getItem('locale');
-        const locale = storageLocale != null
-          ? storageLocale
-          : navigator.language.split('-', 1)[0];
-        return loadLocale(container, locale);
+      async () => {
+        const locale = userLocale();
+        if (locale != null) await loadLocale(container, locale);
       },
 
       // Implements the restoreSession meta field. A test can skip this request

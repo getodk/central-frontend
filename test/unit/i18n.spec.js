@@ -1,10 +1,46 @@
 import createCentralI18n from '../../src/i18n';
-import { $tcn, loadLocale, useI18nUtils } from '../../src/util/i18n';
+import { $tcn, loadLocale, useI18nUtils, userLocale } from '../../src/util/i18n';
 
 import createTestContainer from '../util/container';
+import { setLanguages } from '../util/i18n';
 import { withSetup } from '../util/lifecycle';
 
 describe('util/i18n', () => {
+  describe('userLocale()', () => {
+    it('returns a locale that exactly matches the navigator language', () => {
+      setLanguages(['es']);
+      userLocale().should.equal('es');
+    });
+
+    it('ignores subtags of navigator language other than language subtag', () => {
+      setLanguages(['ja-JP-u-ca-japanese']);
+      userLocale().should.equal('ja');
+    });
+
+    it('ignores a mismatch on the script subtag', () => {
+      setLanguages(['zh']);
+      userLocale().should.equal('zh-Hant');
+      setLanguages(['zh-Hans']);
+      userLocale().should.equal('zh-Hant');
+    });
+
+    it('returns null if there is no matching locale', () => {
+      setLanguages(['la']);
+      should.not.exist(userLocale());
+    });
+
+    it('returns the first locale that matches on the language subtag', () => {
+      setLanguages(['la', 'zh-Hans', 'es']);
+      userLocale().should.equal('zh-Hant');
+    });
+
+    it('returns the previously selected locale set in local storage', () => {
+      localStorage.setItem('locale', 'zh-Hant');
+      setLanguages(['es']);
+      userLocale().should.equal('zh-Hant');
+    });
+  });
+
   describe('loadLocale()', () => {
     it('changes the locale', async () => {
       const container = createTestContainer();
@@ -149,6 +185,28 @@ describe('util/i18n', () => {
           { type: 'literal', value: '、' },
           { type: 'element', value: 'y' }
         ]);
+      });
+    });
+
+    describe('sentenceSeparator', () => {
+      it('is a space for en', () => {
+        const container = createTestContainer();
+        const { sentenceSeparator } = withSetup(useI18nUtils, { container });
+        sentenceSeparator.value.should.equal(' ');
+      });
+
+      it('is a space for es', () => {
+        const container = createTestContainer();
+        const { sentenceSeparator } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'es';
+        sentenceSeparator.value.should.equal(' ');
+      });
+
+      it('is empty for ja', () => {
+        const container = createTestContainer();
+        const { sentenceSeparator } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        sentenceSeparator.value.should.equal('');
       });
     });
   });
