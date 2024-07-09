@@ -86,50 +86,78 @@ describe('TriggerableDagTest.java', () => {
 		});
 
 		describe('constraint violations and form finalization', () => {
-			it('[has no clear BDD-ish description equivalent]', async () => {
-				const scenario = await Scenario.init(
-					'Some form',
-					html(
-						head(
-							title('Some form'),
-							model(
-								mainInstance(t('data id="some-form"', t('a'), t('b'))),
-								bind('/data/a').type('string').constraint('/data/b'),
-								bind('/data/b').type('boolean')
+			interface CastReadonlyExpressionOptions {
+				readonly castReadonlyExpressionsAsNumber: boolean;
+			}
+
+			describe.each<CastReadonlyExpressionOptions>([
+				{ castReadonlyExpressionsAsNumber: false },
+				{ castReadonlyExpressionsAsNumber: true },
+			])(
+				'readonly (cast readonly expression as number: $castReadonlyExpressionAsNumber)',
+				({ castReadonlyExpressionsAsNumber }) => {
+					let testFn: typeof it | typeof it.fails;
+
+					if (castReadonlyExpressionsAsNumber) {
+						testFn = it;
+					} else {
+						testFn = it.fails;
+					}
+
+					let castReadonlyExpression: (baseExpression: string) => string;
+
+					if (castReadonlyExpressionsAsNumber) {
+						castReadonlyExpression = (baseExpression) => `number(${baseExpression})`;
+					} else {
+						castReadonlyExpression = (baseExpression) => baseExpression;
+					}
+
+					testFn('[has no clear BDD-ish description equivalent]', async () => {
+						const scenario = await Scenario.init(
+							'Some form',
+							html(
+								head(
+									title('Some form'),
+									model(
+										mainInstance(t('data id="some-form"', t('a'), t('b'))),
+										bind('/data/a').type('string').constraint(castReadonlyExpression('/data/b')),
+										bind('/data/b').type('boolean')
+									)
+								),
+								body(input('/data/a'), input('/data/b'))
 							)
-						),
-						body(input('/data/a'), input('/data/b'))
-					)
-				);
+						);
 
-				// First, ensure we will be able to commit an answer in /data/a by
-				// making it match its constraint. No values can be committed to the
-				// instance if constraints aren't satisfied.
-				scenario.answer('/data/b', true);
+						// First, ensure we will be able to commit an answer in /data/a by
+						// making it match its constraint. No values can be committed to the
+						// instance if constraints aren't satisfied.
+						scenario.answer('/data/b', true);
 
-				// Then, commit an answer (answers with empty values are always valid)
-				scenario.answer('/data/a', 'cocotero');
+						// Then, commit an answer (answers with empty values are always valid)
+						scenario.answer('/data/a', 'cocotero');
 
-				// Then, make the constraint defined at /data/a impossible to satisfy
-				scenario.answer('/data/b', false);
+						// Then, make the constraint defined at /data/a impossible to satisfy
+						scenario.answer('/data/b', false);
 
-				// At this point, the form has /data/a filled with an answer that's
-				// invalid according to its constraint expression, but we can't be
-				// aware of that, unless we validate the whole form.
-				//
-				// Clients like Collect will validate the whole form before marking
-				// a submission as complete and saving it to the filesystem.
-				//
-				// FormDef.validate(boolean) will go through all the relevant fields
-				// re-answering them with their current values in order to detect
-				// any constraint violations. When this happens, a non-null
-				// ValidationOutcome object is returned including information about
-				// the violated constraint.
-				const validate = scenario.getValidationOutcome();
+						// At this point, the form has /data/a filled with an answer that's
+						// invalid according to its constraint expression, but we can't be
+						// aware of that, unless we validate the whole form.
+						//
+						// Clients like Collect will validate the whole form before marking
+						// a submission as complete and saving it to the filesystem.
+						//
+						// FormDef.validate(boolean) will go through all the relevant fields
+						// re-answering them with their current values in order to detect
+						// any constraint violations. When this happens, a non-null
+						// ValidationOutcome object is returned including information about
+						// the violated constraint.
+						const validate = scenario.getValidationOutcome();
 
-				expect(validate.failedPrompt).toBe(scenario.indexOf('/data/a'));
-				expect(validate.outcome).toBe(ANSWER_CONSTRAINT_VIOLATED);
-			});
+						expect(validate.failedPrompt).toBe(scenario.indexOf('/data/a'));
+						expect(validate.outcome).toBe(ANSWER_CONSTRAINT_VIOLATED);
+					});
+				}
+			);
 		});
 	});
 });
