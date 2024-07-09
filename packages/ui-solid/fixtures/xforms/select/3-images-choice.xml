@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>images-choice</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="default" default="true()">
+          <text id="animals-0">
+            <value>tiger</value>
+            <value form="image">jr://images/tiger.jpg</value>
+          </text>
+          <text id="animals-1">
+            <value>camel</value>
+            <value form="image">jr://images/camel.jpg</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="images-choice" version="20240611120218">
+          <animal/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <instance id="animals">
+        <root>
+          <item>
+            <itextId>animals-0</itextId>
+            <name>tiger</name>
+          </item>
+          <item>
+            <itextId>animals-1</itextId>
+            <name>camel</name>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/animal" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/animal">
+      <label>Animal</label>
+      <itemset nodeset="instance('animals')/root/item">
+        <value ref="name"/>
+        <label ref="jr:itext(itextId)"/>
+      </itemset>
+    </select1>
+  </h:body>
+</h:html>

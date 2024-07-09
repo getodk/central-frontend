@@ -5,7 +5,8 @@
     "src/components/__tests__",
     "tests",
     "tests-examples",
-    "src/components/**/*.vue"
+    "src/components/**/*.vue",
+    "src/directives/**/*.ts"
   ],
   "exclude": [],
   "compilerOptions": {

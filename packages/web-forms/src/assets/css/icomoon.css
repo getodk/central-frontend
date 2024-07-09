@@ -89,5 +89,8 @@
 	content: '\e914';
 }
 .icon-menu:before {
+	content: '\e915';
+}
+.icon-check:before {
 	content: '\e916';
 }

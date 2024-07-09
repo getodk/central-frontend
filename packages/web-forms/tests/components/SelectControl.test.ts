@@ -7,19 +7,23 @@ import { getReactiveForm, globalMountOptions } from '../helpers';
 const mountComponent = async (questionNumber: number) => {
 	const xform = await getReactiveForm('select/1-static-selects.xml');
 
-	return mount(SelectControl, {
+	const component = mount(SelectControl, {
 		props: {
 			question: xform.currentState.children[questionNumber] as SelectNode,
 		},
 		global: globalMountOptions,
 	});
+
+	return { xform, component };
 };
 
 describe('SelectControl', () => {
 	it('shows radio buttons for select1', async () => {
-		const component = await mountComponent(0);
-		const cherry: DOMWrapper<HTMLInputElement> = component.find('input[value="cherry"]');
-		const mango: DOMWrapper<HTMLInputElement> = component.find('input[value="mango"]');
+		const { xform, component } = await mountComponent(0);
+		const nodeId = xform.currentState.children[0].nodeId;
+
+		const cherry: DOMWrapper<HTMLInputElement> = component.find(`input[id="${nodeId}_cherry"]`);
+		const mango: DOMWrapper<HTMLInputElement> = component.find(`input[id="${nodeId}_mango"]`);
 
 		expect(cherry.element.type).toEqual('radio');
 		expect(cherry.element.checked).toBe(true);
@@ -31,10 +35,13 @@ describe('SelectControl', () => {
 	});
 
 	it('shows checkboxes for select many', async () => {
-		const component = await mountComponent(1);
+		const { xform, component } = await mountComponent(1);
+		const nodeId = xform.currentState.children[1].nodeId;
 
-		const watermelon: DOMWrapper<HTMLInputElement> = component.find('input[value="watermelon"]');
-		const peach: DOMWrapper<HTMLInputElement> = component.find('input[value="peach"]');
+		const watermelon: DOMWrapper<HTMLInputElement> = component.find(
+			`input[id="${nodeId}_watermelon"]`
+		);
+		const peach: DOMWrapper<HTMLInputElement> = component.find(`input[id="${nodeId}_peach"]`);
 
 		expect(watermelon.element.type).toEqual('checkbox');
 		expect(watermelon.element.checked).toBe(false);

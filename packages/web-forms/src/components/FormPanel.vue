@@ -9,7 +9,7 @@ interface PanelProps {
 	title?: string;
 	menuItems?: MenuItem[];
 	noUi?: boolean;
-	class?: string;
+	class?: string[] | string;
 	labelIcon?: string;
 	labelNumber?: number;
 }
@@ -58,7 +58,7 @@ const toggleMenu = (event:  Event) => {
 			<Menu ref="menu" :model="menuItems" :popup="true" />
 		</template>
 		<template #default>
-			<div class="flex flex-column gap-5">
+			<div class="content-wrapper">
 				<slot />
 			</div>
 		</template>
@@ -127,5 +127,11 @@ h2 {
 		display: none;
 	}
 	
+}
+
+.content-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
 }
 </style>

@@ -1,94 +1,13 @@
 <script setup lang="ts">
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
-import PrimeVueCheckbox from 'primevue/checkbox';
-import type { HTMLInputElementEvent } from 'primevue/events';
+import type { SelectNode } from '@getodk/xforms-engine';
+import Select1Control from './Select1Control.vue';
+import SelectNControl from './SelectNControl.vue';
 
-import PrimeVueRadioButton from 'primevue/radiobutton';
-import { computed } from 'vue';
-import ControlLabel from '../ControlLabel.vue';
-
-
-const props = defineProps<{question: SelectNode}>();
-
-const setSelect1Value = (item: SelectItem) => {
-	props.question.select(item);
-};
-
-const setSelectNValue = (e: HTMLInputElementEvent, item: SelectItem) => {
-	const checkbox = e.target;
-
-	if(checkbox.checked) {
-		props.question.select(item);
-	}
-	else{
-		props.question.deselect(item);
-	}
-}
-
-const value = computed(() => {
-	const [item] = props.question.currentState.value;
-
-	return item?.value ?? null
-})
+defineProps<{question: SelectNode}>();
 </script>
 
 <template>
-	<ControlLabel :question="question" />
+	<Select1Control v-if="question.definition.bodyElement.type === 'select1'" :question="question" />
 
-	<template v-if="question.definition.bodyElement.type === 'select1'">
-		<div
-			v-for="option in question.currentState.valueOptions"
-			:key="option.value"
-			:class="[{disabled: question.currentState.readonly}, 'select1']"
-		>
-			<PrimeVueRadioButton
-				:input-id="question.nodeId + '_' + option.value"
-				:name="question.nodeId"
-				:value="option.value"
-				:disabled="question.currentState.readonly"
-				:model-value="value"
-				@update:model-value="setSelect1Value(option)"
-			/>
-			<label :for="question.nodeId + '_' + option.value">{{ option.label?.asString }}</label>
-		</div>
-	</template>
-
-	<template v-else>
-		<div
-			v-for="option of question.currentState.valueOptions"
-			:key="option.value"
-			:class="[{disabled: question.currentState.readonly}, 'selectN']"
-		>
-			<PrimeVueCheckbox
-				:input-id="question.nodeId + '_' + option.value"
-				:name="question.nodeId"
-				:value="option.value"
-				:disabled="question.currentState.readonly"
-				:model-value="question.currentState.value.map(v => v.value)"
-				@change="setSelectNValue($event, option)"
-			/>
-			<label :for="question.nodeId + '_' + option.value">{{ option.label?.asString }}</label>
-		</div>
-	</template>
+	<SelectNControl v-else-if="question.definition.bodyElement.type === 'select'" :question="question" />
 </template>
-
-<style scoped lang="scss">
-
-.select1,
-.selectN {
-	display: flex;
-	align-items: center;
-
-	label {
-		padding-left: 0.5rem;
-		margin-left: 0;
-		margin-bottom: 0;
-		cursor: pointer;
-	}
-
-	&.disabled,
-	&.disabled label {
-		cursor: not-allowed;
-	}
-}
-</style>
