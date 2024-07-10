@@ -1,5 +1,14 @@
 # @getodk/common
 
+## 0.2.0
+
+### Minor Changes
+
+- e7bef0c: Support for `appearances`:
+
+  - Added `PartiallyKnownString` type.
+  - Several custom assertion helpers.
+
 ## 0.1.1
 
 ### Patch Changes

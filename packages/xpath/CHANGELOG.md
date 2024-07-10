@@ -1,5 +1,12 @@
 # @getodk/xpath
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [4a87291]
+  - @getodk/common@0.2.0
+
 ## 0.1.1
 
 ### Patch Changes

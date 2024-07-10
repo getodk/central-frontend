@@ -1,7 +1,7 @@
 {
   "name": "@getodk/scenario",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "@getodk/scenario",
   "type": "module",
   "author": "getodk",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@js-joda/core": "^5.6.2",
-    "@getodk/xforms-engine": "0.1.1",
+    "@getodk/xforms-engine": "0.2.0",
     "@vitest/browser": "^1.6.0",
     "jsdom": "^24.0.0",
     "solid-js": "^1.8.17",
