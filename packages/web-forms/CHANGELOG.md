@@ -1,5 +1,30 @@
 # @getodk/web-forms
 
+## 0.2.0
+
+### Minor Changes
+
+- 721506a: Added support for following `select_one` and `select_multiple` appearances (#141):
+
+  - minimal
+  - search
+  - columns-pack
+  - columns
+  - columns-n
+  - no-buttons
+  - likert (`select_one` only)
+  - label
+  - list-nolabel
+  - list
+
+  Added support for `field-list` appearance for `group`.
+
+### Patch Changes
+
+- bab3924: Responsive layout: Adjust Form header based on screen size (#128)
+- e7bef0c: Add initial engine support for appearances
+- 8ab9493: fix: include css in the built js file, test build to prevent repeat regressions
+
 ## 0.1.1
 
 ### Patch Changes

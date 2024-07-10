@@ -1,6 +1,6 @@
 {
   "name": "@getodk/web-forms",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "Apache-2.0",
   "description": "ODK Web Forms",
   "author": "getodk",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@getodk/xforms-engine": "0.1.1",
+    "@getodk/xforms-engine": "0.2.0",
     "@playwright/test": "^1.44.1",
     "@types/ramda": "^0.30.0",
     "@vitejs/plugin-vue": "^5.0.4",

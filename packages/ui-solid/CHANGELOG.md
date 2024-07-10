@@ -1,5 +1,16 @@
 # @getodk/ui-solid
 
+## 0.1.2
+
+### Patch Changes
+
+- e7bef0c: Add initial engine support for appearances
+- Updated dependencies [4a87291]
+- Updated dependencies [e7bef0c]
+- Updated dependencies [7859da4]
+  - @getodk/common@0.2.0
+  - @getodk/xforms-engine@0.2.0
+
 ## 0.1.1
 
 ### Patch Changes

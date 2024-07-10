@@ -1,6 +1,6 @@
 {
   "name": "@getodk/xpath",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "Apache-2.0",
   "description": "XPath implementation for ODK Web Forms",
   "type": "module",
@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
-    "@getodk/common": "0.1.1",
+    "@getodk/common": "0.2.0",
     "crypto-js": "^4.2.0",
     "itertools-ts": "^1.23.0"
   },
