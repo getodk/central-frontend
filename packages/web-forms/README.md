@@ -1,6 +1,6 @@
 # @getodk/web-forms
 
-This is a Vue component library that uses [`@getodk/xforms-engine`](../xforms-engine/) to render ODK XForms.
+This package is a Vue component library that uses [`@getodk/xforms-engine`](../xforms-engine/) to render [ODK XForms](https://getodk.github.io/xforms-spec/). These forms are generally authored by end users in Excel using the [XLSForm](https://docs.getodk.org/xlsform/) standard. Learn more [on the ODK website](https://getodk.org/) and the ODK Web Form project's [main README](https://github.com/getodk/web-forms).
 
 ## Usage
 
@@ -16,12 +16,16 @@ To use this library in a Vue.js application:
 
 **Plugin:**
 
-Plugin is there to initialize PrimeVue, currently it exposes no options. In future, various configuration options might be added to the plugin.
+The plugin is there to initialize PrimeVue, currently it exposes no options. In the future, configuration options may be added to the plugin.
 
 **Props and Events:**
 
-- `form-xml`: the XML of ODK XForm to be rendered.
+- `form-xml`: the XML of the ODK XForm to be rendered.
 - `submit`: it is raised when user pressed "Send" button on the Form.
+
+### What if I don't use Vue?
+
+We will eventually publish a framework-agnostic custom element.
 
 ## Development
 
@@ -35,13 +39,13 @@ Individual test environments, and their corresponding watch modes, also have sep
 
 ### Material Design
 
-This package uses Material Design system for the UI, though not strictly. The idea is to closely match the design to that of ODK Collect.
+This package uses the Material Design system for the UI, though not strictly. The idea is to closely match the design to that of [ODK Collect](https://docs.getodk.org/collect-intro/).
 
-For Material Components and layout, it is using PrimeVue component library.
+It uses the [PrimeVue component library](https://primevue.org/).
 
 ### Theme and Styles
 
-We are using customized version of Material Light Indigo theme provided by the PrimeVue. All customization is done in [`./themes/2024-light/theme.scss`](./themes/2024-light/theme.scss) file. We tend to define all css rules in that file so that in future we could support shipping multiple themes at the same time, However, this approach is flexible and subject to change in the near future.
+We are using a customized version of the Material Light Indigo theme provided by PrimeVue.
 
 ### Icons
 
