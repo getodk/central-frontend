@@ -589,14 +589,13 @@ export class Scenario {
 		return Promise.reject(new UnclearApplicabilityError('Scenario instance statefulness'));
 	}
 
-	/**
-	 * @todo
-	 */
 	getValidationOutcome(): ValidateOutcome {
 		const [first, ...rest] = this.instanceRoot.validationState.violations;
 
 		if (rest.length > 0) {
-			throw 'todo';
+			throw new Error(
+				'TODO: what is an appropriate form-/Scenario-level ValidationOutcome when there is more than one violation?'
+			);
 		}
 
 		if (first == null) {
