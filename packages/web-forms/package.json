@@ -30,6 +30,7 @@
     "build": "npm-run-all -nl build:*",
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
+    "build-preview": "yarn build && yarn vite serve build-preview --port 5174",
     "dev": "vite",
     "test": "npm-run-all -nl test:*",
     "test:e2e": "playwright test",
