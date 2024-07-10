@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>ODK Web Forms: Test Build</title>
+	</head>
+	<body>
+		<div id="app"></div>
+		<script type="module">
+			/** Basic form definition, to load for validation of build product */
+			const formXml = /* xml */ `<?xml version="1.0"?>
+				<h:html xmlns="http://www.w3.org/2002/xforms"
+					xmlns:ev="http://www.w3.org/2001/xml-events"
+					xmlns:h="http://www.w3.org/1999/xhtml"
+					xmlns:jr="http://openrosa.org/javarosa"
+					xmlns:orx="http://openrosa.org/xforms/"
+					xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+					<h:head>
+						<h:title>Calculate (simple)</h:title>
+						<model>
+							<instance>
+								<root id="calculate-simple">
+									<first-question>1</first-question>
+									<second-question/>
+									<meta>
+										<instanceID/>
+									</meta>
+								</root>
+							</instance>
+							<bind nodeset="/root/first-question"/>
+							<bind nodeset="/root/second-question" calculate="/root/first-question * 2"/>
+							<bind nodeset="/root/meta/instanceID" type="string"/>
+						</model>
+					</h:head>
+					<h:body>
+						<input ref="/root/first-question">
+							<label>1. Default value is 1</label>
+						</input>
+						<input ref="/root/second-question">
+							<label>2. Calculates #1 × 2</label>
+						</input>
+					</h:body>
+				</h:html>`;
+
+			/**
+			 * Partially based on
+			 * {@link https://github.com/getodk/central-frontend/blob/74f2d9529cca53316ffa7a723ee1da4fdd70c1a7/src/components/form/preview.vue | central-frontend's initial `@getodk/web-forms` integration}.
+			 */
+
+			import { createApp, defineOptions, getCurrentInstance, h } from 'vue';
+			import { OdkWebForm, webFormsPlugin } from '../dist/index.js';
+
+			const vnode = h(OdkWebForm, {
+				formXml,
+				onSubmit: () => {
+					console.log('onSubmit');
+				},
+			});
+			console.log('vnode', vnode);
+
+			// Install WebFormsPlugin in the component instead of installing it at the
+			// application level so that @getodk/web-forms package is not loaded for every
+			// page, thus increasing the initial bundle
+			const app = createApp({
+				render: () => vnode,
+			});
+
+			app.use(webFormsPlugin);
+
+			defineOptions({
+				name: 'FormPreview',
+			});
+
+			app.mount('#app');
+		</script>
+		<style id="build-preview-global-styles">
+			:root,
+			body {
+				padding: 0;
+				margin: 0;
+			}
+		</style>
+	</body>
+</html>

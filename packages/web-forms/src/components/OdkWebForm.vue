@@ -24,8 +24,6 @@ initializeForm(props.formXml, {
 const handleSubmit = () => {
 	emit('submit');
 }
-
-
 </script>
 
 <template>
@@ -51,7 +49,7 @@ const handleSubmit = () => {
 	</div>
 </template>
 
-<style scoped lang="scss"> 
+<style scoped lang="scss">
 @import 'primeflex/core/_variables.scss';
 
 .odk-form {
@@ -97,7 +95,7 @@ const handleSubmit = () => {
 		.form-wrapper {
 			max-width: unset;
 			padding-top: unset;
-			
+
 			.questions-card {
 				border-radius: unset;
 				box-shadow: unset;
@@ -116,6 +114,10 @@ const handleSubmit = () => {
 
 <style lang="scss">
 @import 'primeflex/core/_variables.scss';
+:root {
+	--breakpoint-lg: #{$lg};
+}
+
 body {
 	background: var(--gray-200);
 }

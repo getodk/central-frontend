@@ -39,7 +39,7 @@ export default mergeConfig(
 				headless: true,
 			},
 			environment: TEST_ENVIRONMENT,
-			exclude: [...configDefaults.exclude, 'e2e/*'],
+			exclude: [...configDefaults.exclude, 'e2e/**'],
 			root: fileURLToPath(new URL('./', import.meta.url)),
 			// Suppress the console error log about parsing CSS stylesheet
 			// This is an open issue of jsdom

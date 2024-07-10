@@ -3,9 +3,10 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import { fileURLToPath, URL } from 'node:url';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 export default defineConfig({
-	plugins: [vue(), vueJsx()],
+	plugins: [vue(), vueJsx(), cssInjectedByJsPlugin()],
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url)),

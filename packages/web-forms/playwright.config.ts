@@ -97,14 +97,24 @@ export default defineConfig({
 	// outputDir: 'test-results/',
 
 	/* Run your local dev server before starting the tests */
-	webServer: {
+	webServer: [
 		/**
-		 * Always use the dev server because build output of this package is a library.
-		 * E2e tests are performed against demo application i.e. (index.html, OdkWebFormDemo.vue)
-		 * Playwright will re-use the local server if there is already a dev-server running.
+		 * Serve dev mode: for testing with demo/fixtures
 		 */
-		command: 'npx vite dev',
-		port: 5173,
-		reuseExistingServer: !process.env.CI,
-	},
+		{
+			command: 'yarn vite dev',
+			port: 5173,
+			reuseExistingServer: !process.env.CI,
+		},
+
+		/**
+		 * Serve minimal integration of build product: for testing styles, any other
+		 * aspects of build product we wish to validate.
+		 */
+		{
+			command: 'yarn vite build-preview',
+			port: 5174,
+			reuseExistingServer: false,
+		},
+	],
 });

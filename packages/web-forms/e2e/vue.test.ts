@@ -10,7 +10,7 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 		}
 	});
 
-	await page.goto('/');
+	await page.goto('http://localhost:5173');
 
 	// this ensures that Vue application is loaded before proceeding forward.
 	await expect(page.getByText('Demo Forms')).toBeVisible();
