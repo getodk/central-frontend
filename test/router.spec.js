@@ -22,7 +22,7 @@ describe('createCentralRouter()', () => {
         });
     });
 
-    it('falls back to en if there is no matching locale', () => {
+    it("falls back to en if no locale matches the user's preferences", () => {
       setLanguages(['la']);
       return load('/login')
         .restoreSession(false)

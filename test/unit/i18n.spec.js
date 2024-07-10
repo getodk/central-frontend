@@ -190,8 +190,7 @@ describe('util/i18n', () => {
 
     describe('sentenceSeparator', () => {
       it('is a space for en', () => {
-        const container = createTestContainer();
-        const { sentenceSeparator } = withSetup(useI18nUtils, { container });
+        const { sentenceSeparator } = withSetup(useI18nUtils);
         sentenceSeparator.value.should.equal(' ');
       });
 

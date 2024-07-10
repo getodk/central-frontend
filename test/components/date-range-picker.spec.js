@@ -276,12 +276,12 @@ describe('DateRangePicker', () => {
   });
 
   describe('i18n', () => {
-    it('renders correctly for en', async () => {
+    it('renders correctly for en', () => {
       const component = mountComponent({
         props: { modelValue: ['1970-01-02', '1970-01-03'] }
       });
       const input = component.get('input');
-      // Check the text between the dates.
+      // Check the text between the two dates (" to ").
       input.element.value.should.equal('1970/01/02 to 1970/01/03');
     });
 

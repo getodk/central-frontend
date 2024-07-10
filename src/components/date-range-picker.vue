@@ -86,13 +86,12 @@ export default {
   },
   computed: {
     config() {
-      const config = {
+      return {
         mode: 'range',
         // See https://github.com/flatpickr/flatpickr/issues/1549
         dateFormat: 'Y/m/d',
         locale: l10ns[this.$i18n.locale] ?? l10ns[this.$i18n.fallbackLocale]
       };
-      return config;
     }
   },
   watch: {

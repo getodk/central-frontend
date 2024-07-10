@@ -16,8 +16,9 @@ import { localStore } from './storage';
 import { locales } from '../i18n';
 import { memoizeForContainer } from './composable';
 
-// Returns the user's locale based on their previous selection and their browser
-// settings. Returns `null` if there is no matching locale.
+// Returns the user's preferred locale based on their previous selection and
+// their browser settings. Returns `null` if there is no locale that matches
+// their preferences.
 export const userLocale = () => {
   const storageLocale = localStore.getItem('locale');
   if (storageLocale != null && locales.has(storageLocale)) return storageLocale;
@@ -109,9 +110,6 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
     return numberFormat;
   };
 
-  const sentenceSeparator = computed(() =>
-    locales.get(i18n.locale).sentenceSeparator);
-
   return {
     formatRange: (start, end, key = 'default') => (start === end
       ? i18n.n(start, key)
@@ -120,7 +118,8 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
     formatListToParts: (list) =>
       formats[i18n.locale].listFormat.formatToParts(list),
 
-    sentenceSeparator
+    sentenceSeparator: computed(() =>
+      locales.get(i18n.locale).sentenceSeparator)
   };
 });
 

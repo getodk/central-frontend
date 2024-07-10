@@ -29,7 +29,7 @@ export const locales = new Map();
 /*
 Adds a locale to `locales`. Options:
 
-  - name (required). The human-readable name of the language.
+  - name (required). The human-readable name of the locale.
   - sentenceSeparator (default: ' '). We sometimes need to combine two
     separately translated sentences in the same block of text. For example, this
     can happen before or after a component interpolation. Most locales that we
@@ -46,8 +46,8 @@ addLocale('es', { name: 'Español' });
 addLocale('fr', { name: 'Français' });
 addLocale('id', { name: 'Bahasa Indonesia' });
 addLocale('it', { name: 'Italiano' });
-addLocale('sw', { name: 'Kiswahili' });
 addLocale('ja', { name: '日本語', sentenceSeparator: '' });
+addLocale('sw', { name: 'Kiswahili' });
 addLocale('zh-Hant', { name: '漢語', sentenceSeparator: '' });
 
 
