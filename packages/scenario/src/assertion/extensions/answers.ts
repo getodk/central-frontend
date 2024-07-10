@@ -118,7 +118,7 @@ const answerExtensions = extendExpect(expect, {
 					return new UnreachableError(expected);
 			}
 
-			return pass || new InspectableComparisonError(condition, expected, 'be');
+			return pass || new InspectableComparisonError(actual, expected, 'be');
 		}
 	),
 

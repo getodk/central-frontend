@@ -16,6 +16,7 @@ import { AnswerResult, Scenario } from '../src/jr/Scenario.ts';
 import { r } from '../src/jr/resource/ResourcePathHelper.ts';
 import {
 	ANSWER_CONSTRAINT_VIOLATED,
+	ANSWER_OK,
 	ANSWER_REQUIRED_BUT_EMPTY,
 } from '../src/jr/validation/ValidateOutcome.ts';
 
@@ -444,5 +445,91 @@ describe('Validity messages', () => {
 
 		expect(result).toHaveDefaultRequiredMessage();
 		expect(result).toHaveConstraintMessage(null);
+	});
+});
+
+describe('Validation and relevance', () => {
+	it('does not produce validation errors for non-relevant questions', async () => {
+		const scenario = await Scenario.init(
+			'Validation and relevance',
+			html(
+				head(
+					title('Validation and relevance'),
+					// prettier-ignore
+					model(
+						mainInstance(
+							t('data id="validation-and-relevance"',
+								t('a', 'default value'),
+								t('b', 'A'),
+								t('validated-when-relevant')
+							)
+						),
+						bind('/data/a'),
+						bind('/data/b'),
+						bind('/data/validated-when-relevant')
+							.relevant("/data/a != 'default value'")
+							.required('/data/b &gt; 10')
+					)
+				),
+				body(input('/data/a'), input('/data/b'), input('/data/validated-when-relevant'))
+			)
+		);
+
+		// Sanity check: initially non-relevant and optional
+		expect(scenario.getInstanceNode('/data/validated-when-relevant')).toBeNonRelevant();
+		expect(scenario.getInstanceNode('/data/validated-when-relevant')).toBeOptional();
+
+		// Sanity check: no validation errors while optional
+		expect(scenario.answerOf('/data/validated-when-relevant')).toHaveValidityStatus(
+			AnswerResult.OK
+		);
+
+		// Make required condition effective
+		scenario.answer('/data/b', 11);
+
+		// Sanity check: still non-relevant, now required
+		expect(scenario.getInstanceNode('/data/validated-when-relevant')).toBeNonRelevant();
+		expect(scenario.getInstanceNode('/data/validated-when-relevant')).toBeRequired();
+
+		// Check form has no validation error while non-relevant
+		let validate = scenario.getValidationOutcome();
+
+		expect(validate.failedPrompt).toBeNull();
+		expect(validate.outcome).toBe(ANSWER_OK);
+
+		// Check answer/node has no validation error while non-relevant
+		expect(scenario.answerOf('/data/validated-when-relevant')).toHaveValidityStatus(
+			AnswerResult.OK
+		);
+
+		// Make relevant, sanity check
+		scenario.answer('/data/a', 'another value, not the default!');
+		expect(scenario.getInstanceNode('/data/validated-when-relevant')).toBeRelevant();
+
+		// Check validation error while relevant
+		validate = scenario.getValidationOutcome();
+
+		expect(validate.failedPrompt).toBe(scenario.indexOf('/data/validated-when-relevant'));
+		expect(validate.outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
+
+		// Check answer/node has no validation error while non-relevant
+		expect(scenario.answerOf('/data/validated-when-relevant')).toHaveValidityStatus(
+			AnswerResult.REQUIRED_BUT_EMPTY
+		);
+
+		// Make non-relevant again
+		scenario.answer('/data/a', 'default value');
+		expect(scenario.getInstanceNode('/data/validated-when-relevant')).toBeNonRelevant();
+
+		// Check form has no validation error again
+		validate = scenario.getValidationOutcome();
+
+		expect(validate.failedPrompt).toBeNull();
+		expect(validate.outcome).toBe(ANSWER_OK);
+
+		// Check answer/node has no validation error again
+		expect(scenario.answerOf('/data/validated-when-relevant')).toHaveValidityStatus(
+			AnswerResult.OK
+		);
 	});
 });
