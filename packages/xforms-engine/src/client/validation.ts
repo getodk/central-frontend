@@ -3,7 +3,6 @@ import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
-import type { AnyChildNode } from './hierarchy.ts';
 
 // This interface exists so that extensions can share JSDoc for `valid`.
 interface BaseValidity {
@@ -180,7 +179,6 @@ export interface DescendantNodeViolationReference {
 	readonly nodeId: NodeID;
 
 	get reference(): string;
-	get node(): AnyChildNode;
 	get violation(): AnyViolation;
 }
 
