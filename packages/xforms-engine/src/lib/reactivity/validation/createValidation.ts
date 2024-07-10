@@ -81,7 +81,7 @@ const createConstraintValidation = (
 		const message = createViolationMessage(context, 'constraintMsg', constraintMsg);
 
 		return createMemo(() => {
-			if (context.isBlank() || isValid()) {
+			if (!context.isRelevant() || context.isBlank() || isValid()) {
 				return constraintValid();
 			}
 
@@ -123,7 +123,7 @@ const createRequiredValidation = (
 		const message = createViolationMessage(context, 'requiredMsg', requiredMsg);
 
 		return createMemo(() => {
-			if (isValid()) {
+			if (!context.isRelevant() || isValid()) {
 				return requiredValid();
 			}
 

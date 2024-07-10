@@ -17,6 +17,7 @@ interface ValidationContextDefinition {
 export interface ValidationContext extends EvaluationContext, SubscribableDependency {
 	readonly definition: ValidationContextDefinition;
 
+	isRelevant(): boolean;
 	isRequired(): boolean;
 	isBlank(): boolean;
 }
