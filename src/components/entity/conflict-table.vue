@@ -247,7 +247,9 @@ defineExpose({ resize });
 
   .unchanged {
     color: #888;
+
     font-style: italic;
+    &:lang(ja), &:lang(zh) { font-style: normal; }
   }
 
   [class^="icon-"] {

@@ -120,9 +120,7 @@ export default {
     overflow-wrap: break-word;
   }
 
-  .no-properties {
-    font-style: italic;
-  }
+  .no-properties { @include italic; }
 }
 </style>
 

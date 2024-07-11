@@ -89,8 +89,8 @@ const { publishedFormPath } = useRoutes();
   }
 
   .empty-update-form {
+    @include italic;
     color: #888;
-    font-style: italic;
   }
 }
 </style>

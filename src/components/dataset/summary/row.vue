@@ -91,7 +91,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/_variables.scss';
 @import '../../../assets/scss/mixins';
 
 .dataset-summary-row {
@@ -144,9 +143,7 @@ export default {
       hyphens: auto;
       overflow-wrap: break-word;
 
-      .no-properties {
-        font-style: italic;
-      }
+      .no-properties { @include italic; }
     }
 }
 
