@@ -3,31 +3,18 @@ import sinon from 'sinon';
 import NotFound from '../src/components/not-found.vue';
 
 import { noop } from '../src/util/util';
+import { userLocale } from '../src/util/i18n';
 
 import testData from './data';
 import { load } from './util/http';
 import { mockLogin } from './util/session';
 import { mockResponse } from './util/axios';
+import { setLanguages } from './util/i18n';
 
 describe('createCentralRouter()', () => {
   describe('i18n', () => {
-    beforeAll(() => {
-      const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
-      has.should.be.false();
-    });
-    afterEach(() => {
-      delete navigator.language;
-    });
-
-    const setLanguage = (locale) => {
-      Object.defineProperty(navigator, 'language', {
-        value: locale,
-        configurable: true
-      });
-    };
-
     it("loads the user's preferred language", () => {
-      setLanguage('es');
+      setLanguages(['es']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(app => {
@@ -35,17 +22,8 @@ describe('createCentralRouter()', () => {
         });
     });
 
-    it('loads a less specific locale', () => {
-      setLanguage('es-ES');
-      return load('/login')
-        .restoreSession(false)
-        .afterResponses(app => {
-          app.vm.$i18n.locale.should.equal('es');
-        });
-    });
-
-    it('falls back to en for a locale that is not defined', () => {
-      setLanguage('la');
+    it("falls back to en if no locale matches the user's preferences", () => {
+      setLanguages(['la']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(app => {
@@ -53,21 +31,13 @@ describe('createCentralRouter()', () => {
         });
     });
 
-    it('loads the locale saved to local storage', () => {
-      localStorage.setItem('locale', 'es');
-      return load('/login')
-        .restoreSession(false)
-        .afterResponses(app => {
-          app.vm.$i18n.locale.should.equal('es');
-        });
-    });
-
     it('only loads the locale during the initial navigation', () => {
-      setLanguage('es');
+      setLanguages(['es']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(() => {
-          setLanguage('en');
+          setLanguages(['en']);
+          userLocale().should.equal('en');
         })
         .route('/reset-password')
         .then(app => {

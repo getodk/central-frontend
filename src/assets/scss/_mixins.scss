@@ -26,7 +26,7 @@
   max-width: 77ch;
   overflow-wrap: break-word;
   // 35 characters per line in Hiragino Kaku Gothic ProN
-  &:lang(ja) { max-width: 54ch; }
+  &:lang(ja), &:lang(zh) { max-width: 54ch; }
 }
 
 // A list that shows descriptive text

@@ -93,9 +93,11 @@ code {
 
 .text-monospace { font-family: $font-family-monospace; }
 
-em:lang(ja) {
-  font-style: normal;
-  font-weight: bold;
+em {
+  &:lang(ja), &:lang(zh) {
+    font-style: normal;
+    font-weight: bold;
+  }
 }
 
 .tooltip {
