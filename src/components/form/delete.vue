@@ -160,6 +160,14 @@ export default {
       "kitendo hiki kitahamisha Fomu hadi kwenye Tupio. Baada ya siku 30 kwenye Tupio, itasafishwa kabisa, lakini inaweza kufutwa kabla ya wakati huo."
     ],
     "noDeleteEntities": "Huluki zozote zilizoundwa na Mawasilisho ya Fomu hii hazitafutwa. Katika toleo la baadaye la Kati, itawezekana kufuta Huluki."
+  },
+  "zh-Hant": {
+    "title": "刪除表單",
+    "introduction": [
+      "您確定要刪除表單{name}及其所有提交內容嗎？",
+      "此操作會將表單移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以取消刪除。"
+    ],
+    "noDeleteEntities": "透過此表單提交建立的任何實體都不會被刪除。在 Central 的未來版本中，將可以刪除實體。"
   }
 }
 </i18n>

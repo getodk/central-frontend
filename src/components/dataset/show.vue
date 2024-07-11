@@ -145,6 +145,9 @@ export default {
   },
   "sw": {
     "back": "Rudi kwenye vyombo vya Mradi"
+  },
+  "zh-Hant": {
+    "back": "返回專案實體"
   }
 }
 </i18n>

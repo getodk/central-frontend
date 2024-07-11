@@ -509,6 +509,21 @@ watch(() => props.state, (state) => {
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha."
+  },
+  "zh-Hant": {
+    "title": "從文件匯入數據",
+    "table": {
+      "server": "{name} 伺服器數據",
+      "file": "要導入的資料"
+    },
+    "action": {
+      "append": "追加資料"
+    },
+    "alert": {
+      "blankLabel": "標籤遺失。",
+      "noData": "您的文件不包含任何資料。"
+    },
+    "noEntities": "沒有可顯示的實體。"
   }
 }
 </i18n>

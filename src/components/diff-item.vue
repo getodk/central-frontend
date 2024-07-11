@@ -304,6 +304,13 @@ export default {
       "deleted": "(imefutwa)"
     },
     "empty": "tupu"
+  },
+  "zh-Hant": {
+    "editCaption": {
+      "added": "(已增加)",
+      "deleted": "(已刪除)"
+    },
+    "empty": "空的"
   }
 }
 </i18n>

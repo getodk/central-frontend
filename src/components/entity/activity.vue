@@ -180,6 +180,11 @@ watchEffect(() => {
     "action": {
       "delete": "Elimina Entità"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "delete": "刪除實體"
+    }
   }
 }
 </i18n>

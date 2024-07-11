@@ -196,6 +196,17 @@ export default {
     "alert": {
       "success": "Nenosiri limewekwa upya."
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "set": "設定密碼"
+    },
+    "problem": {
+      "401_2": "{message} 您電子郵件中的連結可能已過期，可能需要發送新電子郵件。"
+    },
+    "alert": {
+      "success": "密碼已重設成功。"
+    }
   }
 }
 </i18n>

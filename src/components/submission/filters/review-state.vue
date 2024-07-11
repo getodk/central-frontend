@@ -144,6 +144,15 @@ const placeholder = (counts) => t('placeholder', counts);
         "none": "Hakuna"
       }
     }
+  },
+  "zh-Hant": {
+    "placeholder": "{selected} /{total}",
+    "action": {
+      "select": {
+        "all": "全部",
+        "none": "無"
+      }
+    }
   }
 }
 </i18n>

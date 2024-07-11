@@ -143,6 +143,9 @@ export default {
   },
   "sw": {
     "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
+  },
+  "zh-Hant": {
+    "analyzeDisabled": "由於表單加密，OData 存取不可用"
   }
 }
 </i18n>

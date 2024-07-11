@@ -425,6 +425,38 @@ export default {
     "alert": {
       "archive": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
     }
+  },
+  "zh-Hant": {
+    "encryption": {
+      "title": "加密",
+      "body": {
+        "unencrypted": [
+          "該專案未啟用提交資料加密。"
+        ],
+        "encrypted": [
+          {
+            "full": "此專案已{enabled}提交資料加密。",
+            "enabled": "啟用"
+          },
+          "在此版本的 ODK Central 中，加密一旦開啟就無法停用。"
+        ]
+      },
+      "action": {
+        "enableEncryption": "啟用加密"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "備存該專案"
+      },
+      "archived": [
+        "該項目已備存。",
+        "在此版本的 ODK Central 中，您無法取消專案的備存。但是，計劃在未來版本中提供取消備存專案的功能。"
+      ]
+    },
+    "alert": {
+      "archive": "項目「{name}」已存檔。"
+    }
   }
 }
 </i18n>

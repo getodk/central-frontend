@@ -234,6 +234,20 @@ const placeholder = (counts) => t('placeholder', counts);
       }
     },
     "unknown": "Mwasilishaji asiyejulikana"
+  },
+  "zh-Hant": {
+    "field": {
+      "submitter": "由提交者",
+      "search": "搜尋提交者..."
+    },
+    "placeholder": "{selected} /{total}",
+    "action": {
+      "select": {
+        "all": "全部",
+        "none": "無"
+      }
+    },
+    "unknown": "未知提交者"
   }
 }
 </i18n>

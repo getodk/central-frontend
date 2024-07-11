@@ -181,6 +181,16 @@ export default {
       "Je, una uhakika unataka kupakia {filename} kama {attachmentName}?",
       "Tunakagua mara mbili kwa sababu majina ya faili hayalingani"
     ]
+  },
+  "zh-Hant": {
+    "title": {
+      "upload": "上傳檔案",
+      "replace": "替換檔案"
+    },
+    "introduction": [
+      "您確定要將 {filename} 上傳為 {attachmentName} 嗎？",
+      "們正在仔細檢查，因為檔案名稱不符。"
+    ]
   }
 }
 </i18n>

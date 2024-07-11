@@ -514,6 +514,41 @@ const versionAnchor = (v) => `#v${v}`;
         "update_resolve": "Onyo la migogoro limetatuliwa kwa {name}"
       }
     }
+  },
+  "zh-Hant": {
+    "title": {
+      "submission": {
+        "create": {
+          "notDeleted": "由 {submitter} 上傳的投稿內容 {instanceName}",
+          "deleted": {
+            "full": "{deletedSubmission} 由 {name}上傳",
+            "deletedSubmission": "(已刪除的提交 {id})"
+          }
+        },
+        "approval": {
+          "full": "{reviewState} 按照{name}",
+          "reviewState": "已認可"
+        }
+      },
+      "entity": {
+        "create": {
+          "api": "由 {name}建立的{label}實體",
+          "bulkSource": "由 {actor}上傳的{name}檔案",
+          "submission": "在 {dataset} 實體清單中建立了實體 {label}"
+        },
+        "update_version": {
+          "submission": {
+            "notDeleted": "提交{instanceName}更新的數據",
+            "deleted": {
+              "full": "已由{deletedSubmission}更新資料",
+              "deletedSubmission": "(已刪除提交{id})"
+            }
+          },
+          "api": "由{name}更親資料"
+        },
+        "update_resolve": "衝突警告已由{name}解決"
+      }
+    }
   }
 }
 </i18n>

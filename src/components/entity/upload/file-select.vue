@@ -114,6 +114,13 @@ const changeInput = (event) => {
       "chooseOne": "scegli uno"
     },
     "parsing": "Lettura dei dati…"
+  },
+  "zh-Hant": {
+    "text": {
+      "full": "拖曳一個 .csv 檔案到這，或者 {chooseOne}進行匯入。",
+      "chooseOne": "選擇一個檔案"
+    },
+    "parsing": "讀取資料..."
   }
 }
 </i18n>

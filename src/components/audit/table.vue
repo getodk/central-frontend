@@ -115,6 +115,13 @@ const { audits } = useRequestData();
       "target": "Lengo",
       "details": "Maelezo"
     }
+  },
+  "zh-Hant": {
+    "header": {
+      "initiator": "引發者",
+      "target": "目標",
+      "details": "細節"
+    }
   }
 }
 </i18n>

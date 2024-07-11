@@ -187,6 +187,18 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
       "emptyColumn": "Sembra che ci sia una cella vuota nell'intestazione. Eliminare le colonne vuote nel file.",
       "delimiterNotComma": "Ciò potrebbe essere dovuto al fatto che abbiamo sbagliato il delimitatore di cella. Abbiamo usato {delimiter}."
     }
+  },
+  "zh-Hant": {
+    "expectedHeader": "預期標題",
+    "suggestions": {
+      "title": "建議",
+      "invalidQuotes": "帶引號的欄位無效。檢查文件的標題行，看看是否有任何異常值。",
+      "missingLabel": "需要 1{label} 屬性。此標籤指示整個 Central 和其他地方每個實體使用的名稱。",
+      "unknownProperty": "如果您想要向此實體清單新增屬性，您可以在此實體清單的概述頁面上的實體屬性部分中執行此操作，也可以上傳並發佈引用該屬性的表單。",
+      "duplicateColumn": "看起來兩個或更多列具有相同的標題。請確保列標題是唯一的。",
+      "emptyColumn": "標題中似乎有一個空白單元格。請刪除檔案中的所有空白列。",
+      "delimiterNotComma": "這可能是因為我們的單元格分隔符號錯誤。我們使用了 1{delimiter}。"
+    }
   }
 }
 </i18n>

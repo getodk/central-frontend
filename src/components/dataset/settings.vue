@@ -208,6 +208,19 @@ const hideAndReset = () => {
       "description": "Data ya huluki haitasasishwa hadi mtu aikague data. Marekebisho yanaweza kufanywa ikiwa ni lazima.",
       "successMessage": "Huluki zitaundwa Mawasilisho yanapotiwa alama kuwa Yameidhinishwa."
     }
+  },
+  "zh-Hant": {
+    "entityWorkflow": "實體工作流程",
+    "onReceipt": {
+      "label": "Central 收到提交後立即建立實體",
+      "description": "在建立實體之前，您將沒有機會查看或修改資料。",
+      "successMessage": "Central 收到提交後將立即建立實體。"
+    },
+    "onApproval": {
+      "label": "當提交標記為「已核准」時建立實體",
+      "description": "在有人查看資料之前，實體資料不會更新。如有必要，可以進行更正。",
+      "successMessage": "當提交標記為「已核准」時，將建立實體。"
+    }
   }
 }
 </i18n>

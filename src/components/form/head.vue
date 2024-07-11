@@ -373,6 +373,21 @@ $tab-li-margin-top: 5px;
         "create": "Unda Rasimu mpya"
       }
     }
+  },
+  "zh-Hant": {
+    "projectNav": {
+      "action": {
+        "back": "返回專案概覽"
+      }
+    },
+    "formNav": {
+      "tabTitle": "一旦您發布草稿表單，這些功能將可用"
+    },
+    "draftNav": {
+      "action": {
+        "create": "建立新草稿"
+      }
+    }
   }
 }
 </i18n>

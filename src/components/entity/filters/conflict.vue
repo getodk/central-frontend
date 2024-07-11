@@ -178,6 +178,22 @@ const placeholder = (counts) => t('placeholder', counts);
         "none": "Hakuna"
       }
     }
+  },
+  "zh-Hant": {
+    "conflict": {
+      "true": "可能發生衝突",
+      "false": "沒有衝突"
+    },
+    "field": {
+      "conflict": "衝突狀態"
+    },
+    "placeholder": "{selected}/{total}",
+    "action": {
+      "select": {
+        "all": "全部",
+        "none": "無"
+      }
+    }
   }
 }
 </i18n>

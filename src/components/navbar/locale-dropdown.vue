@@ -95,6 +95,9 @@ const selectLocale = (locale) => {
   },
   "sw": {
     "helpTranslate": "Saidia kutafsiri Central"
+  },
+  "zh-Hant": {
+    "helpTranslate": "協助翻譯 Central"
   }
 }
 </i18n>

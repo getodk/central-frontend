@@ -79,6 +79,9 @@ $border-radius: 3px;
   },
   "it": {
     "headersNote": "The first row in your data file must exactly match the table header you see above."
+  },
+  "zh-Hant": {
+    "headersNote": "資料檔案中的第一行必須與上面看到的表標題完全相符。"
   }
 }
 </i18n>

@@ -122,6 +122,15 @@ const del = () => {
     "field": {
       "noConfirm": "Elimina immediatamente senza conferma finché non lascio la pagina"
     }
+  },
+  "zh-Hant": {
+    "title": "刪除{label}",
+    "introduction": [
+      "您確定要刪除「{label}」？"
+    ],
+    "field": {
+      "noConfirm": "立即刪除，無需確認，直到我離開頁面"
+    }
   }
 }
 </i18n>

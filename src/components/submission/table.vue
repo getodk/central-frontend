@@ -148,6 +148,11 @@ defineExpose({ afterReview });
     "header": {
       "stateAndActions": "Hali na vitendo"
     }
+  },
+  "zh-Hant": {
+    "header": {
+      "stateAndActions": "狀態和動作"
+    }
   }
 }
 </i18n>

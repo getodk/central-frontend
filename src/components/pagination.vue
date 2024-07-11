@@ -252,6 +252,18 @@ const sizeModel = computed({
     "field": {
       "size": "per pagina"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "first": "第一頁",
+      "previous": "上一頁",
+      "next": "下一頁",
+      "last": "最後一頁"
+    },
+    "rows": "第 {range} 行，共 {count} 行",
+    "field": {
+      "size": "每頁"
+    }
   }
 }
 </i18n>

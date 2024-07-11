@@ -548,6 +548,11 @@ const emptyMessage = computed(() => (searchValue.value === ''
     "action": {
       "select": "Changua {all} / {none}"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "select": "選擇 {all} / {none}"
+    }
   }
 }
 </i18n>

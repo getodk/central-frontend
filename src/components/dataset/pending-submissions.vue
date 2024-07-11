@@ -229,6 +229,27 @@ const convert = ref(null);
       "label": "Badilisha Mawasilisho yote yanayosubiri kuwa Huluki sasa.",
       "description": "Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika. | Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika."
     }
+  },
+  "zh-Hant": {
+    "title": "待提交的內容",
+    "action": {
+      "changeSetting": "修改設定"
+    },
+    "explanation": {
+      "userAction": "您將設定實體建立在 Central 首次收到提交時進行。",
+      "implication": {
+        "full": "一旦生效，當提交被標記為「已批准」時，將不再產生實體，包括我們發現既沒有被標記為「已批准」也沒有被標記為「拒絕」的 {records}。",
+        "records": "{count} 筆記錄"
+      }
+    },
+    "dontConvert": {
+      "label": "我理解，這對我來說不是問題。",
+      "description": "改設定並對待處理的提交不執行任何操作。"
+    },
+    "convert": {
+      "label": "立即將所有待處理的提交內容轉換為實體。",
+      "description": "變更設定並從所有尚未批准或拒絕的 {count}份提交中建立實體。審核狀態不會受到影響。"
+    }
   }
 }
 </i18n>

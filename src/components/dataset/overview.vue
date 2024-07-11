@@ -133,6 +133,11 @@ const afterCreateProperty = () => {
   "sw": {
     "connectionsToForms": "Viunganisho kwa Fomu",
     "entityProperties": "Sifa za Mashirika"
+  },
+  "zh-Hant": {
+    "connectionsToForms": "與表單的連接",
+    "entityProperties": "實體屬性",
+    "new": "新增"
   }
 }
 </i18n>

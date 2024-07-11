@@ -216,6 +216,15 @@ const requestDelete = () => {
       "title": "Data ya Huluki",
       "back": "Rudi kwenye Jedwali la {datasetName}"
     }
+  },
+  "zh-Hant": {
+    "back": {
+      "title": "實體詳細資訊",
+      "back": "回到 {datasetName} 表"
+    },
+    "alert": {
+      "delete": "實體「1{label}」已被刪除。"
+    }
   }
 }
 </i18n>

@@ -144,6 +144,17 @@ const submit = () => {
     "problem": {
       "409_3": "Esiste già una proprietà in questo elenco di entità con il nome \"{propertyName}”."
     }
+  },
+  "zh-Hant": {
+    "title": "新增實體屬性",
+    "introduction": [
+      "若要新增實體屬性，請在下方選個唯一屬性名稱。",
+      "您也可以透過上傳引用新屬性的表單來新增屬性，在這種情況下，屬性會在發佈表單時建立。"
+    ],
+    "newPropertyName": "新屬性名稱",
+    "problem": {
+      "409_3": "此實體清單中已存在名稱為「{propertyName}」的屬性。"
+    }
   }
 }
 </i18n>

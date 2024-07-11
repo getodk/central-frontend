@@ -142,6 +142,13 @@ const afterCreateDataset = async (dataset) => {
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi.",
       "Mashirika huundwa kupitia muundo wa fomu na yanaweza kuambatishwa kwa Fomu yoyote."
     ]
+  },
+  "zh-Hant": {
+    "heading": [
+      "實體允許您在表單之間共用訊息，以便您可以收集縱向資料、隨時間管理案例並透過多個步驟表示其他工作流程。",
+      "實體是透過表單設計建立的，可以附加到任何表單。"
+    ],
+    "new": "新增"
   }
 }
 </i18n>

@@ -130,6 +130,11 @@ export default {
     "alert": {
       "upload": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
     }
+  },
+  "zh-Hant": {
+    "alert": {
+      "upload": "成功！您的實體已上傳。"
+    }
   }
 }
 </i18n>

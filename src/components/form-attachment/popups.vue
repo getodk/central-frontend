@@ -539,6 +539,36 @@ $popup-width: 300px;
         "last": "Hili ndilo faili la mwisho."
       }
     }
+  },
+  "zh-Hant": {
+    "title": "上傳多個檔案",
+    "duringDragover": {
+      "dropToUpload": "立即將此文件上傳為 {attachmentName}。",
+      "dragover": "將您想要替換為文件的表單附件拖曳並拖曳以上傳。",
+      "dropToPrepare": {
+        "full": "立即準備 {countOfFiles} 上傳到此表單。",
+        "countOfFiles": "{count} 個檔案"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": "{countOfFiles} 個檔案準備上傳",
+        "countOfFiles": "{count} 個檔案"
+      },
+      "someUnmatched": {
+        "full": "{countOfFiles} 個檔案，有我們不認識的名字並且會被忽略。要上傳它們，請重新命名它們或將它們單獨拖曳到目標上。",
+        "countOfFiles": "{count} 個檔案"
+      },
+      "noneMatched": "我們無法識別您嘗試上傳的任何文件。請重新命名它們以符合上面列出的名稱，或將它們單獨拖曳到目標上。"
+    },
+    "duringUpload": {
+      "total": "請稍候，正在上傳您的 {count} 個檔案：",
+      "current": "正在傳送{filename} ({percentUploaded})",
+      "remaining": {
+        "beforeLast": "{count} 個檔案仍然存在。",
+        "last": "這是最後一個檔案。"
+      }
+    }
   }
 }
 </i18n>

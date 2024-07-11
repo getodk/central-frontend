@@ -106,6 +106,12 @@ defineEmits(['update:modelValue']);
       "alphabetical": "Kialfabeti",
       "newest": "Mpya zaidi"
     }
+  },
+  "zh-Hant": {
+    "sortOptions": {
+      "alphabetical": "按字母順序",
+      "newest": "最新優先"
+    }
   }
 }
 </i18n>

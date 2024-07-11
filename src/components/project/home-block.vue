@@ -368,6 +368,15 @@ export default {
     "showFewer": "Onyesha idadi ndogo ya Fomu {count} jumla | Onyesha Jumla ya Fomu {count} chache",
     "showFewerDatasets": "Onyesha idadi ndogo ya Orodha ya Huluki chache kati ya {count} | Onyesha chini ya Orodha {count} jumla ya Huluki",
     "hidden": "Fiche"
+  },
+  "zh-Hant": {
+    "encrypted": "加密",
+    "encryptionTip": "該專案使用託管加密。",
+    "showMore": "共顯示 {count} 個表單",
+    "showMoreDatasets": "共顯示 {count} 個實體列表",
+    "showFewer": "顯示較少的表格（共 {count} 個）",
+    "showFewerDatasets": "顯示較少的實體清單（共 {count} 個）",
+    "hidden": "隱藏"
   }
 }
 </i18n>

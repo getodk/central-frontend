@@ -177,6 +177,14 @@ const uuid = inject('uuid');
     },
     "comparing": "Paragonando",
     "version": "{version} ({source})"
+  },
+  "zh-Hant": {
+    "header": {
+      "oldValue": "舊值",
+      "newValue": "新值"
+    },
+    "comparing": "比較",
+    "version": "{version} ({source})"
   }
 }
 </i18n>

@@ -165,6 +165,13 @@ const status = computed(() => (props.progress < 1
       "sending": "Inviando il file...({percentUploaded})",
       "processing": "Processando il file..."
     }
+  },
+  "zh-Hant": {
+    "rowCount": "找到{count}行資料",
+    "status": {
+      "sending": "傳送檔案… ({percentUploaded})",
+      "processing": "處理檔案…"
+    }
   }
 }
 </i18n>

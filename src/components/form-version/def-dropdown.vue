@@ -170,6 +170,14 @@ export default {
       "downloadXForm": "Pakua kama XForm (.xml)",
       "downloadXlsForm": "Pakua kama XLSForm ({extension})"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "def": "定義",
+      "viewXml": "在瀏覽器中查看 XML",
+      "downloadXForm": "下載為 XForm (.xml)",
+      "downloadXlsForm": "下載為 XLSForm ({extension})"
+    }
   }
 }
 </i18n>

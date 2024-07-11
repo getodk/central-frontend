@@ -74,6 +74,12 @@ defineEmits(['rows']);
       "raggedRows": "In alcune righe sono state trovate meno colonne del previsto:",
       "largeCell": "Alcune celle sono eccessivamente grandi, il che può indicare difficoltà nella lettura del file:"
     }
+  },
+  "zh-Hant": {
+    "row": {
+      "raggedRows": "在某些行中發現的列數少於預期：",
+      "largeCell": "有些儲存格異常大，這可能表示讀取檔案有困難："
+    }
   }
 }
 </i18n>

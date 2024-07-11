@@ -272,6 +272,20 @@ export default {
         }
       }
     }
+  },
+  "zh-Hant": {
+    "draft": {
+      "none": {
+        "title": "目前無草稿",
+        "body": "目前該表格還沒有草稿版本。如果您想要更改表單或其附件，請先使用上面的按鈕建立草稿。"
+      },
+      "any": {
+        "versionCaption": {
+          "full": "表格的{draftVersion}",
+          "draftVersion": "草稿版本"
+        }
+      }
+    }
   }
 }
 </i18n>

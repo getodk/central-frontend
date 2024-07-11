@@ -365,6 +365,25 @@ export default {
       "linkDataset": "Unganisha Orodha ya Huluki {datasetName}"
     },
     "override": "Batilisha"
+  },
+  "zh-Hant": {
+    "type": {
+      "image": "影像",
+      "audio": "聲音檔",
+      "video": "影片檔",
+      "file": "資料檔"
+    },
+    "replace": "替代",
+    "notUploaded": {
+      "text": "尚未上傳",
+      "title": "若要上傳檔案，請將一個或多個檔案拖曳到此頁面上"
+    },
+    "linkedToDataset": "連結到實體列表 {datasetName}",
+    "uploadToOverride": "上傳要覆蓋的檔案。",
+    "action": {
+      "linkDataset": "連結實體列表 {datasetName}"
+    },
+    "override": "覆蓋"
   }
 }
 </i18n>

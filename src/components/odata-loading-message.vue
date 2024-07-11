@@ -444,6 +444,44 @@ const message = computed(() => {
         }
       }
     }
+  },
+  "zh-Hant": {
+    "entity": {
+      "withoutCount": "載入實體…",
+      "all": "正在載入 {count} 個實體...",
+      "first": "正在載入第 {top} 個實體（共 {count} 個）...",
+      "middle": "正在載入另外 {top} 個實體（共 {count} 個）...",
+      "last": {
+        "multiple": "正在載入最後 {count} 個實體...",
+        "one": "正在載入最後一個實體..."
+      },
+      "filtered": {
+        "withoutCount": "正在載入符合的實體...",
+        "middle": "正在載入另外 {top} 個剩餘的 {count} 個符合實體...",
+        "last": {
+          "multiple": "正在載入最後 {count} 個符合實體...",
+          "one": "正在載入最後一個符合的實體..."
+        }
+      }
+    },
+    "submission": {
+      "withoutCount": "正在加載提交內容...",
+      "all": "正在載入 {count} 個提交內容...",
+      "first": "正在載入第 {top} 個提交內容，共 {count} 個提交內容...",
+      "middle": "正在載入另外 {top} 個剩餘提交內容（共 {count} 個）...",
+      "last": {
+        "multiple": "正在載入最後 {count} 筆提交內容...",
+        "one": "正在加載最後提交的內容..."
+      },
+      "filtered": {
+        "withoutCount": "正在載入符合的提交內容...",
+        "middle": "正在載入另外 {top} 個剩餘的 {count} 個符合提交內容...",
+        "last": {
+          "multiple": "正在載入最後 {count} 個符合的提交內容...",
+          "one": "正在載入最後一個相符的提交..."
+        }
+      }
+    }
   }
 }
 </i18n>

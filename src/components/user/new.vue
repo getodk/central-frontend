@@ -198,6 +198,18 @@ export default {
     "oidcIntroduction": [
       "Watumiaji kwenye seva yako ya kuingia lazima wawe na akaunti ya Kati ili kuingia Kati. Mara tu unapofungua akaunti hii, mtumiaji kwenye seva yako ya kuingia na anwani ya barua pepe unayotoa ataweza kuingia kwenye Central."
     ]
+  },
+  "zh-Hant": {
+    "title": "建立網頁使用者",
+    "introduction": [
+      "建立此帳戶後，您提供的電子郵件地址將收到有關如何設定密碼並繼續操作的說明。"
+    ],
+    "oidcIntroduction": [
+      "登入伺服器上的使用者必須擁有 Central 帳戶才能登入 Central。建立此帳戶後，登入伺服器上使用您提供的電子郵件地址的使用者將能夠登入 Central。"
+    ],
+    "problem": {
+      "409_3": "{email} 似乎已經有一個帳戶。請嘗試其他電子郵件地址。"
+    }
   }
 }
 </i18n>

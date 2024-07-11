@@ -129,6 +129,10 @@ const { publishedFormPath } = useRoutes();
   },
   "sw": {
     "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
+  },
+  "zh-Hant": {
+    "emptyTable": "此實體清單中的實體沒有任何使用者定義的屬性。",
+    "none": "(無)"
   }
 }
 </i18n>

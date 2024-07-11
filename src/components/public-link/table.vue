@@ -118,6 +118,12 @@ const { publicLinks } = useRequestData();
       "once": "Uwasilishaji Mmoja",
       "accessLink": "Kiungo cha Ufikiaji"
     }
+  },
+  "zh-Hant": {
+    "header": {
+      "once": "單次提交",
+      "accessLink": "訪問連結"
+    }
   }
 }
 </i18n>

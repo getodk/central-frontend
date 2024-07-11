@@ -243,6 +243,21 @@ const hideOrComplete = () => {
     "introduction": [
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi."
     ]
+  },
+  "zh-Hant": {
+    "title": "建立實體列表",
+    "encrypted": "該項目已加密。表格和提交內容將無法修改此清單中的任何實體。實體必須透過 Central 或 API 進行管理。",
+    "entityListName": "實體清單名稱",
+    "success": [
+      "實體清單「{name}」已建立。",
+      "您可以透過直接在此頁面上新增其資料屬性或上傳使用它的表單來開始使用它。在這種情況下，當您發佈表單時，表單呼叫的任何屬性都會自動建立。"
+    ],
+    "problem": {
+      "409_3": "該項目中已存在名稱為「{datasetName}」的實體清單。"
+    },
+    "introduction": [
+      "實體允許您在表單之間共用訊息，以便您可以收集縱向資料、隨時間管理案例並透過多個步驟表示其他工作流程。"
+    ]
   }
 }
 </i18n>

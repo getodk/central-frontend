@@ -317,6 +317,26 @@ export default {
       "create": "Mafanikio! Kiungo chako cha Kufikia Umma kimeundwa na sasa kinapatikana. Nakili hapa chini ili kuisambaza.",
       "revoke": "Kiungo cha Ufikiaji wa Umma \"{displayName}\" kimebatilishwa. Hakuna Mawasilisho Zaidi yatakubaliwa kwa kutumia Kiungo hiki."
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "create": "建立公共訪問連結"
+    },
+    "heading": [
+      {
+        "full": "任何擁有公共存取連結的人都可以在網頁瀏覽器中填寫此表格。您可以建立多個連結來追蹤表單的不同分發、限制特定人群存取表單的時間等等。只有當表單處於「開放{state}」時，這些連結才有效。",
+        "state": "狀態"
+      },
+      {
+        "full": "公共連結用於自我報告。如果您與需要多次提交相同表單的資料收集者合作，請{clickHere}以了解其他選項。",
+        "clickHere": "點擊此處"
+      }
+    ],
+    "emptyTable": "此表格沒有公共存取連結。",
+    "alert": {
+      "create": "成功！您的公共存取連結已建立並且現已上線。複製下面的內容進行分發。",
+      "revoke": "公共存取連結“{displayName}”已成功撤銷。使用此連結將不再接受任何提交。"
+    }
   }
 }
 </i18n>

@@ -149,6 +149,12 @@ const { submissionPath } = useRoutes();
   "sw": {
     "creatingSubmission": "Kuunda Uwasilishaji",
     "submissionDeleted": "Wasilisho hili limefutwa."
+  },
+  "zh-Hant": {
+    "creatingSubmission": "建立提交",
+    "creatingSource": "建立來源",
+    "upload": "更新",
+    "submissionDeleted": "此提交已被刪除"
   }
 }
 </i18n>

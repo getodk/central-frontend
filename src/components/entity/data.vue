@@ -109,6 +109,9 @@ const data = computed(() => entity.currentVersion.data);
   },
   "sw": {
     "title": "Data ya Huluki"
+  },
+  "zh-Hant": {
+    "title": "實體資料"
   }
 }
 </i18n>

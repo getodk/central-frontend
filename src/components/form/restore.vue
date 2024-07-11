@@ -144,6 +144,14 @@ export default {
       "Fomu itarejeshwa katika hali yake ya awali, ikijumuisha data, mipangilio na ruhusa zote.",
       "Ikiwa Fomu itafutwa tena, itapita siku 30 kabla ya kuondolewa."
     ]
+  },
+  "zh-Hant": {
+    "title": "取消刪除表單",
+    "introduction": [
+      "您確定要取消刪除表單{name}嗎？",
+      "表單將恢復到先前的狀態，包括所有資料、設定和權限。",
+      "如果再次刪除該表格，則需要再過 30 天才會被刪除。"
+    ]
   }
 }
 </i18n>

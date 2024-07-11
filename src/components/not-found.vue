@@ -64,6 +64,9 @@ defineOptions({
   },
   "sw": {
     "body": "Ukurasa ulioomba haukupatikana."
+  },
+  "zh-Hant": {
+    "body": "您請求的頁面無法找到。"
   }
 }
 </i18n>

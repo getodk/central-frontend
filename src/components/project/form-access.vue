@@ -327,6 +327,15 @@ export default {
     "alert": {
       "success": "Mabadiliko yako yamehifadhiwa!"
     }
+  },
+  "zh-Hant": {
+    "heading": [
+      "使用者只能查看並填寫下表中，明確授予他們存取權限的表格。專案經理和資料收集者可以使用 Web 瀏覽器填寫專案中，處於開啟狀態的任何表格。"
+    ],
+    "emptyTable": "沒有可顯示的表格。",
+    "alert": {
+      "success": "你的修改已被儲存！"
+    }
   }
 }
 </i18n>
