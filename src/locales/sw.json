@@ -226,7 +226,8 @@
     "webUsers": "watumiaji wa mtandao",
     "session": "kipindi",
     "submissions": "mawasilisho",
-    "projectRoles": "majukumu ya mradi"
+    "projectRoles": "majukumu ya mradi",
+    "draft": "Rasimu"
   },
   "alert": {
     "passwordTooShort": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10.",

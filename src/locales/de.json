@@ -132,6 +132,7 @@
     "continue": "Weitermachen",
     "create": "Anlegen",
     "createSubmission": "Neu",
+    "delete": "Löschen",
     "done": "Fertig",
     "download": "Herunterladen",
     "edit": "Bearbeiten",
@@ -205,13 +206,15 @@
   "count": {
     "appUser": "{count} App-Benutzer | {count} App-Benutzer",
     "form": "{count} Formular | {count} Formulare",
-    "submission": "{count} Übermittlung | {count} Übermittlungen"
+    "submission": "{count} Übermittlung | {count} Übermittlungen",
+    "warning": "{count} Warnung | {count} Warnungen"
   },
   "resource": {
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
     "config": "Server-Konfiguration",
     "entityList": "Entitätsliste",
+    "entityLists": "Entitätslisten",
     "entities": "Entitäten",
     "form": "Formular",
     "forms": "Formulare",
@@ -226,7 +229,8 @@
     "webUsers": "Web-Benutzer",
     "session": "Sitzung",
     "submissions": "Übermittlungen",
-    "projectRoles": "Projektrollen"
+    "projectRoles": "Projektrollen",
+    "draft": "Entwurf"
   },
   "alert": {
     "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
@@ -289,6 +293,7 @@
     "loading": "Wird geladen...",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
+    "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden.",
     "rightNow": "Aktuell",
     "rowNumber": "Reihe",
     "success": "Das hat geklappt!",
@@ -304,13 +309,15 @@
     "new": "Neu!",
     "totalEntities": "Entitäten insgesamt",
     "versionShort": "v{version}",
+    "warning": "Warnung",
     "status": "Status",
     "version": "Version"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Die Datei \"{name}\", die Sie versuchen hochzuladen ist größer als das 100 MB Limit."
+        "fileSize": "Die Datei \"{name}\", die Sie versuchen hochzuladen ist größer als das 100 MB Limit.",
+        "entityTooLarge": "Die Daten, die Sie hochzuladen versuchen, sind zu gross."
       }
     }
   },
@@ -320,10 +327,18 @@
     }
   },
   "util": {
+    "csv": {
+      "readError": "Beim Lesen Ihrer Datei ist ein Problem aufgetreten: {message}",
+      "invalidCSV": "Die Datei “{name}” ist keine gültige .csv-Datei. Sie kann nicht gelesen werden.",
+      "emptyRow": "Die Reihe ist leer."
+    },
     "request": {
       "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
       "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
-      "errorNotProblem": "Etwas ging schief: Fehlercode {status}."
+      "errorNotProblem": "Etwas ging schief: Fehlercode {status}.",
+      "problem": {
+        "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht."
+      }
     },
     "session": {
       "alert": {

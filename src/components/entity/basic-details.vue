@@ -121,10 +121,14 @@ const { submissionPath } = useRoutes();
   },
   "de": {
     "creatingSubmission": "Übermittlung erstellen",
+    "creatingSource": "Quelle erstellen",
+    "upload": "Hochladen",
     "submissionDeleted": "Diese Übermittlungen wurde gelöscht."
   },
   "es": {
     "creatingSubmission": "Creando envío",
+    "creatingSource": "Creando fuente",
+    "upload": "Subir",
     "submissionDeleted": "Este envío ha sido borrado."
   },
   "fr": {
@@ -138,6 +142,7 @@ const { submissionPath } = useRoutes();
   },
   "it": {
     "creatingSubmission": "Creando invio",
+    "creatingSource": "Creazione della fonte",
     "upload": "Carica",
     "submissionDeleted": "Questo invio è stato eliminato."
   },

@@ -443,7 +443,11 @@ export default {
             [
               "Los formularios configurados con claves {submission} manuales continuarán utilizando esas claves y deben ser descifrados manualmente.",
               "Para utilizar el proceso automático de encriptación de Central en estos formularios, remueva la configuración {base64RsaPublicKey}."
-            ]
+            ],
+            "Ya no podrá editar ni ver los datos de envío en línea.",
+            "Ya no podrá analizar datos a través de OData.",
+            "Ya no podrá editar envíos en su navegador web.",
+            "Los Envíos nuevos ya no se procesarán en Entidades."
           ],
           [
             "Además, lo siguiente es cierto en esta versión de ODK Central:",
@@ -587,7 +591,11 @@ export default {
             [
               "I formulari configurati con chiavi {submission} manuali continueranno a utilizzare tali chiavi e devono essere decrittografati manualmente.",
               "Per utilizzare il processo di crittografia centrale automatica su questi formulari, rimuovere la configurazione {base64RsaPublicKey}."
-            ]
+            ],
+            "Non sarai più in grado di modificare i dati di invio online.",
+            "Non sarai più in grado di analizzare dati tramite OData.",
+            "Non sarai più in grado di modificare gli Invii nel tuo browser web.",
+            "I nuovi invii non verranno più elaborati in Entità."
           ],
           [
             "Inoltre, quanto segue è reale in questa versione di ODK Central:",

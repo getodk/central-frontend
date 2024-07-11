@@ -264,7 +264,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře"
     },
     "draftNav": {
-      "title": "Koncept",
       "action": {
         "create": "Vytvořit nový koncept"
       }
@@ -280,7 +279,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Diese Funktionen stehen zur Verfügung, wenn Sie Ihren Entwurf veröffentlicht haben."
     },
     "draftNav": {
-      "title": "Entwurf",
       "action": {
         "create": "Neuen Entwurf erstellen"
       }
@@ -296,7 +294,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de formulario."
     },
     "draftNav": {
-      "title": "Borrador",
       "action": {
         "create": "Crear un nuevo borrador"
       }
@@ -312,7 +309,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Ces fonctions seront disponibles quand vous publierez votre ébauche"
     },
     "draftNav": {
-      "title": "Ébauche",
       "action": {
         "create": "Créer une nouvelle ébauche"
       }
@@ -328,7 +324,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda"
     },
     "draftNav": {
-      "title": "Draf",
       "action": {
         "create": "Buat draf baru"
       }
@@ -344,7 +339,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Queste funzioni diventeranno disponibili una volta che avrai pubblicato la tua bozza del formulario"
     },
     "draftNav": {
-      "title": "Bozza",
       "action": {
         "create": "Crea una nuova bozza"
       }
@@ -360,7 +354,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "これらの機能は下書きフォームが公開された際に有効になります。"
     },
     "draftNav": {
-      "title": "下書き",
       "action": {
         "create": "新規下書きの作成"
       }
@@ -376,7 +369,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Vipengele hivi vitapatikana mara tu utakapochapisha Rasimu ya Fomu yako"
     },
     "draftNav": {
-      "title": "Rasimu",
       "action": {
         "create": "Unda Rasimu mpya"
       }

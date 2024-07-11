@@ -229,7 +229,8 @@
     "webUsers": "Utilisateurs web",
     "session": "Session",
     "submissions": "Soumissions",
-    "projectRoles": "Rôles du projet"
+    "projectRoles": "Rôles du projet",
+    "draft": "Ébauche"
   },
   "alert": {
     "passwordTooShort": "Merci de renseigner un mot de passe d'au moins 10 caractères.",

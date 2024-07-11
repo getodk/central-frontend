@@ -464,6 +464,17 @@ watch(() => props.state, (state) => {
     "noEntities": "Es gibt keine Entitäten zum Anzeigen."
   },
   "es": {
+    "title": "Importar datos de un archivo",
+    "table": {
+      "file": "Datos a importar"
+    },
+    "action": {
+      "append": "Añadir datos"
+    },
+    "alert": {
+      "blankLabel": "Falta la etiqueta.",
+      "noData": "Su archivo no contiene ningún dato."
+    },
     "noEntities": "No hay Entidades para mostrar."
   },
   "fr": {
@@ -483,6 +494,17 @@ watch(() => props.state, (state) => {
   },
   "it": {
     "title": "Importa Dati da File",
+    "table": {
+      "server": "{name} dati del server",
+      "file": "Dati da importare"
+    },
+    "action": {
+      "append": "Aggiungi dati"
+    },
+    "alert": {
+      "blankLabel": "Manca l'etichetta.",
+      "noData": "Il tuo file non contiene alcun dato."
+    },
     "noEntities": "Non ci sono entità da mostrare."
   },
   "sw": {

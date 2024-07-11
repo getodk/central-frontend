@@ -197,11 +197,14 @@ const hideOrComplete = () => {
     ]
   },
   "de": {
+    "title": "Entitätsliste erstellen",
+    "entityListName": "Name der Entitätsliste",
     "introduction": [
       "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können."
     ]
   },
   "es": {
+    "title": "Crear lista de entidades",
     "introduction": [
       "Las entidades le permiten compartir información entre formularios para que pueda recopilar datos longitudinales, gestionar casos a lo largo del tiempo y representar otros flujos de trabajo con varios pasos."
     ]
@@ -223,10 +226,15 @@ const hideOrComplete = () => {
   },
   "it": {
     "title": "Crea la Lista Entità",
+    "encrypted": "Questo progetto è criptato. I formulari e gli invii non saranno in grado di modificare le entità di questo elenco. Le entità devono essere gestite tramite Central o l'API.",
     "entityListName": "Nome Lista Entità",
     "success": [
-      "La Lista Entità \"{name}\" è stato creata."
+      "La Lista Entità \"{name}\" è stato creata.",
+      "È possibile iniziare ad usarlo aggiungendo le proprietà dei dati direttamente in questa pagina o caricando i formulari che lo utilizzano. In questo caso, le proprietà richiamate dal formulario saranno create automaticamente quando si pubblica il modulo."
     ],
+    "problem": {
+      "409_3": "Esiste già un elenco di entità in questo progetto con il nome di “{datasetName}”."
+    },
     "introduction": [
       "Le entità consentono di condividere le informazioni tra i formulari per raccogliere dati longitudinali, gestire i casi nel tempo e rappresentare altri flussi di lavoro con più passaggi."
     ]

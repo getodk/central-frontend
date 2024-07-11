@@ -206,6 +206,9 @@ const requestDelete = () => {
     "back": {
       "title": "Dettaglio Entità",
       "back": "Indietro alla Tabella {datasetName}"
+    },
+    "alert": {
+      "delete": "La Entità “{label}” è stata cancellata."
     }
   },
   "sw": {

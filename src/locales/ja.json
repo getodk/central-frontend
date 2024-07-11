@@ -205,7 +205,8 @@
     "webUsers": "Webユーザー",
     "session": "セッション",
     "submissions": "提出済フォーム",
-    "projectRoles": "プロジェクトでの役割"
+    "projectRoles": "プロジェクトでの役割",
+    "draft": "下書き"
   },
   "alert": {
     "passwordTooShort": "10文字以上の長さのパスワードを入力してください。",

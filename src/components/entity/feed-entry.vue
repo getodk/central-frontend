@@ -454,6 +454,7 @@ const versionAnchor = (v) => `#v${v}`;
       "entity": {
         "create": {
           "api": "Entità {label} creata da {name}",
+          "bulkSource": "File {name} caricato da {actor}",
           "submission": "Entità creata {label} in {dataset} Lista Entità"
         },
         "update_version": {

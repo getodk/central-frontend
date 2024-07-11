@@ -400,7 +400,10 @@ export default {
   },
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
-    "noMatching": "Non sono presenti Entità corrispondenti."
+    "noMatching": "Non sono presenti Entità corrispondenti.",
+    "alert": {
+      "delete": "La Entità “{label}” è stata cancellata."
+    }
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",
