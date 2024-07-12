@@ -94,3 +94,9 @@
 .icon-check:before {
 	content: '\e916';
 }
+.icon-error:before {
+	content: '\e917';
+}
+.icon-error_outline:before {
+	content: '\e918';
+}
