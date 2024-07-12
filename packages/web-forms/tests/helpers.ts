@@ -2,7 +2,6 @@ import type { AnyControlNode, RootNode } from '@getodk/xforms-engine';
 import { initializeForm } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
-import { assocPath } from 'ramda';
 import { reactive } from 'vue';
 
 const formFixtures = import.meta.glob<true, 'raw', string>(
@@ -34,4 +33,4 @@ export const globalMountOptions: GlobalMountOptions = {
 };
 
 export const fakeUnsupportedControlNode = () =>
-	assocPath(['nodeType'], 'dummy', {} as AnyControlNode);
+	Object.assign({ nodeType: 'dummy', validationState: {} }, {} as AnyControlNode);

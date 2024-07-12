@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Validation Form</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="default" default="true()">
+          <text id="/data/profession:jr:requiredMsg">
+            <value>Please enter your profession</value>
+          </text>
+          <text id="/data/citizen:jr:constraintMsg">
+            <value>It has to be two</value>
+          </text>
+        </translation>
+        <translation lang="Urdu (ur)">
+          <text id="/data/profession:jr:requiredMsg">
+            <value>اپنا پروفیشن بتائیں</value>
+          </text>
+          <text id="/data/citizen:jr:constraintMsg">
+            <value>صرف دو ہی ہوسکتی ہیں</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="validation" version="20240708154514">
+          <first_name />
+          <last_name />
+          <profession />
+          <favourite_color />
+          <citizen />
+          <age />
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <instance id="country">
+        <root>
+          <item>
+            <name>pk</name>
+            <label>Pakistan</label>
+          </item>
+          <item>
+            <name>ca</name>
+            <label>Canada</label>
+          </item>
+          <item>
+            <name>us</name>
+            <label>USA</label>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/first_name" type="string" required="true()" />
+      <bind nodeset="/data/last_name" type="string" required="true()"
+        jr:requiredMsg="Please enter the Last Name" />
+      <bind nodeset="/data/profession" type="string" required="true()"
+        jr:requiredMsg="jr:itext('/data/profession:jr:requiredMsg')" />
+      <bind nodeset="/data/favourite_color" type="string" constraint=". = &quot;red&quot;" />
+      <bind nodeset="/data/citizen" type="string" constraint="count-selected(.) = 2"
+        jr:constraintMsg="jr:itext('/data/citizen:jr:constraintMsg')" />
+      <bind nodeset="/data/age" type="string" required="true()"
+        constraint=". &gt; 18 and . &lt; 100" jr:constraintMsg="Age has to be between 18 and 100" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/first_name">
+      <label>First Name</label>
+    </input>
+    <input ref="/data/last_name">
+      <label>Last Name</label>
+    </input>
+    <input ref="/data/profession">
+      <label>Profession</label>
+    </input>
+    <input ref="/data/favourite_color">
+      <label>Favourite Color</label>
+    </input>
+    <select ref="/data/citizen">
+      <label>Citizenships</label>
+      <itemset nodeset="instance('country')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <input ref="/data/age">
+      <label>Age</label>
+    </input>
+  </h:body>
+</h:html>
