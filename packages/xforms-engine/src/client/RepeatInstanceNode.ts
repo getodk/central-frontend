@@ -5,6 +5,7 @@ import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RepeatRangeNode } from './RepeatRangeNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
+import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RepeatInstanceNodeState extends BaseNodeState {
 	// TODO(?): Previous iteration included an `index` getter here. I don't see it
@@ -42,4 +43,5 @@ export interface RepeatInstanceNode extends BaseNode {
 	readonly parent: RepeatRangeNode;
 
 	readonly currentState: RepeatInstanceNodeState;
+	readonly validationState: AncestorNodeValidationState;
 }

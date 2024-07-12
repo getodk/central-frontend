@@ -4,6 +4,7 @@ import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
+import type { LeafNodeValidationState } from './validation.ts';
 
 export interface StringNodeState extends BaseNodeState {
 	get children(): null;
@@ -38,6 +39,7 @@ export interface StringNode extends BaseNode {
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: StringNodeState;
+	readonly validationState: LeafNodeValidationState;
 
 	/**
 	 * For use by a client to update the value of a string node.

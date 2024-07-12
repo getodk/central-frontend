@@ -1,5 +1,5 @@
+import type { AnyViolation } from '@getodk/xforms-engine';
 import type { AnyPositionalEvent } from '../event/getPositionalEvents.ts';
-import { ValidationImplementationPendingError } from './ValidationImplementationPendingError.ts';
 
 export const ANSWER_OK = 'ANSWER_OK';
 export const ANSWER_REQUIRED_BUT_EMPTY = 'ANSWER_REQUIRED_BUT_EMPTY';
@@ -19,11 +19,23 @@ type ValidationOutcomeStatus = ValidationOutcomeStatuses[keyof ValidationOutcome
  * @todo
  */
 export class ValidateOutcome {
-	get failedPrompt(): AnyPositionalEvent | null {
-		throw new ValidationImplementationPendingError();
-	}
+	readonly outcome: ValidationOutcomeStatus;
 
-	get outcome(): ValidationOutcomeStatus {
-		throw new ValidationImplementationPendingError();
+	constructor(
+		readonly failedPrompt: AnyPositionalEvent | null,
+		violation: AnyViolation | null
+	) {
+		switch (violation?.condition) {
+			case 'constraint':
+				this.outcome = 'ANSWER_CONSTRAINT_VIOLATED';
+				break;
+
+			case 'required':
+				this.outcome = 'ANSWER_REQUIRED_BUT_EMPTY';
+				break;
+
+			default:
+				this.outcome = 'ANSWER_OK';
+		}
 	}
 }

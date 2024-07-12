@@ -201,9 +201,7 @@ describe('BodyDefinition', () => {
 				type: 'input',
 				reference: '/root/input-label-hint',
 				label: {
-					category: 'support',
-					type: 'label',
-					children: [{ expression: '"Label text"' }],
+					role: 'label',
 				},
 			});
 		});
@@ -216,9 +214,7 @@ describe('BodyDefinition', () => {
 				type: 'input',
 				reference: '/root/input-label-hint',
 				hint: {
-					category: 'support',
-					type: 'hint',
-					children: [{ expression: '"Hint text"' }],
+					role: 'hint',
 				},
 			});
 		});
@@ -254,9 +250,7 @@ describe('BodyDefinition', () => {
 							type: 'input',
 							reference: '/root/loggrp/lg-child-2',
 							label: {
-								category: 'support',
-								type: 'label',
-								children: [{ expression: '"Logical group child 2"' }],
+								role: 'label',
 							},
 							hint: null,
 						},
@@ -272,9 +266,7 @@ describe('BodyDefinition', () => {
 					type: 'logical-group',
 					reference: '/root/loggrp-2',
 					label: {
-						category: 'support',
-						type: 'label',
-						children: [{ expression: '"Logical group 2 with label"' }],
+						role: 'label',
 					},
 				});
 			});
@@ -312,9 +304,7 @@ describe('BodyDefinition', () => {
 					type: 'presentation-group',
 					reference: null,
 					label: {
-						category: 'support',
-						type: 'label',
-						children: [{ expression: '"Presentation group label"' }],
+						role: 'label',
 					},
 				});
 			});
@@ -336,9 +326,7 @@ describe('BodyDefinition', () => {
 							type: 'input',
 							reference: '/root/presgrp/pg-b',
 							label: {
-								category: 'support',
-								type: 'label',
-								children: [{ expression: '"Presentation group child b"' }],
+								role: 'label',
 							},
 							hint: null,
 						},
@@ -414,9 +402,7 @@ describe('BodyDefinition', () => {
 				type: 'repeat',
 				reference: '/root/rep1',
 				label: {
-					category: 'support',
-					type: 'label',
-					children: [{ expression: '"Repeat group"' }],
+					role: 'label',
 				},
 			});
 		});
@@ -437,9 +423,7 @@ describe('BodyDefinition', () => {
 						type: 'input',
 						reference: '/root/rep1/r1-2',
 						label: {
-							category: 'support',
-							type: 'label',
-							children: [{ expression: '"Repeat 1 input 2"' }],
+							role: 'label',
 						},
 					},
 				],

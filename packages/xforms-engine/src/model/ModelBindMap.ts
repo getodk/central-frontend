@@ -17,6 +17,10 @@ class ArtificialBindElement implements BindElement {
 
 		return null;
 	}
+
+	getAttributeNS() {
+		return null;
+	}
 }
 
 type TopologicalSortIndex = number;

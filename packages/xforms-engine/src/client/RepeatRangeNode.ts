@@ -5,6 +5,7 @@ import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
+import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RepeatRangeNodeState extends BaseNodeState {
 	get hint(): null;
@@ -97,6 +98,7 @@ export interface RepeatRangeNode extends BaseNode {
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: RepeatRangeNodeState;
+	readonly validationState: AncestorNodeValidationState;
 
 	addInstances(afterIndex?: number, count?: number): RootNode;
 

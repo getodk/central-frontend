@@ -4,6 +4,7 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { ItemDefinition } from '../../body/control/select/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../body/control/select/ItemsetDefinition.ts';
+import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
 import type { SelectItem } from '../../index.ts';
 import type { SelectField } from '../../instance/SelectField.ts';
 import type {
@@ -11,20 +12,31 @@ import type {
 	EvaluationContextRoot,
 } from '../../instance/internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
-import type { TextRange } from '../../instance/text/TextRange.ts';
+import { TextChunk } from '../../instance/text/TextChunk.ts';
+import { TextRange } from '../../instance/text/TextRange.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
+type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
+
+const derivedItemLabel = (context: EvaluationContext, value: string): DerivedItemLabel => {
+	const chunk = new TextChunk(context.root, 'static', value);
+
+	return new TextRange('form-derived', 'item-label', [chunk]);
+};
+
 const createSelectItemLabel = (
 	context: EvaluationContext,
 	definition: ItemDefinition
-): Accessor<TextRange<'label'>> => {
+): Accessor<ClientTextRange<'item-label'>> => {
 	const { label, value } = definition;
 
-	return createTextRange(context, 'label', label, {
-		fallbackValue: value,
-	});
+	if (label == null) {
+		return () => derivedItemLabel(context, value);
+	}
+
+	return createTextRange(context, 'item-label', label);
 };
 
 const createTranslatedStaticSelectItems = (
@@ -73,25 +85,20 @@ const createSelectItemsetItemLabel = (
 	context: EvaluationContext,
 	definition: ItemsetDefinition,
 	itemValue: Accessor<string>
-): Accessor<TextRange<'label'>> => {
+): Accessor<ClientTextRange<'item-label'>> => {
 	const { label } = definition;
 
 	if (label == null) {
 		return createMemo(() => {
-			const value = itemValue();
-			const staticValueLabel = createTextRange(context, 'label', label, {
-				fallbackValue: value,
-			});
-
-			return staticValueLabel();
+			return derivedItemLabel(context, itemValue());
 		});
 	}
 
-	return createTextRange(context, 'label', label);
+	return createTextRange(context, 'item-label', label);
 };
 
 interface ItemsetItem {
-	label(): TextRange<'label'>;
+	label(): ClientTextRange<'item-label'>;
 	value(): string;
 }
 

@@ -1,6 +1,6 @@
 import type { XFormDefinition } from '../../XFormDefinition.ts';
+import { LabelDefinition } from '../../parse/text/LabelDefinition.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
-import { LabelDefinition } from '../text/LabelDefinition.ts';
 import { BaseGroupDefinition } from './BaseGroupDefinition.ts';
 
 export class PresentationGroupDefinition extends BaseGroupDefinition<'presentation-group'> {

@@ -1,8 +1,8 @@
 import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/whitespace.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
-import type { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { SelectNodeAnswer } from '../../answer/SelectNodeAnswer.ts';
 import { UntypedAnswer } from '../../answer/UntypedAnswer.ts';
+import type { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import type { Scenario } from '../Scenario.ts';
 import { SelectChoice } from '../select/SelectChoice.ts';
 import { QuestionEvent } from './QuestionEvent.ts';
@@ -41,7 +41,7 @@ export class SelectQuestionEvent extends QuestionEvent<'select'> {
 	 * behavior! For now it's consistent with the internals (which we shouldn't
 	 * need to know about here because {@link Scenario} is a client)
 	 */
-	answerQuestion(answerValue: unknown): ComparableAnswer {
+	answerQuestion(answerValue: unknown): ValueNodeAnswer {
 		const { node } = this;
 		const { stringValue } = new UntypedAnswer(answerValue);
 

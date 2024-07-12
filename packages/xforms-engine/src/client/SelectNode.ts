@@ -6,10 +6,11 @@ import type { RootNode } from './RootNode.ts';
 import type { StringNode } from './StringNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
+import type { LeafNodeValidationState } from './validation.ts';
 
 export interface SelectItem {
 	get value(): string;
-	get label(): TextRange<'label'> | null;
+	get label(): TextRange<'item-label'> | null;
 }
 
 export interface SelectNodeState extends BaseNodeState {
@@ -48,6 +49,7 @@ export interface SelectNode extends BaseNode {
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: SelectNodeState;
+	readonly validationState: LeafNodeValidationState;
 
 	/**
 	 * For use by a client to update the selection of a select node where:

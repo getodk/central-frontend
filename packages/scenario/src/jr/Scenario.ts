@@ -3,8 +3,8 @@ import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
-import type { ComparableAnswer } from '../answer/ComparableAnswer.ts';
 import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
+import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
 import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
@@ -30,8 +30,7 @@ import { JRFormIndex } from './form/JRFormIndex.ts';
 import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
-import type { ValidateOutcome } from './validation/ValidateOutcome.ts';
-import { ValidationImplementationPendingError } from './validation/ValidationImplementationPendingError.ts';
+import { ValidateOutcome } from './validation/ValidateOutcome.ts';
 import { JREvaluationContext } from './xpath/JREvaluationContext.ts';
 import { JRTreeReference } from './xpath/JRTreeReference.ts';
 
@@ -288,6 +287,16 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(increment, expectReference);
 	}
 
+	private getPositionalStateForReference(reference: string): AnyPositionalEvent | null {
+		const events = this.getPositionalEvents();
+
+		return (
+			events.find(({ node }) => {
+				return node?.currentState.reference === reference;
+			}) ?? null
+		);
+	}
+
 	private setPositionalStateToReference(reference: string): AnyPositionalEvent {
 		const events = this.getPositionalEvents();
 		const index = events.findIndex(({ node }) => {
@@ -303,7 +312,7 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(() => index, reference);
 	}
 
-	private answerSelect(reference: string, ...selectionValues: string[]): ComparableAnswer {
+	private answerSelect(reference: string, ...selectionValues: string[]): ValueNodeAnswer {
 		const event = this.setPositionalStateToReference(reference);
 
 		if (!isQuestionEventOfType(event, 'select')) {
@@ -315,7 +324,7 @@ export class Scenario {
 		return event.answerQuestion(new SelectValuesAnswer(selectionValues));
 	}
 
-	answer(...args: AnswerParameters): unknown {
+	answer(...args: AnswerParameters): ValueNodeAnswer {
 		if (isAnswerSelectParams(args)) {
 			return this.answerSelect(...args);
 		}
@@ -356,7 +365,7 @@ export class Scenario {
 		return event.answerQuestion(value);
 	}
 
-	answerOf(reference: string): ComparableAnswer {
+	answerOf(reference: string): ValueNodeAnswer {
 		return answerOf(this.instanceRoot, reference);
 	}
 
@@ -580,11 +589,23 @@ export class Scenario {
 		return Promise.reject(new UnclearApplicabilityError('Scenario instance statefulness'));
 	}
 
-	/**
-	 * @todo
-	 */
 	getValidationOutcome(): ValidateOutcome {
-		throw new ValidationImplementationPendingError();
+		const [first, ...rest] = this.instanceRoot.validationState.violations;
+
+		if (rest.length > 0) {
+			throw new Error(
+				'TODO: what is an appropriate form-/Scenario-level ValidationOutcome when there is more than one violation?'
+			);
+		}
+
+		if (first == null) {
+			return new ValidateOutcome(null, null);
+		}
+
+		const { reference, violation } = first;
+		const failedPrompt = this.getPositionalStateForReference(reference);
+
+		return new ValidateOutcome(failedPrompt, violation);
 	}
 
 	/**

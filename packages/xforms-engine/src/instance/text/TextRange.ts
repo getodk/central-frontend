@@ -1,9 +1,14 @@
-import type { TextRange as ClientTextRange, TextChunk } from '../../client/TextRange.ts';
+import type {
+	TextRange as ClientTextRange,
+	TextChunk,
+	TextOrigin,
+	TextRole,
+} from '../../client/TextRange.ts';
 import { FormattedTextStub } from './FormattedTextStub.ts';
 
-export type TextRole = 'hint' | 'label';
-
-export class TextRange<Role extends TextRole> implements ClientTextRange<Role> {
+export class TextRange<Role extends TextRole, Origin extends TextOrigin>
+	implements ClientTextRange<Role, Origin>
+{
 	*[Symbol.iterator]() {
 		yield* this.chunks;
 	}
@@ -17,6 +22,7 @@ export class TextRange<Role extends TextRole> implements ClientTextRange<Role> {
 	}
 
 	constructor(
+		readonly origin: Origin,
 		readonly role: Role,
 		protected readonly chunks: readonly TextChunk[]
 	) {}

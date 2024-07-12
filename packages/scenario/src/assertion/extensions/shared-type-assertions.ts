@@ -1,5 +1,6 @@
 import { assertUnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
 import { arrayOfAssertion } from '@getodk/common/test/assertions/arrayOfAssertion.ts';
+import type { TypeofAssertion } from '@getodk/common/test/assertions/typeofAssertion.ts';
 import { typeofAssertion } from '@getodk/common/test/assertions/typeofAssertion.ts';
 import type { AnyNode, RootNode } from '@getodk/xforms-engine';
 
@@ -50,6 +51,14 @@ export const assertEngineNode: AssertEngineNode = (node) => {
 	}
 };
 
-export const assertString = typeofAssertion('string');
+export const assertString: TypeofAssertion<'string'> = typeofAssertion('string');
+
+type AssertNullableString = (value: unknown) => asserts value is string | null | undefined;
+
+export const assertNullableString: AssertNullableString = (value) => {
+	if (value != null) {
+		assertString(value);
+	}
+};
 
 export const assertArrayOfStrings = arrayOfAssertion(assertString, 'string');

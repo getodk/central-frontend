@@ -1,19 +1,25 @@
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
 import {
 	AsymmetricTypedExpectExtension,
 	InspectableComparisonError,
+	StaticConditionExpectExtension,
 	SymmetricTypedExpectExtension,
 	extendExpect,
 	instanceAssertion,
 } from '@getodk/common/test/assertions/helpers.ts';
+import { constants, type ValidationCondition } from '@getodk/xforms-engine';
 import { expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
+import type { ValueNode } from '../../answer/ValueNodeAnswer.ts';
+import { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { AnswerResult } from '../../jr/Scenario.ts';
-import { ValidationImplementationPendingError } from '../../jr/validation/ValidationImplementationPendingError.ts';
-import { assertString } from './shared-type-assertions.ts';
+import { assertNullableString, assertString } from './shared-type-assertions.ts';
 
 const assertComparableAnswer = instanceAssertion(ComparableAnswer);
+
+const assertValueNodeAnswer = instanceAssertion<ValueNodeAnswer<ValueNode>>(ValueNodeAnswer);
 
 const assertExpectedApproximateUOMAnswer = instanceAssertion(ExpectedApproximateUOMAnswer);
 
@@ -27,6 +33,31 @@ const assertAnswerResult: AssertAnswerResult = (value) => {
 			`Expected assertion of an AnswerResult (an expected result of \`constraint\` or \`required\` status check). Got ${String(value)}`
 		);
 	}
+};
+
+const matchDefaultMessage = (condition: ValidationCondition) => {
+	const expectedMessage = constants.VALIDATION_TEXT[`${condition}Msg`];
+
+	return {
+		node: {
+			validationState: {
+				[condition]: {
+					valid: false,
+					message: {
+						origin: 'engine',
+						asString: expectedMessage,
+					},
+				},
+				violation: {
+					condition,
+					message: {
+						origin: 'engine',
+						asString: expectedMessage,
+					},
+				},
+			},
+		},
+	};
 };
 
 const answerExtensions = extendExpect(expect, {
@@ -64,11 +95,74 @@ const answerExtensions = extendExpect(expect, {
 	 *   the spec.
 	 */
 	toHaveValidityStatus: new AsymmetricTypedExpectExtension(
-		assertComparableAnswer,
+		assertValueNodeAnswer,
 		assertAnswerResult,
-		(_actual, _expected) => {
-			return new ValidationImplementationPendingError();
+		(actual, expected) => {
+			const { condition } = actual.node.validationState.violation ?? {};
+			let pass: boolean;
+
+			switch (expected) {
+				case AnswerResult.CONSTRAINT_VIOLATED:
+					pass = condition === 'constraint';
+					break;
+
+				case AnswerResult.REQUIRED_BUT_EMPTY:
+					pass = condition === 'required';
+					break;
+
+				case AnswerResult.OK:
+					pass = condition == null;
+					break;
+
+				default:
+					return new UnreachableError(expected);
+			}
+
+			return pass || new InspectableComparisonError(actual, expected, 'be');
 		}
+	),
+
+	toHaveConstraintMessage: new AsymmetricTypedExpectExtension(
+		assertValueNodeAnswer,
+		assertNullableString,
+		(actual, expected) => {
+			const { asString = null } = actual.node.validationState.constraint?.message ?? {};
+			const pass = asString === expected;
+
+			return pass || new InspectableComparisonError(asString, expected, 'to be message');
+		}
+	),
+
+	toHaveRequiredMessage: new AsymmetricTypedExpectExtension(
+		assertValueNodeAnswer,
+		assertNullableString,
+		(actual, expected) => {
+			const { asString = null } = actual.node.validationState.required?.message ?? {};
+			const pass = asString === expected;
+
+			return pass || new InspectableComparisonError(asString, expected, 'to be message');
+		}
+	),
+
+	toHaveValidityMessage: new AsymmetricTypedExpectExtension(
+		assertValueNodeAnswer,
+		assertNullableString,
+		(actual, expected) => {
+			const { asString = null } = actual.node.validationState.violation?.message ?? {};
+			const pass = asString === expected;
+
+			return pass || new InspectableComparisonError(asString, expected, 'to be message');
+		}
+	),
+
+	toHaveDefaultConstraintMessage: new StaticConditionExpectExtension(
+		assertValueNodeAnswer,
+		matchDefaultMessage('constraint')
+	),
+
+	toHaveDefaultRequiredMessage: new StaticConditionExpectExtension(
+		assertValueNodeAnswer,
+		matchDefaultMessage('required')
 	),
 
 	/**

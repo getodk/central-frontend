@@ -1,6 +1,6 @@
-import type { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { StringNodeAnswer } from '../../answer/StringNodeAnswer.ts';
 import { UntypedAnswer } from '../../answer/UntypedAnswer.ts';
+import type { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { QuestionEvent } from './QuestionEvent.ts';
 
 export class StringInputQuestionEvent extends QuestionEvent<'string'> {
@@ -8,7 +8,7 @@ export class StringInputQuestionEvent extends QuestionEvent<'string'> {
 		return new StringNodeAnswer(this.node);
 	}
 
-	answerQuestion(answerValue: unknown): ComparableAnswer {
+	answerQuestion(answerValue: unknown): ValueNodeAnswer {
 		const { stringValue } = new UntypedAnswer(answerValue);
 
 		this.node.setValue(stringValue);

@@ -2,6 +2,7 @@ import type { SubtreeDefinition as BaseSubtreeDefinition } from '../model/Subtre
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
+import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface SubtreeNodeState extends BaseNodeState {
 	get label(): null;
@@ -55,4 +56,5 @@ export interface SubtreeNode extends BaseNode {
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: SubtreeNodeState;
+	readonly validationState: AncestorNodeValidationState;
 }

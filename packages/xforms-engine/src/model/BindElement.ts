@@ -5,4 +5,5 @@ export interface BindElement {
 
 	getAttribute(name: 'nodeset'): BindNodeset;
 	getAttribute(name: string): string | null;
+	getAttributeNS(namespaceURI: string | null, localName: string): string | null;
 }

@@ -31,7 +31,7 @@ export interface SharedNodeState<Spec extends StateSpec> {
 	readonly setProperty: SetEnginePropertyState<Spec>;
 }
 
-interface SharedNodeStateOptions<
+export interface SharedNodeStateOptions<
 	Factory extends OpaqueReactiveObjectFactory,
 	Spec extends StateSpec,
 > {

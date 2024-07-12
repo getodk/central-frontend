@@ -5,7 +5,8 @@ import type {
 	RepeatInstanceNode,
 	RepeatInstanceNodeAppearances,
 } from '../client/RepeatInstanceNode.ts';
-import type { TextRange } from '../index.ts';
+import type { TextRange } from '../client/TextRange.ts';
+import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -15,6 +16,7 @@ import type { EngineState } from '../lib/reactivity/node-state/createEngineState
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
+import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { RepeatRange } from './RepeatRange.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
@@ -87,6 +89,7 @@ export class RepeatInstance
 		CurrentState<RepeatInstanceStateSpec>,
 		GeneralChildNode
 	>;
+	readonly validationState: AncestorNodeValidationState;
 
 	constructor(
 		override readonly parent: RepeatRange,
@@ -116,6 +119,10 @@ export class RepeatInstance
 
 		this.currentIndex = currentIndex;
 
+		const sharedStateOptions = {
+			clientStateFactory: this.engineConfig.stateFactory,
+		};
+
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -131,9 +138,7 @@ export class RepeatInstance
 				valueOptions: null,
 				value: null,
 			},
-			{
-				clientStateFactory: this.engineConfig.stateFactory,
-			}
+			sharedStateOptions
 		);
 
 		this.state = state;
@@ -166,6 +171,7 @@ export class RepeatInstance
 		});
 
 		childrenState.setChildren(buildChildren(this));
+		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 	}
 
 	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {

@@ -96,7 +96,7 @@ export abstract class DescendantNode<
 		return this.isSelfRelevant();
 	};
 
-	protected readonly isRequired: Accessor<boolean>;
+	readonly isRequired: Accessor<boolean>;
 
 	readonly root: Root;
 	readonly evaluator: XFormsXPathEvaluator;

@@ -1,11 +1,10 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
 import {
+	ArbitraryConditionExpectExtension,
 	extendExpect,
-	StaticConditionExpectExtension,
 } from '@getodk/common/test/assertions/helpers.ts';
 import { expect } from 'vitest';
-import { ConstraintImplementationPendingError } from '../../error/ConstraintImplementationPendingError.ts';
 import { JRFormDef } from '../../jr/form/JRFormDef.ts';
 
 type AssertJRFormDef = (value: unknown) => asserts value is JRFormDef;
@@ -31,12 +30,12 @@ const formStateExtensions = extendExpect(expect, {
 	 * ])
 	 * ```
 	 */
-	toBeValid: new StaticConditionExpectExtension(assertJRFormDef, {
-		currentState: {
-			get valid(): boolean {
-				throw new ConstraintImplementationPendingError();
-			},
-		},
+	toBeValid: new ArbitraryConditionExpectExtension(assertJRFormDef, (actual) => {
+		if (actual.scenario.instanceRoot.validationState.violations.length) {
+			return new Error();
+		}
+
+		return true;
 	}),
 });
 

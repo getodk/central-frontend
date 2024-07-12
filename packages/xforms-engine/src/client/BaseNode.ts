@@ -4,6 +4,11 @@ import type { NodeAppearances } from './NodeAppearances.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';
 import type { InstanceNodeType } from './node-types.ts';
+import type {
+	AncestorNodeValidationState,
+	LeafNodeValidationState,
+	NodeValidationState,
+} from './validation.ts';
 
 export interface BaseNodeState {
 	/**
@@ -43,11 +48,17 @@ export interface BaseNodeState {
 	 */
 	get relevant(): boolean;
 
-	// Note: according to spec, `required` is NOT inherited from ancestor nodes.
-	// What this means for a `required` state on subtree nodes is an open
-	// question. It was also raised on the first engine-internals iteration, and I
-	// could have sworn it was discussed in that PR, but finding any record of
-	// this discussion has proven elusive.
+	/**
+	 * Specifies whether the node must have a non-blank value to be valid (see
+	 * {@link value} for details).
+	 *
+	 * @see {@link https://getodk.github.io/xforms-spec/#bind-attributes}
+	 *
+	 * @default false
+	 *
+	 * @todo What is the expected behavior of `required` expressions defined for
+	 * non-leaf/value nodes?
+	 */
 	get required(): boolean;
 
 	/**
@@ -106,6 +117,14 @@ export interface BaseNodeState {
 	 *
 	 * Parent nodes, i.e. nodes which can contain {@link children}, do not store a
 	 * value state. For those nodes, their value state should always be `null`.
+	 *
+	 * A node's value is considered "blank" when its primary instance state is an
+	 * empty string, and it is considered "non-blank" otherwise. The engine may
+	 * represent node values according to aspects of the node's definition (such
+	 * as its defined data type, its associated control type if any). The node's
+	 * value being blank or non-blank may contribute to satisfying conditions of
+	 * the node's validity ({@link constraint}, {@link required}). Otherwise, it
+	 * is an internal engine consideration.
 	 */
 	get value(): unknown;
 }
@@ -181,8 +200,55 @@ export interface BaseNode {
 	readonly parent: BaseNode | null;
 
 	/**
-	 * Each node provides a discrete object representing the stateful aspects of
-	 * that node which will change over time. When a client provides a {@link OpaqueReactiveObjectFactory}
+	 * Each node provides a discrete object representing the stateful aspects\* of
+	 * that node which will change over time. When a client provides a
+	 * {@link OpaqueReactiveObjectFactory}, the engine will update the properties
+	 * of this object as their respective states change, so a client can implement
+	 * reactive updates that respond to changes as they occur.
+	 *
+	 * \* This includes state which is either client-/user-mutable, or state which
+	 *    is computed based on the core XForms computation model. Each node also
+	 *    exposes {@link validationState}, which reflects the validity of the
+	 *    node, or its descendants.
 	 */
 	readonly currentState: BaseNodeState;
+
+	/**
+	 * Represents the validation state of a the node itself, or its descendants.
+	 *
+	 * @see {@link AncestorNodeValidationState} and
+	 * {@link LeafNodeValidationState} for additional details.
+	 *
+	 * While filling a form (i.e. prior to submission), validation state can be
+	 * viewed as computed metadata about the form state. The validation conditions
+	 * and their violation messages produced by a node _may be computed on
+	 * demand_. Clients should assume:
+	 *
+	 * 1. Validation state **will be current** when directly read by the client.
+	 *    Accessing validation state _may_ invoke engine computation of that state
+	 *    _at that time_.
+	 *
+	 *    It **may** also be pre-computed by the engine so that direct reads are
+	 *    less computationally expensive, but such optimizations cannot be
+	 *    guaranteed by the engine at this time.
+	 *
+	 * 2. For clients providing an {@link OpaqueReactiveObjectFactory}, accessing
+	 *    validation state within a reactive context **will produce updates** to
+	 *    the validation state, as long as the client retains a subscription to
+	 *    that state.
+	 *
+	 *    If it is possible to detect interruption of such client- reactive
+	 *    subscriptions, the engine _may defer computations_ until subsequent
+	 *    client read/re-subscription, in order to reduce unnecessary
+	 *    computational overhead. Again, such optimizations cannot be guaranteed
+	 *    by the engine at this time.
+	 *
+	 * @todo it's easier to conceive a reliable, general solution to optimizing
+	 * the direct read case, than it is for the client-reactive case (largely
+	 * because our solution for client reactivity is intentionally opaque). If it
+	 * turns out that such optimizations are crucial for overall usability, the
+	 * client-reactive case may best be served by additional APIs for reactive
+	 * clients to explicitly pause and resume recomputation.
+	 */
+	readonly validationState: NodeValidationState;
 }

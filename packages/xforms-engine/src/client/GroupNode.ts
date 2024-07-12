@@ -4,6 +4,7 @@ import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
+import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface GroupNodeState extends BaseNodeState {
 	get hint(): null;
@@ -34,4 +35,5 @@ export interface GroupNode extends BaseNode {
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: GroupNodeState;
+	readonly validationState: AncestorNodeValidationState;
 }

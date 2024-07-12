@@ -71,6 +71,13 @@ const nodeStateExtensions = extendExpect(expect, {
 		currentState: { relevant: false },
 	}),
 
+	toBeRequired: new StaticConditionExpectExtension(assertEngineNode, {
+		currentState: { required: true },
+	}),
+	toBeOptional: new StaticConditionExpectExtension(assertEngineNode, {
+		currentState: { required: false },
+	}),
+
 	/**
 	 * **PORTING NOTES**
 	 *

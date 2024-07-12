@@ -14,6 +14,7 @@ export type * from './client/SelectNode.ts';
 export type * from './client/StringNode.ts';
 export type * from './client/SubtreeNode.ts';
 export type * from './client/TextRange.ts';
+export * as constants from './client/constants.ts';
 export type {
 	AnyChildNode,
 	AnyLeafNode,
@@ -23,6 +24,7 @@ export type {
 	GeneralParentNode,
 } from './client/hierarchy.ts';
 export type * from './client/index.ts';
+export type * from './client/validation.ts';
 
 // TODO: notwithstanding potential conflicts with parallel work on `web-forms`
 // (former `ui-vue`), these are the last remaining references **outside of
