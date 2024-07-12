@@ -23,10 +23,15 @@ const handleSubmit = () => {
 const showForm = (form: [string, string]) => {
 	selectForm.value = form;
 	history.pushState({form: form }, "", "/" + form[0]);
+	window.scrollTo(0,0);
 }
 
 interface PopStateEventWithForm extends PopStateEvent {
 	state: {form: [string, string]};
+}
+
+if ('scrollRestoration' in history) {
+	history.scrollRestoration = 'manual';
 }
 
 window.addEventListener("popstate", (event:PopStateEventWithForm) => {
