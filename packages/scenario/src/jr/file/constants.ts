@@ -1,11 +1,15 @@
-const IS_NODE = typeof globalThis.process === 'object' && globalThis.process != null;
+import { IS_NODE_RUNTIME } from '@getodk/common/env/detection.ts';
 
 export type FileSeparator = '/' | '\\';
 
+/**
+ * @todo This detection should likely be done in vitest.config.ts and populated
+ * with a `define` config.
+ */
 export const FILE_SEPARATOR: FileSeparator = await (async () => {
 	let result: FileSeparator | null = null;
 
-	if (IS_NODE) {
+	if (IS_NODE_RUNTIME) {
 		try {
 			const { sep } = await import('node:path');
 

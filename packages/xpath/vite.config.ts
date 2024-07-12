@@ -2,6 +2,7 @@
 /// <reference types="vitest" />
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
+import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
@@ -120,12 +121,13 @@ export default defineConfig(({ mode }) => {
 				name: BROWSER_NAME!,
 				provider: 'playwright',
 				headless: true,
+				screenshotFailures: false,
 			},
 
 			environment: TEST_ENVIRONMENT,
 			globals: false,
 			include: ['test/**/*.test.ts', 'test/native/index.ts', 'test/xforms/index.ts'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		},
+		} satisfies VitestTestConfig,
 	};
 });

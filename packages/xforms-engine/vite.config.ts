@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
+import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import { resolve as resolvePath } from 'node:path';
 import type { UserConfig } from 'vite';
 import { defineConfig } from 'vite';
@@ -123,6 +124,7 @@ export default defineConfig(({ mode }) => {
 				name: BROWSER_NAME!,
 				provider: 'playwright',
 				headless: true,
+				screenshotFailures: false,
 			},
 
 			environment: TEST_ENVIRONMENT,
@@ -130,6 +132,6 @@ export default defineConfig(({ mode }) => {
 			include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
 			exclude: ['src/**/*.tsx', 'test/**/*.tsx'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		},
+		} satisfies VitestTestConfig,
 	} satisfies ViteConfig;
 });

@@ -1,3 +1,4 @@
+import { IS_NODE_RUNTIME } from '@getodk/common/env/detection.ts';
 import WebTreeSitter, * as WebTreeSitterNamespace from 'web-tree-sitter';
 
 type ParserConstructor = typeof WebTreeSitter;
@@ -31,15 +32,13 @@ if (
 	throw new Error('Failed to import web-tree-sitter (`Parser` constructor)');
 }
 
-const IS_NODE = typeof process === 'object' && process != null;
-
 /**
  * Vitest `?url` imports produce `/@fs/Absolute/file-system/paths`, which
  * tree-sitter will fail to load in Node, because it uses `node:fs` functions
  * to access the file system there.
  */
 const unprefixNodeFileSystemPath = (resourcePath: string) => {
-	if (IS_NODE && resourcePath.startsWith('/@fs/')) {
+	if (IS_NODE_RUNTIME && resourcePath.startsWith('/@fs/')) {
 		return resourcePath.replace('/@fs/', '/');
 	}
 
@@ -114,7 +113,7 @@ const resolveWebAssemblyResource = async <T extends ResourceType>(
 	resource: string,
 	resourceType: T
 ): Promise<ResolvedResourceType<T>> => {
-	if (IS_NODE && resourceType === 'binary' && resource.startsWith('data:')) {
+	if (IS_NODE_RUNTIME && resourceType === 'binary' && resource.startsWith('data:')) {
 		const binary = resolveWebAssemblyDataURL(resource);
 
 		if (binary != null) {
@@ -202,7 +201,7 @@ export class TreeSitterXPathParser {
 
 		let xpathLanguageResourceType: ResourceType;
 
-		if (IS_NODE && !xpathLanguageResource.startsWith('data:')) {
+		if (IS_NODE_RUNTIME && !xpathLanguageResource.startsWith('data:')) {
 			xpathLanguageResourceType = 'locator';
 		} else {
 			xpathLanguageResourceType = 'binary';

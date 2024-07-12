@@ -29,8 +29,8 @@
     "README.md"
   ],
   "engines": {
-    "node": "^18.20.3 || ^20.13.1 || ^22.2.0",
-    "yarn": "1.22.19"
+    "node": "^18.20.4 || ^20.15.1 || ^22.4.1",
+    "yarn": "1.22.22"
   },
   "scripts": {
     "build": "npm-run-all -nl build:*",
@@ -54,26 +54,25 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "solid-js": "^1.8.17"
+    "solid-js": "^1.8.18"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.6",
+    "@babel/core": "^7.24.8",
     "@getodk/tree-sitter-xpath": "0.1.1",
     "@getodk/xpath": "0.1.2",
-    "@playwright/test": "^1.44.1",
-    "@vitest/browser": "^1.6.0",
+    "@playwright/test": "^1.45.1",
+    "@vitest/browser": "^2.0.2",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.0",
     "http-server": "^14.1.1",
-    "jsdom": "^24.0.0",
-    "typedoc": "^0.25.13",
-    "unplugin-fonts": "^1.1.1",
-    "vite": "^5.2.11",
+    "jsdom": "^24.1.0",
+    "typedoc": "^0.26.4",
+    "vite": "^5.3.3",
     "vite-plugin-dts": "^3.9.1",
     "vite-plugin-no-bundle": "^4.0.0",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.2"
   },
   "peerDependencies": {
-    "solid-js": "^1.8.17"
+    "solid-js": "^1.8.18"
   },
   "peerDependenciesMeta": {
     "solid-js": {

@@ -20,8 +20,8 @@
     "tree-sitter-xpath.wasm"
   ],
   "engines": {
-    "node": "^18.20.3 || ^20.13.1 || ^22.2.0",
-    "yarn": "1.22.19"
+    "node": "^18.20.4 || ^20.15.1 || ^22.4.1",
+    "yarn": "1.22.22"
   },
   "scripts": {
     "build": "yarn build:clean && yarn build:js && yarn build:node && yarn build:parser-types && yarn build:wasm && yarn build:post",
@@ -39,11 +39,11 @@
   },
   "devDependencies": {
     "@asgerf/dts-tree-sitter": "^0.1.0",
-    "nan": "^2.19.0",
+    "nan": "2.20.0",
     "node-gyp": "10.1.0",
     "tree-sitter": "0.21.1",
     "tree-sitter-cli": "0.22.6",
-    "vite": "^5.2.11",
+    "vite": "^5.3.3",
     "web-tree-sitter": "0.22.6"
   },
   "peerDependencies": {

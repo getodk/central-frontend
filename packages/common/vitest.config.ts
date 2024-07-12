@@ -4,6 +4,7 @@
 // TODO: much of this may be a good candidate for sharing from this internal package!
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
+import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
@@ -48,6 +49,7 @@ export default defineConfig(() => {
 				name: BROWSER_NAME!,
 				provider: 'playwright',
 				headless: true,
+				screenshotFailures: false,
 			},
 
 			deps: {
@@ -64,10 +66,9 @@ export default defineConfig(() => {
 			},
 			environment: TEST_ENVIRONMENT,
 			globals: false,
-			transformMode: { web: [/\.[jt]sx?$/] },
 
 			exclude: ['e2e/**/*'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		},
+		} satisfies VitestTestConfig,
 	};
 });

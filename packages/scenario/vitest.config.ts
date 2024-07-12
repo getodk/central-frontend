@@ -2,6 +2,7 @@
 /// <reference types="vite/client" />
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
+import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
@@ -70,6 +71,7 @@ export default defineConfig(({ mode }) => {
 				name: BROWSER_NAME!,
 				provider: 'playwright',
 				headless: true,
+				screenshotFailures: false,
 			},
 
 			include,
@@ -92,6 +94,6 @@ export default defineConfig(({ mode }) => {
 			setupFiles: ['./src/vitest/setup.ts'],
 
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		},
+		} satisfies VitestTestConfig,
 	};
 });

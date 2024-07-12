@@ -4,6 +4,7 @@
 // TODO: share Vite config where makes sense
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
+import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import suidPlugin from '@suid/vite-plugin';
 import { resolve as resolvePath } from 'node:path';
 import unpluginFonts from 'unplugin-fonts/vite';
@@ -156,6 +157,7 @@ export default defineConfig(({ mode }) => {
 				name: BROWSER_NAME!,
 				provider: 'playwright',
 				headless: true,
+				screenshotFailures: false,
 			},
 
 			deps: {
@@ -175,9 +177,8 @@ export default defineConfig(({ mode }) => {
 			},
 			environment: TEST_ENVIRONMENT,
 			globals: false,
-			transformMode: { web: [/\.[jt]sx?$/] },
 			exclude: ['e2e/**/*'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		},
+		} satisfies VitestTestConfig,
 	};
 });

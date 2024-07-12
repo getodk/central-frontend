@@ -35,8 +35,8 @@
     "README.md"
   ],
   "engines": {
-    "node": "^18.20.3 || ^20.13.1 || ^22.2.0",
-    "yarn": "1.22.19"
+    "node": "^18.20.4 || ^20.15.1 || ^22.4.1",
+    "yarn": "1.22.22"
   },
   "scripts": {
     "test": "npm-run-all --print-name --print-label test-node:* test-browser:*",
@@ -51,9 +51,9 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
-    "@vitest/browser": "^1.6.0",
-    "jsdom": "^24.0.0",
-    "vite": "^5.2.11",
-    "vitest": "^1.6.0"
+    "@vitest/browser": "^2.0.2",
+    "jsdom": "^24.1.0",
+    "vite": "^5.3.3",
+    "vitest": "^2.0.2"
   }
 }

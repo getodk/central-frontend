@@ -23,8 +23,8 @@
     "README.md"
   ],
   "engines": {
-    "node": "^18.20.3 || ^20.13.1 || ^22.2.0",
-    "yarn": "1.22.19"
+    "node": "^18.20.4 || ^20.15.1 || ^22.4.1",
+    "yarn": "1.22.22"
   },
   "scripts": {
     "build": "npm-run-all -nl build:*",
@@ -50,20 +50,20 @@
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@getodk/xforms-engine": "0.2.0",
-    "@playwright/test": "^1.44.1",
-    "@types/ramda": "^0.30.0",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@playwright/test": "^1.45.1",
+    "@types/ramda": "^0.30.1",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vitejs/plugin-vue-jsx": "^4.0.0",
     "@vue/test-utils": "^2.4.6",
-    "jsdom": "^24.0.0",
+    "jsdom": "^24.1.0",
     "primeflex": "^3.3.1",
-    "primevue": "^3.52.0",
-    "primevue-sass-theme": "https://github.com/primefaces/primevue-sass-theme.git#3.49.1",
-    "ramda": "^0.30.0",
+    "primevue": "^3.53.0",
+    "primevue-sass-theme": "https://github.com/primefaces/primevue-sass-theme.git#3.52.0",
+    "ramda": "^0.30.1",
     "sass": "^1.77.2",
-    "vite": "^5.2.11",
+    "vite": "^5.3.3",
     "vite-plugin-css-injected-by-js": "^3.5.1",
-    "vitest": "^1.6.0",
+    "vitest": "^2.0.2",
     "vue": "3.3.4"
   },
   "peerDependencies": {

@@ -1,4 +1,5 @@
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
+import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import { fileURLToPath } from 'node:url';
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config';
 import viteConfig from './vite.config';
@@ -37,6 +38,7 @@ export default mergeConfig(
 				name: BROWSER_NAME!,
 				provider: 'playwright',
 				headless: true,
+				screenshotFailures: false,
 			},
 			environment: TEST_ENVIRONMENT,
 			exclude: [...configDefaults.exclude, 'e2e/**'],
@@ -49,6 +51,6 @@ export default mergeConfig(
 					return false;
 				}
 			},
-		},
+		} satisfies VitestTestConfig,
 	})
 );

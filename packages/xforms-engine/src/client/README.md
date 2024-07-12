@@ -20,6 +20,7 @@ The interface is designed to:
 - Facilitate loading any of a form's externally referenced resources, by means of a client-provided generic resource accessor[^2]
 
 [^1]: This factory **may be** reactive, and for many clients that is the anticipated usage. But no assumptions are made by the engine about reactivity or any other implementation details beyond the factory's type definition.
+
 [^2]: This accessor **may** access networked resources, and for many clients that is the anticipated usage. But no assumptions are made by the engine about the provenance of any resources it requests beyond the accessor's type definition.
 
 ### Non-goals
