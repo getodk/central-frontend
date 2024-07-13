@@ -33,9 +33,8 @@
     "build:wasm": "tree-sitter build --wasm",
     "install": "true # Prevent invoking `node-gyp rebuild` on `yarn install`",
     "test": "npm-run-all -nl test:*",
-    "test:grammar": "tree-sitter test",
-    "test:web": "playwright test",
-    "test:types": "tsc --project ./tsconfig.json"
+    "test:types": "tsc --project ./tsconfig.json",
+    "test:grammar": "tree-sitter test"
   },
   "devDependencies": {
     "@asgerf/dts-tree-sitter": "^0.1.0",
