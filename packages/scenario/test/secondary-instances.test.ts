@@ -274,19 +274,9 @@ describe('Secondary instances', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * 1. Rephrase?
-			 * 2. Failure is caused by `<` in the first `calculate` predicate. The
-			 *    current DSL logic (which has been rechecked for consistency with
-			 *    JavaRosa) appears to produce invalid XML in this case (and in
-			 *    general does not do a lot of sanitization for attributes; I've seen
-			 *    similar errors when authoring new fixtures with the DSL).
-			 * 3. Test passes otherwise (with `<` escaped as `&lt;` in situ).
-			 * 4. This is one example where JSX might be a good option for future
-			 *    iteration on the DSL itself (as attributes/props are first class in
-			 *    the JSX grammar, and escaping would be handled consistently without
-			 *    special serialization logic).
+			 * Rephrase?
 			 */
-			it.fails('[does] do not get confused', async () => {
+			it('[does] do not get confused', async () => {
 				const scenario = await Scenario.init(
 					'Some form',
 					html(
