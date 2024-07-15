@@ -38,7 +38,7 @@ const isSelectNode = (n: QuestionNode): n is SelectNode => n.nodeType === 'selec
 }
 
 .validation-placeholder{
-	height: 2rem;
+	min-height: 2rem;
 
 	.validation-message {
 		display: none;

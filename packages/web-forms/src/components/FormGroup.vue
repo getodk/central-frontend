@@ -20,7 +20,7 @@ const tableLayout = computed(() => {
 
 <template>
 	<FormPanel :title="node.currentState.label?.asString" :no-ui="!node.currentState.label" :class="classes">
-		<div :class="{ 'table-layout': tableLayout }">
+		<div :class="{ 'table-layout': tableLayout, 'gap-2': !tableLayout }" class="flex flex-column">
 			<QuestionList :nodes="node.currentState.children" />
 		</div>
 	</FormPanel>

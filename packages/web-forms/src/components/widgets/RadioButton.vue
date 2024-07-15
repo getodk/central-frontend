@@ -49,7 +49,7 @@ const isDirty = ref(false);
   outline: 1px solid var(--surface-300);
 	border-radius: 10px;
   padding: 15px;
-	margin: 20px 0;
+	margin: 20px 0 0 0;
   cursor: pointer;
 
   .label-text {
