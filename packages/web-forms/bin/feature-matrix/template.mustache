@@ -1,0 +1,15 @@
+{{ #categories }}
+
+<details>
+  <summary>{{{ label }}}</summary>
+
+  <br/>
+
+  | Feature  <img width=250px/>  | Progress     |
+  | ----------- | :----------: |
+  {{ #features }}
+  | {{{ label }}} | {{ status }} |
+  {{ /features }}
+
+</details>
+{{ /categories }}
