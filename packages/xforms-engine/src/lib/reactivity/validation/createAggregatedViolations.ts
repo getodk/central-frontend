@@ -42,7 +42,7 @@ const collectViolationReferences = (
 			}
 
 			default:
-				return child.validationState.violations;
+				return collectViolationReferences(child);
 		}
 	});
 };
