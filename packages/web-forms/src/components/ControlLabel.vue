@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { AnyLeafNode } from '@getodk/xforms-engine';
-const props = defineProps<{question: AnyLeafNode}>();
+import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
+const props = defineProps<{question: QuestionNode}>();
 </script>
 
 <template>
@@ -19,5 +19,5 @@ label {
 		color: var(--red-500); // TODO/sk danger color should be a variable
 	}
 }
-		
+
 </style>

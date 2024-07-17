@@ -5,7 +5,7 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import FormQuestion from '../../src/components/FormQuestion.vue';
-import { getDummyLeafNode, getReactiveForm, globalMountOptions } from '../helpers';
+import { fakeUnsupportedControlNode, getReactiveForm, globalMountOptions } from '../helpers';
 
 const mountComponent = async (formPath: string, questionNumber: number) => {
 	const xform = await getReactiveForm(formPath);
@@ -42,7 +42,7 @@ describe('FormQuestion', () => {
 	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
 		const component = mount(FormQuestion, {
 			props: {
-				question: getDummyLeafNode(),
+				question: fakeUnsupportedControlNode(),
 			},
 		});
 
