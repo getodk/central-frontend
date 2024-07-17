@@ -69,7 +69,7 @@ describe('FormDelete', () => {
         .respondWithData(() => []); // Empty list of deleted forms
     };
 
-    it('navigates to the project overview', async () => {
+    it('navigates to the forms page', async () => {
       const app = await del();
       app.vm.$route.path.should.equal('/projects/1');
     });

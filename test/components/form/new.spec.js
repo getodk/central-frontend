@@ -3,11 +3,11 @@ import { clone } from 'ramda';
 import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FileDropZone from '../../../src/components/file-drop-zone.vue';
 import FormNew from '../../../src/components/form/new.vue';
-import FormRow from '../../../src/components/form/row.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
 import { dragAndDrop, setFiles } from '../../util/trigger';
+import { findTab } from '../../util/dom';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
@@ -283,12 +283,16 @@ describe('FormNew', () => {
         app.should.alert('success', 'Your new Form “Form 2” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use.');
       }));
 
-    it('renders the correct number of rows in the forms table', () =>
+    it('increments the form count', () =>
       createForm()
         .complete()
-        .load('/projects/1', { project: false })
+        // Navigate to a page that does not request the form list. Once the form
+        // list is received, the form count will be updated to match it.
+        .load('/projects/1/settings', { project: false })
         .afterResponses(app => {
-          app.findAllComponents(FormRow).length.should.equal(2);
+          findTab(app, 'Forms').get('.badge').text().should.equal('2');
+          // Check that the form list was not requested.
+          app.vm.$container.requestData.localResources.forms.dataExists.should.be.false();
         }));
   });
 

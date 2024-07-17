@@ -60,9 +60,9 @@ export default {
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
-    const { form } = useRequestData();
+    const { project, form } = useRequestData();
     const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
+    return { project, form, request, awaitingResponse };
   },
   computed: {
     title() {
@@ -80,9 +80,10 @@ export default {
           : apiPaths.form(this.form.projectId, this.form.xmlFormId)
       })
         .then(() => {
-          // project.forms and project.lastSubmission may now be out-of-date. If
-          // the user navigates to ProjectOverview, project.forms should be
-          // updated. project.lastSubmission is not used within ProjectShow.
+          if (this.form.publishedAt == null) this.project.forms -= 1;
+          // project.lastSubmission may now be out-of-date. However,
+          // project.lastSubmission is not used within ProjectShow.
+
           this.$emit('success');
         })
         .catch(noop);

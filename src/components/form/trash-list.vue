@@ -79,7 +79,7 @@ export default {
       // refresh trashed forms list
       this.fetchDeletedForms(true);
 
-      // tell parent component (project overview) to refresh regular forms list
+      // tell parent component (ProjectOverview) to refresh regular forms list
       // (by emitting event to that component's parent)
       this.$emit('restore');
     }

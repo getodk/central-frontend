@@ -47,7 +47,7 @@ describe('ProjectOverview', () => {
     });
   });
 
-  // These tests are in project overview because this component
+  // These tests are in ProjectOverview because this component
   // does/does not include the trashed forms component based on
   // permissions of the given user and project. (And those
   // permissions may not be immediately available.)

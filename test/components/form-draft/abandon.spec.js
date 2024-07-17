@@ -165,9 +165,15 @@ describe('FormDraftAbandon', () => {
         app.should.alert('success', 'The Form “My Form” was deleted.');
       }));
 
-    it('redirects to the project overview', () =>
+    it('redirects to the forms page', () =>
       abandon().then(app => {
         app.vm.$route.path.should.equal('/projects/1');
+      }));
+
+    it('decreases the form count even before the forms response', () =>
+      abandon().beforeEachResponse((app, _, i) => {
+        if (i === 0) return;
+        app.get('#page-head-tabs li.active .badge').text().should.equal('0');
       }));
 
     it('does not show the form in the table', () =>
