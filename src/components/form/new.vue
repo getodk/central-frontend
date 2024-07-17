@@ -679,6 +679,53 @@ export default {
         "update": "Ikiwa una uhakika matatizo haya yanaweza kupuuzwa, bofya kitufe ili kusasisha Rasimu hata hivyo:"
       }
     ]
+  },
+  "zh-Hant": {
+    "title": {
+      "create": "建立表單",
+      "update": "上傳新表單定義"
+    },
+    "introduction": [
+      {
+        "create": "若要建立表單，請上傳 XForms XML 檔案或 XLSForm Excel 檔案。",
+        "update": "若要更新草稿，請上傳 XForms XML 檔案或 XLSForm Excel 檔案。"
+      },
+      {
+        "full": "如果您還沒有，可以使用{tools}來幫助您設計表單。",
+        "tools": "可用的工具"
+      },
+      "如果您有表單附件，則可以在建立表單後在下一頁上提供這些附件。"
+    ],
+    "dropZone": {
+      "full": "將檔案拖曳到此處，或{chooseOne} 上傳。",
+      "chooseOne": "選擇一個檔案"
+    },
+    "action": {
+      "uploadAnyway": "無論如何上傳"
+    },
+    "alert": {
+      "fileRequired": "請選擇檔案"
+    },
+    "problem": {
+      "400_8": "您上傳的表單定義似乎不適用於此表單。它的 formId (表單 ID)錯誤（預期為“{expected}”，得到“{actual}”）。",
+      "400_15": "無法轉換 XLSForm：{error}",
+      "409_3": "此項目中已存在表單 ID 為「{xmlFormId}」的表單。"
+    },
+    "fields": "欄位：",
+    "warningsText": [
+      "該檔案可以使用，但可能存在以下問題：",
+      "表單設計警告：",
+      "工作流程警告：",
+      {
+        "deletedFormExists": "垃圾箱中有一個 ID 為「{value}」的表單。如果您上傳此表單，您將無法取消刪除具有符合 ID 的另一張表單。",
+        "structureChanged": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。"
+      },
+      "請更正問題並重試。",
+      {
+        "create": "如果您確定可以忽略這些問題，請按一下按鈕來建立表單：",
+        "update": "如果您確定可以忽略這些問題，請按一下按鈕來更新草稿："
+      }
+    ]
   }
 }
 </i18n>

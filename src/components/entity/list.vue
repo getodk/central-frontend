@@ -400,11 +400,21 @@ export default {
   },
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
-    "noMatching": "Non sono presenti Entità corrispondenti."
+    "noMatching": "Non sono presenti Entità corrispondenti.",
+    "alert": {
+      "delete": "La Entità “{label}” è stata cancellata."
+    }
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",
     "noMatching": "Hakuna Huluki zinazolingana."
+  },
+  "zh-Hant": {
+    "noEntities": "沒有可顯示的實體。",
+    "noMatching": "無相符的實體。",
+    "alert": {
+      "delete": "實體「1{label}」已被刪除。"
+    }
   }
 }
 </i18n>

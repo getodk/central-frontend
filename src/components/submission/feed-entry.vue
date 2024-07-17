@@ -583,6 +583,39 @@ export default {
       },
       "comment": "Maoni kutoka kwa {name}"
     }
+  },
+  "zh-Hant": {
+    "title": {
+      "create": "由{name}提交",
+      "entity": {
+        "create": "在 {dataset} 實體清單中建立了實體 {label}",
+        "update": "更新了 {dataset} 實體清單中的實體 {label}",
+        "error": "問題處理實體"
+      },
+      "updateReviewState": {
+        "null": {
+          "full": "每個{name}的{reviewState}",
+          "reviewState": "已收到"
+        },
+        "hasIssues": {
+          "full": "每個{name}的{reviewState}",
+          "reviewState": "有問題"
+        },
+        "edited": {
+          "full": "{reviewState} 按照{name}",
+          "reviewState": "已編輯"
+        },
+        "approved": {
+          "full": "{reviewState} 按照{name}",
+          "reviewState": "已認可"
+        },
+        "rejected": {
+          "full": "{reviewState} 按照{name}",
+          "reviewState": "拒絕"
+        }
+      },
+      "comment": "由{name}評論"
+    }
   }
 }
 </i18n>

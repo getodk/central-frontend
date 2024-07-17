@@ -198,6 +198,14 @@ export default {
       "restore": "Fomu \"{name}\" imetenguliwa"
     },
     "message": "Fomu na data inayohusiana na Fomu hufutwa baada ya siku 30 kwenye Tupio"
+  },
+  "zh-Hant": {
+    "title": "垃圾桶",
+    "trashCount": "({count})",
+    "alert": {
+      "restore": "表單「{name}」已取消刪除。"
+    },
+    "message": "表單和表單相關資料將在 30 天後從垃圾箱中刪除"
   }
 }
 </i18n>

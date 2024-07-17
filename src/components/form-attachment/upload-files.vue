@@ -189,6 +189,19 @@ export default {
         "clickHere": "bonyeza hapa kuchagua"
       }
     ]
+  },
+  "zh-Hant": {
+    "title": "上傳檔案",
+    "introduction": [
+      {
+        "full": "若要上傳檔案，您可以將一個或多個檔案{dragAndDrop}到此頁面的表格中。",
+        "dragAndDrop": "拖放"
+      },
+      {
+        "full": "如果您想從提示中選擇檔案，請確保名稱與表中的名稱相同，然後{clickHere}。",
+        "clickHere": "點這裡進行選擇"
+      }
+    ]
   }
 }
 </i18n>

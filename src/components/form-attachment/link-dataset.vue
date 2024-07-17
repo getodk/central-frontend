@@ -156,6 +156,16 @@ export default {
     "action": {
       "link": "Kiungo"
     }
+  },
+  "zh-Hant": {
+    "title": "連結實體清單",
+    "introduction": [
+      "您確定要連結實體清單嗎？",
+      "您上傳的檔案將會被刪除。您稍後可以隨時重新上傳。"
+    ],
+    "action": {
+      "link": "連結"
+    }
   }
 }
 </i18n>

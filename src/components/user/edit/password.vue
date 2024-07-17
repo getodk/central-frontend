@@ -222,6 +222,18 @@ export default {
       "mismatch": "Ni mmiliki wa akaunti pekee ndiye anayeweza kuweka nenosiri lake moja kwa moja.",
       "success": "Mafanikio! Nenosiri lako limesasishwa."
     }
+  },
+  "zh-Hant": {
+    "title": "變更密碼",
+    "oidcBody": "此 Central 服器不管理任何登入密碼。",
+    "action": {
+      "change": "變更密碼"
+    },
+    "cannotChange": "只有帳戶所有者可以直接設定自己的密碼。",
+    "alert": {
+      "mismatch": "請檢查您的新密碼是否符合。",
+      "success": "成功！您的密碼已更新。"
+    }
   }
 }
 </i18n>

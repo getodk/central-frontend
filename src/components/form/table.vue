@@ -182,6 +182,14 @@ export default {
       "latest": "karibuni",
       "idAndVersion": "Kitambulisho na Toleo"
     }
+  },
+  "zh-Hant": {
+    "header": {
+      "closedForms": "封閉表單",
+      "reviewStates": "審查狀態",
+      "latest": "最新的",
+      "idAndVersion": "ID和版本"
+    }
   }
 }
 </i18n>

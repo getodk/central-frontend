@@ -134,6 +134,11 @@ defineExpose({ afterUpdate, afterDelete });
     "header": {
       "updatedAtAndActions": "Ilisasishwa Mwisho / Vitendo"
     }
+  },
+  "zh-Hant": {
+    "header": {
+      "updatedAtAndActions": "最後更新/操作"
+    }
   }
 }
 </i18n>

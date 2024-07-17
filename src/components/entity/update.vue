@@ -273,6 +273,16 @@ const currentVersion = computed(() =>
     "problem": {
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
     }
+  },
+  "zh-Hant": {
+    "title": "更新{label}",
+    "header": {
+      "currentValue": "目前數值",
+      "updatedValue": "更新數值"
+    },
+    "problem": {
+      "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。"
+    }
   }
 }
 </i18n>

@@ -149,6 +149,9 @@ export default {
   },
   "it": {
     "formsUpdateEntities": "Formulario aggiorna Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità"
+  },
+  "zh-Hant": {
+    "formsUpdateEntities": "表單更新此實體清單中的實體"
   }
 }
 </i18n>

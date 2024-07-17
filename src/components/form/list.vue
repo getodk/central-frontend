@@ -191,6 +191,16 @@ export default {
     "alert": {
       "create": "Fomu yako mpya \"{name}\" imeundwa kama Rasimu. Angalia orodha hapa chini, na unapohisi iko tayari, unaweza kuchapisha Fomu kwa matumizi."
     }
+  },
+  "zh-Hant": {
+    "title": "表單",
+    "action": {
+      "create": "新增"
+    },
+    "emptyTable": "沒有可顯示的表單。",
+    "alert": {
+      "create": "您的新表單「{name}」已建立為草稿。查看下面的清單，當您認為準備就緒時，您可以發佈表單以供使用。"
+    }
   }
 }
 </i18n>

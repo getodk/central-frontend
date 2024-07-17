@@ -324,6 +324,23 @@ export default {
       "resetPassword": "Nenosiri la \"{displayName}\" limebatilishwa. Barua pepe imetumwa kwa {email} ikiwa na maagizo ya jinsi ya kuendelea.",
       "retire": "Mtumiaji \"{displayName}\" amestaafu."
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "create": "建立網頁用戶"
+    },
+    "heading": [
+      "網路使用者，在該網站上擁有帳戶來監督和管理該伺服器上的項目。管理員可以管理網站上的任何內容。沒有網站範圍角色的使用者可以從該專案的設定中獲得任何專案的角色。網站管理員和某些專案角色可以使用 Web 瀏覽器填寫表格。若要透過應用程式（例如 {collect}）提交數據，請為每個項目建立APP使用者。"
+    ],
+    "header": {
+      "sitewideRole": "全站角色"
+    },
+    "alert": {
+      "create": "已成功為「{displayName}」建立使用者。",
+      "assignRole": "成功！ 「{displayName}」已被授予網站範圍角色「{roleName}」。",
+      "resetPassword": "「{displayName}」的密碼已失效。一封電子郵件已發送至 {email}，其中包含有關如何繼續操作的說明。",
+      "retire": "用戶「{displayName}」已停用。"
+    }
   }
 }
 </i18n>

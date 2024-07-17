@@ -447,6 +447,38 @@ export default {
     "alert": {
       "success": "Mipangilio imehifadhiwa!"
     }
+  },
+  "zh-Hant": {
+    "enabled": {
+      "null": [
+        "稍後提醒我們。",
+        "管理員將繼續在畫面上方看到該訊息。"
+      ],
+      "true": [
+        {
+          "full": "{weWillShare} 與我們接受 {termsOfService} 與 {privacyPolicy}。",
+          "weWillShare": "我們願意每月與 Central 團隊分享匿名使用資料。",
+          "termsOfService": "服務條款",
+          "privacyPolicy": "隱私權政策"
+        },
+        "發送哪些指標？"
+      ],
+      "false": [
+        "我們無意分享任何資訊。",
+        "您將不會再看到有關此問題的提醒。"
+      ]
+    },
+    "contact": [
+      "我願意於報告中包含我的聯絡資訊。",
+      "我們可能會與您聯繫，以了解有關 Central 使用情況的更多資訊。"
+    ],
+    "field": {
+      "workEmail": "工作電子郵件地址",
+      "organization": "組織名稱"
+    },
+    "alert": {
+      "success": "設定已儲存！"
+    }
   }
 }
 </i18n>

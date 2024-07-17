@@ -87,6 +87,9 @@ const { datasets } = useRequestData();
   },
   "sw": {
     "emptyTable": "Bado hakuna Huluki ambazo zimeundwa kwa ajili ya Mradi huu."
+  },
+  "zh-Hant": {
+    "emptyTable": "尚未為此專案建立任何實體。"
   }
 }
 </i18n>

@@ -171,6 +171,16 @@ const archive = () => {
         "noUndo": "Kitendo hiki hakiwezi kutenduliwa"
       }
     ]
+  },
+  "zh-Hant": {
+    "title": "歸檔項目",
+    "introduction": [
+      "您即將歸檔項目「{name}」。它仍一樣工作，但它將被排序到 Central 主頁項目清單的底部。",
+      {
+        "full": "{noUndo}，但計劃在未來版本中提供取消存檔項目的功能。",
+        "noUndo": "此操作無法撤銷"
+      }
+    ]
   }
 }
 </i18n>

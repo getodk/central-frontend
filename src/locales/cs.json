@@ -225,7 +225,8 @@
     "webUsers": "Uživatelé webu",
     "session": "Relace",
     "submissions": "Příspěvky",
-    "projectRoles": "Role projektu"
+    "projectRoles": "Role projektu",
+    "draft": "Koncept"
   },
   "alert": {
     "passwordTooShort": "Zadejte heslo dlouhé alespoň 10 znaků.",

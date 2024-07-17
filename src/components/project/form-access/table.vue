@@ -261,6 +261,12 @@ export default {
       "form": "fomu",
       "state": "hali"
     }
+  },
+  "zh-Hant": {
+    "header": {
+      "form": "表單",
+      "state": "狀態"
+    }
   }
 }
 </i18n>

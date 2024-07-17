@@ -233,6 +233,12 @@ export default {
       "title": "Maelezo ya Uwasilishaji",
       "back": "Rudi kwenye Jedwali la Mawasilisho"
     }
+  },
+  "zh-Hant": {
+    "back": {
+      "title": "提交詳情",
+      "back": "返回提交表"
+    }
   }
 }
 </i18n>

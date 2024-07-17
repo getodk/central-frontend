@@ -144,6 +144,13 @@ export default {
       "Je, una uhakika unataka kubatilisha ufikiaji kutoka kwa Mtumiaji wa Programu {displayName}?",
       "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho"
     ]
+  },
+  "zh-Hant": {
+    "title": "撤銷使用者存取權限",
+    "introduction": [
+      "您確定要撤銷APP使用者 {displayName} 的存取權限嗎？",
+      "該用戶的現有提交內容將保留，但依賴該用戶的任何人都必須建立一個新提交內容才能繼續下載表格或上傳提交內容。"
+    ]
   }
 }
 </i18n>

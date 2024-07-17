@@ -468,6 +468,33 @@ export default {
       "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi.",
       "delete": "Fomu \"{name}\" ilifutwa."
     }
+  },
+  "zh-Hant": {
+    "draftChecklist": {
+      "title": "清單草案"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "此表格的{draftVersion}。",
+        "draftVersion": "草稿版本"
+      },
+      "action": {
+        "upload": "上傳新定義"
+      }
+    },
+    "actions": {
+      "title": "行動",
+      "action": {
+        "publish": "發布草稿",
+        "abandon": "放棄草案"
+      }
+    },
+    "alert": {
+      "upload": "成功！新的表單定義已儲存為您的草稿。",
+      "publish": "您的草稿現已發布。任何檢索該項目表單的裝置現在都將收到新的表單定義和表單附件。",
+      "abandon": "此表格的草稿版本已成功刪除。",
+      "delete": "表單「{name}」已刪除。"
+    }
   }
 }
 </i18n>

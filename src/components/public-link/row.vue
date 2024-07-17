@@ -190,6 +190,16 @@ export default {
       "text": "Haipatikani bado",
       "title": "Kiungo cha Ufikiaji wa Umma bado hakipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena."
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "revoke": "撤銷"
+    },
+    "revoked": "已撤銷",
+    "unavailable": {
+      "text": "還不可用",
+      "title": "公共訪問連結尚不可用。它尚未完成處理。請稍後刷新並重試。"
+    }
   }
 }
 </i18n>

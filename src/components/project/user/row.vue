@@ -199,6 +199,12 @@ export default {
     "field": {
       "projectRole": "Jukumu la Mradi"
     }
+  },
+  "zh-Hant": {
+    "cannotAssignRole": "您不得編輯自己的專案角色。",
+    "field": {
+      "projectRole": "專案角色"
+    }
   }
 }
 </i18n>

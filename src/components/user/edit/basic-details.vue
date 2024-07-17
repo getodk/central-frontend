@@ -193,6 +193,19 @@ const submit = () => {
     "alert": {
       "success": "Maelezo ya mtumiaji yamehifadhiwa!"
     }
+  },
+  "zh-Hant": {
+    "title": "基本訊息",
+    "emailDisabled": "您的電子郵件地址無法變更。它在 Central 和您的登入伺服器之間使用，以確保您的身分。",
+    "action": {
+      "update": "更新詳情"
+    },
+    "problem": {
+      "409_3": "您無法將電子郵件變更為 {email}，因為此帳戶已存在。請嘗試其他電子郵件地址。"
+    },
+    "alert": {
+      "success": "用戶詳細資料已儲存！"
+    }
   }
 }
 </i18n>

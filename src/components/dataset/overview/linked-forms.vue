@@ -102,6 +102,9 @@ const { publishedFormPath } = useRoutes();
   },
   "sw": {
     "formsConsumeData": "Fomu hutumia Orodha hii ya Huluki | Fomu hutumia Orodha hii ya Huluki"
+  },
+  "zh-Hant": {
+    "formsConsumeData": "表單使用此實體列表"
   }
 }
 </i18n>

@@ -139,6 +139,12 @@ export default {
       "Hapo chini, unaweza kuchagua kama seva hii ya Central itashiriki maelezo ya matumizi yasiyokutambulisha na timu ya Central. Mpangilio huu unaathiri seva nzima"
     ],
     "auditsTitle": "Ripoti za Matumizi ya Hivi Punde"
+  },
+  "zh-Hant": {
+    "heading": [
+      "在下方，您可以選擇此 Central 伺服器是否與 Central 團隊共用匿名使用資訊。此設定會影響整個伺服器。"
+    ],
+    "auditsTitle": "最新使用報告"
   }
 }
 </i18n>

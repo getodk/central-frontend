@@ -145,6 +145,12 @@ export default {
     "action": {
       "download": "Pakua data (.csv)"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "download": "下載資料 (.csv)"
+    },
+    "possibleConflictsCount": "{count} 筆資料可能衝突"
   }
 }
 </i18n>

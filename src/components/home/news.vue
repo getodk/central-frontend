@@ -72,6 +72,9 @@ defineOptions({
   },
   "sw": {
     "title": "Habari"
+  },
+  "zh-Hant": {
+    "title": "新訊息"
   }
 }
 </i18n>

@@ -112,10 +112,12 @@ const { publishedFormPath } = useRoutes();
     "emptyTable": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti."
   },
   "de": {
-    "emptyTable": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften."
+    "emptyTable": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften.",
+    "none": "(Keine)"
   },
   "es": {
-    "emptyTable": "Las entidades de esta lista no tienen propiedades definidas por el usuario."
+    "emptyTable": "Las entidades de esta lista no tienen propiedades definidas por el usuario.",
+    "none": "(ninguno)"
   },
   "fr": {
     "emptyTable": "Les entités dans cette liste n'ont pas de propriétés définies par l'utilisateur",
@@ -127,6 +129,10 @@ const { publishedFormPath } = useRoutes();
   },
   "sw": {
     "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
+  },
+  "zh-Hant": {
+    "emptyTable": "此實體清單中的實體沒有任何使用者定義的屬性。",
+    "none": "(無)"
   }
 }
 </i18n>

@@ -648,6 +648,32 @@ export default {
         "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Orodha ya Huluki. Kwa chaguomsingi, hizo zimeunganishwa kwenye Orodha za Huluki. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe kwenye Orodha za Huluki mara tu utakapothibitisha mantiki ya fomu yako."
       ]
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "upload": "上傳檔案"
+    },
+    "heading": [
+      "根據您上傳的表格，需要以下表格附件。您可以查看哪些已提供或仍然缺少。",
+      "若要上傳文件，請將一個或多個文件拖曳到頁面上。"
+    ],
+    "header": {
+      "uploaded": "已上傳"
+    },
+    "problem": {
+      "noneUploaded": "{message} 沒有文件上傳成功。",
+      "someUploaded": "{message} 僅 {uploaded} 個檔案成功上傳，共 {total} 個檔案。"
+    },
+    "alert": {
+      "success": "{count} 個文件已成功上傳。",
+      "link": "實體列表連結成功。"
+    },
+    "entitiesTesting": {
+      "title": "測試實體",
+      "body": [
+        "一個或多個表單附件的檔案名稱與實體清單名稱相符。預設情況下，這些連結到實體列表。為了進行測試，您可能需要將臨時資料上傳為 .csv 文件，然後在驗證表單邏輯後連結到實體清單。"
+      ]
+    }
   }
 }
 </i18n>

@@ -85,7 +85,8 @@ const text = computed(() => {
   },
   "es": {
     "submission": "Envío {instanceName}",
-    "api": "Actualizar por {name}"
+    "api": "Actualizar por {name}",
+    "bulk": "Archivo {filename} subido por {name}"
   },
   "fr": {
     "submission": "Soumission {instanceName}",
@@ -94,7 +95,13 @@ const text = computed(() => {
   },
   "it": {
     "submission": "Invio {instanceName}",
-    "api": "Aggiornato da {name}"
+    "api": "Aggiornato da {name}",
+    "bulk": "File {filename} caricato da {name}"
+  },
+  "zh-Hant": {
+    "submission": "提交{instanceName}",
+    "api": "由 {name}更新",
+    "bulk": "檔案{filename} 由 2{name}上傳"
   }
 }
 </i18n>

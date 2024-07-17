@@ -277,6 +277,21 @@ export default {
       "Rasimu ya Mawasilisho huenda kwenye jedwali la majaribio hapa chini, ambapo unaweza kuhakiki na kupakua. Unapochapisha Rasimu ya Fomu hii, Mawasilisho yake ya majaribio yataondolewa kabisa."
     ],
     "collectProjectName": "[Rasimu] {name}"
+  },
+  "zh-Hant": {
+    "title": "草稿測試",
+    "body": [
+      "您可以使用右側的設定代碼設定行動裝置來下載此草稿。您也可以點擊上面的「新建」按鈕，從網頁瀏覽器建立新的提交內容。",
+      "草稿提交進入下面的測試表，您可以在其中預覽和下載它們。當您發佈此表單草稿時，其測試提交內容將會永久刪除。"
+    ],
+    "collectProjectName": "[草稿] {name}",
+    "entitiesTesting": {
+      "title": "該表單可以更新實體",
+      "body": [
+        "實體僅針對已發布的表單進行更新。在 Central 的未來版本中，您將能夠在草稿狀態下測試實體功能。",
+        "目前，我們建議在草稿狀態下嘗試表單定義以驗證其邏輯。在發布之前，您可以驗證它是否更新了所有所需的屬性。"
+      ]
+    }
   }
 }
 </i18n>

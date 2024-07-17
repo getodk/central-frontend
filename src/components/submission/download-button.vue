@@ -145,6 +145,17 @@ export default {
         }
       }
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "download": {
+        "unfiltered": "下載{count} 個提交資料",
+        "filtered": {
+          "withoutCount": "下載符合的提交資料",
+          "withCount": "下載{count}個相符提交"
+        }
+      }
+    }
   }
 }
 </i18n>

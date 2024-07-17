@@ -396,6 +396,9 @@ export default {
   },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
+  },
+  "zh-Hant": {
+    "noMatching": "沒有符合的提交內容。"
   }
 }
 </i18n>

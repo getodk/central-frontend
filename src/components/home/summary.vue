@@ -199,6 +199,20 @@ if (currentUser.can('user.list'))
     "forum": {
       "body": "Unaweza kupata usaidizi kutoka kwa wengine kila wakati kwenye mijadala, ambapo unaweza pia kutafuta maswali yaliyotangulia."
     }
+  },
+  "zh-Hant": {
+    "projects": {
+      "body": "Central 被組織成多個項目，每個項目都包含自己的表單和相關資料。"
+    },
+    "users": {
+      "body": "可以將使用者指派到專案來管理它們，或收集或審查提交的資料。"
+    },
+    "docs": {
+      "body": "ODK 文件網站上提供了入門指南和使用者文件。"
+    },
+    "forum": {
+      "body": "您始終可在論壇上獲得其他人的幫助，您也可以在其中搜尋先前的問題。"
+    }
   }
 }
 </i18n>

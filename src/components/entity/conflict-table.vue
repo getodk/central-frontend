@@ -371,6 +371,23 @@ defineExpose({ resize });
       "softConflict": "Questa versione potrebbe essere stata creata basandosi su dati vecchi.",
       "hardConflict": "Questa versione è stata realizzata parallelamente ad altri aggiornamenti, alcuni dei quali cercano di scrivere sulle stesse proprietà di questo aggiornamento."
     }
+  },
+  "zh-Hant": {
+    "noConflicts": "沒有可顯示的衝突。",
+    "basedOn": {
+      "label": "基於",
+      "description": "作者在進行更改時看到的該實體的版本"
+    },
+    "source": {
+      "label": "來源",
+      "description": "產生此版本的更新"
+    },
+    "status": {
+      "historical": "包含此歷史版本是因為最近基於該實體的此版本進行了平行更新。",
+      "lastGoodVersion": "這是吻合良好的最新版本。在此更新之後，同時進行了可能存在衝突的更新。",
+      "softConflict": "這個版本可能是根據舊數據製作的。",
+      "hardConflict": "此版本是與其他更新並行進行的，其中一些更新嘗試寫入與此更新相同的屬性。"
+    }
   }
 }
 </i18n>

@@ -483,6 +483,41 @@ export default {
       },
       "Changanua msimbo huu wa QR ili kusanidi kifaa kilicho na akaunti \"{displayName}\"."
     ]
+  },
+  "zh-Hant": {
+    "title": {
+      "managed": "客戶端配置QR code",
+      "legacy": "舊版客戶端配置QR code"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "此為一個 {managedCode}。",
+          "managedCode": "管理 QR Code"
+        },
+        "legacy": {
+          "full": "這是一個 {legacyCode}。",
+          "legacyCode": "舊版 QR Code"
+        }
+      },
+      {
+        "managed": "Collect 將與「{displayName}」可用的表單完全匹配，包括自動套用更新。用戶無需手動取得空白表格。此外，一旦找到連接，最終的表格將自動發送。",
+        "legacy": "使用者必須在裝置上手動取得空白表單並確定要更新哪些表單。他們還需要手動發送最終表格。"
+      },
+      {
+        "managed": {
+          "full": "對於舊的行為， {switchToLegacy}。",
+          "switchToLegacy": "切換到 {legacyCode}",
+          "legacyCode": "舊版 QR Code"
+        },
+        "legacy": {
+          "full": "為了實現更受控和萬無一失的過程， {switchToManaged}。",
+          "switchToManaged": "切換到{managedCode}",
+          "managedCode": "管理 QR Code"
+        }
+      },
+      "掃描此 QR code 即可使用「{displayName}」帳戶配置到設備。"
+    ]
   }
 }
 </i18n>

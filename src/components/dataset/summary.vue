@@ -95,6 +95,9 @@ export default {
   },
   "sw": {
     "datasetUpdates": "Orodha za Mashirika husasishwa na Fomu hii: | Orodha za Mashirika husasishwa na Fomu hii:"
+  },
+  "zh-Hant": {
+    "datasetUpdates": "實體清單已透過此表格更新："
   }
 }
 </i18n>

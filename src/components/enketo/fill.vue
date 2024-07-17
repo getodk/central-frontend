@@ -109,6 +109,12 @@ export default {
       "processing": "Fomu ya Wavuti bado haipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena",
       "notOpen": "Fomu hii haikubali Mawasilisho mapya kwa sasa"
     }
+  },
+  "zh-Hant": {
+    "disabled": {
+      "processing": "網路表單尚不可用。它尚未完成處理。請稍後重新載入並重試。",
+      "notOpen": "此表單目前不接受新的提交。"
+    }
   }
 }
 </i18n>

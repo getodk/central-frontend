@@ -218,6 +218,12 @@ export default {
     "field": {
       "notes": "Vidokezo na maoni (si lazima)"
     }
+  },
+  "zh-Hant": {
+    "title": "更新審核狀態",
+    "field": {
+      "notes": "註釋和評論（可選）"
+    }
   }
 }
 </i18n>

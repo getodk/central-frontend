@@ -412,6 +412,30 @@ export default {
       "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa.",
       "revoke": "Ufikiaji umebatilishwa kwa Mtumiaji wa Programu \"{displayName}\"."
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "create": "建立APP使用者"
+    },
+    "heading": [
+      {
+        "full": "APP使用者用於從應用程式（例如 {collect}）收集資料。他們通常代表一個共同的角色，例如「疫苗接種者」，但也可能代表個人。本專案內的App使用者只能下載和使用本專案內的表單。當您建立新的APP使用者時，它首先無法存取任何表單。若要設定每個應用程式使用者可以存取的表單，請使用 {formAccess} 標籤。",
+        "formAccess": "表單存取"
+      },
+      {
+        "full": "當資料收集者需要存取多個表單、離線或您有複雜的表單時，應用程式使用者是最合適的。如果您需要受訪者自我報告或擁有僅限線上的表格，請{clickHere}了解其他選項。",
+        "clickHere": "點選此處"
+      }
+    ],
+    "header": {
+      "lastUsed": "最後更新",
+      "configureClient": "設定客戶端"
+    },
+    "emptyTable": "還沒有應用程式用戶。您將需要建立一些表格來下載表格並從您的裝置提交資料。",
+    "alert": {
+      "create": "APP使用者「{displayName}」已成功建立。",
+      "revoke": "APP使用者「{displayName}」的存取權限已被撤銷。"
+    }
   }
 }
 </i18n>

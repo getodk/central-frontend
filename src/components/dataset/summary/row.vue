@@ -192,6 +192,10 @@ export default {
   "sw": {
     "new": "mpya!",
     "addedByThisDraft": "Imeongezwa na Rasimu hii"
+  },
+  "zh-Hant": {
+    "new": "新增！",
+    "addedByThisDraft": "已由草稿新增"
   }
 }
 </i18n>

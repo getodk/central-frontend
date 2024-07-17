@@ -146,6 +146,12 @@ export default {
       "processing": "Onyesho la kuchungulia halijamaliza kuchakata Fomu hii. Tafadhali onyesha upya baadaye na ujaribu tena.",
       "notOpen": "Katika toleo hili la ODK Central, onyesho la kukagua linapatikana kwa Fomu zilizo katika \"OPEN STATE\""
     }
+  },
+  "zh-Hant": {
+    "disabled": {
+      "processing": "預覽尚未完成此表單的處理。請稍後重新載入並重試。",
+      "notOpen": "在此版本的 ODK Central 中，預覽僅適用於「開啟」狀態的表單。"
+    }
   }
 }
 </i18n>
