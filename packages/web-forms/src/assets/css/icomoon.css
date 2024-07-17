@@ -100,3 +100,6 @@
 .icon-error_outline:before {
 	content: '\e918';
 }
+.icon-add:before {
+  content: "\e919";
+}

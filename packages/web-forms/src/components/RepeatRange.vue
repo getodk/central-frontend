@@ -15,7 +15,12 @@ const label = computed(() => props.node.currentState.label?.asString);
 		<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" @remove="node.removeInstances(index)" />
 
 		<div class="flex justify-content-start flex-wrap">
-			<Button label="Add" rounded outlined class="w-2 btn-add" @click="node.addInstances()" />
+			<Button rounded outlined class="btn-add" @click="node.addInstances()">
+				<span class="p-button-label" data-pc-section="label">
+					<span class="icon-add" />
+					<span class="btn-add-label">Add {{ label }}</span>
+				</span>
+			</Button>
 		</div>
 	</FormPanel>
 </template>
@@ -25,15 +30,32 @@ const label = computed(() => props.node.currentState.label?.asString);
 .p-button.p-button-outlined.btn-add {
 	box-shadow: inset 0 0 0 1px #cbcacc;
 	margin-left: 36px;
+	min-width: 144px;
+	font-weight: 400;
+	margin-bottom: 1rem;
 
 	&:hover {
 		background: var(--primary-100);
 	}
+
+	.btn-add-label{
+		vertical-align: middle;
+		margin-right: 0.5rem;
+	}
+
+	.icon-add {
+		margin-right: 0.5rem;
+		font-size: 18px;
+		vertical-align: middle;
+	}
 }
 
 .repeat {
+	margin-bottom: 1rem;
+	
 	.p-button.p-button-outlined.btn-add {
 		margin-left: 25px;
+		margin-bottom: 0rem;
 	}
 }
 </style>
