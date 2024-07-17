@@ -1,6 +1,5 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { AnyNode } from '@getodk/xforms-engine';
-import { isStringInputNode, type RootNode } from '../../client/node-types.ts';
+import type { AnyNode, RootNode } from '@getodk/xforms-engine';
 import { collectFlatNodeList } from '../../client/traversal.ts';
 import { BeginningOfFormEvent } from './BeginningOfFormEvent.ts';
 import { EndOfFormEvent } from './EndOfFormEvent.ts';
@@ -8,7 +7,7 @@ import { GroupEvent } from './GroupEvent.ts';
 import { PromptNewRepeatEvent } from './PromptNewRepeatEvent.ts';
 import { RepeatInstanceEvent } from './RepeatInstanceEvent.ts';
 import { SelectQuestionEvent } from './SelectQuestionEvent.ts';
-import { StringInputQuestionEvent } from './StringQuestionEvent.ts';
+import { StringInputQuestionEvent } from './StringInputQuestionEvent.ts';
 
 // prettier-ignore
 export type AnyQuestionEvent =
@@ -63,15 +62,14 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 				case 'group':
 					return GroupEvent.from(node);
 
+				case 'model-value':
+					return [];
+
 				case 'select':
 					return SelectQuestionEvent.from(node);
 
 				case 'string':
-					if (isStringInputNode(node)) {
-						return StringInputQuestionEvent.from(node);
-					}
-
-					return [];
+					return StringInputQuestionEvent.from(node);
 
 				default:
 					throw new UnreachableError(node);

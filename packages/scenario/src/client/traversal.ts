@@ -23,6 +23,7 @@ export const collectFlatNodeList = (currentNode: AnyNode): readonly AnyNode[] =>
 		case 'repeat-range':
 			return [currentNode.currentState.children.map(collectFlatNodeList), currentNode].flat(2);
 
+		case 'model-value':
 		case 'select':
 		case 'string':
 			return [currentNode];
@@ -52,6 +53,7 @@ export const getClosestRepeatRange = (currentNode: AnyNode): RepeatRangeNode | n
 
 		case 'group':
 		case 'subtree':
+		case 'model-value':
 		case 'string':
 		case 'select':
 			return getClosestRepeatRange(currentNode.parent);
