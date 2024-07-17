@@ -34,7 +34,7 @@ defineEmits(['update:activeLanguage'])
 .p-dropdown.rounded {
 	border-radius: 30px;
 	border: none;
-	width: 160px;
+	width: max-content;
 	color: #424242;
 
 	&.p-focus {
