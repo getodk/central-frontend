@@ -9,6 +9,12 @@ import { Match, Show, Switch } from 'solid-js';
 import { XFormGroup } from './containers/XFormGroup.tsx';
 import { XFormControl } from './controls/XFormControl.tsx';
 
+type ViewNode = GroupNode | RepeatRangeNode | SelectNode | StringNode;
+
+const isViewNode = (node: GeneralChildNode): node is ViewNode => {
+	return node.nodeType !== 'model-value' && node.nodeType !== 'subtree';
+};
+
 interface XFormUnknownElementProps {
 	readonly node: GeneralChildNode;
 }
@@ -53,7 +59,7 @@ export interface XFormBodyElementProps {
 
 export const XFormBodyElement = (props: XFormBodyElementProps) => {
 	return (
-		<Show when={props.node.definition.bodyElement != null}>
+		<Show when={isViewNode(props.node)}>
 			<Switch fallback={<XFormUnknownElement {...props} />}>
 				<Match when={groupLikeNode(props)} keyed={true}>
 					{(node) => <XFormGroup node={node} />}
