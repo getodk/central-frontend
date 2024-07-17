@@ -135,7 +135,8 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 	h1 {
 		padding-left: 10px;
-		font-size: 1.5rem;
+		font-size: 1.25rem;
+		font-weight: 400;
 	}
 
 	.form-options{

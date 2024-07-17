@@ -71,7 +71,7 @@ const toggleMenu = (event:  Event) => {
 <style scoped lang="scss">
 h2 {
 	font-size: 1.2rem;
-	font-weight: 500;
+	font-weight: 400;
 	margin: 0;
 	display: flex;
 }
