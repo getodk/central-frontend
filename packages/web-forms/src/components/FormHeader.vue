@@ -111,10 +111,8 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 
 .form-title {
-	// var(--light-elevation-1);
-
 	border-radius: 10px;
-	box-shadow: var(--light-elevation-1);
+	box-shadow: none;
 	border-top: none;
 	margin-top: 20px;
 
