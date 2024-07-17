@@ -42,12 +42,15 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 
 	input.p-inputtext {
 		width: 100%;
+		background-color: var(--surface-100);
+
 		&:read-only {
 			cursor: not-allowed;
 		}
 
+		&.p-variant-filled:enabled:hover,
 		&.p-variant-filled:enabled:focus {
-			background-color: var(--surface-100);
+			background-color: var(--surface-50);
 		}
 	}
 
