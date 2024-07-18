@@ -96,7 +96,17 @@ h2 {
 .btn-context {
 	margin-top: -10px;
 
-	.p-button-icon {
+	&.p-button.p-button-secondary:not(:disabled){
+		&:active, &:focus, &.p-focus {
+			background: var(--primary-50);
+		}
+
+		&:hover {
+			background: var(--primary-100);
+		}
+	}
+
+	:deep(.p-button-icon) {
 		font-size: 1.5rem;
 	}
 }
