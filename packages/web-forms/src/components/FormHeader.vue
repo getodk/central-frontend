@@ -64,32 +64,33 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 
 	<!-- for mobile and tablet -->
-	<div class="flex lg:hidden align-items-center smaller-screens">
-		<h1 class="flex-grow-1">
+	<div class="flex lg:hidden align-items-start smaller-screens">
+		<h1>
 			{{ form.definition.bind.form.title }}
 		</h1>
 
-		<!-- for tablet -->
-		<div class="form-options hidden md:flex justify-content-end gap-3">
-			<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
-			<FormLanguageMenu
-				:active-language="form.currentState.activeLanguage"
-				:languages="languages"
-				@update:active-language="handleLanguageChange"
-			/>
-		</div>
+		<div class="form-options">
+			<!-- if Form is not multilingual then we always show print button -->
+			<PrimeButton v-if="languages.length === 0" class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
 
-		<!-- for mobile -->
-		<div class="form-options flex md:hidden">
-			<PrimeButton v-if="languages.length > 0" icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
-			<PrimeButton v-else class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
-			<PrimeMenu id="overlay_menu" ref="menu" :model="items" :popup="true" />
-			<FormLanguageDialog
-				v-model:state="languageDialogState"
-				:active-language="form.currentState.activeLanguage"
-				:languages="languages"
-				@update:active-language="handleLanguageChange"
-			/>
+			<!-- show either hamburger or (print button and language changer) based on container size -->
+			<div v-else class="multilingual">
+				<PrimeButton icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
+				<PrimeMenu id="overlay_menu" ref="menu" :model="items" :popup="true" />
+				<FormLanguageDialog
+					v-model:state="languageDialogState"
+					:active-language="form.currentState.activeLanguage"
+					:languages="languages"
+					@update:active-language="handleLanguageChange"
+				/>
+
+				<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+				<FormLanguageMenu
+					:active-language="form.currentState.activeLanguage"
+					:languages="languages"
+					@update:active-language="handleLanguageChange"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -108,7 +109,6 @@ const handleLanguageChange = (event: FormLanguage) => {
 			background: var(--primary-50);
 		}
 	}
-
 
 .form-title {
 	border-radius: 10px;
@@ -139,6 +139,43 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 	.form-options{
 		padding-right: 10px;
+		flex-grow: 1;
+		min-width: 50px;
+		container-type: size;
+		container-name: formOptionsContainer;
+		height: 40px;
+		margin-top: 6px;
+
+		.multilingual{
+			display: flex;
+			justify-content: end;
+			gap: 0.5rem;
+
+			.btn-menu{
+				color: var(--surface-900);
+			}
+			.print-button {
+				display: none;
+			}
+			.language-changer {
+				display: none;
+			}
+		}
+
+		@container formOptionsContainer (min-width: 240px) {
+			.multilingual{
+				.btn-menu{
+					display: none;
+				}
+				.print-button {
+					display: flex;
+				}
+				.language-changer {
+					display: flex;
+					max-width: 180px;
+				}
+			}
+		}
 	}
 
 	.btn-menu{

@@ -14,7 +14,7 @@ defineEmits(['update:activeLanguage'])
 		:model-value="activeLanguage"
 		:options="languages"
 		option-label="language"
-		class="flex align-items-center rounded with-icon language-changer"
+		class="align-items-center rounded with-icon language-changer"
 		aria-label="change language"
 		@update:model-value="$emit('update:activeLanguage', $event)"
 	>
@@ -31,6 +31,10 @@ defineEmits(['update:activeLanguage'])
 </template>
 
 <style scoped lang="scss">
+.language-changer {
+	display: flex;
+}
+
 .p-dropdown.rounded {
 	border-radius: 30px;
 	border: none;
