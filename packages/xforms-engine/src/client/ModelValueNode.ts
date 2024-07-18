@@ -1,4 +1,4 @@
-import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { RootNode } from './RootNode.ts';
@@ -18,7 +18,7 @@ export interface ModelValueNodeState extends BaseNodeState {
 	get value(): string;
 }
 
-export interface ModelValueDefinition extends ValueNodeDefinition {
+export interface ModelValueDefinition extends LeafNodeDefinition {
 	readonly bodyElement: null;
 }
 

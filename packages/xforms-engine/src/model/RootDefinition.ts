@@ -1,6 +1,7 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
+import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 import type {
 	ChildNodeDefinition,
@@ -9,7 +10,6 @@ import type {
 } from './NodeDefinition.ts';
 import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
-import { ValueNodeDefinition } from './ValueNodeDefinition.ts';
 
 export class RootDefinition implements NodeDefinition<'root'> {
 	readonly type = 'root';
@@ -100,7 +100,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 			const isLeafNode = element.childElementCount === 0;
 
 			if (isLeafNode) {
-				return new ValueNodeDefinition(parent, bind, bodyElement, element);
+				return new LeafNodeDefinition(parent, bind, bodyElement, element);
 			}
 
 			return new SubtreeDefinition(parent, bind, bodyElement, element);

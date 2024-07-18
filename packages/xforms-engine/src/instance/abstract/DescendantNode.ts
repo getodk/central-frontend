@@ -4,9 +4,9 @@ import type { BaseNode } from '../../client/BaseNode.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../model/DescendentNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../../model/LeafNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
 import type { RepeatInstanceDefinition } from '../../model/RepeatInstanceDefinition.ts';
-import type { ValueNodeDefinition } from '../../model/ValueNodeDefinition.ts';
 import type { RepeatInstance } from '../RepeatInstance.ts';
 import type { RepeatRange } from '../RepeatRange.ts';
 import type { Root } from '../Root.ts';
@@ -37,7 +37,7 @@ export type DescendantNodeDefinition = Extract<
 
 // prettier-ignore
 export type DescendantNodeParent<Definition extends DescendantNodeDefinition> =
-	Definition extends ValueNodeDefinition
+	Definition extends LeafNodeDefinition
 		? GeneralParentNode
 	: Definition extends RepeatInstanceDefinition
 		? RepeatRange

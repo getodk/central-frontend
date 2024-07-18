@@ -1,8 +1,8 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
+import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../model/SubtreeDefinition.ts';
-import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
 import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import { ModelValue, type ModelValueDefinition } from './ModelValue.ts';
@@ -21,10 +21,10 @@ const isSubtreeDefinition = (
 
 type ControlNodeDefinition = SelectFieldDefinition | StringFieldDefinition;
 
-type LeafNodeDefinition = ControlNodeDefinition | ModelValueDefinition;
+type AnyLeafNodeDefinition = ControlNodeDefinition | ModelValueDefinition;
 
 const isModelValueDefinition = (
-	definition: ValueNodeDefinition
+	definition: LeafNodeDefinition
 ): definition is ModelValueDefinition => {
 	return definition.bodyElement == null;
 };
@@ -55,9 +55,9 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 				return new RepeatRange(parent, child);
 			}
 
-			case 'value-node': {
+			case 'leaf-node': {
 				// More specific type helps with narrowing below
-				const leafChild: LeafNodeDefinition = child;
+				const leafChild: AnyLeafNodeDefinition = child;
 
 				if (isModelValueDefinition(leafChild)) {
 					return new ModelValue(parent, leafChild);

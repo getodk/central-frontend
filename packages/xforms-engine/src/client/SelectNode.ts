@@ -1,5 +1,5 @@
 import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
-import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
@@ -36,7 +36,7 @@ export interface SelectNodeState extends BaseNodeState {
 	get value(): readonly SelectItem[];
 }
 
-export interface SelectDefinition extends ValueNodeDefinition {
+export interface SelectDefinition extends LeafNodeDefinition {
 	readonly bodyElement: AnySelectDefinition;
 }
 

@@ -16,7 +16,7 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
@@ -26,7 +26,7 @@ import type { SubscribableDependency } from './internal-api/SubscribableDependen
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
 
-export interface SelectFieldDefinition extends ValueNodeDefinition {
+export interface SelectFieldDefinition extends LeafNodeDefinition {
 	readonly bodyElement: AnySelectDefinition;
 }
 
