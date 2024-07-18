@@ -62,6 +62,7 @@ defineProps<{ appearances: SelectNodeAppearances}>();
 
   :deep(.value-option){
     border-radius: 35px;
+    background-color: transparent;
     .label-text {
       display: none;
     }

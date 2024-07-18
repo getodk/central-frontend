@@ -24,6 +24,7 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 			:id="question.nodeId"
 			:required="question.currentState.required" 
 			:disabled="question.currentState.readonly"
+			:class="{'inside-highlighted': invalid && submitPressed}"
 			variant="filled"
 			:model-value="question.currentState.value"			
 			@update:model-value="setValue"
@@ -43,6 +44,10 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 	input.p-inputtext {
 		width: 100%;
 		background-color: var(--surface-100);
+
+		&.inside-highlighted {
+			background-color: var(--surface-0);
+		}
 
 		&:read-only {
 			cursor: not-allowed;
