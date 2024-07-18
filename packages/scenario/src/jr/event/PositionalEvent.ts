@@ -1,6 +1,7 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
 	GroupNode,
+	NoteNode,
 	RepeatInstanceNode,
 	RepeatRangeNode,
 	RootNode,
@@ -11,7 +12,7 @@ import type { Scenario } from '../Scenario.ts';
 
 export interface PositionalEventTypeMapping {
 	readonly BEGINNING_OF_FORM: RootNode;
-	readonly QUESTION: SelectNode | StringNode;
+	readonly QUESTION: NoteNode | SelectNode | StringNode;
 	readonly GROUP: GroupNode;
 	readonly REPEAT: RepeatInstanceNode;
 	readonly REPEAT_JUNCTURE: never; // per @lognaturel: this can be ignored

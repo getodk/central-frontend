@@ -4,6 +4,7 @@ import { collectFlatNodeList } from '../../client/traversal.ts';
 import { BeginningOfFormEvent } from './BeginningOfFormEvent.ts';
 import { EndOfFormEvent } from './EndOfFormEvent.ts';
 import { GroupEvent } from './GroupEvent.ts';
+import { NoteQuestionEvent } from './NoteQuestionEvent.ts';
 import { PromptNewRepeatEvent } from './PromptNewRepeatEvent.ts';
 import { RepeatInstanceEvent } from './RepeatInstanceEvent.ts';
 import { SelectQuestionEvent } from './SelectQuestionEvent.ts';
@@ -11,6 +12,7 @@ import { StringInputQuestionEvent } from './StringInputQuestionEvent.ts';
 
 // prettier-ignore
 export type AnyQuestionEvent =
+	| NoteQuestionEvent
 	| SelectQuestionEvent
 	| StringInputQuestionEvent;
 
@@ -64,6 +66,9 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 
 				case 'model-value':
 					return [];
+
+				case 'note':
+					return NoteQuestionEvent.from(node);
 
 				case 'select':
 					return SelectQuestionEvent.from(node);
