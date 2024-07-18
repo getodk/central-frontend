@@ -78,14 +78,14 @@ h2 {
 
 .label-number {
 	display: inline-block;
-	margin: 2px 5px 0 17px;
-	padding-top: 4px;
+	margin: 1px 5px 0 17px;
+	padding-top: 3px;
 	width: 20px;
 	height: 20px;
-	font-weight: 400;
+	font-weight: 500;
 	border-radius: 30px;
 	background-color: var(--gray-200);
-	font-size: 10px;
+	font-size: 12px;
 	text-align: center;
 }
 
