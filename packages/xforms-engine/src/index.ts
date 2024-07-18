@@ -18,6 +18,7 @@ export type {
 } from './client/hierarchy.ts';
 export type * from './client/index.ts';
 export type * from './client/ModelValueNode.ts';
+export type * from './client/NoteNode.ts';
 export type * from './client/OpaqueReactiveObjectFactory.ts';
 export type * from './client/RepeatInstanceNode.ts';
 export type * from './client/RepeatRangeNode.ts';

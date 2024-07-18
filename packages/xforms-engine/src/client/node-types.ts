@@ -7,5 +7,6 @@ export type InstanceNodeType =
 	| 'group'
 	| 'subtree'
 	| 'model-value'
+	| 'note'
 	| 'select'
 	| 'string';
