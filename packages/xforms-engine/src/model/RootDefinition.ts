@@ -1,5 +1,6 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BodyClassList } from '../body/BodyDefinition.ts';
+import { NoteNodeDefinition } from '../parse/NoteNodeDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
@@ -100,7 +101,10 @@ export class RootDefinition implements NodeDefinition<'root'> {
 			const isLeafNode = element.childElementCount === 0;
 
 			if (isLeafNode) {
-				return new LeafNodeDefinition(parent, bind, bodyElement, element);
+				return (
+					NoteNodeDefinition.from(parent, bind, bodyElement, element) ??
+					new LeafNodeDefinition(parent, bind, bodyElement, element)
+				);
 			}
 
 			return new SubtreeDefinition(parent, bind, bodyElement, element);

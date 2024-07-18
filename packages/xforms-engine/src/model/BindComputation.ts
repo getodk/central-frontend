@@ -57,7 +57,6 @@ export class BindComputation<Computation extends BindComputationType> extends De
 		readonly computation: Computation,
 		expression: string | null
 	) {
-		const isInherited = computation === 'readonly' || computation === 'relevant';
 		const ignoreContextReference = computation === 'constraint';
 
 		let isDefaultExpression: boolean;
@@ -78,9 +77,6 @@ export class BindComputation<Computation extends BindComputationType> extends De
 
 		super(bind, bindComputationResultTypes[computation], resolvedExpression, {
 			ignoreContextReference,
-			semanticDependencies: {
-				parentContext: isInherited,
-			},
 		});
 
 		this.isDefaultExpression = isDefaultExpression;

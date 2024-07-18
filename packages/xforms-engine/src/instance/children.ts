@@ -3,9 +3,11 @@ import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../model/SubtreeDefinition.ts';
+import { NoteNodeDefinition } from '../parse/NoteNodeDefinition.ts';
 import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import { ModelValue, type ModelValueDefinition } from './ModelValue.ts';
+import { Note } from './Note.ts';
 import { RepeatRange } from './RepeatRange.ts';
 import type { SelectFieldDefinition } from './SelectField.ts';
 import { SelectField } from './SelectField.ts';
@@ -56,6 +58,10 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 			}
 
 			case 'leaf-node': {
+				if (child instanceof NoteNodeDefinition) {
+					return new Note(parent, child);
+				}
+
 				// More specific type helps with narrowing below
 				const leafChild: AnyLeafNodeDefinition = child;
 
