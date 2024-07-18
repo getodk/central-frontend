@@ -78,5 +78,11 @@ describe('FormDelete', () => {
       const app = await del();
       app.should.alert('success');
     });
+
+    it('decreases the form count even before the forms response', () =>
+      del().beforeEachResponse((app, _, i) => {
+        if (i === 0) return;
+        app.get('#page-head-tabs li.active .badge').text().should.equal('0');
+      }));
   });
 });

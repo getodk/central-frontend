@@ -58,8 +58,6 @@ export default {
   },
   emits: ['hide', 'success'],
   setup() {
-    // The component assumes that this data will exist when the component is
-    // created.
     const { project, form } = useRequestData();
     const { request, awaitingResponse } = useRequest();
     return { project, form, request, awaitingResponse };
@@ -81,9 +79,6 @@ export default {
       })
         .then(() => {
           if (this.form.publishedAt == null) this.project.forms -= 1;
-          // project.lastSubmission may now be out-of-date. However,
-          // project.lastSubmission is not used within ProjectShow.
-
           this.$emit('success');
         })
         .catch(noop);

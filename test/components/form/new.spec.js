@@ -7,7 +7,6 @@ import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
 import { dragAndDrop, setFiles } from '../../util/trigger';
-import { findTab } from '../../util/dom';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
@@ -286,13 +285,11 @@ describe('FormNew', () => {
     it('increments the form count', () =>
       createForm()
         .complete()
-        // Navigate to a page that does not request the form list. Once the form
-        // list is received, the form count will be updated to match it.
-        .load('/projects/1/settings', { project: false })
-        .afterResponses(app => {
-          findTab(app, 'Forms').get('.badge').text().should.equal('2');
-          // Check that the form list was not requested.
-          app.vm.$container.requestData.localResources.forms.dataExists.should.be.false();
+        .load('/projects/1', { project: false })
+        .beforeAnyResponse(app => {
+          // The form count should be seen to be incremented even before the
+          // updated form list is received.
+          app.get('#page-head-tabs li.active .badge').text().should.equal('2');
         }));
   });
 

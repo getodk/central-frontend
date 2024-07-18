@@ -1,5 +1,4 @@
 import FormDraftAbandon from '../../../src/components/form-draft/abandon.vue';
-import FormRow from '../../../src/components/form/row.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
@@ -174,11 +173,6 @@ describe('FormDraftAbandon', () => {
       abandon().beforeEachResponse((app, _, i) => {
         if (i === 0) return;
         app.get('#page-head-tabs li.active .badge').text().should.equal('0');
-      }));
-
-    it('does not show the form in the table', () =>
-      abandon().then(app => {
-        app.findComponent(FormRow).exists().should.be.false();
       }));
   });
 });
