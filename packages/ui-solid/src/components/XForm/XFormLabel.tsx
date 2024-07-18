@@ -5,7 +5,7 @@ import { DefaultLabelRequiredIndicator } from '../styled/DefaultLabelRequiredInd
 
 export interface XFormLabelProps {
 	readonly as?: 'span';
-	readonly label: TextRange<'label'>;
+	readonly label: TextRange<'hint' | 'label'>;
 	readonly node: AnyChildNode;
 }
 
