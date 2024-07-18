@@ -74,8 +74,8 @@ const newValue = name === 'label' ? entityVersion.label : entityVersion.data[nam
   .conflicting { color: $color-danger; }
 
   .empty {
+    @include italic;
     color: #888;
-    font-style: italic;
   }
   .value {
     overflow-wrap: break-word;

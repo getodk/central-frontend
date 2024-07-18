@@ -440,6 +440,12 @@ const emptyMessage = computed(() => (searchValue.value === ''
         color: #666;
         font-style: italic;
       }
+      &:lang(ja), &:lang(zh) {
+        &::placeholder {
+          font-style: normal;
+          font-weight: bold;
+        }
+      }
     }
 
     .close {

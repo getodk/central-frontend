@@ -127,8 +127,8 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
     white-space: break-spaces;
 
     &.empty {
+      @include italic;
       color: #999;
-      font-style: italic;
     }
   }
 

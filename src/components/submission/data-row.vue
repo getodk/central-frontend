@@ -174,7 +174,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #submission-table {
   .int-field, .decimal-field { text-align: right; }
@@ -215,7 +215,7 @@ export default {
       vertical-align: -2px;
     }
 
-    .encryption-message { font-style: italic; }
+    .encryption-message { @include italic; }
 
     ~ .encrypted-submission {
       .encrypted-data { position: relative; }

@@ -93,12 +93,7 @@ code {
 
 .text-monospace { font-family: $font-family-monospace; }
 
-em {
-  &:lang(ja), &:lang(zh) {
-    font-style: normal;
-    font-weight: bold;
-  }
-}
+em { @include italic; }
 
 .tooltip {
   /* v-tooltip.aria-describedby tooltips are rendered before they are shown

@@ -82,7 +82,7 @@ export default {
 }
 
 #project-overview-description-update {
-  font-style: italic;
+  @include italic;
 
   .instructions {
     font-size: 16px;

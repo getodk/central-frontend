@@ -71,8 +71,8 @@ const data = computed(() => entity.currentVersion.data);
   }
 
   .empty {
+    @include italic;
     color: #888;
-    font-style: italic;
   }
 }
 </style>

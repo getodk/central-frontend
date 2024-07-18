@@ -1,5 +1,14 @@
 @import './variables';
 
+@mixin italic {
+  font-style: italic;
+
+  &:lang(ja), &:lang(zh) {
+    font-style: normal;
+    font-weight: bold;
+  }
+}
+
 @mixin text-overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
