@@ -79,7 +79,7 @@ watchEffect(() => {
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
 				<!-- maybe current state is in odkForm.state.something -->
-				<Button label="Send" rounded raised @click="handleSubmit()" />
+				<Button label="Send" rounded @click="handleSubmit()" />
 			</div>
 		</div>
 	</div>
