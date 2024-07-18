@@ -46,6 +46,9 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 
 		&:read-only {
 			cursor: not-allowed;
+			opacity: 1;
+			background-color: var(--surface-50);
+			background-image: none;
 		}
 
 		&.p-variant-filled:enabled:hover,

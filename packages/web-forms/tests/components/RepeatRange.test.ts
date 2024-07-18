@@ -30,7 +30,7 @@ describe('RepeatRange', () => {
 
 		expect(component.findAllComponents(RepeatInstance).length).toBe(1);
 
-		await component.find('button[aria-label="Add"]').trigger('click');
+		await component.find('button.btn-add').trigger('click');
 
 		expect(component.findAllComponents(RepeatInstance).length).toBe(2);
 	});
