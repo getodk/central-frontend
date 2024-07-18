@@ -44,7 +44,7 @@ const submitPressed = inject('submitPressed');
 }
 
 :global(.p-panel-content .question-container) {
-	padding-left: 0;
+	margin-left: -1rem;
 }
 
 
