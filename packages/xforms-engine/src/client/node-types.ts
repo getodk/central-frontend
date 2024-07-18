@@ -6,5 +6,6 @@ export type InstanceNodeType =
 	| 'repeat-instance'
 	| 'group'
 	| 'subtree'
+	| 'model-value'
 	| 'select'
 	| 'string';

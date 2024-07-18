@@ -30,6 +30,7 @@ const collectViolationReferences = (
 ): readonly DescendantNodeViolationReference[] => {
 	return context.getChildren().flatMap((child) => {
 		switch (child.nodeType) {
+			case 'model-value':
 			case 'string':
 			case 'select': {
 				const reference = violationReference(child);

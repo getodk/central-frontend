@@ -1,4 +1,5 @@
 import type { Group } from './Group.ts';
+import type { ModelValue } from './ModelValue.ts';
 import type { RepeatInstance } from './RepeatInstance.ts';
 import type { RepeatRange } from './RepeatRange.ts';
 import type { Root } from './Root.ts';
@@ -14,6 +15,7 @@ export type AnyNode =
 	| Subtree
 	| RepeatRange
 	| RepeatInstance
+	| ModelValue
 	| StringField
 	| SelectField;
 
@@ -41,6 +43,7 @@ export type AnyChildNode =
 	| Subtree
 	| RepeatRange
 	| RepeatInstance
+	| ModelValue
 	| StringField
 	| SelectField;
 
@@ -50,11 +53,13 @@ export type GeneralChildNode =
 	| Group
 	| Subtree
 	| RepeatRange
+	| ModelValue
 	| StringField
 	| SelectField;
 
 // prettier-ignore
 export type AnyValueNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| ModelValue
 	| StringField
 	| SelectField;

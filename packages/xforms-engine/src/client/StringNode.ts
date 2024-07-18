@@ -20,7 +20,7 @@ export interface StringNodeState extends BaseNodeState {
 }
 
 export interface StringDefinition extends ValueNodeDefinition {
-	readonly bodyElement: InputDefinition | null;
+	readonly bodyElement: InputDefinition;
 }
 
 export type StringNodeAppearances = NodeAppearances<StringDefinition>;

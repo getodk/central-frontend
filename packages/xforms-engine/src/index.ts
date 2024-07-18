@@ -3,9 +3,21 @@ import { initializeForm as engine__initializeForm } from './instance/index.ts';
 
 export const initializeForm: InitializeForm = engine__initializeForm;
 
+export * as constants from './client/constants.ts';
 export type * from './client/EngineConfig.ts';
 export type * from './client/FormLanguage.ts';
 export type * from './client/GroupNode.ts';
+export type {
+	AnyChildNode,
+	AnyControlNode,
+	AnyLeafNode,
+	AnyNode,
+	AnyParentNode,
+	GeneralChildNode,
+	GeneralParentNode,
+} from './client/hierarchy.ts';
+export type * from './client/index.ts';
+export type * from './client/ModelValueNode.ts';
 export type * from './client/OpaqueReactiveObjectFactory.ts';
 export type * from './client/RepeatInstanceNode.ts';
 export type * from './client/RepeatRangeNode.ts';
@@ -14,16 +26,6 @@ export type * from './client/SelectNode.ts';
 export type * from './client/StringNode.ts';
 export type * from './client/SubtreeNode.ts';
 export type * from './client/TextRange.ts';
-export * as constants from './client/constants.ts';
-export type {
-	AnyChildNode,
-	AnyLeafNode,
-	AnyNode,
-	AnyParentNode,
-	GeneralChildNode,
-	GeneralParentNode,
-} from './client/hierarchy.ts';
-export type * from './client/index.ts';
 export type * from './client/validation.ts';
 
 // TODO: notwithstanding potential conflicts with parallel work on `web-forms`

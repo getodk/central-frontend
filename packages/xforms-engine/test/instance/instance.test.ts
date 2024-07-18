@@ -1,8 +1,10 @@
 import {
 	bind,
 	body,
+	group,
 	head,
 	html,
+	input,
 	mainInstance,
 	model,
 	t,
@@ -14,7 +16,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { AnyNode, RootNode, StringNode } from '../../src/index.ts';
 import { initializeForm } from '../../src/index.ts';
 import { Root } from '../../src/instance/Root.ts';
-import { StringField } from '../../src/instance/StringField.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
 
 interface IntializedTestForm {
@@ -72,7 +73,7 @@ describe('Form instance state', () => {
 			throw new Error(`No node for reference: ${reference}`);
 		}
 
-		if (node instanceof StringField) {
+		if (node.nodeType === 'string') {
 			return node;
 		}
 
@@ -110,7 +111,7 @@ describe('Form instance state', () => {
 						bind('/root/second-question').calculate('/root/first-question * 2')
 					)
 				),
-				body()
+				body(input('/root/first-question'), input('/root/second-question'))
 			);
 
 			testForm = await initializeTestForm(xform.asXml());
@@ -195,7 +196,11 @@ describe('Form instance state', () => {
 						bind('/root/parent-group/child-question').type('string')
 					)
 				),
-				body()
+				body(
+					input('/root/first-question'),
+					input('/root/second-question'),
+					group('/root/parent-group', input('/root/parent-group/child-question'))
+				)
 			);
 
 			testForm = await initializeTestForm(xform.asXml());
@@ -296,7 +301,11 @@ describe('Form instance state', () => {
 							.relevant("selected(/root/second-question, 'yes')")
 					)
 				),
-				body()
+				body(
+					input('/root/first-question'),
+					input('/root/second-question'),
+					input('/root/third-question')
+				)
 			);
 
 			testForm = await initializeTestForm(xform.asXml());
@@ -398,7 +407,7 @@ describe('Form instance state', () => {
 						bind('/root/second-question').type('string').required('/root/first-question &gt; 1')
 					)
 				),
-				body()
+				body(input('/root/first-question'), input('/root/second-question'))
 			);
 
 			testForm = await initializeTestForm(xform.asXml());
@@ -443,7 +452,7 @@ describe('Form instance state', () => {
 						bind('/root/second-question').type('string').readonly('/root/first-question &gt; 1')
 					)
 				),
-				body()
+				body(input('/root/first-question'), input('/root/second-question'))
 			);
 
 			testForm = await initializeTestForm(xform.asXml());
@@ -494,7 +503,7 @@ describe('Form instance state', () => {
 							bind('/root/grp/c').readonly("/root/grp/b = 'yep'")
 						)
 					),
-					body()
+					body(input('/root/a'), group('/root/grp', input('/root/grp/b'), input('/root/grp/c')))
 				);
 
 				testForm = await initializeTestForm(xform.asXml());
