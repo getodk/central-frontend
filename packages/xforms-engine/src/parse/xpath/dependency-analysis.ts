@@ -105,8 +105,8 @@ export const resolveDependencyNodesets = (
 
 	const serializedPaths = Array.from(
 		new Set(
-			resolvedPathLists.map((resovledPathList) => {
-				return serializeNodesetReference(resovledPathList, {
+			resolvedPathLists.map((resolvedPathList) => {
+				return serializeNodesetReference(resolvedPathList, {
 					stripPredicates: true,
 				});
 			})
