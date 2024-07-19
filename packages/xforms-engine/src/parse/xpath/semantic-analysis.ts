@@ -114,7 +114,7 @@ const isCurrentFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
  * - `current()/...` (where `...` represents additional steps)
  * - `current()//...` (^)
  *
- * @todo XPath grammar technically also allows for `current()[some-predicate]`,
+ * @todo XPath grammar technically also allows for FilterExpr[Predicate],
  * and our `tree-sitter-xpath` grammar/parser also allow for this. But
  * `@getodk/xpath` types do not currently acknowledge this possibility.
  */
@@ -144,7 +144,7 @@ const isInstanceFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
  * - `instance("id")/...` (where `...` represents additional steps)
  * - `instance("id")//...` (^)
  *
- * @todo XPath grammar technically also allows for `current()[some-predicate]`,
+ * @todo XPath grammar technically also allows for FilterExpr[Predicate],
  * and our `tree-sitter-xpath` grammar/parser also allow for this. But
  * `@getodk/xpath` types do not currently acknowledge this possibility.
  */
