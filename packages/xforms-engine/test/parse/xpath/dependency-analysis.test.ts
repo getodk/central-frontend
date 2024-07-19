@@ -145,7 +145,7 @@ describe('Dependency analysis', () => {
 			description:
 				'No context. Expression with instance("id") reference has its own parent steps resolved',
 
-			contextNodeset: '/data/quux',
+			contextNodeset: null,
 			expression: 'instance("first")/foo/bar/../quux',
 			expected: ['instance("first")/foo/quux'],
 		},
