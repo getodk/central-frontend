@@ -148,28 +148,16 @@ describe('WHO VA fixture(s): smoketests', () => {
 		 *
 		 * - Test further fails on writes to some fields—where portions of the test
 		 *   loop through large portions of the form state, answering "no" to each
-		 *   answer in series—where those writes produce an error because those
-		 *   fields have a `readonly: true` state. Without further investigation,
-		 *   it's unclear whether this should be treated as a bug:
+		 *   answer in series—where writes produce an error because those fields
+		 *   have a `readonly: true` state. Since we have now implemented an
+		 *   explicit 'note' node type, we have now confirmed that in each case, the
+		 *   node is considered a 'note': it will always be readonly, and any
+		 *   attempted write will fail.
 		 *
-		 *     - If those `readonly` states are incorrect, that would surely
-		 *       indicate a defect in some aspect of computing that state.
-		 *
-		 *     - If the fields are correctly `readonly`, it seems likely that
-		 *       either: JavaRosa ignores the writes—which may be the expected
-		 *       behavior, although I suspect that producing an error would be a
-		 *       benefit to user experience; clients could still ignore those
-		 *       errors, or guide users in context-appropriate ways; or JavaRosa
-		 *       allows the write calls to set state—which would be consistent with
-		 *       previously encountered comments suggesting the computation is
-		 *       "display-only", and which we believe to be inconsistent with the
-		 *       spec.
-		 *
-		 * - Regardless of whether either constitutes a bug, the test is
-		 *   parameterized to demonstrate failure without accommodation for the
-		 *   issues, and passage when the assertion of `ageInDays` has slightly
-		 *   relaxed precision and when there's a guard preventing attempts to write
-		 *   values to fields in a `readonly: true` state.
+		 * - The test is parameterized to demonstrate failure without accommodation
+		 *   for these issues, and passage when the assertion of `ageInDays` has
+		 *   slightly relaxed precision and when there's a guard preventing attempts
+		 *   to write values to 'note' nodes.
 		 *
 		 * - In the last long sequence of iterate-and-answer-"no" steps, several of
 		 *   the questions' node-set references only become available (i.e. those
@@ -185,24 +173,24 @@ describe('WHO VA fixture(s): smoketests', () => {
 		describe('smoke test: route, fever, and lumps', () => {
 			interface SmokeTestOptions {
 				readonly relaxCalculatedDateArithmeticPrecision: boolean;
-				readonly skipWritesToApparentReadonlyFields: boolean;
+				readonly skipWritesToNoteNodes: boolean;
 			}
 
 			describe.each<SmokeTestOptions>([
 				{
 					relaxCalculatedDateArithmeticPrecision: false,
-					skipWritesToApparentReadonlyFields: false,
+					skipWritesToNoteNodes: false,
 				},
 				{
 					relaxCalculatedDateArithmeticPrecision: true,
-					skipWritesToApparentReadonlyFields: true,
+					skipWritesToNoteNodes: true,
 				},
 			])(
-				'relax calculated date arithmetic precision: $relaxCalculatedDateArithmeticPrecision;  skip writes to apparent readonly fields: $skipWritesToApparentReadonlyFields',
-				({ relaxCalculatedDateArithmeticPrecision, skipWritesToApparentReadonlyFields }) => {
+				'relax calculated date arithmetic precision: $relaxCalculatedDateArithmeticPrecision;  skip writes to note nodes: $skipWritesToNoteNodes',
+				({ relaxCalculatedDateArithmeticPrecision, skipWritesToNoteNodes }) => {
 					let testFn: typeof it | typeof it.fails;
 
-					if (relaxCalculatedDateArithmeticPrecision && skipWritesToApparentReadonlyFields) {
+					if (relaxCalculatedDateArithmeticPrecision && skipWritesToNoteNodes) {
 						testFn = it;
 					} else {
 						testFn = it.fails;
@@ -564,14 +552,15 @@ describe('WHO VA fixture(s): smoketests', () => {
 							scenario.next(expectedReference);
 
 							if (scenario.atQuestion()) {
-								if (
-									skipWritesToApparentReadonlyFields &&
-									scenario.getInstanceNode(expectedReference).currentState.readonly
-								) {
-									return;
+								if (skipWritesToNoteNodes) {
+									try {
+										scenario.answer('no');
+									} catch {
+										expect(scenario.getInstanceNode(expectedReference).nodeType).toBe('note');
+									}
+								} else {
+									scenario.answer('no');
 								}
-
-								scenario.answer('no');
 							}
 						});
 						// endregion
