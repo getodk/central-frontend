@@ -46,9 +46,13 @@ const setSelect1Value = (item: SelectItem) => {
   outline: 1px solid var(--surface-300);
 	border-radius: 10px;
   padding: 15px;
-	margin: 20px 0 0 0;
+	margin: 0 0 20px 0;
   cursor: pointer;
 	background: var(--surface-0);
+
+	&:last-of-type{
+		margin-bottom: 0;
+	}
 
   .label-text {
 		margin-left: 10px;

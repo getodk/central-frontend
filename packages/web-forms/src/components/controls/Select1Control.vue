@@ -60,6 +60,9 @@ const submitPressed = inject<boolean>('submitPressed');
 
 <style lang="scss" scoped>
 @import 'primeflex/core/_variables.scss';
+label{
+	margin-bottom: 0.75rem;
+}
 
 .default-appearance {
 	width: 100%;

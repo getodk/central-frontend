@@ -37,9 +37,12 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 </template>
 
 <style scoped lang="scss">
+label {
+	margin-bottom: 0.75rem;
+}
+
 .textbox-container {
 	position: relative;
-	margin-top: 0.5rem;
 
 	input.p-inputtext {
 		width: 100%;

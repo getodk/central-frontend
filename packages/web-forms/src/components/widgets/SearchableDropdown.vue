@@ -34,7 +34,6 @@ const getOptionLabel = (o:SelectItem) => {
 	width: 100%;
 	border-radius: 10px;
 	border-color: var(--surface-300);
-	margin-top: 0.5rem;
 
 	&:not(.p-disabled):hover {
 		border-color: var(--primary-500);
