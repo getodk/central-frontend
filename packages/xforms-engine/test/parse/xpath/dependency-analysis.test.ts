@@ -312,6 +312,16 @@ describe('Dependency analysis', () => {
 			expression: '//. | //./foo | //.. | //../foo',
 			expected: ['//.', '//foo', '//..'],
 		},
+
+		// This case exists to test removal of such a special case.
+		//
+		// Discussion here: https://github.com/getodk/web-forms/pull/166#discussion_r1680168253
+		{
+			description: 'null is not a keyword, nor special cased',
+			contextNodeset: '/data',
+			expression: 'count(null) > count(foo/null)',
+			expected: ['/data/null', '/data/foo/null'],
+		},
 	])('$description', ({ contextNodeset, expression, expected }) => {
 		it(`resolves nodeset dependencies in expression ${JSON.stringify(expression)}, with context ${JSON.stringify(contextNodeset)}, producing nodesets: ${JSON.stringify(expected)}`, () => {
 			const actual = resolveDependencyNodesets(contextNodeset, expression);

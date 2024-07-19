@@ -38,11 +38,6 @@ interface DependentExpressionOptions {
 	 */
 	readonly ignoreContextReference?: boolean;
 
-	/**
-	 * @default true
-	 */
-	readonly ignoreNullExpressions?: boolean;
-
 	readonly semanticDependencies?: SemanticDependencyOptions;
 }
 
@@ -61,7 +56,6 @@ export class DependentExpression<Type extends DependentExpressionResultType> {
 
 		const {
 			ignoreContextReference = false,
-			ignoreNullExpressions = true,
 			semanticDependencies = {
 				parentContext: false,
 				translations: false,
@@ -71,7 +65,6 @@ export class DependentExpression<Type extends DependentExpressionResultType> {
 		const dependencyReferences = new Set(
 			resolveDependencyNodesets(context.reference, expression, {
 				ignoreReferenceToContextPath: ignoreContextReference,
-				simulateNullKeyword: ignoreNullExpressions,
 			})
 		);
 

@@ -29,29 +29,10 @@ interface PathResolutionOptions {
 	 * cycle analysis.
 	 */
 	readonly ignoreReferenceToContextPath?: boolean;
-
-	/**
-	 * Treats the literal sub-expression `null` as if it were a keyword. This is a
-	 * deviation from XPath (where `null` would be a RelativeLocationPath
-	 * referencing a child node by that name). However, in real-world usage, some
-	 * forms evidently use `null` as a keyword representing a null and/or blank
-	 * value.
-	 *
-	 * @default true
-	 *
-	 * @todo Some equivalent of this flag has been present, with the same default,
-	 * since very early Web Forms exploratory work. At time of writing, it has
-	 * never been overridden in any equivalent context. This has not been a source
-	 * of any known bug/unexpected/unusual behavior. Howevever, it would probably
-	 * be more robust to override the default whenever a form definition includes
-	 * a node literally named `<null/>`.
-	 */
-	readonly simulateNullKeyword?: boolean;
 }
 
 const defaultPathResolutionOptions: Required<PathResolutionOptions> = {
 	ignoreReferenceToContextPath: false,
-	simulateNullKeyword: true,
 };
 
 /**
@@ -75,19 +56,14 @@ export const resolveDependencyNodesets = (
 	expression: string,
 	options: PathResolutionOptions = {}
 ): readonly string[] => {
-	const { ignoreReferenceToContextPath, simulateNullKeyword } = {
+	const { ignoreReferenceToContextPath } = {
 		...defaultPathResolutionOptions,
 		...options,
 	};
 
 	const contextNode = getPathExpressionNode(contextNodeset ?? '"not a path, null fallback"');
 	const expressionRootNode = expressionParser.parse(expression).rootNode;
-
-	let subExpressions = findLocationPathSubExpressionNodes(expressionRootNode);
-
-	if (simulateNullKeyword) {
-		subExpressions = subExpressions.filter((subExpression) => subExpression.text !== 'null');
-	}
+	const subExpressions = findLocationPathSubExpressionNodes(expressionRootNode);
 
 	const resolvedPathLists = subExpressions.flatMap((subExpression) => {
 		const pathNodes = resolvePath(contextNode, subExpression);
