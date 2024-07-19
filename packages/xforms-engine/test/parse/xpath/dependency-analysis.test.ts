@@ -119,15 +119,29 @@ describe('Dependency analysis', () => {
 
 		{
 			description:
-				'Context is instance("id") descendant. Expression references another instance (resolved as-is); relative sibling and relative child (resolved from context); relative sibling and child with current() calls (likewise resolved from context); absolute reference (resolved as-is)',
+				'Context is instance("id") descendant. Expression references another instance (resolved as-is); relative sibling and relative child (resolved from context); absolute reference (resolved as-is)',
+
+			contextNodeset: 'instance("foo")/bar',
+			expression: 'if(position() > 2, instance("quux")/zig, ./zag | ../zag) or /beep//boop',
+			expected: [
+				'instance("quux")/zig',
+				'instance("foo")/bar/zag',
+				'instance("foo")/zag',
+				'/beep//boop',
+			],
+		},
+
+		{
+			description:
+				'Context is instance("id") descendant. Expression references another instance (resolved as-is); relative sibling and child with current() calls (likewise resolved from context); absolute reference (resolved as-is)',
 
 			contextNodeset: 'instance("foo")/bar',
 			expression:
-				'if(position() > 2, instance("quux")/zig, ../zag | ./zag | current()/zag | current()/../zag) or /beep//boop',
+				'if(position() > 2, instance("quux")/zig, current()/zag | current()/../zag) or /beep//boop',
 			expected: [
 				'instance("quux")/zig',
-				'instance("foo")/zag',
 				'instance("foo")/bar/zag',
+				'instance("foo")/zag',
 				'/beep//boop',
 			],
 		},
@@ -306,11 +320,28 @@ describe('Dependency analysis', () => {
 		},
 
 		{
-			description: '// special cases',
-
+			description: 'descendant-or-self case: //.',
 			contextNodeset: null,
-			expression: '//. | //./foo | //.. | //../foo',
-			expected: ['//.', '//foo', '//..'],
+			expression: 'fn-name-does-not-matter(//.)',
+			expected: ['//.'],
+		},
+		{
+			description: 'descendant-or-self case: //./foo',
+			contextNodeset: null,
+			expression: 'yep(//./foo)',
+			expected: ['//foo'],
+		},
+		{
+			description: 'descendant-or-self case: //..',
+			contextNodeset: null,
+			expression: 'nope(//..)',
+			expected: ['//..'],
+		},
+		{
+			description: 'descendant-or-self case: //../foo',
+			contextNodeset: null,
+			expression: 'maybe(//../foo)',
+			expected: ['//foo'],
 		},
 
 		// This case exists to test removal of such a special case.
@@ -321,6 +352,24 @@ describe('Dependency analysis', () => {
 			contextNodeset: '/data',
 			expression: 'count(null) > count(foo/null)',
 			expected: ['/data/null', '/data/foo/null'],
+		},
+
+		{
+			description:
+				'Results are set-like: each resolved path is only produced once, even if the resolved from multiple sub-expressions',
+
+			contextNodeset: '/data/foo',
+			expression: `count(
+				bar |
+				bar/bat |
+
+				./bar |
+				./bar/bat |
+
+				bat/../bar |
+				quux/../bar/bat
+			)`,
+			expected: ['/data/foo/bar', '/data/foo/bar/bat'],
 		},
 	])('$description', ({ contextNodeset, expression, expected }) => {
 		it(`resolves nodeset dependencies in expression ${JSON.stringify(expression)}, with context ${JSON.stringify(contextNodeset)}, producing nodesets: ${JSON.stringify(expected)}`, () => {
