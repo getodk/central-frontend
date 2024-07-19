@@ -1,5 +1,4 @@
 import FormDraftAbandon from '../../../src/components/form-draft/abandon.vue';
-import FormRow from '../../../src/components/form/row.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
@@ -165,14 +164,15 @@ describe('FormDraftAbandon', () => {
         app.should.alert('success', 'The Form “My Form” was deleted.');
       }));
 
-    it('redirects to the project overview', () =>
+    it('redirects to the forms page', () =>
       abandon().then(app => {
         app.vm.$route.path.should.equal('/projects/1');
       }));
 
-    it('does not show the form in the table', () =>
-      abandon().then(app => {
-        app.findComponent(FormRow).exists().should.be.false();
+    it('decreases the form count even before the forms response', () =>
+      abandon().beforeEachResponse((app, _, i) => {
+        if (i === 0) return;
+        app.get('#page-head-tabs li.active .badge').text().should.equal('0');
       }));
   });
 });

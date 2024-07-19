@@ -141,7 +141,7 @@ describe('ProjectShow', () => {
       const app = await load('/projects/1', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
-        'Overview',
+        'Forms 1',
         'Entities 1',
         'Project Roles',
         'App Users',
@@ -167,7 +167,7 @@ describe('ProjectShow', () => {
         });
         const li = app.findAll('#page-head-tabs li');
         const text = li.map(wrapper => wrapper.get('a').text());
-        text.should.eql(['Overview', 'Entities 1']);
+        text.should.eql(['Forms 1', 'Entities 1']);
         li[0].should.be.visible(true);
       });
     });
@@ -181,6 +181,14 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.length.should.equal(1);
       li[0].should.be.hidden(true);
+    });
+
+    it('shows the form count', async () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { forms: 1000 });
+      // Navigate to a page that does not request the form list.
+      const app = await load('/projects/1/settings');
+      findTab(app, 'Forms').get('.badge').text().should.equal('1,000');
     });
 
     it('shows the count of entity lists', async () => {

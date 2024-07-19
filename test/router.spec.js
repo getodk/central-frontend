@@ -234,7 +234,7 @@ describe('createCentralRouter()', () => {
         testData.extendedForms.createPast(1);
       });
 
-      it('preserves data while navigating to/from the project overview', () =>
+      it('preserves data while navigating to/from the forms page', () =>
         load('/projects/1/form-access')
           .complete()
           .load('/projects/1', { project: false, forms: false }) // allow deletedForms to be fetched
@@ -526,7 +526,7 @@ describe('createCentralRouter()', () => {
           testData.extendedFieldKeys.createPast(1);
         });
 
-        it('does not redirect the user from the project overview', async () => {
+        it('does not redirect the user from the forms page', async () => {
           const app = await load('/projects/1', {}, { deletedForms: false });
           app.vm.$route.path.should.equal('/projects/1');
         });
@@ -683,7 +683,7 @@ describe('createCentralRouter()', () => {
         testData.extendedDatasets.createPast(1, { name: 'trees' });
       });
 
-      it('does not redirect the user from the project overview', async () => {
+      it('does not redirect the user from the forms page', async () => {
         const app = await load('/projects/1', {}, { deletedForms: false });
         app.vm.$route.path.should.equal('/projects/1');
       });
@@ -1012,10 +1012,10 @@ describe('createCentralRouter()', () => {
     it('inspects title before and after project data loaded', () =>
       load('/projects/1')
         .beforeAnyResponse(() => {
-          document.title.should.equal('ODK Central');
+          document.title.should.equal('Forms | ODK Central');
         })
         .afterResponses(() => {
-          document.title.should.equal('My Project Name | ODK Central');
+          document.title.should.equal('Forms | My Project Name | ODK Central');
         }));
 
     it('shows project name in title for /projects/1/user', async () => {
@@ -1041,13 +1041,6 @@ describe('createCentralRouter()', () => {
     it('shows project name in title for /projects/1/settings', async () => {
       await load('/projects/1/settings');
       document.title.should.equal('Settings | My Project Name | ODK Central');
-    });
-
-    // Special cases of project routes
-    it('does not show project name if null for /projects/1', async () => {
-      testData.extendedProjects.createPast(1, { name: null });
-      await load('/projects/2');
-      document.title.should.equal('ODK Central');
     });
 
     // Form routes

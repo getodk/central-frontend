@@ -41,7 +41,7 @@ export default () => {
   });
 
   // Returns a set containing just the form names that appear more than once
-  // in a project. Used on project overview to show form ID next to form name
+  // in a project. Used on forms page to show form ID next to form name
   // when form names are duplicated.
   const duplicateFormNames = createGetter('duplicateFormNames', computed(() => {
     if (!(forms.dataExists && deletedForms.dataExists)) return null;

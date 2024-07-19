@@ -272,7 +272,7 @@ const routes = [
           validateData: {
             project: () => project.permits('form.list') || project.permits('open_form.list')
           },
-          title: () => [project.name]
+          title: () => [i18n.t('resource.forms'), project.name]
         }
       }),
       asyncRoute({

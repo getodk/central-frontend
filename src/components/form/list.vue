@@ -71,12 +71,15 @@ export default {
     }
   },
   methods: {
-    afterCreate(form) {
+    async afterCreate(form) {
       const message = this.$t('alert.create', {
         name: form.name != null ? form.name : form.xmlFormId
       });
-      this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'))
-        .then(() => { this.alert.success(message); });
+      await this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'));
+      // Increment the count so that if the user returns to a project page, they
+      // will see the new count.
+      this.project.forms += 1;
+      this.alert.success(message);
     }
   }
 };
