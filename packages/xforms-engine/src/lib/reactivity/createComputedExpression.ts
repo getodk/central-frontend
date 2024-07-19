@@ -8,6 +8,7 @@ import type {
 } from '../../expression/DependentExpression.ts';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
+import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 
 interface ComputedExpressionResults {
 	readonly boolean: boolean;
@@ -52,18 +53,6 @@ const expressionEvaluator = <Type extends DependentExpressionResultType>(
 		default:
 			throw new UnreachableError(type);
 	}
-};
-
-/**
- * Determines if an XPath expression will always produce the same value.
- *
- * @todo There are quite a few more cases than this, and it also likely belongs
- * in another `lib` module.
- */
-const isConstantExpression = (expression: string): boolean => {
-	const normalized = expression.replaceAll(/\s/g, '');
-
-	return normalized === 'true()' || normalized === 'false()';
 };
 
 // prettier-ignore
