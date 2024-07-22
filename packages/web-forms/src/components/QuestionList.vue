@@ -21,7 +21,7 @@ const isRepeatRangeNode = (node: GeneralChildNode): node is RepeatRangeNode => {
 
 <template>
 	<template v-for="node in nodes" :key="node.nodeId">
-		<template v-if="node.definition.bodyElement && node.currentState.relevant">
+		<template v-if="node.currentState.relevant">
 			<!-- Render leaf nodes like string, select, etc -->
 			<FormQuestion v-if="isQuestionNode(node)" :question="node" />
 
