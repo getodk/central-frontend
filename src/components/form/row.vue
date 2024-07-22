@@ -199,7 +199,10 @@ export default {
   }
 
   .actions {
-    width: 100px,
+    width: 100px;
+    // Make sure there is enough width for .btn-web-form so that toggling Web
+    // Forms does not change the width of the column.
+    &:has(.enketo-preview) { min-width: 127px; }
   }
 
   .last-submission{
@@ -291,6 +294,13 @@ export default {
       "test": "jaribio"
     },
     "formClosingTip": "Fomu Hii Inafungwa na inakubali Mawasilisho yake ya mwisho. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho."
+  },
+  "zh-Hant": {
+    "action": {
+      "fill": "填寫表格",
+      "test": "測試"
+    },
+    "formClosingTip": "該表格即將結束並接受其最終提交資料。它不可下載，但仍接受提交。"
   }
 }
 </i18n>

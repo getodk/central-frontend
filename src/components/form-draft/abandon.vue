@@ -58,11 +58,9 @@ export default {
   },
   emits: ['hide', 'success'],
   setup() {
-    // The component assumes that this data will exist when the component is
-    // created.
-    const { form } = useRequestData();
+    const { project, form } = useRequestData();
     const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
+    return { project, form, request, awaitingResponse };
   },
   computed: {
     title() {
@@ -80,9 +78,7 @@ export default {
           : apiPaths.form(this.form.projectId, this.form.xmlFormId)
       })
         .then(() => {
-          // project.forms and project.lastSubmission may now be out-of-date. If
-          // the user navigates to ProjectOverview, project.forms should be
-          // updated. project.lastSubmission is not used within ProjectShow.
+          if (this.form.publishedAt == null) this.project.forms -= 1;
           this.$emit('success');
         })
         .catch(noop);
@@ -242,6 +238,24 @@ export default {
     },
     "action": {
       "abandon": "Achana"
+    }
+  },
+  "zh-Hant": {
+    "title": {
+      "abandon": "放棄草稿",
+      "deleteForm": "放棄草稿並刪除表單"
+    },
+    "introduction": {
+      "abandon": [
+        "您將永久刪除此表單的草稿版本。這意味著草稿表單定義、您上傳的任何草稿表單附件以及所有測試提交都將被刪除。",
+        "您發布的表單定義、其表單附件和提交內容不會受到影響。"
+      ],
+      "deleteForm": [
+        "您將刪除此草稿的表單定義以及您已上傳的任何附件以及所有測試提交。由於您尚未發布該表單，因此整個表單將被刪除並移至垃圾桶。"
+      ]
+    },
+    "action": {
+      "abandon": "放棄"
     }
   }
 }

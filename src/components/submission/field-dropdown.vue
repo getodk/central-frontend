@@ -225,6 +225,20 @@ const placeholder = (counts) => t('placeholder', counts);
       }
     },
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
+  },
+  "zh-Hant": {
+    "placeholder": "{selected} /{total}",
+    "field": {
+      "columns": "顯示的列",
+      "search": "搜尋欄位..."
+    },
+    "action": {
+      "select": {
+        "all": "全部",
+        "none": "無"
+      }
+    },
+    "warning": "選擇太多列可能會降低計算機的速度。"
   }
 }
 </i18n>

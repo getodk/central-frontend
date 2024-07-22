@@ -70,6 +70,9 @@ export default {
   },
   "sw": {
     "blank": "(tupu)"
+  },
+  "zh-Hant": {
+    "blank": "(空白)"
   }
 }
 </i18n>

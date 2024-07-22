@@ -192,6 +192,17 @@ const submit = () => {
     "alert": {
       "success": "Mipangilio ya mradi imehifadhiwa!"
     }
+  },
+  "zh-Hant": {
+    "title": "基本訊息",
+    "field": {
+      "name": "專案名稱",
+      "description": "專案描述",
+      "note": "在此處新增註釋、連結、說明和其他資源。"
+    },
+    "alert": {
+      "success": "專案設定已儲存！"
+    }
   }
 }
 </i18n>

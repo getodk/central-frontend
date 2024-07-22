@@ -331,6 +331,24 @@ export default {
       "subtitle": "(Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha ya Huluki) | (Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha za Huluki)"
     },
     "other": "Nyingine"
+  },
+  "zh-Hant": {
+    "title": "匿名使用報告",
+    "introduction": [
+      "感謝您考慮發送一些使用資訊。這些數據將幫助我們優先考慮您的需求！",
+      "這裡顯示的是我們目前正在收集的報告。為了回應新功能和需求，我們有時會更改報告的內容，但我們只會收集匯總平均值，就像您在此處看到的那樣。",
+      "您可以隨時來這裡看看正在收集什麼。"
+    ],
+    "projects": {
+      "title": "專案概要",
+      "subtitle": "(顯示 {count} 個項目中最活躍的項目)"
+    },
+    "submissionStates": "提交狀態",
+    "entities": {
+      "title": "實體摘要",
+      "subtitle": "(顯示 {count} 個實體清單中最活躍的實體清單)"
+    },
+    "other": "其他"
   }
 }
 </i18n>

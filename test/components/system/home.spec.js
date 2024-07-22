@@ -3,6 +3,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 import PageHead from '../../../src/components/page/head.vue';
 import SystemHome from '../../../src/components/system/home.vue';
 
+import { findTab } from '../../util/dom';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { mockRouter } from '../../util/router';
@@ -26,7 +27,7 @@ describe('SystemHome', () => {
         config: { showsAnalytics: false }
       }
     });
-    component.get('#page-head-tabs li:nth-child(2)').should.be.hidden();
+    findTab(component, 'Usage Reporting').should.be.hidden();
   });
 
   describe('active tab', () => {

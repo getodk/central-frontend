@@ -16,7 +16,7 @@ import createRoutes from './routes';
 import { beforeNextNavigation, canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
 import { createScrollBehavior } from './scroll-behavior';
 import { loadAsync } from './util/load-async';
-import { loadLocale } from './util/i18n';
+import { loadLocale, userLocale } from './util/i18n';
 import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
@@ -81,10 +81,10 @@ router.afterEach(unlessFailure(to => {
           session.reset();
         });
 
-    const localePromise = loadLocale(
-      container,
-      localStore.getItem('locale') ?? navigator.language.split('-', 1)[0]
-    );
+    const locale = userLocale();
+    const localePromise = locale != null
+      ? loadLocale(container, locale)
+      : Promise.resolve();
 
     await Promise.allSettled([sessionPromise, configPromise]);
     if (needsLogin && session.dataExists) {

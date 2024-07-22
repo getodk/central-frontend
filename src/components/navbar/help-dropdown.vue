@@ -70,6 +70,9 @@ defineOptions({
   },
   "sw": {
     "help": "msaada"
+  },
+  "zh-Hant": {
+    "help": "幫助"
   }
 }
 </i18n>

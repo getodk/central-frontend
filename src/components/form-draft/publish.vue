@@ -467,6 +467,36 @@ export default {
       "newDataset": "Orodha mpya ya Huluki {datasetName} itaundwa.",
       "newProperty": "Katika Orodha ya Huluki {datasetName}, sifa mpya ya {propertyName} itaundwa."
     }
+  },
+  "zh-Hant": {
+    "title": "發佈草稿",
+    "warnings": {
+      "attachments": {
+        "full": "您尚未提供表單所需的所有 {formAttachments}。如果您願意，可以忽略此內容，但您需要製作新的草稿版本才能稍後提供這些附件。",
+        "formAttachments": "表格附件"
+      },
+      "testing": {
+        "full": "您尚未透過上傳測試提交來{tested}。您不必這樣做，但強烈建議您這樣做。",
+        "tested": "測試此表單"
+      }
+    },
+    "introduction": [
+      "您即將將此草稿作為您表格的發布版本。這將完成您對表單定義和表單附件所做的任何變更。",
+      "現有的表單提交將不受影響，但所有草稿測試提交將被刪除。",
+      "表單的每個版本，都需要獨一版本名稱。現在，您的草稿表單與先前發布的版本具有相同的版本名稱。您可以透過上傳具有所需名稱的表單定義來設定新的，也可以在下面輸入一個新的版本名稱，伺服器將為您更改它。",
+      "您想繼續嗎？"
+    ],
+    "problem": {
+      "409_6": "此草案的版本名稱與此表單的過去版本或已刪除的表單衝突。請使用下面的欄位將其變更為新內容或上傳新的表單定義。"
+    },
+    "dataset": {
+      "introduction": {
+        "full": "{inAddition}發布此表單定義將對此專案進行以下變更：",
+        "inAddition": "此外"
+      },
+      "newDataset": "將會建立一個新的實體清單 {datasetName}。",
+      "newProperty": "在實體清單 {datasetName} 中，將會建立一個新屬性 {propertyName}。"
+    }
   }
 }
 </i18n>

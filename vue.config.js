@@ -31,7 +31,6 @@ module.exports = {
       css: { url: false }
     }
   },
-  lintOnSave: false,
   pluginOptions: {
     i18n: {
       locale: 'en',

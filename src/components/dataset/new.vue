@@ -197,11 +197,14 @@ const hideOrComplete = () => {
     ]
   },
   "de": {
+    "title": "Entitätsliste erstellen",
+    "entityListName": "Name der Entitätsliste",
     "introduction": [
       "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können."
     ]
   },
   "es": {
+    "title": "Crear lista de entidades",
     "introduction": [
       "Las entidades le permiten compartir información entre formularios para que pueda recopilar datos longitudinales, gestionar casos a lo largo del tiempo y representar otros flujos de trabajo con varios pasos."
     ]
@@ -223,10 +226,15 @@ const hideOrComplete = () => {
   },
   "it": {
     "title": "Crea la Lista Entità",
+    "encrypted": "Questo progetto è criptato. I formulari e gli invii non saranno in grado di modificare le entità di questo elenco. Le entità devono essere gestite tramite Central o l'API.",
     "entityListName": "Nome Lista Entità",
     "success": [
-      "La Lista Entità \"{name}\" è stato creata."
+      "La Lista Entità \"{name}\" è stato creata.",
+      "È possibile iniziare ad usarlo aggiungendo le proprietà dei dati direttamente in questa pagina o caricando i formulari che lo utilizzano. In questo caso, le proprietà richiamate dal formulario saranno create automaticamente quando si pubblica il modulo."
     ],
+    "problem": {
+      "409_3": "Esiste già un elenco di entità in questo progetto con il nome di “{datasetName}”."
+    },
     "introduction": [
       "Le entità consentono di condividere le informazioni tra i formulari per raccogliere dati longitudinali, gestire i casi nel tempo e rappresentare altri flussi di lavoro con più passaggi."
     ]
@@ -234,6 +242,21 @@ const hideOrComplete = () => {
   "sw": {
     "introduction": [
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi."
+    ]
+  },
+  "zh-Hant": {
+    "title": "建立實體列表",
+    "encrypted": "該項目已加密。表格和提交內容將無法修改此清單中的任何實體。實體必須透過 Central 或 API 進行管理。",
+    "entityListName": "實體清單名稱",
+    "success": [
+      "實體清單「{name}」已建立。",
+      "您可以透過直接在此頁面上新增其資料屬性或上傳使用它的表單來開始使用它。在這種情況下，當您發佈表單時，表單呼叫的任何屬性都會自動建立。"
+    ],
+    "problem": {
+      "409_3": "該項目中已存在名稱為「{datasetName}」的實體清單。"
+    },
+    "introduction": [
+      "實體允許您在表單之間共用訊息，以便您可以收集縱向資料、隨時間管理案例並透過多個步驟表示其他工作流程。"
     ]
   }
 }

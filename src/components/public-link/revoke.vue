@@ -129,6 +129,12 @@ export default {
     "introduction": [
       "Unakaribia kubatilisha Kiungo hiki cha Ufikiaji wa Umma. Hii ina maana kwamba majaribio yote ya kuwasilisha data kwa kutumia kiungo yatakataliwa, ikiwa ni pamoja na rekodi ambazo tayari zimeanzishwa"
     ]
+  },
+  "zh-Hant": {
+    "title": "撤銷公共訪問鏈接",
+    "introduction": [
+      "您即將撤銷此公共存取連結。這意味著所有使用該連結提交資料的嘗試都將被拒絕，包括已經開始的記錄。"
+    ]
   }
 }
 </i18n>

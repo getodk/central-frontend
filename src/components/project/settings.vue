@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
               <p>
                 <button id="project-settings-enable-encryption-button"
                   type="button" class="btn btn-primary"
-                  @click="showModal('enableEncryption')">
+                  @click="enableEncryption.show()">
                   {{ $t('encryption.action.enableEncryption') }}&hellip;
                 </button>
               </p>
@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
             <template v-if="!project.archived">
               <p>
                 <button id="project-settings-archive-button" type="button"
-                  class="btn btn-danger" @click="showModal('archive')">
+                  class="btn btn-danger" @click="archiveModal.show()">
                   {{ $t('dangerZone.action.archive') }}&hellip;
                 </button>
               </p>
@@ -72,8 +72,8 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <project-enable-encryption v-bind="enableEncryption"
-      @hide="hideModal('enableEncryption')" @success="afterEnableEncryption"/>
-    <project-archive v-bind="archive" @hide="hideModal('archive')"
+      @hide="enableEncryption.hide()" @success="afterEnableEncryption"/>
+    <project-archive v-bind="archiveModal" @hide="archiveModal.hide()"
       @success="afterArchive"/>
   </div>
 </template>
@@ -85,8 +85,8 @@ import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -98,27 +98,20 @@ export default {
     ProjectEnableEncryption,
     SentenceSeparator
   },
-  mixins: [modal()],
   inject: ['alert'],
   emits: ['fetch-project'],
   setup() {
     const { project } = useRequestData();
     const { projectPath } = useRoutes();
-    return { project, projectPath };
-  },
-  data() {
     return {
-      enableEncryption: {
-        state: false
-      },
-      archive: {
-        state: false
-      }
+      project,
+      enableEncryption: modalData(), archiveModal: modalData(),
+      projectPath
     };
   },
   methods: {
     afterEnableEncryption() {
-      this.hideModal('enableEncryption');
+      this.enableEncryption.hide();
       this.$emit('fetch-project', true);
     },
     afterArchive() {
@@ -431,6 +424,38 @@ export default {
     },
     "alert": {
       "archive": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
+    }
+  },
+  "zh-Hant": {
+    "encryption": {
+      "title": "加密",
+      "body": {
+        "unencrypted": [
+          "該專案未啟用提交資料加密。"
+        ],
+        "encrypted": [
+          {
+            "full": "此專案已{enabled}提交資料加密。",
+            "enabled": "啟用"
+          },
+          "在此版本的 ODK Central 中，加密一旦開啟就無法停用。"
+        ]
+      },
+      "action": {
+        "enableEncryption": "啟用加密"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "備存該專案"
+      },
+      "archived": [
+        "該項目已備存。",
+        "在此版本的 ODK Central 中，您無法取消專案的備存。但是，計劃在未來版本中提供取消備存專案的功能。"
+      ]
+    },
+    "alert": {
+      "archive": "項目「{name}」已存檔。"
     }
   }
 }

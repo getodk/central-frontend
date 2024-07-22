@@ -318,7 +318,7 @@
       "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
     },
     "delete": {
-      "string": "",
+      "string": "Borrar",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "done": {
@@ -412,6 +412,10 @@
     "hidePreview": {
       "string": "Ocultar vista previa",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "newPreview": {
+      "string": "",
+      "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
     },
     "expand": {
       "string": "Expandir",
@@ -602,7 +606,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
-      "string": "",
+      "string": "Listas de entidades",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
@@ -663,6 +667,10 @@
     },
     "projectRoles": {
       "string": "Roles del proyecto",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "formPreview": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -837,7 +845,7 @@
       "developer_comment": "This is shown if a search returned no results."
     },
     "noUndo": {
-      "string": ""
+      "string": "Esta acción no se puede deshacer."
     },
     "rightNow": {
       "string": "Ahora mismo",
@@ -899,7 +907,7 @@
           "string": "El archivo “{name}” que está intentando cargar supera el límite de 100 MB."
         },
         "entityTooLarge": {
-          "string": ""
+          "string": "Los datos que estás intentando cargar son demasiado grandes."
         }
       }
     }
@@ -930,7 +938,7 @@
         "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
       },
       "emptyRow": {
-        "string": ""
+        "string": "La fila está vacía."
       },
       "dataWithoutHeader": {
         "string": "{count, plural, one {} many {} other {}}",
@@ -1407,7 +1415,7 @@
     "DatasetEntities": {
       "alert": {
         "upload": {
-          "string": ""
+          "string": "¡Éxito! Tus entidades han sido cargadas."
         }
       }
     },
@@ -1422,13 +1430,13 @@
         }
       },
       "new": {
-        "string": "",
+        "string": "Nueva",
         "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
       }
     },
     "DatasetNew": {
       "title": {
-        "string": "",
+        "string": "Crear lista de entidades",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "encrypted": {
@@ -1463,7 +1471,7 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "",
+        "string": "Nueva",
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
@@ -1478,7 +1486,7 @@
         "string": "Las entidades de esta lista no tienen propiedades definidas por el usuario."
       },
       "none": {
-        "string": "",
+        "string": "(ninguno)",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
       }
     },
@@ -1490,19 +1498,19 @@
     },
     "DatasetOverviewNewProperty": {
       "title": {
-        "string": "",
+        "string": "Añadir propiedad de entidad",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Para añadir una propiedad de Entidad, elija un nombre de propiedad único a continuación."
         },
         "1": {
-          "string": ""
+          "string": "También puede añadir nuevas propiedades cargando un Formulario que haga referencia a ellas, en cuyo caso las propiedades se crean cuando se publica el Formulario."
         }
       },
       "newPropertyName": {
-        "string": ""
+        "string": "Nuevo nombre de propiedad"
       },
       "problem": {
         "409_3": {
@@ -1646,7 +1654,7 @@
     "EntityActivity": {
       "action": {
         "delete": {
-          "string": "",
+          "string": "Borrar entidad",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -1657,11 +1665,11 @@
         "developer_comment": "This is shown above the Submission that created the Entity."
       },
       "creatingSource": {
-        "string": "",
+        "string": "Creando fuente",
         "developer_comment": "This is shown above the source (e.g. a CSV file) that created the entity"
       },
       "upload": {
-        "string": "",
+        "string": "Subir",
         "developer_comment": "This describes an \"upload\" being a generic source of an entity"
       },
       "submissionDeleted": {
@@ -1748,7 +1756,7 @@
     },
     "EntityDelete": {
       "title": {
-        "string": "",
+        "string": "Borrar {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "introduction": {
@@ -1759,7 +1767,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "",
+          "string": "Borrar inmediatamente sin confirmación hasta que salga de la página",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -2046,7 +2054,7 @@
     },
     "EntityUpload": {
       "title": {
-        "string": "",
+        "string": "Importar datos de un archivo",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "table": {
@@ -2055,30 +2063,30 @@
           "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
         },
         "file": {
-          "string": ""
+          "string": "Datos a importar"
         }
       },
       "action": {
         "append": {
-          "string": "",
+          "string": "Añadir datos",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {
         "blankLabel": {
-          "string": ""
+          "string": "Falta la etiqueta."
         },
         "noData": {
-          "string": ""
+          "string": "Su archivo no contiene ningún dato."
         }
       },
       "headersNote": {
-        "string": ""
+        "string": "La primera fila de su fichero de datos debe coincidir exactamente con la cabecera de la tabla que ve arriba."
       }
     },
     "EntityUploadDataError": {
       "title": {
-        "string": ""
+        "string": "Error de datos"
       }
     },
     "EntityUploadDataTemplate": {
@@ -2100,39 +2108,39 @@
           "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
         },
         "chooseOne": {
-          "string": "",
+          "string": "elige uno",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
         }
       },
       "parsing": {
-        "string": ""
+        "string": "Leyendo datos..."
       }
     },
     "EntityUploadHeaderErrors": {
       "expectedHeader": {
-        "string": "",
+        "string": "Cabecera prevista",
         "developer_comment": "This refers to the header row of a spreadsheet."
       },
       "suggestions": {
         "title": {
-          "string": "",
+          "string": "Sugerencias",
           "developer_comment": "Suggestions to fix an error"
         },
         "invalidQuotes": {
-          "string": ""
+          "string": "Un campo citado no es válido. Compruebe la fila de cabecera de su archivo para ver si hay algún valor inusual."
         },
         "missingLabel": {
           "string": "",
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "unknownProperty": {
-          "string": ""
+          "string": "Si desea añadir propiedades a esta Lista de entidades, puede hacerlo en la sección Propiedades de la entidad de la página Descripción general de esta Lista de entidades, o puede cargar y publicar un Formulario que haga referencia a la propiedad."
         },
         "duplicateColumn": {
-          "string": ""
+          "string": "Parece que dos o más columnas tienen el mismo encabezado. Asegúrate de que los encabezados de las columnas son únicos."
         },
         "emptyColumn": {
-          "string": ""
+          "string": "Parece que tiene una celda vacía en la cabecera. Elimine las columnas vacías de su archivo."
         },
         "delimiterNotComma": {
           "string": ""
@@ -2149,7 +2157,7 @@
           "developer_comment": "This text is shown while a file is being uploaded to the server."
         },
         "processing": {
-          "string": "",
+          "string": "Procesando archivo…",
           "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
         }
       }
@@ -2157,11 +2165,11 @@
     "EntityUploadWarnings": {
       "row": {
         "raggedRows": {
-          "string": "",
+          "string": "Se encontraron menos columnas de las esperadas en algunas filas:",
           "developer_comment": "This is a warning that is followed by a list of rows."
         },
         "largeCell": {
-          "string": "",
+          "string": "Algunas celdas son anormalmente grandes, lo que puede indicar dificultades para leer su archivo:",
           "developer_comment": "This is a warning that is followed by a list of rows."
         }
       }
@@ -2176,13 +2184,13 @@
         "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
       },
       "bulk": {
-        "string": "",
+        "string": "Archivo {filename} subido por {name}",
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
     "FeedbackButton": {
       "feedback": {
-        "string": "",
+        "string": "Comentario",
         "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
@@ -2941,15 +2949,15 @@
         }
       },
       "draftNav": {
-        "title": {
-          "string": "Borrador",
-          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
-        },
         "action": {
           "create": {
             "string": "Crear un nuevo borrador",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        },
+        "title": {
+          "string": "Borrador",
+          "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
         }
       }
     },
@@ -3141,6 +3149,20 @@
       "datasetsLinked": {
         "string": "{count, plural, one {Conjunto de datos adjunto a este formulario:} many {Conjuntos de datos adjuntos a este formulario:} other {Conjuntos de datos adjuntos a este formulario:}}",
         "developer_comment": "The count of Dataset(s) is shown separately above this text."
+      }
+    },
+    "FormPreview": {
+      "webFormPreview": {
+        "submissionModal": {
+          "title": {
+            "string": "",
+            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
+          },
+          "body": {
+            "string": "",
+            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
+          }
+        }
       }
     },
     "FormRestore": {
@@ -3487,29 +3509,29 @@
     "Pagination": {
       "action": {
         "first": {
-          "string": "",
+          "string": "Primera página",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "previous": {
-          "string": "",
+          "string": "Pagina anterior",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "next": {
-          "string": "",
+          "string": "Pagina siguiente",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "last": {
-          "string": "",
+          "string": "Última página",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "rows": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Fila {range} de {count}} many {Filas {range} de {count}} other {Filas {range} de {count}}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
       },
       "field": {
         "size": {
-          "string": "",
+          "string": "por página",
           "developer_comment": "This is shown next to a field to select the number of rows to show on each page."
         }
       }
@@ -3589,10 +3611,10 @@
                 }
               },
               "4": {
-                "string": ""
+                "string": "Ya no podrá editar ni ver los datos de envío en línea."
               },
               "5": {
-                "string": ""
+                "string": "Ya no podrá analizar datos a través de OData."
               },
               "6": {
                 "string": "Ya no podrá editar envíos en su navegador web."

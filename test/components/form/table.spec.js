@@ -65,50 +65,6 @@ describe('FormTable', () => {
     });
   });
 
-  describe('number of rows', () => {
-    it('shows a form without a published version to an administrator', async () => {
-      mockLogin({ role: 'admin' });
-      testData.extendedProjects.createPast(1, { forms: 2 });
-      testData.extendedForms.createPast(1, { name: 'My Published Form', state: 'open' });
-      testData.extendedForms.createPast(1, {
-        name: 'My Draft Form',
-        draft: true,
-        state: 'open'
-      });
-      const app = await load('/projects/1');
-      const text = app.findAll('.form-row .name').map(td => td.text());
-      text.should.eql(['My Draft Form', 'My Published Form']);
-    });
-
-    it('does not show a form without a published version to a project viewer', async () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer', forms: 2 });
-      testData.extendedForms.createPast(1, { name: 'My Published Form', state: 'open' });
-      testData.extendedForms.createPast(1, {
-        name: 'My Draft Form',
-        draft: true,
-        state: 'open'
-      });
-      const app = await load('/projects/1', {}, { deletedForms: false });
-      const text = app.findAll('.form-row .name').map(td => td.text());
-      text.should.eql(['My Published Form']);
-    });
-
-    it('does not show form without published version to Data Collector', async () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'formfill', forms: 2 });
-      testData.extendedForms.createPast(1, { name: 'My Published Form', state: 'open' });
-      testData.extendedForms.createPast(1, {
-        name: 'My Draft Form',
-        draft: true,
-        state: 'open'
-      });
-      const app = await load('/projects/1', {}, { deletedForms: false });
-      const text = app.findAll('.form-row .name').map(td => td.text());
-      text.should.eql(['My Published Form']);
-    });
-  });
-
   describe('sorting', () => {
     it('applies sorting to forms in table', () => {
       mockLogin();

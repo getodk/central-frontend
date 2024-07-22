@@ -208,6 +208,10 @@ export default {
   "sw": {
     "deletedMessage": "Rasimali hii imefutwa",
     "purgedMessage": "Rasilimali hii imesafishwa."
+  },
+  "zh-Hant": {
+    "deletedMessage": "該資源已被刪除。",
+    "purgedMessage": "該資源已清除。"
   }
 }
 </i18n>

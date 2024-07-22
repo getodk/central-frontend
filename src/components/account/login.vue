@@ -353,6 +353,24 @@ export default {
     "problem": {
       "401_2": "Anwani ya barua pepe na/au nenosiri si sahihi."
     }
+  },
+  "zh-Hant": {
+    "alert": {
+      "alreadyLoggedIn": "使用者已登入，重新載入頁面再繼續進行。",
+      "changePassword": "您的密碼少於 10 個字元。為了保護您的帳戶，請變更密碼並增加密碼長度。"
+    },
+    "oidc": {
+      "body": "點選繼續進入登入頁面。",
+      "error": {
+        "auth-ok-user-not-found": "沒有與您的電子郵件地址關聯的 Central 帳戶。請要求您的 Central 管理員建立帳戶以便您繼續登入。",
+        "email-not-verified": "您的登入伺服器尚未驗證您的電子郵件地址。請聯絡您的伺服器管理員。",
+        "email-claim-not-provided": "Central 無法存取與您的帳戶關聯的電子郵件地址。這可能是因為您的伺服器管理員配置不正確，或沒有為您的帳戶設定電子郵件地址。這也可能是您在登入過程中可以選擇的隱私選項的結果。如果是這樣，請重試並確保您的電子郵件已分享。",
+        "internal-server-error": "登入期間出現問題。請聯絡您的伺服器管理員。"
+      }
+    },
+    "problem": {
+      "401_2": "電子郵件地址和/或密碼不正確。"
+    }
   }
 }
 </i18n>

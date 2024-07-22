@@ -627,6 +627,36 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       "submit": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena.",
       "parseError": "Hitilafu fulani imetokea wakati wa kuomba data yako."
     }
+  },
+  "zh-Hant": {
+    "title": "下載提交資料",
+    "exportOptions": "匯出選項",
+    "field": {
+      "splitSelectMultiples": "將「選擇多個」選項拆分為列",
+      "removeGroupNames": "刪除群組名稱",
+      "deletedFields": "包含已發佈表單中未包含的字段"
+    },
+    "deletedFieldsHelp": "如果您需要查看先前的表單版本中引用的字段，請使用此選項。",
+    "noSelectMultiple": "此表單沒有任何選擇多個欄位。",
+    "encryptedForm": "加密表格不能以這種方式處理。",
+    "deletedFieldsDisabledForDraft": "草稿表格不能以這種方式處理。",
+    "introduction": [
+      "為了下載此資料，您需要提供您的密碼。您的密碼將僅用於解密您的資料以供下載，之後伺服器將再次忘記它。"
+    ],
+    "hint": "提示: {hint}",
+    "noRepeat": "此表格沒有重複。",
+    "action": {
+      "download": {
+        "mainTable": "主要資料表（無重複）",
+        "allTables": "所有資料表",
+        "withAttachments": "所有資料與附件"
+      }
+    },
+    "alert": {
+      "unavailable": "資料下載尚不可用。請稍後重試。",
+      "submit": "您的資料下載應該很快就會開始。一旦開始，您可以關閉此框。如果您一直在等待但尚未開始，請重試。",
+      "parseError": "請求您的資料時出現問題。"
+    }
   }
 }
 </i18n>

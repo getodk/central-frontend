@@ -82,7 +82,7 @@ export default {
 }
 
 #project-overview-description-update {
-  font-style: italic;
+  @include italic;
 
   .instructions {
     font-size: 16px;
@@ -157,6 +157,13 @@ export default {
       "projectSettings": "Mipangilio ya Mradi"
     },
     "note": "Wasimamizi wa Miradi pekee ndio wanaoweza kuona pendekezo hili."
+  },
+  "zh-Hant": {
+    "instructions": {
+      "full": "將項目註釋、連結、說明和其他資源新增至 {projectSettings} 中的此空間。",
+      "projectSettings": "專案設定"
+    },
+    "note": "只有專案經理才能看到此建議。"
   }
 }
 </i18n>

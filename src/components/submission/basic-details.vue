@@ -233,6 +233,16 @@ export default {
     "present": "faili {count} | faili {count}",
     "expected": "{count} inatarajiwa | {count} inatarajiwa",
     "attachmentSummary": "{present} / {expected}"
+  },
+  "zh-Hant": {
+    "reviewState": "預覽情況",
+    "formVersion": "表單版本",
+    "deviceId": "裝置ID",
+    "userAgent": "使用者代理",
+    "attachments": "附件",
+    "present": "{count} 個檔案",
+    "expected": "{count} 預期的",
+    "attachmentSummary": "{present} / {expected}"
   }
 }
 </i18n>

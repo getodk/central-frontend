@@ -367,6 +367,30 @@ export default {
         "article": "Makala hii"
       }
     }
+  },
+  "zh-Hant": {
+    "title": "使用 OData",
+    "introduction": [
+      "OData 是在工具和服務之間傳輸資料的標準。 {powerBi}、{excel}、{python}、{r}等強大的分析工具可以透過OData取得資料進行分析。",
+      "若要連接到此 OData 來源，請選擇您的工具並將連結複製到其中。"
+    ],
+    "tab": {
+      "microsoft": "Power BI 或 Excel",
+      "other": "其他"
+    },
+    "help": {
+      "microsoft": {
+        "full": "如需將 OData 與 Power BI 結合使用的協助，請參閱 {pageForPowerBi}。有關 Excel 的協助，請參閱 {pageForExcel}。",
+        "pageForExcel": "這個網頁",
+        "pageForPowerBi": "這個網頁"
+      },
+      "python": "要從 Python 連接到 Central，我們建議使用 {pyODK}。 pyODK 是 Central 的官方 Python 用戶端。它簡化了數據分析和工作流程自動化。",
+      "r": "要從 R 連接到 Central，我們建議使用 {ruODK}。 ruODK 由 ODK 社群成員開發和支援。",
+      "other": {
+        "full": "有關 OData 支援的完整說明，請參閱{article}。",
+        "article": "本文"
+      }
+    }
   }
 }
 </i18n>

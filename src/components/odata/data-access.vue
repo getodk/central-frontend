@@ -99,6 +99,12 @@ const { oidcEnabled } = inject('config');
       "apiAccess": "Ufikiaji wa API",
       "analyze": "Changanua kupitia OData"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "apiAccess": "API 存取",
+      "analyze": "透過 OData 分析"
+    }
   }
 }
 </i18n>

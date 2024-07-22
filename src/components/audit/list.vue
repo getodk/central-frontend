@@ -144,6 +144,12 @@ watch([action, dateRange], fetchData);
       "Hapa utapata logi ya vitendo muhimu vilivyofanywa kwenye seva hii. Mabadiliko yaliyofanywa kwa mipangilio ya mtumiaji, Mradi, au Fomu yanaweza kupatikana hapa."
     ],
     "emptyTable": "Hakuna maingizo ya kumbukumbu ya ukaguzi yanayolingana"
+  },
+  "zh-Hant": {
+    "heading": [
+      "在這裡您將找到在此伺服器上執行的重要操作的日誌。可以在此處找到對使用者、項目或表單設定所做的變更。"
+    ],
+    "emptyTable": "沒有符合的審核日誌條目。"
   }
 }
 </i18n>

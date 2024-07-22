@@ -76,9 +76,12 @@ datasets.request({
 
 const newDatasetModal = modalData();
 
-const afterCreateDataset = (dataset) => {
+const afterCreateDataset = async (dataset) => {
   newDatasetModal.hide();
-  router.push(datasetPath(props.projectId, dataset.name));
+  await router.push(datasetPath(props.projectId, dataset.name));
+  // Increment the count so that if the user returns to a project page, they
+  // will see the new count.
+  project.datasets += 1;
 };
 </script>
 
@@ -110,13 +113,15 @@ const afterCreateDataset = (dataset) => {
     "heading": [
       "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
       "Entitäten werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
-    ]
+    ],
+    "new": "Neu"
   },
   "es": {
     "heading": [
       "Las entidades le permiten compartir información entre formularios para que pueda recopilar datos longitudinales, gestionar casos a lo largo del tiempo y representar otros flujos de trabajo con varios pasos.",
       "Las entidades se crean mediante el diseño del formulario y pueden adjuntarse a cualquier formulario."
-    ]
+    ],
+    "new": "Nueva"
   },
   "fr": {
     "heading": [
@@ -137,6 +142,13 @@ const afterCreateDataset = (dataset) => {
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi.",
       "Mashirika huundwa kupitia muundo wa fomu na yanaweza kuambatishwa kwa Fomu yoyote."
     ]
+  },
+  "zh-Hant": {
+    "heading": [
+      "實體允許您在表單之間共用訊息，以便您可以收集縱向資料、隨時間管理案例並透過多個步驟表示其他工作流程。",
+      "實體是透過表單設計建立的，可以附加到任何表單。"
+    ],
+    "new": "新增"
   }
 }
 </i18n>

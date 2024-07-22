@@ -151,6 +151,12 @@ export default {
     "introduction": [
       "Miradi huweka pamoja Fomu na Watumiaji wa Programu ili kurahisisha kupanga na kudhibiti, kwenye tovuti hii na kwenye kifaa chako cha kukusanya data."
     ]
+  },
+  "zh-Hant": {
+    "title": "建立專案",
+    "introduction": [
+      "專案將表單和APP使用者分組在一起，以便在本網站和資料收集設備上更輕鬆地組織和管理它們"
+    ]
   }
 }
 </i18n>

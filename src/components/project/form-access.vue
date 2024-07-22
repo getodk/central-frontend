@@ -35,14 +35,14 @@ except according to the terms contained in the LICENSE file.
       <project-form-access-table :changes-by-form="changesByForm"
         @update:state="updateState"
         @update:field-key-access="updateFieldKeyAccess"
-        @show-states="showModal('statesModal')"/>
+        @show-states="statesModal.show()"/>
       <p v-if="forms.length === 0" class="empty-table-message">
         {{ $t('emptyTable') }}
       </p>
     </template>
 
     <project-form-access-states v-bind="statesModal"
-      @hide="hideModal('statesModal')"/>
+      @hide="statesModal.hide()"/>
   </div>
 </template>
 
@@ -54,9 +54,9 @@ import ProjectFormAccessTable from './form-access/table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import modal from '../../mixins/modal';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -70,7 +70,6 @@ export default {
     SentenceSeparator,
     Spinner
   },
-  mixins: [modal()],
   inject: ['alert', 'unsavedChanges'],
   props: {
     projectId: {
@@ -92,9 +91,7 @@ export default {
     return {
       changesByForm: null,
       changeCount: 0,
-      statesModal: {
-        state: false
-      }
+      statesModal: modalData()
     };
   },
   computed: {
@@ -329,6 +326,15 @@ export default {
     "emptyTable": "Hakuna Fomu za kuonyesha.",
     "alert": {
       "success": "Mabadiliko yako yamehifadhiwa!"
+    }
+  },
+  "zh-Hant": {
+    "heading": [
+      "使用者只能查看並填寫下表中，明確授予他們存取權限的表格。專案經理和資料收集者可以使用 Web 瀏覽器填寫專案中，處於開啟狀態的任何表格。"
+    ],
+    "emptyTable": "沒有可顯示的表格。",
+    "alert": {
+      "success": "你的修改已被儲存！"
     }
   }
 }

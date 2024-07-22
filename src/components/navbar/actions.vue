@@ -168,6 +168,15 @@ export default {
     "alert": {
       "logOut": "Umetoka kwenye ukurasa kwa mafanikio."
     }
+  },
+  "zh-Hant": {
+    "notLoggedIn": "尚未登入",
+    "action": {
+      "logOut": "登出"
+    },
+    "alert": {
+      "logOut": "您已成功登入"
+    }
   }
 }
 </i18n>

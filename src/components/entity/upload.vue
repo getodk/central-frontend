@@ -464,6 +464,17 @@ watch(() => props.state, (state) => {
     "noEntities": "Es gibt keine Entitäten zum Anzeigen."
   },
   "es": {
+    "title": "Importar datos de un archivo",
+    "table": {
+      "file": "Datos a importar"
+    },
+    "action": {
+      "append": "Añadir datos"
+    },
+    "alert": {
+      "blankLabel": "Falta la etiqueta.",
+      "noData": "Su archivo no contiene ningún dato."
+    },
     "noEntities": "No hay Entidades para mostrar."
   },
   "fr": {
@@ -483,10 +494,36 @@ watch(() => props.state, (state) => {
   },
   "it": {
     "title": "Importa Dati da File",
+    "table": {
+      "server": "{name} dati del server",
+      "file": "Dati da importare"
+    },
+    "action": {
+      "append": "Aggiungi dati"
+    },
+    "alert": {
+      "blankLabel": "Manca l'etichetta.",
+      "noData": "Il tuo file non contiene alcun dato."
+    },
     "noEntities": "Non ci sono entità da mostrare."
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha."
+  },
+  "zh-Hant": {
+    "title": "從文件匯入數據",
+    "table": {
+      "server": "{name} 伺服器數據",
+      "file": "要導入的資料"
+    },
+    "action": {
+      "append": "追加資料"
+    },
+    "alert": {
+      "blankLabel": "標籤遺失。",
+      "noData": "您的文件不包含任何資料。"
+    },
+    "noEntities": "沒有可顯示的實體。"
   }
 }
 </i18n>

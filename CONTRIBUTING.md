@@ -117,10 +117,6 @@ Most components are named according to the combination of a resource and an acti
 * `Edit` or `Update`. A component used to update an existing resource of a particular type.
 * `Delete`. A modal used to delete an existing resource of a particular type.
 
-### Vue Mixins
-
-Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
-
 ### Composables
 
 Each component may use one or more of the composables in [`/src/composables/`](/src/composables/). Most composables will reside in that directory, but if it makes sense to group a composable with other functionality, it may be defined elsewhere. For example, the `useSessions()` composable is defined in [`/src/util/session.js`](/src/util/session.js).
@@ -239,10 +235,8 @@ To add a new locale to ODK Central Frontend:
 1. Add the locale to Transifex.
 2. Add the locale to `locales` in [`/src/i18n.js`](/src/i18n.js) and [`/bin/util/transifex.js`](/bin/util/transifex.js).
 3. If the locale pluralizes differently from the default, specify its pluralization rules in `/src/i18n.js`.
-4. Check whether there is a [flatpickr localization](https://github.com/flatpickr/flatpickr/tree/master/src/l10n) for the locale. If there is, add it to [`DateRangePicker`](/src/components/date-range-picker.vue). If there isn't, create a GitHub issue in this repository or contact us on Slack.
+4. Check whether there is a [flatpickr localization](https://github.com/flatpickr/flatpickr/tree/master/src/l10n) for the locale. If there is, add it to [`DateRangePicker`](/src/components/date-range-picker.vue). If there isn't, let us know about it in the ODK forum.
 5. Consider spot-checking the translations. In particular, check that messages used in component interpolation have been translated correctly.
-
-Note that right now, the router will use the user's preferred language to load the locale, but it will only use the first subtag of the language. If/when we add a locale with multiple subtags, we will need to update the router.
 
 ### Styles
 

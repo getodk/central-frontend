@@ -137,6 +137,17 @@ const text = computed(() => (props.odataFilter == null
         }
       }
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "download": {
+        "unfiltered": "下載{count} 組實體",
+        "filtered": {
+          "withCount": "下載{count}個相符的實體",
+          "withoutCount": "下載相符的實體"
+        }
+      }
+    }
   }
 }
 </i18n>

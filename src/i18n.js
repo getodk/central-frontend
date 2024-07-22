@@ -15,18 +15,40 @@ import { createI18n } from 'vue-i18n';
 // asynchronously.
 import fallbackMessages from './locales/en.json5';
 
-export const locales = new Map()
-  .set('en', 'English')
-  .set('cs', 'Čeština')
-  .set('de', 'Deutsch')
-  .set('es', 'Español')
-  .set('fr', 'Français')
-  .set('id', 'Bahasa Indonesia')
-  .set('it', 'Italiano')
-  .set('ja', '日本語')
-  .set('sw', 'Kiswahili');
-
 const fallbackLocale = 'en';
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LOCALE LIST
+
+// Maps each locale tag to metadata about the locale that is useful outside this
+// file.
+export const locales = new Map();
+
+/*
+Adds a locale to `locales`. Options:
+
+  - name (required). The human-readable name of the locale.
+  - sentenceSeparator (default: ' '). We sometimes need to combine two
+    separately translated sentences in the same block of text. For example, this
+    can happen before or after a component interpolation. Most locales that we
+    support use a space character between sentences, but some do not.
+*/
+const addLocale = (tag, { name, sentenceSeparator = ' ' }) => {
+  locales.set(tag, { name, sentenceSeparator });
+};
+
+addLocale('en', { name: 'English' });
+addLocale('cs', { name: 'Čeština' });
+addLocale('de', { name: 'Deutsch' });
+addLocale('es', { name: 'Español' });
+addLocale('fr', { name: 'Français' });
+addLocale('id', { name: 'Bahasa Indonesia' });
+addLocale('it', { name: 'Italiano' });
+addLocale('ja', { name: '日本語', sentenceSeparator: '' });
+addLocale('sw', { name: 'Kiswahili' });
+addLocale('zh-Hant', { name: '漢語', sentenceSeparator: '' });
 
 
 
@@ -69,7 +91,8 @@ const pluralizationRules = {
   // However, we never use "many".
   es: (count) => (count === 1 ? 0 : 2),
   id: noPlural,
-  ja: noPlural
+  ja: noPlural,
+  'zh-Hant': noPlural
 };
 pluralizationRules.fr = pluralizationRules.es;
 pluralizationRules.it = pluralizationRules.es;

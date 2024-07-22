@@ -220,7 +220,8 @@
     "webUsers": "Pengguna Web",
     "session": "Sesi",
     "submissions": "Kiriman",
-    "projectRoles": "Peran Proyek"
+    "projectRoles": "Peran Proyek",
+    "draft": "Draf"
   },
   "alert": {
     "passwordTooShort": "Silahkan masukan password minimal 10 karakter.",

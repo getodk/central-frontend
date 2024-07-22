@@ -251,6 +251,15 @@ export default {
     "disabled": {
       "conflict": "Fomu hii haiwezi kufutwa kwa sababu kuna Fomu inayotumika yenye kitambulisho sawa."
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "restore": "復原刪除"
+    },
+    "deletedDate": "已刪除{dateTime}",
+    "disabled": {
+      "conflict": "該表單無法取消刪除，因為存在具有相同 ID 的活動表單。"
+    }
   }
 }
 </i18n>

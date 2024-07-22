@@ -72,19 +72,15 @@ export default {
     formsToShow() {
       if (!this.forms.dataExists)
         return [];
-      // Hide any form without a published version from a Data Collector.
       const filteredForms = this.showClosed
         ? this.forms.filter(form => form.state === 'closed')
         : this.forms.filter(form => form.state !== 'closed');
       filteredForms.sort(this.sortFunc);
-      return this.project.permits('submission.list') && this.project.permits('form.update')
-        ? filteredForms
-        : filteredForms.filter(form => form.publishedAt != null);
+      return filteredForms;
     }
   }
 };
 </script>
-
 
 <style lang="scss">
 .form-table {
@@ -181,6 +177,14 @@ export default {
       "reviewStates": "Kagua Majimbo",
       "latest": "karibuni",
       "idAndVersion": "Kitambulisho na Toleo"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "closedForms": "封閉表單",
+      "reviewStates": "審查狀態",
+      "latest": "最新的",
+      "idAndVersion": "ID和版本"
     }
   }
 }

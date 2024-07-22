@@ -440,6 +440,12 @@ const emptyMessage = computed(() => (searchValue.value === ''
         color: #666;
         font-style: italic;
       }
+      &:lang(ja), &:lang(zh) {
+        &::placeholder {
+          font-style: normal;
+          font-weight: bold;
+        }
+      }
     }
 
     .close {
@@ -547,6 +553,11 @@ const emptyMessage = computed(() => (searchValue.value === ''
   "sw": {
     "action": {
       "select": "Changua {all} / {none}"
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "select": "選擇 {all} / {none}"
     }
   }
 }

@@ -15,11 +15,13 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-          <p>
-            <span>{{ $t('introduction[0]') }}</span>
-            <sentence-separator/>
-            <template v-if="blobExists">{{ $t('introduction[1]') }}</template>
-          </p>
+        <p>
+          <span>{{ $t('introduction[0]') }}</span>
+          <sentence-separator/>
+          <template v-if="attachment != null && attachment.blobExists">
+            {{ $t('introduction[1]') }}
+          </template>
+        </p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary btn-link-dataset"
@@ -53,14 +55,7 @@ export default {
       type: Boolean,
       default: false
     },
-    attachmentName: {
-      type: String,
-      required: true
-    },
-    blobExists: {
-      type: Boolean,
-      default: false
-    }
+    attachment: Object
   },
   emits: ['hide', 'success'],
   setup() {
@@ -72,7 +67,7 @@ export default {
     link() {
       this.request({
         method: 'PATCH',
-        url: apiPaths.formDraftAttachment(this.form.projectId, this.form.xmlFormId, this.attachmentName),
+        url: apiPaths.formDraftAttachment(this.form.projectId, this.form.xmlFormId, this.attachment.name),
         data: { dataset: true }
       })
         .then(() => {
@@ -160,6 +155,16 @@ export default {
     ],
     "action": {
       "link": "Kiungo"
+    }
+  },
+  "zh-Hant": {
+    "title": "連結實體清單",
+    "introduction": [
+      "您確定要連結實體清單嗎？",
+      "您上傳的檔案將會被刪除。您稍後可以隨時重新上傳。"
+    ],
+    "action": {
+      "link": "連結"
     }
   }
 }

@@ -160,6 +160,13 @@ export default {
     "action": {
       "revokeAccess": "Batilisha ufikiaji"
     }
+  },
+  "zh-Hant": {
+    "seeCode": "查看 QR code",
+    "accessRevoked": "存取權限被撤銷",
+    "action": {
+      "revokeAccess": "撤銷存取權限"
+    }
   }
 }
 </i18n>

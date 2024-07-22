@@ -132,6 +132,7 @@
     "continue": "Continuar",
     "create": "Crear",
     "createSubmission": "Nuevo",
+    "delete": "Borrar",
     "done": "Listo",
     "download": "Descargar",
     "edit": "Editar",
@@ -212,6 +213,7 @@
     "appUsers": "Usuarios móviles",
     "config": "Configuración del servidor",
     "entityList": "Lista de entidades",
+    "entityLists": "Listas de entidades",
     "entities": "Entidades",
     "form": "Formulario",
     "forms": "Formularios",
@@ -226,7 +228,8 @@
     "webUsers": "Usuarios web",
     "session": "Sesión",
     "submissions": "Envíos",
-    "projectRoles": "Roles del proyecto"
+    "projectRoles": "Roles del proyecto",
+    "draft": "Borrador"
   },
   "alert": {
     "passwordTooShort": "Introduzca una contraseña de al menos 10 caracteres.",
@@ -289,6 +292,7 @@
     "loading": "Cargando...",
     "no": "No",
     "noResults": "Sin resultados",
+    "noUndo": "Esta acción no se puede deshacer.",
     "rightNow": "Ahora mismo",
     "rowNumber": "Fila",
     "success": "¡Éxito!",
@@ -310,7 +314,8 @@
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "El archivo “{name}” que está intentando cargar supera el límite de 100 MB."
+        "fileSize": "El archivo “{name}” que está intentando cargar supera el límite de 100 MB.",
+        "entityTooLarge": "Los datos que estás intentando cargar son demasiado grandes."
       }
     }
   },
@@ -320,6 +325,9 @@
     }
   },
   "util": {
+    "csv": {
+      "emptyRow": "La fila está vacía."
+    },
     "request": {
       "noRequest": "Algo salió mal: no hubo solicitud.",
       "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",

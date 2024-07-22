@@ -182,12 +182,13 @@ export default {
     width: 80%;
     margin-bottom: 0px;
   }
+
+  + .field-key-qr-panel {
+    margin: 15px auto 30px;
+    box-shadow: $box-shadow-popover;
+  }
 }
 
-.field-key-qr-panel {
-  box-shadow: $box-shadow-popover;
-  margin: 15px auto 30px;
-}
 </style>
 
 <i18n lang="json5">
@@ -352,6 +353,23 @@ export default {
     ],
     "action": {
       "createAnother": "Unda nyingine"
+    }
+  },
+  "zh-Hant": {
+    "title": "建立App使用者",
+    "introduction": [
+      "使用者剛開始無存取任何表單的權限。建立使用者後，您才能夠分配表單權限。"
+    ],
+    "success": [
+      "APP使用者「{displayName}」已建立。",
+      "您可以立即為「{displayName}」設定行動裝置，也可以稍後透過點選「檢視代碼」從APP使用者表格中進行設定。",
+      {
+        "full": "您可能想要存取此項目的 {formAccessSettings} 以授予此使用者對表單的存取權限。",
+        "formAccessSettings": "表格存取設定"
+      }
+    ],
+    "action": {
+      "createAnother": "建立另一個"
     }
   }
 }

@@ -206,7 +206,8 @@
   "count": {
     "appUser": "{count} Utente dell'applicazione | {count} Utenti dell'applicazione | {count} Utenti dell'applicazione",
     "form": "{count} Formulario | {count} Formulari | {count} Formulari",
-    "submission": "{count} Invio | {count} Invii | {count} Invii"
+    "submission": "{count} Invio | {count} Invii | {count} Invii",
+    "warning": "{count} avvertimento | {count} avvertimenti | {count} avvertimenti"
   },
   "resource": {
     "appUser": "Utente dell'applicazione",
@@ -228,7 +229,8 @@
     "webUsers": "Utenti web",
     "session": "Sessioni",
     "submissions": "Invii",
-    "projectRoles": "Ruoli del progetto"
+    "projectRoles": "Ruoli del progetto",
+    "draft": "Bozza"
   },
   "alert": {
     "passwordTooShort": "Si prega di inserire una password di almeno 10 caratteri.",
@@ -307,13 +309,15 @@
     "new": "Novità!",
     "totalEntities": "Entità totali",
     "versionShort": "v{version}",
+    "warning": "Avvertimento",
     "status": "Stato",
     "version": "Versione"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Il file “{name}” che stai tentando di caricare è più grande del limite di 100 MB."
+        "fileSize": "Il file “{name}” che stai tentando di caricare è più grande del limite di 100 MB.",
+        "entityTooLarge": "I dati che stai tentando di caricare sono troppo grandi."
       }
     }
   },
@@ -323,10 +327,21 @@
     }
   },
   "util": {
+    "csv": {
+      "readError": "Si è verificato un problema durante la lettura del file:{message}",
+      "invalidCSV": "Il file “{name}” non è un file .csv valido. Non può essere letto.",
+      "rowError": "C'è un problema sulla riga {row} del file:{message}",
+      "invalidQuotes": "Un campo tra virgolette non è valido. Controlla la riga per vedere se sono presenti valori insoliti.",
+      "emptyRow": "La riga è vuota.",
+      "dataWithoutHeader": "Attesa {expected} colonna, ma trovate {actual}. | Attese {expected} colonne, ma trovate {actual}. | Attese {expected} colonne, ma trovate {actual}."
+    },
     "request": {
       "noRequest": "Qualcosa è andato storto: non c'era nessuna request.",
       "noResponse": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request.",
-      "errorNotProblem": "Qualcosa è andato storto: codice error {status}."
+      "errorNotProblem": "Qualcosa è andato storto: codice error {status}.",
+      "problem": {
+        "404_1": "Impossibile trovare la risorsa che stai cercando. La risorsa potrebbe essere stata eliminata."
+      }
     },
     "session": {
       "alert": {

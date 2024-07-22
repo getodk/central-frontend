@@ -86,7 +86,7 @@ describe('ProjectNew', () => {
         .respondFor('/projects/2');
     };
 
-    it('redirects to the project overview', async () => {
+    it('redirects to the project', async () => {
       const app = await submit();
       app.vm.$route.path.should.equal('/projects/2');
     });

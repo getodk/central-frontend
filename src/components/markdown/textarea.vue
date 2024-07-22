@@ -190,6 +190,10 @@ export default {
   "sw": {
     "markdownSupported": "Markdown inatumika",
     "preview": "Hakiki"
+  },
+  "zh-Hant": {
+    "markdownSupported": "支持 Markdown 語法",
+    "preview": "預覽"
   }
 }
 </i18n>

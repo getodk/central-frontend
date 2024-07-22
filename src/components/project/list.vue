@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('resource.projects') }}</span>
         <button v-if="currentUser.can('project.create')"
           id="project-list-new-button" type="button" class="btn btn-primary"
-          @click="showModal('newProject')">
+          @click="createModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
         <project-sort v-model="sortMode"/>
@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </template>
     </page-section>
-    <project-new v-bind="newProject" @hide="hideModal('newProject')"
+    <project-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
   </div>
 </template>
@@ -73,12 +73,12 @@ import ProjectHomeBlock from './home-block.vue';
 import ProjectSort from './sort.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import modal from '../../mixins/modal';
 import sortFunctions from '../../util/sort';
 import useChunkyArray from '../../composables/chunky-array';
 import useRoutes from '../../composables/routes';
-import { useRequestData } from '../../request-data';
+import { modalData } from '../../util/reactivity';
 import { sumUnderThreshold } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectList',
@@ -91,7 +91,6 @@ export default {
     ProjectSort,
     SentenceSeparator
   },
-  mixins: [modal()],
   inject: ['alert'],
   setup() {
     const { currentUser, projects } = useRequestData();
@@ -113,14 +112,8 @@ export default {
       currentUser, projects,
       sortMode, sortFunction,
       activeProjects, chunkyProjects,
+      createModal: modalData(),
       projectPath
-    };
-  },
-  data() {
-    return {
-      newProject: {
-        state: false
-      }
     };
   },
   computed: {
@@ -303,6 +296,19 @@ export default {
     },
     "alert": {
       "create": "Mradi wako mpya umeundwa."
+    }
+  },
+  "zh-Hant": {
+    "archived": "備存專案",
+    "action": {
+      "create": "新訊息"
+    },
+    "emptyTable": {
+      "canCreate": "首先，創建一個專案。專案可透過對相關表單和使用者分組來幫助您組織資料。",
+      "cannotCreate": "沒有可顯示的項目。如果您希望在此處看到項目，請與向您提供此帳戶的人員聯絡。他們可能需要為您應該看到的項目分配專案角色。"
+    },
+    "alert": {
+      "create": "您的新專案已成功建立。"
     }
   }
 }

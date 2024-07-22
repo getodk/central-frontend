@@ -51,6 +51,9 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('submissions')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('resource.submissions') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $n(form.submissions, 'default') }}
+                  </span>
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
@@ -58,6 +61,9 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('public-links')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('formHead.tab.publicAccess') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $n(form.publicLinks, 'default') }}
+                  </span>
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
@@ -65,13 +71,16 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('settings')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('common.tab.settings') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $t(`formState.${form.state}`) }}
+                  </span>
                 </router-link>
               </li>
             </ul>
           </div>
           <div v-if="rendersDraftNav" id="form-head-draft-nav"
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
-            <span id="form-head-draft-nav-title">{{ $t('draftNav.title') }}</span>
+            <span id="form-head-draft-nav-title">{{ $t('resource.draft') }}</span>
             <button v-show="formDraft.isEmpty()"
               id="form-head-create-draft-button" type="button"
               class="btn btn-primary" @click="$emit('create-draft')">
@@ -234,8 +243,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "These functions will become available once you publish your Draft Form"
     },
     "draftNav": {
-      // This is shown above the navigation tabs for the Form Draft.
-      "title": "Draft",
       "action": {
         "create": "Create a new Draft"
       },
@@ -257,7 +264,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře"
     },
     "draftNav": {
-      "title": "Koncept",
       "action": {
         "create": "Vytvořit nový koncept"
       }
@@ -273,7 +279,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Diese Funktionen stehen zur Verfügung, wenn Sie Ihren Entwurf veröffentlicht haben."
     },
     "draftNav": {
-      "title": "Entwurf",
       "action": {
         "create": "Neuen Entwurf erstellen"
       }
@@ -289,7 +294,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de formulario."
     },
     "draftNav": {
-      "title": "Borrador",
       "action": {
         "create": "Crear un nuevo borrador"
       }
@@ -305,7 +309,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Ces fonctions seront disponibles quand vous publierez votre ébauche"
     },
     "draftNav": {
-      "title": "Ébauche",
       "action": {
         "create": "Créer une nouvelle ébauche"
       }
@@ -321,7 +324,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda"
     },
     "draftNav": {
-      "title": "Draf",
       "action": {
         "create": "Buat draf baru"
       }
@@ -337,7 +339,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Queste funzioni diventeranno disponibili una volta che avrai pubblicato la tua bozza del formulario"
     },
     "draftNav": {
-      "title": "Bozza",
       "action": {
         "create": "Crea una nuova bozza"
       }
@@ -353,7 +354,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "これらの機能は下書きフォームが公開された際に有効になります。"
     },
     "draftNav": {
-      "title": "下書き",
       "action": {
         "create": "新規下書きの作成"
       }
@@ -369,9 +369,23 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Vipengele hivi vitapatikana mara tu utakapochapisha Rasimu ya Fomu yako"
     },
     "draftNav": {
-      "title": "Rasimu",
       "action": {
         "create": "Unda Rasimu mpya"
+      }
+    }
+  },
+  "zh-Hant": {
+    "projectNav": {
+      "action": {
+        "back": "返回專案概覽"
+      }
+    },
+    "formNav": {
+      "tabTitle": "一旦您發布草稿表單，這些功能將可用"
+    },
+    "draftNav": {
+      "action": {
+        "create": "建立新草稿"
       }
     }
   }

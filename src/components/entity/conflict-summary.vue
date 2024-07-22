@@ -350,6 +350,28 @@ const markAsResolved = () => {
     "problem": {
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
     }
+  },
+  "zh-Hant": {
+    "title": "資料並行更新",
+    "subtitle": [
+      "根據可能已過時的資料進行了一或多項更新。",
+      "請查看並行更新的摘要。"
+    ],
+    "footer": [
+      "如果需要調整任何數值，您可以直接編輯實體資料。",
+      "如果一切正常，請按一下「標記為已解決」以忽略此警告。"
+    ],
+    "confirmation": {
+      "title": "這個實體還好嗎？",
+      "body": "在檢查了可能衝突的更新並進行了所需的任何更新後，您可以點擊下面的「確認」以清除並行更新警告。",
+      "confirm": "確認"
+    },
+    "conflictResolved": "衝突警告已清除。",
+    "markAsResolved": "標記為已解決",
+    "problem": {
+      "400_32": "另一位用戶已將衝突標記為已解決。請重新整理查看更新後的資料。",
+      "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。"
+    }
   }
 }
 </i18n>

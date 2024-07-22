@@ -9,6 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { watchSyncEffect } from 'vue';
+
 import { transformForms } from './util';
 import { useRequestData } from './index';
 
@@ -22,6 +24,12 @@ export default () => {
   const formDraftDatasetDiff = createResource('formDraftDatasetDiff');
   const formDatasetDiff = createResource('formDatasetDiff');
   const publishedAttachments = createResource('publishedAttachments'); // Published Form attachments
+
+  watchSyncEffect(() => {
+    if (form.dataExists && publicLinks.dataExists &&
+      form.publicLinks !== publicLinks.length)
+      form.publicLinks = publicLinks.length;
+  });
 
   return {
     form, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff, publishedAttachments

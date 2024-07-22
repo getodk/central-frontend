@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
 @import './mixins';
 
 html {
-  background-color: $color-accent-secondary;
+  --color-accent-secondary: #{$color-accent-secondary};
   min-height: 100%;
 }
 
@@ -93,10 +93,7 @@ code {
 
 .text-monospace { font-family: $font-family-monospace; }
 
-em:lang(ja) {
-  font-style: normal;
-  font-weight: bold;
-}
+em { @include italic; }
 
 .tooltip {
   /* v-tooltip.aria-describedby tooltips are rendered before they are shown
@@ -872,6 +869,8 @@ becomes more complicated.
       }
     }
   }
+
+  .badge { vertical-align: baseline; }
 }
 
 .chip {

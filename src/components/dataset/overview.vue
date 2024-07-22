@@ -112,11 +112,13 @@ const afterCreateProperty = () => {
   },
   "de": {
     "connectionsToForms": "Verbindungen zu Formularen",
-    "entityProperties": "Entitätseigenschaften"
+    "entityProperties": "Entitätseigenschaften",
+    "new": "Neu"
   },
   "es": {
     "connectionsToForms": "Conexiones a formularios",
-    "entityProperties": "Propiedades de la entidad"
+    "entityProperties": "Propiedades de la entidad",
+    "new": "Nueva"
   },
   "fr": {
     "connectionsToForms": "Connexions aux formulaires",
@@ -131,6 +133,11 @@ const afterCreateProperty = () => {
   "sw": {
     "connectionsToForms": "Viunganisho kwa Fomu",
     "entityProperties": "Sifa za Mashirika"
+  },
+  "zh-Hant": {
+    "connectionsToForms": "與表單的連接",
+    "entityProperties": "實體屬性",
+    "new": "新增"
   }
 }
 </i18n>

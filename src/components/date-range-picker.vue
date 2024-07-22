@@ -41,8 +41,18 @@ import 'flatpickr/dist/l10n/fr';
 import 'flatpickr/dist/l10n/id';
 import 'flatpickr/dist/l10n/it';
 import 'flatpickr/dist/l10n/ja';
+import 'flatpickr/dist/l10n/zh-tw';
 
+import { locales } from '../i18n';
 import { requiredLabel } from '../util/dom';
+
+// Map locales.
+const l10ns = {};
+for (const locale of locales.keys()) {
+  const l10n = flatpickr.l10ns[locale];
+  if (l10n != null) l10ns[locale] = l10n;
+}
+l10ns['zh-Hant'] = flatpickr.l10ns.zh_tw;
 
 export default {
   name: 'DateRangePicker',
@@ -76,14 +86,12 @@ export default {
   },
   computed: {
     config() {
-      const config = {
+      return {
         mode: 'range',
         // See https://github.com/flatpickr/flatpickr/issues/1549
-        dateFormat: 'Y/m/d'
+        dateFormat: 'Y/m/d',
+        locale: l10ns[this.$i18n.locale] ?? l10ns[this.$i18n.fallbackLocale]
       };
-      const l10n = flatpickr.l10ns[this.$i18n.locale];
-      if (l10n != null) config.locale = l10n;
-      return config;
     }
   },
   watch: {

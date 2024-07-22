@@ -222,6 +222,20 @@ const change = (value) => {
       "serverDiff": "Vista di Central",
       "updating": "(aggiornando {version})"
     }
+  },
+  "zh-Hant": {
+    "introduction": "此提交更新已套用至該實體的版本 {version}，但它是基於版本{baseVersion}建立的。",
+    "hardConflict": {
+      "description": "其他更新已寫入相同的屬性。"
+    },
+    "softConflict": {
+      "title": "平行更新"
+    },
+    "tab": {
+      "baseDiff": "由作者的角度",
+      "serverDiff": "由Central的角度",
+      "updating": "(更新中{version})"
+    }
   }
 }
 </i18n>

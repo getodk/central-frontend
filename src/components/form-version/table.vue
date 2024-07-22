@@ -115,6 +115,12 @@ const { formVersions } = useRequestData();
       "published": "Imechapishwa",
       "definition": "Ufafanuzi"
     }
+  },
+  "zh-Hant": {
+    "header": {
+      "published": "已發佈",
+      "definition": "定義"
+    }
   }
 }
 </i18n>

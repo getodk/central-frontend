@@ -202,6 +202,13 @@ export default {
       "state": "Hali",
       "appUserAccess": "Ufikiaji wa Mtumiaji wa Programu"
     }
+  },
+  "zh-Hant": {
+    "draftTitle": "該表單尚無發佈版本。在草稿發佈之前，它不會出現在裝置上。發佈表單後，將使用此處顯示的設定。",
+    "field": {
+      "state": "狀態",
+      "appUserAccess": "APP使用者存取"
+    }
   }
 }
 </i18n>

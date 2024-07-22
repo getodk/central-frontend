@@ -300,6 +300,12 @@ $border-height: 3px;
       "toggle": "Geuza urambazaji"
     },
     "analyticsNotice": "Saidia kuboresha Central"
+  },
+  "zh-Hant": {
+    "action": {
+      "toggle": "切換導航鈕"
+    },
+    "analyticsNotice": "幫忙改善 Central!"
   }
 }
 </i18n>

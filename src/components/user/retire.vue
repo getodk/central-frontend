@@ -168,6 +168,16 @@ export default {
         "noUndo": "Kitendo hiki hakiwezi kutenduliwa"
       }
     ]
+  },
+  "zh-Hant": {
+    "title": "停用使用者",
+    "introduction": [
+      "您即將停用使用者帳號「{displayName}」\u003c{email}>。該用戶將被立即禁止執行任何操作並註銷。",
+      {
+        "full": "{noUndo}，但可以使用相同的電子郵件地址，為該人建立一個新帳戶。",
+        "noUndo": "此操作無法取消"
+      }
+    ]
   }
 }
 </i18n>

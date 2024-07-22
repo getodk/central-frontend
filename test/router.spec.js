@@ -3,31 +3,18 @@ import sinon from 'sinon';
 import NotFound from '../src/components/not-found.vue';
 
 import { noop } from '../src/util/util';
+import { userLocale } from '../src/util/i18n';
 
 import testData from './data';
 import { load } from './util/http';
 import { mockLogin } from './util/session';
 import { mockResponse } from './util/axios';
+import { setLanguages } from './util/i18n';
 
 describe('createCentralRouter()', () => {
   describe('i18n', () => {
-    before(() => {
-      const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
-      has.should.be.false();
-    });
-    afterEach(() => {
-      delete navigator.language;
-    });
-
-    const setLanguage = (locale) => {
-      Object.defineProperty(navigator, 'language', {
-        value: locale,
-        configurable: true
-      });
-    };
-
     it("loads the user's preferred language", () => {
-      setLanguage('es');
+      setLanguages(['es']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(app => {
@@ -35,17 +22,8 @@ describe('createCentralRouter()', () => {
         });
     });
 
-    it('loads a less specific locale', () => {
-      setLanguage('es-ES');
-      return load('/login')
-        .restoreSession(false)
-        .afterResponses(app => {
-          app.vm.$i18n.locale.should.equal('es');
-        });
-    });
-
-    it('falls back to en for a locale that is not defined', () => {
-      setLanguage('la');
+    it("falls back to en if no locale matches the user's preferences", () => {
+      setLanguages(['la']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(app => {
@@ -53,21 +31,13 @@ describe('createCentralRouter()', () => {
         });
     });
 
-    it('loads the locale saved to local storage', () => {
-      localStorage.setItem('locale', 'es');
-      return load('/login')
-        .restoreSession(false)
-        .afterResponses(app => {
-          app.vm.$i18n.locale.should.equal('es');
-        });
-    });
-
     it('only loads the locale during the initial navigation', () => {
-      setLanguage('es');
+      setLanguages(['es']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(() => {
-          setLanguage('en');
+          setLanguages(['en']);
+          userLocale().should.equal('en');
         })
         .route('/reset-password')
         .then(app => {
@@ -264,7 +234,7 @@ describe('createCentralRouter()', () => {
         testData.extendedForms.createPast(1);
       });
 
-      it('preserves data while navigating to/from the project overview', () =>
+      it('preserves data while navigating to/from the forms page', () =>
         load('/projects/1/form-access')
           .complete()
           .load('/projects/1', { project: false, forms: false }) // allow deletedForms to be fetched
@@ -556,7 +526,7 @@ describe('createCentralRouter()', () => {
           testData.extendedFieldKeys.createPast(1);
         });
 
-        it('does not redirect the user from the project overview', async () => {
+        it('does not redirect the user from the forms page', async () => {
           const app = await load('/projects/1', {}, { deletedForms: false });
           app.vm.$route.path.should.equal('/projects/1');
         });
@@ -713,7 +683,7 @@ describe('createCentralRouter()', () => {
         testData.extendedDatasets.createPast(1, { name: 'trees' });
       });
 
-      it('does not redirect the user from the project overview', async () => {
+      it('does not redirect the user from the forms page', async () => {
         const app = await load('/projects/1', {}, { deletedForms: false });
         app.vm.$route.path.should.equal('/projects/1');
       });
@@ -1042,10 +1012,10 @@ describe('createCentralRouter()', () => {
     it('inspects title before and after project data loaded', () =>
       load('/projects/1')
         .beforeAnyResponse(() => {
-          document.title.should.equal('ODK Central');
+          document.title.should.equal('Forms | ODK Central');
         })
         .afterResponses(() => {
-          document.title.should.equal('My Project Name | ODK Central');
+          document.title.should.equal('Forms | My Project Name | ODK Central');
         }));
 
     it('shows project name in title for /projects/1/user', async () => {
@@ -1071,13 +1041,6 @@ describe('createCentralRouter()', () => {
     it('shows project name in title for /projects/1/settings', async () => {
       await load('/projects/1/settings');
       document.title.should.equal('Settings | My Project Name | ODK Central');
-    });
-
-    // Special cases of project routes
-    it('does not show project name if null for /projects/1', async () => {
-      testData.extendedProjects.createPast(1, { name: null });
-      await load('/projects/2');
-      document.title.should.equal('ODK Central');
     });
 
     // Form routes
@@ -1339,6 +1302,13 @@ describe('createCentralRouter()', () => {
       };
       const app = await load('/system/analytics', { container }, false);
       app.findComponent(NotFound).exists().should.be.true();
+    });
+  });
+
+  describe('standalone field', () => {
+    it('adds a background color if standalone is false', async () => {
+      await load('/login').restoreSession(false);
+      document.documentElement.style.backgroundColor.should.equal('var(--color-accent-secondary)');
     });
   });
 });

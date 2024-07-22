@@ -413,6 +413,10 @@
       "string": "Ficha hakiki",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
+    "newPreview": {
+      "string": "",
+      "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
+    },
     "expand": {
       "string": "Panua",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -663,6 +667,10 @@
     },
     "projectRoles": {
       "string": "majukumu ya mradi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "formPreview": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -2941,15 +2949,15 @@
         }
       },
       "draftNav": {
-        "title": {
-          "string": "Rasimu",
-          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
-        },
         "action": {
           "create": {
             "string": "Unda Rasimu mpya",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        },
+        "title": {
+          "string": "Rasimu",
+          "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
         }
       }
     },
@@ -3141,6 +3149,20 @@
       "datasetsLinked": {
         "string": "{count, plural, one {Seti ya data iliyoambatishwa kwenye Fomu hii:} other {Seti za data zilizoambatishwa kwenye Fomu hii:}}",
         "developer_comment": "The count of Dataset(s) is shown separately above this text."
+      }
+    },
+    "FormPreview": {
+      "webFormPreview": {
+        "submissionModal": {
+          "title": {
+            "string": "",
+            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
+          },
+          "body": {
+            "string": "",
+            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
+          }
+        }
       }
     },
     "FormRestore": {

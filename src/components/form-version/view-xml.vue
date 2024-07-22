@@ -123,6 +123,9 @@ export default {
   },
   "sw": {
     "title": "Tazama XML"
+  },
+  "zh-Hant": {
+    "title": "檢視XML"
   }
 }
 </i18n>

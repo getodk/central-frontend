@@ -151,7 +151,8 @@ entities = dataStore({
     source = undefined,
     creator: creatorOption = undefined
   }) => {
-    if (extendedDatasets.size === 0) {
+    const newDataset = extendedDatasets.size === 0;
+    if (newDataset) {
       const properties = data != null
         ? Object.keys(data).map(name => ({ name, forms: [] }))
         : [];
@@ -166,6 +167,7 @@ entities = dataStore({
         lastCreatedAt,
         creator.createdAt
       ]);
+    if (newDataset) extendedDatasets.update(0, { lastEntity: createdAt });
     const entity = {
       uuid,
       creatorId: creator.id,

@@ -308,6 +308,22 @@ export default {
       "submissions": "Wasilisho | Mawasilisho"
     },
     "datasetsLinked": "Seti ya data iliyoambatishwa kwenye Fomu hii: | Seti za data zilizoambatishwa kwenye Fomu hii:"
+  },
+  "zh-Hant": {
+    "version": {
+      "full": "表格的{publishedVersion}",
+      "publishedVersion": "已發佈版本"
+    },
+    "stateCaption": {
+      "open": "該表格可供下載並接受提交。",
+      "closing": "表格不可下載，但仍接受提交。",
+      "closed": "該表格不可下載，也不接受提交。"
+    },
+    "submissions": {
+      "full": "{submissions} 已為此表格儲存。",
+      "submissions": "提交"
+    },
+    "datasetsLinked": "本表格附有資料集："
   }
 }
 </i18n>

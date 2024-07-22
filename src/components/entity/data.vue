@@ -71,8 +71,8 @@ const data = computed(() => entity.currentVersion.data);
   }
 
   .empty {
+    @include italic;
     color: #888;
-    font-style: italic;
   }
 }
 </style>
@@ -109,6 +109,9 @@ const data = computed(() => entity.currentVersion.data);
   },
   "sw": {
     "title": "Data ya Huluki"
+  },
+  "zh-Hant": {
+    "title": "實體資料"
   }
 }
 </i18n>

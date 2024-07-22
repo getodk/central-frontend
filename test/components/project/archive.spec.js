@@ -51,12 +51,12 @@ describe('ProjectArchive', () => {
         .respondWithData(() => []);
     };
 
-    it('redirects the user to the project overview', async () => {
+    it('redirects the user to the forms page', async () => {
       const app = await submit();
       app.vm.$route.path.should.equal('/projects/1');
     });
 
-    it("appends (archived) to project's name in project overview", async () => {
+    it("appends (archived) to the project's name", async () => {
       const app = await submit();
       app.get('#page-head-title').text().should.equal('My Project (archived)');
     });

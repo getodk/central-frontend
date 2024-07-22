@@ -29,11 +29,12 @@ except according to the terms contained in the LICENSE file.
           </button>
         </form>
         <submission-download-button :form-version="formVersion"
-          :filtered="odataFilter != null" @download="showModal('download')"/>
+          :filtered="odataFilter != null" @download="downloadModal.show()"/>
       </div>
       <submission-table v-show="odata.dataExists && odata.value.length !== 0"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :fields="selectedFields" @review="showReview"/>
+        :draft="draft" :fields="selectedFields"
+        @review="reviewModal.show({ submission: $event })"/>
       <p v-show="odata.dataExists && odata.value.length === 0"
         class="empty-table-message">
         {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
@@ -46,11 +47,10 @@ except according to the terms contained in the LICENSE file.
         :total-count="formVersion.dataExists ? formVersion.submissions : 0"/>
     </div>
 
-    <submission-download :state="download.state" :form-version="formVersion"
-      :odata-filter="odataFilter" @hide="hideModal('download')"/>
-    <submission-update-review-state :state="review.state"
-      :project-id="projectId" :xml-form-id="xmlFormId"
-      :submission="review.submission" @hide="hideReview"
+    <submission-download v-bind="downloadModal" :form-version="formVersion"
+      :odata-filter="odataFilter" @hide="downloadModal.hide()"/>
+    <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
+      :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
   </div>
 </template>
@@ -69,13 +69,13 @@ import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 
-import modal from '../../mixins/modal';
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useReviewState from '../../composables/review-state';
 import useSubmissions from '../../request-data/submissions';
 import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
@@ -93,7 +93,6 @@ export default {
     SubmissionUpdateReviewState,
     OdataLoadingMessage
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -185,13 +184,9 @@ export default {
       // among the options.)
       selectedFields: shallowRef(null),
       refreshing: false,
-      download: {
-        state: false
-      },
-      review: {
-        state: false,
-        submission: null
-      }
+      // Modals
+      downloadModal: modalData(),
+      reviewModal: modalData()
     };
   },
   computed: {
@@ -315,19 +310,11 @@ export default {
         !this.odata.awaitingResponse && this.scrolledToBottom())
         this.fetchChunk(false);
     },
-    showReview(submission) {
-      this.review.submission = submission;
-      this.showModal('review');
-    },
-    hideReview() {
-      this.hideModal('review');
-      this.review.submission = null;
-    },
     // This method accounts for the unlikely case that the user clicked the
     // refresh button before reviewing the submission. In that case, the
     // submission may have been edited or may no longer be shown.
     afterReview(originalSubmission, reviewState) {
-      this.hideReview();
+      this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));
       const index = this.odata.value.findIndex(submission =>
         submission.__id === originalSubmission.__id);
@@ -409,6 +396,9 @@ export default {
   },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
+  },
+  "zh-Hant": {
+    "noMatching": "沒有符合的提交內容。"
   }
 }
 </i18n>

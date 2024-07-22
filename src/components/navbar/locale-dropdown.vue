@@ -12,14 +12,14 @@ except according to the terms contained in the LICENSE file.
 <template>
   <li id="navbar-locale-dropdown" class="dropdown">
     <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"
-      :aria-label="locales.get($i18n.locale)" aria-haspopup="true"
+      :aria-label="locales.get($i18n.locale).name" aria-haspopup="true"
       aria-expanded="false">
-      {{ $i18n.locale }}<span class="caret"></span>
+      {{ languageSubtag }}<span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-      <li v-for="[locale, name] of locales" :key="locale"
+      <li v-for="[locale, info] of locales" :key="locale"
         :class="{ disabled: loading }">
-        <a href="#" @click.prevent="loadLocale(locale)">{{ name }}</a>
+        <a href="#" @click.prevent="selectLocale(locale)">{{ info.name }}</a>
       </li>
       <li class="divider" role="separator"></li>
       <li>
@@ -32,38 +32,30 @@ except according to the terms contained in the LICENSE file.
   </li>
 </template>
 
-<script>
+<script setup>
+import { computed, inject, ref } from 'vue';
+
 import { loadLocale } from '../../util/i18n';
 import { localStore } from '../../util/storage';
 import { locales } from '../../i18n';
 import { noop } from '../../util/util';
 
-export default {
-  name: 'NavbarLocaleDropdown',
-  inject: ['container'],
-  data() {
-    return {
-      loading: false
-    };
-  },
-  computed: {
-    locales() {
-      return locales;
-    }
-  },
-  methods: {
-    loadLocale(locale) {
-      this.loading = true;
-      return loadLocale(this.container, locale)
-        .then(() => {
-          localStore.setItem('locale', locale);
-        })
-        .catch(noop)
-        .finally(() => {
-          this.loading = false;
-        });
-    }
-  }
+defineOptions({
+  name: 'NavbarLocaleDropdown'
+});
+
+const container = inject('container');
+const { i18n: globalI18n } = container;
+const languageSubtag = computed(() =>
+  new Intl.Locale(globalI18n.locale).language);
+
+const loading = ref(false);
+const selectLocale = (locale) => {
+  loading.value = true;
+  return loadLocale(container, locale)
+    .then(() => { localStore.setItem('locale', locale); })
+    .catch(noop)
+    .finally(() => { loading.value = false; });
 };
 </script>
 
@@ -103,6 +95,9 @@ export default {
   },
   "sw": {
     "helpTranslate": "Saidia kutafsiri Central"
+  },
+  "zh-Hant": {
+    "helpTranslate": "協助翻譯 Central"
   }
 }
 </i18n>

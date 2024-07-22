@@ -66,7 +66,7 @@ const forms = dataStore({
       : extendedUsers.createPast(1).last(),
     fields = [testDataFields.string('/s')],
     entityRelated = false,
-    lastEntity = undefined,
+    publicLinks = 0,
 
     ...extraVersionOptions
   }) => {
@@ -79,6 +79,7 @@ const forms = dataStore({
       enketoOnceId,
       state,
       entityRelated,
+      publicLinks,
       // If publishedAt was specified, set createdAt to publishedAt in order to
       // ensure that createdAt is not after publishedAt.
       createdAt: !draft && publishedAt != null
@@ -104,8 +105,7 @@ const forms = dataStore({
       enketoId,
       submissions,
       lastSubmission,
-      reviewStates,
-      lastEntity
+      reviewStates
     });
     Object.assign(form, submissionStats(form));
     if (inPast)
@@ -147,8 +147,7 @@ formVersions = dataStore({
     lastSubmission = undefined,
     reviewStates = undefined,
     publishedBy = undefined,
-    draftToken = draft ? faker.random.alphaNumeric(64) : null,
-    lastEntity = undefined
+    draftToken = draft ? faker.random.alphaNumeric(64) : null
   }) => {
     if (form === undefined) throw new Error('form not found');
     const result = {
@@ -177,8 +176,7 @@ formVersions = dataStore({
     } else {
       Object.assign(result, {
         publishedAt: publishedAt != null ? publishedAt : result.createdAt,
-        publishedBy: publishedBy != null ? toActor(publishedBy) : form.createdBy,
-        lastEntity
+        publishedBy: publishedBy != null ? toActor(publishedBy) : form.createdBy
       });
     }
     return result;
@@ -237,10 +235,13 @@ export const extendedForms = view(
   (form) => {
     const version = findVersionForForm(form);
     return {
-      ...pick([...basicFormProps, 'enketoId', 'createdBy', 'entityRelated'], form),
+      ...pick(
+        [...basicFormProps, 'enketoId', 'createdBy', 'entityRelated', 'publicLinks'],
+        form
+      ),
       ...pick([...basicVersionProps, 'excelContentType'], version),
       ...pick(
-        ['submissions', 'lastSubmission', 'reviewStates', 'lastEntity'],
+        ['submissions', 'lastSubmission', 'reviewStates'],
         version.publishedAt == null ? version : form
       )
     };
@@ -270,7 +271,10 @@ export const standardFormDrafts = view(
 export const extendedFormDrafts = view(
   formVersions,
   (version) => ({
-    ...pick([...basicFormProps, 'createdBy', 'entityRelated'], findFormForVersion(version)),
+    ...pick(
+      [...basicFormProps, 'createdBy', 'entityRelated', 'publicLinks'],
+      findFormForVersion(version)
+    ),
     ...pick(
       [...basicVersionProps, 'enketoId', 'excelContentType', 'submissions', 'reviewStates'],
       version

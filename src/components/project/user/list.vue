@@ -568,6 +568,42 @@ export default {
       "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu.",
       "unassignRole": "Mafanikio! \"{displayName}\" imeondolewa kwenye Mradi huu."
     }
+  },
+  "zh-Hant": {
+    "heading": [
+      "網站管理員自動被視為每個專案的經理。其他使用者可以擁有特定於此項目的角色：",
+      {
+        "full": "{projectManagers}可以執行與該專案相關的任何管理任務，並可以在網頁瀏覽器中填寫表格",
+        "projectManagers": "專案管理員"
+      },
+      {
+        "full": "{projectViewers}可以存取和下載此專案中的所有表單和實體數據，但無法對設定或數據進行任何更改",
+        "projectViewers": "專案瀏覽者"
+      },
+      {
+        "full": "繁體){dataCollectors}在網頁瀏覽器中填寫表格，但無法查看或變更資料或設定",
+        "dataCollectors": "資料收集者"
+      }
+    ],
+    "action": {
+      "clearSearch": "清除搜尋"
+    },
+    "field": {
+      "q": {
+        "canList": "搜尋使用者",
+        "cannotList": "輸入準確的使用者電子郵件地址..."
+      }
+    },
+    "header": {
+      "user": "使用者",
+      "projectRole": "專案角色"
+    },
+    "emptyTable": "文 (繁體)尚未為該專案分配任何使用者。若要新增用戶，請在上面搜尋用戶配任何使用者。",
+    "alert": {
+      "unassignWithoutReassign": "出了些問題。 「{displayName}」已從專案中刪除。",
+      "assignRole": "成功！ 「{displayName}」在此專案中被賦予「{roleName}」角色。",
+      "unassignRole": "成功！ 「{displayName}」已從此項目中刪除。"
+    }
   }
 }
 </i18n>

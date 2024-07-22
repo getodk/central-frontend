@@ -355,6 +355,27 @@ watch(() => props.entity, (entity) => {
     "problem": {
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
     }
+  },
+  "zh-Hant": {
+    "title": "並行更新「1{label}」",
+    "instructions": [
+      "並行更新了「1{label}」。這意味著更改可能會相互衝突，因為它們是根據較舊的資料編寫的，而不是 Central 最終應用的資料。",
+      "查看更新，進行所需的任何編輯，如果您確定該實體資料正確，請按「標記為已解決」以清除此警告訊息。"
+    ],
+    "action": {
+      "table": {
+        "show": "顯示總計表",
+        "hide": "隱藏統計表"
+      },
+      "seeMoreDetails": "顯示更多細節",
+      "editEntity": "編輯實體",
+      "markAsResolved": "標記為已解決"
+    },
+    "successMessage": "實體中的衝突警告已清除。",
+    "problem": {
+      "400_32": "另一位用戶已將衝突標記為已解決。請重新整理查看更新後的資料。",
+      "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。"
+    }
   }
 }
 </i18n>

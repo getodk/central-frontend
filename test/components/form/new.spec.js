@@ -3,7 +3,6 @@ import { clone } from 'ramda';
 import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FileDropZone from '../../../src/components/file-drop-zone.vue';
 import FormNew from '../../../src/components/form/new.vue';
-import FormRow from '../../../src/components/form/row.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
@@ -283,12 +282,14 @@ describe('FormNew', () => {
         app.should.alert('success', 'Your new Form “Form 2” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use.');
       }));
 
-    it('renders the correct number of rows in the forms table', () =>
+    it('increments the form count', () =>
       createForm()
         .complete()
         .load('/projects/1', { project: false })
-        .afterResponses(app => {
-          app.findAllComponents(FormRow).length.should.equal(2);
+        .beforeAnyResponse(app => {
+          // The form count should be seen to be incremented even before the
+          // updated form list is received.
+          app.get('#page-head-tabs li.active .badge').text().should.equal('2');
         }));
   });
 

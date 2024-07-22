@@ -270,6 +270,25 @@ const { projectPath, formPath } = useRoutes();
         "dataCollector": "Mkusanya Data"
       }
     ]
+  },
+  "zh-Hant": {
+    "title": "提交選項",
+    "introduction": [
+      "有多種選項可用於向 ODK Central 提交資料：",
+      {
+        "full": "建立 {appUsers} 並使用 {collect} Android 應用程式。當資料收集者需要存取多個表單、處於離線狀態或您有一個複雜的表單時，這是最合適的。",
+        "appUsers": "App 使用者"
+      },
+      {
+        "full": "建立一個或多個 {publicLinks} 以與進行自我報告的受訪者分享。",
+        "publicLinks": "公共訪問連結"
+      },
+      {
+        "full": "為每個要收集資料的人建立一個角色為 {dataCollector} 的 {webUser}。這些使用者將登入 Central 以在網頁瀏覽器中填寫此表格。專案經理也可以從網頁瀏覽器建立提交。",
+        "webUser": "網路使用者",
+        "dataCollector": "資料收集者"
+      }
+    ]
   }
 }
 </i18n>

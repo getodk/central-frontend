@@ -33,7 +33,7 @@ describe('util/reactivity', () => {
       });
 
       describe('async component', () => {
-        before(() => {
+        beforeAll(() => {
           setLoader('MyModal', async () => ({
             default: { foo: 'bar' }
           }));
