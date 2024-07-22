@@ -1,0 +1,166 @@
+================================================================================
+Expression from `scenario` > `calculate.test.ts` currently beginning on L130
+================================================================================
+
+count(instance('instance')/root/item[yob < 1970]/child[yob = 1988])
+
+--------------------------------------------------------------------------------
+
+(xpath
+  (expr
+    (filter_path_expr
+      (filter_expr
+        (function_call
+          (function_name
+            (unprefixed_name))
+          (argument
+            (expr
+              (filter_path_expr
+                (filter_expr
+                  (function_call
+                    (function_name
+                      (unprefixed_name))
+                    (argument
+                      (expr
+                        (filter_path_expr
+                          (filter_expr
+                            (string_literal)))))))
+                (step
+                  (node_test
+                    (unprefixed_name)))
+                (step
+                  (node_test
+                    (unprefixed_name))
+                  (predicate
+                    (expr
+                      (lt_expr
+                        (relative_location_path
+                          (step
+                            (node_test
+                              (unprefixed_name))))
+                        (filter_path_expr
+                          (filter_expr
+                            (number)))))))
+                (step
+                  (node_test
+                    (unprefixed_name))
+                  (predicate
+                    (expr
+                      (eq_expr
+                        (relative_location_path
+                          (step
+                            (node_test
+                              (unprefixed_name))))
+                        (filter_path_expr
+                          (filter_expr
+                            (number)))))))))))))))
+
+================================================================================
+Simplified calculate expression to narrow syntax tree
+================================================================================
+
+instance('instance')/child[yob = 1988]
+
+--------------------------------------------------------------------------------
+
+(xpath
+  (expr
+    (filter_path_expr
+      (filter_expr
+        (function_call
+          (function_name
+            (unprefixed_name))
+          (argument
+            (expr
+              (filter_path_expr
+                (filter_expr
+                  (string_literal)))))))
+      (step
+        (node_test
+          (unprefixed_name))
+        (predicate
+          (expr
+            (eq_expr
+              (relative_location_path
+                (step
+                  (node_test
+                    (unprefixed_name))))
+              (filter_path_expr
+                (filter_expr
+                  (number))))))))))
+
+================================================================================
+Axis name as name test, with another step after
+================================================================================
+
+/root/item/child/grandchild
+
+--------------------------------------------------------------------------------
+
+(xpath
+  (expr
+    (absolute_location_path
+      (absolute_root_location_path)
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name))))))
+
+================================================================================
+Each axis name as a name test
+================================================================================
+
+ancestor/ancestor-or-self/attribute/child/descendant/descendant-or-self/following/following-sibling/namespace/parent/preceding/preceding-sibling/self
+
+--------------------------------------------------------------------------------
+
+(xpath
+  (expr
+    (relative_location_path
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name)))
+      (step
+        (node_test
+          (unprefixed_name))))))

@@ -99,22 +99,12 @@ describe('MultiplePredicateTest.java', () => {
 		 *   additional casting. Ported to use {@link ExpectStatic.toEqualAnswer}
 		 *   for similar semantics.
 		 *
-		 * - Fails due to the form fixture DSL's lack of escaping for the `<`
-		 *   character in the `calculate` expression. This was also discussed on a
-		 *   test in `secondary-instances.test.ts`, which should serve as the
-		 *   canonical note on this topic.
+		 * - Following note is no longer applicable, but it is preserved (struck),
+		 *   to provide context for the next point which remains pertinent.
 		 *
-		 * - Even when adjusting the `calculate` expression to escape `<`, this test
-		 *   will fail parsing the `calculate` expression itself. Evidently this is
-		 *   due to the unqualified name test `child`. This is definitely a bug, and
-		 *   we definitely need more tests around XPath keyword ambiguities. (I had
-		 *   orignally written "the spec is clear on this…", and went to the spec to
-		 *   get the pertinent text. It turns out the disambiguation section I had
-		 *   in mind doesn't seem to address this case? At any rate, we have many
-		 *   tests exercising other abbreviated child-axis steps where an
-		 *   unqualified name references axis names _other than `child`_; in all
-		 *   those cases, it's clear that we expect `/$AXIS_NAME` to be equivalent
-		 *   to its expanded name test format).
+		 * - ~~Even when adjusting the `calculate` expression to escape `<`, this
+		 *   test will fail parsing the `calculate` expression itself. Evidently
+		 *   this is due to the unqualified name test `child`.~~
 		 *
 		 * - Note, in the above point, that the XPath syntax is referenced as
 		 *   "abbreviated child-axis steps". This is another current discrepancy in
@@ -127,53 +117,50 @@ describe('MultiplePredicateTest.java', () => {
 		 *   usage, correcting it would benefit any other potential users of
 		 *   `tree-sitter-xpath` once it's published.
 		 */
-		it.fails(
-			'support[s] multiple predicates in multiple parts of [the expression] path',
-			async () => {
-				const scenario = await Scenario.init(
-					'Some form',
-					html(
-						head(
-							title('Some form'),
-							model(
-								mainInstance(t('data id="some-form"', t('calc'), t('input'))),
-								instance(
-									'instance',
-									t(
-										'item',
-										t('name', 'Bob Smith'),
-										t('yob', '1966'),
-										t('child', t('name', 'Sally Smith'), t('yob', '1988')),
-										t('child', t('name', 'Kwame Smith'), t('yob', '1990'))
-									),
-									t(
-										'item',
-										t('name', 'Hu Xao'),
-										t('yob', '1972'),
-										t('child', t('name', 'Foo Bar'), t('yob', '1988')),
-										t('child', t('name', 'Foo2 Bar'), t('yob', '2008'))
-									),
-									t(
-										'item',
-										t('name', 'Baz Quux'),
-										t('yob', '1968'),
-										t('child', t('name', 'Baz2 Quux'), t('yob', '1988')),
-										t('child', t('name', 'Baz3 Quux'), t('yob', '1988'))
-									)
+		it('support[s] multiple predicates in multiple parts of [the expression] path', async () => {
+			const scenario = await Scenario.init(
+				'Some form',
+				html(
+					head(
+						title('Some form'),
+						model(
+							mainInstance(t('data id="some-form"', t('calc'), t('input'))),
+							instance(
+								'instance',
+								t(
+									'item',
+									t('name', 'Bob Smith'),
+									t('yob', '1966'),
+									t('child', t('name', 'Sally Smith'), t('yob', '1988')),
+									t('child', t('name', 'Kwame Smith'), t('yob', '1990'))
 								),
-								bind('/data/calc')
-									.type('string')
-									.calculate("count(instance('instance')/root/item[yob < 1970]/child[yob = 1988])"),
-								bind('/data/input').type('string')
-							)
-						),
-						body(input('/data/input'))
-					)
-				);
+								t(
+									'item',
+									t('name', 'Hu Xao'),
+									t('yob', '1972'),
+									t('child', t('name', 'Foo Bar'), t('yob', '1988')),
+									t('child', t('name', 'Foo2 Bar'), t('yob', '2008'))
+								),
+								t(
+									'item',
+									t('name', 'Baz Quux'),
+									t('yob', '1968'),
+									t('child', t('name', 'Baz2 Quux'), t('yob', '1988')),
+									t('child', t('name', 'Baz3 Quux'), t('yob', '1988'))
+								)
+							),
+							bind('/data/calc')
+								.type('string')
+								.calculate("count(instance('instance')/root/item[yob < 1970]/child[yob = 1988])"),
+							bind('/data/input').type('string')
+						)
+					),
+					body(input('/data/input'))
+				)
+			);
 
-				// assertThat(scenario.answerOf("/data/calc").getValue(), equalTo(3));
-				expect(scenario.answerOf('/data/calc')).toEqualAnswer(intAnswer(3));
-			}
-		);
+			// assertThat(scenario.answerOf("/data/calc").getValue(), equalTo(3));
+			expect(scenario.answerOf('/data/calc')).toEqualAnswer(intAnswer(3));
+		});
 	});
 });

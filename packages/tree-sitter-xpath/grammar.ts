@@ -144,7 +144,7 @@ const xpathGrammar = grammar({
 
 				// This is implicit in the spec's grammar notation, but reflects parts of
 				// the details on disambiguation (and helps tree-sitter with same).
-				$._axis_name,
+				alias($._axis_name, $.unprefixed_name),
 
 				$.node_type_test,
 				$.processing_instruction_name_test
