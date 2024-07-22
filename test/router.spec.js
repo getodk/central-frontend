@@ -1187,44 +1187,31 @@ describe('createCentralRouter()', () => {
   });
 
   describe('config', () => {
-    describe('request', () => {
-      it('requests the config', () => {
-        // Using a role of 'none' in order to prevent some requests.
-        const user = testData.extendedUsers
-          .createPast(1, { role: 'none' })
-          .first();
-        const session = testData.sessions.createPast(1).last();
-        const container = { config: false };
-        return load('/', { container }, false)
-          .respondWithData(() => session)
-          .respondWithData(() => ({}))
-          .respondWithData(() => user)
-          .respondFor('/', { users: false })
-          .testRequests([
-            { url: '/v1/sessions/restore' },
-            { url: '/client-config.json' },
-            { url: '/v1/users/current', extended: true },
-            { url: '/v1/projects?forms=true&datasets=true' }
-          ]);
-      });
-
-      it('merges the config response with the defaults', () => {
-        const container = { config: false };
-        return load('/login', { container })
-          .restoreSession(false)
-          .respondWithData(() => ({
-            home: { title: 'Some Title' }
-          }))
-          .beforeAnyResponse(app => {
-            app.vm.$container.config.dataExists.should.be.false();
-          })
-          .afterResponses(app => {
-            app.vm.$container.config.data.should.containEql({
-              oidcEnabled: false,
-              home: { title: 'Some Title', body: null }
-            });
-          });
-      });
+    it('requests the config', () => {
+      // Using a role of 'none' in order to prevent some requests.
+      const user = testData.extendedUsers
+        .createPast(1, { role: 'none' })
+        .first();
+      const session = testData.sessions.createPast(1).last();
+      const container = { config: false };
+      return load('/', { container }, false)
+        .respondWithData(() => session)
+        .respondWithData(() => ({})) // config
+        .respondWithData(() => user)
+        .respondFor('/', { users: false })
+        .beforeAnyResponse(app => {
+          app.vm.$container.requestData.config.dataExists.should.be.false();
+        })
+        .testRequests([
+          { url: '/v1/sessions/restore' },
+          { url: '/client-config.json' },
+          { url: '/v1/users/current', extended: true },
+          { url: '/v1/projects?forms=true&datasets=true' }
+        ])
+        .afterResponses(app => {
+          const { config } = app.vm.$container.requestData;
+          config.data.should.containEql({ oidcEnabled: false });
+        });
     });
 
     describe('error loading config', () => {

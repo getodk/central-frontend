@@ -31,7 +31,11 @@ export default ({ i18n }, createResource) => {
 
   // Resources related to the system
   createResource('config', () => ({
-    transformResponse: ({ data }) => mergeDeepLeft(data, configDefaults)
+    // If client-config.json is completely invalid JSON, `data` seems to be a
+    // string (e.g., '{]').
+    transformResponse: ({ data }) => (typeof data === 'object' && data != null
+      ? mergeDeepLeft(data, configDefaults)
+      : configDefaults)
   }));
   createResource('centralVersion');
   createResource('analyticsConfig', noargs(setupOption));
