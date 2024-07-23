@@ -1,12 +1,16 @@
 import { xml } from '@getodk/common/test/factories/xml.ts';
 import { XFormsXPathEvaluator } from '@getodk/xpath';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
-import { resolveDependencyNodesets } from '../../../src/parse/xpath/dependency-analysis.ts';
+import {
+	resolveDependencyNodesets,
+	type PathResolutionOptions,
+} from '../../../src/parse/xpath/dependency-analysis.ts';
 
 describe('Dependency analysis', () => {
 	interface ResolveDependencyNodesetsCase {
 		readonly description: string;
 		readonly contextNodeset: string | null;
+		readonly ignoreReferenceToContextPath?: boolean;
 		readonly expression: string;
 		readonly expected: readonly string[];
 	}
@@ -373,9 +377,39 @@ describe('Dependency analysis', () => {
 			)`,
 			expected: ['/data/foo/bar', '/data/foo/bar/bat'],
 		},
-	])('$description', ({ contextNodeset, expression, expected }) => {
+
+		// Responsive to point 7 in
+		// https://github.com/getodk/web-forms/pull/166#issuecomment-2243849828
+		{
+			description:
+				'Resolved path expressions would reference context, but all are ignored by `ignoreReferenceToContextPath: true`. Note: there are three sub-expressions which would resolve to the same nodeset as `contextNodeset`; the empty result indicates option is consistent with set-like behavior',
+
+			contextNodeset: '/data/foo',
+			ignoreReferenceToContextPath: true,
+			expression: '. | current() | ../foo',
+			expected: [],
+		},
+
+		// Responsive to point 7 in
+		// https://github.com/getodk/web-forms/pull/166#issuecomment-2243849828
+		{
+			description:
+				'Resolved path expressions would reference context, **NOT IGNORED** (`ignoreReferenceToContextPath: false`). Note: there are three sub-expressions which resolve to the same nodeset as `contextNodeset`; the single result indicates option is consistent with set-like behavior',
+
+			contextNodeset: '/data/foo',
+			ignoreReferenceToContextPath: false,
+			expression: '. | current() | ../foo',
+			expected: ['/data/foo'],
+		},
+	])('$description', ({ contextNodeset, ignoreReferenceToContextPath, expression, expected }) => {
 		it(`resolves nodeset dependencies in expression ${JSON.stringify(expression)}, with context ${JSON.stringify(contextNodeset)}, producing nodesets: ${JSON.stringify(expected)}`, () => {
-			const actual = resolveDependencyNodesets(contextNodeset, expression);
+			let options: PathResolutionOptions | undefined;
+
+			if (ignoreReferenceToContextPath != null) {
+				options = { ignoreReferenceToContextPath };
+			}
+
+			const actual = resolveDependencyNodesets(contextNodeset, expression, options);
 
 			expect(actual).toEqual(expected);
 		});

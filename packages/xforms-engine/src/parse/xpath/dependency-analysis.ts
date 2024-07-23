@@ -7,7 +7,7 @@ import {
 import { findPredicateReferences } from './predicate-analysis.ts';
 import { findLocationPathSubExpressionNodes, getPathExpressionNode } from './semantic-analysis.ts';
 
-interface PathResolutionOptions {
+export interface PathResolutionOptions {
 	/**
 	 * Excludes direct references to the nodeset specified as a context. This flag
 	 * has earlier precedent as `ignoreContextReference` in similar internal APIs.
