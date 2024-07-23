@@ -594,6 +594,12 @@ describe('Dependency analysis', () => {
 		});
 
 		describe('4- How are we handling text()? I am thinking parent of the text node (i.e. the element node) should be added to the dependencies', () => {
+			// TODO! This is an enhancement opportunity. I did a timeboxed spike into
+			// a solution, but found it would require intrusive rework to prevent
+			// breaking at least one related edge case. This may be worth doing in the
+			// fullness of time, but it's a pretty unlikely case in practice (as are
+			// the several additional cases below, all included to capture the general
+			// set of expectations if we do prioritize this).
 			it.fails(
 				'should resolve the containing element as a dependency, when a path sub-expression would reference its non-element children',
 				() => {
@@ -606,6 +612,78 @@ describe('Dependency analysis', () => {
 					expect(actual).toEqual(expected);
 				}
 			);
+
+			const additionalCases: readonly ResolveDependencyNodesetsCase[] = [
+				{
+					description: 'text() is equivalent to child::text()',
+
+					contextNodeset: '/data/foo',
+					expression: 'text()',
+					expected: ['/data/foo'],
+				},
+				{
+					description:
+						'child::comment() or comment(), though unlikely in practice, also resolved to parent of that NodeTest',
+
+					contextNodeset: '/data/foo',
+					expression: 'bar/child::comment()',
+					expected: ['/data/foo/bar'],
+				},
+				{
+					description:
+						'child::processing-instruction() or processing-instruction(), though unlikely in practice, also resolved to parent of that NodeTest',
+
+					contextNodeset: '/data/foo',
+					expression: './bat/child::processing-instruction() + bat/processing-instruction()',
+					expected: ['/data/foo/bat'],
+				},
+				{
+					description:
+						'child::processing-instruction("name") or processing-instruction("name"), though unlikely in practice, also resolved to parent of that NodeTest',
+
+					contextNodeset: '/data/foo',
+					expression:
+						'/data/quux/child::processing-instruction("name") div ../quux/processing-instruction("name")',
+					expected: ['/data/quux'],
+				},
+			];
+
+			describe.each<ResolveDependencyNodesetsCase>(additionalCases)(
+				'$description',
+				({ contextNodeset, expression, expected }) => {
+					it.fails(
+						`resolves nodeset dependencies in expression ${JSON.stringify(expression)}, with context ${JSON.stringify(contextNodeset)}, producing nodesets: ${JSON.stringify(expected)}`,
+						() => {
+							const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+							expect(actual).toEqual(expected);
+						}
+					);
+				}
+			);
+
+			describe('child::node() may match an element, so it is not safe to omit', () => {
+				it('preserves Step with child::node() NodeTest', () => {
+					const contextNodeset = '/data/foo';
+					const expression = 'child::node()';
+					const expected = ['/data/foo/child::node()'];
+					const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+					expect(actual).toEqual(expected);
+				});
+
+				// This normalization could go either way, failing here just captures
+				// the expectation that we'd normalize equivalent NodeTest cases if/when
+				// we handle them more broadly.
+				it.fails('normalizes Step with node() NodeTest to child::node()', () => {
+					const contextNodeset = '/data/foo';
+					const expression = 'node()';
+					const expected = ['/data/foo/child::node()'];
+					const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+					expect(actual).toEqual(expected);
+				});
+			});
 		});
 
 		describe("5- Shouldn't this be an error? A text node can't have children, right?", () => {
