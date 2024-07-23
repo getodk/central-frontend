@@ -270,6 +270,38 @@ export const findLocationPathSubExpressionNodes = (
 	const baseResults = collectTypedNodes(pathExpressionTypes, syntaxNode);
 
 	return baseResults.flatMap((node) => {
+		// Note: `collectTypedNodes`, as called, is shallowly recursive. Our intent
+		// is to operate on complete path expressions, relying on downstream logic
+		// to determine if and how deeper recursion is appropriate.
+		//
+		// In this case, we treat paths beginning with a FilterExpr -> FunctionCall
+		// as a special case, where we also manually walk the FunctionCall's
+		// Arguments. The shallow search performed by `collectTypedNodes` is
+		// important here, ensuring we can target further recursion into this syntax
+		// case without applying the same logic to other parts of an identified path
+		// sub-expression (i.e. allowing specialized contextualization and analysis
+		// of Predicates downstream).
+		if (node.type === 'filter_path_expr' && isNodeSetFilterPathExpression(node)) {
+			const [filterExprNode] = node.children;
+			const [functionCallNode] = filterExprNode.children;
+
+			// This only satisfies the type checker. We could complicate
+			// `FilterPathNode` to eliminate it, but seems reasonable for now.
+			if (functionCallNode.type !== 'function_call') {
+				return node;
+			}
+
+			const [, ...argumentNodes] = functionCallNode.children;
+
+			argumentNodes satisfies readonly ArgumentNode[];
+
+			const argumentResults = argumentNodes.flatMap((argumentNode) => {
+				return findLocationPathSubExpressionNodes(argumentNode);
+			});
+
+			return [node, ...argumentResults];
+		}
+
 		if (isPathExpression(node)) {
 			return node;
 		}

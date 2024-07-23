@@ -184,7 +184,7 @@ describe('Dependency analysis', () => {
 
 			contextNodeset: null,
 			expression: 'foo("bar", /bat)/quux and zig()[zag]',
-			expected: ['foo("bar", /bat)/quux', 'zig()', 'zig()/zag'],
+			expected: ['foo("bar", /bat)/quux', '/bat', 'zig()', 'zig()/zag'],
 		},
 
 		{
@@ -545,18 +545,15 @@ describe('Dependency analysis', () => {
 		});
 
 		describe("2- I was assuming arguments to the functions would be added as dependencies and this would return '/bat' as well?", () => {
-			it.fails(
-				'resolves paths from an Argument to a FilterExpr at the start of another path',
-				() => {
-					const contextNodeset = null;
-					const expression = 'foo("bar", /bat)/quux and zig()[zag]';
-					const expected = ['foo("bar", /bat)/quux', '/bat', 'zig()', 'zig()/zag'];
+			it('resolves paths from an Argument to a FilterExpr at the start of another path', () => {
+				const contextNodeset = null;
+				const expression = 'foo("bar", /bat)/quux and zig()[zag]';
+				const expected = ['foo("bar", /bat)/quux', '/bat', 'zig()', 'zig()/zag'];
 
-					const actual = resolveDependencyNodesets(contextNodeset, expression);
+				const actual = resolveDependencyNodesets(contextNodeset, expression);
 
-					expect(actual).toEqual(expected);
-				}
-			);
+				expect(actual).toEqual(expected);
+			});
 		});
 
 		describe("3- Parent's sibling works when contextnode is absolute but not when it is relative", () => {
