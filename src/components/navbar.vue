@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </nav>
-    <analytics-introduction v-if="config.dataExists && config.showsAnalytics"
+    <analytics-introduction v-if="config.loaded && config.showsAnalytics"
       v-bind="analyticsIntroduction" @hide="analyticsIntroduction.hide()"/>
   </div>
 </template>
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     showsAnalyticsNotice() {
-      return this.visiblyLoggedIn && this.config.showsAnalytics &&
+      return this.config.loaded && this.config.showsAnalytics && this.visiblyLoggedIn &&
         this.canRoute('/system/analytics') && this.analyticsConfig.dataExists &&
         this.analyticsConfig.isEmpty() &&
         Date.now() - Date.parse(this.currentUser.createdAt) >= /* 14 days */ 1209600000;
