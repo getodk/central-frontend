@@ -1234,7 +1234,7 @@ describe('createCentralRouter()', () => {
           .respond(() => ({ status: 502 }))
           .testRequests([
             { url: '/v1/sessions/restore' },
-            { url: '/client-config.json' },
+            { url: '/client-config.json' }
           ]);
       });
 

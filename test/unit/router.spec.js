@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { F } from 'ramda';
 
 import { beforeNextNavigation, afterNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
 
@@ -94,17 +95,15 @@ describe('util/router', () => {
         });
     });
 
-    it('returns the return value of the callback to the router', () => {
-      const callback = sinon.fake.returns(false);
-      return load('/')
+    it('returns the return value of the callback to the router', () =>
+      load('/')
         .afterResponses(app => {
-          beforeNextNavigation(app.vm.$router, callback);
+          beforeNextNavigation(app.vm.$router, F);
         })
         .route('/users')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
-        });
-    });
+        }));
 
     it('does not run the callback after a later navigation', () => {
       const callback = sinon.fake();

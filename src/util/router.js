@@ -40,11 +40,8 @@ export const unlessFailure = (callback) => (to, from, failure) => {
 };
 
 export const beforeNextNavigation = (router, callback) => {
-  const removeGuard = router.beforeEach((to, from) => {
-    const result = callback(to, from);
-    removeGuard();
-    return result;
-  });
+  const removeGuard = router.beforeEach((to, from) =>
+    Promise.resolve(callback(to, from)).finally(removeGuard));
 };
 
 /*

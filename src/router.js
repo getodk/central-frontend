@@ -64,8 +64,8 @@ router.afterEach(unlessFailure(to => {
   // that is needed to render the app.
 
   beforeNextNavigation(router, async (to) => {
-    // Implements the restoreSession meta field. A test can skip this request by
-    // setting the session before the initial navigation.
+    // A test can skip this request by setting the session before the initial
+    // navigation.
     const needsLogin = to.meta.restoreSession && !session.dataExists;
     const sessionPromise = needsLogin
       ? restoreSession(session)
@@ -78,6 +78,12 @@ router.afterEach(unlessFailure(to => {
       : config.request({ url: '/client-config.json', alert: false })
         .catch(error => {
           config.data = { loadError: error };
+          /* If the request for the session is still in progress, it will be
+          canceled. We're about to redirect the user to /load-error, where we
+          won't need session data. If the request is already complete, we clear
+          `session`. If we didn't, then Frontend would attempt to log out before
+          the session expired. Note that without `config`, it's not possible to
+          complete login below. */
           session.reset();
         });
 
@@ -86,10 +92,12 @@ router.afterEach(unlessFailure(to => {
       ? loadLocale(container, locale)
       : Promise.resolve();
 
+    // Once the session and the config have been received, we can complete
+    // login.
     await Promise.allSettled([sessionPromise, configPromise]);
     if (needsLogin && session.dataExists) {
-      // If this is the first time that the session has been restored since
-      // the most recent OIDC login, set sessionExpires in local storage. If
+      // If this is the first time that the session has been restored since the
+      // most recent OIDC login, set sessionExpires in local storage. If
       // sessionExpires is already set (for example, if the previous session
       // expired), then it will be overwritten.
       const newSession = config.oidcEnabled &&
