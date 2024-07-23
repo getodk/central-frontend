@@ -91,6 +91,10 @@ describe('Semantic analysis', () => {
 				expression: '(foo | /bar) or if(false(), ./bat, //quux)',
 				expected: ['foo', '/bar', './bat', '//quux'],
 			},
+			{
+				expression: 'foo("bar", /bat)/quux',
+				expected: ['foo("bar", /bat)/quux', '/bat'],
+			},
 		])('finds $expected sub-expressions in expression $expression', ({ expression, expected }) => {
 			const { rootNode } = expressionParser.parse(expression);
 			const nodes = findLocationPathSubExpressionNodes(rootNode);
