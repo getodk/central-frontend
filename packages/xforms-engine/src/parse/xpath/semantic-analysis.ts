@@ -88,6 +88,10 @@ export type TranslationExpression = LocalNamedFunctionCallLiteral<'itext'>;
 /**
  * Determines if an arbitrary XPath expression is (in whole) a translation
  * expression (i.e. a call to `jr:itext`).
+ *
+ * @todo We may also want a companion function: `hasTranslationExpression`,
+ * which could be used for `<label ref>`/`<hint ref>` or anywhere else that an
+ * arbitrary expression may call `jr:itext`.
  */
 export const isTranslationExpression = (
 	expression: string

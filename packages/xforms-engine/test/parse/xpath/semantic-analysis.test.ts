@@ -52,6 +52,17 @@ describe('Semantic analysis', () => {
 					expression: 'other-prefix:itext("id")',
 					expected: true,
 				},
+
+				// From question 6 in https://github.com/getodk/web-forms/pull/166#issuecomment-2243849828
+				//
+				// The intent of this question is currently addressed in a `@todo`
+				// added to the `isTranslationExpression` JSDoc, in this same commit.
+				{
+					description:
+						'as the name is meant to suggest, `isTranslationExpression` is a check for whether the complete expression is a translation expression; this is important to distinguish such expressions from arbitrary text in `jr:constraintMsg`/`jr:requiredMsg`',
+					expression: '/foo[jr:itext("id") = 1]',
+					expected: false,
+				},
 			])(
 				'determines that an expression is a translation - $expression = $expected ($description)',
 				({ expression, expected }) => {
