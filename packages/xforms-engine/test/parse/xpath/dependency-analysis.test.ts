@@ -1,15 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { xml } from '@getodk/common/test/factories/xml.ts';
+import { XFormsXPathEvaluator } from '@getodk/xpath';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { resolveDependencyNodesets } from '../../../src/parse/xpath/dependency-analysis.ts';
 
 describe('Dependency analysis', () => {
-	interface FindDependencyNodesetsCase {
+	interface ResolveDependencyNodesetsCase {
+		readonly description: string;
 		readonly contextNodeset: string | null;
 		readonly expression: string;
 		readonly expected: readonly string[];
-		readonly description: string;
 	}
 
-	describe.each<FindDependencyNodesetsCase>([
+	describe.each<ResolveDependencyNodesetsCase>([
 		{
 			description:
 				'No context; absolute paths in expression; extracted and returned as-is, already resolved',
@@ -376,6 +378,242 @@ describe('Dependency analysis', () => {
 			const actual = resolveDependencyNodesets(contextNodeset, expression);
 
 			expect(actual).toEqual(expected);
+		});
+	});
+
+	// These questions are taken from the linked PR comment. Some of the question
+	// text has been lightly edited to clarify intent.
+	describe('Questions from https://github.com/getodk/web-forms/pull/166#issuecomment-2243849828', () => {
+		interface ExplainedCase extends ResolveDependencyNodesetsCase {
+			readonly explanation: string;
+		}
+
+		describe("1- Why are the following two different? If contextNodeset is relative, shouldn't current() to resolve as relative nodeset. (From comment in example: shouldn't ['whatever'] be '/data/whatever'??)", () => {
+			const cases: readonly ExplainedCase[] = [
+				{
+					description: 'relative context; current() reference',
+					explanation:
+						'current() is a reference to the context itself; results are contextualized to context, but the inverse is not the case',
+
+					contextNodeset: 'whatever',
+					expression: '/data[current() = 1]/bar',
+					expected: [
+						'/data/bar',
+						'whatever', // shouldn't this be '/data/whatever'??
+					],
+				},
+				{
+					description: 'any context; predicate reference',
+					explanation:
+						'context is not pertinent here, reference in the Predicate is relative to the path Step where the Predicate occurs (and contextualized to it)',
+
+					contextNodeset: 'whatever',
+					expression: '/data[whatever = 1]/bar',
+					expected: ['/data/bar', '/data/whatever'],
+				},
+			];
+
+			describe.each(cases)(
+				'$description',
+				({ contextNodeset, explanation, expression, expected }) => {
+					describe(explanation, () => {
+						it(`resolves nodeset dependencies in expression ${JSON.stringify(expression)}, with context ${JSON.stringify(contextNodeset)}, producing nodesets: ${JSON.stringify(expected)}`, () => {
+							const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+							expect(actual).toEqual(expected);
+						});
+					});
+				}
+			);
+
+			describe('evaluation examples', () => {
+				let fixture: XMLDocument;
+				let evaluator: XFormsXPathEvaluator;
+				let dataBarTarget: Element;
+				let dataWhateverContext: Element;
+				let dataFooWhateverContext: Element;
+
+				beforeEach(() => {
+					fixture = xml/* xml */ `
+						<data>
+							<foo>
+								<whatever>2</whatever>
+							</foo>
+							<whatever>1</whatever>
+							<bar>bar</bar>
+						</data>
+					`;
+
+					evaluator = new XFormsXPathEvaluator({
+						rootNode: fixture,
+					});
+
+					const dataBar = fixture.querySelector('bar');
+
+					assert(dataBar != null);
+
+					dataBarTarget = dataBar;
+
+					const [dataFooWhatever, dataWhatever] = fixture.querySelectorAll('whatever');
+
+					assert(dataFooWhatever);
+					assert(dataWhatever);
+
+					dataFooWhateverContext = dataFooWhatever;
+					dataWhateverContext = dataWhatever;
+				});
+
+				it('evaluates with `current()` as a reference to the context node itself (where context is /data/whatever, value equal to 1)', () => {
+					const evaluationOptions = { contextNode: dataWhateverContext };
+
+					const currentEq1 = evaluator.evaluateBoolean('current() = 1', evaluationOptions);
+
+					expect(currentEq1).toBe(true);
+
+					const currentResult = evaluator.evaluateNode(
+						'/data[current() = 1]/bar',
+						evaluationOptions
+					);
+
+					expect(currentResult).toBe(dataBarTarget);
+				});
+
+				it('evaluates with `current()` as a reference to the context node itself (where context /data/foo/whatever, value equal to 2)', () => {
+					const evaluationOptions = { contextNode: dataFooWhateverContext };
+
+					const currentEq1 = evaluator.evaluateBoolean('current() = 1', evaluationOptions);
+
+					expect(currentEq1).toBe(false);
+
+					const currentResult = evaluator.evaluateNode(
+						'/data[current() = 1]/bar',
+						evaluationOptions
+					);
+
+					expect(currentResult).toBeNull();
+				});
+
+				it('evaluates Predicate NameTest relative to step (context is <whatever>2</whatever>, but `whatever` does not reference the context, it references /data/bar)', () => {
+					const evaluationOptions = { contextNode: dataFooWhateverContext };
+
+					const currentEq1 = evaluator.evaluateBoolean('current() = 1', evaluationOptions);
+
+					expect(currentEq1).toBe(false);
+
+					const currentResult = evaluator.evaluateNode(
+						'/data[whatever = 1]/bar',
+						evaluationOptions
+					);
+
+					expect(currentResult).toBe(dataBarTarget);
+				});
+			});
+		});
+
+		describe("2- I was assuming arguments to the functions would be added as dependencies and this would return '/bat' as well?", () => {
+			it.fails(
+				'resolves paths from an Argument to a FilterExpr at the start of another path',
+				() => {
+					const contextNodeset = null;
+					const expression = 'foo("bar", /bat)/quux and zig()[zag]';
+					const expected = ['foo("bar", /bat)/quux', '/bat', 'zig()', 'zig()/zag'];
+
+					const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+					expect(actual).toEqual(expected);
+				}
+			);
+		});
+
+		describe("3- Parent's sibling works when contextnode is absolute but not when it is relative", () => {
+			const cases: readonly ExplainedCase[] = [
+				{
+					description:
+						"Relative context, sibling path in expression (review feedback expected resolving 'bar' rather than 'foo/../bar'",
+					explanation:
+						'Context does not provide enough information to fully resolve expression. Intent of this partial resolution is that it may be resolved downstream, which may provide further (hopefully, eventually, absolute) context which can then fully resolve the still-relative dependencies. This may require some followup work to revisit those still-relative dependencies, but the logic is in place to progressively resolve context paths as form parsing progresses. In theory, this is probably safe to resolve further because the result would preserve the hierarchical implications, but it feels safer now to start with this more conservative incomplete result.',
+
+					contextNodeset: 'foo',
+					expression: '../bar',
+					expected: ['foo/../bar'],
+				},
+				{
+					description: 'Absolute context, sibling path in expression',
+					explanation:
+						'Context provides enough information to fully resolve the sibling path sub-expression, so it is fully resolved.',
+
+					contextNodeset: '/foo',
+					expression: '../bar',
+					expected: ['/bar'],
+				},
+			];
+
+			describe.each(cases)(
+				'$description',
+				({ contextNodeset, explanation, expression, expected }) => {
+					describe(explanation, () => {
+						it(`resolves nodeset dependencies in expression ${JSON.stringify(expression)}, with context ${JSON.stringify(contextNodeset)}, producing nodesets: ${JSON.stringify(expected)}`, () => {
+							const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+							expect(actual).toEqual(expected);
+						});
+					});
+				}
+			);
+		});
+
+		describe('4- How are we handling text()? I am thinking parent of the text node (i.e. the element node) should be added to the dependencies', () => {
+			it.fails(
+				'should resolve the containing element as a dependency, when a path sub-expression would reference its non-element children',
+				() => {
+					const contextNodeset = '/data/foo';
+					const expression = 'child::text()';
+					const expected = ['/data/foo'];
+
+					const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+					expect(actual).toEqual(expected);
+				}
+			);
+		});
+
+		describe("5- Shouldn't this be an error? A text node can't have children, right?", () => {
+			const cases: readonly ExplainedCase[] = [
+				{
+					description:
+						'Context terminates at a NodeTest for a text node, expression is a relative child NodeTest',
+
+					explanation: `
+This is subjective! The intent of the functionality under test is focused on applying a subset of known XPath semantics _at the syntactic level_.
+
+Responding directly to the question: it's true that the resulting expression cannot ever reach a node. It represents a structure that isn't possible to create with the underlying XML semantics. However, the result correctly represents the traversal that would be performed by evaluating the specified \`expression\` with a context node matching the specified \`contextNodeset\`.
+
+Importantly:
+
+1. The result **is syntactically valid**.
+2. Evaluation will simply produce an empty node-set.
+
+In theory, it could definitely make sense to produce a warning to at least some users (when we have the functionality to support that). If we do that, I would expect warning to happen somewhere downstream from here. Although that could suggest a result structure that carries more information than the resolved expression serialized as a string, e.g. to capture any observation of the nonsensical structure during analysis and then have consuming code capable of warning based on that information.
+`.trim(),
+
+					contextNodeset: '/data/child::text()',
+					expression: 'child::node()',
+					expected: ['/data/child::text()/child::node()'],
+				},
+			];
+
+			describe.each(cases)(
+				'$description',
+				({ contextNodeset, explanation, expression, expected }) => {
+					describe(explanation, () => {
+						it(`resolves nodeset dependencies in expression ${JSON.stringify(expression)}, with context ${JSON.stringify(contextNodeset)}, producing nodesets: ${JSON.stringify(expected)}`, () => {
+							const actual = resolveDependencyNodesets(contextNodeset, expression);
+
+							expect(actual).toEqual(expected);
+						});
+					});
+				}
+			);
 		});
 	});
 
