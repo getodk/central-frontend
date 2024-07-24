@@ -221,7 +221,7 @@ const routes = [
       requireAnonymity: true,
       title: () => [i18n.t('common.error')]
     },
-    beforeEnter: () => (config.loadError == null ? '/' : true)
+    beforeEnter: () => (config.loadError == null ? '/login' : true)
   }),
 
   {
@@ -699,7 +699,7 @@ const routes = [
           ],
           fullWidth: true
         },
-        beforeEnter: () => (!config.showsAnalytics ? '/404' : true)
+        beforeEnter: () => (config.showsAnalytics ? true : '/404')
       })
     ]
   }),

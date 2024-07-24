@@ -7,6 +7,9 @@ import { testRequestData } from './request-data';
 /*
 createTestContainer() creates a container with sensible defaults for testing.
 
+- Most tests don't involve a navigation, so by default, the container does not
+  include a router. To create a container with a router, use mockRouter() or
+  testRouter() with the `router` option.
 - You can use the requestData option to set up the requestData object. Pass an
   object to specify initial data; the object will be passed to setRequestData().
   To set up local resources, pass in the result from testRequestData().

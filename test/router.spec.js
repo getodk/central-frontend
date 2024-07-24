@@ -1168,11 +1168,11 @@ describe('createCentralRouter()', () => {
   });
 
   describe('title meta field - logged out', () => {
-    it('shows correct title for /load-error', () => {
+    it('shows static title for /load-error', () => {
       const container = { config: false };
       return load('/login', { container })
         .restoreSession(false)
-        .respond(() => ({ status: 502 }))
+        .respond(() => ({ status: 502 })) // config
         .afterResponses(() => {
           document.title.should.equal('Error | ODK Central');
         });

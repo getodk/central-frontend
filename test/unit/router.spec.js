@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { F } from 'ramda';
 
-import { beforeNextNavigation, afterNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
+import { afterNextNavigation, beforeNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
@@ -80,7 +80,7 @@ describe('util/router', () => {
   describe('beforeNextNavigation()', () => {
     beforeEach(mockLogin);
 
-    it('runs the callback before the next navigation', () => {
+    it('runs the callback during the next navigation', () => {
       const callback = sinon.fake();
       return load('/')
         .afterResponses(app => {
@@ -105,7 +105,7 @@ describe('util/router', () => {
           app.vm.$route.path.should.equal('/');
         }));
 
-    it('does not run the callback after a later navigation', () => {
+    it('does not run the callback during a later navigation', () => {
       const callback = sinon.fake();
       return load('/')
         .afterResponses(app => {
