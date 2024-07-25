@@ -5,6 +5,7 @@ import {
 	serializeNodesetReference,
 } from './path-resolution.ts';
 import { findPredicateReferences } from './predicate-analysis.ts';
+import type { PathExpressionNode } from './semantic-analysis.ts';
 import { findLocationPathSubExpressionNodes, getPathExpressionNode } from './semantic-analysis.ts';
 
 export interface PathResolutionOptions {
@@ -61,7 +62,12 @@ export const resolveDependencyNodesets = (
 		...options,
 	};
 
-	const contextNode = getPathExpressionNode(contextNodeset ?? '"not a path, null fallback"');
+	let contextNode: PathExpressionNode | null = null;
+
+	if (contextNodeset != null) {
+		contextNode = getPathExpressionNode(contextNodeset);
+	}
+
 	const expressionRootNode = expressionParser.parse(expression).rootNode;
 	const subExpressions = findLocationPathSubExpressionNodes(expressionRootNode);
 
