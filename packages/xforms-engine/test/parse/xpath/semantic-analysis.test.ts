@@ -31,9 +31,9 @@ describe('Semantic analysis', () => {
 					expected: true,
 				},
 				{
-					description: 'unexpected Number argument',
+					description: 'Number argument; this counts because it will be cast to string',
 					expression: 'jr:itext(1)',
-					expected: false,
+					expected: true,
 				},
 				{
 					description: 'FuntionName references another function',
@@ -62,6 +62,12 @@ describe('Semantic analysis', () => {
 						'as the name is meant to suggest, `isTranslationExpression` is a check for whether the complete expression is a translation expression; this is important to distinguish such expressions from arbitrary text in `jr:constraintMsg`/`jr:requiredMsg`',
 					expression: '/foo[jr:itext("id") = 1]',
 					expected: false,
+				},
+
+				{
+					description: 'argument is a string',
+					expression: 'jr:itext(string(1))',
+					expected: true,
 				},
 			])(
 				'determines that an expression is a translation - $expression = $expected ($description)',

@@ -48,11 +48,14 @@ const isCallToLocalNamedFunction = <LocalName extends string>(
 	return localNameNode?.text === localName;
 };
 
-type ArgumentTypes = readonly [AnySyntaxType, ...AnySyntaxType[]];
+const ANY_ARGUMENT_TYPE = Symbol('ANY_ARGUMENT_TYPE');
+type AnyArgumentType = typeof ANY_ARGUMENT_TYPE;
+
+type ArgumentFilter = AnyArgumentType | readonly [AnySyntaxType, ...AnySyntaxType[]];
 
 const hasCallSignature = (
 	syntaxNode: FunctionCallNode,
-	expected: readonly ArgumentTypes[]
+	expected: readonly ArgumentFilter[]
 ): boolean => {
 	const [, ...argumentNodes] = syntaxNode.children;
 
@@ -64,14 +67,18 @@ const hasCallSignature = (
 		return false;
 	}
 
-	return expected.every((types, i) => {
+	return expected.every((filter, i) => {
 		const argumentNode = argumentNodes[i];
 
 		if (argumentNode == null) {
 			return false;
 		}
 
-		const [firstMatch] = collectTypedNodes(types, argumentNode);
+		if (filter === ANY_ARGUMENT_TYPE) {
+			return true;
+		}
+
+		const [firstMatch] = collectTypedNodes(filter, argumentNode);
 
 		return firstMatch != null && isCompleteSubExpression(argumentNode, firstMatch);
 	});
@@ -81,7 +88,12 @@ const isTranslationFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
 	return (
 		isCallToLocalNamedFunction(syntaxNode, 'itext') &&
 		hasCallSignature(syntaxNode, [
-			['string_literal', 'absolute_location_path', 'relative_location_path'],
+			// We don't need to check the argument type here, just its presence. We'd
+			// originally checked for arguments we presume could produce a string.
+			// Giving it a little more thought, it was clear that applies to any
+			// conceivable argument, because anything can be cast to a string in XPath
+			// semantics.
+			ANY_ARGUMENT_TYPE,
 		])
 	);
 };
