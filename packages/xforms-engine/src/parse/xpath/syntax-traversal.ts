@@ -117,7 +117,7 @@ export const findTypedPrincipalExpressionNode = <const Type extends AnySyntaxTyp
 ): TypedSyntaxNode<Type> | null => {
 	const [first, ...rest] = collectTypedNodes(types, xpathNode);
 
-	if (first == null || rest.length > 1) {
+	if (first == null || rest.length > 0) {
 		return null;
 	}
 
