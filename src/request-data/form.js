@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import { watchSyncEffect } from 'vue';
 
-import { transformForms } from './util';
+import { computeIfExists, transformForms } from './util';
 import { useRequestData } from './index';
 
 export default () => {
@@ -20,15 +20,20 @@ export default () => {
     transformResponse: transformForms
   }));
   const formVersionXml = createResource('formVersionXml');
-  const publicLinks = createResource('publicLinks');
+  const publicLinks = createResource('publicLinks', () => ({
+    activeCount: computeIfExists(() => publicLinks.reduce(
+      (count, { token }) => count + (token != null ? 1 : 0),
+      0
+    ))
+  }));
   const formDraftDatasetDiff = createResource('formDraftDatasetDiff');
   const formDatasetDiff = createResource('formDatasetDiff');
   const publishedAttachments = createResource('publishedAttachments'); // Published Form attachments
 
   watchSyncEffect(() => {
     if (form.dataExists && publicLinks.dataExists &&
-      form.publicLinks !== publicLinks.length)
-      form.publicLinks = publicLinks.length;
+      form.publicLinks !== publicLinks.activeCount)
+      form.publicLinks = publicLinks.activeCount;
   });
 
   return {

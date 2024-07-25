@@ -126,7 +126,7 @@ describe('FormHead', () => {
       findTab(app, 'Submissions').get('.badge').text().should.equal('1,000');
     });
 
-    it('shows the count of public links', async () => {
+    it('shows the number of active public links', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { publicLinks: 1000 });
       const app = await load('/projects/1/forms/f');
