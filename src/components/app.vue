@@ -73,7 +73,8 @@ export default {
       return this.$route !== START_LOCATION;
     },
     showsFeedbackButton() {
-      return this.config.showsFeedbackButton && this.visiblyLoggedIn;
+      return this.config.loaded && this.config.showsFeedbackButton &&
+        this.visiblyLoggedIn;
     },
   },
   created() {

@@ -53,8 +53,15 @@ export function testRequests(expectedConfigs) {
       }
     })
     .afterResponses(() => {
-      if (count !== expectedConfigs.length)
-        throw new Error('unexpected number of requests');
+      if (count !== expectedConfigs.length) {
+        const messageActual = count === 1
+          ? '1 request was sent'
+          : `${count} requests were sent`;
+        const messageExpected = expectedConfigs.length === 1
+          ? '1 was expected'
+          : `${expectedConfigs.length} were expected`;
+        throw new Error(`${messageActual}, but ${messageExpected}`);
+      }
     });
 }
 

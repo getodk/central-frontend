@@ -9,8 +9,10 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { reactive, shallowReactive, watchSyncEffect } from 'vue';
+import { computed, reactive, shallowReactive, watchSyncEffect } from 'vue';
+import { mergeDeepLeft } from 'ramda';
 
+import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
 
@@ -28,6 +30,14 @@ export default ({ i18n }, createResource) => {
   }));
 
   // Resources related to the system
+  createResource('config', (config) => ({
+    // If client-config.json is completely invalid JSON, `data` seems to be a
+    // string (e.g., '{]').
+    transformResponse: ({ data }) => (typeof data === 'object' && data != null
+      ? mergeDeepLeft(data, configDefaults)
+      : configDefaults),
+    loaded: computed(() => config.dataExists && config.loadError == null)
+  }));
   createResource('centralVersion');
   createResource('analyticsConfig', noargs(setupOption));
   createResource('roles', (roles) => ({

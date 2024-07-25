@@ -55,6 +55,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-audit-list" */
     '../components/audit/list.vue'
   )))
+  .set('ConfigError', loader(() => import(
+    /* webpackChunkName: "component-config-error" */
+    '../components/config-error.vue'
+  )))
   .set('DatasetList', loader(() => import(
     /* webpackChunkName: "component-dataset-list" */
     '../components/dataset/list.vue'

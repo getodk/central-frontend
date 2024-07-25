@@ -39,6 +39,11 @@ export const unlessFailure = (callback) => (to, from, failure) => {
   if (failure == null) callback(to, from);
 };
 
+export const beforeNextNavigation = (router, callback) => {
+  const removeGuard = router.beforeEach((to, from) =>
+    Promise.resolve(callback(to, from)).finally(removeGuard));
+};
+
 /*
 afterNextNavigation() provides a way to run a callback after a navigation has
 been confirmed but before the next DOM update. That is mostly only needed when

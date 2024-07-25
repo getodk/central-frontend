@@ -1412,6 +1412,15 @@
         }
       }
     },
+    "ConfigError": {
+      "title": {
+        "string": "Error Loading Central",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": "There was an error loading Central."
+      }
+    },
     "DatasetEntities": {
       "alert": {
         "upload": {

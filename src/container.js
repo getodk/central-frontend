@@ -17,7 +17,6 @@ import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createUnsavedChanges from './unsaved-changes';
-import defaultConfig from './config';
 import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
 import { noop } from './util/util';
@@ -43,7 +42,6 @@ export default ({
   requestData = createRequestData,
   alert = createAlert(),
   unsavedChanges = createUnsavedChanges(i18n.global),
-  config = defaultConfig,
   http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
   logger = console
@@ -53,11 +51,11 @@ export default ({
     i18n: i18n.global,
     alert,
     unsavedChanges,
-    config,
     http,
     logger
   };
   container.requestData = requestData(container);
+  container.config = container.requestData.config;
   if (router != null) container.router = router(container);
   container.install = (app) => {
     // Register <i18n-t>, since we specify `false` for the fullInstall option of
