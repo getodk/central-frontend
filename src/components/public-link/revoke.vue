@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
@@ -40,30 +40,22 @@ import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
-export default {
-  name: 'PublicLinkRevoke',
-  components: { Modal, Spinner },
-  props: {
-    state: Boolean,
-    publicLink: Object
-  },
-  emits: ['hide', 'success'],
-  setup() {
-    const { request, awaitingResponse } = useRequest();
-    return { request, awaitingResponse };
-  },
-  methods: {
-    revoke() {
-      this.request({
-        method: 'DELETE',
-        url: apiPaths.session(this.publicLink.token)
-      })
-        .then(() => {
-          this.$emit('success', this.publicLink);
-        })
-        .catch(noop);
-    }
-  }
+defineOptions({
+  name: 'PublicLinkRevoke'
+});
+const props = defineProps({
+  state: Boolean,
+  publicLink: Object
+});
+const emit = defineEmits(['hide', 'success']);
+
+const { request, awaitingResponse } = useRequest();
+const revoke = () => {
+  request({ method: 'DELETE', url: apiPaths.session(props.publicLink.token) })
+    .then(() => {
+      emit('success', props.publicLink);
+    })
+    .catch(noop);
 };
 </script>
 
