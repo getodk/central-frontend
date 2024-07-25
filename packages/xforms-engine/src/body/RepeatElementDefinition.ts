@@ -1,6 +1,7 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import { LabelDefinition } from '../parse/text/LabelDefinition.ts';
+import { parseNodesetReference } from '../parse/xpath/reference-parsing.ts';
 import type { BodyElementDefinitionArray, BodyElementParentContext } from './BodyDefinition.ts';
 import { BodyDefinition } from './BodyDefinition.ts';
 import { BodyElementDefinition } from './BodyElementDefinition.ts';
@@ -31,7 +32,7 @@ export class RepeatElementDefinition extends BodyElementDefinition<'repeat'> {
 
 		this.label = LabelDefinition.forRepeatGroup(form, this);
 
-		const reference = element.getAttribute('nodeset');
+		const reference = parseNodesetReference(parent, element, 'nodeset');
 
 		if (reference == null) {
 			throw new Error('Invalid repeat: missing `nodeset` reference');

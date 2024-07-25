@@ -642,10 +642,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			});
 		});
 
-		interface SubstituteAbsoluteBodyReferencesOptions {
-			readonly substituteAbsoluteBodyReferences: boolean;
-		}
-
 		describe('//region Deleting repeats', () => {
 			// JR: deleteSecondRepeatGroup_*
 			describe('deleting second repeat instance', () => {
@@ -671,83 +667,54 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *   deviation from JavaRosa, where we're being more strict and Java is
 				 *   nullable-by-default).
 				 */
-				describe.each<SubstituteAbsoluteBodyReferencesOptions>([
-					{ substituteAbsoluteBodyReferences: false },
-					{ substituteAbsoluteBodyReferences: true },
-				])(
-					'substitute absolute body references: $substituteAbsoluteBodyReferences',
-					({ substituteAbsoluteBodyReferences }) => {
-						let testFn: typeof it | typeof it.fails;
+				// JR: ..._evaluatesTriggerables_dependentOnPrecedingRepeatGroupSiblings
+				it('evalutes computations dependent on preceding repeat instance siblings', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(t('data id="some-form"', t('house jr:template=""', t('number')))),
+									bind('/data/house/number').type('int').calculate('position(..)')
+								)
+							),
+							body(group('/data/house', repeat('/data/house', input('number'))))
+						)
+					); /* .onDagEvent(dagEvents::add) */
 
-						if (substituteAbsoluteBodyReferences) {
-							testFn = it;
-						} else {
-							testFn = it.fails;
-						}
+					range(1, 6).forEach((n) => {
+						scenario.next('/data/house');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/house',
+						});
+						scenario.next('/data/house[' + n + ']/number');
+					});
 
-						// JR: ..._evaluatesTriggerables_dependentOnPrecedingRepeatGroupSiblings
-						testFn(
-							'evalutes computations dependent on preceding repeat instance siblings',
-							async () => {
-								const scenario = await Scenario.init(
-									'Some form',
-									html(
-										head(
-											title('Some form'),
-											model(
-												mainInstance(
-													t('data id="some-form"', t('house jr:template=""', t('number')))
-												),
-												bind('/data/house/number').type('int').calculate('position(..)')
-											)
-										),
-										body(
-											group(
-												'/data/house',
-												repeat(
-													'/data/house',
-													input(substituteAbsoluteBodyReferences ? '/data/house/number' : 'number')
-												)
-											)
-										)
-									)
-								); /* .onDagEvent(dagEvents::add) */
+					expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
+					expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
+					expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
+					expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
+					expect(scenario.answerOf('/data/house[5]/number')).toEqualAnswer(intAnswer(5));
 
-								range(1, 6).forEach((n) => {
-									scenario.next('/data/house');
-									scenario.createNewRepeat({
-										assertCurrentReference: '/data/house',
-									});
-									scenario.next('/data/house[' + n + ']/number');
-								});
+					// Start recording DAG events now
+					// dagEvents.clear();
 
-								expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
-								expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
-								expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
-								expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
-								expect(scenario.answerOf('/data/house[5]/number')).toEqualAnswer(intAnswer(5));
+					scenario.removeRepeat('/data/house[2]');
 
-								// Start recording DAG events now
-								// dagEvents.clear();
+					expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
+					expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
+					expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
+					expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
 
-								scenario.removeRepeat('/data/house[2]');
+					// assertThat(scenario.answerOf("/data/house[5]/number"), is(nullValue()));
+					expect(scenario.indexOf('/data/house[5]/number')).toBeNull();
 
-								expect(scenario.answerOf('/data/house[1]/number')).toEqualAnswer(intAnswer(1));
-								expect(scenario.answerOf('/data/house[2]/number')).toEqualAnswer(intAnswer(2));
-								expect(scenario.answerOf('/data/house[3]/number')).toEqualAnswer(intAnswer(3));
-								expect(scenario.answerOf('/data/house[4]/number')).toEqualAnswer(intAnswer(4));
-
-								// assertThat(scenario.answerOf("/data/house[5]/number"), is(nullValue()));
-								expect(scenario.indexOf('/data/house[5]/number')).toBeNull();
-
-								// assertDagEvents(dagEvents,
-								//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0)",
-								//     "Processing 'Deleted: number [2_1]: 1 triggerables were fired.' for "
-								// );
-							}
-						);
-					}
-				);
+					// assertDagEvents(dagEvents,
+					//     "Processing 'Recalculate' for number [1_1] (1.0), number [2_1] (2.0), number [3_1] (3.0), number [4_1] (4.0)",
+					//     "Processing 'Deleted: number [2_1]: 1 triggerables were fired.' for "
+					// );
+				});
 
 				/**
 				 * **PORTING NOTES**
@@ -931,80 +898,41 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - Another failure caused by relative body reference, again
-				 *   parameterized to accommodate that.
-				 *
-				 * - Fails even when accounting for the relative body reference.
-				 *   Recomputation occurs, but produces invalid value (52 instead of
-				 *   45). Apparently the recomputation accounts for the removed repeat's
-				 *   number, but does not update the sum when the numbers in all of the
-				 *   following repeat instances are updated to account for their new
-				 *   position (which does work, so this appears to be an issue of
-				 *   ordering and reactive subscription mismatch).
-				 *
-				 * - `range(0, ...)` and asserting `n + 1` position felt awkard.
-				 *   Updated to `range(1, ...)` per PR feedback.
+				 * `range(0, ...)` and asserting `n + 1` position felt awkard.
+				 * Updated to `range(1, ...)` per PR feedback.
 				 */
-				describe.each<SubstituteAbsoluteBodyReferencesOptions>([
-					{ substituteAbsoluteBodyReferences: false },
-					{ substituteAbsoluteBodyReferences: true },
-				])(
-					'substitute absolute body references: $substituteAbsoluteBodyReferences',
-					({ substituteAbsoluteBodyReferences }) => {
-						let testFn: typeof it | typeof it.fails;
-
-						if (substituteAbsoluteBodyReferences) {
-							testFn = it;
-						} else {
-							testFn = it.fails;
-						}
-
-						testFn("evaluates triggerables dependent on the repeat group's number", async () => {
-							const scenario = await Scenario.init(
-								'Some form',
-								html(
-									head(
-										title('Some form'),
-										model(
-											mainInstance(
-												t(
-													'data id="some-form"',
-													t('house jr:template=""', t('number')),
-													t('summary')
-												)
-											),
-											bind('/data/house/number').type('int').calculate('position(..)'),
-											bind('/data/summary').type('int').calculate('sum(/data/house/number)')
-										)
+				it("evaluates triggerables dependent on the repeat group's number", async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t('data id="some-form"', t('house jr:template=""', t('number')), t('summary'))
 									),
-									body(
-										group(
-											'/data/house',
-											repeat(
-												'/data/house',
-												input(substituteAbsoluteBodyReferences ? '/data/house/number' : 'number')
-											)
-										)
-									)
+									bind('/data/house/number').type('int').calculate('position(..)'),
+									bind('/data/summary').type('int').calculate('sum(/data/house/number)')
 								)
-							);
+							),
+							body(group('/data/house', repeat('/data/house', input('number'))))
+						)
+					);
 
-							range(1, 11).forEach((n) => {
-								scenario.next('/data/house');
-								scenario.createNewRepeat({
-									assertCurrentReference: '/data/house',
-								});
-								scenario.next('/data/house[' + n + ']/number');
-							});
-
-							expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(55));
-
-							scenario.removeRepeat('/data/house[3]');
-
-							expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(45));
+					range(1, 11).forEach((n) => {
+						scenario.next('/data/house');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/house',
 						});
-					}
-				);
+						scenario.next('/data/house[' + n + ']/number');
+					});
+
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(55));
+
+					scenario.removeRepeat('/data/house[3]');
+
+					expect(scenario.answerOf('/data/summary')).toEqualAnswer(intAnswer(45));
+				});
 			});
 
 			describe('repeat instance deletion', () => {
@@ -1070,78 +998,50 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *
 				 * - Also a "dag events" implementation detail test
 				 *
-				 * - **Not skipped** because it has a different form fixture shape, and
-				 *   again demonstrates the failure caused by relative body reference.
+				 * - **Not skipped** because it has a different form fixture shape
 				 */
-				describe.each<SubstituteAbsoluteBodyReferencesOptions>([
-					{ substituteAbsoluteBodyReferences: false },
-					{ substituteAbsoluteBodyReferences: true },
-				])(
-					'substitute absolute body references: $substituteAbsoluteBodyReferences',
-					({ substituteAbsoluteBodyReferences }) => {
-						let testFn: typeof it | typeof it.fails;
-
-						if (substituteAbsoluteBodyReferences) {
-							testFn = it;
-						} else {
-							testFn = it.fails;
-						}
-
-						testFn(
-							'repeatInstanceDeletion_withoutReferencesToRepeat_evaluatesNoTriggersInInstances',
-							async () => {
-								const scenario = await Scenario.init(
-									'Some form',
-									html(
-										head(
-											title('Some form'),
-											model(
-												mainInstance(
-													t(
-														'data id="some-form"',
-														t('repeat jr:template=""', t('number'), t('numberx2'), t('calc'))
-													)
-												),
-												bind('/data/repeat/number').type('int'),
-												bind('/data/repeat/numberx2').type('int').calculate('../number * 2'),
-												bind('/data/repeat/calc').type('int').calculate('2 * random()')
-											)
-										),
-										body(
-											group(
-												'/data/repeat',
-												repeat(
-													'/data/repeat',
-													input(substituteAbsoluteBodyReferences ? '/data/repeat/number' : 'number')
-												)
-											)
+				it('repeatInstanceDeletion_withoutReferencesToRepeat_evaluatesNoTriggersInInstances', async () => {
+					const scenario = await Scenario.init(
+						'Some form',
+						html(
+							head(
+								title('Some form'),
+								model(
+									mainInstance(
+										t(
+											'data id="some-form"',
+											t('repeat jr:template=""', t('number'), t('numberx2'), t('calc'))
 										)
-									)
-								); /* .onDagEvent(dagEvents::add) */
+									),
+									bind('/data/repeat/number').type('int'),
+									bind('/data/repeat/numberx2').type('int').calculate('../number * 2'),
+									bind('/data/repeat/calc').type('int').calculate('2 * random()')
+								)
+							),
+							body(group('/data/repeat', repeat('/data/repeat', input('number'))))
+						)
+					); /* .onDagEvent(dagEvents::add) */
 
-								range(1, 11).forEach((n) => {
-									scenario.next('/data/repeat');
-									scenario.createNewRepeat({
-										assertCurrentReference: '/data/repeat',
-									});
-									scenario.next('/data/repeat[' + n + ']/number');
-								});
+					range(1, 11).forEach((n) => {
+						scenario.next('/data/repeat');
+						scenario.createNewRepeat({
+							assertCurrentReference: '/data/repeat',
+						});
+						scenario.next('/data/repeat[' + n + ']/number');
+					});
 
-								// Start recording DAG events now
-								// dagEvents.clear();
+					// Start recording DAG events now
+					// dagEvents.clear();
 
-								scenario.removeRepeat('/data/repeat[3]');
+					scenario.removeRepeat('/data/repeat[3]');
 
-								// assertDagEvents(dagEvents,
-								//     "Processing 'Recalculate' for numberx2 [3_1] (NaN)",
-								//     "Processing 'Deleted: number [3_1]: 1 triggerables were fired.' for ",
-								//     "Processing 'Deleted: numberx2 [3_1]: 0 triggerables were fired.' for ",
-								//     "Processing 'Deleted: calc [3_1]: 0 triggerables were fired.' for "
-								// );
-							}
-						);
-					}
-				);
+					// assertDagEvents(dagEvents,
+					//     "Processing 'Recalculate' for numberx2 [3_1] (NaN)",
+					//     "Processing 'Deleted: number [3_1]: 1 triggerables were fired.' for ",
+					//     "Processing 'Deleted: numberx2 [3_1]: 0 triggerables were fired.' for ",
+					//     "Processing 'Deleted: calc [3_1]: 0 triggerables were fired.' for "
+					// );
+				});
 			});
 
 			/**
@@ -1567,12 +1467,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 *
 				 * - Typical `nullValue()` -> blank/empty string check
 				 *
-				 * - Fails at the same point JavaRosa's comments indicate expected
-				 *   failure. Since we don't defer any computations, this is likely a
-				 *   bug (and quite likely in the same class of bugs where references
-				 *   into repeat descendant nodes don't update computations until a new
-				 *   repeat instance is added).
-				 *
 				 * - - -
 				 *
 				 * JR:
@@ -1584,7 +1478,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				 * that. When a repeat is added, it will trigger recomputation for
 				 * previous instances.
 				 */
-				it.fails('updates previous instance', async () => {
+				it('updates previous instance', async () => {
 					const scenario = await Scenario.init(
 						'Some form',
 						html(
@@ -1884,23 +1778,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			});
 
 			describe('adding repeat instance', () => {
-				/**
-				 * **PORTING NOTES**
-				 *
-				 * - Failure likely due **in part** to general class of bugs where
-				 *   reactive updates don't occur until a new repeat instance is added.
-				 *
-				 * - Addressing that would only solve part of the problem (although
-				 *   would probably make this test pass), as `position()` itself does
-				 *   not yet contribute to reactive subscriptions.
-				 *
-				 * - `position()` and other sub-expressions which should update
-				 *   computations but don't directly reference a node-set notably
-				 *   **probably do not** fall into the category of "likely improved by
-				 *   decoupling from browser/XML DOM", at least without specific
-				 *   consideration.
-				 */
-				it.fails('updates reference to last instance, using position predicate', async () => {
+				it('updates reference to last instance, using position predicate', async () => {
 					const scenario = await Scenario.init(
 						'Some form',
 						html(
@@ -2153,43 +2031,40 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				}
 			);
 
-			it.fails(
-				'does not permit creating a repeat instance of a repeat range which does not exist (alternate)',
-				async () => {
-					const scenario = await Scenario.init(
-						'Nested repeat relevance',
-						html(
-							head(
-								title('Nested repeat relevance'),
-								model(
-									mainInstance(
-										t(
-											'data id="nested-repeat-relevance"',
-											t('outer', t('inner_count'), t('inner', t('question')))
-										)
-									),
-									bind('/data/outer/inner_count').type('string').calculate('5')
-								)
-							),
-							body(
-								repeat(
-									'/data/outer',
-									repeat(
-										'/data/outer/inner',
-										'/data/outer/inner_count',
-										input('/data/outer/inner/question')
+			it('does not permit creating a repeat instance of a repeat range which does not exist (alternate)', async () => {
+				const scenario = await Scenario.init(
+					'Nested repeat relevance',
+					html(
+						head(
+							title('Nested repeat relevance'),
+							model(
+								mainInstance(
+									t(
+										'data id="nested-repeat-relevance"',
+										t('outer', t('inner_count'), t('inner', t('question')))
 									)
+								),
+								bind('/data/outer/inner_count').type('string').calculate('5')
+							)
+						),
+						body(
+							repeat(
+								'/data/outer',
+								repeat(
+									'/data/outer/inner',
+									'/data/outer/inner_count',
+									input('/data/outer/inner/question')
 								)
 							)
 						)
-					);
+					)
+				);
 
-					scenario.next('/data/outer[1]');
-					scenario.removeRepeat('/data/outer[1]');
+				scenario.next('/data/outer[1]');
+				scenario.removeRepeat('/data/outer[1]');
 
-					expect(scenario.proposed_canCreateNewRepeat('/data/outer[1]/inner')).toBe(false);
-				}
-			);
+				expect(scenario.proposed_canCreateNewRepeat('/data/outer[1]/inner')).toBe(false);
+			});
 		});
 	});
 
@@ -2647,18 +2522,22 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			])(
 				'add explicit repeat position predicate: $addExplicitRepeatPositionPredicate',
 				({ addExplicitRepeatPositionPredicate }) => {
+					let testFn: typeof it | typeof it.fails;
+
+					if (addExplicitRepeatPositionPredicate) {
+						testFn = it;
+					} else {
+						testFn = it.fails;
+					}
+
 					/**
 					 * **PORTING NOTES**
 					 *
-					 * - Fails in direct port due to lack of position predicates in each
-					 *   reference to `outer_repeat` and `inner_repeat`
-					 *
-					 * - Fails with parameterized option to make the positions explicit,
-					 *   likely due to failure to handle `current()` in dependency analysis.
-					 *   The `calculate` expression behaves as expected with whatever
-					 *   initial value is present, but doesn't reactively update afterward.
+					 * Fails in direct port due to lack of position predicates in each
+					 * reference to `outer_repeat` and `inner_repeat`. Parameterized
+					 * option to make the positions explicit.
 					 */
-					it.fails('[is] reevaluated when trigger[dependency?] changes', async () => {
+					testFn('[is] reevaluated when trigger[dependency?] changes', async () => {
 						const scenario = await Scenario.init(
 							'Predicate trigger',
 							html(

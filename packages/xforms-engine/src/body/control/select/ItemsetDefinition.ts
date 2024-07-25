@@ -1,6 +1,7 @@
-import { getValueElement, type ItemsetElement } from '../../../lib/dom/query.ts';
-import { ItemLabelDefinition } from '../../../parse/text/ItemLabelDefinition.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
+import { getValueElement, type ItemsetElement } from '../../../lib/dom/query.ts';
+import { ItemsetLabelDefinition } from '../../../parse/text/ItemsetLabelDefinition.ts';
+import { parseNodesetReference } from '../../../parse/xpath/reference-parsing.ts';
 import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
 import { ItemsetNodesetExpression } from './ItemsetNodesetExpression.ts';
 import { ItemsetValueExpression } from './ItemsetValueExpression.ts';
@@ -11,26 +12,42 @@ export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 	readonly type = 'itemset';
 
 	override readonly reference: string;
-	override readonly label: ItemLabelDefinition | null;
+	override readonly label: ItemsetLabelDefinition | null;
 
 	readonly nodes: ItemsetNodesetExpression;
 	readonly value: ItemsetValueExpression;
 
-	constructor(form: XFormDefinition, select: AnySelectDefinition, element: ItemsetElement) {
+	constructor(
+		form: XFormDefinition,
+		override readonly parent: AnySelectDefinition,
+		element: ItemsetElement
+	) {
+		super(form, parent, element);
+
+		const nodesetExpression = parseNodesetReference(parent, element, 'nodeset');
+
+		this.nodes = new ItemsetNodesetExpression(this, nodesetExpression);
+		this.reference = nodesetExpression;
+
 		const valueElement = getValueElement(element);
-		const valueExpression = valueElement?.getAttribute('ref');
+
+		if (valueElement == null) {
+			throw new Error('<itemset> has no <value>');
+		}
+
+		const valueExpression = parseNodesetReference(
+			{
+				reference: null,
+			},
+			valueElement,
+			'ref'
+		);
 
 		if (valueExpression == null) {
 			throw new Error(`<itemset> has no <value>`);
 		}
 
-		super(form, select, element);
-
-		const nodesetExpression = element.getAttribute('nodeset');
-
-		this.reference = nodesetExpression;
-		this.nodes = new ItemsetNodesetExpression(this, nodesetExpression);
 		this.value = new ItemsetValueExpression(this, valueExpression);
-		this.label = ItemLabelDefinition.from(form, this);
+		this.label = ItemsetLabelDefinition.from(form, this);
 	}
 }

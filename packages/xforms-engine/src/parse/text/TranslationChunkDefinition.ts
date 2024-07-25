@@ -1,18 +1,27 @@
-import { isItextFunctionCalled } from '../../lib/xpath/analysis.ts';
+import { expressionParser } from '@getodk/xpath/expressionParser.js';
+import type { TranslationExpression } from '../xpath/semantic-analysis.ts';
+import { isTranslationExpression } from '../xpath/semantic-analysis.ts';
 import { TextChunkDefinition } from './abstract/TextChunkDefinition.ts';
 import type { AnyTextRangeDefinition } from './abstract/TextRangeDefinition.ts';
 
-type TranslationExpression = `jr:itext(${string})`;
-
-const isTranslationExpression = (value: string): value is TranslationExpression => {
-	try {
-		return isItextFunctionCalled(value);
-	} catch {
-		return false;
-	}
-};
-
 export class TranslationChunkDefinition extends TextChunkDefinition<'translation'> {
+	static fromMessage(
+		context: AnyTextRangeDefinition,
+		maybeExpression: string
+	): TranslationChunkDefinition | null {
+		try {
+			expressionParser.parse(maybeExpression);
+		} catch {
+			return null;
+		}
+
+		if (isTranslationExpression(maybeExpression)) {
+			return new this(context, maybeExpression);
+		}
+
+		return null;
+	}
+
 	static from(context: AnyTextRangeDefinition, maybeExpression: string) {
 		if (isTranslationExpression(maybeExpression)) {
 			return new this(context, maybeExpression);

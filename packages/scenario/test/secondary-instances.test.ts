@@ -374,17 +374,8 @@ describe('Secondary instances', () => {
 			 *
 			 * 1. Rephrase?
 			 * 2. Null assertion -> blank/empty string
-			 * 3. Super quick spike: this failure seems to fall into a broad class of
-			 *    bugs, where certain reactive subscriptions are not updated until a
-			 *    new repeat instance is added. In this case, it's probably because
-			 *    (at best) `/data/repeat` would be identified as a dependency, when
-			 *    the actual value it should subscribe to is `/data/repeat/name`
-			 *    (which would imply predicate analysis, which we definitely do not
-			 *    yet do).
-			 * 4. This is another case where we'd almost certainly get a win from
-			 *    {@link https://github.com/getodk/web-forms/issues/39 | decoupling XPath evaluation from the browser/XML DOM}
 			 */
-			it.fails('stay[s] up to date', async () => {
+			it('stay[s] up to date', async () => {
 				const scenario = await Scenario.init(
 					'Some form',
 					html(

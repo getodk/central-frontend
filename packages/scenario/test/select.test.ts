@@ -19,6 +19,7 @@ import { describe, expect, it } from 'vitest';
 import { answerText } from '../src/answer/ExpectedDisplayTextAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { choice } from '../src/choice/ExpectedChoice.ts';
+import type { ExplicitRepeatCreationOptions } from '../src/jr/Scenario.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import type { PositionalEvent } from '../src/jr/event/PositionalEvent.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
@@ -29,172 +30,128 @@ import { nullValue } from '../src/value/ExpectedNullValue.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('DynamicSelectUpdateTest.java', () => {
-	/**
-	 * @todo - per Slack discussion, we will update JavaRosa's corresponding tests
-	 * to use absolute paths in body references. For now, we run the affected tests
-	 * against the fixture as it currently exists in JR, and then against the same
-	 * fixture with absolute paths substituted in place of their relative
-	 * counterparts (i.e. {@link substituteAbsoluteBodyReferences}: `true`).
-	 *
-	 * @see
-	 * {@link https://github.com/getodk/javarosa/pull/759/commits/c72b80bf1c5044745cadd573ef87f46255f25df0}
-	 */
-	interface GetSelectFromRepeatFormOptions {
-		readonly substituteAbsoluteBodyReferences: boolean;
-	}
-
-	describe.each<GetSelectFromRepeatFormOptions>([
-		{ substituteAbsoluteBodyReferences: false },
-		{ substituteAbsoluteBodyReferences: true },
-	])(
-		'substituting absolute body references: $substituteAbsoluteBodyReferences',
-		({ substituteAbsoluteBodyReferences }) => {
-			const getSelectFromRepeatForm = (predicate = '') => {
-				const repeatValueInputRef = substituteAbsoluteBodyReferences
-					? '/data/repeat/value'
-					: 'value';
-				const repeatLabelInputRef = substituteAbsoluteBodyReferences
-					? '/data/repeat/label'
-					: 'label';
-				const filterInputRef = substituteAbsoluteBodyReferences ? '/data/filter' : 'filter';
-
-				return html(
-					head(
-						title('Select from repeat'),
-						model(
-							mainInstance(
-								t(
-									"data id='repeat-select'",
-									t('repeat', t('value'), t('label')),
-									t('filter'),
-									t('select')
-								)
-							)
+	const getSelectFromRepeatForm = (predicate = '') => {
+		return html(
+			head(
+				title('Select from repeat'),
+				model(
+					mainInstance(
+						t(
+							"data id='repeat-select'",
+							t('repeat', t('value'), t('label')),
+							t('filter'),
+							t('select')
 						)
-					),
-					body(
-						repeat('/data/repeat', input(repeatValueInputRef), input(repeatLabelInputRef)),
-						input(filterInputRef),
-						select1Dynamic('/data/select', '../repeat' + (predicate !== '' ? `[${predicate}]` : ''))
 					)
-				);
-			};
+				)
+			),
+			body(
+				repeat('/data/repeat', input('value'), input('label')),
+				input('filter'),
+				select1Dynamic('/data/select', '../repeat' + (predicate !== '' ? `[${predicate}]` : ''))
+			)
+		);
+	};
 
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * 1. The below reference to `XPathFuncExprRandomizeTest` in JavaRosa is
-			 *    meant to reference `RandomizeTest`.
-			 *
-			 * 2. Despite accommodating relative body `ref` attributes, this test
-			 *    still fails. A brief side quest to investigate the nature of the
-			 *    failure revealed that:
-			 *
-			 *    - Even without supporting relative `ref`s on controls, we'll need to
-			 *      do so for `<itemset>` and its `<value>` child (presumably its
-			 *      `<label>` child as well). The concern is so general we probably
-			 *      might as well actually just support them all.
-			 *
-			 *    - Even resolving **all** of these relative references, the reactive
-			 *      subscriptions don't propagate updates until after a new repeat
-			 *      instance is added. A similar (but differently presenting) bug was
-			 *      observed in @sadiqkhoja's demo earlier today. Both (for different
-			 *      reasons) _at least partially_ implicate the need to resolve
-			 *      multiple nodes in `getSubscribableDependencyByReference` (or
-			 *      whatever may evolve in its place/to support its current use
-			 *      cases).
-			 *
-			 * - - -
-			 *
-			 * JR:
-			 *
-			 * Integration tests to verify that the choice lists for "dynamic selects"
-			 * (selects with itemsets rather than inline items) are updated when
-			 * dependent values change.
-			 *
-			 * See also:
-			 * - {@see SelectOneChoiceFilterTest}
-			 * - {@see SelectMultipleChoiceFilterTest} for coverage of dynamic select
-			 *   multiples
-			 * - {@see XPathFuncExprRandomizeTest} for coverage of choice list updates
-			 *   when randomization is specified
-			 *
-			 */
-			describe('select from repeat', () => {
-				describe('when repeat added', () => {
-					// Unlike static secondary instances, repeats are dynamic. Repeat instances (items) can be added or removed. The
-					// contents of those instances (item values, labels) can also change.
-					it.fails('updates choices', async () => {
-						const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * The below reference to `XPathFuncExprRandomizeTest` in JavaRosa is meant
+	 * to reference `RandomizeTest`.
+	 *
+	 * - - -
+	 *
+	 * JR:
+	 *
+	 * Integration tests to verify that the choice lists for "dynamic selects"
+	 * (selects with itemsets rather than inline items) are updated when dependent
+	 * values change.
+	 *
+	 * See also:
+	 * - {@see SelectOneChoiceFilterTest}
+	 * - {@see SelectMultipleChoiceFilterTest} for coverage of dynamic select
+	 *   multiples
+	 * - {@see XPathFuncExprRandomizeTest} for coverage of choice list updates
+	 *   when randomization is specified
+	 *
+	 */
+	describe('select from repeat', () => {
+		describe('when repeat added', () => {
+			// Unlike static secondary instances, repeats are dynamic. Repeat instances (items) can be added or removed. The
+			// contents of those instances (item values, labels) can also change.
+			it('updates choices', async () => {
+				const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
 
-						scenario.answer('/data/repeat[1]/value', 'a');
-						scenario.answer('/data/repeat[1]/label', 'A');
-						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
+				scenario.answer('/data/repeat[1]/value', 'a');
+				scenario.answer('/data/repeat[1]/label', 'A');
+				expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
-						scenario.answer('/data/repeat[2]/value', 'b');
-						scenario.answer('/data/repeat[2]/label', 'B');
-						expect(scenario.choicesOf('/data/select')).toContainChoicesInAnyOrder([
-							choice('a', 'A'),
-							choice('b', 'B'),
-						]);
-					});
+				scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/repeat', {
+					explicitRepeatCreation: true,
 				});
 
-				describe('when repeat changed', () => {
-					it.fails('updates choices', async () => {
-						const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
+				scenario.answer('/data/repeat[2]/value', 'b');
+				scenario.answer('/data/repeat[2]/label', 'B');
+				expect(scenario.choicesOf('/data/select')).toContainChoicesInAnyOrder([
+					choice('a', 'A'),
+					choice('b', 'B'),
+				]);
+			});
+		});
 
-						scenario.answer('/data/repeat[1]/value', 'a');
-						scenario.answer('/data/repeat[1]/label', 'A');
+		describe('when repeat changed', () => {
+			it('updates choices', async () => {
+				const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
 
-						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
+				scenario.answer('/data/repeat[1]/value', 'a');
+				scenario.answer('/data/repeat[1]/label', 'A');
 
-						scenario.answer('/data/repeat[1]/value', 'c');
-						scenario.answer('/data/repeat[1]/label', 'C');
+				expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
-						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('c', 'C')]);
-						expect(scenario.choicesOf('/data/select').size()).toBe(1);
-					});
-				});
+				scenario.answer('/data/repeat[1]/value', 'c');
+				scenario.answer('/data/repeat[1]/label', 'C');
 
-				describe('when repeat removed', () => {
-					it.fails('updates choices', async () => {
-						const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
+				expect(scenario.choicesOf('/data/select')).toContainChoices([choice('c', 'C')]);
+				expect(scenario.choicesOf('/data/select').size()).toBe(1);
+			});
+		});
 
-						scenario.answer('/data/repeat[1]/value', 'a');
-						scenario.answer('/data/repeat[1]/label', 'A');
+		describe('when repeat removed', () => {
+			it('updates choices', async () => {
+				const scenario = await Scenario.init('Select from repeat', getSelectFromRepeatForm());
 
-						expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
+				scenario.answer('/data/repeat[1]/value', 'a');
+				scenario.answer('/data/repeat[1]/label', 'A');
 
-						scenario.removeRepeat('/data/repeat[1]');
+				expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
-						expect(scenario.choicesOf('/data/select').size()).toBe(0);
-					});
-				});
+				scenario.removeRepeat('/data/repeat[1]');
 
-				describe('with predicate', () => {
-					describe('when predicate trigger changes', () => {
-						it.fails('updates choices', async () => {
-							const scenario = await Scenario.init(
-								'Select from repeat',
-								getSelectFromRepeatForm('starts-with(value,current()/../filter)')
-							);
+				expect(scenario.choicesOf('/data/select').size()).toBe(0);
+			});
+		});
 
-							scenario.answer('/data/repeat[1]/value', 'a');
-							scenario.answer('/data/repeat[1]/label', 'A');
-							scenario.answer('/data/filter', 'a');
+		describe('with predicate', () => {
+			describe('when predicate trigger changes', () => {
+				it('updates choices', async () => {
+					const scenario = await Scenario.init(
+						'Select from repeat',
+						getSelectFromRepeatForm('starts-with(value,current()/../filter)')
+					);
 
-							expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
+					scenario.answer('/data/repeat[1]/value', 'a');
+					scenario.answer('/data/repeat[1]/label', 'A');
+					scenario.answer('/data/filter', 'a');
 
-							scenario.answer('/data/filter', 'b');
+					expect(scenario.choicesOf('/data/select')).toContainChoices([choice('a', 'A')]);
 
-							expect(scenario.choicesOf('/data/select').size()).toBe(0);
-						});
-					});
+					scenario.answer('/data/filter', 'b');
+
+					expect(scenario.choicesOf('/data/select').size()).toBe(0);
 				});
 			});
-		}
-	);
+		});
+	});
 
 	/**
 	 * **PORTING NOTES**
@@ -376,49 +333,66 @@ describe('DynamicSelectUpdateTest.java', () => {
 		});
 	});
 
-	/**
-	 * **PORTING NOTES**
-	 *
-	 * This currently fails because repeat-based itemsets are broken more
-	 * generally. As with the above sub-suite, the last assertion is a reference
-	 * check and will always pass. Once repeat-based itemsets are fixed, we'll
-	 * want to consider whether this test should be implemented differently too.
-	 */
 	describe('select with repeat as trigger', () => {
-		it.fails('recomputes [the] choice list at every request', async () => {
-			const scenario = await Scenario.init(
-				'Select with repeat trigger',
-				html(
-					head(
-						title('Repeat trigger'),
-						model(
-							mainInstance(t("data id='repeat-trigger'", t('repeat', t('question')), t('select'))),
+		describe.each<ExplicitRepeatCreationOptions>([
+			{ explicitRepeatCreation: false },
+			{ explicitRepeatCreation: true },
+		])('explicit repeat creation: $explicitRepeatCreation', ({ explicitRepeatCreation }) => {
+			let testFn: typeof it | typeof it.fails;
 
-							instance('choices', item('1', 'A'), item('2', 'AA'), item('3', 'B'), item('4', 'BB'))
-						)
-					),
-					body(
-						repeat('/data/repeat', input('/data/repeat/question')),
-						select1Dynamic(
-							'/data/select',
-							"instance('choices')/root/item[value>count(/data/repeat)]"
+			if (explicitRepeatCreation) {
+				testFn = it;
+			} else {
+				testFn = it.fails;
+			}
+
+			testFn('recomputes [the] choice list at every request', async () => {
+				const scenario = await Scenario.init(
+					'Select with repeat trigger',
+					html(
+						head(
+							title('Repeat trigger'),
+							model(
+								mainInstance(
+									t("data id='repeat-trigger'", t('repeat', t('question')), t('select'))
+								),
+
+								instance(
+									'choices',
+									item('1', 'A'),
+									item('2', 'AA'),
+									item('3', 'B'),
+									item('4', 'BB')
+								)
+							)
+						),
+						body(
+							repeat('/data/repeat', input('/data/repeat/question')),
+							select1Dynamic(
+								'/data/select',
+								"instance('choices')/root/item[value>count(/data/repeat)]"
+							)
 						)
 					)
-				)
-			);
+				);
 
-			scenario.answer('/data/repeat[1]/question', 'a');
+				scenario.answer('/data/repeat[1]/question', 'a');
 
-			expect(scenario.choicesOf('/data/select').size()).toBe(3);
+				expect(scenario.choicesOf('/data/select').size()).toBe(3);
 
-			scenario.answer('/data/repeat[2]/question', 'b');
+				scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/repeat', {
+					explicitRepeatCreation,
+				});
 
-			const choices = scenario.choicesOf('/data/select');
+				scenario.answer('/data/repeat[2]/question', 'b');
 
-			expect(choices.size()).toBe(2);
+				const choices = scenario.choicesOf('/data/select');
 
-			// Because of the repeat trigger in the count expression, choices should be recomputed every time they're requested
-			expect(scenario.choicesOf('/data/select')).not.toBe(choices);
+				expect(choices.size()).toBe(2);
+
+				// Because of the repeat trigger in the count expression, choices should be recomputed every time they're requested
+				expect(scenario.choicesOf('/data/select')).not.toBe(choices);
+			});
 		});
 	});
 
@@ -426,16 +400,7 @@ describe('DynamicSelectUpdateTest.java', () => {
 	// When a dynamic select is in a repeat, the itemsets for all repeat instances are represented by the same ItemsetBinding.
 	describe('select in repeat', () => {
 		describe('with ref to repeat child in predicate', () => {
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * This test again asserts a reference check. It seems likely that the
-			 * test is otherwise valid without that check.
-			 *
-			 * Once again, the current failure is likely related to repeat-based
-			 * itemsets being broken in general.
-			 */
-			it.fails('evaluates [the] choice list for each repeat instance', async () => {
+			it('evaluates [the] choice list for each repeat instance', async () => {
 				const scenario = await Scenario.init(
 					'Select in repeat',
 					html(
@@ -467,6 +432,11 @@ describe('DynamicSelectUpdateTest.java', () => {
 				);
 
 				scenario.answer('/data/repeat[1]/filter', 'a');
+
+				scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/repeat', {
+					explicitRepeatCreation: true,
+				});
+
 				scenario.answer('/data/repeat[2]/filter', 'a');
 
 				const repeat0Choices = scenario.choicesOf('/data/repeat[1]/select');
