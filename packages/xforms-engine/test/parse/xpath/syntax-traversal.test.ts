@@ -34,7 +34,7 @@ describe('XPath syntax traversal', () => {
 		interface CollectTypedNodesCase {
 			readonly expressionDescription: string;
 			readonly expression: string;
-			readonly types: readonly AnySyntaxType[];
+			readonly types: readonly [AnySyntaxType, ...AnySyntaxType[]];
 			readonly deep?: true;
 			readonly resultsDescription: string;
 			readonly expected: readonly ExpectedSyntaxNode[];
@@ -126,7 +126,7 @@ describe('XPath syntax traversal', () => {
 		interface FindTypedPrincipalExpressionNodeCase {
 			readonly expressionDescription: string;
 			readonly expression: string;
-			readonly types: readonly AnySyntaxType[];
+			readonly types: readonly [AnySyntaxType, ...AnySyntaxType[]];
 			readonly resultDescription: string;
 			readonly expected: ExpectedSyntaxNode | null;
 		}

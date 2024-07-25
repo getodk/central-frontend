@@ -14,7 +14,7 @@ export type TypedSyntaxNode<Type extends AnySyntaxType> = Extract<
 type CollectedNodes<Type extends AnySyntaxType> = Identity<ReadonlyArray<TypedSyntaxNode<Type>>>;
 
 const isTypedNodeMatch = <const Type extends AnySyntaxType>(
-	types: readonly [...Type[]],
+	types: readonly [Type, ...Type[]],
 	syntaxNode: AnySyntaxNode
 ): syntaxNode is TypedSyntaxNode<Type> => {
 	return types.includes(syntaxNode.type as Type);
@@ -25,7 +25,7 @@ interface CollectNodesOptions {
 }
 
 const collectTypedChildren = <const Type extends AnySyntaxType>(
-	types: readonly [...Type[]],
+	types: readonly [Type, ...Type[]],
 	currentNode: AnySyntaxNode,
 	options: CollectNodesOptions = {}
 ): CollectedNodes<Type> => {
@@ -48,7 +48,7 @@ const collectTypedChildren = <const Type extends AnySyntaxType>(
  * identifying all LocationPaths referenced by a broader expression.
  */
 export const collectTypedNodes = <const Type extends AnySyntaxType>(
-	types: readonly [...Type[]],
+	types: readonly [Type, ...Type[]],
 	currentNode: AnySyntaxNode,
 	options: CollectNodesOptions = {}
 ): CollectedNodes<Type> => {
@@ -112,7 +112,7 @@ export const isCompleteSubExpression = (
  * in `foo[position() = 2]`).
  */
 export const findTypedPrincipalExpressionNode = <const Type extends AnySyntaxType>(
-	types: readonly [...Type[]],
+	types: readonly [Type, ...Type[]],
 	xpathNode: XPathNode
 ): TypedSyntaxNode<Type> | null => {
 	const [first, ...rest] = collectTypedNodes(types, xpathNode);

@@ -48,9 +48,12 @@ const isCallToLocalNamedFunction = <LocalName extends string>(
 	return localNameNode?.text === localName;
 };
 
-type ArgumentTypes = readonly AnySyntaxType[];
+type ArgumentTypes = readonly [AnySyntaxType, ...AnySyntaxType[]];
 
-const hasCallSignature = (syntaxNode: FunctionCallNode, expected: ArgumentTypes[]): boolean => {
+const hasCallSignature = (
+	syntaxNode: FunctionCallNode,
+	expected: readonly ArgumentTypes[]
+): boolean => {
 	const [, ...argumentNodes] = syntaxNode.children;
 
 	if (argumentNodes.length === 0 && expected.length === 0) {
