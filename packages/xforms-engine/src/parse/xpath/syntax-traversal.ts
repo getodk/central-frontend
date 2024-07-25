@@ -77,14 +77,14 @@ export const collectTypedNodes = <const Type extends AnySyntaxType>(
  *
  * const pathRootNode = expressionParser.parse(pathExpression).rootNode;
  * //    ^?: XPathNode
- * const [pathNumberNode] = collectTypedNodes(['number'], rootNode);
+ * const [pathNumberNode] = collectTypedNodes(['number'], pathRootNode);
  * //     ^?: NumberNode
  *
  * isCompleteSubExpression(pathRootNode, pathNumberNode); // false
  *
- * const numericRootNode = expressionParser.parse(pathExpression).rootNode;
+ * const numericRootNode = expressionParser.parse(numericExpression).rootNode;
  * //    ^?: XPathNode
- * const [numericNumberNode] = collectTypedNodes(['number'], rootNode);
+ * const [numericNumberNode] = collectTypedNodes(['number'], numericRootNode);
  * //     ^?: NumberNode
  *
  * isCompleteSubExpression(numericRootNode, numericNumberNode); // true
