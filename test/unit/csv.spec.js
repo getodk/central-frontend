@@ -169,11 +169,11 @@ describe('util/csv', () => {
         data.should.eql([{ a: '1', b: '2' }, { a: '3', b: '4' }]);
       });
 
-      it('returns a rejected promise if function throws an error', async () => {
+      it('returns a rejected promise if function throws an error', () => {
         const promise = parseCSV(i18n, createCSV('a\n1'), ['a'], {
           transformRow: () => { throw new Error('foo'); }
         });
-        promise.should.be.rejectedWith('There is a problem on row 2 of the CSV file: foo');
+        return promise.should.be.rejectedWith('There is a problem on row 2 of the file: foo');
       });
     });
 
