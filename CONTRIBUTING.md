@@ -82,16 +82,6 @@ If a utility is used in a limited number of components, consider using a mixin i
 
 We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. That said, components rarely need to access `this.$http` directly. Most of the time, to send a GET request, you can use the [`request` module](/src/store/modules/request.js) of the Vuex store; to send a non-GET request, you can use the [`request` mixin](/src/mixins/request.js). The module and mixin both accept options and complete common tasks like error handling. See the section below on [Response Data](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) for more on sending a GET request.
 
-### Presenter Classes
-
-Many ODK Central Backend resources have an associated presenter class in Frontend ([`/src/presenters/`](/src/presenters/)). This class extends the [base presenter class](/src/presenters/base.js).
-
-Each presenter class defines a whitelist of properties that the presenter object can read from the underlying resource data. If a new property is added to a Backend resource, it must also be added to the presenter class before a presenter object can read it.
-
-When you use the [`request` module](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) of the Vuex store to send a GET request, then if there is a presenter class associated with the response data, the `request` module will automatically wrap the response data within a presenter object.
-
-Some presenter classes need access to the internationalization object `i18n`. If you retrieve a presenter class from the container rather than importing it, the class will have a static method named `from()` that will create a new presenter object and automatically pass in `i18n`: see [`subclassPresenters()`](/src/presenters/index.js). If you define a new presenter class, you should also add it to `subclassPresenters()`. For more on internationalization, see the section [below](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#internationalization).
-
 ### Learning About a Component
 
 To learn how a given component works, one of the best places to start is how the component communicates with its parent component:

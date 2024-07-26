@@ -66,7 +66,7 @@ export default ({ i18n }, createResource) => {
     },
     /* eslint-enable no-param-reassign */
     nameWithArchived: computeIfExists(() => (project.archived
-      ? i18n.t('presenter.Project.nameWithArchived', project)
+      ? i18n.t('requestData.project.nameWithArchived', project)
       : project.name))
   }));
   createResource('form', () => ({

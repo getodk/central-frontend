@@ -430,8 +430,9 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
+  "requestData": {
+    "project": {
+      // @transifexKey presenter.Project.nameWithArchived
       // {name} is the name of a Project. We append "(archived)" to the name if
       // the Project is archived.
       "nameWithArchived": "{name} (archived)"
