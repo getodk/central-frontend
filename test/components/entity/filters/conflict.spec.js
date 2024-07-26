@@ -11,7 +11,7 @@ describe('EntityFiltersConflict', () => {
     const component = mountComponent({
       props: { modelValue: [true] }
     });
-    component.getComponent(Multiselect).props().modelValue.should.eql([true]);
+    expect(component.getComponent(Multiselect).props().modelValue).to.eql([true]);
   });
 
   it('passes a new value for modelValue prop to Multiselect', async () => {
@@ -19,7 +19,7 @@ describe('EntityFiltersConflict', () => {
       props: { modelValue: [true] }
     });
     await component.setProps({ modelValue: [false] });
-    component.getComponent(Multiselect).props().modelValue.should.eql([false]);
+    expect(component.getComponent(Multiselect).props().modelValue).to.eql([false]);
   });
 
   it('emits an update:modelValue event if selection is changed', async () => {

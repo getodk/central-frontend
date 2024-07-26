@@ -25,7 +25,7 @@ describe('SubmissionFiltersReviewState', () => {
       props: { modelValue: ['null', "'approved'"] }
     });
     const multiselect = component.getComponent(Multiselect);
-    multiselect.props().modelValue.should.eql(['null', "'approved'"]);
+    expect(multiselect.props().modelValue).to.eql(['null', "'approved'"]);
   });
 
   it('passes a new value for modelValue prop to Multiselect', async () => {
@@ -33,7 +33,7 @@ describe('SubmissionFiltersReviewState', () => {
       props: { modelValue: ['null', "'approved'"] }
     });
     await component.setProps({ modelValue: ['null'] });
-    component.getComponent(Multiselect).props().modelValue.should.eql(['null']);
+    expect(component.getComponent(Multiselect).props().modelValue).to.eql(['null']);
   });
 
   it('emits an update:modelValue event if selection is changed', async () => {

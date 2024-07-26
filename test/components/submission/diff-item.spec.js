@@ -42,7 +42,7 @@ describe('SubmissionDiffItem', () => {
     const props = mountComponent(diff).getComponent(DiffItem).props();
     props.new.should.equal('17');
     props.old.should.equal('15');
-    props.path.should.eql(['age']);
+    expect(props.path).to.eql(['age']);
   });
 
   it('shows values as-is by default', () => {

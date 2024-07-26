@@ -73,7 +73,7 @@ describe('SubmissionFiltersSubmitter', () => {
     const component = mountComponent({
       props: { modelValue: [id] }
     });
-    component.getComponent(Multiselect).props().modelValue.should.eql([id]);
+    expect(component.getComponent(Multiselect).props().modelValue).to.eql([id]);
   });
 
   it('passes a new value for modelValue prop to Multiselect', async () => {
@@ -84,7 +84,7 @@ describe('SubmissionFiltersSubmitter', () => {
     });
     await component.setProps({ modelValue: [fieldKey1.id] });
     const multiselect = component.getComponent(Multiselect);
-    multiselect.props().modelValue.should.eql([fieldKey1.id]);
+    expect(multiselect.props().modelValue).to.eql([fieldKey1.id]);
   });
 
   it('passes up an update:modelValue event from the Multiselect', async () => {
@@ -145,7 +145,7 @@ describe('SubmissionFiltersSubmitter', () => {
         await toggle(multiselect);
         await multiselect.get('.select-none').trigger('click');
         await toggle(multiselect);
-        multiselect.props().modelValue.should.eql([fieldKey.id]);
+        expect(multiselect.props().modelValue).to.eql([fieldKey.id]);
         await toggle(multiselect);
         const input = multiselect.get('input[type="checkbox"]');
         input.element.checked.should.be.true;

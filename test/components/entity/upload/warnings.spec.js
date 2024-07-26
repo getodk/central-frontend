@@ -12,7 +12,7 @@ describe('EntityUploadWarnings', () => {
     });
     const warning = component.getComponent(EntityUploadWarning);
     warning.text().should.include('Fewer columns were found than expected');
-    warning.props().ranges.should.eql([[1, 2]]);
+    expect(warning.props().ranges).to.eql([[1, 2]]);
   });
 
   it('shows a warning for a large cell', () => {
@@ -21,7 +21,7 @@ describe('EntityUploadWarnings', () => {
     });
     const warning = component.getComponent(EntityUploadWarning);
     warning.text().should.include('Some cells are abnormally large');
-    warning.props().ranges.should.eql([[1, 1]]);
+    expect(warning.props().ranges).to.eql([[1, 1]]);
   });
 
   it('shows multiple warnings', () => {
