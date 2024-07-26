@@ -12,13 +12,28 @@ const createResources = (data = {}) => {
 };
 
 describe('useForm()', () => {
-  it('updates form.publicLinks to match publicLinks.length', () => {
+  describe('publicLinks', () => {
+    it('counts the number of active public links', () => {
+      testData.standardPublicLinks
+        .createPast(1)
+        .createPast(1, { token: null });
+      const requestData = createResources({
+        publicLinks: testData.standardPublicLinks.sorted()
+      });
+      requestData.localResources.publicLinks.activeCount.should.equal(1);
+    });
+  });
+
+  it('updates form.publicLinks to match publicLinks.activeCount', () => {
     const requestData = createResources({
       form: testData.extendedForms.createPast(1).last()
     });
     requestData.form.publicLinks.should.equal(0);
+    testData.standardPublicLinks
+      .createPast(1)
+      .createPast(1, { token: null });
     setRequestData(requestData, {
-      publicLinks: testData.standardPublicLinks.createPast(1).sorted()
+      publicLinks: testData.standardPublicLinks.sorted()
     });
     requestData.form.publicLinks.should.equal(1);
   });
