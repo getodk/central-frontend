@@ -62,7 +62,7 @@ describe('FormShow', () => {
         form: () => testData.extendedForms.last()
       })
       .afterResponses(app => {
-        should(app.getComponent(FormOverview).vm).not.equal(vm);
+        expect(app.getComponent(FormOverview).vm).to.not.equal(vm);
       });
   });
 

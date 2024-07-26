@@ -13,7 +13,7 @@ describe('useChunkyArray()', () => {
 
   it('returns a ref whose value is null if value of source ref is nullish', () => {
     const chunky = withSetup(() => useChunkyArray(ref(null)));
-    should(chunky.value).be.null();
+    expect(chunky.value).to.be.null;
   });
 
   describe('value of source ref is an array', () => {
@@ -126,7 +126,7 @@ describe('useChunkyArray()', () => {
       const clock = sinon.useFakeTimers();
       const source = ref(null);
       const chunky = withSetup(() => useChunkyArray(source, 2));
-      should(chunky.value).be.null();
+      expect(chunky.value).to.be.null;
       source.value = new Array(30).fill(0);
       await nextTick();
       Array.isArray(chunky.value).should.be.true;
@@ -141,7 +141,7 @@ describe('useChunkyArray()', () => {
       chunky.value.length.should.equal(3);
       source.value = null;
       await nextTick();
-      should(chunky.value).be.null();
+      expect(chunky.value).to.be.null;
     });
 
     it('resets length after value changes from array to null, then back to array', async () => {

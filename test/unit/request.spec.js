@@ -493,7 +493,7 @@ describe('util/request', () => {
     });
 
     it('returns undefined for a property that is not on the function', () => {
-      should(withHttpMethods(() => {}).foo).be.undefined();
+      expect(withHttpMethods(() => {}).foo).to.be.undefined;
     });
   });
 

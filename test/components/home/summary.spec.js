@@ -61,7 +61,7 @@ describe('HomeSummary', () => {
         const items = component.findAllComponents(HomeSummaryItem);
         items.length.should.equal(3);
         for (const item of items)
-          should(item.props().to).not.equal('/users');
+          expect(item.props().to).to.not.equal('/users');
       });
   });
 });

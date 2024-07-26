@@ -30,10 +30,10 @@ export function testRequests(expectedConfigs) {
         }
 
         try {
-          should(config.data).eql(expectedConfig.data);
+          expect(config.data).to.eql(expectedConfig.data);
         } catch (error) {
           try {
-            should(JSON.stringify(config.data)).equal(JSON.stringify(expectedConfig.data));
+            expect(JSON.stringify(config.data)).to.equal(JSON.stringify(expectedConfig.data));
           } catch (_) {
             throw error;
           }
