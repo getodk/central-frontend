@@ -4,7 +4,7 @@ import PrimeButton from 'primevue/button';
 import PrimeCard from 'primevue/card';
 import PrimeMenu from 'primevue/menu';
 import PrimeMessage from 'primevue/message';
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import FormLanguageDialog from './FormLanguageDialog.vue';
 import FormLanguageMenu from './FormLanguageMenu.vue';
 
@@ -53,12 +53,14 @@ const scrollToFirstInvalidQuestion = () => {
 		behavior: 'smooth'
 	});
 }
+
+const submitPressed = inject('submitPressed');
 </script>
 
 <template>
 	<!-- for desktop -->
 	<div class="hidden lg:inline larger-screens">
-		<PrimeMessage v-if="formErrorMessage" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
+		<PrimeMessage v-if="formErrorMessage" v-show="submitPressed" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
 			{{ formErrorMessage }}
 			<span class="fix-errors" @click="scrollToFirstInvalidQuestion()">Fix errors</span>
 		</PrimeMessage>
@@ -110,7 +112,7 @@ const scrollToFirstInvalidQuestion = () => {
 				/>
 			</div>
 		</div>
-		<PrimeMessage v-if="formErrorMessage" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
+		<PrimeMessage v-if="formErrorMessage" v-show="submitPressed" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
 			{{ formErrorMessage }}
 			<span class="fix-errors" @click="scrollToFirstInvalidQuestion()">Fix errors</span>
 		</PrimeMessage>
@@ -164,7 +166,6 @@ const scrollToFirstInvalidQuestion = () => {
 	// Default value for those are either 1000 or 1100
 	// So 5000 here is safe.
 	z-index: 5000;
-	display: none;
 
 	:deep(.p-message-wrapper) {
 		padding: 0.75rem 0.75rem;
@@ -206,10 +207,6 @@ const scrollToFirstInvalidQuestion = () => {
 		margin-top: 1rem;
 		margin-bottom: 0;
 	}
-}
-
-:global(.submit-pressed .form-error-message.p-message.p-message-error ){
-	display: block;
 }
 
 </style>

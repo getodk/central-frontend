@@ -1,30 +1,31 @@
 <script setup lang="ts">
-import type { AnyControlNode as QuestionNode, SelectNode, StringNode } from '@getodk/xforms-engine';
+import type { AnyControlNode, SelectNode, StringNode } from '@getodk/xforms-engine';
+import { inject } from 'vue';
 import InputText from './controls/InputText.vue';
 import SelectControl from './controls/SelectControl.vue';
 import UnsupportedControl from './controls/UnsupportedControl.vue';
 
-defineProps<{question: QuestionNode}>();
+defineProps<{question: AnyControlNode}>();
 
-const isStringNode = (n: QuestionNode): n is StringNode => n.nodeType === 'string';
-const isSelectNode = (n: QuestionNode): n is SelectNode => n.nodeType === 'select';
+const isStringNode = (n: AnyControlNode): n is StringNode => n.nodeType === 'string';
+const isSelectNode = (n: AnyControlNode): n is SelectNode => n.nodeType === 'select';
 
-
+const submitPressed = inject('submitPressed');
 </script>
 
 <template>
-	<div :id="question.nodeId + '_container'" class="question-container" :class="{ invalid: question.validationState.violation?.valid === false}">
+	<div
+		:id="question.nodeId + '_container'" 
+		:class="{
+			'question-container': true,
+			'highlight': submitPressed && question.validationState.violation?.valid === false,
+		}"
+	>
 		<InputText v-if="isStringNode(question)" :question="question" />
 
 		<SelectControl v-else-if="isSelectNode(question)" :question="question" />
 
 		<UnsupportedControl v-else :question="question" />
-		
-		<div class="validation-placeholder">
-			<span class="validation-message">
-				{{ question.validationState.violation?.message.asString }}
-			</span>
-		</div>
 	</div>
 </template>
 
@@ -35,30 +36,11 @@ const isSelectNode = (n: QuestionNode): n is SelectNode => n.nodeType === 'selec
 	flex-direction: column;
 	padding: 0.5rem 1rem 0 1rem;
 	scroll-margin-top: 60px;
-}
+	border-radius: 10px;	
 
-.validation-placeholder{
-	min-height: 2rem;
-
-	.validation-message {
-		display: none;
-		color: var(--error-text-color);
-		margin-top: 0.5rem;
+	&.highlight {
+		background-color: var(--error-bg-color);
 	}
 }
 
-.invalid:has(.dirty) {	
-	.validation-message {
-		display: block;
-	}
-}
-
-:global(.odk-form.submit-pressed .invalid){
-	background-color: var(--error-bg-color);
-	border-radius: 10px;
-}
-
-:global(.odk-form.submit-pressed .invalid .validation-message){
-	display: block;
-}
 </style>

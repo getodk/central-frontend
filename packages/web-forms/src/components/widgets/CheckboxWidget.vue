@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeCheckbox from 'primevue/checkbox';
-import { ref } from 'vue';
 
 const props = defineProps<{ question: SelectNode, style?: string}>();
-defineEmits(['update:modelValue']);
+defineEmits(['update:modelValue', 'change']);
 
 const setSelectNValue = (values: SelectItem[]) => {
 	for(const v of props.question.currentState.value){
@@ -15,7 +14,6 @@ const setSelectNValue = (values: SelectItem[]) => {
 	}
 }
 
-const isDirty = ref(false);
 </script>
 
 <template>
@@ -26,7 +24,6 @@ const isDirty = ref(false);
 			'value-option': true,
 			active: question.currentState.value.find(v => v.value === option.value), 
 			disabled: question.currentState.readonly,
-			dirty: isDirty,
 			'no-buttons': question.appearances['no-buttons'] }]"
 		:for="question.nodeId + '_' + option.value"
 	>
@@ -37,7 +34,7 @@ const isDirty = ref(false);
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value"
 			@update:model-value="setSelectNValue"
-			@change="isDirty = true"
+			@change="$emit('change')"
 		/>
 		<span class="label-text">
 			{{ option.label?.asString }}

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { SelectNode } from '@getodk/xforms-engine';
+import { inject, ref } from 'vue';
 import ControlLabel from '../ControlLabel.vue';
+import ValidationMessage from '../ValidationMessage.vue';
 import ColumnarAppearance from '../appearances/ColumnarAppearance.vue';
 import FieldListTable from '../appearances/FieldListTable.vue';
 import CheckboxWidget from '../widgets/CheckboxWidget.vue';
@@ -14,24 +16,26 @@ const hasColumnsAppearance = [...props.question.appearances].filter(a => a.start
 const fieldListRelatedAppearances = new Set(['label', 'list-nolabel', 'list']);
 const hasFieldListRelatedAppearance = !![...props.question.appearances].find(a => fieldListRelatedAppearances.has(a));
 
+const touched = ref(false);
+const submitPressed = inject<boolean>('submitPressed');
 </script>
 
 <template>
 	<ControlLabel v-if="!hasFieldListRelatedAppearance" :question="question" />
   
-	<MultiselectDropdown v-if="question.appearances.autocomplete || question.appearances.minimal" :question="question" />
+	<MultiselectDropdown v-if="question.appearances.autocomplete || question.appearances.minimal" :question="question" @change="touched = true" />
 
 	<FieldListTable v-else-if="hasFieldListRelatedAppearance" :appearances="question.appearances">
 		<template #firstColumn>
 			<ControlLabel :question="question" />
 		</template>
 		<template #default>
-			<CheckboxWidget :question="question" />
+			<CheckboxWidget :question="question" @change="touched = true" />
 		</template>
 	</FieldListTable>		
 
 	<ColumnarAppearance v-else-if="hasColumnsAppearance" :appearances="question.appearances">
-		<CheckboxWidget :question="question" />
+		<CheckboxWidget :question="question" @change="touched = true" />
 	</ColumnarAppearance>		
 
 	<template v-else>
@@ -39,9 +43,15 @@ const hasFieldListRelatedAppearance = !![...props.question.appearances].find(a =
 			<UnsupportedAppearance :appearance="[...question.appearances].toString()" node-type="Select" />
 		</template>
 		<div class="default-appearance">
-			<CheckboxWidget :question="question" />
+			<CheckboxWidget :question="question" @change="touched = true" />
 		</div>
 	</template>
+
+	<ValidationMessage 
+		:message="question.validationState.violation?.message.asString" 
+		:show-message="touched || submitPressed"
+		:add-placeholder="!hasFieldListRelatedAppearance"
+	/>
 </template>
 
 <style lang="scss" scoped>

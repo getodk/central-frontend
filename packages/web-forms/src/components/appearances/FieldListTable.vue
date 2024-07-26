@@ -84,19 +84,6 @@ defineProps<{ appearances: SelectNodeAppearances}>();
     }
   }
 }
-// No need to have validation message placeholder for field-list related appearance
-:global(.question-container:has(.table-row) .validation-placeholder){
-  min-height: 0;
-}
-:global(.submit-pressed .question-container.invalid:has(.table-row) .validation-placeholder){
-  min-height: 1.5rem;
-}
-:global(.submit-pressed .question-container.invalid:has(.table-row) .validation-placeholder .validation-message){
-  margin-top:0;
-}
-:global(.submit-pressed .question-container.invalid:has(.table-row)){
-  margin-bottom: 0.5rem;
-}
 
 .table-row.list {
   margin-top: -30px;

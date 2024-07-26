@@ -1,16 +1,14 @@
 <script lang="ts" setup>
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeRadioButton from 'primevue/radiobutton';
-import { ref } from 'vue';
 
 const props = defineProps<{ question: SelectNode}>();
-defineEmits(['update:modelValue']);
+defineEmits(['update:modelValue', 'change']);
 
 const setSelect1Value = (item: SelectItem) => {
 	props.question.select(item);
 }
 
-const isDirty = ref(false);
 </script>
 
 <template>
@@ -22,7 +20,6 @@ const isDirty = ref(false);
 			'value-option': true,
 			active: question.currentState.value[0] === option,
 			disabled: question.currentState.readonly,
-			dirty: isDirty,
 			'no-buttons': question.appearances['no-buttons']
 		}"
 	>
@@ -33,7 +30,7 @@ const isDirty = ref(false);
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value[0]"
 			@update:model-value="setSelect1Value"
-			@change="isDirty = true"
+			@change="$emit('change')"
 		/>
 		<span class="label-text">
 			{{ option.label?.asString }} 

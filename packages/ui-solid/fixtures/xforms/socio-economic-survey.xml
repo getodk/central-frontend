@@ -1,0 +1,1505 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Socio-economic Survey</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="region-0">
+            <value>Sindh</value>
+          </text>
+          <text id="region-1">
+            <value>Punjab</value>
+          </text>
+          <text id="region-2">
+            <value>Balochistan</value>
+          </text>
+          <text id="region-3">
+            <value>Khyber Pakhunkhwan</value>
+          </text>
+          <text id="region-4">
+            <value>Azad Kashmir &amp; Gilgit</value>
+          </text>
+          <text id="district-0">
+            <value>Karachi</value>
+          </text>
+          <text id="district-1">
+            <value>Sakhar</value>
+          </text>
+          <text id="district-2">
+            <value>Hyderabad</value>
+          </text>
+          <text id="district-3">
+            <value>Tando Turel</value>
+          </text>
+          <text id="district-4">
+            <value>Thatta &amp; Shah Bunder</value>
+          </text>
+          <text id="district-5">
+            <value>Hafizabad</value>
+          </text>
+          <text id="district-6">
+            <value>Lahore &amp; Sialkot</value>
+          </text>
+          <text id="district-7">
+            <value>Multan &amp; Bahawalpur</value>
+          </text>
+          <text id="district-8">
+            <value>Rawalpindi</value>
+          </text>
+          <text id="district-9">
+            <value>Sargodha</value>
+          </text>
+          <text id="district-10">
+            <value>Arkari</value>
+          </text>
+          <text id="district-11">
+            <value>Chitral Town</value>
+          </text>
+          <text id="district-12">
+            <value>Garamchashma</value>
+          </text>
+          <text id="district-13">
+            <value>Madaklasht</value>
+          </text>
+          <text id="district-14">
+            <value>Parabeg</value>
+          </text>
+          <text id="district-15">
+            <value>Shoghore</value>
+          </text>
+          <text id="district-16">
+            <value>Susum</value>
+          </text>
+          <text id="district-17">
+            <value>Bang</value>
+          </text>
+          <text id="district-18">
+            <value>Booni</value>
+          </text>
+          <text id="district-19">
+            <value>Brep</value>
+          </text>
+          <text id="district-20">
+            <value>Khot</value>
+          </text>
+          <text id="district-21">
+            <value>Laspur</value>
+          </text>
+          <text id="district-22">
+            <value>Chatoorkhand</value>
+          </text>
+          <text id="district-23">
+            <value>Damas</value>
+          </text>
+          <text id="district-24">
+            <value>Gahkuch</value>
+          </text>
+          <text id="district-25">
+            <value>Immit</value>
+          </text>
+          <text id="district-26">
+            <value>Ishkoman</value>
+          </text>
+          <text id="district-27">
+            <value>Sherquilla</value>
+          </text>
+          <text id="district-28">
+            <value>Singal</value>
+          </text>
+          <text id="district-29">
+            <value>Gilgit</value>
+          </text>
+          <text id="district-30">
+            <value>Skardu</value>
+          </text>
+          <text id="district-31">
+            <value>Sul, Dan &amp; Oshikhandas</value>
+          </text>
+          <text id="monthlyIncome-0">
+            <value>Not willing to disclose</value>
+          </text>
+          <text id="monthlyIncome-1">
+            <value>Less than 10,000</value>
+          </text>
+          <text id="monthlyIncome-2">
+            <value>10,001 to 50,000</value>
+          </text>
+          <text id="monthlyIncome-3">
+            <value>50,001 to 60,000</value>
+          </text>
+          <text id="monthlyIncome-4">
+            <value>60,001 to 75,000</value>
+          </text>
+          <text id="monthlyIncome-5">
+            <value>75,001 to 100,000</value>
+          </text>
+          <text id="monthlyIncome-6">
+            <value>100,001 to 200,000</value>
+          </text>
+          <text id="monthlyIncome-7">
+            <value>Above 200,000</value>
+          </text>
+          <text id="seclass-0">
+            <value>Unknown</value>
+          </text>
+          <text id="seclass-1">
+            <value>Lower</value>
+          </text>
+          <text id="seclass-2">
+            <value>Lower</value>
+          </text>
+          <text id="seclass-3">
+            <value>Middle</value>
+          </text>
+          <text id="seclass-4">
+            <value>Middle</value>
+          </text>
+          <text id="seclass-5">
+            <value>Middle</value>
+          </text>
+          <text id="seclass-6">
+            <value>Upper-middle</value>
+          </text>
+          <text id="seclass-7">
+            <value>Upper</value>
+          </text>
+          <text id="yesNoIdk-0">
+            <value>Yes</value>
+          </text>
+          <text id="yesNoIdk-1">
+            <value>No</value>
+          </text>
+          <text id="yesNoIdk-2">
+            <value>I don't know</value>
+          </text>
+          <text id="internetType-0">
+            <value>Access available in area, but my HH is not interested</value>
+          </text>
+          <text id="internetType-1">
+            <value>Cable / LAN / DSL</value>
+          </text>
+          <text id="internetType-2">
+            <value>No internet access (in the area)</value>
+          </text>
+          <text id="internetType-3">
+            <value>Available through 2G</value>
+          </text>
+          <text id="internetType-4">
+            <value>Available through 3G / 4G</value>
+          </text>
+          <text id="internetType-5">
+            <value>I don't know</value>
+          </text>
+          <text id="internetType-6">
+            <value>Other</value>
+          </text>
+          <text id="gender-0">
+            <value>Male</value>
+          </text>
+          <text id="gender-1">
+            <value>Female</value>
+          </text>
+          <text id="gender-2">
+            <value>Other</value>
+          </text>
+          <text id="healthFacility-0">
+            <value>LHV or Community Health Worker</value>
+          </text>
+          <text id="healthFacility-1">
+            <value>Government clinic</value>
+          </text>
+          <text id="healthFacility-2">
+            <value>Private clinic</value>
+          </text>
+          <text id="healthFacility-3">
+            <value>NGO Clinic</value>
+          </text>
+          <text id="healthFacility-4">
+            <value>Traditional healers</value>
+          </text>
+          <text id="healthFacility-5">
+            <value>Pharmacist</value>
+          </text>
+          <text id="healthFacility-6">
+            <value>Other</value>
+          </text>
+          <text id="reasonForNoHealthVisit-0">
+            <value>Facility not available in the area</value>
+          </text>
+          <text id="reasonForNoHealthVisit-1">
+            <value>Lack of funds</value>
+          </text>
+          <text id="reasonForNoHealthVisit-2">
+            <value>Lack of time</value>
+          </text>
+          <text id="reasonForNoHealthVisit-3">
+            <value>Healthy - no need</value>
+          </text>
+          <text id="reasonForNoHealthVisit-4">
+            <value>Not mobile (bed bound / disabled)</value>
+          </text>
+          <text id="reasonForNoHealthVisit-5">
+            <value>Security concerns</value>
+          </text>
+          <text id="reasonForNoHealthVisit-6">
+            <value>Prefer traditional healers</value>
+          </text>
+          <text id="reasonForNoHealthVisit-7">
+            <value>Prefer home remedies / self-medication</value>
+          </text>
+          <text id="reasonForNoHealthVisit-8">
+            <value>Other</value>
+          </text>
+          <text id="diseases-0">
+            <value>Diabetes</value>
+          </text>
+          <text id="diseases-1">
+            <value>Cardiovascular (Heart)</value>
+          </text>
+          <text id="diseases-2">
+            <value>Hypertension</value>
+          </text>
+          <text id="diseases-3">
+            <value>Chronic kidney problem</value>
+          </text>
+          <text id="diseases-4">
+            <value>Respiratory related (Asthma, lung infection)</value>
+          </text>
+          <text id="diseases-5">
+            <value>Arthritis</value>
+          </text>
+          <text id="diseases-6">
+            <value>Cancer</value>
+          </text>
+          <text id="diseases-7">
+            <value>Mental health (Depression, etc)</value>
+          </text>
+          <text id="diseases-8">
+            <value>Other</value>
+          </text>
+          <text id="diseases-9">
+            <value>Not applicable</value>
+          </text>
+          <text id="diseases-10">
+            <value>I don't know</value>
+          </text>
+          <text id="languageLevel-0">
+            <value>Fluent</value>
+          </text>
+          <text id="languageLevel-1">
+            <value>Moderate</value>
+          </text>
+          <text id="languageLevel-2">
+            <value>Low</value>
+          </text>
+          <text id="languageLevel-3">
+            <value>No</value>
+          </text>
+          <text id="languageLevel-4">
+            <value>don't know</value>
+          </text>
+          <text id="/data/headOfHousehold:label">
+            <value>Household Information</value>
+          </text>
+          <text id="/data/headOfHousehold/region:label">
+            <value>Region</value>
+          </text>
+          <text id="/data/headOfHousehold/district:label">
+            <value>District</value>
+          </text>
+          <text id="/data/headOfHousehold/residentialAddress:label">
+            <value>Residential Address</value>
+          </text>
+          <text id="/data/headOfHousehold/primaryContactNo:label">
+            <value>Primary contact no.</value>
+          </text>
+          <text id="/data/headOfHousehold/SecondaryContactNo:label">
+            <value>Secondary contact no.</value>
+          </text>
+          <text id="/data/headOfHousehold/householdIncome:label">
+            <value>Household monthly income</value>
+          </text>
+          <text id="/data/headOfHousehold/se_list:label">
+            <value>se_list</value>
+          </text>
+          <text id="/data/headOfHousehold/SEClass:label">
+            <value>Economic Class</value>
+          </text>
+          <text id="/data/informationTechnology:label">
+            <value>Internet Access</value>
+          </text>
+          <text id="/data/informationTechnology/internetHH:label">
+            <value>Does the household have access to internet?</value>
+          </text>
+          <text id="/data/informationTechnology/internetType:label">
+            <value>Type of internet access / coverage</value>
+          </text>
+          <text id="/data/familyMembers:label">
+            <value>Household members</value>
+          </text>
+          <text id="/data/familyMembers/persons:label">
+            <value>Person</value>
+          </text>
+          <text id="/data/familyMembers/persons/firstNameFM:label">
+            <value>First name</value>
+          </text>
+          <text id="/data/familyMembers/persons/gender:label">
+            <value>Gender</value>
+          </text>
+          <text id="/data/familyMembers/persons/health:label">
+            <value>Health</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/healthVisit:label">
+            <value>Have they visited doctor / hospital in last 12 months?</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/healthFacility:label">
+            <value>Type of facility accessed?</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/reasonForNoHealthVisit:label">
+            <value>Reason for not accessing health facility?</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/diseases:label">
+            <value>Have they been diagnosed and prescribed a medicine for any diseases?</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup:label">
+            <value>Level of English proficiency:</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/languageProficiency:label">
+            <value>Component</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/readEnglish:label">
+            <value>Read</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/writeEnglish:label">
+            <value>Write</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/speakEnglish:label">
+            <value>Speak</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/listenEnglish:label">
+            <value>Listen</value>
+          </text>
+          <text id="/data/comments:label">
+            <value>Other Comments</value>
+          </text>
+        </translation>
+        <translation lang="French (fr)">
+          <text id="region-0">
+            <value>Sind</value>
+          </text>
+          <text id="region-1">
+            <value>Pendjab</value>
+          </text>
+          <text id="region-2">
+            <value>Baloutchistan</value>
+          </text>
+          <text id="region-3">
+            <value>Khyber Pakhunkhwan</value>
+          </text>
+          <text id="region-4">
+            <value>Azad Cachemire et Gilgit</value>
+          </text>
+          <text id="district-0">
+            <value>Karachi</value>
+          </text>
+          <text id="district-1">
+            <value>Sakhar</value>
+          </text>
+          <text id="district-2">
+            <value>Hyderâbâd</value>
+          </text>
+          <text id="district-3">
+            <value>Tando Turel</value>
+          </text>
+          <text id="district-4">
+            <value>Thatta et Shah Bunder</value>
+          </text>
+          <text id="district-5">
+            <value>Hafizabad</value>
+          </text>
+          <text id="district-6">
+            <value>Lahore et Sialkot</value>
+          </text>
+          <text id="district-7">
+            <value>Multan et Bahawalpur</value>
+          </text>
+          <text id="district-8">
+            <value>Rawalpindi</value>
+          </text>
+          <text id="district-9">
+            <value>Sargodha</value>
+          </text>
+          <text id="district-10">
+            <value>Arkari</value>
+          </text>
+          <text id="district-11">
+            <value>Ville de Chitral</value>
+          </text>
+          <text id="district-12">
+            <value>Garamchashma</value>
+          </text>
+          <text id="district-13">
+            <value>Madaklasht</value>
+          </text>
+          <text id="district-14">
+            <value>Parabeg</value>
+          </text>
+          <text id="district-15">
+            <value>Shohore</value>
+          </text>
+          <text id="district-16">
+            <value>Susum</value>
+          </text>
+          <text id="district-17">
+            <value>Claquer</value>
+          </text>
+          <text id="district-18">
+            <value>Booni</value>
+          </text>
+          <text id="district-19">
+            <value>Brep</value>
+          </text>
+          <text id="district-20">
+            <value>Khot</value>
+          </text>
+          <text id="district-21">
+            <value>Laspur</value>
+          </text>
+          <text id="district-22">
+            <value>Chatoorkhand</value>
+          </text>
+          <text id="district-23">
+            <value>Damas</value>
+          </text>
+          <text id="district-24">
+            <value>Gahkuch</value>
+          </text>
+          <text id="district-25">
+            <value>Immettre</value>
+          </text>
+          <text id="district-26">
+            <value>Ishkoman</value>
+          </text>
+          <text id="district-27">
+            <value>Sherquilla</value>
+          </text>
+          <text id="district-28">
+            <value>Singal</value>
+          </text>
+          <text id="district-29">
+            <value>Gilgit</value>
+          </text>
+          <text id="district-30">
+            <value>Skardu</value>
+          </text>
+          <text id="district-31">
+            <value>Sul, Dan et Oshikhandas</value>
+          </text>
+          <text id="monthlyIncome-0">
+            <value>Ne veut pas divulguer</value>
+          </text>
+          <text id="monthlyIncome-1">
+            <value>Moins de 10 000</value>
+          </text>
+          <text id="monthlyIncome-2">
+            <value>10 001 à 50 000</value>
+          </text>
+          <text id="monthlyIncome-3">
+            <value>50 001 à 60 000</value>
+          </text>
+          <text id="monthlyIncome-4">
+            <value>60 001 à 75 000</value>
+          </text>
+          <text id="monthlyIncome-5">
+            <value>75 001 à 100 000</value>
+          </text>
+          <text id="monthlyIncome-6">
+            <value>100 001 à 200 000</value>
+          </text>
+          <text id="monthlyIncome-7">
+            <value>Au-dessus de 200 000</value>
+          </text>
+          <text id="seclass-0">
+            <value>Inconnu</value>
+          </text>
+          <text id="seclass-1">
+            <value>Inférieur</value>
+          </text>
+          <text id="seclass-2">
+            <value>Inférieur</value>
+          </text>
+          <text id="seclass-3">
+            <value>Milieu</value>
+          </text>
+          <text id="seclass-4">
+            <value>Milieu</value>
+          </text>
+          <text id="seclass-5">
+            <value>Milieu</value>
+          </text>
+          <text id="seclass-6">
+            <value>Moyenne supérieure</value>
+          </text>
+          <text id="seclass-7">
+            <value>Supérieur</value>
+          </text>
+          <text id="yesNoIdk-0">
+            <value>Oui</value>
+          </text>
+          <text id="yesNoIdk-1">
+            <value>Non</value>
+          </text>
+          <text id="yesNoIdk-2">
+            <value>Je ne sais pas</value>
+          </text>
+          <text id="internetType-0">
+            <value>Accès disponible dans la zone, mais mon ménage n'est pas intéressé</value>
+          </text>
+          <text id="internetType-1">
+            <value>Câble / LAN / DSL</value>
+          </text>
+          <text id="internetType-2">
+            <value>Pas d'accès internet (dans la région)</value>
+          </text>
+          <text id="internetType-3">
+            <value>Disponible via 2G</value>
+          </text>
+          <text id="internetType-4">
+            <value>Disponible via 3G / 4G</value>
+          </text>
+          <text id="internetType-5">
+            <value>Je ne sais pas</value>
+          </text>
+          <text id="internetType-6">
+            <value>Autre</value>
+          </text>
+          <text id="gender-0">
+            <value>Mâle</value>
+          </text>
+          <text id="gender-1">
+            <value>Femelle</value>
+          </text>
+          <text id="gender-2">
+            <value>Autre</value>
+          </text>
+          <text id="healthFacility-0">
+            <value>LHV ou Agent de Santé Communautaire</value>
+          </text>
+          <text id="healthFacility-1">
+            <value>Clinique gouvernementale</value>
+          </text>
+          <text id="healthFacility-2">
+            <value>Clinique privée</value>
+          </text>
+          <text id="healthFacility-3">
+            <value>Clinique des ONG</value>
+          </text>
+          <text id="healthFacility-4">
+            <value>Guérisseurs traditionnels</value>
+          </text>
+          <text id="healthFacility-5">
+            <value>Pharmacien</value>
+          </text>
+          <text id="healthFacility-6">
+            <value>Autre</value>
+          </text>
+          <text id="reasonForNoHealthVisit-0">
+            <value>Installation non disponible dans la région</value>
+          </text>
+          <text id="reasonForNoHealthVisit-1">
+            <value>Manque de fonds</value>
+          </text>
+          <text id="reasonForNoHealthVisit-2">
+            <value>Manque de temps</value>
+          </text>
+          <text id="reasonForNoHealthVisit-3">
+            <value>Sain - pas besoin</value>
+          </text>
+          <text id="reasonForNoHealthVisit-4">
+            <value>Non mobile (lié au lit / handicapé)</value>
+          </text>
+          <text id="reasonForNoHealthVisit-5">
+            <value>Problèmes de sécurité</value>
+          </text>
+          <text id="reasonForNoHealthVisit-6">
+            <value>Préférez les guérisseurs traditionnels</value>
+          </text>
+          <text id="reasonForNoHealthVisit-7">
+            <value>Préférer les remèdes maison/automédication</value>
+          </text>
+          <text id="reasonForNoHealthVisit-8">
+            <value>Autre</value>
+          </text>
+          <text id="diseases-0">
+            <value>Diabète</value>
+          </text>
+          <text id="diseases-1">
+            <value>Cardiovasculaire (Cœur)</value>
+          </text>
+          <text id="diseases-2">
+            <value>Hypertension</value>
+          </text>
+          <text id="diseases-3">
+            <value>Problème rénal chronique</value>
+          </text>
+          <text id="diseases-4">
+            <value>Problèmes respiratoires (asthme, infection pulmonaire)</value>
+          </text>
+          <text id="diseases-5">
+            <value>Arthrite</value>
+          </text>
+          <text id="diseases-6">
+            <value>Cancer</value>
+          </text>
+          <text id="diseases-7">
+            <value>Santé mentale (dépression, etc.)</value>
+          </text>
+          <text id="diseases-8">
+            <value>Autre</value>
+          </text>
+          <text id="diseases-9">
+            <value>N'est pas applicable</value>
+          </text>
+          <text id="diseases-10">
+            <value>Je ne sais pas</value>
+          </text>
+          <text id="languageLevel-0">
+            <value>Courant</value>
+          </text>
+          <text id="languageLevel-1">
+            <value>Modéré</value>
+          </text>
+          <text id="languageLevel-2">
+            <value>Faible</value>
+          </text>
+          <text id="languageLevel-3">
+            <value>Non</value>
+          </text>
+          <text id="languageLevel-4">
+            <value>je ne sais pas</value>
+          </text>
+          <text id="/data/headOfHousehold:label">
+            <value>Informations sur le ménage</value>
+          </text>
+          <text id="/data/headOfHousehold/region:label">
+            <value>Région</value>
+          </text>
+          <text id="/data/headOfHousehold/district:label">
+            <value>District</value>
+          </text>
+          <text id="/data/headOfHousehold/residentialAddress:label">
+            <value>Adresse résidentielle</value>
+          </text>
+          <text id="/data/headOfHousehold/primaryContactNo:label">
+            <value>Numéro de contact principal</value>
+          </text>
+          <text id="/data/headOfHousehold/SecondaryContactNo:label">
+            <value>Numéro de contact secondaire</value>
+          </text>
+          <text id="/data/headOfHousehold/householdIncome:label">
+            <value>revenu mensuel des ménages</value>
+          </text>
+          <text id="/data/headOfHousehold/se_list:label">
+            <value>se_list</value>
+          </text>
+          <text id="/data/headOfHousehold/SEClass:label">
+            <value>Classe économique</value>
+          </text>
+          <text id="/data/informationTechnology:label">
+            <value>Accès Internet</value>
+          </text>
+          <text id="/data/informationTechnology/internetHH:label">
+            <value>Type d'accès / couverture Internet</value>
+          </text>
+          <text id="/data/informationTechnology/internetType:label">
+            <value>Type d'accès / couverture Internet</value>
+          </text>
+          <text id="/data/familyMembers:label">
+            <value>Membres du foyer</value>
+          </text>
+          <text id="/data/familyMembers/persons:label">
+            <value>Personne</value>
+          </text>
+          <text id="/data/familyMembers/persons/firstNameFM:label">
+            <value>Prénom</value>
+          </text>
+          <text id="/data/familyMembers/persons/gender:label">
+            <value>Genre</value>
+          </text>
+          <text id="/data/familyMembers/persons/health:label">
+            <value>Santé</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/healthVisit:label">
+            <value>Ont-ils consulté un médecin/un hôpital au cours des 12 derniers mois ?</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/healthFacility:label">
+            <value>Type d'établissement consulté ?</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/reasonForNoHealthVisit:label">
+            <value>Raison pour laquelle vous n'avez pas accès aux établissements de santé ?</value>
+          </text>
+          <text id="/data/familyMembers/persons/health/diseases:label">
+            <value>Ont-ils été diagnostiqués et prescrits des médicaments pour des maladies ?</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup:label">
+            <value>Niveau de maîtrise de l'anglais :</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/languageProficiency:label">
+            <value>Composant</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/readEnglish:label">
+            <value>Lire</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/writeEnglish:label">
+            <value>Écrire</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/speakEnglish:label">
+            <value>Parler</value>
+          </text>
+          <text id="/data/familyMembers/persons/languageProficiencyGroup/listenEnglish:label">
+            <value>Écouter</value>
+          </text>
+          <text id="/data/comments:label">
+            <value>Autres commentaires</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="ses2018" version="0.1">
+          <headOfHousehold>
+            <region />
+            <district />
+            <residentialAddress />
+            <primaryContactNo />
+            <SecondaryContactNo />
+            <householdIncome />
+            <se_list />
+            <SEClass />
+          </headOfHousehold>
+          <informationTechnology>
+            <internetHH />
+            <internetType />
+          </informationTechnology>
+          <familyMembers jr:template="">
+            <persons>
+              <firstNameFM />
+              <gender />
+              <health>
+                <healthVisit />
+                <healthFacility />
+                <reasonForNoHealthVisit />
+                <diseases />
+              </health>
+              <languageProficiencyGroup>
+                <languageProficiency />
+                <readEnglish />
+                <writeEnglish />
+                <speakEnglish />
+                <listenEnglish />
+              </languageProficiencyGroup>
+            </persons>
+          </familyMembers>
+          <familyMembers>
+            <persons>
+              <firstNameFM />
+              <gender />
+              <health>
+                <healthVisit />
+                <healthFacility />
+                <reasonForNoHealthVisit />
+                <diseases />
+              </health>
+              <languageProficiencyGroup>
+                <languageProficiency />
+                <readEnglish />
+                <writeEnglish />
+                <speakEnglish />
+                <listenEnglish />
+              </languageProficiencyGroup>
+            </persons>
+          </familyMembers>
+          <comments />
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <instance id="region">
+        <root>
+          <item>
+            <itextId>region-0</itextId>
+            <name>Sindh</name>
+          </item>
+          <item>
+            <itextId>region-1</itextId>
+            <name>Punjab</name>
+          </item>
+          <item>
+            <itextId>region-2</itextId>
+            <name>Balochistan</name>
+          </item>
+          <item>
+            <itextId>region-3</itextId>
+            <name>KP</name>
+          </item>
+          <item>
+            <itextId>region-4</itextId>
+            <name>AKG</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="district">
+        <root>
+          <item>
+            <itextId>district-0</itextId>
+            <name>Garden</name>
+            <region>Sindh</region>
+          </item>
+          <item>
+            <itextId>district-1</itextId>
+            <name>Gulshan</name>
+            <region>Sindh</region>
+          </item>
+          <item>
+            <itextId>district-2</itextId>
+            <name>Hyderabad</name>
+            <region>Sindh</region>
+          </item>
+          <item>
+            <itextId>district-3</itextId>
+            <name>TandoTurel</name>
+            <region>Sindh</region>
+          </item>
+          <item>
+            <itextId>district-4</itextId>
+            <name>Thatta&amp;ShahBunder</name>
+            <region>Sindh</region>
+          </item>
+          <item>
+            <itextId>district-5</itextId>
+            <name>Hafizabad</name>
+            <region>Punjab</region>
+          </item>
+          <item>
+            <itextId>district-6</itextId>
+            <name>Lahore&amp;Sialkot</name>
+            <region>Punjab</region>
+          </item>
+          <item>
+            <itextId>district-7</itextId>
+            <name>Multan&amp;Bahawalpur</name>
+            <region>Punjab</region>
+          </item>
+          <item>
+            <itextId>district-8</itextId>
+            <name>Rawalpindi</name>
+            <region>Punjab</region>
+          </item>
+          <item>
+            <itextId>district-9</itextId>
+            <name>Sargodha</name>
+            <region>Punjab</region>
+          </item>
+          <item>
+            <itextId>district-10</itextId>
+            <name>Arkari</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-11</itextId>
+            <name>ChitralTown</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-12</itextId>
+            <name>Garamchashma</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-13</itextId>
+            <name>Madaklasht</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-14</itextId>
+            <name>Parabeg</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-15</itextId>
+            <name>Shoghore</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-16</itextId>
+            <name>Susum</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-17</itextId>
+            <name>Bang</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-18</itextId>
+            <name>Booni</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-19</itextId>
+            <name>Brep</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-20</itextId>
+            <name>Khot</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-21</itextId>
+            <name>Laspur</name>
+            <region>KP</region>
+          </item>
+          <item>
+            <itextId>district-22</itextId>
+            <name>Chatoorkhand</name>
+            <region>Balochistan</region>
+          </item>
+          <item>
+            <itextId>district-23</itextId>
+            <name>Damas</name>
+            <region>Balochistan</region>
+          </item>
+          <item>
+            <itextId>district-24</itextId>
+            <name>Gahkuch</name>
+            <region>Balochistan</region>
+          </item>
+          <item>
+            <itextId>district-25</itextId>
+            <name>Immit</name>
+            <region>Balochistan</region>
+          </item>
+          <item>
+            <itextId>district-26</itextId>
+            <name>Ishkoman</name>
+            <region>Balochistan</region>
+          </item>
+          <item>
+            <itextId>district-27</itextId>
+            <name>Sherquilla</name>
+            <region>Balochistan</region>
+          </item>
+          <item>
+            <itextId>district-28</itextId>
+            <name>Singal</name>
+            <region>Balochistan</region>
+          </item>
+          <item>
+            <itextId>district-29</itextId>
+            <name>Gilgit</name>
+            <region>AKG</region>
+          </item>
+          <item>
+            <itextId>district-30</itextId>
+            <name>Skardu</name>
+            <region>AKG</region>
+          </item>
+          <item>
+            <itextId>district-31</itextId>
+            <name>Sul,Dan&amp;Oshikhandas</name>
+            <region>AKG</region>
+          </item>
+        </root>
+      </instance>
+      <instance id="monthlyIncome">
+        <root>
+          <item>
+            <itextId>monthlyIncome-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>monthlyIncome-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>monthlyIncome-2</itextId>
+            <name>3</name>
+          </item>
+          <item>
+            <itextId>monthlyIncome-3</itextId>
+            <name>4</name>
+          </item>
+          <item>
+            <itextId>monthlyIncome-4</itextId>
+            <name>5</name>
+          </item>
+          <item>
+            <itextId>monthlyIncome-5</itextId>
+            <name>6</name>
+          </item>
+          <item>
+            <itextId>monthlyIncome-6</itextId>
+            <name>7</name>
+          </item>
+          <item>
+            <itextId>monthlyIncome-7</itextId>
+            <name>8</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="seclass">
+        <root>
+          <item>
+            <itextId>seclass-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>seclass-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>seclass-2</itextId>
+            <name>3</name>
+          </item>
+          <item>
+            <itextId>seclass-3</itextId>
+            <name>4</name>
+          </item>
+          <item>
+            <itextId>seclass-4</itextId>
+            <name>5</name>
+          </item>
+          <item>
+            <itextId>seclass-5</itextId>
+            <name>6</name>
+          </item>
+          <item>
+            <itextId>seclass-6</itextId>
+            <name>7</name>
+          </item>
+          <item>
+            <itextId>seclass-7</itextId>
+            <name>8</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="yesNoIdk">
+        <root>
+          <item>
+            <itextId>yesNoIdk-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>yesNoIdk-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>yesNoIdk-2</itextId>
+            <name>3</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="internetType">
+        <root>
+          <item>
+            <itextId>internetType-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>internetType-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>internetType-2</itextId>
+            <name>3</name>
+          </item>
+          <item>
+            <itextId>internetType-3</itextId>
+            <name>4</name>
+          </item>
+          <item>
+            <itextId>internetType-4</itextId>
+            <name>5</name>
+          </item>
+          <item>
+            <itextId>internetType-5</itextId>
+            <name>6</name>
+          </item>
+          <item>
+            <itextId>internetType-6</itextId>
+            <name>7</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="gender">
+        <root>
+          <item>
+            <itextId>gender-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>gender-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>gender-2</itextId>
+            <name>3</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="healthFacility">
+        <root>
+          <item>
+            <itextId>healthFacility-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>healthFacility-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>healthFacility-2</itextId>
+            <name>3</name>
+          </item>
+          <item>
+            <itextId>healthFacility-3</itextId>
+            <name>4</name>
+          </item>
+          <item>
+            <itextId>healthFacility-4</itextId>
+            <name>5</name>
+          </item>
+          <item>
+            <itextId>healthFacility-5</itextId>
+            <name>6</name>
+          </item>
+          <item>
+            <itextId>healthFacility-6</itextId>
+            <name>7</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="reasonForNoHealthVisit">
+        <root>
+          <item>
+            <itextId>reasonForNoHealthVisit-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-2</itextId>
+            <name>3</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-3</itextId>
+            <name>4</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-4</itextId>
+            <name>5</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-5</itextId>
+            <name>6</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-6</itextId>
+            <name>7</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-7</itextId>
+            <name>8</name>
+          </item>
+          <item>
+            <itextId>reasonForNoHealthVisit-8</itextId>
+            <name>9</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="diseases">
+        <root>
+          <item>
+            <itextId>diseases-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>diseases-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>diseases-2</itextId>
+            <name>3</name>
+          </item>
+          <item>
+            <itextId>diseases-3</itextId>
+            <name>4</name>
+          </item>
+          <item>
+            <itextId>diseases-4</itextId>
+            <name>5</name>
+          </item>
+          <item>
+            <itextId>diseases-5</itextId>
+            <name>6</name>
+          </item>
+          <item>
+            <itextId>diseases-6</itextId>
+            <name>7</name>
+          </item>
+          <item>
+            <itextId>diseases-7</itextId>
+            <name>8</name>
+          </item>
+          <item>
+            <itextId>diseases-8</itextId>
+            <name>9</name>
+          </item>
+          <item>
+            <itextId>diseases-9</itextId>
+            <name>10</name>
+          </item>
+          <item>
+            <itextId>diseases-10</itextId>
+            <name>11</name>
+          </item>
+        </root>
+      </instance>
+      <instance id="languageLevel">
+        <root>
+          <item>
+            <itextId>languageLevel-0</itextId>
+            <name>1</name>
+          </item>
+          <item>
+            <itextId>languageLevel-1</itextId>
+            <name>2</name>
+          </item>
+          <item>
+            <itextId>languageLevel-2</itextId>
+            <name>3</name>
+          </item>
+          <item>
+            <itextId>languageLevel-3</itextId>
+            <name>4</name>
+          </item>
+          <item>
+            <itextId>languageLevel-4</itextId>
+            <name>5</name>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/headOfHousehold/region" type="string" required="true()" />
+      <bind nodeset="/data/headOfHousehold/district" type="string" required="true()" />
+      <bind nodeset="/data/headOfHousehold/residentialAddress" type="string" required="true()" />
+      <bind nodeset="/data/headOfHousehold/primaryContactNo" type="string" required="true()" />
+      <bind nodeset="/data/headOfHousehold/SecondaryContactNo" type="string" />
+      <bind nodeset="/data/headOfHousehold/householdIncome" type="string" />
+      <bind nodeset="/data/headOfHousehold/se_list" type="string" relevant="false()" />
+      <bind nodeset="/data/headOfHousehold/SEClass" type="string" readonly="true()"
+        calculate="jr:itext(instance('seclass')/root/item[name =  /data/headOfHousehold/householdIncome ]/itextId)" />
+      <bind nodeset="/data/informationTechnology/internetHH" type="string" required="true()" />
+      <bind nodeset="/data/informationTechnology/internetType" type="string" required="true()"
+        relevant=" /data/informationTechnology/internetHH  = 1" />
+      <bind nodeset="/data/familyMembers/persons/firstNameFM" type="string" required="true()" />
+      <bind nodeset="/data/familyMembers/persons/gender" type="string" required="true()" />
+      <bind nodeset="/data/familyMembers/persons/health/healthVisit" type="string" />
+      <bind nodeset="/data/familyMembers/persons/health/healthFacility" type="string"
+        constraint="count-selected(.)&lt;=3" jr:constraintMsg="Up to 3 options can be selected"
+        required="true()" relevant=" ../healthVisit  = 1" />
+      <bind nodeset="/data/familyMembers/persons/health/reasonForNoHealthVisit" type="string"
+        constraint="count-selected(.)&lt;=3" jr:constraintMsg="Up to 3 options can be selected"
+        required="true()" relevant=" ../healthVisit  = 2" />
+      <bind nodeset="/data/familyMembers/persons/health/diseases" type="string"
+        constraint="count-selected(.)&lt;=3" jr:constraintMsg="Up to 3 options can be selected"
+        required="true()" />
+      <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup" required="true()" />
+      <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/languageProficiency"
+        type="string" required="true()" />
+      <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/readEnglish" type="string"
+        required="true()" />
+      <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/writeEnglish"
+        type="string" required="true()" />
+      <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/speakEnglish"
+        type="string" required="true()" />
+      <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/listenEnglish"
+        type="string" required="true()" />
+      <bind nodeset="/data/comments" type="string" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+    </model>
+  </h:head>
+  <h:body>
+    <group appearance="field-list" ref="/data/headOfHousehold">
+      <label ref="jr:itext('/data/headOfHousehold:label')" />
+      <select1 appearance="minimal" ref="/data/headOfHousehold/region">
+        <label ref="jr:itext('/data/headOfHousehold/region:label')" />
+        <itemset nodeset="instance('region')/root/item">
+          <value ref="name" />
+          <label ref="jr:itext(itextId)" />
+        </itemset>
+      </select1>
+      <select1 appearance="search" ref="/data/headOfHousehold/district">
+        <label ref="jr:itext('/data/headOfHousehold/district:label')" />
+        <itemset nodeset="instance('district')/root/item[region= /data/headOfHousehold/region ]">
+          <value ref="name" />
+          <label ref="jr:itext(itextId)" />
+        </itemset>
+      </select1>
+      <input ref="/data/headOfHousehold/residentialAddress">
+        <label ref="jr:itext('/data/headOfHousehold/residentialAddress:label')" />
+      </input>
+      <input ref="/data/headOfHousehold/primaryContactNo">
+        <label ref="jr:itext('/data/headOfHousehold/primaryContactNo:label')" />
+      </input>
+      <input ref="/data/headOfHousehold/SecondaryContactNo">
+        <label ref="jr:itext('/data/headOfHousehold/SecondaryContactNo:label')" />
+      </input>
+      <select1 appearance="columns" ref="/data/headOfHousehold/householdIncome">
+        <label ref="jr:itext('/data/headOfHousehold/householdIncome:label')" />
+        <itemset nodeset="instance('monthlyIncome')/root/item">
+          <value ref="name" />
+          <label ref="jr:itext(itextId)" />
+        </itemset>
+      </select1>
+      <select1 ref="/data/headOfHousehold/se_list">
+        <label ref="jr:itext('/data/headOfHousehold/se_list:label')" />
+        <itemset nodeset="instance('seclass')/root/item">
+          <value ref="name" />
+          <label ref="jr:itext(itextId)" />
+        </itemset>
+      </select1>
+      <input ref="/data/headOfHousehold/SEClass">
+        <label ref="jr:itext('/data/headOfHousehold/SEClass:label')" />
+      </input>
+    </group>
+    <group appearance="field-list" ref="/data/informationTechnology">
+      <label ref="jr:itext('/data/informationTechnology:label')" />
+      <select1 appearance="horizontal" ref="/data/informationTechnology/internetHH">
+        <label ref="jr:itext('/data/informationTechnology/internetHH:label')" />
+        <itemset nodeset="instance('yesNoIdk')/root/item">
+          <value ref="name" />
+          <label ref="jr:itext(itextId)" />
+        </itemset>
+      </select1>
+      <select1 appearance="horizontal" ref="/data/informationTechnology/internetType">
+        <label ref="jr:itext('/data/informationTechnology/internetType:label')" />
+        <itemset nodeset="instance('internetType')/root/item">
+          <value ref="name" />
+          <label ref="jr:itext(itextId)" />
+        </itemset>
+      </select1>
+    </group>
+    <group ref="/data/familyMembers">
+      <label ref="jr:itext('/data/familyMembers:label')" />
+      <repeat nodeset="/data/familyMembers">
+        <group ref="/data/familyMembers/persons">
+          <label ref="jr:itext('/data/familyMembers/persons:label')" />
+          <input ref="/data/familyMembers/persons/firstNameFM">
+            <label ref="jr:itext('/data/familyMembers/persons/firstNameFM:label')" />
+          </input>
+          <select1 ref="/data/familyMembers/persons/gender">
+            <label ref="jr:itext('/data/familyMembers/persons/gender:label')" />
+            <itemset nodeset="instance('gender')/root/item">
+              <value ref="name" />
+              <label ref="jr:itext(itextId)" />
+            </itemset>
+          </select1>
+          <group appearance="field-list" ref="/data/familyMembers/persons/health">
+            <label ref="jr:itext('/data/familyMembers/persons/health:label')" />
+            <select1 appearance="columns-3" ref="/data/familyMembers/persons/health/healthVisit">
+              <label ref="jr:itext('/data/familyMembers/persons/health/healthVisit:label')" />
+              <itemset nodeset="instance('yesNoIdk')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select1>
+            <select appearance="minimal" ref="/data/familyMembers/persons/health/healthFacility">
+              <label ref="jr:itext('/data/familyMembers/persons/health/healthFacility:label')" />
+              <hint>Select top 3</hint>
+              <itemset nodeset="instance('healthFacility')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select>
+            <select appearance="minimal"
+              ref="/data/familyMembers/persons/health/reasonForNoHealthVisit">
+              <label
+                ref="jr:itext('/data/familyMembers/persons/health/reasonForNoHealthVisit:label')" />
+              <hint>Select top 4</hint>
+              <itemset nodeset="instance('reasonForNoHealthVisit')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select>
+            <select appearance="minimal" ref="/data/familyMembers/persons/health/diseases">
+              <label ref="jr:itext('/data/familyMembers/persons/health/diseases:label')" />
+              <hint>Select top 5</hint>
+              <itemset nodeset="instance('diseases')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select>
+          </group>
+          <group appearance="field-list" ref="/data/familyMembers/persons/languageProficiencyGroup">
+            <label ref="jr:itext('/data/familyMembers/persons/languageProficiencyGroup:label')" />
+            <select1 appearance="label"
+              ref="/data/familyMembers/persons/languageProficiencyGroup/languageProficiency">
+              <label
+                ref="jr:itext('/data/familyMembers/persons/languageProficiencyGroup/languageProficiency:label')" />
+              <itemset nodeset="instance('languageLevel')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select1>
+            <select1 appearance="list-nolabel"
+              ref="/data/familyMembers/persons/languageProficiencyGroup/readEnglish">
+              <label
+                ref="jr:itext('/data/familyMembers/persons/languageProficiencyGroup/readEnglish:label')" />
+              <itemset nodeset="instance('languageLevel')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select1>
+            <select1 appearance="list-nolabel"
+              ref="/data/familyMembers/persons/languageProficiencyGroup/writeEnglish">
+              <label
+                ref="jr:itext('/data/familyMembers/persons/languageProficiencyGroup/writeEnglish:label')" />
+              <itemset nodeset="instance('languageLevel')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select1>
+            <select1 appearance="list-nolabel"
+              ref="/data/familyMembers/persons/languageProficiencyGroup/speakEnglish">
+              <label
+                ref="jr:itext('/data/familyMembers/persons/languageProficiencyGroup/speakEnglish:label')" />
+              <itemset nodeset="instance('languageLevel')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select1>
+            <select1 appearance="list-nolabel"
+              ref="/data/familyMembers/persons/languageProficiencyGroup/listenEnglish">
+              <label
+                ref="jr:itext('/data/familyMembers/persons/languageProficiencyGroup/listenEnglish:label')" />
+              <itemset nodeset="instance('languageLevel')/root/item">
+                <value ref="name" />
+                <label ref="jr:itext(itextId)" />
+              </itemset>
+            </select1>
+          </group>
+        </group>
+      </repeat>
+    </group>
+    <input appearance="multiline" ref="/data/comments">
+      <label ref="jr:itext('/data/comments:label')" />
+    </input>
+  </h:body>
+</h:html>

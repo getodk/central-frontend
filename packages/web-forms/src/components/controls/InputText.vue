@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { StringNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
-import { ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import ControlLabel from '../ControlLabel.vue';
+import ValidationMessage from '../ValidationMessage.vue';
 
 const props = defineProps<{question: StringNode}>();
 
@@ -10,14 +11,15 @@ const setValue = (value = '') => {
 	props.question.setValue(value);
 };
 
-const isDirty = ref(false);
-
+const doneAnswering = ref(false);
+const submitPressed = inject<boolean>('submitPressed');
+const invalid = computed(() => props.question.validationState.violation?.valid === false);
 </script>
 
 <template>
 	<ControlLabel :question="question" />
 
-	<div class="textbox-container" :class="{ dirty: isDirty }">
+	<div class="textbox-container">
 		<InputText
 			:id="question.nodeId"
 			:required="question.currentState.required" 
@@ -25,10 +27,12 @@ const isDirty = ref(false);
 			variant="filled"
 			:model-value="question.currentState.value"			
 			@update:model-value="setValue"
-			@change="isDirty = true"
+			@input="doneAnswering = false"
+			@blur="doneAnswering = true"
 		/>
-		<i class="icon-error" />
+		<i v-show="invalid && (doneAnswering || submitPressed)" class="icon-error" />
 	</div>
+	<ValidationMessage :message="question.validationState.violation?.message.asString" :show-message="doneAnswering || submitPressed" />
 </template>
 
 <style scoped lang="scss">
@@ -47,18 +51,12 @@ const isDirty = ref(false);
 		}
 	}
 
-	i {
+	.icon-error {
 		position: absolute;
 		right: 10px;
 		top: 15px;
-		display: none;
 		color: var(--error-text-color);
 		font-size: 1.2rem;
 	}
-}
-
-:global(.odk-form.submit-pressed .invalid .textbox-container i), 
-:global(.invalid .dirty .textbox-container i) {
-	display: block;
 }
 </style>

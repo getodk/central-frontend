@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeMultiSelect from 'primevue/multiselect';
-import { ref } from 'vue';
 
 const props = defineProps<{ question: SelectNode, style?: string}>();
-defineEmits(['update:modelValue']);
+defineEmits(['update:modelValue', 'change']);
 
 const setSelectNValue = (values: SelectItem[]) => {
 	for(const v of props.question.currentState.value){
@@ -24,13 +23,11 @@ if(props.question.appearances['no-buttons']) {
 	panelClass += ' no-buttons';
 }
 
-const isDirty = ref(false);
 </script>
 
 <template>
 	<PrimeMultiSelect 
 		class="multi-select-dropdown"
-		:class="{dirty: isDirty}"
 		:input-id="question.nodeId"
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
@@ -40,7 +37,7 @@ const isDirty = ref(false);
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"		
 		@update:model-value="setSelectNValue"
-		@change="isDirty = true"
+		@change="$emit('change')"
 	/>
 </template>
 

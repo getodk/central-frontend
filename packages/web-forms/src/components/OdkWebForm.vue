@@ -2,7 +2,7 @@
 import { initializeForm, type RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
-import { reactive, ref } from 'vue';
+import { provide, reactive, ref } from 'vue';
 import FormHeader from './FormHeader.vue';
 
 import QuestionList from './QuestionList.vue';
@@ -33,6 +33,7 @@ const handleSubmit = () => {
 	}
 }
 
+provide('submitPressed', submitPressed);
 </script>
 
 <template>

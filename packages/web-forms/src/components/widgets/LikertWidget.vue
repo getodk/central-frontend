@@ -3,12 +3,13 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import RadioButton from '../widgets/RadioButton.vue';
 
 defineProps<{question: SelectNode}>();
+defineEmits(['change']);
 
 </script>
 
 <template>
 	<div class="likert">
-		<RadioButton :question="question" />
+		<RadioButton :question="question" @change="$emit('change')" />
 	</div>
 </template>
 
