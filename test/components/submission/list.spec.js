@@ -141,7 +141,7 @@ describe('SubmissionList', () => {
         const rows = component.findAllComponents(SubmissionDataRow);
         rows.length.should.equal(count);
         const submissions = testData.extendedSubmissions.sorted();
-        submissions.length.should.be.aboveOrEqual(count + offset);
+        submissions.length.should.be.at.least(count + offset);
         for (let i = 0; i < rows.length; i += 1) {
           const text = rows[i].get('td:last-child').text();
           text.should.equal(submissions[i + offset].instanceId);

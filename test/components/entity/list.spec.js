@@ -666,7 +666,7 @@ describe('EntityList', () => {
       const rows = component.findAllComponents(EntityDataRow);
       rows.length.should.equal(count);
       const entities = testData.extendedEntities.sorted();
-      entities.length.should.be.aboveOrEqual(count + offset);
+      entities.length.should.be.at.least(count + offset);
       for (let i = 0; i < rows.length; i += 1) {
         const text = rows[i].get('td:last-child').text();
         text.should.equal(entities[i + offset].uuid);
