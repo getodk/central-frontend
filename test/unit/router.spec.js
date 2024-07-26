@@ -183,7 +183,7 @@ describe('util/router', () => {
 
     it('returns a promise', () => {
       const container = createTestContainer({ router: testRouter() });
-      forceReplace(container, '/').should.be.a.Promise();
+      forceReplace(container, '/').should.be.an.instanceof(Promise);
     });
 
     describe('unsaved changes', () => {
