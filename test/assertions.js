@@ -1,6 +1,9 @@
-import should from 'should';
+import chaiAsPromised from 'chai-as-promised';
+import { use } from 'chai';
 
 import { wait } from './util/util';
+
+use(chaiAsPromised);
 
 // Takes an object that is either a native HTMLElement or a Vue Test Utils
 // wrapper, then consistently returns an HTMLElement. If the object is a

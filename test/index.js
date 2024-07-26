@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { enableAutoUnmount } from '@vue/test-utils';
-import 'should';
+import { expect, should } from 'chai';
 
 import '../src/styles';
 import '../src/jquery';
@@ -15,6 +15,9 @@ import './assertions';
 window.beforeAll = before; // eslint-disable-line no-undef
 window.afterAll = after; // eslint-disable-line no-undef
 window.test = it;
+
+window.should = should();
+window.expect = expect;
 
 
 

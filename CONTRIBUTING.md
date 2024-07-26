@@ -306,14 +306,14 @@ Our tests use a number of external packages:
 
 - Karma, a test runner that we have configured to run tests in Headless Chrome
 - Mocha, a test framework
-- Should.js, for assertions
+- Chai, for assertions
 - Sinon.JS, for spies and stubs
 - faker.js, to generate test data
 - Vue Test Utils, to test Vue components
 
 `npm run test` runs [`/test/index.js`](/test/index.js), which mocks global utilities and sets up Mocha hooks.
 
-We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
+[`/test/assertions.js`](/test/assertions.js) adds Chai helpers.
 
 [Vue Test Utils](https://test-utils.vuejs.org/) renders Vue components for testing, allowing you to test that a component renders and behaves as expected. We have built some functionality on top of Vue Test Utils, in particular [`mount()`](/test/util/lifecycle.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
 
