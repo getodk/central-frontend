@@ -3,8 +3,7 @@ import { type FormLanguage, type RootNode, type SyntheticDefaultLanguage } from 
 import PrimeButton from 'primevue/button';
 import PrimeCard from 'primevue/card';
 import PrimeMenu from 'primevue/menu';
-import PrimeMessage from 'primevue/message';
-import { computed, inject, ref } from 'vue';
+import { ref } from 'vue';
 import FormLanguageDialog from './FormLanguageDialog.vue';
 import FormLanguageMenu from './FormLanguageMenu.vue';
 
@@ -19,14 +18,6 @@ const isFormLanguage = (lang: FormLanguage | SyntheticDefaultLanguage) : lang is
 const languages = props.form.languages.filter(isFormLanguage);
 
 const print = () => window.print();
-
-const formErrorMessage = computed(() => {
-	const violationLength = props.form.validationState.violations.length;
-
-	if(violationLength === 0) return '';
-	else if(violationLength === 1) return '1 question with error';
-	else return `${violationLength} questions with errors`;
-});
 
 const items = ref([
 	{
@@ -47,23 +38,11 @@ if(languages.length > 0){
 const handleLanguageChange = (event: FormLanguage) => {
 	props.form.setLanguage(event);
 };
-
-const scrollToFirstInvalidQuestion = () => {
-	document.getElementById(props.form.validationState.violations[0].nodeId + '_container')?.scrollIntoView({
-		behavior: 'smooth'
-	});
-}
-
-const submitPressed = inject('submitPressed');
 </script>
 
 <template>
 	<!-- for desktop -->
 	<div class="hidden lg:inline larger-screens">
-		<PrimeMessage v-if="formErrorMessage" v-show="submitPressed" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
-			{{ formErrorMessage }}
-			<span class="fix-errors" @click="scrollToFirstInvalidQuestion()">Fix errors</span>
-		</PrimeMessage>
 		<div class="flex justify-content-end flex-wrap gap-3">
 			<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
 			<FormLanguageMenu 
@@ -112,10 +91,6 @@ const submitPressed = inject('submitPressed');
 				/>
 			</div>
 		</div>
-		<PrimeMessage v-if="formErrorMessage" v-show="submitPressed" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
-			{{ formErrorMessage }}
-			<span class="fix-errors" @click="scrollToFirstInvalidQuestion()">Fix errors</span>
-		</PrimeMessage>
 	</div>
 </template>
 
@@ -154,36 +129,6 @@ const submitPressed = inject('submitPressed');
 	}
 }
 
-.form-error-message.p-message.p-message-error {
-	border-radius: 10px;
-	background-color: var(--error-bg-color);
-	border: 1px solid var(--error-text-color);
-	width: 70%;
-	margin: 0rem auto 1rem auto;
-	position: sticky;
-	top: 0;
-	// Some PrimeVue components use z-index.
-	// Default value for those are either 1000 or 1100
-	// So 5000 here is safe.
-	z-index: 5000;
-
-	:deep(.p-message-wrapper) {
-		padding: 0.75rem 0.75rem;
-		flex-grow: 1;
-	}
-
-	:deep(.p-message-text){
-		font-weight: 400;
-		flex-grow: 1;
-
-		.fix-errors {
-			float: right;
-			cursor: pointer;
-		}
-	}
-
-}
-
 .smaller-screens {
 	.title-bar{
 		background-color: var(--surface-0);
@@ -203,10 +148,7 @@ const submitPressed = inject('submitPressed');
 		}
 	}
 
-	.form-error-message.p-message.p-message-error {
-		margin-top: 1rem;
-		margin-bottom: 0;
-	}
+	
 }
 
 </style>
