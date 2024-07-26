@@ -30,7 +30,7 @@ describe('SummaryItem', () => {
     });
     const links = item.findAllComponents(RouterLinkStub);
     links.length.should.equal(3);
-    links.map(link => link.props().to).should.matchEach('/users');
+    for (const link of links) link.props().to.should.equal('/users');
   });
 
   it('emits a click event if the clickable prop is true', async () => {
