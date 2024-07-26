@@ -870,7 +870,10 @@ becomes more complicated.
     }
   }
 
-  .badge { vertical-align: baseline; }
+  .badge {
+    position: relative;
+    top: -1px;
+  }
 }
 
 .chip {
