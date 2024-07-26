@@ -1,12 +1,15 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { AnyNode, RootNode, AnyLeafNode as ValueNode } from '@getodk/xforms-engine';
+import type { AnyNode, RootNode } from '@getodk/xforms-engine';
+import { ModelValueNodeAnswer } from '../answer/ModelValueNodeAnswer.ts.ts';
 import { SelectNodeAnswer } from '../answer/SelectNodeAnswer.ts';
 import { StringNodeAnswer } from '../answer/StringNodeAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { getNodeForReference } from './traversal.ts';
 
-const isValueNode = (node: AnyNode): node is ValueNode => {
-	return node.nodeType === 'select' || node.nodeType === 'string';
+const isValueNode = (node: AnyNode) => {
+	return (
+		node.nodeType === 'model-value' || node.nodeType === 'select' || node.nodeType === 'string'
+	);
 };
 
 export const answerOf = (instanceRoot: RootNode, reference: string): ValueNodeAnswer => {
@@ -17,6 +20,9 @@ export const answerOf = (instanceRoot: RootNode, reference: string): ValueNodeAn
 	}
 
 	switch (node.nodeType) {
+		case 'model-value':
+			return new ModelValueNodeAnswer(node);
+
 		case 'select':
 			return new SelectNodeAnswer(node);
 

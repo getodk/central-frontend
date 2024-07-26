@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { AnyLeafNode, SelectNode, StringNode } from '@getodk/xforms-engine';
+import type { AnyControlNode as QuestionNode, SelectNode, StringNode } from '@getodk/xforms-engine';
 import InputText from './controls/InputText.vue';
 import SelectControl from './controls/SelectControl.vue';
 import UnsupportedControl from './controls/UnsupportedControl.vue';
 
-defineProps<{question: AnyLeafNode}>();
+defineProps<{question: QuestionNode}>();
 
-const isStringNode = (n: AnyLeafNode) : n is StringNode => n.nodeType === 'string';
-const isSelectNode = (n: AnyLeafNode) : n is SelectNode => n.nodeType === 'select';
+const isStringNode = (n: QuestionNode): n is StringNode => n.nodeType === 'string';
+const isSelectNode = (n: QuestionNode): n is SelectNode => n.nodeType === 'select';
 
 
 </script>

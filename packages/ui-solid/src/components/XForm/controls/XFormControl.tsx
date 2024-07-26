@@ -3,25 +3,19 @@ import { Match, Switch, createMemo } from 'solid-js';
 import { XFormRelevanceGuard } from '../XFormRelevanceGuard.tsx';
 import { XFormUnknownControl } from '../debugging/XFormUnknownControl.tsx';
 import { SelectControl } from './SelectControl.tsx';
-import { XFormInputControl, type XFormInputControlProps } from './XFormInputControl.tsx';
+import { XFormInputControl } from './XFormInputControl.tsx';
 
-/**
- * @todo see commentary on {@link XFormInputControlProps.node}
- */
 // prettier-ignore
 type ControlNode =
 	| SelectNode
-	| XFormInputControlProps['node'];
+	| StringNode;
 
 export interface XFormControlProps {
 	readonly node: ControlNode;
 }
 
-/**
- * @todo see commentary on {@link XFormInputControlProps.node}
- */
 const stringInputNode = (node: ControlNode): StringNode | null => {
-	if (node.nodeType === 'string' && node.definition.bodyElement != null) {
+	if (node.nodeType === 'string') {
 		return node;
 	}
 

@@ -17,9 +17,9 @@ import {
 import { beforeEach, describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../../src/XFormDefinition.ts';
 import { BindDefinition } from '../../src/model/BindDefinition.ts';
+import type { LeafNodeDefinition } from '../../src/model/LeafNodeDefinition.ts';
 import { ModelDefinition } from '../../src/model/ModelDefinition.ts';
 import type { RepeatRangeDefinition } from '../../src/model/RepeatRangeDefinition.ts';
-import type { ValueNodeDefinition } from '../../src/model/ValueNodeDefinition.ts';
 
 describe('ModelDefinition', () => {
 	let modelDefinition: ModelDefinition;
@@ -74,21 +74,21 @@ describe('ModelDefinition', () => {
 			},
 			children: [
 				{
-					type: 'value-node',
+					type: 'leaf-node',
 					bind: {
 						nodeset: '/root/first-question',
 					},
 					children: null,
 				},
 				{
-					type: 'value-node',
+					type: 'leaf-node',
 					bind: {
 						nodeset: '/root/second-question',
 					},
 					children: null,
 				},
 				{
-					type: 'value-node',
+					type: 'leaf-node',
 					bind: {
 						nodeset: '/root/third-question',
 					},
@@ -117,7 +117,7 @@ describe('ModelDefinition', () => {
 			expected: null,
 		},
 	])('includes a reference to the $index body element definition', ({ index, expected }) => {
-		const child = modelDefinition.root.children[index] as ValueNodeDefinition;
+		const child = modelDefinition.root.children[index] as LeafNodeDefinition;
 
 		if (expected == null) {
 			expect(child.bodyElement).toBeNull();
@@ -185,12 +185,12 @@ describe('ModelDefinition', () => {
 						},
 						children: [
 							{
-								type: 'value-node',
+								type: 'leaf-node',
 								bind: { nodeset: '/root/grp/first' },
 								bodyElement: { type: 'input' },
 							},
 							{
-								type: 'value-node',
+								type: 'leaf-node',
 								bind: { nodeset: '/root/grp/second' },
 								bodyElement: { type: 'input' },
 							},
@@ -212,12 +212,12 @@ describe('ModelDefinition', () => {
 						bodyElement: null,
 						children: [
 							{
-								type: 'value-node',
+								type: 'leaf-node',
 								bind: { nodeset: '/root/sub/third' },
 								bodyElement: { type: 'input' },
 							},
 							{
-								type: 'value-node',
+								type: 'leaf-node',
 								bind: { nodeset: '/root/sub/fourth' },
 								bodyElement: { type: 'input' },
 							},
@@ -335,12 +335,12 @@ describe('ModelDefinition', () => {
 							},
 							children: [
 								{
-									type: 'value-node',
+									type: 'leaf-node',
 									bind: { nodeset: '/root/rep/a' },
 									bodyElement: { type: 'input' },
 								},
 								{
-									type: 'value-node',
+									type: 'leaf-node',
 									bind: { nodeset: '/root/rep/b' },
 									bodyElement: { type: 'input' },
 								},
@@ -365,12 +365,12 @@ describe('ModelDefinition', () => {
 							},
 							children: [
 								{
-									type: 'value-node',
+									type: 'leaf-node',
 									bind: { nodeset: '/root/rep2/c' },
 									bodyElement: { type: 'input' },
 								},
 								{
-									type: 'value-node',
+									type: 'leaf-node',
 									bind: { nodeset: '/root/rep2/d' },
 									bodyElement: null,
 								},

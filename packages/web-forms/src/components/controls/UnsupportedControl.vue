@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { AnyLeafNode } from '@getodk/xforms-engine';
+import type { AnyControlNode } from '@getodk/xforms-engine';
 
-defineProps<{question: AnyLeafNode}>();
+defineProps<{question: AnyControlNode}>();
 
 const isDev = () => {
 	return import.meta.env.DEV;

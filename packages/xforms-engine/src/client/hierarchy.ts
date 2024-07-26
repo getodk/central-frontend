@@ -1,5 +1,7 @@
 import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { GroupNode } from './GroupNode.ts';
+import type { ModelValueNode } from './ModelValueNode.ts';
+import type { NoteNode } from './NoteNode.ts';
 import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
 import type { RepeatRangeNode } from './RepeatRangeNode.ts';
 import type { RootNode } from './RootNode.ts';
@@ -8,9 +10,15 @@ import type { StringNode } from './StringNode.ts';
 import type { SubtreeNode } from './SubtreeNode.ts';
 
 // prettier-ignore
-export type AnyLeafNode =
+export type AnyControlNode =
+	| NoteNode
 	| SelectNode
 	| StringNode;
+
+// prettier-ignore
+export type AnyLeafNode =
+	| AnyControlNode
+	| ModelValueNode;
 
 /**
  * Any of the concrete node types which may be a parent of any other node.

@@ -1,17 +1,18 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
 	GroupNode,
+	NoteNode,
 	RepeatInstanceNode,
 	RepeatRangeNode,
 	RootNode,
 	SelectNode,
-	StringInputNode,
-} from '../../client/node-types.ts';
+	StringNode,
+} from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
 
 export interface PositionalEventTypeMapping {
 	readonly BEGINNING_OF_FORM: RootNode;
-	readonly QUESTION: SelectNode | StringInputNode;
+	readonly QUESTION: NoteNode | SelectNode | StringNode;
 	readonly GROUP: GroupNode;
 	readonly REPEAT: RepeatInstanceNode;
 	readonly REPEAT_JUNCTURE: never; // per @lognaturel: this can be ignored

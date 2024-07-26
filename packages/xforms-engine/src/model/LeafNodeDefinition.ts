@@ -3,11 +3,11 @@ import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 
-export class ValueNodeDefinition
-	extends DescendentNodeDefinition<'value-node', ControlElementDefinition | null>
-	implements NodeDefinition<'value-node'>
+export class LeafNodeDefinition
+	extends DescendentNodeDefinition<'leaf-node', ControlElementDefinition | null>
+	implements NodeDefinition<'leaf-node'>
 {
-	readonly type = 'value-node';
+	readonly type = 'leaf-node';
 
 	readonly nodeName: string;
 	readonly children = null;

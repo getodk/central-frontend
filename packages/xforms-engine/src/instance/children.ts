@@ -1,20 +1,40 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
+import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../model/SubtreeDefinition.ts';
+import { NoteNodeDefinition } from '../parse/NoteNodeDefinition.ts';
 import { Group } from './Group.ts';
+import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
+import { ModelValue, type ModelValueDefinition } from './ModelValue.ts';
+import { Note } from './Note.ts';
 import { RepeatRange } from './RepeatRange.ts';
 import type { SelectFieldDefinition } from './SelectField.ts';
 import { SelectField } from './SelectField.ts';
 import type { StringFieldDefinition } from './StringField.ts';
 import { StringField } from './StringField.ts';
 import { Subtree } from './Subtree.ts';
-import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 
 const isSubtreeDefinition = (
 	definition: ModelSubtreeDefinition
 ): definition is SubtreeDefinition => {
 	return definition.bodyElement == null;
+};
+
+type ControlNodeDefinition = SelectFieldDefinition | StringFieldDefinition;
+
+type AnyLeafNodeDefinition = ControlNodeDefinition | ModelValueDefinition;
+
+const isModelValueDefinition = (
+	definition: LeafNodeDefinition
+): definition is ModelValueDefinition => {
+	return definition.bodyElement == null;
+};
+
+const isStringFieldDefinition = (
+	definition: ControlNodeDefinition
+): definition is StringFieldDefinition => {
+	return definition.bodyElement.type === 'input';
 };
 
 export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => {
@@ -37,21 +57,23 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 				return new RepeatRange(parent, child);
 			}
 
-			case 'value-node': {
-				// TODO: this sort of awkwardness might go away if we embrace a
-				// proliferation of node types throughout.
-				switch (child.bodyElement?.type) {
-					case 'select':
-					case 'select1':
-						return new SelectField(parent, child as SelectFieldDefinition);
-
-					case 'input':
-					case undefined:
-						return new StringField(parent, child as StringFieldDefinition);
-
-					default:
-						throw new UnreachableError(child.bodyElement);
+			case 'leaf-node': {
+				if (child instanceof NoteNodeDefinition) {
+					return new Note(parent, child);
 				}
+
+				// More specific type helps with narrowing below
+				const leafChild: AnyLeafNodeDefinition = child;
+
+				if (isModelValueDefinition(leafChild)) {
+					return new ModelValue(parent, leafChild);
+				}
+
+				if (isStringFieldDefinition(leafChild)) {
+					return new StringField(parent, leafChild);
+				}
+
+				return new SelectField(parent, leafChild);
 			}
 
 			default: {

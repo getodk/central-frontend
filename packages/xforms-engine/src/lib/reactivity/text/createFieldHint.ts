@@ -1,13 +1,13 @@
 import { type Accessor } from 'solid-js';
 import type { TextRange } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
-import type { ValueNodeDefinition } from '../../../model/ValueNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../../../model/LeafNodeDefinition.ts';
 import { createTextRange } from './createTextRange.ts';
 
 export const createFieldHint = (
 	context: EvaluationContext,
-	definition: ValueNodeDefinition
-): Accessor<TextRange<'hint'> | null> => {
+	definition: LeafNodeDefinition
+): Accessor<TextRange<'hint', 'form'> | null> => {
 	const hintDefinition = definition.bodyElement?.hint ?? null;
 
 	if (hintDefinition == null) {

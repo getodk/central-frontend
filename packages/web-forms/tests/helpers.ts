@@ -1,4 +1,5 @@
-import { initializeForm, type AnyLeafNode, type RootNode } from '@getodk/xforms-engine';
+import type { AnyControlNode, RootNode } from '@getodk/xforms-engine';
+import { initializeForm } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import { assocPath } from 'ramda';
@@ -32,4 +33,5 @@ export const globalMountOptions: GlobalMountOptions = {
 	},
 };
 
-export const getDummyLeafNode = () => assocPath(['nodeType'], 'dummy', {} as AnyLeafNode);
+export const fakeUnsupportedControlNode = () =>
+	assocPath(['nodeType'], 'dummy', {} as AnyControlNode);

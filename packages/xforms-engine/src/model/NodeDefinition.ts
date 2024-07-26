@@ -1,12 +1,12 @@
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
+import type { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
 import type { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import type { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 import type { SubtreeDefinition } from './SubtreeDefinition.ts';
-import type { ValueNodeDefinition } from './ValueNodeDefinition.ts';
 
 /**
  * Corresponds to the model/entry DOM root node, i.e.:
@@ -49,7 +49,7 @@ export type SubtreeNodeType = 'subtree';
  * - An element with no child elements
  * - Any attribute corresponding to a bind's `nodeset` expression
  */
-export type ValueNodeType = 'value-node';
+export type LeafNodeType = 'leaf-node';
 
 // prettier-ignore
 export type NodeDefinitionType =
@@ -59,7 +59,7 @@ export type NodeDefinitionType =
 	| RepeatTemplateType
 	| RepeatInstanceType
 	| SubtreeNodeType
-	| ValueNodeType;
+	| LeafNodeType;
 
 // prettier-ignore
 export type ParentNodeDefinition =
@@ -71,9 +71,7 @@ export type ParentNodeDefinition =
 
 // prettier-ignore
 export type ChildNodeDefinition =
-	| RepeatRangeDefinition
-	| SubtreeDefinition
-	| ValueNodeDefinition;
+	LeafNodeDefinition | RepeatRangeDefinition | SubtreeDefinition;
 
 // prettier-ignore
 export type ChildNodeInstanceDefinition =
@@ -81,7 +79,7 @@ export type ChildNodeInstanceDefinition =
 	| RepeatTemplateDefinition
 	| RepeatInstanceDefinition
 	| SubtreeDefinition
-	| ValueNodeDefinition;
+	| LeafNodeDefinition;
 
 // prettier-ignore
 export type NodeChildren<Type extends NodeDefinitionType> =
@@ -101,7 +99,7 @@ export type NodeParent<Type extends NodeDefinitionType> =
 		? ParentNodeDefinition
 		: null;
 
-// TODO: value-node may be Attr
+// TODO: leaf-node may be Attr
 // prettier-ignore
 export type ModelNode<Type extends NodeDefinitionType> =
 	Type extends 'repeat-range'
@@ -110,7 +108,7 @@ export type ModelNode<Type extends NodeDefinitionType> =
 
 // prettier-ignore
 export type NodeDefaultValue<Type extends NodeDefinitionType> =
-	Type extends 'value-node'
+	Type extends 'leaf-node'
 		? string
 		: null;
 
@@ -141,6 +139,6 @@ export type AnyNodeDefinition =
 	| RepeatTemplateDefinition
 	| RepeatInstanceDefinition
 	| SubtreeDefinition
-	| ValueNodeDefinition;
+	| LeafNodeDefinition;
 
 export type TypedNodeDefinition<Type> = Extract<AnyNodeDefinition, { readonly type: Type }>;

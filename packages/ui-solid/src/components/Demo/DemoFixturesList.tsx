@@ -65,6 +65,7 @@ export const DemoFixturesList = (props: DemoFixturesListProps) => {
 	};
 
 	const isDemoFixture = (fixtureKey: string) =>
+		fixtureKey.includes('/notes/') ||
 		fixtureKey.includes('/computations-demo/') ||
 		fixtureKey.includes('/repeats/') ||
 		fixtureKey.includes('/itext/') ||

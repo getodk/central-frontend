@@ -1,3 +1,5 @@
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { expressionParser } from '@getodk/xpath/expressionParser.js';
 import type {
 	AbsoluteLocationPathNode,
@@ -7,7 +9,9 @@ import type {
 	FilterPathExprNode,
 	FunctionCallNode,
 	FunctionNameNode,
+	NumberNode,
 	RelativeLocationPathNode,
+	StringLiteralNode,
 } from '@getodk/xpath/static/grammar/SyntaxNode.js';
 import type { AnySyntaxType } from '@getodk/xpath/static/grammar/type-names.js';
 import {
@@ -338,4 +342,125 @@ export const getPathExpressionNode = (expression: string): PathExpressionNode | 
 	}
 
 	return null;
+};
+
+const constantFunctionCallNames = ['false', 'true'] as const;
+
+type ConstantFunctionCallName = CollectionValues<typeof constantFunctionCallNames>;
+
+type CosntantFunctionCallNode = LocalNamedFunctionCallNode<ConstantFunctionCallName>;
+
+const isConstantFunctionCall = (
+	syntaxNode: FunctionCallNode
+): syntaxNode is CosntantFunctionCallNode => {
+	return (
+		constantFunctionCallNames.some((functionName) => {
+			return isCallToLocalNamedFunction(syntaxNode, functionName);
+		}) && hasCallSignature(syntaxNode, [])
+	);
+};
+
+// prettier-ignore
+type ConstantExpressionSyntaxNode =
+	| CosntantFunctionCallNode
+	| NumberNode
+	| StringLiteralNode;
+
+const findConstantExpressionNode = (expression: string): ConstantExpressionSyntaxNode | null => {
+	const { rootNode } = expressionParser.parse(expression);
+	const syntaxNode = findTypedPrincipalExpressionNode(
+		['function_call', 'number', 'string_literal'],
+		rootNode
+	);
+
+	if (syntaxNode == null) {
+		return null;
+	}
+
+	switch (syntaxNode.type) {
+		case 'function_call':
+			if (isConstantFunctionCall(syntaxNode)) {
+				return syntaxNode;
+			}
+
+			return null;
+
+		case 'number':
+		case 'string_literal':
+			return syntaxNode;
+
+		default:
+			throw new UnreachableError(syntaxNode);
+	}
+};
+
+type BrandedExpression<Expression extends string, Brand extends symbol> = Expression & {
+	readonly [K in Brand]: true;
+};
+
+const CONSTANT_EXPRESSION = Symbol('CONSTANT_EXPRESSION');
+type CONSTANT_EXPRESSION = typeof CONSTANT_EXPRESSION;
+
+/**
+ * Represents an expression which produces a constant result:
+ *
+ * - Makes no reference to explicit dependencies
+ * - Does not depend on any known, implicit state
+ * - Evaluation does not depend in any way on context
+ * - Evaluation can be treated as referentially transparent
+ */
+// prettier-ignore
+export type ConstantExpression = BrandedExpression<
+	string,
+	CONSTANT_EXPRESSION
+>;
+
+/**
+ * @see {@link ConstantExpression}
+ */
+export const isConstantExpression = (expression: string): expression is ConstantExpression => {
+	return findConstantExpressionNode(expression) != null;
+};
+
+const CONSTANT_TRUTHY_EXPRESSION = Symbol('CONSTANT_TRUTHY_EXPRESSION');
+type CONSTANT_TRUTHY_EXPRESSION = typeof CONSTANT_TRUTHY_EXPRESSION;
+
+/**
+ * Represents an expression which is {@link ConstantExpression | constant},
+ * and which will always produce `true` when evaluated as a boolean.
+ */
+// prettier-ignore
+export type ConstantTruthyExpression = BrandedExpression<
+	ConstantExpression,
+	CONSTANT_TRUTHY_EXPRESSION
+>;
+
+/**
+ * @see {@link ConstantTruthyExpression}
+ */
+export const isConstantTruthyExpression = (
+	expression: string
+): expression is ConstantTruthyExpression => {
+	const syntaxNode = findConstantExpressionNode(expression);
+
+	if (syntaxNode == null) {
+		return false;
+	}
+
+	switch (syntaxNode.type) {
+		// Expression is a number, number value is truthy
+		case 'number':
+			return Boolean(Number(syntaxNode.text));
+
+		// Expression is a string literal, string value is non-empty
+		case 'string_literal':
+			return syntaxNode.text.length > 2;
+
+		// Expression is a `true()` call
+		case 'function_call':
+			return isCallToLocalNamedFunction(syntaxNode, 'true');
+
+		default:
+			throw new UnreachableError(syntaxNode);
+	}
 };

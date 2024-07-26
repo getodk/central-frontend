@@ -1,21 +1,15 @@
 import { identity } from '@getodk/common/lib/identity.ts';
-import type { Accessor } from 'solid-js';
-import type { InputDefinition } from '../body/control/InputDefinition.ts';
-import type { StringNode, StringNodeAppearances } from '../client/StringNode.ts';
-import type { TextRange } from '../client/TextRange.ts';
+import type { ModelValueNode } from '../client/ModelValueNode.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
-import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
-import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -24,37 +18,37 @@ import type { SubscribableDependency } from './internal-api/SubscribableDependen
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
 
-export interface StringFieldDefinition extends LeafNodeDefinition {
-	readonly bodyElement: InputDefinition;
+export interface ModelValueDefinition extends LeafNodeDefinition {
+	readonly bodyElement: null;
 }
 
-interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
-	readonly label: Accessor<TextRange<'label'> | null>;
-	readonly hint: Accessor<TextRange<'hint'> | null>;
+interface ModelValueStateSpec extends DescendantNodeStateSpec<string> {
+	readonly label: null;
+	readonly hint: null;
 	readonly children: null;
 	readonly value: SimpleAtomicState<string>;
 	readonly valueOptions: null;
 }
 
-export class StringField
-	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec, null>
+export class ModelValue
+	extends DescendantNode<ModelValueDefinition, ModelValueStateSpec, null>
 	implements
-		StringNode,
+		ModelValueNode,
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
 		ValueContext<string>
 {
 	private readonly validation: SharedValidationState;
-	protected readonly state: SharedNodeState<StringFieldStateSpec>;
+	protected readonly state: SharedNodeState<ModelValueStateSpec>;
 
 	// InstanceNode
-	protected engineState: EngineState<StringFieldStateSpec>;
+	protected engineState: EngineState<ModelValueStateSpec>;
 
-	// StringNode
-	readonly nodeType = 'string';
-	readonly appearances: StringNodeAppearances;
-	readonly currentState: CurrentState<StringFieldStateSpec>;
+	// ModelValueNode
+	readonly nodeType = 'model-value';
+	readonly appearances = null;
+	readonly currentState: CurrentState<ModelValueStateSpec>;
 
 	get validationState(): LeafNodeValidationState {
 		return this.validation.currentState;
@@ -62,13 +56,10 @@ export class StringField
 
 	// ValueContext
 	readonly encodeValue = identity<string>;
-
 	readonly decodeValue = identity<string>;
 
-	constructor(parent: GeneralParentNode, definition: StringFieldDefinition) {
+	constructor(parent: GeneralParentNode, definition: ModelValueDefinition) {
 		super(parent, definition);
-
-		this.appearances = definition.bodyElement.appearances;
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -82,8 +73,8 @@ export class StringField
 				relevant: this.isRelevant,
 				required: this.isRequired,
 
-				label: createNodeLabel(this, definition),
-				hint: createFieldHint(this, definition),
+				label: null,
+				hint: null,
 				children: null,
 				valueOptions: null,
 				value: createValueState(this),
@@ -109,12 +100,5 @@ export class StringField
 	// InstanceNode
 	getChildren(): readonly [] {
 		return [];
-	}
-
-	// StringNode
-	setValue(value: string): Root {
-		this.state.setProperty('value', value);
-
-		return this.root;
 	}
 }

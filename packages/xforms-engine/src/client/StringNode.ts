@@ -1,5 +1,5 @@
 import type { InputDefinition } from '../body/control/InputDefinition.ts';
-import type { ValueNodeDefinition } from '../model/ValueNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
@@ -19,8 +19,8 @@ export interface StringNodeState extends BaseNodeState {
 	get value(): string;
 }
 
-export interface StringDefinition extends ValueNodeDefinition {
-	readonly bodyElement: InputDefinition | null;
+export interface StringDefinition extends LeafNodeDefinition {
+	readonly bodyElement: InputDefinition;
 }
 
 export type StringNodeAppearances = NodeAppearances<StringDefinition>;

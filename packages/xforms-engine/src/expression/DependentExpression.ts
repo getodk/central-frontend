@@ -1,6 +1,14 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import { resolveDependencyNodesets } from '../parse/xpath/dependency-analysis.ts';
-import { isTranslationExpression } from '../parse/xpath/semantic-analysis.ts';
+import type {
+	ConstantExpression,
+	ConstantTruthyExpression,
+} from '../parse/xpath/semantic-analysis.ts';
+import {
+	isConstantExpression,
+	isConstantTruthyExpression,
+	isTranslationExpression,
+} from '../parse/xpath/semantic-analysis.ts';
 import type { DependencyContext } from './DependencyContext.ts';
 
 const evaluatorMethodsByResultType = {
@@ -24,11 +32,6 @@ interface SemanticDependencyOptions {
 	/**
 	 * @default false
 	 */
-	readonly parentContext?: boolean | undefined;
-
-	/**
-	 * @default false
-	 */
 	readonly translations?: boolean | undefined;
 }
 
@@ -41,10 +44,21 @@ interface DependentExpressionOptions {
 	readonly semanticDependencies?: SemanticDependencyOptions;
 }
 
+export interface ConstantDependentExpression<Type extends DependentExpressionResultType>
+	extends DependentExpression<Type> {
+	readonly expression: ConstantExpression;
+}
+
+export interface ConstantTruthyDependentExpression extends ConstantDependentExpression<'boolean'> {
+	readonly expression: ConstantTruthyExpression;
+}
+
 export class DependentExpression<Type extends DependentExpressionResultType> {
 	readonly dependencyReferences: ReadonlySet<string> = new Set();
 	readonly isTranslated: boolean = false;
 	readonly evaluatorMethod: DependentExpressionEvaluatorMethod<Type>;
+	readonly constantExpression: ConstantExpression | null;
+	readonly constantTruthyExpression: ConstantTruthyExpression | null;
 
 	constructor(
 		context: DependencyContext,
@@ -52,29 +66,31 @@ export class DependentExpression<Type extends DependentExpressionResultType> {
 		readonly expression: string,
 		options: DependentExpressionOptions = {}
 	) {
+		if (resultType === 'boolean' && isConstantTruthyExpression(expression)) {
+			this.constantTruthyExpression = expression;
+			this.constantExpression = expression;
+		} else if (isConstantExpression(expression)) {
+			this.constantTruthyExpression = null;
+			this.constantExpression = expression;
+		} else {
+			this.constantTruthyExpression = null;
+			this.constantExpression = null;
+		}
+
 		this.evaluatorMethod = evaluatorMethodsByResultType[resultType];
 
 		const {
 			ignoreContextReference = false,
 			semanticDependencies = {
-				parentContext: false,
 				translations: false,
 			},
 		} = options;
 
-		const dependencyReferences = new Set(
+		this.dependencyReferences = new Set(
 			resolveDependencyNodesets(context.reference, expression, {
 				ignoreReferenceToContextPath: ignoreContextReference,
 			})
 		);
-
-		const parentDependency = semanticDependencies.parentContext ? context.parentReference : null;
-
-		if (parentDependency != null) {
-			dependencyReferences.add(parentDependency);
-		}
-
-		this.dependencyReferences = dependencyReferences;
 
 		const isTranslated = semanticDependencies.translations && isTranslationExpression(expression);
 
@@ -84,6 +100,14 @@ export class DependentExpression<Type extends DependentExpressionResultType> {
 		}
 
 		context.registerDependentExpression(this);
+	}
+
+	isConstantExpression(): this is ConstantDependentExpression<Type> {
+		return this.constantExpression != null;
+	}
+
+	isConstantTruthyExpression(): this is ConstantTruthyDependentExpression {
+		return this.resultType === 'boolean' && this.constantTruthyExpression != null;
 	}
 
 	toString(): string | null {

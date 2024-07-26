@@ -2,6 +2,8 @@ import { expressionParser } from '@getodk/xpath/expressionParser.js';
 import { describe, expect, it } from 'vitest';
 import {
 	findLocationPathSubExpressionNodes,
+	isConstantExpression,
+	isConstantTruthyExpression,
 	isTranslationExpression,
 } from '../../../src/parse/xpath/semantic-analysis.ts';
 
@@ -108,5 +110,50 @@ describe('Semantic analysis', () => {
 
 			expect(actual).toEqual(expected);
 		});
+	});
+
+	interface ExpressionPredicateCase {
+		readonly expression: string;
+		readonly expected: boolean;
+	}
+
+	describe('Constant expressions', () => {
+		it.each<ExpressionPredicateCase>([
+			{ expression: 'true()', expected: true },
+			{ expression: ' true( \t\n)\n', expected: true },
+			{ expression: 'false()', expected: true },
+			{ expression: '1', expected: true },
+			{ expression: '0', expected: true },
+			{ expression: '"."', expected: true },
+			{ expression: '""', expected: true },
+			{ expression: "'!'", expected: true },
+			{ expression: "''", expected: true },
+			{ expression: '/', expected: false },
+			{ expression: 'jr:itext("foo")', expected: false },
+		])(
+			'identifies whether $expression will always produce the same result value: $expected',
+			({ expression, expected }) => {
+				expect(isConstantExpression(expression)).toBe(expected);
+			}
+		);
+	});
+
+	describe('Constant, truthy expressions', () => {
+		it.each<ExpressionPredicateCase>([
+			{ expression: 'true()', expected: true },
+			{ expression: ' true( \t\n)\n', expected: true },
+			{ expression: 'false()', expected: false },
+			{ expression: '1', expected: true },
+			{ expression: '0', expected: false },
+			{ expression: '"."', expected: true },
+			{ expression: '""', expected: false },
+			{ expression: "'!'", expected: true },
+			{ expression: "''", expected: false },
+		])(
+			'identifies whether $expression will always return true: $expected',
+			({ expression, expected }) => {
+				expect(isConstantTruthyExpression(expression)).toBe(expected);
+			}
+		);
 	});
 });

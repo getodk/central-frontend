@@ -94,7 +94,7 @@ export const isCompleteSubExpression = (
 	subExpressionNode: AnySyntaxNode,
 	descendantNode: AnySyntaxNode
 ): boolean => {
-	return descendantNode.text === subExpressionNode.text;
+	return descendantNode.text.trim() === subExpressionNode.text.trim();
 };
 
 /**
