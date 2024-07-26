@@ -157,12 +157,16 @@ export class LocationPathEvaluation
 	readonly contextDocument: ContextDocument;
 	readonly rootNode: ContextParentNode;
 
-	nodes: Iterable<ContextNode>;
+	private _nodes: Iterable<ContextNode>;
+
+	get nodes(): Iterable<ContextNode> {
+		return this._nodes;
+	}
 
 	get contextNodes(): IterableIterator<ContextNode> {
-		const [nodes, contextNodes] = tee(this.nodes);
+		const [nodes, contextNodes] = tee(this._nodes);
 
-		this.nodes = nodes;
+		this._nodes = nodes;
 
 		return contextNodes;
 	}
@@ -245,7 +249,7 @@ export class LocationPathEvaluation
 
 		const [nodes] = tee(distinct(contextNodes));
 
-		this.nodes = nodes;
+		this._nodes = nodes;
 
 		this.nodeEvaluations = Reiterable.from(toNodeEvaluations(this, contextNodes));
 
