@@ -1,5 +1,6 @@
 import chaiAsPromised from 'chai-as-promised';
 import { Assertion, AssertionError, use, util } from 'chai';
+import { BaseWrapper, VueWrapper } from '@vue/test-utils';
 
 import { wait } from './util/util';
 
@@ -95,7 +96,7 @@ Assertion.addMethod('stringMatch', function stringMatch(expected) {
 // wrapper, its HTMLElement is returned.
 const unwrapElement = (elementOrWrapper) => {
   if (elementOrWrapper instanceof HTMLElement) return elementOrWrapper;
-  // If elementOrWrapper isn't an element, then it's a wrapper.
+  expect(elementOrWrapper).to.be.instanceof(BaseWrapper);
   const wrapper = elementOrWrapper;
   wrapper.exists().should.be.true;
   return wrapper.element;
@@ -321,6 +322,7 @@ addAsyncMethod('textTooltip', async function textTooltip() {
 // OTHER
 
 Assertion.addMethod('alert', function assertAlert(type = undefined, message = undefined) {
+  expect(this._obj).to.be.instanceof(VueWrapper);
   const { alert } = this._obj.vm.$container;
   this.assert(
     alert.state,
