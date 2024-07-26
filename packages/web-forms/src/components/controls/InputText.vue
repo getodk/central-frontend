@@ -53,7 +53,7 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 
 	.icon-error {
 		position: absolute;
-		right: 10px;
+		inset-inline-end: 10px;
 		top: 15px;
 		color: var(--error-text-color);
 		font-size: 1.2rem;
