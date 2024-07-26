@@ -162,9 +162,9 @@ const scrollToFirstInvalidQuestion = () => {
 			}
 
 			.form-error-message.p-message.p-message-error {
-				margin-top: 1rem;
-				margin-bottom: 0;
+				margin: 1rem 1rem 0 1rem;
 				order: 2;
+				width: calc(100% - 2rem);
 			}
 
 			.questions-card {
