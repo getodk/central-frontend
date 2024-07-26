@@ -35,11 +35,11 @@ describe('SubmissionFiltersSubmitter', () => {
       })
       .request(() => submitters.request({ url: '/v1/.../submitters' }))
       .beforeAnyResponse(component => {
-        component.getComponent(Multiselect).props().loading.should.be.true();
+        component.getComponent(Multiselect).props().loading.should.be.true;
       })
       .respondWithData(() => [])
       .afterResponse(component => {
-        component.getComponent(Multiselect).props().loading.should.be.false();
+        component.getComponent(Multiselect).props().loading.should.be.false;
       });
   });
 
@@ -52,7 +52,7 @@ describe('SubmissionFiltersSubmitter', () => {
     });
     const { options, loading } = component.getComponent(Multiselect).props();
     should.not.exist(options);
-    loading.should.be.false();
+    loading.should.be.false;
   });
 
   it('renders the correct options', () => {
@@ -148,7 +148,7 @@ describe('SubmissionFiltersSubmitter', () => {
         multiselect.props().modelValue.should.eql([fieldKey.id]);
         await toggle(multiselect);
         const input = multiselect.get('input[type="checkbox"]');
-        input.element.checked.should.be.true();
+        input.element.checked.should.be.true;
       });
     });
   });

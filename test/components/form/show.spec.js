@@ -12,7 +12,7 @@ describe('FormShow', () => {
 
   it('requires the projectId route param to be integer', async () => {
     const app = await load('/projects/p/forms/f');
-    app.findComponent(NotFound).exists().should.be.true();
+    app.findComponent(NotFound).exists().should.be.true;
   });
 
   it('sends the correct initial requests', () => {
@@ -33,7 +33,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f', {}, {
         attachments: () => attachments
       });
-      app.vm.$container.requestData.attachments.isEmpty().should.be.true();
+      app.vm.$container.requestData.attachments.isEmpty().should.be.true;
     });
 
     it('updates formDraft if it is defined but attachments is not', async () => {
@@ -42,7 +42,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f', {}, {
         attachments: () => mockResponse.problem(404.1)
       });
-      app.vm.$container.requestData.formDraft.isEmpty().should.be.true();
+      app.vm.$container.requestData.formDraft.isEmpty().should.be.true;
     });
   });
 

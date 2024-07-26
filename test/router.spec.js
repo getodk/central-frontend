@@ -209,7 +209,7 @@ describe('createCentralRouter()', () => {
         const resource = requestData[name] != null
           ? requestData[name]
           : requestData.localResources[name];
-        resource.dataExists.should.be.true();
+        resource.dataExists.should.be.true;
       }
     };
 
@@ -935,7 +935,7 @@ describe('createCentralRouter()', () => {
         .load('/')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
-          confirm.called.should.be.false();
+          confirm.called.should.be.false;
         });
     });
 
@@ -1200,7 +1200,7 @@ describe('createCentralRouter()', () => {
         .respondWithData(() => user)
         .respondFor('/', { users: false })
         .beforeAnyResponse(app => {
-          app.vm.$container.requestData.config.dataExists.should.be.false();
+          app.vm.$container.requestData.config.dataExists.should.be.false;
         })
         .testRequests([
           { url: '/v1/sessions/restore' },
@@ -1247,10 +1247,10 @@ describe('createCentralRouter()', () => {
           .respond(() => ({ status: 502 }))
           .beforeEachResponse((app, config, i) => {
             if (i === 1)
-              app.vm.$container.requestData.session.dataExists.should.be.true();
+              app.vm.$container.requestData.session.dataExists.should.be.true;
           })
           .afterResponses(app => {
-            app.vm.$container.requestData.session.dataExists.should.be.false();
+            app.vm.$container.requestData.session.dataExists.should.be.false;
           });
       });
 
@@ -1271,14 +1271,14 @@ describe('createCentralRouter()', () => {
         load('/reset-password', { container })
           .restoreSession(false)
           .afterResponses(app => {
-            app.findComponent(NotFound).exists().should.be.true();
+            app.findComponent(NotFound).exists().should.be.true;
           }));
 
       it('renders NotFound for /account/claim', async () => {
         const app = await load(`/account/claim?token=${'a'.repeat(64)}`, {
           container
         });
-        app.findComponent(NotFound).exists().should.be.true();
+        app.findComponent(NotFound).exists().should.be.true;
       });
     });
 
@@ -1288,7 +1288,7 @@ describe('createCentralRouter()', () => {
         config: { showsAnalytics: false }
       };
       const app = await load('/system/analytics', { container }, false);
-      app.findComponent(NotFound).exists().should.be.true();
+      app.findComponent(NotFound).exists().should.be.true;
     });
   });
 

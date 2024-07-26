@@ -95,7 +95,7 @@ describe('FormDraftPublish', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('.modal-warnings').exists().should.be.false();
+      modal.find('.modal-warnings').exists().should.be.false;
     });
   });
 
@@ -123,7 +123,7 @@ describe('FormDraftPublish', () => {
       });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('input').exists().should.be.false();
+      modal.find('input').exists().should.be.false;
       modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
@@ -131,7 +131,7 @@ describe('FormDraftPublish', () => {
       testData.extendedForms.createPast(1, { draft: true });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('input').exists().should.be.false();
+      modal.find('input').exists().should.be.false;
       modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
@@ -318,7 +318,7 @@ describe('FormDraftPublish', () => {
       .respondWithProblem(500.1)
       .afterResponse(modal => {
         modal.should.alert('danger');
-        modal.find('input').exists().should.be.false();
+        modal.find('input').exists().should.be.false;
         modal.findAll('.modal-introduction p').length.should.equal(3);
       });
   });
@@ -362,9 +362,9 @@ describe('FormDraftPublish', () => {
     it('updates requestData', async () => {
       const app = await publish();
       const { requestData } = app.vm.$container;
-      requestData.localResources.formVersions.dataExists.should.be.false();
-      requestData.formDraft.isEmpty().should.be.true();
-      requestData.attachments.isEmpty().should.be.true();
+      requestData.localResources.formVersions.dataExists.should.be.false;
+      requestData.formDraft.isEmpty().should.be.true;
+      requestData.attachments.isEmpty().should.be.true;
     });
 
     it('shows the create draft button', () =>

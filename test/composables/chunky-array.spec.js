@@ -8,7 +8,7 @@ import { mount, withSetup } from '../util/lifecycle';
 describe('useChunkyArray()', () => {
   it('returns a ref', () => {
     const chunky = withSetup(() => useChunkyArray(ref([])));
-    isRef(chunky).should.be.true();
+    isRef(chunky).should.be.true;
   });
 
   it('returns a ref whose value is null if value of source ref is nullish', () => {
@@ -19,7 +19,7 @@ describe('useChunkyArray()', () => {
   describe('value of source ref is an array', () => {
     it('returns a ref whose value is an array', () => {
       const chunky = withSetup(() => useChunkyArray(ref([])));
-      Array.isArray(chunky.value).should.be.true();
+      Array.isArray(chunky.value).should.be.true;
     });
 
     it('increases the length of the resulting array on an interval', () => {
@@ -129,7 +129,7 @@ describe('useChunkyArray()', () => {
       should(chunky.value).be.null();
       source.value = new Array(30).fill(0);
       await nextTick();
-      Array.isArray(chunky.value).should.be.true();
+      Array.isArray(chunky.value).should.be.true;
       chunky.value.length.should.equal(3);
       clock.tick(25);
       chunky.value.length.should.equal(6);

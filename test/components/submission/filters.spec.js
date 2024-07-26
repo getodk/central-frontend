@@ -134,7 +134,7 @@ describe('SubmissionFilters', () => {
           loadComponent(queryString)
             .beforeEachResponse((_, { url }) => {
               if (url.includes('.svc'))
-                relativeUrl(url).searchParams.has('$filter').should.be.false();
+                relativeUrl(url).searchParams.has('$filter').should.be.false;
             })
             .afterResponses(component => {
               const filters = component.getComponent(SubmissionFilters).props();
@@ -198,8 +198,8 @@ describe('SubmissionFilters', () => {
         })
         .request(changeMultiselect('#submission-filters-submitter', [0]))
         .beforeEachResponse((component, { url }) => {
-          component.findComponent(SubmissionMetadataRow).exists().should.be.false();
-          relativeUrl(url).searchParams.has('$skiptoken').should.be.false();
+          component.findComponent(SubmissionMetadataRow).exists().should.be.false;
+          relativeUrl(url).searchParams.has('$skiptoken').should.be.false;
         })
         .respondWithData(() => ({
           ...testData.submissionOData(1),

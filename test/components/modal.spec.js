@@ -35,7 +35,7 @@ describe('Modal', () => {
   });
 
   it('shows any alert', () => {
-    mountComponent().findComponent(Alert).exists().should.be.true();
+    mountComponent().findComponent(Alert).exists().should.be.true;
   });
 
   describe('state prop is initially true', () => {
@@ -44,7 +44,7 @@ describe('Modal', () => {
         props: { state: true },
         attachTo: document.body
       });
-      document.body.classList.contains('modal-open').should.be.true();
+      document.body.classList.contains('modal-open').should.be.true;
     });
 
     it('emits a shown event', () => {
@@ -73,7 +73,7 @@ describe('Modal', () => {
         attachTo: document.body
       });
       await modal.setProps({ state: true });
-      document.body.classList.contains('modal-open').should.be.true();
+      document.body.classList.contains('modal-open').should.be.true;
     });
 
     it('hides the current alert', async () => {
@@ -93,7 +93,7 @@ describe('Modal', () => {
         attachTo: document.body
       });
       await modal.setProps({ state: false });
-      document.body.classList.contains('modal-open').should.be.false();
+      document.body.classList.contains('modal-open').should.be.false;
     });
 
     it('hides an alert that was shown before modal was hidden', async () => {
@@ -182,7 +182,7 @@ describe('Modal', () => {
       const modal = mountComponent({
         props: { size: 'large' }
       });
-      modal.get('.modal-dialog').classes('modal-lg').should.be.true();
+      modal.get('.modal-dialog').classes('modal-lg').should.be.true;
     });
 
     describe("prop is 'full'", () => {
@@ -190,7 +190,7 @@ describe('Modal', () => {
         const modal = mountComponent({
           props: { size: 'full' }
         });
-        modal.get('.modal-dialog').classes('modal-full').should.be.true();
+        modal.get('.modal-dialog').classes('modal-full').should.be.true;
       });
 
       describe('has-scroll class', () => {
@@ -203,7 +203,7 @@ describe('Modal', () => {
             attachTo: document.body
           });
           await nextTick();
-          modal.classes('has-scroll').should.be.true();
+          modal.classes('has-scroll').should.be.true;
         });
 
         it('does not add class if modal does not overflow', async () => {
@@ -212,7 +212,7 @@ describe('Modal', () => {
             attachTo: document.body
           });
           await nextTick();
-          modal.classes('has-scroll').should.be.false();
+          modal.classes('has-scroll').should.be.false;
         });
 
         it('adds class if .modal-body changes, causing overflow', async () => {
@@ -224,10 +224,10 @@ describe('Modal', () => {
             attachTo: document.body
           });
           await nextTick();
-          modal.classes('has-scroll').should.be.false();
+          modal.classes('has-scroll').should.be.false;
           modal.get('#div').element.setAttribute('style', 'height: 10000px;');
           await wait();
-          modal.classes('has-scroll').should.be.true();
+          modal.classes('has-scroll').should.be.true;
         });
       });
     });

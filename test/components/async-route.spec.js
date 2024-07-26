@@ -25,7 +25,7 @@ describe('AsyncRoute', () => {
     setLoader('MyComponent', async () => ({ default: TestUtilP }));
     const asyncRoute = mountComponent({ componentName: 'MyComponent' });
     await wait();
-    asyncRoute.findComponent(TestUtilP).exists().should.be.true();
+    asyncRoute.findComponent(TestUtilP).exists().should.be.true;
   });
 
   it('passes the props to the component', async () => {
@@ -35,7 +35,7 @@ describe('AsyncRoute', () => {
       props: { icon: 'angle-right' }
     });
     await wait();
-    asyncRoute.find('.icon-angle-right').exists().should.be.true();
+    asyncRoute.find('.icon-angle-right').exists().should.be.true;
   });
 
   describe('loading message', () => {
@@ -46,9 +46,9 @@ describe('AsyncRoute', () => {
         loading: 'page'
       });
       const { state } = asyncRoute.getComponent(PageBody).getComponent(Loading).props();
-      state.should.be.true();
+      state.should.be.true;
       await wait();
-      asyncRoute.findComponent(Loading).exists().should.be.false();
+      asyncRoute.findComponent(Loading).exists().should.be.false;
     });
 
     it('renders correctly for a tab', async () => {
@@ -57,9 +57,9 @@ describe('AsyncRoute', () => {
         componentName: 'MyComponent',
         loading: 'tab'
       });
-      asyncRoute.getComponent(Loading).props().state.should.be.true();
+      asyncRoute.getComponent(Loading).props().state.should.be.true;
       await wait();
-      asyncRoute.getComponent(Loading).props().state.should.be.false();
+      asyncRoute.getComponent(Loading).props().state.should.be.false;
     });
   });
 
@@ -86,7 +86,7 @@ describe('AsyncRoute', () => {
       setLoader('MyComponent', () => Promise.reject());
       const asyncRoute = mountComponent({ componentName: 'MyComponent' });
       await wait();
-      asyncRoute.getComponent(Loading).props().state.should.be.false();
+      asyncRoute.getComponent(Loading).props().state.should.be.false;
     });
 
     it('does not show an alert if AsyncRoute component has been unmounted', async () => {
@@ -105,9 +105,9 @@ describe('AsyncRoute', () => {
       const asyncRoute = mountComponent({ componentName: 'First', k: '0' });
       await wait();
       await asyncRoute.setProps({ componentName: 'Second', props: {}, k: '1' });
-      asyncRoute.getComponent(Loading).props().state.should.be.true();
+      asyncRoute.getComponent(Loading).props().state.should.be.true;
       await wait();
-      asyncRoute.getComponent(Loading).props().state.should.be.false();
+      asyncRoute.getComponent(Loading).props().state.should.be.false;
     });
 
     it('renders the new component', async () => {
@@ -117,7 +117,7 @@ describe('AsyncRoute', () => {
       await wait();
       asyncRoute.setProps({ componentName: 'Second', props: {}, k: '1' });
       await wait();
-      asyncRoute.findComponent(TestUtilSpan).exists().should.be.true();
+      asyncRoute.findComponent(TestUtilSpan).exists().should.be.true;
     });
 
     describe('first component finishes loading after the second', () => {
@@ -129,10 +129,10 @@ describe('AsyncRoute', () => {
         setLoader('Second', async () => ({ default: TestUtilSpan }));
         const asyncRoute = mountComponent({ componentName: 'First', k: '0' });
         await wait();
-        asyncRoute.findComponent(TestUtilP).exists().should.be.false();
+        asyncRoute.findComponent(TestUtilP).exists().should.be.false;
         asyncRoute.setProps({ componentName: 'Second', props: {}, k: '1' });
         await waitUntil(() => loadedAsync('First'));
-        asyncRoute.findComponent(TestUtilSpan).exists().should.be.true();
+        asyncRoute.findComponent(TestUtilSpan).exists().should.be.true;
       });
 
       it('does not show an alert for the first component', async () => {

@@ -86,7 +86,7 @@ describe('FormDraftChecklist', () => {
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
       const step = checklist.getComponent(ChecklistStep);
-      step.findComponent(RouterLinkStub).exists().should.be.false();
+      step.findComponent(RouterLinkStub).exists().should.be.false;
     });
   });
 
@@ -188,7 +188,7 @@ describe('FormDraftChecklist', () => {
         container: { router: mockRouter('/projects/1/forms/f/draft') }
       });
       const step = checklist.findAllComponents(ChecklistStep)[3];
-      step.findComponent(RouterLinkStub).exists().should.be.false();
+      step.findComponent(RouterLinkStub).exists().should.be.false;
     });
   });
 });

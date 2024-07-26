@@ -87,26 +87,26 @@ export function testModalToggles({
   return this
     // First, test that the show button actually shows the modal.
     .afterResponses(component => {
-      component.getComponent(modal).props().state.should.be.false();
+      component.getComponent(modal).props().state.should.be.false;
     })
     .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
       const m = component.getComponent(modal);
-      m.props().state.should.be.true();
+      m.props().state.should.be.true;
 
       // Next, test that `modal` listens for `hide` events from Modal.
       await m.get('.close').trigger('click');
-      m.props().state.should.be.false();
+      m.props().state.should.be.false;
     })
     // Finally, test that the hide button actually hides the modal.
     .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
       const m = component.getComponent(modal);
-      m.props().state.should.be.true();
+      m.props().state.should.be.true;
       await m.get(hide).trigger('click');
-      m.props().state.should.be.false();
+      m.props().state.should.be.false;
     });
 }
 

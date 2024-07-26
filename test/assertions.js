@@ -12,7 +12,7 @@ const unwrapElement = (elementOrWrapper) => {
   if (elementOrWrapper instanceof HTMLElement) return elementOrWrapper;
   // If elementOrWrapper isn't an element, then it's a wrapper.
   const wrapper = elementOrWrapper;
-  wrapper.exists().should.be.true();
+  wrapper.exists().should.be.true;
   return wrapper.element;
 };
 

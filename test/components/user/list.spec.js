@@ -124,7 +124,7 @@ describe('UserList', () => {
           loadUsersAndChangeRole({ rowIndex, selectValue })
             .beforeAnyResponse(component => {
               const row = component.findAllComponents(UserRow)[rowIndex];
-              row.getComponent(Spinner).props().state.should.be.true();
+              row.getComponent(Spinner).props().state.should.be.true;
             })
             .respondWithSuccess());
 

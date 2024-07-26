@@ -26,7 +26,7 @@ describe('Dataset summary row', () => {
       });
       component.get('.dataset-name').text().should.be.equal(dataset.name);
       if (data.isNew)
-        component.find('.dataset-name a').exists().should.be.false();
+        component.find('.dataset-name a').exists().should.be.false;
       else
         component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/entity-lists/${dataset.name}`);
       component.find('.dataset-new').exists().should.be.equal(data.isNew);

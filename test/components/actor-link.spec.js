@@ -33,7 +33,7 @@ describe('ActorLink', () => {
       props: { actor },
       container: { router: mockRouter('/system/audits') }
     });
-    component.findComponent(LinkIfCan).exists().should.be.false();
+    component.findComponent(LinkIfCan).exists().should.be.false;
     component.element.tagName.should.equal('SPAN');
     component.text().should.equal('Deleted User');
     await component.should.have.textTooltip();
@@ -47,7 +47,7 @@ describe('ActorLink', () => {
       props: { actor },
       container: { router: mockRouter('/system/audits') }
     });
-    component.findComponent(LinkIfCan).exists().should.be.false();
+    component.findComponent(LinkIfCan).exists().should.be.false;
     component.element.tagName.should.equal('SPAN');
     component.text().should.equal('My App User');
     await component.should.have.textTooltip();

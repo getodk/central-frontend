@@ -76,8 +76,8 @@ describe('AccountLogin', () => {
       .respondFor('/', { users: false })
       .afterResponses(app => {
         const { requestData } = app.vm.$container;
-        requestData.session.dataExists.should.be.true();
-        requestData.currentUser.dataExists.should.be.true();
+        requestData.session.dataExists.should.be.true;
+        requestData.currentUser.dataExists.should.be.true;
       });
   });
 
@@ -90,7 +90,7 @@ describe('AccountLogin', () => {
       .beforeEachResponse(async (app, _, i) => {
         if (i < 2) {
           const result = await app.vm.$router.push('/not-found');
-          isNavigationFailure(result, NavigationFailureType.aborted).should.be.true();
+          isNavigationFailure(result, NavigationFailureType.aborted).should.be.true;
         }
       })
       .respondWithData(() => testData.sessions.createNew())
@@ -123,49 +123,49 @@ describe('AccountLogin', () => {
     };
 
     it('uses the param to redirect the user', () => {
-      navigateToNext('/users').internal.calledWith('/users').should.be.true();
+      navigateToNext('/users').internal.calledWith('/users').should.be.true;
     });
 
     it('passes through query params and hash', () => {
       const { internal } = navigateToNext('/users?x=y#z');
-      internal.calledWith('/users?x=y#z').should.be.true();
+      internal.calledWith('/users?x=y#z').should.be.true;
     });
 
     it('allows the param to be an absolute URL', () => {
       const { internal } = navigateToNext(`${window.location.origin}/users`);
-      internal.calledWith('/users').should.be.true();
+      internal.calledWith('/users').should.be.true;
     });
 
     it('redirects the user to Enketo', () => {
       const { external } = navigateToNext('/-/abc');
-      external.calledWith(`${window.location.origin}/-/abc`).should.be.true();
+      external.calledWith(`${window.location.origin}/-/abc`).should.be.true;
     });
 
     it('passes query params and hash to Enketo', () => {
       const { external } = navigateToNext('/-/abc?x=y#z');
-      external.calledWith(`${window.location.origin}/-/abc?x=y#z`).should.be.true();
+      external.calledWith(`${window.location.origin}/-/abc?x=y#z`).should.be.true;
     });
 
     it('redirects the user to / if there is no param', () => {
-      navigateToNext(undefined).internal.calledWith('/').should.be.true();
+      navigateToNext(undefined).internal.calledWith('/').should.be.true;
     });
 
     it('redirects the user to / if there are multiple params', () => {
       const { internal } = navigateToNext(['/users', '/account/edit']);
-      internal.calledWith('/').should.be.true();
+      internal.calledWith('/').should.be.true;
     });
 
     it('redirects the user to / if the param is /login', () => {
-      navigateToNext('/login').internal.calledWith('/').should.be.true();
+      navigateToNext('/login').internal.calledWith('/').should.be.true;
 
       const { internal } = navigateToNext('/login?next=%2Fusers');
-      internal.calledWith('/').should.be.true();
+      internal.calledWith('/').should.be.true;
     });
 
     it('does not redirect the user away from Central', () => {
       const { internal, external } = navigateToNext('https://www.google.com/');
-      internal.calledWith('/').should.be.true();
-      external.called.should.be.false();
+      internal.calledWith('/').should.be.true;
+      external.called.should.be.false;
     });
 
     it('uses the param after the user submits the form', () => {
@@ -236,7 +236,7 @@ describe('AccountLogin', () => {
         .respondWithData(() => testData.sessions.createNew())
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponses(app => {
-          app.find('#navbar-links').exists().should.be.false();
+          app.find('#navbar-links').exists().should.be.false;
           app.get('#navbar-actions a').text().should.equal('Not logged in');
           app.get('#account-login .btn-primary').attributes('aria-disabled').should.equal('true');
           app.get('#account-login .btn-link').attributes('aria-disabled').should.equal('true');
@@ -258,7 +258,7 @@ describe('AccountLogin', () => {
         container: oidcContainer,
         root: false
       });
-      component.find('form').exists().should.be.false();
+      component.find('form').exists().should.be.false;
     });
 
     it('disables the link after it is clicked', async () => {
@@ -271,7 +271,7 @@ describe('AccountLogin', () => {
         event.preventDefault();
       });
       await a.trigger('click');
-      a.classes('disabled').should.be.true();
+      a.classes('disabled').should.be.true;
     });
 
     it('aborts navigation after the link is clicked', async () => {
@@ -283,7 +283,7 @@ describe('AccountLogin', () => {
       });
       await a.trigger('click');
       const result = await app.vm.$router.push('/not-found');
-      isNavigationFailure(result, NavigationFailureType.aborted).should.be.true();
+      isNavigationFailure(result, NavigationFailureType.aborted).should.be.true;
     });
   });
 
@@ -386,7 +386,7 @@ describe('AccountLogin', () => {
         bubbles: true,
         cancelable: true
       });
-      a.element.dispatchEvent(event).should.be.false();
+      a.element.dispatchEvent(event).should.be.false;
     });
   });
 });

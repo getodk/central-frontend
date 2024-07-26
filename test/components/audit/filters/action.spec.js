@@ -12,7 +12,7 @@ describe('AuditFiltersAction', () => {
     it('renders a category option correctly', () => {
       const option = mountComponent().get('option[value="nonverbose"]');
       option.text().should.equal('(All Actions)');
-      option.classes('audit-filters-action-category').should.be.true();
+      option.classes('audit-filters-action-category').should.be.true;
     });
 
     it('renders an action option correctly', () => {

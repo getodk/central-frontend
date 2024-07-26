@@ -17,7 +17,7 @@ describe('Alert', () => {
   });
 
   it('adds a contextual class', () => {
-    mountComponent().classes('alert-info').should.be.true();
+    mountComponent().classes('alert-info').should.be.true;
   });
 
   it('clicking the .close button hides the alert', async () => {

@@ -43,14 +43,14 @@ describe('DatasetRow', () => {
     it('shows empty cell if no conflicts', () => {
       testData.extendedDatasets.createPast(1, { name: 'my_dataset', conflicts: 0 });
       const row = mountComponent();
-      row.find('.conflicts .icon-warning').exists().should.be.false();
+      row.find('.conflicts .icon-warning').exists().should.be.false;
       row.find('.conflicts').text().should.be.eql('');
     });
 
     it('shows the warning icon', () => {
       testData.extendedDatasets.createPast(1, { name: 'my_dataset', conflicts: 10 });
       const row = mountComponent();
-      row.find('.icon-warning').exists().should.be.true();
+      row.find('.icon-warning').exists().should.be.true;
     });
 
     it('shows the count of conflicts', () => {

@@ -169,7 +169,7 @@ describe('UserNew', () => {
 
     it('hides the modal', () =>
       submitWithSuccess().afterResponses(component => {
-        component.getComponent(UserNew).props().state.should.be.false();
+        component.getComponent(UserNew).props().state.should.be.false;
       }));
 
     it('refreshes the data', () =>

@@ -39,7 +39,7 @@ describe('PublicLinkCreate', () => {
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
     modal.get('input').element.value.should.equal('');
-    modal.get('input[type="checkbox"]').element.checked.should.be.false();
+    modal.get('input[type="checkbox"]').element.checked.should.be.false;
   });
 
   describe('request', () => {
@@ -66,7 +66,7 @@ describe('PublicLinkCreate', () => {
           return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { data }) => {
-          data.once.should.be.true();
+          data.once.should.be.true;
         })
         .respondWithProblem());
   });
@@ -103,7 +103,7 @@ describe('PublicLinkCreate', () => {
 
     it('hides the modal', async () => {
       const app = await submit();
-      app.getComponent(PublicLinkCreate).props().state.should.be.false();
+      app.getComponent(PublicLinkCreate).props().state.should.be.false;
     });
 
     it('shows a success alert', async () => {
@@ -118,7 +118,7 @@ describe('PublicLinkCreate', () => {
 
     it('highlights the new public link', async () => {
       const app = await submit();
-      app.get('.public-link-row').classes('success').should.be.true();
+      app.get('.public-link-row').classes('success').should.be.true;
     });
 
     it('updates the count in the tab', async () => {

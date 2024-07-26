@@ -25,7 +25,7 @@ describe('Dataset summary', () => {
         container: getContainer()
       });
       if (count === 0) {
-        component.text().should.be.empty();
+        component.text().should.be.empty;
       } else {
         component.get('.summary-item-heading').text().should.be.equal(count.toString());
         component.findAll('.dataset-name').length.should.be.equal(count);
@@ -41,7 +41,7 @@ describe('Dataset summary', () => {
         container: getContainer()
       });
       if (count === 0) {
-        component.text().should.be.empty();
+        component.text().should.be.empty;
       } else {
         component.get('.summary-item-heading').text().should.be.equal(count.toString());
         component.findAll('.dataset-name').length.should.be.equal(count);

@@ -325,14 +325,14 @@ describe('Multiselect', () => {
       const component = mountComponent({
         props: { search: 'Search' }
       });
-      component.find('.search').exists().should.be.true();
+      component.find('.search').exists().should.be.true;
     });
 
     it('does not show the input if the search prop is not specified', () => {
       const component = mountComponent({
         props: { search: null }
       });
-      component.find('.search').exists().should.be.false();
+      component.find('.search').exists().should.be.false;
     });
 
     it('uses the value of the search prop', () => {
@@ -709,6 +709,6 @@ describe('Multiselect', () => {
         'after-list': { template: '<span id="foo"></span>' }
       }
     });
-    component.find('.after-list #foo').exists().should.be.true();
+    component.find('.after-list #foo').exists().should.be.true;
   });
 });

@@ -75,7 +75,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct icon', () => {
       const component = mountComponent({ props: createSubmission() });
       const icon = component.find('.feed-entry-title .icon-cloud-upload');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
     });
 
     describe('submission still exists', () => {
@@ -147,7 +147,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct icon', () => {
       const component = mountComponent();
       const icon = component.find('.feed-entry-title .icon-check-circle');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
     });
 
     it('shows the correct text', () => {
@@ -183,7 +183,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct icon', () => {
       createEntity();
       const icon = mountComponent().find('.feed-entry-title .icon-magic-wand');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
     });
 
     describe('entity was created from a submission', () => {
@@ -230,7 +230,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct icon', () => {
       const component = mountComponent();
       const icon = component.find('.feed-entry-title .icon-cloud-upload');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
     });
 
     it('shows the correct text in top of event block', () => {
@@ -271,7 +271,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct icon', () => {
       const component = mountComponent();
       const icon = component.find('.feed-entry-title .icon-pencil');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
     });
 
     it('shows the correct text', () => {
@@ -329,7 +329,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct icon', () => {
       const component = mountComponent({ props: updateEntityFromSubmission() });
       const icon = component.find('.feed-entry-title .icon-pencil');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
     });
 
     it('shows the correct text with submission instance ID', () => {
@@ -378,7 +378,7 @@ describe('EntityFeedEntry', () => {
       action: 'entity.update.version',
       details: {}
     });
-    mountComponent().findComponent(EntityDiff).exists().should.be.true();
+    mountComponent().findComponent(EntityDiff).exists().should.be.true;
   });
 
   describe('entity.update.resolve audit event', () => {
@@ -391,7 +391,7 @@ describe('EntityFeedEntry', () => {
     it('shows the correct icon', () => {
       const component = mountComponent();
       const icon = component.find('.feed-entry-title .icon-random');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
     });
 
     it('shows the correct text', () => {

@@ -68,6 +68,6 @@ describe('FieldKeyQrPanel', () => {
   });
 
   it('adds a class for a legacy QR code', () => {
-    mountComponent({ managed: false }).classes('legacy').should.be.true();
+    mountComponent({ managed: false }).classes('legacy').should.be.true;
   });
 });

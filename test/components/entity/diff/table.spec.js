@@ -47,7 +47,7 @@ describe('EntityDiffTable', () => {
     it('does not show the row if the version is not a conflict', () => {
       testData.extendedEntities.createPast(1, { label: 'dogwood' });
       testData.extendedEntityVersions.createPast(1, { label: 'Dogwood' });
-      mountComponent().find('.comparing').exists().should.be.false();
+      mountComponent().find('.comparing').exists().should.be.false;
     });
 
     it('shows the old version number', () => {

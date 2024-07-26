@@ -26,7 +26,7 @@ describe('EntityData', () => {
       mockLogin();
       testData.extendedEntities.createPast(1);
       const button = mountComponent().find('#entity-data-update-button');
-      button.exists().should.be.true();
+      button.exists().should.be.true;
     });
 
     it('does not render the button for a project viewer', () => {
@@ -34,7 +34,7 @@ describe('EntityData', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
       testData.extendedEntities.createPast(1);
       const button = mountComponent().find('#entity-data-update-button');
-      button.exists().should.be.false();
+      button.exists().should.be.false;
     });
 
     it('toggles the modal', () => {
@@ -96,7 +96,7 @@ describe('EntityData', () => {
     });
     const dd = mountComponent().get('dd');
     dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true();
+    dd.classes('empty').should.be.true;
   });
 
   it('renders correctly if the value of a property does not exist', () => {
@@ -107,6 +107,6 @@ describe('EntityData', () => {
     testData.extendedEntities.createPast(1, { data: {} });
     const dd = mountComponent().get('dd');
     dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true();
+    dd.classes('empty').should.be.true;
   });
 });

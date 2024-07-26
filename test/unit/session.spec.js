@@ -40,7 +40,7 @@ describe('util/session', () => {
         .request(() => restoreSession(session))
         .respondWithData(() => testData.sessions.last())
         .afterResponse(() => {
-          session.dataExists.should.be.true();
+          session.dataExists.should.be.true;
         });
     });
 
@@ -53,7 +53,7 @@ describe('util/session', () => {
         .request(() => restoreSession(session))
         .respondWithData(() => testData.sessions.last())
         .afterResponse(() => {
-          setItem.called.should.be.false();
+          setItem.called.should.be.false;
         });
     });
 
@@ -103,7 +103,7 @@ describe('util/session', () => {
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .afterResponse(() => {
-            currentUser.dataExists.should.be.true();
+            currentUser.dataExists.should.be.true;
           });
       });
 
@@ -113,7 +113,7 @@ describe('util/session', () => {
           requestData: { session: testData.sessions.createNew() }
         });
         return mockHttp(container)
-          .request(() => logIn(container, true).should.be.fulfilled())
+          .request(() => logIn(container, true).should.be.fulfilled)
           .respondWithData(() => testData.extendedUsers.first());
       });
     });
@@ -222,7 +222,7 @@ describe('util/session', () => {
         .request(() => logIn(container, true))
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
-        .request(() => logOut(container, false).should.be.fulfilled())
+        .request(() => logOut(container, false).should.be.fulfilled)
         .respondWithSuccess();
     });
 
@@ -246,12 +246,12 @@ describe('util/session', () => {
         .request(() => logOut(container, false))
         .respondWithSuccess()
         .afterResponse(() => {
-          session.dataExists.should.be.false();
-          currentUser.dataExists.should.be.false();
-          roles.dataExists.should.be.false();
+          session.dataExists.should.be.false;
+          currentUser.dataExists.should.be.false;
+          roles.dataExists.should.be.false;
 
           // Some requestData should not be cleared.
-          config.dataExists.should.be.true();
+          config.dataExists.should.be.true;
         });
     });
 
@@ -269,7 +269,7 @@ describe('util/session', () => {
             if (url === '/v1/config/analytics') {
               sinon.spy(analyticsConfig, 'cancelRequest');
               logOut(container, false);
-              analyticsConfig.cancelRequest.called.should.be.true();
+              analyticsConfig.cancelRequest.called.should.be.true;
             }
           })
           .respondWithData(() => testData.extendedUsers.first())
@@ -294,7 +294,7 @@ describe('util/session', () => {
             if (url === '/v1/roles') {
               sinon.spy(roles, 'cancelRequest');
               logOut(container, false);
-              roles.cancelRequest.called.should.be.true();
+              roles.cancelRequest.called.should.be.true;
             }
           })
           .respondWithData(() => testData.standardRoles.sorted())
@@ -340,9 +340,9 @@ describe('util/session', () => {
           .respondWithSuccess()
           .afterResponse(app => {
             const { requestData } = app.vm.$container;
-            requestData.session.dataExists.should.be.false();
-            requestData.currentUser.dataExists.should.be.false();
-            requestData.roles.dataExists.should.be.false();
+            requestData.session.dataExists.should.be.false;
+            requestData.currentUser.dataExists.should.be.false;
+            requestData.roles.dataExists.should.be.false;
           }));
 
       it('sets the ?next query parameter if setNext is true', () =>
@@ -368,7 +368,7 @@ describe('util/session', () => {
           .afterResponse(app => {
             app.vm.$route.path.should.equal('/login');
             app.vm.$container.unsavedChanges.count.should.equal(0);
-            confirm.called.should.be.false();
+            confirm.called.should.be.false;
           });
       });
     });
@@ -387,7 +387,7 @@ describe('util/session', () => {
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
-          .request(() => logOut(container, false).should.be.rejected())
+          .request(() => logOut(container, false).should.be.rejected)
           .respondWithProblem();
       });
 
@@ -407,7 +407,7 @@ describe('util/session', () => {
             message: 'logOut() problem.'
           })
           .afterResponse(() => {
-            alert.state.should.be.true();
+            alert.state.should.be.true;
             alert.type.should.equal('danger');
             alert.message.should.startWith('There was a problem, and you were not fully logged out.');
             alert.message.should.endWith('logOut() problem.');
@@ -423,7 +423,7 @@ describe('util/session', () => {
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
-          .request(() => logOut(container, false).should.be.fulfilled())
+          .request(() => logOut(container, false).should.be.fulfilled)
           .respondWithProblem(401.2);
       });
 
@@ -436,7 +436,7 @@ describe('util/session', () => {
           .request(() => logIn(container, true))
           .respondWithData(() => testData.extendedUsers.first())
           .complete()
-          .request(() => logOut(container, false).should.be.fulfilled())
+          .request(() => logOut(container, false).should.be.fulfilled)
           .respondWithProblem(403.1);
       });
     });
@@ -455,7 +455,7 @@ describe('util/session', () => {
                 const { currentUser } = container.requestData;
                 sinon.spy(currentUser, 'cancelRequest');
                 logOut(container, false).catch(noop);
-                currentUser.cancelRequest.called.should.be.true();
+                currentUser.cancelRequest.called.should.be.true;
               }
             })
             .restoreSession()
@@ -474,7 +474,7 @@ describe('util/session', () => {
             .respondWithProblem(401.2)
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/reset-password');
-              replace.called.should.be.false();
+              replace.called.should.be.false;
             });
         });
       });
@@ -500,7 +500,7 @@ describe('util/session', () => {
                 const { currentUser } = container.requestData;
                 sinon.spy(currentUser, 'cancelRequest');
                 logOut(container, false).catch(noop);
-                currentUser.cancelRequest.called.should.be.true();
+                currentUser.cancelRequest.called.should.be.true;
               }
             })
             .respondWithData(() => testData.sessions.createNew())
@@ -543,7 +543,7 @@ describe('util/session', () => {
         .respondWithProblem()
         .respondWithSuccess()
         .afterResponses(() => {
-          session.dataExists.should.be.false();
+          session.dataExists.should.be.false;
         });
     });
 
@@ -553,7 +553,7 @@ describe('util/session', () => {
         requestData: { session: testData.sessions.createNew() }
       });
       return mockHttp(container)
-        .request(() => logIn(container, true).should.be.rejected())
+        .request(() => logIn(container, true).should.be.rejected)
         .respondWithProblem()
         .respondWithSuccess();
     });
@@ -580,7 +580,7 @@ describe('util/session', () => {
         })
         .respondWithSuccess()
         .afterResponse(() => {
-          session.dataExists.should.be.false();
+          session.dataExists.should.be.false;
         });
     });
 
@@ -624,7 +624,7 @@ describe('util/session', () => {
         })
         .respondWithSuccess()
         .afterResponse(() => {
-          alert.state.should.be.true();
+          alert.state.should.be.true;
           alert.type.should.equal('info');
           alert.message.should.startWith('Your session has expired.');
         });
@@ -685,7 +685,7 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(300000);
-          return logOut(container, false).should.be.fulfilled();
+          return logOut(container, false).should.be.fulfilled;
         });
     });
   });
@@ -705,9 +705,9 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(119000);
-          alert.state.should.be.false();
+          alert.state.should.be.false;
           clock.tick(1000);
-          alert.state.should.be.true();
+          alert.state.should.be.true;
           alert.type.should.equal('info');
           alert.message.should.startWith('Your session will expire in 2 minutes,');
         });
@@ -727,10 +727,10 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(120000);
-          alert.state.should.be.true();
+          alert.state.should.be.true;
           alert.blank();
           clock.tick(30000);
-          alert.state.should.be.false();
+          alert.state.should.be.false;
         })
         .request(() => logOut(container, false))
         .respondWithSuccess()
@@ -744,7 +744,7 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .afterResponse(() => {
           clock.tick(120000);
-          alert.state.should.be.true();
+          alert.state.should.be.true;
         });
     });
 
@@ -766,7 +766,7 @@ describe('util/session', () => {
         .afterResponse(() => {
           alert.blank();
           clock.tick(120000);
-          alert.state.should.be.false();
+          alert.state.should.be.false;
         });
     });
   });
@@ -791,7 +791,7 @@ describe('util/session', () => {
         })
         .respondWithProblem(401.2)
         .afterResponse(() => {
-          session.dataExists.should.be.false();
+          session.dataExists.should.be.false;
         });
     });
 
@@ -814,7 +814,7 @@ describe('util/session', () => {
         })
         .respondWithSuccess()
         .afterResponse(() => {
-          session.dataExists.should.be.false();
+          session.dataExists.should.be.false;
         });
     });
 
@@ -887,7 +887,7 @@ describe('util/session', () => {
       return load('/login', { container })
         .restoreSession(false)
         .afterResponses(app => {
-          app.vm.visiblyLoggedIn.should.be.false();
+          app.vm.visiblyLoggedIn.should.be.false;
         })
         .request(async (app) => {
           const form = app.get('#account-login form');
@@ -905,8 +905,8 @@ describe('util/session', () => {
         .respondWithData(() => user)
         .respondFor('/')
         .afterResponses(app => {
-          correctBeforeNavigation.should.be.true();
-          app.vm.visiblyLoggedIn.should.be.true();
+          correctBeforeNavigation.should.be.true;
+          app.vm.visiblyLoggedIn.should.be.true;
         });
     });
 
@@ -920,8 +920,8 @@ describe('util/session', () => {
         correctBeforeNavigation = currentUser.dataExists && !visiblyLoggedIn.value;
       });
       await router.push('/');
-      correctBeforeNavigation.should.be.true();
-      visiblyLoggedIn.value.should.be.true();
+      correctBeforeNavigation.should.be.true;
+      visiblyLoggedIn.value.should.be.true;
     });
   });
 });

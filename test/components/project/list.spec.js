@@ -86,7 +86,7 @@ describe('ProjectList', () => {
 
   it('does not show archived header if no archived projects exist', () => {
     mockLogin();
-    mountComponent().find('#project-list-archived').exists().should.be.false();
+    mountComponent().find('#project-list-archived').exists().should.be.false;
   });
 
   describe('sorting', () => {

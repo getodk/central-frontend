@@ -79,7 +79,7 @@ describe('util/csv', () => {
         abortController.abort();
         const { signal } = abortController;
         const promise = parseCSVHeader(i18n, createCSV('a'), signal);
-        return promise.should.be.rejected();
+        return promise.should.be.rejected;
       });
 
       it('returns a rejected promise if the signal becomes aborted', () => {
@@ -87,7 +87,7 @@ describe('util/csv', () => {
         const { signal } = abortController;
         const promise = parseCSVHeader(i18n, createCSV('a'), signal);
         abortController.abort();
-        return promise.should.be.rejected();
+        return promise.should.be.rejected;
       });
     });
   });
@@ -183,7 +183,7 @@ describe('util/csv', () => {
         abortController.abort();
         const { signal } = abortController;
         const promise = parseCSV(i18n, createCSV('a\n1'), ['a'], { signal });
-        return promise.should.be.rejected();
+        return promise.should.be.rejected;
       });
 
       it('returns a rejected promise if the signal becomes aborted', () => {
@@ -191,7 +191,7 @@ describe('util/csv', () => {
         const { signal } = abortController;
         const promise = parseCSV(i18n, createCSV('a\n1'), ['a'], { signal });
         abortController.abort();
-        return promise.should.be.rejected();
+        return promise.should.be.rejected;
       });
 
       it('does not call transformRow if the signal is aborted', async () => {
@@ -202,7 +202,7 @@ describe('util/csv', () => {
         const promise = parseCSV(i18n, csv, ['a'], { transformRow, signal });
         abortController.abort();
         await promise.catch(noop);
-        transformRow.called.should.be.false();
+        transformRow.called.should.be.false;
       });
     });
 

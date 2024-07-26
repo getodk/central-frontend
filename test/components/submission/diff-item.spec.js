@@ -55,10 +55,10 @@ describe('SubmissionDiffItem', () => {
     const dataOld = component.get('.data-old');
     dataOld.text().should.equal('15');
     // There should just be text, no child elements.
-    dataOld.find('*').exists().should.be.false();
+    dataOld.find('*').exists().should.be.false;
     const dataNew = component.get('.data-new');
     dataNew.text().should.equal('17');
-    dataNew.find('*').exists().should.be.false();
+    dataNew.find('*').exists().should.be.false;
   });
 
   it('shows media download links for binary files', () => {

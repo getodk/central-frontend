@@ -54,7 +54,7 @@ describe('TextareaAutosize', () => {
       const component = mountComponent({
         attrs: { required: true }
       });
-      component.element.required.should.be.true();
+      component.element.required.should.be.true;
     });
 
     it('sets the initial height to fit the modelValue prop', () => {
@@ -233,14 +233,14 @@ describe('TextareaAutosize', () => {
     describe('user-resized class', () => {
       it('adds the class', async () => {
         const component = await userResize();
-        component.classes('user-resized').should.be.true();
+        component.classes('user-resized').should.be.true;
       });
 
       it('removes the class after resize() is called', async () => {
         const component = await userResize();
         component.vm.resize();
         await component.vm.$nextTick();
-        component.classes('user-resized').should.be.false();
+        component.classes('user-resized').should.be.false;
       });
     });
   });

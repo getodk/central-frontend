@@ -37,14 +37,14 @@ describe('DatasetNew', () => {
 
   it('does not shows message about entity manipulation if project is not encrypted', () => {
     const modal = mount(DatasetNew, mountOptions({ attachTo: document.body }));
-    modal.find('.icon-exclamation-triangle').exists().should.be.false();
+    modal.find('.icon-exclamation-triangle').exists().should.be.false;
   });
 
   it('shows message about entity manipulation in encrypted project', () => {
     const key = testData.standardKeys.createPast(1, { managed: true }).last();
     testData.extendedProjects.createPast(1, { key });
     const modal = mount(DatasetNew, mountOptions({ attachTo: document.body }));
-    modal.find('.icon-exclamation-triangle').exists().should.be.true();
+    modal.find('.icon-exclamation-triangle').exists().should.be.true;
     modal.get('.modal-introduction').text().should.containEql('This Project is encrypted');
   });
 

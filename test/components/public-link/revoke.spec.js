@@ -101,7 +101,7 @@ describe('PublicLinkRevoke', () => {
         .complete()
         .modify(revoke)
         .afterResponses(app => {
-          app.find('.public-link-row.success').exists().should.be.false();
+          app.find('.public-link-row.success').exists().should.be.false;
         }));
   });
 });

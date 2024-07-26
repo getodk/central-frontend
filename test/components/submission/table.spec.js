@@ -126,7 +126,7 @@ describe('SubmissionTable', () => {
       mockLogin();
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.true();
+      row.props().canUpdate.should.be.true;
     });
 
     it('passes false if the user cannot submission.update', () => {
@@ -134,7 +134,7 @@ describe('SubmissionTable', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.false();
+      row.props().canUpdate.should.be.false;
     });
   });
 });

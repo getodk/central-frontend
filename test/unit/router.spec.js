@@ -88,7 +88,7 @@ describe('util/router', () => {
         })
         .load('/users')
         .afterResponses(() => {
-          callback.called.should.be.true();
+          callback.called.should.be.true;
           const args = callback.args[0];
           args[0].path.should.equal('/users');
           args[1].path.should.equal('/');
@@ -131,7 +131,7 @@ describe('util/router', () => {
         })
         .load('/users')
         .afterResponses(() => {
-          callback.called.should.be.true();
+          callback.called.should.be.true;
           const args = callback.args[0];
           args[0].path.should.equal('/users');
           args[1].path.should.equal('/');
@@ -161,8 +161,8 @@ describe('util/router', () => {
         })
         .load('/users')
         .afterResponses(() => {
-          callbacks[0].called.should.be.true();
-          callbacks[1].called.should.be.true();
+          callbacks[0].called.should.be.true;
+          callbacks[1].called.should.be.true;
         });
     });
   });
@@ -194,7 +194,7 @@ describe('util/router', () => {
         const confirm = sinon.fake();
         sinon.replace(window, 'confirm', confirm);
         await forceReplace(container, '/');
-        confirm.called.should.be.false();
+        confirm.called.should.be.false;
       });
 
       it('resets unsavedChanges', async () => {

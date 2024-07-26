@@ -21,7 +21,7 @@ describe('SummaryItem', () => {
     const item = mountComponent({
       props: { icon: 'user-circle' }
     });
-    item.find('.icon-user-circle').exists().should.be.true();
+    item.find('.icon-user-circle').exists().should.be.true;
   });
 
   it('renders links if the to prop is specified', () => {

@@ -6,14 +6,14 @@ import { modalData } from '../../src/util/reactivity';
 describe('util/reactivity', () => {
   describe('modalData()', () => {
     it('initializes the state prop as false', () => {
-      modalData().state.should.be.false();
+      modalData().state.should.be.false;
     });
 
     describe('show()', () => {
       it('sets the state prop to true', () => {
         const modal = modalData();
         modal.show();
-        modal.state.should.be.true();
+        modal.state.should.be.true;
       });
 
       it('sets other props', () => {
@@ -42,14 +42,14 @@ describe('util/reactivity', () => {
         it('does not set state prop to true if component has not loaded', () => {
           const modal = modalData('MyModal');
           modal.show();
-          modal.state.should.be.false();
+          modal.state.should.be.false;
         });
 
         it('sets state prop to true if component has loaded', async () => {
           const modal = modalData('MyModal');
           await loadAsync('MyModal')();
           modal.show();
-          modal.state.should.be.true();
+          modal.state.should.be.true;
         });
       });
     });
@@ -59,7 +59,7 @@ describe('util/reactivity', () => {
         const modal = modalData();
         modal.show();
         modal.hide();
-        modal.state.should.be.false();
+        modal.state.should.be.false;
       });
 
       it('clears other props', () => {
@@ -73,7 +73,7 @@ describe('util/reactivity', () => {
         const modal = modalData();
         modal.show({ foo: 'bar' });
         modal.hide(false);
-        modal.state.should.be.false();
+        modal.state.should.be.false;
         modal.foo.should.equal('bar');
       });
 

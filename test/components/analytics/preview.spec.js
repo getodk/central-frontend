@@ -85,7 +85,7 @@ describe('AnalyticsPreview', () => {
     tables.length.should.equal(1);
     tables[0].props().metrics.should.eql(emptyProjects.system);
     // Project summary should not exist
-    container.find('#analytics-preview-project-summary').exists().should.be.false();
+    container.find('#analytics-preview-project-summary').exists().should.be.false;
   });
 
   it('shows the project number and plurailization for a single project', async () => {
@@ -162,7 +162,7 @@ describe('AnalyticsPreview', () => {
       .request(modal => modal.setProps({ state: true }))
       .respondWithData(() => assocPath(['projects', 1, 'datasets'], [], analyticsPreview));
 
-    component.find('#analytics-preview-dataset-summary').exists().should.be.false();
+    component.find('#analytics-preview-dataset-summary').exists().should.be.false;
     should.not.exist(component.findAllComponents(AnalyticsMetricsTable)[6]);
   });
 });

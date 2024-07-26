@@ -50,7 +50,7 @@ describe('FileDropZone', () => {
       await component.trigger('dragleave', {
         dataTransfer: fileDataTransfer(files)
       });
-      component.emitted().dragleave[0][1].should.be.true();
+      component.emitted().dragleave[0][1].should.be.true;
     });
 
     it('emits true even if user only drags over a child element', async () => {
@@ -61,7 +61,7 @@ describe('FileDropZone', () => {
       // element, without dragging over any other part of the drop zone.
       await p.trigger('dragenter', { dataTransfer: fileDataTransfer(files) });
       await p.trigger('dragleave', { dataTransfer: fileDataTransfer(files) });
-      component.emitted().dragleave[0][1].should.be.true();
+      component.emitted().dragleave[0][1].should.be.true;
     });
 
     it('emits false after moving within the drop zone', async () => {
@@ -73,7 +73,7 @@ describe('FileDropZone', () => {
       const p = component.get('p');
       await p.trigger('dragenter', { dataTransfer: fileDataTransfer(files) });
       await p.trigger('dragleave', { dataTransfer: fileDataTransfer(files) });
-      component.emitted().dragleave[0][1].should.be.false();
+      component.emitted().dragleave[0][1].should.be.false;
     });
 
     it('emits true after leaving drop zone after previously dropping', async () => {
@@ -88,7 +88,7 @@ describe('FileDropZone', () => {
       });
       const emitted = component.emitted().dragleave;
       emitted.length.should.equal(1);
-      emitted[0][1].should.be.true();
+      emitted[0][1].should.be.true;
     });
   });
 
@@ -103,11 +103,11 @@ describe('FileDropZone', () => {
   describe('dragover class', () => {
     it('adds the class after entering the drop zone', async () => {
       const component = mountComponent();
-      component.classes('dragover').should.be.false();
+      component.classes('dragover').should.be.false;
       await component.trigger('dragenter', {
         dataTransfer: fileDataTransfer([createFile()])
       });
-      component.classes('dragover').should.be.true();
+      component.classes('dragover').should.be.true;
     });
 
     it('removes the class after leaving the drop zone', async () => {
@@ -119,7 +119,7 @@ describe('FileDropZone', () => {
       await component.trigger('dragleave', {
         dataTransfer: fileDataTransfer(files)
       });
-      component.classes('dragover').should.be.false();
+      component.classes('dragover').should.be.false;
     });
 
     it('does not remove class after moving within drop zone', async () => {
@@ -131,7 +131,7 @@ describe('FileDropZone', () => {
       const p = component.get('p');
       await p.trigger('dragenter', { dataTransfer: fileDataTransfer(files) });
       await p.trigger('dragleave', { dataTransfer: fileDataTransfer(files) });
-      component.classes('dragover').should.be.true();
+      component.classes('dragover').should.be.true;
     });
 
     it('removes the class after drop', async () => {
@@ -143,11 +143,11 @@ describe('FileDropZone', () => {
       await component.trigger('dragover', {
         dataTransfer: fileDataTransfer(files)
       });
-      component.classes('dragover').should.be.true();
+      component.classes('dragover').should.be.true;
       await component.trigger('drop', {
         dataTransfer: fileDataTransfer(files)
       });
-      component.classes('dragover').should.be.false();
+      component.classes('dragover').should.be.false;
     });
   });
 
@@ -182,7 +182,7 @@ describe('FileDropZone', () => {
       await component.trigger('dragenter', {
         dataTransfer: new DataTransfer()
       });
-      component.classes('dragover').should.be.false();
+      component.classes('dragover').should.be.false;
     });
   });
 
@@ -226,14 +226,14 @@ describe('FileDropZone', () => {
       await component.trigger('dragenter', {
         dataTransfer: fileDataTransfer([createFile()])
       });
-      component.classes('dragover').should.be.false();
+      component.classes('dragover').should.be.false;
     });
 
     it('adds a class named disabled', () => {
       const component = mountComponent({
         props: { disabled: true }
       });
-      component.classes('disabled').should.be.true();
+      component.classes('disabled').should.be.true;
     });
   });
 
@@ -241,6 +241,6 @@ describe('FileDropZone', () => {
     const component = mountComponent({
       props: { styled: true }
     });
-    component.classes('styled').should.be.true();
+    component.classes('styled').should.be.true;
   });
 });

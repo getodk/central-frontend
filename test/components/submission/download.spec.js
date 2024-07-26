@@ -82,9 +82,9 @@ describe('SubmissionDownload', () => {
         fields: [testData.fields.selectMultiple('/sm')]
       });
       const checkbox = mountComponent().get('.checkbox');
-      checkbox.classes('disabled').should.be.false();
+      checkbox.classes('disabled').should.be.false;
       const input = checkbox.get('input');
-      input.element.disabled.should.be.false();
+      input.element.disabled.should.be.false;
       input.should.not.have.ariaDescription();
       await checkbox.get('label').should.not.have.tooltip();
     });
@@ -94,9 +94,9 @@ describe('SubmissionDownload', () => {
         fields: [testData.fields.int('/i')]
       });
       const checkbox = mountComponent().get('.checkbox');
-      checkbox.classes('disabled').should.be.true();
+      checkbox.classes('disabled').should.be.true;
       const input = checkbox.get('input');
-      input.element.disabled.should.be.true();
+      input.element.disabled.should.be.true;
       input.should.have.ariaDescription('This Form does not have any select multiple fields.');
       const label = checkbox.get('label');
       await label.should.have.tooltip('This Form does not have any select multiple fields.');
@@ -108,9 +108,9 @@ describe('SubmissionDownload', () => {
         key: testData.standardKeys.createPast(1, { managed: false }).last()
       });
       const checkbox = mountComponent().get('.checkbox');
-      checkbox.classes('disabled').should.be.true();
+      checkbox.classes('disabled').should.be.true;
       const input = checkbox.get('input');
-      input.element.disabled.should.be.true();
+      input.element.disabled.should.be.true;
       input.should.have.ariaDescription('Encrypted Forms cannot be processed in this way.');
       const label = checkbox.get('label');
       await label.should.have.tooltip('Encrypted Forms cannot be processed in this way.');
@@ -160,9 +160,9 @@ describe('SubmissionDownload', () => {
         props: { formVersion: testData.extendedFormDrafts.last() }
       });
       const checkbox = modal.findAll('.checkbox')[2];
-      checkbox.classes('disabled').should.be.true();
+      checkbox.classes('disabled').should.be.true;
       const input = checkbox.get('input');
-      input.element.disabled.should.be.true();
+      input.element.disabled.should.be.true;
       input.should.have.ariaDescriptions([
         'Use this option if you need to see fields referenced in previous Form versions.',
         'Draft Forms cannot be processed in this way.'
@@ -196,13 +196,13 @@ describe('SubmissionDownload', () => {
         key: testData.standardKeys.createPast(1, { managed: true }).last()
       });
       const modal = mountComponent();
-      modal.find('input[type="password"]').exists().should.be.true();
+      modal.find('input[type="password"]').exists().should.be.true;
     });
 
     it('does not show the input if there is not a key', () => {
       testData.extendedForms.createPast(1);
       const modal = mountComponent();
-      modal.find('input[type="password"]').exists().should.be.false();
+      modal.find('input[type="password"]').exists().should.be.false;
     });
 
     it('does not show input if there is a key that is not a managed key', () => {
@@ -210,7 +210,7 @@ describe('SubmissionDownload', () => {
         key: testData.standardKeys.createPast(1, { managed: false }).last()
       });
       const modal = mountComponent();
-      modal.find('input[type="password"]').exists().should.be.false();
+      modal.find('input[type="password"]').exists().should.be.false;
     });
 
     it('shows a hint if there is one', () => {
@@ -238,7 +238,7 @@ describe('SubmissionDownload', () => {
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
     for (const checkbox of checkboxes)
-      checkbox.element.checked.should.be.true();
+      checkbox.element.checked.should.be.true;
     passphrase.element.value.should.equal('');
   });
 
@@ -250,7 +250,7 @@ describe('SubmissionDownload', () => {
       urls[1].pathname.should.equal('/v1/projects/1/forms/a%20b/submissions.csv.zip');
       urls[1].searchParams.get('attachments').should.equal('false');
       urls[2].pathname.should.equal('/v1/projects/1/forms/a%20b/submissions.csv.zip');
-      urls[2].searchParams.has('attachments').should.be.false();
+      urls[2].searchParams.has('attachments').should.be.false;
     });
 
     it('sets the correct href attributes for a form draft', () => {
@@ -263,7 +263,7 @@ describe('SubmissionDownload', () => {
       urls[1].pathname.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv.zip');
       urls[1].searchParams.get('attachments').should.equal('false');
       urls[2].pathname.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv.zip');
-      urls[2].searchParams.has('attachments').should.be.false();
+      urls[2].searchParams.has('attachments').should.be.false;
     });
   });
 
@@ -283,9 +283,9 @@ describe('SubmissionDownload', () => {
       });
       const modal = mountComponent();
       const action = modal.findAll('.submission-download-action')[1];
-      action.classes('disabled').should.be.false();
+      action.classes('disabled').should.be.false;
       const a = action.get('a');
-      a.classes('disabled').should.be.false();
+      a.classes('disabled').should.be.false;
       a.should.not.have.ariaDescription();
       await a.should.not.have.tooltip();
     });
@@ -296,9 +296,9 @@ describe('SubmissionDownload', () => {
       });
       const modal = mountComponent();
       const action = modal.findAll('.submission-download-action')[1];
-      action.classes('disabled').should.be.true();
+      action.classes('disabled').should.be.true;
       const a = action.get('a');
-      a.classes('disabled').should.be.true();
+      a.classes('disabled').should.be.true;
       a.should.have.ariaDescription('This Form does not have repeats.');
       await a.should.have.tooltip();
     });
@@ -320,7 +320,7 @@ describe('SubmissionDownload', () => {
         event.preventDefault();
       });
       modal.get('a').trigger('click');
-      defaultPrevented.should.be.false();
+      defaultPrevented.should.be.false;
     });
 
     it('shows an info alert', async () => {
@@ -369,7 +369,7 @@ describe('SubmissionDownload', () => {
       https://bugzilla.mozilla.org/show_bug.cgi?id=1306686 */
       const { contentWindow } = iframe;
       contentWindow.document.addEventListener('submit', onSubmit);
-      (contentWindow.HTMLFormElement.prototype === HTMLFormElement.prototype).should.be.false();
+      (contentWindow.HTMLFormElement.prototype === HTMLFormElement.prototype).should.be.false;
       const originalSubmit = contentWindow.HTMLFormElement.prototype.submit;
       contentWindow.HTMLFormElement.prototype.submit = function submit() {
         // Immediately restore the submit() method in case it is used
@@ -387,7 +387,7 @@ describe('SubmissionDownload', () => {
         bubbles: true,
         cancelable: true
       });
-      modal.get('a').element.dispatchEvent(event).should.be.false();
+      modal.get('a').element.dispatchEvent(event).should.be.false;
     });
 
     it('submits a form from the iframe', async () => {
@@ -405,7 +405,7 @@ describe('SubmissionDownload', () => {
         success = true;
       });
       modal.get('a').trigger('click');
-      success.should.be.true();
+      success.should.be.true;
     });
 
     it('resets the iframe form after it is submitted', async () => {
@@ -422,7 +422,7 @@ describe('SubmissionDownload', () => {
       const onSubmit = sinon.fake(preventDefault);
       const modal = await setup(onSubmit);
       modal.get('a span').trigger('click');
-      onSubmit.called.should.be.true();
+      onSubmit.called.should.be.true;
     });
 
     it('shows an info alert', async () => {
@@ -439,8 +439,8 @@ describe('SubmissionDownload', () => {
         bubbles: true,
         cancelable: true
       });
-      modal.get('a').element.dispatchEvent(event).should.be.false();
-      onSubmit.called.should.be.false();
+      modal.get('a').element.dispatchEvent(event).should.be.false;
+      onSubmit.called.should.be.false;
       modal.should.not.alert();
     });
 
@@ -482,7 +482,7 @@ describe('SubmissionDownload', () => {
         modal.get('a').trigger('click');
         clock.tick(1000);
         const { logger } = modal.vm.$container;
-        logger.log.calledWith('500 Internal Server Error').should.be.true();
+        logger.log.calledWith('500 Internal Server Error').should.be.true;
       });
     });
 

@@ -33,7 +33,7 @@ describe('NavbarActions', () => {
         .request(app => app.get('#navbar-actions-log-out').trigger('click'))
         .respondWithSuccess()
         .afterResponse(app => {
-          app.vm.$container.requestData.session.dataExists.should.be.false();
+          app.vm.$container.requestData.session.dataExists.should.be.false;
         }));
 
     it('does not set the ?next query parameter', () =>

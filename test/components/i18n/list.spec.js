@@ -42,7 +42,7 @@ describe('I18nList', () => {
     const component = await mountComponent({
       props: { list: [] }
     });
-    component.find('*').exists().should.be.false();
+    component.find('*').exists().should.be.false;
   });
 
   it('uses the locale', async () => {

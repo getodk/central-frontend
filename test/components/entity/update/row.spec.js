@@ -43,14 +43,14 @@ describe('EntityUpdateRow', () => {
       });
       const oldValue = row.get('.old-value');
       oldValue.text().should.equal('(empty)');
-      oldValue.classes('empty').should.be.true();
+      oldValue.classes('empty').should.be.true;
     });
 
     it('renders correctly if the value is nullish', () => {
       const row = mountComponent();
       const oldValue = row.get('.old-value');
       oldValue.text().should.equal('(empty)');
-      oldValue.classes('empty').should.be.true();
+      oldValue.classes('empty').should.be.true;
     });
   });
 
@@ -104,7 +104,7 @@ describe('EntityUpdateRow', () => {
       const row = mountComponent({
         props: { oldValue: 'foo', modelValue: 'bar' }
       });
-      row.classes('uncommitted-change').should.be.true();
+      row.classes('uncommitted-change').should.be.true;
     });
   });
 
@@ -120,7 +120,7 @@ describe('EntityUpdateRow', () => {
       const row = mountComponent({
         props: { required: true }
       });
-      row.get('textarea').element.required.should.be.true();
+      row.get('textarea').element.required.should.be.true;
     });
   });
 

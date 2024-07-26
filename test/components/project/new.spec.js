@@ -21,7 +21,7 @@ describe('ProjectNew', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1);
       const component = await load('/', { root: false }, { users: false });
-      component.find('#project-list-new-button').exists().should.be.false();
+      component.find('#project-list-new-button').exists().should.be.false;
     });
   });
 

@@ -40,7 +40,7 @@ describe('Home', () => {
 
     it('does not render the section if the config is null', async () => {
       const app = await load('/', { root: false });
-      app.findComponent(HomeConfigSection).exists().should.be.false();
+      app.findComponent(HomeConfigSection).exists().should.be.false;
     });
   });
 });
