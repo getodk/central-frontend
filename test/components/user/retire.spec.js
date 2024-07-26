@@ -71,7 +71,7 @@ describe('UserRetire', () => {
     it('shows a success alert', async () => {
       const component = await retire();
       component.should.alert('success', (message) => {
-        message.should.containEql('Person A');
+        message.should.include('Person A');
       });
     });
 

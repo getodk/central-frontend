@@ -133,8 +133,8 @@ describe('UserList', () => {
             .respondWithSuccess()
             .afterResponse(component => {
               component.should.alert('success', (message) => {
-                message.should.containEql(`Person ${rowIndex}`);
-                message.should.containEql(roleName);
+                message.should.include(`Person ${rowIndex}`);
+                message.should.include(roleName);
               });
             }));
       });

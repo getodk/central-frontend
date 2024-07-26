@@ -169,7 +169,7 @@ describe('useRequest()', () => {
         data: largeFile('form.xml')
       }).catch(noop);
       component.should.alert('danger', (message) => {
-        message.should.containEql('form.xml');
+        message.should.include('form.xml');
       });
     });
   });

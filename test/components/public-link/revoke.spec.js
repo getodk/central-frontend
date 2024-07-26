@@ -62,7 +62,7 @@ describe('PublicLinkRevoke', () => {
         .modify(revoke)
         .afterResponses(app => {
           app.should.alert('success', (message) => {
-            message.should.containEql('My Public Link');
+            message.should.include('My Public Link');
           });
         }));
 

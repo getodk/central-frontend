@@ -13,7 +13,7 @@ describe('EntityDelete', () => {
       props: { label: 'My Entity' }
     });
     modal.get('.modal-title').text().should.equal('Delete My Entity');
-    modal.get('.modal-introduction').text().should.containEql('My Entity');
+    modal.get('.modal-introduction').text().should.include('My Entity');
   });
 
   it('focuses the checkbox', () => {

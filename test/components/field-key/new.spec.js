@@ -72,7 +72,7 @@ describe('FieldKeyNew', () => {
         .modify(create)
         .afterResponses(app => {
           const p = app.get('#field-key-new .modal-introduction p');
-          p.text().should.containEql('My App User');
+          p.text().should.include('My App User');
         }));
 
     describe('QR code', () => {

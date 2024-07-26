@@ -1210,7 +1210,7 @@ describe('createCentralRouter()', () => {
         ])
         .afterResponses(app => {
           const { config } = app.vm.$container.requestData;
-          config.data.should.containEql({ oidcEnabled: false });
+          config.data.should.include({ oidcEnabled: false });
         });
     });
 

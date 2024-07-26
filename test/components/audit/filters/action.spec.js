@@ -17,13 +17,13 @@ describe('AuditFiltersAction', () => {
 
     it('renders an action option correctly', () => {
       const option = mountComponent().get('option[value="user.create"]');
-      option.element.textContent.should.containEql('\u00a0\u00a0\u00a0Create');
+      option.element.textContent.should.include('\u00a0\u00a0\u00a0Create');
       option.classes().should.eql([]);
     });
 
     it('renders option correctly for an action with multiple periods', () => {
       const option = mountComponent().get('option[value="form.update.draft.set"]');
-      option.element.textContent.should.containEql('\u00a0\u00a0\u00a0Create or Update Draft');
+      option.element.textContent.should.include('\u00a0\u00a0\u00a0Create or Update Draft');
       option.classes().should.eql([]);
     });
   });

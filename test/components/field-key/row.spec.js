@@ -60,7 +60,7 @@ describe('FieldKeyRow', () => {
       const app = await load('/projects/1/app-users', { attachTo: document.body });
       await app.get('.field-key-row-popover-link').trigger('click');
       const text = document.querySelector('.popover p').textContent;
-      text.should.containEql('App User 2');
+      text.should.include('App User 2');
     });
 
     it('defaults to a managed QR code', async () => {
@@ -97,7 +97,7 @@ describe('FieldKeyRow', () => {
         await links[1].trigger('click');
         const panel = document.querySelector('.popover .field-key-qr-panel');
         const text = panel.querySelectorAll('p')[1].textContent;
-        text.should.containEql('App User 1');
+        text.should.include('App User 1');
         panel.classList.contains('legacy').should.be.true;
       });
     });

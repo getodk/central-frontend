@@ -116,7 +116,7 @@ describe('SubmissionFieldDropdown', () => {
         .complete()
         .request(uncheckFirst)
         .beforeEachResponse((_, { url }) => {
-          url.should.containEql('.svc/Submissions');
+          url.should.include('.svc/Submissions');
         })
         .respondWithData(testData.submissionOData));
 

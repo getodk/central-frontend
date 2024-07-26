@@ -24,7 +24,7 @@ describe('UserNew', () => {
         props: { state: true }
       });
       const text = modal.get('.modal-introduction').text();
-      text.should.containEql('the email address you provide will be sent instructions on how to set a password');
+      text.should.include('the email address you provide will be sent instructions on how to set a password');
     });
 
     it('shows the correct text if OIDC is enabled', () => {
@@ -185,7 +185,7 @@ describe('UserNew', () => {
     it('includes display name in alert even if it was not specified', () =>
       submitWithSuccess().afterResponses(component => {
         component.should.alert('success', (message) => {
-          message.should.containEql('New Name');
+          message.should.include('New Name');
         });
       }));
   });

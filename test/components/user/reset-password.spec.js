@@ -77,8 +77,8 @@ describe('UserResetPassword', () => {
     it('shows a success alert', async () => {
       const component = await submit();
       component.should.alert('success', (message) => {
-        message.should.containEql('Alice');
-        message.should.containEql('alice@getodk.org');
+        message.should.include('Alice');
+        message.should.include('alice@getodk.org');
       });
     });
   });

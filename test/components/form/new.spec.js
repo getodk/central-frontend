@@ -65,7 +65,7 @@ describe('FormNew', () => {
       it('renders the paragraph about form attachments', () => {
         const modal = mount(FormNew, mountOptions());
         const text = modal.findAll('.modal-introduction p')[1].text();
-        text.should.containEql('Form Attachments');
+        text.should.include('Form Attachments');
       });
     });
   });
@@ -654,7 +654,7 @@ describe('FormNew', () => {
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
             const text = component.findAll('.modal-warnings p')[3].text();
-            text.should.containEql('create the Form');
+            text.should.include('create the Form');
           });
       });
 
@@ -666,7 +666,7 @@ describe('FormNew', () => {
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
             const text = component.findAll('.modal-warnings p')[3].text();
-            text.should.containEql('update the Draft');
+            text.should.include('update the Draft');
           });
       });
     });

@@ -24,11 +24,11 @@ describe('createResources()', () => {
     });
 
     it('falls back to the defaults for completely invalid JSON', () => {
-      createResource('{]').data.should.containEql({ oidcEnabled: false });
+      createResource('{]').data.should.include({ oidcEnabled: false });
     });
 
     it('falls back to the defaults for a JSON number', () => {
-      createResource(1).data.should.containEql({ oidcEnabled: false });
+      createResource(1).data.should.include({ oidcEnabled: false });
     });
   });
 
