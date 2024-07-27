@@ -368,47 +368,15 @@ const axisEvaluators: AxisEvaluators = {
 	},
 
 	'preceding-sibling': function* precedingSibling(context, step) {
-		const { contextNode } = context;
+		let siblingKey: SiblingKey;
 
-		if (isAttributeNode(contextNode)) {
-			return;
+		if (step.nodeType === '__NAMED__') {
+			siblingKey = 'previousElementSibling';
+		} else {
+			siblingKey = 'previousSibling';
 		}
 
-		const { nodeType = null } = step;
-		const treeWalker = createTreeWalker(context);
-
-		let parentNode: Node | null = null;
-
-		const currentParentNode = contextNode.parentNode;
-
-		if (currentParentNode == null) {
-			return;
-		}
-
-		if (currentParentNode !== parentNode) {
-			parentNode = currentParentNode;
-
-			// Safe, otherwise we wouldn't have a parent node!
-			treeWalker.currentNode = parentNode.firstChild!;
-
-			// See commentary on same logic under `preceding`
-			if (nodeType != null && nodeType !== 'node') {
-				treeWalker.nextSibling();
-				treeWalker.previousSibling();
-			}
-		}
-
-		do {
-			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
-
-			if (currentNode === contextNode) {
-				break;
-			}
-
-			yield currentNode;
-
-			treeWalker.currentNode = currentNode;
-		} while (treeWalker.nextSibling() != null);
+		yield* siblings(context.contextNode, siblingKey);
 	},
 
 	self: function* self(context) {
